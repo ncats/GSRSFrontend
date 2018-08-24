@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { environment} from '../../environments/environment';
+import { ConfigService } from '../config/config.service';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private configService: ConfigService
+  ) { }
 
   ngOnInit() {
-  }
+    if (environment.version == 'gsrs'){
+      console.log(environment);
+    }
 
+    console.log(this.configService.configData);
+  }
 }

@@ -7,6 +7,10 @@ import { BrowseSubstanceComponent } from './browse-substance/browse-substance.co
 
 const childRoutes: Routes = [
   {
+    path: '',
+    component: HomeComponent
+  },
+  {
     path: 'home',
     component: HomeComponent
   },
