@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/gsrs-client",
+            "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -27,16 +27,19 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              {
+                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+              },
+              "src/styles/main.scss"
             ],
             "scripts": []
           },
           "configurations": {
-            "production": {
+            "gsrs.prod": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.gsrs.prod.ts"
                 }
               ],
               "optimization": true,
@@ -48,6 +51,189 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
+            },
+            "gsrs.pre-prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.gsrs.pre-prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "gsrs.dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.gsrs.dev.ts"
+                }
+              ]
+            },
+            "gsrs.local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.gsrs.local.ts"
+                }
+              ]
+            },
+            "fda.prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.fda.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "fda.pre-prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.fda.pre-prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "fda.dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.fda.dev.ts"
+                }
+              ]
+            },
+            "fda.local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.fda.local.ts"
+                }
+              ]
+            },
+            "inxight.prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.inxight.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "inxight.pre-prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.inxight.pre-prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "inxight.dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.inxight.dev.ts"
+                }
+              ]
+            },
+            "inxight.local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.inxight.local.ts"
+                }
+              ]
+            },
+            "abase.prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.abase.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "abase.pre-prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.abase.pre-prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "abase.dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.abase.dev.ts"
+                }
+              ]
+            },
+            "abase.local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.abase.local.ts"
+                }
+              ]
             }
           }
         },
@@ -57,8 +243,53 @@
             "browserTarget": "gsrs-client:build"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "gsrs-client:build:production"
+            "abase.dev": {
+              "browserTarget": "gsrs-client:build:abase.dev"
+            },
+            "abase.local": {
+              "browserTarget": "gsrs-client:build:abase.local"
+            },
+            "abase.pre-prod": {
+              "browserTarget": "gsrs-client:build:abase.pre-prod"
+            },
+            "abase.prod": {
+              "browserTarget": "gsrs-client:build:abase.prod"
+            },
+            "fda.dev": {
+              "browserTarget": "gsrs-client:build:fda.dev"
+            },
+            "fda.local": {
+              "browserTarget": "gsrs-client:build:fda.local"
+            },
+            "fda.pre-prod": {
+              "browserTarget": "gsrs-client:build:fda.pre-prod"
+            },
+            "fda.prod": {
+              "browserTarget": "gsrs-client:build:fda.prod"
+            },
+            "gsrs.dev": {
+              "browserTarget": "gsrs-client:build:gsrs.dev"
+            },
+            "gsrs.local": {
+              "browserTarget": "gsrs-client:build:gsrs.local"
+            },
+            "gsrs.pre-prod": {
+              "browserTarget": "gsrs-client:build:gsrs.pre-prod"
+            },
+            "gsrs.prod": {
+              "browserTarget": "gsrs-client:build:gsrs.prod"
+            },
+            "inxight.dev": {
+              "browserTarget": "gsrs-client:build:inxight.dev"
+            },
+            "inxight.local": {
+              "browserTarget": "gsrs-client:build:inxight.local"
+            },
+            "inxight.pre-prod": {
+              "browserTarget": "gsrs-client:build:inxight.pre-prod"
+            },
+            "inxight.prod": {
+              "browserTarget": "gsrs-client:build:inxight.prod"
             }
           }
         },
@@ -76,6 +307,9 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
+              {
+                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+              },
               "src/styles.scss"
             ],
             "scripts": [],
@@ -95,6 +329,14 @@
             "exclude": [
               "**/node_modules/**"
             ]
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "src/tsconfig.server.json"
           }
         }
       }

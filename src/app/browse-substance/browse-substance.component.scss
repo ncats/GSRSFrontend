@@ -1,0 +1,18 @@
+mat-sidenav {
+    width: 250px;
+    padding: 15px 10px;
+}
+
+.mat-drawer-content {
+    background-color: white;
+}
+
+
+
+.filter-box {
+    padding: 10px;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid #d9d9d9;
+    }
+}

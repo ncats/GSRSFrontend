@@ -1,0 +1,36 @@
+.middle-fill {
+    flex: 1 1 auto;
+  }
+
+.logo {
+    height: 35px;
+    margin-right: 20px;
+
+    img {
+        height: 100%;
+        width: auto;
+    }
+}
+
+.nav {
+
+    .nav-item {
+        padding: 0 5px;
+
+        & > a {
+            font-size: 16px;
+            color: #e6e6e6;
+            padding-bottom: 7px;
+            transition: all 150ms linear;
+            text-decoration: none;
+
+            &:hover, &.active {
+                color: white;
+                cursor: pointer;
+                padding-bottom: 5px;
+                border-bottom: 2px solid white;
+                text-decoration: none;
+            }
+        }
+    }
+}
