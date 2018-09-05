@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (environment.version == 'gsrs'){
+    if (environment.version === 'gsrs') {
       console.log(environment);
     }
 

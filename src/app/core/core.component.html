@@ -12,5 +12,20 @@
     </span>
   </span>
   <span class="middle-fill"></span>
+  <span>
+    <form>
+      <mat-form-field [floatLabel]="'never'" class="search-form-field space-right-small">
+        <input type="text" placeholder="Search" aria-label="Search substances" matInput [formControl]="searchControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of autoCompleteOptions" [value]="option.key">
+            {{option.key}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <button mat-icon-button>
+        <mat-icon>search</mat-icon>
+      </button>
+    </form>
+  </span>
 </mat-toolbar>
 <router-outlet></router-outlet>
