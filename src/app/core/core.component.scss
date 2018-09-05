@@ -37,4 +37,13 @@
 
 .search-form-field {
     width: 300px;
+    
+    .mat-input-element {
+        font-size: 16px;
+    }
+
+    ::ng-deep .mat-form-field-label {
+        font-size: 16px;
+        top: 1.98125em;
+    }
 }
