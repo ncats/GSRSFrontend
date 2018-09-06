@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
+import { SubstanceSummary } from './substance.model';
+import { PagingResponse } from '../utils/paging-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +18,8 @@ export class SubstanceService extends BaseHttpService {
     super(configService);
   }
 
-  getSubtances(): Observable<any> {
-    return this.http.jsonp<any>(this.apiBaseUrl + 'substances', 'callback');
+  getSubtances(): Observable<PagingResponse<SubstanceSummary>> {
+    return this.http.jsonp<PagingResponse<SubstanceSummary>>(this.apiBaseUrl + 'substances', 'callback');
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
+import { SubstanceSummary } from '../substance/substance.model';
 
 @Component({
   selector: 'app-browse-substance',
@@ -9,7 +10,7 @@ import { SubstanceService } from '../substance/substance.service';
 })
 export class BrowseSubstanceComponent implements OnInit {
   private searchTerm: string;
-  public substances: Array<any>;
+  public substances: Array<SubstanceSummary>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -26,11 +27,12 @@ export class BrowseSubstanceComponent implements OnInit {
   }
 
   getSubstances() {
-    this.substanceService.getSubtances().subscribe(substances => {
-      this.substances = substances;
+    this.substanceService.getSubtances().subscribe(pagingResponse => {
+      this.substances = pagingResponse.content;
+      console.log(this.substances);
     }, error => {
       console.log(error);
-    })
+    });
   }
 
 }
