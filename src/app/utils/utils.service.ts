@@ -1,17 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from '../../../node_modules/rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BaseHttpService } from '../base/base-http.service';
+import { Observable } from 'rxjs';
+import { ConfigService } from '../config/config.service';
+import { SubstanceSuggestionsGroup } from './substance-suggestions-group.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UtilsService {
+export class UtilsService extends BaseHttpService {
 
   constructor(
-    private http: HttpClient
-  ) { }
+    public http: HttpClient,
+    public configService: ConfigService
+  ) {
+    super(configService);
+  }
 
-  getStructureSearchSuggestions(searchTerm: string): Observable<HttpResponse<any>> {
-    return this.http.jsonp<any>('https://ginas.ncats.nih.gov/ginas/app/api/v1/suggest?q=' + searchTerm, 'callback');
+  getStructureSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
+    return this.http.jsonp<SubstanceSuggestionsGroup>(this.apiBaseUrl + 'suggest?q=' + searchTerm, 'callback');
   }
 }

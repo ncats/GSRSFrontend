@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { Config } from './config.model';
 
 @Injectable()
 export class ConfigService {
 
-  private _configData: any;
+  private _configData: Config;
 
     constructor(private http: HttpClient) { }
 
@@ -18,11 +18,11 @@ export class ConfigService {
         return this.http
             .get('/assets/data/config.json')
             .toPromise()
-            .then((data: any) => this._configData = data)
+            .then((data: Config) => this._configData = data)
             .catch((err: any) => Promise.resolve());
     }
 
-    get configData(): any {
+    get configData(): Config {
         return this._configData;
     }
 }

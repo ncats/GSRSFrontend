@@ -1,3 +1,3 @@
 {
-    "test": "this is a test of the config file"
+    "apiBaseUrl": "https://tripod.nih.gov/ginas/app/api/v1/"
 }

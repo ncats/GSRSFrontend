@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { UtilsService } from '../utils/utils.service';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
-import { Router, NavigationExtras } from '@angular/router';
+import { NavigationExtras, Router, ActivatedRoute, RouterEvent, NavigationEnd } from '@angular/router';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
+import { UtilsService } from '../utils/utils.service';
 
 @Component({
   selector: 'app-core',
@@ -11,15 +12,16 @@ import { Router, NavigationExtras } from '@angular/router';
   styleUrls: ['./core.component.scss']
 })
 export class CoreComponent implements OnInit {
-  searchControl = new FormControl();
-  autoCompleteOptions: Array<any>;
+  searchControl = new FormControl('', Validators.required);
+  substanceSuggestionsGroup: SubstanceSuggestionsGroup;
+  suggestionsFields: Array<string>;
+  mainPathSegment = '';
 
   constructor(
     private utilsService: UtilsService,
-    private router: Router
-  ) {
-    this.autoCompleteOptions = [];
-  }
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
     this.searchControl.valueChanges.pipe(
@@ -28,20 +30,42 @@ export class CoreComponent implements OnInit {
       switchMap(searchValue =>
         this.utilsService.getStructureSearchSuggestions(searchValue)
       )
-    ).subscribe((response: any) => {
-      this.autoCompleteOptions = response.Name;
+    ).subscribe((response: SubstanceSuggestionsGroup) => {
+      this.substanceSuggestionsGroup = response;
+      this.suggestionsFields = Object.keys(this.substanceSuggestionsGroup);
     }, error => {
       console.log(error);
     });
+    
+    this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
+
+    this.router.events.subscribe((event: RouterEvent) => {
+      if (event instanceof NavigationEnd) {
+        this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
+      }
+    })
   }
 
+  getMainPathSegmentFromUrl(url: string): string {
+    const path = url.split('?')[0];
+    const mainPathPart = path.split('/')[0];
+    return mainPathPart;
+  } 
+
   substanceSearchOptionSelected(event: MatAutocompleteSelectedEvent) {
-    console.log(event.option.value);
+    this.navigateToSearchResults(event.option.value);
+  }
+
+  processSubstanceSearch() {
+    const searchTerm = this.searchControl.value;
+    this.navigateToSearchResults(searchTerm);
+  }
+
+  navigateToSearchResults(searchTerm: string) {
     let navigationExtras: NavigationExtras = {
-      queryParams: { 'search_term': event.option.value }
+      queryParams: { 'search_term': searchTerm }
     };
 
-    // Navigate to the login page with extras
     this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
