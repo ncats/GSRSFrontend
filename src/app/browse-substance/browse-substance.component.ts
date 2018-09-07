@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceSummary } from '../substance/substance.model';
+import { SubstanceDetail } from '../substance/substance.model';
 
 @Component({
   selector: 'app-browse-substance',
@@ -10,7 +10,7 @@ import { SubstanceSummary } from '../substance/substance.model';
 })
 export class BrowseSubstanceComponent implements OnInit {
   private searchTerm: string;
-  public substances: Array<SubstanceSummary>;
+  public substances: Array<SubstanceDetail>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -22,14 +22,13 @@ export class BrowseSubstanceComponent implements OnInit {
       .queryParamMap
       .subscribe(params => {
         this.searchTerm = params.get('search_term') || '';
-        this.getSubstances();
+        this.searchSubstances();
       });
   }
 
-  getSubstances() {
-    this.substanceService.getSubtances().subscribe(pagingResponse => {
+  searchSubstances() {
+    this.substanceService.searchSubstances(this.searchTerm, true).subscribe(pagingResponse => {
       this.substances = pagingResponse.content;
-      console.log(this.substances);
     }, error => {
       console.log(error);
     });
