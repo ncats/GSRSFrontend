@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail } from '../substance/substance.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ConfigService } from '../config/config.service';
 
 @Component({
   selector: 'app-browse-substance',
@@ -14,7 +16,9 @@ export class BrowseSubstanceComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private substanceService: SubstanceService
+    private substanceService: SubstanceService,
+    private sanitizer: DomSanitizer,
+    public configService: ConfigService
   ) {}
 
   ngOnInit() {
@@ -27,11 +31,19 @@ export class BrowseSubstanceComponent implements OnInit {
   }
 
   searchSubstances() {
-    this.substanceService.searchSubstances(this.searchTerm, true).subscribe(pagingResponse => {
+    this.substanceService.getSubtanceDetails(this.searchTerm).subscribe(pagingResponse => {
       this.substances = pagingResponse.content;
+      console.log(this.substances);
     }, error => {
       console.log(error);
     });
+  }
+
+  getSafeStructureImgUrl(structureId: string): SafeUrl {
+
+    const imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=150`;
+
+    return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
 }

@@ -7,6 +7,6 @@ export abstract class BaseHttpService {
   constructor(
     public configService: ConfigService
   ) {
-    this.apiBaseUrl = this.configService.configData.apiBaseUrl;
+    this.apiBaseUrl = this.configService.configData.apiBaseUrl + 'api/v1/';
   }
 }

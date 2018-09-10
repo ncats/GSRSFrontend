@@ -16,3 +16,38 @@ mat-sidenav {
         border-bottom: 1px solid #d9d9d9;
     }
 }
+
+.mat-card {
+    margin-bottom: 20px;
+}
+
+.mat-card-title {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+
+    .substance-name {
+        color: #448aff;
+    }
+
+    .approval-id {
+        font-size: 16px;
+        color: red;
+    }
+}
+
+.mat-card-content {
+
+    .mat-chip-list-container {
+        margin-left: -20px;
+        margin-bottom: 10px;
+    }
+}
+
+.substance-content {
+    display: flex;
+    flex-direction: row;
+}

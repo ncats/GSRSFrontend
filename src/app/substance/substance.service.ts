@@ -18,34 +18,44 @@ export class SubstanceService extends BaseHttpService {
     super(configService);
   }
 
-  getSubtances(viewFull?: boolean): Observable<PagingResponse<SubstanceDetail>> {
+  getSubtanceDetails(searchTerm?: string, getFacets?: boolean): Observable<PagingResponse<SubstanceDetail>> {
 
     const options = {
-      params: new HttpParams()
-    };
-
-    if (viewFull) {
-      options.params.set('view', 'full');
-    }
-
-    return this.http.get<PagingResponse<SubstanceDetail>>(this.apiBaseUrl + 'substances', options);
-  }
-
-  searchSubstances(searchTerm?: string, viewFull?: boolean): Observable<PagingResponse<SubstanceDetail>> {
-    
-    let options = {
-      params: {}
+      params: {
+        view: 'full'
+      }
     };
 
     if (searchTerm) {
       options.params['q'] = searchTerm;
     }
 
-    if (viewFull) {
-      options.params['view'] = 'full';
+    let url = this.apiBaseUrl + 'substances/';
+
+    if (searchTerm != null || getFacets === true) {
+      url += 'search';
     }
 
-    return this.http.get<PagingResponse<SubstanceDetail>>(this.apiBaseUrl + 'substances/search', options);
+    return this.http.get<PagingResponse<SubstanceDetail>>(url, options);
+  }
+
+  getSubstanceSummaries(searchTerm?: string, getFacets?: boolean): Observable<PagingResponse<SubstanceSummary>> {
+
+    const options = {
+      params: {}
+    };
+
+    let url = this.apiBaseUrl + 'substances/';
+
+    if (searchTerm) {
+      options.params['q'] = searchTerm;
+    }
+
+    if (searchTerm != null || getFacets === true) {
+      url += 'search';
+    }
+
+    return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
 }

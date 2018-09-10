@@ -1,14 +1,39 @@
 <mat-sidenav-container class="example-container">
   <mat-sidenav mode="side" opened>
-      <div class="filter-box"> 
-        this
-      </div>
+    <div class="filter-box">
+      facets
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
     <div class="side-nav-content">
-        <mat-card>
-          card
-        </mat-card>
+      <mat-card *ngFor="let substance of substances">
+        <mat-card-title>
+          <a class="substance-name">
+            {{substance._name}}
+          </a>
+          <span class="middle-fill"></span>
+          <a class="approval-id">
+            {{substance.approvalID}}
+          </a>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="substance-content">
+            <div *ngIf="substance.structure">
+              <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
+                <mat-chip-list>
+                  <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
+                </mat-chip-list>
+              </div>
+              <div>
+                <img [src]="getSafeStructureImgUrl(substance.structure.id)">
+              </div>
+            </div>
+            <div>
+              This is the content
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
