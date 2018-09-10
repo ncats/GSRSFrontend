@@ -36,6 +36,8 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
     properties: Array<SubstanceProperty>;
     relationships: Array<SubstanceRelationship>;
     references: Array<SubstanceReference>;
+    codeSystemNames: Array<string>;
+    codeSystems: { [codeSystem: string]: Array<SubstanceCode> };
 }
 
 export interface StructurallyDiverse extends SubstanceBase {
