@@ -16,6 +16,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
@@ -24,6 +27,7 @@ import { BrowseSubstanceComponent } from './browse-substance/browse-substance.co
 import { TestComponent } from './testing-directory/test/test.component';
 import { configServiceFactory } from './config/config.factory';
 import { ConfigService } from './config/config.service'; 
+import { LoadingModule } from './loading/loading.module';
 
 @NgModule({
   declarations: [
@@ -51,7 +55,11 @@ import { ConfigService } from './config/config.service';
     MatIconModule,
     HttpClientModule,
     HttpClientJsonpModule,
-    MatChipsModule
+    MatChipsModule,
+    MatBadgeModule,
+    MatExpansionModule,
+    MatCheckboxModule,
+    LoadingModule
   ],
   providers: [
     ConfigService,

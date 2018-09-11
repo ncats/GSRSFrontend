@@ -12,7 +12,7 @@ import { UtilsService } from '../utils/utils.service';
   styleUrls: ['./core.component.scss']
 })
 export class CoreComponent implements OnInit {
-  searchControl = new FormControl('', Validators.required);
+  searchControl = new FormControl();
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
   suggestionsFields: Array<string>;
   mainPathSegment = '';
@@ -62,8 +62,9 @@ export class CoreComponent implements OnInit {
   }
 
   navigateToSearchResults(searchTerm: string) {
+
     let navigationExtras: NavigationExtras = {
-      queryParams: { 'search_term': searchTerm }
+      queryParams: searchTerm ? { 'search_term': searchTerm } : null
     };
 
     this.router.navigate(['/browse-substance'], navigationExtras);

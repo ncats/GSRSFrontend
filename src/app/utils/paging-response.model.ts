@@ -1,3 +1,5 @@
+import { Facet } from './facet.model';
+
 export interface PagingResponse<T> {
     id: number;
     version: number;
@@ -14,5 +16,5 @@ export interface PagingResponse<T> {
     top: number;
     query: string;
     content: Array<T>;
-    facets: Array<any>;
+    facets: Array<Facet>;
 }

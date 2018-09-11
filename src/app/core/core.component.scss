@@ -49,3 +49,12 @@
     color: #666666;
     overflow: hidden;
 }
+
+::ng-deep .mat-drawer-container.mat-sidenav-container {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}

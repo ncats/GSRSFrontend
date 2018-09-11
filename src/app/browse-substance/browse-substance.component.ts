@@ -5,7 +5,9 @@ import { SubstanceDetail, SubstanceCode } from '../substance/substance.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
 import * as _ from 'lodash';
-import { ReturnStatement } from '../../../node_modules/@angular/compiler';
+import { Facet } from '../utils/facet.model';
+import { LoadingService } from '../loading/loading.service';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-browse-substance',
@@ -15,12 +17,15 @@ import { ReturnStatement } from '../../../node_modules/@angular/compiler';
 export class BrowseSubstanceComponent implements OnInit {
   private searchTerm: string;
   public substances: Array<SubstanceDetail>;
+  public facets: Array<Facet>;
+  private facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
     private sanitizer: DomSanitizer,
-    public configService: ConfigService
+    public configService: ConfigService,
+    private loadingService: LoadingService
   ) {}
 
   ngOnInit() {
@@ -33,10 +38,22 @@ export class BrowseSubstanceComponent implements OnInit {
   }
 
   searchSubstances() {
-    this.substanceService.getSubtanceDetails(this.searchTerm).subscribe(pagingResponse => {
+    this.loadingService.setLoading(true);
+    this.substanceService.getSubtanceDetails(this.searchTerm, true, this.facetParams).subscribe(pagingResponse => {
       this.substances = pagingResponse.content;
-      console.log(this.substances);
-      _.forEach(this.substances, substance => {
+      if (pagingResponse.facets && pagingResponse.facets.length > 0){
+        let sortedFacets = _.orderBy(pagingResponse.facets, facet => {
+          let valuesTotal = 0;
+          _.forEach(facet.values, value => {
+            valuesTotal += value.count;
+          });
+          return valuesTotal;
+        }, 'desc');
+        this.facets = _.take(sortedFacets, 10);
+        sortedFacets = null;
+      }
+      console.log(this.facets);
+      _.forEach(this.substances, (substance: SubstanceDetail) => {
         if (substance.codes && substance.codes.length > 0) {
           substance.codeSystemNames = [];
           substance.codeSystems = {};
@@ -48,11 +65,12 @@ export class BrowseSubstanceComponent implements OnInit {
               substance.codeSystemNames.push(code.codeSystem);
             }
           });
-          console.log(substance.codeSystems, substance.codeSystemNames);
         }
       });
+      this.loadingService.setLoading(false);
     }, error => {
       console.log(error);
+      this.loadingService.setLoading(false);
     });
   }
 
@@ -63,16 +81,30 @@ export class BrowseSubstanceComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
-  getCodesByCodeSystem(codes: Array<SubstanceCode>): { codes: Array<string>, codeSystems: { [codeSystem: string]: Array<SubstanceCode> } } {
-    const returnObject: { codes: Array<string>, codeSystems: { [codeSystem: string]: Array<SubstanceCode> } } = {
-      codes: [],
-      codeSystems: {}
-    };
+  updateFacetSelection(event: MatCheckboxChange, facetName: string, facetValueLabel: string): void {
+    
+    if (this.facetParams[facetName] == null) {
+      this.facetParams[facetName] = {};
+    }
 
-   
+    this.facetParams[facetName][facetValueLabel] = event.checked;
 
-    console.log(returnObject);
-    return returnObject;
+    let facetHasSelectedValue = false;
+    
+    const facetValueKeys = Object.keys(this.facetParams[facetName])
+    for (let i = 0; i < facetValueKeys.length; i++) {
+      if (this.facetParams[facetName][facetValueKeys[i]]) {
+        facetHasSelectedValue = true;
+        break;
+      }
+    }
+    
+    if (!facetHasSelectedValue) {
+      this.facetParams[facetName] = undefined;
+    }
+
+    this.searchSubstances();
+
   }
 
 }

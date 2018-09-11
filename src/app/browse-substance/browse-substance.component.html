@@ -1,8 +1,27 @@
 <mat-sidenav-container class="example-container">
   <mat-sidenav mode="side" opened>
-    <div class="filter-box">
-      facets
-    </div>
+    <mat-accordion multi="true">
+      <mat-expansion-panel *ngFor="let facet of facets" [expanded]="facetParams[facet.name] != null">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{facet.name}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="facet-value" *ngFor="let value of facet.values">
+          <div class="facet-value-checkbox">
+            <mat-checkbox (change)="updateFacetSelection($event, facet.name, value.label)" [checked]="facetParams[facet.name] != null && facetParams[facet.name][value.label] || false"></mat-checkbox>
+          </div>
+          <div class="facet-value-label">
+              {{value.label}}
+          </div>
+          <div class="middle-fill"></div>
+          <div class="facet-value-count">
+            {{value.count}}
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    
   </mat-sidenav>
   <mat-sidenav-content>
     <div class="side-nav-content">
@@ -20,7 +39,7 @@
           <div class="substance-content">
             <div class="structure-container" *ngIf="substance.structure">
               <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
-                <mat-chip-list>
+                <mat-chip-list selectable="false" multiple="false">
                   <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
                 </mat-chip-list>
               </div>
@@ -48,6 +67,10 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="substance-data" *ngIf="substance.relationships && substance.relationships.length">
+                <div class="label" [matBadge]="substance.relationships.length" matBadgeOverlap="false">Relationthips</div>
+                <div></div>
               </div>
             </div>
           </div>
