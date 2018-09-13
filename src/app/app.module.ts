@@ -24,7 +24,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { CoreComponent } from './core/core.component';
 import { HomeComponent } from './home/home.component';
 import { BrowseSubstanceComponent } from './browse-substance/browse-substance.component';
-import { TestComponent } from './testing-directory/test/test.component';
 import { configServiceFactory } from './config/config.factory';
 import { ConfigService } from './config/config.service'; 
 import { LoadingModule } from './loading/loading.module';
@@ -35,8 +34,7 @@ import { LoadingModule } from './loading/loading.module';
     PageNotFoundComponent,
     CoreComponent,
     HomeComponent,
-    BrowseSubstanceComponent,
-    TestComponent
+    BrowseSubstanceComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

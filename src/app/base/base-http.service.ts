@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 
 export abstract class BaseHttpService {

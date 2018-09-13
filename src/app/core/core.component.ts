@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
-import { NavigationExtras, Router, ActivatedRoute, RouterEvent, NavigationEnd } from '@angular/router';
+import { NavigationExtras, Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
@@ -19,8 +19,7 @@ export class CoreComponent implements OnInit {
 
   constructor(
     private utilsService: UtilsService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private router: Router
   ) { }
 
   ngOnInit() {
