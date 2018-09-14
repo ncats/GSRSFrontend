@@ -5,7 +5,7 @@ import { Config } from './config.model';
 @Injectable()
 export class ConfigService {
 
-  private _configData: Config;
+    private _configData: Config;
 
     constructor(private http: HttpClient) { }
 
@@ -24,5 +24,9 @@ export class ConfigService {
 
     get configData(): Config {
         return this._configData;
+    }
+
+    set configData(configData: Config) {
+        this._configData = configData;
     }
 }

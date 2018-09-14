@@ -19,6 +19,7 @@ describe('SubstanceService', () => {
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
     configService = new ConfigService(httpClient);
+    configService.configData = { apiBaseUrl: '' };
     substanceService = new SubstanceService(httpClient, configService);
   });
 

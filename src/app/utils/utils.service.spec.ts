@@ -15,17 +15,17 @@ describe('UtilsService', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      providers: [UtilsService]
+      imports: [ HttpClientTestingModule ]
     });
 
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
     configService = new ConfigService(httpClient);
+    configService.configData = { apiBaseUrl: '' };
     utilsService = new UtilsService(httpClient, configService);
   });
 
-  it('should be created', inject([UtilsService], (service: UtilsService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', () => {
+    expect(utilsService).toBeTruthy();
+  });
 });
