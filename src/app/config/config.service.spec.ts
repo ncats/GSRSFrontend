@@ -11,8 +11,7 @@ describe('ConfigService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      providers: [ConfigService]
+      imports: [ HttpClientTestingModule ]
     });
 
     httpClient = TestBed.get(HttpClient);
@@ -20,7 +19,7 @@ describe('ConfigService', () => {
     configService = new ConfigService(httpClient);
   });
 
-  it('should be created', inject([ConfigService], (service: ConfigService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', () => {
+    expect(configService).toBeTruthy();
+  });
 });

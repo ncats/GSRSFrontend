@@ -38,7 +38,7 @@ describe('CoreComponent', () => {
         LoadingModule,
         BrowserAnimationsModule
       ],
-      declarations: [ 
+      declarations: [
         CoreComponent,
         RouterLinkDirectiveStub
       ],

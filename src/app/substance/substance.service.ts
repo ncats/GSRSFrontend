@@ -5,7 +5,6 @@ import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
-import { encodeUriFragment } from '../../../node_modules/@angular/router/src/url_tree';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,15 @@ export class SubstanceService extends BaseHttpService {
     super(configService);
   }
 
-  getSubtanceDetails(searchTerm?: string, getFacets?: boolean, facets?: { [facetName: string]: { [facetValueLabel: string]: boolean } }): Observable<PagingResponse<SubstanceDetail>> {
+  getSubtanceDetails(
+    searchTerm?: string,
+    getFacets?: boolean,
+    facets?: {
+      [facetName: string]: {
+        [facetValueLabel: string]: boolean
+      }
+    }
+  ): Observable<PagingResponse<SubstanceDetail>> {
 
     let params = new HttpParams();
     params = params.append('view', 'full');
@@ -45,7 +52,15 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceDetail>>(url, options);
   }
 
-  getSubstanceSummaries(searchTerm?: string, getFacets?: boolean, facets?: { [facetName: string]: { [facetValueLabel: string]: boolean } }): Observable<PagingResponse<SubstanceSummary>> {
+  getSubstanceSummaries(
+    searchTerm?: string,
+    getFacets?: boolean,
+    facets?: {
+      [facetName: string]: {
+        [facetValueLabel: string]: boolean
+      }
+    }
+  ): Observable<PagingResponse<SubstanceSummary>> {
 
     let params = new HttpParams();
 
@@ -65,7 +80,7 @@ export class SubstanceService extends BaseHttpService {
 
     const options = {
       params: params
-    }
+    };
 
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
