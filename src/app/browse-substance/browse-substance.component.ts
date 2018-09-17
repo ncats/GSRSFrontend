@@ -15,10 +15,10 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./browse-substance.component.scss']
 })
 export class BrowseSubstanceComponent implements OnInit {
-  private searchTerm: string;
+  private _searchTerm: string;
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
-  private facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
+  private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -32,19 +32,19 @@ export class BrowseSubstanceComponent implements OnInit {
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
-        this.searchTerm = params.get('search_term') || '';
+        this._searchTerm = params.get('search_term') || '';
         this.searchSubstances();
       });
   }
 
   searchSubstances() {
     this.loadingService.setLoading(true);
-    this.substanceService.getSubtanceDetails(this.searchTerm, true, this.facetParams).subscribe(pagingResponse => {
+    this.substanceService.getSubtanceDetails(this._searchTerm, true, this._facetParams).subscribe(pagingResponse => {
       this.substances = pagingResponse.content;
       if (pagingResponse.facets && pagingResponse.facets.length > 0){
         let sortedFacets = _.orderBy(pagingResponse.facets, facet => {
           let valuesTotal = 0;
-          _.forEach(facet.values, value => {
+          facet.values.forEach(value => {
             valuesTotal += value.count;
           });
           return valuesTotal;
@@ -52,8 +52,8 @@ export class BrowseSubstanceComponent implements OnInit {
         this.facets = _.take(sortedFacets, 10);
         sortedFacets = null;
       }
-      console.log(this.facets);
-      _.forEach(this.substances, (substance: SubstanceDetail) => {
+      
+      this.substances.forEach((substance: SubstanceDetail) => {
         if (substance.codes && substance.codes.length > 0) {
           substance.codeSystemNames = [];
           substance.codeSystems = {};
@@ -83,28 +83,36 @@ export class BrowseSubstanceComponent implements OnInit {
 
   updateFacetSelection(event: MatCheckboxChange, facetName: string, facetValueLabel: string): void {
     
-    if (this.facetParams[facetName] == null) {
-      this.facetParams[facetName] = {};
+    if (this._facetParams[facetName] == null) {
+      this._facetParams[facetName] = {};
     }
 
-    this.facetParams[facetName][facetValueLabel] = event.checked;
+    this._facetParams[facetName][facetValueLabel] = event.checked;
 
     let facetHasSelectedValue = false;
     
-    const facetValueKeys = Object.keys(this.facetParams[facetName])
+    const facetValueKeys = Object.keys(this._facetParams[facetName])
     for (let i = 0; i < facetValueKeys.length; i++) {
-      if (this.facetParams[facetName][facetValueKeys[i]]) {
+      if (this._facetParams[facetName][facetValueKeys[i]]) {
         facetHasSelectedValue = true;
         break;
       }
     }
     
     if (!facetHasSelectedValue) {
-      this.facetParams[facetName] = undefined;
+      this._facetParams[facetName] = undefined;
     }
 
     this.searchSubstances();
 
+  }
+
+  get searchTerm(): string {
+    return this._searchTerm;
+  }
+
+  get facetParams(): { [facetName: string]: { [facetValueLabel: string]: boolean } } {
+    return this._facetParams;
   }
 
 }

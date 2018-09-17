@@ -15,6 +15,7 @@ export interface PagingResponse<T> {
     skip: number;
     top: number;
     query: string;
+    sideway: Array<any>;
     content: Array<T>;
     facets: Array<Facet>;
 }
