@@ -51,6 +51,8 @@ export class BrowseSubstanceComponent implements OnInit {
         }, 'desc');
         this.facets = _.take(sortedFacets, 10);
         sortedFacets = null;
+      } else {
+        this.facets = [];
       }
       
       this.substances.forEach((substance: SubstanceDetail) => {
