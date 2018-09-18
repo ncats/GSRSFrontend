@@ -56,12 +56,12 @@
                   </div>
                 </div>
               </div>
-              <div class="substance-data substance-codesystems" *ngIf="substance.codeSystems">
+              <div class="substance-data substance-code-systems" *ngIf="substance.codeSystems">
                 <div class="label">Codes:</div>
                 <div>
                   <div class="margin-bottom" *ngFor="let codeSystemName of substance.codeSystemNames">
-                    <div>
-                      <span class="code-system">{{codeSystemName}}</span>:&nbsp;
+                    <div class="code-system">
+                      <span class="label">{{codeSystemName}}</span>:&nbsp;
                       <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">{{codeObject.code.trim()}}<span *ngIf="!isLast">, </span>
                       </span>
                     </div>

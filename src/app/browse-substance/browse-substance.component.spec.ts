@@ -163,18 +163,44 @@ describe('BrowseSubstanceComponent', () => {
 
             if (component.substances[index].codeSystems != null && component.substances[index].codeSystems.length) {
 
-              const substanceCodeSystemsElement: HTMLElement = substanceElement.querySelector('.substance-codesystems');
-              expect(substanceCodeSystemsElement).toBeTruthy('substance names area should exist');
+              const substanceCodeSystemsAreaElement: HTMLElement = substanceElement.querySelector('.substance-code-systems');
+              expect(substanceCodeSystemsAreaElement).toBeTruthy('substance codeSystems area should exist');
 
-              const substanceNamesValuesElements: NodeListOf<HTMLElement> = substanceCodeSystemsElement.querySelectorAll('.value');
-              expect(substanceNamesValuesElements.length)
+              const substanceCodeSystemElements: NodeListOf<HTMLElement> =
+                substanceCodeSystemsAreaElement.querySelectorAll('.code-system');
+              expect(substanceCodeSystemElements.length)
                 .toBe(
-                  component.substances[index].names.length,
-                  'substance should have ' + component.substances[index].names.length.toString() + 'names'
+                  component.substances[index].codeSystemNames.length,
+                  'substance should have ' + component.substances[index].codeSystemNames.length.toString() + 'codeSystems'
                 );
-              Array.from(substanceNamesValuesElements).forEach((substanceNameValueElement: HTMLElement) => {
-                expect(substanceNameValueElement.innerHTML).toBeTruthy('substance name should have a value');
+              Array.from(substanceCodeSystemElements).forEach((substanceCodeSystemElement: HTMLElement) => {
+
+                const label = substanceCodeSystemElement.querySelector('label').innerHTML;
+                expect(label).toBeTruthy('substance codeSystem should have a label(property)');
+
+                const substanceCodeSystemValueElements: NodeListOf<HTMLElement> =
+                substanceCodeSystemElement.querySelectorAll('.value');
+                expect(substanceCodeSystemValueElements.length)
+                .toBe(
+                  component.substances[index].codeSystems[label].length,
+                  'substance codeSystem should have ' + component.substances[index].codeSystems[label].length.toString() + 'codes'
+                );
+
+                Array.from(substanceCodeSystemValueElements).forEach((substanceCodeSystemValueElement: HTMLElement) => {
+                  expect(substanceCodeSystemValueElement.innerHTML).toBeTruthy('codeSystem instance should have a value');
+                });
               });
+            }
+
+            if (component.substances[index].relationships && component.substances[index].relationships.length) {
+              const substanceRelationshipsElement: HTMLElement = substanceElement.querySelector('.substance-relationships');
+              const relationshipsCount = substanceRelationshipsElement.querySelector('.mat-badge-content').innerHTML;
+              expect(Number(relationshipsCount))
+                .toBe(
+                  component.substances[index].relationships.length,
+                  'substance relationships count should show' +
+                  component.substances[index].relationships.length.toString()
+                );
             }
           });
         } else {
