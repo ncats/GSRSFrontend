@@ -25,8 +25,9 @@ import { CoreComponent } from './core/core.component';
 import { HomeComponent } from './home/home.component';
 import { BrowseSubstanceComponent } from './browse-substance/browse-substance.component';
 import { configServiceFactory } from './config/config.factory';
-import { ConfigService } from './config/config.service'; 
+import { ConfigService } from './config/config.service';
 import { LoadingModule } from './loading/loading.module';
+import { MainNotificationModule } from './main-notification/main-notification.module';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { LoadingModule } from './loading/loading.module';
     MatBadgeModule,
     MatExpansionModule,
     MatCheckboxModule,
-    LoadingModule
+    LoadingModule,
+    MainNotificationModule
   ],
   providers: [
     ConfigService,

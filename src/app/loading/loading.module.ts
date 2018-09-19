@@ -12,7 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   declarations: [
     LoadingComponent
   ],
-  providers:[
+  providers: [
     LoadingService
   ],
   exports: [

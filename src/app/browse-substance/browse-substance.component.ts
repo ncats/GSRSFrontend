@@ -8,6 +8,8 @@ import * as _ from 'lodash';
 import { Facet } from '../utils/facet.model';
 import { LoadingService } from '../loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MainNotificationService } from '../main-notification/main-notification.service';
+import { AppNotification, NotificationType } from '../main-notification/notification.model';
 
 @Component({
   selector: 'app-browse-substance',
@@ -25,8 +27,9 @@ export class BrowseSubstanceComponent implements OnInit {
     private substanceService: SubstanceService,
     private sanitizer: DomSanitizer,
     public configService: ConfigService,
-    private loadingService: LoadingService
-  ) {}
+    private loadingService: LoadingService,
+    private notificationService: MainNotificationService
+  ) { }
 
   ngOnInit() {
     this.activatedRoute
@@ -41,7 +44,7 @@ export class BrowseSubstanceComponent implements OnInit {
     this.loadingService.setLoading(true);
     this.substanceService.getSubtanceDetails(this._searchTerm, true, this._facetParams).subscribe(pagingResponse => {
       this.substances = pagingResponse.content;
-      if (pagingResponse.facets && pagingResponse.facets.length > 0){
+      if (pagingResponse.facets && pagingResponse.facets.length > 0) {
         let sortedFacets = _.orderBy(pagingResponse.facets, facet => {
           let valuesTotal = 0;
           facet.values.forEach(value => {
@@ -54,7 +57,7 @@ export class BrowseSubstanceComponent implements OnInit {
       } else {
         this.facets = [];
       }
-      
+
       this.substances.forEach((substance: SubstanceDetail) => {
         if (substance.codes && substance.codes.length > 0) {
           substance.codeSystemNames = [];
@@ -72,7 +75,13 @@ export class BrowseSubstanceComponent implements OnInit {
       this.loadingService.setLoading(false);
     }, error => {
       console.log(error);
+      const notification: AppNotification = {
+        message: 'There was an error trying to retrieve substances. Please refresh and try again.',
+        type: NotificationType.error,
+        milisecondsToShow: 6000
+      };
       this.loadingService.setLoading(false);
+      this.notificationService.setNotification(notification);
     });
   }
 
@@ -84,7 +93,7 @@ export class BrowseSubstanceComponent implements OnInit {
   }
 
   updateFacetSelection(event: MatCheckboxChange, facetName: string, facetValueLabel: string): void {
-    
+
     if (this._facetParams[facetName] == null) {
       this._facetParams[facetName] = {};
     }
@@ -92,15 +101,15 @@ export class BrowseSubstanceComponent implements OnInit {
     this._facetParams[facetName][facetValueLabel] = event.checked;
 
     let facetHasSelectedValue = false;
-    
-    const facetValueKeys = Object.keys(this._facetParams[facetName])
+
+    const facetValueKeys = Object.keys(this._facetParams[facetName]);
     for (let i = 0; i < facetValueKeys.length; i++) {
       if (this._facetParams[facetName][facetValueKeys[i]]) {
         facetHasSelectedValue = true;
         break;
       }
     }
-    
+
     if (!facetHasSelectedValue) {
       this._facetParams[facetName] = undefined;
     }

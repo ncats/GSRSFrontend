@@ -1,10 +1,19 @@
+::ng-deep .mat-drawer-container.mat-sidenav-container {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+}
+
 mat-sidenav {
     width: 315px;
     padding: 15px 10px;
 }
 
 .mat-drawer-content {
-    background-color: white;
+    background-color: transparent;
 }
 
 
@@ -93,4 +102,11 @@ mat-sidenav {
 
 .structure-container {
     padding-right: 10px;
+}
+
+.mat-drawer {
+
+    &.mat-drawer-side {
+        background-color: transparent;
+    }
 }

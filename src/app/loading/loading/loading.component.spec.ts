@@ -13,7 +13,7 @@ describe('LoadingComponent', () => {
 
     loadingServiceStub = {
       loadingEvent: new Subject()
-    }
+    };
 
     TestBed.configureTestingModule({
       imports: [

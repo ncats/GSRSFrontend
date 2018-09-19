@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
+import { map } from '../../../node_modules/rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { BrowseSubstanceComponent } from './browse-substance.component';
@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SubstanceListData } from '../../testing/substance-list-test-data';
 import { of, throwError } from 'rxjs';
 import { asyncData, asyncError } from '../../testing/async-observable-helpers';
+import { MainNotificationService } from '../main-notification/main-notification.service';
 
 describe('BrowseSubstanceComponent', () => {
   let component: BrowseSubstanceComponent;
@@ -24,11 +25,13 @@ describe('BrowseSubstanceComponent', () => {
   let getSubtanceDetailsSpy: jasmine.Spy;
 
   beforeEach(async(() => {
-
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
     activatedRouteStub = new ActivatedRouteStub({ 'search_term': '' });
 
     const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['getSubtanceDetails']);
     getSubtanceDetailsSpy = substanceServiceSpy.getSubtanceDetails.and.returnValue(asyncData(SubstanceListData));
+
+    const notificationServiceSpy = jasmine.createSpyObj('MainNotificationService', ['setNotification']);
 
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
     const loadingServiceSpy = jasmine.createSpyObj('LoadingService', ['setLoading']);
@@ -51,7 +54,8 @@ describe('BrowseSubstanceComponent', () => {
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: SubstanceService, useValue: substanceServiceSpy },
         { provide: ConfigService, useValue: configServiceSpy },
-        { provide: LoadingService, useValue: loadingServiceSpy }
+        { provide: LoadingService, useValue: loadingServiceSpy },
+        { provide: MainNotificationService, useValue: notificationServiceSpy }
       ]
     })
       .compileComponents();
@@ -77,7 +81,7 @@ describe('BrowseSubstanceComponent', () => {
   it('OnInit, searchTerm should be initialized and getSubstanceDetails should be called', () => {
     fixture.detectChanges();
     expect(component.searchTerm).toBeDefined('searchTerm should be initialized');
-    expect(getSubtanceDetailsSpy.calls.any()).toBe(true, 'getSubtanceDetails called');
+    expect(getSubtanceDetailsSpy.calls.any()).toBe(true, 'should call getSubtanceDetails function');
   });
 
   describe('after OnInit called', () => {
@@ -116,6 +120,34 @@ describe('BrowseSubstanceComponent', () => {
           expect(isInOrder).toBe(true, 'facets should be in order');
         } else {
           expect(facetElements.length).toEqual(0, 'facets should not be displayed');
+        }
+      });
+    }));
+
+    it('when facet value selected, a new API call for substances should be made passing value as query parameter', async(() => {
+      fixture.whenStable().then(() => { // wait for async getSubstanceDetails
+        fixture.detectChanges();
+        const facetElements: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('mat-expansion-panel');
+        if (facetElements && facetElements.length > 0) {
+
+          const maxFacetIndex = facetElements.length - 1;
+          const minFacetIndex = 0;
+          const randomFacetIndex = Math.floor(Math.random() * (maxFacetIndex - minFacetIndex + 1)) + 0;
+
+          const facetValueElements = facetElements.item(randomFacetIndex).querySelectorAll('.facet-value');
+          const maxFacetValueIndex = facetValueElements.length - 1;
+          const minFacetValueIndex = 0;
+          const randomFacetValueIndex = Math.floor(Math.random() * (maxFacetValueIndex - minFacetValueIndex + 1)) + 0;
+
+          const valueCheckbox: HTMLElement = facetValueElements.item(randomFacetValueIndex).querySelector('.mat-checkbox-inner-container');
+          valueCheckbox.click();
+          fixture.detectChanges();
+          const facetName = facetElements.item(randomFacetIndex).querySelector('mat-panel-title').innerHTML.trim();
+          const facetValueLabel = facetValueElements.item(randomFacetValueIndex).querySelector('.facet-value-label').innerHTML.trim();
+
+          expect(component.facetParams[facetName][facetValueLabel])
+            .toBe(true, 'should add facet value as a parameter to getSubtanceDetails call');
+          expect(getSubtanceDetailsSpy.calls.count()).toBe(2, 'should call getSubtanceDetails function for the second time');
         }
       });
     }));
@@ -194,7 +226,7 @@ describe('BrowseSubstanceComponent', () => {
 
             if (component.substances[index].relationships && component.substances[index].relationships.length) {
               const substanceRelationshipsElement: HTMLElement = substanceElement.querySelector('.substance-relationships');
-              const relationshipsCount = substanceRelationshipsElement.querySelector('.mat-badge-content').innerHTML;
+              const relationshipsCount: string = substanceRelationshipsElement.querySelector('.mat-badge-content').innerHTML;
               expect(Number(relationshipsCount))
                 .toBe(
                   component.substances[index].relationships.length,
