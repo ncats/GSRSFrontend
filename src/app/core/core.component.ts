@@ -35,21 +35,21 @@ export class CoreComponent implements OnInit {
     }, error => {
       console.log(error);
     });
-    
+
     this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
 
     this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {
         this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
       }
-    })
+    });
   }
 
   getMainPathSegmentFromUrl(url: string): string {
     const path = url.split('?')[0];
     const mainPathPart = path.split('/')[0];
     return mainPathPart;
-  } 
+  }
 
   substanceSearchOptionSelected(event: MatAutocompleteSelectedEvent) {
     this.navigateToSearchResults(event.option.value);
@@ -62,7 +62,7 @@ export class CoreComponent implements OnInit {
 
   navigateToSearchResults(searchTerm: string) {
 
-    let navigationExtras: NavigationExtras = {
+    const navigationExtras: NavigationExtras = {
       queryParams: searchTerm ? { 'search_term': searchTerm } : null
     };
 

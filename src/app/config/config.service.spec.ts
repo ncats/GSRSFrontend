@@ -24,7 +24,11 @@ describe('ConfigService', () => {
     expect(configService).toBeTruthy();
   });
 
-  it('should get config data on load call', () => {
-    const testData: Config = { apiBaseUrl: 'https://test.api' };
+  it('should get config data after load call', () => {
+    let configData: Config;
+    configService.load().then(() => {
+      configData = configService.configData;
+      expect(configData.apiBaseUrl).toBeTruthy('should return a config object with an apiBaseUrl property');
+    });
   });
 });
