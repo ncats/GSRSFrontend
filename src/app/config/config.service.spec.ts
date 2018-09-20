@@ -2,6 +2,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ConfigService } from './config.service';
+import { Config } from './config.model';
 
 describe('ConfigService', () => {
 
@@ -21,5 +22,9 @@ describe('ConfigService', () => {
 
   it('should be created', () => {
     expect(configService).toBeTruthy();
+  });
+
+  it('should get config data on load call', () => {
+    const testData: Config = { apiBaseUrl: 'https://test.api' };
   });
 });

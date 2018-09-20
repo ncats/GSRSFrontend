@@ -17,6 +17,7 @@ import { SubstanceListData } from '../../testing/substance-list-test-data';
 import { of, throwError } from 'rxjs';
 import { asyncData, asyncError } from '../../testing/async-observable-helpers';
 import { MainNotificationService } from '../main-notification/main-notification.service';
+import { decodeHtml } from '../utils/decode-html';
 
 describe('BrowseSubstanceComponent', () => {
   let component: BrowseSubstanceComponent;
@@ -26,7 +27,7 @@ describe('BrowseSubstanceComponent', () => {
   let setNotificationSpy: jasmine.Spy;
 
   beforeEach(async(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     activatedRouteStub = new ActivatedRouteStub({ 'search_term': '' });
 
     const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['getSubtanceDetails']);
@@ -36,6 +37,7 @@ describe('BrowseSubstanceComponent', () => {
     setNotificationSpy = notificationServiceSpy.setNotification.and.returnValue(null);
 
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+
     const loadingServiceSpy = jasmine.createSpyObj('LoadingService', ['setLoading']);
 
     TestBed.configureTestingModule({
@@ -144,9 +146,12 @@ describe('BrowseSubstanceComponent', () => {
           const valueCheckbox: HTMLElement = facetValueElements.item(randomFacetValueIndex).querySelector('.mat-checkbox-inner-container');
           valueCheckbox.click();
           fixture.detectChanges();
-          const facetName = facetElements.item(randomFacetIndex).querySelector('mat-panel-title').innerHTML.trim();
-          const facetValueLabel = facetValueElements.item(randomFacetValueIndex).querySelector('.facet-value-label').innerHTML.trim();
-
+          const facetName = decodeHtml(
+            facetElements.item(randomFacetIndex).querySelector('mat-panel-title').innerHTML.trim()
+          );
+          const facetValueLabel = decodeHtml(
+            facetValueElements.item(randomFacetValueIndex).querySelector('.facet-value-label').innerHTML.trim()
+          );
           expect(component.facetParams[facetName][facetValueLabel])
             .toBe(true, 'should add facet value as a parameter to getSubtanceDetails call');
           expect(getSubtanceDetailsSpy.calls.count()).toBe(2, 'should call getSubtanceDetails function for the second time');
@@ -209,7 +214,7 @@ describe('BrowseSubstanceComponent', () => {
                 );
               Array.from(substanceCodeSystemElements).forEach((substanceCodeSystemElement: HTMLElement) => {
 
-                const label = substanceCodeSystemElement.querySelector('label').innerHTML;
+                const label = decodeHtml(substanceCodeSystemElement.querySelector('label').innerHTML);
                 expect(label).toBeTruthy('substance codeSystem should have a label(property)');
 
                 const substanceCodeSystemValueElements: NodeListOf<HTMLElement> =
