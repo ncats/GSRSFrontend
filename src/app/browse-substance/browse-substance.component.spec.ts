@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { BrowseSubstanceComponent } from './browse-substance.component';
@@ -23,6 +23,7 @@ describe('BrowseSubstanceComponent', () => {
   let fixture: ComponentFixture<BrowseSubstanceComponent>;
   let activatedRouteStub: Partial<ActivatedRoute>;
   let getSubtanceDetailsSpy: jasmine.Spy;
+  let setNotificationSpy: jasmine.Spy;
 
   beforeEach(async(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
@@ -32,6 +33,7 @@ describe('BrowseSubstanceComponent', () => {
     getSubtanceDetailsSpy = substanceServiceSpy.getSubtanceDetails.and.returnValue(asyncData(SubstanceListData));
 
     const notificationServiceSpy = jasmine.createSpyObj('MainNotificationService', ['setNotification']);
+    setNotificationSpy = notificationServiceSpy.setNotification.and.returnValue(null);
 
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
     const loadingServiceSpy = jasmine.createSpyObj('LoadingService', ['setLoading']);
@@ -238,6 +240,16 @@ describe('BrowseSubstanceComponent', () => {
         } else {
           expect(substanceElements.length).toEqual(0, 'substances should not be displayed');
         }
+      });
+    }));
+
+    it('should make the setNotification call when SubstanceService fails', async(() => {
+      fixture.whenStable().then(() => { // wait for async getSubstanceDetails
+        getSubtanceDetailsSpy.and.returnValue(
+          throwError('SubstanceService test failure'));
+
+        fixture.detectChanges();
+        expect(setNotificationSpy.calls.mostRecent).toBeTruthy('should make a call to set notification');
       });
     }));
   });
