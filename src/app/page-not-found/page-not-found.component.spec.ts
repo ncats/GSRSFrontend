@@ -6,7 +6,7 @@ import { RouterStub } from '../../testing/router-stub';
 describe('PageNotFoundComponent', () => {
   let component: PageNotFoundComponent;
   let fixture: ComponentFixture<PageNotFoundComponent>;
-  let routerStub: Partial<Router>;
+  let routerStub: RouterStub;
 
   beforeEach(async(() => {
 

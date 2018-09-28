@@ -19,4 +19,13 @@ export class RouterStub {
         });
     }
 
+    fireNavigationEndEvent(url: string): void {
+        const navigationEnd = new NavigationEnd(0, url, '');
+        this.subject.next(navigationEnd);
+    }
+
+    setSnapshotUrl(url: string): void {
+        this.routerState.snapshot.url = url;
+    }
+
 }
