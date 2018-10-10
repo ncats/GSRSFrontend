@@ -53,6 +53,7 @@ export class CoreComponent implements OnInit {
   }
 
   substanceSearchOptionSelected(event: MatAutocompleteSelectedEvent) {
+    this.mainPathSegment = 'testing-this';
     this.navigateToSearchResults(event.option.value);
   }
 

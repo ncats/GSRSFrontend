@@ -1,7 +1,7 @@
-import { async, ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA} from '@angular/core';
 import { Router } from '@angular/router';
-import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CoreComponent } from './core.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -16,12 +16,15 @@ import { RouterLinkDirectiveStub } from '../../testing/router-link-directive-stu
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { asyncData, asyncError } from '../../testing/async-observable-helpers';
 import { SubstanceData } from '../../testing/substance-suggestion-test-data';
+import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import { tick } from '../../../node_modules/@angular/core/src/render3';
 
 describe('CoreComponent', () => {
   let component: CoreComponent;
   let fixture: ComponentFixture<CoreComponent>;
   let routerStub: RouterStub;
   let getStructureSearchSuggestionsSpy: jasmine.Spy;
+  let overlayContainerElement;
 
   beforeEach(async(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
@@ -54,6 +57,10 @@ describe('CoreComponent', () => {
       ]
     })
     .compileComponents();
+
+    inject([OverlayContainer], (oc: OverlayContainer) => {
+      overlayContainerElement = oc.getContainerElement();
+    })();
   }));
 
   beforeEach(() => {
@@ -88,40 +95,52 @@ describe('CoreComponent', () => {
       });
     }));
 
-    it('should get search suggestions on search value changes and show them', async(() => {
-      component.searchControl.setValue('test');
+    describe('substance search', () => {
+      let suggestionElements: NodeListOf<HTMLElement>;
 
-      // can't test changes on the view triggering lookahead because of known bug https://github.com/angular/angular/issues/7549
-      // const searchInputElement: HTMLInputElement = fixture.nativeElement.querySelector('.search');
-      // searchInputElement.focus();
-      // searchInputElement.dispatchEvent(new Event('focus'));
-      // searchInputElement.dispatchEvent(new Event('focusin'));
-      // searchInputElement.value = 'test';
-      // searchInputElement.dispatchEvent(new Event('input'));
-      // fixture.detectChanges();
-
-      fixture.whenStable().then(() => {
-        setTimeout(() => {
-          fixture.detectChanges();
-          expect(getStructureSearchSuggestionsSpy.calls.any()).toBeTruthy('should call API for search suggestions');
-
-          // autocomplete is not tiggered will need to look into this in the future
-          // const suggestionElements: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('mat-option');
-          // console.log(suggestionElements);
-          // expect(suggestionElements.length).toBeGreaterThan(0, 'search suggestions should show');
-        }, 501);
-      });
-    }));
-
-    it('should get search suggestions on search value changes', async(() => {
-      fixture.detectChanges();
-      component.searchControl.setValue('test');
-      fixture.whenStable().then(() => {
+      beforeEach(() => {
+        // component.searchControl.setValue('test');
+        // can't test changes on the view triggering lookahead because of known bug https://github.com/angular/angular/issues/7549
+        const searchInputElement: HTMLInputElement = fixture.nativeElement.querySelector('.search');
+        searchInputElement.focus();
+        searchInputElement.dispatchEvent(new Event('focusin'));
+        searchInputElement.value = 'test';
+        searchInputElement.dispatchEvent(new Event('input'));
         fixture.detectChanges();
-        setTimeout(() => {
-          expect(getStructureSearchSuggestionsSpy.calls.any()).toBeTruthy('should call API for search suggestions');
-        }, 501);
+
+        fixture.whenStable().then(() => {
+          setTimeout(() => {
+            fixture.detectChanges();
+            suggestionElements = overlayContainerElement.querySelectorAll('mat-option');
+          }, 501);
+        });
+
       });
-    }));
+
+      it('should get search suggestions on search value changes and show them', async(() => {
+        fixture.whenStable().then(() => {
+          setTimeout(() => {
+            expect(getStructureSearchSuggestionsSpy.calls.any()).toBeTruthy('should call API for search suggestions');
+            expect(suggestionElements.length).toBeGreaterThan(0, 'search suggestions should show');
+          }, 502);
+        });
+      }));
+
+      it('should click call on suggestion selected event handler', async(() => {
+        fixture.whenStable().then(() => {
+          setTimeout(() => {
+            const substanceSearchOptionSelectedSpy = spyOn<CoreComponent>(component, 'substanceSearchOptionSelected');
+            const suggestionElement: HTMLElement = suggestionElements[1];
+            suggestionElement.click();
+            fixture.detectChanges();
+            fixture.whenStable().then(() => {
+              console.log(component.mainPathSegment);
+              expect(substanceSearchOptionSelectedSpy).toHaveBeenCalled();
+            });
+          }, 502);
+        });
+      }));
+
+    });
   });
 });
