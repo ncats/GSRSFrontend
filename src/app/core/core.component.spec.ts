@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA} from '@angular/core';
-import { Router } from '@angular/router';
+import { NO_ERRORS_SCHEMA, NgZone } from '@angular/core';
+import { Router, NavigationExtras } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CoreComponent } from './core.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -9,15 +9,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { LoadingModule } from '../loading/loading.module';
 import { UtilsService } from '../utils/utils.service';
 import { RouterStub } from '../../testing/router-stub';
 import { RouterLinkDirectiveStub } from '../../testing/router-link-directive-stub';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { asyncData, asyncError } from '../../testing/async-observable-helpers';
+import { asyncData } from '../../testing/async-observable-helpers';
 import { SubstanceData } from '../../testing/substance-suggestion-test-data';
-import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
-import { tick } from '../../../node_modules/@angular/core/src/render3';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 describe('CoreComponent', () => {
   let component: CoreComponent;
@@ -25,6 +25,7 @@ describe('CoreComponent', () => {
   let routerStub: RouterStub;
   let getStructureSearchSuggestionsSpy: jasmine.Spy;
   let overlayContainerElement;
+  let zone: NgZone;
 
   beforeEach(async(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
@@ -53,7 +54,8 @@ describe('CoreComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: UtilsService, useValue: utilsServiceSpy },
-        { provide: Router, useValue: routerStub }
+        { provide: Router, useValue: routerStub },
+        { provide: NgZone, useFactory: () => zone = new NgZone({ enableLongStackTrace: false}) }
       ]
     })
     .compileComponents();
@@ -99,8 +101,9 @@ describe('CoreComponent', () => {
       let suggestionElements: NodeListOf<HTMLElement>;
 
       beforeEach(() => {
-        // component.searchControl.setValue('test');
-        // can't test changes on the view triggering lookahead because of known bug https://github.com/angular/angular/issues/7549
+        // lots of examples for testing autocomplete:
+        // https://github.com/angular/material2/blob/master/src/lib/autocomplete/autocomplete.spec.ts
+
         const searchInputElement: HTMLInputElement = fixture.nativeElement.querySelector('.search');
         searchInputElement.focus();
         searchInputElement.dispatchEvent(new Event('focusin'));
@@ -126,16 +129,18 @@ describe('CoreComponent', () => {
         });
       }));
 
-      it('should click call on suggestion selected event handler', async(() => {
+      it('when search suggestion is clicked/selected, should call function and route to browse page with value as parameter', async(() => {
         fixture.whenStable().then(() => {
           setTimeout(() => {
-            const substanceSearchOptionSelectedSpy = spyOn<CoreComponent>(component, 'substanceSearchOptionSelected');
-            const suggestionElement: HTMLElement = suggestionElements[1];
-            suggestionElement.click();
-            fixture.detectChanges();
-            fixture.whenStable().then(() => {
-              console.log(component.mainPathSegment);
-              expect(substanceSearchOptionSelectedSpy).toHaveBeenCalled();
+            zone.onStable.emit(null);
+            setTimeout(() => {
+              const substanceSearchOptionSelectedSpy = spyOn<CoreComponent>(component, 'substanceSearchOptionSelected');
+              suggestionElements[0].click();
+              expect(substanceSearchOptionSelectedSpy).toHaveBeenCalledTimes(1);
+              fixture.detectChanges();
+              expect(routerStub.navigate).toHaveBeenCalledTimes(1);
+              const navigationExtras = routerStub.navigate.calls.mostRecent().args[1] as NavigationExtras;
+              expect(navigationExtras.queryParams['search_term']).toBe('BUTYRIC ACID, 4-(P-ARSENOSOPHENYL)-');
             });
           }, 502);
         });
