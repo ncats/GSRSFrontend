@@ -11,7 +11,7 @@ export class MainNotificationComponent implements OnInit {
   @ViewChild('notification') appNotification: { nativeElement: HTMLElement };
   private notificationTimer: any;
   private notifcationType: NotificationType;
-  public notiricationMessage: string;
+  public notificationMessage: string;
 
   constructor(
     private notificationService: MainNotificationService
@@ -26,7 +26,7 @@ export class MainNotificationComponent implements OnInit {
 
   setNotification(notification: AppNotification): void {
     this.notifcationType = notification.type || NotificationType.default;
-    this.notiricationMessage = notification.message;
+    this.notificationMessage = notification.message;
     this.appNotification.nativeElement.classList.remove('hidden');
     this.appNotification.nativeElement.classList.add(NotificationType[this.notifcationType]);
     this.appNotification.nativeElement.classList.add('showing');

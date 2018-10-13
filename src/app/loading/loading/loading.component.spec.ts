@@ -7,12 +7,15 @@ import { LoadingComponent } from './loading.component';
 describe('LoadingComponent', () => {
   let component: LoadingComponent;
   let fixture: ComponentFixture<LoadingComponent>;
-  let loadingServiceStub: Partial<LoadingService>;
+  let loadingServiceStub: Partial<LoadingService> | any;
 
   beforeEach(async(() => {
 
     loadingServiceStub = {
-      loadingEvent: new Subject()
+      loadingEvent: new Subject(),
+      fireLoadingEvent(event: boolean) {
+        this.loadingEvent.next(event);
+      }
     };
 
     TestBed.configureTestingModule({
@@ -38,4 +41,15 @@ describe('LoadingComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should toggle loading component when event is recevied from loading service', async(() => {
+    loadingServiceStub.fireLoadingEvent(true);
+    fixture.detectChanges();
+    let loadingElement: HTMLElement = fixture.nativeElement.querySelector('mat-progress-bar');
+    expect(loadingElement).toBeTruthy('should show loading element');
+    loadingServiceStub.fireLoadingEvent(false);
+    fixture.detectChanges();
+    loadingElement = fixture.nativeElement.querySelector('mat-progress-bar');
+    expect(loadingElement).toBeFalsy('should hide loading element');
+  }));
 });
