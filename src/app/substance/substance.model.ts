@@ -153,8 +153,8 @@ export interface SubstanceStructure extends SubstanceBase {
     mwt: number;
     count: number;
     hash: string;
-    _self: string;
-    self: string;
+    _self?: string;
+    self?: string;
     stereochemistry: string;
     references: Array<string>;
     _properties?: CountRef;
