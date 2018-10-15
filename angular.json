@@ -32,7 +32,10 @@
               },
               "src/styles/main.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/libraries/Scilligence.JSDraw2.Pro.js",
+              "src/libraries/Scilligence.JSDraw2.Resources.js"
+            ]
           },
           "configurations": {
             "gsrs.prod": {

@@ -28,6 +28,7 @@ import { configServiceFactory } from './config/config.factory';
 import { ConfigService } from './config/config.service';
 import { LoadingModule } from './loading/loading.module';
 import { MainNotificationModule } from './main-notification/main-notification.module';
+import { StructureSearchComponent } from './structure-search/structure-search.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { MainNotificationModule } from './main-notification/main-notification.mo
     PageNotFoundComponent,
     CoreComponent,
     HomeComponent,
-    BrowseSubstanceComponent
+    BrowseSubstanceComponent,
+    StructureSearchComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
