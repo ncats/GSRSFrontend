@@ -367,6 +367,46 @@
           }
         }
       }
+    },
+    "jsdraw-wrapper": {
+      "root": "projects/jsdraw-wrapper",
+      "sourceRoot": "projects/jsdraw-wrapper/src",
+      "projectType": "library",
+      "prefix": "ncats",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/jsdraw-wrapper/tsconfig.lib.json",
+            "project": "projects/jsdraw-wrapper/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/jsdraw-wrapper/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/jsdraw-wrapper/src/test.ts",
+            "tsConfig": "projects/jsdraw-wrapper/tsconfig.spec.json",
+            "karmaConfig": "projects/jsdraw-wrapper/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/jsdraw-wrapper/tsconfig.lib.json",
+              "projects/jsdraw-wrapper/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "gsrs-client"
