@@ -410,6 +410,46 @@
           }
         }
       }
+    },
+    "ketcher-wrapper": {
+      "root": "projects/ketcher-wrapper",
+      "sourceRoot": "projects/ketcher-wrapper/src",
+      "projectType": "library",
+      "prefix": "ncats",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ketcher-wrapper/tsconfig.lib.json",
+            "project": "projects/ketcher-wrapper/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ketcher-wrapper/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ketcher-wrapper/src/test.ts",
+            "tsConfig": "projects/ketcher-wrapper/tsconfig.spec.json",
+            "karmaConfig": "projects/ketcher-wrapper/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ketcher-wrapper/tsconfig.lib.json",
+              "projects/ketcher-wrapper/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "gsrs-client"

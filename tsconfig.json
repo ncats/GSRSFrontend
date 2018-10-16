@@ -23,6 +23,12 @@
       ],
       "jsdraw-wrapper/*": [
         "dist/jsdraw-wrapper/*"
+      ],
+      "ketcher-wrapper": [
+        "dist/ketcher-wrapper"
+      ],
+      "ketcher-wrapper/*": [
+        "dist/ketcher-wrapper/*"
       ]
     }
   }
