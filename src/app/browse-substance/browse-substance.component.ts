@@ -18,6 +18,7 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 })
 export class BrowseSubstanceComponent implements OnInit {
   private _searchTerm: string;
+  private _structureSearchTerm: string;
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
@@ -36,13 +37,15 @@ export class BrowseSubstanceComponent implements OnInit {
       .queryParamMap
       .subscribe(params => {
         this._searchTerm = params.get('search_term') || '';
+        this._structureSearchTerm = params.get('structure_search_term') || '';
         this.searchSubstances();
       });
   }
 
   searchSubstances() {
     this.loadingService.setLoading(true);
-    this.substanceService.getSubtanceDetails(this._searchTerm, true, this._facetParams).subscribe(pagingResponse => {
+    this.substanceService.getSubtanceDetails(this._searchTerm, this._structureSearchTerm, true, this._facetParams)
+    .subscribe(pagingResponse => {
       this.substances = pagingResponse.content;
       if (pagingResponse.facets && pagingResponse.facets.length > 0) {
         let sortedFacets = _.orderBy(pagingResponse.facets, facet => {

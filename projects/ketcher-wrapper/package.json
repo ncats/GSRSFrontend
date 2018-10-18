@@ -3,26 +3,6 @@
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-    "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
-    "babel-polyfill": "6.23.0",
-    "classnames": "2.2.5",
-    "common-js-helpers": "0.4.2",
-    "filesaver.js": "0.2.0",
-    "font-face-observer": "1.0.0",
-    "jsonschema": "1.1.1",
-    "lodash": "4.17.4",
-    "normalize.css": "4.2.0",
-    "preact": "8.1.0",
-    "preact-redux": "2.0.1",
-    "query-string": "2.4.2",
-    "raphael": "2.2.7",
-    "redux": "3.6.0",
-    "redux-logger": "3.0.6",
-    "redux-thunk": "2.2.0",
-    "reselect": "3.0.1",
-    "resemblejs": "2.2.3",
-    "subscription": "3.0.0",
-    "w3c-keyname": "1.1.8",
-    "whatwg-fetch": "2.0.3"
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
   }
 }

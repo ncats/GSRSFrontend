@@ -19,6 +19,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSliderModule } from '@angular/material/slider';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
@@ -63,7 +65,9 @@ import { KetcherWrapperModule } from 'ketcher-wrapper';
     MatCheckboxModule,
     LoadingModule,
     MainNotificationModule,
-    KetcherWrapperModule
+    KetcherWrapperModule,
+    MatSelectModule,
+    MatSliderModule
   ],
   providers: [
     ConfigService,

@@ -1,3 +1,31 @@
-<mat-card>
-    <ncats-ketcher-wrapper></ncats-ketcher-wrapper>
-</mat-card>
+<div class="content-container">
+  <mat-card>
+    <div class="editor-container">
+      <ncats-ketcher-wrapper ketcherFilePath="/assets/ketcher/ketcher.html" (ketcherOnLoad)="ketcherOnLoad($event)">
+      </ncats-ketcher-wrapper>
+    </div>
+    <div class="search-actions">
+      <div>
+        <mat-form-field>
+          <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)">
+            <mat-option value="substructure">
+              Substructure
+            </mat-option>
+            <mat-option value="similarity">
+              Similarity
+            </mat-option>
+            <mat-option value="exact">
+              Exact
+            </mat-option>
+            <mat-option value="flex">
+              Flex
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="search-button-container">
+        <button mat-raised-button color="primary" (click)="search()">Search</button>
+      </div>
+    </div>
+  </mat-card>
+</div>
