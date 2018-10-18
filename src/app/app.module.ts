@@ -19,6 +19,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
@@ -59,7 +61,9 @@ import { MainNotificationModule } from './main-notification/main-notification.mo
     MatExpansionModule,
     MatCheckboxModule,
     LoadingModule,
-    MainNotificationModule
+    MainNotificationModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [
     ConfigService,

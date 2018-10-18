@@ -21,11 +21,13 @@ export class SubstanceService extends BaseHttpService {
   getSubtanceDetails(
     searchTerm?: string,
     getFacets?: boolean,
+    pageSize?: number,
     facets?: {
       [facetName: string]: {
         [facetValueLabel: string]: boolean
       }
-    }
+    },
+    skip?: number
   ): Observable<PagingResponse<SubstanceDetail>> {
 
     let params = new HttpParams();
@@ -33,6 +35,14 @@ export class SubstanceService extends BaseHttpService {
 
     if (searchTerm) {
       params = params.append('q', searchTerm);
+    }
+
+    if (skip) {
+      params = params.append('skip', skip.toString());
+    }
+
+    if (pageSize) {
+      params = params.append('top', pageSize.toString());
     }
 
     let url = this.apiBaseUrl + 'substances/';

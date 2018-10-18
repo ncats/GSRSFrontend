@@ -10,6 +10,9 @@ import { LoadingService } from '../loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
+import { PageEvent } from '@angular/material';
+import { ViewChild } from '@angular/core';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
 
 @Component({
   selector: 'app-browse-substance',
@@ -21,6 +24,16 @@ export class BrowseSubstanceComponent implements OnInit {
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
+  pageEvent: PageEvent;
+  pageIndex: number;
+  pageSize: number;
+  length: number;
+  skip: number;
+  paginator: MatPaginator;
+  // pageSizeOptions: [5, 10, 50, 100];
+  @ViewChild(MatPaginator) set appBacon(paginator: MatPaginator) {
+    this.paginator = paginator;
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -32,17 +45,32 @@ export class BrowseSubstanceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.skip = 0;
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
         this._searchTerm = params.get('search_term') || '';
         this.searchSubstances();
       });
+
+  }
+
+  changePage() {
+    console.log(this.paginator);
+    this.pageSize = this.paginator.pageSize;
+    this.searchSubstances();
+    this.pageIndex = this.paginator.pageIndex;
+    // console.log(this.pageIndex);
   }
 
   searchSubstances() {
     this.loadingService.setLoading(true);
-    this.substanceService.getSubtanceDetails(this._searchTerm, true, this._facetParams).subscribe(pagingResponse => {
+   // let skip = (this.pageIndex * this.pageSize);
+    let skip = 0;
+    this.substanceService.getSubtanceDetails(this._searchTerm, true, this.pageSize, this._facetParams, skip).subscribe(pagingResponse => {
+      this.length = pagingResponse.total;
       this.substances = pagingResponse.content;
       if (pagingResponse.facets && pagingResponse.facets.length > 0) {
         let sortedFacets = _.orderBy(pagingResponse.facets, facet => {
@@ -113,7 +141,7 @@ export class BrowseSubstanceComponent implements OnInit {
     if (!facetHasSelectedValue) {
       this._facetParams[facetName] = undefined;
     }
-
+    this.pageIndex = 0;
     this.searchSubstances();
 
   }

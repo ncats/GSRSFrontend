@@ -24,8 +24,18 @@
     
   </mat-sidenav>
   <mat-sidenav-content>
+
     <div class="side-nav-content">
+      <mat-paginator #paginator
+        [length]= "length"
+        [pageIndex]="pageIndex"
+        [pageSize]= "pageSize"
+        [pageSizeOptions]= "[5, 10, 50, 100]"
+        (page)="pageEvent = changePage($event)"
+      >
+      </mat-paginator>
       <mat-card *ngFor="let substance of substances">
+
         <mat-card-title>
           <a class="substance-name">
             {{substance._name}}
@@ -35,6 +45,7 @@
             {{substance.approvalID}}
           </a>
         </mat-card-title>
+
         <mat-card-content>
           <div class="substance-content">
             <div class="structure-container" *ngIf="substance.structure">
