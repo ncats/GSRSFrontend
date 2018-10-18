@@ -17,8 +17,10 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
   styleUrls: ['./browse-substance.component.scss']
 })
 export class BrowseSubstanceComponent implements OnInit {
-  private _searchTerm: string;
-  private _structureSearchTerm: string;
+  private _searchTerm?: string;
+  private _structureSearchTerm?: string;
+  private _structureSearchType?: string;
+  private _structureSearchCutoff?: number;
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
@@ -38,13 +40,21 @@ export class BrowseSubstanceComponent implements OnInit {
       .subscribe(params => {
         this._searchTerm = params.get('search_term') || '';
         this._structureSearchTerm = params.get('structure_search_term') || '';
+        this._structureSearchType = params.get('structure_search_type') || '';
+        this._structureSearchCutoff = Number(params.get('structure_search_cutoff')) || 0;
         this.searchSubstances();
       });
   }
 
   searchSubstances() {
     this.loadingService.setLoading(true);
-    this.substanceService.getSubtanceDetails(this._searchTerm, this._structureSearchTerm, true, this._facetParams)
+    this.substanceService.getSubtanceDetails(
+      this._searchTerm,
+      this._structureSearchTerm,
+      this._structureSearchType,
+      this._structureSearchCutoff,
+      true,
+      this._facetParams)
     .subscribe(pagingResponse => {
       this.substances = pagingResponse.content;
       if (pagingResponse.facets && pagingResponse.facets.length > 0) {
@@ -75,7 +85,6 @@ export class BrowseSubstanceComponent implements OnInit {
           });
         }
       });
-      this.loadingService.setLoading(false);
     }, error => {
       console.log(error);
       const notification: AppNotification = {
@@ -85,6 +94,8 @@ export class BrowseSubstanceComponent implements OnInit {
       };
       this.loadingService.setLoading(false);
       this.notificationService.setNotification(notification);
+    }, () => {
+      this.loadingService.setLoading(false);
     });
   }
 

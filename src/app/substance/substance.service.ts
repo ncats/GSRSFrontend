@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
-import { switchMap } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,6 +22,8 @@ export class SubstanceService extends BaseHttpService {
   getSubtanceDetails(
     searchTerm?: string,
     structureSearchTerm?: string,
+    structureSearchType?: string,
+    structureSearchCutoff?: number,
     getFacets?: boolean,
     facets?: {
       [facetName: string]: {
@@ -30,48 +32,93 @@ export class SubstanceService extends BaseHttpService {
     }
   ): Observable<PagingResponse<SubstanceDetail>> {
 
-    let params = new HttpParams();
-    params = params.append('view', 'full');
+    return new Observable(observer => {
+      let params = new HttpParams();
+      params = params.append('view', 'full');
 
-    let url = this.apiBaseUrl;
+      let url = this.apiBaseUrl;
 
-    let structureFacetsKey;
+      let structureFacetsKey;
 
-    if (searchTerm) {
-      url += 'substances/search';
-      params = params.append('q', searchTerm);
-    } else if (structureSearchTerm) {
-      structureFacetsKey = this.getStructureFacetsKey(structureSearchTerm, facets);
-      if (this.structureSearchKeys[structureFacetsKey]) {
-        url += `status(${this.structureSearchKeys[structureSearchTerm]})/results`;
-      } else {
-        params = params.append('q', structureSearchTerm);
-        url += 'substances/structureSearch';
-      }
-    } else if (getFacets) {
-      url += 'substances/search';
-    }
-
-    if (facets != null) {
-      params = this.processFacetParams(params, facets);
-    }
-
-    const options = {
-      params: params
-    };
-
-    return this.http.get<PagingResponse<SubstanceDetail>>(url, options).pipe(
-      switchMap((response: any) => {
-        if (response.results) {
-          const resultKey = response.key;
-          console.log(resultKey);
-          this.structureSearchKeys[structureFacetsKey] = resultKey;
-          return this.http.get<PagingResponse<SubstanceDetail>>(response['results']);
+      if (searchTerm) {
+        url += 'substances/search';
+        params = params.append('q', searchTerm);
+      } else if (structureSearchTerm) {
+        structureFacetsKey = this.getStructureSearchKey(structureSearchTerm, structureSearchType, structureSearchCutoff, facets);
+        if (this.structureSearchKeys[structureFacetsKey]) {
+          url += `status(${this.structureSearchKeys[structureSearchTerm]})/results`;
         } else {
-          return of(response);
+          params = params.append('q', structureSearchTerm);
+          if (structureSearchType) {
+            params = params.append('type', structureSearchType);
+            if (structureSearchType === 'similarity') {
+              structureSearchCutoff = structureSearchCutoff || 0;
+              params = params.append('cutoff', structureSearchCutoff.toString());
+            }
+          }
+          url += 'substances/structureSearch';
         }
-      })
-    );
+      } else if (getFacets) {
+        url += 'substances/search';
+      }
+
+      if (facets != null) {
+        params = this.processFacetParams(params, facets);
+      }
+
+      const options = {
+        params: params
+      };
+
+      this.http.get<any>(url, options).subscribe(
+        response => {
+          if (response.results) {
+            const resultKey = response.key;
+            this.structureSearchKeys[structureFacetsKey] = resultKey;
+            this.processStructureSearchResults(url, response, observer, resultKey, options);
+          } else {
+            observer.next(response);
+            observer.complete();
+          }
+        }, error => {
+          observer.error(error);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  private processStructureSearchResults(
+    url: string,
+    structureSearchResponse: any,
+    observer: Observer<PagingResponse<SubstanceDetail>>,
+    structureSearchKey: string,
+    options:  any): void {
+
+      this.getSubstanceStructureSearchResults(structureSearchKey, options).subscribe(response => {
+        observer.next(response);
+        if (!structureSearchResponse.finished) {
+          this.http.get<any>(url, options).subscribe(searchResponse => {
+            setTimeout(() => {
+              this.processStructureSearchResults(url, searchResponse, observer, structureSearchKey, options);
+            });
+          }, error => {
+            observer.error(error);
+            observer.complete();
+          });
+        } else {
+          observer.complete();
+        }
+      }, error => {
+        observer.error(error);
+        observer.complete();
+      });
+
+  }
+
+  private getSubstanceStructureSearchResults(structureSearchKey: string, options:  any): any {
+    const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
+    return this.http.get<PagingResponse<SubstanceDetail>>(url, options);
   }
 
   getSubstanceSummaries(
@@ -123,17 +170,29 @@ export class SubstanceService extends BaseHttpService {
     return params;
   }
 
-  private getStructureFacetsKey(structureSearchTerm: string, facets?: {
-    [facetName: string]: {
-      [facetValueLabel: string]: boolean
+  private getStructureSearchKey(
+    structureSearchTerm: string,
+    structureSearchType: string = '',
+    structureSearchCutoff: number = 0,
+    facets?: {
+      [facetName: string]: {
+        [facetValueLabel: string]: boolean
+      }
+    }): string {
+
+    let key = `${structureSearchTerm}`;
+
+    if (structureSearchType) {
+      key += `-${structureSearchType}`;
+
+      if (structureSearchType === 'similarity') {
+        key += `-${structureSearchCutoff.toString()}`;
+      }
     }
-  }): string {
 
     if (facets == null) {
-      return structureSearchTerm;
+      return key;
     }
-    console.log(facets);
-    let key = structureSearchTerm;
 
     const facetNameKeys = Object.keys(facets);
 

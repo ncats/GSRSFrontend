@@ -23,8 +23,19 @@
     padding-left: 15px;
     margin-left: 10px;
     border-left: 1px solid #b3b3b3;
+
+    .mat-slider-horizontal {
+        width: 100%;
+    }
+}
+
+.similarity-cutoff {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .search-button-container {
+    margin-top: 20px;
     align-self: flex-end;
 }

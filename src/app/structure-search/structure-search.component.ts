@@ -10,6 +10,8 @@ import { NavigationExtras, Router } from '@angular/router';
 export class StructureSearchComponent implements OnInit {
   private ketcher: Ketcher;
   private searchType: string;
+  similarityCutoff?: number;
+  showSimilarityCutoff = false;
 
   constructor(
     private router: Router
@@ -31,12 +33,26 @@ export class StructureSearchComponent implements OnInit {
     navigationExtras.queryParams['structure_search_term'] = smiles || null;
     navigationExtras.queryParams['structure_search_type'] = this.searchType || null;
 
+    if (this.searchType === 'similarity') {
+      navigationExtras.queryParams['structure_search_cutoff'] = this.similarityCutoff || 0;
+    }
+
     this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
   searchTypeSelected(event): void {
-    console.log(event);
     this.searchType = event.value;
+
+    if (this.searchType === 'similarity') {
+      this.showSimilarityCutoff = true;
+      this.similarityCutoff = 0.5;
+    } else {
+      this.showSimilarityCutoff = false;
+    }
+  }
+
+  searchCutoffChanged(event): void {
+    this.similarityCutoff = event.value;
   }
 
 }
