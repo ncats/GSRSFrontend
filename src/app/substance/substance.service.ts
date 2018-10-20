@@ -5,6 +5,7 @@ import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
+import { StructurePostResponse } from '../utils/structure-post-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -152,6 +153,11 @@ export class SubstanceService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
+  }
+
+  postSubstance(mol: string): Observable<StructurePostResponse> {
+    const url = `${this.configService.configData.apiBaseUrl}structure`;
+    return this.http.post<StructurePostResponse>(url, mol);
   }
 
   private processFacetParams(params: HttpParams, facets?: { [facetName: string]: { [facetValueLabel: string]: boolean } }): HttpParams {

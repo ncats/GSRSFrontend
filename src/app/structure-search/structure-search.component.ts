@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Ketcher } from 'ketcher-wrapper';
+import { Ketcher } from 'ketcher-wrapper/ketcher-wrapper';
 import { NavigationExtras, Router } from '@angular/router';
+import { SubstanceService } from '../substance/substance.service';
+import { StructurePostResponse } from '../utils/structure-post-response.model';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-structure-search',
@@ -14,8 +17,12 @@ export class StructureSearchComponent implements OnInit {
   showSimilarityCutoff = false;
 
   constructor(
-    private router: Router
-  ) { }
+    private router: Router,
+    private substanceService: SubstanceService,
+    private dialog: MatDialog
+  ) {
+    this.searchType = 'substructure';
+  }
 
   ngOnInit() {
   }
@@ -25,12 +32,19 @@ export class StructureSearchComponent implements OnInit {
   }
 
   search(): void {
-    const smiles = this.ketcher.getSmiles();
+    const mol = this.ketcher.getMolfile();
+    this.substanceService.postSubstance(mol).subscribe((response: StructurePostResponse) => {
+      this.navigateToBrowseSubstance(response.structure.id);
+    });
+  }
+
+  private navigateToBrowseSubstance(structureSearchTerm: string): void {
+
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
 
-    navigationExtras.queryParams['structure_search_term'] = smiles || null;
+    navigationExtras.queryParams['structure_search_term'] = structureSearchTerm || null;
     navigationExtras.queryParams['structure_search_type'] = this.searchType || null;
 
     if (this.searchType === 'similarity') {
@@ -53,6 +67,10 @@ export class StructureSearchComponent implements OnInit {
 
   searchCutoffChanged(event): void {
     this.similarityCutoff = event.value;
+  }
+
+  openStructureImport(): void {
+
   }
 
 }

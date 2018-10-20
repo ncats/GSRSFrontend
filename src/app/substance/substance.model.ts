@@ -1,11 +1,11 @@
 export interface SubstanceBase {
     uuid?: string;
-    created: number;
-    createdBy: string;
-    lastEdited: number;
-    lastEditedBy: string;
-    deprecated: boolean;
-    access: Array<string>;
+    created?: number;
+    createdBy?: string;
+    lastEdited?: number;
+    lastEditedBy?: string;
+    deprecated?: boolean;
+    access?: Array<string>;
 }
 
 export interface SubstanceBaseExtended {

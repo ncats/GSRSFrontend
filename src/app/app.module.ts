@@ -21,6 +21,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
@@ -31,7 +32,7 @@ import { ConfigService } from './config/config.service';
 import { LoadingModule } from './loading/loading.module';
 import { MainNotificationModule } from './main-notification/main-notification.module';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
-import { KetcherWrapperModule } from 'ketcher-wrapper';
+import { KetcherWrapperModule } from 'ketcher-wrapper/ketcher-wrapper';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { KetcherWrapperModule } from 'ketcher-wrapper';
     MainNotificationModule,
     KetcherWrapperModule,
     MatSelectModule,
-    MatSliderModule
+    MatSliderModule,
+    MatDialogModule
   ],
   providers: [
     ConfigService,
