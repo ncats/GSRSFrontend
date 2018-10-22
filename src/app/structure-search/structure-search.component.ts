@@ -4,6 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { StructureImportComponent } from '../structure-editor/structure-import/structure-import.component';
 
 @Component({
   selector: 'app-structure-search',
@@ -63,6 +64,18 @@ export class StructureSearchComponent implements OnInit {
     } else {
       this.showSimilarityCutoff = false;
     }
+  }
+
+  openStructureImportDialog(): void {
+    const dialogRef = this.dialog.open(StructureImportComponent, {
+      height: '450px',
+      width: '600px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 
   searchCutoffChanged(event): void {

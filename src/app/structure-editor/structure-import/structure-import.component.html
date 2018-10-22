@@ -1,3 +1,14 @@
-<p>
-  structure-import works!
-</p>
+<h1 mat-dialog-title>
+  Import Structure
+</h1>
+<div mat-dialog-content>
+  <div class="directions">Enter molfile or smiles:</div>
+  <div class="text-area-container">
+    <textarea [formControl]="importTextControl"></textarea>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <mat-progress-bar color="accent" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-button (click)="importStructure()">Import</button>
+</div>

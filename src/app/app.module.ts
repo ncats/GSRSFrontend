@@ -32,7 +32,8 @@ import { ConfigService } from './config/config.service';
 import { LoadingModule } from './loading/loading.module';
 import { MainNotificationModule } from './main-notification/main-notification.module';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
-import { KetcherWrapperModule } from 'ketcher-wrapper/ketcher-wrapper';
+import { KetcherWrapperModule } from 'ketcher-wrapper';
+import { StructureEditorModule } from './structure-editor/structure-editor.module';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { KetcherWrapperModule } from 'ketcher-wrapper/ketcher-wrapper';
     KetcherWrapperModule,
     MatSelectModule,
     MatSliderModule,
-    MatDialogModule
+    MatDialogModule,
+    StructureEditorModule
   ],
   providers: [
     ConfigService,
