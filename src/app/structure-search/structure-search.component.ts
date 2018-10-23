@@ -68,22 +68,22 @@ export class StructureSearchComponent implements OnInit {
 
   openStructureImportDialog(): void {
     const dialogRef = this.dialog.open(StructureImportComponent, {
-      height: '450px',
-      width: '600px',
+      height: 'auto',
+      width: '650px',
       data: {}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    dialogRef.afterClosed().subscribe((molfile?: string) => {
+      if (molfile != null) {
+        this.ketcher.setMolecule(molfile);
+      }
+    }, () => {
+      console.log('dismissed');
     });
   }
 
   searchCutoffChanged(event): void {
     this.similarityCutoff = event.value;
-  }
-
-  openStructureImport(): void {
-
   }
 
 }

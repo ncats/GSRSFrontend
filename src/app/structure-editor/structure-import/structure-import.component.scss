@@ -2,17 +2,39 @@
     margin-bottom: 5px;
 }
 
-.text-area-container{
-    padding-bottom: 2px;
-}
-
 textarea {
+    box-sizing: border-box;
     width: 100%;
-    height: 284px;
+    height: 325px;
     border: solid 1px #b3b3b3;
     border-radius: 2px;
+    padding: 5px;
+    margin: 0;
+
+    &.has-message {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
 }
 
-.mat-progress-bar {
-    margin-top: -15px;
+.message-container {
+    padding: 5px 0;
+    text-align: center;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+
+    &.default {
+        background-color: rgba(68, 138, 255, .4);
+        color: #595959;
+    }
+
+    &.success {
+        background-color: rgba(167, 255, 235, .4);
+        color: #595959;
+    }
+
+    &.error {
+        background-color: rgba(229, 115, 115, .4);
+        color: #595959;
+    }
 }

@@ -35,7 +35,12 @@
     text-align: center;
 }
 
-.search-button-container {
+.action-button-container {
     margin-top: 20px;
     align-self: flex-end;
+    width: 100%;
+
+    button {
+        width: 100%;
+    }
 }
