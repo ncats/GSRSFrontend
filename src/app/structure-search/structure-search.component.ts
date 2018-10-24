@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Ketcher } from 'ketcher-wrapper/ketcher-wrapper';
 import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../structure-editor/structure-import/structure-import.component';
+import { Editor } from '../structure-editor/structure.editor.model';
 
 @Component({
   selector: 'app-structure-search',
@@ -12,7 +12,7 @@ import { StructureImportComponent } from '../structure-editor/structure-import/s
   styleUrls: ['./structure-search.component.scss']
 })
 export class StructureSearchComponent implements OnInit {
-  private ketcher: Ketcher;
+  private editor: Editor;
   private searchType: string;
   similarityCutoff?: number;
   showSimilarityCutoff = false;
@@ -28,12 +28,12 @@ export class StructureSearchComponent implements OnInit {
   ngOnInit() {
   }
 
-  ketcherOnLoad(ketcher: Ketcher): void {
-    this.ketcher = ketcher;
+  editorOnLoad(editor: Editor): void {
+    this.editor = editor;
   }
 
   search(): void {
-    const mol = this.ketcher.getMolfile();
+    const mol = this.editor.getMolfile();
     this.substanceService.postSubstance(mol).subscribe((response: StructurePostResponse) => {
       this.navigateToBrowseSubstance(response.structure.id);
     });
@@ -75,7 +75,7 @@ export class StructureSearchComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((molfile?: string) => {
       if (molfile != null) {
-        this.ketcher.setMolecule(molfile);
+        this.editor.setMolecule(molfile);
       }
     }, () => {
       console.log('dismissed');

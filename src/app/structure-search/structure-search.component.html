@@ -1,8 +1,7 @@
 <div class="content-container">
   <mat-card>
     <div class="editor-container">
-      <ncats-ketcher-wrapper ketcherFilePath="/assets/ketcher/ketcher.html" (ketcherOnLoad)="ketcherOnLoad($event)">
-      </ncats-ketcher-wrapper>
+      <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
     </div>
     <div class="search-actions">
       <div>

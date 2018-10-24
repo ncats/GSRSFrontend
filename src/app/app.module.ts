@@ -32,7 +32,6 @@ import { ConfigService } from './config/config.service';
 import { LoadingModule } from './loading/loading.module';
 import { MainNotificationModule } from './main-notification/main-notification.module';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
-import { KetcherWrapperModule } from 'ketcher-wrapper';
 import { StructureEditorModule } from './structure-editor/structure-editor.module';
 
 @NgModule({
@@ -67,7 +66,6 @@ import { StructureEditorModule } from './structure-editor/structure-editor.modul
     MatCheckboxModule,
     LoadingModule,
     MainNotificationModule,
-    KetcherWrapperModule,
     MatSelectModule,
     MatSliderModule,
     MatDialogModule,

@@ -5,3 +5,4 @@
 export * from './lib/jsdraw-wrapper.service';
 export * from './lib/jsdraw-wrapper.component';
 export * from './lib/jsdraw-wrapper.module';
+export * from './lib/jsdraw';

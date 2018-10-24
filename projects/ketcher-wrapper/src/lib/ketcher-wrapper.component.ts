@@ -23,7 +23,6 @@ export class KetcherWrapperComponent implements OnInit {
     this.safeKetcherFilePath = this.sanitizer.bypassSecurityTrustResourceUrl(this.ketcherFilePath);
     this.ketcherFrame.nativeElement.onload = () => {
       this.ketcherOnLoad.emit(this.ketcherFrame.nativeElement.contentWindow['ketcher']);
-      console.log(this.ketcherFrame.nativeElement.contentWindow['ketcher']);
     };
   }
 
