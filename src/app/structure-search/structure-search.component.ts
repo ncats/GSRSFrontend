@@ -5,6 +5,7 @@ import { StructurePostResponse } from '../utils/structure-post-response.model';
 import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../structure-editor/structure-import/structure-import.component';
 import { Editor } from '../structure-editor/structure.editor.model';
+import { LoadingService } from '../loading/loading.service';
 
 @Component({
   selector: 'app-structure-search',
@@ -20,15 +21,18 @@ export class StructureSearchComponent implements OnInit {
   constructor(
     private router: Router,
     private substanceService: SubstanceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private loadingService: LoadingService
   ) {
     this.searchType = 'substructure';
   }
 
   ngOnInit() {
+    this.loadingService.setLoading(true);
   }
 
   editorOnLoad(editor: Editor): void {
+    this.loadingService.setLoading(false);
     this.editor = editor;
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail, SubstanceCode } from '../substance/substance.model';
+import { SubstanceDetail } from '../substance/substance.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
 import * as _ from 'lodash';
@@ -24,6 +24,8 @@ export class BrowseSubstanceComponent implements OnInit {
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
+  isLoading = true;
+  isError = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,6 +58,7 @@ export class BrowseSubstanceComponent implements OnInit {
       true,
       this._facetParams)
     .subscribe(pagingResponse => {
+      this.isError = false;
       this.substances = pagingResponse.content;
       if (pagingResponse.facets && pagingResponse.facets.length > 0) {
         let sortedFacets = _.orderBy(pagingResponse.facets, facet => {
@@ -86,16 +89,18 @@ export class BrowseSubstanceComponent implements OnInit {
         }
       });
     }, error => {
-      console.log(error);
       const notification: AppNotification = {
         message: 'There was an error trying to retrieve substances. Please refresh and try again.',
         type: NotificationType.error,
         milisecondsToShow: 6000
       };
-      this.loadingService.setLoading(false);
+      this.isError = true;
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
       this.notificationService.setNotification(notification);
     }, () => {
-      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
     });
   }
 

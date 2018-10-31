@@ -6,4 +6,4 @@ export const baseEnvironment = {
 };
 
 
-// options for sketcher are 'ketcher' or 'jsdraw'
+// options for structureEditor are 'ketcher' or 'jsdraw'

@@ -13,11 +13,43 @@ export class StructureEditorComponent implements OnInit {
   @Output() editorOnLoad = new EventEmitter<any>();
   private ketcher: Ketcher;
   private jsdraw: JSDraw;
-  structureEditor =  environment.structureEditor;
+  structureEditor = environment.structureEditor;
+  private jsdrawScriptUrls = [
+    '/node_modules/dojo/dojo.js',
+    '/assets/jsdraw/Scilligence.JSDraw2.Pro.js',
+    '/assets/jsdraw/Scilligence.JSDraw2.Resources.js'
+  ];
 
   constructor() { }
 
   ngOnInit() {
+
+    if (environment.structureEditor === 'jsdraw') {
+
+      // this is extremely hacky but no way around it
+
+      const defaultDocumentWriteFunction = document.write;
+
+      document.write = (content) => {
+        if (content === '<style type="text/css">input._scil_dropdown::-ms-clear {display: none;}</style>') {
+          const styleElement = document.createElement('style');
+          styleElement.type = 'text/css';
+          styleElement.innerHTML = 'input._scil_dropdown::-ms-clear {display: none;}';
+          document.getElementsByTagName('head')[0].appendChild(styleElement);
+        } else {
+          defaultDocumentWriteFunction(content);
+        }
+      };
+
+      for (let i = 0; i < this.jsdrawScriptUrls.length; i++) {
+        const node = document.createElement('script');
+        node.src = this.jsdrawScriptUrls[i];
+        node.type = 'text/javascript';
+        node.async = false;
+        node.charset = 'utf-8';
+        document.getElementsByTagName('head')[0].appendChild(node);
+      }
+    }
   }
 
   ketcherOnLoad(ketcher: Ketcher): void {
