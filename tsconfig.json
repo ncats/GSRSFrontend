@@ -29,6 +29,12 @@
       ],
       "ketcher-wrapper/*": [
         "dist/ketcher-wrapper/*"
+      ],
+      "file-select": [
+        "dist/file-select"
+      ],
+      "file-select/*": [
+        "dist/file-select/*"
       ]
     }
   }

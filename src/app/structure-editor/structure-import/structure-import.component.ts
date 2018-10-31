@@ -47,6 +47,16 @@ export class StructureImportComponent implements OnInit {
     }
   }
 
+  fileSelected(file: File): void {
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        this.importTextControl.setValue(fileReader.result);
+      };
+      fileReader.readAsText(file);
+    }
+  }
+
   dismissDialog(): void {
     this.dialogRef.close();
   }

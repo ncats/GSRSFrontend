@@ -4,6 +4,7 @@ import { StructureImportComponent } from './structure-import/structure-import.co
 import { ReactiveFormsModule } from '@angular/forms';
 import { KetcherWrapperModule } from 'ketcher-wrapper';
 import { JsdrawWrapperModule } from 'jsdraw-wrapper';
+import { FileSelectModule } from 'file-select';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,7 +25,8 @@ import { StructureEditorComponent } from './structure-editor.component';
     MatProgressBarModule,
     ReactiveFormsModule,
     KetcherWrapperModule,
-    JsdrawWrapperModule
+    JsdrawWrapperModule,
+    FileSelectModule
   ],
   declarations: [
     StructureImportComponent,

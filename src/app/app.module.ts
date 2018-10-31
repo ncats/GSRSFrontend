@@ -33,6 +33,7 @@ import { LoadingModule } from './loading/loading.module';
 import { MainNotificationModule } from './main-notification/main-notification.module';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { StructureEditorModule } from './structure-editor/structure-editor.module';
+import { FileSelectModule } from 'file-select';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { StructureEditorModule } from './structure-editor/structure-editor.modul
     MatSelectModule,
     MatSliderModule,
     MatDialogModule,
-    StructureEditorModule
+    StructureEditorModule,
+    FileSelectModule
   ],
   providers: [
     ConfigService,
