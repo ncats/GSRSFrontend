@@ -17,6 +17,8 @@ export interface SubstanceBaseExtended {
     approvedBy: string;
     approvalID: string;
     structurallyDiverse?: StructurallyDiverse;
+    structure?: SubstanceStructure;
+    moieties?: Array<SubstanceMoiety>;
     _approvalIDDisplay: string;
     _name: string;
     _self: string;
@@ -24,10 +26,13 @@ export interface SubstanceBaseExtended {
 
 export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
     _names: CountRef;
-    _modifications: CountRef;
+    _modifications?: CountRef;
     _references: CountRef;
-    _codes: CountRef;
-    _relationships: CountRef;
+    _codes?: CountRef;
+    _relationships?: CountRef;
+    _moieties?: CountRef;
+    _properties?: CountRef;
+    protein?: any;
 }
 
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
@@ -40,8 +45,6 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
     codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
     notes: Array<SubstanceNote>;
     tags: Array<string>;
-    structure: SubstanceStructure;
-    moieties: Array<SubstanceMoiety>;
 }
 
 export interface StructurallyDiverse extends SubstanceBase {
@@ -150,9 +153,11 @@ export interface SubstanceStructure extends SubstanceBase {
     mwt: number;
     count: number;
     hash: string;
+    _self: string;
     self: string;
     stereochemistry: string;
     references: Array<string>;
+    _properties?: CountRef;
 }
 
 export interface SubstanceMoiety extends SubstanceStructure {
