@@ -1,5 +1,9 @@
 export const baseEnvironment = {
     production: false,
     version: '',
-    apiBase: ''
-}
+    apiBase: '',
+    structureEditor: 'jsdraw'
+};
+
+
+// options for structureEditor are 'ketcher' or 'jsdraw'

@@ -1,11 +1,11 @@
 export interface SubstanceBase {
     uuid?: string;
-    created: number;
-    createdBy: string;
-    lastEdited: number;
-    lastEditedBy: string;
-    deprecated: boolean;
-    access: Array<string>;
+    created?: number;
+    createdBy?: string;
+    lastEdited?: number;
+    lastEditedBy?: string;
+    deprecated?: boolean;
+    access?: Array<string>;
 }
 
 export interface SubstanceBaseExtended {
@@ -153,8 +153,8 @@ export interface SubstanceStructure extends SubstanceBase {
     mwt: number;
     count: number;
     hash: string;
-    _self: string;
-    self: string;
+    _self?: string;
+    self?: string;
     stereochemistry: string;
     references: Array<string>;
     _properties?: CountRef;

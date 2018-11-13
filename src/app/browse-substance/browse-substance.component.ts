@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail, SubstanceCode } from '../substance/substance.model';
+import { SubstanceDetail } from '../substance/substance.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
 import * as _ from 'lodash';
@@ -17,10 +17,15 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
   styleUrls: ['./browse-substance.component.scss']
 })
 export class BrowseSubstanceComponent implements OnInit {
-  private _searchTerm: string;
+  private _searchTerm?: string;
+  private _structureSearchTerm?: string;
+  private _structureSearchType?: string;
+  private _structureSearchCutoff?: number;
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
+  isLoading = true;
+  isError = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -36,13 +41,24 @@ export class BrowseSubstanceComponent implements OnInit {
       .queryParamMap
       .subscribe(params => {
         this._searchTerm = params.get('search_term') || '';
+        this._structureSearchTerm = params.get('structure_search_term') || '';
+        this._structureSearchType = params.get('structure_search_type') || '';
+        this._structureSearchCutoff = Number(params.get('structure_search_cutoff')) || 0;
         this.searchSubstances();
       });
   }
 
   searchSubstances() {
     this.loadingService.setLoading(true);
-    this.substanceService.getSubtanceDetails(this._searchTerm, true, this._facetParams).subscribe(pagingResponse => {
+    this.substanceService.getSubtanceDetails(
+      this._searchTerm,
+      this._structureSearchTerm,
+      this._structureSearchType,
+      this._structureSearchCutoff,
+      true,
+      this._facetParams)
+    .subscribe(pagingResponse => {
+      this.isError = false;
       this.substances = pagingResponse.content;
       if (pagingResponse.facets && pagingResponse.facets.length > 0) {
         let sortedFacets = _.orderBy(pagingResponse.facets, facet => {
@@ -72,16 +88,19 @@ export class BrowseSubstanceComponent implements OnInit {
           });
         }
       });
-      this.loadingService.setLoading(false);
     }, error => {
-      console.log(error);
       const notification: AppNotification = {
         message: 'There was an error trying to retrieve substances. Please refresh and try again.',
         type: NotificationType.error,
         milisecondsToShow: 6000
       };
-      this.loadingService.setLoading(false);
+      this.isError = true;
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
       this.notificationService.setNotification(notification);
+    }, () => {
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
     });
   }
 
