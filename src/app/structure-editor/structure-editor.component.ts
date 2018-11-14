@@ -24,7 +24,7 @@ export class StructureEditorComponent implements OnInit {
 
   ngOnInit() {
 
-    if (environment.structureEditor === 'jsdraw') {
+    if (environment.structureEditor === 'jsdraw' && !window['JSDraw']) {
 
       // this is extremely hacky but no way around it
 

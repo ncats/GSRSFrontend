@@ -2,7 +2,7 @@ export const baseEnvironment = {
     production: false,
     version: '',
     apiBase: '',
-    structureEditor: 'jsdraw'
+    structureEditor: 'ketcher'
 };
 
 

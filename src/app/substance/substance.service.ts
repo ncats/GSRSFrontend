@@ -38,7 +38,6 @@ export class SubstanceService extends BaseHttpService {
     return new Observable(observer => {
       let params = new HttpParams();
       params = params.append('view', 'full');
-
       let url = this.apiBaseUrl;
 
       let structureFacetsKey;
@@ -49,7 +48,7 @@ export class SubstanceService extends BaseHttpService {
       } else if (structureSearchTerm) {
         structureFacetsKey = this.getStructureSearchKey(structureSearchTerm, structureSearchType, structureSearchCutoff, facets);
         if (this.structureSearchKeys[structureFacetsKey]) {
-          url += `status(${this.structureSearchKeys[structureSearchTerm]})/results`;
+          url += `status(${this.structureSearchKeys[structureFacetsKey]})/results`;
         } else {
           params = params.append('q', structureSearchTerm);
           if (structureSearchType) {
@@ -84,6 +83,7 @@ export class SubstanceService extends BaseHttpService {
       this.http.get<any>(url, options).subscribe(
         response => {
           if (response.results) {
+
             const resultKey = response.key;
             this.structureSearchKeys[structureFacetsKey] = resultKey;
             this.processStructureSearchResults(url, response, observer, resultKey, options);
@@ -105,8 +105,8 @@ export class SubstanceService extends BaseHttpService {
     observer: Observer<PagingResponse<SubstanceDetail>>,
     structureSearchKey: string,
     options: any): void {
-
-    this.getSubstanceStructureSearchResults(structureSearchKey, options).subscribe(response => {
+    this.getSubstanceStructureSearchResults(structureSearchKey, options.params.get('top'), options.params.get('skip'))
+    .subscribe(response => {
       observer.next(response);
       if (!structureSearchResponse.finished) {
         this.http.get<any>(url, options).subscribe(searchResponse => {
@@ -127,8 +127,22 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
-  private getSubstanceStructureSearchResults(structureSearchKey: string, options: any): any {
+  private getSubstanceStructureSearchResults(structureSearchKey: string, top?: string, skip?: string): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
+    let params = new HttpParams();
+
+    if (top) {
+      params = params.append('top', top);
+    }
+
+    if (skip) {
+      params = params.append('top', skip);
+    }
+
+    const options = {
+      params: params
+    };
+
     return this.http.get<PagingResponse<SubstanceDetail>>(url, options);
   }
 

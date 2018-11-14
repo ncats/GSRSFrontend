@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { JSDraw } from './jsdraw';
 
 @Component({
@@ -6,7 +6,7 @@ import { JSDraw } from './jsdraw';
   template: `<div [id]="randomId" dataformat="molfile"></div>`,
   styles: []
 })
-export class JsdrawWrapperComponent implements OnInit {
+export class JsdrawWrapperComponent implements AfterViewInit {
   randomId: string;
   private jsdraw: JSDraw;
   @Output() jsDrawOnLoad = new EventEmitter<JSDraw>();
@@ -15,7 +15,7 @@ export class JsdrawWrapperComponent implements OnInit {
     this.randomId = Math.random().toString(36).replace('0.', '');
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.loadEditor();
   }
 
@@ -24,7 +24,9 @@ export class JsdrawWrapperComponent implements OnInit {
 
     if (window['JSDraw'] && window['dojo']) {
       window['dojo'].ready(() => {
+        console.log(this.randomId);
         this.jsdraw = new window['JSDraw'](this.randomId);
+        console.log(this.jsdraw);
         this.jsDrawOnLoad.emit(this.jsdraw);
       });
     } else if (count < 5000) {
