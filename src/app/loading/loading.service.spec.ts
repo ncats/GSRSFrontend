@@ -12,4 +12,11 @@ describe('LoadingService', () => {
   it('should be created', inject([LoadingService], (service: LoadingService) => {
     expect(service).toBeTruthy();
   }));
+
+  it('should set isLoading boolean and fire event', inject([LoadingService], (service: LoadingService) => {
+    service.loadingEvent.subscribe((event: boolean) => {
+      expect(event).toBe(true, 'should be set to the value set by the caller');
+    });
+    service.setLoading(true);
+  }));
 });

@@ -4,6 +4,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { CoreComponent } from './core/core.component';
 import { HomeComponent } from './home/home.component';
 import { BrowseSubstanceComponent } from './browse-substance/browse-substance.component';
+import { StructureSearchComponent } from './structure-search/structure-search.component';
 
 const childRoutes: Routes = [
   {
@@ -17,6 +18,10 @@ const childRoutes: Routes = [
   {
     path: 'browse-substance',
     component: BrowseSubstanceComponent
+  },
+  {
+    path: 'structure-search',
+    component: StructureSearchComponent
   }
 ];
 

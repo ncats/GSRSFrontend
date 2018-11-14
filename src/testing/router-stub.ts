@@ -1,5 +1,5 @@
 import { ReplaySubject } from 'rxjs';
-import { NavigationEnd, RouterState } from '@angular/router';
+import { NavigationEnd, NavigationExtras } from '@angular/router';
 
 export class RouterStub {
     private subject = new ReplaySubject<NavigationEnd>();
@@ -14,10 +14,8 @@ export class RouterStub {
         };
     }
 
-    navigate(commands: any[]): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-        });
-    }
+    navigate = jasmine.createSpy('navigate').and.returnValue(new Promise((resolve, reject) => {
+    }));
 
     fireNavigationEndEvent(url: string): void {
         const navigationEnd = new NavigationEnd(0, url, '');

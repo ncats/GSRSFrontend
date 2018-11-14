@@ -1,0 +1,46 @@
+.content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mat-card {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+}
+
+.editor-container {
+    width: 920px;
+    height: 460px;
+}
+
+.search-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 15px;
+    margin-left: 10px;
+    border-left: 1px solid #b3b3b3;
+
+    .mat-slider-horizontal {
+        width: 100%;
+    }
+}
+
+.similarity-cutoff {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.action-button-container {
+    margin-top: 20px;
+    align-self: flex-end;
+    width: 100%;
+
+    button {
+        width: 100%;
+    }
+}

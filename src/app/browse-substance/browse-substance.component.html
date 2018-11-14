@@ -1,4 +1,4 @@
-<mat-sidenav-container class="example-container">
+<mat-sidenav-container class="example-container" *ngIf="(facets && facets.length) || (substances && substances.length)">
   <mat-sidenav mode="side" opened>
     <mat-accordion multi="true">
       <mat-expansion-panel *ngFor="let facet of facets" [expanded]="facetParams[facet.name] != null">
@@ -90,3 +90,6 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+<div class="no-results" *ngIf="!isLoading && !isError && (!facets || facets.length === 0) && (!substances || substances.length === 0)">
+  Your search did not return any results. Please try modying it.
+</div>

@@ -21,6 +21,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
@@ -30,6 +33,9 @@ import { configServiceFactory } from './config/config.factory';
 import { ConfigService } from './config/config.service';
 import { LoadingModule } from './loading/loading.module';
 import { MainNotificationModule } from './main-notification/main-notification.module';
+import { StructureSearchComponent } from './structure-search/structure-search.component';
+import { StructureEditorModule } from './structure-editor/structure-editor.module';
+import { FileSelectModule } from 'file-select';
 
 @NgModule({
   declarations: [
@@ -37,7 +43,8 @@ import { MainNotificationModule } from './main-notification/main-notification.mo
     PageNotFoundComponent,
     CoreComponent,
     HomeComponent,
-    BrowseSubstanceComponent
+    BrowseSubstanceComponent,
+    StructureSearchComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -63,7 +70,12 @@ import { MainNotificationModule } from './main-notification/main-notification.mo
     LoadingModule,
     MainNotificationModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSelectModule,
+    MatSliderModule,
+    MatDialogModule,
+    StructureEditorModule,
+    FileSelectModule
   ],
   providers: [
     ConfigService,

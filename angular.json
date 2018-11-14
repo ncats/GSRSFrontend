@@ -31,8 +31,7 @@
                 "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
               },
               "src/styles/main.scss"
-            ],
-            "scripts": []
+            ]
           },
           "configurations": {
             "gsrs.prod": {
@@ -361,6 +360,126 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "jsdraw-wrapper": {
+      "root": "projects/jsdraw-wrapper",
+      "sourceRoot": "projects/jsdraw-wrapper/src",
+      "projectType": "library",
+      "prefix": "ncats",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/jsdraw-wrapper/tsconfig.lib.json",
+            "project": "projects/jsdraw-wrapper/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/jsdraw-wrapper/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/jsdraw-wrapper/src/test.ts",
+            "tsConfig": "projects/jsdraw-wrapper/tsconfig.spec.json",
+            "karmaConfig": "projects/jsdraw-wrapper/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/jsdraw-wrapper/tsconfig.lib.json",
+              "projects/jsdraw-wrapper/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "ketcher-wrapper": {
+      "root": "projects/ketcher-wrapper",
+      "sourceRoot": "projects/ketcher-wrapper/src",
+      "projectType": "library",
+      "prefix": "ncats",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ketcher-wrapper/tsconfig.lib.json",
+            "project": "projects/ketcher-wrapper/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ketcher-wrapper/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ketcher-wrapper/src/test.ts",
+            "tsConfig": "projects/ketcher-wrapper/tsconfig.spec.json",
+            "karmaConfig": "projects/ketcher-wrapper/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ketcher-wrapper/tsconfig.lib.json",
+              "projects/ketcher-wrapper/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "file-select": {
+      "root": "projects/file-select",
+      "sourceRoot": "projects/file-select/src",
+      "projectType": "library",
+      "prefix": "ncats",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/file-select/tsconfig.lib.json",
+            "project": "projects/file-select/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/file-select/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/file-select/src/test.ts",
+            "tsConfig": "projects/file-select/tsconfig.spec.json",
+            "karmaConfig": "projects/file-select/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/file-select/tsconfig.lib.json",
+              "projects/file-select/tsconfig.spec.json"
+            ],
             "exclude": [
               "**/node_modules/**"
             ]

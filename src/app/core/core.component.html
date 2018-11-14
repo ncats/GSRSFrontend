@@ -10,6 +10,11 @@
         Browse Substances
       </a>
     </span>
+    <span class="nav-item">
+      <a routerLink="/structure-search" [ngClass]="{active: mainPathSegment == 'structure-search'}">
+        Structure Search
+      </a>
+    </span>
   </span>
   <span class="middle-fill"></span>
   <span>
@@ -25,7 +30,7 @@
           </div>
         </mat-autocomplete>
       </mat-form-field>
-      <button mat-icon-button (click)="processSubstanceSearch()" [disabled]="searchControl.invalid">
+      <button class="search-button" mat-icon-button (click)="processSubstanceSearch()" [disabled]="searchControl.invalid">
         <mat-icon>search</mat-icon>
       </button>
     </form>

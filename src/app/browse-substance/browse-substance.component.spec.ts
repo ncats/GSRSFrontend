@@ -13,7 +13,7 @@ import { SubstanceService } from '../substance/substance.service';
 import { ConfigService } from '../config/config.service';
 import { LoadingService } from '../loading/loading.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SubstanceListData } from '../../testing/substance-list-test-data';
+import { SubstanceDetailsListData } from '../../testing/substance-details-list-test-data';
 import { of, throwError } from 'rxjs';
 import { asyncData, asyncError } from '../../testing/async-observable-helpers';
 import { MainNotificationService } from '../main-notification/main-notification.service';
@@ -31,7 +31,7 @@ describe('BrowseSubstanceComponent', () => {
     activatedRouteStub = new ActivatedRouteStub({ 'search_term': '' });
 
     const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['getSubtanceDetails']);
-    getSubtanceDetailsSpy = substanceServiceSpy.getSubtanceDetails.and.returnValue(asyncData(SubstanceListData));
+    getSubtanceDetailsSpy = substanceServiceSpy.getSubtanceDetails.and.returnValue(asyncData(SubstanceDetailsListData));
 
     const notificationServiceSpy = jasmine.createSpyObj('MainNotificationService', ['setNotification']);
     setNotificationSpy = notificationServiceSpy.setNotification.and.returnValue(null);
