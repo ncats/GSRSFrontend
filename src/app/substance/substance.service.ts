@@ -26,17 +26,18 @@ export class SubstanceService extends BaseHttpService {
     structureSearchType?: string,
     structureSearchCutoff?: number,
     getFacets?: boolean,
+    pageSize?: number,
     facets?: {
       [facetName: string]: {
         [facetValueLabel: string]: boolean
       }
-    }
+    },
+    skip?: number
   ): Observable<PagingResponse<SubstanceDetail>> {
 
     return new Observable(observer => {
       let params = new HttpParams();
       params = params.append('view', 'full');
-
       let url = this.apiBaseUrl;
 
       let structureFacetsKey;
@@ -47,7 +48,7 @@ export class SubstanceService extends BaseHttpService {
       } else if (structureSearchTerm) {
         structureFacetsKey = this.getStructureSearchKey(structureSearchTerm, structureSearchType, structureSearchCutoff, facets);
         if (this.structureSearchKeys[structureFacetsKey]) {
-          url += `status(${this.structureSearchKeys[structureSearchTerm]})/results`;
+          url += `status(${this.structureSearchKeys[structureFacetsKey]})/results`;
         } else {
           params = params.append('q', structureSearchTerm);
           if (structureSearchType) {
@@ -63,6 +64,14 @@ export class SubstanceService extends BaseHttpService {
         url += 'substances/search';
       }
 
+      if (skip) {
+        params = params.append('skip', skip.toString());
+      }
+
+      if (pageSize) {
+        params = params.append('top', pageSize.toString());
+      }
+
       if (facets != null) {
         params = this.processFacetParams(params, facets);
       }
@@ -74,6 +83,7 @@ export class SubstanceService extends BaseHttpService {
       this.http.get<any>(url, options).subscribe(
         response => {
           if (response.results) {
+
             const resultKey = response.key;
             this.structureSearchKeys[structureFacetsKey] = resultKey;
             this.processStructureSearchResults(url, response, observer, resultKey, options);
@@ -94,31 +104,45 @@ export class SubstanceService extends BaseHttpService {
     structureSearchResponse: any,
     observer: Observer<PagingResponse<SubstanceDetail>>,
     structureSearchKey: string,
-    options:  any): void {
-
-      this.getSubstanceStructureSearchResults(structureSearchKey, options).subscribe(response => {
-        observer.next(response);
-        if (!structureSearchResponse.finished) {
-          this.http.get<any>(url, options).subscribe(searchResponse => {
-            setTimeout(() => {
-              this.processStructureSearchResults(url, searchResponse, observer, structureSearchKey, options);
-            });
-          }, error => {
-            observer.error(error);
-            observer.complete();
+    options: any): void {
+    this.getSubstanceStructureSearchResults(structureSearchKey, options.params.get('top'), options.params.get('skip'))
+    .subscribe(response => {
+      observer.next(response);
+      if (!structureSearchResponse.finished) {
+        this.http.get<any>(url, options).subscribe(searchResponse => {
+          setTimeout(() => {
+            this.processStructureSearchResults(url, searchResponse, observer, structureSearchKey, options);
           });
-        } else {
+        }, error => {
+          observer.error(error);
           observer.complete();
-        }
-      }, error => {
-        observer.error(error);
+        });
+      } else {
         observer.complete();
-      });
+      }
+    }, error => {
+      observer.error(error);
+      observer.complete();
+    });
 
   }
 
-  private getSubstanceStructureSearchResults(structureSearchKey: string, options:  any): any {
+  private getSubstanceStructureSearchResults(structureSearchKey: string, top?: string, skip?: string): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
+    let params = new HttpParams();
+
+    if (top) {
+      params = params.append('top', top);
+    }
+
+    if (skip) {
+      params = params.append('top', skip);
+    }
+
+    const options = {
+      params: params
+    };
+
     return this.http.get<PagingResponse<SubstanceDetail>>(url, options);
   }
 

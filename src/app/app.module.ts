@@ -19,6 +19,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -67,6 +69,8 @@ import { FileSelectModule } from 'file-select';
     MatCheckboxModule,
     LoadingModule,
     MainNotificationModule,
+    MatTableModule,
+    MatPaginatorModule,
     MatSelectModule,
     MatSliderModule,
     MatDialogModule,
