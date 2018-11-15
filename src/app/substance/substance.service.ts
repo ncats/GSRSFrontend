@@ -45,10 +45,12 @@ export class SubstanceService extends BaseHttpService {
       if (searchTerm) {
         url += 'substances/search';
         params = params.append('q', searchTerm);
+        params = this.addQueryParameters(params, pageSize, facets, skip);
       } else if (structureSearchTerm) {
-        structureFacetsKey = this.getStructureSearchKey(structureSearchTerm, structureSearchType, structureSearchCutoff, facets);
+        structureFacetsKey = this.getStructureSearchKey(structureSearchTerm, structureSearchType, structureSearchCutoff);
         if (this.structureSearchKeys[structureFacetsKey]) {
           url += `status(${this.structureSearchKeys[structureFacetsKey]})/results`;
+          params = this.addQueryParameters(params, pageSize, facets, skip);
         } else {
           params = params.append('q', structureSearchTerm);
           if (structureSearchType) {
@@ -62,18 +64,9 @@ export class SubstanceService extends BaseHttpService {
         }
       } else if (getFacets) {
         url += 'substances/search';
-      }
-
-      if (skip) {
-        params = params.append('skip', skip.toString());
-      }
-
-      if (pageSize) {
-        params = params.append('top', pageSize.toString());
-      }
-
-      if (facets != null) {
-        params = this.processFacetParams(params, facets);
+        params = this.addQueryParameters(params, pageSize, facets, skip);
+      } else {
+        params = this.addQueryParameters(params, pageSize, facets, skip);
       }
 
       const options = {
@@ -83,10 +76,17 @@ export class SubstanceService extends BaseHttpService {
       this.http.get<any>(url, options).subscribe(
         response => {
           if (response.results) {
-
             const resultKey = response.key;
             this.structureSearchKeys[structureFacetsKey] = resultKey;
-            this.processStructureSearchResults(url, response, observer, resultKey, options);
+            this.processStructureSearchResults(
+              url,
+              response,
+              observer,
+              resultKey,
+              options,
+              pageSize,
+              facets,
+              skip);
           } else {
             observer.next(response);
             observer.complete();
@@ -99,19 +99,62 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
+  private addQueryParameters(
+    params: HttpParams,
+    pageSize?: number,
+    facets?: {
+      [facetName: string]: {
+        [facetValueLabel: string]: boolean
+      }
+    },
+    skip?: number) {
+      if (skip) {
+        params = params.append('skip', skip.toString());
+      }
+
+      if (pageSize) {
+        params = params.append('top', pageSize.toString());
+      }
+
+      if (facets != null) {
+        params = this.processFacetParams(params, facets);
+      }
+
+      return params;
+  }
+
   private processStructureSearchResults(
     url: string,
     structureSearchResponse: any,
     observer: Observer<PagingResponse<SubstanceDetail>>,
     structureSearchKey: string,
-    options: any): void {
-    this.getSubstanceStructureSearchResults(structureSearchKey, options.params.get('top'), options.params.get('skip'))
+    structureSearchCallOptions: any,
+    pageSize?: number,
+    facets?: {
+      [facetName: string]: {
+        [facetValueLabel: string]: boolean
+      }
+    },
+    skip?: number): void {
+    this.getSubstanceStructureSearchResults(
+      structureSearchKey,
+      pageSize,
+      facets,
+      skip)
     .subscribe(response => {
       observer.next(response);
       if (!structureSearchResponse.finished) {
-        this.http.get<any>(url, options).subscribe(searchResponse => {
+        this.http.get<any>(url, structureSearchCallOptions).subscribe(searchResponse => {
           setTimeout(() => {
-            this.processStructureSearchResults(url, searchResponse, observer, structureSearchKey, options);
+            this.processStructureSearchResults(
+              url,
+              searchResponse,
+              observer,
+              structureSearchKey,
+              structureSearchCallOptions,
+              pageSize,
+              facets,
+              skip);
           });
         }, error => {
           observer.error(error);
@@ -127,17 +170,19 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
-  private getSubstanceStructureSearchResults(structureSearchKey: string, top?: string, skip?: string): any {
+  private getSubstanceStructureSearchResults(
+    structureSearchKey: string,
+    pageSize?: number,
+    facets?: {
+      [facetName: string]: {
+        [facetValueLabel: string]: boolean
+      }
+    },
+    skip?: number): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
     let params = new HttpParams();
 
-    if (top) {
-      params = params.append('top', top);
-    }
-
-    if (skip) {
-      params = params.append('top', skip);
-    }
+    params = this.addQueryParameters(params, pageSize, facets, skip);
 
     const options = {
       params: params
@@ -203,12 +248,7 @@ export class SubstanceService extends BaseHttpService {
   private getStructureSearchKey(
     structureSearchTerm: string,
     structureSearchType: string = '',
-    structureSearchCutoff: number = 0,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    }): string {
+    structureSearchCutoff: number = 0): string {
 
     let key = `${structureSearchTerm}`;
 
@@ -219,23 +259,6 @@ export class SubstanceService extends BaseHttpService {
         key += `-${structureSearchCutoff.toString()}`;
       }
     }
-
-    if (facets == null) {
-      return key;
-    }
-
-    const facetNameKeys = Object.keys(facets);
-
-    facetNameKeys.forEach(facetNameKey => {
-      if (facets[facetNameKey] != null) {
-        const facetValueKeys = Object.keys(facets[facetNameKey]);
-        facetValueKeys.forEach(facetValueKey => {
-          if (facets[facetNameKey][facetValueKey]) {
-            key += (`-${facetNameKey}-${facetValueKey}`);
-          }
-        });
-      }
-    });
 
     return key;
   }
