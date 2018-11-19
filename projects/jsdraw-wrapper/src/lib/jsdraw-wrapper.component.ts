@@ -24,9 +24,7 @@ export class JsdrawWrapperComponent implements AfterViewInit {
 
     if (window['JSDraw'] && window['dojo']) {
       window['dojo'].ready(() => {
-        console.log(this.randomId);
         this.jsdraw = new window['JSDraw'](this.randomId);
-        console.log(this.jsdraw);
         this.jsDrawOnLoad.emit(this.jsdraw);
       });
     } else if (count < 5000) {

@@ -43,14 +43,20 @@ export class SubstanceService extends BaseHttpService {
       let structureFacetsKey;
 
       if (searchTerm) {
+
         url += 'substances/search';
         params = params.append('q', searchTerm);
         params = this.addQueryParameters(params, pageSize, facets, skip);
+
       } else if (structureSearchTerm) {
+
         structureFacetsKey = this.getStructureSearchKey(structureSearchTerm, structureSearchType, structureSearchCutoff);
+
         if (this.structureSearchKeys[structureFacetsKey]) {
+
           url += `status(${this.structureSearchKeys[structureFacetsKey]})/results`;
           params = this.addQueryParameters(params, pageSize, facets, skip);
+
         } else {
           params = params.append('q', structureSearchTerm);
           if (structureSearchType) {
@@ -75,6 +81,7 @@ export class SubstanceService extends BaseHttpService {
 
       this.http.get<any>(url, options).subscribe(
         response => {
+
           if (response.results) {
             const resultKey = response.key;
             this.structureSearchKeys[structureFacetsKey] = resultKey;
