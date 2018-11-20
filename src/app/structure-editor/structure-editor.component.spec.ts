@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StructureEditorComponent } from './structure-editor.component';
+import { KetcherWrapperModule } from 'ketcher-wrapper';
+import { JsdrawWrapperModule } from 'jsdraw-wrapper';
 
 describe('StructureEditorComponent', () => {
   let component: StructureEditorComponent;
@@ -8,7 +10,13 @@ describe('StructureEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StructureEditorComponent ]
+      imports: [
+        KetcherWrapperModule,
+        JsdrawWrapperModule
+      ],
+      declarations: [
+        StructureEditorComponent
+      ]
     })
     .compileComponents();
   }));

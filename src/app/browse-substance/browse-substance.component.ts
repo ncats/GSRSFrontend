@@ -164,6 +164,18 @@ export class BrowseSubstanceComponent implements OnInit {
     return this._searchTerm;
   }
 
+  get structureSearchTerm(): string {
+    return this._structureSearchTerm;
+  }
+
+  get structureSearchType(): string {
+    return this._structureSearchType;
+  }
+
+  get structureSearchCutoff(): number {
+    return this._structureSearchCutoff;
+  }
+
   get facetParams(): { [facetName: string]: { [facetValueLabel: string]: boolean } } {
     return this._facetParams;
   }

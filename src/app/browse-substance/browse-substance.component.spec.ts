@@ -18,6 +18,7 @@ import { of, throwError } from 'rxjs';
 import { asyncData, asyncError } from '../../testing/async-observable-helpers';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { decodeHtml } from '../utils/decode-html';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 describe('BrowseSubstanceComponent', () => {
   let component: BrowseSubstanceComponent;
@@ -28,7 +29,14 @@ describe('BrowseSubstanceComponent', () => {
 
   beforeEach(async(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
-    activatedRouteStub = new ActivatedRouteStub({ 'search_term': '' });
+    activatedRouteStub = new ActivatedRouteStub(
+      {
+        'search_term': 'test_search_term',
+        'structure_search_term': 'test_structure_search_term',
+        'structure_search_type': 'test_structure_search_type',
+        'structure_search_cutoff': '0.5'
+      }
+    );
 
     const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['getSubtanceDetails']);
     getSubtanceDetailsSpy = substanceServiceSpy.getSubtanceDetails.and.returnValue(asyncData(SubstanceDetailsListData));
@@ -49,7 +57,8 @@ describe('BrowseSubstanceComponent', () => {
         MatChipsModule,
         MatBadgeModule,
         HttpClientTestingModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        MatPaginatorModule
       ],
       declarations: [
         BrowseSubstanceComponent
@@ -79,13 +88,36 @@ describe('BrowseSubstanceComponent', () => {
     expect(component.substances).toBeUndefined('substances should not be initialized');
     expect(component.facets).toBeUndefined('facets should not be initialized');
     expect(component.searchTerm).toBeUndefined('searchTerm should not be initialized');
+    expect(component.structureSearchTerm).toBeUndefined('searchTerm should not be initialized');
+    expect(component.structureSearchType).toBeUndefined('searchTerm should not be initialized');
+    expect(component.structureSearchCutoff).toBeUndefined('searchTerm should not be initialized');
     expect(component.facetParams).toEqual({}, 'facetParams should be an empty object');
   });
 
-  it('OnInit, searchTerm should be initialized and getSubstanceDetails should be called', () => {
+  it('OnInit, search variables should be initialized and getSubstanceDetails should be called', () => {
     fixture.detectChanges();
     expect(component.searchTerm).toBeDefined('searchTerm should be initialized');
+    expect(component.structureSearchTerm).toBeDefined('searchTerm should be initialized');
+    expect(component.structureSearchType).toBeDefined('searchTerm should be initialized');
+    expect(component.structureSearchCutoff).toBeDefined('searchTerm should be initialized');
     expect(getSubtanceDetailsSpy.calls.any()).toBe(true, 'should call getSubtanceDetails function');
+  });
+
+  it('OnInit, if search variables not null, getSubstanceDetails should be called with search variables as parameters', () => {
+    fixture.detectChanges();
+    expect(component.searchTerm).toBeTruthy('searchTerm should not be null');
+
+    expect(getSubtanceDetailsSpy.calls.mostRecent().args[0])
+      .toBe('test_search_term', 'firs parameter should be test_search_term');
+
+    expect(getSubtanceDetailsSpy.calls.mostRecent().args[1])
+      .toBe('test_structure_search_term', 'firs parameter should be test_search_term');
+
+    expect(getSubtanceDetailsSpy.calls.mostRecent().args[2])
+      .toBe('test_structure_search_type', 'firs parameter should be test_search_term');
+
+    expect(getSubtanceDetailsSpy.calls.mostRecent().args[3])
+      .toBe(0.5, 'firs parameter should be test_search_term');
   });
 
   describe('after OnInit called', () => {
