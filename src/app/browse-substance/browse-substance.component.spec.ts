@@ -280,6 +280,27 @@ describe('BrowseSubstanceComponent', () => {
       });
     }));
 
+    it('paginator should show the right information and change pages and page sizes', async(() => {
+      fixture.whenStable().then(() => { // wait for async getSubstanceDetails
+
+        fixture.detectChanges();
+
+        const paginatorRangeLabel: HTMLElement = fixture.nativeElement.querySelector('.mat-paginator-range-label');
+
+        expect(paginatorRangeLabel.innerHTML).toBeTruthy('should have label for page and total items');
+
+        const paginatorNext: HTMLButtonElement = fixture.nativeElement.querySelector('.mat-paginator-navigation-next');
+
+        paginatorNext.click();
+
+        fixture.detectChanges();
+
+        expect(getSubtanceDetailsSpy.calls.mostRecent().args[7])
+          .toBe(10, 'should make a get substances call with 10 as skip parameter');
+        console.log(paginatorRangeLabel.innerHTML);
+      });
+    }));
+
     it('should make the setNotification call when SubstanceService fails', async(() => {
       fixture.whenStable().then(() => { // wait for async getSubstanceDetails
         getSubtanceDetailsSpy.and.returnValue(
