@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { BrowseSubstanceComponent } from './browse-substance.component';
@@ -19,6 +19,7 @@ import { asyncData, asyncError } from '../../testing/async-observable-helpers';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { decodeHtml } from '../utils/decode-html';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 describe('BrowseSubstanceComponent', () => {
   let component: BrowseSubstanceComponent;
@@ -285,11 +286,13 @@ describe('BrowseSubstanceComponent', () => {
 
         fixture.detectChanges();
 
-        const paginatorRangeLabel: HTMLElement = fixture.nativeElement.querySelector('.mat-paginator-range-label');
+        const paginatorElement: HTMLElement = fixture.nativeElement.querySelector('mat-paginator');
+
+        const paginatorRangeLabel: HTMLElement = paginatorElement.querySelector('.mat-paginator-range-label');
 
         expect(paginatorRangeLabel.innerHTML).toBeTruthy('should have label for page and total items');
 
-        const paginatorNext: HTMLButtonElement = fixture.nativeElement.querySelector('.mat-paginator-navigation-next');
+        const paginatorNext: HTMLButtonElement = paginatorElement.querySelector('.mat-paginator-navigation-next');
 
         paginatorNext.click();
 
@@ -297,7 +300,26 @@ describe('BrowseSubstanceComponent', () => {
 
         expect(getSubtanceDetailsSpy.calls.mostRecent().args[7])
           .toBe(10, 'should make a get substances call with 10 as skip parameter');
-        console.log(paginatorRangeLabel.innerHTML);
+
+        const pageSizeSelectTriggerElement: HTMLButtonElement = paginatorElement.querySelector('.mat-select-trigger');
+
+        pageSizeSelectTriggerElement.click();
+
+        fixture.detectChanges();
+
+        inject([OverlayContainer], (oc: OverlayContainer) => {
+
+          const overlayContainerElement = oc.getContainerElement();
+
+          const pageSizeSelectOptionElement: HTMLButtonElement = overlayContainerElement.querySelector('mat-option');
+          pageSizeSelectOptionElement.click();
+
+          fixture.detectChanges();
+
+          expect(getSubtanceDetailsSpy.calls.mostRecent().args[5])
+            .toBe(5, 'should make a get substances call with 5 as skip parameter');
+
+        })();
       });
     }));
 
