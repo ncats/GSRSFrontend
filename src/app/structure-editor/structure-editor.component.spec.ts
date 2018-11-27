@@ -8,8 +8,14 @@ import { environment } from '../../environments/environment';
 describe('StructureEditorComponent', () => {
   let component: StructureEditorComponent;
   let fixture: ComponentFixture<StructureEditorComponent>;
+  let documentCreateElementSpy: jasmine.Spy;
 
   beforeEach(async(() => {
+    const documentSpy = jasmine.createSpyObj('document', ['createElement']);
+    const styleElement = document.createElement('style');
+    documentCreateElementSpy = documentSpy.createElement.and.returnValue(styleElement);
+
+    spyOn(document, 'createElement');
     TestBed.configureTestingModule({
       imports: [
         KetcherWrapperModule,
@@ -36,10 +42,9 @@ describe('StructureEditorComponent', () => {
 
     environment.structureEditor = 'jsdraw';
 
-    spyOn(document, 'createElement');
-
     fixture.detectChanges();
 
     expect(document.createElement).toHaveBeenCalledWith('script', 'should have been called');
+
   });
 });
