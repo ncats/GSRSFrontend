@@ -62,4 +62,8 @@ export class StructureEditorComponent implements OnInit {
     this.editorOnLoad.emit(new EditorImplementation(null, this.jsdraw));
   }
 
+  get _jsdrawScriptUrls (): Array<string> {
+    return this.jsdrawScriptUrls;
+  }
+
 }
