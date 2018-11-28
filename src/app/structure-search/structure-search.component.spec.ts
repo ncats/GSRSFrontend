@@ -17,6 +17,7 @@ describe('StructureSearchComponent', () => {
   let routerStub: RouterStub;
 
   beforeEach(async(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     routerStub = new RouterStub();
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
     const loadingServiceSpy = jasmine.createSpyObj('LoadingService', ['setLoading']);

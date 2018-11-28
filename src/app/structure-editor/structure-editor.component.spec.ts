@@ -11,11 +11,11 @@ describe('StructureEditorComponent', () => {
   let documentCreateElementSpy: jasmine.Spy;
 
   beforeEach(async(() => {
-    const documentSpy = jasmine.createSpyObj('document', ['createElement']);
-    const styleElement = document.createElement('style');
-    documentCreateElementSpy = documentSpy.createElement.and.returnValue(styleElement);
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
+    const document = jasmine.createSpyObj('document', ['createElement']);
+    documentCreateElementSpy = document.createElement.and.returnValue({});
 
-    spyOn(document, 'createElement');
+    // spyOn(document, 'createElement');
     TestBed.configureTestingModule({
       imports: [
         KetcherWrapperModule,
@@ -43,8 +43,9 @@ describe('StructureEditorComponent', () => {
     environment.structureEditor = 'jsdraw';
 
     fixture.detectChanges();
-
-    expect(document.createElement).toHaveBeenCalledWith('script', 'should have been called');
+    setTimeout(() => {
+      expect(documentCreateElementSpy.calls.count()).toBe(4, 'should have been called');
+    });
 
   });
 });

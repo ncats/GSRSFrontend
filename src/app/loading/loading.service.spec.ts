@@ -4,6 +4,7 @@ import { LoadingService } from './loading.service';
 
 describe('LoadingService', () => {
   beforeEach(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     TestBed.configureTestingModule({
       providers: [LoadingService]
     });

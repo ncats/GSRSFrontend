@@ -16,7 +16,7 @@ describe('MainNotificationComponent', () => {
   };
 
   beforeEach(async(() => {
-
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     notificationServiceStub = {
       notificationEvent: new Subject(),
       fireNotificationEvent(): void {
