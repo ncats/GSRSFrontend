@@ -13,14 +13,16 @@ export class StructureEditorComponent implements OnInit {
   @Output() editorOnLoad = new EventEmitter<any>();
   private ketcher: Ketcher;
   private jsdraw: JSDraw;
-  structureEditor = environment.structureEditor;
+  structureEditor: string;
   private jsdrawScriptUrls = [
     '/node_modules/dojo/dojo.js',
     '/assets/jsdraw/Scilligence.JSDraw2.Pro.js',
     '/assets/jsdraw/Scilligence.JSDraw2.Resources.js'
   ];
 
-  constructor() { }
+  constructor() {
+    this.structureEditor =  environment.structureEditor;
+  }
 
   ngOnInit() {
 
