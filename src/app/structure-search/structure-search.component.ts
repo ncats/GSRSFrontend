@@ -59,16 +59,16 @@ export class StructureSearchComponent implements OnInit {
     this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
-  searchTypeSelected(event): void {
-    this.searchType = event.value;
+  // searchTypeSelected(event): void {
+  //   this.searchType = event.value;
 
-    if (this.searchType === 'similarity') {
-      this.showSimilarityCutoff = true;
-      this.similarityCutoff = 0.5;
-    } else {
-      this.showSimilarityCutoff = false;
-    }
-  }
+  //   if (this.searchType === 'similarity') {
+  //     this.showSimilarityCutoff = true;
+  //     this.similarityCutoff = 0.5;
+  //   } else {
+  //     this.showSimilarityCutoff = false;
+  //   }
+  // }
 
   openStructureImportDialog(): void {
     const dialogRef = this.dialog.open(StructureImportComponent, {
@@ -81,13 +81,11 @@ export class StructureSearchComponent implements OnInit {
       if (molfile != null) {
         this.editor.setMolecule(molfile);
       }
-    }, () => {
-      console.log('dismissed');
-    });
+    }, () => {});
   }
 
-  searchCutoffChanged(event): void {
-    this.similarityCutoff = event.value;
-  }
+  // searchCutoffChanged(event): void {
+  //   this.similarityCutoff = event.value;
+  // }
 
 }

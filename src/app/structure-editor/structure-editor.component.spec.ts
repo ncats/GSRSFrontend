@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { EditorImplementation } from './structure-editor-implementation.model';
 import { StructureEditorComponent } from './structure-editor.component';
-import { KetcherWrapperModule } from 'ketcher-wrapper';
+import { KetcherWrapperModule, Ketcher } from 'ketcher-wrapper';
 import { JsdrawWrapperModule } from 'jsdraw-wrapper';
 import { environment } from '../../environments/environment';
+import { JSDraw, JSDrawOptions } from 'jsdraw-wrapper/jsdraw-wrapper';
 
 describe('StructureEditorComponent', () => {
   let component: StructureEditorComponent;
@@ -31,7 +32,8 @@ describe('StructureEditorComponent', () => {
   });
 
   it('OnInit, if jsdraw environment,inline css should be set up,' +
-  ' scripts should be added, jsdraw element should be in view, ketcher element should not be in view', () => {
+  ' scripts should be added, jsdraw element should be in view, ketcher element should not be in view,' +
+  ' event should be emmited when jsDrawOnLoad called', () => {
 
     environment.structureEditor = 'jsdraw';
 
@@ -76,10 +78,24 @@ describe('StructureEditorComponent', () => {
 
     expect(ketcherElement).toBeFalsy('ketcher element should be removed to view');
 
+    const jsdrawObject: JSDraw = {
+      options: {},
+      setMolfile(molfile: string) {},
+      getMolfile() { return ''; },
+      getXml() { return ''; }
+    };
+
+    component.editorOnLoad.subscribe(jsdraw => {
+      expect(jsdraw instanceof EditorImplementation).toBe(true, 'should emit instance of EditorImplementation');
+    });
+
+    component.jsDrawOnLoad(jsdrawObject);
+
   });
 
   it('OnInit, if ketcher environment,' +
-  ' jsdraw element should be removed from view, ketcher element should be in view', () => {
+    ' jsdraw element should be removed from view, ketcher element should be in view,' +
+    ' event should be emmited when ketcherOnLoad called', () => {
 
     environment.structureEditor = 'ketcher';
 
@@ -96,22 +112,23 @@ describe('StructureEditorComponent', () => {
 
     expect(ketcherElement).toBeTruthy('ketcher element should be added to view');
 
-  });
+    const ketcherObject: Ketcher = {
+      version: '',
+      apiPath: '',
+      buildDate: '',
+      getSmiles() { return ''; },
+      saveSmiles() { return null; },
+      getMolfile() { return ''; },
+      setMolecule(molString: any) {},
+      addFragment(molString: any) {},
+      showMolfile(clientArea: any, molString: any, options: any) {}
+    };
 
-  describe('on editor load', () => {
-
-    beforeEach(() => {
-      environment.structureEditor = 'ketcher';
-      fixture = TestBed.createComponent(StructureEditorComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
+    component.editorOnLoad.subscribe(ketcher => {
+      expect(ketcher instanceof EditorImplementation).toBe(true, 'should emit instance of EditorImplementation');
     });
 
-    it('should emit event', async(() => {
-      spyOn(component, 'ketcherOnLoad');
-      fixture.detectChanges();
-      expect(component.ketcherOnLoad).toHaveBeenCalled();
-    }));
+    component.ketcherOnLoad(ketcherObject);
 
   });
 });

@@ -46,7 +46,7 @@ describe('StructureSearchComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StructureSearchComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // fixture.detectChanges();
   });
 
   it('should create', () => {

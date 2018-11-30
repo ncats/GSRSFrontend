@@ -21,5 +21,5 @@ export class ActivatedRouteStub {
   /** Set the paramMap observables's next value */
   setParamMap(params?: Params) {
     this.subject.next(convertToParamMap(params));
-  };
+  }
 }

@@ -156,7 +156,7 @@ export interface SubstanceStructure extends SubstanceBase {
     _self?: string;
     self?: string;
     stereochemistry: string;
-    references: Array<string>;
+    references?: Array<string>;
     _properties?: CountRef;
 }
 

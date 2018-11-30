@@ -14,8 +14,8 @@ import { ConfigService } from '../config/config.service';
 import { LoadingService } from '../loading/loading.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SubstanceDetailsListData } from '../../testing/substance-details-list-test-data';
-import { of, throwError } from 'rxjs';
-import { asyncData, asyncError } from '../../testing/async-observable-helpers';
+import { throwError } from 'rxjs';
+import { asyncData } from '../../testing/async-observable-helpers';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { decodeHtml } from '../utils/decode-html';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -324,13 +324,11 @@ describe('BrowseSubstanceComponent', () => {
     }));
 
     it('should make the setNotification call when SubstanceService fails', async(() => {
-      fixture.whenStable().then(() => { // wait for async getSubstanceDetails
-        getSubtanceDetailsSpy.and.returnValue(
-          throwError('SubstanceService test failure'));
-
-        fixture.detectChanges();
-        expect(setNotificationSpy.calls.mostRecent).toBeTruthy('should make a call to set notification');
-      });
+      getSubtanceDetailsSpy.and
+        .returnValue(throwError('SubstanceService test failure'));
+      component.searchSubstances();
+      fixture.detectChanges();
+      expect(setNotificationSpy.calls.count()).toBe(1);
     }));
   });
 });
