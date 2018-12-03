@@ -114,13 +114,21 @@ describe('StructureImportComponent', () => {
       });
     }));
 
-    it('when on file select called, molfile should be added to textarea', async(() => {
+    it('when on file select called, file should be read and value added to textarea', async(() => {
+      const readAsTextSpy = jasmine.createSpy().and.callFake(() => {
+        fileReaderObject['onload']();
+      });
+      const fileReaderObject = {
+        readAsText: readAsTextSpy,
+        result: MolFile
+      };
+      spyOn(<any>window, 'FileReader').and.returnValue(fileReaderObject);
       const molefile = new File([MolFile], 'methandriol.mol', {type: 'text/plain'});
       component.fileSelected(molefile);
       fixture.detectChanges();
-      setTimeout(() => {
-        expect(textAreaElement.value).toBe(MolFile);
-      });
+      expect(FileReader).toHaveBeenCalled();
+      expect(readAsTextSpy).toHaveBeenCalled();
+      expect(textAreaElement.value).toEqual(MolFile);
     }));
 
   });

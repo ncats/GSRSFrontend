@@ -19,7 +19,7 @@ export class StructureSearchComponent implements OnInit {
   showSimilarityCutoff = false;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private substanceService: SubstanceService,
     private dialog: MatDialog,
     private loadingService: LoadingService
@@ -84,8 +84,8 @@ export class StructureSearchComponent implements OnInit {
     }, () => {});
   }
 
-  // searchCutoffChanged(event): void {
-  //   this.similarityCutoff = event.value;
-  // }
+  searchCutoffChanged(event): void {
+    this.similarityCutoff = event.value;
+  }
 
 }
