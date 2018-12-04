@@ -88,4 +88,12 @@ export class StructureSearchComponent implements OnInit {
     this.similarityCutoff = event.value;
   }
 
+  get _editor(): Editor {
+    return this.editor;
+  }
+
+  get _searchType(): string {
+    return this.searchType;
+  }
+
 }

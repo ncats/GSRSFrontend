@@ -1,11 +1,11 @@
 <div class="content-container">
-  <!-- <mat-card>
+  <mat-card>
     <div class="editor-container">
       <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
     </div>
     <div class="search-actions">
       <div>
-        <mat-form-field>
+        <mat-form-field class="search-type-select">
           <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)" value="substructure">
             <mat-option value="substructure">
               Substructure
@@ -28,11 +28,11 @@
         </div>
       </div>
       <div class="action-button-container">
-        <button mat-raised-button color="primary" (click)="search()">Search</button>
+        <button class="search-button" mat-raised-button color="primary" (click)="search()">Search</button>
       </div>
       <div class="action-button-container">
-        <button mat-raised-button color="primary" (click)="openStructureImportDialog()">Import</button>
+        <button class="import-button" mat-raised-button color="primary" (click)="openStructureImportDialog()">Import</button>
       </div>
     </div>
-  </mat-card> -->
+  </mat-card>
 </div>

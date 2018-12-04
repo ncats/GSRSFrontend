@@ -2,11 +2,7 @@ import { MolFile } from './mol-file';
 
 export class EditorStub {
 
-    constructor() {}
-
-    getMolfile(): string {
-        return MolFile;
-    }
+    getMolfile = jasmine.createSpy('getMolfile').and.returnValue(MolFile);
 
     setMolecule(molfile: string): void {}
 }
