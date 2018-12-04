@@ -40,7 +40,7 @@ export class StructureSearchComponent implements OnInit {
     const mol = this.editor.getMolfile();
     this.substanceService.postSubstance(mol).subscribe((response: StructurePostResponse) => {
       this.navigateToBrowseSubstance(response.structure.id);
-    });
+    }, () => {});
   }
 
   private navigateToBrowseSubstance(structureSearchTerm: string): void {

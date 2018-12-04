@@ -9,7 +9,6 @@ describe('PageNotFoundComponent', () => {
   let routerStub: RouterStub;
 
   beforeEach(async(() => {
-
     routerStub = new RouterStub();
 
     TestBed.configureTestingModule({

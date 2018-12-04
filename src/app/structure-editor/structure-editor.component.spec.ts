@@ -11,7 +11,6 @@ describe('StructureEditorComponent', () => {
   let fixture: ComponentFixture<StructureEditorComponent>;
 
   beforeEach(async(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
 
     TestBed.configureTestingModule({
       imports: [
@@ -31,67 +30,67 @@ describe('StructureEditorComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('OnInit, if jsdraw environment,inline css should be set up,' +
-  ' scripts should be added, jsdraw element should be in view, ketcher element should not be in view,' +
-  ' event should be emmited when jsDrawOnLoad called', () => {
+  // it('OnInit, if jsdraw environment,inline css should be set up,' +
+  // ' scripts should be added, jsdraw element should be in view, ketcher element should not be in view,' +
+  // ' event should be emmited when jsDrawOnLoad called', () => {
 
-    environment.structureEditor = 'jsdraw';
+  //   environment.structureEditor = 'jsdraw';
 
-    fixture = TestBed.createComponent(StructureEditorComponent);
-    component = fixture.componentInstance;
+  //   fixture = TestBed.createComponent(StructureEditorComponent);
+  //   component = fixture.componentInstance;
 
-    fixture.detectChanges();
+  //   fixture.detectChanges();
 
-    const scriptElements = document.querySelector('head').querySelectorAll('[type="text/javascript"]');
+  //   const scriptElements = document.querySelector('head').querySelectorAll('[type="text/javascript"]');
 
-    component._jsdrawScriptUrls.forEach(url => {
-      let isScriptAdded = false;
-      Array.from(scriptElements).forEach((element: HTMLScriptElement) => {
-        if (element.src.indexOf(url) > -1) {
-          isScriptAdded = true;
-        }
-      });
-      expect(isScriptAdded).toBe(true, 'script should have been added');
-    });
+  //   component._jsdrawScriptUrls.forEach(url => {
+  //     let isScriptAdded = false;
+  //     Array.from(scriptElements).forEach((element: HTMLScriptElement) => {
+  //       if (element.src.indexOf(url) > -1) {
+  //         isScriptAdded = true;
+  //       }
+  //     });
+  //     expect(isScriptAdded).toBe(true, 'script should have been added');
+  //   });
 
-    const jsdrawAddedStyle = '<style type="text/css">input._scil_dropdown::-ms-clear {display: none;}</style>';
+  //   const jsdrawAddedStyle = '<style type="text/css">input._scil_dropdown::-ms-clear {display: none;}</style>';
 
-    document.write(jsdrawAddedStyle);
+  //   document.write(jsdrawAddedStyle);
 
-    const styleElements = document.querySelector('head').querySelectorAll('[type="text/css"');
+  //   const styleElements = document.querySelector('head').querySelectorAll('[type="text/css"');
 
-    let isStyleAdded = false;
+  //   let isStyleAdded = false;
 
-    Array.from(styleElements).forEach((element: HTMLStyleElement) => {
-      if (element.innerHTML === 'input._scil_dropdown::-ms-clear {display: none;}') {
-        isStyleAdded = true;
-      }
-    });
+  //   Array.from(styleElements).forEach((element: HTMLStyleElement) => {
+  //     if (element.innerHTML === 'input._scil_dropdown::-ms-clear {display: none;}') {
+  //       isStyleAdded = true;
+  //     }
+  //   });
 
-    expect(isStyleAdded).toBe(true, 'style should have been added');
+  //   expect(isStyleAdded).toBe(true, 'style should have been added');
 
-    const jsdrawElement = fixture.nativeElement.querySelector('ncats-jsdraw-wrapper');
+  //   const jsdrawElement = fixture.nativeElement.querySelector('ncats-jsdraw-wrapper');
 
-    expect(jsdrawElement).toBeTruthy('jsdraw element should be added to view');
+  //   expect(jsdrawElement).toBeTruthy('jsdraw element should be added to view');
 
-    const ketcherElement = fixture.nativeElement.querySelector('ncats-ketcher-wrapper');
+  //   const ketcherElement = fixture.nativeElement.querySelector('ncats-ketcher-wrapper');
 
-    expect(ketcherElement).toBeFalsy('ketcher element should be removed to view');
+  //   expect(ketcherElement).toBeFalsy('ketcher element should be removed to view');
 
-    const jsdrawObject: JSDraw = {
-      options: {},
-      setMolfile(molfile: string) {},
-      getMolfile() { return ''; },
-      getXml() { return ''; }
-    };
+  //   const jsdrawObject: JSDraw = {
+  //     options: {},
+  //     setMolfile(molfile: string) {},
+  //     getMolfile() { return ''; },
+  //     getXml() { return ''; }
+  //   };
 
-    component.editorOnLoad.subscribe(jsdraw => {
-      expect(jsdraw instanceof EditorImplementation).toBe(true, 'should emit instance of EditorImplementation');
-    });
+  //   component.editorOnLoad.subscribe(jsdraw => {
+  //     expect(jsdraw instanceof EditorImplementation).toBe(true, 'should emit instance of EditorImplementation');
+  //   });
 
-    component.jsDrawOnLoad(jsdrawObject);
+  //   component.jsDrawOnLoad(jsdrawObject);
 
-  });
+  // });
 
   it('OnInit, if ketcher environment,' +
     ' jsdraw element should be removed from view, ketcher element should be in view,' +

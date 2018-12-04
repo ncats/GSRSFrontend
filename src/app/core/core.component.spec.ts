@@ -14,7 +14,7 @@ import { LoadingModule } from '../loading/loading.module';
 import { UtilsService } from '../utils/utils.service';
 import { RouterStub } from '../../testing/router-stub';
 import { RouterLinkDirectiveStub } from '../../testing/router-link-directive-stub';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { asyncData } from '../../testing/async-observable-helpers';
 import { SubstanceData } from '../../testing/substance-suggestion-test-data';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -28,7 +28,6 @@ describe('CoreComponent', () => {
   let zone: NgZone;
 
   beforeEach(async(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
 
     const utilsServiceSpy = jasmine.createSpyObj('UtilsService', ['getStructureSearchSuggestions']);
     getStructureSearchSuggestionsSpy = utilsServiceSpy.getStructureSearchSuggestions.and.returnValue(asyncData(SubstanceData));
@@ -45,7 +44,7 @@ describe('CoreComponent', () => {
         ReactiveFormsModule,
         FormsModule,
         LoadingModule,
-        BrowserAnimationsModule
+        NoopAnimationsModule
       ],
       declarations: [
         CoreComponent,

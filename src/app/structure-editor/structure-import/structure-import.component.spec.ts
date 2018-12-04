@@ -5,7 +5,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ConfigService } from '../../config/config.service';
 import { StructurePostResponseData } from '../../../testing/structure-post-reponse-test-data';
 import { SubstanceService } from '../../substance/substance.service';
 import { asyncData } from '../../../testing/async-observable-helpers';
@@ -20,8 +19,6 @@ describe('StructureImportComponent', () => {
   let postSubstanceSpy: jasmine.Spy;
 
   beforeEach(async(() => {
-
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
     const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['postSubstance']);
     postSubstanceSpy = substanceServiceSpy.postSubstance.and.returnValue(asyncData(StructurePostResponseData));
     matDialogRefStub = new MatDialogRefStub();
@@ -39,7 +36,6 @@ describe('StructureImportComponent', () => {
       providers: [
         { provide: MatDialogRef, useValue: matDialogRefStub },
         { provide: MAT_DIALOG_DATA, useValue: [] },
-        { provide: ConfigService, useValue: configServiceSpy },
         { provide: SubstanceService, useValue: substanceServiceSpy }
       ]
     })

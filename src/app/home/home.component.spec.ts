@@ -7,7 +7,6 @@ describe('HomeComponent', () => {
   let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(async(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     TestBed.configureTestingModule({
       declarations: [ HomeComponent ]
     })

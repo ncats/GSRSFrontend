@@ -18,7 +18,7 @@ describe('SubstanceService', () => {
   let expectedSubstanceSummaries: PagingResponse<SubstanceSummary>;
 
   beforeEach(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
+    
     expectedSubstanceDetails = SubstanceDetailsListData;
 
     TestBed.configureTestingModule({

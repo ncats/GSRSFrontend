@@ -12,7 +12,7 @@ import { ActivatedRouteStub } from '../../testing/activated-route-stub';
 import { SubstanceService } from '../substance/substance.service';
 import { ConfigService } from '../config/config.service';
 import { LoadingService } from '../loading/loading.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SubstanceDetailsListData } from '../../testing/substance-details-list-test-data';
 import { throwError } from 'rxjs';
 import { asyncData } from '../../testing/async-observable-helpers';
@@ -29,7 +29,6 @@ describe('BrowseSubstanceComponent', () => {
   let setNotificationSpy: jasmine.Spy;
 
   beforeEach(async(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     activatedRouteStub = new ActivatedRouteStub(
       {
         'search_term': 'test_search_term',
@@ -58,7 +57,7 @@ describe('BrowseSubstanceComponent', () => {
         MatChipsModule,
         MatBadgeModule,
         HttpClientTestingModule,
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         MatPaginatorModule
       ],
       declarations: [

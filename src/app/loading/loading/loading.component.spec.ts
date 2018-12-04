@@ -10,7 +10,6 @@ describe('LoadingComponent', () => {
   let loadingServiceStub: Partial<LoadingService> | any;
 
   beforeEach(async(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     loadingServiceStub = {
       loadingEvent: new Subject(),
       fireLoadingEvent(event: boolean) {

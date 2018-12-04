@@ -11,7 +11,6 @@ describe('ConfigService', () => {
   let configService: ConfigService;
 
   beforeEach(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ]
     });
