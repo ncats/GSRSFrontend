@@ -1,6 +1,7 @@
 import { PagingResponse } from '../app/utils/paging-response.model';
 import { SubstanceSummary } from '../app/substance/substance.model';
 
+/* tslint:disable:max-line-length */
 export const SubstanceSummaryListData: PagingResponse<SubstanceSummary> = {
     'id': 37192136,
     'version': 1,
@@ -798,4 +799,4 @@ export const SubstanceSummaryListData: PagingResponse<SubstanceSummary> = {
             '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances(000a0d70-e785-4b99-8e00-284d840c903b)?view=full'
         }
     ]
-}
+};

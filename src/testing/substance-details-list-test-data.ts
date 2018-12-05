@@ -1,6 +1,7 @@
 import { PagingResponse } from '../app/utils/paging-response.model';
 import { SubstanceDetail, SubstanceSummary } from '../app/substance/substance.model';
 
+/* tslint:disable:max-line-length */
 export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
     'id': 36883704,
     'version': 1,
@@ -28,7 +29,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Approved+By&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+                '@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+                'sideway=true&field=Approved+By&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'CAS',
@@ -76,7 +79,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=CAS&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=CAS&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Code System',
@@ -124,7 +129,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Code+System&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Code+System&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Created By',
@@ -136,7 +143,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Created+By&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Created+By&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Definition Level',
@@ -148,7 +157,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Definition+Level&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Definition+Level&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Definition Level Access',
@@ -160,7 +171,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Definition+Level+Access&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Definition+Level+Access&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Definition Type',
@@ -172,7 +185,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Definition+Type&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Definition+Type&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Display Name Level Access',
@@ -184,7 +199,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Display+Name+Level+Access&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Display+Name+Level+Access&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'GInAS Document Tag',
@@ -204,7 +221,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=GInAS+Document+Tag&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=GInAS+Document+Tag&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'GInAS Language',
@@ -216,7 +235,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=GInAS+Language&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=GInAS+Language&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Modifications',
@@ -228,7 +249,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Modifications&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Modifications&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Molecular Weight',
@@ -252,7 +275,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Molecular+Weight&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Molecular+Weight&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Name Count',
@@ -300,7 +325,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Name+Count&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Name+Count&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Record Level Access',
@@ -312,7 +339,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Record+Level+Access&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Record+Level+Access&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Record Status',
@@ -324,7 +353,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Record+Status&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Record+Status&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Reference Count',
@@ -372,7 +403,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Reference+Count&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Reference+Count&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Reference Type',
@@ -420,7 +453,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Reference+Type&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Reference+Type&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Substance Class',
@@ -436,7 +471,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Substance+Class&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Substance+Class&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'SubstanceDeprecated',
@@ -448,7 +485,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=SubstanceDeprecated&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=SubstanceDeprecated&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'ix.Class',
@@ -496,7 +535,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=ix.Class&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=ix.Class&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_codes_lastEditedBy',
@@ -508,7 +549,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_codes_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_codes_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_lastEditedBy',
@@ -520,7 +563,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_names_lastEditedBy',
@@ -532,7 +577,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_names_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_names_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_references_lastEditedBy',
@@ -544,7 +591,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_references_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_references_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Defined Stereocenters',
@@ -576,7 +625,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Defined+Stereocenters&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Defined+Stereocenters&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Last Edited By',
@@ -588,7 +639,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Last+Edited+By&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Last+Edited+By&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'LyChI_L1',
@@ -636,7 +689,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=LyChI_L1&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=LyChI_L1&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'LyChI_L2',
@@ -684,7 +739,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=LyChI_L2&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=LyChI_L2&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'LyChI_L3',
@@ -732,7 +789,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=LyChI_L3&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=LyChI_L3&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'LyChI_L4',
@@ -780,7 +839,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=LyChI_L4&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=LyChI_L4&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Molecular Formula',
@@ -828,7 +889,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Molecular+Formula&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Molecular+Formula&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'StereoChemistry',
@@ -848,7 +911,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=StereoChemistry&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=StereoChemistry&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Stereocenters',
@@ -880,7 +945,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Stereocenters&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Stereocenters&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'SubstanceStereochemistry',
@@ -900,7 +967,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=SubstanceStereochemistry&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=SubstanceStereochemistry&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'PUBCHEM',
@@ -948,7 +1017,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=PUBCHEM&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=PUBCHEM&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'GInAS Tag',
@@ -996,7 +1067,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=GInAS+Tag&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=GInAS+Tag&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Relationships',
@@ -1044,7 +1117,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Relationships&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Relationships&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_relationships_lastEditedBy',
@@ -1056,7 +1131,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_relationships_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_relationships_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_relationships_relatedSubstance_lastEditedBy',
@@ -1068,7 +1145,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_relationships_relatedSubstance_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_relationships_relatedSubstance_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'EPA CompTox',
@@ -1116,7 +1195,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=EPA+CompTox&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=EPA+CompTox&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'ECHA (EC/EINECS)',
@@ -1164,7 +1245,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=ECHA+%28EC%2FEINECS%29&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=ECHA+%28EC%2FEINECS%29&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'EVMPD',
@@ -1212,7 +1295,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=EVMPD&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=EVMPD&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'MERCK INDEX',
@@ -1260,7 +1345,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=MERCK+INDEX&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=MERCK+INDEX&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Validation',
@@ -1276,7 +1363,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Validation&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Validation&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_notes_lastEditedBy',
@@ -1288,7 +1377,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_notes_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_notes_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'RXCUI',
@@ -1336,7 +1427,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=RXCUI&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=RXCUI&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'MESH',
@@ -1384,7 +1477,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=MESH&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=MESH&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'NCI_THESAURUS',
@@ -1432,7 +1527,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=NCI_THESAURUS&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=NCI_THESAURUS&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_names_nameOrgs_lastEditedBy',
@@ -1444,7 +1541,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_names_nameOrgs_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_names_nameOrgs_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'ATC Level 1',
@@ -1484,7 +1583,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=ATC+Level+1&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=ATC+Level+1&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'ATC Level 2',
@@ -1532,7 +1633,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=ATC+Level+2&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=ATC+Level+2&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'ATC Level 3',
@@ -1580,7 +1683,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=ATC+Level+3&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=ATC+Level+3&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'ATC Level 4',
@@ -1628,7 +1733,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=ATC+Level+4&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=ATC+Level+4&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'ChEMBL',
@@ -1676,7 +1783,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=ChEMBL&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=ChEMBL&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'WHO-ATC',
@@ -1724,7 +1833,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=WHO-ATC&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=WHO-ATC&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'WHO-VATC',
@@ -1772,7 +1883,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=WHO-VATC&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=WHO-VATC&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'WIKIPEDIA',
@@ -1820,7 +1933,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=WIKIPEDIA&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=WIKIPEDIA&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'GInAS Domain',
@@ -1832,7 +1947,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=GInAS+Domain&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=GInAS+Domain&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'INN',
@@ -1880,7 +1997,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=INN&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=INN&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'DRUG BANK',
@@ -1924,7 +2043,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=DRUG+BANK&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=DRUG+BANK&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'HSDB',
@@ -1968,7 +2089,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=HSDB&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=HSDB&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'LactMed',
@@ -2004,7 +2127,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=LactMed&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=LactMed&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'CFR',
@@ -2052,7 +2177,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=CFR&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=CFR&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'IUPHAR',
@@ -2084,7 +2211,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=IUPHAR&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=IUPHAR&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'LIVERTOX',
@@ -2116,7 +2245,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=LIVERTOX&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=LIVERTOX&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'WHO-ESSENTIAL MEDICINES LIST',
@@ -2152,7 +2283,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=WHO-ESSENTIAL+MEDICINES+LIST&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=WHO-ESSENTIAL+MEDICINES+LIST&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Interaction Type',
@@ -2180,7 +2313,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Interaction+Type&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Interaction+Type&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'JECFA EVALUATION',
@@ -2204,7 +2339,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=JECFA+EVALUATION&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=JECFA+EVALUATION&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'NDF-RT',
@@ -2252,7 +2389,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=NDF-RT&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=NDF-RT&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_relationships_amount_lastEditedBy',
@@ -2264,7 +2403,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_relationships_amount_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_relationships_amount_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'EPA PESTICIDE CODE',
@@ -2280,7 +2421,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=EPA+PESTICIDE+CODE&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=EPA+PESTICIDE+CODE&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'WHO INTERNATIONAL PHARMACOPEIA',
@@ -2296,7 +2439,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=WHO+INTERNATIONAL+PHARMACOPEIA&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=WHO+INTERNATIONAL+PHARMACOPEIA&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_relationships_mediatorSubstance_lastEditedBy',
@@ -2308,7 +2453,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_relationships_mediatorSubstance_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_relationships_mediatorSubstance_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'DEA NO.',
@@ -2320,7 +2467,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=DEA+NO.&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=DEA+NO.&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'EMA ASSESSMENT REPORTS',
@@ -2352,7 +2501,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=EMA+ASSESSMENT+REPORTS&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=EMA+ASSESSMENT+REPORTS&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Glycosylation Site Count',
@@ -2364,7 +2515,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Glycosylation+Site+Count&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Glycosylation+Site+Count&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'MANUFACTURER PRODUCT INFORMATION',
@@ -2376,7 +2529,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=MANUFACTURER+PRODUCT+INFORMATION&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=MANUFACTURER+PRODUCT+INFORMATION&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'Sequence Type',
@@ -2388,7 +2543,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=Sequence+Type&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=Sequence+Type&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_properties_lastEditedBy',
@@ -2400,7 +2557,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_properties_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_properties_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_protein_glycosylation_lastEditedBy',
@@ -2412,7 +2571,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_protein_glycosylation_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_protein_glycosylation_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_protein_lastEditedBy',
@@ -2424,7 +2585,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_protein_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_protein_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_protein_modifications_lastEditedBy',
@@ -2436,7 +2599,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_protein_modifications_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_protein_modifications_lastEditedBy&top=10&fskip=0&fetch=100'
         },
         {
             'name': 'root_protein_subunits_lastEditedBy',
@@ -2448,7 +2613,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             ],
             'enhanced': true,
             'prefix': '',
-            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&sideway=true&field=root_protein_subunits_lastEditedBy&top=10&fskip=0&fetch=100'
+            '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances/search/' +
+            '@facets?wait=false&&kind=ix.ginas.models.v1.Substance&skip=0&fdim=10&q=aspirin&' +
+            'sideway=true&field=root_protein_subunits_lastEditedBy&top=10&fskip=0&fetch=100'
         }
     ],
     'content': [
@@ -4707,7 +4874,8 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
                     'deprecated': false,
                     'codeSystem': 'WHO-VATC',
                     'code': 'QN02BA51',
-                    'comments': 'VATC|ANALGESICS|OTHER ANALGESICS AND ANTIPYRETICS|Salicylic acid and derivatives|acetylsalicylic acid, combinations excl. psycholeptics',
+                    'comments': 'VATC|ANALGESICS|OTHER ANALGESICS AND ANTIPYRETICS|' +
+                    'Salicylic acid and derivatives|acetylsalicylic acid, combinations excl. psycholeptics',
                     'type': 'PRIMARY',
                     'url': 'http://www.whocc.no/atcvet/atcvet_index/?code=QN02BA51&showdescription=yes',
                     'references': [
@@ -4742,7 +4910,8 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
                     'deprecated': false,
                     'codeSystem': 'WHO-ATC',
                     'code': 'C10BX01',
-                    'comments': 'ATC|CARDIOVASCULAR SYSTEM|LIPID MODIFYING AGENTS|LIPID MODIFYING AGENTS, COMBINATIONS|HMG CoA reductase inhibitors, other combinations|simvastatin and acetylsalicylic acid',
+                    'comments': 'ATC|CARDIOVASCULAR SYSTEM|LIPID MODIFYING AGENTS|LIPID MODIFYING AGENTS, COMBINATIONS|' +
+                    'HMG CoA reductase inhibitors, other combinations|simvastatin and acetylsalicylic acid',
                     'type': 'PRIMARY',
                     'url': 'http://www.whocc.no/atc_ddd_index/?code=C10BX01&showdescription=yes',
                     'references': [
@@ -4760,7 +4929,8 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
                     'deprecated': false,
                     'codeSystem': 'WHO-VATC',
                     'code': 'QB01AC56',
-                    'comments': 'VATC|ANTITHROMBOTIC AGENTS|ANTITHROMBOTIC AGENTS|Platelet aggregation inhibitors, excl. heparin|acetylsalicylic acid and esomeprazole',
+                    'comments': 'VATC|ANTITHROMBOTIC AGENTS|ANTITHROMBOTIC AGENTS|Platelet aggregation inhibitors, excl. heparin|' +
+                    'acetylsalicylic acid and esomeprazole',
                     'type': 'PRIMARY',
                     'url': 'http://www.whocc.no/atcvet/atcvet_index/?code=QB01AC56&showdescription=yes',
                     'references': [
@@ -4796,7 +4966,8 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
                     'deprecated': false,
                     'codeSystem': 'WHO-ATC',
                     'code': 'C10BX05',
-                    'comments': 'ATC|CARDIOVASCULAR SYSTEM|LIPID MODIFYING AGENTS|LIPID MODIFYING AGENTS, COMBINATIONS|HMG CoA reductase inhibitors, other combinations|rosuvastatin and acetylsalicylic acid',
+                    'comments': 'ATC|CARDIOVASCULAR SYSTEM|LIPID MODIFYING AGENTS|LIPID MODIFYING AGENTS, COMBINATIONS|' +
+                    'HMG CoA reductase inhibitors, other combinations|rosuvastatin and acetylsalicylic acid',
                     'type': 'PRIMARY',
                     'url': 'http://www.whocc.no/atc_ddd_index/?code=C10BX05&showdescription=yes',
                     'references': [
@@ -4814,7 +4985,8 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
                     'deprecated': false,
                     'codeSystem': 'WHO-ATC',
                     'code': 'A01AD05',
-                    'comments': 'ATC|ALIMENTARY TRACT AND METABOLISM|STOMATOLOGICAL PREPARATIONS|STOMATOLOGICAL PREPARATIONS|Other agents for local oral treatment|acetylsalicylic acid',
+                    'comments': 'ATC|ALIMENTARY TRACT AND METABOLISM|STOMATOLOGICAL PREPARATIONS|' +
+                    'STOMATOLOGICAL PREPARATIONS|Other agents for local oral treatment|acetylsalicylic acid',
                     'type': 'PRIMARY',
                     'url': 'http://www.whocc.no/atc_ddd_index/?code=A01AD05&showdescription=yes',
                     'references': [
@@ -4832,7 +5004,9 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
                     'deprecated': false,
                     'codeSystem': 'WHO-VATC',
                     'code': 'QM01BA03',
-                    'comments': 'VATC|ANTIINFLAMMATORY AND ANTIRHEUMATIC PRODUCTS|ANTIINFLAMMATORY/ANTIRHEUMATIC AGENTS  IN  COMBINATION|Antiinflammatory/antirheumatic agents in combination with corticosteroids|acetylsalicylic acid and corticosteroids',
+                    'comments': 'VATC|ANTIINFLAMMATORY AND ANTIRHEUMATIC PRODUCTS|' +
+                    'ANTIINFLAMMATORY/ANTIRHEUMATIC AGENTS  IN  COMBINATION|' +
+                    'Antiinflammatory/antirheumatic agents in combination with corticosteroids|acetylsalicylic acid and corticosteroids',
                     'type': 'PRIMARY',
                     'url': 'http://www.whocc.no/atcvet/atcvet_index/?code=QM01BA03&showdescription=yes',
                     'references': [
@@ -13262,4 +13436,4 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances(b01ae0ed-0de4-471a-aca5-7902f31b05ab)?view=full'
         }
     ]
-}
+};

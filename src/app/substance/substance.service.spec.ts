@@ -18,8 +18,9 @@ describe('SubstanceService', () => {
   let expectedSubstanceSummaries: PagingResponse<SubstanceSummary>;
 
   beforeEach(() => {
-    
+
     expectedSubstanceDetails = SubstanceDetailsListData;
+    expectedSubstanceSummaries = SubstanceSummaryListData;
 
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ]

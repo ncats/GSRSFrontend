@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing'
 import { StructureEditorModule } from '../structure-editor/structure-editor.module';
 import { StructureSearchComponent } from './structure-search.component';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSliderModule, MatSlider } from '@angular/material/slider';
+import { MatSliderModule } from '@angular/material/slider';
 import { MatCardModule } from '@angular/material/card';
 import { RouterStub } from '../../testing/router-stub';
 import { Router } from '@angular/router';
@@ -21,10 +21,9 @@ import { MolFile } from '../../testing/mol-file';
 import { Editor } from '../structure-editor/structure.editor.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { TestGestureConfig } from '../../testing/test-gesture-config';
-import { By, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import 'hammerjs';
-import { createMouseEvent } from '../../testing/event-objects';
-import { dispatchEvent, dispatchMouseEvent } from '../../testing/dispatch-events';
+import { dispatchMouseenterEvent, dispatchSlideEvent } from '../../testing/dispatch-events';
 
 describe('StructureSearchComponent', () => {
   let component: StructureSearchComponent;
@@ -172,26 +171,17 @@ describe('StructureSearchComponent', () => {
       expect(component.searchCutoffChanged).toHaveBeenCalledTimes(1);
       expect(component.similarityCutoff).toEqual(0.7);
     });
+
+    it('on import button click, dialop.open should be called, and editor.setMolecule should be called after close', async(() => {
+      spyOn(matDialog, 'open').and.callThrough();
+      const importButtonElement: HTMLButtonElement = fixture.nativeElement.querySelector('.import-button');
+      importButtonElement.click();
+      fixture.detectChanges();
+      expect(matDialog.open).toHaveBeenCalledTimes(1);
+      matDialog.closeDialogRef(MolFile);
+      fixture.detectChanges();
+      expect(editorStub.setMolecule).toHaveBeenCalled();
+      expect(editorStub.setMolecule).toHaveBeenCalledWith(MolFile);
+    }));
   });
 });
-
-function dispatchMouseenterEvent(element: HTMLElement): void {
-  const dimensions = element.getBoundingClientRect();
-  const y = dimensions.top;
-  const x = dimensions.left;
-
-  dispatchMouseEvent(element, 'mouseenter', x, y);
-}
-
-function dispatchSlideEvent(sliderElement: HTMLElement, percent: number,
-  gestureConfig: TestGestureConfig): void {
-  const trackElement = sliderElement.querySelector('.mat-slider-wrapper');
-  const dimensions = trackElement.getBoundingClientRect();
-  const x = dimensions.left + (dimensions.width * percent);
-  const y = dimensions.top + (dimensions.height * percent);
-
-  gestureConfig.emitEventForElement('slide', sliderElement, {
-    center: { x: x, y: y },
-    srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
-  });
-}
