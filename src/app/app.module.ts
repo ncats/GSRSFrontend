@@ -36,7 +36,6 @@ import { MainNotificationModule } from './main-notification/main-notification.mo
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { StructureEditorModule } from './structure-editor/structure-editor.module';
 import { FileSelectModule } from 'file-select';
-import 'hammerjs';
 
 @NgModule({
   declarations: [

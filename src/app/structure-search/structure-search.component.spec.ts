@@ -22,6 +22,9 @@ import { Editor } from '../structure-editor/structure.editor.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { TestGestureConfig } from '../../testing/test-gesture-config';
 import { By, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import 'hammerjs';
+import { createMouseEvent } from '../../testing/event-objects';
+import { dispatchEvent, dispatchMouseEvent } from '../../testing/dispatch-events';
 
 describe('StructureSearchComponent', () => {
   let component: StructureSearchComponent;
@@ -30,6 +33,7 @@ describe('StructureSearchComponent', () => {
   let setLoadingSpy: jasmine.Spy;
   let postSubstanceSpy: jasmine.Spy;
   let matDialog: MatDialogStub;
+  let gestureConfig: TestGestureConfig;
 
   beforeEach(async(() => {
     routerStub = new RouterStub();
@@ -57,7 +61,11 @@ describe('StructureSearchComponent', () => {
         { provide: Router, useValue: routerStub },
         { provide: LoadingService, useValue: loadingServiceSpy },
         { provide: SubstanceService, useValue: substanceServiceSpy },
-        { provide: MatDialog, useValue: matDialog }
+        { provide: MatDialog, useValue: matDialog },
+        {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
+          gestureConfig = new TestGestureConfig();
+          return gestureConfig;
+}}
       ]
     })
       .compileComponents();
@@ -154,53 +162,18 @@ describe('StructureSearchComponent', () => {
 
     // https://github.com/angular/material2/blob/master/src/lib/slider/slider.spec.ts
     it('on similarity cutoff change, similarityCutoff should be set to value emitted by slider', () => {
-      const gestureConfig = new TestGestureConfig();
+      spyOn(component, 'searchCutoffChanged').and.callThrough();
       component.searchTypeSelected({ value: 'similarity' });
       fixture.detectChanges();
-      const sliderNativeElement = fixture.nativeElement.querySelector('mat-slider');
-      dispatchMouseenterEvent(sliderNativeElement);
-      dispatchSlideEvent(sliderNativeElement, 0.7, gestureConfig);
+      const sliderElement = fixture.nativeElement.querySelector('mat-slider');
+      dispatchMouseenterEvent(sliderElement);
+      dispatchSlideEvent(sliderElement, 0.7, gestureConfig);
       fixture.detectChanges();
+      expect(component.searchCutoffChanged).toHaveBeenCalledTimes(1);
       expect(component.similarityCutoff).toEqual(0.7);
     });
   });
 });
-
-function createMouseEvent(type: string, x = 0, y = 0, button = 0) {
-  const event = document.createEvent('MouseEvent');
-
-  event.initMouseEvent(type,
-    true, /* canBubble */
-    false, /* cancelable */
-    window, /* view */
-    0, /* detail */
-    x, /* screenX */
-    y, /* screenY */
-    x, /* clientX */
-    y, /* clientY */
-    false, /* ctrlKey */
-    false, /* altKey */
-    false, /* shiftKey */
-    false, /* metaKey */
-    button, /* button */
-    null /* relatedTarget */);
-
-  // `initMouseEvent` doesn't allow us to pass the `buttons` and
-  // defaults it to 0 which looks like a fake event.
-  Object.defineProperty(event, 'buttons', { get: () => 1 });
-
-  return event;
-}
-
-export function dispatchEvent(node: Node | Window, event: Event): Event {
-  node.dispatchEvent(event);
-  return event;
-}
-
-function dispatchMouseEvent(node: Node, type: string, x = 0, y = 0,
-  event = createMouseEvent(type, x, y)): MouseEvent {
-  return dispatchEvent(node, event) as MouseEvent;
-}
 
 function dispatchMouseenterEvent(element: HTMLElement): void {
   const dimensions = element.getBoundingClientRect();
