@@ -34,7 +34,6 @@ export class SubstanceService extends BaseHttpService {
     },
     skip?: number
   ): Observable<PagingResponse<SubstanceDetail>> {
-
     return new Observable(observer => {
       let params = new HttpParams();
       params = params.append('view', 'full');
