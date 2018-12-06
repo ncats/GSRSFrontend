@@ -23,7 +23,7 @@ describe('SubstanceService', () => {
     expectedSubstanceSummaries = SubstanceSummaryListData;
 
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ]
+      imports: [HttpClientTestingModule]
     });
 
     httpClient = TestBed.get(HttpClient);
@@ -49,7 +49,7 @@ describe('SubstanceService', () => {
       httpClientGetSpy = spyOn(httpClient, 'get');
       httpClientGetSpy.and.callThrough();
 
-      facets  = {
+      facets = {
         'Code System': {
           'PUBCHEM': true,
           'MERCK INDEX': false
@@ -65,7 +65,7 @@ describe('SubstanceService', () => {
       substanceService.getSubtanceDetails().subscribe(
         substances => {
           expect(substances).toEqual(expectedSubstanceDetails, 'should return expected subtances');
-      },
+        },
         fail
       );
 
@@ -74,31 +74,83 @@ describe('SubstanceService', () => {
 
     it('if facets param not null & not a structure serach, facets set to true should be added to params', () => {
 
-      substanceService.getSubtanceDetails(null, null, null, null, null, null, facets, null).subscribe(
-        substances => {
-          expect(substances).toEqual(expectedSubstanceDetails, 'should return expected subtances');
-      },
-        fail
-      );
-
-      substanceService.getSubtanceDetails('test', null, null, null, null, null, facets, null).subscribe(
-        substances => {
-          expect(substances).toEqual(expectedSubstanceDetails, 'should return expected subtances');
-      },
-        fail
-      );
-
-      substanceService.getSubtanceDetails(null, null, null, null, null, 15, facets, 1).subscribe(
-        substances => {
-          expect(substances).toEqual(expectedSubstanceDetails, 'should return expected subtances');
-      },
-        fail
-      );
+      substanceService.getSubtanceDetails(null, null, null, null, null, null, facets, null).subscribe();
+      substanceService.getSubtanceDetails('test', null, null, null, null, null, facets, null).subscribe();
+      substanceService.getSubtanceDetails(null, null, null, null, null, 15, facets, 1).subscribe();
 
       httpClientGetSpy.calls.all().forEach(call => {
-        console.log(call.args[1].params.getAll('facet'));
         expect(call.args[1].params.getAll('facet'))
           .toEqual(['Code System/PUBCHEM', 'Validation/Code Collision']);
+      });
+
+    });
+
+    it('if searchTerm passed, q must be added as query param to http call', () => {
+      const searchTerm = 'test search term';
+
+      substanceService.getSubtanceDetails(searchTerm, null, null, null, null, null, null, null).subscribe();
+      substanceService.getSubtanceDetails(searchTerm, 'test', null, null, null, null, null, null).subscribe();
+      substanceService.getSubtanceDetails(searchTerm, null, 'test', null, null, null, null, null).subscribe();
+      substanceService.getSubtanceDetails(searchTerm, null, null, 0.5, null, null, null, null).subscribe();
+      substanceService.getSubtanceDetails(searchTerm, null, null, null, true, null, null, null).subscribe();
+      substanceService.getSubtanceDetails(searchTerm, null, null, null, false, null, null, null).subscribe();
+      substanceService.getSubtanceDetails(searchTerm, null, null, null, null, 100, null, null).subscribe();
+      substanceService.getSubtanceDetails(searchTerm, null, null, null, true, null, facets, null).subscribe();
+      substanceService.getSubtanceDetails(searchTerm, null, null, null, true, null, null, 10).subscribe();
+
+      httpClientGetSpy.calls.all().forEach(call => {
+        expect(call.args[1].params.get('q'))
+          .toEqual(searchTerm);
+      });
+    });
+
+    it('if not structure search, when pageSize and skip passed as parameters,' +
+      'top and skip should be passed as query parameters respectively', () => {
+        const pageSize = 50;
+        const skip = 150;
+
+        substanceService.getSubtanceDetails('test', null, null, null, null, pageSize, null, skip).subscribe();
+        substanceService.getSubtanceDetails(null, null, 'test', null, null, pageSize, null, skip).subscribe();
+        substanceService.getSubtanceDetails(null, null, null, 0.5, null, pageSize, null, skip).subscribe();
+        substanceService.getSubtanceDetails(null, null, null, null, true, pageSize, null, skip).subscribe();
+        substanceService.getSubtanceDetails(null, null, null, null, false, pageSize, null, skip).subscribe();
+        substanceService.getSubtanceDetails(null, null, null, null, null, pageSize, null, skip).subscribe();
+        substanceService.getSubtanceDetails(null, null, null, null, true, pageSize, facets, skip).subscribe();
+        substanceService.getSubtanceDetails(null, null, null, null, true, pageSize, null, skip).subscribe();
+
+        httpClientGetSpy.calls.all().forEach(call => {
+          expect(call.args[1].params.get('top'))
+            .toEqual(pageSize.toString());
+          expect(call.args[1].params.get('skip'))
+            .toEqual(skip.toString());
+        });
+      });
+
+    describe('structure search', () => {
+      let structureSearchTerm: string;
+
+      beforeEach(() => {
+        structureSearchTerm = 'testStrutctureSearchTermId';
+      });
+
+      it('on initial search, call should be made to corrent url and with correct parameters', () => {
+
+        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, null, null, null, null).subscribe();
+        substanceService.getSubtanceDetails(null, structureSearchTerm, 'test', null, null, null, null, null).subscribe();
+        substanceService.getSubtanceDetails(null, structureSearchTerm, null, 0.5, null, null, null, null).subscribe();
+        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, true, null, null, null).subscribe();
+        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, false, null, null, null).subscribe();
+        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, null, 100, null, null).subscribe();
+        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, true, null, facets, null).subscribe();
+        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, true, null, null, 10).subscribe();
+
+        httpClientGetSpy.calls.all().forEach(call => {
+          expect(call.args[0])
+            .toEqual('api/v1/substances/structureSearch');
+          expect(call.args[1].params.get('q'))
+            .toEqual(structureSearchTerm);
+        });
+
       });
 
     });
