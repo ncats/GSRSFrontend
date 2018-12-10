@@ -5,6 +5,7 @@ import { CoreComponent } from './core/core.component';
 import { HomeComponent } from './home/home.component';
 import { BrowseSubstanceComponent } from './browse-substance/browse-substance.component';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
+import { SubstanceDetailsComponent } from './substance/substance-details/substance-details.component';
 
 const childRoutes: Routes = [
   {
@@ -18,6 +19,10 @@ const childRoutes: Routes = [
   {
     path: 'browse-substance',
     component: BrowseSubstanceComponent
+  },
+  {
+    path: 'substances/:id',
+    component: SubstanceDetailsComponent
   },
   {
     path: 'structure-search',

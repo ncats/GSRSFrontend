@@ -37,7 +37,7 @@
       <mat-card *ngFor="let substance of substances">
 
         <mat-card-title>
-          <a class="substance-name">
+          <a class="substance-name" [routerLink]="['/substances', substance.uuid]">
             {{substance._name}}
           </a>
           <span class="middle-fill"></span>

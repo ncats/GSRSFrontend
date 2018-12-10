@@ -197,6 +197,24 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceDetail>>(url, options);
   }
 
+  private getStructureSearchKey(
+    structureSearchTerm: string,
+    structureSearchType: string = '',
+    structureSearchCutoff: number = 0): string {
+
+    let key = `${structureSearchTerm}`;
+
+    if (structureSearchType) {
+      key += `-${structureSearchType}`;
+
+      if (structureSearchType === 'similarity') {
+        key += `-${structureSearchCutoff.toString()}`;
+      }
+    }
+
+    return key;
+  }
+
   getSubstanceSummaries(
     searchTerm?: string,
     getFacets?: boolean,
@@ -230,11 +248,6 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
-  postSubstance(mol: string): Observable<StructurePostResponse> {
-    const url = `${this.configService.configData.apiBaseUrl}structure`;
-    return this.http.post<StructurePostResponse>(url, mol);
-  }
-
   private processFacetParams(params: HttpParams, facets?: { [facetName: string]: { [facetValueLabel: string]: boolean } }): HttpParams {
     const facetsKeys = Object.keys(facets);
     facetsKeys.forEach(facetKey => {
@@ -251,22 +264,24 @@ export class SubstanceService extends BaseHttpService {
     return params;
   }
 
-  private getStructureSearchKey(
-    structureSearchTerm: string,
-    structureSearchType: string = '',
-    structureSearchCutoff: number = 0): string {
+  postSubstance(mol: string): Observable<StructurePostResponse> {
+    const url = `${this.configService.configData.apiBaseUrl}structure`;
+    return this.http.post<StructurePostResponse>(url, mol);
+  }
 
-    let key = `${structureSearchTerm}`;
+  getSubstanceSummary(id: string): Observable<SubstanceSummary> {
+    const url = `${this.apiBaseUrl}substances(${id})`;
+    return this.http.get<any>(url);
+  }
 
-    if (structureSearchType) {
-      key += `-${structureSearchType}`;
-
-      if (structureSearchType === 'similarity') {
-        key += `-${structureSearchCutoff.toString()}`;
-      }
-    }
-
-    return key;
+  getSubstanceDetails(id: string): Observable<SubstanceDetail> {
+    const url = `${this.apiBaseUrl}substances(${id})`;
+    let params = new HttpParams();
+    params = params.append('view', 'full');
+    const options = {
+      params: params
+    };
+    return this.http.get<SubstanceDetail>(url, options);
   }
 
 }

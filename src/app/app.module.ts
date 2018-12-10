@@ -36,6 +36,7 @@ import { MainNotificationModule } from './main-notification/main-notification.mo
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { StructureEditorModule } from './structure-editor/structure-editor.module';
 import { FileSelectModule } from 'file-select';
+import { SubstanceDetailsComponent } from './substance/substance-details/substance-details.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { FileSelectModule } from 'file-select';
     CoreComponent,
     HomeComponent,
     BrowseSubstanceComponent,
-    StructureSearchComponent
+    StructureSearchComponent,
+    SubstanceDetailsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
