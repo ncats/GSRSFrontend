@@ -1,5 +1,5 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed, inject, async } from '@angular/core/testing';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ConfigService } from '../config/config.service';
 import { SubstanceService } from './substance.service';
@@ -7,6 +7,9 @@ import { SubstanceDetailsListData } from '../../testing/substance-details-list-t
 import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { SubstanceSummaryListData } from '../../testing/substance-summary-list-test-data';
+import { Observable, Observer } from 'rxjs';
+import { StructureSearchResponseTestData } from '../../testing/structure-search-response-test-data';
+import { StructureSearchResponse } from './structure-search-response.model';
 
 describe('SubstanceService', () => {
 
@@ -152,6 +155,34 @@ describe('SubstanceService', () => {
         });
 
       });
+
+      it('first structure search should to go url to get url with results, ' +
+        'then immediately make a call to get results. ' +
+        'Another call to search the same structure should go straight to get results', async(() => {
+
+        const responseComplete = new Observable(observer => {
+          setTimeout(() => {
+            observer.next(StructureSearchResponseTestData);
+            observer.complete();
+          });
+        });
+
+        httpClientGetSpy.and.returnValue(responseComplete);
+
+        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, null, null, null, null)
+          .subscribe(response => {
+            const expectedUrl = `api/v1/status(${StructureSearchResponseTestData.key})/results`;
+
+            substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, null, null, null, null)
+            .subscribe(_response => {
+              const allCalls = httpClientGetSpy.calls.all();
+              expect(allCalls[0].args[0]).toEqual('api/v1/substances/structureSearch');
+              expect(allCalls[1].args[0]).toEqual(expectedUrl);
+              expect(allCalls[2].args[0]).toEqual(expectedUrl);
+          });
+          });
+
+      }));
 
     });
 
