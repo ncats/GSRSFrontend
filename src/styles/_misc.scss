@@ -5,3 +5,25 @@
 .margin-bottom {
     margin-bottom: 15px;
 }
+
+.name-value {
+    display: flex;
+    flex-direction: row;
+
+    &:not(:last-child) {
+        margin-bottom: 20px;
+    }
+
+    .name {
+        min-width: 100px;
+        padding-right: 15px;
+    }
+
+    .value {
+        font-size: 1.1em;
+    }
+}
+
+.blue-font {
+    color: #1565C0
+}

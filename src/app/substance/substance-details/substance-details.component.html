@@ -5,59 +5,25 @@
   <mat-sidenav-content>
 
     <div class="side-nav-content">
-      <mat-card>
-
-        <mat-card-title>
-          <span class="substance-name">
-            {{substance && substance._name}}
-          </span>
-          <span class="middle-fill"></span>
-          <a class="approval-id">
-            {{substance && substance.approvalID | async}}
-          </a>
-        </mat-card-title>
-
-        <mat-card-content>
-          <div class="substance-content">
-            <div class="structure-container" *ngIf="substance && substance.structure">
-              <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
-                <mat-chip-list selectable="false" multiple="false">
-                  <mat-chip color="primary" selected>{{substance.structure.stereochemistry | async}}</mat-chip>
-                </mat-chip-list>
-              </div>
-              <div>
-                <img [src]="getSafeStructureImgUrl(substance.structure.id)">
-              </div>
+      <mat-accordion multi="true">
+        <mat-expansion-panel expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h2>Overview</h2>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <div class="name-value">
+              <div class="name">Substance Class</div>
+              <div class="value blue-font">{{substance.substanceClass}}</div>
             </div>
-            <div>
-              <div class="substance-data substance-names" *ngIf="substance && substance.names && substance.names.length">
-                <div class="label">Names:</div>
-                <div>
-                  <div class="value" *ngFor="let nameObject of substance.names">
-                    {{nameObject.name}}
-                  </div>
-                </div>
-              </div>
-              <div class="substance-data substance-code-systems" *ngIf="substance && substance.codeSystems">
-                <div class="label">Codes:</div>
-                <div>
-                  <div class="margin-bottom" *ngFor="let codeSystemName of substance.codeSystemNames">
-                    <div class="code-system">
-                      <span class="label">{{codeSystemName}}</span>:&nbsp;
-                      <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">{{codeObject.code.trim()}}<span *ngIf="!isLast">, </span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="substance-data substance-relationships" *ngIf="substance && substance.relationships && substance.relationships.length">
-                <div class="label" [matBadge]="substance.relationships.length" matBadgeOverlap="false">Relationthips</div>
-                <div></div>
-              </div>
+            <div class="name-value">
+              <div class="name">Record UNII</div>
+              <div class="value blue-font">{{substance._approvalIDDisplay}}</div>
             </div>
           </div>
-        </mat-card-content>
-      </mat-card>
+        </mat-expansion-panel>
+      </mat-accordion>      
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
