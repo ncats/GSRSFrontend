@@ -10,7 +10,7 @@ import { SubstanceService } from '../../substance/substance.service';
 import { asyncData } from '../../../testing/async-observable-helpers';
 import { MolFile } from '../../../testing/mol-file';
 import { MatDialogRefStub } from '../../../testing/mat-dialog-ref-stub';
-import { throwError } from '../../../../node_modules/rxjs';
+import { throwError } from 'rxjs';
 
 describe('StructureImportComponent', () => {
   let component: StructureImportComponent;

@@ -1,29 +1,49 @@
 <mat-sidenav-container class="example-container">
   <mat-sidenav mode="side" opened>
-    
+    <mat-nav-list>
+      <a mat-list-item>
+        <span>Overview</span>
+        <span class="middle-fill"></span>
+        <mat-icon>chevron_right</mat-icon>
+      </a>
+      <a mat-list-item *ngFor="let property of substanceDetailsProperties">
+          <span class="capitalized">{{property.name}}</span>
+          <span class="middle-fill"></span>
+          <mat-icon>chevron_right</mat-icon>
+      </a>
+    </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
 
     <div class="side-nav-content">
-      <mat-accordion multi="true">
-        <mat-expansion-panel expanded="true">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <h2>Overview</h2>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div>
-            <div class="name-value">
-              <div class="name">Substance Class</div>
-              <div class="value blue-font">{{substance.substanceClass}}</div>
+      <div class="substance-details" *ngIf="substance">
+        <mat-card class="title-card">
+          <h1>{{substance._name}}</h1>
+        </mat-card>
+        <mat-accordion multi="true">
+          <mat-expansion-panel expanded="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h2>Overview</h2>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <div class="name-value">
+                <div class="name">Substance Class</div>
+                <div class="value blue-font">{{substance.substanceClass}}</div>
+              </div>
+              <div class="name-value">
+                <div class="name">Record UNII</div>
+                <div class="value blue-font">{{substance._approvalIDDisplay}}</div>
+              </div>
+              <div class="name-value">
+                <div class="name">Record Version</div>
+                <div class="value blue-font">{{substance.version}}</div>
+              </div>
             </div>
-            <div class="name-value">
-              <div class="name">Record UNII</div>
-              <div class="value blue-font">{{substance._approvalIDDisplay}}</div>
-            </div>
-          </div>
-        </mat-expansion-panel>
-      </mat-accordion>      
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
