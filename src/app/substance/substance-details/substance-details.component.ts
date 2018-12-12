@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance.service';
-import { SubstanceDetail, SubstanceCode } from '../substance.model';
+import { SubstanceDetail, SubstanceCode, SubstanceRelationship } from '../substance.model';
 import { LoadingService } from '../../loading/loading.service';
 import { MainNotificationService } from '../../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../../main-notification/notification.model';
@@ -17,6 +17,7 @@ export class SubstanceDetailsComponent implements OnInit {
   id: string;
   substance: SubstanceDetail;
   substanceDetailsProperties: Array<SubstanceDetailsProperty<any>> = [];
+  private propertiesToShow: Array<string> = ['names', 'notes', 'references', 'structure', 'moieties'];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -53,9 +54,15 @@ export class SubstanceDetailsComponent implements OnInit {
   private processSubstanceProperties() {
     const substanceKeys = Object.keys(this.substance);
     substanceKeys.forEach(key => {
-      console.log(this[`${key}ToDetailsProperties`]);
       if (this[`${key}ToDetailsProperties`]) {
-        console.log(this[`${key}ToDetailsProperties`]());
+        this[`${key}ToDetailsProperties`]();
+      } else if (this.propertiesToShow.indexOf(key) > -1) {
+        const property: SubstanceDetailsProperty<SubstanceCode> = {
+          name: key,
+          count: this.substance[key].length,
+          values: this.substance[key]
+        };
+        this.substanceDetailsProperties.push(property);
       }
     });
   }
@@ -63,27 +70,27 @@ export class SubstanceDetailsComponent implements OnInit {
   private codesToDetailsProperties(): void {
 
     const classification: SubstanceDetailsProperty<SubstanceCode> = {
-        name: 'classification',
-        count: 0,
-        values: []
+      name: 'classification',
+      count: 0,
+      values: []
     };
 
     const identifiers: SubstanceDetailsProperty<SubstanceCode> = {
-        name: 'identifiers',
-        count: 0,
-        values: []
+      name: 'identifiers',
+      count: 0,
+      values: []
     };
 
     if (this.substance.codes && this.substance.codes.length > 0) {
-        this.substance.codes.forEach(code => {
-            if (code.comments && code.comments.indexOf('/') > -1) {
-                classification.count++;
-                classification.values.push(code);
-            } else {
-                identifiers.count++;
-                identifiers.values.push(code);
-            }
-        });
+      this.substance.codes.forEach(code => {
+        if (code.comments && code.comments.indexOf('/') > -1) {
+          classification.count++;
+          classification.values.push(code);
+        } else {
+          identifiers.count++;
+          identifiers.values.push(code);
+        }
+      });
     }
 
     if (classification.count > 0) {
@@ -93,7 +100,41 @@ export class SubstanceDetailsComponent implements OnInit {
     if (identifiers.count > 0) {
       this.substanceDetailsProperties.push(identifiers);
     }
-}
+  }
+
+  private relationshipsToDetailsProperties(): void {
+    const properties: { [type: string]: SubstanceDetailsProperty<SubstanceRelationship> } = {};
+
+    if (this.substance.relationships && this.substance.relationships.length > 1) {
+      this.substance.relationships.forEach(relationship => {
+        const typeParts = relationship.type.split('->');
+        const property = typeParts[0].trim();
+        if (property) {
+          let propertyName: string;
+          if (property.indexOf('METABOLITE') > -1) {
+            propertyName = 'metabolites';
+          } else if (property.indexOf('IMPURITY') > -1) {
+            propertyName = 'impurities';
+          } else if (property.indexOf('ACTIVE MOIETY') > -1) {
+            propertyName = 'active moiety';
+          }
+          if (!properties[propertyName]) {
+            properties[propertyName] = {
+              name: propertyName,
+              count: 0,
+              values: []
+            };
+          }
+          properties[propertyName].count++;
+          properties[propertyName].values.push(relationship);
+        }
+      });
+    }
+
+    Object.keys(properties).forEach(key => {
+      this.substanceDetailsProperties.push(properties[key]);
+    });
+  }
 
   private handleSubstanceRetrivalError() {
     const notification: AppNotification = {
