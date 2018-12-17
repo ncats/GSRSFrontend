@@ -31,8 +31,7 @@
         [pageIndex]="pageIndex"
         [pageSize]= "pageSize"
         [pageSizeOptions]= "[5, 10, 50, 100]"
-        (page)="pageEvent = changePage($event)"
-      >
+        (page)="changePage($event)">
       </mat-paginator>
       <mat-card *ngFor="let substance of substances">
 

@@ -10,7 +10,7 @@ import { LoadingService } from '../loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { PageEvent } from '@angular/material';
+import { PageEvent, MatPaginatorIntl } from '@angular/material';
 
 @Component({
   selector: 'app-browse-substance',

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { BrowseSubstanceComponent } from './browse-substance.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -58,7 +59,8 @@ describe('BrowseSubstanceComponent', () => {
         MatBadgeModule,
         HttpClientTestingModule,
         NoopAnimationsModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        RouterTestingModule
       ],
       declarations: [
         BrowseSubstanceComponent

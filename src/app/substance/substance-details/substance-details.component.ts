@@ -31,7 +31,6 @@ export class SubstanceDetailsComponent implements OnInit {
   ngOnInit() {
     this.loadingService.setLoading(true);
     this.id = this.activatedRoute.snapshot.params['id'];
-    console.log(this.id);
     this.getSubstanceDetails();
   }
 
@@ -83,7 +82,7 @@ export class SubstanceDetailsComponent implements OnInit {
 
     if (this.substance.codes && this.substance.codes.length > 0) {
       this.substance.codes.forEach(code => {
-        if (code.comments && code.comments.indexOf('/') > -1) {
+        if (code.comments && code.comments.indexOf('|') > -1) {
           classification.count++;
           classification.values.push(code);
         } else {
