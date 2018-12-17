@@ -13,11 +13,11 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 import { PageEvent } from '@angular/material';
 
 @Component({
-  selector: 'app-browse-substance',
-  templateUrl: './browse-substance.component.html',
-  styleUrls: ['./browse-substance.component.scss']
+  selector: 'app-substances-browse',
+  templateUrl: './substances-browse.component.html',
+  styleUrls: ['./substances-browse.component.scss']
 })
-export class BrowseSubstanceComponent implements OnInit {
+export class SubstancesBrowseComponent implements OnInit {
   private _searchTerm?: string;
   private _structureSearchTerm?: string;
   private _structureSearchType?: string;

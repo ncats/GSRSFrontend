@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SubstanceService } from '../substance.service';
-import { SubstanceDetail, SubstanceCode, SubstanceRelationship } from '../substance.model';
-import { LoadingService } from '../../loading/loading.service';
-import { MainNotificationService } from '../../main-notification/main-notification.service';
-import { AppNotification, NotificationType } from '../../main-notification/notification.model';
+import { SubstanceService } from '../substance/substance.service';
+import { SubstanceDetail, SubstanceCode, SubstanceRelationship } from '../substance/substance.model';
+import { LoadingService } from '../loading/loading.service';
+import { MainNotificationService } from '../main-notification/main-notification.service';
+import { AppNotification, NotificationType } from '../main-notification/notification.model';
 import { NavigationExtras, Router } from '@angular/router';
-import { SubstanceDetailsProperty } from '../substance-utilities.model';
+import { SubstanceDetailsProperty } from '../substance/substance-utilities.model';
+import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
+import { StructureDetailsComponent } from '../structure/structure-details/structure-details.component';
 
 @Component({
   selector: 'app-substance-details',
@@ -24,7 +26,8 @@ export class SubstanceDetailsComponent implements OnInit {
     private substanceService: SubstanceService,
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
-    private router: Router
+    private router: Router,
+    private dynamicComponentLoader: DynamicComponentLoader
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
@@ -33,6 +36,10 @@ export class SubstanceDetailsComponent implements OnInit {
     this.id = this.activatedRoute.snapshot.params['id'];
     console.log(this.id);
     this.getSubstanceDetails();
+    this.dynamicComponentLoader.getComponentFactory<StructureDetailsComponent>('structure-details')
+      .subscribe(componentFactory => {
+        console.log(componentFactory);
+      });
   }
 
   getSubstanceDetails() {

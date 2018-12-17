@@ -3,9 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
 import { HomeComponent } from './home/home.component';
-import { BrowseSubstanceComponent } from './browse-substance/browse-substance.component';
+import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
-import { SubstanceDetailsComponent } from './substance/substance-details/substance-details.component';
+import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 
 const childRoutes: Routes = [
   {
@@ -18,7 +18,7 @@ const childRoutes: Routes = [
   },
   {
     path: 'browse-substance',
-    component: BrowseSubstanceComponent
+    component: SubstancesBrowseComponent
   },
   {
     path: 'substances/:id',
