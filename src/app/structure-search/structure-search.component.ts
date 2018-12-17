@@ -3,7 +3,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
 import { MatDialog } from '@angular/material';
-import { StructureImportComponent } from '../structure-editor/structure-import/structure-import.component';
+import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { Editor } from '../structure-editor/structure.editor.model';
 import { LoadingService } from '../loading/loading.service';
 

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StructureImportComponent } from './structure-import/structure-import.component';
+import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KetcherWrapperModule } from 'ketcher-wrapper';
 import { JsdrawWrapperModule } from 'jsdraw-wrapper';

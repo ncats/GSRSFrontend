@@ -29,7 +29,7 @@ import { MatListModule } from '@angular/material/list';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
 import { HomeComponent } from './home/home.component';
-import { BrowseSubstanceComponent } from './browse-substance/browse-substance.component';
+import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
 import { configServiceFactory } from './config/config.factory';
 import { ConfigService } from './config/config.service';
 import { LoadingModule } from './loading/loading.module';
@@ -37,7 +37,7 @@ import { MainNotificationModule } from './main-notification/main-notification.mo
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { StructureEditorModule } from './structure-editor/structure-editor.module';
 import { FileSelectModule } from 'file-select';
-import { SubstanceDetailsComponent } from './substance/substance-details/substance-details.component';
+import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +45,7 @@ import { SubstanceDetailsComponent } from './substance/substance-details/substan
     PageNotFoundComponent,
     CoreComponent,
     HomeComponent,
-    BrowseSubstanceComponent,
+    SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent
   ],

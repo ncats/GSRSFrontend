@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing'
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BrowseSubstanceComponent } from './browse-substance.component';
+import { SubstancesBrowseComponent } from './substances-browse.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -22,9 +22,9 @@ import { decodeHtml } from '../utils/decode-html';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
-describe('BrowseSubstanceComponent', () => {
-  let component: BrowseSubstanceComponent;
-  let fixture: ComponentFixture<BrowseSubstanceComponent>;
+describe('SubstancesBrowseComponent', () => {
+  let component: SubstancesBrowseComponent;
+  let fixture: ComponentFixture<SubstancesBrowseComponent>;
   let activatedRouteStub: Partial<ActivatedRoute>;
   let getSubtanceDetailsSpy: jasmine.Spy;
   let setNotificationSpy: jasmine.Spy;
@@ -63,7 +63,7 @@ describe('BrowseSubstanceComponent', () => {
         RouterTestingModule
       ],
       declarations: [
-        BrowseSubstanceComponent
+        SubstancesBrowseComponent
       ],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
@@ -77,7 +77,7 @@ describe('BrowseSubstanceComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BrowseSubstanceComponent);
+    fixture = TestBed.createComponent(SubstancesBrowseComponent);
     component = fixture.componentInstance;
     // fixture.detectChanges();
   });

@@ -12,7 +12,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { EditorStub } from '../../testing/editor-stub';
 import { SubstanceService } from '../substance/substance.service';
 import { MatDialogStub } from '../../testing/mat-dialog-stub';
-import { MatDialog } from '../../../node_modules/@angular/material';
+import { MatDialog } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { StructurePostResponseData } from '../../testing/structure-post-reponse-test-data';
