@@ -68,6 +68,6 @@ export class DynamicComponentLoader {
       return this.load<T>(path, componentId, injector);
     }
 
-    return Promise.resolve(moduleRef.componentFactoryResolver.resolveComponentFactory<T>(dynamicComponentType))
+    return Promise.resolve(moduleRef.componentFactoryResolver.resolveComponentFactory<T>(dynamicComponentType));
   }
 }

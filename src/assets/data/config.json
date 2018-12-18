@@ -1,18 +1,32 @@
 {
     "apiBaseUrl": "https://ginas.ncats.nih.gov/ginas/app/",
-    "substanceDetailsCards": {
-        "overview": {
-            "fromProperties": [
-                "substanceClass",
-                "_approvalIDDisplay",
-                "version" 
-            ],
-            "toProperties": [
+    "substanceDetailsCards": [
+        {
+            "card":"overview",
+            "filters":[
                 {
-                    "name": "overview",
-                    "order": 1
+                    "filterName":"substanceClassFilter",
+                    "propertyToCheck": "substanceClass",
+                    "filterFunction": "equals",
+                    "value": "chemical"
+                }   
+            ]            
+        },
+        {
+            "card":"structure",
+            "filters":[
+                {
+                    "filterName":"substanceClassFilter",
+                    "propertyToCheck": "substanceClass",
+                    "filterFunction": "equals",
+                    "value": "chemical || polymer"
+                },
+                {
+                    "filterName":"structurePropertyFilter",
+                    "propertyToCheck": "structure",
+                    "filterFunction": "exists"
                 }
-            ]
+            ]            
         }
-    }
+    ]
 }

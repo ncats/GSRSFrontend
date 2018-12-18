@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceStructure } from '../../substance/substance.model';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ConfigService } from '../../config/config.service';
+import { StructureService } from '../structure.service';
+import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-structure-details',
@@ -12,19 +12,15 @@ export class StructureDetailsComponent implements OnInit {
   data: SubstanceStructure;
 
   constructor(
-    private sanitizer: DomSanitizer,
-    public configService: ConfigService
+    private structureService: StructureService
   ) { }
 
   ngOnInit() {
     console.log(this.data);
   }
 
-  getSafeStructureImgUrl(structureId: string): SafeUrl {
-
-    const imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=150`;
-
-    return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
+  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
+    return this.structureService.getSafeStructureImgUrl(structureId, size);
   }
 
 }
