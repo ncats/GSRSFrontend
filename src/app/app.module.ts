@@ -38,6 +38,8 @@ import { StructureSearchComponent } from './structure-search/structure-search.co
 import { StructureEditorModule } from './structure-editor/structure-editor.module';
 import { FileSelectModule } from 'file-select';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
+import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic-component-loader.module';
+import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 
 @NgModule({
   declarations: [
@@ -79,7 +81,8 @@ import { SubstanceDetailsComponent } from './substance-details/substance-details
     MatDialogModule,
     StructureEditorModule,
     FileSelectModule,
-    MatListModule
+    MatListModule,
+    DynamicComponentLoaderModule.forRoot(dynamicComponentManifests)
   ],
   providers: [
     ConfigService,

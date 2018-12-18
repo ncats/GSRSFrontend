@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChildren,
+  ViewContainerRef,
+  QueryList
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceCode, SubstanceRelationship } from '../substance/substance.model';
@@ -15,11 +22,19 @@ import { StructureDetailsComponent } from '../structure/structure-details/struct
   templateUrl: './substance-details.component.html',
   styleUrls: ['./substance-details.component.scss']
 })
-export class SubstanceDetailsComponent implements OnInit {
+export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
   id: string;
   substance: SubstanceDetail;
   substanceDetailsProperties: Array<SubstanceDetailsProperty<any>> = [];
   private propertiesToShow: Array<string> = ['names', 'notes', 'references', 'structure', 'moieties'];
+  private propertyDynamicComponentId: { [propertyId: string]: string } = {
+    names: 'na',
+    notes: 'na',
+    references: 'na',
+    structure: 'structure-details',
+    moieties: 'na'
+  };
+  @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -35,15 +50,25 @@ export class SubstanceDetailsComponent implements OnInit {
     this.loadingService.setLoading(true);
     this.id = this.activatedRoute.snapshot.params['id'];
     this.getSubstanceDetails();
-    this.dynamicComponentLoader.getComponentFactory<StructureDetailsComponent>('structure-details')
-      .subscribe(componentFactory => {
-        console.log(componentFactory);
+  }
+
+  ngAfterViewInit(): void {
+    this.dynamicComponents.changes
+      .subscribe(() => {
+        this.dynamicComponents.forEach((cRef, index) => {
+          this.dynamicComponentLoader
+          .getComponentFactory<StructureDetailsComponent>(this.substanceDetailsProperties[index].dynamicComponentId)
+            .subscribe(componentFactory => {
+              const ref = cRef.createComponent(componentFactory);
+              ref.instance.data = this.substanceDetailsProperties[index].data;
+              ref.changeDetectorRef.detectChanges();
+            });
+        });
       });
   }
 
   getSubstanceDetails() {
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
-      console.log(response);
       if (response) {
         this.substance = response;
         this.processSubstanceProperties();
@@ -63,10 +88,11 @@ export class SubstanceDetailsComponent implements OnInit {
       if (this[`${key}ToDetailsProperties`]) {
         this[`${key}ToDetailsProperties`]();
       } else if (this.propertiesToShow.indexOf(key) > -1) {
-        const property: SubstanceDetailsProperty<SubstanceCode> = {
+        const property: SubstanceDetailsProperty<any> = {
           name: key,
           count: this.substance[key].length,
-          values: this.substance[key]
+          data: this.substance[key],
+          dynamicComponentId: this.propertyDynamicComponentId[key]
         };
         this.substanceDetailsProperties.push(property);
       }
@@ -75,26 +101,28 @@ export class SubstanceDetailsComponent implements OnInit {
 
   private codesToDetailsProperties(): void {
 
-    const classification: SubstanceDetailsProperty<SubstanceCode> = {
+    const classification: SubstanceDetailsProperty<Array<SubstanceCode>> = {
       name: 'classification',
       count: 0,
-      values: []
+      data: [],
+      dynamicComponentId: 'na'
     };
 
-    const identifiers: SubstanceDetailsProperty<SubstanceCode> = {
+    const identifiers: SubstanceDetailsProperty<Array<SubstanceCode>> = {
       name: 'identifiers',
       count: 0,
-      values: []
+      data: [],
+      dynamicComponentId: 'na'
     };
 
     if (this.substance.codes && this.substance.codes.length > 0) {
       this.substance.codes.forEach(code => {
         if (code.comments && code.comments.indexOf('|') > -1) {
           classification.count++;
-          classification.values.push(code);
+          classification.data.push(code);
         } else {
           identifiers.count++;
-          identifiers.values.push(code);
+          identifiers.data.push(code);
         }
       });
     }
@@ -109,7 +137,7 @@ export class SubstanceDetailsComponent implements OnInit {
   }
 
   private relationshipsToDetailsProperties(): void {
-    const properties: { [type: string]: SubstanceDetailsProperty<SubstanceRelationship> } = {};
+    const properties: { [type: string]: SubstanceDetailsProperty<Array<SubstanceRelationship>> } = {};
 
     if (this.substance.relationships && this.substance.relationships.length > 1) {
       this.substance.relationships.forEach(relationship => {
@@ -128,11 +156,12 @@ export class SubstanceDetailsComponent implements OnInit {
             properties[propertyName] = {
               name: propertyName,
               count: 0,
-              values: []
+              data: [],
+              dynamicComponentId: 'na'
             };
           }
           properties[propertyName].count++;
-          properties[propertyName].values.push(relationship);
+          properties[propertyName].data.push(relationship);
         }
       });
     }

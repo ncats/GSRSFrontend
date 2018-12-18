@@ -1,30 +1,16 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { StructureDetailsComponent } from './structure-details.component';
 import {
-  DynamicComponentLoaderModule,
-  DynamicComponentManifest
+  DynamicComponentLoaderModule
 } from '../../dynamic-component-loader/dynamic-component-loader.module';
-import { DYNAMIC_COMPONENT } from '../../dynamic-component-loader/dynamic-component-manifest';
-
-const manifests: DynamicComponentManifest[] = [
-  {
-    componentId: 'structure-details',
-    path: 'structure-details',
-    loadChildren: './structure-details.module#StructureDetailsModule',
-  },
-];
 
 @NgModule({
   imports: [
-    DynamicComponentLoaderModule.forRoot(manifests)
+    CommonModule,
+    DynamicComponentLoaderModule.forChild(StructureDetailsComponent)
   ],
   declarations: [
-    StructureDetailsComponent
-  ],
-  providers: [
-    { provide: DYNAMIC_COMPONENT, useValue: StructureDetailsComponent },
-  ],
-  entryComponents: [
     StructureDetailsComponent
   ]
 })

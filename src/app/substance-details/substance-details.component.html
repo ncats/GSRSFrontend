@@ -43,6 +43,14 @@
               </div>
             </div>
           </mat-expansion-panel>
+          <mat-expansion-panel expanded="true" *ngFor="let property of substanceDetailsProperties">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h2>{{property.name}}</h2>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div #dynamicComponent></div>
+          </mat-expansion-panel>
         </mat-accordion>
       </div>
     </div>

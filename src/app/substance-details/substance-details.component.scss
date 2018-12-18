@@ -23,3 +23,9 @@
     padding: 0 5px;
     margin-left: 15px;
 }
+
+mat-panel-title {
+    h2 {
+        text-transform: capitalize;
+    }
+}

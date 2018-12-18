@@ -1,3 +1,35 @@
-<p>
-  structure-details works!
-</p>
+<div class="flex-row" *ngIf="data">
+  <div>
+    <div class="name-value">
+      <div class="name">Stereochemistry</div>
+      <div class="value black-pill">{{data.stereochemistry}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Molecular Formula</div>
+      <div class="value blue-font">{{data.formula}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Molecular Weight</div>
+      <div class="value blue-font">{{data.mwt}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Optical Activity</div>
+      <div class="value gray-pill">{{data.opticalActivity}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Defined Stereocenters</div>
+      <div class="value gray-pill">{{data.definedStereo}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">E/Z Centers</div>
+      <div class="value gray-pill">{{data.ezCenters}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Charge</div>
+      <div class="value gray-pill">{{data.charge}}</div>
+    </div>
+  </div>
+  <div class="structure-image-container">
+    <img class="structure-img" [src]="getSafeStructureImgUrl(data.id)">
+  </div>
+</div>
