@@ -1,3 +1,18 @@
 {
-    "apiBaseUrl": "https://ginas.ncats.nih.gov/ginas/app/"
+    "apiBaseUrl": "https://ginas.ncats.nih.gov/ginas/app/",
+    "substanceDetailsCards": {
+        "overview": {
+            "fromProperties": [
+                "substanceClass",
+                "_approvalIDDisplay",
+                "version" 
+            ],
+            "toProperties": [
+                {
+                    "name": "overview",
+                    "order": 1
+                }
+            ]
+        }
+    }
 }
