@@ -11,12 +11,12 @@
             "filters":[
                 {
                     "filterName":"equals",
-                    "propertyToCheck": "/substanceClass",
+                    "propertyToCheck": "substanceClass",
                     "value": "chemical|polymer"
                 },
                 {
                     "filterName":"exists",
-                    "propertyToCheck": "/structure"
+                    "propertyToCheck": "structure"
                 }
             ]            
         },
@@ -26,7 +26,7 @@
             "filters":[
                 {
                     "filterName":"exists",
-                    "propertyToCheck": "/names"
+                    "propertyToCheck": "names"
                 }
             ]            
         },
@@ -35,7 +35,7 @@
             "filters":[
                 {
                     "filterName":"exists",
-                    "propertyToCheck": "/codes"
+                    "propertyToCheck": "codes"
                 },
                 {
                     "filterName":"substanceCodes"
@@ -47,7 +47,7 @@
             "filters":[
                 {
                     "filterName":"exists",
-                    "propertyToCheck": "/relationships"
+                    "propertyToCheck": "relationships"
                 },
                 {
                     "filterName":"substanceRelationships"
@@ -60,7 +60,36 @@
             "filters":[
                 {
                     "filterName":"exists",
-                    "propertyToCheck": "/notes"
+                    "propertyToCheck": "notes"
+                }
+            ]            
+        },
+        {
+            "card":"substance-audit-info",
+            "title": "audit info"    
+        },
+        {
+            "card":"substance-references",
+            "title": "references",
+            "filters":[
+                {
+                    "filterName":"exists",
+                    "propertyToCheck": "references"
+                }
+            ]            
+        },
+        {
+            "card":"substance-moieties",
+            "title": "moieties",
+            "filters":[
+                {
+                    "filterName":"equals",
+                    "propertyToCheck": "substanceClass",
+                    "value": "chemical"
+                },
+                {
+                    "filterName":"exists",
+                    "propertyToCheck": "moieties"
                 }
             ]            
         }

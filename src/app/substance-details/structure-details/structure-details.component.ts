@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceStructure } from '../../substance/substance.model';
-import { StructureService } from '../structure.service';
+import { StructureService } from '../../structure/structure.service';
 import { SafeUrl } from '@angular/platform-browser';
 
 @Component({

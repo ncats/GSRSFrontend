@@ -10,12 +10,13 @@ import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceCode, SubstanceRelationship } from '../substance/substance.model';
 import { LoadingService } from '../loading/loading.service';
-import { MainNotificationService } from '../main-notification/main-notification.service';
+import { MainNotificationService } from '../main-notification/main-notification.service'
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
 import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceDetailsProperty } from '../substance/substance-utilities.model';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
-import { StructureDetailsComponent } from '../structure/structure-details/structure-details.component';
+import { StructureDetailsComponent } from './structure-details/structure-details.component';
+import { SubstanceCardsService } from './substance-cards.service';
 
 @Component({
   selector: 'app-substance-details',
@@ -42,7 +43,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
     private router: Router,
-    private dynamicComponentLoader: DynamicComponentLoader
+    private dynamicComponentLoader: DynamicComponentLoader,
+    private substanceCardsService: SubstanceCardsService
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
@@ -71,7 +73,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
         this.substance = response;
-        this.processSubstanceProperties();
+        this.substanceDetailsProperties = this.substanceCardsService.getSubstanceDetailsProperties(this.substance);
       } else {
         this.handleSubstanceRetrivalError();
       }
@@ -82,94 +84,94 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private processSubstanceProperties() {
-    const substanceKeys = Object.keys(this.substance);
-    substanceKeys.forEach(key => {
-      if (this[`${key}ToDetailsProperties`]) {
-        this[`${key}ToDetailsProperties`]();
-      } else if (this.propertiesToShow.indexOf(key) > -1) {
-        const property: SubstanceDetailsProperty = {
-          name: key,
-          count: this.substance[key].length,
-          // data: this.substance[key],
-          dynamicComponentId: this.propertyDynamicComponentId[key]
-        };
-        this.substanceDetailsProperties.push(property);
-      }
-    });
-  }
+  // private processSubstanceProperties() {
+  //   const substanceKeys = Object.keys(this.substance);
+  //   substanceKeys.forEach(key => {
+  //     if (this[`${key}ToDetailsProperties`]) {
+  //       this[`${key}ToDetailsProperties`]();
+  //     } else if (this.propertiesToShow.indexOf(key) > -1) {
+  //       const property: SubstanceDetailsProperty = {
+  //         title: key,
+  //         count: this.substance[key].length,
+  //         // data: this.substance[key],
+  //         dynamicComponentId: this.propertyDynamicComponentId[key]
+  //       };
+  //       this.substanceDetailsProperties.push(property);
+  //     }
+  //   });
+  // }
 
-  private codesToDetailsProperties(): void {
+  // private codesToDetailsProperties(): void {
 
-    const classification: SubstanceDetailsProperty = {
-      name: 'classification',
-      count: 0,
-      // data: [],
-      dynamicComponentId: 'na'
-    };
+  //   const classification: SubstanceDetailsProperty = {
+  //     title: 'classification',
+  //     count: 0,
+  //     // data: [],
+  //     dynamicComponentId: 'na'
+  //   };
 
-    const identifiers: SubstanceDetailsProperty = {
-      name: 'identifiers',
-      count: 0,
-      // data: [],
-      dynamicComponentId: 'na'
-    };
+  //   const identifiers: SubstanceDetailsProperty = {
+  //     title: 'identifiers',
+  //     count: 0,
+  //     // data: [],
+  //     dynamicComponentId: 'na'
+  //   };
 
-    if (this.substance.codes && this.substance.codes.length > 0) {
-      this.substance.codes.forEach(code => {
-        if (code.comments && code.comments.indexOf('|') > -1) {
-          classification.count++;
-          // classification.data.push(code);
-        } else {
-          identifiers.count++;
-          // identifiers.data.push(code);
-        }
-      });
-    }
+  //   if (this.substance.codes && this.substance.codes.length > 0) {
+  //     this.substance.codes.forEach(code => {
+  //       if (code.comments && code.comments.indexOf('|') > -1) {
+  //         classification.count++;
+  //         // classification.data.push(code);
+  //       } else {
+  //         identifiers.count++;
+  //         // identifiers.data.push(code);
+  //       }
+  //     });
+  //   }
 
-    if (classification.count > 0) {
-      this.substanceDetailsProperties.push(classification);
-    }
+  //   if (classification.count > 0) {
+  //     this.substanceDetailsProperties.push(classification);
+  //   }
 
-    if (identifiers.count > 0) {
-      this.substanceDetailsProperties.push(identifiers);
-    }
-  }
+  //   if (identifiers.count > 0) {
+  //     this.substanceDetailsProperties.push(identifiers);
+  //   }
+  // }
 
-  private relationshipsToDetailsProperties(): void {
-    const properties: { [type: string]: SubstanceDetailsProperty } = {};
+  // private relationshipsToDetailsProperties(): void {
+  //   const properties: { [type: string]: SubstanceDetailsProperty } = {};
 
-    if (this.substance.relationships && this.substance.relationships.length > 1) {
-      this.substance.relationships.forEach(relationship => {
-        const typeParts = relationship.type.split('->');
-        const property = typeParts[0].trim();
-        if (property) {
-          let propertyName: string;
-          if (property.indexOf('METABOLITE') > -1) {
-            propertyName = 'metabolites';
-          } else if (property.indexOf('IMPURITY') > -1) {
-            propertyName = 'impurities';
-          } else if (property.indexOf('ACTIVE MOIETY') > -1) {
-            propertyName = 'active moiety';
-          }
-          if (!properties[propertyName]) {
-            properties[propertyName] = {
-              name: propertyName,
-              count: 0,
-              // data: [],
-              dynamicComponentId: 'na'
-            };
-          }
-          properties[propertyName].count++;
-          // properties[propertyName].data.push(relationship);
-        }
-      });
-    }
+  //   if (this.substance.relationships && this.substance.relationships.length > 1) {
+  //     this.substance.relationships.forEach(relationship => {
+  //       const typeParts = relationship.type.split('->');
+  //       const property = typeParts[0].trim();
+  //       if (property) {
+  //         let propertyName: string;
+  //         if (property.indexOf('METABOLITE') > -1) {
+  //           propertyName = 'metabolites';
+  //         } else if (property.indexOf('IMPURITY') > -1) {
+  //           propertyName = 'impurities';
+  //         } else if (property.indexOf('ACTIVE MOIETY') > -1) {
+  //           propertyName = 'active moiety';
+  //         }
+  //         if (!properties[propertyName]) {
+  //           properties[propertyName] = {
+  //             title: propertyName,
+  //             count: 0,
+  //             // data: [],
+  //             dynamicComponentId: 'na'
+  //           };
+  //         }
+  //         properties[propertyName].count++;
+  //         // properties[propertyName].data.push(relationship);
+  //       }
+  //     });
+  //   }
 
-    Object.keys(properties).forEach(key => {
-      this.substanceDetailsProperties.push(properties[key]);
-    });
-  }
+  //   Object.keys(properties).forEach(key => {
+  //     this.substanceDetailsProperties.push(properties[key]);
+  //   });
+  // }
 
   private handleSubstanceRetrivalError() {
     const notification: AppNotification = {

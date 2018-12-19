@@ -7,7 +7,7 @@
         <mat-icon>chevron_right</mat-icon>
       </a>
       <a mat-list-item *ngFor="let property of substanceDetailsProperties">
-          <span class="capitalized">{{property.name}}</span>
+          <span class="capitalized">{{property.title}}</span>
           <span class="chip">{{property.count}}</span>
           <span class="middle-fill"></span>
           <mat-icon>chevron_right</mat-icon>
@@ -22,7 +22,7 @@
           <h1>{{substance._name}}</h1>
         </mat-card>
         <mat-accordion multi="true">
-          <mat-expansion-panel expanded="true">
+          <!-- <mat-expansion-panel expanded="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 <h2>Overview</h2>
@@ -42,11 +42,11 @@
                 <div class="value blue-font">{{substance.version}}</div>
               </div>
             </div>
-          </mat-expansion-panel>
+          </mat-expansion-panel> -->
           <mat-expansion-panel expanded="true" *ngFor="let property of substanceDetailsProperties">
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <h2>{{property.name}}</h2>
+                <h2>{{property.title}}</h2>
               </mat-panel-title>
             </mat-expansion-panel-header>
             <div #dynamicComponent></div>

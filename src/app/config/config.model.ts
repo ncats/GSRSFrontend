@@ -13,5 +13,4 @@ export interface SubstanceDetailsCardFilter {
     filterName: string;
     propertyToCheck?: string;
     value?: string;
-    isValueEqualsTitle?: boolean;
 }
