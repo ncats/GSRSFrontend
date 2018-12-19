@@ -25,7 +25,7 @@ import { StructureDetailsComponent } from '../structure/structure-details/struct
 export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
   id: string;
   substance: SubstanceDetail;
-  substanceDetailsProperties: Array<SubstanceDetailsProperty<any>> = [];
+  substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
   private propertiesToShow: Array<string> = ['names', 'notes', 'references', 'structure', 'moieties'];
   private propertyDynamicComponentId: { [propertyId: string]: string } = {
     names: 'na',
@@ -60,7 +60,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
           .getComponentFactory<StructureDetailsComponent>(this.substanceDetailsProperties[index].dynamicComponentId)
             .subscribe(componentFactory => {
               const ref = cRef.createComponent(componentFactory);
-              ref.instance.data = this.substanceDetailsProperties[index].data;
+              // ref.instance.data = this.substanceDetailsProperties[index].data;
               ref.changeDetectorRef.detectChanges();
             });
         });
@@ -88,10 +88,10 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
       if (this[`${key}ToDetailsProperties`]) {
         this[`${key}ToDetailsProperties`]();
       } else if (this.propertiesToShow.indexOf(key) > -1) {
-        const property: SubstanceDetailsProperty<any> = {
+        const property: SubstanceDetailsProperty = {
           name: key,
           count: this.substance[key].length,
-          data: this.substance[key],
+          // data: this.substance[key],
           dynamicComponentId: this.propertyDynamicComponentId[key]
         };
         this.substanceDetailsProperties.push(property);
@@ -101,17 +101,17 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
 
   private codesToDetailsProperties(): void {
 
-    const classification: SubstanceDetailsProperty<Array<SubstanceCode>> = {
+    const classification: SubstanceDetailsProperty = {
       name: 'classification',
       count: 0,
-      data: [],
+      // data: [],
       dynamicComponentId: 'na'
     };
 
-    const identifiers: SubstanceDetailsProperty<Array<SubstanceCode>> = {
+    const identifiers: SubstanceDetailsProperty = {
       name: 'identifiers',
       count: 0,
-      data: [],
+      // data: [],
       dynamicComponentId: 'na'
     };
 
@@ -119,10 +119,10 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
       this.substance.codes.forEach(code => {
         if (code.comments && code.comments.indexOf('|') > -1) {
           classification.count++;
-          classification.data.push(code);
+          // classification.data.push(code);
         } else {
           identifiers.count++;
-          identifiers.data.push(code);
+          // identifiers.data.push(code);
         }
       });
     }
@@ -137,7 +137,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
   }
 
   private relationshipsToDetailsProperties(): void {
-    const properties: { [type: string]: SubstanceDetailsProperty<Array<SubstanceRelationship>> } = {};
+    const properties: { [type: string]: SubstanceDetailsProperty } = {};
 
     if (this.substance.relationships && this.substance.relationships.length > 1) {
       this.substance.relationships.forEach(relationship => {
@@ -156,12 +156,12 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
             properties[propertyName] = {
               name: propertyName,
               count: 0,
-              data: [],
+              // data: [],
               dynamicComponentId: 'na'
             };
           }
           properties[propertyName].count++;
-          properties[propertyName].data.push(relationship);
+          // properties[propertyName].data.push(relationship);
         }
       });
     }

@@ -1,6 +1,5 @@
-export interface SubstanceDetailsProperty<T> {
+export interface SubstanceDetailsProperty {
     name: string;
     count: number;
-    data: T;
     dynamicComponentId?: string;
 }

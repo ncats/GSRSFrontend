@@ -2,29 +2,65 @@
     "apiBaseUrl": "https://ginas.ncats.nih.gov/ginas/app/",
     "substanceDetailsCards": [
         {
-            "card":"overview",
+            "card":"substance-overview",
+            "title": "overview"    
+        },
+        {
+            "card":"structure-details",
+            "title": "structure",
             "filters":[
                 {
-                    "filterName":"substanceClassFilter",
-                    "propertyToCheck": "substanceClass",
-                    "filterFunction": "equals",
-                    "value": "chemical"
-                }   
+                    "filterName":"equals",
+                    "propertyToCheck": "/substanceClass",
+                    "value": "chemical|polymer"
+                },
+                {
+                    "filterName":"exists",
+                    "propertyToCheck": "/structure"
+                }
             ]            
         },
         {
-            "card":"structure",
+            "card":"substance-names",
+            "title": "names",
             "filters":[
                 {
-                    "filterName":"substanceClassFilter",
-                    "propertyToCheck": "substanceClass",
-                    "filterFunction": "equals",
-                    "value": "chemical || polymer"
+                    "filterName":"exists",
+                    "propertyToCheck": "/names"
+                }
+            ]            
+        },
+        {
+            "card":"substance-codes",
+            "filters":[
+                {
+                    "filterName":"exists",
+                    "propertyToCheck": "/codes"
                 },
                 {
-                    "filterName":"structurePropertyFilter",
-                    "propertyToCheck": "structure",
-                    "filterFunction": "exists"
+                    "filterName":"substanceCodes"
+                }
+            ]            
+        },
+        {
+            "card":"substance-relationships",
+            "filters":[
+                {
+                    "filterName":"exists",
+                    "propertyToCheck": "/relationships"
+                },
+                {
+                    "filterName":"substanceRelationships"
+                }
+            ]            
+        },
+        {
+            "card":"substance-notes",
+            "title": "notes",
+            "filters":[
+                {
+                    "filterName":"exists",
+                    "propertyToCheck": "/notes"
                 }
             ]            
         }

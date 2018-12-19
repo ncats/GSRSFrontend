@@ -12,27 +12,28 @@ export class SubstanceCardsService {
     public configService: ConfigService
   ) { }
 
-  getSubstanceDetailsProperties(substance: SubstanceDetail): Array<SubstanceDetailsProperty<any>> {
-    const substanceDetailsProperties: Array<SubstanceDetailsProperty<any>> = [];
+  getSubstanceDetailsProperties(substance: SubstanceDetail): Array<SubstanceDetailsProperty> {
+    const substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
     const configCards = this.configService.configData.substanceDetailsCards;
 
     if (configCards != null && configCards.length) {
       configCards.forEach(card => {
-        if (this[card]) {
-          this[card](substance, substanceDetailsProperties);
-        }
+        card.filters.forEach(filter => {
+          if (this[filter.filterName]) {
+            this[filter.filterName](card.card, substance, substanceDetailsProperties);
+          }
+        });
       });
     }
 
     return substanceDetailsProperties;
   }
 
-  overview(substance: SubstanceDetail, substanceDetailsProperties: Array<SubstanceDetailsProperty<any>>): void {
-    const overview: SubstanceDetailsProperty<Array<any>> = {
-      name: 'overview',
+  equals(card: string, substance: SubstanceDetail, substanceDetailsProperties: Array<SubstanceDetailsProperty>): void {
+    const overview: SubstanceDetailsProperty = {
+      name: '',
       count: 0,
-      data: [],
-      dynamicComponentId: 'substance-overview'
+      dynamicComponentId: card
     };
   }
 
