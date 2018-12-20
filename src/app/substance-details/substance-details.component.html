@@ -1,11 +1,6 @@
 <mat-sidenav-container class="example-container">
   <mat-sidenav mode="side" opened>
     <mat-nav-list>
-      <a mat-list-item>
-        <span>Overview</span>
-        <span class="middle-fill"></span>
-        <mat-icon>chevron_right</mat-icon>
-      </a>
       <a mat-list-item *ngFor="let property of substanceDetailsProperties">
           <span class="capitalized">{{property.title}}</span>
           <span class="chip" *ngIf="property.count != null">{{property.count}}</span>
@@ -18,31 +13,10 @@
 
     <div class="side-nav-content">
       <div class="substance-details" *ngIf="substance">
-        <mat-card class="title-card">
+        <div class="title-container">
           <h1>{{substance._name}}</h1>
-        </mat-card>
+        </div>
         <mat-accordion multi="true">
-          <!-- <mat-expansion-panel expanded="true">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <h2>Overview</h2>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div>
-              <div class="name-value">
-                <div class="name">Substance Class</div>
-                <div class="value blue-font">{{substance.substanceClass}}</div>
-              </div>
-              <div class="name-value">
-                <div class="name">Record UNII</div>
-                <div class="value blue-font">{{substance._approvalIDDisplay}}</div>
-              </div>
-              <div class="name-value">
-                <div class="name">Record Version</div>
-                <div class="value blue-font">{{substance.version}}</div>
-              </div>
-            </div>
-          </mat-expansion-panel> -->
           <mat-expansion-panel expanded="true" *ngFor="let property of substanceDetailsProperties">
             <mat-expansion-panel-header>
               <mat-panel-title>

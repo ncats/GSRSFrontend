@@ -34,7 +34,7 @@ export class SubstanceCardsService {
                 response === true
                 && filter.propertyToCheck
                 && substance[filter.propertyToCheck]
-                && substance[filter.propertyToCheck].length) {
+                && Object.prototype.toString.call(substance[filter.propertyToCheck]) === '[object Array]') {
                   countSubstanceProperty = filter.propertyToCheck;
               }
               responses.push(response);
@@ -44,10 +44,8 @@ export class SubstanceCardsService {
           if (isCardIncluded) {
             responses.forEach(response => {
               if (typeof response !== 'boolean') {
-                console.log(response);
                 isAddCard = false;
                 substanceDetailsProperties = substanceDetailsProperties.concat(response);
-                console.log(substanceDetailsProperties);
               }
             });
           }
@@ -56,7 +54,10 @@ export class SubstanceCardsService {
         if (isAddCard) {
           const detailsProperty: SubstanceDetailsProperty = {
             title: card.title || '',
-            count: countSubstanceProperty && substance[countSubstanceProperty] && substance[countSubstanceProperty].length || null,
+            count: countSubstanceProperty
+              && substance[countSubstanceProperty]
+              && Object.prototype.toString.call(substance[countSubstanceProperty]) === '[object Array]'
+              && (substance[countSubstanceProperty].length || 0),
             dynamicComponentId: card.card
           };
           substanceDetailsProperties.push(detailsProperty);
@@ -91,7 +92,10 @@ export class SubstanceCardsService {
     substance: SubstanceDetail,
     filter: SubstanceDetailsCardFilter
   ): boolean {
-    if (filter.propertyToCheck != null && substance[filter.propertyToCheck] != null) {
+    if (filter.propertyToCheck != null
+      && substance[filter.propertyToCheck] != null
+      && (Object.prototype.toString.call(substance[filter.propertyToCheck]) !== '[object Array]'
+        || substance[filter.propertyToCheck].length)) {
       return true;
     }
     return false;
@@ -106,13 +110,15 @@ export class SubstanceCardsService {
     const classification: SubstanceDetailsProperty = {
       title: 'classification',
       count: 0,
-      dynamicComponentId: 'substance-codes'
+      dynamicComponentId: 'substance-codes',
+      type: 'classification'
     };
 
     const identifiers: SubstanceDetailsProperty = {
       title: 'identifiers',
       count: 0,
-      dynamicComponentId: 'substance-codes'
+      dynamicComponentId: 'substance-codes',
+      type: 'identifiers'
     };
 
     if (substance.codes && substance.codes.length > 0) {
@@ -149,18 +155,23 @@ export class SubstanceCardsService {
         const property = typeParts[0].trim();
         if (property) {
           let propertyName: string;
+          let type: string;
           if (property.indexOf('METABOLITE') > -1) {
             propertyName = 'metabolites';
+            type = 'METABOLITE';
           } else if (property.indexOf('IMPURITY') > -1) {
             propertyName = 'impurities';
+            type = 'IMPURITY';
           } else if (property.indexOf('ACTIVE MOIETY') > -1) {
             propertyName = 'active moiety';
+            type = 'ACTIVE MOIETY';
           }
           if (!properties[propertyName]) {
             properties[propertyName] = {
               title: propertyName,
               count: 0,
-              dynamicComponentId: 'substance-relationships'
+              dynamicComponentId: 'substance-relationships',
+              type: type
             };
           }
           properties[propertyName].count++;
