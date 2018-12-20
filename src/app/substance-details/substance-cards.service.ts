@@ -14,21 +14,49 @@ export class SubstanceCardsService {
   ) { }
 
   getSubstanceDetailsProperties(substance: SubstanceDetail): Array<SubstanceDetailsProperty> {
-    const substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
+    let substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
     const configCards = this.configService.configData.substanceDetailsCards;
 
     if (configCards != null && configCards.length) {
       configCards.forEach(card => {
+        let isAddCard = true;
+        let countSubstanceProperty: string;
         if (card.filters && card.filters.length) {
+          const responses = [];
+          let isCardIncluded = true;
           card.filters.forEach(filter => {
             if (this[filter.filterName]) {
-              this[filter.filterName](substance, substanceDetailsProperties, filter, card.card, card.title);
+              const response = this[filter.filterName](substance, filter);
+              if (response === false) {
+                isCardIncluded = false;
+                isAddCard = false;
+              } else if (
+                response === true
+                && filter.propertyToCheck
+                && substance[filter.propertyToCheck]
+                && substance[filter.propertyToCheck].length) {
+                  countSubstanceProperty = filter.propertyToCheck;
+              }
+              responses.push(response);
             }
           });
-        } else {
+
+          if (isCardIncluded) {
+            responses.forEach(response => {
+              if (typeof response !== 'boolean') {
+                console.log(response);
+                isAddCard = false;
+                substanceDetailsProperties = substanceDetailsProperties.concat(response);
+                console.log(substanceDetailsProperties);
+              }
+            });
+          }
+        }
+
+        if (isAddCard) {
           const detailsProperty: SubstanceDetailsProperty = {
             title: card.title || '',
-            count: 0,
+            count: countSubstanceProperty && substance[countSubstanceProperty] && substance[countSubstanceProperty].length || null,
             dynamicComponentId: card.card
           };
           substanceDetailsProperties.push(detailsProperty);
@@ -41,53 +69,40 @@ export class SubstanceCardsService {
 
   equals(
     substance: SubstanceDetail,
-    substanceDetailsProperties: Array<SubstanceDetailsProperty>,
-    filter: SubstanceDetailsCardFilter,
-    dynamicComponentId: string,
-    title?: string,
-  ): void {
+    filter: SubstanceDetailsCardFilter
+  ): boolean {
     if (filter.value != null && filter.propertyToCheck != null) {
-      const property: SubstanceDetailsProperty = {
-        title: title || '',
-        count: 0,
-        dynamicComponentId: dynamicComponentId
-      };
 
       if (!filter.value.indexOf('|') && substance[filter.propertyToCheck] === filter.value) {
-        substanceDetailsProperties.push(property);
+        return true;
       } else if (filter.value.indexOf('|')) {
         const values = filter.value.split('|');
         for (let i = 0; i < values.length; i++) {
           if (substance[filter.propertyToCheck] === values[i]) {
-            substanceDetailsProperties.push(property);
-            break;
+            return true;
           }
         }
       }
+      return false;
     }
   }
 
   exists(
     substance: SubstanceDetail,
-    substanceDetailsProperties: Array<SubstanceDetailsProperty>,
-    filter: SubstanceDetailsCardFilter,
-    dynamicComponentId: string,
-    title?: string,
-  ): void {
+    filter: SubstanceDetailsCardFilter
+  ): boolean {
     if (filter.propertyToCheck != null && substance[filter.propertyToCheck] != null) {
-      const property: SubstanceDetailsProperty = {
-        title: title || '',
-        count: substance[filter.propertyToCheck].length || 0,
-        dynamicComponentId: dynamicComponentId
-      };
-      substanceDetailsProperties.push(property);
+      return true;
     }
+    return false;
   }
 
   substanceCodes(
-    substance: SubstanceDetail,
-    substanceDetailsProperties: Array<SubstanceDetailsProperty>
-  ): void {
+    substance: SubstanceDetail
+  ): Array<SubstanceDetailsProperty> {
+
+    const substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
+
     const classification: SubstanceDetailsProperty = {
       title: 'classification',
       count: 0,
@@ -117,12 +132,15 @@ export class SubstanceCardsService {
     if (identifiers.count > 0) {
       substanceDetailsProperties.push(identifiers);
     }
+
+    return substanceDetailsProperties;
   }
 
   substanceRelationships(
-    substance: SubstanceDetail,
-    substanceDetailsProperties: Array<SubstanceDetailsProperty>
-  ): void {
+    substance: SubstanceDetail
+  ): Array<SubstanceDetailsProperty> {
+    const substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
+
     const properties: { [type: string]: SubstanceDetailsProperty } = {};
 
     if (substance.relationships && substance.relationships.length > 1) {
@@ -153,5 +171,7 @@ export class SubstanceCardsService {
     Object.keys(properties).forEach(key => {
       substanceDetailsProperties.push(properties[key]);
     });
+
+    return substanceDetailsProperties;
   }
 }

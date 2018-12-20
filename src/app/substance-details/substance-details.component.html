@@ -8,7 +8,7 @@
       </a>
       <a mat-list-item *ngFor="let property of substanceDetailsProperties">
           <span class="capitalized">{{property.title}}</span>
-          <span class="chip">{{property.count}}</span>
+          <span class="chip" *ngIf="property.count != null">{{property.count}}</span>
           <span class="middle-fill"></span>
           <mat-icon>chevron_right</mat-icon>
       </a>
