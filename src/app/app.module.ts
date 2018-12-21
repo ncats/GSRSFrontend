@@ -40,6 +40,7 @@ import { FileSelectModule } from 'file-select';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic-component-loader.module';
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
+import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { dynamicComponentManifests } from './app-dynamic-component-manifests';
     StructureEditorModule,
     FileSelectModule,
     MatListModule,
-    DynamicComponentLoaderModule.forRoot(dynamicComponentManifests)
+    DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
+    ScrollNavModule
   ],
   providers: [
     ConfigService,
