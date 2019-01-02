@@ -1,0 +1,7 @@
+table.mat-table {
+    width: 100%;
+}
+
+td.mat-cell:not(:last-child), td.mat-footer-cell:not(:last-child), th.mat-header-cell:not(:last-child) {
+    padding-right: 10px;
+}
