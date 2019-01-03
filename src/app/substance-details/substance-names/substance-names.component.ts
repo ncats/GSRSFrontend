@@ -14,7 +14,7 @@ export class SubstanceNamesComponent extends SubstanceCardBase implements OnInit
   names: Array<SubstanceName>;
   filteredNames: Array<SubstanceName>;
   pagedNames: Array<SubstanceName>;
-  displayedColumns: string[] = ['name', 'type', 'language', 'references'];
+  displayedColumns: string[] = ['name', 'type', 'language'];
   page = 0;
   pageSize = 5;
   searchControl = new FormControl();
