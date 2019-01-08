@@ -25,10 +25,8 @@ export class ScrollNavItemDirective implements AfterViewInit {
   }
 
   getScrollToElement() {
-    console.log(this.scrollToElementId);
     setTimeout(() => {
       this.scrollToElement = document.getElementById(this.scrollToElementId);
-      console.log(this.scrollToElement);
       if (this.scrollToElement == null) {
         console.error('You did not enter a valid element Id in scrollToElementId');
       } else {

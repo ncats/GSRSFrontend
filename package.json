@@ -51,6 +51,7 @@
     "@nguniversal/express-engine": "6.0.0",
     "@nguniversal/module-map-ngfactory-loader": "6.0.0",
     "@types/hammerjs": "2.0.36",
+    "classlist.js": "^1.1.20150312",
     "compression": "1.7.3",
     "core-js": "2.5.4",
     "dojo": "1.14.2",
@@ -60,6 +61,7 @@
     "lodash": "4.17.10",
     "rxjs": "6.0.0",
     "ts-loader": "4.5.0",
+    "web-animations-js": "^2.3.1",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
