@@ -5,7 +5,7 @@
   </mat-form-field>
 </div>
 <div class="responsive">
-  <table mat-table [dataSource]="paged">
+  <table [ngClass]="{ 'classification': type == 'classification' }" mat-table [dataSource]="paged">
 
     <ng-container matColumnDef="classificationTree">
       <th mat-header-cell *matHeaderCellDef> Classification Tree </th>

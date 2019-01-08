@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceRelationship } from '../../substance/substance.model';
+import { StructureService } from '../../structure/structure.service';
+import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-substance-relationships',
@@ -10,8 +12,9 @@ import { SubstanceRelationship } from '../../substance/substance.model';
 export class SubstanceRelationshipsComponent extends SubstanceCardBase implements OnInit {
   type: string;
   relationships: Array<SubstanceRelationship> = [];
+  displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details'];
 
-  constructor() {
+  constructor(private structureService: StructureService) {
     super();
   }
 
@@ -33,7 +36,10 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
         }
       });
     }
-    console.log(this.relationships);
+  }
+
+  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
+    return this.structureService.getSafeStructureImgUrl(structureId, size);
   }
 
 }

@@ -4,3 +4,11 @@
     width: 400px;
     max-width: 100%;
 }
+
+.classification {
+    
+    td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
