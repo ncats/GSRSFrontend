@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { SubstanceCode } from '../../substance/substance.model';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-substance-codes',
@@ -13,7 +12,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   codes: Array<SubstanceCode> = [];
   displayedColumns: string[];
 
-  constructor(private sanitizer: DomSanitizer) {
+  constructor() {
     super();
   }
 
@@ -55,11 +54,5 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
 
   getClassificationTree(comments: string): Array<string> {
     return comments.split('|');
-  }
-
-  getIndentation(treeLevelIndex: number): any {
-    const pxPadding = treeLevelIndex * 10; 
-    const style = `padding-left:${ pxPadding }px`;
-    return this.sanitizer.bypassSecurityTrustStyle(style);
   }
 }
