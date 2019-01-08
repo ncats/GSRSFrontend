@@ -8,6 +8,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { MatTreeModule } from '@angular/material/tree';
     MatInputModule,
     ReactiveFormsModule,
     FormsModule,
-    MatTreeModule
+    MatTreeModule,
+    RouterModule
   ],
   declarations: [SubstanceCodesComponent]
 })
