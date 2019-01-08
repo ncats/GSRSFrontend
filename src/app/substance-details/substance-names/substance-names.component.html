@@ -5,7 +5,7 @@
   </mat-form-field>
 </div>
 <div class="responsive">
-  <table mat-table [dataSource]="pagedNames">
+  <table mat-table [dataSource]="paged">
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -31,6 +31,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
-<mat-paginator [length]="filteredNames.length || 0" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event)"
+<mat-paginator [length]="filtered.length || 0" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event)"
   [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
