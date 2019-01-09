@@ -36,6 +36,8 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
         }, error => {
           console.log(error);
         });
+      } else {
+        this.filtered = [];
       }
     }
   }

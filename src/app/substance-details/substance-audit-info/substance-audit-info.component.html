@@ -1,3 +1,18 @@
-<p>
-  substance-audit-info works!
-</p>
+<div *ngIf="substance">
+  <div class="name-value">
+    <div class="name">Created</div>
+    <div class="value">{{substance.created | date : 'short'}}</div>
+  </div>
+  <div class="name-value">
+    <div class="name">Created By</div>
+    <div class="value">{{substance.createdBy}}</div>
+  </div>
+  <div class="name-value">
+    <div class="name">Last Edited</div>
+    <div class="value">{{substance.lastEdited | date : 'short'}}</div>
+  </div>
+  <div class="name-value">
+    <div class="name">Last Edited By</div>
+    <div class="value">{{substance.lastEditedBy}}</div>
+  </div>
+</div>

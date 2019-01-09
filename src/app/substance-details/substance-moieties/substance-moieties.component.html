@@ -1,3 +1,50 @@
-<p>
-  substance-moieties works!
-</p>
+<div class="flex-row moiety" *ngFor="let moiety of moieties">
+  <div class="equal-width">
+    <img class="structure-image" [src]="getSafeStructureImgUrl(moiety.uuid)">
+  </div>
+  <div class="equal-width">
+    <div class="name-value">
+      <div class="name">Molecular Formula:</div>
+      <div class="value">{{moiety.formula}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Molecular Weight:</div>
+      <div class="value">{{moiety.mwt}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Charge:</div>
+      <div class="value">{{moiety.charge}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Count:</div>
+      <div class="value">
+        <div *ngIf="moiety.countAmount">
+          <div>{{moiety.countAmount.type}}</div>
+          <div>{{moiety.countAmount.average}}&nbsp;{{moiety.countAmount.units}}&nbsp;(average)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="equal-width">
+    <div class="name-value">
+      <div class="name">Stereochemistry:</div>
+      <div class="value">{{moiety.stereochemistry}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Additional Stereochemistry:</div>
+      <div class="value">{{moiety.additionalStereochemistry}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Defined Stereocenters:</div>
+      <div class="value">{{moiety.stereoCenters}}/{{moiety.definedStereo}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">E/Z Centers:</div>
+      <div class="value">{{moiety.ezCenters}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Optical Activity:</div>
+      <div class="value">{{moiety.opticalActivity}}</div>
+    </div>
+  </div>
+</div>
