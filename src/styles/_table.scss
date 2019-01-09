@@ -5,3 +5,17 @@ table.mat-table {
 td.mat-cell:not(:last-child), td.mat-footer-cell:not(:last-child), th.mat-header-cell:not(:last-child) {
     padding-right: 10px;
 }
+
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.no-bottom-border {
+    tr:last-child {
+        td.mat-cell {
+            border-bottom: none;
+        }
+    }
+    
+}
