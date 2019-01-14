@@ -13,29 +13,53 @@ export class SubstanceCardsService {
     public configService: ConfigService
   ) { }
 
+  private getEvaluatedProperty(substance: any, propertyToCheck?: string): any {
+    if (propertyToCheck == null) {
+      return null;
+    } else if (propertyToCheck.indexOf('.') > -1) {
+      const properties = propertyToCheck.split('.');
+      let evaluatedObject = substance;
+      const lastIndex = properties.length - 1;
+      for (let i = 0; i < properties.length; i++) {
+        if (i !== lastIndex) {
+          if (evaluatedObject[properties[i]] != null
+            && Object.prototype.toString.call(evaluatedObject[properties[i]]) === '[object Object]') {
+            evaluatedObject = evaluatedObject[properties[i]];
+          } else {
+            return null;
+          }
+        } else {
+          return evaluatedObject[properties[i]];
+        }
+      }
+    } else {
+      return substance[propertyToCheck];
+    }
+  }
+
   getSubstanceDetailsProperties(substance: SubstanceDetail): Array<SubstanceDetailsProperty> {
     let substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
     const configCards = this.configService.configData.substanceDetailsCards;
-
+    let propertyTocheck = null;
     if (configCards != null && configCards.length) {
       configCards.forEach(card => {
         let isAddCard = true;
-        let countSubstanceProperty: string;
+        let countSubstanceProperty = false;
         if (card.filters && card.filters.length) {
           const responses = [];
           let isCardIncluded = true;
           card.filters.forEach(filter => {
             if (this[filter.filterName]) {
+              propertyTocheck = this.getEvaluatedProperty(substance, filter.propertyToCheck);
               const response = this[filter.filterName](substance, filter);
               if (response === false) {
                 isCardIncluded = false;
                 isAddCard = false;
               } else if (
                 response === true
-                && filter.propertyToCheck
-                && substance[filter.propertyToCheck]
-                && Object.prototype.toString.call(substance[filter.propertyToCheck]) === '[object Array]') {
-                  countSubstanceProperty = filter.propertyToCheck;
+                && propertyTocheck != null
+                && Object.prototype.toString.call(propertyTocheck) === '[object Array]') {
+                countSubstanceProperty = true;
               }
               responses.push(response);
             }
@@ -52,12 +76,10 @@ export class SubstanceCardsService {
         }
 
         if (isAddCard) {
+
           const detailsProperty: SubstanceDetailsProperty = {
             title: card.title || '',
-            count: countSubstanceProperty
-              && substance[countSubstanceProperty]
-              && Object.prototype.toString.call(substance[countSubstanceProperty]) === '[object Array]'
-              && (substance[countSubstanceProperty].length || 0),
+            count: countSubstanceProperty && propertyTocheck.length || null,
             dynamicComponentId: card.card
           };
           substanceDetailsProperties.push(detailsProperty);
@@ -92,14 +114,19 @@ export class SubstanceCardsService {
     substance: SubstanceDetail,
     filter: SubstanceDetailsCardFilter
   ): boolean {
-    if (filter.propertyToCheck != null
-      && substance[filter.propertyToCheck] != null
-      && (Object.prototype.toString.call(substance[filter.propertyToCheck]) !== '[object Array]'
-        || substance[filter.propertyToCheck].length)) {
-      return true;
+
+    if (filter.propertyToCheck != null) {
+      const evaluatedProperty = this.getEvaluatedProperty(substance, filter.propertyToCheck);
+
+      if (evaluatedProperty != null
+        && (Object.prototype.toString.call(evaluatedProperty) !== '[object Array]'
+          || evaluatedProperty.length)) {
+        return true;
+      }
     }
     return false;
   }
+
 
   substanceCodes(
     substance: SubstanceDetail
@@ -166,6 +193,9 @@ export class SubstanceCardsService {
           } else if (property.indexOf('ACTIVE MOIETY') > -1) {
             propertyName = 'active moiety';
             type = 'ACTIVE MOIETY';
+          } else if (property.indexOf('TARGET') > -1) {
+            propertyName = 'targets';
+            type = 'TARGET';
           }
           if (!properties[propertyName]) {
             properties[propertyName] = {

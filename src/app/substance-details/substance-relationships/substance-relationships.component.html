@@ -3,10 +3,10 @@
 
     <ng-container matColumnDef="relatedRecord">
       <th mat-header-cell *matHeaderCellDef> Related Record </th>
-      <td mat-cell *matCellDef="let relationship">
-        <div class="text-center">{{relationship.relatedSubstance.linkingID}}</div>
-        <img [src]="getSafeStructureImgUrl(relationship.relatedSubstance.refuuid)">
-        <div class="text-center">{{relationship.relatedSubstance.name}}</div>
+      <td class="text-center" mat-cell *matCellDef="let relationship">
+        <div>{{relationship.relatedSubstance.linkingID}}</div>
+        <img class="structure-image" [src]="getSafeStructureImgUrl(relationship.relatedSubstance.refuuid)">
+        <div>{{relationship.relatedSubstance.name}}</div>
       </td>
     </ng-container>
 
