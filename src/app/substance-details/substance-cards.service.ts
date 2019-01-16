@@ -154,7 +154,6 @@ export class SubstanceCardsService {
         const typeParts = relationship.type.split('->');
         const property = typeParts[0].trim();
         if (property) {
-          console.log(property);
           let propertyName: string;
           let type: string;
           if (property.indexOf('METABOLITE') > -1) {
