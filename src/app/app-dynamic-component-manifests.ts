@@ -19,6 +19,11 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
         loadChildren: './substance-details/substance-codes/substance-codes.module#SubstanceCodesModule',
     },
     {
+        componentId: 'substance-subunits',
+        path: 'substance-subunits',
+        loadChildren: './substance-details/substance-subunits/substance-subunits.module#SubstanceSubunitsModule',
+    },
+    {
         componentId: 'substance-moieties',
         path: 'substance-moieties',
         loadChildren: './substance-details/substance-moieties/substance-moieties.module#SubstanceMoietiesModule',
