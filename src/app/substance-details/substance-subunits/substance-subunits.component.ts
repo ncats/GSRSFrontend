@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import { Subunit } from '../../substance/substance.model';
+import { sequence } from '../../../../node_modules/@angular/animations';
 
 @Component({
   selector: 'app-substance-subunits',
@@ -20,9 +21,9 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
       && this.substance.protein != null
       && this.substance.protein.subunits != null
       && this.substance.protein.subunits.length) {
-
         this.subunits = this.substance.protein.subunits;
-
+        this.processSubunits();
+        console.log(this.subunitSequences);
     }
   }
 
@@ -37,30 +38,41 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
     });
   }
 
-  private addSequenceSectionsGroup(subunitSequence: SubunitSequence, squence: string = '', indexStart: number = 0, indexEnd: number = 49) {
-    const indexIncrement = 50;
-    if (squence.length > (indexStart + 1)) {
+  private addSequenceSectionsGroup(subunitSequence: SubunitSequence, squenceString: string = '', indexStart: number = 0) {
+    const sequenceSectionLength = 50;
+    if (squenceString.length > (indexStart + 1)) {
       const sequenceSectionGroup: SequenceSectionGroup = {
         sequenceSections: []
       };
       subunitSequence.sequencesSectionGroups.push(sequenceSectionGroup);
-      
+      const sequenceSectionString = squenceString.substr(indexStart, sequenceSectionLength);
+      const addend = indexStart === 0 ? 0 : (indexStart + 1);
+      this.addSequenceSections(sequenceSectionGroup, sequenceSectionString, indexStart);
+
+      if (sequenceSectionString.length === sequenceSectionLength) {
+        indexStart = indexStart + sequenceSectionLength;
+        this.addSequenceSectionsGroup(subunitSequence, squenceString, indexStart);
+      }
     }
   }
 
-  private addSequenceSections(sequenceSectionString?: string, index: number = 0, indexEnd: number = 9) {
+  private addSequenceSections(
+    sectionGroup: SequenceSectionGroup,
+    sequenceSectionString: string = '',
+    sectionNumberAddend: number,
+    index: number = 0,
+    indexEnd: number = 9) {
     const indexIncrement = 10;
 
-    if (sequenceSectionString != null) {
+    if (sequenceSectionString !== '') {
 
       const sequenceSection: SequenceSection = {
         sectionNumber: 0,
         sectionUnits: []
       };
 
-      while (index < indexEnd) {
+      while (index <= indexEnd) {
         if (sequenceSectionString[index]) {
-          sequenceSection.sectionNumber++;
           sequenceSection.sectionUnits.push(sequenceSectionString[index]);
           index++;
         } else {
@@ -68,11 +80,13 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         }
       }
 
-      subunitSequence.sequencesSectionGroups.push(sequenceSection);
+      sequenceSection.sectionNumber = index + sectionNumberAddend;
 
-      if (sequenceStringSection.length > index) {
+      sectionGroup.sequenceSections.push(sequenceSection);
+
+      if (sequenceSectionString.length > index) {
         indexEnd = indexEnd + indexIncrement;
-        this.addSequenceSections(subunitSequence, sequenceStringSection, index, indexEnd);
+        this.addSequenceSections(sectionGroup, sequenceSectionString, sectionNumberAddend, index, indexEnd);
       }
     }
   }
