@@ -1,0 +1,30 @@
+.subunit-sequence {
+    margin-bottom: 30px;
+}
+
+.sequence-section-group {
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.section-number {
+    text-align: right;
+    padding: 0 10px;
+    font-size: .8em;
+}
+
+.sequence-section {
+    flex-grow: 0;
+    padding: 0 10px;
+    flex-basis: 20%;
+    flex-shrink: 0;
+}
+
+.section-units-container {
+    display: flex;
+
+    .section-unit {
+        flex-grow: 1;
+    }
+}
