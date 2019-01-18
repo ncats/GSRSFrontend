@@ -26,9 +26,11 @@
 }
 
 .mat-card-title {
+    white-space: normal;
 
     .substance-name {
         color: #448aff;
+        padding-right: 10px;
     }
 
     .approval-id {

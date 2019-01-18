@@ -195,6 +195,12 @@ export class SubstanceCardsService {
           } else if (property.indexOf('TARGET') > -1) {
             propertyName = 'targets';
             type = 'TARGET';
+          } else if (property.indexOf('AGONIST') > -1) {
+            propertyName = 'Agonists';
+            type = 'AGONIST';
+          } else if (property.indexOf('ACTIVATOR') > -1) {
+            propertyName = 'Activators';
+            type = 'ACTIVATOR';
           }
           if (!properties[propertyName]) {
             properties[propertyName] = {
