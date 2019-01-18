@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import { Subunit } from '../../substance/substance.model';
-import { sequence } from '../../../../node_modules/@angular/animations';
+import { UtilsService } from '../../utils/utils.service';
+import { VocabularyTerm } from '../../utils/vocabulary.model';
 
 @Component({
   selector: 'app-substance-subunits',
@@ -11,8 +12,12 @@ import { sequence } from '../../../../node_modules/@angular/animations';
 export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnInit {
   subunits: Array<Subunit> = [];
   subunitSequences: Array<SubunitSequence> = [];
+  vocabularyTerms: { [vocabularyValue: string]: string } = {};
+  view = 'details';
 
-  constructor() {
+  constructor(
+    private utilsService: UtilsService
+  ) {
     super();
   }
 
@@ -22,9 +27,25 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
       && this.substance.protein.subunits != null
       && this.substance.protein.subunits.length) {
         this.subunits = this.substance.protein.subunits;
-        this.processSubunits();
-        console.log(this.subunitSequences);
+        this.getVocabularies();
     }
+  }
+
+  getVocabularies(): void {
+    this.utilsService.getVocabularies('domain=\'AMINO_ACID_RESIDUE\'').subscribe(response => {
+      if (response.content && response.content.length) {
+        response.content.forEach(vocabulary => {
+          if (vocabulary.terms && vocabulary.terms.length) {
+            vocabulary.terms.forEach(vocabularyTerm => {
+              this.vocabularyTerms[vocabularyTerm.value] = vocabularyTerm.display;
+            });
+          }
+        });
+      }
+      this.processSubunits();
+    }, error => {
+      this.processSubunits();
+    });
   }
 
   private processSubunits(): void {
@@ -46,7 +67,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
       };
       subunitSequence.sequencesSectionGroups.push(sequenceSectionGroup);
       const sequenceSectionString = squenceString.substr(indexStart, sequenceSectionLength);
-      const addend = indexStart === 0 ? 0 : (indexStart + 1);
+
       this.addSequenceSections(sequenceSectionGroup, sequenceSectionString, indexStart);
 
       if (sequenceSectionString.length === sequenceSectionLength) {
@@ -73,7 +94,12 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
 
       while (index <= indexEnd) {
         if (sequenceSectionString[index]) {
-          sequenceSection.sectionUnits.push(sequenceSectionString[index]);
+          const sequenceUnit: SequenceUnit = {
+            unitIndex: index + sectionNumberAddend + 1,
+            unitValue: sequenceSectionString[index]
+          };
+
+          sequenceSection.sectionUnits.push(sequenceUnit);
           index++;
         } else {
           break;
@@ -91,6 +117,13 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
     }
   }
 
+  getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
+    return `${subunitIndex} - ${unitIndex}: ${unitValue} (${this.vocabularyTerms[unitValue]})`;
+  }
+
+  updateView(event): void {
+    this.view = event.value;
+  }
 }
 
 interface SubunitSequence {
@@ -104,5 +137,10 @@ interface SequenceSectionGroup {
 
 interface SequenceSection {
   sectionNumber: number;
-  sectionUnits: Array<string>;
+  sectionUnits: Array<SequenceUnit>;
+}
+
+interface SequenceUnit {
+  unitIndex: number;
+  unitValue: string;
 }
