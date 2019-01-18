@@ -1,0 +1,17 @@
+
+  <div *ngIf="definitions.length > 0">
+    This is a Definitional Concept of
+    <div *ngFor="let definition of definitions">
+      <div class="structure-image-container">
+       <img class="image-icon" [src]="getSafeIconImgUrl(definition)">
+      </div>
+      <br/>
+      <a class="substance-name" [routerLink]="['/substances', definition.uuid]" >
+        {{definition._name}}
+      </a>
+    </div>
+  </div>
+  <div *ngIf = "definitions.length == 0">
+    <i>This is a non-substance concept</i>
+  </div>
+

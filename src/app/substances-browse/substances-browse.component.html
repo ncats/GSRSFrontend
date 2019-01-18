@@ -47,14 +47,16 @@
 
         <mat-card-content>
           <div class="substance-content">
-            <div class="structure-container" *ngIf="substance.structure">
-              <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
-                <mat-chip-list selectable="false" multiple="false">
-                  <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
-                </mat-chip-list>
+            <div class="structure-container" >
+              <div *ngIf="substance.structure">
+                <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
+                  <mat-chip-list selectable="false" multiple="false">
+                    <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
+                  </mat-chip-list>
+                </div>
               </div>
-              <div>
-                <img [src]="getSafeStructureImgUrl(substance.structure.id)">
+              <div class = image-thumbnail>
+                <img [src]="getSafeIconImgUrl(substance)">
               </div>
             </div>
             <div>

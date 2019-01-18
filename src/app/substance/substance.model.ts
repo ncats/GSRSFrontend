@@ -18,6 +18,7 @@ export interface SubstanceBaseExtended {
     approvalID: string;
     structurallyDiverse?: StructurallyDiverse;
     structure?: SubstanceStructure;
+    polymer?: Polymer;
     moieties?: Array<SubstanceMoiety>;
     _approvalIDDisplay: string;
     _name: string;
@@ -53,6 +54,16 @@ export interface StructurallyDiverse extends SubstanceBase {
     part: Array<string>;
     parentSubstance: SubstanceRelated;
     references: Array<string>;
+}
+
+export interface Polymer extends SubstanceBase {
+  uuid: string;
+  references: Array<string>;
+  displayStructure: DisplayStructure;
+}
+
+export interface DisplayStructure extends Polymer {
+  id: string;
 }
 
 export interface SubstanceRelated extends SubstanceBase {

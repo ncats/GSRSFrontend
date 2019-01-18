@@ -52,5 +52,10 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
         componentId: 'substance-relationships',
         path: 'substance-relationships',
         loadChildren: './substance-details/substance-relationships/substance-relationships.module#SubstanceRelationshipsModule',
+    },
+    {
+      componentId: 'substance-concept-definition',
+      path: 'substance-concept-definition',
+      loadChildren: './substance-details/substance-concept-definition/substance-concept-definition.module#SubstanceConceptDefinitionModule',
     }
 ];

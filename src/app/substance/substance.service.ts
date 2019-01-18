@@ -6,6 +6,7 @@ import { BaseHttpService } from '../base/base-http.service';
 import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class SubstanceService extends BaseHttpService {
 
   constructor(
     public http: HttpClient,
-    public configService: ConfigService
+    public configService: ConfigService,
+    private sanitizer: DomSanitizer,
   ) {
     super(configService);
   }
@@ -282,6 +284,22 @@ export class SubstanceService extends BaseHttpService {
       params: params
     };
     return this.http.get<SubstanceDetail>(url, options);
+  }
+
+  getSafeIconImgUrl(substance: SubstanceDetail, size: number): SafeUrl {
+    let imgUrl = '${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg?size=${size.toString()}';
+    const substanceType = substance.substanceClass;
+    if ((substanceType === 'chemical') && (substance.structure.id)) {
+      const structureId = substance.structure.id;
+      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;
+      console.log(imgUrl);
+    } else if ((substanceType === 'polymer') && (substance.polymer.displayStructure.id)) {
+      const structureId = substance.polymer.displayStructure.id;
+      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;
+    } else {
+      imgUrl = `assets/images/${substanceType}.svg`;
+    }
+    return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
 }

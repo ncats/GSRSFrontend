@@ -134,6 +134,12 @@ export class SubstancesBrowseComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
+
+  getSafeIconImgUrl(substanceId: SubstanceDetail, size: number = 150): SafeUrl {
+    return this.substanceService.getSafeIconImgUrl(substanceId, size);
+  }
+
+
   updateFacetSelection(event: MatCheckboxChange, facetName: string, facetValueLabel: string): void {
 
     if (this._facetParams[facetName] == null) {

@@ -107,6 +107,17 @@
                     "propertyToCheck": "moieties"
                 }
             ]            
-        }
+        },
+      {
+        "card":"substance-concept-definition",
+        "title": "concept definition",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "concept"
+          }
+        ]
+      }
     ]
 }
