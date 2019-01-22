@@ -177,42 +177,58 @@ export class SubstanceCardsService {
     const properties: { [type: string]: SubstanceDetailsProperty } = {};
 
     if (substance.relationships && substance.relationships.length > 1) {
-      substance.relationships.forEach(relationship => {
-        const typeParts = relationship.type.split('->');
-        const property = typeParts[0].trim();
-        if (property) {
-          let propertyName: string;
-          let type: string;
-          if (property.indexOf('METABOLITE') > -1) {
-            propertyName = 'metabolites';
-            type = 'METABOLITE';
-          } else if (property.indexOf('IMPURITY') > -1) {
-            propertyName = 'impurities';
-            type = 'IMPURITY';
-          } else if (property.indexOf('ACTIVE MOIETY') > -1) {
-            propertyName = 'active moiety';
-            type = 'ACTIVE MOIETY';
-          } else if (property.indexOf('TARGET') > -1) {
-            propertyName = 'targets';
-            type = 'TARGET';
-          } else if (property.indexOf('AGONIST') > -1) {
-            propertyName = 'Agonists';
-            type = 'AGONIST';
-          } else if (property.indexOf('ACTIVATOR') > -1) {
-            propertyName = 'Activators';
-            type = 'ACTIVATOR';
+      if (substance.substanceClass === 'chemical') {
+        substance.relationships.forEach(relationship => {
+          const typeParts = relationship.type.split('->');
+          const property = typeParts[0].trim();
+          if (property) {
+            let propertyName: string;
+            let type: string;
+            if (property.indexOf('METABOLITE') > -1) {
+              propertyName = 'metabolites';
+              type = 'METABOLITE';
+            } else if (property.indexOf('IMPURITY') > -1) {
+              propertyName = 'impurities';
+              type = 'IMPURITY';
+            } else if (property.indexOf('ACTIVE MOIETY') > -1) {
+              propertyName = 'active moiety';
+              type = 'ACTIVE MOIETY';
+            } else if (property.indexOf('PARENT') > -1) {
+              propertyName = 'parents';
+              type = 'PARENT';
+            } else if (property.indexOf('TARGET') > -1) {
+              propertyName = 'targets';
+              type = 'TARGET';
+            } else if (property.indexOf('SALT/SOLVATE') > -1) {
+              propertyName = 'salts/solvates';
+              type = 'SALT/SOLVATE';
+            } else if (property.indexOf('BASIS OF STRENGTH') > -1) {
+              propertyName = 'basis of strength';
+              type = 'BASIS OF STRENGTH';
+            } else if (property.indexOf('BINDER') > -1) {
+              propertyName = 'binders';
+              type = 'BINDER';
+            }
+
+            if (!properties[propertyName]) {
+              properties[propertyName] = {
+                title: propertyName,
+                count: 0,
+                dynamicComponentId: 'substance-relationships',
+                type: type
+              };
+            }
+            properties[propertyName].count++;
           }
-          if (!properties[propertyName]) {
-            properties[propertyName] = {
-              title: propertyName,
-              count: 0,
-              dynamicComponentId: 'substance-relationships',
-              type: type
-            };
-          }
-          properties[propertyName].count++;
-        }
-      });
+        });
+      } else {
+        properties.Relationships = {
+          title: 'Relationships',
+          count: substance.relationships.length,
+          dynamicComponentId: 'substance-relationships',
+          type: 'RELATIONSHIPS'
+        };
+      }
     }
 
     Object.keys(properties).forEach(key => {
