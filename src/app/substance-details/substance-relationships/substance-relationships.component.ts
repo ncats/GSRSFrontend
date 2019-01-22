@@ -13,8 +13,11 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
   type: string;
   relationships: Array<SubstanceRelationship> = [];
   displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details'];
+  private specialRelationships = 'METABOLITE|IMPURITY|ACTIVE MOIETY';
 
-  constructor(private structureService: StructureService) {
+  constructor(
+    private structureService: StructureService
+  ) {
     super();
   }
 
@@ -26,19 +29,17 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
 
   private filterRelationhships(): void {
     if (this.substance.relationships && this.substance.relationships.length > 1) {
-      if (this.substance.substanceClass === 'chemical') {
-        this.substance.relationships.forEach(relationship => {
-          const typeParts = relationship.type.split('->');
-          const property = typeParts[0].trim();
-          if (property) {
-            if (property.indexOf(this.type) > -1) {
-              this.relationships.push(relationship);
-            }
+      this.substance.relationships.forEach(relationship => {
+        const typeParts = relationship.type.split('->');
+        const property = typeParts[0].trim();
+        if (property) {
+          if (property.indexOf(this.type) > -1) {
+            this.relationships.push(relationship);
+          } else if (this.type === 'RELATIONSHIPS' && property.indexOf(this.type) === -1) {
+            this.relationships.push(relationship);
           }
-        });
-      } else {
-        this.relationships = this.substance.relationships;
-      }
+        }
+      });
     }
   }
 
