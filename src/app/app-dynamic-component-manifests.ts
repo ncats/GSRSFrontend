@@ -57,5 +57,20 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
       componentId: 'substance-concept-definition',
       path: 'substance-concept-definition',
       loadChildren: './substance-details/substance-concept-definition/substance-concept-definition.module#SubstanceConceptDefinitionModule',
+    },
+    {
+      componentId: 'substance-polymer-structure',
+      path: 'substance-polymer-structure',
+      loadChildren: './substance-details/substance-polymer-structure/substance-polymer-structure.module#SubstancePolymerStructureModule',
+    },
+    {
+      componentId: 'substance-monomers',
+      path: 'substance-monomers',
+      loadChildren: './substance-details/substance-monomers/substance-monomers.module#SubstanceMonomersModule',
+    },
+    {
+      componentId: 'substance-mixture-components',
+      path: 'substance-mixture-components',
+      loadChildren: './substance-details/substance-mixture-components/substance-mixture-components.module#SubstanceMixtureComponentsModule',
     }
 ];

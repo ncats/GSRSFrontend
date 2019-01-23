@@ -1,3 +1,29 @@
-<p>
-  substance-subunits works!
-</p>
+<div class="filters-container">
+  <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+    <mat-button-toggle value="details">
+      <mat-icon svgIcon="list"></mat-icon>
+    </mat-button-toggle>
+    <mat-button-toggle value="raw">
+      <mat-icon svgIcon="view_stream"></mat-icon>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+<div [ngClass]="view">
+  <div class="subunit-sequence" *ngFor="let subunitSequence of subunitSequences">
+    <h4>Subunit {{subunitSequence.subunitIndex}}</h4>
+    <div class="sequence-section-group" *ngFor="let sequencesSectionGroup of subunitSequence.sequencesSectionGroups">
+      <div class="sequence-section" *ngFor="let sequencesSectionGroup of sequencesSectionGroup.sequenceSections">
+        <div class="section-number">{{sequencesSectionGroup.sectionNumber}}</div>
+        <div class="section-units-container">
+          <span class="section-unit" *ngFor="let sectionUnit of sequencesSectionGroup.sectionUnits" [matTooltip]="getTooltipMessage(subunitSequence.subunitIndex, sectionUnit.unitIndex, sectionUnit.unitValue)">
+            {{sectionUnit.unitValue}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="subunit" *ngFor="let subunit of subunits">
+    <h4>Subunit {{subunit.subunitIndex}}</h4>
+    <div class="raw-sequence">{{subunit.sequence}}</div>
+  </div>
+</div>

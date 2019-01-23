@@ -1,0 +1,40 @@
+
+<div *ngIf = "required.length > 0" >
+  <h3>All of the following components <i>must</i> be present:</h3>
+  <div class= "flex-row wrap">
+    <div *ngFor="let component of required" class = "substance-icon-container" >
+      <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
+      <br/>
+      <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" >
+        {{component.substance.name}}
+      </a>
+    </div>
+  </div>
+</div>
+<div *ngIf = "presentInAny.length > 0" >
+  <h3>Any of these components may be present:</h3>
+  <div class= "flex-row wrap">
+    <div *ngFor="let component of presentInAny" class = "substance-icon-container">
+      <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
+      <br/>
+      <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" >
+        {{component.substance.name}}
+      </a>
+    </div>
+  </div>
+
+</div>
+<div *ngIf = "presentInOne.length > 0"  class= "flex-row wrap">
+  <h3>One of these components may be present:</h3>
+  <div class= "flex-row">
+    <div *ngFor="let component of presentInOne" class= "substance-icon-container">
+      <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
+      <br/>
+      <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" >
+        {{component.substance.name}}
+      </a>
+    </div>
+  </div>
+</div>
+
+

@@ -23,16 +23,11 @@ export class SubstancesBrowseComponent implements OnInit {
   private _structureSearchType?: string;
   private _structureSearchCutoff?: number;
   public substances: Array<SubstanceDetail>;
-  public facets: Array<Facet>;
+  public facets: Array<Facet> = [];
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
   pageIndex: number;
   pageSize: number;
   totalSubstances: number;
-  // paginator: MatPaginator;
-  // // pageSizeOptions: [5, 10, 50, 100];
-  // @ViewChild(MatPaginator) set appBacon(paginator: MatPaginator) {
-  //   this.paginator = paginator;
-  // }
   isLoading = true;
   isError = false;
 
@@ -78,53 +73,89 @@ export class SubstancesBrowseComponent implements OnInit {
       this.pageSize,
       this._facetParams,
       skip,
-      )
-    .subscribe(pagingResponse => {
-      this.isError = false;
-      this.substances = pagingResponse.content;
-      this.totalSubstances = pagingResponse.total;
-      if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-        let sortedFacets = _.orderBy(pagingResponse.facets, facet => {
-          let valuesTotal = 0;
-          facet.values.forEach(value => {
-            valuesTotal += value.count;
-          });
-          return valuesTotal;
-        }, 'desc');
-        this.facets = _.take(sortedFacets, 10);
-        sortedFacets = null;
-      } else {
+    )
+      .subscribe(pagingResponse => {
+        this.isError = false;
+        this.substances = pagingResponse.content;
+        this.totalSubstances = pagingResponse.total;
         this.facets = [];
-      }
-
-      this.substances.forEach((substance: SubstanceDetail) => {
-        if (substance.codes && substance.codes.length > 0) {
-          substance.codeSystemNames = [];
-          substance.codeSystems = {};
-          _.forEach(substance.codes, code => {
-            if (substance.codeSystems[code.codeSystem]) {
-              substance.codeSystems[code.codeSystem].push(code);
-            } else {
-              substance.codeSystems[code.codeSystem] = [code];
-              substance.codeSystemNames.push(code.codeSystem);
-            }
-          });
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          this.populateFacets(pagingResponse.facets);
         }
+
+        this.substances.forEach((substance: SubstanceDetail) => {
+          if (substance.codes && substance.codes.length > 0) {
+            substance.codeSystemNames = [];
+            substance.codeSystems = {};
+            _.forEach(substance.codes, code => {
+              if (substance.codeSystems[code.codeSystem]) {
+                substance.codeSystems[code.codeSystem].push(code);
+              } else {
+                substance.codeSystems[code.codeSystem] = [code];
+                substance.codeSystemNames.push(code.codeSystem);
+              }
+            });
+          }
+        });
+      }, error => {
+        const notification: AppNotification = {
+          message: 'There was an error trying to retrieve substances. Please refresh and try again.',
+          type: NotificationType.error,
+          milisecondsToShow: 6000
+        };
+        this.isError = true;
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+        this.notificationService.setNotification(notification);
+      }, () => {
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
       });
-    }, error => {
-      const notification: AppNotification = {
-        message: 'There was an error trying to retrieve substances. Please refresh and try again.',
-        type: NotificationType.error,
-        milisecondsToShow: 6000
-      };
-      this.isError = true;
-      this.isLoading = false;
-      this.loadingService.setLoading(this.isLoading);
-      this.notificationService.setNotification(notification);
-    }, () => {
-      this.isLoading = false;
-      this.loadingService.setLoading(this.isLoading);
-    });
+  }
+
+  private populateFacets(facets: Array<Facet>): void {
+    if (this.configService.configData.facets != null) {
+      if (this.configService.configData.facets.default != null && this.configService.configData.facets.default.length) {
+        this.configService.configData.facets.default.forEach(facet => {
+          for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
+            if (facet === facets[facetIndex].name) {
+              if (facets[facetIndex].values != null && facets[facetIndex].values.length) {
+                let hasValues = false;
+                for (let valueIndex = 0; valueIndex < facets[facetIndex].values.length; valueIndex++) {
+                  if (facets[facetIndex].values[valueIndex].count) {
+                    hasValues = true;
+                    break;
+                  }
+                }
+
+                if (hasValues) {
+                  const facetToAdd = facets.splice(facetIndex, 1);
+                  facetIndex--;
+                  this.facets.push(facetToAdd[0]);
+                }
+              }
+              break;
+            }
+          }
+        });
+      }
+    }
+
+    if (this.facets.length < 15) {
+
+      const numFillFacets = 20 - this.facets.length;
+
+      let sortedFacets = _.orderBy(facets, facet => {
+        let valuesTotal = 0;
+        facet.values.forEach(value => {
+          valuesTotal += value.count;
+        });
+        return valuesTotal;
+      }, 'desc');
+      const additionalFacets = _.take(sortedFacets, numFillFacets);
+      this.facets = this.facets.concat(additionalFacets);
+      sortedFacets = null;
+    }
   }
 
   getSafeStructureImgUrl(structureId: string): SafeUrl {

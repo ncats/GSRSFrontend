@@ -3,7 +3,7 @@
     This is a Definitional Concept of
     <div *ngFor="let definition of definitions">
       <div class="structure-image-container">
-       <img class="image-icon" [src]="getSafeIconImgUrl(definition)">
+       <img class="image-icon" [src]="getSafeStructureImgUrl(definition.uuid)">
       </div>
       <br/>
       <a class="substance-name" [routerLink]="['/substances', definition.uuid]" >

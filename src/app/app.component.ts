@@ -20,5 +20,13 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'subdirectory_arrow_right',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-subdirectory_arrow_right-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'list',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-list-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'view_stream',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-view_stream-24px.svg'));
   }
 }

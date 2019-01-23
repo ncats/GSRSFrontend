@@ -3,9 +3,7 @@ import {SubstanceCardBase} from '../substance-card-base';
 import {SubstanceDetail, SubstanceRelationship} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {SubstanceService} from '../../substance/substance.service';
-import {StructureService} from '../../structure/structure.service';
-import {Observable} from 'rxjs';
-import {ConfigService} from '../../config/config.service';
+import {UtilsService} from '../../utils/utils.service';
 
 @Component({
   selector: 'app-substance-concept-definition',
@@ -13,7 +11,6 @@ import {ConfigService} from '../../config/config.service';
   styleUrls: ['./substance-concept-definition.component.scss']
 })
 export class SubstanceConceptDefinitionComponent extends SubstanceCardBase implements OnInit {
-  conceptDefinitions: Array<SubstanceRelationship> = [];
   relationships: Array<SubstanceRelationship> = [];
   definitions: Array<SubstanceDetail> = [];
   definition: SubstanceDetail;
@@ -22,7 +19,7 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
   constructor(
     private substanceService: SubstanceService,
     private sanitizer: DomSanitizer,
-    public configService: ConfigService
+    public utilsService: UtilsService
   ) {
     super();
   }
@@ -49,13 +46,12 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
   getSubstanceDetails(id: string) {
     this.substanceService.getSubstanceDetails(id).subscribe(response => {
       if (response) {
-        console.log(response);
         this.definitions.push(response);
       }
     });
   }
 
-  getSafeIconImgUrl(substanceId: SubstanceDetail, size: number = 150): SafeUrl {
-      return this.substanceService.getSafeIconImgUrl(substanceId, size);
+  getSafeStructureImgUrl(substanceId: string, size: number = 150): SafeUrl {
+      return this.utilsService.getSafeStructureImgUrl(substanceId, size);
   }
 }

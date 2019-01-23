@@ -33,7 +33,7 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
     _relationships?: CountRef;
     _moieties?: CountRef;
     _properties?: CountRef;
-    protein?: any;
+    protein?: Protein;
 }
 
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
@@ -46,6 +46,8 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
     codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
     notes: Array<SubstanceNote>;
     tags: Array<string>;
+    protein?: Protein;
+    mixture?: Mixture;
 }
 
 export interface StructurallyDiverse extends SubstanceBase {
@@ -60,10 +62,29 @@ export interface Polymer extends SubstanceBase {
   uuid: string;
   references: Array<string>;
   displayStructure: DisplayStructure;
+  monomers: Array<Monomer>;
+}
+
+export interface Mixture extends SubstanceBase {
+  uuid: string;
+  components: Array<MixtureComponents>;
+}
+
+export interface MixtureComponents extends Mixture {
+  uuid: string;
+  type:string;
+  substance: SubstanceRelated;
 }
 
 export interface DisplayStructure extends Polymer {
   id: string;
+}
+
+export interface Monomer extends Polymer {
+  uuid: string;
+  type: string;
+  amount: Array<SubstanceAmount>;
+  monomerSubstance: Array<SubstanceRelated>;
 }
 
 export interface SubstanceRelated extends SubstanceBase {
@@ -133,7 +154,7 @@ export interface SubstanceAmount extends SubstanceBase {
     units?: string;
     type: string;
     average?: number;
-    references: Array<SubstanceReference>;
+    references: Array<string>;
     highLimit?: number;
     lowLimit?: number;
 }
@@ -178,4 +199,47 @@ export interface SubstanceMoiety extends SubstanceStructure {
 export interface SubstanceNameOrg extends SubstanceBase {
     nameOrg: string;
     references: Array<string>;
+}
+
+export interface Protein extends SubstanceBase {
+    proteinType: string;
+    proteinSubType: string;
+    sequenceOrigin: string;
+    sequenceType: string;
+    glycosylation: Glycosylation;
+    subunits: Array<Subunit>;
+    otherLinks: Array<Link>;
+    disulfideLinks: Array<DisulfideLink>;
+    references: Array<string>;
+}
+
+export interface Glycosylation extends SubstanceBase {
+    glycosylationType: string;
+    CGlycosylationSites: Array<Site>;
+    NGlycosylationSites: Array<Site>;
+    OGlycosylationSites: Array<Site>;
+    references: Array<string>;
+}
+
+export interface Subunit extends SubstanceBase {
+    sequence: string;
+    subunitIndex: number;
+    length: number;
+    references: Array<string>;
+}
+
+export interface Link extends SubstanceBase {
+    linkageType: string;
+    sites: Array<Site>;
+    references: Array<string>;
+}
+
+export interface DisulfideLink {
+    sites: Array<Site>;
+    sitesShorthand: string;
+}
+
+export interface Site {
+    subunitIndex: number;
+    residueIndex: number;
 }

@@ -18,4 +18,5 @@ export interface PagingResponse<T> {
     sideway?: Array<any>;
     content: Array<T>;
     facets?: Array<Facet>;
+    filter?: string;
 }
