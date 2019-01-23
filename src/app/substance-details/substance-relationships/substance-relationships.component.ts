@@ -13,7 +13,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
   type: string;
   relationships: Array<SubstanceRelationship> = [];
   displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details'];
-  private specialRelationships = 'METABOLITE|IMPURITY|ACTIVE MOIETY';
+  private specialRelationships = ['METABOLITE', 'IMPURITY', 'ACTIVE MOIETY'];
 
   constructor(
     private structureService: StructureService
@@ -31,11 +31,19 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
     if (this.substance.relationships && this.substance.relationships.length > 1) {
       this.substance.relationships.forEach(relationship => {
         const typeParts = relationship.type.split('->');
-        const property = typeParts[0].trim();
-        if (property) {
-          if (property.indexOf(this.type) > -1) {
-            this.relationships.push(relationship);
-          } else if (this.type === 'RELATIONSHIPS' && property.indexOf(this.type) === -1) {
+        const property = typeParts && typeParts.length && typeParts[0].trim() || '';
+        if (property.indexOf(this.type) > -1) {
+          this.relationships.push(relationship);
+        } else if (this.type === 'RELATIONSHIPS') {
+          let isSpecialRelationship = false;
+
+          this.specialRelationships.forEach(specialRelationship => {
+            if (property.indexOf(specialRelationship) > -1) {
+              isSpecialRelationship = true;
+            }
+          });
+
+          if (!isSpecialRelationship) {
             this.relationships.push(relationship);
           }
         }
