@@ -3,6 +3,7 @@ import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceRelationship } from '../../substance/substance.model';
 import { StructureService } from '../../structure/structure.service';
 import { SafeUrl } from '@angular/platform-browser';
+import { ConfigService } from '../../config/config.service';
 
 @Component({
   selector: 'app-substance-relationships',
@@ -13,10 +14,10 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
   type: string;
   relationships: Array<SubstanceRelationship> = [];
   displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details'];
-  private specialRelationships = ['METABOLITE', 'IMPURITY', 'ACTIVE MOIETY'];
 
   constructor(
-    private structureService: StructureService
+    private structureService: StructureService,
+    private configService: ConfigService
   ) {
     super();
   }
@@ -37,11 +38,14 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
         } else if (this.type === 'RELATIONSHIPS') {
           let isSpecialRelationship = false;
 
-          this.specialRelationships.forEach(specialRelationship => {
-            if (property.indexOf(specialRelationship) > -1) {
-              isSpecialRelationship = true;
+          if (this.configService.configData.specialRelationships && this.configService.configData.specialRelationships.length) {
+            for (let i = 0; i < this.configService.configData.specialRelationships.length; i++) {
+              if (property.toLowerCase().indexOf(this.configService.configData.specialRelationships[i].type.toLowerCase()) > -1) {
+                isSpecialRelationship = true;
+                break;
+              }
             }
-          });
+          }
 
           if (!isSpecialRelationship) {
             this.relationships.push(relationship);

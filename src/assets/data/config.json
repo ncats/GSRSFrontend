@@ -139,5 +139,23 @@
             "Product Name Type",
             "Product Dosage Form"
         ]
-    }
+    },
+    "specialRelationships": [
+        {
+            "type": "METABOLITE",
+            "display": "metabolites"
+        },
+        {
+            "type": "IMPURITY",
+            "display": "impurities"
+        },
+        {
+            "type": "ACTIVE MOIETY",
+            "display": "active moiety"
+        },
+        {
+            "type": "CONSTITUENT",
+            "display": "constituents"
+        }
+    ]
 }

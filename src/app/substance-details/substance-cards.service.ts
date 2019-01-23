@@ -179,34 +179,34 @@ export class SubstanceCardsService {
     if (substance.relationships && substance.relationships.length > 1) {
       substance.relationships.forEach(relationship => {
         const typeParts = relationship.type.split('->');
-        const property = typeParts[0].trim();
-        if (property) {
-          let propertyName: string;
-          let type: string;
-          if (property.indexOf('METABOLITE') > -1) {
-            propertyName = 'metabolites';
-            type = 'METABOLITE';
-          } else if (property.indexOf('IMPURITY') > -1) {
-            propertyName = 'impurities';
-            type = 'IMPURITY';
-          } else if (property.indexOf('ACTIVE MOIETY') > -1) {
-            propertyName = 'active moiety';
-            type = 'ACTIVE MOIETY';
-          } else {
-            propertyName = 'relationships';
-            type = 'RELATIONSHIPS';
-          }
+        const property = typeParts && typeParts.length && typeParts[0].trim() || '';
+        let propertyName: string;
+        let type: string;
 
-          if (!properties[propertyName]) {
-            properties[propertyName] = {
-              title: propertyName,
-              count: 0,
-              dynamicComponentId: 'substance-relationships',
-              type: type
-            };
+        if (this.configService.configData.specialRelationships && this.configService.configData.specialRelationships.length) {
+          for (let i = 0; i < this.configService.configData.specialRelationships.length; i++) {
+            if (property.toLowerCase().indexOf(this.configService.configData.specialRelationships[i].type.toLowerCase()) > -1) {
+              propertyName = this.configService.configData.specialRelationships[i].display;
+              type = this.configService.configData.specialRelationships[i].type;
+              break;
+            }
           }
-          properties[propertyName].count++;
         }
+
+        if (propertyName == null || type == null) {
+          propertyName = 'relationships';
+          type = 'RELATIONSHIPS';
+        }
+
+        if (!properties[propertyName]) {
+          properties[propertyName] = {
+            title: propertyName,
+            count: 0,
+            dynamicComponentId: 'substance-relationships',
+            type: type
+          };
+        }
+        properties[propertyName].count++;
       });
     }
 
