@@ -1,5 +1,5 @@
 {
-    "apiBaseUrl": "https://ginas.ncats.nih.gov/ginas/app/",
+    "apiBaseUrl": "https://cbg-gsrs-dev.ncats.io/ginas/app/",
     "substanceDetailsCards": [
         {
             "card":"substance-overview",
