@@ -63,7 +63,7 @@
               <div class="substance-data substance-names" *ngIf="substance.names && substance.names.length">
                 <div class="label">Names:</div>
                 <div>
-                  <div class="value" *ngFor="let nameObject of substance.names">
+                  <div class="value space-bottom" *ngFor="let nameObject of substance.names | take: 5">
                     {{nameObject.name}}
                   </div>
                 </div>
@@ -71,7 +71,7 @@
               <div class="substance-data substance-code-systems" *ngIf="substance.codeSystems">
                 <div class="label">Codes:</div>
                 <div>
-                  <div class="margin-bottom" *ngFor="let codeSystemName of substance.codeSystemNames">
+                  <div class="margin-bottom" *ngFor="let codeSystemName of substance.codeSystemNames | take: 5">
                     <div class="code-system">
                       <span class="label">{{codeSystemName}}</span>:&nbsp;
                       <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">{{codeObject.code.trim()}}<span *ngIf="!isLast">, </span>

@@ -1,8 +1,8 @@
 export interface Config {
-    apiBaseUrl: string;
-    substanceDetailsCards: Array<SubstanceDetailsCard>;
-    facets: { [permission: string]: Array<string> };
-    specialRelationships: Array<SpecialRelationship>;
+    apiBaseUrl?: string;
+    substanceDetailsCards?: Array<SubstanceDetailsCard>;
+    facets?: { [permission: string]: Array<string> };
+    specialRelationships?: Array<SpecialRelationship>;
 }
 
 export interface SubstanceDetailsCard {
