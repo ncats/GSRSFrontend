@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
-import {SubstanceDetail, SubstanceRelationship} from '../../substance/substance.model';
+import {SubstanceDetail, SubstanceRelated, SubstanceRelationship} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {SubstanceService} from '../../substance/substance.service';
 import {UtilsService} from '../../utils/utils.service';
@@ -12,13 +12,12 @@ import {UtilsService} from '../../utils/utils.service';
 })
 export class SubstanceConceptDefinitionComponent extends SubstanceCardBase implements OnInit {
   relationships: Array<SubstanceRelationship> = [];
-  definitions: Array<SubstanceDetail> = [];
-  definition: SubstanceDetail;
+  definitions: Array<SubstanceRelated> = [];
+
 
 
   constructor(
     private substanceService: SubstanceService,
-    private sanitizer: DomSanitizer,
     public utilsService: UtilsService
   ) {
     super();
@@ -36,19 +35,10 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
     if (this.substance.relationships && this.substance.relationships.length > 0) {
       this.substance.relationships.forEach(relationship => {
         if (relationship.type === 'SUBSTANCE->SUB_CONCEPT') {
-          this.getSubstanceDetails(relationship.relatedSubstance.refuuid);
+          this.definitions.push(relationship.relatedSubstance);
         }
       });
-      console.log(this.definitions);
     }
-  }
-
-  getSubstanceDetails(id: string) {
-    this.substanceService.getSubstanceDetails(id).subscribe(response => {
-      if (response) {
-        this.definitions.push(response);
-      }
-    });
   }
 
   getSafeStructureImgUrl(substanceId: string, size: number = 150): SafeUrl {
