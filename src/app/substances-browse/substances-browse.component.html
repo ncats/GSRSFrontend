@@ -81,8 +81,12 @@
                 </div>
               </div>
               <div class="substance-data substance-relationships" *ngIf="substance.relationships && substance.relationships.length">
-                <div class="label" [matBadge]="substance.relationships.length" matBadgeOverlap="false">Relationthips</div>
-                <div></div>
+                <!-- <div class="label" [matBadge]="substance.relationships.length" matBadgeOverlap="false">Relationthips</div>
+                <div></div> -->
+                <div class="label">Relationthips:</div>
+                <div class="value">
+                  {{substance.relationships.length}}
+                </div>
               </div>
             </div>
           </div>

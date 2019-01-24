@@ -1,5 +1,5 @@
 {
-    "apiBaseUrl": "https://ginas.ncats.nih.gov/ginas/app/",
+    "apiBaseUrl": "https://cbg-gsrs-dev.ncats.io/ginas/app/",
     "substanceDetailsCards": [
         {
             "card":"substance-overview",
@@ -201,5 +201,23 @@
             "Product Name Type",
             "Product Dosage Form"
         ]
-    }
+    },
+    "specialRelationships": [
+        {
+            "type": "METABOLITE",
+            "display": "metabolites"
+        },
+        {
+            "type": "IMPURITY",
+            "display": "impurities"
+        },
+        {
+            "type": "ACTIVE MOIETY",
+            "display": "active moiety"
+        },
+        {
+            "type": "CONSTITUENT",
+            "display": "constituents"
+        }
+    ]
 }
