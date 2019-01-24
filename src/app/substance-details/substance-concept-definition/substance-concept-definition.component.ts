@@ -26,7 +26,6 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
 
   ngOnInit() {
     if (this.substance != null) {
-      console.log(this.substance);
       this.getConceptDefinition();
     }
   }
