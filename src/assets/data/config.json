@@ -151,6 +151,16 @@
             "value": "mixture"
           }
         ]
+      },
+      {
+        "card":"substance-modifications",
+        "title": "substance modifications",
+        "filters":[
+          {
+            "filterName":"exists",
+            "propertyToCheck": "modifications"
+          }
+        ]
       }
     ],
     "facets": {
