@@ -194,7 +194,7 @@ export interface PhysicalModification extends SubstanceModifications {
   amount?: string;
 }
 
-export interface SubstanceParameters extends SubstanceBase {
+export interface SubstanceParameters extends PhysicalModification {
   parameterName: string;
   amount: string;
 }

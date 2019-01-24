@@ -22,7 +22,7 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
   }
 
   ngOnInit() {
-    console.log(this.substance.modifications);
+
     if (this.substance != null) {
       if (this.substance.modifications.structuralModifications.length > 0) {
         this.structural = this.substance.modifications.structuralModifications;

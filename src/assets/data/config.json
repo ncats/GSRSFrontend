@@ -138,6 +138,10 @@
             "filterName":"equals",
             "propertyToCheck": "substanceClass",
             "value": "polymer"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "polymer.monomers"
           }
         ]
       },
@@ -149,6 +153,10 @@
             "filterName":"equals",
             "propertyToCheck": "substanceClass",
             "value": "mixture"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "mixture.components"
           }
         ]
       },

@@ -2,11 +2,11 @@
   <div *ngIf="definitions.length > 0">
     This is a Definitional Concept of
     <div *ngFor="let definition of definitions">
-      <div class="structure-image-container">
-       <img class="image-icon" [src]="getSafeStructureImgUrl(definition.uuid)">
+      <div class="substance-icon-container">
+       <img class="image-icon" [src]="getSafeStructureImgUrl(definition.refuuid)">
       </div>
       <br/>
-      <a class="substance-name" [routerLink]="['/substances', definition.uuid]" >
+      <a class="substance-name" [routerLink]="['/substances', definition.refuuid]" >
         {{definition.refPname}}
       </a>
     </div>

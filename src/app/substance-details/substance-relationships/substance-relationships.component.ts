@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceRelationship } from '../../substance/substance.model';
-import { StructureService } from '../../structure/structure.service';
 import { SafeUrl } from '@angular/platform-browser';
+import {UtilsService} from '../../utils/utils.service';
 
 @Component({
   selector: 'app-substance-relationships',
@@ -14,7 +14,9 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
   relationships: Array<SubstanceRelationship> = [];
   displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details'];
 
-  constructor(private structureService: StructureService) {
+  constructor(
+              private utilService: UtilsService
+  ) {
     super();
   }
 
@@ -39,7 +41,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.structureService.getSafeStructureImgUrl(structureId, size);
+    return this.utilService.getSafeStructureImgUrl(structureId, size);
   }
 
 }
