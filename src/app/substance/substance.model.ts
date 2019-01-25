@@ -48,6 +48,7 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
     tags: Array<string>;
     protein?: Protein;
     mixture?: Mixture;
+    modifications?: SubstanceModifications;
 }
 
 export interface StructurallyDiverse extends SubstanceBase {
@@ -168,6 +169,46 @@ export interface SubstanceReference extends SubstanceBase {
     url?: string;
     _self: string;
     documentDate?: number;
+}
+
+export interface SubstanceModifications extends SubstanceBase {
+    uuid: string;
+    structuralModifications: Array<StructuralModification>;
+    physicalModifications: Array<PhysicalModification>;
+    agentModifications: Array <AgentModification>;
+}
+
+export interface StructuralModification extends SubstanceModifications {
+  structuralModificationType?: string;
+  locationType?: string;
+  residueModified?: string;
+  sites?: Array<ModificationSite>;
+  extent?: string;
+  extentAmount?: string;
+  molecularFragment?: SubstanceRelated;
+}
+
+export interface PhysicalModification extends SubstanceModifications {
+  physicalModificationRole?: string;
+  parameters: Array<SubstanceParameters>;
+  amount?: string;
+}
+
+export interface SubstanceParameters extends PhysicalModification {
+  parameterName: string;
+  amount: string;
+}
+export interface AgentModification extends SubstanceModifications {
+  agentModificationProcess?: string;
+  agentModificationRole?: string;
+  agentModificationType?: string;
+  amount?: string;
+  agentSubstance?: SubstanceRelated;
+}
+
+export interface ModificationSite extends StructuralModification {
+  subunitIndex: string;
+  residueIndex: string;
 }
 
 export interface SubstanceStructure extends SubstanceBase {

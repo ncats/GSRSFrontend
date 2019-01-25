@@ -12,7 +12,7 @@ import { VocabularyTerm } from '../../utils/vocabulary.model';
 export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnInit {
   subunits: Array<Subunit> = [];
   subunitSequences: Array<SubunitSequence> = [];
-  vocabularyTerms: { [vocabularyValue: string]: string } = {};
+  vocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   view = 'details';
 
   constructor(
@@ -32,16 +32,8 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   }
 
   getVocabularies(): void {
-    this.utilsService.getVocabularies('domain=\'AMINO_ACID_RESIDUE\'').subscribe(response => {
-      if (response.content && response.content.length) {
-        response.content.forEach(vocabulary => {
-          if (vocabulary.terms && vocabulary.terms.length) {
-            vocabulary.terms.forEach(vocabularyTerm => {
-              this.vocabularyTerms[vocabularyTerm.value] = vocabularyTerm.display;
-            });
-          }
-        });
-      }
+    this.utilsService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
+      this.vocabulary = response;
       this.processSubunits();
     }, error => {
       this.processSubunits();
@@ -118,7 +110,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   }
 
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
-    return `${subunitIndex} - ${unitIndex}: ${unitValue} (${this.vocabularyTerms[unitValue]})`;
+    return `${subunitIndex} - ${unitIndex}: ${unitValue} (${this.vocabulary[unitValue].display})`;
   }
 
   updateView(event): void {

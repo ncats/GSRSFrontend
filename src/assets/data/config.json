@@ -1,5 +1,5 @@
 {
-    "apiBaseUrl": "https://ginas.ncats.nih.gov/ginas/app/",
+    "apiBaseUrl": "https://cbg-gsrs-dev.ncats.io/ginas/app/",
     "substanceDetailsCards": [
         {
             "card":"substance-overview",
@@ -138,6 +138,10 @@
             "filterName":"equals",
             "propertyToCheck": "substanceClass",
             "value": "polymer"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "polymer.monomers"
           }
         ]
       },
@@ -149,6 +153,20 @@
             "filterName":"equals",
             "propertyToCheck": "substanceClass",
             "value": "mixture"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "mixture.components"
+          }
+        ]
+      },
+      {
+        "card":"substance-modifications",
+        "title": "substance modifications",
+        "filters":[
+          {
+            "filterName":"exists",
+            "propertyToCheck": "modifications.structuralModifications"
           }
         ]
       }
@@ -183,5 +201,23 @@
             "Product Name Type",
             "Product Dosage Form"
         ]
-    }
+    },
+    "specialRelationships": [
+        {
+            "type": "METABOLITE",
+            "display": "metabolites"
+        },
+        {
+            "type": "IMPURITY",
+            "display": "impurities"
+        },
+        {
+            "type": "ACTIVE MOIETY",
+            "display": "active moiety"
+        },
+        {
+            "type": "CONSTITUENT",
+            "display": "constituents"
+        }
+    ]
 }

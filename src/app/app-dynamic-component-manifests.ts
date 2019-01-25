@@ -72,5 +72,10 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
       componentId: 'substance-mixture-components',
       path: 'substance-mixture-components',
       loadChildren: './substance-details/substance-mixture-components/substance-mixture-components.module#SubstanceMixtureComponentsModule',
+    },
+    {
+      componentId: 'substance-modifications',
+      path: 'substance-modifications',
+      loadChildren: './substance-details/substance-modifications/substance-modifications.module#SubstanceModificationsModule',
     }
 ];
