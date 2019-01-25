@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Config } from './config.model';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ConfigService {
@@ -18,7 +19,12 @@ export class ConfigService {
         return this.http
             .get('/assets/data/config.json')
             .toPromise()
-            .then((data: Config) => this._configData = data)
+            .then((data: Config) => {
+                if (data.apiBaseUrl == null) {
+                    data.apiBaseUrl = environment.apiBaseUrl;
+                }
+                this._configData = data;
+            })
             .catch((err: any) => Promise.resolve());
     }
 

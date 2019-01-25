@@ -6,7 +6,7 @@ import { ConfigService } from '../config/config.service';
 import { SubstanceSuggestionsGroup } from './substance-suggestions-group.model';
 import { Vocabulary, VocabularyTerm } from './vocabulary.model';
 import { PagingResponse } from './paging-response.model';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
