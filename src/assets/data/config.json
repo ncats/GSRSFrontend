@@ -1,5 +1,4 @@
 {
-    "apiBaseUrl": "https://ginas.ncats.nih.gov/ginas/app/",
     "substanceDetailsCards": [
         {
             "card":"substance-overview",
@@ -107,7 +106,69 @@
                     "propertyToCheck": "moieties"
                 }
             ]            
-        }
+        },
+      {
+        "card":"substance-concept-definition",
+        "title": "concept definition",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "concept"
+          }
+        ]
+      },
+      {
+        "card":"substance-polymer-structure",
+        "title": "display structure",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "polymer"
+          }
+        ]
+      },
+      {
+        "card":"substance-monomers",
+        "title": "monomers",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "polymer"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "polymer.monomers"
+          }
+        ]
+      },
+      {
+        "card":"substance-mixture-components",
+        "title": "mixture components",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "mixture"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "mixture.components"
+          }
+        ]
+      },
+      {
+        "card":"substance-modifications",
+        "title": "substance modifications",
+        "filters":[
+          {
+            "filterName":"exists",
+            "propertyToCheck": "modifications.structuralModifications"
+          }
+        ]
+      }
     ],
     "facets": {
         "default": [
@@ -139,5 +200,23 @@
             "Product Name Type",
             "Product Dosage Form"
         ]
-    }
+    },
+    "specialRelationships": [
+        {
+            "type": "METABOLITE",
+            "display": "metabolites"
+        },
+        {
+            "type": "IMPURITY",
+            "display": "impurities"
+        },
+        {
+            "type": "ACTIVE MOIETY",
+            "display": "active moiety"
+        },
+        {
+            "type": "CONSTITUENT",
+            "display": "constituents"
+        }
+    ]
 }

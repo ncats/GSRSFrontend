@@ -4,6 +4,7 @@ import { SubstanceStructure } from '../../substance/substance.model';
 import { StructureService } from '../../structure/structure.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceCardBase } from '../substance-card-base';
+import {UtilsService} from '../../utils/utils.service';
 
 @Component({
   selector: 'app-structure-details',
@@ -14,7 +15,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   structure: SubstanceStructure;
 
   constructor(
-    private structureService: StructureService
+    private structureService: StructureService,
+    private utilService: UtilsService
   ) {
     super();
   }
@@ -26,7 +28,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.structureService.getSafeStructureImgUrl(structureId, size);
+    return this.utilService.getSafeStructureImgUrl(structureId, size);
   }
 
 }

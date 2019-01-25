@@ -41,6 +41,7 @@ import { SubstanceDetailsComponent } from './substance-details/substance-details
 import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic-component-loader.module';
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
+import { TakePipe } from './utils/take.pipe';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
     HomeComponent,
     SubstancesBrowseComponent,
     StructureSearchComponent,
-    SubstanceDetailsComponent
+    SubstanceDetailsComponent,
+    TakePipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

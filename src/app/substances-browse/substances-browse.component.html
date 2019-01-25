@@ -47,21 +47,23 @@
 
         <mat-card-content>
           <div class="substance-content">
-            <div class="structure-container" *ngIf="substance.structure">
-              <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
-                <mat-chip-list selectable="false" multiple="false">
-                  <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
-                </mat-chip-list>
+            <div class="structure-container" >
+              <div *ngIf="substance.structure">
+                <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
+                  <mat-chip-list selectable="false" multiple="false">
+                    <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
+                  </mat-chip-list>
+                </div>
               </div>
-              <div>
-                <img [src]="getSafeStructureImgUrl(substance.structure.id)">
+              <div class = image-thumbnail>
+                <img [src]="getSafeStructureImgUrl(substance.uuid)">
               </div>
             </div>
             <div>
               <div class="substance-data substance-names" *ngIf="substance.names && substance.names.length">
                 <div class="label">Names:</div>
                 <div>
-                  <div class="value" *ngFor="let nameObject of substance.names">
+                  <div class="value space-bottom" *ngFor="let nameObject of substance.names | take: 5">
                     {{nameObject.name}}
                   </div>
                 </div>
@@ -69,7 +71,7 @@
               <div class="substance-data substance-code-systems" *ngIf="substance.codeSystems">
                 <div class="label">Codes:</div>
                 <div>
-                  <div class="margin-bottom" *ngFor="let codeSystemName of substance.codeSystemNames">
+                  <div class="margin-bottom" *ngFor="let codeSystemName of substance.codeSystemNames | take: 5">
                     <div class="code-system">
                       <span class="label">{{codeSystemName}}</span>:&nbsp;
                       <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">{{codeObject.code.trim()}}<span *ngIf="!isLast">, </span>
@@ -79,8 +81,12 @@
                 </div>
               </div>
               <div class="substance-data substance-relationships" *ngIf="substance.relationships && substance.relationships.length">
-                <div class="label" [matBadge]="substance.relationships.length" matBadgeOverlap="false">Relationthips</div>
-                <div></div>
+                <!-- <div class="label" [matBadge]="substance.relationships.length" matBadgeOverlap="false">Relationthips</div>
+                <div></div> -->
+                <div class="label">Relationthips:</div>
+                <div class="value">
+                  {{substance.relationships.length}}
+                </div>
               </div>
             </div>
           </div>

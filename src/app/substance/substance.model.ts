@@ -18,6 +18,7 @@ export interface SubstanceBaseExtended {
     approvalID: string;
     structurallyDiverse?: StructurallyDiverse;
     structure?: SubstanceStructure;
+    polymer?: Polymer;
     moieties?: Array<SubstanceMoiety>;
     _approvalIDDisplay: string;
     _name: string;
@@ -46,6 +47,8 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
     notes: Array<SubstanceNote>;
     tags: Array<string>;
     protein?: Protein;
+    mixture?: Mixture;
+    modifications?: SubstanceModifications;
 }
 
 export interface StructurallyDiverse extends SubstanceBase {
@@ -54,6 +57,35 @@ export interface StructurallyDiverse extends SubstanceBase {
     part: Array<string>;
     parentSubstance: SubstanceRelated;
     references: Array<string>;
+}
+
+export interface Polymer extends SubstanceBase {
+  uuid: string;
+  references: Array<string>;
+  displayStructure: DisplayStructure;
+  monomers: Array<Monomer>;
+}
+
+export interface Mixture extends SubstanceBase {
+  uuid: string;
+  components: Array<MixtureComponents>;
+}
+
+export interface MixtureComponents extends Mixture {
+  uuid: string;
+  type:string;
+  substance: SubstanceRelated;
+}
+
+export interface DisplayStructure extends Polymer {
+  id: string;
+}
+
+export interface Monomer extends Polymer {
+  uuid: string;
+  type: string;
+  amount: Array<SubstanceAmount>;
+  monomerSubstance: Array<SubstanceRelated>;
 }
 
 export interface SubstanceRelated extends SubstanceBase {
@@ -137,6 +169,46 @@ export interface SubstanceReference extends SubstanceBase {
     url?: string;
     _self: string;
     documentDate?: number;
+}
+
+export interface SubstanceModifications extends SubstanceBase {
+    uuid: string;
+    structuralModifications: Array<StructuralModification>;
+    physicalModifications: Array<PhysicalModification>;
+    agentModifications: Array <AgentModification>;
+}
+
+export interface StructuralModification extends SubstanceModifications {
+  structuralModificationType?: string;
+  locationType?: string;
+  residueModified?: string;
+  sites?: Array<ModificationSite>;
+  extent?: string;
+  extentAmount?: string;
+  molecularFragment?: SubstanceRelated;
+}
+
+export interface PhysicalModification extends SubstanceModifications {
+  physicalModificationRole?: string;
+  parameters: Array<SubstanceParameters>;
+  amount?: string;
+}
+
+export interface SubstanceParameters extends PhysicalModification {
+  parameterName: string;
+  amount: string;
+}
+export interface AgentModification extends SubstanceModifications {
+  agentModificationProcess?: string;
+  agentModificationRole?: string;
+  agentModificationType?: string;
+  amount?: string;
+  agentSubstance?: SubstanceRelated;
+}
+
+export interface ModificationSite extends StructuralModification {
+  subunitIndex: string;
+  residueIndex: string;
 }
 
 export interface SubstanceStructure extends SubstanceBase {

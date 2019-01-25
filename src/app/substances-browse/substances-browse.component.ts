@@ -11,6 +11,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
+import {UtilsService} from '../utils/utils.service';
 
 @Component({
   selector: 'app-substances-browse',
@@ -37,7 +38,8 @@ export class SubstancesBrowseComponent implements OnInit {
     private sanitizer: DomSanitizer,
     public configService: ConfigService,
     private loadingService: LoadingService,
-    private notificationService: MainNotificationService
+    private notificationService: MainNotificationService,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
@@ -158,12 +160,10 @@ export class SubstancesBrowseComponent implements OnInit {
     }
   }
 
-  getSafeStructureImgUrl(structureId: string): SafeUrl {
-
-    const imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=150`;
-
-    return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
+  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
+    return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
+
 
   updateFacetSelection(event: MatCheckboxChange, facetName: string, facetValueLabel: string): void {
 
