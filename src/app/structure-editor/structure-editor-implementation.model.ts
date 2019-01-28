@@ -1,5 +1,5 @@
-import { Ketcher } from 'ketcher-wrapper/ketcher-wrapper';
-import { JSDraw } from 'jsdraw-wrapper/jsdraw-wrapper';
+import { Ketcher } from 'ketcher-wrapper';
+import { JSDraw } from 'jsdraw-wrapper';
 import { Editor } from './structure.editor.model';
 
 export class EditorImplementation implements Editor {

@@ -73,7 +73,7 @@ export interface Mixture extends SubstanceBase {
 
 export interface MixtureComponents extends Mixture {
   uuid: string;
-  type:string;
+  type: string;
   substance: SubstanceRelated;
 }
 
@@ -243,15 +243,17 @@ export interface SubstanceNameOrg extends SubstanceBase {
 }
 
 export interface Protein extends SubstanceBase {
-    proteinType: string;
+    proteinType?: string;
     proteinSubType: string;
-    sequenceOrigin: string;
+    sequenceOrigin?: string;
     sequenceType: string;
-    glycosylation: Glycosylation;
+    glycosylation?: Glycosylation;
     subunits: Array<Subunit>;
     otherLinks: Array<Link>;
-    disulfideLinks: Array<DisulfideLink>;
+    disulfideLinks?: Array<DisulfideLink>;
     references: Array<string>;
+    _disulfideLinks?: any;
+    _glycosylation?: any;
 }
 
 export interface Glycosylation extends SubstanceBase {

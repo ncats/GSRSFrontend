@@ -15,6 +15,16 @@
         Structure Search
       </a>
     </span>
+    <span class="nav-item" *ngIf="environmentVersion == 'fda'">
+      <a routerLink="/fda-sample-path" [ngClass]="{active: mainPathSegment == 'fda-sample-path'}">
+        FDA Simple Sample
+      </a>
+    </span>
+    <span class="nav-item" *ngIf="environmentVersion == 'fda'">
+      <a routerLink="/fda-sample-inheritance" [ngClass]="{active: mainPathSegment == 'fda-sample-inheritance'}">
+        FDA Inheritance Sample
+      </a>
+    </span>
   </span>
   <span class="middle-fill"></span>
   <span>

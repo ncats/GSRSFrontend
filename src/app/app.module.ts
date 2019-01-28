@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, Optional } from '@angular/core';
 import { HttpClientModule, HttpClientJsonpModule  } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -42,6 +42,7 @@ import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
+import { EnvironmentModule } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { TakePipe } from './utils/take.pipe';
     FileSelectModule,
     MatListModule,
     DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
-    ScrollNavModule
+    ScrollNavModule,
+    EnvironmentModule
   ],
   providers: [
     ConfigService,
@@ -99,4 +101,8 @@ import { TakePipe } from './utils/take.pipe';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(@Optional() module: EnvironmentModule) {
+    console.log(module);
+  }
+}

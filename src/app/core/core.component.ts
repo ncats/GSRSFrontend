@@ -5,6 +5,7 @@ import { NavigationExtras, Router, RouterEvent, NavigationEnd } from '@angular/r
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-core',
@@ -16,6 +17,7 @@ export class CoreComponent implements OnInit {
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
   suggestionsFields: Array<string>;
   mainPathSegment = '';
+  environmentVersion = environment.version;
 
   constructor(
     private utilsService: UtilsService,
