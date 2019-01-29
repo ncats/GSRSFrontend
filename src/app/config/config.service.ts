@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Config } from './config.model';
-import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ConfigService {
@@ -12,7 +11,7 @@ export class ConfigService {
 
     // This is the method you want to call at bootstrap
     // Important: It should return a Promise
-    load(): Promise<any> {
+    load(apiBaseUrl?: string): Promise<any> {
 
         this._configData = null;
 
@@ -20,8 +19,8 @@ export class ConfigService {
             .get('/assets/data/config.json')
             .toPromise()
             .then((data: Config) => {
-                if (data.apiBaseUrl == null) {
-                    data.apiBaseUrl = environment.apiBaseUrl;
+                if (data.apiBaseUrl == null && apiBaseUrl != null) {
+                    data.apiBaseUrl = apiBaseUrl;
                 }
                 this._configData = data;
             })

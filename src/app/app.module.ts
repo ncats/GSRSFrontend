@@ -101,8 +101,4 @@ import { EnvironmentModule } from '../environments/environment';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor(@Optional() module: EnvironmentModule) {
-    console.log(module);
-  }
-}
+export class AppModule {}
