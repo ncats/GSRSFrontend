@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FdaSampleComponent } from './fda-sample/fda-sample.component';
 import { Router } from '@angular/router';
-import { InheritanceSampleFdaComponent } from './inheritance-sample/inheritance-sample-fda/inheritance-sample-fda.component';
+import { FdaInheritanceSampleComponent } from './inheritance-sample/fda-inheritance-sample/fda-inheritance-sample.component';
 
 const fdaRoutes: Routes = [
   {
@@ -12,7 +12,7 @@ const fdaRoutes: Routes = [
   },
   {
     path: 'fda-sample-inheritance',
-    component: InheritanceSampleFdaComponent
+    component: FdaInheritanceSampleComponent
   }
 ];
 
@@ -23,11 +23,11 @@ const fdaRoutes: Routes = [
   ],
   declarations: [
     FdaSampleComponent,
-    InheritanceSampleFdaComponent
+    FdaInheritanceSampleComponent
   ],
   exports: [
     FdaSampleComponent,
-    InheritanceSampleFdaComponent
+    FdaInheritanceSampleComponent
   ]
 })
 export class FdaModule {
