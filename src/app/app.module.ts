@@ -44,6 +44,7 @@ import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
 import { EnvironmentModule } from '../environments/environment';
+import { TopSearchComponent } from './top-search/top-search.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { EnvironmentModule } from '../environments/environment';
     SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent,
-    TakePipe
+    TakePipe,
+    TopSearchComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
