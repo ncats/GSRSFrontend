@@ -28,5 +28,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'view_stream',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-view_stream-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'menu',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-menu-24px.svg'));
   }
 }

@@ -25,6 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
@@ -88,7 +89,8 @@ import { EnvironmentModule } from '../environments/environment';
     MatListModule,
     DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
     ScrollNavModule,
-    EnvironmentModule
+    EnvironmentModule,
+    MatMenuModule
   ],
   providers: [
     ConfigService,

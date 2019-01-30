@@ -18,6 +18,16 @@ export class CoreComponent implements OnInit {
   suggestionsFields: Array<string>;
   mainPathSegment = '';
   environmentVersion = environment.version;
+  navItems = [
+    {
+      display: 'Browse Substances',
+      path: 'browse-substance'
+    },
+    {
+      display: 'Structure Search',
+      path: 'structure-search'
+    }
+  ];
 
   constructor(
     private utilsService: UtilsService,
@@ -25,6 +35,11 @@ export class CoreComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    if (environment.navItems && environment.navItems.length) {
+      this.navItems.concat(environment.navItems);
+    }
+
     this.searchControl.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),

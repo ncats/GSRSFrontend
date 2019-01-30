@@ -15,6 +15,8 @@ export class UtilsService extends BaseHttpService {
   private vocabularies: { [domain: string]: { [vocabularyValue: string]: VocabularyTerm } } = {};
   private vocabularySubject: { [domain: string]: Subject<{ [vocabularyValue: string]: VocabularyTerm }> } = {};
   private vocabularyLoadingIndicators: { [domain: string]: boolean } = {};
+  private bodyElement: HTMLBodyElement;
+  private matSidenavContentElement: HTMLElement;
 
   constructor(
     public http: HttpClient,
@@ -131,5 +133,29 @@ export class UtilsService extends BaseHttpService {
     });
 
     return this.vocabularySubject[domain];
+  }
+
+  handleMatSidenavOpen(widthBreakingPoint?: number): void {
+
+    if (widthBreakingPoint == null || window.innerWidth < widthBreakingPoint) {
+      this.bodyElement = document.getElementsByTagName('BODY')[0] as HTMLBodyElement;
+      this.matSidenavContentElement = document.getElementsByTagName('mat-sidenav-content')[0] as HTMLElement;
+
+      this.bodyElement.style.overflowX = 'hidden';
+      this.matSidenavContentElement.style.width = `${this.matSidenavContentElement.offsetWidth}px`;
+    } else {
+      this.handleMatSidenavClose();
+    }
+  }
+
+  handleMatSidenavClose(): void {
+    if (this.bodyElement != null || this.matSidenavContentElement != null) {
+      setTimeout(() => {
+        this.bodyElement.style.overflowX = null;
+        this.matSidenavContentElement.style.width = null;
+        this.bodyElement = null;
+        this.matSidenavContentElement = null;
+      }, 500);
+    }
   }
 }

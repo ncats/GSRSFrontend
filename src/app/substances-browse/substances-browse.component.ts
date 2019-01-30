@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail } from '../substance/substance.model';
@@ -10,15 +10,16 @@ import { LoadingService } from '../loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { PageEvent, MatPaginatorIntl } from '@angular/material';
-import {UtilsService} from '../utils/utils.service';
+import { PageEvent } from '@angular/material';
+import { UtilsService } from '../utils/utils.service';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-substances-browse',
   templateUrl: './substances-browse.component.html',
   styleUrls: ['./substances-browse.component.scss']
 })
-export class SubstancesBrowseComponent implements OnInit {
+export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private _searchTerm?: string;
   private _structureSearchTerm?: string;
   private _structureSearchType?: string;
@@ -31,6 +32,8 @@ export class SubstancesBrowseComponent implements OnInit {
   totalSubstances: number;
   isLoading = true;
   isError = false;
+  @ViewChild('matSideNavInstance') matSideNav: MatSidenav;
+  hasBackdrop = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -54,7 +57,20 @@ export class SubstancesBrowseComponent implements OnInit {
         this._structureSearchCutoff = Number(params.get('structure_search_cutoff')) || 0;
         this.searchSubstances();
       });
+  }
 
+  ngAfterViewInit() {
+    this.matSideNav.openedStart.subscribe(() => {
+      this.utilsService.handleMatSidenavOpen(1100);
+    });
+    this.matSideNav.closedStart.subscribe(() => {
+      this.utilsService.handleMatSidenavClose();
+    });
+    window.addEventListener('resize', this.processResponsiveness);
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.processResponsiveness);
   }
 
   changePage(pageEvent: PageEvent) {
@@ -83,6 +99,12 @@ export class SubstancesBrowseComponent implements OnInit {
         this.facets = [];
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.populateFacets(pagingResponse.facets);
+        }
+
+        if (this.facets.length > 0) {
+          this.processResponsiveness();
+        } else {
+          this.matSideNav.close();
         }
 
         this.substances.forEach((substance: SubstanceDetail) => {
@@ -209,6 +231,20 @@ export class SubstancesBrowseComponent implements OnInit {
 
   get facetParams(): { [facetName: string]: { [facetValueLabel: string]: boolean } } {
     return this._facetParams;
+  }
+
+  private processResponsiveness = () => {
+    if (window.innerWidth < 1100) {
+      this.matSideNav.close();
+      this.hasBackdrop = true;
+    } else {
+      this.matSideNav.open();
+      this.hasBackdrop = false;
+    }
+  }
+
+  openSideNav() {
+    this.matSideNav.open();
   }
 
 }
