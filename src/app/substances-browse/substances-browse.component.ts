@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail } from '../substance/substance.model';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
 import * as _ from 'lodash';
 import { Facet } from '../utils/facet.model';
@@ -13,6 +12,7 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 import { PageEvent } from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
+import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-substances-browse',
@@ -38,7 +38,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
-    private sanitizer: DomSanitizer,
     public configService: ConfigService,
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,

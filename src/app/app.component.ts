@@ -32,5 +32,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'menu',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-menu-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'close',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-close-24px.svg'));
   }
 }

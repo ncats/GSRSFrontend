@@ -4,7 +4,9 @@ import {
   AfterViewInit,
   ViewChildren,
   ViewContainerRef,
-  QueryList
+  QueryList,
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
@@ -16,17 +18,21 @@ import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceDetailsProperty } from '../substance/substance-utilities.model';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { SubstanceCardsService } from './substance-cards.service';
+import { MatSidenav } from '@angular/material/sidenav';
+import { UtilsService } from '../utils/utils.service';
 
 @Component({
   selector: 'app-substance-details',
   templateUrl: './substance-details.component.html',
   styleUrls: ['./substance-details.component.scss']
 })
-export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
+export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   id: string;
   substance: SubstanceDetail;
   substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
+  @ViewChild('matSideNavInstance') matSideNav: MatSidenav;
+  hasBackdrop = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -35,7 +41,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
     private mainNotificationService: MainNotificationService,
     private router: Router,
     private dynamicComponentLoader: DynamicComponentLoader,
-    private substanceCardsService: SubstanceCardsService
+    private substanceCardsService: SubstanceCardsService,
+    private utilsService: UtilsService
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
@@ -61,6 +68,19 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
             });
         });
       });
+    this.matSideNav.openedStart.subscribe(() => {
+      this.utilsService.handleMatSidenavOpen(1100);
+    });
+    this.matSideNav.closedStart.subscribe(() => {
+      this.utilsService.handleMatSidenavClose();
+    });
+    window.addEventListener('resize', this.processResponsiveness);
+
+    this.processResponsiveness();
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.processResponsiveness);
   }
 
   getSubstanceDetails() {
@@ -92,5 +112,19 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit {
       navigationExtras.queryParams['search_term'] = this.id || null;
       this.router.navigate(['/browse-substance'], navigationExtras);
     }, 5000);
+  }
+
+  private processResponsiveness = () => {
+    if (window.innerWidth < 1100) {
+      this.matSideNav.close();
+      this.hasBackdrop = true;
+    } else {
+      this.matSideNav.open();
+      this.hasBackdrop = false;
+    }
+  }
+
+  openSideNav() {
+    this.matSideNav.open();
   }
 }

@@ -1,20 +1,18 @@
-<mat-sidenav-container class="example-container">
-  <mat-sidenav mode="side" opened>
+<mat-sidenav-container [hasBackdrop]="hasBackdrop">
+  <mat-sidenav mode="side" opened #matSideNavInstance>
     <mat-nav-list appScrollNav>
-      <a 
-        mat-list-item
-        *ngFor="let property of substanceDetailsProperties"
-        appScrollNavItem
-        [scrollToElementId]="property.dynamicComponentId + (property.type ? property.type : '')">
-          <span class="capitalized">{{property.title}}</span>
-          <span class="chip" *ngIf="property.count != null">{{property.count}}</span>
-          <span class="middle-fill"></span>
-          <mat-icon svgIcon="chevron_right"></mat-icon>
+      <a mat-list-item *ngFor="let property of substanceDetailsProperties" appScrollNavItem [scrollToElementId]="property.dynamicComponentId + (property.type ? property.type : '')" (click)="matSideNavInstance.close()">
+        <span class="capitalized">{{property.title}}</span>
+        <span class="chip" *ngIf="property.count != null">{{property.count}}</span>
+        <span class="middle-fill"></span>
+        <mat-icon svgIcon="chevron_right"></mat-icon>
       </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-
+    <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+      <mat-icon svgIcon="chevron_right"></mat-icon>
+    </button>
     <div class="side-nav-content">
       <div class="substance-details" *ngIf="substance">
         <div class="title-container">
