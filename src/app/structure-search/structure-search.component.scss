@@ -17,6 +17,18 @@
     height: 460px;
 }
 
+.ketcher {
+    .editor-container {
+        height: 460px;
+    }
+}
+
+.jsdraw {
+    .editor-container {
+        height: 330px;
+    }
+}
+
 .search-actions {
     display: flex;
     flex-direction: column;
@@ -61,7 +73,9 @@
         flex-direction: row;
         border-left: none;
         padding-top: 10px;
-
+        padding-left: 0;
+        margin-left: 0;
+        
         .one {
             order: 1;
         }
@@ -102,5 +116,11 @@
 
     .editor-container, .search-actions {
         min-width: 633px;
+    }
+
+    .jsdraw {
+        .editor-container, .search-actions {
+            min-width: 710px;
+        }
     }
 }

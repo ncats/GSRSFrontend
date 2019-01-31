@@ -61,6 +61,7 @@ export class StructureEditorComponent implements OnInit {
 
   jsDrawOnLoad(jsdraw: JSDraw): void {
     this.jsdraw = jsdraw;
+    console.log(this.jsdraw);
     this.editorOnLoad.emit(new EditorImplementation(null, this.jsdraw));
   }
 

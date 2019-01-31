@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
@@ -6,13 +6,14 @@ import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { Editor } from '../structure-editor/structure.editor.model';
 import { LoadingService } from '../loading/loading.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-structure-search',
   templateUrl: './structure-search.component.html',
   styleUrls: ['./structure-search.component.scss']
 })
-export class StructureSearchComponent implements OnInit {
+export class StructureSearchComponent implements OnInit, AfterViewInit {
   private editor: Editor;
   private searchType: string;
   similarityCutoff?: number;
@@ -22,13 +23,19 @@ export class StructureSearchComponent implements OnInit {
     public router: Router,
     private substanceService: SubstanceService,
     private dialog: MatDialog,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private element: ElementRef
   ) {
     this.searchType = 'substructure';
   }
 
   ngOnInit() {
     this.loadingService.setLoading(true);
+  }
+
+  ngAfterViewInit() {
+    const contentContainerElement = this.element.nativeElement.querySelector('.content-container');
+    contentContainerElement.classList.add(environment.structureEditor);
   }
 
   editorOnLoad(editor: Editor): void {
