@@ -45,4 +45,8 @@ mat-sidenav {
         display: none;
         opacity: 0;
     }
+
+    mat-sidenav.mat-drawer {
+        background-color: transparent;
+    }
 }

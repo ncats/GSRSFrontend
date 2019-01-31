@@ -26,6 +26,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
@@ -92,7 +93,8 @@ import { TopSearchComponent } from './top-search/top-search.component';
     DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
     ScrollNavModule,
     EnvironmentModule,
-    MatMenuModule
+    MatMenuModule,
+    MatButtonToggleModule
   ],
   providers: [
     ConfigService,

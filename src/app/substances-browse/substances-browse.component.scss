@@ -6,14 +6,56 @@
     }
 }
 
+.controls-container {
+    display: flex;
+}
+
 .mat-card {
+    max-width: 928px;
     margin-bottom: 20px;
 }
 
-.mat-card, .mat-paginator {
+.mat-card, .controls-container {
     width: 100%;
-    max-width: 928px;
     box-sizing: border-box;
+}
+
+.controls-container {
+    display: flex;
+    align-items: center;
+
+    .mat-button-toggle-group {
+        max-height: 36px;
+    }
+
+    .mat-paginator {
+        margin-left: auto;
+    }
+}
+
+.cards {
+
+    .controls-container {
+        max-width: 928px;
+    }
+
+    .substance-cards {
+        display: block;
+    }
+
+    .substance-table {
+        display: none;
+    }
+}
+
+.table {
+    .substance-cards {
+        display: none;
+    }
+
+    .substance-table {
+        display: block;
+    }
 }
 
 .mat-card-title, .facet-value {
@@ -111,6 +153,12 @@
     margin-bottom: 5px;
 }
 
+@media(max-width: 1100px) {
+    .controls-container {
+        padding-left: 50px;
+    }
+}
+
 @media(max-width: 700px) {
     .mat-card-title {
         flex-direction: column;
@@ -141,9 +189,5 @@
         .image-thumbnail {
             margin: 0 auto;
         }
-    }
-
-    .mat-paginator {
-        padding-left: 40px;
     }
 }

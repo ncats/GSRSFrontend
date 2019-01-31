@@ -94,7 +94,9 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip);
+              skip,
+              'full'
+            );
           } else {
             observer.next(response);
             observer.complete();
@@ -115,7 +117,9 @@ export class SubstanceService extends BaseHttpService {
         [facetValueLabel: string]: boolean
       }
     },
-    skip?: number) {
+    skip?: number,
+    view?: string
+  ) {
       if (skip) {
         params = params.append('skip', skip.toString());
       }
@@ -126,6 +130,10 @@ export class SubstanceService extends BaseHttpService {
 
       if (facets != null) {
         params = this.processFacetParams(params, facets);
+      }
+
+      if (view != null) {
+        params = params.append('view', view);
       }
 
       return params;
@@ -143,12 +151,16 @@ export class SubstanceService extends BaseHttpService {
         [facetValueLabel: string]: boolean
       }
     },
-    skip?: number): void {
+    skip?: number,
+    view?: string
+  ): void {
     this.getSubstanceStructureSearchResults(
       structureSearchKey,
       pageSize,
       facets,
-      skip)
+      skip,
+      view
+    )
     .subscribe(response => {
       observer.next(response);
       if (!structureSearchResponse.finished) {
@@ -162,7 +174,9 @@ export class SubstanceService extends BaseHttpService {
               structureSearchCallOptions,
               pageSize,
               facets,
-              skip);
+              skip,
+              view
+            );
           });
         }, error => {
           observer.error(error);
@@ -186,11 +200,13 @@ export class SubstanceService extends BaseHttpService {
         [facetValueLabel: string]: boolean
       }
     },
-    skip?: number): any {
+    skip?: number,
+    view?: string
+  ): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
     let params = new HttpParams();
 
-    params = this.addQueryParameters(params, pageSize, facets, skip);
+    params = this.addQueryParameters(params, pageSize, facets, skip, view);
 
     const options = {
       params: params

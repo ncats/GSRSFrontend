@@ -34,6 +34,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   isError = false;
   @ViewChild('matSideNavInstance') matSideNav: MatSidenav;
   hasBackdrop = false;
+  view = 'cards';
+  displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes'];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -244,6 +246,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   openSideNav() {
     this.matSideNav.open();
+  }
+
+  updateView(event): void {
+    this.view = event.value;
   }
 
 }
