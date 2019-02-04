@@ -266,14 +266,17 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
-  private processFacetParams(params: HttpParams, facets?: { [facetName: string]: { [facetValueLabel: string]: boolean } }): HttpParams {
+  private processFacetParams(
+    params: HttpParams,
+    facets?: { [facetName: string]: { [facetValueLabel: string]: boolean } }
+  ): HttpParams {
     const facetsKeys = Object.keys(facets);
     facetsKeys.forEach(facetKey => {
       if (facets[facetKey] != null) {
         const facetValueKeys = Object.keys(facets[facetKey]);
         facetValueKeys.forEach((facetValueKey) => {
-          if (facets[facetKey][facetValueKey]) {
-            params = params.append('facet', (facetKey + '/' + facetValueKey));
+          if (facets[facetKey][facetValueKey] != null) {
+            params = params.append('facet', (`${!facets[facetKey][facetValueKey] ? '!' : ''}${facetKey}/${facetValueKey}`));
           }
         });
       }

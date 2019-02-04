@@ -9,7 +9,18 @@
         </mat-expansion-panel-header>
         <div class="facet-value" *ngFor="let value of facet.values">
           <div class="facet-value-checkbox">
-            <mat-checkbox (change)="updateFacetSelection($event, facet.name, value.label)" [checked]="facetParams[facet.name] != null && facetParams[facet.name][value.label] || false"></mat-checkbox>
+            <mat-checkbox
+              class="include"
+              matTooltip="Include"
+              (change)="updateFacetSelection($event, facet.name, value.label, true)"
+              [checked]="facetParams[facet.name] != null && facetParams[facet.name][value.label] == true">
+            </mat-checkbox>
+            <mat-checkbox
+              class="exclude"
+              matTooltip="Exclude"
+              (change)="updateFacetSelection($event, facet.name, value.label, false)"
+              [checked]="facetParams[facet.name] != null && facetParams[facet.name][value.label] == false">
+            </mat-checkbox>
           </div>
           <div class="facet-value-label">
             {{value.label}}

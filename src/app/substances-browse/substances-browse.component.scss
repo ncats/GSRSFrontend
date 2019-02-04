@@ -1,8 +1,39 @@
+::ng-deep .mat-expansion-panel-content > .mat-expansion-panel-body {
+    padding: 0 12px 10px;
+}
+
+.mat-expansion-panel-header {
+    padding: 0 12px;
+}
+
 .filter-box {
     padding: 10px;
 
     &:not(:last-child) {
         border-bottom: 1px solid #d9d9d9;
+    }
+}
+
+.include {
+    ::ng-deep .mat-checkbox-frame {
+        border-color: #80CBC4;
+    }
+
+    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+        background-color: #26A69A;
+    }
+}
+
+.exclude {
+    margin-left: 5px;
+    ::ng-deep .mat-checkbox-frame {
+        border-color: #EF9A9A;
+    }
+
+    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+        background-color: #EF5350;
     }
 }
 
@@ -94,6 +125,7 @@
         max-width: 150px;
         overflow: hidden;
         color: #404040;
+        white-space: normal;
     }
 
     .facet-value-count {

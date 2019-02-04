@@ -26,7 +26,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private _structureSearchCutoff?: number;
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet> = [];
-  private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
+  private _facetParams: {
+    [facetName: string]: {
+      hasSelections?: boolean,
+      showAllMatchOption?: boolean,
+      [facetValueLabel: string]: boolean
+    }
+  };
   pageIndex: number;
   pageSize: number;
   totalSubstances: number;
@@ -44,7 +50,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
     private utilsService: UtilsService
-  ) { }
+  ) {
+    this._facetParams = {};
+  }
 
   ngOnInit() {
     this.pageSize = 10;
@@ -188,19 +196,23 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
 
-  updateFacetSelection(event: MatCheckboxChange, facetName: string, facetValueLabel: string): void {
+  updateFacetSelection(event: MatCheckboxChange, facetName: string, facetValueLabel: string, include: boolean): void {
 
     if (this._facetParams[facetName] == null) {
       this._facetParams[facetName] = {};
     }
 
-    this._facetParams[facetName][facetValueLabel] = event.checked;
+    if (include) {
+      this._facetParams[facetName][facetValueLabel] = event.checked || null;
+    } else {
+      this._facetParams[facetName][facetValueLabel] = event.checked === true ? false : null;
+    }
 
     let facetHasSelectedValue = false;
 
     const facetValueKeys = Object.keys(this._facetParams[facetName]);
     for (let i = 0; i < facetValueKeys.length; i++) {
-      if (this._facetParams[facetName][facetValueKeys[i]]) {
+      if (this._facetParams[facetName][facetValueKeys[i]] != null) {
         facetHasSelectedValue = true;
         break;
       }
