@@ -13,6 +13,7 @@ import { PageEvent } from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SafeUrl } from '@angular/platform-browser';
+import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 
 @Component({
   selector: 'app-substances-browse',
@@ -20,19 +21,13 @@ import { SafeUrl } from '@angular/platform-browser';
   styleUrls: ['./substances-browse.component.scss']
 })
 export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  private _searchTerm?: string;
-  private _structureSearchTerm?: string;
-  private _structureSearchType?: string;
-  private _structureSearchCutoff?: number;
+  private privateSearchTerm?: string;
+  private privateStructureSearchTerm?: string;
+  private privateStructureSearchType?: string;
+  private privateStructureSearchCutoff?: number;
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet> = [];
-  private _facetParams: {
-    [facetName: string]: {
-      hasSelections?: boolean,
-      showAllMatchOption?: boolean,
-      [facetValueLabel: string]: boolean
-    }
-  };
+  private privateFacetParams: SubstanceFacetParam;
   pageIndex: number;
   pageSize: number;
   totalSubstances: number;
@@ -51,7 +46,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private notificationService: MainNotificationService,
     private utilsService: UtilsService
   ) {
-    this._facetParams = {};
+    this.privateFacetParams = {};
   }
 
   ngOnInit() {
@@ -60,10 +55,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
-        this._searchTerm = params.get('search_term') || '';
-        this._structureSearchTerm = params.get('structure_search_term') || '';
-        this._structureSearchType = params.get('structure_search_type') || '';
-        this._structureSearchCutoff = Number(params.get('structure_search_cutoff')) || 0;
+        this.privateSearchTerm = params.get('search_term') || '';
+        this.privateStructureSearchTerm = params.get('structure_search_term') || '';
+        this.privateStructureSearchType = params.get('structure_search_type') || '';
+        this.privateStructureSearchCutoff = Number(params.get('structure_search_cutoff')) || 0;
         this.searchSubstances();
       });
   }
@@ -89,24 +84,25 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   searchSubstances() {
+    this.isLoading = true;
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
     this.substanceService.getSubtanceDetails(
-      this._searchTerm,
-      this._structureSearchTerm,
-      this._structureSearchType,
-      this._structureSearchCutoff,
+      this.privateSearchTerm,
+      this.privateStructureSearchTerm,
+      this.privateStructureSearchType,
+      this.privateStructureSearchCutoff,
       true,
       this.pageSize,
-      this._facetParams,
+      this.privateFacetParams,
       skip,
     )
       .subscribe(pagingResponse => {
         this.isError = false;
         this.substances = pagingResponse.content;
         this.totalSubstances = pagingResponse.total;
-        this.facets = [];
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          this.facets = [];
           this.populateFacets(pagingResponse.facets);
         }
 
@@ -130,6 +126,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             });
           }
         });
+        this.cleanFacets();
       }, error => {
         const notification: AppNotification = {
           message: 'There was an error trying to retrieve substances. Please refresh and try again.',
@@ -196,54 +193,99 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
 
-  updateFacetSelection(event: MatCheckboxChange, facetName: string, facetValueLabel: string, include: boolean): void {
+  updateFacetSelection(
+    event: MatCheckboxChange,
+    facetName: string,
+    facetValueLabel: string,
+    include: boolean
+  ): void {
 
-    if (this._facetParams[facetName] == null) {
-      this._facetParams[facetName] = {};
+    if (this.privateFacetParams[facetName] == null) {
+      this.privateFacetParams[facetName] = {
+        params: {}
+      };
     }
 
     if (include) {
-      this._facetParams[facetName][facetValueLabel] = event.checked || null;
+      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked || null;
     } else {
-      this._facetParams[facetName][facetValueLabel] = event.checked === true ? false : null;
+      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked === true ? false : null;
     }
 
-    let facetHasSelectedValue = false;
+    let hasSelections = false;
+    let hasExcludeOption = false;
+    let includeOptionsLength = 0;
 
-    const facetValueKeys = Object.keys(this._facetParams[facetName]);
+    const facetValueKeys = Object.keys(this.privateFacetParams[facetName].params);
     for (let i = 0; i < facetValueKeys.length; i++) {
-      if (this._facetParams[facetName][facetValueKeys[i]] != null) {
-        facetHasSelectedValue = true;
-        break;
+      if (this.privateFacetParams[facetName].params[facetValueKeys[i]] != null) {
+        hasSelections = true;
+        if (this.privateFacetParams[facetName].params[facetValueKeys[i]] === false) {
+          hasExcludeOption = true;
+        } else {
+          includeOptionsLength++;
+        }
       }
     }
 
-    if (!facetHasSelectedValue) {
-      this._facetParams[facetName] = undefined;
-    }
-    this.pageIndex = 0;
-    this.searchSubstances();
+    this.privateFacetParams[facetName].hasSelections = hasSelections;
 
+     if (!hasExcludeOption && includeOptionsLength > 1) {
+      this.privateFacetParams[facetName].showAllMatchOption = true;
+    } else {
+      this.privateFacetParams[facetName].showAllMatchOption = false;
+      this.privateFacetParams[facetName].isAllMatch = false;
+    }
+
+    this.pageIndex = 0;
+  }
+
+  clearFacetSelection(
+    facetName: string
+  ) {
+    if (this.privateFacetParams[facetName] != null && this.privateFacetParams[facetName].params != null) {
+      const facetValueKeys = Object.keys(this.privateFacetParams[facetName].params);
+      facetValueKeys.forEach(facetParam => {
+        this.privateFacetParams[facetName].params[facetParam] = null;
+      });
+
+      this.privateFacetParams[facetName].isAllMatch = false;
+      this.privateFacetParams[facetName].showAllMatchOption = false;
+      this.privateFacetParams[facetName].hasSelections = false;
+    }
+  }
+
+  cleanFacets(): void {
+    if (this.privateFacetParams != null) {
+      const facetParamsKeys = Object.keys(this.privateFacetParams);
+      if (facetParamsKeys && facetParamsKeys.length > 0) {
+        facetParamsKeys.forEach(key => {
+          if (this.privateFacetParams[key] && !this.privateFacetParams[key].hasSelections) {
+            this.privateFacetParams[key] = undefined;
+          }
+        });
+      }
+    }
   }
 
   get searchTerm(): string {
-    return this._searchTerm;
+    return this.privateSearchTerm;
   }
 
   get structureSearchTerm(): string {
-    return this._structureSearchTerm;
+    return this.privateStructureSearchTerm;
   }
 
   get structureSearchType(): string {
-    return this._structureSearchType;
+    return this.privateStructureSearchType;
   }
 
   get structureSearchCutoff(): number {
-    return this._structureSearchCutoff;
+    return this.privateStructureSearchCutoff;
   }
 
-  get facetParams(): { [facetName: string]: { [facetValueLabel: string]: boolean } } {
-    return this._facetParams;
+  get facetParams(): SubstanceFacetParam | { showAllMatchOption?: boolean } {
+    return this.privateFacetParams;
   }
 
   private processResponsiveness = () => {

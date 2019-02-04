@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {DynamicComponentLoaderModule} from '../../dynamic-component-loader/dynamic-component-loader.module';
-import {SubstanceMixtureComponentsComponent} from '../substance-mixture-components/substance-mixture-components.component';
+import {SubstanceMixtureComponentsComponent} from './substance-mixture-components.component';
 
 @NgModule({
   imports: [

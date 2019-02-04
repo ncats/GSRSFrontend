@@ -135,6 +135,24 @@
     }
 }
 
+.facet-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    .pull-right {
+        margin-left: auto;
+    }
+
+    .mat-flat-button {
+        min-width: 70px;
+
+        &:not(:first-child) {
+            margin-left: 5px;
+        }
+    }
+}
+
 .mat-card-content {
 
     .mat-chip-list-container {

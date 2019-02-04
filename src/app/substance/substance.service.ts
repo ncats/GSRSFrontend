@@ -7,6 +7,7 @@ import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +30,7 @@ export class SubstanceService extends BaseHttpService {
     structureSearchCutoff?: number,
     getFacets?: boolean,
     pageSize?: number,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    },
+    facets?: SubstanceFacetParam,
     skip?: number
   ): Observable<PagingResponse<SubstanceDetail>> {
     return new Observable(observer => {
@@ -112,11 +109,7 @@ export class SubstanceService extends BaseHttpService {
   private addQueryParameters(
     params: HttpParams,
     pageSize?: number,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    },
+    facets?: SubstanceFacetParam,
     skip?: number,
     view?: string
   ) {
@@ -146,11 +139,7 @@ export class SubstanceService extends BaseHttpService {
     structureSearchKey: string,
     structureSearchCallOptions: any,
     pageSize?: number,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    },
+    facets?: SubstanceFacetParam,
     skip?: number,
     view?: string
   ): void {
@@ -195,11 +184,7 @@ export class SubstanceService extends BaseHttpService {
   private getSubstanceStructureSearchResults(
     structureSearchKey: string,
     pageSize?: number,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    },
+    facets?: SubstanceFacetParam,
     skip?: number,
     view?: string
   ): any {
@@ -236,11 +221,7 @@ export class SubstanceService extends BaseHttpService {
   getSubstanceSummaries(
     searchTerm?: string,
     getFacets?: boolean,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    }
+    facets?: SubstanceFacetParam
   ): Observable<PagingResponse<SubstanceSummary>> {
 
     let params = new HttpParams();
@@ -268,15 +249,21 @@ export class SubstanceService extends BaseHttpService {
 
   private processFacetParams(
     params: HttpParams,
-    facets?: { [facetName: string]: { [facetValueLabel: string]: boolean } }
+    facets?: SubstanceFacetParam
   ): HttpParams {
     const facetsKeys = Object.keys(facets);
     facetsKeys.forEach(facetKey => {
       if (facets[facetKey] != null) {
-        const facetValueKeys = Object.keys(facets[facetKey]);
+        const facetValueKeys = Object.keys(facets[facetKey].params);
         facetValueKeys.forEach((facetValueKey) => {
-          if (facets[facetKey][facetValueKey] != null) {
-            params = params.append('facet', (`${!facets[facetKey][facetValueKey] ? '!' : ''}${facetKey}/${facetValueKey}`));
+          if (facets[facetKey].params[facetValueKey] != null) {
+
+            const paramPrefix = !facets[facetKey].params[facetValueKey] ? '!' :
+              facets[facetKey].isAllMatch ? '^' : '';
+
+            params = params.append(
+              'facet',
+              (`${paramPrefix}${facetKey}/${facetValueKey}`));
           }
         });
       }
