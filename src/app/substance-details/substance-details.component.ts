@@ -127,4 +127,11 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   openSideNav() {
     this.matSideNav.open();
   }
+
+  handleSidenavClick(): void {
+    if (window.innerWidth < 1100) {
+      this.matSideNav.close();
+      this.hasBackdrop = true;
+    }
+  }
 }

@@ -26,10 +26,11 @@ mat-sidenav {
     border-top-right-radius: 25%;
     border-bottom-right-radius: 25%;
     transition: all 800ms;
+    padding: 5px 0;
 
     .mat-icon {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
     }
 }
 
