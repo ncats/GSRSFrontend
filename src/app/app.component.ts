@@ -36,5 +36,13 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'close',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-close-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'delete_forever',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-delete_forever-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'edit',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-edit-24px.svg'));
   }
 }

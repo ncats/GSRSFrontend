@@ -37,6 +37,20 @@
     }
 }
 
+.search-parameters {
+    display: flex;
+
+    &.center {
+        margin-top: 10px;
+        justify-content: center;
+    }
+
+    & > div {
+        padding: 5px 10px;
+        margin-bottom: 5px;
+    }
+}
+
 .controls-container {
     display: flex;
 }

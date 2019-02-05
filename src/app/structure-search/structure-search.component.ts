@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
 import { MatDialog } from '@angular/material';
@@ -7,6 +7,8 @@ import { StructureImportComponent } from '../structure/structure-import/structur
 import { Editor } from '../structure-editor/structure.editor.model';
 import { LoadingService } from '../loading/loading.service';
 import { environment } from '../../environments/environment';
+import { StructureService } from '../structure/structure.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-structure-search',
@@ -18,13 +20,16 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
   private searchType: string;
   similarityCutoff?: number;
   showSimilarityCutoff = false;
+  searchTypeControl = new FormControl();
 
   constructor(
     public router: Router,
     private substanceService: SubstanceService,
     private dialog: MatDialog,
     private loadingService: LoadingService,
-    private element: ElementRef
+    private element: ElementRef,
+    private structureService: StructureService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.searchType = 'substructure';
   }
@@ -41,16 +46,33 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
   editorOnLoad(editor: Editor): void {
     this.loadingService.setLoading(false);
     this.editor = editor;
+    this.activatedRoute
+      .queryParamMap
+      .subscribe(params => {
+        if (params.has('structure')) {
+          this.structureService.getMolfile(params.get('structure')).subscribe(molfile => {
+            this.editor.setMolecule(molfile);
+          });
+        }
+        if (params.has('type')) {
+          this.searchType = params.get('type');
+          this.searchTypeControl.setValue(this.searchType);
+        }
+        if (this.searchType === 'similarity') {
+          this.showSimilarityCutoff = true;
+          this.similarityCutoff = params.has('cutoff') && Number(params.get('cutoff')) || 0.5;
+        }
+      });
   }
 
   search(): void {
     const mol = this.editor.getMolfile();
     this.substanceService.postSubstance(mol).subscribe((response: StructurePostResponse) => {
-      this.navigateToBrowseSubstance(response.structure.id);
+      this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
     }, () => {});
   }
 
-  private navigateToBrowseSubstance(structureSearchTerm: string): void {
+  private navigateToBrowseSubstance(structureSearchTerm: string, smiles?: string): void {
 
     const navigationExtras: NavigationExtras = {
       queryParams: {}
@@ -61,6 +83,10 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
 
     if (this.searchType === 'similarity') {
       navigationExtras.queryParams['structure_search_cutoff'] = this.similarityCutoff || 0;
+    }
+
+    if (smiles != null) {
+      navigationExtras.queryParams['smiles'] = smiles;
     }
 
     this.router.navigate(['/browse-substance'], navigationExtras);

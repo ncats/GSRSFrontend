@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER, Optional } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule, HttpClientJsonpModule  } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -46,7 +46,7 @@ import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
 import { EnvironmentModule } from '../environments/environment';
-import { TopSearchComponent } from './top-search/top-search.component';
+import { TopSearchModule } from './top-search/top-search.module';
 
 @NgModule({
   declarations: [
@@ -57,8 +57,7 @@ import { TopSearchComponent } from './top-search/top-search.component';
     SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent,
-    TakePipe,
-    TopSearchComponent
+    TakePipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -96,7 +95,8 @@ import { TopSearchComponent } from './top-search/top-search.component';
     EnvironmentModule,
     MatMenuModule,
     MatButtonToggleModule,
-    MatTooltipModule
+    MatTooltipModule,
+    TopSearchModule
   ],
   providers: [
     ConfigService,

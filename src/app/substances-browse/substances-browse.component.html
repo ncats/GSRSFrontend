@@ -9,16 +9,10 @@
         </mat-expansion-panel-header>
         <div class="facet-value" *ngFor="let value of facet.values">
           <div class="facet-value-checkbox">
-            <mat-checkbox
-              class="include"
-              matTooltip="Include"
-              (change)="updateFacetSelection($event, facet.name, value.label, true)"
+            <mat-checkbox class="include" matTooltip="Include" (change)="updateFacetSelection($event, facet.name, value.label, true)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
             </mat-checkbox>
-            <mat-checkbox
-              class="exclude"
-              matTooltip="Exclude"
-              (change)="updateFacetSelection($event, facet.name, value.label, false)"
+            <mat-checkbox class="exclude" matTooltip="Exclude" (change)="updateFacetSelection($event, facet.name, value.label, false)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
             </mat-checkbox>
           </div>
@@ -31,23 +25,14 @@
           </div>
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
-          <mat-checkbox
-            *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
-            [(ngModel)]="facetParams[facet.name].isAllMatch">
+          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch">
             All Match
           </mat-checkbox>
           <div class="pull-right">
-            <button
-              mat-flat-button
-              [disabled]="isLoading"
-              (click)="clearFacetSelection(facet.name)">
+            <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
               Clear
             </button>
-            <button
-              mat-flat-button
-              color="primary"
-              [disabled]="isLoading"
-              (click)="searchSubstances()">
+            <button mat-flat-button color="primary" [disabled]="isLoading" (click)="searchSubstances()">
               Apply
             </button>
           </div>
@@ -60,6 +45,24 @@
       <mat-icon svgIcon="chevron_right"></mat-icon>
     </button>
     <div class="side-nav-content" [ngClass]="view" *ngIf="substances && substances.length">
+      <div class="search-parameters">
+        <div class="mat-elevation-z2" *ngIf="searchTerm">
+          <span class="capitalized font-medium-bold">Search Query</span>: {{this.searchTerm}}
+          <button mat-icon-button color="primary" (click)="clearSearch()">
+            <mat-icon svgIcon="delete_forever"></mat-icon>
+          </button>
+        </div>
+        <div class="mat-elevation-z2" *ngIf="smiles">
+          <span class="capitalized font-medium-bold">{{structureSearchType && structureSearchType}} Query</span>: {{this.smiles}}&nbsp;
+          <span *ngIf="structureSearchType && structureSearchType == 'similarity'">&ge; {{privateStructureSearchCutoff}}</span>
+          <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="clearStructureSearch()">
+            <mat-icon svgIcon="delete_forever"></mat-icon>
+          </button>
+        </div>
+      </div>
       <div class="controls-container">
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
           <mat-button-toggle value="table">
@@ -181,7 +184,20 @@
       </div>
     </div>
     <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
-      Your search did not return any results. Please try modying it.
+      Your search did not return any results. Please try modying it or
+      <a class="link" (click)="clearFilters()">click here</a> to clear all your search criteria.
+      <div class="search-parameters center">
+        <div class="mat-elevation-z2" *ngIf="smiles">
+          <span class="capitalized font-medium-bold">{{structureSearchType && structureSearchType}} Query</span>: {{this.smiles}}&nbsp;
+          <span *ngIf="structureSearchType && structureSearchType == 'similarity'">&ge; {{privateStructureSearchCutoff}}</span>
+          <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="clearStructureSearch()">
+            <mat-icon svgIcon="delete_forever"></mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

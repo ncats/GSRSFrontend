@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
@@ -14,6 +14,7 @@ import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
+import { TopSearchService } from '../top-search/top-search.service';
 
 @Component({
   selector: 'app-substances-browse',
@@ -37,6 +38,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   hasBackdrop = false;
   view = 'cards';
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes'];
+  public smiles: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -44,7 +46,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     public configService: ConfigService,
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
-    private utilsService: UtilsService
+    public utilsService: UtilsService,
+    private router: Router,
+    private topSearchService: TopSearchService
   ) {
     this.privateFacetParams = {};
   }
@@ -59,6 +63,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         this.privateStructureSearchTerm = params.get('structure_search_term') || '';
         this.privateStructureSearchType = params.get('structure_search_type') || '';
         this.privateStructureSearchCutoff = Number(params.get('structure_search_cutoff')) || 0;
+        this.smiles = params.get('smiles') || '';
         this.searchSubstances();
       });
   }
@@ -241,17 +246,24 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   clearFacetSelection(
-    facetName: string
+    facetName?: string
   ) {
-    if (this.privateFacetParams[facetName] != null && this.privateFacetParams[facetName].params != null) {
-      const facetValueKeys = Object.keys(this.privateFacetParams[facetName].params);
-      facetValueKeys.forEach(facetParam => {
-        this.privateFacetParams[facetName].params[facetParam] = null;
-      });
 
-      this.privateFacetParams[facetName].isAllMatch = false;
-      this.privateFacetParams[facetName].showAllMatchOption = false;
-      this.privateFacetParams[facetName].hasSelections = false;
+    const facetKeys = facetName != null ? [facetName] : Object.keys(this.privateFacetParams);
+
+    if (facetKeys != null && facetKeys.length) {
+      facetKeys.forEach(facetKey => {
+        if (this.privateFacetParams[facetKey] != null && this.privateFacetParams[facetKey].params != null) {
+          const facetValueKeys = Object.keys(this.privateFacetParams[facetKey].params);
+          facetValueKeys.forEach(facetParam => {
+            this.privateFacetParams[facetKey].params[facetParam] = null;
+          });
+
+          this.privateFacetParams[facetKey].isAllMatch = false;
+          this.privateFacetParams[facetKey].showAllMatchOption = false;
+          this.privateFacetParams[facetKey].hasSelections = false;
+        }
+      });
     }
   }
 
@@ -266,6 +278,48 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         });
       }
     }
+  }
+
+  clearStructureSearch(): void {
+    this.privateStructureSearchTerm = '';
+    this.privateStructureSearchType = '';
+    this.privateStructureSearchCutoff = null;
+    this.smiles = '';
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          'structure_search_term': null,
+          'structure_search_type': null,
+          'structure_search_cutoff': null,
+          'smiles': null
+        },
+        queryParamsHandling: 'merge'
+      }
+    );
+  }
+
+  clearSearch(): void {
+    this.privateSearchTerm = '';
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          'search_term': null
+        },
+        queryParamsHandling: 'merge'
+      }
+    );
+    this.topSearchService.clearSearch();
+  }
+
+  clearFilters(): void {
+    this.clearFacetSelection();
+    this.clearStructureSearch();
+    this.clearSearch();
+    this.searchSubstances();
   }
 
   get searchTerm(): string {

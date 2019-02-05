@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BaseHttpService } from '../base/base-http.service';
-import { Observable, Subject, observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { SubstanceSuggestionsGroup } from './substance-suggestions-group.model';
 import { Vocabulary, VocabularyTerm } from './vocabulary.model';
@@ -157,5 +157,15 @@ export class UtilsService extends BaseHttpService {
         this.matSidenavContentElement = null;
       }, 500);
     }
+  }
+
+  capitalize(phrase: string): string {
+    const stringArray = phrase.split(' ');
+
+    for (let i = 0, x = stringArray.length; i < x; i++) {
+      stringArray[i] = stringArray[i][0].toUpperCase() + stringArray[i].substr(1);
+    }
+
+    return stringArray.join(' ');
   }
 }
