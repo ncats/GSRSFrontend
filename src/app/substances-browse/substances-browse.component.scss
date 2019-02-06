@@ -218,8 +218,8 @@
 }
 
 @media(max-width: 1100px) {
-    .controls-container {
-        padding-left: 50px;
+    .controls-container, .search-parameters {
+        padding-left: 25px;
     }
 }
 

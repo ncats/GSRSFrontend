@@ -56,12 +56,14 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
         }
         if (params.has('type')) {
           this.searchType = params.get('type');
-          this.searchTypeControl.setValue(this.searchType);
         }
+
         if (this.searchType === 'similarity') {
           this.showSimilarityCutoff = true;
           this.similarityCutoff = params.has('cutoff') && Number(params.get('cutoff')) || 0.5;
         }
+
+        this.searchTypeControl.setValue(this.searchType);
       });
   }
 
