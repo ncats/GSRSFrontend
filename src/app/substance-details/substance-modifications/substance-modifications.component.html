@@ -1,4 +1,5 @@
-<!--<div *ngIf="agent">
+<!--
+<div *ngIf="agent">
   Agent Modifications:
 
   <table class="no-bottom-border" mat-table [dataSource]="agent">
@@ -27,7 +28,7 @@
     <ng-container matColumnDef="Amount">
       <th mat-header-cell *matHeaderCellDef> Amount </th>
       <td mat-cell *matCellDef="let agent">
-
+          {{toString(agent.amount)}}
       </td>
     </ng-container>
 
@@ -75,15 +76,16 @@
     <ng-container matColumnDef="Amount">
       <th mat-header-cell *matHeaderCellDef> Amount </th>
       <td mat-cell *matCellDef="let physical">
-
+        {{toString(physical.amount)}}
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="physicalColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="physicaolumns"></tr>
     <tr mat-row *matRowDef="let row; columns: physicalColumns;"></tr>
   </table>
 
-</div>-->
+</div>
+-->
 <div *ngIf="structural">
   Structural Modifications:
 

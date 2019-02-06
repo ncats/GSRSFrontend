@@ -1,5 +1,5 @@
 {
-    "apiBaseUrl": "https://cbg-gsrs-dev.ncats.io/ginas/app/",
+    "apiBaseUrl": "http://localhost:9000/ginas/app/",
     "substanceDetailsCards": [
         {
             "card":"substance-overview",
@@ -57,6 +57,51 @@
                 }
             ]            
         },
+      {
+        "card":"substance-glycosylation",
+        "title": "glycosylation",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "protein"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "protein.glycosylation"
+          }
+        ]
+      },
+      {
+        "card":"substance-disulfide-links",
+        "title": "disulfide links",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "protein"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "protein.disulfideLinks"
+          }
+        ]
+      },
+      {
+        "card":"substance-other-links",
+        "title": "other links",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "protein"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "protein.otherLinks"
+          }
+        ]
+      },
         {
             "card":"substance-relationships",
             "filters":[
@@ -167,6 +212,46 @@
           {
             "filterName":"exists",
             "propertyToCheck": "modifications.structuralModifications"
+          }
+        ]
+      },
+      {
+        "card":"substance-na-sugars",
+        "title": "sugars",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "nucleicAcid"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "nucleicAcid.sugars"
+          }
+        ]
+      },
+      {
+        "card":"substance-na-linkages",
+        "title": "linkages",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "nucleicAcid"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "nucleicAcid.linkages"
+          }
+        ]
+      },
+      {
+        "card":"substance-properties",
+        "title": "characteristic attributes",
+        "filters":[
+          {
+            "filterName":"exists",
+            "propertyToCheck": "properties"
           }
         ]
       }

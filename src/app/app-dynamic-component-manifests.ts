@@ -77,5 +77,35 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
       componentId: 'substance-modifications',
       path: 'substance-modifications',
       loadChildren: './substance-details/substance-modifications/substance-modifications.module#SubstanceModificationsModule',
-    }
+    },
+  {
+    componentId: 'substance-disulfide-links',
+    path: 'substance-disulfide-links',
+    loadChildren: './substance-details/substance-disulfide-links/substance-disulfide-links.module#SubstanceDisulfideLinksModule',
+  },
+  {
+    componentId: 'substance-other-links',
+    path: 'substance-other-links',
+    loadChildren: './substance-details/substance-other-links/substance-other-links.module#SubstanceOtherLinksModule',
+  },
+  {
+    componentId: 'substance-glycosylation',
+    path: 'substance-glycosylation',
+    loadChildren: './substance-details/substance-glycosylation/substance-glycosylation.module#SubstanceGlycosylationModule',
+  },
+  {
+    componentId: 'substance-na-sugars',
+    path: 'substance-na-sugars',
+    loadChildren: './substance-details/substance-na-sugars/substance-na-sugars.module#SubstanceNaSugarsModule',
+  },
+  {
+    componentId: 'substance-na-linkages',
+    path: 'substance-na-linkages',
+    loadChildren: './substance-details/substance-na-linkages/substance-na-linkages.module#SubstanceNaLinkagesModule',
+  },
+  {
+    componentId: 'substance-properties',
+    path: 'substance-properties',
+    loadChildren: './substance-details/substance-properties/substance-properties.module#SubstancePropertiesModule',
+  }
 ];

@@ -1,0 +1,23 @@
+<table >
+  <td>Glycosylation Type</td>
+  <td>{{glycosylation.glycosylationType}}</td>
+</table>
+
+<table >
+  <tr>
+    <th>Glycosylation Link Type</th>
+    <th>Site</th>
+  </tr>
+  <tr *ngFor = "let C of glycosylation.CGlycosylationSites">
+    <td>C</td>
+    <td>{{getFullSite(C)}}</td>
+  </tr>
+  <tr *ngFor = "let N of glycosylation.NGlycosylationSites">
+    <td>N</td>
+    <td>{{getFullSite(N)}}</td>
+  </tr>
+  <tr *ngFor = "let O of glycosylation.NGlycosylationSites">
+    <td>O</td>
+    <td>{{getFullSite(O)}}</td>
+  </tr>
+</table>

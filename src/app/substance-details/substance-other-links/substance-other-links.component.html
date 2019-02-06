@@ -1,0 +1,11 @@
+<table class="table table-striped" id="otherLinks-Table">
+  <tr>
+    <th>Linkage Type</th>
+    <th>Residue Index</th>
+  </tr>
+
+  <tr *ngfor = "let links as otherLinks">
+    <td>{{links.linkageType}}</td>
+    <td>{{  getFullSite(links.site[0]) }}</td>
+  </tr>
+</table>

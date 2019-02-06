@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
 import {UtilsService} from '../../utils/utils.service';
-import {AgentModification, PhysicalModification, StructuralModification, SubstanceModifications} from '../../substance/substance.model';
+import {AgentModification, PhysicalModification, StructuralModification, SubstanceAmount} from '../../substance/substance.model';
 
 @Component({
   selector: 'app-substance-modifications',
@@ -26,7 +26,6 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
     if (this.substance != null) {
       if (this.substance.modifications.structuralModifications.length > 0) {
         this.structural = this.substance.modifications.structuralModifications;
-        console.log(this.structural);
       }
       if (this.substance.modifications.physicalModifications.length > 0) {
         this.physical = this.substance.modifications.physicalModifications;
@@ -35,6 +34,36 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
         this.agent = this.substance.modifications.agentModifications;
       }
     }
+  }
+
+  public toString(amount: SubstanceAmount) {
+    let val = '';
+    if (amount.highLimit != null && amount.lowLimit == null && amount.average == null) {
+      val = '>' + amount.highLimit;
+    } else if (amount.highLimit == null && amount.lowLimit == null && amount.average != null) {
+      val = amount.average + '';
+    } else if (amount.highLimit == null && amount.lowLimit != null && amount.average == null) {
+      val = '<' + amount.lowLimit;
+    } else if (amount.highLimit != null && amount.lowLimit != null && amount.average != null) {
+      val = amount.average + '[' + amount.lowLimit + ' to ' + amount.highLimit + ']';
+    } else if (amount.highLimit != null && amount.lowLimit == null && amount.average != null) {
+      val = amount.average + '[>' + amount.highLimit + ']';
+    } else if (amount.highLimit == null && amount.lowLimit != null && amount.average != null) {
+      val = amount.average + '[<' + amount.lowLimit + ']';
+    }
+    if (amount.nonNumericValue != null) {
+      val += ' { ' + amount.nonNumericValue + ' }';
+      val = val.trim();
+    }
+    if (amount.units != null) {
+      val += ' (' + amount.units + ')';
+      val = val.trim();
+    }
+    if (val.trim().length <= 0) {
+      val = '<i>empty value</i>';
+    }
+
+    return val;
   }
 
 }

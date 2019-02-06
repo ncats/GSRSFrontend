@@ -1,0 +1,14 @@
+<div class="responsive">
+
+
+<table mat-table>
+  <tr>
+    <th>To</th>
+    <th>From</th>
+  </tr>
+  <tr *ngFor = "let link of disulfideLinks">
+    <td *ngFor = "let site of link.sites">{{getFullSite(site)}}</td>
+  </tr>
+</table>
+
+</div>
