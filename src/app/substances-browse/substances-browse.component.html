@@ -47,20 +47,35 @@
     <div class="side-nav-content" [ngClass]="view" *ngIf="substances && substances.length">
       <div class="search-parameters">
         <div class="mat-elevation-z2" *ngIf="searchTerm">
-          <span class="capitalized font-medium-bold">Search Query</span>: {{this.searchTerm}}
-          <button mat-icon-button color="primary" (click)="clearSearch()">
-            <mat-icon svgIcon="delete_forever"></mat-icon>
-          </button>
+          <div>
+            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+            <span class="no-break">{{this.searchTerm}}</span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" (click)="clearSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
         </div>
         <div class="mat-elevation-z2" *ngIf="smiles">
-          <span class="capitalized font-medium-bold">{{structureSearchType && structureSearchType}} Query</span>: {{this.smiles}}&nbsp;
-          <span *ngIf="structureSearchType && structureSearchType == 'similarity'">&ge; {{privateStructureSearchCutoff}}</span>
-          <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
-            <mat-icon svgIcon="edit"></mat-icon>
-          </button>
-          <button mat-icon-button color="primary" (click)="clearStructureSearch();searchSubstances();">
-            <mat-icon svgIcon="delete_forever"></mat-icon>
-          </button>
+          <div>
+            <span class="capitalized font-medium-bold no-break">{{structureSearchType && structureSearchType}} Query:</span>
+            &nbsp;
+            <span class="no-break">
+              <span>{{this.smiles}}</span>
+              <span *ngIf="structureSearchType && structureSearchType == 'similarity'">
+                &nbsp;&ge; {{privateStructureSearchCutoff}}
+              </span>
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearStructureSearch();searchSubstances();">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
         </div>
       </div>
       <div class="controls-container">
@@ -187,15 +202,36 @@
       Your search did not return any results. Please try modying it or
       <a class="link" (click)="clearFilters()">click here</a> to clear all your search criteria.
       <div class="search-parameters center">
+        <div class="mat-elevation-z2" *ngIf="searchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+            <span class="no-break">{{this.searchTerm}}</span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" (click)="clearSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
         <div class="mat-elevation-z2" *ngIf="smiles">
-          <span class="capitalized font-medium-bold">{{structureSearchType && structureSearchType}} Query</span>: {{this.smiles}}&nbsp;
-          <span *ngIf="structureSearchType && structureSearchType == 'similarity'">&ge; {{privateStructureSearchCutoff}}</span>
-          <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
-            <mat-icon svgIcon="edit"></mat-icon>
-          </button>
-          <button mat-icon-button color="primary" (click)="clearStructureSearch();searchSubstances();">
-            <mat-icon svgIcon="delete_forever"></mat-icon>
-          </button>
+          <div>
+            <span class="capitalized font-medium-bold no-break">{{structureSearchType && structureSearchType}} Query:</span>
+            &nbsp;
+            <span class="no-break">
+              <span>{{this.smiles}}</span>
+              <span *ngIf="structureSearchType && structureSearchType == 'similarity'">
+                &nbsp;&ge; {{privateStructureSearchCutoff}}
+              </span>
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearStructureSearch();searchSubstances();">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
         </div>
       </div>
     </div>

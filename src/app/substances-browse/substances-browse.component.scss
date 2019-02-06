@@ -48,6 +48,13 @@
     & > div {
         padding: 5px 10px;
         margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+    }
+
+    .actions-container {
+        margin-left: auto;
+        flex-shrink: 0;
     }
 }
 
@@ -221,6 +228,10 @@
     .controls-container, .search-parameters {
         padding-left: 25px;
     }
+
+    .side-nav-content {
+        padding-top: 10px;
+    }
 }
 
 @media(max-width: 700px) {
@@ -244,6 +255,16 @@
             padding-left: 20px;
         }
     }
+    
+    .search-parameters {
+        font-size: .9em;
+
+        .mat-icon-button {
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+        }
+    }
 }
 
 @media(max-width: 600px) {
@@ -252,6 +273,50 @@
 
         .image-thumbnail {
             margin: 0 auto;
+        }
+    }
+
+    .controls-container {
+
+        ::ng-deep {
+
+            .mat-paginator-range-label {
+                margin: 0 3px 0 0;
+            }
+
+            .mat-paginator-page-size-select {
+                margin-left: 0;
+            }
+
+            .mat-paginator-container {
+                padding-right: 0;
+                padding-left: 0;
+            }
+
+            .mat-paginator-page-size {
+                margin-right: 4px;
+            }
+
+            .mat-paginator-range-actions {
+
+                .mat-icon-button {
+                    width: 35px;
+                    height: 35px;
+                    line-height: 35px;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 505px) {
+    .controls-container {
+
+        ::ng-deep {
+
+            .mat-paginator-page-size-label {
+                display: none;
+            }
         }
     }
 }
