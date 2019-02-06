@@ -27,14 +27,9 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-
-    this.activatedRoute
-      .queryParamMap
-      .subscribe(params => {
-        if (params.has('search_term')) {
-          this.searchControl.setValue(params.get('search_term'));
-        }
-      });
+    if (this.activatedRoute.snapshot.queryParamMap.has('search_term')) {
+      this.searchControl.setValue(this.activatedRoute.snapshot.queryParamMap.get('search_term'));
+    }
 
     this.searchControl.valueChanges.pipe(
       debounceTime(500),
@@ -51,6 +46,16 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
 
     this.topSearchService.clearSearchEvent.subscribe(() => {
       this.searchControl.setValue('');
+      this.router.navigate(
+        [],
+        {
+          relativeTo: this.activatedRoute,
+          queryParams: {
+            'search_term': null
+          },
+          queryParamsHandling: 'merge'
+        }
+      );
     });
   }
 

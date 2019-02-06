@@ -56,14 +56,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   ngOnInit() {
     this.pageSize = 10;
     this.pageIndex = 0;
+    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParamMap.get('structure_search_term') || '';
+    this.privateStructureSearchType = this.activatedRoute.snapshot.queryParamMap.get('structure_search_type') || '';
+    this.privateStructureSearchCutoff = Number(this.activatedRoute.snapshot.queryParamMap.get('structure_search_cutoff')) || 0;
+    this.smiles = this.activatedRoute.snapshot.queryParamMap.get('smiles') || '';
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
         this.privateSearchTerm = params.get('search_term') || '';
-        this.privateStructureSearchTerm = params.get('structure_search_term') || '';
-        this.privateStructureSearchType = params.get('structure_search_type') || '';
-        this.privateStructureSearchCutoff = Number(params.get('structure_search_cutoff')) || 0;
-        this.smiles = params.get('smiles') || '';
         this.searchSubstances();
       });
   }
@@ -178,7 +178,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     if (this.facets.length < 15) {
 
-      const numFillFacets = 20 - this.facets.length;
+      const numFillFacets = 15 - this.facets.length;
 
       let sortedFacets = _.orderBy(facets, facet => {
         let valuesTotal = 0;
@@ -285,6 +285,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateStructureSearchType = '';
     this.privateStructureSearchCutoff = null;
     this.smiles = '';
+    this.pageIndex = 0;
     this.router.navigate(
       [],
       {
@@ -301,17 +302,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   clearSearch(): void {
+    // automatically call searchSubstances() because of subscription to route changes
+    // route query params change in order to clear search query param
     this.privateSearchTerm = '';
-    this.router.navigate(
-      [],
-      {
-        relativeTo: this.activatedRoute,
-        queryParams: {
-          'search_term': null
-        },
-        queryParamsHandling: 'merge'
-      }
-    );
+    this.pageIndex = 0;
     this.topSearchService.clearSearch();
   }
 
@@ -319,7 +313,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.clearFacetSelection();
     this.clearStructureSearch();
     this.clearSearch();
-    this.searchSubstances();
   }
 
   get searchTerm(): string {

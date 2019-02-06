@@ -58,7 +58,7 @@
           <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button mat-icon-button color="primary" (click)="clearStructureSearch()">
+          <button mat-icon-button color="primary" (click)="clearStructureSearch();searchSubstances();">
             <mat-icon svgIcon="delete_forever"></mat-icon>
           </button>
         </div>
@@ -193,7 +193,7 @@
           <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button mat-icon-button color="primary" (click)="clearStructureSearch()">
+          <button mat-icon-button color="primary" (click)="clearStructureSearch();searchSubstances();">
             <mat-icon svgIcon="delete_forever"></mat-icon>
           </button>
         </div>
