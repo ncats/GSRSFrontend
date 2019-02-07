@@ -6,6 +6,17 @@
             "title": "overview"    
         },
         {
+          "card":"substance-primary-definition",
+          "title": "primary definition",
+          "filters":[
+            {
+              "filterName":"equals",
+              "propertyToCheck": "definitionType",
+              "value": "ALTERNATIVE"
+            }
+          ]
+        },
+        {
             "card":"structure-details",
             "title": "structure",
             "filters":[
@@ -252,6 +263,18 @@
           {
             "filterName":"exists",
             "propertyToCheck": "properties"
+          }
+        ]
+      },
+      {
+        "card":"substance-variant-concepts",
+        "title": "variant concepts",
+        "filters":[
+          {
+            "filterName":"equals_in_array",
+            "propertyToCheck": "relationships",
+            "propertyInArray": "type",
+            "value": "SUB_CONCEPT->SUBSTANCE"
           }
         ]
       }

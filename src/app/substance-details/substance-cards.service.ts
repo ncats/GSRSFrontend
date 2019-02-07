@@ -29,10 +29,12 @@ export class SubstanceCardsService {
             return null;
           }
         } else {
+          console.log('returning ' + evaluatedObject[properties[i]]);
           return evaluatedObject[properties[i]];
         }
       }
     } else {
+      console.log('returning ' + substance[propertyToCheck]);
       return substance[propertyToCheck];
     }
   }
@@ -52,6 +54,8 @@ export class SubstanceCardsService {
             if (this[filter.filterName]) {
               propertyTocheck = this.getEvaluatedProperty(substance, filter.propertyToCheck);
               const response = this[filter.filterName](substance, filter);
+              console.log(response);
+              console.log(filter.filterName);
               if (response === false) {
                 isCardIncluded = false;
                 isAddCard = false;
@@ -82,6 +86,7 @@ export class SubstanceCardsService {
             count: countSubstanceProperty && propertyTocheck.length || null,
             dynamicComponentId: card.card
           };
+          console.log(detailsProperty);
           substanceDetailsProperties.push(detailsProperty);
         }
       });
@@ -94,9 +99,12 @@ export class SubstanceCardsService {
     substance: SubstanceDetail,
     filter: SubstanceDetailsCardFilter
   ): boolean {
+    console.log(filter);
     if (filter.value != null && filter.propertyToCheck != null) {
 
+
       if (!filter.value.indexOf('|') && substance[filter.propertyToCheck] === filter.value) {
+        console.log('true1');
         return true;
       } else if (filter.value.indexOf('|')) {
         const values = filter.value.split('|');
@@ -106,6 +114,25 @@ export class SubstanceCardsService {
           }
         }
       }
+      console.log('false');
+      return false;
+    }
+  }
+  equals_in_array(
+    substance: SubstanceDetail,
+    filter: SubstanceDetailsCardFilter
+  ): boolean {
+    if (filter.value != null && filter.propertyToCheck != null && filter.propertyInArray != null) {
+      for (let i = 0; i < substance[filter.propertyToCheck].length; i++) {
+        console.log(filter.value);
+        if ((substance[filter.propertyToCheck][i][filter.propertyInArray]) === filter.value) {
+          console.log('returning true');
+          return true;
+      } else {
+        console.log((substance[filter.propertyToCheck][i][filter.propertyInArray]) + ' ! ' + filter.value);
+      }
+
+    }
       return false;
     }
   }

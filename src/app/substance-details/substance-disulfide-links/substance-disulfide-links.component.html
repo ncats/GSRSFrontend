@@ -1,13 +1,16 @@
 <div class="responsive">
 
 
-<table mat-table>
+<table >
   <tr>
     <th>To</th>
     <th>From</th>
   </tr>
   <tr *ngFor = "let link of disulfideLinks">
     <td *ngFor = "let site of link.sites">{{getFullSite(site)}}</td>
+  </tr>
+  <tr *ngFor = "let test of formatted">
+    <td>{{test[0]</td><td>{{test[1]</td>
   </tr>
 </table>
 

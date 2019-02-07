@@ -107,5 +107,15 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-properties',
     path: 'substance-properties',
     loadChildren: './substance-details/substance-properties/substance-properties.module#SubstancePropertiesModule',
+  },
+  {
+    componentId: 'substance-primary-definition',
+    path: 'substance-primary-definition',
+    loadChildren: './substance-details/substance-primary-definition/substance-primary-definition.module#SubstancePrimaryDefinitionModule',
+  },
+  {
+    componentId: 'substance-variant-concepts',
+    path: 'substance-variant-concepts',
+    loadChildren: './substance-details/substance-variant-concepts/substance-variant-concepts.module#SubstanceVariantConceptsModule',
   }
 ];

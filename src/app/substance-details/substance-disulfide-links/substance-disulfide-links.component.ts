@@ -9,6 +9,7 @@ import {DisulfideLink, Site} from '../../substance/substance.model';
 })
 export class SubstanceDisulfideLinksComponent extends SubstanceCardBase implements OnInit {
   disulfideLinks: Array<DisulfideLink>;
+  formatted: Array<any>;
 
   constructor() {
     super();
@@ -20,7 +21,13 @@ export class SubstanceDisulfideLinksComponent extends SubstanceCardBase implemen
       && this.substance.protein.disulfideLinks != null
       && this.substance.protein.disulfideLinks.length) {
         this.disulfideLinks = this.substance.protein.disulfideLinks;
+        for (const link of this.disulfideLinks) {
+          const to = link[0].subunitIndex + '_' + link[0].residueIndex;
+          const from = link[1].subunitIndex + '_' + link[1].residueIndex;
+          this.formatted.push([to, from]);
+        }
     }
+    console.log(this.formatted);
   }
 
 

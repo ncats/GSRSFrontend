@@ -15,6 +15,7 @@ export interface SubstanceDetailsCardFilter {
     filterName: string;
     propertyToCheck?: string;
     value?: string;
+    propertyInArray?: string;
 }
 
 export interface SpecialRelationship {

@@ -11,6 +11,7 @@ export class SubstanceOtherLinksComponent extends SubstanceCardBase implements O
   otherLinks: Array<Link>;
   columnsToDisplay = ['linkageType', 'residueIndex'];
 
+
   constructor() {
     super();
   }
@@ -21,6 +22,7 @@ export class SubstanceOtherLinksComponent extends SubstanceCardBase implements O
       && this.substance.protein.otherLinks != null
       && this.substance.protein.otherLinks.length) {
       this.otherLinks = this.substance.protein.otherLinks;
+
 
     }
   }

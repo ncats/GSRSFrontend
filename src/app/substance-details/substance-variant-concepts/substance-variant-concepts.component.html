@@ -1,0 +1,6 @@
+<div class="substance-icon-container" *ngFor = "let variant of variants">
+  <img class="image-icon" [src]="getSafeStructureImgUrl(variant.refuuid)">
+  <a class="substance-name" [routerLink]="['/substances', variant.refuuid]" >
+    {{variant.refPname}}
+  </a>
+</div>
