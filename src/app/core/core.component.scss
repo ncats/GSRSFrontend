@@ -1,3 +1,5 @@
+@import '../../styles/variables';
+
 .logo {
     height: 35px;
     margin-right: 20px;
@@ -36,13 +38,13 @@
     padding-right: 10px;
 }
 
-@media(max-width: 865px) {
+@media(max-width: $nav-breaking-point) {
     .nav-big {
         display: none;
     }
 }
 
-@media(min-width: 865px) {
+@media(min-width: $nav-breaking-point) {
     .nav-small {
         display: none;
     }

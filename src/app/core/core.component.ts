@@ -17,6 +17,10 @@ export class CoreComponent implements OnInit {
     {
       display: 'Structure Search',
       path: 'structure-search'
+    },
+    {
+      display: 'Sequence Search',
+      path: 'sequence-search'
     }
   ];
 

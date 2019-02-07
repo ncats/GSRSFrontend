@@ -47,6 +47,7 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
 import { EnvironmentModule } from '../environments/environment';
 import { TopSearchModule } from './top-search/top-search.module';
+import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { TopSearchModule } from './top-search/top-search.module';
     SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent,
-    TakePipe
+    TakePipe,
+    SequenceSearchComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

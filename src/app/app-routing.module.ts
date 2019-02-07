@@ -6,8 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
-import { environment } from '../environments/environment';
-import { FdaSampleComponent } from './fda-sample/fda-sample.component';
+import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 
 const childRoutes: Routes = [
   {
@@ -29,6 +28,10 @@ const childRoutes: Routes = [
   {
     path: 'structure-search',
     component: StructureSearchComponent
+  },
+  {
+    path: 'sequence-search',
+    component: SequenceSearchComponent
   }
 ];
 
