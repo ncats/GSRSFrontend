@@ -94,6 +94,7 @@ export interface Linkage extends NucleicAcid {
 export interface Mixture extends SubstanceBase {
   uuid: string;
   components: Array<MixtureComponents>;
+  parentSubstance?: SubstanceRelated;
 }
 
 export interface MixtureComponents extends Mixture {

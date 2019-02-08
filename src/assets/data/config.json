@@ -280,18 +280,6 @@
             "propertyToCheck": "properties"
           }
         ]
-      },
-      {
-        "card":"substance-variant-concepts",
-        "title": "variant concepts",
-        "filters":[
-          {
-            "filterName":"equals_in_array",
-            "propertyToCheck": "relationships",
-            "propertyInArray": "type",
-            "value": "SUB_CONCEPT->SUBSTANCE"
-          }
-        ]
       }
     ],
     "facets": {
