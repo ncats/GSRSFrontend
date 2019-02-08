@@ -6,7 +6,8 @@ import { BaseHttpService } from '../base/base-http.service';
 import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +30,7 @@ export class SubstanceService extends BaseHttpService {
     structureSearchCutoff?: number,
     getFacets?: boolean,
     pageSize?: number,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    },
+    facets?: SubstanceFacetParam,
     skip?: number
   ): Observable<PagingResponse<SubstanceDetail>> {
     return new Observable(observer => {
@@ -94,7 +91,9 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip);
+              skip,
+              'full'
+            );
           } else {
             observer.next(response);
             observer.complete();
@@ -110,12 +109,10 @@ export class SubstanceService extends BaseHttpService {
   private addQueryParameters(
     params: HttpParams,
     pageSize?: number,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    },
-    skip?: number) {
+    facets?: SubstanceFacetParam,
+    skip?: number,
+    view?: string
+  ) {
       if (skip) {
         params = params.append('skip', skip.toString());
       }
@@ -128,6 +125,10 @@ export class SubstanceService extends BaseHttpService {
         params = this.processFacetParams(params, facets);
       }
 
+      if (view != null) {
+        params = params.append('view', view);
+      }
+
       return params;
   }
 
@@ -138,17 +139,17 @@ export class SubstanceService extends BaseHttpService {
     structureSearchKey: string,
     structureSearchCallOptions: any,
     pageSize?: number,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    },
-    skip?: number): void {
+    facets?: SubstanceFacetParam,
+    skip?: number,
+    view?: string
+  ): void {
     this.getSubstanceStructureSearchResults(
       structureSearchKey,
       pageSize,
       facets,
-      skip)
+      skip,
+      view
+    )
     .subscribe(response => {
       observer.next(response);
       if (!structureSearchResponse.finished) {
@@ -162,7 +163,9 @@ export class SubstanceService extends BaseHttpService {
               structureSearchCallOptions,
               pageSize,
               facets,
-              skip);
+              skip,
+              view
+            );
           });
         }, error => {
           observer.error(error);
@@ -181,16 +184,14 @@ export class SubstanceService extends BaseHttpService {
   private getSubstanceStructureSearchResults(
     structureSearchKey: string,
     pageSize?: number,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    },
-    skip?: number): any {
+    facets?: SubstanceFacetParam,
+    skip?: number,
+    view?: string
+  ): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
     let params = new HttpParams();
 
-    params = this.addQueryParameters(params, pageSize, facets, skip);
+    params = this.addQueryParameters(params, pageSize, facets, skip, view);
 
     const options = {
       params: params
@@ -220,11 +221,7 @@ export class SubstanceService extends BaseHttpService {
   getSubstanceSummaries(
     searchTerm?: string,
     getFacets?: boolean,
-    facets?: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    }
+    facets?: SubstanceFacetParam
   ): Observable<PagingResponse<SubstanceSummary>> {
 
     let params = new HttpParams();
@@ -250,14 +247,23 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
-  private processFacetParams(params: HttpParams, facets?: { [facetName: string]: { [facetValueLabel: string]: boolean } }): HttpParams {
+  private processFacetParams(
+    params: HttpParams,
+    facets?: SubstanceFacetParam
+  ): HttpParams {
     const facetsKeys = Object.keys(facets);
     facetsKeys.forEach(facetKey => {
       if (facets[facetKey] != null) {
-        const facetValueKeys = Object.keys(facets[facetKey]);
+        const facetValueKeys = Object.keys(facets[facetKey].params);
         facetValueKeys.forEach((facetValueKey) => {
-          if (facets[facetKey][facetValueKey]) {
-            params = params.append('facet', (facetKey + '/' + facetValueKey));
+          if (facets[facetKey].params[facetValueKey] != null) {
+
+            const paramPrefix = !facets[facetKey].params[facetValueKey] ? '!' :
+              facets[facetKey].isAllMatch ? '^' : '';
+
+            params = params.append(
+              'facet',
+              (`${paramPrefix}${facetKey}/${facetValueKey}`));
           }
         });
       }

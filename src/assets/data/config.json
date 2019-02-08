@@ -79,7 +79,7 @@
           },
           {
             "filterName":"exists",
-            "propertyToCheck": "protein.glycosylation"
+            "propertyToCheck": "protein.glycosylation.glycosylationType"
           }
         ]
       },
@@ -213,6 +213,21 @@
           {
             "filterName":"exists",
             "propertyToCheck": "mixture.components"
+          }
+        ]
+      },
+      {
+        "card":"substance-mixture-source",
+        "title": "mixture source",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "mixture"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "mixture.parentSubstance"
           }
         ]
       },

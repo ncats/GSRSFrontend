@@ -9,7 +9,7 @@ import {Link, Site} from '../../substance/substance.model';
 })
 export class SubstanceOtherLinksComponent extends SubstanceCardBase implements OnInit {
   otherLinks: Array<Link>;
-  columnsToDisplay = ['linkageType', 'residueIndex'];
+  displayedColumns = ['linkageType', 'residueIndex'];
 
 
   constructor() {

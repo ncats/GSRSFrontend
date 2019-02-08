@@ -1,0 +1,7 @@
+<div class="substance-icon-container">
+  <img class="image-icon" [src]="getSafeStructureImgUrl(parent.refuuid)">
+  <br/>
+  <a class="substance-name" [routerLink]="['/substances', parent.refuuid]" >
+    {{parent.refPname}}
+  </a>
+</div>

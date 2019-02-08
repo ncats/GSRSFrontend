@@ -25,6 +25,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
@@ -41,6 +44,9 @@ import { SubstanceDetailsComponent } from './substance-details/substance-details
 import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic-component-loader.module';
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
+import { TakePipe } from './utils/take.pipe';
+import { EnvironmentModule } from '../environments/environment';
+import { TopSearchModule } from './top-search/top-search.module';
 
 @NgModule({
   declarations: [
@@ -50,7 +56,8 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
     HomeComponent,
     SubstancesBrowseComponent,
     StructureSearchComponent,
-    SubstanceDetailsComponent
+    SubstanceDetailsComponent,
+    TakePipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -84,7 +91,12 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
     FileSelectModule,
     MatListModule,
     DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
-    ScrollNavModule
+    ScrollNavModule,
+    EnvironmentModule,
+    MatMenuModule,
+    MatButtonToggleModule,
+    MatTooltipModule,
+    TopSearchModule
   ],
   providers: [
     ConfigService,
@@ -97,4 +109,4 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

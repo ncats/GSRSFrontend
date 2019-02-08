@@ -6,14 +6,14 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ActivatedRoute } from '@angular/router';
-import { ActivatedRouteStub } from '../../../testing/activated-route-stub';
+import { ActivatedRouteStub } from '../../testing/activated-route-stub';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ConfigService } from '../../config/config.service';
-import { LoadingService } from '../../loading/loading.service';
-import { MainNotificationService } from '../../main-notification/main-notification.service';
+import { ConfigService } from '../config/config.service';
+import { LoadingService } from '../loading/loading.service';
+import { MainNotificationService } from '../main-notification/main-notification.service';
 import { Router, NavigationExtras } from '@angular/router';
-import { RouterStub } from '../../../testing/router-stub';
-import { RouterLinkDirectiveStub } from '../../../testing/router-link-directive-stub';
+import { RouterStub } from '../../testing/router-stub';
+import { RouterLinkDirectiveStub } from '../../testing/router-link-directive-stub';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SubstanceDetailsComponent', () => {

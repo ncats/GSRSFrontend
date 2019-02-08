@@ -4,7 +4,7 @@ import { StructureEditorComponent } from './structure-editor.component';
 import { KetcherWrapperModule, Ketcher } from 'ketcher-wrapper';
 import { JsdrawWrapperModule } from 'jsdraw-wrapper';
 import { environment } from '../../environments/environment';
-import { JSDraw, JSDrawOptions } from 'jsdraw-wrapper/jsdraw-wrapper';
+import { JSDraw, JSDrawOptions } from 'jsdraw-wrapper';
 
 describe('StructureEditorComponent', () => {
   let component: StructureEditorComponent;

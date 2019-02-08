@@ -1,5 +1,4 @@
 import { ConfigService } from '../config/config.service';
-import { environment } from '../../environments/environment';
 
 export abstract class BaseHttpService {
   public apiBaseUrl: string;
@@ -7,6 +6,6 @@ export abstract class BaseHttpService {
   constructor(
     public configService: ConfigService
   ) {
-    this.apiBaseUrl = `${this.configService.configData.apiBaseUrl || environment.apiBaseUrl}api/v1/`;
+    this.apiBaseUrl = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '' }api/v1/`;
   }
 }

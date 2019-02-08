@@ -4,9 +4,9 @@
       <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
     </div>
     <div class="search-actions">
-      <div>
+      <div class="two">
         <mat-form-field class="search-type-select">
-          <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)" value="substructure">
+          <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)" [formControl]="searchTypeControl" value="substructure">
             <mat-option value="substructure">
               Substructure
             </mat-option>
@@ -23,14 +23,14 @@
         </mat-form-field>
         <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
           <div>Similarity cutoff (tanimoto)</div>
-          <mat-slider min="0" max="1" step="0.01" value="0.5" (input)="searchCutoffChanged($event)"></mat-slider>
+          <mat-slider min="0" max="1" step="0.01" [value]="similarityCutoff" (input)="searchCutoffChanged($event)"></mat-slider>
           <div>{{similarityCutoff}}</div>
         </div>
       </div>
-      <div class="action-button-container">
+      <div class="action-button-container three">
         <button class="search-button" mat-raised-button color="primary" (click)="search()">Search</button>
       </div>
-      <div class="action-button-container">
+      <div class="action-button-container one">
         <button class="import-button" mat-raised-button color="primary" (click)="openStructureImportDialog()">Import</button>
       </div>
     </div>

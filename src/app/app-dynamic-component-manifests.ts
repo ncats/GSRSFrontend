@@ -117,5 +117,10 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-variant-concepts',
     path: 'substance-variant-concepts',
     loadChildren: './substance-details/substance-variant-concepts/substance-variant-concepts.module#SubstanceVariantConceptsModule',
+  },
+  {
+    componentId: 'substance-mixture-source',
+    path: 'substance-mixture-source',
+    loadChildren: './substance-details/substance-mixture-source/substance-mixture-source.module#SubstanceMixtureSourceModule',
   }
 ];

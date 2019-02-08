@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BaseHttpService } from '../base/base-http.service';
-import { Observable, Subject, observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { SubstanceSuggestionsGroup } from './substance-suggestions-group.model';
 import { Vocabulary, VocabularyTerm } from './vocabulary.model';
 import { PagingResponse } from './paging-response.model';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,8 @@ export class UtilsService extends BaseHttpService {
   private vocabularies: { [domain: string]: { [vocabularyValue: string]: VocabularyTerm } } = {};
   private vocabularySubject: { [domain: string]: Subject<{ [vocabularyValue: string]: VocabularyTerm }> } = {};
   private vocabularyLoadingIndicators: { [domain: string]: boolean } = {};
+  private bodyElement: HTMLBodyElement;
+  private matSidenavContentElement: HTMLElement;
 
   constructor(
     public http: HttpClient,
@@ -131,5 +133,39 @@ export class UtilsService extends BaseHttpService {
     });
 
     return this.vocabularySubject[domain];
+  }
+
+  handleMatSidenavOpen(widthBreakingPoint?: number): void {
+
+    if (widthBreakingPoint == null || window.innerWidth < widthBreakingPoint) {
+      this.bodyElement = document.getElementsByTagName('BODY')[0] as HTMLBodyElement;
+      this.matSidenavContentElement = document.getElementsByTagName('mat-sidenav-content')[0] as HTMLElement;
+
+      this.bodyElement.style.overflowX = 'hidden';
+      this.matSidenavContentElement.style.width = `${this.matSidenavContentElement.offsetWidth}px`;
+    } else {
+      this.handleMatSidenavClose();
+    }
+  }
+
+  handleMatSidenavClose(): void {
+    if (this.bodyElement != null || this.matSidenavContentElement != null) {
+      setTimeout(() => {
+        this.bodyElement.style.overflowX = null;
+        this.matSidenavContentElement.style.width = null;
+        this.bodyElement = null;
+        this.matSidenavContentElement = null;
+      }, 500);
+    }
+  }
+
+  capitalize(phrase: string): string {
+    const stringArray = phrase.split(' ');
+
+    for (let i = 0, x = stringArray.length; i < x; i++) {
+      stringArray[i] = stringArray[i][0].toUpperCase() + stringArray[i].substr(1);
+    }
+
+    return stringArray.join(' ');
   }
 }

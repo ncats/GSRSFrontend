@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Ketcher } from 'ketcher-wrapper/ketcher-wrapper';
+import { Ketcher } from 'ketcher-wrapper';
 import { EditorImplementation } from './structure-editor-implementation.model';
-import { JSDraw } from 'jsdraw-wrapper/jsdraw-wrapper';
+import { JSDraw } from 'jsdraw-wrapper';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -61,6 +61,7 @@ export class StructureEditorComponent implements OnInit {
 
   jsDrawOnLoad(jsdraw: JSDraw): void {
     this.jsdraw = jsdraw;
+    console.log(this.jsdraw);
     this.editorOnLoad.emit(new EditorImplementation(null, this.jsdraw));
   }
 

@@ -38,30 +38,35 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
 
   public toString(amount: SubstanceAmount) {
     let val = '';
-    if (amount.highLimit != null && amount.lowLimit == null && amount.average == null) {
-      val = '>' + amount.highLimit;
-    } else if (amount.highLimit == null && amount.lowLimit == null && amount.average != null) {
-      val = amount.average + '';
-    } else if (amount.highLimit == null && amount.lowLimit != null && amount.average == null) {
-      val = '<' + amount.lowLimit;
-    } else if (amount.highLimit != null && amount.lowLimit != null && amount.average != null) {
-      val = amount.average + '[' + amount.lowLimit + ' to ' + amount.highLimit + ']';
-    } else if (amount.highLimit != null && amount.lowLimit == null && amount.average != null) {
-      val = amount.average + '[>' + amount.highLimit + ']';
-    } else if (amount.highLimit == null && amount.lowLimit != null && amount.average != null) {
-      val = amount.average + '[<' + amount.lowLimit + ']';
+    if (amount) {
+      if ((amount.highLimit)  && (!amount.lowLimit) && (!amount.average) ) {
+        val = '>' + (amount.highLimit);
+      } else if ((!amount.highLimit) && (!amount.lowLimit) && (amount.average) ) {
+        val = (amount.average) + '';
+      } else if ((!amount.highLimit) && (amount.lowLimit)  && (!amount.average) ) {
+        val = '<' + (amount.lowLimit);
+      } else if ((amount.highLimit)  && (amount.lowLimit)  && (amount.average) ) {
+        val = (amount.average) + '[' + (amount.lowLimit) + ' to ' + (amount.highLimit) + ']';
+      } else if ((amount.highLimit)  && (!amount.lowLimit) && (amount.average) ) {
+        val = (amount.average) + '[>' + (amount.highLimit) + ']';
+      } else if ((!amount.highLimit) && (amount.lowLimit)  && (amount.average) ) {
+        val = (amount.average) + '[<' + (amount.lowLimit) + ']';
+      }
+      if (amount.nonNumericValue ) {
+        val += ' { ' + amount.nonNumericValue + ' }';
+        val = val.trim();
+      }
+      if (amount.units != null) {
+        val += ' (' + amount.units + ')';
+        val = val.trim();
+      }
+      if (val.trim().length <= 0) {
+        val = 'empty value';
+      }
+    }else{
+      val = 'empty value';
     }
-    if (amount.nonNumericValue != null) {
-      val += ' { ' + amount.nonNumericValue + ' }';
-      val = val.trim();
-    }
-    if (amount.units != null) {
-      val += ' (' + amount.units + ')';
-      val = val.trim();
-    }
-    if (val.trim().length <= 0) {
-      val = '<i>empty value</i>';
-    }
+
 
     return val;
   }

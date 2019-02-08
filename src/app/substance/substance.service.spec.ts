@@ -10,6 +10,7 @@ import { SubstanceSummaryListData } from '../../testing/substance-summary-list-t
 import { Observable, Observer } from 'rxjs';
 import { StructureSearchResponseTestData } from '../../testing/structure-search-response-test-data';
 import { StructureSearchResponse } from './structure-search-response.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 describe('SubstanceService', () => {
 
@@ -19,6 +20,7 @@ describe('SubstanceService', () => {
   let substanceService: SubstanceService;
   let expectedSubstanceDetails: PagingResponse<SubstanceDetail>;
   let expectedSubstanceSummaries: PagingResponse<SubstanceSummary>;
+  let domSanitizer: DomSanitizer;
 
   beforeEach(() => {
 
@@ -31,9 +33,10 @@ describe('SubstanceService', () => {
 
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
+    domSanitizer = TestBed.get(domSanitizer);
     configService = new ConfigService(httpClient);
     configService.configData = { apiBaseUrl: '' };
-    substanceService = new SubstanceService(httpClient, configService);
+    substanceService = new SubstanceService(httpClient, configService, domSanitizer);
   });
 
   it('should be created', () => {

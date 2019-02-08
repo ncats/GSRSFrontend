@@ -6,6 +6,8 @@ import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
 
+export { GsrsModule as EnvironmentModule } from '../app/gsrs.module';
+
 /*
  * In development mode, for easier debugging, you can ignore zone related error
  * stack frames such as `zone.run`/`zoneDelegate.invokeTask` by importing the
