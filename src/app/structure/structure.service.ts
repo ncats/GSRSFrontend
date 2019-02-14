@@ -24,4 +24,9 @@ export class StructureService {
     const url = `${this.configService.configData.apiBaseUrl}img/${id}.mol`;
     return this.http.get(url, { responseType: 'text' });
   }
+
+  getInchi(id: string): Observable<string> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})structure!$inchikey()`;
+    return this.http.get(url, {responseType: 'text'});
+  }
 }

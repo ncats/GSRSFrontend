@@ -9,12 +9,14 @@ import { LoadingService } from '../loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { PageEvent } from '@angular/material';
+import {MatDialog, PageEvent} from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 import { TopSearchService } from '../top-search/top-search.service';
+import {StructureImportComponent} from '../structure/structure-import/structure-import.component';
+import {StructureImageModalComponent} from '../structure/structure-image-modal/structure-image-modal.component';
 
 @Component({
   selector: 'app-substances-browse',
@@ -48,6 +50,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private notificationService: MainNotificationService,
     public utilsService: UtilsService,
     private router: Router,
+    private dialog: MatDialog,
     private topSearchService: TopSearchService
   ) {
     this.privateFacetParams = {};
@@ -351,6 +354,30 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   updateView(event): void {
     this.view = event.value;
+  }
+
+  openImageModal(substance): void {
+    if (substance.substanceClass === 'chemical') {
+      const dialogRef = this.dialog.open(StructureImageModalComponent, {
+        height: 'auto',
+        width: '650px',
+        data: {
+          structure: substance.structure.id,
+          smiles: substance.structure.smiles,
+          uuid: substance.uuid,
+          names: substance.names
+        }
+      });
+    } else {
+      const dialogRef = this.dialog.open(StructureImageModalComponent, {
+        height: 'auto',
+        width: '650px',
+        data: {
+          structure: substance.polymer.displayStructure.id,
+          names: substance.names
+        }
+      });
+    }
   }
 
 }

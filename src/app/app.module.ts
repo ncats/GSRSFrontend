@@ -47,6 +47,8 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
 import { EnvironmentModule } from '../environments/environment';
 import { TopSearchModule } from './top-search/top-search.module';
+import {StructureImageModalComponent} from './structure/structure-image-modal/structure-image-modal.component';
+import {MatTabsModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,7 @@ import { TopSearchModule } from './top-search/top-search.module';
     SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent,
+    StructureImageModalComponent,
     TakePipe
   ],
   imports: [
@@ -96,6 +99,7 @@ import { TopSearchModule } from './top-search/top-search.module';
     MatMenuModule,
     MatButtonToggleModule,
     MatTooltipModule,
+    MatTabsModule,
     TopSearchModule
   ],
   providers: [
@@ -107,6 +111,7 @@ import { TopSearchModule } from './top-search/top-search.module';
             multi: true
         }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [StructureImageModalComponent]
 })
 export class AppModule {}

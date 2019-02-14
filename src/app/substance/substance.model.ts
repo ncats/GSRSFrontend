@@ -105,6 +105,7 @@ export interface MixtureComponents extends Mixture {
 
 export interface DisplayStructure extends Polymer {
   id: string;
+  smiles: string;
 }
 
 export interface Monomer extends Polymer {

@@ -30,6 +30,8 @@
     </div>
   </div>
   <div class="structure-image-container">
-    <img class="structure-img" [src]="getSafeStructureImgUrl(structure.id)">
+    <a class = "zoom" (click)="openImageModal(substance)">
+      <img class="structure-img" [src]="getSafeStructureImgUrl(structure.id)">
+    </a>
   </div>
 </div>

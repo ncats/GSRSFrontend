@@ -113,8 +113,15 @@
                     </mat-chip-list>
                   </div>
                 </div>
-                <div class=i mage-thumbnail>
-                  <img [src]="getSafeStructureImgUrl(substance.uuid)">
+                <div class="image-thumbnail">
+                  <div *ngIf="substance.structure || substance.polymer.displayStructure">
+                    <a class = "zoom" (click)="openImageModal(substance)">
+                      <img [src]="getSafeStructureImgUrl(substance.uuid)">
+                    </a>
+                  </div>
+                  <div *ngIf="!substance.structure && !substance.polymer.displayStructure">
+                    <img [src]="getSafeStructureImgUrl(substance.uuid)">
+                  </div>
                 </div>
               </div>
               <div>
