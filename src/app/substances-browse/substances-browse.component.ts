@@ -315,7 +315,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       {
         relativeTo: this.activatedRoute,
         queryParams: {
-          'structure_search_term': null,
+          'structure_search': null,
           'type': null,
           'cutoff': null,
           'smiles': null
@@ -358,8 +358,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   clearFilters(): void {
     this.clearFacetSelection();
-    this.clearStructureSearch();
-    this.clearSearch();
+    if (this.privateStructureSearchTerm != null && this.privateStructureSearchTerm !== '') {
+      this.clearStructureSearch();
+    } else if (this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') {
+      this.clearSequenceSearch();
+    } else {
+      this.clearSearch();
+    }
   }
 
   get searchTerm(): string {
