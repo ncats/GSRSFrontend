@@ -24,8 +24,10 @@ import { TopSearchService } from '../top-search/top-search.service';
 export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;
   private privateStructureSearchTerm?: string;
-  private privateStructureSearchType?: string;
-  private privateStructureSearchCutoff?: number;
+  private privateSequenceSearchTerm?: string;
+  private privateSearchType?: string;
+  private privateSearchCutoff?: number;
+  private privateSearchSeqType?: string;
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet> = [];
   private privateFacetParams: SubstanceFacetParam;
@@ -60,10 +62,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
-        this.privateSearchTerm = params.get('search_term') || '';
-        this.privateStructureSearchTerm = params.get('structure_search_term') || '';
-        this.privateStructureSearchType = params.get('structure_search_type') || '';
-        this.privateStructureSearchCutoff = Number(params.get('structure_search_cutoff')) || 0;
+        this.privateSearchTerm = params.get('search') || '';
+        this.privateStructureSearchTerm = params.get('structure_search') || '';
+        this.privateSequenceSearchTerm = params.get('sequence_search') || '';
+        this.privateSearchType = params.get('type') || '';
+        this.privateSearchCutoff = Number(params.get('cutoff')) || 0;
+        this.privateSearchSeqType = params.get('seq_type') || '';
         this.smiles = params.get('smiles') || '';
         this.searchSubstances();
       });
@@ -94,9 +98,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
-      this.privateStructureSearchType,
-      this.privateStructureSearchCutoff,
-      true,
+      this.privateSequenceSearchTerm,
+      this.privateSearchCutoff,
+      this.privateSearchType,
+      this.privateSearchSeqType,
       this.pageSize,
       this.privateFacetParams,
       (this.pageIndex * this.pageSize),
@@ -110,9 +115,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.substanceService.getSubtanceDetails({
         searchTerm: this.privateSearchTerm,
         structureSearchTerm: this.privateStructureSearchTerm,
-        searchType: this.privateStructureSearchType,
-        structureSearchCutoff: this.privateStructureSearchCutoff,
-        getFacets: true,
+        sequenceSearchTerm: this.privateSequenceSearchTerm,
+        cutoff: this.privateSearchCutoff,
+        type: this.privateSearchType,
+        seqType: this.privateSearchSeqType,
         pageSize: this.pageSize,
         facets: this.privateFacetParams,
         skip: skip
@@ -300,8 +306,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     // automatically calls searchSubstances() because of subscription to route changes
     // route query params change in order to clear search query param
     this.privateStructureSearchTerm = '';
-    this.privateStructureSearchType = '';
-    this.privateStructureSearchCutoff = 0;
+    this.privateSearchType = '';
+    this.privateSearchCutoff = 0;
     this.smiles = '';
     this.pageIndex = 0;
     this.router.navigate(
@@ -310,9 +316,32 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         relativeTo: this.activatedRoute,
         queryParams: {
           'structure_search_term': null,
-          'structure_search_type': null,
-          'structure_search_cutoff': null,
+          'type': null,
+          'cutoff': null,
           'smiles': null
+        },
+        queryParamsHandling: 'merge'
+      }
+    );
+  }
+
+  clearSequenceSearch(): void {
+    // automatically calls searchSubstances() because of subscription to route changes
+    // route query params change in order to clear search query param
+    this.privateSequenceSearchTerm = '';
+    this.privateSearchType = '';
+    this.privateSearchCutoff = 0;
+    this.privateSearchSeqType = '';
+    this.pageIndex = 0;
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          'sequence_search': null,
+          'type': null,
+          'cutoff': null,
+          'seq_type': null
         },
         queryParamsHandling: 'merge'
       }
@@ -341,12 +370,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     return this.privateStructureSearchTerm;
   }
 
-  get structureSearchType(): string {
-    return this.privateStructureSearchType;
+  get sequenceSearchTerm(): string {
+    return this.privateSequenceSearchTerm;
   }
 
-  get structureSearchCutoff(): number {
-    return this.privateStructureSearchCutoff;
+  get searchType(): string {
+    return this.privateSearchType;
+  }
+
+  get searchCutoff(): number {
+    return this.privateSearchCutoff;
+  }
+
+  get searchSeqType(): string {
+    return this.privateSearchSeqType;
   }
 
   get facetParams(): SubstanceFacetParam | { showAllMatchOption?: boolean } {
@@ -369,6 +406,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   updateView(event): void {
     this.view = event.value;
+  }
+
+  getSequenceDisplay(sequence: string): string {
+    if (sequence.length < 16) {
+      return sequence;
+    } else {
+      return `${sequence.substr(0, 15)}...`;
+    }
   }
 
 }

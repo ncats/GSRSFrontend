@@ -27,7 +27,7 @@ export class StructureImportComponent implements OnInit {
     this.message = null;
     if (this.importTextControl.value) {
       this.isLoading = false;
-      this.substanceService.postSubstance(this.importTextControl.value).subscribe(response => {
+      this.substanceService.postSubstanceStructure(this.importTextControl.value).subscribe(response => {
         this.isLoading = false;
         if (response.structure && response.structure.molfile) {
           this.dialogRef.close(response.structure.molfile);
