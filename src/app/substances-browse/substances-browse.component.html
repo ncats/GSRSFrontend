@@ -250,6 +250,23 @@
             </button>
           </div>
         </div>
+        <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
+            <div>
+              <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
+              &nbsp;
+              <span class="no-break">
+                <span>{{getSequenceDisplay(sequenceSearchTerm)}}</span>
+              </span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button color="primary" [routerLink]="['/sequence-search']" [queryParams]="{ sequence: sequenceSearchTerm, type: searchType, cutoff: searchCutoff, 'seq_type': searchSeqType }">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
+                <mat-icon svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
       </div>
     </div>
   </mat-sidenav-content>
