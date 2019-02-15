@@ -91,8 +91,8 @@ describe('SubstancesBrowseComponent', () => {
     expect(component.facets).toBeUndefined('facets should not be initialized');
     expect(component.searchTerm).toBeUndefined('searchTerm should not be initialized');
     expect(component.structureSearchTerm).toBeUndefined('searchTerm should not be initialized');
-    expect(component.structureSearchType).toBeUndefined('searchTerm should not be initialized');
-    expect(component.structureSearchCutoff).toBeUndefined('searchTerm should not be initialized');
+    expect(component.searchType).toBeUndefined('searchTerm should not be initialized');
+    expect(component.searchCutoff).toBeUndefined('searchTerm should not be initialized');
     expect(component.facetParams).toEqual({}, 'facetParams should be an empty object');
   });
 
@@ -100,8 +100,8 @@ describe('SubstancesBrowseComponent', () => {
     fixture.detectChanges();
     expect(component.searchTerm).toBeDefined('searchTerm should be initialized');
     expect(component.structureSearchTerm).toBeDefined('searchTerm should be initialized');
-    expect(component.structureSearchType).toBeDefined('searchTerm should be initialized');
-    expect(component.structureSearchCutoff).toBeDefined('searchTerm should be initialized');
+    expect(component.searchType).toBeDefined('searchTerm should be initialized');
+    expect(component.searchCutoff).toBeDefined('searchTerm should be initialized');
     expect(getSubtanceDetailsSpy.calls.any()).toBe(true, 'should call getSubtanceDetails function');
   });
 

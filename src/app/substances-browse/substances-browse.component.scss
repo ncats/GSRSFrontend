@@ -226,7 +226,7 @@
 
 @media(max-width: 1100px) {
     .controls-container, .search-parameters {
-        padding-left: 25px;
+        padding-left: 30px;
     }
 
     .side-nav-content {
@@ -264,6 +264,10 @@
             height: 35px;
             line-height: 35px;
         }
+    }
+
+    .side-nav-content {
+        padding: 5px;
     }
 }
 

@@ -69,7 +69,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
 
   search(): void {
     const mol = this.editor.getMolfile();
-    this.substanceService.postSubstance(mol).subscribe((response: StructurePostResponse) => {
+    this.substanceService.postSubstanceStructure(mol).subscribe((response: StructurePostResponse) => {
       this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
     }, () => {});
   }
@@ -80,11 +80,11 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
       queryParams: {}
     };
 
-    navigationExtras.queryParams['structure_search_term'] = structureSearchTerm || null;
-    navigationExtras.queryParams['structure_search_type'] = this.searchType || null;
+    navigationExtras.queryParams['structure_search'] = structureSearchTerm || null;
+    navigationExtras.queryParams['type'] = this.searchType || null;
 
     if (this.searchType === 'similarity') {
-      navigationExtras.queryParams['structure_search_cutoff'] = this.similarityCutoff || 0;
+      navigationExtras.queryParams['cutoff'] = this.similarityCutoff || 0;
     }
 
     if (smiles != null) {
