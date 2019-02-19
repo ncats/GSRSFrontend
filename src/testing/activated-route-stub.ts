@@ -12,7 +12,15 @@ export class ActivatedRouteStub {
 
   constructor(initialParams?: Params) {
     this.snapshot = {
-      params: {}
+      params: {},
+      queryParamMap: {
+        has(param: string): boolean {
+          return true;
+        },
+        get(param: string): string {
+          return 'test';
+        }
+      }
     };
     this.setParamMap(initialParams);
   }

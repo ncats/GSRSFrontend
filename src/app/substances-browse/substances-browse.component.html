@@ -32,7 +32,7 @@
             <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
               Clear
             </button>
-            <button mat-flat-button color="primary" [disabled]="isLoading" (click)="searchSubstances()">
+            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading" (click)="searchSubstances()">
               Apply
             </button>
           </div>
@@ -130,7 +130,7 @@
                     </mat-chip-list>
                   </div>
                 </div>
-                <div class=i mage-thumbnail>
+                <div class="image-thumbnail">
                   <img [src]="getSafeStructureImgUrl(substance.uuid)">
                 </div>
               </div>

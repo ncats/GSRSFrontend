@@ -1,5 +1,4 @@
 import { TestBed, inject } from '@angular/core/testing';
-
 import { TopSearchService } from './top-search.service';
 
 describe('TopSearchService', () => {

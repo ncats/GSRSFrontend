@@ -26,7 +26,7 @@ export class SubstanceService extends BaseHttpService {
     super(configService);
   }
 
-  getSubtanceDetails(args: {
+  getSubtanceDetails(args?: {
     searchTerm?: string,
     structureSearchTerm?: string,
     sequenceSearchTerm?: string,
@@ -39,7 +39,7 @@ export class SubstanceService extends BaseHttpService {
   }): Observable<PagingResponse<SubstanceDetail>> {
     return new Observable(observer => {
 
-      if (args.structureSearchTerm != null && args.structureSearchTerm !== '') {
+      if (args != null && args.structureSearchTerm != null && args.structureSearchTerm !== '') {
 
         this.searchSubstanceStructures(
           args.structureSearchTerm,
@@ -55,7 +55,7 @@ export class SubstanceService extends BaseHttpService {
         }, () => {
           observer.complete();
         });
-      } else if (args.sequenceSearchTerm != null && args.sequenceSearchTerm !== '') {
+      } else if (args != null && args.sequenceSearchTerm != null && args.sequenceSearchTerm !== '') {
         this.searchSubstanceSequences(
           args.sequenceSearchTerm,
           args.cutoff,

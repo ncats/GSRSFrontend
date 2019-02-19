@@ -16,6 +16,8 @@ import { asyncData } from '../../testing/async-observable-helpers';
 import { SubstanceData } from '../../testing/substance-suggestion-test-data';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ActivatedRouteStub } from '../../testing/activated-route-stub';
+import { TopSearchService } from './top-search.service';
+import { Subject } from '../../../node_modules/rxjs';
 
 describe('TopSearchComponent', () => {
   let component: TopSearchComponent;
@@ -35,6 +37,8 @@ describe('TopSearchComponent', () => {
         'search_term': 'test_search_term'
       }
     );
+    const topSearchServiceSpy = jasmine.createSpyObj('TopSearchService', ['clearSearchEvent']);
+    topSearchServiceSpy.clearSearchEvent = new Subject();
 
     TestBed.configureTestingModule({
       imports: [
@@ -56,7 +60,8 @@ describe('TopSearchComponent', () => {
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: UtilsService, useValue: utilsServiceSpy },
         { provide: Router, useValue: routerStub },
-        { provide: NgZone, useFactory: () => zone = new NgZone({ enableLongStackTrace: false }) }
+        { provide: NgZone, useFactory: () => zone = new NgZone({ enableLongStackTrace: false }) },
+        { provide: TopSearchService, useValue: topSearchServiceSpy }
       ]
     })
       .compileComponents();

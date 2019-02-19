@@ -29,7 +29,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   public substances: Array<SubstanceDetail>;
-  public facets: Array<Facet> = [];
+  public facets: Array<Facet>;
   private privateFacetParams: SubstanceFacetParam;
   pageIndex: number;
   pageSize: number;
@@ -59,6 +59,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   ngOnInit() {
     this.pageSize = 10;
     this.pageIndex = 0;
+    this.facets = [];
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
