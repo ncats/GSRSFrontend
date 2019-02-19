@@ -21,6 +21,8 @@ import { MainNotificationService } from '../main-notification/main-notification.
 import { decodeHtml } from '../utils/decode-html';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 describe('SubstancesBrowseComponent', () => {
   let component: SubstancesBrowseComponent;
@@ -60,7 +62,9 @@ describe('SubstancesBrowseComponent', () => {
         HttpClientTestingModule,
         NoopAnimationsModule,
         MatPaginatorModule,
-        RouterTestingModule
+        RouterTestingModule,
+        MatIconModule,
+        MatButtonToggleModule
       ],
       declarations: [
         SubstancesBrowseComponent

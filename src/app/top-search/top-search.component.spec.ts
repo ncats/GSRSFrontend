@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, NgZone } from '@angular/core';
 import { TopSearchComponent } from './top-search.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +15,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { asyncData } from '../../testing/async-observable-helpers';
 import { SubstanceData } from '../../testing/substance-suggestion-test-data';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { ActivatedRouteStub } from '../../testing/activated-route-stub';
 
 describe('TopSearchComponent', () => {
   let component: TopSearchComponent;
@@ -22,11 +24,17 @@ describe('TopSearchComponent', () => {
   let overlayContainerElement;
   let zone: NgZone;
   let routerStub: RouterStub;
+  let activatedRouteStub: Partial<ActivatedRoute>;
 
   beforeEach(async(() => {
     const utilsServiceSpy = jasmine.createSpyObj('UtilsService', ['getStructureSearchSuggestions']);
     getStructureSearchSuggestionsSpy = utilsServiceSpy.getStructureSearchSuggestions.and.returnValue(asyncData(SubstanceData));
     routerStub = new RouterStub();
+    activatedRouteStub = new ActivatedRouteStub(
+      {
+        'search_term': 'test_search_term'
+      }
+    );
 
     TestBed.configureTestingModule({
       imports: [
@@ -37,19 +45,21 @@ describe('TopSearchComponent', () => {
         MatIconModule,
         ReactiveFormsModule,
         FormsModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        RouterTestingModule
       ],
       declarations: [
         TopSearchComponent
       ],
-      schemas: [ NO_ERRORS_SCHEMA ],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: UtilsService, useValue: utilsServiceSpy },
         { provide: Router, useValue: routerStub },
-        { provide: NgZone, useFactory: () => zone = new NgZone({ enableLongStackTrace: false}) }
+        { provide: NgZone, useFactory: () => zone = new NgZone({ enableLongStackTrace: false }) }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     inject([OverlayContainer], (oc: OverlayContainer) => {
       overlayContainerElement = oc.getContainerElement();
