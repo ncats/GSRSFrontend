@@ -41,6 +41,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   view = 'cards';
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes'];
   public smiles: string;
+  private argsHash?: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -59,14 +60,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   ngOnInit() {
     this.pageSize = 10;
     this.pageIndex = 0;
-    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParamMap.get('structure_search_term') || '';
-    this.privateStructureSearchType = this.activatedRoute.snapshot.queryParamMap.get('structure_search_type') || '';
-    this.privateStructureSearchCutoff = Number(this.activatedRoute.snapshot.queryParamMap.get('structure_search_cutoff')) || 0;
-    this.smiles = this.activatedRoute.snapshot.queryParamMap.get('smiles') || '';
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
         this.privateSearchTerm = params.get('search_term') || '';
+        this.privateStructureSearchTerm = params.get('structure_search_term') || '';
+        this.privateStructureSearchType = params.get('structure_search_type') || '';
+        this.privateStructureSearchCutoff = Number(params.get('structure_search_cutoff')) || 0;
+        this.smiles = params.get('smiles') || '';
         this.searchSubstances();
       });
   }
@@ -92,10 +93,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   searchSubstances() {
-    this.isLoading = true;
-    this.loadingService.setLoading(true);
-    const skip = this.pageIndex * this.pageSize;
-    this.substanceService.getSubtanceDetails(
+
+    const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
       this.privateStructureSearchType,
@@ -103,52 +102,69 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       true,
       this.pageSize,
       this.privateFacetParams,
-      skip,
-    )
-      .subscribe(pagingResponse => {
-        this.isError = false;
-        this.substances = pagingResponse.content;
-        this.totalSubstances = pagingResponse.total;
-        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-          this.facets = [];
-          this.populateFacets(pagingResponse.facets);
-        }
+      (this.pageIndex * this.pageSize),
+    );
 
-        if (this.facets.length > 0) {
-          this.processResponsiveness();
-        } else {
-          this.matSideNav.close();
-        }
-
-        this.substances.forEach((substance: SubstanceDetail) => {
-          if (substance.codes && substance.codes.length > 0) {
-            substance.codeSystemNames = [];
-            substance.codeSystems = {};
-            _.forEach(substance.codes, code => {
-              if (substance.codeSystems[code.codeSystem]) {
-                substance.codeSystems[code.codeSystem].push(code);
-              } else {
-                substance.codeSystems[code.codeSystem] = [code];
-                substance.codeSystemNames.push(code.codeSystem);
-              }
-            });
+    if (this.argsHash == null || this.argsHash !== newArgsHash) {
+      this.isLoading = true;
+      this.loadingService.setLoading(true);
+      this.argsHash = newArgsHash;
+      const skip = this.pageIndex * this.pageSize;
+      this.substanceService.getSubtanceDetails({
+        searchTerm: this.privateSearchTerm,
+        structureSearchTerm: this.privateStructureSearchTerm,
+        searchType: this.privateStructureSearchType,
+        structureSearchCutoff: this.privateStructureSearchCutoff,
+        getFacets: true,
+        pageSize: this.pageSize,
+        facets: this.privateFacetParams,
+        skip: skip
+      })
+        .subscribe(pagingResponse => {
+          this.isError = false;
+          this.substances = pagingResponse.content;
+          this.totalSubstances = pagingResponse.total;
+          if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+            this.facets = [];
+            this.populateFacets(pagingResponse.facets);
           }
+
+          if (this.facets.length > 0) {
+            this.processResponsiveness();
+          } else {
+            this.matSideNav.close();
+          }
+
+          this.substances.forEach((substance: SubstanceDetail) => {
+            if (substance.codes && substance.codes.length > 0) {
+              substance.codeSystemNames = [];
+              substance.codeSystems = {};
+              _.forEach(substance.codes, code => {
+                if (substance.codeSystems[code.codeSystem]) {
+                  substance.codeSystems[code.codeSystem].push(code);
+                } else {
+                  substance.codeSystems[code.codeSystem] = [code];
+                  substance.codeSystemNames.push(code.codeSystem);
+                }
+              });
+            }
+          });
+          this.cleanFacets();
+        }, error => {
+          const notification: AppNotification = {
+            message: 'There was an error trying to retrieve substances. Please refresh and try again.',
+            type: NotificationType.error,
+            milisecondsToShow: 6000
+          };
+          this.isError = true;
+          this.isLoading = false;
+          this.loadingService.setLoading(this.isLoading);
+          this.notificationService.setNotification(notification);
+        }, () => {
+          this.isLoading = false;
+          this.loadingService.setLoading(this.isLoading);
         });
-        this.cleanFacets();
-      }, error => {
-        const notification: AppNotification = {
-          message: 'There was an error trying to retrieve substances. Please refresh and try again.',
-          type: NotificationType.error,
-          milisecondsToShow: 6000
-        };
-        this.isError = true;
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-        this.notificationService.setNotification(notification);
-      }, () => {
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-      });
+    }
   }
 
   private populateFacets(facets: Array<Facet>): void {
@@ -238,7 +254,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     this.privateFacetParams[facetName].hasSelections = hasSelections;
 
-     if (!hasExcludeOption && includeOptionsLength > 1) {
+    if (!hasExcludeOption && includeOptionsLength > 1) {
       this.privateFacetParams[facetName].showAllMatchOption = true;
     } else {
       this.privateFacetParams[facetName].showAllMatchOption = false;
@@ -284,9 +300,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   clearStructureSearch(): void {
+    // automatically calls searchSubstances() because of subscription to route changes
+    // route query params change in order to clear search query param
     this.privateStructureSearchTerm = '';
     this.privateStructureSearchType = '';
-    this.privateStructureSearchCutoff = null;
+    this.privateStructureSearchCutoff = 0;
     this.smiles = '';
     this.pageIndex = 0;
     this.router.navigate(
@@ -305,7 +323,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   clearSearch(): void {
-    // automatically call searchSubstances() because of subscription to route changes
+    // automatically calls searchSubstances() because of subscription to route changes
     // route query params change in order to clear search query param
     this.privateSearchTerm = '';
     this.pageIndex = 0;

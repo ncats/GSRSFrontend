@@ -1,3 +1,5 @@
+@import '../../styles/variables';
+
 form {
     display: flex;
     align-items: center;
@@ -35,14 +37,14 @@ form {
     transition: all 250ms linear;
 }
 
-@media(min-width: 865px) {
+@media(min-width: $nav-breaking-point) {
 
     .activate-search-button {
         display: none;
     }
 }
 
-@media(max-width: 865px) {
+@media(max-width: $nav-breaking-point) {
 
     .search-container {
         mat-form-field {

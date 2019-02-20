@@ -18,10 +18,14 @@
 
     <ng-container matColumnDef="referenced substance">
       <th mat-header-cell *matHeaderCellDef> Referenced Substance </th>
-      <td mat-cell *matCellDef="let property"><div *ngIf = "property.referencedSubstance" class = "substance-icon-container">
-        <div>{{property.referencedSubstance.linkingID}}</div>
-        <img  [src]="getSafeStructureImgUrl(property.referencedSubstance.refuuid)">
-        <div>{{property.referencedSubstance.name}}</div>
+      <td mat-cell *matCellDef="let property"><div *ngIf = "property.referencedSubstance" class = "thumb-col">
+        <div *ngIf = "property.referencedSubstance.linkingID" class = "code" >{{property.referencedSubstance.linkingID}}</div>
+        <img class = "image-thumb" [src]="getSafeStructureImgUrl(property.referencedSubstance.refuuid)">
+        <div>
+          <a class="substance-name" [routerLink]="['/substances', property.referencedSubstance.refuuid]" >
+          {{property.referencedSubstance.name}}
+          </a>
+        </div>
       </div>
       </td>
     </ng-container>

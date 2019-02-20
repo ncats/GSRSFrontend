@@ -9,6 +9,8 @@ import {Glycosylation, Site} from '../../substance/substance.model';
 })
 export class SubstanceGlycosylationComponent extends SubstanceCardBase implements OnInit {
   glycosylation: Glycosylation;
+  sites: any = [];
+  displayedColumns = ['glycosylationLinkType', 'site'];
 
   constructor() {
     super();
@@ -17,8 +19,17 @@ export class SubstanceGlycosylationComponent extends SubstanceCardBase implement
   ngOnInit() {
     if (this.substance != null
       && this.substance.protein != null
-      && this.substance.protein.glycosylation != null) {
+      && this.substance.protein.glycosylation.glycosylationType != null) {
         this.glycosylation = this.substance.protein.glycosylation;
+        for (const link of this.glycosylation.CGlycosylationSites) {
+          this.sites.push({type: 'C', site: link.subunitIndex + '_' + link.residueIndex});
+        }
+        for (const link of this.glycosylation.NGlycosylationSites) {
+          this.sites.push({type: 'N', site: link.subunitIndex + '_' + link.residueIndex});
+        }
+        for (const link of this.glycosylation.OGlycosylationSites) {
+          this.sites.push({type: 'O', site: link.subunitIndex + '_' + link.residueIndex});
+        }
       }
     }
 

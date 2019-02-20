@@ -11,9 +11,14 @@
     <ng-container matColumnDef="material">
       <th mat-header-cell *matHeaderCellDef> Material </th>
       <td mat-cell *matCellDef="let monomer">
-        <div class = "substance-icon-container">
+        <div class = "thumb-col">
+          <div *ngIf = "monomer.monomerSubstance.linkingID" class = "code">{{monomer.monomerSubstance.linkingID}}</div>
           <img class="image-icon" [src]="getSafeStructureImgUrl(monomer.monomerSubstance.refuuid)">
-          {{monomer.monomerSubstance.refPname}}
+          <div>
+            <a class="substance-name" [routerLink]="['/substances', monomer.monomerSubstance.refuuid]" >
+            {{monomer.monomerSubstance.refPname}}
+            </a>
+          </div>
         </div>
     </ng-container>
 

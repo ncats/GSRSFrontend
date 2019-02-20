@@ -1,6 +1,8 @@
-<div class="substance-icon-container">
-  <img class="image-icon" [src]="getSafeStructureImgUrl(primary.refuuid)">
-  <a class="substance-name" [routerLink]="['/substances', primary.refuuid]" >
-    {{primary.refPname}}
-  </a>
+<div class="thumb-col">
+  <img class="image-thumb" [src]="getSafeStructureImgUrl(primary.refuuid)">
+  <div>
+    <a class="substance-name" [routerLink]="['/substances', primary.refuuid]" >
+      {{primary.refPname}}
+    </a>
+  </div>
 </div>

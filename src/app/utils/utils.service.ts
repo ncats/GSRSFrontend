@@ -168,4 +168,19 @@ export class UtilsService extends BaseHttpService {
 
     return stringArray.join(' ');
   }
+
+  /* tslint:disable:no-bitwise */
+  hashCode(...args): number {
+    const stringToHash = JSON.stringify([...args]);
+    let hash = 0, i, chr;
+    if (stringToHash.length === 0) {
+      return hash;
+    }
+    for (i = 0; i < stringToHash.length; i++) {
+      chr   = stringToHash.charCodeAt(i);
+      hash  = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  }
 }

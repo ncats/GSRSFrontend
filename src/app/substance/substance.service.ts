@@ -23,16 +23,19 @@ export class SubstanceService extends BaseHttpService {
     super(configService);
   }
 
-  getSubtanceDetails(
+  getSubtanceDetails(args: {
     searchTerm?: string,
     structureSearchTerm?: string,
-    structureSearchType?: string,
     structureSearchCutoff?: number,
+    sequenceSearchTerm?: string,
+    sequenceSearchIdentity?: string,
+    sequenceSearchSeqType?: string,
+    searchType?: string,
     getFacets?: boolean,
     pageSize?: number,
     facets?: SubstanceFacetParam,
     skip?: number
-  ): Observable<PagingResponse<SubstanceDetail>> {
+  }): Observable<PagingResponse<SubstanceDetail>> {
     return new Observable(observer => {
       let params = new HttpParams();
       params = params.append('view', 'full');
@@ -40,37 +43,61 @@ export class SubstanceService extends BaseHttpService {
 
       let structureFacetsKey;
 
-      if (searchTerm) {
+      if (args.searchTerm) {
 
         url += 'substances/search';
-        params = params.append('q', searchTerm);
-        params = this.addQueryParameters(params, pageSize, facets, skip);
+        params = params.append('q', args.searchTerm);
+        params = this.addQueryParameters(
+          params,
+          args.facets,
+          {
+            pageSize: args.pageSize,
+            skip: args.skip
+          });
 
-      } else if (structureSearchTerm) {
+      } else if (args.structureSearchTerm) {
 
-        structureFacetsKey = this.getStructureSearchKey(structureSearchTerm, structureSearchType, structureSearchCutoff);
+        structureFacetsKey = this.getStructureSearchKey(args.structureSearchTerm, args.searchType, args.structureSearchCutoff);
 
         if (this.structureSearchKeys[structureFacetsKey]) {
 
           url += `status(${this.structureSearchKeys[structureFacetsKey]})/results`;
-          params = this.addQueryParameters(params, pageSize, facets, skip);
+          params = this.addQueryParameters(
+            params,
+            args.facets,
+            {
+              pageSize: args.pageSize,
+              skip: args.skip
+            });
 
         } else {
-          params = params.append('q', structureSearchTerm);
-          if (structureSearchType) {
-            params = params.append('type', structureSearchType);
-            if (structureSearchType === 'similarity') {
-              structureSearchCutoff = structureSearchCutoff || 0;
-              params = params.append('cutoff', structureSearchCutoff.toString());
+          params = params.append('q', args.structureSearchTerm);
+          if (args.searchType) {
+            params = params.append('type', args.searchType);
+            if (args.searchType === 'similarity') {
+              args.structureSearchCutoff = args.structureSearchCutoff || 0;
+              params = params.append('cutoff', args.structureSearchCutoff.toString());
             }
           }
           url += 'substances/structureSearch';
         }
-      } else if (getFacets) {
+      } else if (args.getFacets) {
         url += 'substances/search';
-        params = this.addQueryParameters(params, pageSize, facets, skip);
+        params = this.addQueryParameters(
+          params,
+          args.facets,
+          {
+            pageSize: args.pageSize,
+            skip: args.skip
+          });
       } else {
-        params = this.addQueryParameters(params, pageSize, facets, skip);
+        params = this.addQueryParameters(
+          params,
+          args.facets,
+          {
+            pageSize: args.pageSize,
+            skip: args.skip
+          });
       }
 
       const options = {
@@ -89,9 +116,9 @@ export class SubstanceService extends BaseHttpService {
               observer,
               resultKey,
               options,
-              pageSize,
-              facets,
-              skip,
+              args.pageSize,
+              args.facets,
+              args.skip,
               'full'
             );
           } else {
@@ -106,30 +133,74 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
-  private addQueryParameters(
-    params: HttpParams,
+  getSubstanceStructureSearchDetails(args: {
+    structureSearchTerm?: string,
+    structureSearchCutoff?: number,
+    sequenceSearchTerm?: string,
+    sequenceSearchIdentity?: string,
+    sequenceSearchSeqType?: string,
+    searchType?: string,
+    getFacets?: boolean,
     pageSize?: number,
     facets?: SubstanceFacetParam,
     skip?: number,
-    view?: string
+    async?: boolean
+  }): any {
+    return new Observable(observer => {
+      let params = new HttpParams();
+      params = params.append('view', 'full');
+      let url = this.apiBaseUrl;
+      let searchFacetsKey;
+
+      searchFacetsKey = this.getStructureSearchKey(args.structureSearchTerm, args.searchType, args.structureSearchCutoff);
+
+      if (this.structureSearchKeys[searchFacetsKey]) {
+
+        url += `status(${this.structureSearchKeys[searchFacetsKey]})/results`;
+        params = this.addQueryParameters(
+          params,
+          args.facets,
+          {
+            pageSize: args.pageSize,
+            skip: args.skip
+          });
+
+      } else {
+        params = params.append('q', args.structureSearchTerm);
+        if (args.searchType) {
+          params = params.append('type', args.searchType);
+          if (args.searchType === 'similarity') {
+            args.structureSearchCutoff = args.structureSearchCutoff || 0;
+            params = params.append('cutoff', args.structureSearchCutoff.toString());
+          }
+        }
+        url += 'substances/structureSearch';
+      }
+    });
+  }
+
+  private addQueryParameters(
+    params: HttpParams,
+    facets?: SubstanceFacetParam,
+    ...args
   ) {
-      if (skip) {
-        params = params.append('skip', skip.toString());
-      }
 
-      if (pageSize) {
-        params = params.append('top', pageSize.toString());
-      }
+    if (facets != null) {
+      params = this.processFacetParams(params, facets);
+    }
 
-      if (facets != null) {
-        params = this.processFacetParams(params, facets);
-      }
+    const argsObject = {...args}[0];
+    const keys = Object.keys(argsObject);
 
-      if (view != null) {
-        params = params.append('view', view);
-      }
+    if (keys != null && keys.length) {
+      keys.forEach(key => {
+        if (argsObject[key] != null && argsObject[key] !== '') {
+          params = params.append(key, argsObject[key].toString());
+        }
+      });
+    }
 
-      return params;
+    return params;
   }
 
   private processStructureSearchResults(
@@ -150,34 +221,34 @@ export class SubstanceService extends BaseHttpService {
       skip,
       view
     )
-    .subscribe(response => {
-      observer.next(response);
-      if (!structureSearchResponse.finished) {
-        this.http.get<any>(url, structureSearchCallOptions).subscribe(searchResponse => {
-          setTimeout(() => {
-            this.processStructureSearchResults(
-              url,
-              searchResponse,
-              observer,
-              structureSearchKey,
-              structureSearchCallOptions,
-              pageSize,
-              facets,
-              skip,
-              view
-            );
+      .subscribe(response => {
+        observer.next(response);
+        if (!structureSearchResponse.finished) {
+          this.http.get<any>(url, structureSearchCallOptions).subscribe(searchResponse => {
+            setTimeout(() => {
+              this.processStructureSearchResults(
+                url,
+                searchResponse,
+                observer,
+                structureSearchKey,
+                structureSearchCallOptions,
+                pageSize,
+                facets,
+                skip,
+                view
+              );
+            });
+          }, error => {
+            observer.error(error);
+            observer.complete();
           });
-        }, error => {
-          observer.error(error);
+        } else {
           observer.complete();
-        });
-      } else {
+        }
+      }, error => {
+        observer.error(error);
         observer.complete();
-      }
-    }, error => {
-      observer.error(error);
-      observer.complete();
-    });
+      });
 
   }
 
@@ -191,7 +262,14 @@ export class SubstanceService extends BaseHttpService {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
     let params = new HttpParams();
 
-    params = this.addQueryParameters(params, pageSize, facets, skip, view);
+    params = this.addQueryParameters(
+      params,
+      facets,
+      {
+        pageSize: pageSize,
+        skip: skip,
+        view: view
+      });
 
     const options = {
       params: params
@@ -293,12 +371,11 @@ export class SubstanceService extends BaseHttpService {
   }
 
   getSafeIconImgUrl(substance: SubstanceDetail, size: number): SafeUrl {
-    let imgUrl = '${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg?size=${size.toString()}';
+    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg?size=${size.toString()}`;
     const substanceType = substance.substanceClass;
     if ((substanceType === 'chemical') && (substance.structure.id)) {
       const structureId = substance.structure.id;
       imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;
-      console.log(imgUrl);
     } else if ((substanceType === 'polymer') && (substance.polymer.displayStructure.id)) {
       const structureId = substance.polymer.displayStructure.id;
       imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;

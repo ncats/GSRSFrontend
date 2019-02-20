@@ -4,6 +4,7 @@ import {DynamicComponentLoaderModule} from '../../dynamic-component-loader/dynam
 import {SubstancePropertiesComponent} from './substance-properties.component';
 import {MatInputModule, MatPaginatorModule, MatTableModule} from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import {CdkTableModule} from '@angular/cdk/table';
     CdkTableModule,
     MatPaginatorModule,
     MatInputModule,
+    RouterModule
   ],
   declarations: [SubstancePropertiesComponent]
 })

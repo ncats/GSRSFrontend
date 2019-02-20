@@ -1,23 +1,24 @@
-<table >
-  <td>Glycosylation Type</td>
-  <td>{{glycosylation.glycosylationType}}</td>
-</table>
+<div class="responsive">
 
-<table >
-  <tr>
-    <th>Glycosylation Link Type</th>
-    <th>Site</th>
-  </tr>
-  <tr *ngFor = "let C of glycosylation.CGlycosylationSites">
-    <td>C</td>
-    <td>{{getFullSite(C)}}</td>
-  </tr>
-  <tr *ngFor = "let N of glycosylation.NGlycosylationSites">
-    <td>N</td>
-    <td>{{getFullSite(N)}}</td>
-  </tr>
-  <tr *ngFor = "let O of glycosylation.NGlycosylationSites">
-    <td>O</td>
-    <td>{{getFullSite(O)}}</td>
-  </tr>
-</table>
+  <table >
+    <td>Glycosylation Type</td>
+    <td>{{glycosylation.glycosylationType}}</td>
+  </table>
+
+  <table  mat-table [dataSource]="sites">
+
+    <ng-container matColumnDef="glycosylationLinkType">
+      <th mat-header-cell *matHeaderCellDef> Glycosylation Link Type </th>
+      <td mat-cell *matCellDef="let site"> {{site.type}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="site">
+      <th mat-header-cell *matHeaderCellDef> Site </th>
+      <td mat-cell *matCellDef="let site"> {{site.site}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+</div>

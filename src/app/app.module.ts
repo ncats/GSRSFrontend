@@ -49,6 +49,7 @@ import { EnvironmentModule } from '../environments/environment';
 import { TopSearchModule } from './top-search/top-search.module';
 import {StructureImageModalComponent} from './structure/structure-image-modal/structure-image-modal.component';
 import {MatTabsModule} from '@angular/material';
+import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import {MatTabsModule} from '@angular/material';
     StructureSearchComponent,
     SubstanceDetailsComponent,
     StructureImageModalComponent,
-    TakePipe
+    TakePipe,
+    SequenceSearchComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

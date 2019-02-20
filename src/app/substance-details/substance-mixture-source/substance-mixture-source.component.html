@@ -1,7 +1,12 @@
-<div class="substance-icon-container">
-  <img class="image-icon" [src]="getSafeStructureImgUrl(parent.refuuid)">
-  <br/>
-  <a class="substance-name" [routerLink]="['/substances', parent.refuuid]" >
-    {{parent.refPname}}
-  </a>
+<div class = "responsive">
+  <div class="thumb-col">
+    <div *ngIf = "parent.approvalID" class = "code">{{parent.approvalID}}</div>
+    <img class="image-thumb" [src]="getSafeStructureImgUrl(parent.refuuid)">
+    <div>
+      <a class="substance-name" [routerLink]="['/substances', parent.refuuid]" >
+        {{parent.refPname}}
+      </a>
+    </div>
+  </div>
 </div>
+

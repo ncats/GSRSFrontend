@@ -2,13 +2,14 @@
   <div *ngIf="definitions.length > 0">
     This is a Definitional Concept of
     <div *ngFor="let definition of definitions">
-      <div class="substance-icon-container">
-       <img class="image-icon" [src]="getSafeStructureImgUrl(definition.refuuid)">
+      <div class="thumb-col">
+       <img class="image-thumb" [src]="getSafeStructureImgUrl(definition.refuuid)">
+        <div>
+          <a class="substance-name" [routerLink]="['/substances', definition.refuuid]" >
+            {{definition.refPname}}
+          </a>
+        </div>
       </div>
-      <br/>
-      <a class="substance-name" [routerLink]="['/substances', definition.refuuid]" >
-        {{definition.refPname}}
-      </a>
     </div>
   </div>
   <div *ngIf = "definitions.length == 0">

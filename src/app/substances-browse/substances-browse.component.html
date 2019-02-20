@@ -72,7 +72,7 @@
             <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
-            <button mat-icon-button color="primary" (click)="clearStructureSearch();searchSubstances();">
+            <button mat-icon-button color="primary" (click)="clearStructureSearch()">
               <mat-icon svgIcon="delete_forever"></mat-icon>
             </button>
           </div>
@@ -114,12 +114,12 @@
                   </div>
                 </div>
                 <div class="image-thumbnail">
-                  <div *ngIf="substance.structure || substance.polymer.displayStructure">
+                  <div *ngIf="substance.structure || substance.polymer">
                     <a class = "zoom" (click)="openImageModal(substance)">
                       <img [src]="getSafeStructureImgUrl(substance.uuid)">
                     </a>
                   </div>
-                  <div *ngIf="!substance.structure && !substance.polymer.displayStructure">
+                  <div *ngIf="!substance.structure && !substance.polymer">
                     <img [src]="getSafeStructureImgUrl(substance.uuid)">
                   </div>
                 </div>
@@ -235,7 +235,7 @@
             <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: structureSearchType, cutoff: structureSearchCutoff }">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
-            <button mat-icon-button color="primary" (click)="clearStructureSearch();searchSubstances();">
+            <button mat-icon-button color="primary" (click)="clearStructureSearch()">
               <mat-icon svgIcon="delete_forever"></mat-icon>
             </button>
           </div>
