@@ -1,5 +1,6 @@
 import { ReplaySubject } from 'rxjs';
-import { NavigationEnd, NavigationExtras } from '@angular/router';
+import { NavigationEnd } from '@angular/router';
+import { Routes } from '@angular/router';
 
 export class RouterStub {
     private subject = new ReplaySubject<NavigationEnd>();

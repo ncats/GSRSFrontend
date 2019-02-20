@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Monomer} from '../../substance/substance.model';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {SubstanceCardBaseFilteredList} from '../substance-card-base-filtered-list';
-import {UtilsService} from '../../utils/utils.service';
+import { SafeUrl } from '@angular/platform-browser';
+import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
+import { UtilsService } from '../../utils/utils.service';
 @Component({
   selector: 'app-substance-monomers',
   templateUrl: './substance-monomers.component.html',

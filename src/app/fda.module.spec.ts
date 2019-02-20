@@ -1,5 +1,5 @@
 import { FdaModule } from './fda.module';
-import { Router } from '@angular/router';
+import { Router, Routes } from '@angular/router';
 import { RouterStub } from '../testing/router-stub';
 
 describe('FdaModule', () => {
@@ -8,6 +8,12 @@ describe('FdaModule', () => {
 
   beforeEach(() => {
     routerStub = new RouterStub();
+    routerStub.config = [
+      {
+        path: '',
+        children: []
+      }
+    ];
     fdaModule = new FdaModule(routerStub as Router);
   });
 

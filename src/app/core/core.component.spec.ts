@@ -14,6 +14,9 @@ import { MainNotificationModule } from '../main-notification/main-notification.m
 import { ConfigService } from '../config/config.service';
 import { TopSearchService } from '../top-search/top-search.service';
 import { ActivatedRouteStub } from '../../testing/activated-route-stub';
+import { RouterOutletStubComponent } from '../../testing/router-outlet-component-stub';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { Subject } from 'rxjs';
 
 describe('CoreComponent', () => {
   let component: CoreComponent;
@@ -24,7 +27,8 @@ describe('CoreComponent', () => {
   beforeEach(async(() => {
     routerStub = new RouterStub();
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
-    const topSearchServiceSpy = jasmine.createSpyObj('TopSearchService', ['clearSearch']);
+    const topSearchServiceSpy = jasmine.createSpyObj('TopSearchService', ['clearSearch', 'clearSearchEvent']);
+    topSearchServiceSpy.clearSearchEvent = new Subject();
     activatedRouteStub = new ActivatedRouteStub(
       {
         'search_term': 'test_search_term'
@@ -33,18 +37,19 @@ describe('CoreComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatToolbarModule,
         LoadingModule,
         MatMenuModule,
         MatIconModule,
         TopSearchModule,
         MainNotificationModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        NoopAnimationsModule
       ],
       declarations: [
         CoreComponent,
-        RouterLinkDirectiveStub
+        RouterLinkDirectiveStub,
+        RouterOutletStubComponent
       ],
       providers: [
         { provide: Router, useValue: routerStub },
@@ -76,6 +81,7 @@ describe('CoreComponent', () => {
     it('should set mainPathSegment on init', async(() => {
       fixture.whenStable().then(() => {
         fixture.detectChanges();
+        console.log(component.mainPathSegment);
         expect(component.mainPathSegment).toBe('test-before', 'mainPathSegment should be set correctly');
       });
     }));

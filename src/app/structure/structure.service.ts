@@ -3,7 +3,6 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
 import { Observable } from '../../../node_modules/rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map } from '../../../node_modules/rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })

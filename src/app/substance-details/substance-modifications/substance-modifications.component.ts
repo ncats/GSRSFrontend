@@ -12,9 +12,24 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
   structural: Array<StructuralModification>;
   physical: Array<PhysicalModification>;
   agent: Array<AgentModification>;
-  structuralColumns: string[] = ['Modification Type', 'Location Site', 'Location Type', 'Residue Modified', 'Extent', 'Modification Name', 'Modification ID'];
+  structuralColumns: string[] = [
+    'Modification Type',
+    'Location Site',
+    'Location Type',
+    'Residue Modified',
+    'Extent',
+    'Modification Name',
+    'Modification ID'
+  ];
   physicalColumns: string[] = ['Modification Role', 'Parameter Name', 'Amount'];
-  agentColumns: string[] = ['Modification Process', 'Modification Role', 'Modification Type', 'Amount', 'Modification Agent', 'Approved ID'];
+  agentColumns: string[] = [
+    'Modification Process',
+    'Modification Role',
+    'Modification Type',
+    'Amount',
+    'Modification Agent',
+    'Approved ID'
+  ];
   constructor(
     private utilsService: UtilsService,
   ) {

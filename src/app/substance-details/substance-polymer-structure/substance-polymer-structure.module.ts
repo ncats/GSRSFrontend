@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
-import {RouterModule} from '@angular/router';
-import {SubstancePolymerStructureComponent} from './substance-polymer-structure.component';
+import { SubstancePolymerStructureComponent } from './substance-polymer-structure.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstancePolymerStructureComponent),
-    RouterModule
+    DynamicComponentLoaderModule.forChild(SubstancePolymerStructureComponent)
   ],
   declarations: [SubstancePolymerStructureComponent]
 })

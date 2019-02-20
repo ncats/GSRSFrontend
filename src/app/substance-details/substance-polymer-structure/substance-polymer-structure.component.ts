@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {SubstanceCardBase} from '../substance-card-base';
+import { SubstanceCardBase } from '../substance-card-base';
 import { DisplayStructure} from '../../substance/substance.model';
-import { SafeUrl} from '@angular/platform-browser';
-import {UtilsService} from '../../utils/utils.service';
+import { SafeUrl } from '@angular/platform-browser';
+import { UtilsService } from '../../utils/utils.service';
 
 @Component({
   selector: 'app-substance-polymer-structure',

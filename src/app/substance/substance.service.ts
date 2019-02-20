@@ -26,7 +26,7 @@ export class SubstanceService extends BaseHttpService {
     super(configService);
   }
 
-  getSubtanceDetails(args?: {
+  getSubtanceDetails(args: {
     searchTerm?: string,
     structureSearchTerm?: string,
     sequenceSearchTerm?: string,
@@ -36,11 +36,10 @@ export class SubstanceService extends BaseHttpService {
     pageSize?: number,
     facets?: SubstanceFacetParam,
     skip?: number
-  }): Observable<PagingResponse<SubstanceDetail>> {
+  } = {}): Observable<PagingResponse<SubstanceDetail>> {
     return new Observable(observer => {
 
-      if (args != null && args.structureSearchTerm != null && args.structureSearchTerm !== '') {
-
+      if (args.structureSearchTerm != null && args.structureSearchTerm !== '') {
         this.searchSubstanceStructures(
           args.structureSearchTerm,
           args.cutoff,
@@ -55,7 +54,7 @@ export class SubstanceService extends BaseHttpService {
         }, () => {
           observer.complete();
         });
-      } else if (args != null && args.sequenceSearchTerm != null && args.sequenceSearchTerm !== '') {
+      } else if (args.sequenceSearchTerm != null && args.sequenceSearchTerm !== '') {
         this.searchSubstanceSequences(
           args.sequenceSearchTerm,
           args.cutoff,
@@ -92,9 +91,9 @@ export class SubstanceService extends BaseHttpService {
 
   searchSubstances(
     searchTerm?: string,
-    pageSize?: number,
+    pageSize: number = 10,
     facets?: SubstanceFacetParam,
-    skip?: number
+    skip: number = 0
   ): Observable<PagingResponse<SubstanceDetail>> {
 
     let params = new SubstanceHttpParams();
@@ -106,9 +105,10 @@ export class SubstanceService extends BaseHttpService {
       params = params.append('q', searchTerm);
     }
     params = params.appendFacetParams(facets);
+
     params = params.appendDictionary({
-      pageSize: pageSize.toString(),
-      skip: skip.toString()
+      top: pageSize && pageSize.toString(),
+      skip: skip && skip.toString()
     });
 
     const options = {
@@ -121,11 +121,11 @@ export class SubstanceService extends BaseHttpService {
   searchSubstanceStructures(
     searchTerm: string,
     cutoff?: number,
-    type?: string,
-    pageSize?: number,
+    type: string = 'substructure',
+    pageSize: number = 10,
     facets?: SubstanceFacetParam,
-    skip?: number,
-    sync?: boolean
+    skip: number = 0,
+    sync: boolean = false
   ): Observable<PagingResponse<SubstanceDetail>> {
     return new Observable(observer => {
       let params = new SubstanceHttpParams();
@@ -140,7 +140,7 @@ export class SubstanceService extends BaseHttpService {
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets);
         params = params.appendDictionary({
-          pageSize: pageSize.toString(),
+          top: pageSize.toString(),
           skip: skip.toString()
         });
 
@@ -194,13 +194,13 @@ export class SubstanceService extends BaseHttpService {
 
   searchSubstanceSequences(
     searchTerm?: string,
-    cutoff?: number,
+    cutoff: number = 0.5,
     type?: string,
     seqType?: string,
-    pageSize?: number,
+    pageSize: number = 10,
     facets?: SubstanceFacetParam,
-    skip?: number,
-    sync?: boolean
+    skip: number = 0,
+    sync: boolean = false
   ): Observable<PagingResponse<SubstanceDetail>> {
     return new Observable(observer => {
       let params = new SubstanceHttpParams();
@@ -215,7 +215,7 @@ export class SubstanceService extends BaseHttpService {
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets);
         params = params.appendDictionary({
-          pageSize: pageSize.toString(),
+          top: pageSize.toString(),
           skip: skip.toString()
         });
 
@@ -224,7 +224,7 @@ export class SubstanceService extends BaseHttpService {
         params = params.appendDictionary({
           q: searchTerm,
           type: type,
-          cutoff: cutoff != null ? cutoff.toString() : null
+          cutoff: cutoff.toString()
         });
 
         if (sync) {
@@ -327,7 +327,7 @@ export class SubstanceService extends BaseHttpService {
 
     params = params.appendFacetParams(facets);
     params = params.appendDictionary({
-      pageSize: pageSize.toString(),
+      top: pageSize.toString(),
       skip: skip.toString(),
       view: view || ''
     });

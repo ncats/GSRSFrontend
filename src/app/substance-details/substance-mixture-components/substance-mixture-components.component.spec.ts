@@ -1,14 +1,27 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubstanceMixtureComponentsComponent } from './substance-mixture-components.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConfigService } from '../../config/config.service';
 
 describe('SubstanceMixtureComponentsComponent', () => {
   let component: SubstanceMixtureComponentsComponent;
   let fixture: ComponentFixture<SubstanceMixtureComponentsComponent>;
 
   beforeEach(async(() => {
+    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+
     TestBed.configureTestingModule({
-      declarations: [ SubstanceMixtureComponentsComponent ]
+      imports: [
+        RouterTestingModule,
+        HttpClientTestingModule
+      ],
+      declarations: [
+        SubstanceMixtureComponentsComponent
+      ],
+      providers: [
+        { provide: ConfigService, useValue: configServiceSpy }
+      ]
     })
     .compileComponents();
   }));

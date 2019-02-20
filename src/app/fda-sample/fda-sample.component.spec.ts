@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FdaSampleComponent } from './fda-sample.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('FdaSampleComponent', () => {
   let component: FdaSampleComponent;
@@ -8,7 +8,12 @@ describe('FdaSampleComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FdaSampleComponent ]
+      imports: [
+        HttpClientTestingModule
+      ],
+      declarations: [
+        FdaSampleComponent
+      ]
     })
     .compileComponents();
   }));

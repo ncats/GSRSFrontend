@@ -34,14 +34,14 @@ export class CoreComponent implements OnInit {
       this.navItems.concat(environment.navItems);
     }
 
-    this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
-
     this.router.events.subscribe((event: RouterEvent) => {
 
       if (event instanceof NavigationEnd) {
         this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
       }
     });
+
+    this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
   }
 
   getMainPathSegmentFromUrl(url: string): string {
