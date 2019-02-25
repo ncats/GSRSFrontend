@@ -8,7 +8,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { UtilsService } from '../utils/utils.service';
 import { RouterStub } from '../../testing/router-stub';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,7 +16,8 @@ import { SubstanceData } from '../../testing/substance-suggestion-test-data';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ActivatedRouteStub } from '../../testing/activated-route-stub';
 import { TopSearchService } from './top-search.service';
-import { Subject } from '../../../node_modules/rxjs';
+import { Subject } from 'rxjs';
+import { MatIconMock } from '../../testing/mat-icon-mock.component';
 
 describe('TopSearchComponent', () => {
   let component: TopSearchComponent;
@@ -46,14 +46,14 @@ describe('TopSearchComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         MatButtonModule,
-        MatIconModule,
         ReactiveFormsModule,
         FormsModule,
         NoopAnimationsModule,
         RouterTestingModule
       ],
       declarations: [
-        TopSearchComponent
+        TopSearchComponent,
+        MatIconMock
       ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
