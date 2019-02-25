@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubstanceGlycosylationComponent } from './substance-glycosylation.component';
+import { MatTableModule } from '@angular/material';
+import { CdkTableModule } from '@angular/cdk/table';
 
 describe('SubstanceGlycosylationComponent', () => {
   let component: SubstanceGlycosylationComponent;
@@ -8,7 +9,13 @@ describe('SubstanceGlycosylationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceGlycosylationComponent ]
+      imports: [
+        MatTableModule,
+        CdkTableModule
+      ],
+      declarations: [
+        SubstanceGlycosylationComponent
+      ]
     })
     .compileComponents();
   }));

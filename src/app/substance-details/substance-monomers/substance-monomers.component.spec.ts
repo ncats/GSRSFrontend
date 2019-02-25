@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterLinkDirectiveMock } from '../../../testing/router-link-mock.directive';
 
 describe('SubstanceMonomersComponent', () => {
   let component: SubstanceMonomersComponent;
@@ -26,7 +27,8 @@ describe('SubstanceMonomersComponent', () => {
         NoopAnimationsModule
       ],
       declarations: [
-        SubstanceMonomersComponent
+        SubstanceMonomersComponent,
+        RouterLinkDirectiveMock
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy }

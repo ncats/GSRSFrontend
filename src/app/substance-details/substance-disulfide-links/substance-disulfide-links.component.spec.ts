@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubstanceDisulfideLinksComponent } from './substance-disulfide-links.component';
+import { MatTableModule } from '@angular/material';
+import { CdkTableModule } from '@angular/cdk/table';
 
 describe('SubstanceDisulfideLinksComponent', () => {
   let component: SubstanceDisulfideLinksComponent;
@@ -8,7 +9,13 @@ describe('SubstanceDisulfideLinksComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceDisulfideLinksComponent ]
+      imports: [
+        MatTableModule,
+        CdkTableModule
+      ],
+      declarations: [
+        SubstanceDisulfideLinksComponent
+      ]
     })
     .compileComponents();
   }));

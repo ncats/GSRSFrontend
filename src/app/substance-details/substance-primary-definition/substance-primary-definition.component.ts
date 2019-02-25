@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
-import {SubstanceReference, SubstanceRelated, SubstanceRelationship} from '../../substance/substance.model';
+import { SubstanceRelated } from '../../substance/substance.model';
 import {UtilsService} from '../../utils/utils.service';
 import {SafeUrl} from '@angular/platform-browser';
 
@@ -20,11 +20,9 @@ export class SubstancePrimaryDefinitionComponent extends SubstanceCardBase imple
   }
 
   ngOnInit() {
-    if (this.substance != null && this.substance.definitionType == 'ALTERNATIVE') {
-      console.log(this.substance);
-      console.log(this.substance.relationships);
+    if (this.substance != null && this.substance.definitionType === 'ALTERNATIVE') {
       for (const rel of this.substance.relationships) {
-        if (rel.type == 'SUB_ALTERNATE->SUBSTANCE') {
+        if (rel.type === 'SUB_ALTERNATE->SUBSTANCE') {
           this.primary = rel.relatedSubstance;
         }
       }

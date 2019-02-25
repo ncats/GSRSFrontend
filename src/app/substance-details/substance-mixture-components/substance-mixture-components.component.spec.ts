@@ -3,6 +3,7 @@ import { SubstanceMixtureComponentsComponent } from './substance-mixture-compone
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
+import { RouterLinkDirectiveMock } from '../../../testing/router-link-mock.directive';
 
 describe('SubstanceMixtureComponentsComponent', () => {
   let component: SubstanceMixtureComponentsComponent;
@@ -17,7 +18,8 @@ describe('SubstanceMixtureComponentsComponent', () => {
         HttpClientTestingModule
       ],
       declarations: [
-        SubstanceMixtureComponentsComponent
+        SubstanceMixtureComponentsComponent,
+        RouterLinkDirectiveMock
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy }

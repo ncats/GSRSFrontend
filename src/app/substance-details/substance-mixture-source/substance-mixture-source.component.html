@@ -1,5 +1,5 @@
 <div class = "responsive">
-  <div class="thumb-col">
+  <div class="thumb-col" *ngIf="parent">
     <div *ngIf = "parent.approvalID" class = "code">{{parent.approvalID}}</div>
     <img class="image-thumb" [src]="getSafeStructureImgUrl(parent.refuuid)">
     <div>

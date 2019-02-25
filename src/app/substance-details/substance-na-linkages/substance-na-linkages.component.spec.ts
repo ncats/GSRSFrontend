@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubstanceNaLinkagesComponent } from './substance-na-linkages.component';
+import { MatTableModule } from '@angular/material';
+import { CdkTableModule } from '@angular/cdk/table';
 
 describe('SubstanceNaLinkagesComponent', () => {
   let component: SubstanceNaLinkagesComponent;
@@ -8,7 +9,13 @@ describe('SubstanceNaLinkagesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceNaLinkagesComponent ]
+      imports: [
+        MatTableModule,
+        CdkTableModule
+      ],
+      declarations: [
+        SubstanceNaLinkagesComponent
+      ]
     })
     .compileComponents();
   }));

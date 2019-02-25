@@ -1,4 +1,4 @@
-<div class="thumb-col">
+<div class="thumb-col" *ngIf="primary">
   <img class="image-thumb" [src]="getSafeStructureImgUrl(primary.refuuid)">
   <div>
     <a class="substance-name" [routerLink]="['/substances', primary.refuuid]" >

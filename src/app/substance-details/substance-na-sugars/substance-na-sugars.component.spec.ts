@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubstanceNaSugarsComponent } from './substance-na-sugars.component';
+import { MatTableModule } from '@angular/material';
+import { CdkTableModule } from '@angular/cdk/table';
 
 describe('SubstanceNaSugarsComponent', () => {
   let component: SubstanceNaSugarsComponent;
@@ -8,7 +9,13 @@ describe('SubstanceNaSugarsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceNaSugarsComponent ]
+      imports: [
+        MatTableModule,
+        CdkTableModule
+      ],
+      declarations: [
+        SubstanceNaSugarsComponent
+      ]
     })
     .compileComponents();
   }));

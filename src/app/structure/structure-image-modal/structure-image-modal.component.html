@@ -23,10 +23,10 @@
 <div *ngIf = "!smiles">
   <h2>Systematic Names:</h2>
   <ul>
-    <li *ngIf = "names?.length == 0">
+    <li *ngIf="!names || names.length == 0">
       <i>None Recorded</i>
     </li>
-    <li *ngFor = "let name of names">
+    <li *ngFor="let name of names">
       {{name}}
     </li>
   </ul>

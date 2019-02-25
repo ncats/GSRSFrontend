@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubstanceOtherLinksComponent } from './substance-other-links.component';
+import { MatTableModule } from '@angular/material';
+import { CdkTableModule } from '@angular/cdk/table';
 
 describe('SubstanceOtherLinksComponent', () => {
   let component: SubstanceOtherLinksComponent;
@@ -8,7 +9,13 @@ describe('SubstanceOtherLinksComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceOtherLinksComponent ]
+      imports: [
+        MatTableModule,
+        CdkTableModule
+      ],
+      declarations: [
+        SubstanceOtherLinksComponent
+      ]
     })
     .compileComponents();
   }));
