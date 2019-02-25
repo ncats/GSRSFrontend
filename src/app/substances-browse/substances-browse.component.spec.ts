@@ -27,6 +27,8 @@ import { FormsModule } from '@angular/forms';
 import { TakePipe } from '../utils/take.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { TopSearchService } from '../top-search/top-search.service';
+import { MatDialogStub } from '../../testing/mat-dialog-stub';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('SubstancesBrowseComponent', () => {
   let component: SubstancesBrowseComponent;
@@ -34,6 +36,7 @@ describe('SubstancesBrowseComponent', () => {
   let activatedRouteStub: Partial<ActivatedRoute>;
   let getSubtanceDetailsSpy: jasmine.Spy;
   let setNotificationSpy: jasmine.Spy;
+  let matDialog: MatDialogStub;
 
   beforeEach(async(() => {
     activatedRouteStub = new ActivatedRouteStub(
@@ -56,6 +59,8 @@ describe('SubstancesBrowseComponent', () => {
     const loadingServiceSpy = jasmine.createSpyObj('LoadingService', ['setLoading']);
 
     const topSearchServiceSpy = jasmine.createSpyObj('TopSearchService', ['clearSearch']);
+
+    matDialog = new MatDialogStub();
 
     TestBed.configureTestingModule({
       imports: [
@@ -84,7 +89,8 @@ describe('SubstancesBrowseComponent', () => {
         { provide: ConfigService, useValue: configServiceSpy },
         { provide: LoadingService, useValue: loadingServiceSpy },
         { provide: MainNotificationService, useValue: notificationServiceSpy },
-        { provide: TopSearchService, useValue: topSearchServiceSpy }
+        { provide: TopSearchService, useValue: topSearchServiceSpy },
+        { provide: MatDialog, useValue: matDialog }
       ]
     })
       .compileComponents();
