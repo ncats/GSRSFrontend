@@ -58,8 +58,8 @@ displayedColumns: string[] = ['name', 'property type', 'amount', 'referenced sub
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    //return this.utilService.getSafeStructureImgUrl(structureId, size);
-    return "";
+    // return this.utilService.getSafeStructureImgUrl(structureId, size);
+    return '';
   }
 
 }

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceVariantConceptsComponent } from './substance-variant-concepts.component';
-import { RouterLinkDirectiveStub } from '../../../testing/router-link-directive-stub';
+import { RouterLinkDirectiveMock } from '../../../testing/router-link-mock.directive';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 
@@ -12,10 +12,12 @@ describe('SubstanceVariantConceptsComponent', () => {
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
 
     TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule
+      ],
       declarations: [
         SubstanceVariantConceptsComponent,
-        RouterLinkDirectiveStub,
-        HttpClientTestingModule
+        RouterLinkDirectiveMock
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy }

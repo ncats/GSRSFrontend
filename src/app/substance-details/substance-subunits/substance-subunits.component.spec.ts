@@ -2,9 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceSubunitsComponent } from './substance-subunits.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatIconModule } from '@angular/material/icon';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
+import { MatIconMock } from '../../../testing/mat-icon-mock.component';
 
 describe('SubstanceSubunitsComponent', () => {
   let component: SubstanceSubunitsComponent;
@@ -17,11 +17,11 @@ describe('SubstanceSubunitsComponent', () => {
       imports: [
         MatTooltipModule,
         MatButtonToggleModule,
-        MatIconModule,
         HttpClientTestingModule
       ],
       declarations: [
-        SubstanceSubunitsComponent
+        SubstanceSubunitsComponent,
+        MatIconMock
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy }

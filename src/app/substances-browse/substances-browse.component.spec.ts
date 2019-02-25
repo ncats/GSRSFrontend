@@ -21,7 +21,6 @@ import { MainNotificationService } from '../main-notification/main-notification.
 import { decodeHtml } from '../utils/decode-html';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { TakePipe } from '../utils/take.pipe';
@@ -29,6 +28,7 @@ import { MatTableModule } from '@angular/material/table';
 import { TopSearchService } from '../top-search/top-search.service';
 import { MatDialogStub } from '../../testing/mat-dialog-stub';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconMock } from '../../testing/mat-icon-mock.component';
 
 describe('SubstancesBrowseComponent', () => {
   let component: SubstancesBrowseComponent;
@@ -74,14 +74,14 @@ describe('SubstancesBrowseComponent', () => {
         NoopAnimationsModule,
         MatPaginatorModule,
         RouterTestingModule,
-        MatIconModule,
         MatButtonToggleModule,
         FormsModule,
         MatTableModule
       ],
       declarations: [
         SubstancesBrowseComponent,
-        TakePipe
+        TakePipe,
+        MatIconMock
       ],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
