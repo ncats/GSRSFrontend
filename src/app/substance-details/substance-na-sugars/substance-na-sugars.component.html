@@ -1,0 +1,22 @@
+<div class="responsive">
+  <table mat-table [dataSource]="sugars">
+
+    <ng-container matColumnDef='Sugar'>
+      <th mat-header-cell *matHeaderCellDef> Sugar </th>
+      <td mat-cell *matCellDef="let sugar"> {{sugar.sugar}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef='Site Range'>
+      <th mat-header-cell *matHeaderCellDef> Site Range </th>
+      <td mat-cell *matCellDef="let sugar"> {{sugar.sitesShorthand}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef='Site Count'>
+      <th mat-header-cell *matHeaderCellDef> Site Count </th>
+      <td mat-cell *matCellDef="let sugar"> {{getSiteCount(sugar.sites)}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

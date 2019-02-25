@@ -44,5 +44,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'edit',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-edit-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'zoom_in',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-zoom_in-24px.svg'));
   }
 }

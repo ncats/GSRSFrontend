@@ -1,0 +1,56 @@
+<div class="responsive">
+  <table mat-table [dataSource]="properties">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let property"> {{property.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="property type">
+      <th mat-header-cell *matHeaderCellDef> Property Type </th>
+      <td mat-cell *matCellDef="let property"> {{property.propertyType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef> Amount </th>
+      <td mat-cell *matCellDef="let property"> {{toString(property.value)}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="referenced substance">
+      <th mat-header-cell *matHeaderCellDef> Referenced Substance </th>
+      <td mat-cell *matCellDef="let property"><div *ngIf = "property.referencedSubstance" class = "thumb-col">
+        <div *ngIf = "property.referencedSubstance.linkingID" class = "code" >{{property.referencedSubstance.linkingID}}</div>
+        <img class = "image-thumb" [src]="getSafeStructureImgUrl(property.referencedSubstance.refuuid)">
+        <div>
+          <a class="substance-name" [routerLink]="['/substances', property.referencedSubstance.refuuid]" >
+          {{property.referencedSubstance.name}}
+          </a>
+        </div>
+      </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="defining">
+      <th mat-header-cell *matHeaderCellDef> Defining </th>
+      <td mat-cell *matCellDef="let property"> {{property.defining}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="references">
+      <th mat-header-cell *matHeaderCellDef> References </th>
+      <td mat-cell *matCellDef="let property"> {{property.references.length}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="parameters">
+      <th mat-header-cell *matHeaderCellDef> Parameters </th>
+      <td mat-cell *matCellDef="let property">
+          <div *ngFor = "let parameter of property.parameters">{{parameter.name}}<br>{{parameter.type}}<br/>{{toString(property.amount)}}</div>
+      </td>
+    </ng-container>
+
+
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
 import {SubstanceDetail, SubstanceRelated, SubstanceRelationship} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {SubstanceService} from '../../substance/substance.service';
 import {UtilsService} from '../../utils/utils.service';
 
 @Component({
@@ -17,7 +16,6 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
 
 
   constructor(
-    private substanceService: SubstanceService,
     public utilsService: UtilsService
   ) {
     super();

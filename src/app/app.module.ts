@@ -47,6 +47,8 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
 import { EnvironmentModule } from '../environments/environment';
 import { TopSearchModule } from './top-search/top-search.module';
+import {StructureImageModalComponent} from './structure/structure-image-modal/structure-image-modal.component';
+import {MatTabsModule} from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 
 @NgModule({
@@ -58,6 +60,7 @@ import { SequenceSearchComponent } from './sequence-search/sequence-search.compo
     SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent,
+    StructureImageModalComponent,
     TakePipe,
     SequenceSearchComponent
   ],
@@ -98,6 +101,7 @@ import { SequenceSearchComponent } from './sequence-search/sequence-search.compo
     MatMenuModule,
     MatButtonToggleModule,
     MatTooltipModule,
+    MatTabsModule,
     TopSearchModule
   ],
   providers: [
@@ -109,6 +113,7 @@ import { SequenceSearchComponent } from './sequence-search/sequence-search.compo
             multi: true
         }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [StructureImageModalComponent]
 })
 export class AppModule {}

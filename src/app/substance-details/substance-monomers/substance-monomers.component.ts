@@ -10,7 +10,7 @@ import { UtilsService } from '../../utils/utils.service';
 })
 export class SubstanceMonomersComponent extends SubstanceCardBaseFilteredList<Monomer> implements OnInit {
   monomers: Array<Monomer>;
-  displayedColumns: string[] = ['material', 'material name', 'amount', 'type'];
+  displayedColumns: string[] = ['material', 'amount', 'type'];
   constructor(
     private utilsService: UtilsService
   ) {

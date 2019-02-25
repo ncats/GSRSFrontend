@@ -23,7 +23,10 @@ export interface SubstanceBaseExtended {
     _approvalIDDisplay: string;
     _name: string;
     _self: string;
+    nucleicAcid?: NucleicAcid;
 }
+
+
 
 export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
     _names: CountRef;
@@ -66,9 +69,32 @@ export interface Polymer extends SubstanceBase {
   monomers: Array<Monomer>;
 }
 
+export interface NucleicAcid extends SubstanceBase {
+  uuid: string;
+  references: Array<string>;
+  nucleicAcidType: string;
+  subunits: Array<Subunit>;
+  sugars: Array<Sugar>;
+  linkages: Array<Linkage>;
+
+}
+
+export interface Sugar extends NucleicAcid {
+  sugar: string;
+  sitesShorthand: string;
+  sites: Array<Site>;
+}
+
+export interface Linkage extends NucleicAcid {
+  linkage: string;
+  sitesShorthand: string;
+  sites: Array<Site>;
+}
+
 export interface Mixture extends SubstanceBase {
   uuid: string;
   components: Array<MixtureComponents>;
+  parentSubstance?: SubstanceRelated;
 }
 
 export interface MixtureComponents extends Mixture {
@@ -79,6 +105,7 @@ export interface MixtureComponents extends Mixture {
 
 export interface DisplayStructure extends Polymer {
   id: string;
+  smiles: string;
 }
 
 export interface Monomer extends Polymer {
@@ -138,6 +165,8 @@ export interface SubstanceProperty extends SubstanceBase {
     value: SubstanceAmount;
     defining: boolean;
     parameters: Array<any>;
+    referencedSubstance?: SubstanceReference;
+    references: Array<SubstanceReference>;
 }
 
 export interface SubstanceRelationship extends SubstanceBase {
@@ -158,6 +187,7 @@ export interface SubstanceAmount extends SubstanceBase {
     references: Array<string>;
     highLimit?: number;
     lowLimit?: number;
+    nonNumericValue?: string;
 }
 
 export interface SubstanceReference extends SubstanceBase {
@@ -190,13 +220,12 @@ export interface StructuralModification extends SubstanceModifications {
 
 export interface PhysicalModification extends SubstanceModifications {
   physicalModificationRole?: string;
-  parameters: Array<SubstanceParameters>;
-  amount?: string;
+  parameters: Array<PhysicalModificationParameter>;
 }
 
-export interface SubstanceParameters extends PhysicalModification {
+export interface PhysicalModificationParameter extends PhysicalModification {
   parameterName: string;
-  amount: string;
+  amount: SubstanceAmount;
 }
 export interface AgentModification extends SubstanceModifications {
   agentModificationProcess?: string;

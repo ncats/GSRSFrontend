@@ -131,7 +131,14 @@
                   </div>
                 </div>
                 <div class="image-thumbnail">
-                  <img [src]="getSafeStructureImgUrl(substance.uuid)">
+                  <div *ngIf="substance.structure || substance.polymer">
+                    <a class = "zoom" (click)="openImageModal(substance)">
+                      <img [src]="getSafeStructureImgUrl(substance.uuid)">
+                    </a>
+                  </div>
+                  <div *ngIf="!substance.structure && !substance.polymer">
+                    <img [src]="getSafeStructureImgUrl(substance.uuid)">
+                  </div>
                 </div>
               </div>
               <div>
