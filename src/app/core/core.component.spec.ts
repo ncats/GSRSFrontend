@@ -1,22 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { CoreComponent } from './core.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { LoadingModule } from '../loading/loading.module';
 import { RouterStub } from '../../testing/router-stub';
-import { RouterLinkDirectiveStub } from '../../testing/router-link-directive-stub';
+import { RouterLinkDirectiveMock } from '../../testing/router-link-mock.directive';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatIconModule } from '@angular/material/icon';
 import { TopSearchModule } from '../top-search/top-search.module';
 import { MainNotificationModule } from '../main-notification/main-notification.module';
 import { ConfigService } from '../config/config.service';
 import { TopSearchService } from '../top-search/top-search.service';
 import { ActivatedRouteStub } from '../../testing/activated-route-stub';
-import { RouterOutletStubComponent } from '../../testing/router-outlet-component-stub';
+import { RouterOutletStubComponent } from '../../testing/router-outlet-mock.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
+import { MatIconMock } from '../../testing/mat-icon-mock.component';
 
 describe('CoreComponent', () => {
   let component: CoreComponent;
@@ -40,7 +39,6 @@ describe('CoreComponent', () => {
         MatToolbarModule,
         LoadingModule,
         MatMenuModule,
-        MatIconModule,
         TopSearchModule,
         MainNotificationModule,
         HttpClientTestingModule,
@@ -48,8 +46,9 @@ describe('CoreComponent', () => {
       ],
       declarations: [
         CoreComponent,
-        RouterLinkDirectiveStub,
-        RouterOutletStubComponent
+        RouterLinkDirectiveMock,
+        RouterOutletStubComponent,
+        MatIconMock
       ],
       providers: [
         { provide: Router, useValue: routerStub },

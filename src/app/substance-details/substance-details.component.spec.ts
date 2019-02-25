@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceDetailsComponent } from './substance-details.component';
-import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
@@ -13,11 +12,12 @@ import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { Router } from '@angular/router';
 import { RouterStub } from '../../testing/router-stub';
-import { RouterLinkDirectiveStub } from '../../testing/router-link-directive-stub';
+import { RouterLinkDirectiveMock } from '../../testing/router-link-mock.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ScrollNavModule } from '../scroll-nav/scroll-nav.module';
 import { DynamicComponentLoaderModule } from '../dynamic-component-loader/dynamic-component-loader.module';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
+import { MatIconMock } from '../../testing/mat-icon-mock.component';
 
 describe('SubstanceDetailsComponent', () => {
   let component: SubstanceDetailsComponent;
@@ -43,7 +43,6 @@ describe('SubstanceDetailsComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MatIconModule,
         MatListModule,
         MatSidenavModule,
         MatCardModule,
@@ -55,7 +54,8 @@ describe('SubstanceDetailsComponent', () => {
       ],
       declarations: [
         SubstanceDetailsComponent,
-        RouterLinkDirectiveStub
+        RouterLinkDirectiveMock,
+        MatIconMock
       ],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
