@@ -99,7 +99,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   searchSubstances() {
 
-    const newArgsHash = this.utilsService.hashCode(
+    const newArgsHash = 0; this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
       this.privateSequenceSearchTerm,

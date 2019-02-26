@@ -15,7 +15,6 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   structure: SubstanceStructure;
 
   constructor(
-    private structureService: StructureService,
     private utilService: UtilsService
   ) {
     super();

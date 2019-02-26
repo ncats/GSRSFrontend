@@ -29,6 +29,8 @@ import { TopSearchService } from '../top-search/top-search.service';
 import { MatDialogStub } from '../../testing/mat-dialog-stub';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconMock } from '../../testing/mat-icon-mock.component';
+import { UtilsService } from '../utils/utils.service';
+import { UtilsServiceStub } from '../../testing/utils-service-stub';
 
 describe('SubstancesBrowseComponent', () => {
   let component: SubstancesBrowseComponent;
@@ -37,6 +39,7 @@ describe('SubstancesBrowseComponent', () => {
   let getSubtanceDetailsSpy: jasmine.Spy;
   let setNotificationSpy: jasmine.Spy;
   let matDialog: MatDialogStub;
+  let utilsServiceStub: UtilsServiceStub;
 
   beforeEach(async(() => {
     activatedRouteStub = new ActivatedRouteStub(
@@ -61,6 +64,7 @@ describe('SubstancesBrowseComponent', () => {
     const topSearchServiceSpy = jasmine.createSpyObj('TopSearchService', ['clearSearch']);
 
     matDialog = new MatDialogStub();
+    utilsServiceStub = new UtilsServiceStub();
 
     TestBed.configureTestingModule({
       imports: [
@@ -90,7 +94,8 @@ describe('SubstancesBrowseComponent', () => {
         { provide: LoadingService, useValue: loadingServiceSpy },
         { provide: MainNotificationService, useValue: notificationServiceSpy },
         { provide: TopSearchService, useValue: topSearchServiceSpy },
-        { provide: MatDialog, useValue: matDialog }
+        { provide: MatDialog, useValue: matDialog },
+        { provide: UtilsService, useValue: utilsServiceStub }
       ]
     })
       .compileComponents();

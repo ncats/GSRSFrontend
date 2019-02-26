@@ -7,13 +7,17 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterLinkDirectiveMock } from '../../../testing/router-link-mock.directive';
+import { UtilsService } from '../../utils/utils.service';
+import { UtilsServiceStub } from '../../../testing/utils-service-stub';
 
 describe('SubstanceMonomersComponent', () => {
   let component: SubstanceMonomersComponent;
   let fixture: ComponentFixture<SubstanceMonomersComponent>;
+  let utilsServiceStub: UtilsServiceStub;
 
   beforeEach(async(() => {
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+    utilsServiceStub = new UtilsServiceStub();
 
     TestBed.configureTestingModule({
       imports: [
@@ -31,7 +35,8 @@ describe('SubstanceMonomersComponent', () => {
         RouterLinkDirectiveMock
       ],
       providers: [
-        { provide: ConfigService, useValue: configServiceSpy }
+        { provide: ConfigService, useValue: configServiceSpy },
+        { provide: UtilsService, useValue: utilsServiceStub }
       ]
     })
     .compileComponents();

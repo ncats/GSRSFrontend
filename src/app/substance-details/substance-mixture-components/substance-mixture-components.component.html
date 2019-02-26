@@ -1,64 +1,44 @@
-
-<div *ngIf="required && required.length > 0" >
-  <h3>All of the following components <i>must</i> be present:</h3>
-  <div class= "flex-row wrap">
-    <div *ngFor="let component of required" class = "thumb-col" >
-      <div *ngIf = "component.substance.linkingID" class = "code">{{component.substance.linkingID}}</div>
+<div *ngIf="required && required.length > 0">
+  <h3>All of the following components
+    <i>must</i> be present:</h3>
+  <div class="flex-row wrap">
+    <div *ngFor="let component of required" class="thumb-col">
+      <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
       <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
       <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" >
+        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
           {{component.substance.name}}
         </a>
       </div>
     </div>
   </div>
 </div>
-<div *ngIf="presentInAny && presentInAny.length > 0" >
+<div *ngIf="presentInAny && presentInAny.length > 0">
   <h3>Any of these components may be present:</h3>
-  <div class= "flex-row wrap">
-<<<<<<< HEAD
-    <div *ngFor="let component of presentInAny" class="substance-icon-container">
+  <div class="flex-row wrap">
+    <div *ngFor="let component of presentInAny" class="thumb-col">
+      <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
       <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
-      <br/>
-      <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" >
-        {{component.substance.name}}
-      </a>
-=======
-    <div *ngFor="let component of presentInAny" class = "thumb-col">
-      <div *ngIf = "component.substance.linkingID" class = "code">{{component.substance.linkingID}}</div>
-        <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
       <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" >
+        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
           {{component.substance.name}}
         </a>
       </div>
->>>>>>> 49c188353d1ebfad8be45e8651c2921610f2d871
     </div>
   </div>
 
 </div>
-<div *ngIf="presentInOne && presentInOne.length > 0"  class="flex-row wrap">
+<div *ngIf="presentInOne && presentInOne.length > 0" class="flex-row wrap">
   <h3>One of these components may be present:</h3>
-  <div class= "flex-row">
-<<<<<<< HEAD
-    <div *ngFor="let component of presentInOne" class="substance-icon-container">
+  <div class="flex-row">
+    <div *ngFor="let component of presentInOne" class="thumb-col">
+      <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
       <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
-      <br/>
-      <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" >
-        {{component.substance.name}}
-      </a>
-=======
-    <div *ngFor="let component of presentInOne" class= "thumb-col">
-      <div *ngIf = "component.substance.linkingID" class = "code">{{component.substance.linkingID}}</div>
-        <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
       <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" >
+        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
           {{component.substance.name}}
         </a>
       </div>
->>>>>>> 49c188353d1ebfad8be45e8651c2921610f2d871
     </div>
   </div>
 </div>
-
-
