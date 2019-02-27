@@ -218,7 +218,8 @@ describe('SubstancesBrowseComponent', () => {
           );
           expect(component.facetParams[facetName].params[facetValueLabel])
             .toBe(true, 'should add facet value as a parameter to getSubtanceDetails call');
-          expect(getSubtanceDetailsSpy.calls.count()).toBe(2, 'should call getSubtanceDetails function for the second time');
+          expect(getSubtanceDetailsSpy.calls.mostRecent().args[0].facets[facetName].params[facetValueLabel])
+            .toBe(true, 'should call getSubtanceDetails with selected facet param set to true');
         }
       });
     }));
@@ -331,10 +332,11 @@ describe('SubstancesBrowseComponent', () => {
         expect(paginatorRangeLabel.innerHTML).toBeTruthy('should have label for page and total items');
 
         const paginatorNext: HTMLButtonElement = paginatorElement.querySelector('.mat-paginator-navigation-next');
-
+        utilsServiceStub.setReturnHasCode(Math.random());
         paginatorNext.click();
 
         fixture.detectChanges();
+
         expect(getSubtanceDetailsSpy.calls.mostRecent().args[0]['skip'])
           .toBe(10, 'should make a get substances call with 10 as skip parameter');
 
@@ -349,7 +351,7 @@ describe('SubstancesBrowseComponent', () => {
           const overlayContainerElement = oc.getContainerElement();
 
           const pageSizeSelectOptionElement: HTMLButtonElement = overlayContainerElement.querySelector('mat-option');
-
+          utilsServiceStub.setReturnHasCode(Math.random());
           pageSizeSelectOptionElement.click();
 
           fixture.detectChanges();

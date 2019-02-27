@@ -80,7 +80,6 @@ describe('CoreComponent', () => {
     it('should set mainPathSegment on init', async(() => {
       fixture.whenStable().then(() => {
         fixture.detectChanges();
-        console.log(component.mainPathSegment);
         expect(component.mainPathSegment).toBe('test-before', 'mainPathSegment should be set correctly');
       });
     }));

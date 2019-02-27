@@ -99,7 +99,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   searchSubstances() {
 
-    const newArgsHash = 0; this.utilsService.hashCode(
+    const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
       this.privateSequenceSearchTerm,
@@ -110,7 +110,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.privateFacetParams,
       (this.pageIndex * this.pageSize),
     );
-
     if (this.argsHash == null || this.argsHash !== newArgsHash) {
       this.isLoading = true;
       this.loadingService.setLoading(true);

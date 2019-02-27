@@ -24,8 +24,6 @@ export class SubstanceVariantConceptsComponent extends SubstanceCardBase impleme
       this.variants = [];
       for (const rel of this.substance.relationships) {
         if (rel.type === 'SUB_CONCEPT->SUBSTANCE') {
-          console.log(rel);
-          console.log(this.variants);
           this.variants.push(rel.relatedSubstance);
         }
       }
