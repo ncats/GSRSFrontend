@@ -5,6 +5,7 @@ import { SubstanceMonomersComponent } from './substance-monomers.component';
 import { MatInputModule, MatPaginatorModule, MatTableModule } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatPaginatorModule,
     MatInputModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    RouterModule
   ],
   declarations: [SubstanceMonomersComponent]
 })
