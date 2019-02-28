@@ -7,7 +7,7 @@ import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
+import { SubstanceFacetParam } from './substance-facet-param.model';
 import { SubstanceHttpParams } from './substance-http-params';
 import { UtilsService } from '../utils/utils.service';
 
