@@ -30,6 +30,9 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { CoreComponent } from './core/core.component';
 import { HomeComponent } from './home/home.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
+import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical-trials-browse.component';
+import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
+import { MiniSearchComponent } from './mini-search/mini-search.component';
 import { configServiceFactory } from './config/config.factory';
 import { ConfigService } from './config/config.service';
 import { LoadingModule } from './loading/loading.module';
@@ -50,7 +53,10 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
     HomeComponent,
     SubstancesBrowseComponent,
     StructureSearchComponent,
-    SubstanceDetailsComponent
+    SubstanceDetailsComponent,
+    ClinicalTrialsBrowseComponent,
+    ClinicalTrialEditComponent,
+    MiniSearchComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

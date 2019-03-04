@@ -6,6 +6,11 @@ import { HomeComponent } from './home/home.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
+import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical-trials-browse.component';
+import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
+
+import {environment} from '../environments/environment';
+
 
 const childRoutes: Routes = [
   {
@@ -29,6 +34,21 @@ const childRoutes: Routes = [
     component: StructureSearchComponent
   }
 ];
+
+environment.version='fda'
+
+if (environment.version==='fda') {
+  childRoutes.push(  {
+    path: 'browse-clinical-trials',
+      component: ClinicalTrialsBrowseComponent
+    }
+  );
+  childRoutes.push(  {
+    path: 'edit-clinical-trial/:nctNumber',
+      component: ClinicalTrialEditComponent
+    }
+  );
+}
 
 const routes: Routes = [
   {
