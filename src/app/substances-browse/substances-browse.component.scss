@@ -1,3 +1,11 @@
+::ng-deep .mat-expansion-panel-content > .mat-expansion-panel-body {
+    padding: 0 12px 10px;
+}
+
+.mat-expansion-panel-header {
+    padding: 0 12px;
+}
+
 .filter-box {
     padding: 10px;
 
@@ -6,14 +14,100 @@
     }
 }
 
+.include {
+    ::ng-deep .mat-checkbox-frame {
+        border-color: #80CBC4;
+    }
+
+    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+        background-color: #26A69A;
+    }
+}
+
+.exclude {
+    margin-left: 5px;
+    ::ng-deep .mat-checkbox-frame {
+        border-color: #EF9A9A;
+    }
+
+    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+        background-color: #EF5350;
+    }
+}
+
+.search-parameters {
+    display: flex;
+
+    &.center {
+        margin-top: 10px;
+        justify-content: center;
+    }
+
+    & > div {
+        padding: 5px 10px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+    }
+
+    .actions-container {
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+}
+
+.controls-container {
+    display: flex;
+}
+
 .mat-card {
+    max-width: 928px;
     margin-bottom: 20px;
 }
 
-.mat-card, .mat-paginator {
+.mat-card, .controls-container {
     width: 100%;
-    max-width: 928px;
     box-sizing: border-box;
+}
+
+.controls-container {
+    display: flex;
+    align-items: center;
+
+    .mat-button-toggle-group {
+        max-height: 36px;
+    }
+
+    .mat-paginator {
+        margin-left: auto;
+    }
+}
+
+.cards {
+
+    .controls-container {
+        max-width: 928px;
+    }
+
+    .substance-cards {
+        display: block;
+    }
+
+    .substance-table {
+        display: none;
+    }
+}
+
+.table {
+    .substance-cards {
+        display: none;
+    }
+
+    .substance-table {
+        display: block;
+    }
 }
 
 .mat-card-title, .facet-value {
@@ -52,12 +146,31 @@
         max-width: 150px;
         overflow: hidden;
         color: #404040;
+        white-space: normal;
     }
 
     .facet-value-count {
         padding: 0 0 0 3px;
         overflow: hidden;
         font-weight: 500;
+    }
+}
+
+.facet-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    .pull-right {
+        margin-left: auto;
+    }
+
+    .mat-flat-button {
+        min-width: 70px;
+
+        &:not(:first-child) {
+            margin-left: 5px;
+        }
     }
 }
 
@@ -100,4 +213,119 @@
 
 .mat-paginator {
     background: transparent;
+}
+
+.image-thumbnail{
+  height:150px;
+  width:150px;
+}
+
+.space-bottom {
+    margin-bottom: 5px;
+}
+
+@media(max-width: 1100px) {
+    .controls-container, .search-parameters {
+        padding-left: 30px;
+    }
+
+    .side-nav-content {
+        padding-top: 10px;
+    }
+}
+
+@media(max-width: 700px) {
+    .mat-card-title {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .substance-name {
+            margin-bottom: 10px;
+        }
+    }
+
+    .substance-data {
+        flex-direction: column;
+
+        .label {
+            margin-bottom: 10px;
+        }
+
+        .value, .code-system {
+            padding-left: 20px;
+        }
+    }
+    
+    .search-parameters {
+        font-size: .9em;
+
+        .mat-icon-button {
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+        }
+    }
+
+    .side-nav-content {
+        padding: 5px;
+    }
+}
+
+@media(max-width: 600px) {
+    
+    .substance-content {
+        flex-direction: column;
+
+        .image-thumbnail {
+            margin: 0 auto;
+        }
+    }
+
+    .controls-container {
+
+        ::ng-deep {
+
+            .mat-paginator-range-label {
+                margin: 0 3px 0 0;
+            }
+
+            .mat-paginator-page-size-select {
+                margin-left: 0;
+            }
+
+            .mat-paginator-container {
+                padding-right: 0;
+                padding-left: 0;
+            }
+
+            .mat-paginator-page-size {
+                margin-right: 4px;
+            }
+
+            .mat-paginator-range-actions {
+
+                .mat-icon-button {
+                    width: 35px;
+                    height: 35px;
+                    line-height: 35px;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 505px) {
+    .controls-container {
+
+        ::ng-deep {
+
+            .mat-paginator-page-size-label {
+                display: none;
+            }
+        }
+    }
+}
+
+.zoom{
+  cursor:zoom-in;
 }

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HttpClientModule, HttpClientJsonpModule  } from '@angular/common/http';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -25,6 +25,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CoreComponent } from './core/core.component';
@@ -44,6 +47,12 @@ import { SubstanceDetailsComponent } from './substance-details/substance-details
 import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic-component-loader.module';
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
+import { TakePipe } from './utils/take.pipe';
+import { EnvironmentModule } from '../environments/environment';
+import { TopSearchModule } from './top-search/top-search.module';
+import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
+import { MatTabsModule } from '@angular/material';
+import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +65,10 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
     SubstanceDetailsComponent,
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
-    MiniSearchComponent
+    MiniSearchComponent,
+    StructureImageModalComponent,
+    TakePipe,
+    SequenceSearchComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -90,7 +102,13 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
     FileSelectModule,
     MatListModule,
     DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
-    ScrollNavModule
+    ScrollNavModule,
+    EnvironmentModule,
+    MatMenuModule,
+    MatButtonToggleModule,
+    MatTooltipModule,
+    MatTabsModule,
+    TopSearchModule
   ],
   providers: [
     ConfigService,
@@ -101,6 +119,7 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
             multi: true
         }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [StructureImageModalComponent]
 })
-export class AppModule { }
+export class AppModule {}

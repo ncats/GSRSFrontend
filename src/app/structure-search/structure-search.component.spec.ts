@@ -5,7 +5,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCardModule } from '@angular/material/card';
 import { RouterStub } from '../../testing/router-stub';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoadingService } from '../loading/loading.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,23 +24,36 @@ import { TestGestureConfig } from '../../testing/test-gesture-config';
 import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import 'hammerjs';
 import { dispatchMouseenterEvent, dispatchSlideEvent } from '../../testing/dispatch-events';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ConfigService } from '../config/config.service';
+import { ActivatedRouteStub } from '../../testing/activated-route-stub';
 
 describe('StructureSearchComponent', () => {
   let component: StructureSearchComponent;
   let fixture: ComponentFixture<StructureSearchComponent>;
   let routerStub: RouterStub;
   let setLoadingSpy: jasmine.Spy;
-  let postSubstanceSpy: jasmine.Spy;
+  let postSubstanceStructureSpy: jasmine.Spy;
   let matDialog: MatDialogStub;
   let gestureConfig: TestGestureConfig;
+  let activatedRouteStub: Partial<ActivatedRoute>;
 
   beforeEach(async(() => {
     routerStub = new RouterStub();
     const loadingServiceSpy = jasmine.createSpyObj('LoadingService', ['setLoading']);
     setLoadingSpy = loadingServiceSpy.setLoading.and.returnValue(null);
-    const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['postSubstance']);
-    postSubstanceSpy = substanceServiceSpy.postSubstance.and.returnValue(asyncData(StructurePostResponseData));
+    const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['postSubstanceStructure']);
+    postSubstanceStructureSpy = substanceServiceSpy.postSubstanceStructure.and.returnValue(asyncData(StructurePostResponseData));
     matDialog = new MatDialogStub();
+    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+    activatedRouteStub = new ActivatedRouteStub(
+      {
+        'sequence': 'test_sequence_term',
+        'type': 'test_type_term',
+        'seq_type': 'test_seq_type_term',
+        'cutoff': 'test_cutoff_term'
+      }
+    );
 
     TestBed.configureTestingModule({
       imports: [
@@ -51,7 +64,8 @@ describe('StructureSearchComponent', () => {
         HttpClientTestingModule,
         NoopAnimationsModule,
         MatFormFieldModule,
-        MatButtonModule
+        MatButtonModule,
+        ReactiveFormsModule
       ],
       declarations: [
         StructureSearchComponent
@@ -61,10 +75,13 @@ describe('StructureSearchComponent', () => {
         { provide: LoadingService, useValue: loadingServiceSpy },
         { provide: SubstanceService, useValue: substanceServiceSpy },
         { provide: MatDialog, useValue: matDialog },
-        {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
-          gestureConfig = new TestGestureConfig();
-          return gestureConfig;
-}}
+        { provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
+            gestureConfig = new TestGestureConfig();
+            return gestureConfig;
+          }
+        },
+        { provide: ConfigService, useValue: configServiceSpy },
+        { provide: ActivatedRoute, useValue: activatedRouteStub }
       ]
     })
       .compileComponents();
@@ -105,12 +122,12 @@ describe('StructureSearchComponent', () => {
       searchButtonElement.click();
       fixture.detectChanges();
       expect(component._editor.getMolfile).toHaveBeenCalledTimes(1);
-      expect(postSubstanceSpy).toHaveBeenCalled();
-      expect(postSubstanceSpy.calls.mostRecent().args[0]).toBe(MolFile);
+      expect(postSubstanceStructureSpy).toHaveBeenCalled();
+      expect(postSubstanceStructureSpy.calls.mostRecent().args[0]).toBe(MolFile);
       fixture.whenStable().then(() => {
         expect(routerStub.navigate).toHaveBeenCalled();
         const navigationExtras = routerStub.navigate.calls.mostRecent().args[1];
-        expect(navigationExtras.queryParams['structure_search_term']).toEqual(StructurePostResponseData.structure.id);
+        expect(navigationExtras.queryParams['structure_search']).toEqual(StructurePostResponseData.structure.id);
       });
     }));
 

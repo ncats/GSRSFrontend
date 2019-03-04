@@ -96,6 +96,7 @@ export class SubstanceCardsService {
   ): boolean {
     if (filter.value != null && filter.propertyToCheck != null) {
 
+
       if (!filter.value.indexOf('|') && substance[filter.propertyToCheck] === filter.value) {
         return true;
       } else if (filter.value.indexOf('|')) {
@@ -105,6 +106,20 @@ export class SubstanceCardsService {
             return true;
           }
         }
+      }
+      return false;
+    }
+  }
+  equals_in_array(
+    substance: SubstanceDetail,
+    filter: SubstanceDetailsCardFilter
+  ): boolean {
+    if (filter.value != null && filter.propertyToCheck != null && filter.propertyInArray != null) {
+      for (let i = 0; i < substance[filter.propertyToCheck].length; i++) {
+        if ((substance[filter.propertyToCheck][i][filter.propertyInArray]) === filter.value) {
+          return true;
+        }
+
       }
       return false;
     }
@@ -179,39 +194,34 @@ export class SubstanceCardsService {
     if (substance.relationships && substance.relationships.length > 1) {
       substance.relationships.forEach(relationship => {
         const typeParts = relationship.type.split('->');
-        const property = typeParts[0].trim();
-        if (property) {
-          let propertyName: string;
-          let type: string;
-          if (property.indexOf('METABOLITE') > -1) {
-            propertyName = 'metabolites';
-            type = 'METABOLITE';
-          } else if (property.indexOf('IMPURITY') > -1) {
-            propertyName = 'impurities';
-            type = 'IMPURITY';
-          } else if (property.indexOf('ACTIVE MOIETY') > -1) {
-            propertyName = 'active moiety';
-            type = 'ACTIVE MOIETY';
-          } else if (property.indexOf('TARGET') > -1) {
-            propertyName = 'targets';
-            type = 'TARGET';
-          } else if (property.indexOf('AGONIST') > -1) {
-            propertyName = 'Agonists';
-            type = 'AGONIST';
-          } else if (property.indexOf('ACTIVATOR') > -1) {
-            propertyName = 'Activators';
-            type = 'ACTIVATOR';
+        const property = typeParts && typeParts.length && typeParts[0].trim() || '';
+        let propertyName: string;
+        let type: string;
+
+        if (this.configService.configData.specialRelationships && this.configService.configData.specialRelationships.length) {
+          for (let i = 0; i < this.configService.configData.specialRelationships.length; i++) {
+            if (property.toLowerCase().indexOf(this.configService.configData.specialRelationships[i].type.toLowerCase()) > -1) {
+              propertyName = this.configService.configData.specialRelationships[i].display;
+              type = this.configService.configData.specialRelationships[i].type;
+              break;
+            }
           }
-          if (!properties[propertyName]) {
-            properties[propertyName] = {
-              title: propertyName,
-              count: 0,
-              dynamicComponentId: 'substance-relationships',
-              type: type
-            };
-          }
-          properties[propertyName].count++;
         }
+
+        if (propertyName == null || type == null) {
+          propertyName = 'relationships';
+          type = 'RELATIONSHIPS';
+        }
+
+        if (!properties[propertyName]) {
+          properties[propertyName] = {
+            title: propertyName,
+            count: 0,
+            dynamicComponentId: 'substance-relationships',
+            type: type
+          };
+        }
+        properties[propertyName].count++;
       });
     }
 

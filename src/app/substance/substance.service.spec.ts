@@ -1,15 +1,17 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed, inject, async } from '@angular/core/testing';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { TestBed, async } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../config/config.service';
 import { SubstanceService } from './substance.service';
 import { SubstanceDetailsListData } from '../../testing/substance-details-list-test-data';
 import { SubstanceSummary, SubstanceDetail } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { SubstanceSummaryListData } from '../../testing/substance-summary-list-test-data';
-import { Observable, Observer } from 'rxjs';
+import { Observable } from 'rxjs';
 import { StructureSearchResponseTestData } from '../../testing/structure-search-response-test-data';
-import { StructureSearchResponse } from './structure-search-response.model';
+import { DomSanitizer } from '@angular/platform-browser';
+import { UtilsService } from '../utils/utils.service';
+import { SubstanceFacetParam } from './substance-facet-param.model';
 
 describe('SubstanceService', () => {
 
@@ -19,6 +21,8 @@ describe('SubstanceService', () => {
   let substanceService: SubstanceService;
   let expectedSubstanceDetails: PagingResponse<SubstanceDetail>;
   let expectedSubstanceSummaries: PagingResponse<SubstanceSummary>;
+  let domSanitizer: DomSanitizer;
+  let utilsService: UtilsService;
 
   beforeEach(() => {
 
@@ -31,9 +35,11 @@ describe('SubstanceService', () => {
 
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
+    domSanitizer = TestBed.get(DomSanitizer);
     configService = new ConfigService(httpClient);
     configService.configData = { apiBaseUrl: '' };
-    substanceService = new SubstanceService(httpClient, configService);
+    utilsService = new UtilsService(httpClient, configService, domSanitizer);
+    substanceService = new SubstanceService(httpClient, configService, domSanitizer, utilsService);
   });
 
   it('should be created', () => {
@@ -42,11 +48,7 @@ describe('SubstanceService', () => {
 
   describe('getSubtanceDetails', () => {
     let httpClientGetSpy: jasmine.Spy;
-    let facets: {
-      [facetName: string]: {
-        [facetValueLabel: string]: boolean
-      }
-    };
+    let facets: SubstanceFacetParam;
 
     beforeEach(() => {
       httpClientGetSpy = spyOn(httpClient, 'get');
@@ -54,12 +56,16 @@ describe('SubstanceService', () => {
 
       facets = {
         'Code System': {
-          'PUBCHEM': true,
-          'MERCK INDEX': false
+          params: {
+            'PUBCHEM': true,
+            'MERCK INDEX': null
+          }
         },
         'Reference Type': undefined,
         'Validation': {
-          'Code Collision': true
+          params: {
+            'Code Collision': true
+          }
         }
       };
     });
@@ -77,9 +83,9 @@ describe('SubstanceService', () => {
 
     it('if facets param not null & not a structure serach, facets set to true should be added to params', () => {
 
-      substanceService.getSubtanceDetails(null, null, null, null, null, null, facets, null).subscribe();
-      substanceService.getSubtanceDetails('test', null, null, null, null, null, facets, null).subscribe();
-      substanceService.getSubtanceDetails(null, null, null, null, null, 15, facets, 1).subscribe();
+      substanceService.getSubtanceDetails({ facets: facets }).subscribe();
+      substanceService.getSubtanceDetails({ searchTerm: 'test', facets: facets }).subscribe();
+      substanceService.getSubtanceDetails({ pageSize: 15, facets: facets, skip: 1 }).subscribe();
 
       httpClientGetSpy.calls.all().forEach(call => {
         expect(call.args[1].params.getAll('facet'))
@@ -91,15 +97,12 @@ describe('SubstanceService', () => {
     it('if searchTerm passed, q must be added as query param to http call', () => {
       const searchTerm = 'test search term';
 
-      substanceService.getSubtanceDetails(searchTerm, null, null, null, null, null, null, null).subscribe();
-      substanceService.getSubtanceDetails(searchTerm, 'test', null, null, null, null, null, null).subscribe();
-      substanceService.getSubtanceDetails(searchTerm, null, 'test', null, null, null, null, null).subscribe();
-      substanceService.getSubtanceDetails(searchTerm, null, null, 0.5, null, null, null, null).subscribe();
-      substanceService.getSubtanceDetails(searchTerm, null, null, null, true, null, null, null).subscribe();
-      substanceService.getSubtanceDetails(searchTerm, null, null, null, false, null, null, null).subscribe();
-      substanceService.getSubtanceDetails(searchTerm, null, null, null, null, 100, null, null).subscribe();
-      substanceService.getSubtanceDetails(searchTerm, null, null, null, true, null, facets, null).subscribe();
-      substanceService.getSubtanceDetails(searchTerm, null, null, null, true, null, null, 10).subscribe();
+      substanceService.getSubtanceDetails({ searchTerm: searchTerm }).subscribe();
+      substanceService.getSubtanceDetails({ searchTerm: searchTerm, type: 'test' }).subscribe();
+      substanceService.getSubtanceDetails({ searchTerm: searchTerm, cutoff: 0.5 }).subscribe();
+      substanceService.getSubtanceDetails({ searchTerm: searchTerm, pageSize: 100 }).subscribe();
+      substanceService.getSubtanceDetails({ searchTerm: searchTerm, facets: facets }).subscribe();
+      substanceService.getSubtanceDetails({ searchTerm: searchTerm, skip: 10 }).subscribe();
 
       httpClientGetSpy.calls.all().forEach(call => {
         expect(call.args[1].params.get('q'))
@@ -112,14 +115,14 @@ describe('SubstanceService', () => {
         const pageSize = 50;
         const skip = 150;
 
-        substanceService.getSubtanceDetails('test', null, null, null, null, pageSize, null, skip).subscribe();
-        substanceService.getSubtanceDetails(null, null, 'test', null, null, pageSize, null, skip).subscribe();
-        substanceService.getSubtanceDetails(null, null, null, 0.5, null, pageSize, null, skip).subscribe();
-        substanceService.getSubtanceDetails(null, null, null, null, true, pageSize, null, skip).subscribe();
-        substanceService.getSubtanceDetails(null, null, null, null, false, pageSize, null, skip).subscribe();
-        substanceService.getSubtanceDetails(null, null, null, null, null, pageSize, null, skip).subscribe();
-        substanceService.getSubtanceDetails(null, null, null, null, true, pageSize, facets, skip).subscribe();
-        substanceService.getSubtanceDetails(null, null, null, null, true, pageSize, null, skip).subscribe();
+        substanceService.getSubtanceDetails({ searchTerm: 'test', pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubtanceDetails({ type: 'test', pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubtanceDetails({ cutoff: 0.5, pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubtanceDetails({ pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubtanceDetails({ pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubtanceDetails({ pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubtanceDetails({ pageSize: pageSize, facets: facets, skip: skip }).subscribe();
+        substanceService.getSubtanceDetails({ pageSize: pageSize, skip: skip }).subscribe();
 
         httpClientGetSpy.calls.all().forEach(call => {
           expect(call.args[1].params.get('top'))
@@ -138,14 +141,12 @@ describe('SubstanceService', () => {
 
       it('on initial search, call should be made to corrent url and with correct parameters', () => {
 
-        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, null, null, null, null).subscribe();
-        substanceService.getSubtanceDetails(null, structureSearchTerm, 'test', null, null, null, null, null).subscribe();
-        substanceService.getSubtanceDetails(null, structureSearchTerm, null, 0.5, null, null, null, null).subscribe();
-        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, true, null, null, null).subscribe();
-        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, false, null, null, null).subscribe();
-        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, null, 100, null, null).subscribe();
-        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, true, null, facets, null).subscribe();
-        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, true, null, null, 10).subscribe();
+        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm }).subscribe();
+        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, type: 'test' }).subscribe();
+        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, cutoff: 0.5 }).subscribe();
+        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, pageSize: 100 }).subscribe();
+        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, facets: facets }).subscribe();
+        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, skip: 10 }).subscribe();
 
         httpClientGetSpy.calls.all().forEach(call => {
           expect(call.args[0])
@@ -160,29 +161,29 @@ describe('SubstanceService', () => {
         'then immediately make a call to get results. ' +
         'Another call to search the same structure should go straight to get results', async(() => {
 
-        const responseComplete = new Observable(observer => {
-          setTimeout(() => {
-            observer.next(StructureSearchResponseTestData);
-            observer.complete();
-          });
-        });
-
-        httpClientGetSpy.and.returnValue(responseComplete);
-
-        substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, null, null, null, null)
-          .subscribe(response => {
-            const expectedUrl = `api/v1/status(${StructureSearchResponseTestData.key})/results`;
-
-            substanceService.getSubtanceDetails(null, structureSearchTerm, null, null, null, null, null, null)
-            .subscribe(_response => {
-              const allCalls = httpClientGetSpy.calls.all();
-              expect(allCalls[0].args[0]).toEqual('api/v1/substances/structureSearch');
-              expect(allCalls[1].args[0]).toEqual(expectedUrl);
-              expect(allCalls[2].args[0]).toEqual(expectedUrl);
-          });
+          const responseComplete = new Observable(observer => {
+            setTimeout(() => {
+              observer.next(StructureSearchResponseTestData);
+              observer.complete();
+            });
           });
 
-      }));
+          httpClientGetSpy.and.returnValue(responseComplete);
+
+          substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm })
+            .subscribe(response => {
+              const expectedUrl = `api/v1/status(${StructureSearchResponseTestData.key})/results`;
+
+              substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm })
+                .subscribe(_response => {
+                  const allCalls = httpClientGetSpy.calls.all();
+                  expect(allCalls[0].args[0]).toEqual('api/v1/substances/structureSearch');
+                  expect(allCalls[1].args[0]).toEqual(expectedUrl);
+                  expect(allCalls[2].args[0]).toEqual(expectedUrl);
+                });
+            });
+
+        }));
 
     });
 

@@ -11,6 +11,7 @@ import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial
 
 import {environment} from '../environments/environment';
 
+import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 
 const childRoutes: Routes = [
   {
@@ -32,6 +33,10 @@ const childRoutes: Routes = [
   {
     path: 'structure-search',
     component: StructureSearchComponent
+  },
+  {
+    path: 'sequence-search',
+    component: SequenceSearchComponent
   }
 ];
 

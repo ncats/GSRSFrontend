@@ -1,3 +1,5 @@
+@import '../../styles/variables';
+
 .logo {
     height: 35px;
     margin-right: 20px;
@@ -8,7 +10,7 @@
     }
 }
 
-.nav {
+.nav-big {
 
     .nav-item {
         padding: 0 5px;
@@ -32,21 +34,18 @@
     }
 }
 
-.search-form-field {
-    width: 300px;
-    
-    .mat-input-element {
-        font-size: 16px;
-    }
+.nav-small {
+    padding-right: 10px;
+}
 
-    ::ng-deep .mat-form-field-label {
-        font-size: 16px;
-        top: 1.98125em;
+@media(max-width: $nav-breaking-point) {
+    .nav-big {
+        display: none;
     }
 }
 
-.substance-suggestion-field {
-    padding: 8px 6px;
-    color: #666666;
-    overflow: hidden;
+@media(min-width: $nav-breaking-point) {
+    .nav-small {
+        display: none;
+    }
 }

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubstanceNotesComponent } from './substance-notes.component';
+import { MatTableModule } from '@angular/material/table';
+import { CdkTableModule } from '@angular/cdk/table';
 
 describe('SubstanceNotesComponent', () => {
   let component: SubstanceNotesComponent;
@@ -8,7 +9,13 @@ describe('SubstanceNotesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceNotesComponent ]
+      imports: [
+        MatTableModule,
+        CdkTableModule
+      ],
+      declarations: [
+        SubstanceNotesComponent
+      ]
     })
     .compileComponents();
   }));

@@ -1,9 +1,20 @@
 {
-    "apiBaseUrl": "https://ginas.ncats.nih.gov/ginas/app/",
+
     "substanceDetailsCards": [
         {
             "card":"substance-overview",
             "title": "overview"    
+        },
+        {
+          "card":"substance-primary-definition",
+          "title": "primary definition",
+          "filters":[
+            {
+              "filterName":"equals",
+              "propertyToCheck": "definitionType",
+              "value": "ALTERNATIVE"
+            }
+          ]
         },
         {
             "card":"structure-details",
@@ -57,6 +68,51 @@
                 }
             ]            
         },
+      {
+        "card":"substance-glycosylation",
+        "title": "glycosylation",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "protein"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "protein.glycosylation.glycosylationType"
+          }
+        ]
+      },
+      {
+        "card":"substance-disulfide-links",
+        "title": "disulfide links",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "protein"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "protein.disulfideLinks"
+          }
+        ]
+      },
+      {
+        "card":"substance-other-links",
+        "title": "other links",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "protein"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "protein.otherLinks"
+          }
+        ]
+      },
         {
             "card":"substance-relationships",
             "filters":[
@@ -107,7 +163,124 @@
                     "propertyToCheck": "moieties"
                 }
             ]            
-        }
+        },
+      {
+        "card":"substance-concept-definition",
+        "title": "concept definition",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "concept"
+          }
+        ]
+      },
+      {
+        "card":"substance-polymer-structure",
+        "title": "display structure",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "polymer"
+          }
+        ]
+      },
+      {
+        "card":"substance-monomers",
+        "title": "monomers",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "polymer"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "polymer.monomers"
+          }
+        ]
+      },
+      {
+        "card":"substance-mixture-components",
+        "title": "mixture components",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "mixture"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "mixture.components"
+          }
+        ]
+      },
+      {
+        "card":"substance-mixture-source",
+        "title": "mixture source",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "mixture"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "mixture.parentSubstance"
+          }
+        ]
+      },
+      {
+        "card":"substance-modifications",
+        "title": "substance modifications",
+        "filters":[
+          {
+            "filterName":"exists",
+            "propertyToCheck": "modifications.structuralModifications"
+          }
+        ]
+      },
+      {
+        "card":"substance-na-sugars",
+        "title": "sugars",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "nucleicAcid"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "nucleicAcid.sugars"
+          }
+        ]
+      },
+      {
+        "card":"substance-na-linkages",
+        "title": "linkages",
+        "filters":[
+          {
+            "filterName":"equals",
+            "propertyToCheck": "substanceClass",
+            "value": "nucleicAcid"
+          },
+          {
+            "filterName":"exists",
+            "propertyToCheck": "nucleicAcid.linkages"
+          }
+        ]
+      },
+      {
+        "card":"substance-properties",
+        "title": "characteristic attributes",
+        "filters":[
+          {
+            "filterName":"exists",
+            "propertyToCheck": "properties"
+          }
+        ]
+      }
     ],
     "facets": {
         "default": [
@@ -139,5 +312,23 @@
             "Product Name Type",
             "Product Dosage Form"
         ]
-    }
+    },
+    "specialRelationships": [
+        {
+            "type": "METABOLITE",
+            "display": "metabolites"
+        },
+        {
+            "type": "IMPURITY",
+            "display": "impurities"
+        },
+        {
+            "type": "ACTIVE MOIETY",
+            "display": "active moiety"
+        },
+        {
+            "type": "CONSTITUENT",
+            "display": "constituents"
+        }
+    ]
 }

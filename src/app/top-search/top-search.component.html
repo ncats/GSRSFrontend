@@ -1,0 +1,25 @@
+<div class="search-container">
+    <form>
+      <mat-form-field [floatLabel]="'never'" class="search-form-field space-right-small">
+        <input class="search" type="text" placeholder="Search" aria-label="Search substances" matInput [formControl]="searchControl"
+          [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="substanceSearchOptionSelected($event)">
+          <div *ngFor="let field of suggestionsFields">
+            <div class="substance-suggestion-field">{{field}}</div>
+            <mat-option *ngFor="let suggestion of substanceSuggestionsGroup[field]" [value]="suggestion.key">
+              <div>{{suggestion.key}}</div>
+            </mat-option>
+          </div>
+        </mat-autocomplete>
+      </mat-form-field>
+      <button class="search-button" mat-icon-button (click)="processSubstanceSearch()" [disabled]="searchControl.invalid">
+        <mat-icon svgIcon="search"></mat-icon>
+      </button>
+      <button class="close-button" mat-icon-button (click)="deactivateSearch()">
+        <mat-icon svgIcon="close"></mat-icon>
+      </button>
+      <button class="activate-search-button" mat-icon-button (click)="activateSearch()">
+        <mat-icon svgIcon="search"></mat-icon>
+      </button>
+    </form>
+  </div>

@@ -11,16 +11,17 @@ import { asyncData } from '../../../testing/async-observable-helpers';
 import { MolFile } from '../../../testing/mol-file';
 import { MatDialogRefStub } from '../../../testing/mat-dialog-ref-stub';
 import { throwError } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('StructureImportComponent', () => {
   let component: StructureImportComponent;
   let fixture: ComponentFixture<StructureImportComponent>;
   let matDialogRefStub: Partial<MatDialogRef<StructureImportComponent>>;
-  let postSubstanceSpy: jasmine.Spy;
+  let postSubstanceStructureSpy: jasmine.Spy;
 
   beforeEach(async(() => {
-    const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['postSubstance']);
-    postSubstanceSpy = substanceServiceSpy.postSubstance.and.returnValue(asyncData(StructurePostResponseData));
+    const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['postSubstanceStructure']);
+    postSubstanceStructureSpy = substanceServiceSpy.postSubstanceStructure.and.returnValue(asyncData(StructurePostResponseData));
     matDialogRefStub = new MatDialogRefStub();
 
     TestBed.configureTestingModule({
@@ -28,7 +29,8 @@ describe('StructureImportComponent', () => {
         ReactiveFormsModule,
         MatProgressBarModule,
         MatDialogModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        NoopAnimationsModule
       ],
       declarations: [
         StructureImportComponent
@@ -79,11 +81,11 @@ describe('StructureImportComponent', () => {
       textAreaElement.dispatchEvent(new Event('input'));
       importButtonElement.click();
       fixture.detectChanges();
-      expect(postSubstanceSpy.calls.count()).toBe(1, 'should have been called once');
+      expect(postSubstanceStructureSpy.calls.count()).toBe(1, 'should have been called once');
     }));
 
     it('after import call, if response is empty object, an error message should be displayed', async(() => {
-      postSubstanceSpy.and.returnValue(asyncData({}));
+      postSubstanceStructureSpy.and.returnValue(asyncData({}));
       textAreaElement.value = 'test for error';
       textAreaElement.dispatchEvent(new Event('input'));
       importButtonElement.click();
@@ -97,7 +99,7 @@ describe('StructureImportComponent', () => {
     }));
 
     it('after import call, if error, an error message should be displayed', async(() => {
-      postSubstanceSpy.and.returnValue(asyncData(throwError('test error')));
+      postSubstanceStructureSpy.and.returnValue(asyncData(throwError('test error')));
       textAreaElement.value = 'test for error';
       textAreaElement.dispatchEvent(new Event('input'));
       importButtonElement.click();

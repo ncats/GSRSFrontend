@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceReference } from '../../substance/substance.model';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
-import { PageEvent } from '@angular/material/paginator';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-substance-references',
