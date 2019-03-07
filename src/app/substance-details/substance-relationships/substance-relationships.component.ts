@@ -4,6 +4,7 @@ import { SubstanceRelationship } from '../../substance/substance.model';
 import { SafeUrl } from '@angular/platform-browser';
 import {UtilsService} from '../../utils/utils.service';
 import { ConfigService } from '../../config/config.service';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-substance-relationships',
@@ -13,11 +14,12 @@ import { ConfigService } from '../../config/config.service';
 export class SubstanceRelationshipsComponent extends SubstanceCardBase implements OnInit {
   type: string;
   relationships: Array<SubstanceRelationship> = [];
-  displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details'];
+  displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details', 'references'];
 
   constructor(
     private utilService: UtilsService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private dialog: MatDialog
   ) {
     super();
   }
@@ -26,6 +28,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
     if (this.substance != null && this.type != null) {
       this.filterRelationhships();
     }
+
   }
 
   private filterRelationhships(): void {
@@ -53,10 +56,18 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
         }
       });
     }
+    console.log(this.relationships);
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilService.getSafeStructureImgUrl(structureId, size);
+  }
+
+  openModal(templateRef) {
+    let dialogRef = this.dialog.open(templateRef, {});
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
 }

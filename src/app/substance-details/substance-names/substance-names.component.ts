@@ -3,6 +3,7 @@ import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-l
 import { SubstanceName } from '../../substance/substance.model';
 import { UtilsService } from '../../utils/utils.service';
 import { VocabularyTerm } from '../../utils/vocabulary.model';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-substance-names',
@@ -11,12 +12,13 @@ import { VocabularyTerm } from '../../utils/vocabulary.model';
 })
 export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit {
   names: Array<SubstanceName>;
-  displayedColumns: string[] = ['name', 'type', 'language'];
+  displayedColumns: string[] = ['name', 'type', 'language', 'references'];
   languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
 
   constructor(
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private dialog: MatDialog
   ) {
     super();
   }
@@ -62,6 +64,16 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     } else {
       return '';
     }
+  }
+
+  openModal(templateRef) {
+    const dialogRef = this.dialog.open(templateRef, {
+      minWidth: '40%',
+      maxWidth: '90%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
 }

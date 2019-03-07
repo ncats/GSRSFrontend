@@ -11,4 +11,15 @@
     <div class="name">Record Version</div>
     <div class="value blue-font">{{substance.version}}</div>
   </div>
+  <div *ngIf = "references?.length > 0">
+  <a (click) = "showDef = !showDef" ng-init = "showDef">show definitional references </a>
+
+    <div [hidden]="!showDef">
+      <app-references-manager  [substance]="substance" [references]="references" ></app-references-manager>
+
+    </div>
+
+
+
+  </div>
 </div>

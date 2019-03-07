@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { SubstanceCode } from '../../substance/substance.model';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-substance-codes',
@@ -12,7 +13,9 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   codes: Array<SubstanceCode> = [];
   displayedColumns: string[];
 
-  constructor() {
+  constructor(
+    private dialog: MatDialog
+  ) {
     super();
   }
 
@@ -20,9 +23,9 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     if (this.substance != null && this.type != null) {
 
       if (this.type === 'classification') {
-        this.displayedColumns = ['classificationTree', 'codeSystem', 'code'];
+        this.displayedColumns = ['classificationTree', 'codeSystem', 'code', 'references'];
       } else {
-        this.displayedColumns = ['codeSystem', 'code', 'type', 'description'];
+        this.displayedColumns = ['codeSystem', 'code', 'type', 'description', 'references'];
       }
 
       this.filterSubstanceCodes();
@@ -56,5 +59,15 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
 
   getClassificationTree(comments: string): Array<string> {
     return comments.split('|');
+  }
+
+  openModal(templateRef) {
+    const dialogRef = this.dialog.open(templateRef, {
+      minWidth: '40%',
+      maxWidth: '90%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 }

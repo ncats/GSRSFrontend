@@ -95,6 +95,7 @@ export interface Mixture extends SubstanceBase {
   uuid: string;
   components: Array<MixtureComponents>;
   parentSubstance?: SubstanceRelated;
+  references: Array<string>;
 }
 
 export interface MixtureComponents extends Mixture {
@@ -199,6 +200,7 @@ export interface SubstanceReference extends SubstanceBase {
     url?: string;
     _self: string;
     documentDate?: number;
+    lastEdited: number;
 }
 
 export interface SubstanceModifications extends SubstanceBase {

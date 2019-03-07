@@ -10,6 +10,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
+import {MatDialogModule} from '@angular/material';
 
 @NgModule({
   imports: [
@@ -23,7 +25,9 @@ import { MatIconModule } from '@angular/material/icon';
     FormsModule,
     MatTreeModule,
     RouterModule,
-    MatIconModule
+    MatIconModule,
+    ReferencesManagerModule,
+    MatDialogModule
   ],
   declarations: [SubstanceCodesComponent]
 })

@@ -25,6 +25,18 @@
       <td mat-cell *matCellDef="let relationship"> {{relationship.comments}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="references">
+      <th mat-header-cell *matHeaderCellDef> References </th>
+      <td mat-cell *matCellDef="let relationship">
+        <button class = "mat-raised-button mat-primary" (click)="openModal(refTemplate)" [disabled]="relationship.references.length <= 0">View {{relationship.references.length > 0? relationship.references.length : ''}} references</button>
+        <ng-template #refTemplate>
+          <button class = "modal-close mat-raised-button mat-primary" mat-dialog-close> close </button>
+          <h2 mat-dialog-title>References</h2>
+          <app-references-manager [substance] = "substance" [references] = "relationship.references"></app-references-manager>
+        </ng-template>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
