@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -6,8 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  roundLogoSrcPath: string;
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.roundLogoSrcPath = `${environment.baseHref || '/'}assets/images/gsrs-logo-round.svg`;
+  }
 }

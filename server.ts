@@ -43,7 +43,18 @@ app.get('/api/*', (req, res) => {
 });
 
 // Server static files from /browser
-app.get('*.*', express.static(join(DIST_FOLDER, 'browser')));
+// app.get('*.*', express.static(join(DIST_FOLDER, 'browser')));
+
+// START test implementation in java/play server
+app.get('/ginas/app/beta*.*', (req, res) => {
+  console.log(req.path);
+  const path = req.path.replace('/ginas/app/beta', '');
+  res.sendFile(join(DIST_FOLDER, 'browser' + path));
+});
+app.get('*.*', (req, res) => {
+  res.status(404).send('Add the right path buddy!');
+});
+// END
 
 // All regular routes use the Universal engine
 app.get('*', (req, res) => {
