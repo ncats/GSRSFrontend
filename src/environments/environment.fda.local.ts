@@ -13,4 +13,4 @@ environment.navItems = [
     }
 ];
 
-export { AbaseModule as EnvironmentModule } from '../app/abase.module';
+export { FdaModule as EnvironmentModule } from '../app/fda.module';

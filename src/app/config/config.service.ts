@@ -11,12 +11,14 @@ export class ConfigService {
 
     // This is the method you want to call at bootstrap
     // Important: It should return a Promise
-    load(apiBaseUrl?: string): Promise<any> {
+    load(apiBaseUrl?: string, baseHref?: string): Promise<any> {
 
         this._configData = null;
+        console.log(baseHref);
+        const configFilePath = `${baseHref || '/'}assets/data/config.json`;
 
         return this.http
-            .get('/assets/data/config.json')
+            .get(configFilePath)
             .toPromise()
             .then((data: Config) => {
                 if (data.apiBaseUrl == null && apiBaseUrl != null) {

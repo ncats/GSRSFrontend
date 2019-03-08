@@ -6,14 +6,14 @@ import { Router } from '@angular/router';
 import { FdaInheritanceSampleComponent } from './inheritance-sample/fda-inheritance-sample/fda-inheritance-sample.component';
 
 const fdaRoutes: Routes = [
-  {
-    path: 'fda-sample-path',
-    component: FdaSampleComponent
-  },
-  {
-    path: 'fda-sample-inheritance',
-    component: FdaInheritanceSampleComponent
-  }
+  // {
+  //   path: 'fda-sample-path',
+  //   component: FdaSampleComponent
+  // },
+  // {
+  //   path: 'fda-sample-inheritance',
+  //   component: FdaInheritanceSampleComponent
+  // }
 ];
 
 @NgModule({

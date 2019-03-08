@@ -23,6 +23,7 @@ export class CoreComponent implements OnInit {
       path: 'sequence-search'
     }
   ];
+  logoSrcPath: string;
 
   constructor(
     private router: Router
@@ -33,6 +34,8 @@ export class CoreComponent implements OnInit {
     if (environment.navItems && environment.navItems.length) {
       this.navItems.concat(environment.navItems);
     }
+
+    this.logoSrcPath = `${environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
 
     this.router.events.subscribe((event: RouterEvent) => {
 

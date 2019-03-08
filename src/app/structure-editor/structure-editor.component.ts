@@ -15,16 +15,19 @@ export class StructureEditorComponent implements OnInit {
   private jsdraw: JSDraw;
   structureEditor: string;
   private jsdrawScriptUrls = [
-    '/node_modules/dojo/dojo.js',
-    '/assets/jsdraw/Scilligence.JSDraw2.Pro.js',
-    '/assets/jsdraw/Scilligence.JSDraw2.Resources.js'
+    `${environment.baseHref || '/'}assets/dojo/dojo.js`,
+    `${environment.baseHref || '/'}assets/jsdraw/Scilligence.JSDraw2.Pro.js`,
+    `${environment.baseHref || '/'}assets/jsdraw/Scilligence.JSDraw2.Resources.js`
   ];
+  ketcherFilePath: string;
 
-  constructor() {
-    this.structureEditor =  environment.structureEditor;
-  }
+  constructor() {}
 
   ngOnInit() {
+
+    this.ketcherFilePath = `${environment.baseHref || '/'}assets/ketcher/ketcher.html`;
+
+    this.structureEditor =  environment.structureEditor;
 
     if (environment.structureEditor === 'jsdraw' && !window['JSDraw']) {
 
