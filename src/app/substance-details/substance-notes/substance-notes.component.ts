@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceNote } from '../../substance/substance.model';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-substance-notes',
@@ -9,9 +10,12 @@ import { SubstanceNote } from '../../substance/substance.model';
 })
 export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit {
   notes: Array<SubstanceNote> = [];
-  displayedColumns: string[] = ['note'];
+  displayedColumns: string[] = ['note', 'references'];
 
-  constructor() {
+
+  constructor(
+    private dialog: MatDialog
+  ) {
     super();
   }
 
@@ -19,6 +23,17 @@ export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit
     if (this.substance != null && this.substance.notes != null && this.substance.notes.length) {
       this.notes = this.substance.notes;
     }
+  }
+
+
+  openModal(templateRef) {
+    const dialogRef = this.dialog.open(templateRef, {
+      minWidth: '40%',
+      maxWidth: '90%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
 }

@@ -1,4 +1,5 @@
-<div class="structure-card-content" *ngIf="structure">
+<div  *ngIf="structure">
+  <div class="structure-card-content">
   <div>
     <div class="name-value">
       <div class="name">Stereochemistry</div>
@@ -28,8 +29,39 @@
       <div class="name">Charge</div>
       <div class="value gray-pill">{{structure.charge}}</div>
     </div>
+      <div class = "name-value" *ngIf = "structure.references?.length > 0" >
+        <div class = "name">
+          <a (click) = "toggleReferences()" class = 'blue-font references-link'>
+            <span>{{showDef === false ? 'Show' : 'Hide'}} References</span><mat-icon svgIcon="{{defIcon}}"></mat-icon>
+          </a>
+        </div>
+      </div>
+      <div class = "name-value" *ngIf = "structure.smiles" >
+        <div class = "name">
+          <a (click) = "toggleSmiles()" class = 'blue-font references-link'>
+            <span>{{showSmiles === false ? 'Show' : 'Hide'}} SMILES / InChi</span><mat-icon svgIcon="{{smilesIcon}}"></mat-icon>
+          </a>
+        </div>
+      </div>
   </div>
   <div class="structure-image-container">
     <img class="structure-img" [src]="getSafeStructureImgUrl(structure.id)">
   </div>
+</div>
+</div>
+
+<div style = "width:100%" >
+
+  <div [hidden]="!showDef" style = "min-width:50%;">
+    <h3>References</h3>
+    <app-references-manager  [substance]="substance" [references]="structure.references" ></app-references-manager>
+  </div>
+
+  <div [hidden]="!showSmiles" style = "width:100%">
+    <h3>SMILES:</h3>
+    <p>{{structure.smiles}}</p>
+    <h3>InChi</h3>
+    <p>{{inchi}}</p>
+  </div>
+
 </div>

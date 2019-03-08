@@ -21,7 +21,6 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
 
   ngOnInit() {
     if (this.substance != null && this.type != null) {
-
       if (this.type === 'classification') {
         this.displayedColumns = ['classificationTree', 'codeSystem', 'code', 'references'];
       } else {
@@ -50,7 +49,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       this.substance.codes.forEach(code => {
         if (code.comments && code.comments.indexOf('|') > -1 && this.type === 'classification') {
           this.codes.push(code);
-        } else if (code.comments && code.comments.indexOf('|') === -1 && this.type === 'identifiers') {
+        } else if (this.type === 'identifiers') {
           this.codes.push(code);
         }
       });

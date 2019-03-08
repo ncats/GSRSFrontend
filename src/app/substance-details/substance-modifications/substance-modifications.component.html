@@ -36,14 +36,14 @@
     <ng-container matColumnDef="Modification Agent">
       <th mat-header-cell *matHeaderCellDef> Modification Agent </th>
       <td mat-cell *matCellDef="let agent">
-        {{agent.agentSubstance.refPname}}
+        {{agent.agentSubstance?.refPname}}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="Approved ID">
       <th mat-header-cell *matHeaderCellDef> Approved ID </th>
       <td mat-cell *matCellDef="let agent">
-        {{agent.agentSubstance.linkingID}}
+        {{agent.agentSubstance?.linkingID}}
       </td>
     </ng-container>
 

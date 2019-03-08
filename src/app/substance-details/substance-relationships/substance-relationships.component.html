@@ -1,12 +1,25 @@
+<div class="flex-row">
+  <span class="middle-fill"></span>
+  <mat-form-field [floatLabel]="'never'" class="search">
+    <input matInput placeholder="Search" [formControl]="searchControl">
+  </mat-form-field>
+</div>
 <div class="responsive">
-  <table class="no-bottom-border" mat-table [dataSource]="relationships">
+  <table mat-table [dataSource]="paged">
 
-    <ng-container matColumnDef="relatedRecord">
+  <ng-container matColumnDef="relatedRecord">
       <th mat-header-cell *matHeaderCellDef> Related Record </th>
       <td class="text-center" mat-cell *matCellDef="let relationship">
-        <div>{{relationship.relatedSubstance.linkingID}}</div>
-        <img class="structure-image" [src]="getSafeStructureImgUrl(relationship.relatedSubstance.refuuid)">
-        <div>{{relationship.relatedSubstance.name}}</div>
+        <div class = "thumb-col">
+          <div>{{relationship.relatedSubstance.linkingID}}</div>
+          <img class="structure-image" [src]="getSafeStructureImgUrl(relationship.relatedSubstance.refuuid)">
+          <div>
+            <a class="substance-name" [routerLink]="['/substances', relationship.relatedSubstance.refuuid]" >
+              {{relationship.relatedSubstance.name}}
+            </a>
+          </div>
+        </div>
+
       </td>
     </ng-container>
 
@@ -29,11 +42,18 @@
       <th mat-header-cell *matHeaderCellDef> References </th>
       <td mat-cell *matCellDef="let relationship">
         <button class = "mat-raised-button mat-primary" (click)="openModal(refTemplate)" [disabled]="relationship.references.length <= 0">View {{relationship.references.length > 0? relationship.references.length : ''}} references</button>
+
         <ng-template #refTemplate>
-          <button class = "modal-close mat-raised-button mat-primary" mat-dialog-close> close </button>
           <h2 mat-dialog-title>References</h2>
-          <app-references-manager [substance] = "substance" [references] = "relationship.references"></app-references-manager>
+          <div mat-dialog-content>
+            <app-references-manager [substance] = "substance" [references] = "relationship.references"></app-references-manager>
+          </div>
+          <div mat-dialog-actions>
+            <span class="middle-fill"></span>
+            <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+          </div>
         </ng-template>
+
       </td>
     </ng-container>
 
@@ -41,3 +61,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
+<mat-paginator [length]="filtered && filtered.length || 0" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event)"
+               [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>

@@ -1,4 +1,4 @@
-<img class="structure-image" *ngIf="structure" [src]="getSafeStructureImgUrl(structure)">
+<img class="structure-image structure-modal" *ngIf="structure" [src]="getSafeStructureImgUrl(structure)">
 <mat-tab-group *ngIf="smiles">
   <mat-tab label="Systematic Names">
     <h2>Systematic Names:</h2>
@@ -30,4 +30,9 @@
       {{name}}
     </li>
   </ul>
+</div>
+<div class = 'flex-row'>
+  <span class="middle-fill"></span>
+  <button class = "modal-space-saver" mat-button (click)="dismissDialog()">Close</button>
+
 </div>

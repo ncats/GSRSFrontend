@@ -1,8 +1,4 @@
 <div class="flex-row">
-
-
-  <br/>
-  <app-references-manager [subUUID] = "substance.uuid"> test</app-references-manager>
   <span class="middle-fill"></span>
   <mat-form-field [floatLabel]="'never'" class="search">
     <input matInput placeholder="Search" [formControl]="searchControl">
@@ -30,16 +26,20 @@
     <ng-container matColumnDef="references">
       <th mat-header-cell *matHeaderCellDef> References </th>
       <td mat-cell *matCellDef="let name">
-        <button class = "mat-raised-button mat-primary" (click)="openModal(refTemplate)"  [disabled]="name.references.length <= 0">View</button>
+        <button class = "mat-raised-button mat-primary dialog-close" (click)="openModal(refTemplate)"  [disabled]="name.references.length <= 0">View</button>
 
         <ng-template #refTemplate>
-          <button class = "dialog-close mat-raised-button mat-primary" mat-dialog-close> close </button>
           <h2 mat-dialog-title>References</h2>
-          <app-references-manager [substance] = "substance" [references] = "name.references"></app-references-manager></ng-template>
+          <div mat-dialog-content>
+            <app-references-manager [substance] = "substance" [references] = "name.references"></app-references-manager>
+          </div>
+            <div mat-dialog-actions>
+              <span class="middle-fill"></span>
+              <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+            </div>
+        </ng-template>
       </td>
     </ng-container>
-
-
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

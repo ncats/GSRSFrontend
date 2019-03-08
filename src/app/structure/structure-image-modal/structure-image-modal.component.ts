@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UtilsService } from '../../utils/utils.service';
-import { MAT_DIALOG_DATA, } from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material';
 import { SafeUrl } from '@angular/platform-browser';
 import { StructureService } from '../structure.service';
 
@@ -17,6 +17,7 @@ export class StructureImageModalComponent implements OnInit {
   constructor(
     private utilsService: UtilsService,
     private structureService: StructureService,
+    public dialogRef: MatDialogRef<StructureImageModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
@@ -39,6 +40,10 @@ export class StructureImageModalComponent implements OnInit {
 
   getSafeStructureImgUrl(structureId: string, size: number = 600): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size);
+  }
+
+  dismissDialog(): void {
+    this.dialogRef.close();
   }
 
 }

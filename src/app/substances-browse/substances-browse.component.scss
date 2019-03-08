@@ -285,7 +285,10 @@
 
         ::ng-deep {
 
-            .mat-paginator-range-label {
+            .mat-paginator-range-l.references-link{
+  display: inline-flex;
+  vertical-align: middle;
+}abel {
                 margin: 0 3px 0 0;
             }
 
@@ -329,3 +332,14 @@
 .zoom{
   cursor:zoom-in;
 }
+
+.icon-align{
+  margin-top: -10px;
+  vertical-align: bottom;
+}
+
+.ext-link{
+  color: #448aff;
+  text-decoration-style: unset;
+}
+

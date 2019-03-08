@@ -20,7 +20,6 @@ export class ReferencesManagerComponent implements OnInit {
   constructor(private substanceService: SubstanceService) { }
 
   ngOnInit() {
-    console.log(this.substance);
     if (this.substance) {
       this.subRef = this.substance.references;
     } else if (this.subUUID) {
@@ -41,7 +40,6 @@ export class ReferencesManagerComponent implements OnInit {
       this.substance.references.forEach(ref => {
         const uuid = ref.uuid;
         if (this.references.indexOf(uuid) > -1) {
-
           this.matchedRef.push(ref);
         }
       });

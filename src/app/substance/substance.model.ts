@@ -57,9 +57,18 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
 export interface StructurallyDiverse extends SubstanceBase {
     sourceMaterialClass: string;
     sourceMaterialType: string;
+    sourceMaterialState: string;
     part: Array<string>;
     parentSubstance: SubstanceRelated;
     references: Array<string>;
+    organismFamily: string;
+    organismGenus: string;
+    organismSpecies: string;
+    organismAuthor: string;
+    developmentalStage: string;
+    fractionMaterialType: string;
+    fractionName: string;
+
 }
 
 export interface Polymer extends SubstanceBase {

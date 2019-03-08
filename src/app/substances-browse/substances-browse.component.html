@@ -145,8 +145,8 @@
                 <div class="substance-data substance-names" *ngIf="substance.names && substance.names.length">
                   <div class="label">Names:</div>
                   <div>
-                    <div class="value space-bottom" *ngFor="let nameObject of substance.names | take: 5">
-                      {{nameObject.name}}
+                    <div class="value space-bottom"  *ngFor="let nameObject of substance.names | take: 5" >
+                      {{nameObject.name}} <span *ngIf = "nameObject.displayName == true" matTooltip="Accepted Name" > <mat-icon class = "icon-align blue-font"  svgIcon="done"></mat-icon></span>
                     </div>
                   </div>
                 </div>
@@ -156,7 +156,11 @@
                     <div class="margin-bottom" *ngFor="let codeSystemName of substance.codeSystemNames | take: 5">
                       <div class="code-system">
                         <span class="label">{{codeSystemName}}</span>:&nbsp;
-                        <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">{{codeObject.code.trim()}}
+                        <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">
+                          <span *ngIf = "codeObject.url"><a class = "ext-link" href = "{{codeObject.url}}">{{codeObject.code.trim()}}
+                           <!-- <mat-icon class = "icon-align" svgIcon = "link"></mat-icon>-->
+                          </a></span>
+                          <span *ngIf = "!codeObject.url">{{codeObject.code.trim()}}</span>
                           <span *ngIf="!isLast">, </span>
                         </span>
                       </div>
@@ -169,6 +173,29 @@
                     {{substance.relationships.length}}
                   </div>
                 </div>
+                <div class="substance-data" *ngIf="substance.structure?.mwt">
+                  <div class="label">Mol. Weight:</div>
+                  <div>
+                    <span class="value">{{substance.structure.mwt}}</span>
+                  </div>
+                </div>
+                <div class="substance-data" *ngIf="substance.structure?.formula">
+                  <div class="label">Formula:</div>
+                  <div>
+                    <span class="value">{{substance.structure.formula}}</span>
+                  </div>
+                </div>
+                <div class="substance-data" *ngIf="substance.structurallyDiverse?.part">
+                  <div class="label">Part:</div>
+                  <div>
+                    <span class="blue-pill">
+                      <span *ngFor = "let part of substance.structurallyDiverse.part; last as isLast">
+                        {{part}}<span *ngIf="!isLast">, </span>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
               </div>
             </div>
           </mat-card-content>

@@ -77,7 +77,11 @@
   text-align:center;
   padding-left:5px;
   padding-right:5px;
-  max-width:250px;
+  max-width:280px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
 }
 
 .image-thumb{
@@ -104,7 +108,25 @@
   border-radius: 10px;
 }
 
+.black-pill, .gray-pill, .blue-pill {
+  color: white;
+  padding: 1px 7px;
+  border-radius: 11px;
+}
+
+.black-pill {
+  background-color: black;
+}
+
+.gray-pill {
+  background-color: gray;
+}
+
+.blue-pill {
+  background-color:#448aff;
+}
+
 .dialog-close{
-  margin-top:0px;
+  margin-top:10px;
   float:right;
 }

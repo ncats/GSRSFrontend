@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail} from '../../substance/substance.model';
+import {SafeUrl} from '@angular/platform-browser';
+import {UtilsService} from '../../utils/utils.service';
 
 @Component({
   selector: 'app-substance-overview',
@@ -10,12 +12,14 @@ import {SubstanceDetail} from '../../substance/substance.model';
 export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit {
   references: string[] = [];
   showDef = false;
-  constructor() {
+  defIcon = 'drop_down';
+  constructor(private utilsService: UtilsService) {
     super();
   }
 
   ngOnInit() {
     this.getSubtypeRefs(this.substance);
+
   }
 
   getSubtypeRefs(substance: SubstanceDetail): void  {
@@ -34,5 +38,19 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     }
 
   }
+
+  toggleReferences() {
+    this.showDef = !this.showDef;
+    if (!this.showDef) {
+      this.defIcon = 'drop_down';
+    } else {
+      this.defIcon = 'drop_up';
+    }
+  }
+
+  getSafeStructureImgUrl(structureId: string, size: number = 400): SafeUrl {
+    return this.utilsService.getSafeStructureImgUrl(structureId, size);
+  }
+
 
 }

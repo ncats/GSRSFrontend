@@ -13,9 +13,15 @@ import {UtilsService} from '../../utils/utils.service';
 })
 export class StructureDetailsComponent extends SubstanceCardBase implements OnInit {
   structure: SubstanceStructure;
+  showDef = false;
+  showSmiles = false;
+  defIcon = 'drop_down';
+  smilesIcon = 'drop_down';
+  inchi: string;
 
   constructor(
-    private utilService: UtilsService
+    private utilService: UtilsService,
+    private structureService: StructureService
   ) {
     super();
   }
@@ -23,11 +29,34 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   ngOnInit() {
     if (this.substance != null) {
       this.structure = this.substance.structure;
+      if (this.structure.smiles) {
+        this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
+          this.inchi = inchi;
+        });
+      }
     }
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilService.getSafeStructureImgUrl(structureId, size);
+  }
+
+  toggleReferences() {
+    this.showDef = !this.showDef;
+    if (!this.showDef) {
+      this.defIcon = 'drop_down';
+    } else {
+      this.defIcon = 'drop_up';
+    }
+  }
+
+  toggleSmiles() {
+    this.showSmiles = !this.showSmiles;
+    if (!this.showSmiles) {
+      this.smilesIcon = 'drop_down';
+    } else {
+      this.smilesIcon = 'drop_up';
+    }
   }
 
 }

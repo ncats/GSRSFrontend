@@ -5,13 +5,14 @@ import { SafeUrl } from '@angular/platform-browser';
 import {UtilsService} from '../../utils/utils.service';
 import { ConfigService } from '../../config/config.service';
 import {MatDialog} from '@angular/material';
+import {SubstanceCardBaseFilteredList} from '../substance-card-base-filtered-list';
 
 @Component({
   selector: 'app-substance-relationships',
   templateUrl: './substance-relationships.component.html',
   styleUrls: ['./substance-relationships.component.scss']
 })
-export class SubstanceRelationshipsComponent extends SubstanceCardBase implements OnInit {
+export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship> implements OnInit {
   type: string;
   relationships: Array<SubstanceRelationship> = [];
   displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details', 'references'];
@@ -27,6 +28,14 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
   ngOnInit() {
     if (this.substance != null && this.type != null) {
       this.filterRelationhships();
+
+      this.filtered = this.substance.relationships;
+      this.pageChange();
+      this.searchControl.valueChanges.subscribe(value => {
+        this.filterList(value, this.relationships);
+      }, error => {
+        console.log(error);
+      });
     }
 
   }
@@ -56,7 +65,6 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
         }
       });
     }
-    console.log(this.relationships);
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
@@ -64,7 +72,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBase implement
   }
 
   openModal(templateRef) {
-    let dialogRef = this.dialog.open(templateRef, {});
+    const dialogRef = this.dialog.open(templateRef, {});
 
     dialogRef.afterClosed().subscribe(result => {
     });

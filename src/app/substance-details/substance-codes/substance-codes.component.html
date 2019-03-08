@@ -41,10 +41,16 @@
       <th mat-header-cell *matHeaderCellDef> References </th>
       <td mat-cell *matCellDef="let code">
         <button class = "mat-raised-button mat-primary" (click)="openModal(refTemplate)" [disabled]="code.references.length <= 0" >View</button>
+
         <ng-template #refTemplate>
-          <button class = "dialog-close mat-raised-button mat-primary" mat-dialog-close> close </button>
           <h2 mat-dialog-title>References</h2>
-          <app-references-manager [substance] = "substance" [references] = "code.references"></app-references-manager>
+          <div mat-dialog-content>
+            <app-references-manager [substance] = "substance" [references] = "code.references"></app-references-manager>
+          </div>
+          <div mat-dialog-actions>
+            <span class="middle-fill"></span>
+            <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+          </div>
         </ng-template>
       </td>
     </ng-container>

@@ -4,7 +4,10 @@ import { SubstanceRelationshipsComponent } from './substance-relationships.compo
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { MatTableModule } from '@angular/material/table';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
-import {MatIconModule, MatDialogModule} from '@angular/material';
+import {MatIconModule, MatDialogModule, MatPaginatorModule, MatFormFieldModule, MatInputModule} from '@angular/material';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {CdkTableModule} from '@angular/cdk/table';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
@@ -13,7 +16,14 @@ import {MatIconModule, MatDialogModule} from '@angular/material';
     MatTableModule,
     ReferencesManagerModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatPaginatorModule,
+    FormsModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    CdkTableModule,
+    RouterModule
   ],
   declarations: [SubstanceRelationshipsComponent]
 })

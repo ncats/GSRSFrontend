@@ -48,5 +48,30 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'zoom_in',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-zoom_in-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'chevron_down',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-keyboard_arrow_down-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'chevron_up',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-keyboard_arrow_up-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'drop_down',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-arrow_drop_down-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'drop_up',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-arrow_drop_up-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'done',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-done-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'link',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-link-24px.svg'));
   }
+
 }
