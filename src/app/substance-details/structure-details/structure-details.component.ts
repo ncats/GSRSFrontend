@@ -18,6 +18,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   defIcon = 'drop_down';
   smilesIcon = 'drop_down';
   inchi: string;
+  showStereo = false;
 
   constructor(
     private utilService: UtilsService,
@@ -37,8 +38,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     }
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilService.getSafeStructureImgUrl(structureId, size);
+  getSafeStructureImgUrl(stereo: boolean, structureId: string, size: number = 150): SafeUrl {
+    return this.utilService.getSafeStructureImgUrl(structureId, size, stereo);
   }
 
   toggleReferences() {

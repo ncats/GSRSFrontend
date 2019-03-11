@@ -44,9 +44,14 @@
         </div>
       </div>
   </div>
-  <div class="structure-image-container">
-    <img class="structure-img" [src]="getSafeStructureImgUrl(structure.id)">
+  <div class="structure-image-container text-center">
+    <img class="structure-img" [src]=" getSafeStructureImgUrl(showStereo, structure.id)">
+    <br/>
+      <button class = "mat-raised-button mat-primary" [disabled]= "structure.definedStereo == 0" (click) = "showStereo = !showStereo">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
+
   </div>
+
+
 </div>
 </div>
 

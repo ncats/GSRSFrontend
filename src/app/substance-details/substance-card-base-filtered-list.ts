@@ -34,7 +34,12 @@ export class SubstanceCardBaseFilteredList<T> extends SubstanceCardBase {
         this.searchTimer = setTimeout(() => {
             this.filtered = [];
             listToFilter.forEach(item => {
-                const keys = Object.keys(item);
+
+              const itemString = JSON.stringify(item).toLowerCase();
+              if (itemString.indexOf(searchInput.toLowerCase()) > -1) {
+                this.filtered.push(item);
+              }
+             /*   const keys = Object.keys(item);
                 let contains = false;
                 for (let i = 0; i < keys.length; i++) {
                     if (item[keys[i]].toString().toLowerCase().indexOf(searchInput.toLowerCase()) > -1) {
@@ -44,7 +49,7 @@ export class SubstanceCardBaseFilteredList<T> extends SubstanceCardBase {
                 }
                 if (contains) {
                     this.filtered.push(item);
-                }
+                }*/
             });
             clearTimeout(this.searchTimer);
             this.searchTimer = null;

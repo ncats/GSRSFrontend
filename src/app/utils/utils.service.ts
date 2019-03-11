@@ -55,8 +55,11 @@ export class UtilsService extends BaseHttpService {
     return this.http.get<PagingResponse<Vocabulary>>(url, options);
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    const imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;
+  getSafeStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean): SafeUrl {
+    if (!stereo) {
+      stereo = false;
+    }
+    const imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}`;
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
