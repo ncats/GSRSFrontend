@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail } from '../substance/substance.model';
@@ -23,7 +23,7 @@ import {StructureImageModalComponent} from '../structure/structure-image-modal/s
   templateUrl: './substances-browse.component.html',
   styleUrls: ['./substances-browse.component.scss']
 })
-export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SubstancesBrowseComponent implements OnInit, AfterViewInit {
   private privateSearchTerm?: string;
   private privateStructureSearchTerm?: string;
   private privateSequenceSearchTerm?: string;
@@ -84,11 +84,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.matSideNav.closedStart.subscribe(() => {
       this.utilsService.handleMatSidenavClose();
     });
-    window.addEventListener('resize', this.processResponsiveness);
   }
 
-  ngOnDestroy() {
-    window.removeEventListener('resize', this.processResponsiveness);
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.processResponsiveness();
   }
 
   changePage(pageEvent: PageEvent) {
@@ -399,12 +399,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private processResponsiveness = () => {
-    if (window.innerWidth < 1100) {
-      this.matSideNav.close();
-      this.hasBackdrop = true;
-    } else {
-      this.matSideNav.open();
-      this.hasBackdrop = false;
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
+      }
     }
   }
 
