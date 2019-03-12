@@ -6,7 +6,8 @@ import {
   ViewContainerRef,
   QueryList,
   ViewChild,
-  OnDestroy
+  OnDestroy,
+  HostListener
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
@@ -57,7 +58,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       .subscribe(() => {
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
-          .getComponentFactory<any>(this.substanceDetailsProperties[index].dynamicComponentId)
+            .getComponentFactory<any>(this.substanceDetailsProperties[index].dynamicComponentId)
             .subscribe(componentFactory => {
               const ref = cRef.createComponent(componentFactory);
               ref.instance.substance = this.substance;
@@ -74,11 +75,15 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.matSideNav.closedStart.subscribe(() => {
       this.utilsService.handleMatSidenavClose();
     });
-    window.addEventListener('resize', this.processResponsiveness);
 
     setTimeout(() => {
       this.processResponsiveness();
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.processResponsiveness();
   }
 
   ngOnDestroy() {
@@ -117,12 +122,14 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private processResponsiveness = () => {
-    if (window.innerWidth < 1100) {
-      this.matSideNav.close();
-      this.hasBackdrop = true;
-    } else {
-      this.matSideNav.open();
-      this.hasBackdrop = false;
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
+      }
     }
   }
 
@@ -131,7 +138,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   handleSidenavClick(): void {
-    if (window.innerWidth < 1100) {
+    if (window && window.innerWidth < 1100) {
       this.matSideNav.close();
       this.hasBackdrop = true;
     }

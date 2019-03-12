@@ -137,7 +137,7 @@ export class UtilsService extends BaseHttpService {
 
   handleMatSidenavOpen(widthBreakingPoint?: number): void {
 
-    if (widthBreakingPoint == null || window.innerWidth < widthBreakingPoint) {
+    if (widthBreakingPoint == null || (window && window.innerWidth < widthBreakingPoint)) {
       this.bodyElement = document.getElementsByTagName('BODY')[0] as HTMLBodyElement;
       this.matSidenavContentElement = document.getElementsByTagName('mat-sidenav-content')[0] as HTMLElement;
 
