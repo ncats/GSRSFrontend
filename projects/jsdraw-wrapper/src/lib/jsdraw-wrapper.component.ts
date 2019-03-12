@@ -1,4 +1,5 @@
-import { Component, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, Output, EventEmitter, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { JSDraw } from './jsdraw';
 
 @Component({
@@ -11,7 +12,7 @@ export class JsdrawWrapperComponent implements AfterViewInit {
   private jsdraw: JSDraw;
   @Output() jsDrawOnLoad = new EventEmitter<JSDraw>();
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.randomId = Math.random().toString(36).replace('0.', '');
   }
 
@@ -22,16 +23,18 @@ export class JsdrawWrapperComponent implements AfterViewInit {
   loadEditor(): void {
     let count = 0;
 
-    if (window['JSDraw'] && window['dojo']) {
-      window['dojo'].ready(() => {
-        this.jsdraw = new window['JSDraw'](this.randomId);
-        this.jsDrawOnLoad.emit(this.jsdraw);
-      });
-    } else if (count < 5000) {
-      count++;
-      setTimeout(() => {
-        this.loadEditor();
-      }, 10);
+    if (isPlatformBrowser(this.platformId)) {
+      if (window['JSDraw'] && window['dojo']) {
+        window['dojo'].ready(() => {
+          this.jsdraw = new window['JSDraw'](this.randomId);
+          this.jsDrawOnLoad.emit(this.jsdraw);
+        });
+      } else if (count < 5000) {
+        count++;
+        setTimeout(() => {
+          this.loadEditor();
+        }, 10);
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail } from '../substance/substance.model';
@@ -23,7 +23,7 @@ import {StructureImageModalComponent} from '../structure/structure-image-modal/s
   templateUrl: './substances-browse.component.html',
   styleUrls: ['./substances-browse.component.scss']
 })
-export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SubstancesBrowseComponent implements OnInit, AfterViewInit {
   private privateSearchTerm?: string;
   private privateStructureSearchTerm?: string;
   private privateSequenceSearchTerm?: string;

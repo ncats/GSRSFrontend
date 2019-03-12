@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Renderer2, ViewChild } from '@angular/core';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
@@ -21,15 +21,16 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
   similarityCutoff?: number;
   showSimilarityCutoff = false;
   searchTypeControl = new FormControl();
+  @ViewChild('contentContainer') contentContainer;
 
   constructor(
     public router: Router,
     private substanceService: SubstanceService,
     private dialog: MatDialog,
     private loadingService: LoadingService,
-    private element: ElementRef,
     private structureService: StructureService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private renderer: Renderer2
   ) {
     this.searchType = 'substructure';
   }
@@ -39,32 +40,33 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    const contentContainerElement = this.element.nativeElement.querySelector('.content-container');
-    contentContainerElement.classList.add(environment.structureEditor);
+    this.renderer.addClass(this.contentContainer.nativeElement, environment.structureEditor);
   }
 
   editorOnLoad(editor: Editor): void {
     this.loadingService.setLoading(false);
     this.editor = editor;
-    this.activatedRoute
-      .queryParamMap
-      .subscribe(params => {
-        if (params.has('structure')) {
-          this.structureService.getMolfile(params.get('structure')).subscribe(molfile => {
-            this.editor.setMolecule(molfile);
-          });
-        }
-        if (params.has('type')) {
-          this.searchType = params.get('type');
-        }
+    setTimeout(() => {
+      this.activatedRoute
+        .queryParamMap
+        .subscribe(params => {
+          if (params.has('structure')) {
+            this.structureService.getMolfile(params.get('structure')).subscribe(molfile => {
+              this.editor.setMolecule(molfile);
+            });
+          }
+          if (params.has('type')) {
+            this.searchType = params.get('type');
+          }
 
-        if (this.searchType === 'similarity') {
-          this.showSimilarityCutoff = true;
-          this.similarityCutoff = params.has('cutoff') && Number(params.get('cutoff')) || 0.5;
-        }
+          if (this.searchType === 'similarity') {
+            this.showSimilarityCutoff = true;
+            this.similarityCutoff = params.has('cutoff') && Number(params.get('cutoff')) || 0.5;
+          }
 
-        this.searchTypeControl.setValue(this.searchType);
-      });
+          this.searchTypeControl.setValue(this.searchType);
+        });
+    });
   }
 
   search(): void {

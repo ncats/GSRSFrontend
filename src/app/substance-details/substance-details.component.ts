@@ -87,7 +87,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnDestroy() {
-    window.removeEventListener('resize', this.processResponsiveness);
+    // window.removeEventListener('resize', this.processResponsiveness);
   }
 
   getSubstanceDetails() {
