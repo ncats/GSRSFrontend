@@ -15,5 +15,6 @@ environment.version = 'fda';
 //         path: 'fda-sample-inheritance'
 //     }
 // ];
+environment.isAnalyticsPrivate = true;
 
 export { FdaModule as EnvironmentModule } from '../app/fda.module';

@@ -1,8 +1,9 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ConfigService } from '../config/config.service';
-import { Router, RouterEvent, NavigationEnd, NavigationStart } from '@angular/router';
-import { HitType, SendFields } from './google-analytics.model';
+import { Router } from '@angular/router';
+import { SendFields } from './google-analytics.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class GoogleAnalyticsService {
   private googleAnanlyticsId: string;
   private analyticsObjectKey: string;
   private analytics: any;
+  private isActive = false;
 
   constructor(
     public configService: ConfigService,
@@ -37,9 +39,17 @@ export class GoogleAnalyticsService {
     this.analytics.l = +new Date;
 
     this.analytics('create', this.googleAnanlyticsId, { cookieName: 'gsrsCookie' });
-    this.analytics('set', 'allowAdFeatures', false);
     this.analytics('set', 'screenResolution', `${window.screen.availWidth}x${window.screen.availHeight}`);
     this.analytics('set', 'viewportSize', `${window.innerHeight}x${window.innerWidth}`);
+
+    if (environment.isAnalyticsPrivate) {
+      this.analytics('set', 'allowAdFeatures', false);
+      this.analytics('set', 'anonymizeIp', true);
+      this.analytics('set', 'referrer', 'https://none.com');
+      this.analytics('set', 'location', 'https://none.com');
+    }
+
+    this.isActive = true;
 
     if (this.configService.configData.appId) {
       this.analytics('set', 'appId', this.configService.configData.appId);
@@ -49,16 +59,6 @@ export class GoogleAnalyticsService {
       this.analytics('set', 'appVersion', this.configService.configData.version);
     }
 
-    this.router.events.subscribe((event: RouterEvent) => {
-      if (this.router.routerState.snapshot.url) {
-        if (event instanceof NavigationEnd) {
-          this.sendPageView(this.router.routerState.snapshot.url, 'start');
-        } else if (event instanceof NavigationStart) {
-          this.sendPageView(this.router.routerState.snapshot.url, 'end');
-        }
-      }
-    });
-
     const node = document.createElement('script');
     node.src = 'https://www.google-analytics.com/analytics.js';
     node.type = 'text/javascript';
@@ -67,40 +67,53 @@ export class GoogleAnalyticsService {
     document.getElementsByTagName('head')[0].appendChild(node);
   }
 
-  sendPageView(path: string, sessionControl?: 'start' | 'end'): void {
+  sendPageView(title?: string, sessionControl?: 'start' | 'end', path?: string): void {
 
-    const sendFields: SendFields = {
-      hitType: 'pageview',
-      page: path,
-      sessionControl: sessionControl
-    };
+    if (this.isActive) {
+      if (path == null && title != null) {
+        path = `/${title.replace(/ /g, '-').toLowerCase()}`;
+      }
 
-    this.analytics('send', sendFields);
+      const sendFields: SendFields = {
+        hitType: 'pageview',
+        title: title,
+        page: path,
+        sessionControl: sessionControl
+      };
+      this.analytics('send', sendFields);
+    }
   }
 
   sendEvent(eventCategory?: string, eventAction?: string, eventLabel?: string, eventValue?: number): void {
-    const sendFields: SendFields = {
-      hitType: 'event',
-      eventCategory: eventCategory,
-      eventAction: eventAction,
-      eventLabel: eventLabel,
-      eventValue: eventValue
-    };
 
-    this.analytics('send', sendFields);
+    if (this.isActive) {
+      const sendFields: SendFields = {
+        hitType: 'event',
+        eventCategory: eventCategory,
+        eventAction: eventAction,
+        eventLabel: eventLabel,
+        eventValue: eventValue
+      };
+
+      this.analytics('send', sendFields);
+    }
   }
 
   sendException(exDescription: string, exFatal?: boolean): void {
-    const sendFields: SendFields = {
-      hitType: 'exception',
-      exDescription: exDescription,
-      exFatal: exFatal
-    };
+    if (this.isActive) {
+      const sendFields: SendFields = {
+        hitType: 'exception',
+        exDescription: exDescription,
+        exFatal: exFatal
+      };
 
-    this.analytics('send', sendFields);
+      this.analytics('send', sendFields);
+    }
   }
 
   setTitle(title: string): void {
-    this.analytics('set', 'title', title);
+    if (this.isActive) {
+      this.analytics('set', 'title', title);
+    }
   }
 }

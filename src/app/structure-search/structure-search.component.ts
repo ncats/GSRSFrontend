@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
@@ -16,7 +16,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
   templateUrl: './structure-search.component.html',
   styleUrls: ['./structure-search.component.scss']
 })
-export class StructureSearchComponent implements OnInit, AfterViewInit {
+export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   private editor: Editor;
   private searchType: string;
   similarityCutoff?: number;
@@ -38,12 +38,16 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.gaService.sendPageView(`Structure Search`, 'start');
     this.loadingService.setLoading(true);
   }
 
   ngAfterViewInit() {
-    this.gaService.setTitle(`Structure Search`);
     this.renderer.addClass(this.contentContainer.nativeElement, environment.structureEditor);
+  }
+
+  ngOnDestroy() {
+    this.gaService.sendPageView(`Structure Search`, 'end');
   }
 
   editorOnLoad(editor: Editor): void {

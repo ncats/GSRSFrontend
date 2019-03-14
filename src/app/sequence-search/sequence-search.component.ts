@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
@@ -8,7 +8,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
   templateUrl: './sequence-search.component.html',
   styleUrls: ['./sequence-search.component.scss']
 })
-export class SequenceSearchComponent implements OnInit {
+export class SequenceSearchComponent implements OnInit, OnDestroy {
   sequenceSearchForm = new FormGroup({
     cutoff: new FormControl(0.5, [Validators.min(0), Validators.max(1), Validators.required]),
     type: new FormControl('SUB', Validators.required),
@@ -40,7 +40,11 @@ export class SequenceSearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.gaService.setTitle(`Sequence Search`);
+    this.gaService.sendPageView(`Sequence Search`, 'start');
+  }
+
+  ngOnDestroy() {
+    this.gaService.sendPageView(`Sequence Search`, 'end');
   }
 
   search(): void {

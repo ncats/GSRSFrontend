@@ -3,6 +3,7 @@ export type HitType = 'pageview' | 'screenview' | 'event' | 'transaction' | 'ite
 export interface SendFields {
     hitType?:  HitType;
     page?: string;
+    title?: string;
     sessionControl?: 'start' | 'end';
     eventCategory?: string;
     eventAction?: string;

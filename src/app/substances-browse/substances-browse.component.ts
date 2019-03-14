@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail } from '../substance/substance.model';
@@ -24,7 +24,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
   templateUrl: './substances-browse.component.html',
   styleUrls: ['./substances-browse.component.scss']
 })
-export class SubstancesBrowseComponent implements OnInit, AfterViewInit {
+export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;
   private privateStructureSearchTerm?: string;
   private privateSequenceSearchTerm?: string;
@@ -62,7 +62,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.gaService.setTitle('Browse Substances');
+    this.gaService.sendPageView('Browse Substances', 'start');
     this.pageSize = 10;
     this.pageIndex = 0;
     this.facets = [];
@@ -87,6 +87,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit {
     this.matSideNav.closedStart.subscribe(() => {
       this.utilsService.handleMatSidenavClose();
     });
+  }
+
+  ngOnDestroy() {
+    this.gaService.sendPageView('Browse Substances', 'end');
   }
 
   @HostListener('window:resize', ['$event'])
@@ -232,6 +236,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit {
     facetValueLabel: string,
     include: boolean
   ): void {
+
+    this.gaService.sendEvent('substanceFiltering', 'select', 'facet');
 
     if (this.privateFacetParams[facetName] == null) {
       this.privateFacetParams[facetName] = {

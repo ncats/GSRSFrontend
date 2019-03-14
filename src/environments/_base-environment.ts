@@ -4,7 +4,8 @@ export const baseEnvironment = {
     production: false,
     version: '',
     structureEditor: 'jsdraw',
-    navItems: []
+    navItems: [],
+    isAnalyticsPrivate: false
 };
 
 

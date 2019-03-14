@@ -50,6 +50,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
   ngOnInit() {
+    this.gaService.sendPageView(`Substance Details`, 'start');
     this.loadingService.setLoading(true);
     this.id = this.activatedRoute.snapshot.params['id'];
     this.getSubstanceDetails();
@@ -89,6 +90,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnDestroy() {
+    this.gaService.sendPageView(`Substance Details`, 'end');
     // window.removeEventListener('resize', this.processResponsiveness);
   }
 
@@ -96,7 +98,6 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
         this.substance = response;
-        this.gaService.setTitle(`Substance Details - ${this.substance._name}`);
         this.substanceDetailsProperties = this.substanceCardsService.getSubstanceDetailsProperties(this.substance);
       } else {
         this.handleSubstanceRetrivalError();
