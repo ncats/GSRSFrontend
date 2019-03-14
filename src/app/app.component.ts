@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
+import { GoogleAnalyticsService } from './google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,10 @@ import { MatIconRegistry } from '@angular/material';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+  constructor(
+    iconRegistry: MatIconRegistry, sanitizer: DomSanitizer,
+    private googleAnalyticsService: GoogleAnalyticsService
+  ) {
     iconRegistry.addSvgIcon(
       'chevron_right',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-chevron_right-24px.svg'));

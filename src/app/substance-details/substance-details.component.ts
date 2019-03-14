@@ -21,6 +21,7 @@ import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-comp
 import { SubstanceCardsService } from './substance-cards.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { UtilsService } from '../utils/utils.service';
+import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-substance-details',
@@ -43,7 +44,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private router: Router,
     private dynamicComponentLoader: DynamicComponentLoader,
     private substanceCardsService: SubstanceCardsService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private gaService: GoogleAnalyticsService
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
@@ -94,6 +96,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
         this.substance = response;
+        this.gaService.setTitle(`Substance Details - ${this.substance._name}`);
         this.substanceDetailsProperties = this.substanceCardsService.getSubstanceDetailsProperties(this.substance);
       } else {
         this.handleSubstanceRetrivalError();

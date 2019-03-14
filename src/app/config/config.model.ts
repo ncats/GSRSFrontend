@@ -1,6 +1,8 @@
 export interface Config {
     apiBaseUrl?: string;
     googleAnalyticsId?: string;
+    appId?: string;
+    version?: string;
     substanceDetailsCards?: Array<SubstanceDetailsCard>;
     facets?: { [permission: string]: Array<string> };
     specialRelationships?: Array<SpecialRelationship>;

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
+import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-sequence-search',
@@ -17,7 +18,8 @@ export class SequenceSearchComponent implements OnInit {
 
   constructor(
     public router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private gaService: GoogleAnalyticsService
   ) {
     this.activatedRoute
       .queryParamMap
@@ -38,6 +40,7 @@ export class SequenceSearchComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.gaService.setTitle(`Sequence Search`);
   }
 
   search(): void {

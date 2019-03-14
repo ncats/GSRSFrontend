@@ -17,6 +17,7 @@ import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 import { TopSearchService } from '../top-search/top-search.service';
 import {StructureImportComponent} from '../structure/structure-import/structure-import.component';
 import {StructureImageModalComponent} from '../structure/structure-image-modal/structure-image-modal.component';
+import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-substances-browse',
@@ -54,12 +55,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit {
     public utilsService: UtilsService,
     private router: Router,
     private dialog: MatDialog,
-    private topSearchService: TopSearchService
+    private topSearchService: TopSearchService,
+    private gaService: GoogleAnalyticsService
   ) {
     this.privateFacetParams = {};
   }
 
   ngOnInit() {
+    this.gaService.setTitle('Browse Substances');
     this.pageSize = 10;
     this.pageIndex = 0;
     this.facets = [];

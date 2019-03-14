@@ -50,6 +50,7 @@ import { TopSearchModule } from './top-search/top-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
+import { GoogleAnalyticsService } from './google-analytics/google-analytics.service';
 
 @NgModule({
   declarations: [

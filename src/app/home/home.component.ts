@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-home',
@@ -9,9 +10,12 @@ import { environment } from '../../environments/environment';
 export class HomeComponent implements OnInit {
   roundLogoSrcPath: string;
 
-  constructor() { }
+  constructor(
+    private gaService: GoogleAnalyticsService
+  ) { }
 
   ngOnInit() {
+    this.gaService.setTitle(`Home`);
     this.roundLogoSrcPath = `${environment.baseHref || '/'}assets/images/gsrs-logo-round.svg`;
   }
 }

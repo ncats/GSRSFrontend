@@ -9,6 +9,7 @@ import { LoadingService } from '../loading/loading.service';
 import { environment } from '../../environments/environment';
 import { StructureService } from '../structure/structure.service';
 import { FormControl } from '@angular/forms';
+import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-structure-search',
@@ -30,7 +31,8 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
     private loadingService: LoadingService,
     private structureService: StructureService,
     private activatedRoute: ActivatedRoute,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private gaService: GoogleAnalyticsService
   ) {
     this.searchType = 'substructure';
   }
@@ -40,6 +42,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.gaService.setTitle(`Structure Search`);
     this.renderer.addClass(this.contentContainer.nativeElement, environment.structureEditor);
   }
 
