@@ -25,14 +25,14 @@
           </div>
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
-          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch">
+          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch" (click)="sendFacetsEvent($event, facet.name)">
             All Match
           </mat-checkbox>
           <div class="pull-right">
             <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
               Clear
             </button>
-            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading" (click)="searchSubstances()">
+            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading" (click)="searchSubstances(facet.name)">
               Apply
             </button>
           </div>

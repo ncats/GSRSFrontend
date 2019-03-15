@@ -38,6 +38,8 @@ export class GoogleAnalyticsService {
 
     this.analytics.l = +new Date;
 
+    this.isActive = true;
+
     this.analytics('create', this.googleAnanlyticsId, { cookieName: 'gsrsCookie' });
     this.analytics('set', 'screenResolution', `${window.screen.availWidth}x${window.screen.availHeight}`);
     this.analytics('set', 'viewportSize', `${window.innerHeight}x${window.innerWidth}`);

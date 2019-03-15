@@ -18,6 +18,7 @@ import { TopSearchService } from '../top-search/top-search.service';
 import {StructureImportComponent} from '../structure/structure-import/structure-import.component';
 import {StructureImageModalComponent} from '../structure/structure-image-modal/structure-image-modal.component';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-substances-browse',
@@ -56,7 +57,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private router: Router,
     private dialog: MatDialog,
     private topSearchService: TopSearchService,
-    private gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService
   ) {
     this.privateFacetParams = {};
   }
@@ -225,6 +226,18 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  applyFacetsFilter(facetName: string) {
+    const eventLabel = environment.isAnalyticsPrivate ? 'facet-apply' : `${facetName}-apply`;
+    let eventValue = 0;
+    Object.keys(this.privateFacetParams).forEach(key => {
+      if (this.privateFacetParams[key].params) {
+        eventValue = eventValue + Object.keys(this.privateFacetParams[key].params).length || 0;
+      }
+    });
+    this.gaService.sendEvent('substanceFiltering', 'click-button', eventLabel, eventValue);
+    this.searchSubstances();
+  }
+
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
@@ -237,7 +250,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     include: boolean
   ): void {
 
-    this.gaService.sendEvent('substanceFiltering', 'select', 'facet');
+    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName} > ${facetValueLabel}`;
+    const eventValue = event.checked ? 1 : 0;
+    this.gaService.sendEvent('substanceFiltering', 'select', eventLabel, eventValue);
 
     if (this.privateFacetParams[facetName] == null) {
       this.privateFacetParams[facetName] = {
@@ -283,6 +298,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     facetName?: string
   ) {
 
+    const eventLabel = environment.isAnalyticsPrivate ? 'facet-clear' : `${facetName}-clear`;
+    let eventValue = 0;
+
     const facetKeys = facetName != null ? [facetName] : Object.keys(this.privateFacetParams);
 
     if (facetKeys != null && facetKeys.length) {
@@ -290,6 +308,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         if (this.privateFacetParams[facetKey] != null && this.privateFacetParams[facetKey].params != null) {
           const facetValueKeys = Object.keys(this.privateFacetParams[facetKey].params);
           facetValueKeys.forEach(facetParam => {
+            eventValue++;
             this.privateFacetParams[facetKey].params[facetParam] = null;
           });
 
@@ -299,6 +318,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         }
       });
     }
+
+    this.gaService.sendEvent('substanceFiltering', 'click-button', eventLabel, eventValue);
   }
 
   cleanFacets(): void {
@@ -457,6 +478,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         }
       });
     }
+  }
+
+  sendFacetsEvent(event: MatCheckboxChange, facetName: string): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'facet > All Match' : `${facetName} > All Match`;
+    const eventValue = event.checked ? 1 : 0;
+    this.gaService.sendEvent('substanceFiltering', 'select', eventLabel, eventValue);
   }
 
 }
