@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-substance-references',
@@ -11,8 +12,12 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
   references: Array<SubstanceReference>;
   displayedColumns: string[] = ['citation', 'type', 'tags', 'dateAcessed'];
 
-  constructor() {
-    super();
+  constructor(
+    public gaService: GoogleAnalyticsService
+  ) {
+    super(
+      gaService
+    );
   }
 
   ngOnInit() {

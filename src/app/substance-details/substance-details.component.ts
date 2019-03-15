@@ -22,6 +22,7 @@ import { SubstanceCardsService } from './substance-cards.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { UtilsService } from '../utils/utils.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-substance-details',
@@ -65,6 +66,10 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
             .subscribe(componentFactory => {
               const ref = cRef.createComponent(componentFactory);
               ref.instance.substance = this.substance;
+              ref.instance.title = this.substanceDetailsProperties[index].title;
+              ref.instance.analyticsEventCategory = !environment.isAnalyticsPrivate
+                && this.utilsService.toCamelCase(`substance ${this.substanceDetailsProperties[index].title}`)
+                || 'substance card';
               if (this.substanceDetailsProperties[index].type != null) {
                 ref.instance.type = this.substanceDetailsProperties[index].type;
               }
@@ -138,10 +143,16 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   openSideNav() {
+    this.gaService.sendEvent('substanceNav', 'button:sidenav', 'open');
     this.matSideNav.open();
   }
 
-  handleSidenavClick(): void {
+  handleSidenavClick(substancePropertyTitle: string): void {
+
+    const eventLabel = environment.isAnalyticsPrivate ? 'substance card' : substancePropertyTitle;
+
+    this.gaService.sendEvent('substanceNav', 'link:nav-to', eventLabel);
+
     if (window && window.innerWidth < 1100) {
       this.matSideNav.close();
       this.hasBackdrop = true;

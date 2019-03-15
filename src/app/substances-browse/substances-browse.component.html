@@ -25,14 +25,15 @@
           </div>
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
-          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch" (click)="sendFacetsEvent($event, facet.name)">
+          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch"
+            (click)="sendFacetsEvent($event, facet.name)">
             All Match
           </mat-checkbox>
           <div class="pull-right">
             <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
               Clear
             </button>
-            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading" (click)="searchSubstances(facet.name)">
+            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading" (click)="applyFacetsFilter(facet.name)">
               Apply
             </button>
           </div>
@@ -69,7 +70,7 @@
             </span>
           </div>
           <div class="actions-container">
-            <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: searchType, cutoff: searchCutoff }">
+            <button mat-icon-button color="primary" (click)="editStructureSearh()">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
             <button mat-icon-button color="primary" (click)="clearStructureSearch()">
@@ -86,7 +87,7 @@
             </span>
           </div>
           <div class="actions-container">
-            <button mat-icon-button color="primary" [routerLink]="['/sequence-search']" [queryParams]="{ sequence: sequenceSearchTerm, type: searchType, cutoff: searchCutoff, 'seq_type': searchSeqType }">
+            <button mat-icon-button color="primary" (click)="editSequenceSearh()">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
             <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
@@ -145,8 +146,11 @@
                 <div class="substance-data substance-names" *ngIf="substance.names && substance.names.length">
                   <div class="label">Names:</div>
                   <div>
-                    <div class="value space-bottom"  *ngFor="let nameObject of substance.names | take: 5" >
-                      {{nameObject.name}} <span *ngIf="nameObject.displayName == true" matTooltip="Accepted Name" > <mat-icon class="icon-align blue-font"  svgIcon="done"></mat-icon></span>
+                    <div class="value space-bottom" *ngFor="let nameObject of substance.names | take: 5">
+                      {{nameObject.name}}
+                      <span *ngIf="nameObject.displayName == true" matTooltip="Accepted Name">
+                        <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -157,9 +161,12 @@
                       <div class="code-system">
                         <span class="label">{{codeSystemName}}</span>:&nbsp;
                         <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">
-                          <span *ngIf="codeObject.url"><a class="ext-link" target="_blank" href="{{codeObject.url}}">{{codeObject.code.trim()}}
-                           <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
-                          </a></span>
+                          <span *ngIf="codeObject.url">
+                            <a class="ext-link" target="_blank" href="{{codeObject.url}}" appTrackLinkEvent evCategory="substancesContent" evAction="link:code">
+                              {{codeObject.code.trim()}}
+                              <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
+                            </a>
+                          </span>
                           <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}</span>
                           <span *ngIf="!isLast">, </span>
                         </span>
@@ -190,7 +197,8 @@
                   <div>
                     <span class="blue-pill">
                       <span *ngFor="let part of substance.structurallyDiverse.part; last as isLast">
-                        {{part}}<span *ngIf="!isLast">, </span>
+                        {{part}}
+                        <span *ngIf="!isLast">, </span>
                       </span>
                     </span>
                   </div>
@@ -276,7 +284,7 @@
             </span>
           </div>
           <div class="actions-container">
-            <button mat-icon-button color="primary" [routerLink]="['/structure-search']" [queryParams]="{ structure: structureSearchTerm, type: searchType, cutoff: searchCutoff }">
+            <button mat-icon-button color="primary" (click)="editStructureSearh()">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
             <button mat-icon-button color="primary" (click)="clearStructureSearch()">
@@ -285,22 +293,22 @@
           </div>
         </div>
         <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
-            <div>
-              <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
-              &nbsp;
-              <span class="no-break">
-                <span>{{getSequenceDisplay(sequenceSearchTerm)}}</span>
-              </span>
-            </div>
-            <div class="actions-container">
-              <button mat-icon-button color="primary" [routerLink]="['/sequence-search']" [queryParams]="{ sequence: sequenceSearchTerm, type: searchType, cutoff: searchCutoff, 'seq_type': searchSeqType }">
-                <mat-icon svgIcon="edit"></mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
-                <mat-icon svgIcon="delete_forever"></mat-icon>
-              </button>
-            </div>
+          <div>
+            <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
+            &nbsp;
+            <span class="no-break">
+              <span>{{getSequenceDisplay(sequenceSearchTerm)}}</span>
+            </span>
           </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" (click)="editSequenceSearh()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </mat-sidenav-content>

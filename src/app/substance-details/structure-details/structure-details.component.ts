@@ -4,7 +4,9 @@ import { SubstanceStructure } from '../../substance/substance.model';
 import { StructureService } from '../../structure/structure.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceCardBase } from '../substance-card-base';
-import {UtilsService} from '../../utils/utils.service';
+import { UtilsService } from '../../utils/utils.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-structure-details',
@@ -22,7 +24,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
 
   constructor(
     private utilService: UtilsService,
-    private structureService: StructureService
+    private structureService: StructureService,
+    public gaService: GoogleAnalyticsService
   ) {
     super();
   }
@@ -43,6 +46,10 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   }
 
   toggleReferences() {
+
+    const value = this.showDef ? 0 : 1;
+    this.gaService.sendEvent(this.analyticsEventCategory, 'link-toggle', 'references', value);
+
     this.showDef = !this.showDef;
     if (!this.showDef) {
       this.defIcon = 'drop_down';
@@ -52,12 +59,22 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   }
 
   toggleSmiles() {
+
+    const value = this.showSmiles ? 0 : 1;
+    this.gaService.sendEvent(this.analyticsEventCategory, 'link-toggle', 'smiles', value);
+
     this.showSmiles = !this.showSmiles;
     if (!this.showSmiles) {
       this.smilesIcon = 'drop_down';
     } else {
       this.smilesIcon = 'drop_up';
     }
+  }
+
+  toggleStereo() {
+    const value = this.showStereo ? 0 : 1;
+    this.gaService.sendEvent(this.analyticsEventCategory, 'link-toggle', 'stereo', value);
+    this.showStereo = !this.showStereo;
   }
 
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { SubstanceCode } from '../../substance/substance.model';
 import {MatDialog} from '@angular/material';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-substance-codes',
@@ -14,9 +15,10 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   displayedColumns: string[];
 
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public gaService: GoogleAnalyticsService
   ) {
-    super();
+    super(gaService);
   }
 
   ngOnInit() {

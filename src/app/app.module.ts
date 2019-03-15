@@ -51,6 +51,7 @@ import { StructureImageModalComponent } from './structure/structure-image-modal/
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { GoogleAnalyticsService } from './google-analytics/google-analytics.service';
+import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { GoogleAnalyticsService } from './google-analytics/google-analytics.serv
     SubstanceDetailsComponent,
     StructureImageModalComponent,
     TakePipe,
-    SequenceSearchComponent
+    SequenceSearchComponent,
+    TrackLinkEventDirective
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

@@ -3,6 +3,8 @@ import { Monomer} from '../../substance/substance.model';
 import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { UtilsService } from '../../utils/utils.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+
 @Component({
   selector: 'app-substance-monomers',
   templateUrl: './substance-monomers.component.html',
@@ -12,9 +14,10 @@ export class SubstanceMonomersComponent extends SubstanceCardBaseFilteredList<Mo
   monomers: Array<Monomer>;
   displayedColumns: string[] = ['material', 'amount', 'type'];
   constructor(
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    public gaService: GoogleAnalyticsService
   ) {
-    super();
+    super(gaService);
   }
 
   ngOnInit() {

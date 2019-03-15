@@ -186,4 +186,11 @@ export class UtilsService extends BaseHttpService {
     }
     return hash;
   }
+
+  toCamelCase(term: string = ''): string {
+    return term
+        .replace(/\s(.)/g, ($1) => $1.toUpperCase())
+        .replace(/\s/g, '')
+        .replace(/^(.)/, ($1) => $1.toLowerCase());
+  }
 }

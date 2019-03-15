@@ -4,6 +4,7 @@ import { SubstanceName } from '../../substance/substance.model';
 import { UtilsService } from '../../utils/utils.service';
 import { VocabularyTerm } from '../../utils/vocabulary.model';
 import {MatDialog} from '@angular/material';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-substance-names',
@@ -18,9 +19,10 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 
   constructor(
     private utilsService: UtilsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public gaService: GoogleAnalyticsService
   ) {
-    super();
+    super(gaService);
   }
 
   ngOnInit() {

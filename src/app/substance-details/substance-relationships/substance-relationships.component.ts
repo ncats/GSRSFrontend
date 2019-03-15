@@ -6,6 +6,7 @@ import {UtilsService} from '../../utils/utils.service';
 import { ConfigService } from '../../config/config.service';
 import {MatDialog} from '@angular/material';
 import {SubstanceCardBaseFilteredList} from '../substance-card-base-filtered-list';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-substance-relationships',
@@ -20,9 +21,10 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   constructor(
     private utilService: UtilsService,
     private configService: ConfigService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public gaService: GoogleAnalyticsService
   ) {
-    super();
+    super(gaService);
   }
 
   ngOnInit() {

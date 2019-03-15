@@ -29,25 +29,25 @@
       <div class="name">Charge</div>
       <div class="value gray-pill">{{structure.charge}}</div>
     </div>
-      <div class = "name-value" *ngIf = "structure.references?.length > 0" >
-        <div class = "name">
-          <a (click) = "toggleReferences()" class = 'blue-font references-link'>
+      <div class="name-value" *ngIf="structure.references?.length > 0" >
+        <div class="name">
+          <a (click)="toggleReferences()" class='blue-font references-link'>
             <span>{{showDef === false ? 'Show' : 'Hide'}} References</span><mat-icon svgIcon="{{defIcon}}"></mat-icon>
           </a>
         </div>
       </div>
-      <div class = "name-value" *ngIf = "structure.smiles" >
-        <div class = "name">
-          <a (click) = "toggleSmiles()" class = 'blue-font references-link'>
+      <div class="name-value" *ngIf="structure.smiles" >
+        <div class="name">
+          <a (click)="toggleSmiles()" class='blue-font references-link'>
             <span>{{showSmiles === false ? 'Show' : 'Hide'}} SMILES / InChi</span><mat-icon svgIcon="{{smilesIcon}}"></mat-icon>
           </a>
         </div>
       </div>
   </div>
   <div class="structure-image-container text-center">
-    <img class="structure-img" [src]=" getSafeStructureImgUrl(showStereo, structure.id)">
+    <img class="structure-img" [src]="getSafeStructureImgUrl(showStereo, structure.id)">
     <br/>
-      <button class = "mat-raised-button mat-primary" [disabled]= "structure.definedStereo == 0" (click) = "showStereo = !showStereo">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
+      <button class ="mat-raised-button mat-primary" [disabled]="structure.definedStereo == 0" (click)="toggleStereo()">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
 
   </div>
 
@@ -55,14 +55,14 @@
 </div>
 </div>
 
-<div style = "width:100%" >
+<div style="width:100%" >
 
-  <div [hidden]="!showDef" style = "min-width:50%;">
+  <div [hidden]="!showDef" style="min-width:50%;">
     <h3>References</h3>
     <app-references-manager  [substance]="substance" [references]="structure.references" ></app-references-manager>
   </div>
 
-  <div [hidden]="!showSmiles" style = "width:100%">
+  <div [hidden]="!showSmiles" style="width:100%">
     <h3>SMILES:</h3>
     <p>{{structure.smiles}}</p>
     <h3>InChi</h3>
