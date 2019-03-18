@@ -95,7 +95,6 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnDestroy() {
-    this.gaService.sendPageView(`Substance Details`, 'end');
     // window.removeEventListener('resize', this.processResponsiveness);
   }
 

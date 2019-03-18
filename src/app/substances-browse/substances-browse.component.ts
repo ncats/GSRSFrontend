@@ -90,9 +90,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
-  ngOnDestroy() {
-    this.gaService.sendPageView('Browse Substances', 'end');
-  }
+  ngOnDestroy() {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {

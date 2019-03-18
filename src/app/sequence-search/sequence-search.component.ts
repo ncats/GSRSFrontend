@@ -43,9 +43,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     this.gaService.sendPageView(`Sequence Search`, 'start');
   }
 
-  ngOnDestroy() {
-    this.gaService.sendPageView(`Sequence Search`, 'end');
-  }
+  ngOnDestroy() {}
 
   search(): void {
     if (this.sequenceSearchForm.valid) {

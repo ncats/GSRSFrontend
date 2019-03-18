@@ -29,6 +29,8 @@ import {MatDialogModule} from '@angular/material';
     ReferencesManagerModule,
     MatDialogModule
   ],
-  declarations: [SubstanceCodesComponent]
+  declarations: [
+    SubstanceCodesComponent
+  ]
 })
 export class SubstanceCodesModule { }

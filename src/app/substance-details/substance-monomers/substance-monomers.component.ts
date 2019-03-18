@@ -27,7 +27,7 @@ export class SubstanceMonomersComponent extends SubstanceCardBaseFilteredList<Mo
       this.pageChange();
 
       this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.monomers);
+        this.filterList(value, this.monomers, this.analyticsEventCategory);
       }, error => {
         console.log(error);
       });

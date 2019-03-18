@@ -27,7 +27,7 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
       this.pageChange();
 
       this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.references);
+        this.filterList(value, this.references, this.analyticsEventCategory);
       }, error => {
         console.log(error);
       });

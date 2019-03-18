@@ -32,7 +32,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       this.pageChange();
 
       this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.names);
+        this.filterList(value, this.names, this.analyticsEventCategory);
       }, error => {
         console.log(error);
       });
@@ -69,6 +69,9 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   openModal(templateRef) {
+
+    this.gaService.sendEvent(this.analyticsEventCategory, 'button', 'references view');
+
     const dialogRef = this.dialog.open(templateRef, {
       minWidth: '40%',
       maxWidth: '90%'

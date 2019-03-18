@@ -63,6 +63,9 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   openModal(templateRef) {
+
+    this.gaService.sendEvent(this.analyticsEventCategory, 'button', 'references view');
+
     const dialogRef = this.dialog.open(templateRef, {
       minWidth: '40%',
       maxWidth: '90%'

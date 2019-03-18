@@ -50,12 +50,17 @@ export class SubstanceCardBaseFilteredList<T> extends SubstanceCardBase {
         }
     }
 
-    filterList(searchInput: string, listToFilter: Array<T>): void {
+    filterList(searchInput: string, listToFilter: Array<T>, analyticsEventCategory: string = 'substance card'): void {
         if (this.searchTimer != null) {
             clearTimeout(this.searchTimer);
         }
 
         this.searchTimer = setTimeout(() => {
+
+            const eventLabel = !environment.isAnalyticsPrivate && searchInput || 'input value';
+
+            this.gaService.sendEvent(analyticsEventCategory, 'search', eventLabel);
+
             this.filtered = [];
             listToFilter.forEach(item => {
 
@@ -63,17 +68,6 @@ export class SubstanceCardBaseFilteredList<T> extends SubstanceCardBase {
                 if (itemString.indexOf(searchInput.toLowerCase()) > -1) {
                     this.filtered.push(item);
                 }
-                /*   const keys = Object.keys(item);
-                   let contains = false;
-                   for (let i = 0; i < keys.length; i++) {
-                       if (item[keys[i]].toString().toLowerCase().indexOf(searchInput.toLowerCase()) > -1) {
-                           contains = true;
-                           break;
-                       }
-                   }
-                   if (contains) {
-                       this.filtered.push(item);
-                   }*/
             });
             clearTimeout(this.searchTimer);
             this.searchTimer = null;

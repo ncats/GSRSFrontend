@@ -46,9 +46,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     this.renderer.addClass(this.contentContainer.nativeElement, environment.structureEditor);
   }
 
-  ngOnDestroy() {
-    this.gaService.sendPageView(`Structure Search`, 'end');
-  }
+  ngOnDestroy() {}
 
   editorOnLoad(editor: Editor): void {
     this.loadingService.setLoading(false);

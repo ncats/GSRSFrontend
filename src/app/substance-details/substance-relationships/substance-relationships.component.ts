@@ -34,7 +34,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
       this.filtered = this.substance.relationships;
       this.pageChange();
       this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.relationships);
+        this.filterList(value, this.relationships, this.analyticsEventCategory);
       }, error => {
         console.log(error);
       });
@@ -74,6 +74,9 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   }
 
   openModal(templateRef) {
+
+    this.gaService.sendEvent(this.analyticsEventCategory, 'button', 'references view');
+
     const dialogRef = this.dialog.open(templateRef, {});
 
     dialogRef.afterClosed().subscribe(result => {

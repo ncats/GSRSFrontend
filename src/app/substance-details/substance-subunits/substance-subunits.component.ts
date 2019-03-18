@@ -3,6 +3,7 @@ import { SubstanceCardBase } from '../substance-card-base';
 import { Subunit } from '../../substance/substance.model';
 import { UtilsService } from '../../utils/utils.service';
 import { VocabularyTerm } from '../../utils/vocabulary.model';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-substance-subunits',
@@ -16,7 +17,8 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   view = 'details';
 
   constructor(
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    public gaService: GoogleAnalyticsService
   ) {
     super();
   }
@@ -114,6 +116,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   }
 
   updateView(event): void {
+    this.gaService.sendEvent(this.analyticsEventCategory, 'button:view-update', event.value);
     this.view = event.value;
   }
 }

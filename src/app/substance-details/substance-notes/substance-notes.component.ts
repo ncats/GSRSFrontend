@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceNote } from '../../substance/substance.model';
 import {MatDialog} from '@angular/material';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-substance-notes',
@@ -14,7 +15,8 @@ export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit
 
 
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public gaService: GoogleAnalyticsService
   ) {
     super();
   }
@@ -27,6 +29,9 @@ export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit
 
 
   openModal(templateRef) {
+
+    this.gaService.sendEvent(this.analyticsEventCategory, 'button', 'references view');
+
     const dialogRef = this.dialog.open(templateRef, {
       minWidth: '40%',
       maxWidth: '90%'
