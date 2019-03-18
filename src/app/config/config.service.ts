@@ -14,7 +14,7 @@ export class ConfigService {
     load(apiBaseUrl?: string, baseHref?: string): Promise<any> {
 
         this._configData = null;
-        console.log(baseHref);
+
         const configFilePath = `${baseHref || '/'}assets/data/config.json`;
 
         return this.http

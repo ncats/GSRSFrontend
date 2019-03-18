@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { SubstanceService } from '../../substance/substance.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
 @Component({
   selector: 'app-structure-import',
@@ -17,7 +18,8 @@ export class StructureImportComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<StructureImportComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private substanceService: SubstanceService
+    private substanceService: SubstanceService,
+    public gaService: GoogleAnalyticsService
   ) { }
 
   ngOnInit() {
@@ -30,24 +32,33 @@ export class StructureImportComponent implements OnInit {
       this.substanceService.postSubstanceStructure(this.importTextControl.value).subscribe(response => {
         this.isLoading = false;
         if (response && response.structure && response.structure.molfile) {
+          this.gaService.sendEvent('structureImport', 'button:import', 'file imported');
           this.dialogRef.close(response.structure.molfile);
         } else {
           this.messageClass = 'error';
           this.message = 'You need to enter a valid molfile or smiles';
+          this.gaService.sendException('wrong structure data imported');
         }
 
       }, error => {
         this.isLoading = false;
         this.messageClass = 'error';
         this.message = 'There was an error importing your structure. Please refresh and try again.';
+        this.gaService.sendException('postSubstanceStructure error');
       });
     } else {
       this.messageClass = 'error';
       this.message = 'You have not entered anything to import';
+      this.gaService.sendException('no structure data entered for import');
     }
   }
 
+  fileBrowse() {
+    this.gaService.sendEvent('structureImport', 'button:browse-file', 'browse file');
+  }
+
   fileSelected(file: File): void {
+    this.gaService.sendEvent('structureImport', 'file-selected', 'file selected');
     if (file) {
       const fileReader = new FileReader();
       fileReader.onload = () => {
@@ -58,6 +69,7 @@ export class StructureImportComponent implements OnInit {
   }
 
   dismissDialog(): void {
+    this.gaService.sendEvent('structureImport', 'button:close', 'no file imported');
     this.dialogRef.close();
   }
 

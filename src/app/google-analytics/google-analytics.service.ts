@@ -1,4 +1,4 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject, HostListener } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ConfigService } from '../config/config.service';
 import { Router } from '@angular/router';
@@ -11,7 +11,6 @@ import { environment } from '../../environments/environment';
 export class GoogleAnalyticsService {
   private googleAnanlyticsId: string;
   private analyticsObjectKey: string;
-  private analytics: any;
   private isActive = false;
 
   constructor(
@@ -28,37 +27,39 @@ export class GoogleAnalyticsService {
   }
 
   init() {
-    this.analyticsObjectKey = Math.random().toString(36).replace('0.', '');
+
+    let analyticsObjectKey;
+
+    this.analyticsObjectKey = analyticsObjectKey = Math.random().toString(36).replace('0.', '');
+
     window['GoogleAnalyticsObject'] = this.analyticsObjectKey;
 
-    this.analytics = window[this.analyticsObjectKey] = window[this.analyticsObjectKey] || function() {
-      (window[this.analyticsObjectKey].q = window[this.analyticsObjectKey].q || []).push(arguments);
-      this.analytics = window[this.analyticsObjectKey];
+    window[this.analyticsObjectKey] = window[this.analyticsObjectKey] || function() {
+      (window[analyticsObjectKey].q = window[analyticsObjectKey] && window[analyticsObjectKey].q || []).push(arguments);
     };
 
-    this.analytics.l = +new Date;
+    window[this.analyticsObjectKey].l = +new Date;
 
     this.isActive = true;
 
-    this.analytics('create', this.googleAnanlyticsId, { cookieName: 'gsrsCookie' });
-    this.analytics('set', 'screenResolution', `${window.screen.availWidth}x${window.screen.availHeight}`);
-    this.analytics('set', 'viewportSize', `${window.innerHeight}x${window.innerWidth}`);
+    window[this.analyticsObjectKey]('create', this.googleAnanlyticsId, { cookieName: 'gsrsCookie' });
+    window[this.analyticsObjectKey]('set', 'screenResolution', `${window.screen.availWidth}x${window.screen.availHeight}`);
 
     if (environment.isAnalyticsPrivate) {
-      this.analytics('set', 'allowAdFeatures', false);
-      this.analytics('set', 'anonymizeIp', true);
-      this.analytics('set', 'referrer', 'https://none.com');
-      this.analytics('set', 'location', 'https://none.com');
+      window[this.analyticsObjectKey]('set', 'allowAdFeatures', false);
+      window[this.analyticsObjectKey]('set', 'anonymizeIp', true);
+      window[this.analyticsObjectKey]('set', 'referrer', 'https://none.com');
+      window[this.analyticsObjectKey]('set', 'location', 'https://none.com');
     }
 
     this.isActive = true;
 
     if (this.configService.configData.appId) {
-      this.analytics('set', 'appId', this.configService.configData.appId);
+      window[this.analyticsObjectKey]('set', 'appId', this.configService.configData.appId);
     }
 
     if (this.configService.configData.version) {
-      this.analytics('set', 'appVersion', this.configService.configData.version);
+      window[this.analyticsObjectKey]('set', 'appVersion', this.configService.configData.version);
     }
 
     const node = document.createElement('script');
@@ -69,7 +70,13 @@ export class GoogleAnalyticsService {
     document.getElementsByTagName('head')[0].appendChild(node);
   }
 
-  sendPageView(title?: string, sessionControl?: 'start' | 'end', path?: string): void {
+  @HostListener('window:error', ['$event'])
+  onGlobalError(event) {
+    const errorDescription = `message: ${event.message} | filenname: ${event.filename} | lineno: ${event.lineno} | colno: ${event.colno}`;
+    this.sendException(errorDescription);
+  }
+
+  sendPageView(title?: string, path?: string): void {
 
     if (this.isActive) {
       if (path == null && title != null) {
@@ -80,9 +87,9 @@ export class GoogleAnalyticsService {
         hitType: 'pageview',
         title: title,
         page: path,
-        sessionControl: sessionControl
+        viewportSize: `${window.innerHeight}x${window.innerWidth}`
       };
-      this.analytics('send', sendFields);
+      window[this.analyticsObjectKey]('send', sendFields);
     }
   }
 
@@ -94,28 +101,24 @@ export class GoogleAnalyticsService {
         eventCategory: eventCategory,
         eventAction: eventAction,
         eventLabel: eventLabel,
-        eventValue: eventValue
+        eventValue: eventValue,
+        viewportSize: `${window.innerHeight}x${window.innerWidth}`
       };
 
-      this.analytics('send', sendFields);
+      window[this.analyticsObjectKey]('send', sendFields);
     }
   }
 
-  sendException(exDescription: string, exFatal?: boolean): void {
+  sendException(exDescription: string, exFatal: boolean = false): void {
     if (this.isActive) {
       const sendFields: SendFields = {
         hitType: 'exception',
         exDescription: exDescription,
-        exFatal: exFatal
+        exFatal: exFatal,
+        viewportSize: `${window.innerHeight}x${window.innerWidth}`
       };
 
-      this.analytics('send', sendFields);
-    }
-  }
-
-  setTitle(title: string): void {
-    if (this.isActive) {
-      this.analytics('set', 'title', title);
+      window[this.analyticsObjectKey]('send', sendFields);
     }
   }
 }

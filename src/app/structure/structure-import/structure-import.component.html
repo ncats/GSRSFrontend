@@ -12,7 +12,7 @@
   {{message}}
 </div>
 <div mat-dialog-actions>
-  <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">Browse</button>
+  <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)" (click)="fileBrowse()">Browse</button>
   <span class="middle-fill"></span>
   <button mat-button (click)="dismissDialog()">Close</button>
   <button class="import-button" mat-button (click)="importStructure()">Import</button>

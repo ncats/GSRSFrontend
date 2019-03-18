@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { debounceTime } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-sequence-search',
@@ -40,14 +42,30 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.gaService.sendPageView(`Sequence Search`, 'start');
+    this.gaService.sendPageView(`Sequence Search`);
+    this.sequenceSearchForm.controls.cutoff.valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe(value => {
+      this.gaService.sendEvent('sequenceSearch', 'input:cutoff', 'search identity', value);
+    });
+    this.sequenceSearchForm.controls.type.valueChanges.subscribe(value => {
+      const eventLabel = !environment.isAnalyticsPrivate && value || 'cutoff type';
+      this.gaService.sendEvent('sequenceSearch', 'select:cutoff-type', eventLabel);
+    });
+    this.sequenceSearchForm.controls.sequenceType.valueChanges.subscribe(value => {
+      const eventLabel = !environment.isAnalyticsPrivate && value || 'cutoff type';
+      this.gaService.sendEvent('sequenceSearch', 'select:sequence-type', eventLabel);
+    });
   }
 
   ngOnDestroy() {}
 
   search(): void {
     if (this.sequenceSearchForm.valid) {
+      this.gaService.sendEvent('sequenceSearch', 'button:search', 'sequence');
       this.navigateToBrowseSubstance();
+    } else {
+      this.gaService.sendException('tried invalid sequence search');
     }
   }
 

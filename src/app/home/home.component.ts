@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.gaService.setTitle(`Home`);
+    this.gaService.sendPageView(`Home`);
     this.roundLogoSrcPath = `${environment.baseHref || '/'}assets/images/gsrs-logo-round.svg`;
   }
 }

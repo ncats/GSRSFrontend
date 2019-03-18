@@ -38,7 +38,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   ngOnInit() {
-    this.gaService.sendPageView(`Structure Search`, 'start');
+    this.gaService.sendPageView(`Structure Search`);
     this.loadingService.setLoading(true);
   }
 
@@ -77,6 +77,8 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   search(): void {
     const mol = this.editor.getMolfile();
     this.substanceService.postSubstanceStructure(mol).subscribe((response: StructurePostResponse) => {
+      const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
+      this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
       this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
     }, () => {});
   }
@@ -104,6 +106,8 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   searchTypeSelected(event): void {
     this.searchType = event.value;
 
+    this.gaService.sendEvent('structureSearch', 'select:search-type', this.searchType);
+
     if (this.searchType === 'similarity') {
       this.showSimilarityCutoff = true;
       this.similarityCutoff = 0.5;
@@ -113,6 +117,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   openStructureImportDialog(): void {
+    this.gaService.sendEvent('structureSearch', 'button:import', 'import structure');
     const dialogRef = this.dialog.open(StructureImportComponent, {
       height: 'auto',
       width: '650px',
@@ -128,6 +133,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   searchCutoffChanged(event): void {
     this.similarityCutoff = event.value;
+    this.gaService.sendEvent('structureSearch', 'slider', 'similarity-cutoff', this.similarityCutoff);
   }
 
   get _editor(): Editor {

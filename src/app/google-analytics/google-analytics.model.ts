@@ -11,4 +11,5 @@ export interface SendFields {
     eventValue?: number;
     exDescription?: string;
     exFatal?: boolean;
+    viewportSize?: string;
 }

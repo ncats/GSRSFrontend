@@ -51,7 +51,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
   ngOnInit() {
-    this.gaService.sendPageView(`Substance Details`, 'start');
+    this.gaService.sendPageView(`Substance Details`);
     this.loadingService.setLoading(true);
     this.id = this.activatedRoute.snapshot.params['id'];
     this.getSubstanceDetails();

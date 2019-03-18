@@ -6,6 +6,8 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
 import { TopSearchService } from './top-search.service';
+import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-top-search',
@@ -23,7 +25,8 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
     private router: Router,
     private element: ElementRef,
     private topSearchService: TopSearchService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    public gaService: GoogleAnalyticsService
   ) { }
 
   ngOnInit() {
@@ -34,13 +37,16 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
     this.searchControl.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      switchMap(searchValue =>
-        this.utilsService.getStructureSearchSuggestions(searchValue)
-      )
+      switchMap(searchValue => {
+        const eventLabel = !environment.isAnalyticsPrivate && searchValue || 'search term';
+        this.gaService.sendEvent('topSearch', 'search:enter-term', eventLabel);
+        return this.utilsService.getStructureSearchSuggestions(searchValue);
+      })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
       this.suggestionsFields = Object.keys(this.substanceSuggestionsGroup);
     }, error => {
+      this.gaService.sendException('search suggestion error from API call');
       console.log(error);
     });
 
@@ -64,11 +70,15 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
   }
 
   substanceSearchOptionSelected(event?: MatAutocompleteSelectedEvent) {
+    const eventLabel = !environment.isAnalyticsPrivate && event.option.value || 'auto-complete option';
+    this.gaService.sendEvent('topSearch', 'select:auto-complete', eventLabel);
     this.navigateToSearchResults(event.option.value);
   }
 
   processSubstanceSearch() {
     const searchTerm = this.searchControl.value;
+    const eventLabel = !environment.isAnalyticsPrivate && searchTerm || 'search term option';
+    this.gaService.sendEvent('topSearch', 'search:submit', eventLabel);
     this.navigateToSearchResults(searchTerm);
   }
 

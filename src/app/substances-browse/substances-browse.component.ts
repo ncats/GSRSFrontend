@@ -63,7 +63,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnInit() {
-    this.gaService.sendPageView('Browse Substances', 'start');
+    this.gaService.sendPageView('Browse Substances');
     this.pageSize = 10;
     this.pageIndex = 0;
     this.facets = [];
