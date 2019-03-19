@@ -26,7 +26,7 @@ export class SubstanceService extends BaseHttpService {
     super(configService);
   }
 
-  getSubtanceDetails(args: {
+  getSubstancesDetails(args: {
     searchTerm?: string,
     structureSearchTerm?: string,
     sequenceSearchTerm?: string,

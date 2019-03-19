@@ -135,7 +135,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
-      this.substanceService.getSubtanceDetails({
+      this.substanceService.getSubstancesDetails({
         searchTerm: this.privateSearchTerm,
         structureSearchTerm: this.privateStructureSearchTerm,
         sequenceSearchTerm: this.privateSequenceSearchTerm,
@@ -177,6 +177,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           });
           this.cleanFacets();
         }, error => {
+          this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
             message: 'There was an error trying to retrieve substances. Please refresh and try again.',
             type: NotificationType.error,

@@ -71,7 +71,7 @@ describe('SubstanceService', () => {
     });
 
     it('should add view=full as query param and return expected substance details', () => {
-      substanceService.getSubtanceDetails().subscribe(
+      substanceService.getSubstancesDetails().subscribe(
         substances => {
           expect(substances).toEqual(expectedSubstanceDetails, 'should return expected subtances');
         },
@@ -83,9 +83,9 @@ describe('SubstanceService', () => {
 
     it('if facets param not null & not a structure serach, facets set to true should be added to params', () => {
 
-      substanceService.getSubtanceDetails({ facets: facets }).subscribe();
-      substanceService.getSubtanceDetails({ searchTerm: 'test', facets: facets }).subscribe();
-      substanceService.getSubtanceDetails({ pageSize: 15, facets: facets, skip: 1 }).subscribe();
+      substanceService.getSubstancesDetails({ facets: facets }).subscribe();
+      substanceService.getSubstancesDetails({ searchTerm: 'test', facets: facets }).subscribe();
+      substanceService.getSubstancesDetails({ pageSize: 15, facets: facets, skip: 1 }).subscribe();
 
       httpClientGetSpy.calls.all().forEach(call => {
         expect(call.args[1].params.getAll('facet'))
@@ -97,12 +97,12 @@ describe('SubstanceService', () => {
     it('if searchTerm passed, q must be added as query param to http call', () => {
       const searchTerm = 'test search term';
 
-      substanceService.getSubtanceDetails({ searchTerm: searchTerm }).subscribe();
-      substanceService.getSubtanceDetails({ searchTerm: searchTerm, type: 'test' }).subscribe();
-      substanceService.getSubtanceDetails({ searchTerm: searchTerm, cutoff: 0.5 }).subscribe();
-      substanceService.getSubtanceDetails({ searchTerm: searchTerm, pageSize: 100 }).subscribe();
-      substanceService.getSubtanceDetails({ searchTerm: searchTerm, facets: facets }).subscribe();
-      substanceService.getSubtanceDetails({ searchTerm: searchTerm, skip: 10 }).subscribe();
+      substanceService.getSubstancesDetails({ searchTerm: searchTerm }).subscribe();
+      substanceService.getSubstancesDetails({ searchTerm: searchTerm, type: 'test' }).subscribe();
+      substanceService.getSubstancesDetails({ searchTerm: searchTerm, cutoff: 0.5 }).subscribe();
+      substanceService.getSubstancesDetails({ searchTerm: searchTerm, pageSize: 100 }).subscribe();
+      substanceService.getSubstancesDetails({ searchTerm: searchTerm, facets: facets }).subscribe();
+      substanceService.getSubstancesDetails({ searchTerm: searchTerm, skip: 10 }).subscribe();
 
       httpClientGetSpy.calls.all().forEach(call => {
         expect(call.args[1].params.get('q'))
@@ -115,14 +115,14 @@ describe('SubstanceService', () => {
         const pageSize = 50;
         const skip = 150;
 
-        substanceService.getSubtanceDetails({ searchTerm: 'test', pageSize: pageSize, skip: skip }).subscribe();
-        substanceService.getSubtanceDetails({ type: 'test', pageSize: pageSize, skip: skip }).subscribe();
-        substanceService.getSubtanceDetails({ cutoff: 0.5, pageSize: pageSize, skip: skip }).subscribe();
-        substanceService.getSubtanceDetails({ pageSize: pageSize, skip: skip }).subscribe();
-        substanceService.getSubtanceDetails({ pageSize: pageSize, skip: skip }).subscribe();
-        substanceService.getSubtanceDetails({ pageSize: pageSize, skip: skip }).subscribe();
-        substanceService.getSubtanceDetails({ pageSize: pageSize, facets: facets, skip: skip }).subscribe();
-        substanceService.getSubtanceDetails({ pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubstancesDetails({ searchTerm: 'test', pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubstancesDetails({ type: 'test', pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubstancesDetails({ cutoff: 0.5, pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubstancesDetails({ pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubstancesDetails({ pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubstancesDetails({ pageSize: pageSize, skip: skip }).subscribe();
+        substanceService.getSubstancesDetails({ pageSize: pageSize, facets: facets, skip: skip }).subscribe();
+        substanceService.getSubstancesDetails({ pageSize: pageSize, skip: skip }).subscribe();
 
         httpClientGetSpy.calls.all().forEach(call => {
           expect(call.args[1].params.get('top'))
@@ -141,12 +141,12 @@ describe('SubstanceService', () => {
 
       it('on initial search, call should be made to corrent url and with correct parameters', () => {
 
-        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm }).subscribe();
-        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, type: 'test' }).subscribe();
-        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, cutoff: 0.5 }).subscribe();
-        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, pageSize: 100 }).subscribe();
-        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, facets: facets }).subscribe();
-        substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm, skip: 10 }).subscribe();
+        substanceService.getSubstancesDetails({ structureSearchTerm: structureSearchTerm }).subscribe();
+        substanceService.getSubstancesDetails({ structureSearchTerm: structureSearchTerm, type: 'test' }).subscribe();
+        substanceService.getSubstancesDetails({ structureSearchTerm: structureSearchTerm, cutoff: 0.5 }).subscribe();
+        substanceService.getSubstancesDetails({ structureSearchTerm: structureSearchTerm, pageSize: 100 }).subscribe();
+        substanceService.getSubstancesDetails({ structureSearchTerm: structureSearchTerm, facets: facets }).subscribe();
+        substanceService.getSubstancesDetails({ structureSearchTerm: structureSearchTerm, skip: 10 }).subscribe();
 
         httpClientGetSpy.calls.all().forEach(call => {
           expect(call.args[0])
@@ -170,11 +170,11 @@ describe('SubstanceService', () => {
 
           httpClientGetSpy.and.returnValue(responseComplete);
 
-          substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm })
+          substanceService.getSubstancesDetails({ structureSearchTerm: structureSearchTerm })
             .subscribe(response => {
               const expectedUrl = `api/v1/status(${StructureSearchResponseTestData.key})/results`;
 
-              substanceService.getSubtanceDetails({ structureSearchTerm: structureSearchTerm })
+              substanceService.getSubstancesDetails({ structureSearchTerm: structureSearchTerm })
                 .subscribe(_response => {
                   const allCalls = httpClientGetSpy.calls.all();
                   expect(allCalls[0].args[0]).toEqual('api/v1/substances/structureSearch');

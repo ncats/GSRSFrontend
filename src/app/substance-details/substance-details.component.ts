@@ -69,7 +69,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
               ref.instance.title = this.substanceDetailsProperties[index].title;
               ref.instance.analyticsEventCategory = !environment.isAnalyticsPrivate
                 && this.utilsService.toCamelCase(`substance ${this.substanceDetailsProperties[index].title}`)
-                || 'substance card';
+                || 'substanceCard';
               if (this.substanceDetailsProperties[index].type != null) {
                 ref.instance.type = this.substanceDetailsProperties[index].type;
               }
@@ -108,6 +108,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       }
       this.loadingService.setLoading(false);
     }, error => {
+      this.gaService.sendException('getSubstanceDetails: error from API cal');
       this.loadingService.setLoading(false);
       this.handleSubstanceRetrivalError();
     });

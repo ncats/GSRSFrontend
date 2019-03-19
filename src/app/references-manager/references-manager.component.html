@@ -12,8 +12,8 @@
   <ng-container matColumnDef="citation">
     <th mat-header-cell *matHeaderCellDef> Source Text / Citation </th>
     <td mat-cell *matCellDef="let ref">
-      <a *ngIf = "ref.url" href = {{ref.url}}>{{ref.citation}}</a>
-      <span *ngIf = "!ref.url">{{ref.citation}}</span>
+      <a *ngIf="ref.url" target="_blank" [href]="ref.url" appTrackLinkEvent evCategory="substanceOverview">{{ref.citation}}</a>
+      <span *ngIf="!ref.url">{{ref.citation}}</span>
     </td>
   </ng-container>
 

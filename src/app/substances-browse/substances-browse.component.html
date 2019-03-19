@@ -162,7 +162,7 @@
                         <span class="label">{{codeSystemName}}</span>:&nbsp;
                         <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">
                           <span *ngIf="codeObject.url">
-                            <a class="ext-link" target="_blank" href="{{codeObject.url}}" appTrackLinkEvent evCategory="substancesContent" evAction="link:code">
+                            <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent evCategory="substancesContent" evAction="link:code">
                               {{codeObject.code.trim()}}
                               <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
                             </a>
@@ -175,7 +175,7 @@
                   </div>
                 </div>
                 <div class="substance-data substance-relationships" *ngIf="substance.relationships && substance.relationships.length">
-                  <div class="label">Relationthips:</div>
+                  <div class="label">Relationships:</div>
                   <div class="value">
                     {{substance.relationships.length}}
                   </div>
