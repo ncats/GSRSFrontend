@@ -4,7 +4,7 @@ export const environment = baseEnvironment;
 environment.apiBaseUrl = '/ginas/app/';
 environment.production = true;
 environment.baseHref = '/ginas/app/beta/';
-environment.version = 'fda';
+environment.appId = 'fda';
 // environment.navItems = [
 //     {
 //         display: 'FDA Sample Path',
@@ -15,6 +15,7 @@ environment.version = 'fda';
 //         path: 'fda-sample-inheritance'
 //     }
 // ];
+environment.googleAnalyticsId = 'UA-136176848-3';
 environment.isAnalyticsPrivate = true;
 
 export { FdaModule as EnvironmentModule } from '../app/fda.module';

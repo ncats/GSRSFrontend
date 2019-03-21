@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CoreComponent } from './core.component';
+import { BaseComponent } from './base.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { LoadingModule } from '../loading/loading.module';
 import { RouterStub } from '../../testing/router-stub';
@@ -17,9 +17,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { MatIconMock } from '../../testing/mat-icon-mock.component';
 
-describe('CoreComponent', () => {
-  let component: CoreComponent;
-  let fixture: ComponentFixture<CoreComponent>;
+describe('BaseComponent', () => {
+  let component: BaseComponent;
+  let fixture: ComponentFixture<BaseComponent>;
   let routerStub: RouterStub;
   let activatedRouteStub: Partial<ActivatedRoute>;
 
@@ -45,7 +45,7 @@ describe('CoreComponent', () => {
         NoopAnimationsModule
       ],
       declarations: [
-        CoreComponent,
+        BaseComponent,
         RouterLinkDirectiveMock,
         RouterOutletStubComponent,
         MatIconMock
@@ -61,7 +61,7 @@ describe('CoreComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CoreComponent);
+    fixture = TestBed.createComponent(BaseComponent);
     component = fixture.componentInstance;
     // fixture.detectChanges();
   });

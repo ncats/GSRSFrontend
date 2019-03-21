@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Config } from './config.model';
+import { Environment } from '../../environments/_base-environment';
 
 @Injectable()
 export class ConfigService {
@@ -11,20 +12,26 @@ export class ConfigService {
 
     // This is the method you want to call at bootstrap
     // Important: It should return a Promise
-    load(apiBaseUrl?: string, baseHref?: string): Promise<any> {
+    load(environment: Environment): Promise<any> {
 
         this._configData = null;
 
-        const configFilePath = `${baseHref || '/'}assets/data/config.json`;
+        const configFilePath = `${environment.baseHref || '/'}assets/data/config.json`;
 
         return this.http
             .get(configFilePath)
             .toPromise()
-            .then((data: Config) => {
-                if (data.apiBaseUrl == null && apiBaseUrl != null) {
-                    data.apiBaseUrl = apiBaseUrl;
+            .then((config: Config) => {
+                if (config.apiBaseUrl == null && environment.apiBaseUrl != null) {
+                    config.apiBaseUrl = environment.apiBaseUrl;
                 }
-                this._configData = data;
+                if (config.googleAnalyticsId == null && environment.googleAnalyticsId != null) {
+                    config.googleAnalyticsId = environment.googleAnalyticsId;
+                }
+                if (config.version == null && environment.version != null) {
+                    config.version = environment.version;
+                }
+                this._configData = config;
             })
             .catch((err: any) => Promise.resolve());
     }

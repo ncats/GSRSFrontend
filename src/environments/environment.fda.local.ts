@@ -1,7 +1,7 @@
 import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
-environment.version = 'fda';
+environment.appId = 'fda';
 // environment.navItems = [
 //     {
 //         display: 'FDA Sample Path',

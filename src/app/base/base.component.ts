@@ -3,11 +3,11 @@ import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { environment } from '../../environments/environment';
 
 @Component({
-  selector: 'app-core',
-  templateUrl: './core.component.html',
-  styleUrls: ['./core.component.scss']
+  selector: 'app-base',
+  templateUrl: './base.component.html',
+  styleUrls: ['./base.component.scss']
 })
-export class CoreComponent implements OnInit {
+export class BaseComponent implements OnInit {
   mainPathSegment = '';
   navItems = [
     {

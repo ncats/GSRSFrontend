@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { CoreComponent } from './core/core.component';
+import { BaseComponent } from './base/base.component';
 import { HomeComponent } from './home/home.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
@@ -39,7 +39,7 @@ const routes: Routes = [
   {
     path: '',
     children: childRoutes,
-    component: CoreComponent
+    component: BaseComponent
   },
   {
     path: '**',

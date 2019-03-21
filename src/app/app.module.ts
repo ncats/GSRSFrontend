@@ -30,7 +30,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { CoreComponent } from './core/core.component';
+import { BaseComponent } from './base/base.component';
 import { HomeComponent } from './home/home.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
 import { configServiceFactory } from './config/config.factory';
@@ -57,7 +57,7 @@ import { TrackLinkEventDirective } from './google-analytics/track-link-event/tra
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-    CoreComponent,
+    BaseComponent,
     HomeComponent,
     SubstancesBrowseComponent,
     StructureSearchComponent,

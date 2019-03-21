@@ -54,14 +54,6 @@ export class GoogleAnalyticsService {
 
     this.isActive = true;
 
-    if (this.configService.configData.appId) {
-      window[this.analyticsObjectKey]('set', 'appId', this.configService.configData.appId);
-    }
-
-    if (this.configService.configData.version) {
-      window[this.analyticsObjectKey]('set', 'appVersion', this.configService.configData.version);
-    }
-
     const node = document.createElement('script');
     node.src = 'https://www.google-analytics.com/analytics.js';
     node.type = 'text/javascript';

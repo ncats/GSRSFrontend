@@ -27,7 +27,7 @@ export class UtilsService extends BaseHttpService {
   }
 
   getStructureSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
-    return this.http.jsonp<SubstanceSuggestionsGroup>(this.apiBaseUrl + 'suggest?q=' + searchTerm, 'callback');
+    return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrl + 'suggest?q=' + searchTerm);
   }
 
   getVocabularies(filter?: string, pageSize?: number, skip?: number): Observable<PagingResponse<Vocabulary>> {

@@ -9,7 +9,8 @@
     "exclude": [
       "testing",
       "test.ts",
-      "**/*.spec.ts"
+      "**/*.spec.ts",
+      "testing/**/*"
     ],
     "angularCompilerOptions": {
       "entryModule": "app/app.server.module#AppServerModule"

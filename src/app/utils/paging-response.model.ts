@@ -1,5 +1,8 @@
 import { Facet } from './facet.model';
 
+/**
+ * API response object for list calls that have paging
+ */
 export interface PagingResponse<T> {
     id: number;
     version: number;

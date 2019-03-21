@@ -1,12 +1,31 @@
-export const baseEnvironment = {
+export const baseEnvironment: Environment = {
     apiBaseUrl: 'https://ginas.ncats.nih.gov/ginas/app/',
     baseHref: '',
     production: false,
-    version: '',
+    appId: 'gsrs',
     structureEditor: 'jsdraw',
     navItems: [],
+    googleAnalyticsId: '',
+    version: '2.3.4',
     isAnalyticsPrivate: false
 };
+
+export interface Environment {
+    apiBaseUrl: string;
+    baseHref: string;
+    production: boolean;
+    appId: 'abase' | 'fda' | 'gsrs' | 'inxight';
+    structureEditor: 'ketcher' | 'jsdraw';
+    navItems: Array<NavItem>;
+    googleAnalyticsId: string;
+    version: string;
+    isAnalyticsPrivate: boolean;
+}
+
+export interface NavItem {
+    display: string;
+    path: string;
+}
 
 
 // options for structureEditor are 'ketcher' or 'jsdraw'
