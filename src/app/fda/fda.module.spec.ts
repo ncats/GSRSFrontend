@@ -1,6 +1,6 @@
 import { FdaModule } from './fda.module';
 import { Router, Routes } from '@angular/router';
-import { RouterStub } from '../testing/router-stub';
+import { RouterStub } from '../../testing/router-stub';
 
 describe('FdaModule', () => {
   let fdaModule: FdaModule;
