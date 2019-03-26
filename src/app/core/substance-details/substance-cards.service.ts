@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { SubstanceDetailsProperty } from '../substance/substance-utilities.model';
-import { SubstanceDetail, SubstanceCode, SubstanceRelationship } from '../substance/substance.model';
+import { SubstanceDetail } from '../substance/substance.model';
 import { SubstanceDetailsCardFilter } from '../config/config.model';
 
 @Injectable({
@@ -124,7 +124,6 @@ export class SubstanceCardsService {
       return false;
     }
   }
-
   exists(
     substance: SubstanceDetail,
     filter: SubstanceDetailsCardFilter
@@ -141,8 +140,6 @@ export class SubstanceCardsService {
     }
     return false;
   }
-
-
   substanceCodes(
     substance: SubstanceDetail
   ): Array<SubstanceDetailsProperty> {

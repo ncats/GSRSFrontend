@@ -16,7 +16,8 @@ export class ConfigService {
 
         this._configData = null;
 
-        const configFilePath = `${environment.baseHref || '/'}assets/data/config.json`;
+        const configFilePath = environment.configFileLocation ?
+            environment.configFileLocation : `${environment.baseHref || '/'}assets/data/config.json`;
 
         return this.http
             .get(configFilePath)

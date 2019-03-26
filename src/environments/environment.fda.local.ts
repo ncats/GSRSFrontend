@@ -13,5 +13,6 @@ environment.appId = 'fda';
 //     }
 // ];
 environment.isAnalyticsPrivate = true;
+environment.configFileLocation = '/assets/data/config-fda.json';
 
 export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';
