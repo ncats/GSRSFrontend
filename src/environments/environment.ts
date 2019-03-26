@@ -6,7 +6,7 @@ import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
 
-export { GsrsModule as EnvironmentModule } from '../app/gsrs.module';
+export { GsrsModule as EnvironmentModule } from '../app/core/gsrs.module';
 
 /*
  * In development mode, for easier debugging, you can ignore zone related error

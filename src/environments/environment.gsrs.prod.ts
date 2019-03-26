@@ -6,4 +6,4 @@ environment.baseHref = '/ginas/app/beta/';
 environment.appId = 'gsrs';
 environment.googleAnalyticsId = 'UA-136176848-1';
 
-export { GsrsModule as EnvironmentModule } from '../app/gsrs.module';
+export { GsrsModule as EnvironmentModule } from '../app/core/gsrs.module';

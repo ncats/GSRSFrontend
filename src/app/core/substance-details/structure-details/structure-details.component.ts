@@ -6,7 +6,6 @@ import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceCardBase } from '../substance-card-base';
 import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-structure-details',

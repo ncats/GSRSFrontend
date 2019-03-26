@@ -14,4 +14,4 @@ environment.appId = 'fda';
 // ];
 environment.isAnalyticsPrivate = true;
 
-export { FdaModule as EnvironmentModule } from '../app/fda.module';
+export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';

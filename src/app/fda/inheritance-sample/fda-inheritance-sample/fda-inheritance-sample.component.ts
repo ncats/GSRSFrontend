@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InheritanceSampleBase } from '../inheritance-sample-base';
-import { SubstanceService } from '../../substance/substance.service';
+import { SubstanceService } from '../../../core/substance/substance.service';
 
 @Component({
   selector: 'app-fda-inheritance-sample',

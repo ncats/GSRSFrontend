@@ -1,4 +1,4 @@
-import { SubstanceService } from '../substance/substance.service';
+import { SubstanceService } from '../../core/substance/substance.service';
 
 export class InheritanceSampleBase {
     message: string;

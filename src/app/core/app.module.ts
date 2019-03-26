@@ -45,12 +45,11 @@ import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
-import { EnvironmentModule } from '../environments/environment';
+import { EnvironmentModule } from '../../environments/environment';
 import { TopSearchModule } from './top-search/top-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
-import { GoogleAnalyticsService } from './google-analytics/google-analytics.service';
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
 
 @NgModule({

@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { ConfigService } from '../config/config.service';
 import { Router } from '@angular/router';
 import { SendFields } from './google-analytics.model';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

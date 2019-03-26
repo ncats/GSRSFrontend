@@ -18,7 +18,7 @@ import { TopSearchService } from '../top-search/top-search.service';
 import {StructureImportComponent} from '../structure/structure-import/structure-import.component';
 import {StructureImageModalComponent} from '../structure/structure-image-modal/structure-image-modal.component';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-substances-browse',

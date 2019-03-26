@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Ketcher } from 'ketcher-wrapper';
 import { EditorImplementation } from './structure-editor-implementation.model';
 import { JSDraw } from 'jsdraw-wrapper';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-structure-editor',

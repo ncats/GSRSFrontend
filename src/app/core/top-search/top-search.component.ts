@@ -7,7 +7,7 @@ import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.
 import { UtilsService } from '../utils/utils.service';
 import { TopSearchService } from './top-search.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-top-search',

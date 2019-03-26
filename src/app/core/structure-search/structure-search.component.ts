@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { Editor } from '../structure-editor/structure.editor.model';
 import { LoadingService } from '../loading/loading.service';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { StructureService } from '../structure/structure.service';
 import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
