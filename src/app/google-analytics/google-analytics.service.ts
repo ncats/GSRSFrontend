@@ -45,6 +45,8 @@ export class GoogleAnalyticsService {
     window[this.analyticsObjectKey]('create', this.googleAnanlyticsId, { cookieName: 'gsrsCookie' });
     window[this.analyticsObjectKey]('set', 'screenResolution', `${window.screen.availWidth}x${window.screen.availHeight}`);
 
+    window[this.analyticsObjectKey]('set', 'hostname', window.location.hostname);
+
     if (environment.isAnalyticsPrivate) {
       window[this.analyticsObjectKey]('set', 'allowAdFeatures', false);
       window[this.analyticsObjectKey]('set', 'anonymizeIp', true);
