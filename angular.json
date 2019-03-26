@@ -132,106 +132,6 @@
                   "with": "src/environments/environment.fda.local.ts"
                 }
               ]
-            },
-            "inxight.prod": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.inxight.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
-            },
-            "inxight.pre-prod": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.inxight.pre-prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
-            },
-            "inxight.dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.inxight.dev.ts"
-                }
-              ]
-            },
-            "inxight.local": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.inxight.local.ts"
-                }
-              ]
-            },
-            "abase.prod": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.abase.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
-            },
-            "abase.pre-prod": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.abase.pre-prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
-            },
-            "abase.dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.abase.dev.ts"
-                }
-              ]
-            },
-            "abase.local": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.abase.local.ts"
-                }
-              ]
             }
           }
         },
@@ -241,18 +141,6 @@
             "browserTarget": "gsrs-client:build"
           },
           "configurations": {
-            "abase.dev": {
-              "browserTarget": "gsrs-client:build:abase.dev"
-            },
-            "abase.local": {
-              "browserTarget": "gsrs-client:build:abase.local"
-            },
-            "abase.pre-prod": {
-              "browserTarget": "gsrs-client:build:abase.pre-prod"
-            },
-            "abase.prod": {
-              "browserTarget": "gsrs-client:build:abase.prod"
-            },
             "fda.dev": {
               "browserTarget": "gsrs-client:build:fda.dev"
             },
@@ -276,18 +164,6 @@
             },
             "gsrs.prod": {
               "browserTarget": "gsrs-client:build:gsrs.prod"
-            },
-            "inxight.dev": {
-              "browserTarget": "gsrs-client:build:inxight.dev"
-            },
-            "inxight.local": {
-              "browserTarget": "gsrs-client:build:inxight.local"
-            },
-            "inxight.pre-prod": {
-              "browserTarget": "gsrs-client:build:inxight.pre-prod"
-            },
-            "inxight.prod": {
-              "browserTarget": "gsrs-client:build:inxight.prod"
             }
           }
         },
