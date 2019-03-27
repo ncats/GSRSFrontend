@@ -27,7 +27,7 @@ export class DynamicComponentLoaderModule {
         // provider for Angular CLI to analyze
         { provide: ROUTES, useValue: manifests, multi: true },
         // provider for DynamicComponentLoader to analyze
-        { provide: DYNAMIC_COMPONENT_MANIFESTS, useValue: manifests },
+        { provide: DYNAMIC_COMPONENT_MANIFESTS, useValue: manifests, multi: true },
       ],
     };
   }
@@ -39,7 +39,8 @@ export class DynamicComponentLoaderModule {
         // provider for @angular/router to parse
         { provide: ROUTES, useValue: manifest, multi: true },
         // provider for DynamicComponentLoader to analyze
-        { provide: DYNAMIC_MODULE, useValue: manifest }],
+        { provide: DYNAMIC_MODULE, useValue: manifest }
+      ],
     };
   }
   static forChild(component: Type<any>): ModuleWithProviders {
