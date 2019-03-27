@@ -4,6 +4,10 @@
       "title": "overview"
     },
     {
+      "card": "fda-sample-card",
+      "title": "Sample Card"
+    },
+    {
       "card": "substance-primary-definition",
       "title": "primary definition",
       "filters": [{
