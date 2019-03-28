@@ -34,6 +34,7 @@ export class SubstanceService extends BaseHttpService {
     type?: string,
     seqType?: string,
     pageSize?: number,
+    order?: string,
     facets?: SubstanceFacetParam,
     skip?: number
   } = {}): Observable<PagingResponse<SubstanceDetail>> {
@@ -76,6 +77,7 @@ export class SubstanceService extends BaseHttpService {
           args.searchTerm,
           args.pageSize,
           args.facets,
+          args.order,
           args.skip
         ).subscribe(response => {
           observer.next(response);
@@ -93,6 +95,7 @@ export class SubstanceService extends BaseHttpService {
     searchTerm?: string,
     pageSize: number = 10,
     facets?: SubstanceFacetParam,
+    order?: string,
     skip: number = 0
   ): Observable<PagingResponse<SubstanceDetail>> {
 
@@ -103,6 +106,9 @@ export class SubstanceService extends BaseHttpService {
     url += 'substances/search';
     if (searchTerm != null && searchTerm !== '') {
       params = params.append('q', searchTerm);
+    }
+    if (order != null && order !== '') {
+      params = params.append('order', order);
     }
     params = params.appendFacetParams(facets);
 
