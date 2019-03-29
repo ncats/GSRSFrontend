@@ -1,43 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { SubstanceDetailsProperty } from '../substance/substance-utilities.model';
 import { SubstanceDetail } from '../substance/substance.model';
-import { SubstanceDetailsCardFilter } from '../config/config.model';
+import { SUBSTANCE_CARDS_FILTERS } from './substance-cards-filter.model';
+import { SubstanceCardFilter } from './substance-cards-filter.model';
+import { getEvaluatedProperty } from './substance-cards-utils';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SubstanceCardsService {
 
   constructor(
-    public configService: ConfigService
+    public configService: ConfigService,
+    @Inject(SUBSTANCE_CARDS_FILTERS) private filters: Array<Array<SubstanceCardFilter>>
   ) { }
 
-  private getEvaluatedProperty(substance: any, propertyToCheck?: string): any {
-    if (propertyToCheck == null) {
-      return null;
-    } else if (propertyToCheck.indexOf('.') > -1) {
-      const properties = propertyToCheck.split('.');
-      let evaluatedObject = substance;
-      const lastIndex = properties.length - 1;
-      for (let i = 0; i < properties.length; i++) {
-        if (i !== lastIndex) {
-          if (evaluatedObject[properties[i]] != null
-            && Object.prototype.toString.call(evaluatedObject[properties[i]]) === '[object Object]') {
-            evaluatedObject = evaluatedObject[properties[i]];
-          } else {
-            return null;
-          }
-        } else {
-          return evaluatedObject[properties[i]];
-        }
-      }
-    } else {
-      return substance[propertyToCheck];
-    }
-  }
-
   getSubstanceDetailsProperties(substance: SubstanceDetail): Array<SubstanceDetailsProperty> {
+    const filtersList = this.filters.reduce((acc, val) => acc.concat(val), []);
     let substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
     const configCards = this.configService.configData.substanceDetailsCards;
     let propertyTocheck = null;
@@ -48,10 +26,11 @@ export class SubstanceCardsService {
         if (card.filters && card.filters.length) {
           const responses = [];
           let isCardIncluded = true;
-          card.filters.forEach(filter => {
-            if (this[filter.filterName]) {
-              propertyTocheck = this.getEvaluatedProperty(substance, filter.propertyToCheck);
-              const response = this[filter.filterName](substance, filter);
+          card.filters.forEach(cardFilter => {
+            const filter = filtersList.find(_filter => _filter.name === cardFilter.filterName);
+            if (filter != null) {
+              propertyTocheck = getEvaluatedProperty(substance, cardFilter.propertyToCheck);
+              const response = filter.filter(substance, cardFilter, this.configService.configData.specialRelationships);
               if (response === false) {
                 isCardIncluded = false;
                 isAddCard = false;
@@ -62,6 +41,8 @@ export class SubstanceCardsService {
                 countSubstanceProperty = true;
               }
               responses.push(response);
+            } else {
+              isAddCard = false;
             }
           });
 
@@ -86,145 +67,6 @@ export class SubstanceCardsService {
         }
       });
     }
-
-    return substanceDetailsProperties;
-  }
-
-  equals(
-    substance: SubstanceDetail,
-    filter: SubstanceDetailsCardFilter
-  ): boolean {
-    if (filter.value != null && filter.propertyToCheck != null) {
-
-
-      if (!filter.value.indexOf('|') && substance[filter.propertyToCheck] === filter.value) {
-        return true;
-      } else if (filter.value.indexOf('|')) {
-        const values = filter.value.split('|');
-        for (let i = 0; i < values.length; i++) {
-          if (substance[filter.propertyToCheck] === values[i]) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-  }
-  equals_in_array(
-    substance: SubstanceDetail,
-    filter: SubstanceDetailsCardFilter
-  ): boolean {
-    if (filter.value != null && filter.propertyToCheck != null && filter.propertyInArray != null) {
-      for (let i = 0; i < substance[filter.propertyToCheck].length; i++) {
-        if ((substance[filter.propertyToCheck][i][filter.propertyInArray]) === filter.value) {
-          return true;
-        }
-
-      }
-      return false;
-    }
-  }
-  exists(
-    substance: SubstanceDetail,
-    filter: SubstanceDetailsCardFilter
-  ): boolean {
-
-    if (filter.propertyToCheck != null) {
-      const evaluatedProperty = this.getEvaluatedProperty(substance, filter.propertyToCheck);
-
-      if (evaluatedProperty != null
-        && (Object.prototype.toString.call(evaluatedProperty) !== '[object Array]'
-          || evaluatedProperty.length)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  substanceCodes(
-    substance: SubstanceDetail
-  ): Array<SubstanceDetailsProperty> {
-
-    const substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
-
-    const classification: SubstanceDetailsProperty = {
-      title: 'classification',
-      count: 0,
-      dynamicComponentId: 'substance-codes',
-      type: 'classification'
-    };
-
-    const identifiers: SubstanceDetailsProperty = {
-      title: 'identifiers',
-      count: 0,
-      dynamicComponentId: 'substance-codes',
-      type: 'identifiers'
-    };
-
-    if (substance.codes && substance.codes.length > 0) {
-      substance.codes.forEach(code => {
-        if (code.comments && code.comments.indexOf('|') > -1) {
-          classification.count++;
-        } else {
-          identifiers.count++;
-        }
-      });
-    }
-
-    if (classification.count > 0) {
-      substanceDetailsProperties.push(classification);
-    }
-
-    if (identifiers.count > 0) {
-      substanceDetailsProperties.push(identifiers);
-    }
-
-    return substanceDetailsProperties;
-  }
-
-  substanceRelationships(
-    substance: SubstanceDetail
-  ): Array<SubstanceDetailsProperty> {
-    const substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
-
-    const properties: { [type: string]: SubstanceDetailsProperty } = {};
-
-    if (substance.relationships && substance.relationships.length > 1) {
-      substance.relationships.forEach(relationship => {
-        const typeParts = relationship.type.split('->');
-        const property = typeParts && typeParts.length && typeParts[0].trim() || '';
-        let propertyName: string;
-        let type: string;
-
-        if (this.configService.configData.specialRelationships && this.configService.configData.specialRelationships.length) {
-          for (let i = 0; i < this.configService.configData.specialRelationships.length; i++) {
-            if (property.toLowerCase().indexOf(this.configService.configData.specialRelationships[i].type.toLowerCase()) > -1) {
-              propertyName = this.configService.configData.specialRelationships[i].display;
-              type = this.configService.configData.specialRelationships[i].type;
-              break;
-            }
-          }
-        }
-
-        if (propertyName == null || type == null) {
-          propertyName = 'relationships';
-          type = 'RELATIONSHIPS';
-        }
-
-        if (!properties[propertyName]) {
-          properties[propertyName] = {
-            title: propertyName,
-            count: 0,
-            dynamicComponentId: 'substance-relationships',
-            type: type
-          };
-        }
-        properties[propertyName].count++;
-      });
-    }
-
-    Object.keys(properties).forEach(key => {
-      substanceDetailsProperties.push(properties[key]);
-    });
 
     return substanceDetailsProperties;
   }

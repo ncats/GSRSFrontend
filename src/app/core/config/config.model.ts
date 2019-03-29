@@ -10,10 +10,10 @@ export interface Config {
 export interface SubstanceDetailsCard {
     card: string;
     title?: string;
-    filters?: Array<SubstanceDetailsCardFilter>;
+    filters?: Array<SubstanceCardFilterParameters>;
 }
 
-export interface SubstanceDetailsCardFilter {
+export interface SubstanceCardFilterParameters {
     filterName: string;
     propertyToCheck?: string;
     value?: string;

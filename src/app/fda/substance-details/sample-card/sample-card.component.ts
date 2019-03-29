@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SubstanceCardBase } from 'gsrs-core/substance-details';
+import { SubstanceCardBase } from '@gsrs-core/substance-details/substance-card-base';
 
 @Component({
   selector: 'app-sample-card',
