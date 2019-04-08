@@ -5,26 +5,26 @@ import { SubstanceDetailsProperty } from '../substance/substance-utilities.model
 import { getEvaluatedProperty } from './substance-cards-utils';
 
 export const substanceCardsFilters: Array<SubstanceCardFilter> = [
-    {
-        name: 'equals',
-        filter: equalsFilter
-    },
-    {
-        name: 'equals_in_array',
-        filter: equalsInArrayFilter
-    },
-    {
-        name: 'exists',
-        filter: existsFilter
-    },
-    {
-        name: 'substanceCodes',
-        filter: substanceCodesFilter
-    },
-    {
-        name: 'substanceRelationships',
-        filter: substanceRelationshipsFilter
-    }
+    // {
+    //     name: 'equals',
+    //     filter: equalsFilter
+    // },
+    // {
+    //     name: 'equals_in_array',
+    //     filter: equalsInArrayFilter
+    // },
+    // {
+    //     name: 'exists',
+    //     filter: existsFilter
+    // },
+    // {
+    //     name: 'substanceCodes',
+    //     filter: substanceCodesFilter
+    // },
+    // {
+    //     name: 'substanceRelationships',
+    //     filter: substanceRelationshipsFilter
+    // }
 ];
 
 

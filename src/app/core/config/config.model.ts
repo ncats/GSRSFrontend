@@ -18,6 +18,7 @@ export interface SubstanceCardFilterParameters {
     propertyToCheck?: string;
     value?: string;
     propertyInArray?: string;
+    order?: number;
 }
 
 export interface SpecialRelationship {
