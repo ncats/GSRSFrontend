@@ -11,11 +11,7 @@ export interface SubstanceCardFilter {
     name: string;
     filter: (
         substanceUuid: string,
-        substanceDeatilsProperty: SubstanceDetailsProperty,
-        filters: Array<SubstanceCardFilter>,
-        filterParameters?: Array<SubstanceCardFilterParameters>,
-        specialRelationships?: Array<SpecialRelationship>,
-        observer?: Subscriber<Array<SubstanceDetailsProperty>>
+        filterParameters: SubstanceCardFilterParameters
     ) => SubstanceCardFilterResponse | any;
 }
 

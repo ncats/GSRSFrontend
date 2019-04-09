@@ -76,21 +76,20 @@ export class SubstanceCardsService {
     return substanceDetailsProperties;
   }
 
-  // getSubstanceDetailsPropertiesAsync(substanceUUID: string): Observable<SubstanceDetailsProperty> {
-  //   return new Observable(observer => {
-  //     const filtersList = this.filters.reduce((acc, val) => acc.concat(val), []);
-  //     const configCards = this.configService.configData.substanceDetailsCards;
-  //     if (configCards != null && configCards.length) {
+  getSubstanceDetailsPropertiesAsync(substanceUUID: string): Observable<SubstanceDetailsProperty> {
+    return new Observable(observer => {
+      const filtersList = this.filters.reduce((acc, val) => acc.concat(val), []);
+      const configCards = this.configService.configData.substanceDetailsCards;
+      if (configCards != null && configCards.length) {
+        configCards.forEach((card) => {
+          const substanceDetailsProperty: SubstanceDetailsProperty;
+          if (card.filters && card.filters.length) {
+            const filter = filtersList.find(_filter => _filter.name === card.filters[0].filterName);
+            filter.filter();
+          }
+        });
+      }
 
-  //       configCards.forEach((card) => {
-  //         const substanceDetailsProperty: SubstanceDetailsProperty;
-  //         if (card.filters && card.filters.length) {
-  //           const filter = filtersList.find(_filter => _filter.name === card.filters[0].filterName);
-  //           filter.filter();
-  //         }
-  //       });
-  //     }
-
-  //   });
-  // }
+    });
+  }
 }
