@@ -1,50 +1,43 @@
 import { SubstanceCardFilterParameters } from '../config/config.model';
 import { SubstanceCardFilterResponse } from './substance-cards-filter.model';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, merge } from 'rxjs';
 import { SubstanceCardFilter } from './substance-cards-filter.model';
-import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants';
+import { SubstanceDetail } from '../substance/substance.model';
+import { forkJoin } from 'rxjs';
 
 export class FilterResolver {
-    filters: Array<Filter> = [];
-    observer: Subscriber<SubstanceCardFilterResponse>;
+    private filters = [];
 
     constructor(
-        substanceUuid: string,
+        private substance: SubstanceDetail,
         filterParameters: Array<SubstanceCardFilterParameters>,
         registeredFilters: Array<SubstanceCardFilter>
     ) {
         filterParameters.forEach(filterParameter => {
             const registeredFilter = registeredFilters.find(_filter => _filter.name === filterParameter.filterName);
             if (registeredFilter != null) {
-                const filter = new Filter(registeredFilter.filter);
-                this.filters.push(filter);
+                this.filters.push(registeredFilter.filter(substance, filterParameter));
             }
         });
     }
 
-    resolve(): Observable<SubstanceCardFilterResponse> {
+    resolve(): Observable<boolean> {
         return new Observable(observer => {
             if (this.filters.length > 0) {
-                this.filters.forEach(filter => {
-                    filter.filter();
+                forkJoin(this.filters).subscribe(responses => {
+                    let isApproved = true;
+                    responses.forEach(response => {
+                        if (!response) {
+                            isApproved = false;
+                        }
+                    });
+                    observer.next(isApproved);
+                    observer.complete();
                 });
-                this.observer = observer;
+            } else {
+                observer.next(true);
+                observer.complete();
             }
         });
-    }
-}
-
-class Filter {
-    isApproved?: boolean;
-    filter: (
-        substanceUuid: string,
-        filterParameters: SubstanceCardFilterParameters
-    ) => Observable<SubstanceCardFilterResponse>;
-    constructor(registeredFilter: (
-            substanceUuid: string,
-            filterParameters: SubstanceCardFilterParameters
-        ) => Observable<SubstanceCardFilterResponse>
-    ) {
-        this.filter = registeredFilter;
     }
 }

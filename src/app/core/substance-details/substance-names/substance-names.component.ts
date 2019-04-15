@@ -29,6 +29,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     if (this.substance != null && this.substance.names != null) {
       this.names = this.substance.names;
       this.filtered = this.substance.names;
+      this.countUpdate.emit(this.names.length);
       this.pageChange();
 
       this.searchControl.valueChanges.subscribe(value => {

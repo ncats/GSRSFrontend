@@ -61,20 +61,26 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.dynamicComponents.changes
       .subscribe(() => {
         this.dynamicComponents.forEach((cRef, index) => {
-          this.dynamicComponentLoader
-            .getComponentFactory<any>(this.substanceDetailsProperties[index].dynamicComponentId)
-            .subscribe(componentFactory => {
-              const ref = cRef.createComponent(componentFactory);
-              ref.instance.substance = this.substance;
-              ref.instance.title = this.substanceDetailsProperties[index].title;
-              ref.instance.analyticsEventCategory = !environment.isAnalyticsPrivate
-                && this.utilsService.toCamelCase(`substance ${this.substanceDetailsProperties[index].title}`)
-                || 'substanceCard';
-              if (this.substanceDetailsProperties[index].type != null) {
-                ref.instance.type = this.substanceDetailsProperties[index].type;
-              }
-              ref.changeDetectorRef.detectChanges();
-            });
+          if (!this.substanceDetailsProperties[index].isLoaded) {
+            this.dynamicComponentLoader
+              .getComponentFactory<any>(this.substanceDetailsProperties[index].dynamicComponentId)
+              .subscribe(componentFactory => {
+                this.substanceDetailsProperties[index].isLoaded = true;
+                const ref = cRef.createComponent(componentFactory);
+                ref.instance.countUpdate.subscribe(count => {
+                  this.substanceDetailsProperties[index].updateCount(count);
+                });
+                ref.instance.substance = this.substance;
+                ref.instance.title = this.substanceDetailsProperties[index].title;
+                ref.instance.analyticsEventCategory = !environment.isAnalyticsPrivate
+                  && this.utilsService.toCamelCase(`substance ${this.substanceDetailsProperties[index].title}`)
+                  || 'substanceCard';
+                if (this.substanceDetailsProperties[index].type != null) {
+                  ref.instance.type = this.substanceDetailsProperties[index].type;
+                }
+                ref.changeDetectorRef.detectChanges();
+              });
+          }
         });
       });
     this.matSideNav.openedStart.subscribe(() => {
@@ -102,16 +108,56 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
         this.substance = response;
-        this.substanceDetailsProperties = this.substanceCardsService.getSubstanceDetailsProperties(this.substance);
+        this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
+          if (substanceProperty != null) {
+            this.substanceDetailsProperties.push(substanceProperty);
+          }
+        });
       } else {
         this.handleSubstanceRetrivalError();
       }
       this.loadingService.setLoading(false);
     }, error => {
-      this.gaService.sendException('getSubstanceDetails: error from API cal');
+      this.gaService.sendException('getSubstanceDetails: error from API call');
       this.loadingService.setLoading(false);
       this.handleSubstanceRetrivalError();
     });
+  }
+
+  private insertSubstanceProperty(property: SubstanceDetailsProperty, startVal?: number, endVal?: number): void {
+    const length = this.substanceDetailsProperties.length;
+    const start = startVal != null ? startVal : 0;
+    const end = endVal != null ? endVal : length - 1;
+    const m = start + Math.floor((end - start) / 2);
+
+
+    if (length === 0) {
+      this.substanceDetailsProperties.push(property);
+      return;
+    }
+    if (property.order > this.substanceDetailsProperties[end].order) {
+      this.substanceDetailsProperties.splice(end + 1, 0, property);
+      return;
+    }
+
+    if (property.order < this.substanceDetailsProperties[start].order) {
+      this.substanceDetailsProperties.splice(start, 0, property);
+      return;
+    }
+
+    if (start >= end) {
+      return;
+    }
+
+    if (property.order < this.substanceDetailsProperties[m].order) {
+      this.insertSubstanceProperty(property, start, m - 1);
+      return;
+    }
+
+    if (property.order > this.substanceDetailsProperties[m].order) {
+      this.insertSubstanceProperty(property, m + 1, end);
+      return;
+    }
   }
 
   private handleSubstanceRetrivalError() {

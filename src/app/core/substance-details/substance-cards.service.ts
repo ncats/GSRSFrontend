@@ -5,9 +5,8 @@ import { SubstanceDetailsProperty } from '../substance/substance-utilities.model
 import { SubstanceDetail } from '../substance/substance.model';
 import { SUBSTANCE_CARDS_FILTERS } from './substance-cards-filter.model';
 import { SubstanceCardFilter } from './substance-cards-filter.model';
-import { getEvaluatedProperty } from './substance-cards-utils';
 import { Observable } from 'rxjs';
-import { Substance } from '../substance/substance';
+import { FilterResolver } from './filter-resolver';
 
 @Injectable()
 export class SubstanceCardsService {
@@ -18,74 +17,31 @@ export class SubstanceCardsService {
     public http: HttpClient
   ) { }
 
-  getSubstanceDetailsProperties(substance: SubstanceDetail): Array<SubstanceDetailsProperty> {
-    const filtersList = this.filters.reduce((acc, val) => acc.concat(val), []);
-    let substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
-    const configCards = this.configService.configData.substanceDetailsCards;
-    const _substance = new Substance(this.http, this.configService, substance.uuid);
-    // let propertyTocheck = null;
-    // if (configCards != null && configCards.length) {
-    //   configCards.forEach(card => {
-    //     let isAddCard = true;
-    //     let countSubstanceProperty = false;
-    //     if (card.filters && card.filters.length) {
-    //       const responses = [];
-    //       let isCardIncluded = true;
-    //       card.filters.forEach(cardFilter => {
-    //         const filter = filtersList.find(_filter => _filter.name === cardFilter.filterName);
-    //         if (filter != null) {
-    //           propertyTocheck = getEvaluatedProperty(substance, cardFilter.propertyToCheck);
-    //           const response = filter.filter(substance, cardFilter, this.configService.configData.specialRelationships);
-    //           if (response === false) {
-    //             isCardIncluded = false;
-    //             isAddCard = false;
-    //           } else if (
-    //             response === true
-    //             && propertyTocheck != null
-    //             && Object.prototype.toString.call(propertyTocheck) === '[object Array]') {
-    //             countSubstanceProperty = true;
-    //           }
-    //           responses.push(response);
-    //         } else {
-    //           isAddCard = false;
-    //         }
-    //       });
-
-    //       if (isCardIncluded) {
-    //         responses.forEach(response => {
-    //           if (typeof response !== 'boolean') {
-    //             isAddCard = false;
-    //             substanceDetailsProperties = substanceDetailsProperties.concat(response);
-    //           }
-    //         });
-    //       }
-    //     }
-
-    //     if (isAddCard) {
-
-    //       const detailsProperty: SubstanceDetailsProperty = {
-    //         title: card.title || '',
-    //         count: countSubstanceProperty && propertyTocheck.length || null,
-    //         dynamicComponentId: card.card
-    //       };
-    //       substanceDetailsProperties.push(detailsProperty);
-    //     }
-    //   });
-    // }
-
-    return substanceDetailsProperties;
-  }
-
-  getSubstanceDetailsPropertiesAsync(substanceUUID: string): Observable<SubstanceDetailsProperty> {
+  getSubstanceDetailsPropertiesAsync(substance: SubstanceDetail): Observable<SubstanceDetailsProperty> {
     return new Observable(observer => {
-      const filtersList = this.filters.reduce((acc, val) => acc.concat(val), []);
+      const registeredFilters = this.filters.reduce((acc, val) => acc.concat(val), []);
       const configCards = this.configService.configData.substanceDetailsCards;
       if (configCards != null && configCards.length) {
-        configCards.forEach((card) => {
-          const substanceDetailsProperty: SubstanceDetailsProperty;
+        configCards.forEach((card, index) => {
+          const order = card.order != null ? card.order : index;
+          const substanceDetailsProperty = new SubstanceDetailsProperty(
+            card.title || card.type || '',
+            null,
+            card.card,
+            card.type,
+            order
+          );
           if (card.filters && card.filters.length) {
-            const filter = filtersList.find(_filter => _filter.name === card.filters[0].filterName);
-            filter.filter();
+            const filterResolver = new FilterResolver(substance, card.filters, registeredFilters);
+            filterResolver.resolve().subscribe(response => {
+              if (response) {
+                observer.next(substanceDetailsProperty);
+              } else {
+                observer.next(null);
+              }
+            });
+          } else {
+            observer.next(substanceDetailsProperty);
           }
         });
       }

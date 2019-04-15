@@ -1,8 +1,8 @@
 import { InjectionToken } from '@angular/core';
 import { SubstanceDetail } from '../substance/substance.model';
-import { SubstanceCardFilterParameters, SpecialRelationship } from '../config/config.model';
+import { SubstanceCardFilterParameters } from '../config/config.model';
 import { SubstanceCardFilter } from './substance-cards-filter.model';
-import { Subscriber } from 'rxjs';
+import { Subscriber, Observable } from 'rxjs';
 import { SubstanceDetailsProperty } from '../substance/substance-utilities.model';
 
 export const SUBSTANCE_CARDS_FILTERS = new InjectionToken('SUBSTANCE_CARDS_FILTERS');
@@ -10,9 +10,9 @@ export const SUBSTANCE_CARDS_FILTERS = new InjectionToken('SUBSTANCE_CARDS_FILTE
 export interface SubstanceCardFilter {
     name: string;
     filter: (
-        substanceUuid: string,
+        substance: SubstanceDetail,
         filterParameters: SubstanceCardFilterParameters
-    ) => SubstanceCardFilterResponse | any;
+    ) => Observable<boolean>;
 }
 
 export interface SubstanceCardFilterResponse {

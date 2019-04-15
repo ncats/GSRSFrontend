@@ -30,6 +30,7 @@ export class SubstanceGlycosylationComponent extends SubstanceCardBase implement
         for (const link of this.glycosylation.OGlycosylationSites) {
           this.sites.push({type: 'O', site: link.subunitIndex + '_' + link.residueIndex});
         }
+        this.countUpdate.emit(this.sites.length);
       }
     }
 
