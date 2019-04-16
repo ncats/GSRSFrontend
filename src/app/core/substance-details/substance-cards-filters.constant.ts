@@ -146,7 +146,6 @@ export function substanceRelationshipsFilter(
                 }
             }
         }
-
         observer.next(isApproved);
         observer.complete();
     });

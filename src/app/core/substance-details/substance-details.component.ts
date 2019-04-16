@@ -62,10 +62,10 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       .subscribe(() => {
         this.dynamicComponents.forEach((cRef, index) => {
           if (!this.substanceDetailsProperties[index].isLoaded) {
+            this.substanceDetailsProperties[index].isLoaded = true;
             this.dynamicComponentLoader
               .getComponentFactory<any>(this.substanceDetailsProperties[index].dynamicComponentId)
               .subscribe(componentFactory => {
-                this.substanceDetailsProperties[index].isLoaded = true;
                 const ref = cRef.createComponent(componentFactory);
                 ref.instance.countUpdate.subscribe(count => {
                   this.substanceDetailsProperties[index].updateCount(count);
@@ -110,7 +110,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
         this.substance = response;
         this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
           if (substanceProperty != null) {
-            this.substanceDetailsProperties.push(substanceProperty);
+            this.insertSubstanceProperty(substanceProperty);
           }
         });
       } else {

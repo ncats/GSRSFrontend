@@ -23,7 +23,7 @@ export class SubstanceHttpParams extends HttpParams {
 
                             clone = clone.append(
                                 'facet',
-                                (`${paramPrefix}${facetKey.replace(/-/g, '%2D')}/${facetValueKey.replace(/-/g, '%2D')}`));
+                                (`${paramPrefix}${facetKey.replace(/\//g, '$$$')}/${facetValueKey.replace(/\//g, '$$$')}`));
                         }
                     });
                 }

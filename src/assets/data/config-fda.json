@@ -5,7 +5,10 @@
     },
     {
       "card": "fda-sample-card",
-      "title": "Sample Card"
+      "title": "sample card",
+      "filters": [{
+        "filterName": "fdaSample"
+      }]
     },
     {
       "card": "substance-primary-definition",
@@ -40,12 +43,27 @@
     },
     {
       "card": "substance-codes",
+      "type": "classification",
       "filters": [{
           "filterName": "exists",
           "propertyToCheck": "codes"
         },
         {
-          "filterName": "substanceCodes"
+          "filterName": "substanceCodes",
+          "value": "classification"
+        }
+      ]
+    },
+    {
+      "card": "substance-codes",
+      "type": "identifiers",
+      "filters": [{
+          "filterName": "exists",
+          "propertyToCheck": "codes"
+        },
+        {
+          "filterName": "substanceCodes",
+          "value": "identifiers"
         }
       ]
     },
@@ -107,12 +125,71 @@
     },
     {
       "card": "substance-relationships",
+      "type": "METABOLITE",
+      "title": "metabolites",
       "filters": [{
           "filterName": "exists",
           "propertyToCheck": "relationships"
         },
         {
-          "filterName": "substanceRelationships"
+          "filterName": "substanceRelationships",
+          "value": "METABOLITE"
+        }
+      ]
+    },
+    {
+      "card": "substance-relationships",
+      "type": "IMPURITY",
+      "title": "impurities",
+      "filters": [{
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        },
+        {
+          "filterName": "substanceRelationships",
+          "value": "IMPURITY"
+        }
+      ]
+    },
+    {
+      "card": "substance-relationships",
+      "type": "ACTIVE MOIETY",
+      "title": "active moiety",
+      "filters": [{
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        },
+        {
+          "filterName": "substanceRelationships",
+          "value": "ACTIVE MOIETY"
+        }
+      ]
+    },
+    {
+      "card": "substance-relationships",
+      "type": "CONSTITUENT",
+      "title": "constituents",
+      "filters": [{
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        },
+        {
+          "filterName": "substanceRelationships",
+          "value": "CONSTITUENT"
+        }
+      ]
+    },
+    {
+      "card": "substance-relationships",
+      "type": "RELATIONSHIPS",
+      "title": "relationships",
+      "filters": [{
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        },
+        {
+          "filterName": "substanceRelationships",
+          "value": ["METABOLITE", "IMPURITY", "ACTIVE MOIETY", "CONSTITUENT"]
         }
       ]
     },
@@ -285,22 +362,5 @@
       "Product Name Type",
       "Product Dosage Form"
     ]
-  },
-  "specialRelationships": [{
-      "type": "METABOLITE",
-      "display": "metabolites"
-    },
-    {
-      "type": "IMPURITY",
-      "display": "impurities"
-    },
-    {
-      "type": "ACTIVE MOIETY",
-      "display": "active moiety"
-    },
-    {
-      "type": "CONSTITUENT",
-      "display": "constituents"
-    }
-  ]
+  }
 }
