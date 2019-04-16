@@ -22,6 +22,7 @@ export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnI
       && this.substance.nucleicAcid.sugars != null
       && this.substance.nucleicAcid.sugars.length) {
       this.sugars = this.substance.nucleicAcid.sugars;
+      this.countUpdate.emit(this.sugars.length);
       this.getTotalSites();
     }
   }

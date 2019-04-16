@@ -173,6 +173,20 @@
       ]
     },
     {
+      "card": "substance-relationships",
+      "type": "RELATIONSHIPS",
+      "title": "relationships",
+      "filters": [{
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        },
+        {
+          "filterName": "substanceRelationships",
+          "value": ["METABOLITE", "IMPURITY", "ACTIVE MOIETY", "CONSTITUENT"]
+        }
+      ]
+    },
+    {
       "card": "substance-notes",
       "title": "notes",
       "filters": [{

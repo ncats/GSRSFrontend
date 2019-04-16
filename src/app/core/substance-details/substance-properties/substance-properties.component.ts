@@ -10,7 +10,7 @@ import {SafeUrl} from '@angular/platform-browser';
   styleUrls: ['./substance-properties.component.scss']
 })
 export class SubstancePropertiesComponent extends SubstanceCardBase implements OnInit {
-properties: Array<SubstanceProperty>;
+properties: Array<SubstanceProperty> = [];
 displayedColumns: string[] = ['name', 'property type', 'amount', 'referenced substance', 'defining', 'parameters', 'references'];
   constructor(
     private utilService: UtilsService
@@ -22,6 +22,7 @@ displayedColumns: string[] = ['name', 'property type', 'amount', 'referenced sub
     if (this.substance != null && this.substance.properties != null) {
       this.properties = this.substance.properties;
     }
+    this.countUpdate.emit(this.properties.length);
   }
 
   public toString(amount: SubstanceAmount) {

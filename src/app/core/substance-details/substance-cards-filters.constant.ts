@@ -123,12 +123,24 @@ export function substanceRelationshipsFilter(
 
         let isApproved = false;
 
-        if (substance.relationships && substance.relationships.length > 1) {
+        if (substance.relationships && substance.relationships.length > 0) {
 
             for (let i = 0; i < substance.relationships.length; i++) {
                 const typeParts = substance.relationships[i].type.split('->');
                 const property = typeParts && typeParts.length && typeParts[0].trim() || '';
-                if (property.toLowerCase().indexOf(filter.value.toLowerCase()) > -1) {
+
+                if (filter.value instanceof Array) {
+                    let isInExcludeValues = false;
+                    filter.value.forEach(value => {
+                        if (property.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+                            isInExcludeValues = true;
+                        }
+                    });
+                    if (!isInExcludeValues) {
+                        isApproved = true;
+                        break;
+                    }
+                } else if (property.toLowerCase().indexOf(filter.value.toLowerCase()) > -1) {
                     isApproved = true;
                     break;
                 }

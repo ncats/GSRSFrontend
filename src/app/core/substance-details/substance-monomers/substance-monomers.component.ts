@@ -23,6 +23,7 @@ export class SubstanceMonomersComponent extends SubstanceCardBaseFilteredList<Mo
   ngOnInit() {
     if (this.substance != null) {
       this.monomers = this.substance.polymer.monomers;
+      this.countUpdate.emit(this.monomers.length);
       this.filtered = this.substance.polymer.monomers;
       this.pageChange();
 

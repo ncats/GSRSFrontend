@@ -17,7 +17,7 @@ export interface SubstanceDetailsCard {
 export interface SubstanceCardFilterParameters {
     filterName: string;
     propertyToCheck?: string;
-    value?: string;
+    value?: any;
     propertyInArray?: string;
     order?: number;
 }

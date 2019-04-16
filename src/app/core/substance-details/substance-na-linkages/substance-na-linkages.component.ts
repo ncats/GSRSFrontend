@@ -22,6 +22,7 @@ export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements O
       && this.substance.nucleicAcid.linkages != null
       && this.substance.nucleicAcid.linkages.length) {
       this.linkages = this.substance.nucleicAcid.linkages;
+      this.countUpdate.emit(this.linkages.length);
       this.getTotalSites();
     }
   }
