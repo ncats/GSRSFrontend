@@ -4,10 +4,10 @@
       "title": "overview"
     },
     {
-      "card": "fda-sample-card",
-      "title": "sample card",
+      "card": "fda-substance-product",
+      "title": "product",
       "filters": [{
-        "filterName": "fdaSample"
+        "filterName": "products"
       }]
     },
     {

@@ -8,6 +8,10 @@ export const fdaSubstanceCardsFilters: Array<SubstanceCardFilter> = [
     {
         name: 'fdaSample',
         filter: fdaSampleFilter
+    },
+    {
+        name: 'products',
+        filter: productsFilter
     }
 ];
 
@@ -17,9 +21,24 @@ export function fdaSampleFilter(
     http: HttpClient
 ): Observable<boolean> {
     return new Observable(observer => {
-        http.get('/assets/data/gsrs-product-test.json').subscribe(response => {
+        observer.next(true);
+        observer.complete();
+    });
+}
+
+export function productsFilter(
+    substance: SubstanceDetail,
+    filter: SubstanceCardFilterParameters,
+    http: HttpClient
+): Observable<boolean> {
+    return new Observable(observer => {
+        http.get('/assets/data/gsrs-products-test.json').subscribe((response: Array<any>) => {
             console.log(response);
-            observer.next(true);
+            if (response && response.length) {
+                observer.next(true);
+            } else {
+                observer.next(false);
+            }
             observer.complete();
         });
     });
