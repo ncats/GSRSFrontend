@@ -32,7 +32,7 @@ export class SubstanceCardsService {
             order
           );
           if (card.filters && card.filters.length) {
-            const filterResolver = new FilterResolver(substance, card.filters, registeredFilters);
+            const filterResolver = new FilterResolver(substance, card.filters, registeredFilters, this.http);
             filterResolver.resolve().subscribe(response => {
               if (response) {
                 observer.next(substanceDetailsProperty);

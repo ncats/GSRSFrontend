@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { SubstanceDetail } from '../substance/substance.model';
 import { SubstanceCardFilterParameters } from '../config/config.model';
 import { SubstanceCardFilter } from './substance-cards-filter.model';
@@ -11,11 +12,7 @@ export interface SubstanceCardFilter {
     name: string;
     filter: (
         substance: SubstanceDetail,
-        filterParameters: SubstanceCardFilterParameters
+        filterParameters: SubstanceCardFilterParameters,
+        http?: HttpClient
     ) => Observable<boolean>;
-}
-
-export interface SubstanceCardFilterResponse {
-    isIncluded: boolean;
-    count?: number;
 }

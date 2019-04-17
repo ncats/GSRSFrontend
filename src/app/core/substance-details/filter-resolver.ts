@@ -1,6 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { SubstanceCardFilterParameters } from '../config/config.model';
-import { SubstanceCardFilterResponse } from './substance-cards-filter.model';
-import { Observable, Subscriber, merge } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SubstanceCardFilter } from './substance-cards-filter.model';
 import { SubstanceDetail } from '../substance/substance.model';
 import { forkJoin } from 'rxjs';
@@ -11,12 +11,13 @@ export class FilterResolver {
     constructor(
         private substance: SubstanceDetail,
         filterParameters: Array<SubstanceCardFilterParameters>,
-        registeredFilters: Array<SubstanceCardFilter>
+        registeredFilters: Array<SubstanceCardFilter>,
+        http: HttpClient
     ) {
         filterParameters.forEach(filterParameter => {
             const registeredFilter = registeredFilters.find(_filter => _filter.name === filterParameter.filterName);
             if (registeredFilter != null) {
-                this.filters.push(registeredFilter.filter(substance, filterParameter));
+                this.filters.push(registeredFilter.filter(substance, filterParameter, http));
             }
         });
     }

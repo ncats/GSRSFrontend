@@ -61,22 +61,23 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.dynamicComponents.changes
       .subscribe(() => {
         this.dynamicComponents.forEach((cRef, index) => {
-          if (!this.substanceDetailsProperties[index].isLoaded) {
-            this.substanceDetailsProperties[index].isLoaded = true;
+          const substanceProperty = this.substanceDetailsProperties[index];
+          if (!substanceProperty.isLoaded) {
+            substanceProperty.isLoaded = true;
             this.dynamicComponentLoader
-              .getComponentFactory<any>(this.substanceDetailsProperties[index].dynamicComponentId)
+              .getComponentFactory<any>(substanceProperty.dynamicComponentId)
               .subscribe(componentFactory => {
                 const ref = cRef.createComponent(componentFactory);
                 ref.instance.countUpdate.subscribe(count => {
-                  this.substanceDetailsProperties[index].updateCount(count);
+                  substanceProperty.updateCount(count);
                 });
                 ref.instance.substance = this.substance;
-                ref.instance.title = this.substanceDetailsProperties[index].title;
+                ref.instance.title = substanceProperty.title;
                 ref.instance.analyticsEventCategory = !environment.isAnalyticsPrivate
-                  && this.utilsService.toCamelCase(`substance ${this.substanceDetailsProperties[index].title}`)
+                  && this.utilsService.toCamelCase(`substance ${substanceProperty.title}`)
                   || 'substanceCard';
-                if (this.substanceDetailsProperties[index].type != null) {
-                  ref.instance.type = this.substanceDetailsProperties[index].type;
+                if (substanceProperty.type != null) {
+                  ref.instance.type = substanceProperty.type;
                 }
                 ref.changeDetectorRef.detectChanges();
               });
