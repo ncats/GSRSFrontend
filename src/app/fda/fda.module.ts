@@ -8,6 +8,7 @@ import { SubstanceCardsModule } from '@gsrs-core/substance-details/substance-car
 import { fdaSubstanceCardsFilters } from './substance-details/fda-substance-cards-filters.constant';
 import { ProductService } from './product/product.service';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { MatCardModule } from '@angular/material/card';
 
 const fdaRoutes: Routes = [
   {
@@ -21,7 +22,8 @@ const fdaRoutes: Routes = [
     CommonModule,
     RouterModule.forChild(fdaRoutes),
     DynamicComponentLoaderModule.forRoot(fdaDynamicComponentManifests),
-    SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters)
+    SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
+    MatCardModule
   ],
   declarations: [ProductDetailsComponent],
   providers: [
