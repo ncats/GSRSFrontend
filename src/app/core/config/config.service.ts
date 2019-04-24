@@ -5,15 +5,15 @@ import { Environment } from '../../../environments/_base-environment';
 
 @Injectable()
 export class ConfigService {
-
     private _configData: Config;
+    private _environment: Environment;
 
     constructor(private http: HttpClient) { }
 
     // This is the method you want to call at bootstrap
     // Important: It should return a Promise
     load(environment: Environment): Promise<any> {
-
+        this._environment = environment;
         this._configData = null;
 
         const configFilePath = environment.configFileLocation ?
@@ -43,5 +43,9 @@ export class ConfigService {
 
     set configData(configData: Config) {
         this._configData = configData;
+    }
+
+    get environment(): Environment {
+        return this._environment;
     }
 }

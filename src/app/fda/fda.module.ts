@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule, ROUTES } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { DynamicComponentLoaderModule } from '@gsrs-core/dynamic-component-loader/dynamic-component-loader.module';
 import { fdaDynamicComponentManifests } from './fda-dynamic-componet-manifests';

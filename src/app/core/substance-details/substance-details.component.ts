@@ -9,13 +9,12 @@ import {
   OnDestroy,
   HostListener
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail, SubstanceCode, SubstanceRelationship } from '../substance/substance.model';
+import { SubstanceDetail } from '../substance/substance.model';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceDetailsProperty } from '../substance/substance-utilities.model';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { SubstanceCardsService } from './substance-cards.service';

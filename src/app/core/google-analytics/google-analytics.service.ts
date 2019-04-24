@@ -1,9 +1,8 @@
 import { Injectable, PLATFORM_ID, Inject, HostListener } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ConfigService } from '../config/config.service';
-import { Router } from '@angular/router';
 import { SendFields } from './google-analytics.model';
-import { environment } from '../../../environments/environment';
+import { Environment } from '../../../environments/_base-environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +11,11 @@ export class GoogleAnalyticsService {
   private googleAnanlyticsId: string;
   private analyticsObjectKey: string;
   private isActive = false;
+  private environment: Environment;
 
   constructor(
     public configService: ConfigService,
-    @Inject(PLATFORM_ID) private platformId: Object,
-    private router: Router
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     if (isPlatformBrowser(this.platformId)
       && configService.configData
@@ -24,6 +23,7 @@ export class GoogleAnalyticsService {
       this.googleAnanlyticsId = configService.configData.googleAnalyticsId;
       this.init();
     }
+    this.environment = configService.environment;
   }
 
   init() {
@@ -38,7 +38,7 @@ export class GoogleAnalyticsService {
       (window[analyticsObjectKey].q = window[analyticsObjectKey] && window[analyticsObjectKey].q || []).push(arguments);
     };
 
-    window[this.analyticsObjectKey].l = +new Date;
+    window[this.analyticsObjectKey].l = + new Date;
 
     this.isActive = true;
 
@@ -47,7 +47,7 @@ export class GoogleAnalyticsService {
 
     window[this.analyticsObjectKey]('set', 'hostname', window.location.hostname);
 
-    if (environment.isAnalyticsPrivate) {
+    if (this.environment.isAnalyticsPrivate) {
       window[this.analyticsObjectKey]('set', 'allowAdFeatures', false);
       window[this.analyticsObjectKey]('set', 'anonymizeIp', true);
       window[this.analyticsObjectKey]('set', 'referrer', 'https://none.com');
