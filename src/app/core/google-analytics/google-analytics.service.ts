@@ -17,13 +17,13 @@ export class GoogleAnalyticsService {
     public configService: ConfigService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
+    this.environment = configService.environment;
     if (isPlatformBrowser(this.platformId)
       && configService.configData
       && configService.configData.googleAnalyticsId) {
       this.googleAnanlyticsId = configService.configData.googleAnalyticsId;
       this.init();
     }
-    this.environment = configService.environment;
   }
 
   init() {
