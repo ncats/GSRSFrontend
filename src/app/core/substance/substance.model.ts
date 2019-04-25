@@ -326,3 +326,10 @@ export interface Site {
     subunitIndex: number;
     residueIndex: number;
 }
+
+export interface ResolverResults {
+  source: string;
+  results: SubstanceStructure;
+  name?: string;
+  uuid?: string;
+}

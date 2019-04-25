@@ -3,6 +3,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import {ResolverResults, SubstanceDetail} from '../substance/substance.model';
+import {PagingResponse} from '../utils/paging-response.model';
+import {SubstanceHttpParams} from '../substance/substance-http-params';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +15,8 @@ export class StructureService {
     private sanitizer: DomSanitizer,
     public configService: ConfigService,
     private http: HttpClient
-  ) { }
+  ) {
+  }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     const imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;
@@ -21,11 +25,33 @@ export class StructureService {
 
   getMolfile(id: string): Observable<string> {
     const url = `${this.configService.configData.apiBaseUrl}img/${id}.mol`;
-    return this.http.get(url, { responseType: 'text' });
+    return this.http.get(url, {responseType: 'text'});
   }
 
   getInchi(id: string): Observable<string> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})structure!$inchikey()`;
     return this.http.get(url, {responseType: 'text'});
   }
+
+  resolveName(name: string): Observable<ResolverResults[]> {
+    console.log('running '+ name);
+    const url = `${this.configService.configData.apiBaseUrl}resolve/${name}`;
+    return this.http.get<ResolverResults[]>(url);
+  }
+
+  getName(name:string): Observable<SubstanceDetail> {
+    let params = new SubstanceHttpParams();
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search`;
+    const n = name.replace("\"","");
+    //Needs sanitation
+    params = params.append('q', "root_names_name:\"^" + n + "$\" OR " +
+      "root_approvalID:\"^" + n + "$\" OR " +
+      "root_codes_BDNUM:\"^" + n + "$\"");
+    const options = {
+      params: params
+    };
+    return this.http.get<SubstanceDetail>(url, options);
+  }
+
+
 }

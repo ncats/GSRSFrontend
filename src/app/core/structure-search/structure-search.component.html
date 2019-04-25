@@ -35,4 +35,42 @@
       </div>
     </div>
   </mat-card>
+
+  <mat-card style = "display: block;
+
+width: 76%;">
+    <mat-card-title>
+      Get Structure From Name
+    </mat-card-title>
+    <mat-card-content>
+      <div class = "search">
+        <input [(ngModel)]="resolved" type = 'text'  (keyup.enter) = "resolveName(resolved)"/>
+        <button class="activate-search-button" mat-icon-button (click) = "resolveName(resolved)">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </div>
+
+      <div class = "result-container">
+        {{errorMessage}}
+        <div class = 'name-result' *ngFor = "let name of resolvedNames">
+          <img [src]="getSafeStructureImgUrl(name.value.id)" /><br/>
+          {{name.source}}<br/><br/>
+          <button mat-raised-button color="primary" class = "name-result-button" (click)="applyStructure(name.value.molfile)">Apply Structure</button>
+          {{errorMessage}}
+        </div>
+
+          <ng-container *ngIf ="matchedNames">
+            <div class = 'name-result' *ngFor = "let name of matchedNames.content">
+               <img [src]="getSafeStructureImgUrl(name.uuid)" /><br/>
+             GSRS duplicate<br/>
+              {{  name._name}}
+             <br/>
+              <button *ngIf="name.structure" mat-raised-button color="primary" class = "name-result-button" (click)="applyStructure(name.structure.molfile)">Apply Structure</button><br/>
+              <button mat-raised-button color="primary" class = "name-result-button" [routerLink]="['/substances',name.uuid]">view</button>
+          </div>
+          </ng-container>
+
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
