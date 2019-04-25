@@ -9,7 +9,7 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
   styleUrls: ['./substance-references.component.scss']
 })
 export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<SubstanceReference> implements OnInit {
-  references: Array<SubstanceReference>;
+  references: Array<SubstanceReference> = [];
   displayedColumns: string[] = ['citation', 'type', 'tags', 'dateAcessed'];
 
   constructor(
@@ -32,6 +32,7 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
         console.log(error);
       });
     }
+    this.countUpdate.emit(this.references.length);
   }
 
 }

@@ -12,9 +12,10 @@ export const baseEnvironment: Environment = {
 
 export interface Environment {
     apiBaseUrl: string;
+    configFileLocation?: string;
     baseHref: string;
     production: boolean;
-    appId: 'abase' | 'fda' | 'gsrs' | 'inxight';
+    appId: 'fda' | 'gsrs';
     structureEditor: 'ketcher' | 'jsdraw';
     navItems: Array<NavItem>;
     googleAnalyticsId: string;

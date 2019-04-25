@@ -1,5 +1,5 @@
 import { SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
-import { StructuralUnit } from '../substance/structure.model';
+import { StructuralUnit } from '../substance/structural-unit.model';
 
 /**
  * API response object for structure post call

@@ -4,23 +4,20 @@ export interface Config {
     version?: string;
     substanceDetailsCards?: Array<SubstanceDetailsCard>;
     facets?: { [permission: string]: Array<string> };
-    specialRelationships?: Array<SpecialRelationship>;
 }
 
 export interface SubstanceDetailsCard {
     card: string;
     title?: string;
-    filters?: Array<SubstanceDetailsCardFilter>;
+    filters?: Array<SubstanceCardFilterParameters>;
+    type?: string;
+    order?: number;
 }
 
-export interface SubstanceDetailsCardFilter {
+export interface SubstanceCardFilterParameters {
     filterName: string;
     propertyToCheck?: string;
-    value?: string;
+    value?: any;
     propertyInArray?: string;
-}
-
-export interface SpecialRelationship {
-    type: string;
-    display: string;
+    order?: number;
 }

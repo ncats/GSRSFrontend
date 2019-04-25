@@ -51,6 +51,8 @@ import { StructureImageModalComponent } from './structure/structure-image-modal/
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
+import { SubstanceCardsModule } from './substance-details/substance-cards.module';
+import { substanceCardsFilters } from './substance-details/substance-cards-filters.constant';
 
 @NgModule({
   declarations: [
@@ -104,7 +106,8 @@ import { TrackLinkEventDirective } from './google-analytics/track-link-event/tra
     MatButtonToggleModule,
     MatTooltipModule,
     MatTabsModule,
-    TopSearchModule
+    TopSearchModule,
+    SubstanceCardsModule.forRoot(substanceCardsFilters)
   ],
   providers: [
     ConfigService,

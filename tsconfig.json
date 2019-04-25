@@ -35,6 +35,12 @@
       ],
       "file-select/*": [
         "dist/file-select/*"
+      ],
+      "@gsrs-core/*": [
+        "src/app/core/*"
+      ],
+      "environment": [
+        "src/environments/environment"
       ]
     }
   },

@@ -35,6 +35,7 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
           this.definitions.push(relationship.relatedSubstance);
         }
       });
+      this.countUpdate.emit(this.definitions.length);
     }
   }
 

@@ -22,6 +22,7 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
     if (this.substance != null && this.substance.moieties != null) {
       this.moieties = this.substance.moieties;
     }
+    this.countUpdate.emit(this.moieties.length);
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {

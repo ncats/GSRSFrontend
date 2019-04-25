@@ -22,7 +22,8 @@ export class DynamicComponentLoader {
 
   /** Retrieve a ComponentFactory, based on the specified componentId (defined in the DynamicComponentManifest array). */
   getComponentFactory<T>(componentId: string, injector?: Injector): Observable<ComponentFactory<T>> {
-    const manifest = this.manifests
+    const manifestsFlat = this.manifests.reduce((acc, val) => acc.concat(val), []);
+    const manifest = manifestsFlat
       .find(m => m.componentId === componentId);
     if (!manifest) {
       return ObservableThrow(`DynamicComponentLoader: Unknown componentId "${componentId}"`);

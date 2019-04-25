@@ -30,6 +30,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   }
 
   ngOnInit() {
+    console.log(this.substance);
     if (this.substance != null) {
       this.structure = this.substance.structure;
       if (this.structure.smiles) {

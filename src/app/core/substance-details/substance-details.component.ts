@@ -9,13 +9,12 @@ import {
   OnDestroy,
   HostListener
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail, SubstanceCode, SubstanceRelationship } from '../substance/substance.model';
+import { SubstanceDetail } from '../substance/substance.model';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceDetailsProperty } from '../substance/substance-utilities.model';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { SubstanceCardsService } from './substance-cards.service';
@@ -61,20 +60,27 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.dynamicComponents.changes
       .subscribe(() => {
         this.dynamicComponents.forEach((cRef, index) => {
-          this.dynamicComponentLoader
-            .getComponentFactory<any>(this.substanceDetailsProperties[index].dynamicComponentId)
-            .subscribe(componentFactory => {
-              const ref = cRef.createComponent(componentFactory);
-              ref.instance.substance = this.substance;
-              ref.instance.title = this.substanceDetailsProperties[index].title;
-              ref.instance.analyticsEventCategory = !environment.isAnalyticsPrivate
-                && this.utilsService.toCamelCase(`substance ${this.substanceDetailsProperties[index].title}`)
-                || 'substanceCard';
-              if (this.substanceDetailsProperties[index].type != null) {
-                ref.instance.type = this.substanceDetailsProperties[index].type;
-              }
-              ref.changeDetectorRef.detectChanges();
-            });
+          const substanceProperty = this.substanceDetailsProperties[index];
+          if (!substanceProperty.isLoaded) {
+            substanceProperty.isLoaded = true;
+            this.dynamicComponentLoader
+              .getComponentFactory<any>(substanceProperty.dynamicComponentId)
+              .subscribe(componentFactory => {
+                const ref = cRef.createComponent(componentFactory);
+                ref.instance.countUpdate.subscribe(count => {
+                  substanceProperty.updateCount(count);
+                });
+                ref.instance.substance = this.substance;
+                ref.instance.title = substanceProperty.title;
+                ref.instance.analyticsEventCategory = !environment.isAnalyticsPrivate
+                  && this.utilsService.toCamelCase(`substance ${substanceProperty.title}`)
+                  || 'substanceCard';
+                if (substanceProperty.type != null) {
+                  ref.instance.type = substanceProperty.type;
+                }
+                ref.changeDetectorRef.detectChanges();
+              });
+          }
         });
       });
     this.matSideNav.openedStart.subscribe(() => {
@@ -102,16 +108,56 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
         this.substance = response;
-        this.substanceDetailsProperties = this.substanceCardsService.getSubstanceDetailsProperties(this.substance);
+        this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
+          if (substanceProperty != null) {
+            this.insertSubstanceProperty(substanceProperty);
+          }
+        });
       } else {
         this.handleSubstanceRetrivalError();
       }
       this.loadingService.setLoading(false);
     }, error => {
-      this.gaService.sendException('getSubstanceDetails: error from API cal');
+      this.gaService.sendException('getSubstanceDetails: error from API call');
       this.loadingService.setLoading(false);
       this.handleSubstanceRetrivalError();
     });
+  }
+
+  private insertSubstanceProperty(property: SubstanceDetailsProperty, startVal?: number, endVal?: number): void {
+    const length = this.substanceDetailsProperties.length;
+    const start = startVal != null ? startVal : 0;
+    const end = endVal != null ? endVal : length - 1;
+    const m = start + Math.floor((end - start) / 2);
+
+
+    if (length === 0) {
+      this.substanceDetailsProperties.push(property);
+      return;
+    }
+    if (property.order > this.substanceDetailsProperties[end].order) {
+      this.substanceDetailsProperties.splice(end + 1, 0, property);
+      return;
+    }
+
+    if (property.order < this.substanceDetailsProperties[start].order) {
+      this.substanceDetailsProperties.splice(start, 0, property);
+      return;
+    }
+
+    if (start >= end) {
+      return;
+    }
+
+    if (property.order < this.substanceDetailsProperties[m].order) {
+      this.insertSubstanceProperty(property, start, m - 1);
+      return;
+    }
+
+    if (property.order > this.substanceDetailsProperties[m].order) {
+      this.insertSubstanceProperty(property, m + 1, end);
+      return;
+    }
   }
 
   private handleSubstanceRetrivalError() {

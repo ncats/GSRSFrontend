@@ -25,6 +25,7 @@ export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit
     if (this.substance != null && this.substance.notes != null && this.substance.notes.length) {
       this.notes = this.substance.notes;
     }
+    this.countUpdate.emit(this.notes.length);
   }
 
 

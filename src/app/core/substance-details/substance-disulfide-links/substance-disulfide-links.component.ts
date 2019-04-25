@@ -28,6 +28,7 @@ export class SubstanceDisulfideLinksComponent extends SubstanceCardBase implemen
           const fromcol = link.sites[1].subunitIndex + '_' + link.sites[1].residueIndex;
          this.formatted.push({to: tocol, from: fromcol});
         }
+        this.countUpdate.emit(this.formatted.length);
     }
   }
 

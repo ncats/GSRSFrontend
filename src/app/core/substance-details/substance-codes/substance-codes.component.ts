@@ -55,6 +55,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
           this.codes.push(code);
         }
       });
+      this.countUpdate.emit(this.codes.length);
     }
   }
 

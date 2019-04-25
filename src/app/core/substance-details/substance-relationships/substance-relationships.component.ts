@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceRelationship } from '../../substance/substance.model';
 import { SafeUrl } from '@angular/platform-browser';
-import {UtilsService} from '../../utils/utils.service';
+import { UtilsService } from '../../utils/utils.service';
 import { ConfigService } from '../../config/config.service';
-import {MatDialog} from '@angular/material';
-import {SubstanceCardBaseFilteredList} from '../substance-card-base-filtered-list';
+import { MatDialog } from '@angular/material';
+import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
 @Component({
@@ -17,6 +16,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   type: string;
   relationships: Array<SubstanceRelationship> = [];
   displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details', 'references'];
+  private excludedRelationships: Array<string>;
 
   constructor(
     private utilService: UtilsService,
@@ -28,10 +28,22 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   }
 
   ngOnInit() {
+    if (this.type === 'RELATIONSHIPS'
+      && this.configService.configData
+      && this.configService.configData.substanceDetailsCards
+      && this.configService.configData.substanceDetailsCards.length
+    ) {
+      const relationshipsCard = this.configService.configData.substanceDetailsCards.find(card => card.type === this.type);
+      if (relationshipsCard != null && relationshipsCard.filters && relationshipsCard.filters.length) {
+        const filter = relationshipsCard.filters.find(_filter => _filter.filterName === 'substanceRelationships') || { value: [] };
+        this.excludedRelationships = filter.value;
+      }
+    }
+
     if (this.substance != null && this.type != null) {
       this.filterRelationhships();
-
-      this.filtered = this.substance.relationships;
+      this.countUpdate.emit(this.relationships.length);
+      this.filtered = this.relationships;
       this.pageChange();
       this.searchControl.valueChanges.subscribe(value => {
         this.filterList(value, this.relationships, this.analyticsEventCategory);
@@ -43,29 +55,25 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   }
 
   private filterRelationhships(): void {
-    if (this.substance.relationships && this.substance.relationships.length > 1) {
+    if (this.substance.relationships && this.substance.relationships.length > 0) {
       this.substance.relationships.forEach(relationship => {
         const typeParts = relationship.type.split('->');
         const property = typeParts && typeParts.length && typeParts[0].trim() || '';
-        if (property.indexOf(this.type) > -1) {
-          this.relationships.push(relationship);
-        } else if (this.type === 'RELATIONSHIPS') {
-          let isSpecialRelationship = false;
-
-          if (this.configService.configData.specialRelationships && this.configService.configData.specialRelationships.length) {
-            for (let i = 0; i < this.configService.configData.specialRelationships.length; i++) {
-              if (property.toLowerCase().indexOf(this.configService.configData.specialRelationships[i].type.toLowerCase()) > -1) {
-                isSpecialRelationship = true;
-                break;
-              }
+        if (this.excludedRelationships != null && this.excludedRelationships instanceof Array) {
+          let isInExcludedValues = false;
+          this.excludedRelationships.forEach(value => {
+            if (property.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+              isInExcludedValues = true;
             }
-          }
-
-          if (!isSpecialRelationship) {
+          });
+          if (!isInExcludedValues) {
             this.relationships.push(relationship);
           }
+        } else if (property.toLowerCase().indexOf(this.type.toLowerCase()) > -1) {
+          this.relationships.push(relationship);
         }
       });
+      console.log(this.relationships);
     }
   }
 

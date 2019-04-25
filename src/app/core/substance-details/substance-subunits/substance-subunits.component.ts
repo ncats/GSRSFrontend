@@ -29,6 +29,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
       && this.substance.protein.subunits != null
       && this.substance.protein.subunits.length) {
         this.subunits = this.substance.protein.subunits;
+        this.countUpdate.emit(this.subunits.length);
         this.getVocabularies();
     }
   }

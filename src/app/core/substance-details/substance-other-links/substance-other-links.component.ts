@@ -8,7 +8,7 @@ import {Link, Site} from '../../substance/substance.model';
   styleUrls: ['./substance-other-links.component.scss']
 })
 export class SubstanceOtherLinksComponent extends SubstanceCardBase implements OnInit {
-  otherLinks: Array<Link>;
+  otherLinks: Array<Link> = [];
   displayedColumns = ['linkageType', 'residueIndex'];
 
 
@@ -22,9 +22,8 @@ export class SubstanceOtherLinksComponent extends SubstanceCardBase implements O
       && this.substance.protein.otherLinks != null
       && this.substance.protein.otherLinks.length) {
       this.otherLinks = this.substance.protein.otherLinks;
-
-
     }
+    this.countUpdate.emit(this.otherLinks.length);
   }
 
   getFullSite(site: Site ): string {
