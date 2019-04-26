@@ -21,10 +21,6 @@ export class BaseComponent implements OnInit {
     {
       display: 'Sequence Search',
       path: 'sequence-search'
-    },
-    {
-      display: 'Sequence Search',
-      path: 'sequence-search'
     }
   ];
   logoSrcPath: string;
