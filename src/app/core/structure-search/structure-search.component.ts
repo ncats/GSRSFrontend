@@ -169,7 +169,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
         }
       },
       error => {
-        this.errorMessage = 'there was a problem with returning your query';
+        this.errorMessage = 'there was a problem returning your query';
 
         this.loadingService.setLoading(false);
       });

@@ -15,11 +15,10 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./top-search.component.scss']
 })
 
-@Pipe({name: 'relabel'})
 export class TopSearchComponent implements OnInit, AfterViewInit {
   searchControl = new FormControl();
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
-  suggestionsFields: Array<string>;
+  suggestionsFields: Array<any>;
   matOpen = true;
   private testElem: HTMLElement;
   private searchContainerElement: HTMLElement;
@@ -65,6 +64,16 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
         }
       });*/
       this.suggestionsFields.sort(function(x, y) { return x == 'Display_Name' ? -1 : y == 'Display_Name' ? 1 : 0; });
+      this.suggestionsFields.forEach((value, index) => {
+        if (value === 'Approval_ID') {
+          this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
+        } else if (value === 'Display_Name') {
+          this.suggestionsFields[index] =  {value: 'Display_Name', display: 'Preferred Term'};
+        } else {
+          this.suggestionsFields[index] =  {value: value, display: value};
+        }
+      });
+
     }, error => {
       this.gaService.sendException('search suggestion error from API call');
       console.log(error);
