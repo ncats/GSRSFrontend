@@ -43,14 +43,21 @@
                     <textarea formControlName="sequence"></textarea>
                 </div>
                 <div class="actions">
+                  <button class = "padding-right" mat-raised-button color="primary" (click)="search()" [disabled]="sequenceSearchForm.invalid">
+                    Search
+                  </button>
                     <button *ngIf="sequenceSearchForm.value.sequence" mat-button (click)="sequenceSearchForm.controls.sequence.setValue('')">
                         Clear
                     </button>
-                    <button class="align-right" mat-raised-button color="primary" (click)="search()" [disabled]="sequenceSearchForm.invalid">
-                        Search
-                    </button>
+
+                  <div class="align-right" >
+                    <a class = "blue-font" (click) = "cleanSequence(sequenceSearchForm.controls.sequenceType.value)" ><mat-icon svgIcon="spellcheck"></mat-icon> clean sequence</a>
+                  </div>
+
+
                 </div>
             </form>
+
         </mat-card-content>
     </mat-card>
 </div>

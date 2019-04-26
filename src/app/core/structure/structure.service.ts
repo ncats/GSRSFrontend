@@ -4,7 +4,6 @@ import { ConfigService } from '../config/config.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import {ResolverResults, SubstanceDetail} from '../substance/substance.model';
-import {PagingResponse} from '../utils/paging-response.model';
 import {SubstanceHttpParams} from '../substance/substance-http-params';
 @Injectable({
   providedIn: 'root'
@@ -34,19 +33,19 @@ export class StructureService {
   }
 
   resolveName(name: string): Observable<ResolverResults[]> {
-    console.log('running '+ name);
+    console.log('running ' + name);
     const url = `${this.configService.configData.apiBaseUrl}resolve/${name}`;
     return this.http.get<ResolverResults[]>(url);
   }
 
-  getName(name:string): Observable<SubstanceDetail> {
+  getName(name: string): Observable<SubstanceDetail> {
     let params = new SubstanceHttpParams();
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search`;
-    const n = name.replace("\"","");
+    const n = name.replace('"', '');
     //Needs sanitation
-    params = params.append('q', "root_names_name:\"^" + n + "$\" OR " +
-      "root_approvalID:\"^" + n + "$\" OR " +
-      "root_codes_BDNUM:\"^" + n + "$\"");
+    params = params.append('q', 'root_names_name:"^' + n + '$" OR ' +
+      'root_approvalID:"^' + n + '$" OR ' +
+      'root_codes_BDNUM:"^' + n + '$"');
     const options = {
       params: params
     };

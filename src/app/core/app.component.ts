@@ -76,6 +76,14 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'link',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-link-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'find_replace',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-find_replace-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'spellcheck',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-spellcheck-24px.svg'));
   }
 
 }

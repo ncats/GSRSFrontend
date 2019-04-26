@@ -69,6 +69,27 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     }
   }
 
+  cleanSequence(type): void {
+    let mod = ['G', 'T', 'U', 'N', 'A', 'C', 'X'];
+    if (type === 'Protein') {
+      mod = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y'];
+    }
+    this.sequenceSearchForm.controls.sequence.setValue(this.filterbychr(this.sequenceSearchForm.controls.sequence.value, mod));
+
+
+  }
+
+  filterbychr(str, reg): any {
+    const arr = str.toString().split('');
+    const newArr = [];
+    arr.forEach( function(item, index, object) {
+      if (reg.indexOf(item.toUpperCase()) >= 0) {
+        newArr.push(item);
+      }
+    });
+    return newArr.join('');
+    }
+
   private navigateToBrowseSubstance(): void {
 
     const navigationExtras: NavigationExtras = {
