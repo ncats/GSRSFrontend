@@ -76,6 +76,10 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'link',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-link-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'account_circle',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-account_circle-24px.svg'));
   }
 
 }

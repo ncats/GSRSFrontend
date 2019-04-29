@@ -86,4 +86,10 @@ export class AuthService extends BaseHttpService {
       }
     });
   }
+
+  logout(): void {
+    sessionStorage.removeItem('authToken');
+    this._auth = null;
+    this.authUpdate.next(null);
+  }
 }
