@@ -1,3 +1,4 @@
+
 export interface Auth {
     id: number;
     version: number;
@@ -12,7 +13,7 @@ export interface Auth {
     properties?: Array<any>;
     identifier: string;
     groups: Array<UserGroup>;
-    roles: Array<'Updater|Admin|Query|SuperUpdate|DataEntry|SuperDataEntry|Approver'>;
+    roles: Array<Role>;
     computedToken: string;
     tokenTimeToExpireMS: number;
     roleQueryOnly: boolean;
@@ -38,3 +39,5 @@ export interface UserGroup {
     id: number;
     members: Array<User>;
 }
+
+export type Role = 'Updater'|'Admin'|'Query'|'SuperUpdate'|'DataEntry'|'SuperDataEntry'|'Approver';

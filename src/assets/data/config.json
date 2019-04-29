@@ -354,6 +354,12 @@
       "Product Ingredient Type",
       "Product Name Type",
       "Product Dosage Form"
+    ],
+    "admin": [
+      "root_lastEditedBy",
+      "Material Type",
+      "Family",
+      "Parts"
     ]
   }
 }

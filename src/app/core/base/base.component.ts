@@ -39,10 +39,6 @@ export class BaseComponent implements OnInit {
       this.auth = auth;
     });
 
-    this.authService.authUpdate.subscribe(auth => {
-      this.auth = auth;
-    });
-
     if (environment.navItems && environment.navItems.length) {
       this.navItems.concat(environment.navItems);
     }
@@ -57,7 +53,6 @@ export class BaseComponent implements OnInit {
     });
 
     this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
-    console.log(this.mainPathSegment);
   }
 
   getMainPathSegmentFromUrl(url: string): string {

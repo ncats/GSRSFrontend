@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseHttpService } from '../base/base-http.service';
 import { ConfigService } from '../config/config.service';
-import { Auth } from './auth.model';
+import { Auth, Role } from './auth.model';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthService extends BaseHttpService {
   private _auth: Auth;
-  public authUpdate: Subject<Auth> = new Subject();
+  private _authUpdate: Subject<Auth> = new Subject();
   private isLoading: boolean;
 
   constructor(
@@ -22,10 +22,10 @@ export class AuthService extends BaseHttpService {
     this.isLoading = true;
     this.fetchAuth().subscribe(auth => {
       this._auth = auth;
-      this.authUpdate.next(auth);
+      this._authUpdate.next(auth);
       this.isLoading = false;
     }, error => {
-      this.authUpdate.next(null);
+      this._authUpdate.next(null);
       this.isLoading = false;
     });
   }
@@ -49,7 +49,7 @@ export class AuthService extends BaseHttpService {
           sessionStorage.setItem('authToken', auth.computedToken);
         }
         this._auth = auth;
-        this.authUpdate.next(auth);
+        this._authUpdate.next(auth);
         return auth;
       })
     );
@@ -57,39 +57,53 @@ export class AuthService extends BaseHttpService {
 
   getAuth(): Observable<Auth> {
     return new Observable(observer => {
+
       if (this._auth != null) {
         observer.next(this._auth);
-        observer.complete();
-      } else if (this.isLoading) {
-        const subscription = this.authUpdate.subscribe(auth => {
-          observer.next(auth);
-          observer.complete();
-          subscription.unsubscribe();
-        }, error => {
-          observer.next(null);
-          observer.complete();
-          subscription.unsubscribe();
-        });
-      } else {
+      } else if (!this.isLoading) {
         this.isLoading = true;
         this.fetchAuth().subscribe(auth => {
-          this.authUpdate.next(auth);
+          this._auth = auth;
+          observer.next(this._auth);
           this.isLoading = false;
-          observer.next(auth);
-          observer.complete();
         }, error => {
-          this.authUpdate.next(null);
+          this.logout();
           this.isLoading = false;
-          observer.next(null);
-          observer.complete();
         });
       }
+
+      this._authUpdate.subscribe(auth => {
+        observer.next(auth);
+      }, error => {
+        observer.next(null);
+      });
     });
+  }
+
+  get auth(): Auth {
+    return this._auth;
   }
 
   logout(): void {
     sessionStorage.removeItem('authToken');
     this._auth = null;
-    this.authUpdate.next(null);
+    this._authUpdate.next(null);
+  }
+
+  hasRoles(...roles: Array<Role|string>): boolean {
+    const rolesList = [...roles];
+
+    if (this._auth && this._auth.roles && rolesList && rolesList.length) {
+      for (let i = 0; i < rolesList.length; i++) {
+        let role = rolesList[i].toLowerCase();
+        role = role.charAt(0).toUpperCase() + role.slice(1);
+        if (!this._auth.roles.includes(role as Role)) {
+          return false;
+        }
+      }
+    } else {
+      return false;
+    }
+    return true;
   }
 }
