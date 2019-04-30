@@ -98,6 +98,9 @@
     .substance-table {
         display: none;
     }
+    .substance-tiles{
+      display: none;
+    }
 }
 
 .table {
@@ -108,6 +111,25 @@
     .substance-table {
         display: block;
     }
+
+    .substance-tiles{
+      display: none;
+    }
+}
+
+.tiles {
+  .substance-cards {
+    display: none;
+  }
+
+  .substance-table {
+    display: none;
+  }
+
+  .substance-tiles{
+    display: flex;
+  }
+
 }
 
 .mat-card-title, .facet-value {
@@ -185,6 +207,47 @@
 .substance-content {
     display: flex;
     flex-direction: row;
+}
+
+.tile {
+  height:300px;
+  margin:10px;
+  padding:10px;
+  width: calc(25% - 20px);
+  min-width:200px;
+  max-width:230px;
+  align-content:center;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.tile .image-thumbnail {
+  margin:auto;
+  margin-bottom:20px;
+  height:175px;
+  width:175px;
+}
+
+.tile .structure-container {
+  width:100%;
+  padding-right:0px;
+}
+
+.tile-name {
+  white-space:nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width:100%;
+  height:25px;
+}
+
+.substance-tiles{
+  flex-flow: row wrap;
+}
+
+.image-other {
+  width:175px;
+  height:175px;
 }
 
 .substance-data {

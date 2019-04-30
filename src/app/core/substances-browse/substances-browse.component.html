@@ -4,7 +4,7 @@
       <mat-expansion-panel *ngFor="let facet of facets" [expanded]="facetParams[facet.name] != null">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{facet.name}}
+            {{facet.name | facetDisplay}}
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="facet-value" *ngFor="let value of facet.values">
@@ -104,7 +104,11 @@
           <mat-button-toggle value="cards">
             <mat-icon svgIcon="view_stream"></mat-icon>
           </mat-button-toggle>
+          <mat-button-toggle value="tiles">
+            <mat-icon svgIcon="delete_forever"></mat-icon>
+          </mat-button-toggle>
         </mat-button-toggle-group>
+        {{view.value}}
         <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
           (page)="changePage($event)">
         </mat-paginator>
@@ -209,6 +213,7 @@
           </mat-card-content>
         </mat-card>
       </div>
+
       <div class="substance-table">
         <div class="responsive">
           <table mat-table [dataSource]="substances">
@@ -256,6 +261,40 @@
           </table>
         </div>
       </div>
+
+      <div class="substance-tiles">
+        <mat-card *ngFor="let substance of substances" class = "tile">
+          <mat-card-title>
+            <a class="approval-id">
+              {{substance.approvalID}}
+            </a>
+          </mat-card-title>
+
+          <mat-card-content>
+            <div class="substance-content">
+              <div class="structure-container">
+                <div class="image-thumbnail">
+                  <div *ngIf="substance.structure || substance.polymer">
+                    <a class="zoom" (click)="openImageModal(substance)">
+                      <img [src]="getSafeStructureImgUrl2(substance.uuid)">
+                    </a>
+                  </div>
+                  <div *ngIf="!substance.structure && !substance.polymer">
+                    <img class = "image-other" [src]="getSafeStructureImgUrl2(substance.uuid)">
+                  </div>
+                </div>
+                <div class = "tile-name">
+                  <a class="substance-name" [routerLink]="['/substances', substance.uuid]">
+                    {{substance._name}}
+                  </a>
+                </div>
+
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
     </div>
     <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
       Your search did not return any results. Please try modying it or

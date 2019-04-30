@@ -255,6 +255,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
+  getSafeStructureImgUrl2(structureId: string, size: number = 175): SafeUrl {
+    return this.utilsService.getSafeStructureImgUrl(structureId, size);
+  }
+
 
   updateFacetSelection(
     event: MatCheckboxChange,
@@ -510,6 +514,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   updateView(event): void {
+    console.log(event.value);
     this.gaService.sendEvent('substancesContent', 'button:view-update', event.value);
     this.view = event.value;
   }

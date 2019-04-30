@@ -45,6 +45,7 @@ import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
+import { FacetDisplayPipe } from './utils/facet-display.pipe';
 import { EnvironmentModule } from '../../environments/environment';
 import { TopSearchModule } from './top-search/top-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
@@ -65,6 +66,7 @@ import { substanceCardsFilters } from './substance-details/substance-cards-filte
     SubstanceDetailsComponent,
     StructureImageModalComponent,
     TakePipe,
+    FacetDisplayPipe,
     SequenceSearchComponent,
     TrackLinkEventDirective
   ],
