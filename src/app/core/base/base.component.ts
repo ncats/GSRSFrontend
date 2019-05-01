@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../auth/auth.service';
+import { Auth } from '../auth/auth.model';
 
 @Component({
   selector: 'app-base',
@@ -24,12 +26,18 @@ export class BaseComponent implements OnInit {
     }
   ];
   logoSrcPath: string;
+  auth?: Auth;
 
   constructor(
-    private router: Router
+    private router: Router,
+    public authService: AuthService
   ) { }
 
   ngOnInit() {
+
+    this.authService.getAuth().subscribe(auth => {
+      this.auth = auth;
+    });
 
     if (environment.navItems && environment.navItems.length) {
       this.navItems.concat(environment.navItems);

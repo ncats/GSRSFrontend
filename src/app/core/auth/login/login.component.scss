@@ -1,0 +1,24 @@
+.login-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.mat-card {
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+}
