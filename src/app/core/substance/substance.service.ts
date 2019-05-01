@@ -47,6 +47,7 @@ export class SubstanceService extends BaseHttpService {
           args.type,
           args.pageSize,
           args.facets,
+          args.order,
           args.skip
         ).subscribe(response => {
           observer.next(response);
@@ -63,6 +64,7 @@ export class SubstanceService extends BaseHttpService {
           args.seqType,
           args.pageSize,
           args.facets,
+          args.order,
           args.skip
         ).subscribe(response => {
           observer.next(response);
@@ -107,9 +109,7 @@ export class SubstanceService extends BaseHttpService {
     if (searchTerm != null && searchTerm !== '') {
       params = params.append('q', searchTerm);
     }
-    if (order != null && order !== '') {
-      params = params.append('order', order);
-    }
+
     params = params.appendFacetParams(facets);
 
     params = params.appendDictionary({
@@ -129,6 +129,7 @@ export class SubstanceService extends BaseHttpService {
     type: string = 'substructure',
     pageSize: number = 10,
     facets?: SubstanceFacetParam,
+    order?: string,
     skip: number = 0,
     sync: boolean = false
   ): Observable<PagingResponse<SubstanceDetail>> {
@@ -148,6 +149,9 @@ export class SubstanceService extends BaseHttpService {
           top: pageSize.toString(),
           skip: skip.toString()
         });
+        if (order != null && order !== '') {
+          params = params.append('order', order);
+        }
 
       } else {
         params = params.append('q', searchTerm);
@@ -204,6 +208,7 @@ export class SubstanceService extends BaseHttpService {
     seqType?: string,
     pageSize: number = 10,
     facets?: SubstanceFacetParam,
+    order?: string,
     skip: number = 0,
     sync: boolean = false
   ): Observable<PagingResponse<SubstanceDetail>> {
@@ -215,8 +220,10 @@ export class SubstanceService extends BaseHttpService {
 
       structureFacetsKey = this.utilsService.hashCode(searchTerm, cutoff, type, seqType);
 
-      if (!sync && this.searchKeys[structureFacetsKey]) {
-
+      if (!sync && this.searchKeys[structureFacetsKey]){
+        if (order != null && order !== '') {
+          params = params.append('order', order);
+        }
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets);
         params = params.appendDictionary({
@@ -225,7 +232,6 @@ export class SubstanceService extends BaseHttpService {
         });
 
       } else {
-
         params = params.appendDictionary({
           q: searchTerm,
           type: type,
@@ -241,7 +247,8 @@ export class SubstanceService extends BaseHttpService {
       const options = {
         params: params
       };
-
+      console.log(url);
+      console.log(params);
       this.http.get<any>(url, options).subscribe(
         response => {
           // call async
