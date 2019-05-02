@@ -327,9 +327,4 @@ export interface Site {
     residueIndex: number;
 }
 
-export interface ResolverResults {
-  source: string;
-  results: SubstanceStructure;
-  name?: string;
-  uuid?: string;
-}
+

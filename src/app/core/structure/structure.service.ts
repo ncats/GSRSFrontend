@@ -3,8 +3,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import {ResolverResults, SubstanceDetail} from '../substance/substance.model';
+import {SubstanceDetail} from '../substance/substance.model';
 import {SubstanceHttpParams} from '../substance/substance-http-params';
+import {ResolverResponse} from '@gsrs-core/utils/structure-post-response.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,10 +33,10 @@ export class StructureService {
     return this.http.get(url, {responseType: 'text'});
   }
 
-  resolveName(name: string): Observable<ResolverResults[]> {
+  resolveName(name: string): Observable<ResolverResponse[]> {
     console.log('running ' + name);
     const url = `${this.configService.configData.apiBaseUrl}resolve/${name}`;
-    return this.http.get<ResolverResults[]>(url);
+    return this.http.get<ResolverResponse[]>(url);
   }
 
   getName(name: string): Observable<SubstanceDetail> {

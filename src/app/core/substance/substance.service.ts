@@ -117,6 +117,10 @@ export class SubstanceService extends BaseHttpService {
       skip: skip && skip.toString()
     });
 
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
     const options = {
       params: params
     };
@@ -220,7 +224,7 @@ export class SubstanceService extends BaseHttpService {
 
       structureFacetsKey = this.utilsService.hashCode(searchTerm, cutoff, type, seqType);
 
-      if (!sync && this.searchKeys[structureFacetsKey]){
+      if (!sync && this.searchKeys[structureFacetsKey]) {
         if (order != null && order !== '') {
           params = params.append('order', order);
         }
@@ -247,8 +251,6 @@ export class SubstanceService extends BaseHttpService {
       const options = {
         params: params
       };
-      console.log(url);
-      console.log(params);
       this.http.get<any>(url, options).subscribe(
         response => {
           // call async

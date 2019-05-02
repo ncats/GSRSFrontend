@@ -44,10 +44,13 @@ width: 76%;">
     </mat-card-title>
     <mat-card-content>
       <div class = "search">
-        <input [(ngModel)]="resolved" type = 'text'  (keyup.enter) = "resolveName(resolved)"/>
-        <button class="activate-search-button" mat-icon-button (click) = "resolveName(resolved)">
-          <mat-icon svgIcon="search"></mat-icon>
-        </button>
+        <mat-form-field  class="">
+          <input class="search" type="text" placeholder="Search" aria-label="Resolve Name" matInput [formControl]="resolverControl" (keydown) = "resolveNameKey($event)">
+          <button mat-button matSuffix mat-icon-button (click) = "resolveName(resolverControl.value)">
+            <mat-icon class="resolver-search-icon" svgIcon="search"></mat-icon>
+          </button>
+        </mat-form-field>
+
       </div>
 
       <div class = "result-container">

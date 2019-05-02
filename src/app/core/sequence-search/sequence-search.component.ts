@@ -18,6 +18,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     sequence: new FormControl('', Validators.required)
   });
 
+
   constructor(
     public router: Router,
     private activatedRoute: ActivatedRoute,
@@ -79,10 +80,10 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
 
   }
 
-  filterbychr(str, reg): any {
+  filterbychr(str: string, reg: string[]): string {
     const arr = str.toString().split('');
     const newArr = [];
-    arr.forEach( function(item, index, object) {
+    arr.forEach( (item, index, object) => {
       if (reg.indexOf(item.toUpperCase()) >= 0) {
         newArr.push(item);
       }
