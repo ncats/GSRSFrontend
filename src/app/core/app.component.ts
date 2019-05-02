@@ -78,6 +78,10 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-link-24px.svg'));
 
     iconRegistry.addSvgIcon(
+      'account_circle',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-account_circle-24px.svg'));
+
+    iconRegistry.addSvgIcon(
       'find_replace',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-find_replace-24px.svg'));
 

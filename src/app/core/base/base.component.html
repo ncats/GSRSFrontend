@@ -23,6 +23,21 @@
     </mat-menu>
   </span>
   <app-top-search></app-top-search>
+  <div>
+    <button mat-flat-button class="login-link" routerLink="/login" *ngIf="!auth && mainPathSegment != 'login'">
+      Login
+    </button>
+    <div>
+      <button mat-icon-button [matMenuTriggerFor]="accountMenu" *ngIf="auth">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #accountMenu="matMenu">
+        <button mat-menu-item (click)="authService.logout()">
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
 </mat-toolbar>
 <app-main-notification></app-main-notification>
 <app-loading></app-loading>
