@@ -21,6 +21,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
+import { searchSortValues} from '@gsrs-core/utils/search-sort-values';
 
 @Component({
   selector: 'app-substances-browse',
@@ -49,6 +50,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public smiles: string;
   private argsHash?: number;
   public auth?: Auth;
+  public order: string;
+  public sortValues = searchSortValues;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -131,6 +134,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.privateSearchType,
       this.privateSearchSeqType,
       this.pageSize,
+      this.order,
       this.privateFacetParams,
       (this.pageIndex * this.pageSize),
     );
@@ -146,6 +150,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         cutoff: this.privateSearchCutoff,
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
+        order: this.order,
         pageSize: this.pageSize,
         facets: this.privateFacetParams,
         skip: skip

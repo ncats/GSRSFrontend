@@ -7,7 +7,7 @@ form {
 }
 
 .search-form-field {
-    width: 300px;
+    width: 500px;
     
     .mat-input-element {
         font-size: 16px;
@@ -21,9 +21,31 @@ form {
 
 .substance-suggestion-field {
     padding: 8px 6px;
-    color: #666666;
+    color: white;
     overflow: hidden;
 }
+
+.field-styling {
+  padding:5px;
+  border-radius:5px;
+  background-color: #448aff;
+  color:white;
+}
+
+.suggestion-styling {
+  overflow-x: hidden;
+  white-space: nowrap !important;
+  text-overflow: ellipsis;
+}
+
+.overflow-comp{
+  visibility:hidden;
+  max-width:2000px;
+  height:1px;
+  margin:0px;
+  padding:0px;
+}
+
 
 .search-container {
     mat-form-field {

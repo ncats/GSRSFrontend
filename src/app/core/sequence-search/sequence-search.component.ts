@@ -18,6 +18,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     sequence: new FormControl('', Validators.required)
   });
 
+
   constructor(
     public router: Router,
     private activatedRoute: ActivatedRoute,
@@ -68,6 +69,27 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
       this.gaService.sendException('tried invalid sequence search');
     }
   }
+
+  cleanSequence(type): void {
+    let mod = ['G', 'T', 'U', 'N', 'A', 'C', 'X'];
+    if (type === 'Protein') {
+      mod = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y'];
+    }
+    this.sequenceSearchForm.controls.sequence.setValue(this.filterbychr(this.sequenceSearchForm.controls.sequence.value, mod));
+
+
+  }
+
+  filterbychr(str: string, reg: string[]): string {
+    const arr = str.toString().split('');
+    const newArr = [];
+    arr.forEach( (item, index, object) => {
+      if (reg.indexOf(item.toUpperCase()) >= 0) {
+        newArr.push(item);
+      }
+    });
+    return newArr.join('');
+    }
 
   private navigateToBrowseSubstance(): void {
 

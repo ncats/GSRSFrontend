@@ -17,7 +17,12 @@
             </mat-checkbox>
           </div>
           <div class="facet-value-label">
-            {{value.label}}
+            <span *ngIf = "value.label == 'approved'">
+              Validated (UNII)
+           </span>
+              <span *ngIf = "value.label != 'approved'">
+              {{value.label}}
+            </span>
           </div>
           <div class="middle-fill"></div>
           <div class="facet-value-count">
@@ -105,6 +110,16 @@
             <mat-icon svgIcon="view_stream"></mat-icon>
           </mat-button-toggle>
         </mat-button-toggle-group>
+
+        <mat-form-field class = "sort">
+          <mat-label>Sort By</mat-label>
+          <mat-select (selectionChange)="searchSubstances()" [(ngModel)]="order">
+            <mat-option *ngFor="let option of sortValues" [value]="option.value">
+              {{option.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
           (page)="changePage($event)">
         </mat-paginator>

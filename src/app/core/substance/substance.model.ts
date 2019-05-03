@@ -326,3 +326,5 @@ export interface Site {
     subunitIndex: number;
     residueIndex: number;
 }
+
+

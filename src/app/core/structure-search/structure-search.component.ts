@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { StructurePostResponse } from '../utils/structure-post-response.model';
+import { StructurePostResponse, ResolverResponse } from '../utils/structure-post-response.model';
 import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { Editor } from '../structure-editor/structure.editor.model';
@@ -10,6 +10,10 @@ import { environment } from '../../../environments/environment';
 import { StructureService } from '../structure/structure.service';
 import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { SubstanceDetail, SubstanceStructure, SubstanceSummary} from '../substance/substance.model';
+import {SafeUrl} from '@angular/platform-browser';
+import {PagingResponse} from '../utils/paging-response.model';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-structure-search',
@@ -21,7 +25,12 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   private searchType: string;
   similarityCutoff?: number;
   showSimilarityCutoff = false;
+  resolved: string;
+  errorMessage: string;
+  resolvedNames: Array<ResolverResponse>;
+  matchedNames: PagingResponse<SubstanceSummary>;
   searchTypeControl = new FormControl();
+  resolverControl = new FormControl();
   @ViewChild('contentContainer') contentContainer;
 
   constructor(
@@ -143,5 +152,53 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   get _searchType(): string {
     return this.searchType;
   }
+
+  resolveName(name: string): void {
+    this.errorMessage = '';
+    this.resolvedNames = [];
+    this.matchedNames = null;
+    this.loadingService.setLoading(true);
+    const n = name.replace('"', '');
+    const searchStr = 'root_names_name:"^${n}$" OR root_approvalID:"^${n}$" OR root_codes_BDNUM:"^${n}$"';
+    forkJoin(this.substanceService.getSubstanceSummaries(searchStr),
+      this.structureService.resolveName(name)).subscribe(([local, remote]) => {
+        this.loadingService.setLoading(false);
+        this.resolvedNames = remote;
+        this.matchedNames = local;
+        if (this.matchedNames.content.length === 0 && this.resolvedNames.length === 0) {
+         this.errorMessage = 'no results found for \'' + name + '\'';
+        }
+      },
+      error => {
+        this.errorMessage = 'there was a problem returning your query';
+
+        this.loadingService.setLoading(false);
+      });
+  }
+
+  resolveNameKey(event): void {
+    if (event.keyCode === 13) {
+      this.resolveName(this.resolverControl.value);
+    }
+  }
+
+  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
+    return this.structureService.getSafeStructureImgUrl(structureId, size);
+  }
+
+  applyStructure(molfile: string) {
+    this.editor.setMolecule(molfile);
+  }
+
+  getName(name: string): void {
+    const n = name.replace('"', '');
+    const searchStr = 'root_names_name:"^${n}$" OR root_approvalID:"^${n}$" OR root_codes_BDNUM:"^${n}$"';
+    this.substanceService.getSubstanceSummaries(searchStr).subscribe(response => {
+    this.loadingService.setLoading(false); },
+        error => {
+          this.loadingService.setLoading(false);
+    });
+  }
+
 
 }
