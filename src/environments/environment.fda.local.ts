@@ -14,5 +14,6 @@ environment.appId = 'fda';
 // ];
 environment.isAnalyticsPrivate = true;
 environment.configFileLocation = '/assets/data/config-fda.json';
+environment.apiBaseUrl = 'http://localhost:9000/ginas/app/';
 
 export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';

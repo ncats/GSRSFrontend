@@ -8,6 +8,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { SubstanceApplicationComponent } from './substance-application/substance-application.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ],
   declarations: [
-    SubstanceProductsComponent
+    SubstanceProductsComponent,
+    SubstanceApplicationComponent
   ]
 })
 export class SubstanceProductsModule { }
