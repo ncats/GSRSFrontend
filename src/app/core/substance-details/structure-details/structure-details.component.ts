@@ -41,7 +41,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
       }
 
       const theJSON = this.structure.molfile;
-      const uri = this.sanitizer.bypassSecurityTrustUrl("data:text;charset=UTF-8," + encodeURIComponent(theJSON));
+      const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
       this.molfileHref = uri;
     }
   }
