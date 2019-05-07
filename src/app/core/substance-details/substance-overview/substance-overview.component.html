@@ -1,6 +1,6 @@
 <div *ngIf="substance">
   <div class = 'float-right'>
-    <button class="mat-raised-button mat-primary icon-button" title="Download JSON" (click)="downloadJsonHref" download="results.json"><mat-icon svgIcon="get_app"></mat-icon></button>
+    <a class="mat-raised-button mat-primary icon-button" title="Download JSON" [href]="downloadJsonHref" download="results.json"><mat-icon svgIcon="get_app"></mat-icon></a>
   </div>
   <div>
     <div class="name-value">
