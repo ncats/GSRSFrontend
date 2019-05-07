@@ -26,7 +26,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   ngOnInit() {
     this.getSubtypeRefs(this.substance);
     const theJSON = JSON.stringify(this.substance);
-    const uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHref = uri;
 
   }
