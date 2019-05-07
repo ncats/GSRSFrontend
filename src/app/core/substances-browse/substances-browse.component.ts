@@ -52,6 +52,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public auth?: Auth;
   public order: string;
   public sortValues = searchSortValues;
+  showAudit: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -199,6 +200,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.authService.getAuth().subscribe(auth => {
       this.facets = [];
       this.auth = auth;
+      this.showAudit = this.authService.hasRoles('admin');
       if (this.configService.configData.facets != null) {
 
         const facetKeys = Object.keys(this.configService.configData.facets) || [];
@@ -273,6 +275,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
+    return this.utilsService.getSafeStructureImgUrl(structureId, size);
+  }
+
+  getSafeStructureImgUrlLarge(structureId: string, size: number = 175): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
@@ -370,7 +376,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
-  editStructureSearh(): void {
+  editStructureSearch(): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
       `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);

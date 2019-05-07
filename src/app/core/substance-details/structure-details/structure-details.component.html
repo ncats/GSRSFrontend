@@ -44,7 +44,11 @@
         </div>
       </div>
   </div>
+
   <div class="structure-image-container text-center">
+    <div class = 'float-right'>
+      <a class="mat-raised-button mat-primary icon-button" title="Download molfile" [href]="molfileHref" download="results.mol"><mat-icon svgIcon="get_app"></mat-icon></a>
+    </div>
     <img class="structure-img" [src]="getSafeStructureImgUrl(showStereo, structure.id)">
     <br/>
       <button class ="mat-raised-button mat-primary" [disabled]="structure.definedStereo == 0" (click)="toggleStereo()">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>

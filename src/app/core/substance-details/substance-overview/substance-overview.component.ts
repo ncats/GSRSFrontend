@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail} from '../../substance/substance.model';
-import {SafeUrl} from '@angular/platform-browser';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {UtilsService} from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
@@ -13,16 +13,21 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit {
   references: string[] = [];
   showDef = false;
+  downloadJsonHref: any;
   defIcon = 'drop_down';
   constructor(
     private utilsService: UtilsService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private sanitizer: DomSanitizer,
   ) {
     super();
   }
 
   ngOnInit() {
     this.getSubtypeRefs(this.substance);
+    const theJSON = JSON.stringify(this.substance);
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
+    this.downloadJsonHref = uri;
 
   }
 
@@ -60,5 +65,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
+  generateDownloadJsonUri() {
+
+  }
 
 }

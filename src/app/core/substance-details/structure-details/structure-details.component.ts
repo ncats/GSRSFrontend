@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SubstanceDetail } from '../../substance/substance.model';
 import { SubstanceStructure } from '../../substance/substance.model';
 import { StructureService } from '../../structure/structure.service';
-import { SafeUrl } from '@angular/platform-browser';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import { SubstanceCardBase } from '../substance-card-base';
 import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
@@ -20,17 +20,18 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   smilesIcon = 'drop_down';
   inchi: string;
   showStereo = false;
+  molfileHref: any;
 
   constructor(
     private utilService: UtilsService,
     private structureService: StructureService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private sanitizer: DomSanitizer
   ) {
     super();
   }
 
   ngOnInit() {
-    console.log(this.substance);
     if (this.substance != null) {
       this.structure = this.substance.structure;
       if (this.structure.smiles) {
@@ -38,6 +39,10 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
           this.inchi = inchi;
         });
       }
+
+      const theJSON = this.structure.molfile;
+      const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
+      this.molfileHref = uri;
     }
   }
 
