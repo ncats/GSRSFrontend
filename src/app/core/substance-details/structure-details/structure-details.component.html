@@ -47,7 +47,7 @@
 
   <div class="structure-image-container text-center">
     <div class = 'float-right'>
-      <a class="blue-font" title="Download molfile" [href]="molfileHref" download="results.mol"><mat-icon class = "large-icon"  svgIcon="get_app"></mat-icon></a>
+      <button class="mat-raised-button mat-primary icon-button" title="Download molfile" (click)="molfileHref" download="results.mol"><mat-icon svgIcon="get_app"></mat-icon></button>
     </div>
     <img class="structure-img" [src]="getSafeStructureImgUrl(showStereo, structure.id)">
     <br/>

@@ -6,10 +6,13 @@
   </div>
   <div class="responsive">
     <table mat-table [dataSource]="paged">
-  
+
       <ng-container matColumnDef="citation">
         <th mat-header-cell *matHeaderCellDef> Citation </th>
-        <td mat-cell *matCellDef="let reference"> {{reference.citation}} </td>
+        <td mat-cell *matCellDef="let reference">
+          <a *ngIf = "reference.url" [href]="reference.url" target = "_blank" >{{reference.citation}} </a>
+          <span *ngIf = "!reference.url"> {{reference.citation}} </span>
+        </td>
       </ng-container>
   
       <ng-container matColumnDef="type">

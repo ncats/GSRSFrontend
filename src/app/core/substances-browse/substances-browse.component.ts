@@ -9,16 +9,19 @@ import { LoadingService } from '../loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import {MatDialog, PageEvent} from '@angular/material';
+import { MatDialog, PageEvent } from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 import { TopSearchService } from '../top-search/top-search.service';
-import {StructureImportComponent} from '../structure/structure-import/structure-import.component';
-import {StructureImageModalComponent} from '../structure/structure-image-modal/structure-image-modal.component';
+import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
+import { StructureImageModalComponent } from '../structure/structure-image-modal/structure-image-modal.component';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../auth/auth.service';
+import { Auth } from '../auth/auth.model';
+import { searchSortValues} from '@gsrs-core/utils/search-sort-values';
 
 @Component({
   selector: 'app-substances-browse',
@@ -46,6 +49,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes'];
   public smiles: string;
   private argsHash?: number;
+  public auth?: Auth;
+  public order: string;
+  public sortValues = searchSortValues;
+  showAudit: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -57,7 +64,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private router: Router,
     private dialog: MatDialog,
     private topSearchService: TopSearchService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    public authService: AuthService
   ) {
     this.privateFacetParams = {};
   }
@@ -90,7 +98,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -127,6 +135,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.privateSearchType,
       this.privateSearchSeqType,
       this.pageSize,
+      this.order,
       this.privateFacetParams,
       (this.pageIndex * this.pageSize),
     );
@@ -142,6 +151,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         cutoff: this.privateSearchCutoff,
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
+        order: this.order,
         pageSize: this.pageSize,
         facets: this.privateFacetParams,
         skip: skip
@@ -151,14 +161,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-            this.facets = [];
             this.populateFacets(pagingResponse.facets);
-          }
-
-          if (this.facets.length > 0) {
-            this.processResponsiveness();
-          } else {
-            this.matSideNav.close();
           }
 
           this.substances.forEach((substance: SubstanceDetail) => {
@@ -175,7 +178,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               });
             }
           });
-          this.cleanFacets();
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
@@ -195,48 +197,69 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private populateFacets(facets: Array<Facet>): void {
-    if (this.configService.configData.facets != null) {
-      if (this.configService.configData.facets.default != null && this.configService.configData.facets.default.length) {
-        this.configService.configData.facets.default.forEach(facet => {
-          for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
-            if (facet === facets[facetIndex].name) {
-              if (facets[facetIndex].values != null && facets[facetIndex].values.length) {
-                let hasValues = false;
-                for (let valueIndex = 0; valueIndex < facets[facetIndex].values.length; valueIndex++) {
-                  if (facets[facetIndex].values[valueIndex].count) {
-                    hasValues = true;
-                    break;
-                  }
-                }
+    this.authService.getAuth().subscribe(auth => {
+      this.facets = [];
+      this.auth = auth;
+      this.showAudit = this.authService.hasRoles('admin');
+      if (this.configService.configData.facets != null) {
 
-                if (hasValues) {
-                  const facetToAdd = facets.splice(facetIndex, 1);
-                  facetIndex--;
-                  this.facets.push(facetToAdd[0]);
+        const facetKeys = Object.keys(this.configService.configData.facets) || [];
+
+        facetKeys.forEach(facetKey => {
+          if (this.configService.configData.facets[facetKey].length
+            && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
+            this.configService.configData.facets[facetKey].forEach(facet => {
+              for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
+                if (facet === facets[facetIndex].name) {
+                  if (facets[facetIndex].values != null && facets[facetIndex].values.length) {
+                    let hasValues = false;
+                    for (let valueIndex = 0; valueIndex < facets[facetIndex].values.length; valueIndex++) {
+                      if (facets[facetIndex].values[valueIndex].count) {
+                        hasValues = true;
+                        break;
+                      }
+                    }
+
+                    if (hasValues) {
+                      const facetToAdd = facets.splice(facetIndex, 1);
+                      facetIndex--;
+                      this.facets.push(facetToAdd[0]);
+                    }
+                  }
+                  break;
                 }
               }
-              break;
-            }
+            });
           }
+
         });
+
       }
-    }
 
-    if (this.facets.length < 15) {
+      if (this.facets.length < 15) {
 
-      const numFillFacets = 15 - this.facets.length;
+        const numFillFacets = 15 - this.facets.length;
 
-      let sortedFacets = _.orderBy(facets, facet => {
-        let valuesTotal = 0;
-        facet.values.forEach(value => {
-          valuesTotal += value.count;
-        });
-        return valuesTotal;
-      }, 'desc');
-      const additionalFacets = _.take(sortedFacets, numFillFacets);
-      this.facets = this.facets.concat(additionalFacets);
-      sortedFacets = null;
-    }
+        let sortedFacets = _.orderBy(facets, facet => {
+          let valuesTotal = 0;
+          facet.values.forEach(value => {
+            valuesTotal += value.count;
+          });
+          return valuesTotal;
+        }, 'desc');
+        const additionalFacets = _.take(sortedFacets, numFillFacets);
+        this.facets = this.facets.concat(additionalFacets);
+        sortedFacets = null;
+      }
+
+      if (this.facets.length > 0) {
+        this.processResponsiveness();
+      } else {
+        this.matSideNav.close();
+      }
+
+      this.cleanFacets();
+    });
   }
 
   applyFacetsFilter(facetName: string) {
@@ -255,7 +278,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
-  getSafeStructureImgUrl2(structureId: string, size: number = 175): SafeUrl {
+  getSafeStructureImgUrlLarge(structureId: string, size: number = 175): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
@@ -353,7 +376,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
-  editStructureSearh(): void {
+  editStructureSearch(): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
       `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
@@ -514,7 +537,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   updateView(event): void {
-    console.log(event.value);
     this.gaService.sendEvent('substancesContent', 'button:view-update', event.value);
     this.view = event.value;
   }

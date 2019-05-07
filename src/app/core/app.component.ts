@@ -80,6 +80,22 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'get_app',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-get_app-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'account_circle',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-account_circle-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'find_replace',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-find_replace-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'spellcheck',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-spellcheck-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'view_module',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-view_module-24px.svg'));
   }
 
 }

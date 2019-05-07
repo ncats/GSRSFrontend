@@ -9,3 +9,10 @@ export interface StructurePostResponse {
     moieties: Array<SubstanceMoiety>;
     structuralUnits: Array<StructuralUnit>;
 }
+
+export interface ResolverResponse {
+  source: string;
+  results: SubstanceStructure;
+  name?: string;
+  uuid?: string;
+}

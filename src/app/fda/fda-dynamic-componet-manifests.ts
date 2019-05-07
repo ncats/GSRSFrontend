@@ -2,7 +2,7 @@ import {
     DynamicComponentManifest,
 } from '@gsrs-core/dynamic-component-loader/dynamic-component-loader.module';
 
-export const fdaDynamicComponentManifests: DynamicComponentManifest[] = [
+export const fdaDynamicComponentManifests: Array<DynamicComponentManifest> = [
     {
         componentId: 'fda-substance-product',
         path: 'fda-substance-product',

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientJsonpModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -54,6 +54,8 @@ import { SequenceSearchComponent } from './sequence-search/sequence-search.compo
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
 import { SubstanceCardsModule } from './substance-details/substance-cards.module';
 import { substanceCardsFilters } from './substance-details/substance-cards-filters.constant';
+import { AuthModule } from './auth/auth.module';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -109,16 +111,18 @@ import { substanceCardsFilters } from './substance-details/substance-cards-filte
     MatTooltipModule,
     MatTabsModule,
     TopSearchModule,
-    SubstanceCardsModule.forRoot(substanceCardsFilters)
+    SubstanceCardsModule.forRoot(substanceCardsFilters),
+    AuthModule
   ],
   providers: [
     ConfigService,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: configServiceFactory,
-            deps: [ConfigService],
-            multi: true
-        }
+    {
+        provide: APP_INITIALIZER,
+        useFactory: configServiceFactory,
+        deps: [ConfigService],
+        multi: true
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   entryComponents: [StructureImageModalComponent]

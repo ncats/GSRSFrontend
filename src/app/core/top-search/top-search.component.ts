@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
+import {Component, OnInit, ElementRef, AfterViewInit, Pipe} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
@@ -14,11 +14,16 @@ import { environment } from '../../../environments/environment';
   templateUrl: './top-search.component.html',
   styleUrls: ['./top-search.component.scss']
 })
+
 export class TopSearchComponent implements OnInit, AfterViewInit {
   searchControl = new FormControl();
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
-  suggestionsFields: Array<string>;
+  suggestionsFields: Array<any>;
+  matOpen = true;
+  private testElem: HTMLElement;
   private searchContainerElement: HTMLElement;
+  private query: string;
+
 
   constructor(
     private utilsService: UtilsService,
@@ -38,17 +43,43 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(searchValue => {
+        this.query = searchValue;
         const eventLabel = !environment.isAnalyticsPrivate && searchValue || 'search term';
         this.gaService.sendEvent('topSearch', 'search:enter-term', eventLabel);
         return this.utilsService.getStructureSearchSuggestions(searchValue);
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
-      this.suggestionsFields = Object.keys(this.substanceSuggestionsGroup);
+      const showTypes = [ 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
+      this.suggestionsFields =   Object.keys(this.substanceSuggestionsGroup).filter(function(item) {
+        return showTypes.includes(item);
+      });
+      console.log(this.suggestionsFields);
+     /* this.suggestionsFields.forEach((value, index) => {
+        if (value === 'Approval_ID') {
+          this.suggestionsFields[index] = 'UNII';
+        }
+        if (value === 'Display_Name') {
+          this.suggestionsFields[index] =  'Preferred Term';
+        }
+      });*/
+      this.suggestionsFields.sort(function(x, y) { return x == 'Display_Name' ? -1 : y == 'Display_Name' ? 1 : 0; });
+      this.suggestionsFields.forEach((value, index) => {
+        if (value === 'Approval_ID') {
+          this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
+        } else if (value === 'Display_Name') {
+          this.suggestionsFields[index] =  {value: 'Display_Name', display: 'Preferred Term'};
+        } else {
+          this.suggestionsFields[index] =  {value: value, display: value};
+        }
+      });
+
     }, error => {
       this.gaService.sendException('search suggestion error from API call');
       console.log(error);
     });
+
+
 
     this.topSearchService.clearSearchEvent.subscribe(() => {
       this.searchControl.setValue('');
@@ -64,6 +95,10 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
       );
     });
   }
+  setStatus(value) {
+    //get matAutocomplete status so highlight() doesn't get undefined #overflow
+    this.matOpen = value;
+  }
 
   ngAfterViewInit() {
     this.searchContainerElement = this.element.nativeElement.querySelector('.search-container');
@@ -73,6 +108,25 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
     const eventLabel = !environment.isAnalyticsPrivate && event.option.value || 'auto-complete option';
     this.gaService.sendEvent('topSearch', 'select:auto-complete', eventLabel);
     this.navigateToSearchResults(event.option.value);
+  }
+
+  highlight(field) {
+    if (!this.query) {
+      return field;
+    } else {
+      if (this.matOpen) {
+        this.testElem = document.querySelector('#overflow') as HTMLElement;
+        this.testElem.innerText = field;
+        if (this.testElem.scrollWidth > this.testElem.offsetWidth) {
+          const pos = field.toUpperCase().indexOf(this.query.toUpperCase());
+          field = '...' + field.substring(pos - 15, field.length);
+        }
+      }
+      return field.replace(new RegExp(this.query, 'gi'), match => {
+        return '<strong>' + match + '</strong>';
+      });
+    }
+
   }
 
   processSubstanceSearch() {
