@@ -56,6 +56,7 @@ import { SubstanceCardsModule } from './substance-details/substance-cards.module
 import { substanceCardsFilters } from './substance-details/substance-cards-filters.constant';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { SubstanceAddEditComponent } from './substance-add-edit/substance-add-edit.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     TakePipe,
     FacetDisplayPipe,
     SequenceSearchComponent,
-    TrackLinkEventDirective
+    TrackLinkEventDirective,
+    SubstanceAddEditComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

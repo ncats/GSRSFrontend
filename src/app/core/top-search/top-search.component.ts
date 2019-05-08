@@ -63,7 +63,7 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
           this.suggestionsFields[index] =  'Preferred Term';
         }
       });*/
-      this.suggestionsFields.sort(function(x, y) { return x == 'Display_Name' ? -1 : y == 'Display_Name' ? 1 : 0; });
+      this.suggestionsFields.sort(function(x, y) { return x = 'Display_Name' ? -1 : y === 'Display_Name' ? 1 : 0; });
       this.suggestionsFields.forEach((value, index) => {
         if (value === 'Approval_ID') {
           this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
@@ -96,7 +96,7 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
     });
   }
   setStatus(value) {
-    //get matAutocomplete status so highlight() doesn't get undefined #overflow
+    // get matAutocomplete status so highlight() doesn't get undefined #overflow
     this.matOpen = value;
   }
 

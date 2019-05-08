@@ -4,6 +4,7 @@ import {SubstanceDetail} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {UtilsService} from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-substance-overview',
@@ -19,6 +20,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     private utilsService: UtilsService,
     public gaService: GoogleAnalyticsService,
     private sanitizer: DomSanitizer,
+    public auth: AuthService
   ) {
     super();
   }

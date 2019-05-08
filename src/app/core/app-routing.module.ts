@@ -8,6 +8,7 @@ import { StructureSearchComponent } from './structure-search/structure-search.co
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { LoginComponent } from './auth/login/login.component';
+import { SubstanceAddEditComponent } from './substance-add-edit/substance-add-edit.component';
 
 const childRoutes: Routes = [
   {
@@ -37,6 +38,14 @@ const childRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'substances/register',
+    component: SubstanceAddEditComponent
+  },
+  {
+    path: 'substances/:id/edit',
+    component: SubstanceAddEditComponent
   }
 ];
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterEvent, NavigationEnd } from '@angular/router';
+import { Router, RouterEvent, NavigationEnd, NavigationExtras } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
@@ -61,4 +61,13 @@ export class BaseComponent implements OnInit {
     return mainPathPart;
   }
 
+  routeToLogin(): void {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        path: this.router.url
+      }
+    };
+
+    this.router.navigate(['/login'], navigationExtras);
+  }
 }
