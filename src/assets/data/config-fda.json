@@ -4,13 +4,6 @@
       "title": "overview"
     },
     {
-      "card": "fda-substance-product",
-      "title": "product",
-      "filters": [{
-        "filterName": "products"
-      }]
-    },
-    {
       "card": "substance-primary-definition",
       "title": "primary definition",
       "filters": [{
@@ -361,6 +354,12 @@
       "Product Ingredient Type",
       "Product Name Type",
       "Product Dosage Form"
+    ],
+    "admin": [
+      "root_lastEditedBy",
+      "Material Type",
+      "Family",
+      "Parts"
     ]
   }
 }

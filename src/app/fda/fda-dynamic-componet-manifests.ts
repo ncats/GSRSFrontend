@@ -1,6 +1,6 @@
 import {
     DynamicComponentManifest,
-} from '@gsrs-core/dynamic-component-loader/dynamic-component-loader.module';
+} from '@gsrs-core/dynamic-component-loader';
 
 export const fdaDynamicComponentManifests: Array<DynamicComponentManifest> = [
     {

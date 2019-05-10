@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../product/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingService } from '@gsrs-core/loading/loading.service';
-import { MainNotificationService } from '@gsrs-core/main-notification/main-notification.service';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification/notification.model';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
+import { LoadingService } from '@gsrs-core/loading';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 
 @Component({
   selector: 'app-product-details',

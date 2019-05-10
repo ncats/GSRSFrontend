@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details/substance-card-base-filtered-list';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
+import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ProductService } from '../../product/product.service';
 
 @Component({

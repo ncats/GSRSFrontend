@@ -17,5 +17,6 @@ environment.appId = 'fda';
 // ];
 environment.googleAnalyticsId = 'UA-136176848-3';
 environment.isAnalyticsPrivate = true;
+environment.configFileLocation = '/ginas/app/beta/assets/data/config-fda.json';
 
 export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';
