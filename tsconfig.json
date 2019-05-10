@@ -39,8 +39,8 @@
       "@gsrs-core/*": [
         "src/app/core/*"
       ],
-      "environment": [
-        "src/environments/environment"
+      "@environment": [
+        "src/environments/environment.model.ts"
       ]
     }
   },
@@ -48,6 +48,6 @@
     "testing",
     "test.ts",
     "**/*.spec.ts",
-    "testing/**/*"
+    "src/testing/**/*"
   ]
 }

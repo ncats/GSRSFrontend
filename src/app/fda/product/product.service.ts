@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ConfigService } from '@gsrs-core/config/config.service';
-import { BaseHttpService } from '@gsrs-core/base/base-http.service';
+import { ConfigService } from '@gsrs-core/config';
+import { BaseHttpService } from '@gsrs-core/base';
 import { Observable,  } from 'rxjs';
 import { map } from 'rxjs/operators';
 

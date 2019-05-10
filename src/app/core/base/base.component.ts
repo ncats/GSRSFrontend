@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterEvent, NavigationEnd, NavigationExtras } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
+import { ConfigService } from '../config/config.service';
 
 @Component({
   selector: 'app-base',
@@ -27,10 +28,12 @@ export class BaseComponent implements OnInit {
   ];
   logoSrcPath: string;
   auth?: Auth;
+  environment: Environment;
 
   constructor(
     private router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private configService: ConfigService
   ) { }
 
   ngOnInit() {
@@ -39,11 +42,13 @@ export class BaseComponent implements OnInit {
       this.auth = auth;
     });
 
-    if (environment.navItems && environment.navItems.length) {
-      this.navItems.concat(environment.navItems);
+    this.environment = this.configService.environment;
+
+    if (this.environment.navItems && this.environment.navItems.length) {
+      this.navItems.concat(this.environment.navItems);
     }
 
-    this.logoSrcPath = `${environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
+    this.logoSrcPath = `${this.environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
 
     this.router.events.subscribe((event: RouterEvent) => {
 

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import {SubstanceDetail} from '../substance/substance.model';
 import {SubstanceHttpParams} from '../substance/substance-http-params';
-import {ResolverResponse} from '@gsrs-core/utils/structure-post-response.model';
+import { ResolverResponse } from '../utils/structure-post-response.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -43,7 +43,7 @@ export class StructureService {
     let params = new SubstanceHttpParams();
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search`;
     const n = name.replace('"', '');
-    //Needs sanitation
+    // Needs sanitation
     params = params.append('q', 'root_names_name:"^' + n + '$" OR ' +
       'root_approvalID:"^' + n + '$" OR ' +
       'root_codes_BDNUM:"^' + n + '$"');

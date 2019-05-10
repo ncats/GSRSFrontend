@@ -21,7 +21,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
-import { searchSortValues} from '@gsrs-core/utils/search-sort-values';
+import { searchSortValues} from '../utils/search-sort-values';
 
 @Component({
   selector: 'app-substances-browse',

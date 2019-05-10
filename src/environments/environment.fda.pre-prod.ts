@@ -13,6 +13,7 @@ environment.appId = 'fda';
 //     }
 // ];
 environment.googleAnalyticsId = 'UA-136176848-3';
+environment.configFileLocation = '/assets/data/config-fda.json';
 environment.isAnalyticsPrivate = true;
 
 export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';
