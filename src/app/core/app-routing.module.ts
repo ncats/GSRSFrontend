@@ -9,6 +9,7 @@ import { SubstanceDetailsComponent } from './substance-details/substance-details
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { LoginComponent } from './auth/login/login.component';
 import { SubstanceAddEditComponent } from './substance-add-edit/substance-add-edit.component';
+import { CanActivateSubstanceAddEdit } from './substance-add-edit/can-activate-substance-add-edit';
 
 const childRoutes: Routes = [
   {
@@ -45,7 +46,8 @@ const childRoutes: Routes = [
   },
   {
     path: 'substances/:id/edit',
-    component: SubstanceAddEditComponent
+    component: SubstanceAddEditComponent,
+    canActivate: [CanActivateSubstanceAddEdit]
   }
 ];
 

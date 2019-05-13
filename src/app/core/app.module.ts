@@ -57,6 +57,7 @@ import { substanceCardsFilters } from './substance-details/substance-cards-filte
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { SubstanceAddEditComponent } from './substance-add-edit/substance-add-edit.component';
+import { CanActivateSubstanceAddEdit } from './substance-add-edit/can-activate-substance-add-edit';
 
 @NgModule({
   declarations: [
@@ -124,7 +125,8 @@ import { SubstanceAddEditComponent } from './substance-add-edit/substance-add-ed
         deps: [ConfigService],
         multi: true
     },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    CanActivateSubstanceAddEdit
   ],
   bootstrap: [AppComponent],
   entryComponents: [StructureImageModalComponent]
