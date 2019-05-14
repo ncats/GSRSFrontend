@@ -25,3 +25,10 @@ export interface VocabularyTerm {
     fragmentStructure: string;
     simplifiedStructure: string;
 }
+
+export interface VocabularyDictionary {
+    [domain: string]: {
+        dictionary?: { [vocabularyValue: string]: VocabularyTerm },
+        list?: Array<VocabularyTerm>
+    };
+}

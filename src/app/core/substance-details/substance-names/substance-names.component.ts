@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { SubstanceName } from '../../substance/substance.model';
-import { UtilsService } from '../../utils/utils.service';
-import { VocabularyTerm } from '../../utils/vocabulary.model';
+import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
+import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
@@ -18,9 +18,9 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
 
   constructor(
-    private utilsService: UtilsService,
     private dialog: MatDialog,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private cvService: ControlledVocabularyService
   ) {
     super(gaService);
   }
@@ -38,20 +38,14 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
         console.log(error);
       });
 
-      this.getLanguageVocabulary();
-      this.getTypeVocabulary();
+      this.getVocabularies();
     }
   }
 
-  getLanguageVocabulary(): void {
-    this.utilsService.getDomainVocabulary('LANGUAGE').subscribe(response => {
-      this.languageVocabulary = response;
-    });
-  }
-
-  getTypeVocabulary(): void {
-    this.utilsService.getDomainVocabulary('NAME_TYPE').subscribe(response => {
-      this.typeVocabulary = response;
+  getVocabularies(): void {
+    this.cvService.getDomainVocabulary('LANGUAGE', 'NAME_TYPE').subscribe(response => {
+      this.languageVocabulary = response['LANGUAGE'] && response['LANGUAGE'].dictionary;
+      this.typeVocabulary = response['NAME_TYPE'] && response['NAME_TYPE'].dictionary;
     });
   }
 

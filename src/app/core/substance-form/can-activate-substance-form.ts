@@ -4,7 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class CanActivateSubstanceAddEdit implements CanActivate {
+export class CanActivateSubstanceForm implements CanActivate {
 
     constructor(
         private router: Router,

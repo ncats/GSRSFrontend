@@ -96,6 +96,12 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'view_module',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-view_module-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'lock_open',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-lock_open-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'lock',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-lock-24px.svg'));
   }
 
 }

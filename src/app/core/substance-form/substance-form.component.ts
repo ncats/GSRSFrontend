@@ -21,11 +21,11 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-substance-add-edit',
-  templateUrl: './substance-add-edit.component.html',
-  styleUrls: ['./substance-add-edit.component.scss']
+  selector: 'app-substance-form',
+  templateUrl: './substance-form.component.html',
+  styleUrls: ['./substance-form.component.scss']
 })
-export class SubstanceAddEditComponent implements OnInit, AfterViewInit {
+export class SubstanceFormComponent implements OnInit, AfterViewInit {
   id?: string;
   substance: SubstanceDetail;
   formSections: Array<string> = [];

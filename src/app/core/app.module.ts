@@ -56,8 +56,9 @@ import { SubstanceCardsModule } from './substance-details/substance-cards.module
 import { substanceCardsFilters } from './substance-details/substance-cards-filters.constant';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/auth.interceptor';
-import { SubstanceAddEditComponent } from './substance-add-edit/substance-add-edit.component';
-import { CanActivateSubstanceAddEdit } from './substance-add-edit/can-activate-substance-add-edit';
+import { SubstanceFormComponent } from './substance-form/substance-form.component';
+import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
+import { SubstanceFormModule } from './substance-form/substance-form.module';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,7 @@ import { CanActivateSubstanceAddEdit } from './substance-add-edit/can-activate-s
     FacetDisplayPipe,
     SequenceSearchComponent,
     TrackLinkEventDirective,
-    SubstanceAddEditComponent
+    SubstanceFormComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -115,7 +116,8 @@ import { CanActivateSubstanceAddEdit } from './substance-add-edit/can-activate-s
     MatTabsModule,
     TopSearchModule,
     SubstanceCardsModule.forRoot(substanceCardsFilters),
-    AuthModule
+    AuthModule,
+    SubstanceFormModule
   ],
   providers: [
     ConfigService,
@@ -126,7 +128,7 @@ import { CanActivateSubstanceAddEdit } from './substance-add-edit/can-activate-s
         multi: true
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    CanActivateSubstanceAddEdit
+    CanActivateSubstanceForm
   ],
   bootstrap: [AppComponent],
   entryComponents: [StructureImageModalComponent]

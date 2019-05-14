@@ -8,8 +8,8 @@ import { StructureSearchComponent } from './structure-search/structure-search.co
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { LoginComponent } from './auth/login/login.component';
-import { SubstanceAddEditComponent } from './substance-add-edit/substance-add-edit.component';
-import { CanActivateSubstanceAddEdit } from './substance-add-edit/can-activate-substance-add-edit';
+import { SubstanceFormComponent } from './substance-form/substance-form.component';
+import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 
 const childRoutes: Routes = [
   {
@@ -42,12 +42,12 @@ const childRoutes: Routes = [
   },
   {
     path: 'substances/register',
-    component: SubstanceAddEditComponent
+    component: SubstanceFormComponent
   },
   {
     path: 'substances/:id/edit',
-    component: SubstanceAddEditComponent,
-    canActivate: [CanActivateSubstanceAddEdit]
+    component: SubstanceFormComponent,
+    canActivate: [CanActivateSubstanceForm]
   }
 ];
 

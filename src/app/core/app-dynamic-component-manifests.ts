@@ -127,6 +127,6 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
   {
     componentId: 'substance-form-overview',
     path: 'substance-form-overview',
-    loadChildren: './substance-add-edit/substance-form-overview/substance-form-overview.module#SubstanceFormOverviewModule',
+    loadChildren: './substance-form/substance-form-overview/substance-form-overview.module#SubstanceFormOverviewModule',
   }
 ];

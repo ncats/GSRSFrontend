@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceAddEditComponent } from './substance-add-edit.component';
+import { AccessManagerComponent } from './access-manager.component';
 
-describe('SubstanceAddEditComponent', () => {
-  let component: SubstanceAddEditComponent;
-  let fixture: ComponentFixture<SubstanceAddEditComponent>;
+describe('AccessManagerComponent', () => {
+  let component: AccessManagerComponent;
+  let fixture: ComponentFixture<AccessManagerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceAddEditComponent ]
+      declarations: [ AccessManagerComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceAddEditComponent);
+    fixture = TestBed.createComponent(AccessManagerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,11 @@
+<button mat-button [matMenuTriggerFor]="accessMenu">
+    <mat-icon>lock</mat-icon>
+    <span>Access</span>
+  </button>
+  <mat-menu #accessMenu="matMenu" xPosition="before">
+    <div mat-menu-item *ngFor="let accessOption of accessOptions">
+      <mat-checkbox (click)="$event.stopPropagation()">
+        {{accessOption.display}}
+      </mat-checkbox>
+    </div>
+  </mat-menu>
