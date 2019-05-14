@@ -1,0 +1,11 @@
+<div *ngIf="substance">
+  <div class="substance-form-title">
+    <span>
+      {{substance.uuid ? 'Editing' : 'Registering new'}} <span class="capitalized">{{substance.substanceClass}}</span>
+    </span>
+    <span class="middle-fill"></span>
+    <span>
+      {{substance.approvalID}}
+    </span>
+  </div>
+</div>

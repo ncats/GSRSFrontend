@@ -123,4 +123,10 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     path: 'substance-mixture-source',
     loadChildren: './substance-details/substance-mixture-source/substance-mixture-source.module#SubstanceMixtureSourceModule',
   }
+  ,
+  {
+    componentId: 'substance-form-overview',
+    path: 'substance-form-overview',
+    loadChildren: './substance-add-edit/substance-form-overview/substance-form-overview.module#SubstanceFormOverviewModule',
+  }
 ];
