@@ -100,4 +100,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
       this.formSections = formSections.chemical;
     }, 5000);
   }
+
+  submit(): void {
+    console.log(this.substance);
+  }
 }

@@ -3,9 +3,11 @@
     <span>Access</span>
   </button>
   <mat-menu #accessMenu="matMenu" xPosition="before">
-    <div mat-menu-item *ngFor="let accessOption of accessOptions">
-      <mat-checkbox (click)="$event.stopPropagation()">
-        {{accessOption.display}}
-      </mat-checkbox>
-    </div>
+    <form [formGroup]="accessFormGroup">
+      <div mat-menu-item *ngFor="let accessOption of accessOptions" (click)="$event.stopPropagation()">
+        <mat-checkbox (change)="updateAccess($event, accessOption.value)" [formControlName]="accessOption.value">
+          {{accessOption.display}}
+        </mat-checkbox>
+      </div>
+    </form>
   </mat-menu>
