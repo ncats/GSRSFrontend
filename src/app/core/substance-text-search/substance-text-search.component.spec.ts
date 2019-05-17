@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, NgZone } from '@angular/core';
-import { TopSearchComponent } from './top-search.component';
+import { SubstanceTextSearchComponent } from './substance-text-search.component';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -9,19 +9,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { UtilsService } from '../utils/utils.service';
-import { RouterStub } from '../../testing/router-stub';
+import { RouterStub } from '../../../testing/router-stub';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { asyncData } from '../../testing/async-observable-helpers';
-import { SubstanceData } from '../../testing/substance-suggestion-test-data';
+import { asyncData } from '../../../testing/async-observable-helpers';
+import { SubstanceData } from '../../../testing/substance-suggestion-test-data';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ActivatedRouteStub } from '../../testing/activated-route-stub';
-import { TopSearchService } from './top-search.service';
+import { ActivatedRouteStub } from '../../../testing/activated-route-stub';
+import { SubstanceTextSearchService } from './substance-text-search.service';
 import { Subject } from 'rxjs';
-import { MatIconMock } from '../../testing/mat-icon-mock.component';
+import { MatIconMock } from '../../../testing/mat-icon-mock.component';
 
 describe('TopSearchComponent', () => {
-  let component: TopSearchComponent;
-  let fixture: ComponentFixture<TopSearchComponent>;
+  let component: SubstanceTextSearchComponent;
+  let fixture: ComponentFixture<SubstanceTextSearchComponent>;
   let getStructureSearchSuggestionsSpy: jasmine.Spy;
   let overlayContainerElement;
   let zone: NgZone;
@@ -52,7 +52,7 @@ describe('TopSearchComponent', () => {
         RouterTestingModule
       ],
       declarations: [
-        TopSearchComponent,
+        SubstanceTextSearchComponent,
         MatIconMock
       ],
       schemas: [NO_ERRORS_SCHEMA],
@@ -61,7 +61,7 @@ describe('TopSearchComponent', () => {
         { provide: UtilsService, useValue: utilsServiceSpy },
         { provide: Router, useValue: routerStub },
         { provide: NgZone, useFactory: () => zone = new NgZone({ enableLongStackTrace: false }) },
-        { provide: TopSearchService, useValue: topSearchServiceSpy }
+        { provide: SubstanceTextSearchService, useValue: topSearchServiceSpy }
       ]
     })
       .compileComponents();
@@ -72,7 +72,7 @@ describe('TopSearchComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TopSearchComponent);
+    fixture = TestBed.createComponent(SubstanceTextSearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -118,7 +118,7 @@ describe('TopSearchComponent', () => {
         setTimeout(() => {
           // zone.onStable.emit(null);
           setTimeout(() => {
-            const substanceSearchOptionSelectedSpy = spyOn<TopSearchComponent>(component, 'substanceSearchOptionSelected');
+            const substanceSearchOptionSelectedSpy = spyOn<SubstanceTextSearchComponent>(component, 'substanceSearchOptionSelected');
             suggestionElements[0].click();
             expect(substanceSearchOptionSelectedSpy).toHaveBeenCalledTimes(1);
 
@@ -133,7 +133,7 @@ describe('TopSearchComponent', () => {
 
     it('when search button is clicked, should call function and route to browse page with value as parameter', async(() => {
       fixture.whenStable().then(() => {
-        const substanceSearchClickedSpy = spyOn<TopSearchComponent>(component, 'processSubstanceSearch');
+        const substanceSearchClickedSpy = spyOn<SubstanceTextSearchComponent>(component, 'processSubstanceSearch');
         const searchButtonElement: HTMLButtonElement = fixture.nativeElement.querySelector('.search-button');
         searchButtonElement.click();
         expect(substanceSearchClickedSpy).toHaveBeenCalledTimes(1);

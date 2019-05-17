@@ -47,7 +47,7 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
 import { FacetDisplayPipe } from './utils/facet-display.pipe';
 import { EnvironmentModule } from '../../environments/environment';
-import { TopSearchModule } from './top-search/top-search.module';
+import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
@@ -114,7 +114,7 @@ import { SubstanceFormModule } from './substance-form/substance-form.module';
     MatButtonToggleModule,
     MatTooltipModule,
     MatTabsModule,
-    TopSearchModule,
+    SubstanceTextSearchModule,
     SubstanceCardsModule.forRoot(substanceCardsFilters),
     AuthModule,
     SubstanceFormModule
