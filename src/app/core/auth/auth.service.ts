@@ -85,6 +85,14 @@ export class AuthService extends BaseHttpService {
   }
 
   logout(): void {
+    if (
+      !this.configService.configData
+      || !this.configService.configData.apiBaseUrl
+      || this.configService.configData.apiBaseUrl.startsWith('/')
+    ) {
+      const url = (this.configService.configData && this.configService.configData.apiBaseUrl || '/') + 'logout';
+      this.http.get(url).subscribe();
+    }
     sessionStorage.removeItem('authToken');
     this._auth = null;
     this._authUpdate.next(null);

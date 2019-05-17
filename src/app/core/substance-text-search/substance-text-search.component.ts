@@ -5,17 +5,17 @@ import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
-import { TopSearchService } from './top-search.service';
+import { SubstanceTextSearchService } from './substance-text-search.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-top-search',
-  templateUrl: './top-search.component.html',
-  styleUrls: ['./top-search.component.scss']
+  selector: 'app-substance-text-search',
+  templateUrl: './substance-text-search.component.html',
+  styleUrls: ['./substance-text-search.component.scss']
 })
 
-export class TopSearchComponent implements OnInit, AfterViewInit {
+export class SubstanceTextSearchComponent implements OnInit, AfterViewInit {
   searchControl = new FormControl();
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
   suggestionsFields: Array<any>;
@@ -29,7 +29,7 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
     private utilsService: UtilsService,
     private router: Router,
     private element: ElementRef,
-    private topSearchService: TopSearchService,
+    private topSearchService: SubstanceTextSearchService,
     private activatedRoute: ActivatedRoute,
     public gaService: GoogleAnalyticsService
   ) { }
