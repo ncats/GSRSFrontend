@@ -3,6 +3,7 @@ import { SubstanceFormSectionBase } from '../substance-form-section-base';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-substance-form-overview',
@@ -26,10 +27,13 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   }
 
   ngAfterViewInit() {
-    const definitionType = this.substance && this.substance.definitionType || 'primary';
-    this.definitionTypeControl.setValue(definitionType);
-    const definitionLevel = this.substance && this.substance.definitionLevel || 'complete';
-    this.definitionLevelControl.setValue(definitionLevel);
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      const definitionType = this.substance && this.substance.definitionType || 'primary';
+      this.definitionTypeControl.setValue(definitionType);
+      const definitionLevel = this.substance && this.substance.definitionLevel || 'complete';
+      this.definitionLevelControl.setValue(definitionLevel);
+    });
   }
 
   getVocabularies(): void {
@@ -37,5 +41,13 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
       this.definitionTypes = response['DEFINITION_TYPE'].list;
       this.definitionLevels = response['DEFINITION_LEVEL'].list;
     });
+  }
+
+  updateDefinitionType(event: MatSelectChange): void {
+    this.substance.definitionType = event.value;
+  }
+
+  updateDefinitionLevel(event: MatSelectChange): void {
+    this.substance.definitionLevel = event.value;
   }
 }

@@ -4,13 +4,10 @@ import {
   AfterViewInit,
   ViewChildren,
   ViewContainerRef,
-  QueryList,
-  ViewChild,
-  OnDestroy,
-  HostListener
+  QueryList
 } from '@angular/core';
 import { formSections } from './form-sections.constant';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail } from '../substance/substance.model';
 import { LoadingService } from '../loading/loading.service';
@@ -19,6 +16,7 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { environment } from '../../../environments/environment';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-substance-form',
@@ -26,9 +24,11 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./substance-form.component.scss']
 })
 export class SubstanceFormComponent implements OnInit, AfterViewInit {
+  isLoading = true;
   id?: string;
   substance: SubstanceDetail;
   formSections: Array<string> = [];
+  substanceUpdated = new Subject<SubstanceDetail>();
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
 
   constructor(
@@ -65,7 +65,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
               .subscribe(componentFactory => {
                 const ref = cRef.createComponent(componentFactory);
                 ref.instance.substance = this.substance;
+                ref.instance.substanceUpdated = this.substanceUpdated.asObservable();
                 ref.changeDetectorRef.detectChanges();
+                this.substanceUpdated.next(this.substance);
               });
         });
       });
@@ -80,9 +82,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
         this.handleSubstanceRetrivalError();
       }
       this.loadingService.setLoading(false);
+      this.isLoading = false;
     }, error => {
       this.gaService.sendException('getSubstanceDetails: error from API call');
       this.loadingService.setLoading(false);
+      this.isLoading = false;
       this.handleSubstanceRetrivalError();
     });
   }
@@ -102,6 +106,22 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
   }
 
   submit(): void {
-    console.log(this.substance);
+    this.isLoading = true;
+    this.loadingService.setLoading(true);
+    this.substanceService.saveSubstance(this.substance).subscribe(response => {
+      response.access = [];
+      this.substance = response;
+      this.substanceUpdated.next(response);
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      const notification: AppNotification = {
+        message: 'Substance was saved successfully!',
+        type: NotificationType.success
+      };
+      this.mainNotificationService.setNotification(notification);
+    }, error => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    });
   }
 }

@@ -1,7 +1,7 @@
 <div class="top-fixed">
   <div class="actions-container">
     <span class="middle-fill"></span>
-    <button mat-flat-button color="primary" (click)="submit()">Submit</button>
+    <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading">Submit</button>
   </div>
 </div>
 <div class="content-container">

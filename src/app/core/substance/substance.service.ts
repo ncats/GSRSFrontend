@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, of, Observer, ArgumentOutOfRangeError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
@@ -415,6 +415,15 @@ export class SubstanceService extends BaseHttpService {
       imgUrl = `assets/images/${substanceType}.svg`;
     }
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
+  }
+
+  saveSubstance(substance: SubstanceDetail): Observable<SubstanceDetail> {
+    const url = `${this.apiBaseUrl}substances`;
+    const method = substance.uuid ? 'PUT' : 'POST';
+    const options = {
+      body: substance
+    };
+    return this.http.request(method, url, options);
   }
 
 }

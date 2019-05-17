@@ -110,7 +110,7 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
     this.navigateToSearchResults(event.option.value);
   }
 
-  highlight(field) {
+  highlight(field: string) {
     if (!this.query) {
       return field;
     } else {

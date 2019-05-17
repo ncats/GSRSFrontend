@@ -1,11 +1,12 @@
-<button mat-button [matMenuTriggerFor]="accessMenu">
-    <mat-icon>lock</mat-icon>
+<button mat-button [matMenuTriggerFor]="accessMenu" [matTooltip]="tooltipMessage">
+    <mat-icon *ngIf="access.length">lock</mat-icon>
+    <mat-icon *ngIf="!access.length">lock_open</mat-icon>
     <span>Access</span>
   </button>
   <mat-menu #accessMenu="matMenu" xPosition="before">
     <form [formGroup]="accessFormGroup">
       <div mat-menu-item *ngFor="let accessOption of accessOptions" (click)="$event.stopPropagation()">
-        <mat-checkbox (change)="updateAccess($event, accessOption.value)" [formControlName]="accessOption.value">
+        <mat-checkbox (change)="updateAccess($event, accessOption)" [formControlName]="accessOption.value">
           {{accessOption.display}}
         </mat-checkbox>
       </div>
