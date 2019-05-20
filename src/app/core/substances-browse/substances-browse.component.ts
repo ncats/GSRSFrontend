@@ -477,7 +477,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     // route query params change in order to clear search query param
     this.privateSearchTerm = '';
     this.pageIndex = 0;
-    this.topSearchService.clearSearch();
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          'search': null
+        },
+        queryParamsHandling: 'merge'
+      }
+    );
   }
 
   clearFilters(): void {

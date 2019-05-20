@@ -22,7 +22,8 @@
       </button>
     </mat-menu>
   </span>
-  <app-substance-text-search></app-substance-text-search>
+  <app-substance-text-search class="top-search" [searchValueUpdated]="searchValueEmitter" (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch">
+  </app-substance-text-search>
   <div>
     <button mat-flat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment != 'login'">
       Login

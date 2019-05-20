@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterEvent, NavigationEnd, NavigationExtras } from '@angular/router';
+import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
 import { ConfigService } from '../config/config.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-base',
@@ -29,14 +30,26 @@ export class BaseComponent implements OnInit {
   logoSrcPath: string;
   auth?: Auth;
   environment: Environment;
+  searchValueEmitter: Observable<string>;
 
   constructor(
     private router: Router,
     public authService: AuthService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
+
+    this.searchValueEmitter = new Observable(observer => {
+      if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
+        observer.next(this.activatedRoute.snapshot.queryParamMap.get('search'));
+      }
+
+      this.activatedRoute.queryParamMap.subscribe(params => {
+        observer.next(params.get('search'));
+      });
+    });
 
     this.authService.getAuth().subscribe(auth => {
       this.auth = auth;
@@ -74,5 +87,18 @@ export class BaseComponent implements OnInit {
     };
 
     this.router.navigate(['/login'], navigationExtras);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.navigateToSearchResults(searchValue);
+  }
+
+  navigateToSearchResults(searchTerm: string) {
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: searchTerm ? { 'search': searchTerm } : null
+    };
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
   }
 }

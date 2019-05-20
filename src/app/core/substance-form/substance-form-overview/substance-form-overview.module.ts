@@ -10,6 +10,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SubstanceFormModule } from '../substance-form.module';
+import { SubstanceTextSearchModule } from '../../substance-text-search/substance-text-search.module';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { SubstanceFormModule } from '../substance-form.module';
     MatCheckboxModule,
     MatButtonModule,
     MatIconModule,
-    SubstanceFormModule
+    SubstanceFormModule,
+    SubstanceTextSearchModule
   ],
   declarations: [
     SubstanceFormOverviewComponent

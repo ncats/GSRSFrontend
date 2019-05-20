@@ -17,6 +17,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <app-substance-text-search></app-substance-text-search>
     <mat-form-field>
       <mat-label>Definition Level</mat-label>
       <mat-select [formControl]="definitionLevelControl" (selectionChange)="updateDefinitionLevel($event)">
