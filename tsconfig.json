@@ -35,7 +35,19 @@
       ],
       "file-select/*": [
         "dist/file-select/*"
+      ],
+      "@gsrs-core/*": [
+        "src/app/core/*"
+      ],
+      "@environment": [
+        "src/environments/environment.model.ts"
       ]
     }
-  }
+  },
+  "exclude": [
+    "testing",
+    "test.ts",
+    "**/*.spec.ts",
+    "src/testing/**/*"
+  ]
 }

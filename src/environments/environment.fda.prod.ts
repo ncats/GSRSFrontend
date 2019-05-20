@@ -1,17 +1,22 @@
 import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
+environment.apiBaseUrl = '/ginas/app/';
 environment.production = true;
-environment.version = 'fda';
-environment.navItems = [
-    {
-        display: 'FDA Sample Path',
-        path: 'fda-sample-path'
-    },
-    {
-        display: 'FDA Sample Inheritance',
-        path: 'fda-sample-inheritance'
-    }
-];
+environment.baseHref = '/ginas/app/beta/';
+environment.appId = 'fda';
+// environment.navItems = [
+//     {
+//         display: 'FDA Sample Path',
+//         path: 'fda-sample-path'
+//     },
+//     {
+//         display: 'FDA Sample Inheritance',
+//         path: 'fda-sample-inheritance'
+//     }
+// ];
+environment.googleAnalyticsId = 'UA-136176848-3';
+environment.isAnalyticsPrivate = true;
+environment.configFileLocation = '/ginas/app/beta/assets/data/config-fda.json';
 
-export { AbaseModule as EnvironmentModule } from '../app/abase.module';
+export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';

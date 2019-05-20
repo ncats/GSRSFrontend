@@ -4,14 +4,23 @@
       "outDir": "../out-tsc/app",
       "baseUrl": "./",
       "module": "commonjs",
-      "types": []
+      "types": [],
+      "paths": {
+        "@gsrs-core/*": [
+          "app/core/*"
+        ],
+        "@environment": [
+          "environments/environment.model.ts"
+        ]
+      }
     },
     "exclude": [
       "testing",
       "test.ts",
-      "**/*.spec.ts"
+      "**/*.spec.ts",
+      "testing/**/*"
     ],
     "angularCompilerOptions": {
-      "entryModule": "app/app.server.module#AppServerModule"
+      "entryModule": "app/core/app.server.module#AppServerModule"
     }
   }

@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>
+  Import Structure
+</h1>
+<div mat-dialog-content>
+  <div class="directions">Enter molfile or smiles:</div>
+  <div class="text-area-container">
+    <textarea [formControl]="importTextControl" [ngClass]="{ 'has-message': message }"></textarea>
+  </div>
+</div>
+<mat-progress-bar color="accent" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+<div [ngClass]="['message-container', messageClass]" *ngIf="message">
+  {{message}}
+</div>
+<div mat-dialog-actions>
+  <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)" (click)="fileBrowse()">Browse</button>
+  <span class="middle-fill"></span>
+  <button mat-button (click)="dismissDialog()">Close</button>
+  <button class="import-button" mat-button (click)="importStructure()">Import</button>
+</div>

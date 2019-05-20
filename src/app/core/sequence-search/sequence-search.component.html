@@ -1,0 +1,63 @@
+<div class="content-container">
+    <mat-card>
+        <mat-card-title>
+            Sequence Search
+        </mat-card-title>
+        <mat-card-content>
+            <form [formGroup]="sequenceSearchForm">
+                <div class="parameters">
+                    <mat-form-field>
+                        <input matInput placeholder="Search Identity" formControlName="cutoff">
+                        <mat-error *ngIf="sequenceSearchForm.controls.cutoff.hasError('min') || sequenceSearchForm.controls.cutoff.hasError('max')">
+                            Only values between 0 and 1 are allowed
+                        </mat-error>
+                        <mat-error *ngIf="sequenceSearchForm.controls.cutoff.hasError('required')">
+                            This is required
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select placeholder="Cutoff Type" formControlName="type">
+                            <mat-option value="SUB">
+                                Contains Aligment Match
+                            </mat-option>
+                            <mat-option value="GLOBAL">
+                                Global Alignment Match
+                            </mat-option>
+                            <mat-option value="LOCAL">
+                                Local Alignment Match
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select placeholder="Sequence Type" formControlName="sequenceType">
+                            <mat-option value="Protein">
+                                Protein
+                            </mat-option>
+                            <mat-option value="Nucleicacid">
+                                Nucleic Acid
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="sequence-body">
+                    <textarea formControlName="sequence"></textarea>
+                </div>
+                <div class="actions">
+                  <button class = "padding-right" mat-raised-button color="primary" (click)="search()" [disabled]="sequenceSearchForm.invalid">
+                    Search
+                  </button>
+                    <button *ngIf="sequenceSearchForm.value.sequence" mat-button (click)="sequenceSearchForm.controls.sequence.setValue('')">
+                        Clear
+                    </button>
+
+                  <div class="align-right" >
+                    <a class = "blue-font" (click) = "cleanSequence(sequenceSearchForm.controls.sequenceType.value)" ><mat-icon svgIcon="spellcheck"></mat-icon> clean sequence</a>
+                  </div>
+
+
+                </div>
+            </form>
+
+        </mat-card-content>
+    </mat-card>
+</div>

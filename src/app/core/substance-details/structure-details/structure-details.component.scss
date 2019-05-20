@@ -1,0 +1,56 @@
+.structure-card-content {
+    display: flex;
+}
+
+.structure-image-container {
+    padding-left: 20px;
+    flex-grow: 1;
+    
+    .structure-img {
+        width: 100%;
+        height: auto;
+      margin-top:-12%;
+      margin-bottom: -2%;
+    }
+}
+
+.black-pill, .gray-pill {
+    color: white;
+    padding: 1px 7px;
+    border-radius: 11px;
+}
+
+.black-pill {
+    background-color: black;
+}
+
+.gray-pill {
+    background-color: gray;
+}
+
+.name {
+    min-width: 175px;
+}
+
+@media(max-width: 700px) {
+    .structure-card-content {
+        flex-direction: column;
+    }
+}
+
+.references-link{
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.float-right {
+  float:right;
+}
+
+.icon-button {
+  padding:5px;
+  height:34px;
+  width: 34px;
+  min-width: 34px;
+  margin: 2px;
+}

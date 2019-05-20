@@ -1,6 +1,7 @@
 import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
-environment.version = 'gsrs';
+environment.appId = 'gsrs';
+environment.apiBaseUrl = 'http://localhost:9000/ginas/app/';
 
-export { GsrsModule as EnvironmentModule } from '../app/gsrs.module';
+export { GsrsModule as EnvironmentModule } from '../app/core/gsrs.module';
