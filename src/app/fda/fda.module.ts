@@ -9,6 +9,7 @@ import { fdaSubstanceCardsFilters } from './substance-details/fda-substance-card
 import { ProductService } from './product/product.service';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { MatCardModule } from '@angular/material/card';
+import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
 
 const fdaRoutes: Routes = [
   {
@@ -23,7 +24,8 @@ const fdaRoutes: Routes = [
     RouterModule.forChild(fdaRoutes),
     DynamicComponentLoaderModule.forRoot(fdaDynamicComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
-    MatCardModule
+    MatCardModule,
+    ClinicalTrialsModule
   ],
   declarations: [ProductDetailsComponent],
   providers: [

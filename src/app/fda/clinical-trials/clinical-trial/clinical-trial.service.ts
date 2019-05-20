@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
-import { ConfigService } from '../config/config.service';
-import { BaseHttpService } from '../base/base-http.service';
+import { ConfigService } from '@gsrs-core/config';
+import { BaseHttpService } from '@gsrs-core/base';
 import { ClinicalTrial } from './clinical-trial.model';
 import { BdnumNameAll } from './clinical-trial.model';
-import { PagingResponse } from '../utils/paging-response.model';
+import { PagingResponse } from '@gsrs-core/utils';
 
 
 @Injectable({
@@ -37,31 +37,16 @@ export class ClinicalTrialService extends BaseHttpService {
     return x;
   }
   getClinicalTrials(
-      searchTerm?: string,
-      getFacets?: boolean,
-      facets?: {
-        [facetName: string]: {
-          [facetValueLabel: string]: boolean
-        }
-      }
+      skip: number = 0,
+      pageSize: number = 10
     ): Observable<PagingResponse<ClinicalTrial>> {
   
       let params = new HttpParams();
-      // let url = this.apiBaseUrl + 'clinicaltrial';
 
-      let url = "http://localhost:9000/ginas/app/api/v1/" + 'clinicaltrial';
-  
-      if (searchTerm) {
-        params = params.append('q', searchTerm);
-      }
-  
-      if (searchTerm != null || getFacets === true) {
-      //  url += 'search';
-      }
-  
-      if (facets != null) {
-        // params = this.processFacetParams(params, facets);
-      }
+      params = params.append('skip', skip.toString());
+      params = params.append('top', pageSize.toString());
+
+      let url = `${this.apiBaseUrl}clinicaltrial`;
   
       const options = {
         params: params
