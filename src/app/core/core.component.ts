@@ -29,11 +29,11 @@ export class CoreComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    
     if (environment.navItems && environment.navItems.length) {
-      this.navItems.concat(environment.navItems);
+      this.navItems = this.navItems.concat(environment.navItems);
     }
-
+    
     this.router.events.subscribe((event: RouterEvent) => {
 
       if (event instanceof NavigationEnd) {

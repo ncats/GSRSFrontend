@@ -1,25 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
+import { Router, Routes, RouterModule } from '@angular/router';
 import { FdaSampleComponent } from './fda-sample/fda-sample.component';
-import { Router } from '@angular/router';
 import { FdaInheritanceSampleComponent } from './inheritance-sample/fda-inheritance-sample/fda-inheritance-sample.component';
-
+import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
 const fdaRoutes: Routes = [
-  {
-    path: 'fda-sample-path',
-    component: FdaSampleComponent
-  },
-  {
-    path: 'fda-sample-inheritance',
-    component: FdaInheritanceSampleComponent
-  }
+  // {
+  //   path: 'fda-sample-path',
+  //   component: FdaSampleComponent
+  // },
+  // {
+  //   path: 'fda-sample-inheritance',
+  //   component: FdaInheritanceSampleComponent
+  // }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(fdaRoutes)
+    RouterModule.forChild(fdaRoutes),
+    ClinicalTrialsModule
   ],
   declarations: [
     FdaSampleComponent,
