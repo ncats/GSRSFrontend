@@ -1,0 +1,158 @@
+
+<div *ngIf="agent">
+  <h4>Agent Modifications:</h4>
+
+  <table class="no-bottom-border" mat-table [dataSource]="agent">
+
+    <ng-container matColumnDef="Modification Process">
+      <th mat-header-cell *matHeaderCellDef> Modification Process </th>
+      <td mat-cell *matCellDef="let agent">
+        {{agent.agentModificationProcess}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Modification Role">
+      <th mat-header-cell *matHeaderCellDef> Modification Role </th>
+      <td mat-cell *matCellDef="let agent">
+        {{agent.agentModificationRole}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Modification Type">
+      <th mat-header-cell *matHeaderCellDef> Modification Type </th>
+      <td mat-cell *matCellDef="let agent">
+        {{agent.agentModificationType}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Amount">
+      <th mat-header-cell *matHeaderCellDef> Amount </th>
+      <td mat-cell *matCellDef="let agent">
+          {{toString(agent.amount)}}
+      </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="Modification Agent">
+      <th mat-header-cell *matHeaderCellDef> Modification Agent </th>
+      <td mat-cell *matCellDef="let agent">
+        {{agent.agentSubstance?.refPname}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Approved ID">
+      <th mat-header-cell *matHeaderCellDef> Approved ID </th>
+      <td mat-cell *matCellDef="let agent">
+        {{agent.agentSubstance?.linkingID}}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="agentColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: agentColumns;"></tr>
+  </table>
+
+</div>
+
+<br/>
+
+<div *ngIf="physical">
+ <h4>Physical Modifications:</h4>
+
+  <table class="no-bottom-border" mat-table [dataSource]="physical">
+
+    <ng-container matColumnDef="Modification Role">
+      <th mat-header-cell *matHeaderCellDef> Modification Role </th>
+      <td mat-cell *matCellDef="let physical">
+        {{physical.physicalModificationRole}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Parameter Name">
+      <th mat-header-cell *matHeaderCellDef> Parameter Name </th>
+      <td mat-cell *matCellDef="let physical">
+
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Amount">
+      <th mat-header-cell *matHeaderCellDef> Amount </th>
+      <td mat-cell *matCellDef="let physical">
+        {{toString(physical.amount)}}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="physicalColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: physicalColumns;"></tr>
+  </table>
+
+</div>
+
+<br/>
+
+<div *ngIf="structural">
+  <h4>Structural Modifications:</h4>
+
+  <div class="responsive">
+    <table class="no-bottom-border" mat-table [dataSource]="structural">
+
+      <ng-container matColumnDef="Modification Type">
+        <th mat-header-cell *matHeaderCellDef> Modification Type </th>
+        <td mat-cell *matCellDef="let structural">
+          {{structural.structuralModificationType}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Location Site">
+        <th mat-header-cell *matHeaderCellDef> Location Site </th>
+        <td mat-cell *matCellDef="let structural">
+          <div *ngFor="let site of structural.sites">
+            [{{site.subunitIndex}}_{{site.residueIndex}}]
+            <br />
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Location Type">
+        <th mat-header-cell *matHeaderCellDef> Location Type </th>
+        <td mat-cell *matCellDef="let structural">
+          {{structural.locationType}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Residue Modified">
+        <th mat-header-cell *matHeaderCellDef> Residue Modified </th>
+        <td mat-cell *matCellDef="let structural">
+          {{structural.residueModified}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Extent">
+        <th mat-header-cell *matHeaderCellDef> Extent </th>
+        <td mat-cell *matCellDef="let structural">
+          {{structural.extent}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Modification Name">
+        <th mat-header-cell *matHeaderCellDef> Modification Name </th>
+        <td mat-cell *matCellDef="let structural">
+          <span *ngIf="structural.molecularFragment">
+            {{structural.molecularFragment.refPname}}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Modification ID">
+        <th mat-header-cell *matHeaderCellDef> Modification ID </th>
+        <td mat-cell *matCellDef="let structural">
+          <span *ngIf="structural.molecularFragment">
+            {{structural.molecularFragment.linkingID}}
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="structuralColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: structuralColumns;"></tr>
+    </table>
+  </div>
+</div>

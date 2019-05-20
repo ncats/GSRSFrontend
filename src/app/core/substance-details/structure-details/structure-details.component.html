@@ -1,0 +1,76 @@
+<div  *ngIf="structure">
+  <div class="structure-card-content">
+  <div>
+    <div class="name-value">
+      <div class="name">Stereochemistry</div>
+      <div class="value black-pill">{{structure.stereochemistry}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Molecular Formula</div>
+      <div class="value blue-font">{{structure.formula}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Molecular Weight</div>
+      <div class="value blue-font">{{structure.mwt}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Optical Activity</div>
+      <div class="value gray-pill">{{structure.opticalActivity}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Defined Stereocenters</div>
+      <div class="value gray-pill">{{structure.definedStereo}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">E/Z Centers</div>
+      <div class="value gray-pill">{{structure.ezCenters}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Charge</div>
+      <div class="value gray-pill">{{structure.charge}}</div>
+    </div>
+      <div class="name-value" *ngIf="structure.references?.length > 0" >
+        <div class="name">
+          <a (click)="toggleReferences()" class='blue-font references-link'>
+            <span>{{showDef === false ? 'Show' : 'Hide'}} References</span><mat-icon svgIcon="{{defIcon}}"></mat-icon>
+          </a>
+        </div>
+      </div>
+      <div class="name-value" *ngIf="structure.smiles" >
+        <div class="name">
+          <a (click)="toggleSmiles()" class='blue-font references-link'>
+            <span>{{showSmiles === false ? 'Show' : 'Hide'}} SMILES / InChi</span><mat-icon svgIcon="{{smilesIcon}}"></mat-icon>
+          </a>
+        </div>
+      </div>
+  </div>
+
+  <div class="structure-image-container text-center">
+    <div class = 'float-right'>
+      <a class="mat-raised-button mat-primary icon-button" title="Download molfile" [href]="molfileHref" download="results.mol"><mat-icon svgIcon="get_app"></mat-icon></a>
+    </div>
+    <img class="structure-img" [src]="getSafeStructureImgUrl(showStereo, structure.id)">
+    <br/>
+      <button class ="mat-raised-button mat-primary" [disabled]="structure.definedStereo == 0" (click)="toggleStereo()">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
+
+  </div>
+
+
+</div>
+</div>
+
+<div style="width:100%" >
+
+  <div [hidden]="!showDef" style="min-width:50%;">
+    <h3>References</h3>
+    <app-references-manager  [substance]="substance" [references]="structure.references" ></app-references-manager>
+  </div>
+
+  <div [hidden]="!showSmiles" style="width:100%">
+    <h3>SMILES:</h3>
+    <p>{{structure.smiles}}</p>
+    <h3>InChi</h3>
+    <p>{{inchi}}</p>
+  </div>
+
+</div>

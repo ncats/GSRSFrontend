@@ -1,0 +1,41 @@
+<div class="flex-row">
+    <span class="middle-fill"></span>
+    <mat-form-field [floatLabel]="'never'" class="search">
+      <input matInput placeholder="Search" [formControl]="searchControl">
+    </mat-form-field>
+  </div>
+  <div class="responsive">
+    <table mat-table [dataSource]="paged">
+
+      <ng-container matColumnDef="citation">
+        <th mat-header-cell *matHeaderCellDef> Citation </th>
+        <td mat-cell *matCellDef="let reference">
+          <a *ngIf = "reference.url" [href]="reference.url" target = "_blank" >{{reference.citation}} </a>
+          <span *ngIf = "!reference.url"> {{reference.citation}} </span>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let reference"> {{reference.docType}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="tags">
+        <th mat-header-cell *matHeaderCellDef> Tags </th>
+        <td mat-cell *matCellDef="let reference">
+          <span *ngFor="let tag of reference.tags; last as isLast">{{tag}}<span *ngIf="!isLast">,&nbsp;</span></span>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="dateAcessed">
+        <th mat-header-cell *matHeaderCellDef> Date Accessed </th>
+        <td mat-cell *matCellDef="let reference"> {{reference.accessed | date : 'short'}} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+  <mat-paginator [length]="filtered && filtered.length || 0" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
+    [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>

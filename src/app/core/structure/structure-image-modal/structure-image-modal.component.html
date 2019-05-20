@@ -1,0 +1,38 @@
+<img class="structure-image structure-modal" *ngIf="structure" [src]="getSafeStructureImgUrl(structure)">
+<mat-tab-group *ngIf="smiles">
+  <mat-tab label="Systematic Names">
+    <h2>Systematic Names:</h2>
+      <ul>
+        <li *ngIf="!names || names.length == 0">
+          <i>None Recorded</i>
+        </li>
+        <li *ngFor="let name of names">
+          {{name}}
+        </li>
+      </ul>
+  </mat-tab>
+  <mat-tab label="SMILES">
+    <h2>SMILES:</h2>
+    <p>{{smiles}}</p>
+  </mat-tab>
+  <mat-tab label="InChi">
+    <h2>InChi</h2>
+    <p>{{inchi}}</p>
+  </mat-tab>
+</mat-tab-group>
+<div *ngIf="!smiles">
+  <h2>Systematic Names:</h2>
+  <ul>
+    <li *ngIf="!names || names.length == 0">
+      <i>None Recorded</i>
+    </li>
+    <li *ngFor="let name of names">
+      {{name}}
+    </li>
+  </ul>
+</div>
+<div class = 'flex-row'>
+  <span class="middle-fill"></span>
+  <button class = "modal-space-saver" mat-button (click)="dismissDialog()">Close</button>
+
+</div>
