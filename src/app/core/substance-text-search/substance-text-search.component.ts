@@ -24,7 +24,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit {
   private searchContainerElement: HTMLElement;
   private query: string;
   @Input() eventCategory: string;
-  @Input() searchValueUpdated: Observable<string>;
+  @Input() searchValueUpdated?: Observable<string>;
   @Output() searchPerformed  = new EventEmitter<string>();
 
   constructor(
@@ -36,9 +36,11 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    this.searchValueUpdated.subscribe(searchValue => {
-      this.searchControl.setValue(searchValue);
-    });
+    if (this.searchValueUpdated != null) {
+      this.searchValueUpdated.subscribe(searchValue => {
+        this.searchControl.setValue(searchValue);
+      });
+    }
 
     this.searchControl.valueChanges.pipe(
       debounceTime(500),

@@ -4,6 +4,7 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { SubstanceService } from '../../substance/substance.service';
 
 @Component({
   selector: 'app-substance-form-overview',
@@ -17,7 +18,8 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   definitionLevelControl = new FormControl();
 
   constructor(
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private substanceService: SubstanceService
   ) {
     super();
   }
@@ -45,9 +47,23 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
 
   updateDefinitionType(event: MatSelectChange): void {
     this.substance.definitionType = event.value;
+    console.log(this.substance.definitionType);
   }
 
   updateDefinitionLevel(event: MatSelectChange): void {
     this.substance.definitionLevel = event.value;
+  }
+
+  processSubstanceSearch(searchValue: string): void {
+    console.log(searchValue);
+    const q = searchValue.replace('\"', '');
+
+    const searchStr = `root_names_name:\"^${q}$\" OR ` +
+      `root_approvalID:\"^${q}$\" OR ` +
+      `root_codes_BDNUM:\"^${q}$\"`;
+
+    this.substanceService.getSubstanceSummaries(searchStr, true).subscribe(response => {
+      console.log(response);
+    });
   }
 }
