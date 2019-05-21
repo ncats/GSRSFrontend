@@ -102,6 +102,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'lock',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-lock-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'open_in_new',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-open_in_new-24px.svg'));
   }
 
 }

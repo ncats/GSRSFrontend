@@ -5,6 +5,8 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
+import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
+import { Observable, Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-substance-form-overview',
@@ -16,15 +18,22 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   definitionLevels: Array<VocabularyTerm>;
   definitionTypeControl = new FormControl();
   definitionLevelControl = new FormControl();
+  primarySubstanceErrorEmitter: Observable<string>;
+  private primarySubstanceErrorSubscriber: Subscriber<string>;
+  primarySubstance?: SubstanceSummary;
+  showPrimarySubstanceOptions = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private substanceService: SubstanceService
+    public substanceService: SubstanceService
   ) {
     super();
   }
 
   ngOnInit() {
+    this.primarySubstanceErrorEmitter = new Observable(observer => {
+      this.primarySubstanceErrorSubscriber = observer;
+    });
     this.getVocabularies();
   }
 
@@ -35,6 +44,24 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
       this.definitionTypeControl.setValue(definitionType);
       const definitionLevel = this.substance && this.substance.definitionLevel || 'complete';
       this.definitionLevelControl.setValue(definitionLevel);
+
+      if (this.substance.definitionType === 'ALTERNATIVE') {
+        this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
+          const type = vocabularyResponse['RELATIONSHIP_TYPE']
+            && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE']
+            && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE'].value
+            || null;
+
+          if (type && this.substance.relationships && this.substance.relationships.length) {
+            const primarySubstance = this.substance.relationships.find(relationship => relationship.type === type);
+            if (primarySubstance != null) {
+              this.substanceService.getSubstanceSummary(primarySubstance.relatedSubstance.refuuid).subscribe(response => {
+                this.primarySubstance = response;
+              });
+            }
+          }
+        });
+      }
     });
   }
 
@@ -47,7 +74,14 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
 
   updateDefinitionType(event: MatSelectChange): void {
     this.substance.definitionType = event.value;
-    console.log(this.substance.definitionType);
+    if (this.substance.definitionType === 'PRIMARY' && this.substance.relationships != null && this.substance.relationships.length) {
+      const indexToRemove = this.substance.relationships
+        .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
+      if (indexToRemove > -1) {
+        this.substance.relationships.splice(indexToRemove, 1);
+      }
+      this.primarySubstance = null;
+    }
   }
 
   updateDefinitionLevel(event: MatSelectChange): void {
@@ -55,7 +89,6 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   }
 
   processSubstanceSearch(searchValue: string): void {
-    console.log(searchValue);
     const q = searchValue.replace('\"', '');
 
     const searchStr = `root_names_name:\"^${q}$\" OR ` +
@@ -63,7 +96,40 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
       `root_codes_BDNUM:\"^${q}$\"`;
 
     this.substanceService.getSubstanceSummaries(searchStr, true).subscribe(response => {
-      console.log(response);
+      if (response.content && response.content.length) {
+        this.primarySubstance = response.content[0];
+        if (this.substance.relationships == null || Object.prototype.toString.call(this.substance.relationships) !== '[object Array]') {
+          this.substance.relationships = [];
+        }
+        this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
+          const relationship: SubstanceRelationship = {
+            relatedSubstance: {
+              refuuid: this.primarySubstance.uuid,
+              refPname: this.primarySubstance._name,
+              approvalID: this.primarySubstance.approvalID,
+              substanceClass: 'reference'
+            },
+            access: [],
+            type: vocabularyResponse['RELATIONSHIP_TYPE']
+              && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE']
+              && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE'].value
+              || ''
+          };
+          this.substance.relationships.push(relationship);
+        });
+        this.primarySubstanceErrorSubscriber.next('');
+      } else {
+        setTimeout(() => {
+          this.primarySubstanceErrorSubscriber.next('No substances found');
+        });
+      }
     });
+  }
+
+  editPrimarySubstance(): void {
+    const indexToRemove = this.substance.relationships
+      .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
+    this.substance.relationships.splice(indexToRemove, 1);
+    this.primarySubstance = null;
   }
 }

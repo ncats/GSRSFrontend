@@ -1,13 +1,12 @@
-import {Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
-import { SubstanceTextSearchService } from './substance-text-search.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-text-search',
@@ -15,7 +14,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./substance-text-search.component.scss']
 })
 
-export class SubstanceTextSearchComponent implements OnInit, AfterViewInit {
+export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   searchControl = new FormControl();
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
   suggestionsFields: Array<any>;
@@ -26,20 +25,40 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit {
   @Input() eventCategory: string;
   @Input() searchValueUpdated?: Observable<string>;
   @Output() searchPerformed  = new EventEmitter<string>();
+  @Input() placeholder = 'Search';
+  @Input() hintMessage = '';
+  @Input() errorMessageUpdated?: Observable<string>;
+  errorMessage = '';
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private utilsService: UtilsService,
     private element: ElementRef,
-    private topSearchService: SubstanceTextSearchService,
     public gaService: GoogleAnalyticsService
   ) { }
 
   ngOnInit() {
 
     if (this.searchValueUpdated != null) {
-      this.searchValueUpdated.subscribe(searchValue => {
+      const subscription = this.searchValueUpdated.subscribe(searchValue => {
         this.searchControl.setValue(searchValue);
       });
+      this.subscriptions.push(subscription);
+    }
+
+    if (this.errorMessageUpdated != null) {
+      const subscription = this.errorMessageUpdated.subscribe(errorMessage => {
+        this.searchControl.markAsTouched();
+        if (errorMessage) {
+          this.searchControl.setErrors({
+            error: true
+          });
+        } else {
+          this.searchControl.setErrors(null);
+        }
+        this.errorMessage = errorMessage;
+      });
+      this.subscriptions.push(subscription);
     }
 
     this.searchControl.valueChanges.pipe(
@@ -82,22 +101,16 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit {
       console.log(error);
     });
 
-
-
-    // this.topSearchService.clearSearchEvent.subscribe(() => {
-    //   this.searchControl.setValue('');
-    //   this.router.navigate(
-    //     [],
-    //     {
-    //       relativeTo: this.activatedRoute,
-    //       queryParams: {
-    //         'search': null
-    //       },
-    //       queryParamsHandling: 'merge'
-    //     }
-    //   );
-    // });
   }
+
+  ngOnDestroy() {
+    if (this.subscriptions && this.subscriptions.length) {
+      this.subscriptions.forEach(subscription => {
+        subscription.unsubscribe();
+      });
+    }
+  }
+
   setStatus(value) {
     // get matAutocomplete status so highlight() doesn't get undefined #overflow
     this.matOpen = value;
