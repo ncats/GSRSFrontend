@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { SubstanceName } from '../../substance/substance.model';
 import { UtilsService } from '../../utils/utils.service';
 import { VocabularyTerm } from '../../utils/vocabulary.model';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatSort} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Sort} from '@angular/material';
 
 @Component({
   selector: 'app-substance-names',
@@ -16,7 +17,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   displayedColumns: string[] = ['name', 'type', 'language', 'references'];
   languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
-
+  @ViewChild(MatSort) sort: MatSort;
   constructor(
     private utilsService: UtilsService,
     private dialog: MatDialog,
@@ -41,6 +42,25 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       this.getLanguageVocabulary();
       this.getTypeVocabulary();
     }
+  }
+
+  sortData(sort: Sort) {
+    const data = this.names.slice();
+    if (!sort.active || sort.direction === '') {
+      this.filtered = data;
+      this.pageChange();
+      return;
+    }
+    this.filtered = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'name': return compare(a.name, b.name, isAsc);
+        case 'type': return compare(a.type, b.type, isAsc);
+        case 'language': return compare(this.getLanguages(a), this.getLanguages(b), isAsc);
+        default: return 0;
+      }
+    });
+    this.pageChange();
   }
 
   getLanguageVocabulary(): void {
@@ -82,4 +102,8 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     });
   }
 
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
