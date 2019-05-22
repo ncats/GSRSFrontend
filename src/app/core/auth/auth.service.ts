@@ -114,4 +114,19 @@ export class AuthService extends BaseHttpService {
     }
     return true;
   }
+
+  hasRolesAsync(...roles: Array<Role|string>): Observable<boolean> {
+    return new Observable(observer => {
+      if (this.auth != null) {
+        observer.next(this.hasRoles(...roles));
+        observer.complete();
+      } else {
+        const subscription = this.getAuth().subscribe(auth => {
+          observer.next(this.hasRoles(...roles));
+          observer.complete();
+          subscription.unsubscribe();
+        });
+      }
+    });
+  }
 }

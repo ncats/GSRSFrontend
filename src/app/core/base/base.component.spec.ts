@@ -7,10 +7,10 @@ import { LoadingModule } from '../loading/loading.module';
 import { RouterStub } from '../../testing/router-stub';
 import { RouterLinkDirectiveMock } from '../../testing/router-link-mock.directive';
 import { MatMenuModule } from '@angular/material/menu';
-import { TopSearchModule } from '../top-search/top-search.module';
+import { SubstanceTextSearchModule } from '../substance-text-search/substance-text-search.module';
 import { MainNotificationModule } from '../main-notification/main-notification.module';
 import { ConfigService } from '../config/config.service';
-import { TopSearchService } from '../top-search/top-search.service';
+import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
 import { ActivatedRouteStub } from '../../testing/activated-route-stub';
 import { RouterOutletStubComponent } from '../../testing/router-outlet-mock.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,7 +39,7 @@ describe('BaseComponent', () => {
         MatToolbarModule,
         LoadingModule,
         MatMenuModule,
-        TopSearchModule,
+        SubstanceTextSearchModule,
         MainNotificationModule,
         HttpClientTestingModule,
         NoopAnimationsModule
@@ -53,7 +53,7 @@ describe('BaseComponent', () => {
       providers: [
         { provide: Router, useValue: routerStub },
         { provide: ConfigService, useValue: configServiceSpy },
-        { provide: TopSearchService, useValue: topSearchServiceSpy },
+        { provide: SubstanceTextSearchService, useValue: topSearchServiceSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub }
       ]
     })

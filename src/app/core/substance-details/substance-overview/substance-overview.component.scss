@@ -7,8 +7,10 @@
   padding-bottom:20px;
 }
 
-.float-right {
+.options-area {
   float:right;
+  display: flex;
+  flex-direction: column;
 }
 
 .large-icon {

@@ -1,0 +1,149 @@
+@import '../../../styles/variables';
+
+form {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.search-form-field {
+
+  .mat-input-element {
+    font-size: 16px;
+  }
+  
+}
+
+.substance-suggestion-field {
+  padding: 8px 6px;
+  color: white;
+  overflow: hidden;
+}
+
+.field-styling {
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #448aff;
+  color: white;
+}
+
+.suggestion-styling {
+  overflow-x: hidden;
+  white-space: nowrap !important;
+  text-overflow: ellipsis;
+}
+
+.overflow-comp {
+  visibility: hidden;
+  max-width: 2000px;
+  height: 1px;
+  margin: 0px;
+  padding: 0px;
+}
+
+
+.search-container {
+  mat-form-field {
+    overflow: hidden;
+  }
+}
+
+.close-button {
+  display: none;
+  width: 0;
+  transition: all 250ms linear;
+}
+
+@media(min-width: $nav-breaking-point) {
+
+  .activate-search-button {
+    display: none;
+  }
+}
+
+@media(max-width: $nav-breaking-point) {
+
+  .search-container {
+    mat-form-field {
+      width: 0;
+    }
+  }
+
+  .search-button {
+    display: none;
+  }
+
+  .active-search {
+
+    &.search-container {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      left: 0;
+      height: 64px;
+      padding-right: 16px;
+      padding-left: 16px;
+      background-color: #448aff;
+      overflow: hidden;
+
+      form {
+        max-height: 100%;
+      }
+
+      .mat-form-field {
+        width: 100%;
+        flex-flow: 1;
+        animation-name: expandWidth;
+        animation-duration: 300ms;
+      }
+
+      .search-button {
+        display: inline-block;
+      }
+
+      .activate-search-button {
+        display: none;
+      }
+
+      // ::ng-deep .mat-form-field-infix {
+      //     border-top: 2px solid transparent;
+      // }
+
+      .close-button {
+        display: inline-block;
+        width: auto;
+      }
+    }
+  }
+
+  .deactivate-search {
+
+    &.search-container {
+      .mat-form-field {
+        animation-name: reduceWidth;
+        animation-duration: 300ms;
+      }
+    }
+  }
+}
+
+@keyframes expandWidth {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes reduceWidth {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0;
+  }
+}

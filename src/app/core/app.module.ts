@@ -47,7 +47,7 @@ import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
 import { TakePipe } from './utils/take.pipe';
 import { FacetDisplayPipe } from './utils/facet-display.pipe';
 import { EnvironmentModule } from '../../environments/environment';
-import { TopSearchModule } from './top-search/top-search.module';
+import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
@@ -56,6 +56,9 @@ import { SubstanceCardsModule } from './substance-details/substance-cards.module
 import { substanceCardsFilters } from './substance-details/substance-cards-filters.constant';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { SubstanceFormComponent } from './substance-form/substance-form.component';
+import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
+import { SubstanceFormModule } from './substance-form/substance-form.module';
 
 @NgModule({
   declarations: [
@@ -70,7 +73,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     TakePipe,
     FacetDisplayPipe,
     SequenceSearchComponent,
-    TrackLinkEventDirective
+    TrackLinkEventDirective,
+    SubstanceFormComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -110,9 +114,10 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     MatButtonToggleModule,
     MatTooltipModule,
     MatTabsModule,
-    TopSearchModule,
+    SubstanceTextSearchModule,
     SubstanceCardsModule.forRoot(substanceCardsFilters),
-    AuthModule
+    AuthModule,
+    SubstanceFormModule
   ],
   providers: [
     ConfigService,
@@ -122,7 +127,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
         deps: [ConfigService],
         multi: true
     },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    CanActivateSubstanceForm
   ],
   bootstrap: [AppComponent],
   entryComponents: [StructureImageModalComponent]

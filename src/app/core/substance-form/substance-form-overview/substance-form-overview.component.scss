@@ -1,0 +1,58 @@
+.substance-form-title {
+    display: flex;
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.substance-form-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.primary-substance-container {
+    max-width: 25%;
+}
+
+.primary-substance {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    position: relative;
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-width: 200px;
+    }
+}
+
+.section-header {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 11px;
+    text-align: left;
+    letter-spacing: .005px;
+}
+
+.primary-substance-options {
+    position: absolute;
+    right: 5px;
+    top: 15px;
+    display: flex;
+    flex-direction: column;
+
+    .mat-mini-fab {
+        background-color: rgba(242, 242, 242, .85);
+        color: #404040;
+        width: 35px;
+        height: 35px;
+
+        &:not(:first-child) {
+            margin-top: 3px;
+        }
+
+        ::ng-deep .mat-button-wrapper {
+            padding: 0;
+        }
+    }
+}

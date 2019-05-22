@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import { Subunit } from '../../substance/substance.model';
-import { UtilsService } from '../../utils/utils.service';
-import { VocabularyTerm } from '../../utils/vocabulary.model';
+import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
+import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   view = 'details';
 
   constructor(
-    private utilsService: UtilsService,
+    private cvService: ControlledVocabularyService,
     public gaService: GoogleAnalyticsService
   ) {
     super();
@@ -35,8 +35,8 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   }
 
   getVocabularies(): void {
-    this.utilsService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
-      this.vocabulary = response;
+    this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
+      this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
       this.processSubunits();
     }, error => {
       this.processSubunits();

@@ -25,7 +25,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { TakePipe } from '../utils/take.pipe';
 import { MatTableModule } from '@angular/material/table';
-import { TopSearchService } from '../top-search/top-search.service';
+import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
 import { MatDialogStub } from '../../testing/mat-dialog-stub';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconMock } from '../../testing/mat-icon-mock.component';
@@ -93,7 +93,7 @@ describe('SubstancesBrowseComponent', () => {
         { provide: ConfigService, useValue: configServiceSpy },
         { provide: LoadingService, useValue: loadingServiceSpy },
         { provide: MainNotificationService, useValue: notificationServiceSpy },
-        { provide: TopSearchService, useValue: topSearchServiceSpy },
+        { provide: SubstanceTextSearchService, useValue: topSearchServiceSpy },
         { provide: MatDialog, useValue: matDialog },
         { provide: UtilsService, useValue: utilsServiceStub }
       ]

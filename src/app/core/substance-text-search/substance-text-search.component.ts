@@ -1,21 +1,20 @@
-import {Component, OnInit, ElementRef, AfterViewInit, Pipe} from '@angular/core';
+import {Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
-import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
-import { TopSearchService } from './top-search.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { environment } from '../../../environments/environment';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-top-search',
-  templateUrl: './top-search.component.html',
-  styleUrls: ['./top-search.component.scss']
+  selector: 'app-substance-text-search',
+  templateUrl: './substance-text-search.component.html',
+  styleUrls: ['./substance-text-search.component.scss']
 })
 
-export class TopSearchComponent implements OnInit, AfterViewInit {
+export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   searchControl = new FormControl();
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
   suggestionsFields: Array<any>;
@@ -23,20 +22,43 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
   private testElem: HTMLElement;
   private searchContainerElement: HTMLElement;
   private query: string;
-
+  @Input() eventCategory: string;
+  @Input() searchValueUpdated?: Observable<string>;
+  @Output() searchPerformed  = new EventEmitter<string>();
+  @Input() placeholder = 'Search';
+  @Input() hintMessage = '';
+  @Input() errorMessageUpdated?: Observable<string>;
+  errorMessage = '';
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private utilsService: UtilsService,
-    private router: Router,
     private element: ElementRef,
-    private topSearchService: TopSearchService,
-    private activatedRoute: ActivatedRoute,
     public gaService: GoogleAnalyticsService
   ) { }
 
   ngOnInit() {
-    if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
-      this.searchControl.setValue(this.activatedRoute.snapshot.queryParamMap.get('search'));
+
+    if (this.searchValueUpdated != null) {
+      const subscription = this.searchValueUpdated.subscribe(searchValue => {
+        this.searchControl.setValue(searchValue);
+      });
+      this.subscriptions.push(subscription);
+    }
+
+    if (this.errorMessageUpdated != null) {
+      const subscription = this.errorMessageUpdated.subscribe(errorMessage => {
+        this.searchControl.markAsTouched();
+        if (errorMessage) {
+          this.searchControl.setErrors({
+            error: true
+          });
+        } else {
+          this.searchControl.setErrors(null);
+        }
+        this.errorMessage = errorMessage;
+      });
+      this.subscriptions.push(subscription);
     }
 
     this.searchControl.valueChanges.pipe(
@@ -44,8 +66,9 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
       distinctUntilChanged(),
       switchMap(searchValue => {
         this.query = searchValue;
+        const eventCategory = this.eventCategory || 'substanceTextSearch';
         const eventLabel = !environment.isAnalyticsPrivate && searchValue || 'search term';
-        this.gaService.sendEvent('topSearch', 'search:enter-term', eventLabel);
+        this.gaService.sendEvent(eventCategory, 'search:enter-term', eventLabel);
         return this.utilsService.getStructureSearchSuggestions(searchValue);
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
@@ -54,7 +77,6 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
       this.suggestionsFields =   Object.keys(this.substanceSuggestionsGroup).filter(function(item) {
         return showTypes.includes(item);
       });
-      console.log(this.suggestionsFields);
      /* this.suggestionsFields.forEach((value, index) => {
         if (value === 'Approval_ID') {
           this.suggestionsFields[index] = 'UNII';
@@ -79,22 +101,16 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
       console.log(error);
     });
 
-
-
-    this.topSearchService.clearSearchEvent.subscribe(() => {
-      this.searchControl.setValue('');
-      this.router.navigate(
-        [],
-        {
-          relativeTo: this.activatedRoute,
-          queryParams: {
-            'search': null
-          },
-          queryParamsHandling: 'merge'
-        }
-      );
-    });
   }
+
+  ngOnDestroy() {
+    if (this.subscriptions && this.subscriptions.length) {
+      this.subscriptions.forEach(subscription => {
+        subscription.unsubscribe();
+      });
+    }
+  }
+
   setStatus(value) {
     // get matAutocomplete status so highlight() doesn't get undefined #overflow
     this.matOpen = value;
@@ -105,12 +121,13 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
   }
 
   substanceSearchOptionSelected(event?: MatAutocompleteSelectedEvent) {
+    const eventCategory = this.eventCategory || 'substanceTextSearch';
     const eventLabel = !environment.isAnalyticsPrivate && event.option.value || 'auto-complete option';
-    this.gaService.sendEvent('topSearch', 'select:auto-complete', eventLabel);
-    this.navigateToSearchResults(event.option.value);
+    this.gaService.sendEvent(eventCategory, 'select:auto-complete', eventLabel);
+    this.searchPerformed.emit(event.option.value);
   }
 
-  highlight(field) {
+  highlight(field: string) {
     if (!this.query) {
       return field;
     } else {
@@ -131,18 +148,10 @@ export class TopSearchComponent implements OnInit, AfterViewInit {
 
   processSubstanceSearch() {
     const searchTerm = this.searchControl.value;
+    const eventCategory = this.eventCategory || 'substanceTextSearch';
     const eventLabel = !environment.isAnalyticsPrivate && searchTerm || 'search term option';
-    this.gaService.sendEvent('topSearch', 'search:submit', eventLabel);
-    this.navigateToSearchResults(searchTerm);
-  }
-
-  navigateToSearchResults(searchTerm: string) {
-
-    const navigationExtras: NavigationExtras = {
-      queryParams: searchTerm ? { 'search': searchTerm } : null
-    };
-
-    this.router.navigate(['/browse-substance'], navigationExtras);
+    this.gaService.sendEvent(eventCategory, 'search:submit', eventLabel);
+    this.searchPerformed.emit(searchTerm);
   }
 
   activateSearch(): void {
