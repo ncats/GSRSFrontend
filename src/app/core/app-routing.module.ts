@@ -40,10 +40,12 @@ const childRoutes: Routes = [
     path: 'login',
     component: LoginComponent
   },
-  {
-    path: 'substances/register',
-    component: SubstanceFormComponent
-  },
+  // add this once components are capable of registering
+  // {
+  //   path: 'substances/register',
+  //   component: SubstanceFormComponent,
+  //  canActivate: [CanActivateSubstanceForm]
+  // },
   {
     path: 'substances/:id/edit',
     component: SubstanceFormComponent,

@@ -5,6 +5,7 @@ import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {UtilsService} from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { AuthService } from '../../auth/auth.service';
+import { formSections } from '../../substance-form/form-sections.constant';
 
 @Component({
   selector: 'app-substance-overview',
@@ -16,6 +17,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   showDef = false;
   downloadJsonHref: any;
   defIcon = 'drop_down';
+  isEditable = false;
+
   constructor(
     private utilsService: UtilsService,
     public gaService: GoogleAnalyticsService,
@@ -26,6 +29,9 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   }
 
   ngOnInit() {
+    this.isEditable = this.auth.hasRoles('admin')
+      && this.substance.substanceClass != null
+      && formSections[this.substance.substanceClass.toLowerCase()] != null;
     this.getSubtypeRefs(this.substance);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));

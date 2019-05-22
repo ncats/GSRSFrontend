@@ -1,15 +1,13 @@
 <div *ngIf="substance">
-  <div class='float-right'>
-    <button mat-icon-button [matMenuTriggerFor]="optionMenu">
-      <mat-icon svgIcon="menu">menu</mat-icon>
+  <div class='options-area'>
+    <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isEditable">
+      <mat-icon svgIcon="edit"></mat-icon>
+    </a>
+    <button mat-icon-button [matMenuTriggerFor]="downloadMenu">
+      <mat-icon svgIcon="get_app"></mat-icon>
     </button>
-    <mat-menu #optionMenu="matMenu" xPosition="before">
-      <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="auth.hasRoles('admin')">
-        <mat-icon svgIcon="edit"></mat-icon>
-        <span>Edit</span>
-      </a>
+    <mat-menu #downloadMenu="matMenu" xPosition="before">
       <a mat-menu-item [href]="downloadJsonHref" download="results.json">
-        <mat-icon svgIcon="get_app"></mat-icon>
         <span>Download JSON</span>
       </a>
     </mat-menu>

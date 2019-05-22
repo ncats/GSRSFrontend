@@ -15,7 +15,6 @@ import { MainNotificationService } from '../main-notification/main-notification.
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { environment } from '../../../environments/environment';
 import { Subject } from 'rxjs';
 
 @Component({
