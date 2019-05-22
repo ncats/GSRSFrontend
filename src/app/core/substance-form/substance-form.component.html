@@ -1,0 +1,17 @@
+<div class="top-fixed">
+  <div class="actions-container">
+    <span class="middle-fill"></span>
+    <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading">Submit</button>
+  </div>
+</div>
+<div class="content-container">
+  <div class="scrollable-container">
+    <div class="cards-container">
+      <mat-card *ngFor="let section of formSections" [id]="section">
+        <mat-card-content>
+          <div #dynamicComponent></div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

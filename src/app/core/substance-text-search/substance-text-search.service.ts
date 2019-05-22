@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { TopSearchModule } from './top-search.module';
+import { SubstanceTextSearchModule } from './substance-text-search.module';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: TopSearchModule
+  providedIn: SubstanceTextSearchModule
 })
-export class TopSearchService {
+export class SubstanceTextSearchService {
   public clearSearchEvent = new Subject();
 
   constructor() { }

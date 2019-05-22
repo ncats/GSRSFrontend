@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TopSearchComponent } from './top-search.component';
+import { SubstanceTextSearchComponent } from './substance-text-search.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -20,10 +20,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ],
   declarations: [
-    TopSearchComponent
+    SubstanceTextSearchComponent
   ],
   exports: [
-    TopSearchComponent
+    SubstanceTextSearchComponent
   ]
 })
-export class TopSearchModule { }
+export class SubstanceTextSearchModule { }

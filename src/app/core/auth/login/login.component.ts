@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { LoadingService } from '../../loading/loading.service';
 import { MainNotificationService } from '../../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../../main-notification/notification.model';
@@ -23,7 +23,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private loadingService: LoadingService,
-    private mainNotificationService: MainNotificationService
+    private mainNotificationService: MainNotificationService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit {
     this.authService.getAuth().subscribe(auth => {
       this.loadingService.setLoading(false);
       if (auth) {
-        this.router.navigate(['/browse-substance']);
+        const route = this.activatedRoute.snapshot.queryParamMap.get('path') || '/browse-substance';
+        this.router.navigate([route]);
       } else {
         this.isLoaded = true;
         this.isLoading = false;
@@ -52,7 +54,8 @@ export class LoginComponent implements OnInit {
       this.authService.login(username, password).subscribe(auth => {
         this.loadingService.setLoading(false);
         if (auth) {
-          this.router.navigate(['/browse-substance']);
+          const route = this.activatedRoute.snapshot.queryParamMap.get('path') || '/browse-substance';
+          this.router.navigate([route]);
         } else {
           this.isLoading = false;
         }

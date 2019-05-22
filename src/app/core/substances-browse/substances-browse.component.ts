@@ -14,7 +14,7 @@ import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
-import { TopSearchService } from '../top-search/top-search.service';
+import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { StructureImageModalComponent } from '../structure/structure-image-modal/structure-image-modal.component';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
@@ -63,7 +63,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     public utilsService: UtilsService,
     private router: Router,
     private dialog: MatDialog,
-    private topSearchService: TopSearchService,
+    private topSearchService: SubstanceTextSearchService,
     public gaService: GoogleAnalyticsService,
     public authService: AuthService
   ) {
@@ -477,7 +477,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     // route query params change in order to clear search query param
     this.privateSearchTerm = '';
     this.pageIndex = 0;
-    this.topSearchService.clearSearch();
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          'search': null
+        },
+        queryParamsHandling: 'merge'
+      }
+    );
   }
 
   clearFilters(): void {

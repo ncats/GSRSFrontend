@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, of, Observer, ArgumentOutOfRangeError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
@@ -402,19 +402,33 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<SubstanceDetail>(url, options);
   }
 
-  getSafeIconImgUrl(substance: SubstanceDetail, size: number): SafeUrl {
-    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg?size=${size.toString()}`;
+  getSafeIconImgUrl(substance: SubstanceDetail | SubstanceSummary, size?: number): SafeUrl {
+    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg`;
     const substanceType = substance.substanceClass;
     if ((substanceType === 'chemical') && (substance.structure.id)) {
       const structureId = substance.structure.id;
-      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;
+      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg`;
     } else if ((substanceType === 'polymer') && (substance.polymer.displayStructure.id)) {
       const structureId = substance.polymer.displayStructure.id;
-      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;
+      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg`;
     } else {
       imgUrl = `assets/images/${substanceType}.svg`;
     }
+
+    if (size != null) {
+      imgUrl += `?size=${size.toString()}`;
+    }
+
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
+  }
+
+  saveSubstance(substance: SubstanceDetail): Observable<SubstanceDetail> {
+    const url = `${this.apiBaseUrl}substances`;
+    const method = substance.uuid ? 'PUT' : 'POST';
+    const options = {
+      body: substance
+    };
+    return this.http.request(method, url, options);
   }
 
 }

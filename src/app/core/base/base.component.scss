@@ -1,57 +1,69 @@
 @import '../../../styles/variables';
 
 .logo {
-    height: 35px;
-    margin-right: 20px;
+  height: 35px;
+  margin-right: 20px;
 
-    img {
-        height: 100%;
-        width: auto;
-    }
+  img {
+    height: 100%;
+    width: auto;
+  }
 }
 
 .nav-big {
 
-    .nav-item {
-        padding: 0 5px;
+  .nav-item {
+    padding: 0 5px;
 
-        & > a {
-            font-size: 16px;
-            color: #e6e6e6;
-            padding-bottom: 7px;
-            transition: all 150ms linear;
-            text-decoration: none;
-            outline: none;
+    &>a {
+      font-size: 16px;
+      color: #e6e6e6;
+      padding-bottom: 7px;
+      transition: all 150ms linear;
+      text-decoration: none;
+      outline: none;
 
-            &:hover, &.active {
-                color: white;
-                cursor: pointer;
-                padding-bottom: 5px;
-                border-bottom: 2px solid white;
-                text-decoration: none;
-            }
-        }
+      &:hover,
+      &.active {
+        color: white;
+        cursor: pointer;
+        padding-bottom: 5px;
+        border-bottom: 2px solid white;
+        text-decoration: none;
+      }
     }
+  }
 }
 
 .nav-small {
-    padding-right: 10px;
+  padding-right: 10px;
 }
 
 .login-link {
-    color: white;
-    font-size: 16px;
-    text-decoration: none;
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.top-search {
+  ::ng-deep .mat-form-field {
+    width: 500px;
+
+    .mat-form-field-label {
+      font-size: 16px;
+      top: 1.98125em;
+    }
+  }
 }
 
 @media(max-width: $nav-breaking-point) {
-    .nav-big {
-        display: none;
-    }
+  .nav-big {
+    display: none;
+  }
 }
 
 @media(min-width: $nav-breaking-point) {
-    .nav-small {
-        display: none;
-    }
+  .nav-small {
+    display: none;
+  }
 }
