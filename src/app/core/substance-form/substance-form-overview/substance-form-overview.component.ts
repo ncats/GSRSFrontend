@@ -31,6 +31,7 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   }
 
   ngOnInit() {
+    this.menuLabelUpdate.emit('Overview');
     this.primarySubstanceErrorEmitter = new Observable(observer => {
       this.primarySubstanceErrorSubscriber = observer;
     });

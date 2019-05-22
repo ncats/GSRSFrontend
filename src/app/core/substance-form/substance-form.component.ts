@@ -16,6 +16,7 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { Subject } from 'rxjs';
+import { SubstanceFormSection } from './substance-form-section';
 
 @Component({
   selector: 'app-substance-form',
@@ -26,7 +27,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
   isLoading = true;
   id?: string;
   substance: SubstanceDetail;
-  formSections: Array<string> = [];
+  formSections: Array<SubstanceFormSection> = [];
   substanceUpdated = new Subject<SubstanceDetail>();
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
 
@@ -51,7 +52,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
       this.gaService.sendPageView(`Substance Register`);
       const kind = this.activatedRoute.snapshot.queryParamMap.get('kind') || 'chemical';
       this.substance = {};
-      this.formSections = formSections[kind];
+      this.setFormSections(formSections[kind]);
     }
   }
 
@@ -60,12 +61,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
       .subscribe(() => {
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
-              .getComponentFactory<any>(this.formSections[index])
+              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
               .subscribe(componentFactory => {
-                const ref = cRef.createComponent(componentFactory);
-                ref.instance.substance = this.substance;
-                ref.instance.substanceUpdated = this.substanceUpdated.asObservable();
-                ref.changeDetectorRef.detectChanges();
+                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                this.formSections[index].dynamicComponentRef.instance.substance = this.substance;
+                this.formSections[index].dynamicComponentRef.instance.substanceUpdated = this.substanceUpdated.asObservable();
+                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.subscribe(label => {
+                  this.formSections[index].menuLabel = label;
+                });
+                this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
                 this.substanceUpdated.next(this.substance);
               });
         });
@@ -76,7 +80,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
         this.substance = response;
-        this.formSections = formSections[this.substance.substanceClass];
+        this.setFormSections(formSections[this.substance.substanceClass]);
       } else {
         this.handleSubstanceRetrivalError();
       }
@@ -90,6 +94,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     });
   }
 
+  private setFormSections(sectionNames: Array<string> = []): void {
+    sectionNames.forEach(sectionName => {
+      const formSection = new SubstanceFormSection(sectionName);
+      this.formSections.push(formSection);
+    });
+  }
+
   private handleSubstanceRetrivalError() {
     const notification: AppNotification = {
       message: 'The substance you\'re trying to edit doesn\'t exist.',
@@ -100,7 +111,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.router.navigate(['/substances/register']);
       this.substance = {};
-      this.formSections = formSections.chemical;
+      this.setFormSections(formSections.chemical);
     }, 5000);
   }
 

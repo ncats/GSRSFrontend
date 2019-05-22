@@ -1,28 +1,41 @@
-.top-fixed {
-    position: fixed;
-    display: flex;
-    top: 64px;
-    width: 100%;
-    background-color: white;
-    align-items: center;
-    justify-content: center;
-    box-shadow:     0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
-    z-index: 10;
-}
-
 .content-container {
     position: fixed;
-    top: 121px;
+    top: 65px;
     right: 0;
     bottom: 0;
     left: 0;
     overflow: hidden;
+    padding: 15px;
 }
 
-.actions-container {
-    max-width: 1028px;
+.mat-card {
+    box-sizing: border-box;
     width: 100%;
-    background-color: white;
-    padding: 10px;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+.substance-form-title {
     display: flex;
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.scrollable-container {
+    padding-top: 15px;
+}
+
+.form-actions {
+    display: flex;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    width: 100%;
+    padding: 10px;
 }
