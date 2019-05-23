@@ -14,8 +14,10 @@
       <mat-tab-group>
         <mat-tab *ngFor="let section of formSections" [id]="section.dynamicComponentName" [label]="section.menuLabel">
           <ng-template matTabContent>
-            <div class="scrollable-container">
-              <div #dynamicComponent></div>
+            <div class="form-content-container">
+              <div class="scrollable-container">
+                <div #dynamicComponent></div>
+              </div>
             </div>
           </ng-template>
         </mat-tab>

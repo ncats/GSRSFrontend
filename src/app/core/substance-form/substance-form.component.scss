@@ -17,6 +17,14 @@
     display: block;
 }
 
+.mat-card-content {
+    height: 100%;
+}
+
+.mat-tab-group {
+    height: 100%;
+}
+
 .substance-form-title {
     display: flex;
     font-size: 24px;
@@ -38,4 +46,8 @@
     margin: 0;
     width: 100%;
     padding: 10px;
+}
+
+.form-content-container {
+    position: absolute;
 }
