@@ -106,23 +106,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
-  console.log(a +' - '+b+' - '+(a < b ? -1 : 1) * (isAsc ? 1 : -1));
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
 
-function compare2(a: SubstanceName, b: SubstanceName) {
-  var returned = 0;
-  if (a.displayName === true) {
-    returned = -1;
-  }  else if (b.displayName === true) {
-  returned = 1;
-} else if (a.preferred === true) {
-      returned = -1;
-  } else if (b.preferred === true) {
-    returned = 1;
-  } else {
-    returned = (a.type < b.type ? -1 : 1);
-  }
-  console.log(returned +" - "+ a.name+" - "+b.name);
-  return returned;
-}
+
