@@ -8,7 +8,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
-import {MatDialogModule, MatIconModule, MatSortModule} from '@angular/material';
+import {MatDialogModule, MatIconModule, MatSortModule, MatTooltipModule} from '@angular/material';
 @NgModule({
   imports: [
     CommonModule,
@@ -22,7 +22,8 @@ import {MatDialogModule, MatIconModule, MatSortModule} from '@angular/material';
     ReferencesManagerModule,
     MatIconModule,
     MatDialogModule,
-    MatSortModule
+    MatSortModule,
+    MatTooltipModule
   ],
   declarations: [SubstanceNamesComponent,
   ]

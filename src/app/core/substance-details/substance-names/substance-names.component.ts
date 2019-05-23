@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { SubstanceName } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
@@ -31,7 +31,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       this.names = this.substance.names;
       this.filtered = this.substance.names;
       this.countUpdate.emit(this.names.length);
-      this.pageChange();
+
 
       this.searchControl.valueChanges.subscribe(value => {
         this.filterList(value, this.names, this.analyticsEventCategory);
@@ -41,7 +41,14 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 
       this.getVocabularies();
     }
+    //move display name to top
+    this.filtered = this.names.slice().sort((a, b) => {
+      return (b.displayName === true ? 1 : -1);
+    });
+    this.pageChange();
   }
+
+
 
   sortData(sort: Sort) {
     const data = this.names.slice();
@@ -53,7 +60,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
+        case 'name': return compare(a.name.toUpperCase(), b.name.toUpperCase(), isAsc);
         case 'type': return compare(a.type, b.type, isAsc);
         case 'language': return compare(this.getLanguages(a), this.getLanguages(b), isAsc);
         default: return 0;
@@ -99,5 +106,23 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
+  console.log(a +' - '+b+' - '+(a < b ? -1 : 1) * (isAsc ? 1 : -1));
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+}
+
+function compare2(a: SubstanceName, b: SubstanceName) {
+  var returned = 0;
+  if (a.displayName === true) {
+    returned = -1;
+  }  else if (b.displayName === true) {
+  returned = 1;
+} else if (a.preferred === true) {
+      returned = -1;
+  } else if (b.preferred === true) {
+    returned = 1;
+  } else {
+    returned = (a.type < b.type ? -1 : 1);
+  }
+  console.log(returned +" - "+ a.name+" - "+b.name);
+  return returned;
 }
