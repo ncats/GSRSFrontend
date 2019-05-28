@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
-import { SubstanceName } from '../../substance/substance.model';
+import {SubstanceDetail, SubstanceName} from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-substance-names',
@@ -16,6 +17,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   displayedColumns: string[] = ['name', 'type', 'language', 'references'];
   languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
     private dialog: MatDialog,
@@ -26,20 +28,23 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   ngOnInit() {
-    if (this.substance != null && this.substance.names != null) {
-      this.names = this.substance.names;
-      this.filtered = this.substance.names;
-      this.countUpdate.emit(this.names.length);
-      this.pageChange();
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null && this.substance.names != null) {
+        this.names = this.substance.names;
+        this.filtered = this.substance.names;
+        this.countUpdate.emit(this.names.length);
+        this.pageChange();
 
-      this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.names, this.analyticsEventCategory);
-      }, error => {
-        console.log(error);
-      });
+        this.searchControl.valueChanges.subscribe(value => {
+          this.filterList(value, this.names, this.analyticsEventCategory);
+        }, error => {
+          console.log(error);
+        });
 
-      this.getVocabularies();
-    }
+        this.getVocabularies();
+      }
+    });
   }
 
   getVocabularies(): void {

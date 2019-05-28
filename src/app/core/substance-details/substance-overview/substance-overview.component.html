@@ -91,14 +91,40 @@
         <div class="value blue-font">{{substance.structurallyDiverse.fractionName}}</div>
       </div>
 
+  </div>
+  <div *ngIf = "canEdit">
+    <div class="name-value">
+      <div class="name">Record Version</div>
+      <mat-form-field class = "version-dropdown">
+        <mat-select [formControl]="versionControl" >
+          <mat-option *ngFor = "let version of versions" [value]="version" >
+            {{version}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
-    <div class="name-value" *ngIf="references?.length > 0">
-      <div class="name">
-        <a (click)="toggleReferences()" class='blue-font references-link'>
-          <span>{{showDef === false ? 'Show' : 'Hide'}} Definitional References</span>
-          <mat-icon svgIcon="{{defIcon}}"></mat-icon>
+    <div *ngIf = "versionControl.value != latestVersion">
+    this is an older version of this substance
+    </div>
+    <button *ngIf = "substance.version != versionControl.value" mat-button (click) = 'changeVersion()'>View</button>
+
+</div>
+  <div *ngIf = "!canEdit">
+    <div class="name-value">
+      <div class="name">Record Version</div>
+      <div class="value blue-font">{{substance.version}}</div>
+    </div>
+  </div>
+    <div class = "name-value" *ngIf = "references?.length > 0">
+      <div class = "name">
+        <a (click) = "toggleReferences()" class = 'blue-font references-link'>
+          <span>{{showDef === false ? 'Show' : 'Hide'}} Definitional References</span><mat-icon svgIcon="{{defIcon}}"></mat-icon>
         </a>
       </div>
+    </div>
+
+    <div *ngFor = "let name of substance.names">
+      {{name.name}}
     </div>
 
 
@@ -106,6 +132,8 @@
       <app-references-manager [substance]="substance" [references]="references"></app-references-manager>
     </div>
   </div>
+
+
 
 
 

@@ -1,29 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {UtilsService} from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
-import { AuthService } from '../../auth/auth.service';
-import { formSections } from '../../substance-form/form-sections.constant';
+import {AuthService} from '@gsrs-core/auth/auth.service';
+import {SubstanceService} from '@gsrs-core/substance/substance.service';
+import {FormControl, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {formSections} from '@gsrs-core/substance-form/form-sections.constant';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-overview',
   templateUrl: './substance-overview.component.html',
   styleUrls: ['./substance-overview.component.scss']
 })
-export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit {
+export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit, AfterViewInit {
   references: string[] = [];
   showDef = false;
   downloadJsonHref: any;
   defIcon = 'drop_down';
+  latestVersion: number;
+  canEdit: boolean;
+  versionControl = new FormControl('', Validators.required);
+  versions: string[] = [];
   isEditable = false;
-
+  substanceUpdated = new Subject<SubstanceDetail>();
   constructor(
+    private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
     public gaService: GoogleAnalyticsService,
-    private sanitizer: DomSanitizer,
-    public auth: AuthService
+    private substanceService: SubstanceService,
+    private router: Router,
+    private authService: AuthService,
+    public auth: AuthService,
+    private activeRoute: ActivatedRoute
   ) {
     super();
   }
@@ -36,7 +48,15 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHref = uri;
+    this.getVersion();
+    this.canEdit = this.authService.hasRoles('admin');
+  }
 
+  ngAfterViewInit() {
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      console.log('resub after');
+    });
   }
 
   getSubtypeRefs(substance: SubstanceDetail): void  {
@@ -54,6 +74,26 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.references = substance.structurallyDiverse.references;
     }
 
+  }
+
+  getVersion() {
+    this.substanceService.checkVersion(this.substance.uuid).subscribe((result: number) => {
+      this.latestVersion = result;
+      this.setVersionList();
+      this.versionControl.setValue(this.substance.version);
+    });
+  }
+
+  changeVersion() {
+    const version = this.versionControl.value.toString();
+    console.log(version);
+    this.router.navigate(['/substances/' + this.substance.uuid + '/v/' + version]);
+  }
+
+  setVersionList() {
+    for (let i = 1; i <= this.latestVersion; i++) {
+      this.versions.push(i.toString());
+    }
   }
 
   toggleReferences() {

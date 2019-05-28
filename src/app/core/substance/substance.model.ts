@@ -327,4 +327,11 @@ export interface Site {
     residueIndex?: number;
 }
 
-
+export interface SubstanceEdit {
+  editor: string;
+  version: string;
+  oldValue: string;
+  refid: string;
+  created: number;
+  comments?: string;
+}

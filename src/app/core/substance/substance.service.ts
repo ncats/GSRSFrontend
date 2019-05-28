@@ -10,6 +10,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from './substance-facet-param.model';
 import { SubstanceHttpParams } from './substance-http-params';
 import { UtilsService } from '../utils/utils.service';
+import {map, switchMap, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -392,18 +393,57 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<any>(url);
   }
 
-  getSubstanceDetails(id: string): Observable<SubstanceDetail> {
+  getEdits(id: string) {
+    const url = `${this.apiBaseUrl}substances(${id})/@edits`;
+    console.log(url);
+    return this.http.get<any>(url, {withCredentials: true});
+  }
+
+  getSubstanceDetails2(id: string, version?: string): Observable<SubstanceDetail> {
+    let url = `${this.apiBaseUrl}substances(${id})`;
+    let params = new HttpParams();
+
+
+
+      url = `${this.apiBaseUrl}substances(${id})`;
+      params = params.append('view', 'full');
+      const options = {
+        params: params
+      };
+      return this.http.get<SubstanceDetail>(url, options);
+
+  }
+
+  getSubstanceDetails(id: string, version?: string): any {
     const url = `${this.apiBaseUrl}substances(${id})`;
     let params = new HttpParams();
     params = params.append('view', 'full');
     const options = {
       params: params
     };
-    return this.http.get<SubstanceDetail>(url, options);
+    if (version) {
+
+      const editurl = `${this.apiBaseUrl}substances(${id})/@edits`;
+      console.log(editurl);
+
+     return this.http.get<any>(editurl, {withCredentials: true}).pipe(
+        switchMap(response  => {
+          response = response.filter(resp => resp.version === version);
+          console.log(response);
+          return this.http.get<SubstanceDetail>(response[0].oldValue, options); } ));
+
+    } else {
+      return this.http.get<SubstanceDetail>(url, options);
+    }
   }
 
-  getSafeIconImgUrl(substance: SubstanceDetail | SubstanceSummary, size?: number): SafeUrl {
-    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg`;
+  checkVersion(id: string): any {
+    const verurl = `${this.apiBaseUrl}substances(${id})/version`;
+   return this.http.get<any>(verurl);
+  }
+
+  getSafeIconImgUrl(substance: SubstanceDetail, size: number): SafeUrl {
+    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg?size=${size.toString()}`;
     const substanceType = substance.substanceClass;
     if ((substanceType === 'chemical') && (substance.structure.id)) {
       const structureId = substance.structure.id;

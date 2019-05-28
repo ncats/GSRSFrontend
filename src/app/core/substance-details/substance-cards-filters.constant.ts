@@ -3,6 +3,8 @@ import { SubstanceDetail } from '../substance/substance.model';
 import { SubstanceCardFilterParameters } from '../config/config.model';
 import { getEvaluatedProperty } from './substance-cards-utils';
 import { Observable } from 'rxjs';
+import { AuthService} from '@gsrs-core/auth/auth.service';
+import {HttpClient} from '@angular/common/http';
 
 export const substanceCardsFilters: Array<SubstanceCardFilter> = [
     {
@@ -24,6 +26,14 @@ export const substanceCardsFilters: Array<SubstanceCardFilter> = [
     {
         name: 'substanceRelationships',
         filter: substanceRelationshipsFilter
+    },
+    {
+      name: 'hasCredentials',
+      filter: credentialsFilter
+    },
+    {
+      name: 'hasEdits',
+      filter: versionFilter
     }
 ];
 
@@ -149,4 +159,42 @@ export function substanceRelationshipsFilter(
         observer.next(isApproved);
         observer.complete();
     });
+}
+
+  export function credentialsFilter(
+    substance: SubstanceDetail,
+    filter: SubstanceCardFilterParameters,
+    http: HttpClient,
+    auth: AuthService
+  ): Observable<boolean> {
+    return new Observable(observer => {
+
+      let isApproved = true;
+      if (filter.value != null) {
+        if (auth.hasRoles(filter.value) === true) {
+          console.log('logged in');
+          isApproved = true;
+        }
+      }
+      observer.next(isApproved);
+      observer.complete();
+    });
+}
+
+
+export function versionFilter(
+  substance: SubstanceDetail,
+  filter: SubstanceCardFilterParameters,
+): Observable<boolean> {
+  return new Observable(observer => {
+
+    let isApproved = true;
+
+      if (this.substance.version !== '1') {
+        isApproved = true;
+        console.log('version not 1 ' + this.substance.version);
+      }
+    observer.next(isApproved);
+    observer.complete();
+  });
 }

@@ -7,6 +7,7 @@ import { SUBSTANCE_CARDS_FILTERS } from './substance-cards-filter.model';
 import { SubstanceCardFilter } from './substance-cards-filter.model';
 import { Observable } from 'rxjs';
 import { FilterResolver } from './filter-resolver';
+import {AuthService} from '@gsrs-core/auth/auth.service';
 
 @Injectable()
 export class SubstanceCardsService {
@@ -14,7 +15,8 @@ export class SubstanceCardsService {
   constructor(
     public configService: ConfigService,
     @Inject(SUBSTANCE_CARDS_FILTERS) private filters: Array<Array<SubstanceCardFilter>>,
-    public http: HttpClient
+    public http: HttpClient,
+    public auth: AuthService
   ) { }
 
   getSubstanceDetailsPropertiesAsync(substance: SubstanceDetail): Observable<SubstanceDetailsProperty> {
@@ -32,7 +34,7 @@ export class SubstanceCardsService {
             order
           );
           if (card.filters && card.filters.length) {
-            const filterResolver = new FilterResolver(substance, card.filters, registeredFilters, this.http);
+            const filterResolver = new FilterResolver(substance, card.filters, registeredFilters, this.http, this.auth);
             filterResolver.resolve().subscribe(response => {
               if (response) {
                 observer.next(substanceDetailsProperty);
