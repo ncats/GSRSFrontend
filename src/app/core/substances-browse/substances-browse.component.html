@@ -159,6 +159,10 @@
                     <img [src]="getSafeStructureImgUrl(substance.uuid)">
                   </div>
                 </div>
+                <div *ngIf="substance.structure">
+                  <a [routerLink]="['/structure-search']" [queryParams]="{structure : substance.structure.id}" ><mat-icon svgIcon="search"></mat-icon></a>
+                  <a title="Download molfile" [href]="downloadMol(substance.structure.molfile)"  download="results.mol"><mat-icon svgIcon="get_app"></mat-icon></a>
+                </div>
               </div>
               <div>
                 <div class="substance-data substance-names" *ngIf="substance.names && substance.names.length">

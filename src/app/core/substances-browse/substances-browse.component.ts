@@ -12,7 +12,7 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 import { MatDialog, PageEvent } from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import { SafeUrl } from '@angular/platform-browser';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
@@ -65,7 +65,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private dialog: MatDialog,
     private topSearchService: SubstanceTextSearchService,
     public gaService: GoogleAnalyticsService,
-    public authService: AuthService
+    public authService: AuthService,
+    private sanitizer: DomSanitizer
   ) {
     this.privateFacetParams = {};
   }
@@ -590,6 +591,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     const eventValue = event.checked ? 1 : 0;
     this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
+  }
+
+  downloadMol(molfile: any) {
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(molfile));
   }
 
 }
