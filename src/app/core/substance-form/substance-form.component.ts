@@ -119,7 +119,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.substanceService.saveSubstance(this.substance).subscribe(response => {
-      response.access = [];
       this.substance = response;
       this.substanceUpdated.next(response);
       this.loadingService.setLoading(false);

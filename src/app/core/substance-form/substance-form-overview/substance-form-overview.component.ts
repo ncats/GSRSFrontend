@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-substance-form-overview',
@@ -22,6 +22,8 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   private primarySubstanceErrorSubscriber: Subscriber<string>;
   primarySubstance?: SubstanceSummary;
   showPrimarySubstanceOptions = false;
+  accessEmitter: Observable<Array<string>>;
+  private accessSubscriber: Subscriber<Array<string>>;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -35,12 +37,18 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
     this.primarySubstanceErrorEmitter = new Observable(observer => {
       this.primarySubstanceErrorSubscriber = observer;
     });
+    this.accessEmitter = new Observable(observer => {
+      this.accessSubscriber = observer;
+    });
     this.getVocabularies();
   }
 
   ngAfterViewInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
+      setTimeout(() => {
+        this.accessSubscriber.next(substance.access);
+      });
       const definitionType = this.substance && this.substance.definitionType || 'primary';
       this.definitionTypeControl.setValue(definitionType);
       const definitionLevel = this.substance && this.substance.definitionLevel || 'complete';
@@ -132,5 +140,9 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
       .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
     this.substance.relationships.splice(indexToRemove, 1);
     this.primarySubstance = null;
+  }
+
+  updateAccess(access: Array<string>): void {
+    this.substance.access = access;
   }
 }

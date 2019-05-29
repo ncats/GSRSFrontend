@@ -29,7 +29,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     ReferencesManagerComponent
   ],
   exports: [
-    AccessManagerComponent
+    AccessManagerComponent,
+    ReferencesManagerComponent
   ]
 })
 export class SubstanceFormModule { }

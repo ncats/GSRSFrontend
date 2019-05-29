@@ -39,7 +39,13 @@
       </mat-select>
     </mat-form-field>
     <div>
-      <app-access-manager [substanceUpdated]="substanceUpdated"></app-access-manager>
+      <app-access-manager (accessOut)="updateAccess($event)" [accessIn]="accessEmitter"></app-access-manager>
+    </div>
+  </div>
+  <div class="substance-form-row">
+    <div class="references-container">
+      <h3>References</h3>
+      <app-references-manager></app-references-manager>
     </div>
   </div>
 </div>
