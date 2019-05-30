@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import {SubstanceDetail, SubstanceName} from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
@@ -35,16 +35,18 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
         this.filtered = this.substance.names;
         this.countUpdate.emit(this.names.length);
         this.pageChange();
-
-        this.searchControl.valueChanges.subscribe(value => {
-          this.filterList(value, this.names, this.analyticsEventCategory);
-        }, error => {
-          console.log(error);
-        });
-
-        this.getVocabularies();
       }
-    });
+      });
+    if (this.substance != null && this.substance.names != null) {
+      this.searchControl.valueChanges.subscribe(value => {
+        this.filterList(value, this.names, this.analyticsEventCategory);
+      }, error => {
+        console.log(error);
+      });
+
+      this.getVocabularies();
+    }
+
   }
 
   getVocabularies(): void {

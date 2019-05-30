@@ -64,28 +64,19 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
       console.log(this.version);
      this.checkVersion().subscribe((result: number) => {this.latestVersion = result;
-
-      if (this.version) {
-        console.log(result + ' - ' + this.version);
-        if (this.latestVersion > this.version) {
-          this.getSubstanceDetails(this.id, this.version.toString());
-        } else {
-          this.getSubstanceDetails(this.id);
-        }
-      } else {
-        this.getSubstanceDetails(this.id);
-      }
-
        this.activeRoute.params.subscribe(routeParams => {
          this.version = routeParams.version;
+         console.log(routeParams.version);
          if (this.version) {
            if (this.latestVersion > this.version) {
              this.getSubstanceDetails(this.id, this.version.toString());
            } else {
              this.getSubstanceDetails(this.id);
            }
+         } else {
+           this.getSubstanceDetails(this.id);
          }
-         console.log('details after view' + this.latestVersion + ' - ' + this.version.toString() );
+         console.log('details after view' + this.latestVersion + ' - ' + this.version );
 
        });
 

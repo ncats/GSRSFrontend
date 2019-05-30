@@ -92,7 +92,7 @@
       </div>
 
   </div>
-  <div *ngIf = "canEdit">
+  <div *ngIf = "isEditable">
     <div class="name-value">
       <div class="name">Record Version</div>
       <mat-form-field class = "version-dropdown">
@@ -109,7 +109,7 @@
     <button *ngIf = "substance.version != versionControl.value" mat-button (click) = 'changeVersion()'>View</button>
 
 </div>
-  <div *ngIf = "!canEdit">
+  <div *ngIf = "!isEditable">
     <div class="name-value">
       <div class="name">Record Version</div>
       <div class="value blue-font">{{substance.version}}</div>
@@ -122,12 +122,6 @@
         </a>
       </div>
     </div>
-
-    <div *ngFor = "let name of substance.names">
-      {{name.name}}
-    </div>
-
-
     <div [hidden]="!showDef">
       <app-references-manager [substance]="substance" [references]="references"></app-references-manager>
     </div>

@@ -34,14 +34,13 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     private substanceService: SubstanceService,
     private router: Router,
     private authService: AuthService,
-    public auth: AuthService,
     private activeRoute: ActivatedRoute
   ) {
     super();
   }
 
   ngOnInit() {
-    this.isEditable = this.auth.hasRoles('admin')
+    this.isEditable = this.authService.hasRoles('admin')
       && this.substance.substanceClass != null
       && formSections[this.substance.substanceClass.toLowerCase()] != null;
     this.getSubtypeRefs(this.substance);
@@ -49,7 +48,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHref = uri;
     this.getVersion();
-    this.canEdit = this.authService.hasRoles('admin');
   }
 
   ngAfterViewInit() {
@@ -100,7 +98,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
     const value = this.showDef ? 0 : 1;
     this.gaService.sendEvent(this.analyticsEventCategory, 'link-toggle', 'references', value);
-
     this.showDef = !this.showDef;
     if (!this.showDef) {
       this.defIcon = 'drop_down';
@@ -113,8 +110,5 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
-  generateDownloadJsonUri() {
-
-  }
 
 }
