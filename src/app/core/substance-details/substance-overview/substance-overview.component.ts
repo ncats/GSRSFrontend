@@ -53,6 +53,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   ngAfterViewInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
+      this.getVersion();
       console.log('resub after');
     });
   }
@@ -76,6 +77,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
   getVersion() {
     this.substanceService.checkVersion(this.substance.uuid).subscribe((result: number) => {
+      this.versions = [];
       this.latestVersion = result;
       this.setVersionList();
       this.versionControl.setValue(this.substance.version);
@@ -84,7 +86,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
   changeVersion() {
     const version = this.versionControl.value.toString();
-    console.log(version);
     this.router.navigate(['/substances/' + this.substance.uuid + '/v/' + version]);
   }
 

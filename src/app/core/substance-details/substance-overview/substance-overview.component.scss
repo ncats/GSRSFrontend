@@ -2,11 +2,21 @@
   display: inline-flex;
   vertical-align: middle;
 }
-
+.version-dropdown{
+  width:50px;
+  border:0px;
+  height:20px;
+}
 .diverseWrapper{
   padding-bottom:20px;
 }
+.view-version {
+  margin-left:10px;
 
+}
+::ng-deep .mat-form-field-infix{
+  border: 0px;
+}
 .options-area {
   float:right;
   display: flex;

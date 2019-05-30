@@ -25,10 +25,6 @@
       <div class="name">Record Status</div>
       <div class="value blue-font">{{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}</div>
     </div>
-    <div class="name-value">
-      <div class="name">Record Version</div>
-      <div class="value blue-font">{{substance.version}}</div>
-    </div>
     <div *ngIf="substance.structurallyDiverse" class="diverseWrapper">
       <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialClass">
         <div class="name">Source Materials Class</div>
@@ -92,29 +88,24 @@
       </div>
 
   </div>
-  <div *ngIf = "isEditable">
-    <div class="name-value">
+    <div *ngIf = "!isEditable" class="name-value">
+        <div class="name">Record Version</div>
+        <div class="value blue-font">{{substance.version}}</div>
+      </div>
+  <div *ngIf = "isEditable" class="name-value">
       <div class="name">Record Version</div>
       <mat-form-field class = "version-dropdown">
-        <mat-select [formControl]="versionControl" >
-          <mat-option *ngFor = "let version of versions" [value]="version" >
+        <mat-select [formControl]="versionControl" class = "version-select" >
+          <mat-option *ngFor = "let version of versions" [value]="version" class = "version-option" >
             {{version}}
           </mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
-    <div *ngIf = "versionControl.value != latestVersion">
-    this is an older version of this substance
-    </div>
-    <button *ngIf = "substance.version != versionControl.value" mat-button (click) = 'changeVersion()'>View</button>
-
+    <button *ngIf = "substance.version != versionControl.value" mat-button class = "mat-raised-button mat-primary view-version" (click) = 'changeVersion()'>View</button>
 </div>
-  <div *ngIf = "!isEditable">
-    <div class="name-value">
-      <div class="name">Record Version</div>
-      <div class="value blue-font">{{substance.version}}</div>
+    <div *ngIf = "versionControl.value != latestVersion">
+      This is an older version of this substance
     </div>
-  </div>
     <div class = "name-value" *ngIf = "references?.length > 0">
       <div class = "name">
         <a (click) = "toggleReferences()" class = 'blue-font references-link'>
