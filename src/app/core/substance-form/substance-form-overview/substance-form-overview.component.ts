@@ -7,6 +7,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { Observable, Subscriber, Subject } from 'rxjs';
+import { ReferencesContainer } from '../references-manager/references-container.model';
 
 @Component({
   selector: 'app-substance-form-overview',
@@ -24,6 +25,8 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   showPrimarySubstanceOptions = false;
   accessEmitter: Observable<Array<string>>;
   private accessSubscriber: Subscriber<Array<string>>;
+  referencesContainerEmitter: Observable<ReferencesContainer>;
+  private referencesContainerSubscriber: Subscriber<ReferencesContainer>;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -40,15 +43,37 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
     this.accessEmitter = new Observable(observer => {
       this.accessSubscriber = observer;
     });
+    this.referencesContainerEmitter = new Observable(observer => {
+      this.referencesContainerSubscriber = observer;
+    });
     this.getVocabularies();
   }
 
   ngAfterViewInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
+
       setTimeout(() => {
         this.accessSubscriber.next(substance.access);
       });
+
+      let subClass = this.substance.substanceClass;
+
+      if (subClass === 'chemical') {
+          subClass = 'structure';
+      } else if (subClass === 'specifiedSubstanceG1') {
+          subClass = 'specifiedSubstance';
+      }
+
+      const referencesContainer = {
+        domainReferences: this.substance[subClass] && this.substance[subClass].references || [],
+        substanceReferences: this.substance.references
+      };
+
+      setTimeout(() => {
+        this.referencesContainerSubscriber.next(referencesContainer);
+      });
+
       const definitionType = this.substance && this.substance.definitionType || 'primary';
       this.definitionTypeControl.setValue(definitionType);
       const definitionLevel = this.substance && this.substance.definitionLevel || 'complete';

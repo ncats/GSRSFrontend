@@ -42,10 +42,10 @@
       <app-access-manager (accessOut)="updateAccess($event)" [accessIn]="accessEmitter"></app-access-manager>
     </div>
   </div>
-  <div class="substance-form-row">
+  <div class="substance-form-row" *ngIf="substance.substanceClass != 'concept'">
     <div class="references-container">
       <h3>References</h3>
-      <app-references-manager></app-references-manager>
+      <app-references-manager [referencesIn]="referencesContainerEmitter"></app-references-manager>
     </div>
   </div>
 </div>
