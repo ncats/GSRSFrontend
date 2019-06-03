@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReferencesManagerComponent } from './references-manager/references-manager.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDividerModule
   ],
   declarations: [
     AccessManagerComponent,

@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { ReferencesContainer } from './references-container.model';
 import { Observable } from 'rxjs';
+import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
+import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 
 @Component({
   selector: 'app-references-manager',
@@ -14,14 +16,23 @@ export class ReferencesManagerComponent implements OnInit {
   references: Array<SubstanceReference>;
   substanceReferences: Array<SubstanceReference>;
   domainReferenceIds?: Array<string>;
+  documentTypes: Array<VocabularyTerm> = [];
 
-  constructor() { }
+  constructor(
+    private cvService: ControlledVocabularyService
+  ) { }
 
   ngOnInit() {
     this.referencesIn.subscribe(referencesContainer => {
       this.domainReferenceIds = referencesContainer.domainReferences;
       this.substanceReferences = referencesContainer.substanceReferences;
       this.loadEditableReferences();
+    });
+  }
+
+  getVocabularies(): void {
+    this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
+      this.documentTypes = response['DOCUMENT_TYPE'].list;
     });
   }
 

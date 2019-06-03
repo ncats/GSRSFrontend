@@ -32,7 +32,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.isEditable = this.auth.hasRoles('admin')
       && this.substance.substanceClass != null
       && formSections[this.substance.substanceClass.toLowerCase()] != null;
-    console.log(formSections[this.substance.substanceClass.toLowerCase()]);
     this.getSubtypeRefs(this.substance);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
