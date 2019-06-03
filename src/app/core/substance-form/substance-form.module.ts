@@ -11,6 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReferencesManagerComponent } from './references-manager/references-manager.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatIconModule,
     MatTooltipModule,
     MatTabsModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSelectModule
   ],
   declarations: [
     AccessManagerComponent,
