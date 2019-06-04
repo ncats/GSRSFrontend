@@ -22,6 +22,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
 import { searchSortValues} from '../utils/search-sort-values';
+import {StructureService} from '@gsrs-core/structure';
 
 @Component({
   selector: 'app-substances-browse',
@@ -66,7 +67,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private topSearchService: SubstanceTextSearchService,
     public gaService: GoogleAnalyticsService,
     public authService: AuthService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private structureService: StructureService
   ) {
     this.privateFacetParams = {};
   }
@@ -593,8 +595,26 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
   }
 
-  downloadMol(molfile: any) {
-    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(molfile));
+  getMol(id: string, filename: string) {
+    this.structureService.downloadMolfile(id).subscribe(response => {
+      this.downloadFile(response, filename);
+    });
+  }
+  getFasta(id: string, filename: string): void {
+    this.substanceService.getFasta(id).subscribe(response => {
+      this.downloadFile(response, filename);
+    });
+  }
+
+  downloadFile(response: any, filename: string) {
+    const dataType = response.type;
+    const binaryData = [];
+    binaryData.push(response);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: dataType}));
+    downloadLink.setAttribute('download', filename);
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
   }
 
 }

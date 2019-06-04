@@ -159,11 +159,31 @@
                     <img [src]="getSafeStructureImgUrl(substance.uuid)">
                   </div>
                 </div>
-                <div *ngIf="substance.structure">
-                  <a [routerLink]="['/structure-search']" [queryParams]="{structure : substance.structure.id}" ><mat-icon svgIcon="search"></mat-icon></a>
-                  <a title="Download molfile" [href]="downloadMol(substance.structure.molfile)"  download="results.mol"><mat-icon svgIcon="get_app"></mat-icon></a>
+                  <button *ngIf="substance.structure || substance.protein" mat-icon-button [matMenuTriggerFor]="downloadMenu">
+                    <mat-icon svgIcon="get_app"></mat-icon>
+                  </button>
+
+                  <button *ngIf="substance.structure" mat-icon-button [matMenuTriggerFor]="searchMenu">
+                    <mat-icon svgIcon="search"></mat-icon>
+                  </button>
+
+                <mat-menu #downloadMenu="matMenu">
+                  <a mat-menu-item *ngIf="substance.structure" (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+                    <span>Download Molfile</span>
+                  </a>
+                  <a mat-menu-item *ngIf="substance.protein" (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')" >
+                    <span>Download Fasta</span>
+                  </a>
+                </mat-menu>
+
+                <mat-menu #searchMenu="matMenu" >
+                  <a mat-menu-item *ngIf="substance.structure"  [routerLink]="['/structure-search']" [queryParams]="{structure : substance.structure.id}" >
+                    <span>Search Structure</span>
+                  </a>
+                </mat-menu>
+
                 </div>
-              </div>
+
               <div>
                 <div class="substance-data substance-names" *ngIf="substance.names && substance.names.length">
                   <div class="label">Names:</div>
