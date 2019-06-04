@@ -162,6 +162,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         .subscribe(pagingResponse => {
           this.isError = false;
           this.substances = pagingResponse.content;
+          console.log(this.substances);
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.populateFacets(pagingResponse.facets);

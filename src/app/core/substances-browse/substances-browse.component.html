@@ -159,16 +159,19 @@
                     <img [src]="getSafeStructureImgUrl(substance.uuid)">
                   </div>
                 </div>
-                  <button *ngIf="substance.structure || substance.protein" mat-icon-button [matMenuTriggerFor]="downloadMenu">
+                  <button *ngIf="substance.structure || substance.protein || substance.polymer" mat-icon-button [matMenuTriggerFor]="downloadMenu">
                     <mat-icon svgIcon="get_app"></mat-icon>
                   </button>
 
-                  <button *ngIf="substance.structure" mat-icon-button [matMenuTriggerFor]="searchMenu">
+                  <button *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
                     <mat-icon svgIcon="search"></mat-icon>
                   </button>
 
                 <mat-menu #downloadMenu="matMenu">
                   <a mat-menu-item *ngIf="substance.structure" (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+                    <span>Download Molfile</span>
+                  </a>
+                  <a mat-menu-item *ngIf="substance.polymer" (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
                     <span>Download Molfile</span>
                   </a>
                   <a mat-menu-item *ngIf="substance.protein" (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')" >
@@ -178,6 +181,9 @@
 
                 <mat-menu #searchMenu="matMenu" >
                   <a mat-menu-item *ngIf="substance.structure"  [routerLink]="['/structure-search']" [queryParams]="{structure : substance.structure.id}" >
+                    <span>Search Structure</span>
+                  </a>
+                  <a mat-menu-item *ngIf="substance.polymer"  [routerLink]="['/structure-search']" [queryParams]="{structure : substance.polymer.displayStructure.id}" >
                     <span>Search Structure</span>
                   </a>
                 </mat-menu>
