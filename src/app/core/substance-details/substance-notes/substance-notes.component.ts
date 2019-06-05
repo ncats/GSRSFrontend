@@ -27,7 +27,6 @@ export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit
       this.notes = this.substance.notes;
     }
     this.countUpdate.emit(this.notes.length);
-    console.log(this.notes);
   }
 
 
