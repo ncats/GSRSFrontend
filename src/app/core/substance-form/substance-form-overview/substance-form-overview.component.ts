@@ -27,6 +27,7 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   private accessSubscriber: Subscriber<Array<string>>;
   referencesContainerEmitter: Observable<ReferencesContainer>;
   private referencesContainerSubscriber: Subscriber<ReferencesContainer>;
+  private subClass: string;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -57,16 +58,16 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
         this.accessSubscriber.next(substance.access);
       });
 
-      let subClass = this.substance.substanceClass;
+      this.subClass = this.substance.substanceClass;
 
-      if (subClass === 'chemical') {
-          subClass = 'structure';
-      } else if (subClass === 'specifiedSubstanceG1') {
-          subClass = 'specifiedSubstance';
+      if (this.subClass === 'chemical') {
+        this.subClass = 'structure';
+      } else if (this.subClass === 'specifiedSubstanceG1') {
+        this.subClass = 'specifiedSubstance';
       }
 
       const referencesContainer = {
-        domainReferences: this.substance[subClass] && this.substance[subClass].references || [],
+        domainReferences: this.substance[this.subClass] && this.substance[this.subClass].references || [],
         substanceReferences: this.substance.references
       };
 
@@ -169,5 +170,10 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
 
   updateAccess(access: Array<string>): void {
     this.substance.access = access;
+  }
+
+  updateReferences(referencesContainer: ReferencesContainer): void {
+    this.substance.references = referencesContainer.substanceReferences;
+    this.substance[this.subClass].references = referencesContainer.domainReferences;
   }
 }

@@ -6,6 +6,7 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl } from '@angular/forms';
 import { Reference } from './reference';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-references-manager',
@@ -19,7 +20,10 @@ export class ReferencesManagerComponent implements OnInit {
   substanceReferences: Array<SubstanceReference>;
   domainReferenceIds?: Array<string>;
   documentTypes: Array<VocabularyTerm> = [];
+  documentCollections: Array<VocabularyTerm> = [];
+  documentCollectionsDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
   documentTypeControl = new FormControl();
+  separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(
     private cvService: ControlledVocabularyService
@@ -35,33 +39,62 @@ export class ReferencesManagerComponent implements OnInit {
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
+    this.cvService.getDomainVocabulary('DOCUMENT_TYPE', 'DOCUMENT_COLLECTION').subscribe(response => {
       this.documentTypes = response['DOCUMENT_TYPE'].list;
-      console.log(this.documentTypes);
+      this.documentCollections = response['DOCUMENT_COLLECTION'].list;
+      this.documentCollectionsDictionary = response['DOCUMENT_COLLECTION'].dictionary;
     });
   }
 
   loadEditableReferences(): void {
     this.references = [];
     if (this.domainReferenceIds == null) {
-      this.references = this.substanceReferences.map(reference => {
-        return new Reference(reference);
+      this.references = this.substanceReferences.map(substanceReference => {
+        return new Reference(substanceReference);
       });
     } else if (this.domainReferenceIds.length > 0) {
       this.domainReferenceIds.forEach(referenceId => {
-        const reference = this.substanceReferences.find((substanceReference, index) => {
-          return substanceReference.uuid === referenceId;
+        const substanceReference = this.substanceReferences.find((reference, index) => {
+          return reference.uuid === referenceId;
         });
 
-        if (reference != null) {
-          this.references.push(new Reference(reference));
+        if (substanceReference != null) {
+          const reference = new Reference(substanceReference);
+          reference.referenceChanges.subscribe(value => {
+            this.updateSubstanceReferences(reference);
+            this.outputReferences();
+          });
+
+          this.references.push(reference);
+          console.log(reference.tags);
+          setTimeout(() => {
+            reference.emitReferenceAccess();
+          });
         }
       });
     }
+  }
 
-    setTimeout(() => {
-      console.log(this.references[0].getSerializableObject());
-    }, 1000);
+  updateSubstanceReferences(reference: Reference): void {
+    for (let i = 0; i < this.substanceReferences.length; i++) {
+      if (this.substanceReferences[i].uuid === reference.uuid) {
+        this.substanceReferences.splice(i, 1, reference.toSerializableObject());
+        break;
+      }
+    }
+  }
+
+  outputReferences(): void {
+    const referencesContainer: ReferencesContainer = {
+      domainReferences: this.domainReferenceIds,
+      substanceReferences: this.substanceReferences
+    };
+
+    this.referencesOut.emit(referencesContainer);
+  }
+
+  openTagsAutoComplete(): void {
+    console.log('here');
   }
 
 }

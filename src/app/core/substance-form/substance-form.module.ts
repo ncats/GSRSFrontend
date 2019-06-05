@@ -12,6 +12,10 @@ import { ReferencesManagerComponent } from './references-manager/references-mana
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { TagSelectorComponent } from './tag-selector/tag-selector.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   imports: [
@@ -26,11 +30,15 @@ import { MatSelectModule } from '@angular/material/select';
     MatTooltipModule,
     MatTabsModule,
     MatDividerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatInputModule,
+    MatChipsModule,
+    MatAutocompleteModule
   ],
   declarations: [
     AccessManagerComponent,
-    ReferencesManagerComponent
+    ReferencesManagerComponent,
+    TagSelectorComponent
   ],
   exports: [
     AccessManagerComponent,

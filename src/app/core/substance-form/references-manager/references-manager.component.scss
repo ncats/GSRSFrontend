@@ -1,11 +1,20 @@
 .reference-form-container {
 
     & > .form-divider {
-        margin: 10px 0;
+        margin: 10px 0 15px 0;
     }
 }
 
 .form-row {
     display: flex;
     justify-content: space-between;
+    padding: 0 7px;
+}
+
+.source-type, .citation, .url {
+    width: 30%;
+}
+
+.tags {
+    width: 40%;
 }

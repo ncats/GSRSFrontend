@@ -45,7 +45,10 @@
   <div class="substance-form-row" *ngIf="substance.substanceClass != 'concept'">
     <div class="references-container">
       <h3>Definition Reference</h3>
-      <app-references-manager [referencesIn]="referencesContainerEmitter"></app-references-manager>
+      <app-references-manager
+        [referencesIn]="referencesContainerEmitter"
+        (referencesOut)="updateReferences($event)">
+      </app-references-manager>
     </div>
   </div>
 </div>
