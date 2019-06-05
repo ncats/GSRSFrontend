@@ -20,10 +20,7 @@ export class ReferencesManagerComponent implements OnInit {
   substanceReferences: Array<SubstanceReference>;
   domainReferenceIds?: Array<string>;
   documentTypes: Array<VocabularyTerm> = [];
-  documentCollections: Array<VocabularyTerm> = [];
-  documentCollectionsDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
   documentTypeControl = new FormControl();
-  separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(
     private cvService: ControlledVocabularyService
@@ -41,8 +38,6 @@ export class ReferencesManagerComponent implements OnInit {
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('DOCUMENT_TYPE', 'DOCUMENT_COLLECTION').subscribe(response => {
       this.documentTypes = response['DOCUMENT_TYPE'].list;
-      this.documentCollections = response['DOCUMENT_COLLECTION'].list;
-      this.documentCollectionsDictionary = response['DOCUMENT_COLLECTION'].dictionary;
     });
   }
 
@@ -66,9 +61,10 @@ export class ReferencesManagerComponent implements OnInit {
           });
 
           this.references.push(reference);
-          console.log(reference.tags);
+
           setTimeout(() => {
             reference.emitReferenceAccess();
+            reference.emitReferenceTags();
           });
         }
       });

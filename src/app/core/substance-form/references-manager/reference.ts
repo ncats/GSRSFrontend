@@ -1,3 +1,4 @@
+import { ViewChild, ElementRef } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { SubstanceReference } from '../../substance/substance.model';
 import { isSerializable, serializable } from '../../utils/serialize.decorator';
@@ -46,7 +47,11 @@ export class Reference implements SubstanceReference {
     private accessSubscriber: Subscriber<Array<string>>;
     urlControl: FormControl;
     idControl: FormControl;
-    
+    tagsEmitter: Observable<Array<string>>;
+    private tagsSubscriber: Subscriber<Array<string>>;
+
+    @ViewChild('fruitInput', {read: false}) fruitInput: ElementRef<HTMLInputElement>;
+
     constructor(substanceReference?: SubstanceReference) {
 
         if (substanceReference != null) {
@@ -92,6 +97,10 @@ export class Reference implements SubstanceReference {
             this.id = value;
             this.referenceChangesSubscriber.next(this.toSerializableObject());
         });
+
+        this.tagsEmitter = new Observable(observer => {
+            this.tagsSubscriber = observer;
+        });
     }
 
     toSerializableObject(): SubstanceReference {
@@ -111,20 +120,16 @@ export class Reference implements SubstanceReference {
         this.referenceChangesSubscriber.next(this.toSerializableObject());
     }
 
+    updateTags(tags: Array<string>): void {
+        this.tags = tags;
+        this.referenceChangesSubscriber.next(this.toSerializableObject());
+    }
+
     emitReferenceAccess(): void {
         this.accessSubscriber.next(this.access);
     }
 
-    tagSelected(tag: any) {
-        this.tags.push(tag.option.value);
-        this.referenceChangesSubscriber.next(this.toSerializableObject());
-    }
-
-    removeTag(tag: string) {
-        const index = this.tags.indexOf(tag);
-        if (index > -1) {
-            this.tags.splice(index, 1);
-        }
-        this.referenceChangesSubscriber.next(this.toSerializableObject());
+    emitReferenceTags(): void {
+        this.tagsSubscriber.next(this.tags);
     }
 }
