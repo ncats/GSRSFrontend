@@ -1,12 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SubstanceReference } from '../../substance/substance.model';
+import { SubstanceReference, SubstanceDetail } from '../../substance/substance.model';
 import { ReferencesContainer } from './references-container.model';
 import { Observable } from 'rxjs';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl } from '@angular/forms';
 import { Reference } from './reference';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-references-manager',
@@ -21,6 +20,7 @@ export class ReferencesManagerComponent implements OnInit {
   domainReferenceIds?: Array<string>;
   documentTypes: Array<VocabularyTerm> = [];
   documentTypeControl = new FormControl();
+  private substance: SubstanceDetail;
 
   constructor(
     private cvService: ControlledVocabularyService
@@ -30,6 +30,7 @@ export class ReferencesManagerComponent implements OnInit {
     this.referencesIn.subscribe(referencesContainer => {
       this.domainReferenceIds = referencesContainer.domainReferences;
       this.substanceReferences = referencesContainer.substanceReferences;
+      this.substance = referencesContainer.substance;
       this.loadEditableReferences();
     });
     this.getVocabularies();
@@ -44,8 +45,8 @@ export class ReferencesManagerComponent implements OnInit {
   loadEditableReferences(): void {
     this.references = [];
     if (this.domainReferenceIds == null) {
-      this.references = this.substanceReferences.map(substanceReference => {
-        return new Reference(substanceReference);
+      this.substanceReferences.forEach(substanceReference => {
+        this.addReference(substanceReference);
       });
     } else if (this.domainReferenceIds.length > 0) {
       this.domainReferenceIds.forEach(referenceId => {
@@ -54,20 +55,30 @@ export class ReferencesManagerComponent implements OnInit {
         });
 
         if (substanceReference != null) {
-          const reference = new Reference(substanceReference);
-          reference.referenceChanges.subscribe(value => {
-            this.updateSubstanceReferences(reference);
-            this.outputReferences();
-          });
-
-          this.references.push(reference);
-
-          setTimeout(() => {
-            reference.emitReferenceAccess();
-            reference.emitReferenceTags();
-          });
+          this.addReference(substanceReference);
         }
       });
+    }
+  }
+
+  private addReference(substanceReference: SubstanceReference): void {
+    if (this.substance != null) {
+      const reference = new Reference(this.substance, substanceReference);
+      reference.referenceChanges.subscribe(value => {
+        this.updateSubstanceReferences(reference);
+        this.outputReferences();
+      });
+
+      this.references.push(reference);
+
+      setTimeout(() => {
+        reference.emitReferenceAccess();
+        reference.emitReferenceTags();
+      });
+    } else {
+      setTimeout(() => {
+        this.addReference(substanceReference);
+      }, 1);
     }
   }
 

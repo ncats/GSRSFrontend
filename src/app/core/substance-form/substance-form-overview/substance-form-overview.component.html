@@ -38,6 +38,9 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <div class="checkbox-container">
+      <mat-checkbox [formControl]="deprecatedControl" (change)="updateDeprecate($event)">Deprecated</mat-checkbox>
+    </div>
     <div>
       <app-access-manager (accessOut)="updateAccess($event)" [accessIn]="accessEmitter"></app-access-manager>
     </div>

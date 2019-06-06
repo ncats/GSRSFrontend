@@ -1,8 +1,9 @@
 import { ViewChild, ElementRef } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { SubstanceReference } from '../../substance/substance.model';
+import { SubstanceReference, SubstanceDetail } from '../../substance/substance.model';
 import { isSerializable, serializable } from '../../utils/serialize.decorator';
 import { Observable, Subscriber } from 'rxjs';
+import { ReferenceApplied } from './reference-applied';
 
 export class Reference implements SubstanceReference {
     @serializable()
@@ -39,7 +40,6 @@ export class Reference implements SubstanceReference {
     referenceChanges: Observable<SubstanceReference>;
     private referenceChangesSubscriber: Subscriber<SubstanceReference>;
 
-
     documentTypeControl: FormControl;
     citationControl: FormControl;
     publicDomainControl: FormControl;
@@ -50,9 +50,11 @@ export class Reference implements SubstanceReference {
     tagsEmitter: Observable<Array<string>>;
     private tagsSubscriber: Subscriber<Array<string>>;
 
+    referenceApplied: ReferenceApplied;
+
     @ViewChild('fruitInput', {read: false}) fruitInput: ElementRef<HTMLInputElement>;
 
-    constructor(substanceReference?: SubstanceReference) {
+    constructor(substance: SubstanceDetail, substanceReference?: SubstanceReference) {
 
         if (substanceReference != null) {
             Object.keys(substanceReference).forEach(key => {
@@ -101,6 +103,8 @@ export class Reference implements SubstanceReference {
         this.tagsEmitter = new Observable(observer => {
             this.tagsSubscriber = observer;
         });
+
+        this.referenceApplied = new ReferenceApplied(this.uuid, substance);
     }
 
     toSerializableObject(): SubstanceReference {

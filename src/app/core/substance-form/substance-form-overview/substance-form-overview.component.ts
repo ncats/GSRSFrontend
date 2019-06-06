@@ -6,8 +6,9 @@ import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
-import { Observable, Subscriber, Subject } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 import { ReferencesContainer } from '../references-manager/references-container.model';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-substance-form-overview',
@@ -19,6 +20,7 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   definitionLevels: Array<VocabularyTerm>;
   definitionTypeControl = new FormControl();
   definitionLevelControl = new FormControl();
+  deprecatedControl = new FormControl();
   primarySubstanceErrorEmitter: Observable<string>;
   private primarySubstanceErrorSubscriber: Subscriber<string>;
   primarySubstance?: SubstanceSummary;
@@ -66,9 +68,10 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
         this.subClass = 'specifiedSubstance';
       }
 
-      const referencesContainer = {
+      const referencesContainer: ReferencesContainer = {
         domainReferences: this.substance[this.subClass] && this.substance[this.subClass].references || [],
-        substanceReferences: this.substance.references
+        substanceReferences: this.substance.references,
+        substance: this.substance
       };
 
       setTimeout(() => {
@@ -79,6 +82,8 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
       this.definitionTypeControl.setValue(definitionType);
       const definitionLevel = this.substance && this.substance.definitionLevel || 'complete';
       this.definitionLevelControl.setValue(definitionLevel);
+
+      this.deprecatedControl.setValue(this.substance.deprecated || false);
 
       if (this.substance.definitionType === 'ALTERNATIVE') {
         this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
@@ -175,5 +180,13 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   updateReferences(referencesContainer: ReferencesContainer): void {
     this.substance.references = referencesContainer.substanceReferences;
     this.substance[this.subClass].references = referencesContainer.domainReferences;
+
+    if (referencesContainer.substance) {
+      this.substanceUpdated.next(referencesContainer.substance);
+    }
+  }
+
+  updateDeprecate(event: MatCheckboxChange): void {
+    this.substance.deprecated = event.checked;
   }
 }

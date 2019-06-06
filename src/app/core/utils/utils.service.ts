@@ -111,4 +111,11 @@ export class UtilsService extends BaseHttpService {
           this.newUUID            // random hex digits
         );
   }
+
+  // https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_get
+  getObjectValue(obj: any, path: string, defaultValue: any = null): any {
+    String.prototype.split.call(path, /[,[\].]+?/)
+      .filter(Boolean)
+      .reduce((a: any, c: string) => (Object.hasOwnProperty.call(a, c) ? a[c] : defaultValue), obj);
+  }
 }

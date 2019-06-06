@@ -1,9 +1,9 @@
 import { SubstanceDetail } from '../substance/substance.model';
 import { Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
 export abstract class SubstanceFormSectionBase {
     substance: SubstanceDetail;
-    substanceUpdated: Observable<SubstanceDetail>;
+    substanceUpdated: Subject<SubstanceDetail>;
     @Output() menuLabelUpdate = new EventEmitter<string>();
 }
