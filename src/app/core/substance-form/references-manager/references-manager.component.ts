@@ -89,8 +89,4 @@ export class ReferencesManagerComponent implements OnInit {
     this.referencesOut.emit(referencesContainer);
   }
 
-  openTagsAutoComplete(): void {
-    console.log('here');
-  }
-
 }

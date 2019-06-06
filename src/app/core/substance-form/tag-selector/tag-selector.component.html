@@ -2,7 +2,7 @@
     <mat-chip-list #chipList>
         <mat-chip *ngFor="let tag of tags" removable="true" (removed)="remove(tag)">
             {{optionsDictionary[tag] && optionsDictionary[tag].display}}
-            <mat-icon matChipRemove>cancel</mat-icon>
+            <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
         </mat-chip>
         <input placeholder="Tags" #tagInput [formControl]="tagControl" [matAutocomplete]="auto"
             [matChipInputFor]="chipList" matChipInputAddOnBlur="false" (blur)="clearTagsInput()">

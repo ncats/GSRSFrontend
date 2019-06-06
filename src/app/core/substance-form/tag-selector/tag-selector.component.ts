@@ -32,20 +32,19 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.cvService.getDomainVocabulary(this.cvDomain).subscribe(response => {
-      // 'DOCUMENT_COLLECTION'
-      this.allOptions = response[this.cvDomain].list;
-      this.optionsDictionary = response[this.cvDomain].dictionary;
+    setTimeout(() => {
+      this.cvService.getDomainVocabulary(this.cvDomain).subscribe(response => {
+        this.allOptions = response[this.cvDomain].list;
+        this.optionsDictionary = response[this.cvDomain].dictionary;
 
-      this.filteredOptions = this.tagControl.valueChanges.pipe(
-        startWith(null),
-        map((tag: string | null) => tag ? this._filter(tag) : this.allOptions.filter(option => this.tags.indexOf(option.value) === -1)));
+        this.filteredOptions = this.tagControl.valueChanges.pipe(
+          startWith(null),
+          map((tag: string | null) => tag ? this._filter(tag) : this.allOptions.filter(option => this.tags.indexOf(option.value) === -1)));
+      });
     });
-
     this.tagsIn.subscribe(tags => {
-      console.log(tags);
-      this.tags = tags;
-    });
+        this.tags = tags;
+      });
   }
 
   clearTagsInput(): void {
@@ -56,7 +55,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   remove(tag: string): void {
     const index = this.tags.indexOf(tag);
     if (index > -1) {
-        this.tags.splice(index, 1);
+      this.tags.splice(index, 1);
     }
     this.tagsOut.emit(this.tags);
   }

@@ -105,6 +105,10 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'open_in_new',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-open_in_new-24px.svg'));
+
+    iconRegistry.addSvgIcon(
+      'cancel',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-cancel-24px.svg'));
   }
 
 }

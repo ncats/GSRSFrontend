@@ -1,4 +1,5 @@
 .reference-form-container {
+    padding: 12px 0 12px 0;
 
     & > .form-divider {
         margin: 10px 0 15px 0;
@@ -9,6 +10,11 @@
     display: flex;
     justify-content: space-between;
     padding: 0 7px;
+    align-items: flex-end;
+
+    .checkbox-container {
+        padding-bottom: 18px;
+    }
 }
 
 .source-type, .citation, .url {
