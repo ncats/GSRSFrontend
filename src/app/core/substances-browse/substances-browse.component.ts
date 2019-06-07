@@ -596,18 +596,19 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
   }
 
-  getMol(id: string, filename: string) {
+  getMol(id: string, filename: string): void {
     this.structureService.downloadMolfile(id).subscribe(response => {
       this.downloadFile(response, filename);
     });
   }
   getFasta(id: string, filename: string): void {
     this.substanceService.getFasta(id).subscribe(response => {
+      console.log(response);
       this.downloadFile(response, filename);
     });
   }
 
-  downloadFile(response: any, filename: string) {
+  downloadFile(response: any, filename: string): void {
     const dataType = response.type;
     const binaryData = [];
     binaryData.push(response);

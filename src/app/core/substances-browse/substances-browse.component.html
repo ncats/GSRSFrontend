@@ -159,7 +159,7 @@
                     <img [src]="getSafeStructureImgUrl(substance.uuid)">
                   </div>
                 </div>
-                  <button *ngIf="substance.structure || substance.protein || substance.polymer" mat-icon-button [matMenuTriggerFor]="downloadMenu">
+                  <button *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer" mat-icon-button [matMenuTriggerFor]="downloadMenu">
                     <mat-icon svgIcon="get_app"></mat-icon>
                   </button>
 
@@ -174,7 +174,7 @@
                   <a mat-menu-item *ngIf="substance.polymer" (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
                     <span>Download Molfile</span>
                   </a>
-                  <a mat-menu-item *ngIf="substance.protein" (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')" >
+                  <a mat-menu-item *ngIf="(substance.protein || substance.nucleicAcid) && !showAudit" (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')" >
                     <span>Download Fasta</span>
                   </a>
                 </mat-menu>

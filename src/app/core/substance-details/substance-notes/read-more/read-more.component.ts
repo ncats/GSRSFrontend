@@ -14,13 +14,15 @@ export class ReadMoreComponent implements OnInit {
   public isCollapsed = true;
 
   constructor(private elementRef: ElementRef) {
-
   }
-  toggleView() {
+  ngOnInit() {
+    this.determineView();
+  }
+  toggleView(): void {
     this.isCollapsed = !this.isCollapsed;
     this.determineView();
   }
-  determineView() {
+  determineView(): void {
     if (!this.text || this.text.length <= this.maxLength) {
       this.currentText = this.text.replace(/(?:\r\n|\r|\n)/g, '<br/>');
       this.isCollapsed = false;
@@ -36,7 +38,5 @@ export class ReadMoreComponent implements OnInit {
     }
 
   }
-  ngOnInit() {
-    this.determineView();
-  }
+
 }
