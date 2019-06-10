@@ -7,7 +7,6 @@ import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { Observable, Subscriber } from 'rxjs';
-import { ReferencesContainer } from '../references-manager/references-container.model';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
@@ -27,8 +26,6 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   showPrimarySubstanceOptions = false;
   accessEmitter: Observable<Array<string>>;
   private accessSubscriber: Subscriber<Array<string>>;
-  referencesContainerEmitter: Observable<ReferencesContainer>;
-  private referencesContainerSubscriber: Subscriber<ReferencesContainer>;
   private subClass: string;
 
   constructor(
@@ -45,9 +42,6 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
     });
     this.accessEmitter = new Observable(observer => {
       this.accessSubscriber = observer;
-    });
-    this.referencesContainerEmitter = new Observable(observer => {
-      this.referencesContainerSubscriber = observer;
     });
     this.getVocabularies();
   }
@@ -67,16 +61,6 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
       } else if (this.subClass === 'specifiedSubstanceG1') {
         this.subClass = 'specifiedSubstance';
       }
-
-      const referencesContainer: ReferencesContainer = {
-        domainReferences: this.substance[this.subClass] && this.substance[this.subClass].references || [],
-        substanceReferences: this.substance.references,
-        substance: this.substance
-      };
-
-      setTimeout(() => {
-        this.referencesContainerSubscriber.next(referencesContainer);
-      });
 
       const definitionType = this.substance && this.substance.definitionType || 'primary';
       this.definitionTypeControl.setValue(definitionType);
@@ -175,15 +159,6 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
 
   updateAccess(access: Array<string>): void {
     this.substance.access = access;
-  }
-
-  updateReferences(referencesContainer: ReferencesContainer): void {
-    this.substance.references = referencesContainer.substanceReferences;
-    this.substance[this.subClass].references = referencesContainer.domainReferences;
-
-    if (referencesContainer.substance) {
-      this.substanceUpdated.next(referencesContainer.substance);
-    }
   }
 
   updateDeprecate(event: MatCheckboxChange): void {

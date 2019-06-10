@@ -8,7 +8,7 @@ import {
 @Directive({
   selector: '[appScrollNavItem]'
 })
-export class ScrollNavItemDirective implements AfterViewInit {
+export class ScrollToTriggerDirective implements AfterViewInit {
   @Input() scrollToElementId: string;
   scrollToElement: HTMLElement;
 

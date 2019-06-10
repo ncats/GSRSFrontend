@@ -6,6 +6,7 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl } from '@angular/forms';
 import { Reference } from './reference';
+import { UtilsService } from '../../utils/utils.service';
 
 @Component({
   selector: 'app-references-manager',
@@ -21,9 +22,11 @@ export class ReferencesManagerComponent implements OnInit {
   documentTypes: Array<VocabularyTerm> = [];
   documentTypeControl = new FormControl();
   private substance: SubstanceDetail;
+  isSubstanceReferences = false;
 
   constructor(
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
@@ -31,6 +34,9 @@ export class ReferencesManagerComponent implements OnInit {
       this.domainReferenceIds = referencesContainer.domainReferences;
       this.substanceReferences = referencesContainer.substanceReferences;
       this.substance = referencesContainer.substance;
+      if (!this.domainReferenceIds) {
+        this.isSubstanceReferences = true;
+      }
       this.loadEditableReferences();
     });
     this.getVocabularies();
@@ -67,6 +73,17 @@ export class ReferencesManagerComponent implements OnInit {
       reference.referenceChanges.subscribe(value => {
         this.updateSubstanceReferences(reference);
         this.outputReferences();
+      });
+      reference.substanceUpdated().subscribe(substance => {
+        this.substance = substance;
+
+        const referencesContainer: ReferencesContainer = {
+          domainReferences: this.domainReferenceIds,
+          substanceReferences: this.substanceReferences,
+          substance: substance
+        };
+
+        this.referencesOut.emit(referencesContainer);
       });
 
       this.references.push(reference);

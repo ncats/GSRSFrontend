@@ -1,9 +1,9 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[appScrollNav]'
+  selector: '[appScrollToTarget]'
 })
-export class ScrollNavDirective {
+export class ScrollToTargetDirective {
 
   constructor() { }
 

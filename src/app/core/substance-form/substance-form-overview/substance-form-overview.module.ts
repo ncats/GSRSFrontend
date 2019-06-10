@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SubstanceFormModule } from '../substance-form.module';
 import { SubstanceTextSearchModule } from '../../substance-text-search/substance-text-search.module';
 import { RouterModule } from '@angular/router';
+import { ScrollToModule } from '../../scroll-to/scroll-to.module';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { RouterModule } from '@angular/router';
     MatIconModule,
     SubstanceFormModule,
     SubstanceTextSearchModule,
-    RouterModule
+    RouterModule,
+    ScrollToModule
   ],
   declarations: [
     SubstanceFormOverviewComponent

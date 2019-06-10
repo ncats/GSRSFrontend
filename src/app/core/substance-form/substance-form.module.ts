@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { TagSelectorComponent } from './tag-selector/tag-selector.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ScrollToModule } from '../scroll-to/scroll-to.module';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSelectModule,
     MatInputModule,
     MatChipsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    ScrollToModule
   ],
   declarations: [
     AccessManagerComponent,
