@@ -1,4 +1,4 @@
-<div class="reference-form-container" *ngFor="let reference of references; last as isLast" [id]="reference.uuid">
+<div class="reference-form-container" *ngFor="let reference of references; last as isLast" [id]="substance && reference.uuid || null" appScrollToTarget>
   <div class="form-row">
     <mat-form-field class="source-type">
       <mat-label>Source Type *</mat-label>

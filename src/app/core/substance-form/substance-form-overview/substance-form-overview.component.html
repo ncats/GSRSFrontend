@@ -48,7 +48,7 @@
   <div class="substance-form-row" *ngIf="substance.substanceClass != 'concept'">
     <div class="references-container">
       <h3>Definition Reference</h3>
-      <a *ngFor="let reference of substance.references" appScrollNavItem [scrollToElementId]="reference.uuid">substance</a>
+      <a *ngFor="let reference of substance.references" appScrollToTrigger [scrollToElementId]="reference.uuid">substance</a>
     </div>
   </div>
 </div>

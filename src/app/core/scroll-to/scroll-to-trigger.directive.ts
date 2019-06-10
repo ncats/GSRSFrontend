@@ -2,39 +2,39 @@ import {
   Directive,
   Input,
   AfterViewInit,
-  ElementRef
+  ElementRef,
+  OnDestroy
 } from '@angular/core';
+import { ScrollToRegistration } from './scroll-to-registration.class';
+import { ScrollToService } from './scroll-to.service';
 
 @Directive({
-  selector: '[appScrollNavItem]'
+  selector: '[appScrollToTrigger]'
 })
-export class ScrollToTriggerDirective implements AfterViewInit {
+export class ScrollToTriggerDirective implements AfterViewInit, OnDestroy {
   @Input() scrollToElementId: string;
   scrollToElement: HTMLElement;
+  triggerElementRegistration: ScrollToRegistration;
 
   constructor(
-    private navItemElement: ElementRef
+    private elementRef: ElementRef,
+    private scrollToService: ScrollToService
   ) { }
 
   ngAfterViewInit() {
     if (this.scrollToElementId != null) {
-      this.getScrollToElement();
+      this.registerTriggerElement();
     } else {
       console.error('You need to enter a value for scrollToElementId');
     }
   }
 
-  getScrollToElement() {
-    setTimeout(() => {
-      this.scrollToElement = document.getElementById(this.scrollToElementId);
-      if (this.scrollToElement == null) {
-        console.error('You did not enter a valid element Id in scrollToElementId');
-      } else {
-        this.navItemElement.nativeElement.onclick = () => {
-          this.scrollToElement.scrollIntoView({behavior: 'smooth'});
-        };
-      }
-    });
+  ngOnDestroy() {
+    this.triggerElementRegistration.unregister();
+  }
 
+  registerTriggerElement(): void {
+    this.triggerElementRegistration
+      = this.scrollToService.registerTriggerElement(this.scrollToElementId, this.elementRef.nativeElement);
   }
 }

@@ -153,3 +153,13 @@
   height: 100%;
   overflow: auto;
 }
+
+.blink_me {
+  animation: blinker 400ms linear;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}

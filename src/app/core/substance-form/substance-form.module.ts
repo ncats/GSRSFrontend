@@ -17,6 +17,7 @@ import { TagSelectorComponent } from './tag-selector/tag-selector.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ScrollToModule } from '../scroll-to/scroll-to.module';
+import { DomainSubstancesComponent } from './domain-substances/domain-substances.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { ScrollToModule } from '../scroll-to/scroll-to.module';
   declarations: [
     AccessManagerComponent,
     ReferencesManagerComponent,
-    TagSelectorComponent
+    TagSelectorComponent,
+    DomainSubstancesComponent
   ],
   exports: [
     AccessManagerComponent,
