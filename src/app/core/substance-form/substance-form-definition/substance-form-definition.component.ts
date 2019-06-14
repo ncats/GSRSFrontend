@@ -28,7 +28,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
   showPrimarySubstanceOptions = false;
   private accessSubject = new Subject<Array<string>>();
   accessEmitter = this.accessSubject.asObservable();
-  private definition: SubstanceFormDefinition;
+  definition: SubstanceFormDefinition;
   private uuidSubject = new Subject<string>();
   uuidEmitter = this.uuidSubject.asObservable();
 
