@@ -41,7 +41,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 
       this.getVocabularies();
     }
-    //move display name to top
+    // move display name to top
     this.filtered = this.names.slice().sort((a, b) => {
       return (b.displayName === true ? 1 : -1);
     });
@@ -108,5 +108,3 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
-
-
