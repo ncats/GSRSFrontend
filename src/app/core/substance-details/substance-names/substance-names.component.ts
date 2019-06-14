@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { SubstanceName } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
@@ -41,7 +41,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 
       this.getVocabularies();
     }
-    //move display name to top
+    // move display name to top
     this.filtered = this.names.slice().sort((a, b) => {
       return (b.displayName === true ? 1 : -1);
     });

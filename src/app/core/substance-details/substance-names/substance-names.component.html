@@ -17,12 +17,12 @@
     </ng-container>
 
     <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header > Type </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
       <td mat-cell *matCellDef="let name"> {{typeVocabulary[name.type] && typeVocabulary[name.type].display}} </td>
     </ng-container>
 
     <ng-container matColumnDef="language">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header > Language </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Language </th>
       <td mat-cell *matCellDef="let name"> {{getLanguages(name)}} </td>
     </ng-container>
 
