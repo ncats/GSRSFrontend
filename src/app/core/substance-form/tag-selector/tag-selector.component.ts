@@ -13,7 +13,8 @@ import { map, startWith } from 'rxjs/operators';
 })
 export class TagSelectorComponent implements OnInit, AfterViewInit {
   @Input() cvDomain: string;
-  @Input() tagsIn: Observable<Array<string>>;
+  @Input() tagsAsync?: Observable<Array<string>>;
+  @Input() tagsSync?: Array<string>;
   @Output() tagsOut = new EventEmitter<Array<string>>();
   tags: Array<string> = [];
   allOptions: Array<VocabularyTerm>;
@@ -41,10 +42,16 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
           startWith(null),
           map((tag: string | null) => tag ? this._filter(tag) : this.allOptions.filter(option => this.tags.indexOf(option.value) === -1)));
       });
+      if (this.tagsAsync) {
+        this.tagsAsync.subscribe(tags => {
+          this.tags = tags;
+        });
+      }
+
+      if (this.tagsSync) {
+        this.tags = this.tagsSync;
+      }
     });
-    this.tagsIn.subscribe(tags => {
-        this.tags = tags;
-      });
   }
 
   clearTagsInput(): void {

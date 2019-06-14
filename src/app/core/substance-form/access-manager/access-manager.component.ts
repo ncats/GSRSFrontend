@@ -13,7 +13,8 @@ import { Observable } from 'rxjs';
 export class AccessManagerComponent implements OnInit, AfterViewInit {
   accessOptions: Array<VocabularyTerm>;
   access: Array<string> = [];
-  @Input('accessIn') accessIn: Observable<Array<string>>;
+  @Input('accessAsync') accessAsync?: Observable<Array<string>>;
+  @Input('accessSync') accessSync?: Array<string>;
   @Output('accessOut') accessOut = new EventEmitter<Array<string>>();
   tooltipMessage: string;
   accessFormGroup = new FormGroup({});
@@ -22,12 +23,20 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
     private cvService: ControlledVocabularyService
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit() {
-    this.accessIn.subscribe(access => {
-      this.access = access;
-      this.getVocabularies();
+    setTimeout(() => {
+      if (this.accessAsync) {
+        this.accessAsync.subscribe(access => {
+          this.access = access;
+          this.getVocabularies();
+        });
+      }
+      if (this.accessSync) {
+        this.access = this.accessSync;
+        this.getVocabularies();
+      }
     });
   }
 

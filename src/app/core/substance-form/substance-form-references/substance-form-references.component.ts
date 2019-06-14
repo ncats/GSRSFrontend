@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ReferencesContainer } from '../references-manager/references-container.model';
 import { SubstanceFormSectionBase } from '../substance-form-section-base';
 import { Observable, Subject } from 'rxjs';
+import { SubstanceReference } from '@gsrs-core/substance/substance.model';
+import { SubstanceFormService } from '../substance-form.service';
 
 @Component({
   selector: 'app-substance-form-references',
@@ -9,11 +10,11 @@ import { Observable, Subject } from 'rxjs';
   styleUrls: ['./substance-form-references.component.scss']
 })
 export class SubstanceFormReferencesComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
-  private referencesContainerSubject = new Subject<ReferencesContainer>();
-  referencesContainerEmitter = this.referencesContainerSubject.asObservable();
-  private subClass: string;
+  references: Array<SubstanceReference>;
 
-  constructor() {
+  constructor(
+    private substanceFormService: SubstanceFormService
+  ) {
     super();
   }
 
@@ -22,34 +23,9 @@ export class SubstanceFormReferencesComponent extends SubstanceFormSectionBase i
   }
 
   ngAfterViewInit() {
-    this.substanceUpdated.subscribe(substance => {
-      this.substance = substance;
-
-      this.subClass = this.substance.substanceClass;
-
-      if (this.subClass === 'chemical') {
-        this.subClass = 'structure';
-      } else if (this.subClass === 'specifiedSubstanceG1') {
-        this.subClass = 'specifiedSubstance';
-      }
-
-      const referencesContainer: ReferencesContainer = {
-        substanceReferences: this.substance.references,
-        substance: this.substance
-      };
-
-      setTimeout(() => {
-        this.referencesContainerSubject.next(referencesContainer);
-      });
+    this.substanceFormService.substanceReferences.subscribe(references => {
+      this.references = references;
     });
-  }
-
-  updateReferences(referencesContainer: ReferencesContainer): void {
-    this.substance.references = referencesContainer.substanceReferences;
-
-    if (referencesContainer.substance) {
-      this.substanceUpdated.next(referencesContainer.substance);
-    }
   }
 
 }

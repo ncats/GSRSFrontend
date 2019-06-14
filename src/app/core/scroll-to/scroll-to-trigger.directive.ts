@@ -13,6 +13,7 @@ import { ScrollToService } from './scroll-to.service';
 })
 export class ScrollToTriggerDirective implements AfterViewInit, OnDestroy {
   @Input() scrollToElementId: string;
+  @Input() vAlign: 'start' | 'center' | 'end' | 'nearest' | 'start' = 'center';
   scrollToElement: HTMLElement;
   triggerElementRegistration: ScrollToRegistration;
 
@@ -35,6 +36,6 @@ export class ScrollToTriggerDirective implements AfterViewInit, OnDestroy {
 
   registerTriggerElement(): void {
     this.triggerElementRegistration
-      = this.scrollToService.registerTriggerElement(this.scrollToElementId, this.elementRef.nativeElement);
+      = this.scrollToService.registerTriggerElement(this.scrollToElementId, this.elementRef.nativeElement, this.vAlign);
   }
 }

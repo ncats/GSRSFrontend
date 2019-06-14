@@ -7,7 +7,10 @@ export class ScrollToRegistration {
     private registrationTerminatedSubject = new Subject();
     registrationTerminated = this.registrationTerminatedSubject.asObservable();
 
-    constructor(triggerElement: HTMLAnchorElement | HTMLButtonElement | HTMLElement, targetElement?: HTMLElement) {
+    constructor(
+        triggerElement: HTMLAnchorElement | HTMLButtonElement | HTMLElement,
+        private vAlign: 'start' | 'center' | 'end' | 'nearest' | 'start',
+        targetElement?: HTMLElement) {
         this.triggerElement = triggerElement;
         if (targetElement != null) {
             this.registerEventHandler(targetElement);
@@ -21,13 +24,13 @@ export class ScrollToRegistration {
 
     private scrollToEventHandler = () => {
         if (this.targetElement != null) {
-            this.targetElement.scrollIntoView({behavior: 'smooth'});
+            this.targetElement.scrollIntoView({behavior: 'smooth', block: this.vAlign});
             setTimeout(() => {
                 this.targetElement.classList.add('blink_me');
                 setTimeout(() => {
                     this.targetElement.classList.remove('blink_me');
                 }, 400);
-            }, 400);
+            }, 500);
         }
     }
 

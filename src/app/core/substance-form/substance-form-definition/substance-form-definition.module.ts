@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubstanceFormOverviewComponent } from './substance-form-overview.component';
+import { SubstanceFormDefinitionComponent } from './substance-form-definition.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,7 +17,7 @@ import { ScrollToModule } from '../../scroll-to/scroll-to.module';
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormOverviewComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormDefinitionComponent),
     ReactiveFormsModule,
     FormsModule,
     MatFormFieldModule,
@@ -32,7 +32,7 @@ import { ScrollToModule } from '../../scroll-to/scroll-to.module';
     ScrollToModule
   ],
   declarations: [
-    SubstanceFormOverviewComponent
+    SubstanceFormDefinitionComponent
   ]
 })
-export class SubstanceFormOverviewModule { }
+export class SubstanceFormDefinitionModule { }

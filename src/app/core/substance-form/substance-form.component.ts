@@ -17,6 +17,7 @@ import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-comp
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { Subject } from 'rxjs';
 import { SubstanceFormSection } from './substance-form-section';
+import { SubstanceFormService } from './substance-form.service';
 
 @Component({
   selector: 'app-substance-form',
@@ -26,10 +27,9 @@ import { SubstanceFormSection } from './substance-form-section';
 export class SubstanceFormComponent implements OnInit, AfterViewInit {
   isLoading = true;
   id?: string;
-  substance: SubstanceDetail;
   formSections: Array<SubstanceFormSection> = [];
-  substanceUpdated = new Subject<SubstanceDetail>();
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
+  private subClass: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -38,7 +38,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     private mainNotificationService: MainNotificationService,
     private router: Router,
     private dynamicComponentLoader: DynamicComponentLoader,
-    private gaService: GoogleAnalyticsService
+    private gaService: GoogleAnalyticsService,
+    private substanceFormService: SubstanceFormService
   ) {
   }
 
@@ -50,9 +51,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
       this.getSubstanceDetails();
     } else {
       this.gaService.sendPageView(`Substance Register`);
-      const kind = this.activatedRoute.snapshot.queryParamMap.get('kind') || 'chemical';
-      this.substance = {};
-      this.setFormSections(formSections[kind]);
+      this.subClass = this.activatedRoute.snapshot.queryParamMap.get('kind') || 'chemical';
+      this.substanceFormService.loadSubstance(this.subClass);
+      this.setFormSections(formSections[this.subClass]);
     }
   }
 
@@ -64,13 +65,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
               .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
               .subscribe(componentFactory => {
                 this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
-                this.formSections[index].dynamicComponentRef.instance.substance = this.substance;
-                this.formSections[index].dynamicComponentRef.instance.substanceUpdated = this.substanceUpdated.asObservable();
                 this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.subscribe(label => {
                   this.formSections[index].menuLabel = label;
                 });
                 this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
-                this.substanceUpdated.next(this.substance);
               });
         });
       });
@@ -79,8 +77,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
   getSubstanceDetails() {
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
-        this.substance = response;
-        this.setFormSections(formSections[this.substance.substanceClass]);
+        this.substanceFormService.loadSubstance(response.substanceClass, response);
+        this.setFormSections(formSections[response.substanceClass]);
       } else {
         this.handleSubstanceRetrivalError();
       }
@@ -110,7 +108,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       this.router.navigate(['/substances/register']);
-      this.substance = {};
+      this.substanceFormService.loadSubstance(this.subClass);
       this.setFormSections(formSections.chemical);
     }, 5000);
   }
@@ -118,9 +116,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    this.substanceService.saveSubstance(this.substance).subscribe(response => {
-      this.substance = response;
-      this.substanceUpdated.next(response);
+    this.substanceFormService.saveSubstance().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       const notification: AppNotification = {

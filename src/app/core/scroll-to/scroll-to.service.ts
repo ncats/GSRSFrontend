@@ -12,11 +12,12 @@ export class ScrollToService {
 
   registerTriggerElement(
     targetElementId: string,
-    triggerElement: HTMLAnchorElement | HTMLButtonElement | HTMLElement): ScrollToRegistration {
+    triggerElement: HTMLAnchorElement | HTMLButtonElement | HTMLElement,
+    vAlign: 'start' | 'center' | 'end' | 'nearest' | 'start'): ScrollToRegistration {
 
     const targetElement = this.targetElements.find(elementItem => elementItem.id === targetElementId);
 
-    const registration = new ScrollToRegistration(triggerElement, targetElement);
+    const registration = new ScrollToRegistration(triggerElement, vAlign, targetElement);
 
     if (this.triggerElementsDictionary[targetElementId] == null) {
       this.triggerElementsDictionary[targetElementId] = [];

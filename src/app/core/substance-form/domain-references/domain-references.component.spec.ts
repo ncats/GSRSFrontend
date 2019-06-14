@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReferencesManagerComponent } from './references-manager.component';
+import { DomainReferencesComponent } from './domain-references.component';
 
-describe('ReferencesManagerComponent', () => {
-  let component: ReferencesManagerComponent;
-  let fixture: ComponentFixture<ReferencesManagerComponent>;
+describe('DomainReferencesComponent', () => {
+  let component: DomainReferencesComponent;
+  let fixture: ComponentFixture<DomainReferencesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReferencesManagerComponent ]
+      declarations: [ DomainReferencesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReferencesManagerComponent);
+    fixture = TestBed.createComponent(DomainReferencesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

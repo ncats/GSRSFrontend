@@ -8,7 +8,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ReferencesManagerComponent } from './references-manager/references-manager.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
@@ -17,7 +16,8 @@ import { TagSelectorComponent } from './tag-selector/tag-selector.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ScrollToModule } from '../scroll-to/scroll-to.module';
-import { DomainSubstancesComponent } from './domain-substances/domain-substances.component';
+import { DomainReferencesComponent } from './domain-references/domain-references.component';
+import { ReferenceFormComponent } from './reference-form/reference-form.component';
 
 @NgModule({
   imports: [
@@ -40,13 +40,14 @@ import { DomainSubstancesComponent } from './domain-substances/domain-substances
   ],
   declarations: [
     AccessManagerComponent,
-    ReferencesManagerComponent,
     TagSelectorComponent,
-    DomainSubstancesComponent
+    DomainReferencesComponent,
+    ReferenceFormComponent
   ],
   exports: [
     AccessManagerComponent,
-    ReferencesManagerComponent
+    DomainReferencesComponent,
+    ReferenceFormComponent
   ]
 })
 export class SubstanceFormModule { }

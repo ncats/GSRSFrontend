@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DomainSubstancesComponent } from './domain-substances.component';
+import { ReferenceFormComponent } from './reference-form.component';
 
-describe('DomainSubstancesComponent', () => {
-  let component: DomainSubstancesComponent;
-  let fixture: ComponentFixture<DomainSubstancesComponent>;
+describe('ReferenceFormComponent', () => {
+  let component: ReferenceFormComponent;
+  let fixture: ComponentFixture<ReferenceFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DomainSubstancesComponent ]
+      declarations: [ ReferenceFormComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DomainSubstancesComponent);
+    fixture = TestBed.createComponent(ReferenceFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
