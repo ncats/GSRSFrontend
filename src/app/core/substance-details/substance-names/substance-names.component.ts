@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { SubstanceName } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Sort} from '@angular/material';
 
 @Component({
   selector: 'app-substance-names',
@@ -30,7 +31,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       this.names = this.substance.names;
       this.filtered = this.substance.names;
       this.countUpdate.emit(this.names.length);
-      this.pageChange();
+
 
       this.searchControl.valueChanges.subscribe(value => {
         this.filterList(value, this.names, this.analyticsEventCategory);
@@ -40,6 +41,32 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 
       this.getVocabularies();
     }
+    // move display name to top
+    this.filtered = this.names.slice().sort((a, b) => {
+      return (b.displayName === true ? 1 : -1);
+    });
+    this.pageChange();
+  }
+
+
+
+  sortData(sort: Sort) {
+    const data = this.names.slice();
+    if (!sort.active || sort.direction === '') {
+      this.filtered = data;
+      this.pageChange();
+      return;
+    }
+    this.filtered = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'name': return compare(a.name.toUpperCase(), b.name.toUpperCase(), isAsc);
+        case 'type': return compare(a.type, b.type, isAsc);
+        case 'language': return compare(this.getLanguages(a), this.getLanguages(b), isAsc);
+        default: return 0;
+      }
+    });
+    this.pageChange();
   }
 
   getVocabularies(): void {
@@ -76,4 +103,8 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     });
   }
 
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

@@ -4,8 +4,9 @@ import { SubstanceNotesComponent } from './substance-notes.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
-import {MatDialogModule} from '@angular/material';
+import {MatDialogModule, MatIconModule} from '@angular/material';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
+import {ReadMoreComponent} from '@gsrs-core/substance-details/substance-notes/read-more/read-more.component';
 
 @NgModule({
   imports: [
@@ -14,8 +15,9 @@ import {ReferencesManagerModule} from '../../references-manager/references-manag
     MatTableModule,
     CdkTableModule,
     MatDialogModule,
-    ReferencesManagerModule
+    ReferencesManagerModule,
+    MatIconModule
   ],
-  declarations: [SubstanceNotesComponent]
+  declarations: [SubstanceNotesComponent, ReadMoreComponent]
 })
 export class SubstanceNotesModule { }

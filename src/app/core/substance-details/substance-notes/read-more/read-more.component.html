@@ -1,0 +1,2 @@
+<div [innerHTML]="currentText"></div>
+<a *ngIf="!hideToggle" class = "blue-font toggle" (click)="toggleView()">Show {{isCollapsed? 'all ':'less'}} <mat-icon svgIcon="{{isCollapsed? 'drop_down':'drop_up'}}"></mat-icon></a>
