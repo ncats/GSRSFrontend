@@ -20,7 +20,7 @@ export class SubstanceFormService {
   private substanceEmitter = new Subject<SubstanceDetail>();
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private substanceReferencesEmitter = new Subject<Array<SubstanceReference>>();
-  private domainReferences: { [ uuid: string ]: DomainReferences } = {};
+  private domainReferences: { [uuid: string]: DomainReferences } = {};
   private subClass: string;
 
   constructor(
@@ -36,6 +36,15 @@ export class SubstanceFormService {
           substanceClass: substanceClass
         };
       }
+
+      this.subClass = this.substance.substanceClass;
+
+      if (this.subClass === 'chemical') {
+        this.subClass = 'structure';
+      } else if (this.subClass === 'specifiedSubstanceG1') {
+        this.subClass = 'specifiedSubstance';
+      }
+
       this.substanceEmitter.next(this.substance);
     });
   }
@@ -79,14 +88,6 @@ export class SubstanceFormService {
 
   private getDefinition(): SubstanceFormDefinition {
 
-    this.subClass = this.substance.substanceClass;
-
-    if (this.subClass === 'chemical') {
-      this.subClass = 'structure';
-    } else if (this.subClass === 'specifiedSubstanceG1') {
-      this.subClass = 'specifiedSubstance';
-    }
-
     const definition: SubstanceFormDefinition = {
       uuid: this.substance[this.subClass].uuid,
       substanceClass: this.subClass,
@@ -129,16 +130,16 @@ export class SubstanceFormService {
             if (Object.prototype.toString.call(this.substance[referencesDomains[i]]) === '[object Array]'
               && this.substance[referencesDomains[i]].length) {
 
-                domain = this.substance[referencesDomains[i]].find(_domain => _domain.uuid === uuid);
+              domain = this.substance[referencesDomains[i]].find(_domain => _domain.uuid === uuid);
 
-                if (domain != null) {
-                  break;
-                }
+              if (domain != null) {
+                break;
+              }
 
             } else if (Object.prototype.toString.call(this.substance[referencesDomains[i]]) === '[object Object]'
               && this.substance[referencesDomains[i]].uuid === uuid) {
-                domain = this.substance[referencesDomains[i]];
-                break;
+              domain = this.substance[referencesDomains[i]];
+              break;
             }
           }
         }

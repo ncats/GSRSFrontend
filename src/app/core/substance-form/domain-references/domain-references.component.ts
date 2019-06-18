@@ -5,6 +5,8 @@ import { SubstanceFormService } from '../substance-form.service';
 import { Observable } from 'rxjs';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
+import { MatDialog } from '@angular/material/dialog';
+import { RefernceFormDialogComponent } from '../references-dialogs/refernce-form-dialog.component';
 
 @Component({
   selector: 'app-domain-references',
@@ -18,7 +20,8 @@ export class DomainReferencesComponent implements OnInit {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -32,6 +35,30 @@ export class DomainReferencesComponent implements OnInit {
     this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
       this.documentTypesDictionary = response['DOCUMENT_TYPE'].dictionary;
     });
+  }
+
+  addNewReference(uuid?: string): void {
+
+    let reference: SubstanceReference = {
+      access: []
+    };
+
+    if (uuid != null) {
+      reference = this.domainReferences.getSubstanceReference(uuid);
+    }
+    console.log(reference);
+    const dialogRef = this.dialog.open(RefernceFormDialogComponent, {
+      data: reference,
+      width: '900px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  reuseExistingReference(): void {
+    alert('Coming soon!');
   }
 
 }

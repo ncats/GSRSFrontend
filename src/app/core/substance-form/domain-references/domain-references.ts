@@ -4,13 +4,11 @@ import { Subject, Observable } from 'rxjs';
 export class DomainReferences {
     references: Array<SubstanceReference> = [];
     domain: any;
-    private substanceReferences: Array<SubstanceReference> = [];
     // private domainReferencesSubject = new Subject();
     // domainReferencesUpdated = this.domainReferencesSubject.asObservable();
 
-    constructor(domain: any = {}, substanceReferences: Array<SubstanceReference> = []) {
+    constructor(domain: any = {}, private substanceReferences: Array<SubstanceReference> = []) {
         this.domain = domain;
-        this.substanceReferences = substanceReferences;
         this.loadReferences();
     }
 
@@ -25,6 +23,11 @@ export class DomainReferences {
         }
     }
 
+    getSubstanceReference(uuid: string): SubstanceReference {
+        const reference = this.substanceReferences.find(substanceReference => substanceReference.uuid === uuid);
+        return reference;
+    }
+
     addDomainReference(uuid: string): void {
         if (this.domain.references.indexOf(uuid) === -1) {
             this.domain.references.push(uuid);
@@ -37,7 +40,6 @@ export class DomainReferences {
                 this.references.push(substanceReference);
             }
         }
-        // this.domainReferencesSubject.next();
     }
 
     removeDomainReference(uuid: string): void {
@@ -49,6 +51,5 @@ export class DomainReferences {
         if (substanceReferenceIndex > -1) {
             this.references.splice(substanceReferenceIndex, 1);
         }
-        // this.domainReferencesSubject.next();
     }
 }

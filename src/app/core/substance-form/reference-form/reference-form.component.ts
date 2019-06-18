@@ -52,7 +52,9 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
       this.reference.id = value;
     });
 
-    this.referenceApplied = new ReferenceApplied(this.reference.uuid, this.substanceFormService);
+    if (this.reference.uuid != null) {
+      this.referenceApplied = new ReferenceApplied(this.reference.uuid, this.substanceFormService);
+    }
     this.getVocabularies();
   }
 
@@ -71,6 +73,15 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
 
   updateTags(tags: Array<string>): void {
     this.reference.tags = tags;
+  }
+
+  get isValid(): boolean {
+    console.log('hello');
+    return this.documentTypeControl.valid
+      && this.citationControl.valid
+      && this.publicDomainControl.valid
+      && this.urlControl.valid
+      && this.idControl.valid;
   }
 
 }

@@ -18,6 +18,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ScrollToModule } from '../scroll-to/scroll-to.module';
 import { DomainReferencesComponent } from './domain-references/domain-references.component';
 import { ReferenceFormComponent } from './reference-form/reference-form.component';
+import { RefernceFormDialogComponent } from './references-dialogs/refernce-form-dialog.component';
+import { ReuseReferencesDialogComponent } from './references-dialogs/reuse-references-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -36,18 +39,27 @@ import { ReferenceFormComponent } from './reference-form/reference-form.componen
     MatInputModule,
     MatChipsModule,
     MatAutocompleteModule,
-    ScrollToModule
+    ScrollToModule,
+    MatDialogModule
   ],
   declarations: [
     AccessManagerComponent,
     TagSelectorComponent,
     DomainReferencesComponent,
-    ReferenceFormComponent
+    ReferenceFormComponent,
+    RefernceFormDialogComponent,
+    ReuseReferencesDialogComponent
   ],
   exports: [
     AccessManagerComponent,
     DomainReferencesComponent,
-    ReferenceFormComponent
+    ReferenceFormComponent,
+    RefernceFormDialogComponent,
+    ReuseReferencesDialogComponent
+  ],
+  entryComponents: [
+    RefernceFormDialogComponent,
+    ReuseReferencesDialogComponent
   ]
 })
 export class SubstanceFormModule { }

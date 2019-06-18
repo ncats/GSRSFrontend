@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>{{reference.uuid ? 'Edit' : 'Add'}} Referece</h1>
+<div mat-dialog-content>
+  <div *ngIf="reference">
+    <app-reference-form [reference]="reference" #referenceForm></app-reference-form>
+    <div>
+      <span class="fill-middle"></span>
+      <button mat-button (click)="onNoClick()">Cancel</button>
+      <button mat-button [disabled]="!referenceForm || !referenceForm.isValid">Save</button>
+    </div>
+  </div>
+</div>
