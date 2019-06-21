@@ -43,7 +43,7 @@ import { FileSelectModule } from 'file-select';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic-component-loader.module';
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
-import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
+import { ScrollToModule } from './scroll-to/scroll-to.module';
 import { TakePipe } from './utils/take.pipe';
 import { FacetDisplayPipe } from './utils/facet-display.pipe';
 import { EnvironmentModule } from '../../environments/environment';
@@ -110,7 +110,7 @@ import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
     FileSelectModule,
     MatListModule,
     DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
-    ScrollNavModule,
+    ScrollToModule,
     EnvironmentModule,
     MatMenuModule,
     MatButtonToggleModule,

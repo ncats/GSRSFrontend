@@ -1,7 +1,8 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop">
   <mat-sidenav mode="side" opened #matSideNavInstance>
-    <mat-nav-list appScrollNav>
-      <a mat-list-item *ngFor="let property of substanceDetailsProperties" appScrollNavItem [scrollToElementId]="property.dynamicComponentId + (property.type ? property.type : '')" (click)="handleSidenavClick(property.title)">
+    <mat-nav-list>
+      <a mat-list-item *ngFor="let property of substanceDetailsProperties" appScrollToTrigger [scrollToElementId]="property.dynamicComponentId + (property.type ? property.type : '')" (click)="handleSidenavClick(property.title)"
+      vAlign="start">
         <span class="capitalized">{{property.title}}</span>
         <span class="chip" *ngIf="property.count != null">{{property.count}}</span>
         <span class="middle-fill"></span>
@@ -19,7 +20,7 @@
           <h1>{{substance._name}}</h1>
         </div>
         <mat-accordion multi="true">
-          <mat-expansion-panel expanded="true" *ngFor="let property of substanceDetailsProperties" [id]="property.dynamicComponentId + (property.type ? property.type : '')">
+          <mat-expansion-panel expanded="true" *ngFor="let property of substanceDetailsProperties" [id]="property.dynamicComponentId + (property.type ? property.type : '')" appScrollToTarget>
             <mat-expansion-panel-header>
               <mat-panel-title>
                 <h2>{{property.title}}</h2>
