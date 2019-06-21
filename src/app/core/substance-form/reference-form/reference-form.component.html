@@ -1,4 +1,7 @@
 <div class="reference-form-container">
+  <div *ngIf="isDeleted" class="notification-backdrop">
+    Deleted
+  </div>
   <div class="form-row">
     <mat-form-field class="source-type">
       <mat-label>Source Type *</mat-label>
@@ -29,11 +32,18 @@
     <app-tag-selector class="tags" (tagsOut)="updateTags($event)" [tagsSync]="reference.tags"
       cvDomain="DOCUMENT_COLLECTION"></app-tag-selector>
   </div>
-  <div class="form-row">
+  <div class="form-row form-actions">
+    <div *ngIf="reference.uuid">
+      <button mat-button (click)="deleteReference()">
+        <span>Delete</span>&nbsp;
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
     <span class="fill-middle"></span>
     <div *ngIf="reference.uuid">
-      <button mat-flat-button [matMenuTriggerFor]="appliedOptionsMenu">
-        <span>Apply to</span>
+      <button mat-button [matMenuTriggerFor]="appliedOptionsMenu">
+        <span>Apply to</span>&nbsp;
+        <mat-icon svgIcon="menu"></mat-icon>
       </button>
       <mat-menu class="applied-menu-container" #appliedOptionsMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="referenceApplied.applyToAll()">

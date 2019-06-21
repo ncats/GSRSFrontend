@@ -1,9 +1,27 @@
 .reference-form-container {
-    padding: 12px 0 12px 0;
+    padding: 20px 0 12px 0;
+    position: relative;
+
 
     & > .form-divider {
         margin: 10px 0 15px 0;
     }
+}
+
+.notification-backdrop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, .8);
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #666;
 }
 
 .form-row {
@@ -15,6 +33,10 @@
     .checkbox-container {
         padding-bottom: 18px;
     }
+}
+
+.form-actions {
+    margin: 5px 0 10px 0;
 }
 
 .source-type, .citation, .url {

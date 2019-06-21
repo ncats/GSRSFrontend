@@ -7,6 +7,9 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { MatDialog } from '@angular/material/dialog';
 import { RefernceFormDialogComponent } from '../references-dialogs/refernce-form-dialog.component';
+import { ReuseReferencesDialogComponent } from '../references-dialogs/reuse-references-dialog.component';
+import { ReuseReferencesDialogData } from '../references-dialogs/reuse-references-dialog-data.model';
+import {  MatTableDataSource  } from '@angular/material/table';
 
 @Component({
   selector: 'app-domain-references',
@@ -17,6 +20,9 @@ export class DomainReferencesComponent implements OnInit {
   @Input() uuid: Observable<string>;
   domainReferences: DomainReferences;
   documentTypesDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
+  displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete'];
+  tableData: MatTableDataSource<SubstanceReference>;
+  isExpanded = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -27,6 +33,10 @@ export class DomainReferencesComponent implements OnInit {
   ngOnInit() {
     this.uuid.subscribe(uuid => {
       this.domainReferences = this.substanceFormService.getDomainReferences(uuid);
+      this.tableData = new MatTableDataSource<SubstanceReference>(this.domainReferences.references);
+      this.domainReferences.domainReferencesUpdated.subscribe(() => {
+        this.tableData.data = this.domainReferences.references;
+      });
     });
     this.getVocabularies();
   }
@@ -46,19 +56,41 @@ export class DomainReferencesComponent implements OnInit {
     if (uuid != null) {
       reference = this.domainReferences.getSubstanceReference(uuid);
     }
-    console.log(reference);
+
     const dialogRef = this.dialog.open(RefernceFormDialogComponent, {
       data: reference,
       width: '900px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    dialogRef.afterClosed().subscribe(newReference => {
+      if (newReference != null) {
+        newReference  = this.domainReferences.createSubstanceReference(newReference);
+        this.domainReferences.addDomainReference(newReference.uuid);
+      }
     });
   }
 
   reuseExistingReference(): void {
-    alert('Coming soon!');
+
+    const data: ReuseReferencesDialogData = {
+      domainRefereceUuids: this.domainReferences.domainReferenceUuids,
+      substanceReferences: this.domainReferences.substanceReferences
+    };
+
+    const dialogRef = this.dialog.open(ReuseReferencesDialogComponent, {
+      data: data,
+      width: '900px'
+    });
+
+    dialogRef.afterClosed().subscribe(domainRefereceUuids => {
+      if (domainRefereceUuids != null) {
+        this.domainReferences.updateDomainReferences(domainRefereceUuids);
+      }
+    });
+  }
+
+  removeReference(referenceUuid: string): void {
+    this.domainReferences.removeDomainReference(referenceUuid);
   }
 
 }

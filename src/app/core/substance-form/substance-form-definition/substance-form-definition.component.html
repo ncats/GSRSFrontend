@@ -50,17 +50,6 @@
   </div>
   <div class="substance-form-row" *ngIf="definition.substanceClass != 'concept'">
     <div class="references-container">
-      <h4>
-        Definition Reference
-        &nbsp;
-        <button mat-icon-button [matMenuTriggerFor]="domainReferencesMenu">
-          <mat-icon svgIcon="add_circle_outline"></mat-icon>
-        </button>
-        <mat-menu #domainReferencesMenu="matMenu">
-          <button mat-menu-item (click)="references.addNewReference()">Add new</button>
-          <button mat-menu-item (click)="references.reuseExistingReference()">Reuse</button>
-        </mat-menu>
-      </h4>
       <app-domain-references [uuid]="uuidEmitter" #references></app-domain-references>
     </div>
   </div>

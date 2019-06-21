@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -13,6 +13,7 @@ import { SubstanceFormService } from '../substance-form.service';
 })
 export class ReferenceFormComponent implements OnInit, AfterViewInit {
   @Input() reference: SubstanceReference;
+  @Output() referenceDeleted = new EventEmitter<SubstanceReference>();
   documentTypes: Array<VocabularyTerm> = [];
   documentTypeControl: FormControl;
   citationControl: FormControl;
@@ -20,6 +21,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   urlControl: FormControl;
   idControl: FormControl;
   referenceApplied: ReferenceApplied;
+  isDeleted = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -76,12 +78,18 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   }
 
   get isValid(): boolean {
-    console.log('hello');
     return this.documentTypeControl.valid
       && this.citationControl.valid
       && this.publicDomainControl.valid
       && this.urlControl.valid
       && this.idControl.valid;
+  }
+
+  deleteReference(): void {
+    this.isDeleted = true;
+    setTimeout(() => {
+      this.referenceDeleted.emit(this.reference);
+    }, 500);
   }
 
 }

@@ -21,6 +21,9 @@ import { ReferenceFormComponent } from './reference-form/reference-form.componen
 import { RefernceFormDialogComponent } from './references-dialogs/refernce-form-dialog.component';
 import { ReuseReferencesDialogComponent } from './references-dialogs/reuse-references-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   imports: [
@@ -40,7 +43,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatChipsModule,
     MatAutocompleteModule,
     ScrollToModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTableModule,
+    MatExpansionModule,
+    MatBadgeModule
   ],
   declarations: [
     AccessManagerComponent,

@@ -17,4 +17,12 @@ export class RefernceFormDialogComponent implements OnInit {
   ngOnInit() {
   }
 
+  save(): void {
+    this.dialogRef.close(this.reference);
+  }
+
+  cancel(): void {
+    this.dialogRef.close();
+  }
+
 }

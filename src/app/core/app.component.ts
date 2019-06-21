@@ -111,6 +111,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'add_circle_outline',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-add_circle_outline-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'arrow_downward',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-arrow_downward-24px.svg'));
   }
 
 }

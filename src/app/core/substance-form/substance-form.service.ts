@@ -11,6 +11,7 @@ import { Observable, Subject } from 'rxjs';
 import { SubstanceService } from '../substance/substance.service';
 import { referencesDomains } from './domain-references/domains.constant';
 import { DomainReferences } from './domain-references/domain-references';
+import { UtilsService } from '../utils/utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,8 @@ export class SubstanceFormService {
   private subClass: string;
 
   constructor(
-    private substanceService: SubstanceService
+    private substanceService: SubstanceService,
+    public utilsService: UtilsService
   ) { }
 
   loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail): void {
@@ -116,6 +118,12 @@ export class SubstanceFormService {
     return this.substanceReferencesEmitter.asObservable();
   }
 
+  addSubstanceReference(reference: SubstanceReference): SubstanceReference {
+    reference.uuid = this.utilsService.newUUID();
+    this.substance.references.unshift(reference);
+    return reference;
+  }
+
   getDomainReferences(uuid: string): DomainReferences {
     if (this.domainReferences[uuid] != null) {
       return this.domainReferences[uuid];
@@ -145,7 +153,7 @@ export class SubstanceFormService {
         }
       }
 
-      this.domainReferences[uuid] = new DomainReferences(domain, this.substance.references);
+      this.domainReferences[uuid] = new DomainReferences(domain, this.substance.references, this.utilsService);
       return this.domainReferences[uuid];
     }
   }
@@ -154,12 +162,26 @@ export class SubstanceFormService {
     return this.substance[key];
   }
 
+  deleteSubstanceReference(reference: SubstanceReference): void {
+    Object.keys(this.domainReferences).forEach(key => {
+      this.domainReferences[key].removeDomainReference(reference.uuid);
+    });
+    const subRefIndex = this.substance.references.findIndex(subReference => reference.uuid === subReference.uuid);
+    if (subRefIndex > -1) {
+      this.substance.references.splice(subRefIndex, 1);
+    }
+  }
+
   saveSubstance(): Observable<SubstanceFormResults> {
     return new Observable(observer => {
       const results: SubstanceFormResults = {
         isSuccessfull: true
       };
       this.substanceService.saveSubstance(this.substance).subscribe(substance => {
+        this.domainReferences = {};
+        this.substance = substance;
+        this.definitionEmitter.next(this.getDefinition());
+        this.substanceReferencesEmitter.next(this.substance.references);
         observer.next(results);
       }, error => {
         results.isSuccessfull = false;
