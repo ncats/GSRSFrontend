@@ -94,16 +94,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         this.privateSearchCutoff = Number(params.get('cutoff')) || 0;
         this.privateSearchSeqType = params.get('seq_type') || '';
         this.smiles = params.get('smiles') || '';
-        if ( params.get('order')) {
-          this.order = params.get('order');
-        }
+          this.order = params.get('order') || '';
+
         if ( params.get('pageSize')) {
-         this.pageSize =  parseInt(params.get('pageSize'));
+         this.pageSize =  parseInt(params.get('pageSize')) ;
         }
         if ( params.get('pageIndex')) {
           this.pageIndex =  parseInt(params.get('pageIndex'));
         }
-        this.facetString = params.get('facets');
+        this.facetString = params.get('facets') || '';
        this.facetsFromParams();
 
         this.searchSubstances();
@@ -120,7 +119,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   facetsFromParams() {
-    if (this.facetString) {
+    if (this.facetString !== '') {
       const catArray = this.facetString.split(',');
       for (let i = 0; i < (catArray.length); i++) {
         const catSplit = catArray[i].split('*');
@@ -256,7 +255,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           const cat = this.privateFacetParams[key];
           const valArr = [];
           for (const subkey of Object.keys(cat.params)) {
-            if (cat.params[subkey]) {
+            if (typeof cat.params[subkey] === 'boolean') {
                 valArr.push(subkey + '.' + cat.params[subkey]);
             }
           }
