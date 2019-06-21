@@ -1,0 +1,9 @@
+<div *ngIf="domainReferences">
+  <span *ngFor="let reference of domainReferences.references; last as isLast">
+    <a class="domain-reference"
+      appScrollToTrigger
+      [scrollToElementId]="reference.uuid">
+      {{documentTypesDictionary[reference.docType] && this.documentTypesDictionary[reference.docType].display}} - {{reference.citation}}
+    </a>
+  </span>
+</div>

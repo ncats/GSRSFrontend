@@ -1,13 +1,7 @@
-<div *ngIf="substance">
-  <div class="substance-form-title">
-    <span>
-      {{substance.uuid ? 'Editing' : 'Registering new'}} <span class="capitalized">{{substance.substanceClass}}</span>
-    </span>
-    <span class="middle-fill"></span>
-    <span>
-      {{substance.approvalID}}
-    </span>
-  </div>
+<h2>
+  Definition
+</h2>
+<div *ngIf="definition">
   <div class="substance-form-row">
     <mat-form-field>
       <mat-label>Definition Type</mat-label>
@@ -17,7 +11,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <div class="primary-substance-container" *ngIf="substance.definitionType == 'ALTERNATIVE'">
+    <div class="primary-substance-container" *ngIf="definition.definitionType == 'ALTERNATIVE'">
       <app-substance-text-search
         (searchPerformed)="processSubstanceSearch($event)" eventCategory="substanceFormDefinitionType"
         placeholder="Primary Substance" [errorMessageUpdated]="primarySubstanceErrorEmitter"
@@ -47,8 +41,17 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <div class="checkbox-container">
+      <mat-checkbox [formControl]="deprecatedControl" (change)="updateDeprecate($event)">Deprecated</mat-checkbox>
+    </div>
     <div>
-      <app-access-manager [substanceUpdated]="substanceUpdated"></app-access-manager>
+      <app-access-manager (accessOut)="updateAccess($event)" [accessAsync]="accessEmitter"></app-access-manager>
+    </div>
+  </div>
+  <div class="substance-form-row" *ngIf="definition.substanceClass != 'concept'">
+    <div class="references-container">
+      <h4>Definition Reference</h4>
+      <app-domain-references [uuid]="uuidEmitter"></app-domain-references>
     </div>
   </div>
 </div>

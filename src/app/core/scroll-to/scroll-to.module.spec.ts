@@ -1,4 +1,4 @@
-import { ScrollNavModule } from './scroll-nav.module';
+import { ScrollNavModule } from './scroll-to.module';
 
 describe('ScrollNavModule', () => {
   let scrollNavModule: ScrollNavModule;

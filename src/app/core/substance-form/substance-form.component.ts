@@ -16,6 +16,8 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { Subject } from 'rxjs';
+import { SubstanceFormSection } from './substance-form-section';
+import { SubstanceFormService } from './substance-form.service';
 
 @Component({
   selector: 'app-substance-form',
@@ -25,10 +27,9 @@ import { Subject } from 'rxjs';
 export class SubstanceFormComponent implements OnInit, AfterViewInit {
   isLoading = true;
   id?: string;
-  substance: SubstanceDetail;
-  formSections: Array<string> = [];
-  substanceUpdated = new Subject<SubstanceDetail>();
+  formSections: Array<SubstanceFormSection> = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
+  private subClass: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -37,7 +38,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     private mainNotificationService: MainNotificationService,
     private router: Router,
     private dynamicComponentLoader: DynamicComponentLoader,
-    private gaService: GoogleAnalyticsService
+    private gaService: GoogleAnalyticsService,
+    private substanceFormService: SubstanceFormService
   ) {
   }
 
@@ -49,9 +51,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
       this.getSubstanceDetails();
     } else {
       this.gaService.sendPageView(`Substance Register`);
-      const kind = this.activatedRoute.snapshot.queryParamMap.get('kind') || 'chemical';
-      this.substance = {};
-      this.formSections = formSections[kind];
+      this.subClass = this.activatedRoute.snapshot.queryParamMap.get('kind') || 'chemical';
+      this.substanceFormService.loadSubstance(this.subClass);
+      this.setFormSections(formSections[this.subClass]);
     }
   }
 
@@ -60,13 +62,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
       .subscribe(() => {
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
-              .getComponentFactory<any>(this.formSections[index])
+              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
               .subscribe(componentFactory => {
-                const ref = cRef.createComponent(componentFactory);
-                ref.instance.substance = this.substance;
-                ref.instance.substanceUpdated = this.substanceUpdated.asObservable();
-                ref.changeDetectorRef.detectChanges();
-                this.substanceUpdated.next(this.substance);
+                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.subscribe(label => {
+                  this.formSections[index].menuLabel = label;
+                });
+                this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
               });
         });
       });
@@ -75,8 +77,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
   getSubstanceDetails() {
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
-        this.substance = response;
-        this.formSections = formSections[this.substance.substanceClass];
+        this.substanceFormService.loadSubstance(response.substanceClass, response);
+        this.setFormSections(formSections[response.substanceClass]);
       } else {
         this.handleSubstanceRetrivalError();
       }
@@ -90,6 +92,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     });
   }
 
+  private setFormSections(sectionNames: Array<string> = []): void {
+    sectionNames.forEach(sectionName => {
+      const formSection = new SubstanceFormSection(sectionName);
+      this.formSections.push(formSection);
+    });
+  }
+
   private handleSubstanceRetrivalError() {
     const notification: AppNotification = {
       message: 'The substance you\'re trying to edit doesn\'t exist.',
@@ -99,18 +108,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       this.router.navigate(['/substances/register']);
-      this.substance = {};
-      this.formSections = formSections.chemical;
+      this.substanceFormService.loadSubstance(this.subClass);
+      this.setFormSections(formSections.chemical);
     }, 5000);
   }
 
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    this.substanceService.saveSubstance(this.substance).subscribe(response => {
-      response.access = [];
-      this.substance = response;
-      this.substanceUpdated.next(response);
+    this.substanceFormService.saveSubstance().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       const notification: AppNotification = {
