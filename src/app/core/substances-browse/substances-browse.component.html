@@ -11,7 +11,7 @@
         <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name]" placeholder="Search  {{facet.name}}">
         </mat-form-field>
         <button mat-icon-button color="black" (click) = "searchText[facet.name] = ''"><mat-icon svgIcon="close"></mat-icon></button>
-          <div class="facet-value" *ngFor="let value of facet.values | filter : searchText[facet.name]">
+          <div class="facet-value" *ngFor="let value of facet.values | facetFilter : searchText[facet.name]">
           <div class="facet-value-checkbox">
             <mat-checkbox class="include" matTooltip="Include" (change)="updateFacetSelection($event, facet.name, value.label, true)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
