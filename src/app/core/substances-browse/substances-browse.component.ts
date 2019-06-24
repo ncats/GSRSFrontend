@@ -56,7 +56,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public order: string;
   public sortValues = searchSortValues;
   showAudit: boolean;
-  public facetBuilder = {};
+  public facetBuilder: SubstanceFacetParam;
   searchText: string[] = [];
 
   constructor(
@@ -77,6 +77,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private structureService: StructureService
   ) {
     this.privateFacetParams = {};
+    this.facetBuilder = {};
   }
 
   ngOnInit() {
@@ -120,13 +121,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   facetsFromParams() {
     if (this.facetString !== '') {
-      const catArray = this.facetString.split(',');
-      for (let i = 0; i < (catArray.length); i++) {
-        const catSplit = catArray[i].split('*');
-        const cat = catSplit[0];
-        this.facetBuilder[cat] = {};
-        const fieldsArr = catSplit[1].split('+');
-        const params = {};
+      const categoryArray = this.facetString.split(',');
+      for (let i = 0; i < (categoryArray.length); i++) {
+        const categorySplit = categoryArray[i].split('*');
+        const category = categorySplit[0];
+        const fieldsArr = categorySplit[1].split('+');
+        const params: { [facetValueLabel: string]: boolean } = {};
         let hasSelections = false;
         for (let j = 0; j < fieldsArr.length; j++) {
           const field = fieldsArr[j].split('.');
@@ -139,8 +139,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         }
         if (hasSelections === true ) {
-          this.facetBuilder[cat].hasSelections = true;
-          this.facetBuilder[cat].params = params;
+          this.facetBuilder[category] = {'params' : params, hasSelections : true};
         }
       }
       this.privateFacetParams = this.facetBuilder;
@@ -243,44 +242,47 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.isLoading = false;
           this.loadingService.setLoading(this.isLoading);
         });
+        this.populateUrlQueryParameters();
 
-        const navigationExtras: NavigationExtras = {
-          queryParams: {}
-        };
-
-      const catArr = [];
-      let facetString = '';
-      for (const key of Object.keys(this.privateFacetParams)) {
-        if (this.privateFacetParams[key].hasSelections === true) {
-          const cat = this.privateFacetParams[key];
-          const valArr = [];
-          for (const subkey of Object.keys(cat.params)) {
-            if (typeof cat.params[subkey] === 'boolean') {
-                valArr.push(subkey + '.' + cat.params[subkey]);
-            }
-          }
-          catArr.push(key + '*' + valArr.join('+'));
-        }
-      }
-      facetString = catArr.join(',');
-      navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
-      navigationExtras.queryParams['structureSearchTerm'] = this.privateStructureSearchTerm;
-      navigationExtras.queryParams['sequenceSearchTerm'] = this.privateSequenceSearchTerm;
-      navigationExtras.queryParams['cutoff'] =  this.privateSearchCutoff;
-      navigationExtras.queryParams['type'] = this.privateSearchType;
-      navigationExtras.queryParams['seqType'] =  this.privateSearchSeqType;
-      navigationExtras.queryParams['order'] = this.order;
-      navigationExtras.queryParams['pageSize'] = this.pageSize;
-      navigationExtras.queryParams['pageIndex'] = this.pageIndex;
-      navigationExtras.queryParams['facets'] = facetString;
-      navigationExtras.queryParams['skip'] = skip;
-      this.location.replaceState(
-        this.router.createUrlTree(
-          [this.locationStrategy.path().split('?')[0]],
-          navigationExtras
-        ).toString()
-      );
     }
+  }
+  populateUrlQueryParameters(): void {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    const catArr = [];
+    let facetString = '';
+    for (const key of Object.keys(this.privateFacetParams)) {
+      if (this.privateFacetParams[key].hasSelections === true) {
+        const cat = this.privateFacetParams[key];
+        const valArr = [];
+        for (const subkey of Object.keys(cat.params)) {
+          if (typeof cat.params[subkey] === 'boolean') {
+            valArr.push(subkey + '.' + cat.params[subkey]);
+          }
+        }
+        catArr.push(key + '*' + valArr.join('+'));
+      }
+    }
+    facetString = catArr.join(',');
+    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    navigationExtras.queryParams['structureSearchTerm'] = this.privateStructureSearchTerm;
+    navigationExtras.queryParams['sequenceSearchTerm'] = this.privateSequenceSearchTerm;
+    navigationExtras.queryParams['cutoff'] =  this.privateSearchCutoff;
+    navigationExtras.queryParams['type'] = this.privateSearchType;
+    navigationExtras.queryParams['seqType'] =  this.privateSearchSeqType;
+    navigationExtras.queryParams['order'] = this.order;
+    navigationExtras.queryParams['pageSize'] = this.pageSize;
+    navigationExtras.queryParams['pageIndex'] = this.pageIndex;
+    navigationExtras.queryParams['facets'] = facetString;
+    navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+    this.location.replaceState(
+      this.router.createUrlTree(
+        [this.locationStrategy.path().split('?')[0]],
+        navigationExtras
+      ).toString()
+    );
   }
 
   private populateFacets(facets: Array<Facet>): void {
