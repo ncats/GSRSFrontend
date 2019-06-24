@@ -246,6 +246,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     }
   }
+
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {}
