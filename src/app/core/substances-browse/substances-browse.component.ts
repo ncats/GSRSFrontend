@@ -12,7 +12,7 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 import { MatDialog, PageEvent } from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
@@ -21,9 +21,9 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
-import { searchSortValues} from '../utils/search-sort-values';
+import { searchSortValues } from '../utils/search-sort-values';
 import { Location, LocationStrategy } from '@angular/common';
-import {StructureService} from '@gsrs-core/structure';
+import { StructureService } from '@gsrs-core/structure';
 
 @Component({
   selector: 'app-substances-browse',
@@ -95,16 +95,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         this.privateSearchCutoff = Number(params.get('cutoff')) || 0;
         this.privateSearchSeqType = params.get('seq_type') || '';
         this.smiles = params.get('smiles') || '';
-          this.order = params.get('order') || '';
+        this.order = params.get('order') || '';
 
-        if ( params.get('pageSize')) {
-         this.pageSize =  parseInt(params.get('pageSize')) ;
+        if (params.get('pageSize')) {
+          this.pageSize = parseInt(params.get('pageSize'), null);
         }
-        if ( params.get('pageIndex')) {
-          this.pageIndex =  parseInt(params.get('pageIndex'));
+        if (params.get('pageIndex')) {
+          this.pageIndex = parseInt(params.get('pageIndex'), null);
         }
         this.facetString = params.get('facets') || '';
-       this.facetsFromParams();
+        this.facetsFromParams();
 
         this.searchSubstances();
       });
@@ -138,7 +138,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             hasSelections = true;
           }
         }
-        if (hasSelections === true ) {
+        if (hasSelections === true) {
           this.facetBuilder[category] = {'params' : params, hasSelections : true};
         }
       }
@@ -701,7 +701,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const binaryData = [];
     binaryData.push(response);
     const downloadLink = document.createElement('a');
-    downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: dataType}));
+    downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, { type: dataType }));
     downloadLink.setAttribute('download', filename);
     document.body.appendChild(downloadLink);
     downloadLink.click();
