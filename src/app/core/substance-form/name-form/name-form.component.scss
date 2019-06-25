@@ -1,0 +1,18 @@
+.name-form-container {
+    padding: 30px 10px 12px 10px;
+    position: relative;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .checkbox-container {
+        padding-bottom: 18px;
+    }
+
+    .name {
+        flex-grow: 2;
+    }
+}

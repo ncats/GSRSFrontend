@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   SubstanceDetail,
-  SubstanceReference
+  SubstanceReference,
+  SubstanceName
 } from '../substance/substance.model';
 import {
   SubstanceFormDefinition,
@@ -22,6 +23,7 @@ export class SubstanceFormService {
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private substanceReferencesEmitter = new Subject<Array<SubstanceReference>>();
   private domainReferences: { [uuid: string]: DomainReferences } = {};
+  private substanceNamesEmitter = new Subject<Array<SubstanceName>>();
   private subClass: string;
 
   constructor(
@@ -66,6 +68,12 @@ export class SubstanceFormService {
     });
   }
 
+  getSubstanceValue(key: string): any {
+    return this.substance[key];
+  }
+
+  // Definition Start
+
   get definition(): Observable<SubstanceFormDefinition> {
     setTimeout(() => {
       if (this.substance != null) {
@@ -103,6 +111,10 @@ export class SubstanceFormService {
 
     return definition;
   }
+
+  // Definition end
+
+  // References start
 
   get substanceReferences(): Observable<Array<SubstanceReference>> {
     setTimeout(() => {
@@ -158,10 +170,6 @@ export class SubstanceFormService {
     }
   }
 
-  getSubstanceValue(key: string): any {
-    return this.substance[key];
-  }
-
   deleteSubstanceReference(reference: SubstanceReference): void {
     Object.keys(this.domainReferences).forEach(key => {
       this.domainReferences[key].removeDomainReference(reference.uuid);
@@ -171,6 +179,26 @@ export class SubstanceFormService {
       this.substance.references.splice(subRefIndex, 1);
     }
   }
+
+  // References end
+
+  // Names start
+
+  get substanceNames(): Observable<Array<SubstanceName>> {
+    setTimeout(() => {
+      if (this.substance != null) {
+        this.substanceNamesEmitter.next(this.substance.names);
+      } else {
+        const subscription = this.substanceEmitter.subscribe(substance => {
+          this.substanceNamesEmitter.next(this.substance.names);
+          subscription.unsubscribe();
+        });
+      }
+    });
+    return this.substanceNamesEmitter.asObservable();
+  }
+
+  // Names end
 
   saveSubstance(): Observable<SubstanceFormResults> {
     return new Observable(observer => {
@@ -182,6 +210,7 @@ export class SubstanceFormService {
         this.substance = substance;
         this.definitionEmitter.next(this.getDefinition());
         this.substanceReferencesEmitter.next(this.substance.references);
+        this.substanceNamesEmitter.next(this.substance.names);
         observer.next(results);
       }, error => {
         results.isSuccessfull = false;

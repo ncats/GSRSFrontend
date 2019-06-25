@@ -24,6 +24,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
+import { NameFormComponent } from './name-form/name-form.component';
 
 @NgModule({
   imports: [
@@ -54,14 +55,16 @@ import { MatBadgeModule } from '@angular/material/badge';
     DomainReferencesComponent,
     ReferenceFormComponent,
     RefernceFormDialogComponent,
-    ReuseReferencesDialogComponent
+    ReuseReferencesDialogComponent,
+    NameFormComponent
   ],
   exports: [
     AccessManagerComponent,
     DomainReferencesComponent,
     ReferenceFormComponent,
     RefernceFormDialogComponent,
-    ReuseReferencesDialogComponent
+    ReuseReferencesDialogComponent,
+    NameFormComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,

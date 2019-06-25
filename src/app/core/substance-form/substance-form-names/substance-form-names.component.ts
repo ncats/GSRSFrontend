@@ -1,19 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormSectionBase } from '../substance-form-section-base';
+import { SubstanceName } from '@gsrs-core/substance/substance.model';
+import { SubstanceFormService } from '../substance-form.service';
 
 @Component({
   selector: 'app-substance-form-names',
   templateUrl: './substance-form-names.component.html',
   styleUrls: ['./substance-form-names.component.scss']
 })
-export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implements OnInit {
+export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
+  names: Array<SubstanceName>;
 
-  constructor() {
+  constructor(
+    private substanceFormService: SubstanceFormService
+  ) {
     super();
   }
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Names');
+  }
+
+  ngAfterViewInit() {
+    this.substanceFormService.substanceNames.subscribe(names => {
+      this.names = names;
+    });
   }
 
 }
