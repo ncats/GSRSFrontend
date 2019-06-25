@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormSectionBase } from '../substance-form-section-base';
-import { Observable, Subject } from 'rxjs';
 import { SubstanceReference } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,7 +21,7 @@ export class SubstanceFormReferencesComponent extends SubstanceFormSectionBase i
   }
 
   ngOnInit() {
-    this.menuLabelUpdate.emit('Substance References');
+    this.menuLabelUpdate.emit('References');
   }
 
   ngAfterViewInit() {

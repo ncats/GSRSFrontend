@@ -1,10 +1,7 @@
 <div class="flex-row">
-<h2>
-  References
-</h2>
-&nbsp;
-  <button mat-icon-button (click)="openReferenceFormDialog()">
-    <mat-icon svgIcon="add_circle_outline"></mat-icon>
+  <span class="middle-fill"></span>
+  <button mat-button (click)="openReferenceFormDialog()">
+    Add reference <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
 </div>
 <div *ngFor="let reference of references; last as isLast" [id]="reference.uuid" appScrollToTarget>

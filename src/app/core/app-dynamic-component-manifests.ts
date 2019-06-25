@@ -127,11 +127,15 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-definition',
     path: 'substance-form-definition',
     loadChildren: './substance-form/substance-form-definition/substance-form-definition.module#SubstanceFormDefinitionModule',
-  }
-  ,
+  },
   {
     componentId: 'substance-form-references',
     path: 'substance-form-references',
     loadChildren: './substance-form/substance-form-references/substance-form-references.module#SubstanceFormReferencesModule',
+  },
+  {
+    componentId: 'substance-form-names',
+    path: 'substance-form-names',
+    loadChildren: './substance-form/substance-form-names/substance-form-names.module#SubstanceFormNamesModule',
   }
 ];
