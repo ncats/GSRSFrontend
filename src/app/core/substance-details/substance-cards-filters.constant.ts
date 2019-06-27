@@ -30,10 +30,6 @@ export const substanceCardsFilters: Array<SubstanceCardFilter> = [
     {
       name: 'hasCredentials',
       filter: credentialsFilter
-    },
-    {
-      name: 'hasEdits',
-      filter: versionFilter
     }
 ];
 
@@ -169,10 +165,9 @@ export function substanceRelationshipsFilter(
   ): Observable<boolean> {
     return new Observable(observer => {
 
-      let isApproved = true;
-      if (filter.value != null) {
-        if (auth.hasRoles(filter.value) === true) {
-          console.log('logged in');
+      let isApproved = false;
+      if (filter.propertyToCheck != null) {
+        if (auth.hasRoles(filter.propertyToCheck) === true) {
           isApproved = true;
         }
       }
@@ -181,20 +176,3 @@ export function substanceRelationshipsFilter(
     });
 }
 
-
-export function versionFilter(
-  substance: SubstanceDetail,
-  filter: SubstanceCardFilterParameters,
-): Observable<boolean> {
-  return new Observable(observer => {
-
-    let isApproved = true;
-
-      if (this.substance.version !== '1') {
-        isApproved = true;
-        console.log('version not 1 ' + this.substance.version);
-      }
-    observer.next(isApproved);
-    observer.complete();
-  });
-}

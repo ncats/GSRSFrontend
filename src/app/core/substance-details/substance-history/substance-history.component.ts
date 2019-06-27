@@ -38,9 +38,7 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
   }
   ngOnInit() {
    this.substanceService.getEdits(this.substance.uuid).subscribe( response => {
-     console.log(response);
      this.versions = response;
-     console.log(this.versions);
    } );
 
   }
@@ -48,10 +46,10 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
   ngAfterViewInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
-      console.log('resub after history');
     });
   }
-  switchVersion(version) {
+
+  switchVersion(version): void {
     this.router.navigate(['/substances/' + this.substance.uuid + '/v/' + version]);
   }
 

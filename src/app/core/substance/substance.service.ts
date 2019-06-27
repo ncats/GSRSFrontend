@@ -3,7 +3,7 @@ import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, of, Observer, ArgumentOutOfRangeError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
-import { SubstanceSummary, SubstanceDetail } from './substance.model';
+import {SubstanceSummary, SubstanceDetail, SubstanceEdit} from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { StructurePostResponse } from '../utils/structure-post-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -393,28 +393,12 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<any>(url);
   }
 
-  getEdits(id: string) {
+  getEdits(id: string): Observable<Array<SubstanceEdit>> {
     const url = `${this.apiBaseUrl}substances(${id})/@edits`;
-    console.log(url);
-    return this.http.get<any>(url, {withCredentials: true});
+    return this.http.get<Array<SubstanceEdit>>(url, {withCredentials: true});
   }
 
-  getSubstanceDetails2(id: string, version?: string): Observable<SubstanceDetail> {
-    let url = `${this.apiBaseUrl}substances(${id})`;
-    let params = new HttpParams();
-
-
-
-      url = `${this.apiBaseUrl}substances(${id})`;
-      params = params.append('view', 'full');
-      const options = {
-        params: params
-      };
-      return this.http.get<SubstanceDetail>(url, options);
-
-  }
-
-  getSubstanceDetails(id: string, version?: string): any {
+  getSubstanceDetails(id: string, version?: string): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances(${id})`;
     let params = new HttpParams();
     params = params.append('view', 'full');
@@ -424,12 +408,10 @@ export class SubstanceService extends BaseHttpService {
     if (version) {
 
       const editurl = `${this.apiBaseUrl}substances(${id})/@edits`;
-      console.log(editurl);
 
      return this.http.get<any>(editurl, {withCredentials: true}).pipe(
         switchMap(response  => {
           response = response.filter(resp => resp.version === version);
-          console.log(response);
           return this.http.get<SubstanceDetail>(response[0].oldValue, options); } ));
 
     } else {

@@ -103,7 +103,7 @@
       </mat-form-field>
     <button *ngIf = "substance.version != versionControl.value" mat-button class = "mat-raised-button mat-primary view-version" (click) = 'changeVersion()'>View</button>
 </div>
-    <div *ngIf = "versionControl.value != latestVersion">
+    <div *ngIf = "versionControl.value != latestVersion" class = "indent" >
       This is an older version of this substance
     </div>
     <div class = "name-value" *ngIf = "references?.length > 0">
