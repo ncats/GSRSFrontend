@@ -1,5 +1,10 @@
 <div class="menu-container">
-  <button mat-button [matMenuTriggerFor]="accessMenu" [matTooltip]="tooltipMessage">
+  <button
+    mat-button
+    [matMenuTriggerFor]="accessMenu"
+    [matTooltip]="tooltipMessage"
+    (menuOpened)="menuOpened()"
+    (menuClosed)="menuClosed()">
     <mat-icon *ngIf="access.length">lock</mat-icon>
     <mat-icon *ngIf="!access.length">lock_open</mat-icon>
     <span>Access</span>

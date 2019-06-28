@@ -18,7 +18,7 @@
       <mat-checkbox [formControl]="publicDomainControl">Public Domain</mat-checkbox>
     </div>
     <div>
-      <app-access-manager (accessOut)="updateAccess($event)" [accessSync]="reference.access">
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="reference.access">
       </app-access-manager>
     </div>
   </div>
@@ -29,7 +29,7 @@
     <mat-form-field>
       <input matInput placeholder="Source Id" [formControl]="idControl" />
     </mat-form-field>
-    <app-tag-selector class="tags" (tagsOut)="updateTags($event)" [tagsSync]="reference.tags"
+    <app-tag-selector class="tags" (tagsUpdate)="updateTags($event)" [tags]="reference.tags"
       cvDomain="DOCUMENT_COLLECTION"></app-tag-selector>
   </div>
   <div class="form-row form-actions">

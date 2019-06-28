@@ -5,6 +5,6 @@
   </button>
 </div>
 <div *ngFor="let name of names; last as isLast">
-  <app-name-form [name]="name" (referenceDeleted)="deleteReference($event)"></app-name-form>
+  <app-name-form [name]="name" (priorityUpdate)="priorityUpdated($event)"></app-name-form>
   <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
 </div>

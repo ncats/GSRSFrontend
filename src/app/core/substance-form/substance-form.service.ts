@@ -99,7 +99,7 @@ export class SubstanceFormService {
   private getDefinition(): SubstanceFormDefinition {
 
     const definition: SubstanceFormDefinition = {
-      uuid: this.substance[this.subClass].uuid,
+      uuid: this.substance[this.subClass].uuid || this.substance[this.subClass].id,
       substanceClass: this.subClass,
       definitionType: this.substance.definitionType,
       definitionLevel: this.substance.definitionLevel,
@@ -142,7 +142,7 @@ export class SubstanceFormService {
     } else {
       let domain;
 
-      if (this.substance[this.subClass].uuid === uuid) {
+      if (this.substance[this.subClass].uuid === uuid || this.substance[this.subClass].id === uuid) {
         domain = this.substance[this.subClass];
       } else {
         for (let i = 0; i < referencesDomains.length; i++) {

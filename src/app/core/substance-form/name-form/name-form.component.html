@@ -1,7 +1,43 @@
-<div class="name-form-container">
+<div class="name-form-container" appExpandDetails>
   <div class="form-row">
+    <div class="radio-container">
+      <mat-radio-button name="priorityName" value="true" [checked]="name.displayName"
+        (change)="priorityUpdated($event)">
+        Priority
+      </mat-radio-button>
+    </div>
     <mat-form-field class="name">
       <input matInput placeholder="Name" [formControl]="nameControl" />
     </mat-form-field>
+    <mat-form-field class="name-type">
+      <mat-label>Type *</mat-label>
+      <mat-select [formControl]="nameTypeControl">
+        <mat-option *ngFor="let nameType of nameTypes" [value]="nameType.value">
+          {{nameType.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div>
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="name.access">
+      </app-access-manager>
+    </div>
+  </div>
+  <div appExpandableDetails>
+    <div class="form-row">
+      <app-tag-selector class="tags" (tagsUpdate)="updateLanguages($event)" [tags]="name.languages" cvDomain="LANGUAGE"
+        placeholder="Languages">
+      </app-tag-selector>
+      <app-tag-selector class="domains" (tagsUpdate)="updateDomains($event)" [tags]="name.domains"
+        cvDomain="NAME_DOMAIN" placeholder="Domains">
+      </app-tag-selector>
+      <app-tag-selector class="jurisdiction" (tagsUpdate)="updateJurisdiction($event)" [tags]="name.nameJurisdiction"
+        cvDomain="JURISDICTION" placeholder="Jurisdiction">
+      </app-tag-selector>
+    </div>
+    <div class="form-row">
+      <div class="references-container">
+        <app-domain-references [uuid]="name.uuid" #references></app-domain-references>
+      </div>
+    </div>
   </div>
 </div>

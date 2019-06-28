@@ -25,6 +25,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
 import { NameFormComponent } from './name-form/name-form.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { ExpandDetailsModule } from '../expand-details/expand-details.module';
 
 @NgModule({
   imports: [
@@ -47,7 +49,9 @@ import { NameFormComponent } from './name-form/name-form.component';
     MatDialogModule,
     MatTableModule,
     MatExpansionModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatRadioModule,
+    ExpandDetailsModule
   ],
   declarations: [
     AccessManagerComponent,

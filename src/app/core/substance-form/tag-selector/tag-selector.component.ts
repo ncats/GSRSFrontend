@@ -13,10 +13,9 @@ import { map, startWith } from 'rxjs/operators';
 })
 export class TagSelectorComponent implements OnInit, AfterViewInit {
   @Input() cvDomain: string;
-  @Input() tagsAsync?: Observable<Array<string>>;
-  @Input() tagsSync?: Array<string>;
-  @Output() tagsOut = new EventEmitter<Array<string>>();
-  tags: Array<string> = [];
+  @Output() tagsUpdate = new EventEmitter<Array<string>>();
+  @Input() placeholder = 'Tags';
+  privateTags: Array<string> = [];
   allOptions: Array<VocabularyTerm>;
   filteredOptions: Observable<Array<VocabularyTerm>>;
   tagControl = new FormControl();
@@ -42,16 +41,16 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
           startWith(null),
           map((tag: string | null) => tag ? this._filter(tag) : this.allOptions.filter(option => this.tags.indexOf(option.value) === -1)));
       });
-      if (this.tagsAsync) {
-        this.tagsAsync.subscribe(tags => {
-          this.tags = tags;
-        });
-      }
-
-      if (this.tagsSync) {
-        this.tags = this.tagsSync;
-      }
     });
+  }
+
+  @Input()
+  set tags(tags: Array<string>) {
+    this.privateTags = tags;
+  }
+
+  get tags(): Array<string> {
+    return this.privateTags;
   }
 
   clearTagsInput(): void {
@@ -64,14 +63,14 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
     if (index > -1) {
       this.tags.splice(index, 1);
     }
-    this.tagsOut.emit(this.tags);
+    this.tagsUpdate.emit(this.tags);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.tags.push(event.option.value);
     this.tagInput.nativeElement.value = '';
     this.tagControl.setValue(null);
-    this.tagsOut.emit(this.tags);
+    this.tagsUpdate.emit(this.tags);
   }
 
   private _filter(value: string): Array<VocabularyTerm> {

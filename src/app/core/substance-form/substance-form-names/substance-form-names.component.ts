@@ -27,4 +27,12 @@ export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implem
     });
   }
 
+  priorityUpdated(updatedName: SubstanceName): void {
+    this.names.forEach(name => {
+      if (name.uuid !== updatedName.uuid) {
+        name.displayName = false;
+      }
+    });
+  }
+
 }

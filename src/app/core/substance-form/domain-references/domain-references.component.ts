@@ -17,7 +17,6 @@ import {  MatTableDataSource  } from '@angular/material/table';
   styleUrls: ['./domain-references.component.scss']
 })
 export class DomainReferencesComponent implements OnInit {
-  @Input() uuid: Observable<string>;
   domainReferences: DomainReferences;
   documentTypesDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
   displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete'];
@@ -31,14 +30,19 @@ export class DomainReferencesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.uuid.subscribe(uuid => {
+    this.getVocabularies();
+  }
+
+  @Input()
+  set uuid(uuid: string) {
+    console.log(uuid);
+    if (uuid != null) {
       this.domainReferences = this.substanceFormService.getDomainReferences(uuid);
       this.tableData = new MatTableDataSource<SubstanceReference>(this.domainReferences.references);
       this.domainReferences.domainReferencesUpdated.subscribe(() => {
         this.tableData.data = this.domainReferences.references;
       });
-    });
-    this.getVocabularies();
+    }
   }
 
   getVocabularies(): void {

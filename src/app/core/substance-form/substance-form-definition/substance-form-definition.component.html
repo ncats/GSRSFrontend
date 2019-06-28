@@ -42,12 +42,12 @@
       <mat-checkbox [formControl]="deprecatedControl" (change)="updateDeprecate($event)">Deprecated</mat-checkbox>
     </div>
     <div>
-      <app-access-manager (accessOut)="updateAccess($event)" [accessAsync]="accessEmitter"></app-access-manager>
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access"></app-access-manager>
     </div>
   </div>
   <div class="substance-form-row" *ngIf="definition.substanceClass != 'concept'">
     <div class="references-container">
-      <app-domain-references [uuid]="uuidEmitter" #references></app-domain-references>
+      <app-domain-references [uuid]="definition.uuid" #references></app-domain-references>
     </div>
   </div>
 </div>

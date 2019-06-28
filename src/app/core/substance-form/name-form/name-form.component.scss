@@ -8,11 +8,20 @@
     justify-content: space-between;
     align-items: flex-end;
 
-    .checkbox-container {
+    .checkbox-container, .radio-container {
         padding-bottom: 18px;
     }
 
-    .name {
-        flex-grow: 2;
+    .radio-container {
+        padding-right: 15px;
+    }
+
+    .name, .tags, .domains {
+        flex-grow: 1;
+        padding-right: 15px;
+    }
+
+    .jurisdiction {
+        flex-grow: 1;
     }
 }
