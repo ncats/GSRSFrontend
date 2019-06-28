@@ -1,10 +1,23 @@
 <div class="name-form-container" appExpandDetails>
+  <div *ngIf="isDeleted" class="notification-backdrop">
+    Deleted
+  </div>
   <div class="form-row">
-    <div class="radio-container">
-      <mat-radio-button name="priorityName" value="true" [checked]="name.displayName"
-        (change)="priorityUpdated($event)">
-        Priority
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete name" (click)="deleteName()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+    <div class="radio-container column-radio">
+      <mat-radio-button name="priorityName" value="true" [checked]="name.displayName" (change)="priorityUpdated($event)"
+        matTooltip="Priority Name">
+        PN
       </mat-radio-button>
+    </div>
+    <div class="checkbox-container column-checkbox">
+      <mat-checkbox (change)="updatePreferred($event)" [checked]="name.preferred" matTooltip="Additional Listing Name">
+        AL
+      </mat-checkbox>
     </div>
     <mat-form-field class="name">
       <input matInput placeholder="Name" [formControl]="nameControl" />

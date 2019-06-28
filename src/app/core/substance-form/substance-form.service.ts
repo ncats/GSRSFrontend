@@ -198,6 +198,14 @@ export class SubstanceFormService {
     return this.substanceNamesEmitter.asObservable();
   }
 
+  deleteSubstanceName(name: SubstanceName): void {
+    const subNameIndex = this.substance.names.findIndex(subName => name.uuid === subName.uuid);
+    if (subNameIndex > -1) {
+      this.substance.names.splice(subNameIndex, 1);
+      this.substanceNamesEmitter.next(this.substance.names);
+    }
+  }
+
   // Names end
 
   saveSubstance(): Observable<SubstanceFormResults> {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { DomainReferences } from './domain-references';
 import { SubstanceFormService } from '../substance-form.service';
@@ -22,11 +22,13 @@ export class DomainReferencesComponent implements OnInit {
   displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete'];
   tableData: MatTableDataSource<SubstanceReference>;
   isExpanded = false;
+  @Output() scrolledToReferences = new EventEmitter<void>();
 
   constructor(
     private cvService: ControlledVocabularyService,
     private substanceFormService: SubstanceFormService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private element: ElementRef
   ) { }
 
   ngOnInit() {
@@ -35,7 +37,6 @@ export class DomainReferencesComponent implements OnInit {
 
   @Input()
   set uuid(uuid: string) {
-    console.log(uuid);
     if (uuid != null) {
       this.domainReferences = this.substanceFormService.getDomainReferences(uuid);
       this.tableData = new MatTableDataSource<SubstanceReference>(this.domainReferences.references);
@@ -95,6 +96,18 @@ export class DomainReferencesComponent implements OnInit {
 
   removeReference(referenceUuid: string): void {
     this.domainReferences.removeDomainReference(referenceUuid);
+  }
+
+  panelOpened(): void {
+    this.isExpanded = true;
+    const event: Event = new Event('focusin', { bubbles: true, cancelable: true} );
+    this.element.nativeElement.dispatchEvent(event);
+  }
+
+  panelClosed(): void {
+    this.isExpanded = false;
+    const event: Event = new Event('focusout', { bubbles: true, cancelable: true} );
+    this.element.nativeElement.dispatchEvent(event);
   }
 
 }

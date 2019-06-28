@@ -77,6 +77,7 @@ export class ExpandDetailsDirective implements AfterViewInit {
   private collapseDetails(): void {
     this.renderer.addClass(this.expandableDetailsElement, 'details-collapsed');
     this.renderer.removeClass(this.expandableDetailsElement, 'details-expanded');
+    this.focused = 0;
     this.isExpanded = false;
   }
 }

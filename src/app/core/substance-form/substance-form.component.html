@@ -8,7 +8,7 @@
   <div class="scrollable-container">
     <div class="cards-container">
       <mat-accordion multi="true">
-        <mat-expansion-panel [expanded]="index === 0" *ngFor="let section of formSections; index as index" [id]="section">
+        <mat-expansion-panel [expanded]="index === 0 || isLast" *ngFor="let section of formSections; index as index; last as isLast" [id]="section.dynamicComponentName">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <h2>{{section.menuLabel}}</h2>

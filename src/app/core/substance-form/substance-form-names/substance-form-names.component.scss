@@ -5,3 +5,16 @@
 .mat-divider {
     border-top-color: rgba(0, 0, 0, .5);
 }
+
+.name {
+
+    &:nth-child(odd) {
+        background-color: rgba(242, 242, 242, .75);
+    }
+
+    ::ng-deep {
+        .mat-expansion-panel, .mat-table {
+            background-color: transparent;
+        }
+    }
+}

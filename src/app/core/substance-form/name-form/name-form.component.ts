@@ -4,6 +4,7 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-name-form',
@@ -13,9 +14,11 @@ import { MatRadioChange } from '@angular/material/radio';
 export class NameFormComponent implements OnInit {
   @Input() name: SubstanceName;
   @Output() priorityUpdate = new EventEmitter<SubstanceName>();
+  @Output() nameDeleted = new EventEmitter<SubstanceName>();
   nameControl: FormControl;
   nameTypes: Array<VocabularyTerm> = [];
   nameTypeControl: FormControl;
+  isDeleted = false;
 
   constructor(
     private cvService: ControlledVocabularyService
@@ -49,7 +52,6 @@ export class NameFormComponent implements OnInit {
   }
 
   updateLanguages(languages: Array<string>): void {
-    console.log(languages);
     this.name.languages = languages;
   }
 
@@ -61,4 +63,14 @@ export class NameFormComponent implements OnInit {
     this.name.nameJurisdiction = jurisdiction;
   }
 
+  updatePreferred(event: MatCheckboxChange): void {
+    this.name.preferred = event.checked;
+  }
+
+  deleteName(): void {
+    this.isDeleted = true;
+    setTimeout(() => {
+      this.nameDeleted.emit(this.name);
+    }, 500);
+  }
 }

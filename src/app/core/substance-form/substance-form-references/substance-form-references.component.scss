@@ -5,3 +5,10 @@
 .mat-divider {
     border-top-color: rgba(0, 0, 0, .5);
 }
+
+.reference {
+
+    &:nth-child(odd) {
+        background-color: rgba(242, 242, 242, .75);
+    }
+}

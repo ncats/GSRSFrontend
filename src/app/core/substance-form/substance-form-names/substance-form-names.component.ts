@@ -35,4 +35,9 @@ export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implem
     });
   }
 
+  deleteName(name: SubstanceName): void {
+    console.log(name);
+    this.substanceFormService.deleteSubstanceName(name);
+  }
+
 }

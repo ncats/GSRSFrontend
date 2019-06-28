@@ -1,6 +1,6 @@
 <div class="domain-references-content">
   <mat-accordion>
-    <mat-expansion-panel hideToggle="true" (closed)="isExpanded = false" (opened)="isExpanded = true">
+    <mat-expansion-panel hideToggle="true" (closed)="panelClosed()" (opened)="panelOpened()">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <h4 class="title" matTooltip="Expand references">
