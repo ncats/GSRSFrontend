@@ -1,4 +1,4 @@
-{"apiBaseUrl": "http://localhost:9000/ginas/app/",
+{
   "substanceDetailsCards": [{
       "card": "substance-overview",
       "title": "overview"
@@ -25,14 +25,6 @@
           "propertyToCheck": "structure"
         }
       ]
-    },
-    {
-      "card": "substance-names",
-      "title": "names",
-      "filters": [{
-        "filterName": "exists",
-        "propertyToCheck": "names"
-      }]
     },
     {
       "card": "substance-codes",
@@ -328,6 +320,8 @@
       "card": "substance-history",
       "title": "history",
       "filters": [{
+        "filterName": "hasCredentials",
+        "propertyToCheck": "admin"
       }]
     }
   ],

@@ -13,20 +13,6 @@
       }]
     },
     {
-      "card": "structure-details",
-      "title": "structure",
-      "filters": [{
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "chemical|polymer"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "structure"
-        }
-      ]
-    },
-    {
       "card": "substance-names",
       "title": "names",
       "filters": [{
@@ -322,6 +308,14 @@
       "filters": [{
         "filterName": "exists",
         "propertyToCheck": "properties"
+      }]
+    },
+    {
+      "card": "substance-history",
+      "title": "history",
+      "filters": [{
+        "filterName": "hasCredentials",
+        "propertyToCheck": "admin"
       }]
     }
   ],
