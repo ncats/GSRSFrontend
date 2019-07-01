@@ -60,13 +60,9 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.loadingService.setLoading(true);
     this.id = this.activatedRoute.snapshot.params['id'];
     this.version = this.activatedRoute.snapshot.params['version'];
-    console.log('det oninit called');
-
-      console.log(this.version);
      this.checkVersion().subscribe((result: number) => {this.latestVersion = result;
        this.activeRoute.params.subscribe(routeParams => {
          this.version = routeParams.version;
-         console.log(routeParams.version);
          if (this.version) {
            if (this.latestVersion > this.version) {
              this.getSubstanceDetails(this.id, this.version.toString());
@@ -76,8 +72,6 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
          } else {
            this.getSubstanceDetails(this.id);
          }
-         console.log('details after view' + this.latestVersion + ' - ' + this.version );
-
        });
 
      });

@@ -54,7 +54,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       this.getVersion();
-      console.log('resub after');
     });
   }
 
