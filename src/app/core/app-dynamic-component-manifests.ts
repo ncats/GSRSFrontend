@@ -122,8 +122,17 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-mixture-source',
     path: 'substance-mixture-source',
     loadChildren: './substance-details/substance-mixture-source/substance-mixture-source.module#SubstanceMixtureSourceModule',
-  }
-  ,
+  },
+  {
+    componentId: 'substance-form-definition',
+    path: 'substance-form-definition',
+    loadChildren: './substance-form/substance-form-definition/substance-form-definition.module#SubstanceFormDefinitionModule',
+  },
+  {
+    componentId: 'substance-form-references',
+    path: 'substance-form-references',
+    loadChildren: './substance-form/substance-form-references/substance-form-references.module#SubstanceFormReferencesModule',
+  },
   {
     componentId: 'substance-history',
     path: 'substance-history',

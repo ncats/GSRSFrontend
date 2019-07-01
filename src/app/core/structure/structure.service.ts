@@ -28,6 +28,11 @@ export class StructureService {
     return this.http.get(url, {responseType: 'text'});
   }
 
+  downloadMolfile(id: string): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}img/${id}.mol`;
+    return this.http.get(url, {responseType: 'blob' as 'json'});
+  }
+
   getInchi(id: string): Observable<string> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})structure!$inchikey()`;
     return this.http.get(url, {responseType: 'text'});

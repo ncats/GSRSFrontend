@@ -12,7 +12,7 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 import { MatDialog, PageEvent } from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import { SafeUrl } from '@angular/platform-browser';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
@@ -22,6 +22,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
 import { searchSortValues} from '../utils/search-sort-values';
+import {StructureService} from '@gsrs-core/structure';
 
 @Component({
   selector: 'app-substances-browse',
@@ -65,7 +66,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private dialog: MatDialog,
     private topSearchService: SubstanceTextSearchService,
     public gaService: GoogleAnalyticsService,
-    public authService: AuthService
+    public authService: AuthService,
+    private sanitizer: DomSanitizer,
+    private structureService: StructureService
   ) {
     this.privateFacetParams = {};
   }
@@ -159,6 +162,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         .subscribe(pagingResponse => {
           this.isError = false;
           this.substances = pagingResponse.content;
+          console.log(this.substances);
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.populateFacets(pagingResponse.facets);
@@ -590,6 +594,29 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     const eventValue = event.checked ? 1 : 0;
     this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
+  }
+
+  getMol(id: string, filename: string): void {
+    this.structureService.downloadMolfile(id).subscribe(response => {
+      this.downloadFile(response, filename);
+    });
+  }
+  getFasta(id: string, filename: string): void {
+    this.substanceService.getFasta(id).subscribe(response => {
+      console.log(response);
+      this.downloadFile(response, filename);
+    });
+  }
+
+  downloadFile(response: any, filename: string): void {
+    const dataType = response.type;
+    const binaryData = [];
+    binaryData.push(response);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: dataType}));
+    downloadLink.setAttribute('download', filename);
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
   }
 
 }

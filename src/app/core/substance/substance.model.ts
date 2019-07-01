@@ -209,7 +209,6 @@ export interface SubstanceReference extends SubstanceBase {
     url?: string;
     _self?: string;
     documentDate?: number;
-    lastEdited?: number;
 }
 
 export interface SubstanceModifications extends SubstanceBase {

@@ -6,54 +6,70 @@ import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subject } from 'rxjs';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { SubstanceFormService } from '../substance-form.service';
+import { SubstanceFormDefinition } from '../substance-form.model';
 
 @Component({
-  selector: 'app-substance-form-overview',
-  templateUrl: './substance-form-overview.component.html',
-  styleUrls: ['./substance-form-overview.component.scss']
+  selector: 'app-substance-form-definition',
+  templateUrl: './substance-form-definition.component.html',
+  styleUrls: ['./substance-form-definition.component.scss']
 })
-export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
+export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
   definitionTypes: Array<VocabularyTerm>;
   definitionLevels: Array<VocabularyTerm>;
   definitionTypeControl = new FormControl();
   definitionLevelControl = new FormControl();
-  primarySubstanceErrorEmitter: Observable<string>;
-  private primarySubstanceErrorSubscriber: Subscriber<string>;
+  deprecatedControl = new FormControl();
+  private primarySubstanceErrorSubject = new Subject<string>();
+  primarySubstanceErrorEmitter = this.primarySubstanceErrorSubject.asObservable();
   primarySubstance?: SubstanceSummary;
   showPrimarySubstanceOptions = false;
+  private accessSubject = new Subject<Array<string>>();
+  accessEmitter = this.accessSubject.asObservable();
+  definition: SubstanceFormDefinition;
+  private uuidSubject = new Subject<string>();
+  uuidEmitter = this.uuidSubject.asObservable();
 
   constructor(
     private cvService: ControlledVocabularyService,
-    public substanceService: SubstanceService
+    public substanceService: SubstanceService,
+    private substanceFormService: SubstanceFormService
   ) {
     super();
   }
 
   ngOnInit() {
-    this.primarySubstanceErrorEmitter = new Observable(observer => {
-      this.primarySubstanceErrorSubscriber = observer;
-    });
+    this.menuLabelUpdate.emit('Definition');
     this.getVocabularies();
   }
 
   ngAfterViewInit() {
-    this.substanceUpdated.subscribe(substance => {
-      this.substance = substance;
-      const definitionType = this.substance && this.substance.definitionType || 'primary';
+    this.substanceFormService.definition.subscribe(definition => {
+      this.definition = definition;
+
+      setTimeout(() => {
+        this.accessSubject.next(this.definition.access);
+        this.uuidSubject.next(definition.uuid);
+      });
+
+      const definitionType = this.definition && this.definition.definitionType || 'primary';
       this.definitionTypeControl.setValue(definitionType);
-      const definitionLevel = this.substance && this.substance.definitionLevel || 'complete';
+      const definitionLevel = this.definition && this.definition.definitionLevel || 'complete';
       this.definitionLevelControl.setValue(definitionLevel);
 
-      if (this.substance.definitionType === 'ALTERNATIVE') {
+      this.deprecatedControl.setValue(this.definition.deprecated || false);
+
+      if (this.definition.definitionType === 'ALTERNATIVE') {
         this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
           const type = vocabularyResponse['RELATIONSHIP_TYPE']
             && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE']
             && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE'].value
             || null;
 
-          if (type && this.substance.relationships && this.substance.relationships.length) {
-            const primarySubstance = this.substance.relationships.find(relationship => relationship.type === type);
+          if (type && this.definition.relationships && this.definition.relationships.length) {
+            const primarySubstance = this.definition.relationships.find(relationship => relationship.type === type);
             if (primarySubstance != null) {
               this.substanceService.getSubstanceSummary(primarySubstance.relatedSubstance.refuuid).subscribe(response => {
                 this.primarySubstance = response;
@@ -73,19 +89,21 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
   }
 
   updateDefinitionType(event: MatSelectChange): void {
-    this.substance.definitionType = event.value;
-    if (this.substance.definitionType === 'PRIMARY' && this.substance.relationships != null && this.substance.relationships.length) {
-      const indexToRemove = this.substance.relationships
+    this.definition.definitionType = event.value;
+    if (this.definition.definitionType === 'PRIMARY' && this.definition.relationships != null && this.definition.relationships.length) {
+      const indexToRemove = this.definition.relationships
         .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
       if (indexToRemove > -1) {
-        this.substance.relationships.splice(indexToRemove, 1);
+        this.definition.relationships.splice(indexToRemove, 1);
       }
       this.primarySubstance = null;
     }
+    this.substanceFormService.updateDefinition(this.definition);
   }
 
   updateDefinitionLevel(event: MatSelectChange): void {
-    this.substance.definitionLevel = event.value;
+    this.definition.definitionLevel = event.value;
+    this.substanceFormService.updateDefinition(this.definition);
   }
 
   processSubstanceSearch(searchValue: string): void {
@@ -98,8 +116,8 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
     this.substanceService.getSubstanceSummaries(searchStr, true).subscribe(response => {
       if (response.content && response.content.length) {
         this.primarySubstance = response.content[0];
-        if (this.substance.relationships == null || Object.prototype.toString.call(this.substance.relationships) !== '[object Array]') {
-          this.substance.relationships = [];
+        if (this.definition.relationships == null || Object.prototype.toString.call(this.definition.relationships) !== '[object Array]') {
+          this.definition.relationships = [];
         }
         this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
           const relationship: SubstanceRelationship = {
@@ -115,21 +133,33 @@ export class SubstanceFormOverviewComponent extends SubstanceFormSectionBase imp
               && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE'].value
               || ''
           };
-          this.substance.relationships.push(relationship);
+          this.definition.relationships.push(relationship);
+          this.substanceFormService.updateDefinition(this.definition);
         });
-        this.primarySubstanceErrorSubscriber.next('');
+        this.primarySubstanceErrorSubject.next('');
       } else {
         setTimeout(() => {
-          this.primarySubstanceErrorSubscriber.next('No substances found');
+          this.primarySubstanceErrorSubject.next('No substances found');
         });
       }
     });
   }
 
   editPrimarySubstance(): void {
-    const indexToRemove = this.substance.relationships
+    const indexToRemove = this.definition.relationships
       .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
-    this.substance.relationships.splice(indexToRemove, 1);
+    this.definition.relationships.splice(indexToRemove, 1);
     this.primarySubstance = null;
+    this.substanceFormService.updateDefinition(this.definition);
+  }
+
+  updateAccess(access: Array<string>): void {
+    this.definition.access = access;
+    this.substanceFormService.updateDefinition(this.definition);
+  }
+
+  updateDeprecate(event: MatCheckboxChange): void {
+    this.definition.deprecated = event.checked;
+    this.substanceFormService.updateDefinition(this.definition);
   }
 }

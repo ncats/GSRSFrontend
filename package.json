@@ -58,6 +58,7 @@
     "jsdraw-wrapper": "file:dist/jsdraw-wrapper/jsdraw-wrapper-0.0.1.tgz",
     "ketcher-wrapper": "file:dist/ketcher-wrapper/ketcher-wrapper-0.0.1.tgz",
     "lodash": "4.17.10",
+    "reflect-metadata": "0.1.13",
     "rxjs": "6.0.0",
     "ts-loader": "4.5.0",
     "web-animations-js": "2.3.1",

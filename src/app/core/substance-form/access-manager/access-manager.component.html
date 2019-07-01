@@ -1,4 +1,5 @@
-<button mat-button [matMenuTriggerFor]="accessMenu" [matTooltip]="tooltipMessage">
+<div class="menu-container">
+  <button mat-button [matMenuTriggerFor]="accessMenu" [matTooltip]="tooltipMessage">
     <mat-icon *ngIf="access.length">lock</mat-icon>
     <mat-icon *ngIf="!access.length">lock_open</mat-icon>
     <span>Access</span>
@@ -12,3 +13,4 @@
       </div>
     </form>
   </mat-menu>
+</div>

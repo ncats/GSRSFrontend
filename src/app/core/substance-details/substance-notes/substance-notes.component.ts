@@ -3,6 +3,7 @@ import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceNote } from '../../substance/substance.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import  { ReadMoreComponent } from '@gsrs-core/substance-details/substance-notes/read-more/read-more.component';
 
 @Component({
   selector: 'app-substance-notes',

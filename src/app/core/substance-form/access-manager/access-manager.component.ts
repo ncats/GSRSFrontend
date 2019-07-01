@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Observable } from 'rxjs';
-import { SubstanceDetail } from '../../substance/substance.model';
 
 @Component({
   selector: 'app-access-manager',
@@ -14,7 +13,9 @@ import { SubstanceDetail } from '../../substance/substance.model';
 export class AccessManagerComponent implements OnInit, AfterViewInit {
   accessOptions: Array<VocabularyTerm>;
   access: Array<string> = [];
-  @Input('substanceUpdated') substanceUpdated: Observable<SubstanceDetail>;
+  @Input() accessAsync?: Observable<Array<string>>;
+  @Input() accessSync?: Array<string>;
+  @Output() accessOut = new EventEmitter<Array<string>>();
   tooltipMessage: string;
   accessFormGroup = new FormGroup({});
 
@@ -22,14 +23,22 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
     private cvService: ControlledVocabularyService
   ) { }
 
-  ngOnInit() {
-    this.substanceUpdated.subscribe(substance => {
-      this.access = substance.access;
-      this.getVocabularies();
+  ngOnInit() { }
+
+  ngAfterViewInit() {
+    if (this.accessAsync) {
+      this.accessAsync.subscribe(access => {
+        this.access = access;
+        this.getVocabularies();
+      });
+    }
+    setTimeout(() => {
+      if (this.accessSync) {
+        this.access = this.accessSync;
+        this.getVocabularies();
+      }
     });
   }
-
-  ngAfterViewInit() {}
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('ACCESS_GROUP').subscribe(response => {
@@ -100,6 +109,8 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
         this.tooltipMessage += 'public';
       }
     }
+
+    this.accessOut.emit(this.access);
   }
 
 }
