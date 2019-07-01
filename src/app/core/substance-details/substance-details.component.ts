@@ -147,7 +147,6 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   getSubstanceDetails(id: string, version?: string) {
     this.substanceService.getSubstanceDetails(id, version).subscribe(response => {
       if (response) {
-        console.log(response);
         this.substance = response;
         this.substanceUpdated.next(response);
         this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
