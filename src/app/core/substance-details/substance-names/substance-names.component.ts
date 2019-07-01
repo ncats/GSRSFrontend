@@ -35,23 +35,22 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
         this.names = this.substance.names;
         this.filtered = this.substance.names;
         this.countUpdate.emit(this.names.length);
-        this.pageChange();
+        this.searchControl.valueChanges.subscribe(value => {
+          this.filterList(value, this.names, this.analyticsEventCategory);
+        }, error => {
+          console.log(error);
+        });
+        this.getVocabularies();
+
+        // move display name to top
+        this.filtered = this.names.slice().sort((a, b) => {
+          return (b.displayName === true ? 1 : -1);
+        });
       }
-      });
-    if (this.substance != null && this.substance.names != null) {
-      this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.names, this.analyticsEventCategory);
-      }, error => {
-        console.log(error);
+
+      this.pageChange();
       });
 
-      this.getVocabularies();
-    }
-    // move display name to top
-    this.filtered = this.names.slice().sort((a, b) => {
-      return (b.displayName === true ? 1 : -1);
-    });
-    this.pageChange();
   }
 
 
