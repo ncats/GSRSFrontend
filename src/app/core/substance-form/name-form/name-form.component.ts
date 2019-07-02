@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SubstanceName } from '../../substance/substance.model';
+import { SubstanceName, SubstanceNameOrg } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
@@ -12,7 +12,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./name-form.component.scss']
 })
 export class NameFormComponent implements OnInit {
-  @Input() name: SubstanceName;
+  private privateName: SubstanceName;
   @Output() priorityUpdate = new EventEmitter<SubstanceName>();
   @Output() nameDeleted = new EventEmitter<SubstanceName>();
   nameControl: FormControl;
@@ -25,6 +25,12 @@ export class NameFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getVocabularies();
+  }
+
+  @Input()
+  set name(name: SubstanceName) {
+    this.privateName = name;
     this.nameControl = new FormControl(this.name.name);
     this.nameControl.valueChanges.subscribe(value => {
       this.name.name = value;
@@ -33,7 +39,10 @@ export class NameFormComponent implements OnInit {
     this.nameTypeControl.valueChanges.subscribe(value => {
       this.name.type = value;
     });
-    this.getVocabularies();
+  }
+
+  get name(): SubstanceName {
+    return this.privateName;
   }
 
   getVocabularies(): void {
@@ -72,5 +81,12 @@ export class NameFormComponent implements OnInit {
     setTimeout(() => {
       this.nameDeleted.emit(this.name);
     }, 500);
+  }
+
+  getNameOrgs(name: SubstanceName): Array<SubstanceNameOrg> {
+    if (!name.nameOrgs) {
+      name.nameOrgs = [];
+    }
+    return name.nameOrgs as Array<SubstanceNameOrg>;
   }
 }

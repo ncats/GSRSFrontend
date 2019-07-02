@@ -27,6 +27,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { NameFormComponent } from './name-form/name-form.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { ExpandDetailsModule } from '../expand-details/expand-details.module';
+import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import { ExpandDetailsModule } from '../expand-details/expand-details.module';
     ReferenceFormComponent,
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
-    NameFormComponent
+    NameFormComponent,
+    NameOrgsComponent
   ],
   exports: [
     AccessManagerComponent,

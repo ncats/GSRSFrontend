@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { DomainReferences } from './domain-references';
 import { SubstanceFormService } from '../substance-form.service';
-import { Observable } from 'rxjs';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,7 +21,6 @@ export class DomainReferencesComponent implements OnInit {
   displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete'];
   tableData: MatTableDataSource<SubstanceReference>;
   isExpanded = false;
-  @Output() scrolledToReferences = new EventEmitter<void>();
 
   constructor(
     private cvService: ControlledVocabularyService,
