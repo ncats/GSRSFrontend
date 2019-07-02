@@ -12,7 +12,7 @@ import { AppNotification, NotificationType } from '../main-notification/notifica
 import { MatDialog, PageEvent } from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
 import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
@@ -21,8 +21,9 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
-import { searchSortValues} from '../utils/search-sort-values';
-import {StructureService} from '@gsrs-core/structure';
+import { searchSortValues } from '../utils/search-sort-values';
+import { Location, LocationStrategy } from '@angular/common';
+import { StructureService } from '@gsrs-core/structure';
 
 @Component({
   selector: 'app-substances-browse',
@@ -47,6 +48,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   @ViewChild('matSideNavInstance') matSideNav: MatSidenav;
   hasBackdrop = false;
   view = 'cards';
+  facetString: string;
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes'];
   public smiles: string;
   private argsHash?: number;
@@ -54,6 +56,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public order: string;
   public sortValues = searchSortValues;
   showAudit: boolean;
+  public facetBuilder: SubstanceFacetParam;
+  searchText: string[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -67,10 +71,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private topSearchService: SubstanceTextSearchService,
     public gaService: GoogleAnalyticsService,
     public authService: AuthService,
+    private location: Location,
+    private locationStrategy: LocationStrategy,
     private sanitizer: DomSanitizer,
     private structureService: StructureService
   ) {
     this.privateFacetParams = {};
+    this.facetBuilder = {};
   }
 
   ngOnInit() {
@@ -88,6 +95,17 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         this.privateSearchCutoff = Number(params.get('cutoff')) || 0;
         this.privateSearchSeqType = params.get('seq_type') || '';
         this.smiles = params.get('smiles') || '';
+        this.order = params.get('order') || '';
+
+        if (params.get('pageSize')) {
+          this.pageSize = parseInt(params.get('pageSize'), null);
+        }
+        if (params.get('pageIndex')) {
+          this.pageIndex = parseInt(params.get('pageIndex'), null);
+        }
+        this.facetString = params.get('facets') || '';
+        this.facetsFromParams();
+
         this.searchSubstances();
       });
   }
@@ -99,6 +117,34 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.matSideNav.closedStart.subscribe(() => {
       this.utilsService.handleMatSidenavClose();
     });
+  }
+
+  facetsFromParams() {
+    if (this.facetString !== '') {
+      const categoryArray = this.facetString.split(',');
+      for (let i = 0; i < (categoryArray.length); i++) {
+        const categorySplit = categoryArray[i].split('*');
+        const category = categorySplit[0];
+        const fieldsArr = categorySplit[1].split('+');
+        const params: { [facetValueLabel: string]: boolean } = {};
+        let hasSelections = false;
+        for (let j = 0; j < fieldsArr.length; j++) {
+          const field = fieldsArr[j].split('.');
+          if (field[1] === 'true') {
+            params[field[0]] = true;
+            hasSelections = true;
+          } else if (field[1] === 'false') {
+            params[field[0]] = false;
+            hasSelections = true;
+          }
+        }
+        if (hasSelections === true) {
+          this.facetBuilder[category] = {'params' : params, hasSelections : true};
+        }
+      }
+      this.privateFacetParams = this.facetBuilder;
+    }
+
   }
 
   ngOnDestroy() { }
@@ -162,7 +208,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         .subscribe(pagingResponse => {
           this.isError = false;
           this.substances = pagingResponse.content;
-          console.log(this.substances);
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.populateFacets(pagingResponse.facets);
@@ -197,7 +242,48 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.isLoading = false;
           this.loadingService.setLoading(this.isLoading);
         });
+        this.populateUrlQueryParameters();
+
     }
+  }
+
+  populateUrlQueryParameters(): void {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    const catArr = [];
+    let facetString = '';
+    for (const key of Object.keys(this.privateFacetParams)) {
+      if (this.privateFacetParams[key].hasSelections === true) {
+        const cat = this.privateFacetParams[key];
+        const valArr = [];
+        for (const subkey of Object.keys(cat.params)) {
+          if (typeof cat.params[subkey] === 'boolean') {
+            valArr.push(subkey + '.' + cat.params[subkey]);
+          }
+        }
+        catArr.push(key + '*' + valArr.join('+'));
+      }
+    }
+    facetString = catArr.join(',');
+    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    navigationExtras.queryParams['structureSearchTerm'] = this.privateStructureSearchTerm;
+    navigationExtras.queryParams['sequenceSearchTerm'] = this.privateSequenceSearchTerm;
+    navigationExtras.queryParams['cutoff'] =  this.privateSearchCutoff;
+    navigationExtras.queryParams['type'] = this.privateSearchType;
+    navigationExtras.queryParams['seqType'] =  this.privateSearchSeqType;
+    navigationExtras.queryParams['order'] = this.order;
+    navigationExtras.queryParams['pageSize'] = this.pageSize;
+    navigationExtras.queryParams['pageIndex'] = this.pageIndex;
+    navigationExtras.queryParams['facets'] = facetString;
+    navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+    this.location.replaceState(
+      this.router.createUrlTree(
+        [this.locationStrategy.path().split('?')[0]],
+        navigationExtras
+      ).toString()
+    );
   }
 
   private populateFacets(facets: Array<Facet>): void {
@@ -228,6 +314,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                       const facetToAdd = facets.splice(facetIndex, 1);
                       facetIndex--;
                       this.facets.push(facetToAdd[0]);
+                      this.searchText.push(facetToAdd[0].name);
                     }
                   }
                   break;
@@ -372,8 +459,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       const facetParamsKeys = Object.keys(this.privateFacetParams);
       if (facetParamsKeys && facetParamsKeys.length > 0) {
         facetParamsKeys.forEach(key => {
-          if (this.privateFacetParams[key] && !this.privateFacetParams[key].hasSelections) {
-            this.privateFacetParams[key] = undefined;
+          if (this.privateFacetParams[key]) {
+            if ((Object.keys(this.privateFacetParams[key].params).length < 1) || (this.privateFacetParams[key].hasSelections === false)) {
+              this.privateFacetParams[key] = undefined;
+            }
           }
         });
       }
@@ -486,7 +575,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       {
         relativeTo: this.activatedRoute,
         queryParams: {
-          'search': null
+          'search': null,
+          'facets': null
         },
         queryParamsHandling: 'merge'
       }
@@ -603,7 +693,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
   getFasta(id: string, filename: string): void {
     this.substanceService.getFasta(id).subscribe(response => {
-      console.log(response);
       this.downloadFile(response, filename);
     });
   }
@@ -613,7 +702,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const binaryData = [];
     binaryData.push(response);
     const downloadLink = document.createElement('a');
-    downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: dataType}));
+    downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, { type: dataType }));
     downloadLink.setAttribute('download', filename);
     document.body.appendChild(downloadLink);
     downloadLink.click();

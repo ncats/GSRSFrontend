@@ -59,6 +59,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { SubstanceFormComponent } from './substance-form/substance-form.component';
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import { SubstanceFormModule } from './substance-form/substance-form.module';
+import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { SubstanceFormModule } from './substance-form/substance-form.module';
     StructureImageModalComponent,
     TakePipe,
     FacetDisplayPipe,
+    FacetFilterPipe,
     SequenceSearchComponent,
     TrackLinkEventDirective,
     SubstanceFormComponent
