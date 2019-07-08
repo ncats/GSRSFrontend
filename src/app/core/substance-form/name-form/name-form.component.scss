@@ -1,0 +1,81 @@
+.name-form-container {
+    padding: 30px 10px 12px 10px;
+    position: relative;
+}
+
+.notification-backdrop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, .8);
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #666;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .delete-container {
+        padding: 0 10px 8px 0;
+    }
+
+    .checkbox-container, .radio-container {
+        padding-bottom: 18px;
+    }
+
+    .radio-container, .checkbox-container {
+        padding-right: 15px;
+    }
+
+    .name, .tags, .domains {
+        flex-grow: 1;
+        padding-right: 15px;
+    }
+
+    .jurisdiction {
+        flex-grow: 1;
+    }
+}
+
+.references-container, .nameorgs-container {
+    width: 100%;
+}
+
+.column-radio {
+    ::ng-deep .mat-radio-label {
+        flex-direction: column-reverse;
+    }
+
+    ::ng-deep .mat-radio-label-content {
+        padding-left: 0;
+        font-size: 11px;
+        padding-bottom: 4px;
+    }
+}
+
+.column-checkbox {
+    ::ng-deep .mat-checkbox-layout {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    ::ng-deep .mat-checkbox-inner-container {
+        margin-right: unset;
+        margin-left: unset;
+    }
+
+    ::ng-deep .mat-checkbox-layout .mat-checkbox-label {
+        padding-left: 0;
+        font-size: 11px;
+        padding-bottom: 2px;
+    }
+}

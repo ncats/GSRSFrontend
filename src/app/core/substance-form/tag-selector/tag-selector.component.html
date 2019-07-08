@@ -4,7 +4,7 @@
             {{optionsDictionary[tag] && optionsDictionary[tag].display || tag}}
             <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
         </mat-chip>
-        <input placeholder="Tags" #tagInput [formControl]="tagControl" [matAutocomplete]="auto"
+        <input [placeholder]="placeholder" #tagInput [formControl]="tagControl" [matAutocomplete]="auto"
             [matChipInputFor]="chipList" matChipInputAddOnBlur="false" (blur)="clearTagsInput()">
     </mat-chip-list>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">

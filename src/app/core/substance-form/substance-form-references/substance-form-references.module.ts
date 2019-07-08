@@ -5,6 +5,8 @@ import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dyn
 import { SubstanceFormModule } from '../substance-form.module';
 import { MatDividerModule } from '@angular/material/divider';
 import { ScrollToModule } from '../../scroll-to/scroll-to.module';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
@@ -12,7 +14,9 @@ import { ScrollToModule } from '../../scroll-to/scroll-to.module';
     DynamicComponentLoaderModule.forChild(SubstanceFormReferencesComponent),
     SubstanceFormModule,
     MatDividerModule,
-    ScrollToModule
+    ScrollToModule,
+    MatIconModule,
+    MatButtonModule
   ],
   declarations: [
     SubstanceFormReferencesComponent
