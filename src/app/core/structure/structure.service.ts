@@ -3,9 +3,12 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import {SubstanceDetail} from '../substance/substance.model';
+import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import {SubstanceHttpParams} from '../substance/substance-http-params';
-import { ResolverResponse } from '../utils/structure-post-response.model';
+import { ResolverResponse } from './structure-post-response.model';
+import { StructurePostResponse } from './structure-post-response.model';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +17,8 @@ export class StructureService {
   constructor(
     private sanitizer: DomSanitizer,
     public configService: ConfigService,
-    private http: HttpClient
+    private http: HttpClient,
+    private cvService: ControlledVocabularyService
   ) {
   }
 
@@ -39,7 +43,6 @@ export class StructureService {
   }
 
   resolveName(name: string): Observable<ResolverResponse[]> {
-    console.log('running ' + name);
     const url = `${this.configService.configData.apiBaseUrl}resolve/${name}`;
     return this.http.get<ResolverResponse[]>(url);
   }
@@ -58,5 +61,31 @@ export class StructureService {
     return this.http.get<SubstanceDetail>(url, options);
   }
 
+  postStructure(mol: string): Observable<StructurePostResponse> {
+    const url = `${this.configService.configData.apiBaseUrl}structure`;
+    return this.http.post<StructurePostResponse>(url, mol);
+  }
 
+  mergeStructures(intoStructure: SubstanceStructure | SubstanceMoiety, fromStructure: SubstanceStructure | SubstanceMoiety): void {
+    Object.keys(fromStructure).forEach(key => {
+      let cvname: string;
+
+      switch (key) {
+        case 'stereochemistry':
+          cvname = 'STEREOCHEMISTRY_TYPE';
+          break;
+        case 'opticalActivity':
+          cvname = 'OPTICAL_ACTIVITY';
+          break;
+        default:
+        intoStructure[key] = fromStructure[key];
+      }
+
+      if (cvname !== null) {
+        this.cvService.search(cvname, fromStructure[key]).subscribe(terms => {
+          intoStructure[key] = terms[0];
+        });
+      }
+    });
+  }
 }
