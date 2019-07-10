@@ -52,14 +52,12 @@ export class SubstanceFormStructureComponent extends SubstanceFormSectionBase im
     this.structureService.postStructure(molfile).subscribe(response => {
       if (response.structure) {
 
-        if (this.structure.id) {
-          response.structure.id = this.structure.id;
-        }
-
-        this.structureService.mergeStructures(this.structure, response.structure);
+        Object.keys(response.structure).forEach(key => {
+          this.structure[key] = response.structure[key];
+        });
 
         if (response.structure.hash !== this.structure.hash) {
-
+          this.substanceFormService.updateMoieties(response.moieties);
         }
       }
     });

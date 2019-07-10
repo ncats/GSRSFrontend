@@ -65,27 +65,4 @@ export class StructureService {
     const url = `${this.configService.configData.apiBaseUrl}structure`;
     return this.http.post<StructurePostResponse>(url, mol);
   }
-
-  mergeStructures(intoStructure: SubstanceStructure | SubstanceMoiety, fromStructure: SubstanceStructure | SubstanceMoiety): void {
-    Object.keys(fromStructure).forEach(key => {
-      let cvname: string;
-
-      switch (key) {
-        case 'stereochemistry':
-          cvname = 'STEREOCHEMISTRY_TYPE';
-          break;
-        case 'opticalActivity':
-          cvname = 'OPTICAL_ACTIVITY';
-          break;
-        default:
-        intoStructure[key] = fromStructure[key];
-      }
-
-      if (cvname !== null) {
-        this.cvService.search(cvname, fromStructure[key]).subscribe(terms => {
-          intoStructure[key] = terms[0];
-        });
-      }
-    });
-  }
 }

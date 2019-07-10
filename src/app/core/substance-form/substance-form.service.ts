@@ -267,9 +267,10 @@ export class SubstanceFormService {
   updateMoieties(moieties: Array<SubstanceMoiety>): any {
     this.substance.moieties = [];
     moieties.forEach(moiety => {
-      moiety.id = this.utilsService.newUUID();
       const moi: SubstanceMoiety = {};
-      this.structureService.mergeStructures(moi, moiety);
+      Object.keys(moiety).forEach(key => {
+        moi[key] = moiety[key];
+      });
       this.substance.moieties.push(moi);
     });
   }
@@ -281,6 +282,15 @@ export class SubstanceFormService {
       const results: SubstanceFormResults = {
         isSuccessfull: true
       };
+      if (this.substance.structure != null) {
+        this.substance.structure.id = this.utilsService.newUUID();
+        this.substance.structure.uuid = this.substance.structure.id;
+      }
+      if (this.substance.moieties != null && this.substance.moieties.length) {
+        this.substance.moieties.forEach(moiety => {
+          moiety.id = this.utilsService.newUUID();
+        });
+      }
       this.substanceService.saveSubstance(this.substance).subscribe(substance => {
         this.domainReferences = {};
         this.substance = substance;
