@@ -1,0 +1,40 @@
+.structure-form {
+    padding-top: 15px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .delete-container {
+        padding: 0 10px 8px 0;
+    }
+
+    .checkbox-container, .radio-container {
+        padding-bottom: 18px;
+    }
+
+    .radio-container, .checkbox-container {
+        padding-right: 15px;
+    }
+
+    .name, .tags, .domains {
+        flex-grow: 1;
+        padding-right: 15px;
+    }
+
+    .jurisdiction {
+        flex-grow: 1;
+    }
+}
+
+.key-value-pair {
+    display: flex;
+    flex-direction: column;
+
+    .key {
+        font-size: 11px;
+        padding-bottom: 4px;
+    }
+}

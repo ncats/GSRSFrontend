@@ -76,48 +76,42 @@ export class EditorImplementation implements Editor {
             const xml = this.jsdraw.getXml();
 
             let aai = 1;
-            console.log(xml);
 
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(xml, 'text/xml');
-            console.log(xmlDoc);
 
-            console.log(xmlDoc.getElementsByName('a'));
-            // var charges = _.chain($(xml).find('a[i]'))
-            //     .map(function (a) {
-            //         var ai = $(a).attr('i');
-            //         var ac = $(a).attr('c');
-            //         if(typeof ac === 'undefined'){
-            //             ac=0;
-            //         }
-            //         var o = {
-            //             'i': (aai++),
-            //             'c': ac - 0
-            //         };
-            //         o.toString = function () {
-            //             return leftPad(o.i + '', 4) + leftPad(o.c + '', 4);
-            //         };
-            //         return o;
-            //     })
-            //     .filter(function (a){
-            //         return a.c!=0;
-            //     })
-            //     .value();
-            // if (charges.length > 0) {
-            //     var chgCount=function(count){
-            //         return 'M  CHG' + leftPad(count + '', 3);
-            //     };
+            const charges = Array.from(xmlDoc.getElementsByTagName('a'))
+                .filter(element => element.hasAttribute('i'))
+                .map(a => {
+                    const ai = a.getAttribute('i');
+                    let ac = Number(a.getAttribute('c'));
+                    if (typeof ac === 'undefined') {
+                        ac = 0;
+                    }
+                    const o: any = {
+                        i: (aai++),
+                        c: (ac - 0)
+                    };
+                    o.toString = () => {
+                        return this.leftPad(o.i + '', 4) + this.leftPad(o.c + '', 4);
+                    };
+                    return o;
+                })
+                .filter(a => {
+                    return a.c !== 0;
+                });
 
-            //     return _.chain(charges)
-            //         .chunk(8)
-            //         .map(function(c){ return chgCount(c.length) +
-            //             _.chain(c)
-            //                 .map(function(ic){return ic.toString();})
-            //                 .value()
-            //                 .join('');
-            //         })
-            //         .value()
-            //         .join('\n');
+            if (charges.length > 0) {
+                return charges.reduce((arr, item, idx) => {
+                        return idx % 8 === 0
+                        ? [...arr, [item]]
+                        : [...arr.slice(0, -1), [...arr.slice(-1)[0], item]];
+                    }, [])
+                    .map(c => {
+                        return 'M  CHG' + this.leftPad(c.length + '', 3) +
+                        c.map(ic => ic.toString()).join('');
+                    });
+            }
         }
         return null;
     }
