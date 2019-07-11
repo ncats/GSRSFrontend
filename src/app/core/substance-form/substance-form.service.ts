@@ -373,6 +373,7 @@ export class SubstanceFormService {
       if (this.substance.moieties != null && this.substance.moieties.length) {
         this.substance.moieties.forEach(moiety => {
           moiety.id = this.utilsService.newUUID();
+          moiety.uuid = moiety.id;
         });
       }
       this.substanceService.saveSubstance(this.substance).subscribe(substance => {
