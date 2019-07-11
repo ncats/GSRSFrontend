@@ -142,5 +142,10 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-structure',
     path: 'substance-form-structure',
     loadChildren: './substance-form/substance-form-structure/substance-form-structure.module#SubstanceFormStructureModule',
+  },
+  {
+    componentId: 'substance-form-moieties',
+    path: 'substance-form-moieties',
+    loadChildren: './substance-form/substance-form-moieties/substance-form-moieties.module#SubstanceFormMoietiesModule',
   }
 ];

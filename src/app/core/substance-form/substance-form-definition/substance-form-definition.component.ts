@@ -43,7 +43,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
 
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
-      console.log(definition);
       this.definition = definition;
 
       const definitionType = this.definition && this.definition.definitionType || 'primary';

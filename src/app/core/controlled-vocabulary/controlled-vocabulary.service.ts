@@ -155,12 +155,14 @@ export class ControlledVocabularyService extends BaseHttpService {
               });
             }
 
-            this.vocabularySubject[vocabulary.domain].next(singleDomainVocabulary);
-            this.vocabularySubject[vocabulary.domain].complete();
-            this.vocabularySubject[vocabulary.domain] = null;
-            responseDomainVocabulary[vocabulary.domain] = singleDomainVocabulary[vocabulary.domain];
-            this.vocabularyDictionary[vocabulary.domain] = responseDomainVocabulary[vocabulary.domain];
-            this.vocabularyLoadingIndicators[vocabulary.domain] = false;
+            if (this.vocabularySubject[vocabulary.domain] != null) {
+              this.vocabularySubject[vocabulary.domain].next(singleDomainVocabulary);
+              this.vocabularySubject[vocabulary.domain].complete();
+              this.vocabularySubject[vocabulary.domain] = null;
+              responseDomainVocabulary[vocabulary.domain] = singleDomainVocabulary[vocabulary.domain];
+              this.vocabularyDictionary[vocabulary.domain] = responseDomainVocabulary[vocabulary.domain];
+              this.vocabularyLoadingIndicators[vocabulary.domain] = false;
+            }
 
             unProcessedDomains.splice(unProcessedDomains.indexOf(vocabulary.domain), 1);
           });

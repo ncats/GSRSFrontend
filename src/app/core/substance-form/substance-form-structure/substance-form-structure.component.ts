@@ -85,14 +85,12 @@ export class SubstanceFormStructureComponent extends SubstanceFormSectionBase im
   updateStructureForm(molfile: string): void {
     this.structureService.postStructure(molfile).subscribe(response => {
       if (response.structure) {
+
         Object.keys(response.structure).forEach(key => {
           this.structure[key] = response.structure[key];
         });
 
-        if (response.structure.hash !== this.structure.hash) {
-          this.substanceFormService.updateMoieties(response.moieties);
-        }
-
+        this.substanceFormService.updateMoieties(response.moieties);
         this.molFormulaControl.setValue(this.structure.formula);
         this.stereochemistryControl.setValue(this.structure.stereochemistry);
         this.opticalActivityControl.setValue(this.structure.opticalActivity);

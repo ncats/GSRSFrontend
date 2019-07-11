@@ -29,6 +29,9 @@ export class SubstanceFormService {
   private substanceNamesEmitter = new Subject<Array<SubstanceName>>();
   private substanceStructureEmitter = new Subject<SubstanceStructure>();
   private subClass: string;
+  private computedMoieties: Array<SubstanceMoiety>;
+  private deletedMoieties: Array<SubstanceMoiety> = [];
+  private substanceMoietiesEmitter = new Subject<Array<SubstanceMoiety>>();
 
   constructor(
     private substanceService: SubstanceService,
@@ -62,7 +65,14 @@ export class SubstanceFormService {
         this.substance[this.subClass] = {};
       }
 
-      this.substanceEmitter.next(this.substance);
+      if (this.substance.structure != null && this.substance.structure.molfile != null) {
+        this.structureService.postStructure(this.substance.structure.molfile).subscribe(response => {
+          this.computedMoieties = response.moieties;
+          this.substanceEmitter.next(this.substance);
+        });
+      } else {
+        this.substanceEmitter.next(this.substance);
+      }
     });
   }
 
@@ -264,15 +274,89 @@ export class SubstanceFormService {
     return this.substanceStructureEmitter.asObservable();
   }
 
-  updateMoieties(moieties: Array<SubstanceMoiety>): any {
-    this.substance.moieties = [];
-    moieties.forEach(moiety => {
-      const moi: SubstanceMoiety = {};
-      Object.keys(moiety).forEach(key => {
-        moi[key] = moiety[key];
-      });
-      this.substance.moieties.push(moi);
+  get substanceMoieties(): Observable<Array<SubstanceMoiety>> {
+    setTimeout(() => {
+      if (this.substance != null) {
+        if (this.substance.moieties == null) {
+          this.substance.moieties = [];
+        }
+        this.substanceMoietiesEmitter.next(this.substance.moieties);
+      } else {
+        const subscription = this.substanceEmitter.subscribe(substance => {
+          if (this.substance.moieties == null) {
+            this.substance.moieties = [];
+          }
+          this.substanceMoietiesEmitter.next(this.substance.moieties);
+          subscription.unsubscribe();
+        });
+      }
     });
+    return this.substanceMoietiesEmitter.asObservable();
+  }
+
+  updateMoieties(moieties: Array<SubstanceMoiety>): any {
+
+    const moietiesCopy = moieties.slice();
+    const substanceMoietiesCopy = this.substance.moieties.slice();
+
+    let subtrahend = 0;
+    this.substance.moieties.forEach((subMoiety, index) => {
+      const matchingMoietyIndex = moietiesCopy.findIndex(moiety => moiety.hash === subMoiety.hash);
+
+      if (matchingMoietyIndex > -1) {
+        subMoiety.molfile = moietiesCopy[matchingMoietyIndex].molfile;
+
+        const matchingComputedMoiety = this.computedMoieties.find(computedMoiety => computedMoiety.hash === subMoiety.hash);
+
+        if (matchingComputedMoiety != null && moietiesCopy[matchingMoietyIndex].count !== matchingComputedMoiety.count) {
+          subMoiety.count = moietiesCopy[matchingMoietyIndex].count;
+          subMoiety.countAmount = moietiesCopy[matchingMoietyIndex].countAmount;
+        }
+
+        const substanceIndexToRemove = index - subtrahend;
+        const moietyIndexToRemove = matchingMoietyIndex - subtrahend;
+        substanceMoietiesCopy.splice(substanceIndexToRemove, 1);
+        moietiesCopy.splice(moietyIndexToRemove, 1);
+        subtrahend++;
+      }
+    });
+
+    if (moietiesCopy.length > 0) {
+      moietiesCopy.forEach(moietyCopy => {
+        const moietyIndexInDeleted = this.deletedMoieties.findIndex(deletedMoiety => deletedMoiety.hash === moietyCopy.hash);
+
+        if (moietyIndexInDeleted > -1) {
+          const undeletedMoiety = this.deletedMoieties.splice(moietyIndexInDeleted, 1)[0];
+
+          undeletedMoiety.molfile = moietyCopy.molfile;
+
+          const matchingComputedMoiety = this.computedMoieties.find(computedMoiety => computedMoiety.hash === undeletedMoiety.hash);
+
+          if (matchingComputedMoiety != null && moietyCopy.count !== matchingComputedMoiety.count) {
+            undeletedMoiety.count = moietyCopy.count;
+            undeletedMoiety.countAmount = moietyCopy.countAmount;
+          }
+
+          this.substance.moieties.push(undeletedMoiety);
+        } else {
+          moietyCopy.id = this.utilsService.newUUID();
+          moietyCopy.uuid = moietyCopy.id;
+          this.substance.moieties.push(moietyCopy);
+        }
+      });
+    }
+
+    if (substanceMoietiesCopy.length > 0) {
+      substanceMoietiesCopy.forEach(subMoietyCopy => {
+        const indexToDelete = this.substance.moieties.findIndex(subMoiety => subMoiety.hash === subMoietyCopy.hash);
+        if (indexToDelete > -1) {
+          const deletedMoiety = this.substance.moieties.splice(indexToDelete, 1)[0];
+          this.deletedMoieties.push(deletedMoiety);
+        }
+      });
+    }
+
+    this.computedMoieties = moieties;
   }
 
   // Structure end
