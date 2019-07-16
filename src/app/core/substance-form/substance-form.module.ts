@@ -30,6 +30,7 @@ import { ExpandDetailsModule } from '../expand-details/expand-details.module';
 import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
 import { StructureFormComponent } from './structure-form/structure-form.component';
 import { AmountFormComponent } from './amount-form/amount-form.component';
+import { CodeFormComponent } from './code-form/code-form.component';
 
 @NgModule({
   imports: [
@@ -66,7 +67,8 @@ import { AmountFormComponent } from './amount-form/amount-form.component';
     NameFormComponent,
     NameOrgsComponent,
     StructureFormComponent,
-    AmountFormComponent
+    AmountFormComponent,
+    CodeFormComponent
   ],
   exports: [
     AccessManagerComponent,
