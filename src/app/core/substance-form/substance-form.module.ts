@@ -28,7 +28,8 @@ import { NameFormComponent } from './name-form/name-form.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { ExpandDetailsModule } from '../expand-details/expand-details.module';
 import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
-import { MoietyFormComponent } from './moiety-form/moiety-form.component';
+import { StructureFormComponent } from './structure-form/structure-form.component';
+import { AmountFormComponent } from './amount-form/amount-form.component';
 
 @NgModule({
   imports: [
@@ -64,7 +65,8 @@ import { MoietyFormComponent } from './moiety-form/moiety-form.component';
     ReuseReferencesDialogComponent,
     NameFormComponent,
     NameOrgsComponent,
-    MoietyFormComponent
+    StructureFormComponent,
+    AmountFormComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -73,7 +75,8 @@ import { MoietyFormComponent } from './moiety-form/moiety-form.component';
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
     NameFormComponent,
-    MoietyFormComponent
+    StructureFormComponent,
+    AmountFormComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,

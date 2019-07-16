@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MoietyFormComponent } from './moiety-form.component';
+import { StructureFormComponent } from './structure-form.component';
 
 describe('MoietyFormComponent', () => {
-  let component: MoietyFormComponent;
-  let fixture: ComponentFixture<MoietyFormComponent>;
+  let component: StructureFormComponent;
+  let fixture: ComponentFixture<StructureFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MoietyFormComponent ]
+      declarations: [ StructureFormComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MoietyFormComponent);
+    fixture = TestBed.createComponent(StructureFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

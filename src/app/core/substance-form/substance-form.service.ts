@@ -299,7 +299,6 @@ export class SubstanceFormService {
     const moietiesCopy = moieties.slice();
     const substanceMoietiesCopy = this.substance.moieties.slice();
 
-    let subtrahend = 0;
     this.substance.moieties.forEach((subMoiety, index) => {
       const matchingMoietyIndex = moietiesCopy.findIndex(moiety => moiety.hash === subMoiety.hash);
 
@@ -313,11 +312,10 @@ export class SubstanceFormService {
           subMoiety.countAmount = moietiesCopy[matchingMoietyIndex].countAmount;
         }
 
-        const substanceIndexToRemove = index - subtrahend;
-        const moietyIndexToRemove = matchingMoietyIndex - subtrahend;
+        const substanceIndexToRemove = substanceMoietiesCopy.findIndex(moietyCopy => moietyCopy.hash === subMoiety.hash);
+        const moietyIndexToRemove = moietiesCopy.findIndex(moietyCopy => moietyCopy.hash === subMoiety.hash);
         substanceMoietiesCopy.splice(substanceIndexToRemove, 1);
         moietiesCopy.splice(moietyIndexToRemove, 1);
-        subtrahend++;
       }
     });
 
@@ -339,8 +337,9 @@ export class SubstanceFormService {
 
           this.substance.moieties.push(undeletedMoiety);
         } else {
-          moietyCopy.id = this.utilsService.newUUID();
-          moietyCopy.uuid = moietyCopy.id;
+          // moietyCopy.id = this.utilsService.newUUID();
+          // moietyCopy.uuid = moietyCopy.id;
+          moietyCopy.uuid = '';
           this.substance.moieties.push(moietyCopy);
         }
       });
@@ -357,6 +356,9 @@ export class SubstanceFormService {
     }
 
     this.computedMoieties = moieties;
+
+    this.substanceMoietiesEmitter.next(this.substance.moieties);
+    console.log(this.substance.moieties);
   }
 
   // Structure end
@@ -366,14 +368,16 @@ export class SubstanceFormService {
       const results: SubstanceFormResults = {
         isSuccessfull: true
       };
-      if (this.substance.structure != null) {
+      if (this.substance.structure != null && !this.substance.structure.uuid) {
         this.substance.structure.id = this.utilsService.newUUID();
         this.substance.structure.uuid = this.substance.structure.id;
       }
       if (this.substance.moieties != null && this.substance.moieties.length) {
         this.substance.moieties.forEach(moiety => {
-          moiety.id = this.utilsService.newUUID();
-          moiety.uuid = moiety.id;
+          if (!moiety.uuid) {
+            moiety.id = this.utilsService.newUUID();
+            moiety.uuid = moiety.id;
+          }
         });
       }
       this.substanceService.saveSubstance(this.substance).subscribe(substance => {
@@ -383,6 +387,7 @@ export class SubstanceFormService {
         this.substanceReferencesEmitter.next(this.substance.references);
         this.substanceNamesEmitter.next(this.substance.names);
         this.substanceStructureEmitter.next(this.substance.structure);
+        this.substanceMoietiesEmitter.next(this.substance.moieties);
         observer.next(results);
       }, error => {
         results.isSuccessfull = false;

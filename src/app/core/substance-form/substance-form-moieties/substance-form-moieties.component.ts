@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceFormSectionBase } from '../substance-form-section-base';
 import { SubstanceFormService } from '../substance-form.service';
+import { StructureService } from '../../structure/structure.service';
 import { SubstanceMoiety } from '@gsrs-core/substance/substance.model';
 
 @Component({
@@ -12,7 +14,8 @@ export class SubstanceFormMoietiesComponent extends SubstanceFormSectionBase imp
   moieties: Array<SubstanceMoiety> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private structureService: StructureService
   ) {
     super();
   }
@@ -28,6 +31,10 @@ export class SubstanceFormMoietiesComponent extends SubstanceFormSectionBase imp
         this.hiddenStateUpdate.emit(true);
       }
     });
+  }
+
+  getSafeStructureImgUrl(structureId: string): SafeUrl {
+    return this.structureService.getSafeStructureImgUrl(structureId);
   }
 
 }
