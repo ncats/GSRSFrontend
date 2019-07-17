@@ -124,6 +124,11 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     loadChildren: './substance-details/substance-mixture-source/substance-mixture-source.module#SubstanceMixtureSourceModule',
   },
   {
+    componentId: 'substance-history',
+    path: 'substance-history',
+    loadChildren: './substance-details/substance-history/substance-history.module#SubstanceHistoryModule',
+  },
+  {
     componentId: 'substance-form-definition',
     path: 'substance-form-definition',
     loadChildren: './substance-form/substance-form-definition/substance-form-definition.module#SubstanceFormDefinitionModule',
@@ -147,10 +152,5 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-moieties',
     path: 'substance-form-moieties',
     loadChildren: './substance-form/substance-form-moieties/substance-form-moieties.module#SubstanceFormMoietiesModule',
-  },
-  {
-    componentId: 'substance-history',
-    path: 'substance-history',
-    loadChildren: './substance-details/substance-history/substance-history.module#SubstanceHistoryModule',
   }
 ];
