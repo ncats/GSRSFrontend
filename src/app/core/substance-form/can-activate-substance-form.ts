@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, CanActivate, UrlTree, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { Observable } from 'rxjs';
 
@@ -16,15 +16,27 @@ export class CanActivateSubstanceForm implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean> | Promise<boolean> | boolean {
         return new Observable(observer => {
-            this.authService.hasRolesAsync('admin').subscribe(response => {
-                console.log(response);
-                if (response) {
-                    observer.next(true);
-                    observer.complete();
+            this.authService.getAuth().subscribe(auth => {
+                if (auth) {
+                    this.authService.hasRolesAsync('admin').subscribe(response => {
+                        if (response) {
+                            observer.next(true);
+                            observer.complete();
+                        } else {
+                            observer.next(false);
+                            observer.complete();
+                            this.router.navigate(['/browse-substance']);
+                        }
+                    });
                 } else {
+                    const navigationExtras: NavigationExtras = {
+                        queryParams: {
+                          path: state.url
+                        }
+                      };
                     observer.next(false);
                     observer.complete();
-                    this.router.navigate(['/browse-substance']);
+                    this.router.navigate(['/login'], navigationExtras);
                 }
             });
         });

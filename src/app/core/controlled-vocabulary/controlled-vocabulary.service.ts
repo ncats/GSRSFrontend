@@ -155,12 +155,14 @@ export class ControlledVocabularyService extends BaseHttpService {
               });
             }
 
-            this.vocabularySubject[vocabulary.domain].next(singleDomainVocabulary);
-            this.vocabularySubject[vocabulary.domain].complete();
-            this.vocabularySubject[vocabulary.domain] = null;
-            responseDomainVocabulary[vocabulary.domain] = singleDomainVocabulary[vocabulary.domain];
-            this.vocabularyDictionary[vocabulary.domain] = responseDomainVocabulary[vocabulary.domain];
-            this.vocabularyLoadingIndicators[vocabulary.domain] = false;
+            if (this.vocabularySubject[vocabulary.domain] != null) {
+              this.vocabularySubject[vocabulary.domain].next(singleDomainVocabulary);
+              this.vocabularySubject[vocabulary.domain].complete();
+              this.vocabularySubject[vocabulary.domain] = null;
+              responseDomainVocabulary[vocabulary.domain] = singleDomainVocabulary[vocabulary.domain];
+              this.vocabularyDictionary[vocabulary.domain] = responseDomainVocabulary[vocabulary.domain];
+              this.vocabularyLoadingIndicators[vocabulary.domain] = false;
+            }
 
             unProcessedDomains.splice(unProcessedDomains.indexOf(vocabulary.domain), 1);
           });
@@ -188,5 +190,28 @@ export class ControlledVocabularyService extends BaseHttpService {
         return responseDomainVocabulary;
       })
     );
+  }
+
+  search(domain: string, query: string): Observable<Array<VocabularyTerm>> {
+    return new Observable(observer => {
+      this.getDomainVocabulary(domain).subscribe(response => {
+        const filteredTerms = response[domain].list.filter(term => term.value.toLowerCase().indexOf(query.toLowerCase()) > -1);
+        let sortedTerms = [];
+
+        if (filteredTerms != null && filteredTerms.length) {
+          sortedTerms = filteredTerms.sort((termA, termB) => {
+            if (termA < termB) {
+              return -1;
+            }
+            if (termA > termB) {
+              return 1;
+            }
+            return 0;
+          });
+        }
+
+        observer.next(sortedTerms);
+      });
+    });
   }
 }

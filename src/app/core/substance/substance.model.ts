@@ -198,6 +198,8 @@ export interface SubstanceAmount extends SubstanceBase {
     highLimit?: number;
     lowLimit?: number;
     nonNumericValue?: string;
+    low?: number;
+    high?: number;
 }
 
 export interface SubstanceReference extends SubstanceBase {
@@ -270,6 +272,7 @@ export interface SubstanceStructure extends SubstanceBase {
     stereochemistry?: string;
     references?: Array<string>;
     _properties?: CountRef;
+    stereoComments?: string;
 }
 
 export interface SubstanceMoiety extends SubstanceStructure {

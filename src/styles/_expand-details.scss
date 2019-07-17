@@ -1,0 +1,14 @@
+.expandable-details {
+    overflow: hidden;
+    height: auto;
+    -webkit-transition: all 750ms ease-out;
+    transition: all 750ms ease-out;
+    
+    &.details-collapsed {
+        max-height: 0;
+    }
+    
+    &.details-expanded {
+        max-height: 1000px;
+    }
+}

@@ -18,6 +18,18 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ScrollToModule } from '../scroll-to/scroll-to.module';
 import { DomainReferencesComponent } from './domain-references/domain-references.component';
 import { ReferenceFormComponent } from './reference-form/reference-form.component';
+import { RefernceFormDialogComponent } from './references-dialogs/refernce-form-dialog.component';
+import { ReuseReferencesDialogComponent } from './references-dialogs/reuse-references-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatBadgeModule } from '@angular/material/badge';
+import { NameFormComponent } from './name-form/name-form.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { ExpandDetailsModule } from '../expand-details/expand-details.module';
+import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
+import { StructureFormComponent } from './structure-form/structure-form.component';
+import { AmountFormComponent } from './amount-form/amount-form.component';
 
 @NgModule({
   imports: [
@@ -36,18 +48,39 @@ import { ReferenceFormComponent } from './reference-form/reference-form.componen
     MatInputModule,
     MatChipsModule,
     MatAutocompleteModule,
-    ScrollToModule
+    ScrollToModule,
+    MatDialogModule,
+    MatTableModule,
+    MatExpansionModule,
+    MatBadgeModule,
+    MatRadioModule,
+    ExpandDetailsModule
   ],
   declarations: [
     AccessManagerComponent,
     TagSelectorComponent,
     DomainReferencesComponent,
-    ReferenceFormComponent
+    ReferenceFormComponent,
+    RefernceFormDialogComponent,
+    ReuseReferencesDialogComponent,
+    NameFormComponent,
+    NameOrgsComponent,
+    StructureFormComponent,
+    AmountFormComponent
   ],
   exports: [
     AccessManagerComponent,
     DomainReferencesComponent,
-    ReferenceFormComponent
+    ReferenceFormComponent,
+    RefernceFormDialogComponent,
+    ReuseReferencesDialogComponent,
+    NameFormComponent,
+    StructureFormComponent,
+    AmountFormComponent
+  ],
+  entryComponents: [
+    RefernceFormDialogComponent,
+    ReuseReferencesDialogComponent
   ]
 })
 export class SubstanceFormModule { }

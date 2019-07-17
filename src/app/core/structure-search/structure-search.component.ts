@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { StructurePostResponse, ResolverResponse } from '../utils/structure-post-response.model';
+import { StructurePostResponse, ResolverResponse } from '../structure/structure-post-response.model';
 import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { Editor } from '../structure-editor/structure.editor.model';
@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 import { StructureService } from '../structure/structure.service';
 import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { SubstanceDetail, SubstanceStructure, SubstanceSummary} from '../substance/substance.model';
+import { SubstanceSummary} from '../substance/substance.model';
 import {SafeUrl} from '@angular/platform-browser';
 import {PagingResponse} from '../utils/paging-response.model';
 import {forkJoin} from 'rxjs';
@@ -85,7 +85,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   search(): void {
     const mol = this.editor.getMolfile();
-    this.substanceService.postSubstanceStructure(mol).subscribe((response: StructurePostResponse) => {
+    this.structureService.postStructure(mol).subscribe((response: StructurePostResponse) => {
       const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
       this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
       this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
@@ -176,7 +176,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       });
   }
 
-  resolveNameKey(event): void {
+  resolveNameKey(event: any): void {
     if (event.keyCode === 13) {
       this.resolveName(this.resolverControl.value);
     }

@@ -1,9 +1,8 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, ElementRef } from '@angular/core';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-access-manager',
@@ -12,32 +11,32 @@ import { Observable } from 'rxjs';
 })
 export class AccessManagerComponent implements OnInit, AfterViewInit {
   accessOptions: Array<VocabularyTerm>;
-  access: Array<string> = [];
-  @Input() accessAsync?: Observable<Array<string>>;
-  @Input() accessSync?: Array<string>;
+  privateAccess: Array<string> = [];
   @Output() accessOut = new EventEmitter<Array<string>>();
   tooltipMessage: string;
   accessFormGroup = new FormGroup({});
 
   constructor(
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private element: ElementRef
   ) { }
 
   ngOnInit() { }
 
-  ngAfterViewInit() {
-    if (this.accessAsync) {
-      this.accessAsync.subscribe(access => {
-        this.access = access;
-        this.getVocabularies();
-      });
+  ngAfterViewInit() {}
+
+  @Input()
+  set access(access: Array<string>) {
+    if (access != null) {
+      this.privateAccess = access;
+      this.getVocabularies();
+    } else {
+      this.privateAccess = [];
     }
-    setTimeout(() => {
-      if (this.accessSync) {
-        this.access = this.accessSync;
-        this.getVocabularies();
-      }
-    });
+  }
+
+  get access(): Array<string> {
+    return this.privateAccess;
   }
 
   getVocabularies(): void {
@@ -60,8 +59,8 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
   private crosscheckAccesses() {
     this.tooltipMessage = 'Access is set to: ';
 
-    if (this.access.length > 0) {
-      this.access.forEach(accessOption => {
+    if (this.privateAccess.length > 0) {
+      this.privateAccess.forEach(accessOption => {
         for (let i = 0; i < this.accessOptions.length; i++) {
           if (accessOption === this.accessOptions[i].value) {
             this.accessFormGroup.controls[accessOption].setValue(true);
@@ -78,14 +77,14 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
 
   updateAccess(event: MatCheckboxChange, accessOption: VocabularyTerm): void {
 
-    if (this.access.length === 0) {
+    if (this.privateAccess.length === 0) {
       this.tooltipMessage = this.tooltipMessage.replace('public', '');
     }
 
     if (event.checked) {
-      this.access.push(accessOption.value);
+      this.privateAccess.push(accessOption.value);
 
-      if (this.access.length > 1) {
+      if (this.privateAccess.length > 1) {
         this.tooltipMessage += ', ';
       }
 
@@ -93,10 +92,10 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
 
     } else {
 
-      const indexToRemove = this.access.indexOf(accessOption.value);
+      const indexToRemove = this.privateAccess.indexOf(accessOption.value);
 
       if (indexToRemove > -1) {
-        this.access.splice(indexToRemove, 1);
+        this.privateAccess.splice(indexToRemove, 1);
       }
 
       this.tooltipMessage = this.tooltipMessage.replace(accessOption.display, '')
@@ -105,12 +104,22 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
         .replace(/,$/, '')
         .replace(/(, )$/, '');
 
-      if (this.access.length === 0) {
+      if (this.privateAccess.length === 0) {
         this.tooltipMessage += 'public';
       }
     }
 
-    this.accessOut.emit(this.access);
+    this.accessOut.emit(this.privateAccess);
+  }
+
+  menuOpened(): void {
+    const event: Event = new Event('focusin', { bubbles: true, cancelable: true} );
+    this.element.nativeElement.dispatchEvent(event);
+  }
+
+  menuClosed(): void {
+    const event: Event = new Event('focusout', { bubbles: true, cancelable: true} );
+    this.element.nativeElement.dispatchEvent(event);
   }
 
 }

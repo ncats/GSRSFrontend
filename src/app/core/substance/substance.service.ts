@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
-import { Observable, of, Observer, ArgumentOutOfRangeError } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {SubstanceSummary, SubstanceDetail, SubstanceEdit} from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
-import { StructurePostResponse } from '../utils/structure-post-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from './substance-facet-param.model';
 import { SubstanceHttpParams } from './substance-http-params';
@@ -381,11 +380,6 @@ export class SubstanceService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
-  }
-
-  postSubstanceStructure(mol: string): Observable<StructurePostResponse> {
-    const url = `${this.configService.configData.apiBaseUrl}structure`;
-    return this.http.post<StructurePostResponse>(url, mol);
   }
 
   getFasta(id: string): Observable<any> {

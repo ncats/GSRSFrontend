@@ -134,6 +134,21 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     loadChildren: './substance-form/substance-form-references/substance-form-references.module#SubstanceFormReferencesModule',
   },
   {
+    componentId: 'substance-form-names',
+    path: 'substance-form-names',
+    loadChildren: './substance-form/substance-form-names/substance-form-names.module#SubstanceFormNamesModule',
+  },
+  {
+    componentId: 'substance-form-structure',
+    path: 'substance-form-structure',
+    loadChildren: './substance-form/substance-form-structure/substance-form-structure.module#SubstanceFormStructureModule',
+  },
+  {
+    componentId: 'substance-form-moieties',
+    path: 'substance-form-moieties',
+    loadChildren: './substance-form/substance-form-moieties/substance-form-moieties.module#SubstanceFormMoietiesModule',
+  },
+  {
     componentId: 'substance-history',
     path: 'substance-history',
     loadChildren: './substance-details/substance-history/substance-history.module#SubstanceHistoryModule',

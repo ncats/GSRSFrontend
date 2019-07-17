@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
-import { Observable, Subscriber, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormDefinition } from '../substance-form.model';
@@ -26,11 +26,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
   primarySubstanceErrorEmitter = this.primarySubstanceErrorSubject.asObservable();
   primarySubstance?: SubstanceSummary;
   showPrimarySubstanceOptions = false;
-  private accessSubject = new Subject<Array<string>>();
-  accessEmitter = this.accessSubject.asObservable();
   definition: SubstanceFormDefinition;
-  private uuidSubject = new Subject<string>();
-  uuidEmitter = this.uuidSubject.asObservable();
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -48,11 +44,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
       this.definition = definition;
-
-      setTimeout(() => {
-        this.accessSubject.next(this.definition.access);
-        this.uuidSubject.next(definition.uuid);
-      });
 
       const definitionType = this.definition && this.definition.definitionType || 'primary';
       this.definitionTypeControl.setValue(definitionType);
