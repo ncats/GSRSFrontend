@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { SubstanceCode } from '../../substance/substance.model';
+import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
+import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-code-form',
@@ -6,10 +10,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./code-form.component.scss']
 })
 export class CodeFormComponent implements OnInit {
+  private privateCode: SubstanceCode;
+  @Output() codeDeleted = new EventEmitter<SubstanceCode>();
 
-  constructor() { }
+  constructor(
+    private cvService: ControlledVocabularyService
+  ) { }
 
   ngOnInit() {
+  }
+
+  @Input()
+  set code(code: SubstanceCode) {
+    this.privateCode = code;
+  }
+
+  get code(): SubstanceCode {
+    return this.privateCode;
   }
 
 }
