@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SubstanceReference } from '../../substance/substance.model';
+import {SubstanceDetail, SubstanceReference} from '../../substance/substance.model';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-references',
@@ -11,6 +12,7 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<SubstanceReference> implements OnInit {
   references: Array<SubstanceReference> = [];
   displayedColumns: string[] = ['citation', 'type', 'tags', 'dateAcessed'];
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
     public gaService: GoogleAnalyticsService
@@ -21,18 +23,22 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
   }
 
   ngOnInit() {
-    if (this.substance != null && this.substance.references != null) {
-      this.references = this.substance.references;
-      this.filtered = this.substance.references;
-      this.pageChange();
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null && this.substance.references != null) {
+        this.references = this.substance.references;
+        this.filtered = this.substance.references;
+        this.pageChange();
 
-      this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.references, this.analyticsEventCategory);
-      }, error => {
-        console.log(error);
-      });
-    }
-    this.countUpdate.emit(this.references.length);
+        this.searchControl.valueChanges.subscribe(value => {
+          this.filterList(value, this.references, this.analyticsEventCategory);
+        }, error => {
+          console.log(error);
+        });
+      }
+      this.countUpdate.emit(this.references.length);
+    });
+
   }
 
 }

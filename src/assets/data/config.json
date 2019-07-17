@@ -27,6 +27,14 @@
       ]
     },
     {
+      "card": "substance-names",
+      "title": "names",
+      "filters": [{
+        "filterName": "exists",
+        "propertyToCheck": "names"
+      }]
+    },
+    {
       "card": "substance-codes",
       "type": "classification",
       "filters": [{
