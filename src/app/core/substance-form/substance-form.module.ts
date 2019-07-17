@@ -78,7 +78,8 @@ import { CodeFormComponent } from './code-form/code-form.component';
     ReuseReferencesDialogComponent,
     NameFormComponent,
     StructureFormComponent,
-    AmountFormComponent
+    AmountFormComponent,
+    CodeFormComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,

@@ -24,6 +24,7 @@ export interface VocabularyTerm {
     selected: boolean;
     fragmentStructure: string;
     simplifiedStructure: string;
+    systemCategory?: string;
 }
 
 export interface VocabularyDictionary {

@@ -157,7 +157,7 @@ export interface SubstanceCode extends SubstanceBase {
     codeSystem?: string;
     code?: string;
     comments?: string;
-    type: string;
+    type?: string;
     url?: string;
     references?: Array<string>;
     _self?: string;
