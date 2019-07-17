@@ -3,6 +3,7 @@ import {SubstanceCardBase} from '../substance-card-base';
 import {SubstanceDetail, SubstanceRelated, SubstanceRelationship} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {UtilsService} from '../../utils/utils.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-concept-definition',
@@ -12,7 +13,7 @@ import {UtilsService} from '../../utils/utils.service';
 export class SubstanceConceptDefinitionComponent extends SubstanceCardBase implements OnInit {
   relationships: Array<SubstanceRelationship> = [];
   definitions: Array<SubstanceRelated> = [];
-
+  substanceUpdated = new Subject<SubstanceDetail>();
 
 
   constructor(
@@ -23,9 +24,12 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
 
 
   ngOnInit() {
-    if (this.substance != null) {
-      this.getConceptDefinition();
-    }
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null) {
+        this.getConceptDefinition();
+      }
+    });
   }
 
   private getConceptDefinition(): void {

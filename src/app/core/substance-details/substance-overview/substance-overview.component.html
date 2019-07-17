@@ -88,11 +88,11 @@
       </div>
 
   </div>
-    <div *ngIf = "!isEditable" class="name-value">
+    <div *ngIf = "!isAdmin" class="name-value">
         <div class="name">Record Version</div>
         <div class="value blue-font">{{substance.version}}</div>
       </div>
-  <div *ngIf = "isEditable" class="name-value">
+  <div *ngIf = "isAdmin" class="name-value">
       <div class="name">Record Version</div>
       <mat-form-field class = "version-dropdown">
         <mat-select [formControl]="versionControl" class = "version-select" >

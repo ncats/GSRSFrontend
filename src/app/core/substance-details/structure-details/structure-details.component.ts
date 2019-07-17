@@ -6,6 +6,7 @@ import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import { SubstanceCardBase } from '../substance-card-base';
 import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-structure-details',
@@ -21,6 +22,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   inchi: string;
   showStereo = false;
   molfileHref: any;
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
     private utilService: UtilsService,
@@ -32,18 +34,19 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   }
 
   ngOnInit() {
-    if (this.substance != null) {
-      this.structure = this.substance.structure;
-      if (this.structure.smiles) {
-        this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
-          this.inchi = inchi;
-        });
+    this.substanceUpdated.subscribe(substance => {
+      if (this.substance != null) {
+        this.structure = this.substance.structure;
+        if (this.structure.smiles) {
+          this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
+            this.inchi = inchi;
+          });
+        }
+        const theJSON = this.structure.molfile;
+        const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
+        this.molfileHref = uri;
       }
-
-      const theJSON = this.structure.molfile;
-      const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
-      this.molfileHref = uri;
-    }
+    });
   }
 
   getSafeStructureImgUrl(stereo: boolean, structureId: string, size: number = 150): SafeUrl {

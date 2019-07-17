@@ -26,6 +26,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   versionControl = new FormControl('', Validators.required);
   versions: string[] = [];
   isEditable = false;
+  isAdmin = false;
   substanceUpdated = new Subject<SubstanceDetail>();
   constructor(
     private sanitizer: DomSanitizer,
@@ -40,6 +41,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   }
 
   ngOnInit() {
+    this.isAdmin = this.authService.hasRoles('admin');
     this.isEditable = this.authService.hasRoles('admin')
       && this.substance.substanceClass != null
       && formSections[this.substance.substanceClass.toLowerCase()] != null;
@@ -78,8 +80,12 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.substanceService.checkVersion(this.substance.uuid).subscribe((result: number) => {
       this.versions = [];
       this.latestVersion = result;
+      console.log(result);
+      console.log(this.substance.version);
       this.setVersionList();
+      console.log(this.latestVersion);
       this.versionControl.setValue(this.substance.version);
+      console.log(this.latestVersion);
     });
   }
 

@@ -390,7 +390,6 @@ export class SubstanceService extends BaseHttpService {
 
   getFasta(id: string): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}export/${id}.fas`;
-    console.log(url);
     return this.http.get(url, {responseType: 'blob' as 'json'});
   }
 

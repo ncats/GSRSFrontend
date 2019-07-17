@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
-import {Glycosylation, Site} from '../../substance/substance.model';
+import {Glycosylation, Site, SubstanceDetail} from '../../substance/substance.model';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-glycosylation',
@@ -11,15 +12,17 @@ export class SubstanceGlycosylationComponent extends SubstanceCardBase implement
   glycosylation: Glycosylation;
   sites: any = [];
   displayedColumns = ['glycosylationLinkType', 'site'];
-
+  substanceUpdated = new Subject<SubstanceDetail>();
   constructor() {
     super();
   }
 
   ngOnInit() {
-    if (this.substance != null
-      && this.substance.protein != null
-      && this.substance.protein.glycosylation.glycosylationType != null) {
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null
+        && this.substance.protein != null
+        && this.substance.protein.glycosylation.glycosylationType != null) {
         this.glycosylation = this.substance.protein.glycosylation;
         for (const link of this.glycosylation.CGlycosylationSites) {
           this.sites.push({type: 'C', site: link.subunitIndex + '_' + link.residueIndex});
@@ -32,6 +35,7 @@ export class SubstanceGlycosylationComponent extends SubstanceCardBase implement
         }
         this.countUpdate.emit(this.sites.length);
       }
+    });
     }
 
   getFullSite(site: Site ): string {

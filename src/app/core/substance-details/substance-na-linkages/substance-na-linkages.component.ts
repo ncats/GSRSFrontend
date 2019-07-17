@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Linkage, Site} from '../../substance/substance.model';
+import {Linkage, Site, SubstanceDetail} from '../../substance/substance.model';
 import {SubstanceCardBase} from '../substance-card-base';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-na-linkages',
@@ -11,20 +12,24 @@ export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements O
   linkages: Array<Linkage>;
   displayedColumns: string[] = ['linkage' , 'Site Range' , 'Site Count' ];
   siteCount: number;
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor() {
     super();
   }
 
   ngOnInit() {
-    if (this.substance != null
-      && this.substance.nucleicAcid != null
-      && this.substance.nucleicAcid.linkages != null
-      && this.substance.nucleicAcid.linkages.length) {
-      this.linkages = this.substance.nucleicAcid.linkages;
-      this.countUpdate.emit(this.linkages.length);
-      this.getTotalSites();
-    }
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null
+        && this.substance.nucleicAcid != null
+        && this.substance.nucleicAcid.linkages != null
+        && this.substance.nucleicAcid.linkages.length) {
+        this.linkages = this.substance.nucleicAcid.linkages;
+        this.countUpdate.emit(this.linkages.length);
+        this.getTotalSites();
+      }
+    });
   }
 
   getTotalSites() {
