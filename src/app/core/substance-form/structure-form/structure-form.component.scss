@@ -1,0 +1,33 @@
+.structure-form {
+    padding: 15px 7px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .mol-formula, .stereochemistry, .optical-activity {
+        flex-grow: 1;
+        padding-right: 15px;
+    }
+
+    .atropisomerism {
+        flex-grow: 1;
+    }
+}
+
+.key-value-pair {
+    display: flex;
+    flex-direction: column;
+
+    .key {
+        font-size: 11px;
+        padding-bottom: 4px;
+    }
+}
+
+.stereo-comments {
+    width: 100%;
+    padding-top: 10px;
+}

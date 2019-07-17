@@ -28,6 +28,8 @@ import { NameFormComponent } from './name-form/name-form.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { ExpandDetailsModule } from '../expand-details/expand-details.module';
 import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
+import { StructureFormComponent } from './structure-form/structure-form.component';
+import { AmountFormComponent } from './amount-form/amount-form.component';
 
 @NgModule({
   imports: [
@@ -62,7 +64,9 @@ import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
     NameFormComponent,
-    NameOrgsComponent
+    NameOrgsComponent,
+    StructureFormComponent,
+    AmountFormComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -70,7 +74,9 @@ import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
     ReferenceFormComponent,
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
-    NameFormComponent
+    NameFormComponent,
+    StructureFormComponent,
+    AmountFormComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,

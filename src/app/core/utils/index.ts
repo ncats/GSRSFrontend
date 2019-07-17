@@ -2,7 +2,6 @@ export * from './facet-display.pipe';
 export * from './facet.model';
 export * from './paging-response.model';
 export * from './search-sort-values';
-export * from './structure-post-response.model';
 export * from './substance-suggestion.model';
 export * from './substance-suggestions-group.model';
 export * from './take.pipe';

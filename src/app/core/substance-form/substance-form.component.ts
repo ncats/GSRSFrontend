@@ -30,6 +30,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
   formSections: Array<SubstanceFormSection> = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
   private subClass: string;
+  expandedComponents = [
+    'substance-form-definition',
+    'substance-form-structure',
+    'substance-form-moieties',
+    'substance-form-references'
+  ];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -67,6 +73,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
                 this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
                 this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.subscribe(label => {
                   this.formSections[index].menuLabel = label;
+                });
+                this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+                  this.formSections[index].isHidden = isHidden;
                 });
                 this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
               });

@@ -41,6 +41,11 @@
     }
 }
 
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .responsive {
     overflow: auto;
 }

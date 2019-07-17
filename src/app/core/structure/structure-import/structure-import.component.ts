@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormControl } from '@angular/forms';
-import { SubstanceService } from '../../substance/substance.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { StructureService } from '../structure.service';
 
 @Component({
   selector: 'app-structure-import',
@@ -18,8 +18,8 @@ export class StructureImportComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<StructureImportComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private substanceService: SubstanceService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private structureService: StructureService
   ) { }
 
   ngOnInit() {
@@ -29,7 +29,7 @@ export class StructureImportComponent implements OnInit {
     this.message = null;
     if (this.importTextControl.value) {
       this.isLoading = true;
-      this.substanceService.postSubstanceStructure(this.importTextControl.value).subscribe(response => {
+      this.structureService.postStructure(this.importTextControl.value).subscribe(response => {
         this.isLoading = false;
         if (response && response.structure && response.structure.molfile) {
           this.gaService.sendEvent('structureImport', 'button:import', 'file imported');
