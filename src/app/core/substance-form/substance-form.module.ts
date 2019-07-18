@@ -81,7 +81,8 @@ import { RelationshipFormComponent } from './relationship-form/relationship-form
     NameFormComponent,
     StructureFormComponent,
     AmountFormComponent,
-    CodeFormComponent
+    CodeFormComponent,
+    RelationshipFormComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,

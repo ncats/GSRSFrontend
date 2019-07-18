@@ -5,7 +5,8 @@ import {
   SubstanceName,
   SubstanceStructure,
   SubstanceMoiety,
-  SubstanceCode
+  SubstanceCode,
+  SubstanceRelationship
 } from '../substance/substance.model';
 import {
   SubstanceFormDefinition,
@@ -34,6 +35,7 @@ export class SubstanceFormService {
   private deletedMoieties: Array<SubstanceMoiety> = [];
   private substanceMoietiesEmitter = new Subject<Array<SubstanceMoiety>>();
   private substanceCodesEmitter = new Subject<Array<SubstanceCode>>();
+  private substanceRelationshipsEmitter = new Subject<Array<SubstanceRelationship>>();
 
   constructor(
     private substanceService: SubstanceService,
@@ -403,11 +405,49 @@ export class SubstanceFormService {
     const subCodeIndex = this.substance.codes.findIndex(subCode => code.uuid === subCode.uuid);
     if (subCodeIndex > -1) {
       this.substance.codes.splice(subCodeIndex, 1);
-      this.substanceNamesEmitter.next(this.substance.names);
+      this.substanceNamesEmitter.next(this.substance.codes);
     }
   }
 
   // Codes end
+
+  // Relationships start
+
+  get substanceRelationships(): Observable<Array<SubstanceRelationship>> {
+    setTimeout(() => {
+      if (this.substance != null) {
+        if (this.substance.relationships == null) {
+          this.substance.relationships = [];
+        }
+        this.substanceRelationshipsEmitter.next(this.substance.relationships);
+      } else {
+        const subscription = this.substanceEmitter.subscribe(substance => {
+          if (this.substance.relationships == null) {
+            this.substance.relationships = [];
+          }
+          this.substanceRelationshipsEmitter.next(this.substance.relationships);
+          subscription.unsubscribe();
+        });
+      }
+    });
+    return this.substanceRelationshipsEmitter.asObservable();
+  }
+
+  addSubstanceRelationship(): void {
+    const newRelationship: SubstanceRelationship = {};
+    this.substance.relationships.unshift(newRelationship);
+    this.substanceRelationshipsEmitter.next(this.substance.relationships);
+  }
+
+  deleteSubstanceRelationship(relationship: SubstanceRelationship): void {
+    const subRelationshipIndex = this.substance.relationships.findIndex(subRelationship => relationship.uuid === subRelationship.uuid);
+    if (subRelationshipIndex > -1) {
+      this.substance.relationships.splice(subRelationshipIndex, 1);
+      this.substanceRelationshipsEmitter.next(this.substance.relationships);
+    }
+  }
+
+  // Relationships end
 
   saveSubstance(): Observable<SubstanceFormResults> {
     return new Observable(observer => {

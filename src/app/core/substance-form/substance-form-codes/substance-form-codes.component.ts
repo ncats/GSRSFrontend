@@ -35,5 +35,4 @@ export class SubstanceFormCodesComponent extends SubstanceFormSectionBase implem
     this.substanceFormService.deleteSubstanceName(code);
   }
 
-
 }
