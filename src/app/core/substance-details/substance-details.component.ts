@@ -57,18 +57,15 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
   ngOnInit() {
     this.gaService.sendPageView(`Substance Details`);
-    this.loadingService.setLoading(true);
     this.id = this.activatedRoute.snapshot.params['id'];
     this.version = this.activatedRoute.snapshot.params['version'];
-    console.log('det oninit called');
-
-      console.log(this.version);
+    this.loadingService.setLoading(true);
      this.checkVersion().subscribe((result: number) => {this.latestVersion = result;
        this.activeRoute.params.subscribe(routeParams => {
+         this.id = routeParams.id;
          this.version = routeParams.version;
-         console.log(routeParams.version);
          if (this.version) {
-           if (parseInt(this.latestVersion, 10) > parseInt(this.version, 10)) {
+           if (Number(this.latestVersion) > Number(this.version)) {
              this.getSubstanceDetails(this.id, this.version.toString());
            } else {
              this.getSubstanceDetails(this.id);
@@ -76,7 +73,6 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
          } else {
            this.getSubstanceDetails(this.id);
          }
-         console.log('details after view' + this.latestVersion + ' - ' + this.version );
 
        });
 

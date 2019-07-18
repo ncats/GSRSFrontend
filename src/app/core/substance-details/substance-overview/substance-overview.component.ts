@@ -80,12 +80,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.substanceService.checkVersion(this.substance.uuid).subscribe((result: number) => {
       this.versions = [];
       this.latestVersion = result;
-      console.log(result);
-      console.log(this.substance.version);
       this.setVersionList();
-      console.log(this.latestVersion);
       this.versionControl.setValue(this.substance.version);
-      console.log(this.latestVersion);
     });
   }
 
