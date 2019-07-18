@@ -1,3 +1,16 @@
-<p>
-  relationship-form works!
-</p>
+<div class="relationship-form-container">
+    <div *ngIf="isDeleted" class="notification-backdrop">
+      Deleted
+    </div>
+    <div class="form-row">
+      <div class="delete-container">
+        <button mat-icon-button matTooltip="Delete relationship" (click)="deleteRelationship()">
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="form-row">
+    </div>
+    <div class="form-row">
+    </div>
+  </div>
