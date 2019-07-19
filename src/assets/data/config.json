@@ -118,6 +118,20 @@
     },
     {
       "card": "substance-relationships",
+      "type": "IMPURITY",
+      "title": "impurities",
+      "filters": [{
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+        {
+          "filterName": "substanceRelationships",
+          "value": "IMPURITY"
+        }
+      ]
+    },
+    {
+      "card": "substance-relationships",
       "type": "METABOLITE",
       "title": "metabolites",
       "filters": [{
@@ -127,20 +141,6 @@
         {
           "filterName": "substanceRelationships",
           "value": "METABOLITE"
-        }
-      ]
-    },
-    {
-      "card": "substance-relationships",
-      "type": "IMPURITY",
-      "title": "impurities",
-      "filters": [{
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        },
-        {
-          "filterName": "substanceRelationships",
-          "value": "IMPURITY"
         }
       ]
     },
