@@ -434,7 +434,9 @@ export class SubstanceFormService {
   }
 
   addSubstanceRelationship(): void {
-    const newRelationship: SubstanceRelationship = {};
+    const newRelationship: SubstanceRelationship = {
+      amount: {}
+    };
     this.substance.relationships.unshift(newRelationship);
     this.substanceRelationshipsEmitter.next(this.substance.relationships);
   }

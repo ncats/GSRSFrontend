@@ -23,13 +23,10 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   private searchContainerElement: HTMLElement;
   private query: string;
   @Input() eventCategory: string;
-  @Input() searchValueUpdated?: Observable<string>;
   @Output() searchPerformed  = new EventEmitter<string>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
-  @Input() errorMessageUpdated?: Observable<string>;
-  errorMessage = '';
-  private subscriptions: Array<Subscription> = [];
+  private privateErrorMessage = '';
 
   constructor(
     private utilsService: UtilsService,
@@ -38,28 +35,6 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   ) { }
 
   ngOnInit() {
-
-    if (this.searchValueUpdated != null) {
-      const subscription = this.searchValueUpdated.subscribe(searchValue => {
-        this.searchControl.setValue(searchValue);
-      });
-      this.subscriptions.push(subscription);
-    }
-
-    if (this.errorMessageUpdated != null) {
-      const subscription = this.errorMessageUpdated.subscribe(errorMessage => {
-        this.searchControl.markAsTouched();
-        if (errorMessage) {
-          this.searchControl.setErrors({
-            error: true
-          });
-        } else {
-          this.searchControl.setErrors(null);
-        }
-        this.errorMessage = errorMessage;
-      });
-      this.subscriptions.push(subscription);
-    }
 
     this.searchControl.valueChanges.pipe(
       debounceTime(500),
@@ -103,13 +78,29 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
 
   }
 
-  ngOnDestroy() {
-    if (this.subscriptions && this.subscriptions.length) {
-      this.subscriptions.forEach(subscription => {
-        subscription.unsubscribe();
-      });
-    }
+  @Input()
+  set searchValue(searchValue: string) {
+    this.searchControl.setValue(searchValue);
   }
+
+  @Input()
+  set errorMessage(errorMessage: string) {
+    this.searchControl.markAsTouched();
+        if (errorMessage) {
+          this.searchControl.setErrors({
+            error: true
+          });
+        } else {
+          this.searchControl.setErrors(null);
+        }
+        this.privateErrorMessage = errorMessage;
+  }
+
+  get errorMessage(): string {
+    return this.privateErrorMessage;
+  }
+
+  ngOnDestroy() {}
 
   setStatus(value) {
     // get matAutocomplete status so highlight() doesn't get undefined #overflow

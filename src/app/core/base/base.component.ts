@@ -30,7 +30,7 @@ export class BaseComponent implements OnInit {
   logoSrcPath: string;
   auth?: Auth;
   environment: Environment;
-  searchValueEmitter: Observable<string>;
+  searchValue: string;
 
   constructor(
     private router: Router,
@@ -41,14 +41,12 @@ export class BaseComponent implements OnInit {
 
   ngOnInit() {
 
-    this.searchValueEmitter = new Observable(observer => {
-      if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
-        observer.next(this.activatedRoute.snapshot.queryParamMap.get('search'));
-      }
+    if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
+      this.searchValue = this.activatedRoute.snapshot.queryParamMap.get('search');
+    }
 
-      this.activatedRoute.queryParamMap.subscribe(params => {
-        observer.next(params.get('search'));
-      });
+    this.activatedRoute.queryParamMap.subscribe(params => {
+      this.searchValue = params.get('search');
     });
 
     this.authService.getAuth().subscribe(auth => {

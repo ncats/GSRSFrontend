@@ -32,6 +32,7 @@ import { StructureFormComponent } from './structure-form/structure-form.componen
 import { AmountFormComponent } from './amount-form/amount-form.component';
 import { CodeFormComponent } from './code-form/code-form.component';
 import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
+import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { RelationshipFormComponent } from './relationship-form/relationship-form
     MatExpansionModule,
     MatBadgeModule,
     MatRadioModule,
-    ExpandDetailsModule
+    ExpandDetailsModule,
+    SubstanceSelectorModule
   ],
   declarations: [
     AccessManagerComponent,

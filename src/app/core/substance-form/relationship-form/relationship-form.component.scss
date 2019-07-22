@@ -1,6 +1,7 @@
 .relationship-form-container {
     padding: 30px 10px 12px 10px;
     position: relative;
+    display: flex;
 }
 
 .notification-backdrop {
@@ -19,6 +20,15 @@
     color: #666;
 }
 
+.related-substance, .mediator-substance {
+    max-width: 25%;
+    width: 25%;
+}
+
+.form-content {
+    flex-grow: 1;
+}
+
 .form-row {
     display: flex;
     justify-content: space-between;
@@ -28,13 +38,9 @@
         padding: 0 10px 8px 0;
     }
 
-    .relationship-system, .relationship-system-type, .type {
+    .type, .qualification, .interaction-type, .comments {
         flex-grow: 1;
         padding-right: 15px;
-    }
-
-    .relationship-text, .url {
-        flex-grow: 1;
     }
 }
 
@@ -56,4 +62,13 @@
 
 .references-container {
     width: 100%;
+}
+
+.amount-title {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.amount-form-container {
+    padding: 0 7px;
 }
