@@ -63,3 +63,8 @@
   <div class="amount-title">Amount</div>
   <app-amount-form [substanceAmount]="relationship.amount"></app-amount-form>
 </div>
+<div class="form-row">
+  <div class="references-container">
+    <app-domain-references [uuid]="reference.uuid" #references></app-domain-references>
+  </div>
+</div>

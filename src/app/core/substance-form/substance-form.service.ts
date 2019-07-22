@@ -36,6 +36,7 @@ export class SubstanceFormService {
   private substanceMoietiesEmitter = new Subject<Array<SubstanceMoiety>>();
   private substanceCodesEmitter = new Subject<Array<SubstanceCode>>();
   private substanceRelationshipsEmitter = new Subject<Array<SubstanceRelationship>>();
+  private newNonUuidGeneratingObjects: Array<any> = [];
 
   constructor(
     private substanceService: SubstanceService,
@@ -247,7 +248,13 @@ export class SubstanceFormService {
   }
 
   addSubstanceName(): void {
-    const newName: SubstanceName = {};
+    const newName: SubstanceName = {
+      uuid: this.utilsService.newUUID(),
+      references: []
+    };
+
+    this.domainReferences[newName.uuid] = new DomainReferences(newName, this.substance.references, this.utilsService);
+    this.newNonUuidGeneratingObjects.push(newName);
     this.substance.names.unshift(newName);
     this.substanceNamesEmitter.next(this.substance.names);
   }
@@ -258,6 +265,12 @@ export class SubstanceFormService {
       this.substance.names.splice(subNameIndex, 1);
       this.substanceNamesEmitter.next(this.substance.names);
     }
+    const newNameIndex = this.newNonUuidGeneratingObjects.findIndex(newName => newName.uuid === name.uuid);
+    if (newNameIndex > -1) {
+      this.newNonUuidGeneratingObjects.splice(newNameIndex, 1);
+    }
+
+    this.domainReferences[name.uuid] = null;
   }
 
   // Names end
@@ -368,7 +381,6 @@ export class SubstanceFormService {
     this.computedMoieties = moieties;
 
     this.substanceMoietiesEmitter.next(this.substance.moieties);
-    console.log(this.substance.moieties);
   }
 
   // Structure end
