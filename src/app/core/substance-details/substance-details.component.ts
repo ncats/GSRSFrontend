@@ -22,6 +22,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { UtilsService } from '../utils/utils.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { environment } from '../../../environments/environment';
+import {Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-substance-details',
@@ -30,33 +31,62 @@ import { environment } from '../../../environments/environment';
 })
 export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   id: string;
+  version: number;
+  latestVersion: number;
+  termSubscriber: Subscription;
   substance: SubstanceDetail;
   substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
   @ViewChild('matSideNavInstance') matSideNav: MatSidenav;
   hasBackdrop = false;
-
+  substanceUpdated = new Subject<SubstanceDetail>();
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
     private router: Router,
+    private route: ActivatedRoute,
     private dynamicComponentLoader: DynamicComponentLoader,
     private substanceCardsService: SubstanceCardsService,
     private utilsService: UtilsService,
-    private gaService: GoogleAnalyticsService
+    private gaService: GoogleAnalyticsService,
+    private activeRoute: ActivatedRoute
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
   ngOnInit() {
     this.gaService.sendPageView(`Substance Details`);
-    this.loadingService.setLoading(true);
     this.id = this.activatedRoute.snapshot.params['id'];
-    this.getSubstanceDetails();
+    this.version = this.activatedRoute.snapshot.params['version'];
+    this.loadingService.setLoading(true);
+     this.checkVersion().subscribe((result: number) => {this.latestVersion = result;
+       this.activeRoute.params.subscribe(routeParams => {
+         this.id = routeParams.id;
+         this.version = routeParams.version;
+         if (this.version) {
+           if (Number(this.latestVersion) > Number(this.version)) {
+             this.getSubstanceDetails(this.id, this.version.toString());
+           } else {
+             this.getSubstanceDetails(this.id);
+           }
+         } else {
+           this.getSubstanceDetails(this.id);
+         }
+
+       });
+
+     });
+
+
   }
 
+
+
   ngAfterViewInit(): void {
+
+
+
     this.dynamicComponents.changes
       .subscribe(() => {
         this.dynamicComponents.forEach((cRef, index) => {
@@ -71,6 +101,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
                   substanceProperty.updateCount(count);
                 });
                 ref.instance.substance = this.substance;
+                ref.instance.substanceUpdated = this.substanceUpdated.asObservable();
                 ref.instance.title = substanceProperty.title;
                 ref.instance.analyticsEventCategory = !environment.isAnalyticsPrivate
                   && this.utilsService.toCamelCase(`substance ${substanceProperty.title}`)
@@ -79,6 +110,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
                   ref.instance.type = substanceProperty.type;
                 }
                 ref.changeDetectorRef.detectChanges();
+                this.substanceUpdated.next(this.substance);
               });
           }
         });
@@ -103,11 +135,16 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   ngOnDestroy() {
     // window.removeEventListener('resize', this.processResponsiveness);
   }
+  checkVersion() {
+    return this.substanceService.checkVersion(this.id);
+  }
 
-  getSubstanceDetails() {
-    this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
+
+  getSubstanceDetails(id: string, version?: string) {
+    this.substanceService.getSubstanceDetails(id, version).subscribe(response => {
       if (response) {
         this.substance = response;
+        this.substanceUpdated.next(response);
         this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
           if (substanceProperty != null) {
             this.insertSubstanceProperty(substanceProperty);

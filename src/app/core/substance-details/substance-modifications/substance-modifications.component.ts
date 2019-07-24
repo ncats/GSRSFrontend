@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
 import {UtilsService} from '../../utils/utils.service';
-import {AgentModification, PhysicalModification, StructuralModification, SubstanceAmount} from '../../substance/substance.model';
+import {
+  AgentModification,
+  PhysicalModification,
+  StructuralModification,
+  SubstanceAmount,
+  SubstanceDetail
+} from '../../substance/substance.model';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-modifications',
@@ -12,6 +19,7 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
   structural: Array<StructuralModification>;
   physical: Array<PhysicalModification>;
   agent: Array<AgentModification>;
+  substanceUpdated = new Subject<SubstanceDetail>();
   structuralColumns: string[] = [
     'Modification Type',
     'Location Site',
@@ -37,18 +45,20 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
   }
 
   ngOnInit() {
-
-    if (this.substance != null) {
-      if (this.substance.modifications.structuralModifications.length > 0) {
-        this.structural = this.substance.modifications.structuralModifications;
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null) {
+        if (this.substance.modifications.structuralModifications.length > 0) {
+          this.structural = this.substance.modifications.structuralModifications;
+        }
+        if (this.substance.modifications.physicalModifications.length > 0) {
+          this.physical = this.substance.modifications.physicalModifications;
+        }
+        if (this.substance.modifications.agentModifications.length > 0) {
+          this.agent = this.substance.modifications.agentModifications;
+        }
       }
-      if (this.substance.modifications.physicalModifications.length > 0) {
-        this.physical = this.substance.modifications.physicalModifications;
-      }
-      if (this.substance.modifications.agentModifications.length > 0) {
-        this.agent = this.substance.modifications.agentModifications;
-      }
-    }
+    });
   }
 
   public toString(amount: SubstanceAmount) {

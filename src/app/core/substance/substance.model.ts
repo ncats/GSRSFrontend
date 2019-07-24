@@ -14,6 +14,7 @@ export interface SubstanceBaseExtended {
     substanceClass?: string;
     status?: string;
     version?: string;
+    approved?: string;
     approvedBy?: string;
     approvalID?: string;
     structurallyDiverse?: StructurallyDiverse;
@@ -24,6 +25,7 @@ export interface SubstanceBaseExtended {
     _name?: string;
     _self?: string;
     nucleicAcid?: NucleicAcid;
+    changeReason?: string;
 }
 
 
@@ -329,4 +331,11 @@ export interface Site {
     residueIndex?: number;
 }
 
-
+export interface SubstanceEdit {
+  editor: string;
+  version: string;
+  oldValue: string;
+  refid: string;
+  created: number;
+  comments?: string;
+}

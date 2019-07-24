@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
-import { Subunit } from '../../substance/substance.model';
+import {SubstanceDetail, Subunit} from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-subunits',
   templateUrl: './substance-subunits.component.html',
   styleUrls: ['./substance-subunits.component.scss']
 })
-export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnInit {
+export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnInit, AfterViewInit {
   subunits: Array<Subunit> = [];
   subunitSequences: Array<SubunitSequence> = [];
   vocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   view = 'details';
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -24,14 +26,22 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   }
 
   ngOnInit() {
-    if (this.substance != null
-      && this.substance.protein != null
-      && this.substance.protein.subunits != null
-      && this.substance.protein.subunits.length) {
+      if (this.substance != null
+        && this.substance.protein != null
+        && this.substance.protein.subunits != null
+        && this.substance.protein.subunits.length) {
         this.subunits = this.substance.protein.subunits;
         this.countUpdate.emit(this.subunits.length);
         this.getVocabularies();
-    }
+      }
+  }
+
+  ngAfterViewInit(){
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      this.subunits = this.substance.protein.subunits;
+      this.countUpdate.emit(this.subunits.length);
+    });
   }
 
   getVocabularies(): void {
@@ -113,7 +123,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   }
 
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
-    return `${subunitIndex} - ${unitIndex}: ${unitValue} (${this.vocabulary[unitValue].display})`;
+    return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${this.vocabulary[unitValue.toUpperCase()].display})`;
   }
 
   updateView(event): void {
