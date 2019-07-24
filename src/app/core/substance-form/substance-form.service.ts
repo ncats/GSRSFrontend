@@ -4,7 +4,8 @@ import {
   SubstanceReference,
   SubstanceName,
   SubstanceStructure,
-  SubstanceMoiety
+  SubstanceMoiety,
+  SubstanceCode
 } from '../substance/substance.model';
 import {
   SubstanceFormDefinition,
@@ -32,6 +33,7 @@ export class SubstanceFormService {
   private computedMoieties: Array<SubstanceMoiety>;
   private deletedMoieties: Array<SubstanceMoiety> = [];
   private substanceMoietiesEmitter = new Subject<Array<SubstanceMoiety>>();
+  private substanceCodesEmitter = new Subject<Array<SubstanceCode>>();
 
   constructor(
     private substanceService: SubstanceService,
@@ -242,6 +244,12 @@ export class SubstanceFormService {
     return this.substanceNamesEmitter.asObservable();
   }
 
+  addSubstanceName(): void {
+    const newName: SubstanceName = {};
+    this.substance.names.unshift(newName);
+    this.substanceNamesEmitter.next(this.substance.names);
+  }
+
   deleteSubstanceName(name: SubstanceName): void {
     const subNameIndex = this.substance.names.findIndex(subName => name.uuid === subName.uuid);
     if (subNameIndex > -1) {
@@ -363,6 +371,44 @@ export class SubstanceFormService {
 
   // Structure end
 
+  // Codes start
+
+  get substanceCodes(): Observable<Array<SubstanceCode>> {
+    setTimeout(() => {
+      if (this.substance != null) {
+        if (this.substance.codes == null) {
+          this.substance.codes = [];
+        }
+        this.substanceCodesEmitter.next(this.substance.codes);
+      } else {
+        const subscription = this.substanceEmitter.subscribe(substance => {
+          if (this.substance.codes == null) {
+            this.substance.codes = [];
+          }
+          this.substanceCodesEmitter.next(this.substance.codes);
+          subscription.unsubscribe();
+        });
+      }
+    });
+    return this.substanceCodesEmitter.asObservable();
+  }
+
+  addSubstanceCode(): void {
+    const newCode: SubstanceCode = {};
+    this.substance.codes.unshift(newCode);
+    this.substanceCodesEmitter.next(this.substance.codes);
+  }
+
+  deleteSubstanceCode(code: SubstanceCode): void {
+    const subCodeIndex = this.substance.codes.findIndex(subCode => code.uuid === subCode.uuid);
+    if (subCodeIndex > -1) {
+      this.substance.codes.splice(subCodeIndex, 1);
+      this.substanceNamesEmitter.next(this.substance.names);
+    }
+  }
+
+  // Codes end
+
   saveSubstance(): Observable<SubstanceFormResults> {
     return new Observable(observer => {
       const results: SubstanceFormResults = {
@@ -388,6 +434,7 @@ export class SubstanceFormService {
         this.substanceNamesEmitter.next(this.substance.names);
         this.substanceStructureEmitter.next(this.substance.structure);
         this.substanceMoietiesEmitter.next(this.substance.moieties);
+        this.substanceCodesEmitter.next(this.substance.codes);
         observer.next(results);
       }, error => {
         results.isSuccessfull = false;

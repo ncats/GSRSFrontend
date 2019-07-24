@@ -4,6 +4,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
         'substance-form-names',
         'substance-form-structure',
         'substance-form-moieties',
+        'substance-form-codes',
         'substance-form-references'
     ]
 };

@@ -22,3 +22,9 @@
         padding: 0;
     }
 }
+
+.mat-expansion-panel-header-title {
+    &.block-display {
+        display: block;
+    }
+}

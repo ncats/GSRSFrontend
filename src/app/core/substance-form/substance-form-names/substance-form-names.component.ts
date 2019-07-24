@@ -27,6 +27,10 @@ export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implem
     });
   }
 
+  addName(): void {
+    this.substanceFormService.addSubstanceName();
+  }
+
   priorityUpdated(updatedName: SubstanceName): void {
     this.names.forEach(name => {
       if (name.uuid !== updatedName.uuid) {

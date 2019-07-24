@@ -31,7 +31,7 @@ export class NameFormComponent implements OnInit {
   @Input()
   set name(name: SubstanceName) {
     this.privateName = name;
-    this.nameControl = new FormControl(this.name.name);
+    this.nameControl = new FormControl(this.name.name, [Validators.required]);
     this.nameControl.valueChanges.subscribe(value => {
       this.name.name = value;
     });
