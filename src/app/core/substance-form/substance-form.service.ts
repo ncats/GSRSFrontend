@@ -14,10 +14,11 @@ import {
 } from './substance-form.model';
 import { Observable, Subject } from 'rxjs';
 import { SubstanceService } from '../substance/substance.service';
-import { referencesDomains } from './domain-references/domains.constant';
+import { domainKeys } from './domain-references/domain-keys.constant';
 import { DomainReferences } from './domain-references/domain-references';
 import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
+import { DomainsWithReferences } from './domain-references/domain.references.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,8 @@ export class SubstanceFormService {
   private substanceCodesEmitter = new Subject<Array<SubstanceCode>>();
   private substanceRelationshipsEmitter = new Subject<Array<SubstanceRelationship>>();
   private newNonUuidGeneratingObjects: Array<any> = [];
+  private privateDomainsWithReferences: DomainsWithReferences;
+  private domainsWithReferencesEmitter = new Subject<DomainsWithReferences>();
 
   constructor(
     private substanceService: SubstanceService,
@@ -54,7 +57,9 @@ export class SubstanceFormService {
           substanceClass: substanceClass,
           references: [],
           names: [],
-          structure: {}
+          structure: {},
+          codes: [],
+          relationships: [],
         };
       }
 
@@ -179,29 +184,43 @@ export class SubstanceFormService {
     return reference;
   }
 
-  getDomainReferences(uuid: string): DomainReferences {
-    if (this.domainReferences[uuid] != null) {
-      return this.domainReferences[uuid];
+  get domainsWithReferences(): Observable<DomainsWithReferences> {
+    setTimeout(() => {
+      if (this.substance != null) {
+        this.domainsWithReferencesEmitter.next(this.getDomainReferences());
+      } else {
+        const subscription = this.substanceEmitter.subscribe(substance => {
+          this.definitionEmitter.next(this.getDefinition());
+          subscription.unsubscribe();
+        });
+      }
+    });
+    return this.domainsWithReferencesEmitter.asObservable();
+  }
+
+  getDomainReferences(): DomainsWithReferences {
+    if (this.privateDomainsWithReferences != null) {
+      return this.privateDomainsWithReferences;
     } else {
       let domain: string;
 
       if (this.substance[this.subClass] && (this.substance[this.subClass].uuid === uuid || this.substance[this.subClass].id === uuid)) {
         domain = this.substance[this.subClass];
       } else {
-        for (let i = 0; i < referencesDomains.length; i++) {
-          if (this.substance[referencesDomains[i]]) {
-            if (Object.prototype.toString.call(this.substance[referencesDomains[i]]) === '[object Array]'
-              && this.substance[referencesDomains[i]].length) {
+        for (let i = 0; i < domainKeys.length; i++) {
+          if (this.substance[domainKeys[i]]) {
+            if (Object.prototype.toString.call(this.substance[domainKeys[i]]) === '[object Array]'
+              && this.substance[domainKeys[i]].length) {
 
-              domain = this.substance[referencesDomains[i]].find(_domain => _domain.uuid === uuid);
+              domain = this.substance[domainKeys[i]].find(_domain => _domain.uuid === uuid);
 
               if (domain != null) {
                 break;
               }
 
-            } else if (Object.prototype.toString.call(this.substance[referencesDomains[i]]) === '[object Object]'
-              && this.substance[referencesDomains[i]].uuid === uuid) {
-              domain = this.substance[referencesDomains[i]];
+            } else if (Object.prototype.toString.call(this.substance[domainKeys[i]]) === '[object Object]'
+              && this.substance[domainKeys[i]].uuid === uuid) {
+              domain = this.substance[domainKeys[i]];
               break;
             }
           }

@@ -2,13 +2,13 @@ import { FormControl } from '@angular/forms';
 import { SubstanceDetail } from '../../substance/substance.model';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Subject, Observable } from 'rxjs';
-import { referencesDomains, displayKeys } from '../domain-references/domains.constant';
+import { domainKeys, domainDisplayKeys } from '../domain-references/domain-keys.constant';
 import { DomainReferences } from '../domain-references/domain-references';
 import { SubstanceFormService } from '../substance-form.service';
 
 export class ReferenceApplied {
-    private propertiesWithReferences = referencesDomains.slice();
-    private displayKeys = displayKeys;
+    private propertiesWithReferences = domainKeys.slice();
+    private displayKeys = domainDisplayKeys;
     optionCategories: Array<{
         property: string;
         options: Array<{
