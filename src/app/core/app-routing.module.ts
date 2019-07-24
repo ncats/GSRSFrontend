@@ -29,6 +29,10 @@ const childRoutes: Routes = [
     component: SubstanceDetailsComponent
   },
   {
+    path: 'substances/:id/v/:version',
+    component: SubstanceDetailsComponent
+  },
+  {
     path: 'structure-search',
     component: StructureSearchComponent
   },

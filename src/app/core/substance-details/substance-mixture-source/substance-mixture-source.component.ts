@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {SubstanceRelated} from '../../substance/substance.model';
+import {SubstanceDetail, SubstanceRelated} from '../../substance/substance.model';
 import {UtilsService} from '../../utils/utils.service';
 import {SafeUrl} from '@angular/platform-browser';
 import {SubstanceCardBase} from '../substance-card-base';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-mixture-source',
@@ -11,6 +12,7 @@ import {SubstanceCardBase} from '../substance-card-base';
 })
 export class SubstanceMixtureSourceComponent extends SubstanceCardBase implements OnInit {
  parent: SubstanceRelated;
+  substanceUpdated = new Subject<SubstanceDetail>();
   constructor(
     private utilsService: UtilsService
   ) {
@@ -18,9 +20,12 @@ export class SubstanceMixtureSourceComponent extends SubstanceCardBase implement
   }
 
   ngOnInit() {
-    if (this.substance != null && this.substance.mixture.parentSubstance != null) {
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null && this.substance.mixture.parentSubstance != null) {
         this.parent = this.substance.mixture.parentSubstance;
-    }
+      }
+    });
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {

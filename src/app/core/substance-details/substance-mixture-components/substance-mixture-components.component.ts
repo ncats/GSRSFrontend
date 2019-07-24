@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
-import { MixtureComponents } from '../../substance/substance.model';
+import {MixtureComponents, SubstanceDetail} from '../../substance/substance.model';
 import { SafeUrl} from '@angular/platform-browser';
 import {UtilsService} from '../../utils/utils.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-mixture-components',
@@ -14,7 +15,7 @@ export class SubstanceMixtureComponentsComponent extends SubstanceCardBase imple
   required: Array<MixtureComponents>;
   presentInAny: Array<MixtureComponents>;
   presentInOne: Array<MixtureComponents>;
-
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
     private utilsService: UtilsService,
@@ -23,15 +24,18 @@ export class SubstanceMixtureComponentsComponent extends SubstanceCardBase imple
   }
 
   ngOnInit() {
-    if ((this.substance != null) && (this.substance.mixture.components.length > 0)) {
-      this.components = this.substance.mixture.components;
-      this.required = this.components.filter(
-        component => component.type === 'MUST_BE_PRESENT');
-      this.presentInAny = this.components.filter(
-        component => component.type === 'MAY_BE_PRESENT_ANY_OF');
-      this.presentInOne = this.components.filter(
-        component => component.type === 'MAY_BE_PRESENT_ONE_OF');
-    }
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if ((this.substance != null) && (this.substance.mixture.components.length > 0)) {
+        this.components = this.substance.mixture.components;
+        this.required = this.components.filter(
+          component => component.type === 'MUST_BE_PRESENT');
+        this.presentInAny = this.components.filter(
+          component => component.type === 'MAY_BE_PRESENT_ANY_OF');
+        this.presentInOne = this.components.filter(
+          component => component.type === 'MAY_BE_PRESENT_ONE_OF');
+      }
+    });
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {

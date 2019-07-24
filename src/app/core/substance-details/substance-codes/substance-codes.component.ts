@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
-import { SubstanceCode } from '../../substance/substance.model';
+import {SubstanceCode, SubstanceDetail} from '../../substance/substance.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-codes',
   templateUrl: './substance-codes.component.html',
   styleUrls: ['./substance-codes.component.scss']
 })
-export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<SubstanceCode> implements OnInit {
+export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<SubstanceCode> implements OnInit, AfterViewInit {
   type: string;
   codes: Array<SubstanceCode> = [];
   displayedColumns: string[];
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
     private dialog: MatDialog,
@@ -22,32 +24,41 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   ngOnInit() {
-    if (this.substance != null && this.type != null) {
-      if (this.type === 'classification') {
-        this.displayedColumns = ['classificationTree', 'codeSystem', 'code', 'references'];
-      } else {
-        this.displayedColumns = ['codeSystem', 'code', 'type', 'description', 'references'];
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      this.codes = [];
+      if (this.substance != null && this.type != null) {
+        if (this.type === 'classification') {
+          this.displayedColumns = ['classificationTree', 'codeSystem', 'code', 'references'];
+        } else {
+          this.displayedColumns = ['codeSystem', 'code', 'type', 'description', 'references'];
+        }
+
+          this.filterSubstanceCodes();
+
+        if (this.codes != null && this.codes.length) {
+          this.filtered = this.codes;
+          this.pageChange();
+
+          this.searchControl.valueChanges.subscribe(value => {
+            this.filterList(value, this.codes);
+          }, error => {
+            console.log(error);
+          });
+        } else {
+          this.filtered = [];
+        }
       }
+    });
 
-      this.filterSubstanceCodes();
+  }
 
-      if (this.codes != null && this.codes.length) {
-        this.filtered = this.codes;
-        this.pageChange();
-
-        this.searchControl.valueChanges.subscribe(value => {
-          this.filterList(value, this.codes);
-        }, error => {
-          console.log(error);
-        });
-      } else {
-        this.filtered = [];
-      }
-    }
+  ngAfterViewInit(): void {
   }
 
   private filterSubstanceCodes(): void {
     if (this.substance.codes && this.substance.codes.length > 0) {
+      console.log(this.substance.codes);
       this.substance.codes.forEach(code => {
         if (code.comments && code.comments.indexOf('|') > -1 && this.type === 'classification') {
           this.codes.push(code);

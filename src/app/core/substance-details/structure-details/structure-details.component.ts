@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { SubstanceDetail } from '../../substance/substance.model';
 import { SubstanceStructure } from '../../substance/substance.model';
 import { StructureService } from '../../structure/structure.service';
@@ -6,13 +6,14 @@ import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import { SubstanceCardBase } from '../substance-card-base';
 import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-structure-details',
   templateUrl: './structure-details.component.html',
   styleUrls: ['./structure-details.component.scss']
 })
-export class StructureDetailsComponent extends SubstanceCardBase implements OnInit {
+export class StructureDetailsComponent extends SubstanceCardBase implements OnInit, AfterViewInit {
   structure: SubstanceStructure;
   showDef = false;
   showSmiles = false;
@@ -21,6 +22,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   inchi: string;
   showStereo = false;
   molfileHref: any;
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
     private utilService: UtilsService,
@@ -32,18 +34,34 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   }
 
   ngOnInit() {
-    if (this.substance != null) {
-      this.structure = this.substance.structure;
-      if (this.structure.smiles) {
-        this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
-          this.inchi = inchi;
-        });
+
+      if (this.substance != null) {
+        this.structure = this.substance.structure;
+        if (this.structure.smiles) {
+          this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
+            this.inchi = inchi;
+          });
+        }
+        const theJSON = this.structure.molfile;
+        const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
+        this.molfileHref = uri;
       }
 
-      const theJSON = this.structure.molfile;
-      const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
-      this.molfileHref = uri;
+  }
+
+  ngAfterViewInit() {
+  this.substanceUpdated.subscribe(substance => {
+    this.substance = substance;
+    this.structure = this.substance.structure;
+    if (this.structure.smiles) {
+      this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
+        this.inchi = inchi;
+      });
     }
+    const theJSON = this.structure.molfile;
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
+    this.molfileHref = uri;
+  });
   }
 
   getSafeStructureImgUrl(stereo: boolean, structureId: string, size: number = 150): SafeUrl {

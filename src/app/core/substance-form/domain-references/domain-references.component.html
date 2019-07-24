@@ -2,7 +2,7 @@
   <mat-accordion>
     <mat-expansion-panel hideToggle="true" (closed)="panelClosed()" (opened)="panelOpened()">
       <mat-expansion-panel-header>
-        <mat-panel-title>
+        <mat-panel-title [ngClass]="{'block-display': !isExpanded}">
           <h4 class="title" matTooltip="Expand references">
             References
             <span

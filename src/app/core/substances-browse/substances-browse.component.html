@@ -329,7 +329,13 @@
                   <span *ngFor="let codeSystemName of substance.codeSystemNames | take: 5">
                     <div>
                       <strong>{{codeSystemName}}</strong>:&nbsp;
-                      <span *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLastCodeObject">{{codeObject.code.trim()}}
+                      <span *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLastCodeObject">
+                        <span *ngIf="codeObject.url">
+                            <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent evCategory="substancesContent" evAction="link:code">
+                              {{codeObject.code.trim()}}
+                            </a>
+                          </span>
+                          <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}</span>
                         <span *ngIf="!isLastCodeObject">, </span>
                       </span>
                     </div>

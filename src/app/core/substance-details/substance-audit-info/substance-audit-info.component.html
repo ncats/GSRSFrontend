@@ -15,4 +15,17 @@
     <div class="name">Last Edited By</div>
     <div class="value">{{substance.lastEditedBy}}</div>
   </div>
+
+  <div class="name-value" *ngIf = "substance.approved">
+    <div class="name">Approved</div>
+    <div class="value">{{substance.approved| date : 'short'}}</div>
+  </div>
+  <div class="name-value" *ngIf = "substance.approved">
+    <div class="name">Approved By</div>
+    <div class="value">{{substance.approvedBy}}</div>
+  </div>
+  <div class="name-value" *ngIf = "substance.changeReason">
+    <div class="name">Version Comments</div>
+    <div class="value">{{substance.changeReason}}</div>
+  </div>
 </div>

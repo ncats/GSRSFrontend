@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SubstanceRelationship } from '../../substance/substance.model';
+import {SubstanceDetail, SubstanceRelationship} from '../../substance/substance.model';
 import { SafeUrl } from '@angular/platform-browser';
 import { UtilsService } from '../../utils/utils.service';
 import { ConfigService } from '../../config/config.service';
 import { MatDialog } from '@angular/material';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-relationships',
@@ -17,6 +18,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   relationships: Array<SubstanceRelationship> = [];
   displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details', 'references'];
   private excludedRelationships: Array<string>;
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
     private utilService: UtilsService,
@@ -28,30 +30,35 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   }
 
   ngOnInit() {
-    if (this.type === 'RELATIONSHIPS'
-      && this.configService.configData
-      && this.configService.configData.substanceDetailsCards
-      && this.configService.configData.substanceDetailsCards.length
-    ) {
-      const relationshipsCard = this.configService.configData.substanceDetailsCards.find(card => card.type === this.type);
-      if (relationshipsCard != null && relationshipsCard.filters && relationshipsCard.filters.length) {
-        const filter = relationshipsCard.filters.find(_filter => _filter.filterName === 'substanceRelationships') || { value: [] };
-        this.excludedRelationships = filter.value;
+    console.log(this.substance);
+    this.substanceUpdated.subscribe(substance => {
+      this.relationships = [];
+      console.log(this.substance);
+      this.substance = substance;
+      if (this.type === 'RELATIONSHIPS'
+        && this.configService.configData
+        && this.configService.configData.substanceDetailsCards
+        && this.configService.configData.substanceDetailsCards.length
+      ) {
+        const relationshipsCard = this.configService.configData.substanceDetailsCards.find(card => card.type === this.type);
+        if (relationshipsCard != null && relationshipsCard.filters && relationshipsCard.filters.length) {
+          const filter = relationshipsCard.filters.find(_filter => _filter.filterName === 'substanceRelationships') || {value: []};
+          this.excludedRelationships = filter.value;
+        }
       }
-    }
 
-    if (this.substance != null && this.type != null) {
-      this.filterRelationhships();
-      this.countUpdate.emit(this.relationships.length);
-      this.filtered = this.relationships;
-      this.pageChange();
-      this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.relationships, this.analyticsEventCategory);
-      }, error => {
-        console.log(error);
-      });
-    }
-
+      if (this.substance != null && this.type != null) {
+        this.filterRelationhships();
+        this.countUpdate.emit(this.relationships.length);
+        this.filtered = this.relationships;
+        this.pageChange();
+        this.searchControl.valueChanges.subscribe(value => {
+          this.filterList(value, this.relationships, this.analyticsEventCategory);
+        }, error => {
+          console.log(error);
+        });
+      }
+    });
   }
 
   private filterRelationhships(): void {

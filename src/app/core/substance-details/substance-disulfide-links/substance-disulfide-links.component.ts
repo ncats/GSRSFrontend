@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
-import {DisulfideLink, Site} from '../../substance/substance.model';
+import {DisulfideLink, Site, SubstanceDetail} from '../../substance/substance.model';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-disulfide-links',
@@ -11,6 +12,7 @@ export class SubstanceDisulfideLinksComponent extends SubstanceCardBase implemen
   disulfideLinks: Array<DisulfideLink>;
   formatted: any = [];
   displayedColumns: string[] = ['to', 'from'];
+  substanceUpdated = new Subject<SubstanceDetail>();
 
 
   constructor() {
@@ -18,18 +20,21 @@ export class SubstanceDisulfideLinksComponent extends SubstanceCardBase implemen
   }
 
   ngOnInit() {
-    if (this.substance != null
-      && this.substance.protein != null
-      && this.substance.protein.disulfideLinks != null
-      && this.substance.protein.disulfideLinks.length) {
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null
+        && this.substance.protein != null
+        && this.substance.protein.disulfideLinks != null
+        && this.substance.protein.disulfideLinks.length) {
         this.disulfideLinks = this.substance.protein.disulfideLinks;
         for (const link of this.disulfideLinks) {
           const tocol = link.sites[0].subunitIndex + '_' + link.sites[0].residueIndex;
           const fromcol = link.sites[1].subunitIndex + '_' + link.sites[1].residueIndex;
-         this.formatted.push({to: tocol, from: fromcol});
+          this.formatted.push({to: tocol, from: fromcol});
         }
         this.countUpdate.emit(this.formatted.length);
-    }
+      }
+    });
   }
 
 

@@ -3,6 +3,8 @@ import { SubstanceDetail } from '../substance/substance.model';
 import { SubstanceCardFilterParameters } from '../config/config.model';
 import { getEvaluatedProperty } from './substance-cards-utils';
 import { Observable } from 'rxjs';
+import { AuthService} from '@gsrs-core/auth/auth.service';
+import {HttpClient} from '@angular/common/http';
 
 export const substanceCardsFilters: Array<SubstanceCardFilter> = [
     {
@@ -24,6 +26,10 @@ export const substanceCardsFilters: Array<SubstanceCardFilter> = [
     {
         name: 'substanceRelationships',
         filter: substanceRelationshipsFilter
+    },
+    {
+      name: 'hasCredentials',
+      filter: credentialsFilter
     }
 ];
 
@@ -150,3 +156,23 @@ export function substanceRelationshipsFilter(
         observer.complete();
     });
 }
+
+  export function credentialsFilter(
+    substance: SubstanceDetail,
+    filter: SubstanceCardFilterParameters,
+    http: HttpClient,
+    auth: AuthService
+  ): Observable<boolean> {
+    return new Observable(observer => {
+
+      let isApproved = false;
+      if (filter.propertyToCheck != null) {
+        if (auth.hasRoles(filter.propertyToCheck) === true) {
+          isApproved = true;
+        }
+      }
+      observer.next(isApproved);
+      observer.complete();
+    });
+}
+
