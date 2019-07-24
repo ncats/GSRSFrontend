@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
-import { DomainReferences } from './domain-references';
 import { SubstanceFormService } from '../substance-form.service';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -8,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RefernceFormDialogComponent } from '../references-dialogs/refernce-form-dialog.component';
 import { ReuseReferencesDialogComponent } from '../references-dialogs/reuse-references-dialog.component';
 import { ReuseReferencesDialogData } from '../references-dialogs/reuse-references-dialog-data.model';
-import {  MatTableDataSource  } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-domain-references',
@@ -16,7 +15,9 @@ import {  MatTableDataSource  } from '@angular/material/table';
   styleUrls: ['./domain-references.component.scss']
 })
 export class DomainReferencesComponent implements OnInit {
-  domainReferences: DomainReferences;
+  private domainReferenceUuids: Array<string>;
+  private substanceReferences: Array<SubstanceReference>;
+  references: Array<SubstanceReference> = [];
   documentTypesDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
   displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete'];
   tableData: MatTableDataSource<SubstanceReference>;
@@ -31,23 +32,35 @@ export class DomainReferencesComponent implements OnInit {
 
   ngOnInit() {
     this.getVocabularies();
+    this.substanceFormService.substanceReferences.subscribe(references => {
+      this.substanceReferences = references || [];
+      this.loadReferences();
+    });
   }
 
   @Input()
-  set uuid(uuid: string) {
-    if (uuid != null) {
-      this.domainReferences = this.substanceFormService.getDomainReferences(uuid);
-      this.tableData = new MatTableDataSource<SubstanceReference>(this.domainReferences.references);
-      this.domainReferences.domainReferencesUpdated.subscribe(() => {
-        this.tableData.data = this.domainReferences.references;
-      });
-    }
+  set referencesUuids(referencesUuids: Array<string>) {
+    this.domainReferenceUuids = referencesUuids || [];
+    this.loadReferences();
   }
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
       this.documentTypesDictionary = response['DOCUMENT_TYPE'].dictionary;
     });
+  }
+
+  private loadReferences() {
+    if (this.domainReferenceUuids && this.substanceReferences) {
+      this.references = [];
+      this.domainReferenceUuids.forEach((uuid: string) => {
+        const substanceReference = this.substanceReferences.find(reference => reference.uuid === uuid);
+        if (substanceReference != null) {
+          this.references.push(substanceReference);
+        }
+      });
+      this.tableData = new MatTableDataSource<SubstanceReference>(this.references);
+    }
   }
 
   addNewReference(uuid?: string): void {
@@ -57,7 +70,7 @@ export class DomainReferencesComponent implements OnInit {
     };
 
     if (uuid != null) {
-      reference = this.domainReferences.getSubstanceReference(uuid);
+      reference = this.substanceReferences.find(substanceReference => substanceReference.uuid === uuid);
     }
 
     const dialogRef = this.dialog.open(RefernceFormDialogComponent, {
@@ -67,17 +80,31 @@ export class DomainReferencesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(newReference => {
       if (newReference != null) {
-        newReference  = this.domainReferences.createSubstanceReference(newReference);
-        this.domainReferences.addDomainReference(newReference.uuid);
+        newReference = this.substanceFormService.addSubstanceReference(newReference);
+        this.addDomainReference(newReference.uuid);
       }
     });
+  }
+
+  addDomainReference(uuid: string): void {
+    if (this.domainReferenceUuids.indexOf(uuid) === -1) {
+      this.domainReferenceUuids.push(uuid);
+    }
+
+    let substanceReference = this.references.find(reference => reference.uuid === uuid);
+    if (substanceReference == null) {
+      substanceReference = this.substanceReferences.find(reference => reference.uuid === uuid);
+      if (substanceReference != null) {
+        this.references.push(substanceReference);
+      }
+    }
   }
 
   reuseExistingReference(): void {
 
     const data: ReuseReferencesDialogData = {
-      domainRefereceUuids: this.domainReferences.domainReferenceUuids,
-      substanceReferences: this.domainReferences.substanceReferences
+      domainRefereceUuids: this.domainReferenceUuids,
+      substanceReferences: this.substanceReferences
     };
 
     const dialogRef = this.dialog.open(ReuseReferencesDialogComponent, {
@@ -87,24 +114,45 @@ export class DomainReferencesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(domainRefereceUuids => {
       if (domainRefereceUuids != null) {
-        this.domainReferences.updateDomainReferences(domainRefereceUuids);
+        this.updateDomainReferences(domainRefereceUuids);
       }
     });
   }
 
-  removeReference(referenceUuid: string): void {
-    this.domainReferences.removeDomainReference(referenceUuid);
+  updateDomainReferences(referenceUuids: Array<string>): void {
+    this.domainReferenceUuids = referenceUuids || [];
+    const references = [];
+    this.domainReferenceUuids.forEach((uuid: string) => {
+      const substanceReference = this.substanceReferences.find(reference => reference.uuid === uuid);
+      if (substanceReference != null) {
+        references.push(substanceReference);
+      }
+    });
+    this.references = references;
+  }
+
+  removeDomainReference(uuid: string): void {
+    const referenceUuidIndex = this.domainReferenceUuids.indexOf(uuid);
+
+    if (referenceUuidIndex > -1) {
+      this.domainReferenceUuids.splice(referenceUuidIndex, 1);
+    }
+    const substanceReferenceIndex = this.references.findIndex(reference => reference.uuid === uuid);
+
+    if (substanceReferenceIndex > -1) {
+      this.references.splice(substanceReferenceIndex, 1);
+    }
   }
 
   panelOpened(): void {
     this.isExpanded = true;
-    const event: Event = new Event('focusin', { bubbles: true, cancelable: true} );
+    const event: Event = new Event('focusin', { bubbles: true, cancelable: true });
     this.element.nativeElement.dispatchEvent(event);
   }
 
   panelClosed(): void {
     this.isExpanded = false;
-    const event: Event = new Event('focusout', { bubbles: true, cancelable: true} );
+    const event: Event = new Event('focusout', { bubbles: true, cancelable: true });
     this.element.nativeElement.dispatchEvent(event);
   }
 

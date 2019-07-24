@@ -80,6 +80,7 @@ export class RelationshipFormComponent implements OnInit {
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     const relatedSubstance: SubstanceRelated = {
       refPname: substance._name,
+      name: substance._name,
       refuuid: substance.uuid,
       substanceClass: 'reference',
       approvalID: substance.approvalID

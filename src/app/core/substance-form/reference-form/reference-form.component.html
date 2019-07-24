@@ -41,34 +41,7 @@
     </div>
     <span class="fill-middle"></span>
     <div *ngIf="reference.uuid">
-      <button mat-button [matMenuTriggerFor]="appliedOptionsMenu">
-        <span>Apply to</span>&nbsp;
-        <mat-icon svgIcon="menu"></mat-icon>
-      </button>
-      <mat-menu class="applied-menu-container" #appliedOptionsMenu="matMenu" xPosition="before">
-        <button mat-menu-item (click)="referenceApplied.applyToAll()">
-          <span>All</span>
-        </button>
-        <div *ngFor="let option of referenceApplied.options" mat-menu-item (click)="$event.stopPropagation()">
-          <mat-checkbox (change)="referenceApplied.updateAppliedOtion($event, option.item)"
-            [formControl]="option.control">
-            {{option.display}}
-          </mat-checkbox>
-        </div>
-        <ng-container *ngFor="let optionCategory of referenceApplied.optionCategories">
-          <button mat-menu-item [matMenuTriggerFor]="optionsMenu">
-            {{optionCategory.property}}
-          </button>
-          <mat-menu #optionsMenu="matMenu">
-            <div *ngFor="let option of optionCategory.options" mat-menu-item (click)="$event.stopPropagation()">
-              <mat-checkbox (change)="referenceApplied.updateAppliedOtion($event, option.item)"
-                [formControl]="option.control">
-                {{option.display}}
-              </mat-checkbox>
-            </div>
-          </mat-menu>
-        </ng-container>
-      </mat-menu>
+      <app-apply-reference [subReferenceUuid]="reference.uuid"></app-apply-reference>
     </div>
   </div>
 </div>

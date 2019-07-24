@@ -33,7 +33,7 @@
   </div>
   <div class="substance-form-row" *ngIf="definition.substanceClass != 'concept'">
     <div class="references-container">
-      <app-domain-references [uuid]="definition.uuid" #references></app-domain-references>
+      <app-domain-references [referencesUuids]="definition.references" #references></app-domain-references>
     </div>
   </div>
 </div>

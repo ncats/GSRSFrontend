@@ -14,8 +14,7 @@ import {
 } from './substance-form.model';
 import { Observable, Subject } from 'rxjs';
 import { SubstanceService } from '../substance/substance.service';
-import { domainKeys } from './domain-references/domain-keys.constant';
-import { DomainReferences } from './domain-references/domain-references';
+import { domainKeys, domainDisplayKeys } from './domain-references/domain-keys.constant';
 import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
 import { DomainsWithReferences } from './domain-references/domain.references.model';
@@ -28,7 +27,6 @@ export class SubstanceFormService {
   private substanceEmitter = new Subject<SubstanceDetail>();
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private substanceReferencesEmitter = new Subject<Array<SubstanceReference>>();
-  private domainReferences: { [uuid: string]: DomainReferences } = {};
   private substanceNamesEmitter = new Subject<Array<SubstanceName>>();
   private substanceStructureEmitter = new Subject<SubstanceStructure>();
   private subClass: string;
@@ -37,7 +35,6 @@ export class SubstanceFormService {
   private substanceMoietiesEmitter = new Subject<Array<SubstanceMoiety>>();
   private substanceCodesEmitter = new Subject<Array<SubstanceCode>>();
   private substanceRelationshipsEmitter = new Subject<Array<SubstanceRelationship>>();
-  private newNonUuidGeneratingObjects: Array<any> = [];
   private privateDomainsWithReferences: DomainsWithReferences;
   private domainsWithReferencesEmitter = new Subject<DomainsWithReferences>();
 
@@ -108,17 +105,14 @@ export class SubstanceFormService {
   // Definition Start
 
   get definition(): Observable<SubstanceFormDefinition> {
-    setTimeout(() => {
-      if (this.substance != null) {
-        this.definitionEmitter.next(this.getDefinition());
-      } else {
-        const subscription = this.substanceEmitter.subscribe(substance => {
-          this.definitionEmitter.next(this.getDefinition());
-          subscription.unsubscribe();
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        observer.next(this.getDefinition());
+        this.definitionEmitter.subscribe(definition => {
+          observer.next(this.getDefinition());
         });
-      }
+      });
     });
-    return this.definitionEmitter.asObservable();
   }
 
   updateDefinition(definition: SubstanceFormDefinition): void {
@@ -156,23 +150,17 @@ export class SubstanceFormService {
   // References start
 
   get substanceReferences(): Observable<Array<SubstanceReference>> {
-    setTimeout(() => {
-      if (this.substance != null) {
+    return new Observable(observer => {
+      this.ready().subscribe(substance => {
         if (this.substance.references == null) {
           this.substance.references = [];
         }
-        this.substanceReferencesEmitter.next(this.substance.references);
-      } else {
-        const subscription = this.substanceEmitter.subscribe(substance => {
-          if (this.substance.references == null) {
-            this.substance.references = [];
-          }
-          this.substanceReferencesEmitter.next(this.substance.references);
-          subscription.unsubscribe();
+        observer.next(this.substance.references);
+        this.substanceReferencesEmitter.subscribe(references => {
+          observer.next(this.substance.references);
         });
-      }
+      });
     });
-    return this.substanceReferencesEmitter.asObservable();
   }
 
   addSubstanceReference(reference: SubstanceReference): SubstanceReference {
@@ -185,57 +173,39 @@ export class SubstanceFormService {
   }
 
   get domainsWithReferences(): Observable<DomainsWithReferences> {
-    setTimeout(() => {
-      if (this.substance != null) {
-        this.domainsWithReferencesEmitter.next(this.getDomainReferences());
-      } else {
-        const subscription = this.substanceEmitter.subscribe(substance => {
-          this.definitionEmitter.next(this.getDefinition());
-          subscription.unsubscribe();
+    return new Observable(observer => {
+      this.ready().subscribe(substance => {
+        observer.next(this.getDomainReferences());
+        this.domainsWithReferencesEmitter.subscribe(domains => {
+          observer.next(this.getDomainReferences());
         });
-      }
+      });
     });
-    return this.domainsWithReferencesEmitter.asObservable();
   }
 
   getDomainReferences(): DomainsWithReferences {
-    if (this.privateDomainsWithReferences != null) {
-      return this.privateDomainsWithReferences;
-    } else {
-      let domain: string;
-
-      if (this.substance[this.subClass] && (this.substance[this.subClass].uuid === uuid || this.substance[this.subClass].id === uuid)) {
-        domain = this.substance[this.subClass];
-      } else {
-        for (let i = 0; i < domainKeys.length; i++) {
-          if (this.substance[domainKeys[i]]) {
-            if (Object.prototype.toString.call(this.substance[domainKeys[i]]) === '[object Array]'
-              && this.substance[domainKeys[i]].length) {
-
-              domain = this.substance[domainKeys[i]].find(_domain => _domain.uuid === uuid);
-
-              if (domain != null) {
-                break;
-              }
-
-            } else if (Object.prototype.toString.call(this.substance[domainKeys[i]]) === '[object Object]'
-              && this.substance[domainKeys[i]].uuid === uuid) {
-              domain = this.substance[domainKeys[i]];
-              break;
-            }
-          }
+    if (this.privateDomainsWithReferences == null) {
+      this.privateDomainsWithReferences = {
+        definition: {
+          subClass: this.subClass,
+          domain: this.substance[this.subClass]
         }
-      }
+      };
 
-      this.domainReferences[uuid] = new DomainReferences(domain, this.substance.references, this.utilsService);
-      return this.domainReferences[uuid];
+      domainKeys.forEach(key => {
+        this.privateDomainsWithReferences[key] = {
+          listDisplay: key,
+          displayKey: domainDisplayKeys[key],
+          domains: this.substance[key]
+        };
+      });
+
     }
+
+    return this.privateDomainsWithReferences;
   }
 
   deleteSubstanceReference(reference: SubstanceReference): void {
-    Object.keys(this.domainReferences).forEach(key => {
-      this.domainReferences[key].removeDomainReference(reference.uuid);
-    });
     const subRefIndex = this.substance.references.findIndex(subReference => reference.uuid === subReference.uuid);
     if (subRefIndex > -1) {
       this.substance.references.splice(subRefIndex, 1);
@@ -247,33 +217,23 @@ export class SubstanceFormService {
   // Names start
 
   get substanceNames(): Observable<Array<SubstanceName>> {
-    setTimeout(() => {
-      if (this.substance != null) {
+    return new Observable(observer => {
+      this.ready().subscribe(substance => {
         if (this.substance.names == null) {
           this.substance.names = [];
         }
-        this.substanceNamesEmitter.next(this.substance.names);
-      } else {
-        const subscription = this.substanceEmitter.subscribe(substance => {
-          if (this.substance.names == null) {
-            this.substance.names = [];
-          }
-          this.substanceNamesEmitter.next(this.substance.names);
-          subscription.unsubscribe();
+        observer.next(this.substance.names);
+        this.substanceNamesEmitter.subscribe(names => {
+          observer.next(this.substance.names);
         });
-      }
+      });
     });
-    return this.substanceNamesEmitter.asObservable();
   }
 
   addSubstanceName(): void {
     const newName: SubstanceName = {
-      uuid: this.utilsService.newUUID(),
       references: []
     };
-
-    this.domainReferences[newName.uuid] = new DomainReferences(newName, this.substance.references, this.utilsService);
-    this.newNonUuidGeneratingObjects.push(newName);
     this.substance.names.unshift(newName);
     this.substanceNamesEmitter.next(this.substance.names);
   }
@@ -284,12 +244,6 @@ export class SubstanceFormService {
       this.substance.names.splice(subNameIndex, 1);
       this.substanceNamesEmitter.next(this.substance.names);
     }
-    const newNameIndex = this.newNonUuidGeneratingObjects.findIndex(newName => newName.uuid === name.uuid);
-    if (newNameIndex > -1) {
-      this.newNonUuidGeneratingObjects.splice(newNameIndex, 1);
-    }
-
-    this.domainReferences[name.uuid] = null;
   }
 
   // Names end
@@ -297,43 +251,33 @@ export class SubstanceFormService {
   // Structure start
 
   get substanceStructure(): Observable<SubstanceStructure> {
-    setTimeout(() => {
-      if (this.substance != null) {
+    return new Observable(observer => {
+      this.ready().subscribe(substance => {
         if (this.substance.structure == null) {
-          this.substance.structure = {};
+          this.substance.structure = {
+            references: []
+          };
         }
-        this.substanceStructureEmitter.next(this.substance.structure);
-      } else {
-        const subscription = this.substanceEmitter.subscribe(substance => {
-          if (this.substance.structure == null) {
-            this.substance.structure = {};
-          }
-          this.substanceStructureEmitter.next(this.substance.structure);
-          subscription.unsubscribe();
+        observer.next(this.substance.structure);
+        this.substanceStructureEmitter.subscribe(structure => {
+          observer.next(this.substance.structure);
         });
-      }
+      });
     });
-    return this.substanceStructureEmitter.asObservable();
   }
 
   get substanceMoieties(): Observable<Array<SubstanceMoiety>> {
-    setTimeout(() => {
-      if (this.substance != null) {
+    return new Observable(observer => {
+      this.ready().subscribe(substance => {
         if (this.substance.moieties == null) {
           this.substance.moieties = [];
         }
-        this.substanceMoietiesEmitter.next(this.substance.moieties);
-      } else {
-        const subscription = this.substanceEmitter.subscribe(substance => {
-          if (this.substance.moieties == null) {
-            this.substance.moieties = [];
-          }
-          this.substanceMoietiesEmitter.next(this.substance.moieties);
-          subscription.unsubscribe();
+        observer.next(this.substance.moieties);
+        this.substanceMoietiesEmitter.subscribe(moieties => {
+          observer.next(this.substance.moieties);
         });
-      }
+      });
     });
-    return this.substanceMoietiesEmitter.asObservable();
   }
 
   updateMoieties(moieties: Array<SubstanceMoiety>): any {
@@ -379,8 +323,6 @@ export class SubstanceFormService {
 
           this.substance.moieties.push(undeletedMoiety);
         } else {
-          // moietyCopy.id = this.utilsService.newUUID();
-          // moietyCopy.uuid = moietyCopy.id;
           moietyCopy.uuid = '';
           this.substance.moieties.push(moietyCopy);
         }
@@ -407,27 +349,23 @@ export class SubstanceFormService {
   // Codes start
 
   get substanceCodes(): Observable<Array<SubstanceCode>> {
-    setTimeout(() => {
-      if (this.substance != null) {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
         if (this.substance.codes == null) {
           this.substance.codes = [];
         }
-        this.substanceCodesEmitter.next(this.substance.codes);
-      } else {
-        const subscription = this.substanceEmitter.subscribe(substance => {
-          if (this.substance.codes == null) {
-            this.substance.codes = [];
-          }
-          this.substanceCodesEmitter.next(this.substance.codes);
-          subscription.unsubscribe();
+        observer.next(this.substance.codes);
+        this.substanceCodesEmitter.subscribe(codes => {
+          observer.next(this.substance.codes);
         });
-      }
+      });
     });
-    return this.substanceCodesEmitter.asObservable();
   }
 
   addSubstanceCode(): void {
-    const newCode: SubstanceCode = {};
+    const newCode: SubstanceCode = {
+      references: []
+    };
     this.substance.codes.unshift(newCode);
     this.substanceCodesEmitter.next(this.substance.codes);
   }
@@ -445,28 +383,24 @@ export class SubstanceFormService {
   // Relationships start
 
   get substanceRelationships(): Observable<Array<SubstanceRelationship>> {
-    setTimeout(() => {
-      if (this.substance != null) {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
         if (this.substance.relationships == null) {
           this.substance.relationships = [];
         }
-        this.substanceRelationshipsEmitter.next(this.substance.relationships);
-      } else {
-        const subscription = this.substanceEmitter.subscribe(substance => {
-          if (this.substance.relationships == null) {
-            this.substance.relationships = [];
-          }
-          this.substanceRelationshipsEmitter.next(this.substance.relationships);
-          subscription.unsubscribe();
+        observer.next(this.substance.relationships);
+        this.substanceRelationshipsEmitter.subscribe(relationships => {
+          observer.next(this.substance.relationships);
         });
-      }
+      });
     });
-    return this.substanceRelationshipsEmitter.asObservable();
   }
 
   addSubstanceRelationship(): void {
     const newRelationship: SubstanceRelationship = {
-      amount: {}
+      relatedSubstance: {},
+      amount: {},
+      references: []
     };
     this.substance.relationships.unshift(newRelationship);
     this.substanceRelationshipsEmitter.next(this.substance.relationships);
@@ -500,7 +434,6 @@ export class SubstanceFormService {
         });
       }
       this.substanceService.saveSubstance(this.substance).subscribe(substance => {
-        this.domainReferences = {};
         this.substance = substance;
         this.definitionEmitter.next(this.getDefinition());
         this.substanceReferencesEmitter.next(this.substance.references);
@@ -508,6 +441,7 @@ export class SubstanceFormService {
         this.substanceStructureEmitter.next(this.substance.structure);
         this.substanceMoietiesEmitter.next(this.substance.moieties);
         this.substanceCodesEmitter.next(this.substance.codes);
+        this.substanceRelationshipsEmitter.next(this.substance.relationships);
         observer.next(results);
       }, error => {
         results.isSuccessfull = false;
