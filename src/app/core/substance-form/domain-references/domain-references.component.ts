@@ -70,6 +70,7 @@ export class DomainReferencesComponent implements OnInit {
   addNewReference(uuid?: string): void {
 
     let reference: SubstanceReference = {
+      tags: [],
       access: []
     };
 
@@ -99,7 +100,8 @@ export class DomainReferencesComponent implements OnInit {
     if (substanceReference == null) {
       substanceReference = this.substanceReferences.find(reference => reference.uuid === uuid);
       if (substanceReference != null) {
-        this.references.push(substanceReference);
+        this.references.unshift(substanceReference);
+        this.tableData.data = this.references;
       }
     }
   }
@@ -133,6 +135,7 @@ export class DomainReferencesComponent implements OnInit {
       }
     });
     this.references = references;
+    this.tableData.data = this.references;
   }
 
   removeDomainReference(uuid: string): void {
@@ -146,6 +149,7 @@ export class DomainReferencesComponent implements OnInit {
     if (substanceReferenceIndex > -1) {
       this.references.splice(substanceReferenceIndex, 1);
     }
+    this.tableData.data = this.references;
   }
 
   panelOpened(): void {
