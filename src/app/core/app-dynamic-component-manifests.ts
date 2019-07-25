@@ -162,5 +162,10 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-relationships',
     path: 'substance-form-relationships',
     loadChildren: './substance-form/substance-form-relationships/substance-form-relationships.module#SubstanceFormRelationshipsModule',
+  },
+  {
+    componentId: 'substance-form-notes',
+    path: 'substance-form-notes',
+    loadChildren: './substance-form/substance-form-notes/substance-form-notes.module#SubstanceFormNotesModule',
   }
 ];

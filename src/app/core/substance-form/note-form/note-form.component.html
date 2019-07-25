@@ -1,0 +1,24 @@
+<div class="note-form-container">
+  <div *ngIf="isDeleted" class="notification-backdrop">
+    Deleted
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete note" (click)="deleteNote()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+    <mat-form-field class="note">
+      <textarea matInput placeholder="Note *" [formControl]="noteControl"></textarea>
+    </mat-form-field>
+    <div>
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="note.access">
+      </app-access-manager>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="references-container">
+      <app-domain-references [referencesUuids]="note.references" #references></app-domain-references>
+    </div>
+  </div>
+</div>
