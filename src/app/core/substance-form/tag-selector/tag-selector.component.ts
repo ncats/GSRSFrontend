@@ -39,14 +39,15 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
 
         this.filteredOptions = this.tagControl.valueChanges.pipe(
           startWith(null),
-          map((tag: string | null) => tag ? this._filter(tag) : this.allOptions.filter(option => this.tags.indexOf(option.value) === -1)));
+          map((tag: string | null) => tag ? this._filter(tag)
+            : this.allOptions.filter(option => this.privateTags.indexOf(option.value) === -1)));
       });
     });
   }
 
   @Input()
   set tags(tags: Array<string>) {
-    this.privateTags = tags;
+    this.privateTags = tags || [];
   }
 
   get tags(): Array<string> {
@@ -59,25 +60,25 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   }
 
   remove(tag: string): void {
-    const index = this.tags.indexOf(tag);
+    const index = this.privateTags.indexOf(tag);
     if (index > -1) {
-      this.tags.splice(index, 1);
+      this.privateTags.splice(index, 1);
     }
-    this.tagsUpdate.emit(this.tags);
+    this.tagsUpdate.emit(this.privateTags);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.tags.push(event.option.value);
+    this.privateTags.push(event.option.value);
     this.tagInput.nativeElement.value = '';
     this.tagControl.setValue(null);
-    this.tagsUpdate.emit(this.tags);
+    this.tagsUpdate.emit(this.privateTags);
   }
 
   private _filter(value: string): Array<VocabularyTerm> {
     const filterValue = value.toLowerCase();
 
     return this.allOptions.filter(option => {
-      return this.tags.indexOf(option.value) === -1 && option.display.toLowerCase().indexOf(filterValue) > -1;
+      return this.privateTags.indexOf(option.value) === -1 && option.display.toLowerCase().indexOf(filterValue) > -1;
     });
   }
 
