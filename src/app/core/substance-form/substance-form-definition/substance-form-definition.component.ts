@@ -22,11 +22,10 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
   definitionTypeControl = new FormControl();
   definitionLevelControl = new FormControl();
   deprecatedControl = new FormControl();
-  private primarySubstanceErrorSubject = new Subject<string>();
-  primarySubstanceErrorEmitter = this.primarySubstanceErrorSubject.asObservable();
   primarySubstance?: SubstanceSummary;
   showPrimarySubstanceOptions = false;
   definition: SubstanceFormDefinition;
+  primarySubUuid: string;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -64,6 +63,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
             if (primarySubstance != null) {
               this.substanceService.getSubstanceSummary(primarySubstance.relatedSubstance.refuuid).subscribe(response => {
                 this.primarySubstance = response;
+                this.primarySubUuid = this.primarySubstance.uuid;
               });
             }
           }
@@ -97,46 +97,42 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
     this.substanceFormService.updateDefinition(this.definition);
   }
 
-  processSubstanceSearch(searchValue: string): void {
-    const q = searchValue.replace('\"', '');
+  primartySubstanceUpdated(substance?: SubstanceSummary): void {
+    if (substance != null) {
+      this.setPrimarySubstance(substance);
+    } else {
+      this.removePrimarySubstance();
+    }
+  }
 
-    const searchStr = `root_names_name:\"^${q}$\" OR ` +
-      `root_approvalID:\"^${q}$\" OR ` +
-      `root_codes_BDNUM:\"^${q}$\"`;
+  setPrimarySubstance(substance: SubstanceSummary): void {
 
-    this.substanceService.getSubstanceSummaries(searchStr, true).subscribe(response => {
-      if (response.content && response.content.length) {
-        this.primarySubstance = response.content[0];
-        if (this.definition.relationships == null || Object.prototype.toString.call(this.definition.relationships) !== '[object Array]') {
-          this.definition.relationships = [];
-        }
-        this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
-          const relationship: SubstanceRelationship = {
-            relatedSubstance: {
-              refuuid: this.primarySubstance.uuid,
-              refPname: this.primarySubstance._name,
-              approvalID: this.primarySubstance.approvalID,
-              substanceClass: 'reference'
-            },
-            access: [],
-            type: vocabularyResponse['RELATIONSHIP_TYPE']
-              && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE']
-              && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE'].value
-              || ''
-          };
-          this.definition.relationships.push(relationship);
-          this.substanceFormService.updateDefinition(this.definition);
-        });
-        this.primarySubstanceErrorSubject.next('');
-      } else {
-        setTimeout(() => {
-          this.primarySubstanceErrorSubject.next('No substances found');
-        });
-      }
+    this.primarySubstance = substance;
+
+    if (this.definition.relationships == null
+      || Object.prototype.toString.call(this.definition.relationships) !== '[object Array]') {
+      this.definition.relationships = [];
+    }
+    this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
+      const relationship: SubstanceRelationship = {
+        relatedSubstance: {
+          refuuid: this.primarySubstance.uuid,
+          refPname: this.primarySubstance._name,
+          approvalID: this.primarySubstance.approvalID,
+          substanceClass: 'reference'
+        },
+        access: [],
+        type: vocabularyResponse['RELATIONSHIP_TYPE']
+          && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE']
+          && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE'].value
+          || ''
+      };
+      this.definition.relationships.push(relationship);
+      this.substanceFormService.updateDefinition(this.definition);
     });
   }
 
-  editPrimarySubstance(): void {
+  removePrimarySubstance(): void {
     const indexToRemove = this.definition.relationships
       .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
     this.definition.relationships.splice(indexToRemove, 1);

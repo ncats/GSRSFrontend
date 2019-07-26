@@ -1,0 +1,20 @@
+.mat-divider.mat-divider-inset {
+    margin-left: 0;
+}
+
+.mat-divider {
+    border-top-color: rgba(0, 0, 0, .5);
+}
+
+.relationship {
+
+    &:nth-child(odd) {
+        background-color: rgba(242, 242, 242, .75);
+    }
+
+    ::ng-deep {
+        .mat-expansion-panel, .mat-table {
+            background-color: transparent;
+        }
+    }
+}

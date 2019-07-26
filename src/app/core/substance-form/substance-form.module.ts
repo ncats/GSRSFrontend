@@ -31,6 +31,9 @@ import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
 import { StructureFormComponent } from './structure-form/structure-form.component';
 import { AmountFormComponent } from './amount-form/amount-form.component';
 import { CodeFormComponent } from './code-form/code-form.component';
+import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
+import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
+import { ApplyReferenceComponent } from './apply-reference/apply-reference.component';
 
 @NgModule({
   imports: [
@@ -55,7 +58,8 @@ import { CodeFormComponent } from './code-form/code-form.component';
     MatExpansionModule,
     MatBadgeModule,
     MatRadioModule,
-    ExpandDetailsModule
+    ExpandDetailsModule,
+    SubstanceSelectorModule
   ],
   declarations: [
     AccessManagerComponent,
@@ -68,7 +72,9 @@ import { CodeFormComponent } from './code-form/code-form.component';
     NameOrgsComponent,
     StructureFormComponent,
     AmountFormComponent,
-    CodeFormComponent
+    CodeFormComponent,
+    RelationshipFormComponent,
+    ApplyReferenceComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -79,11 +85,13 @@ import { CodeFormComponent } from './code-form/code-form.component';
     NameFormComponent,
     StructureFormComponent,
     AmountFormComponent,
-    CodeFormComponent
+    CodeFormComponent,
+    RelationshipFormComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
-    ReuseReferencesDialogComponent
+    ReuseReferencesDialogComponent,
+    ApplyReferenceComponent
   ]
 })
 export class SubstanceFormModule { }

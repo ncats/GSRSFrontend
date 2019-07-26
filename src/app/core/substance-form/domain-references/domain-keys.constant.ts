@@ -1,4 +1,4 @@
-export const referencesDomains = [
+export const domainKeys = [
     'names',
     'codes',
     'relationships',
@@ -6,7 +6,7 @@ export const referencesDomains = [
     'properties',
 ];
 
-export const displayKeys = {
+export const domainDisplayKeys = {
     names: 'name',
     codes: 'code',
     relationships: 'relatedSubstance.name',

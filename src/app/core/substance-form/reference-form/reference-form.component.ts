@@ -3,7 +3,6 @@ import { SubstanceReference } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
-import { ReferenceApplied } from '../reference-form/reference-applied';
 import { SubstanceFormService } from '../substance-form.service';
 
 @Component({
@@ -20,7 +19,6 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   publicDomainControl: FormControl;
   urlControl: FormControl;
   idControl: FormControl;
-  referenceApplied: ReferenceApplied;
   isDeleted = false;
 
   constructor(
@@ -54,9 +52,6 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
       this.reference.id = value;
     });
 
-    if (this.reference.uuid != null) {
-      this.referenceApplied = new ReferenceApplied(this.reference.uuid, this.substanceFormService);
-    }
     this.getVocabularies();
   }
 

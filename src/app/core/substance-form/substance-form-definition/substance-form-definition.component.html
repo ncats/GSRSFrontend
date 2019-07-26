@@ -9,26 +9,12 @@
       </mat-select>
     </mat-form-field>
     <div class="primary-substance-container" *ngIf="definition.definitionType == 'ALTERNATIVE'">
-      <app-substance-text-search
-        (searchPerformed)="processSubstanceSearch($event)" eventCategory="substanceFormDefinitionType"
-        placeholder="Primary Substance" [errorMessageUpdated]="primarySubstanceErrorEmitter"
-        *ngIf="!primarySubstance">
-      </app-substance-text-search>
-      <div class="primary-substance" *ngIf="primarySubstance" (mouseenter)="showPrimarySubstanceOptions = true" (mouseleave)="showPrimarySubstanceOptions = false">
-        <div class="primary-substance-options" *ngIf="showPrimarySubstanceOptions">
-          <button mat-mini-fab (click)="editPrimarySubstance()">
-              <mat-icon aria-label="Edit Primary Substance">edit</mat-icon>
-          </button>
-          <a mat-mini-fab target="_blank" [routerLink]="['/substances', primarySubstance.uuid]">
-              <mat-icon aria-label="Open in new tab">open_in_new</mat-icon>
-          </a>
-        </div>
-        <div class="section-header">Primary Substance</div>
-        <img [src]="substanceService.getSafeIconImgUrl(primarySubstance)">
-        <div>
-          {{primarySubstance._name}}
-        </div>
-      </div>
+      <app-substance-selector (selectionUpdated)="primartySubstanceUpdated($event)" 
+        eventCategory="substanceFormDefinitionType"
+        placeholder="Primary Substance"
+        header="Primary Substance"
+        [subuuid]="primarySubUuid">
+      </app-substance-selector>
     </div>
     <mat-form-field>
       <mat-label>Definition Level</mat-label>
@@ -47,7 +33,7 @@
   </div>
   <div class="substance-form-row" *ngIf="definition.substanceClass != 'concept'">
     <div class="references-container">
-      <app-domain-references [uuid]="definition.uuid" #references></app-domain-references>
+      <app-domain-references [referencesUuids]="definition.references" #references></app-domain-references>
     </div>
   </div>
 </div>

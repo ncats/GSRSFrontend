@@ -157,5 +157,10 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-codes',
     path: 'substance-form-codes',
     loadChildren: './substance-form/substance-form-codes/substance-form-codes.module#SubstanceFormCodesModule',
+  },
+  {
+    componentId: 'substance-form-relationships',
+    path: 'substance-form-relationships',
+    loadChildren: './substance-form/substance-form-relationships/substance-form-relationships.module#SubstanceFormRelationshipsModule',
   }
 ];

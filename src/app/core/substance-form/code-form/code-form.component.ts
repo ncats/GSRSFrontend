@@ -81,7 +81,7 @@ export class CodeFormComponent implements OnInit {
   private setCodeSystemType(): void {
     if (this.privateCode != null && this.codeSystemDictionary != null) {
       this.codeSystemType = this.codeSystemDictionary[this.privateCode.codeSystem]
-      && this.codeSystemDictionary[this.privateCode.codeSystem].systemCategory || '';
+        && this.codeSystemDictionary[this.privateCode.codeSystem].systemCategory || '';
     }
   }
 

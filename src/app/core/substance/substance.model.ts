@@ -190,6 +190,7 @@ export interface SubstanceRelationship extends SubstanceBase {
     type?: string;
     references?: Array<string>;
     amount?: SubstanceAmount;
+    mediatorSubstance?: MediatorSubstance;
 }
 
 export interface SubstanceAmount extends SubstanceBase {
@@ -213,6 +214,16 @@ export interface SubstanceReference extends SubstanceBase {
     url?: string;
     _self?: string;
     documentDate?: number;
+}
+
+export interface MediatorSubstance extends SubstanceBase {
+  refPname?: string;
+  refuuid?: string;
+  substanceClass?: string;
+  approvalID?: string;
+  linkingID?: string;
+  name?: string;
+  references?: Array<string>;
 }
 
 export interface SubstanceModifications extends SubstanceBase {
