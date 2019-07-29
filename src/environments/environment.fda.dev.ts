@@ -2,6 +2,7 @@ import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
 environment.appId = 'fda';
+environment.apiBaseUrl = 'http://fdadev.ncats.io:9000/ginas/app/';
 // environment.navItems = [
 //     {
 //         display: 'FDA Sample Path',

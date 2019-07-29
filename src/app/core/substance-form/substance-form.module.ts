@@ -34,6 +34,7 @@ import { CodeFormComponent } from './code-form/code-form.component';
 import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
 import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 import { ApplyReferenceComponent } from './apply-reference/apply-reference.component';
+import { NoteFormComponent } from './note-form/note-form.component';
 
 @NgModule({
   imports: [
@@ -74,7 +75,8 @@ import { ApplyReferenceComponent } from './apply-reference/apply-reference.compo
     AmountFormComponent,
     CodeFormComponent,
     RelationshipFormComponent,
-    ApplyReferenceComponent
+    ApplyReferenceComponent,
+    NoteFormComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -86,7 +88,8 @@ import { ApplyReferenceComponent } from './apply-reference/apply-reference.compo
     StructureFormComponent,
     AmountFormComponent,
     CodeFormComponent,
-    RelationshipFormComponent
+    RelationshipFormComponent,
+    NoteFormComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,

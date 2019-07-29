@@ -31,8 +31,8 @@ export class SubstanceFormCodesComponent extends SubstanceFormSectionBase implem
     this.substanceFormService.addSubstanceCode();
   }
 
-  deleteName(code: SubstanceCode): void {
-    this.substanceFormService.deleteSubstanceName(code);
+  deleteCode(code: SubstanceCode): void {
+    this.substanceFormService.deleteSubstanceCode(code);
   }
 
 }

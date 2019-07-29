@@ -44,6 +44,10 @@ export class DomainReferencesComponent implements OnInit {
     this.loadReferences();
   }
 
+  get referencesUuids(): Array<string> {
+    return this.domainReferenceUuids;
+  }
+
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
       this.documentTypesDictionary = response['DOCUMENT_TYPE'].dictionary;
