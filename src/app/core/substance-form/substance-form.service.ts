@@ -7,7 +7,8 @@ import {
   SubstanceMoiety,
   SubstanceCode,
   SubstanceRelationship,
-  SubstanceNote
+  SubstanceNote,
+  SubstanceProperty
 } from '../substance/substance.model';
 import {
   SubstanceFormDefinition,
@@ -39,6 +40,7 @@ export class SubstanceFormService {
   private privateDomainsWithReferences: DomainsWithReferences;
   private domainsWithReferencesEmitter = new Subject<DomainsWithReferences>();
   private substanceNotesEmitter = new Subject<Array<SubstanceNote>>();
+  private substancePropertiesEmitter = new Subject<Array<SubstanceProperty>>();
 
   constructor(
     private substanceService: SubstanceService,
@@ -451,6 +453,40 @@ export class SubstanceFormService {
   }
 
   // Notes end
+
+  // Properties start
+
+  get substanceProperties(): Observable<Array<SubstanceProperty>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (this.substance.properties == null) {
+          this.substance.properties = [];
+        }
+        observer.next(this.substance.properties);
+        this.substancePropertiesEmitter.subscribe(properties => {
+          observer.next(this.substance.properties);
+        });
+      });
+    });
+  }
+
+  addSubstanceProperty(): void {
+    const newProperty: SubstanceProperty = {
+      references: []
+    };
+    this.substance.properties.unshift(newProperty);
+    this.substancePropertiesEmitter.next(this.substance.properties);
+  }
+
+  deleteSubstanceProperty(property: SubstanceProperty): void {
+    const subPropertyIndex = this.substance.properties.findIndex(subProperty => property.uuid === subProperty.uuid);
+    if (subPropertyIndex > -1) {
+      this.substance.properties.splice(subPropertyIndex, 1);
+      this.substancePropertiesEmitter.next(this.substance.properties);
+    }
+  }
+
+  // Properties end
 
   saveSubstance(): Observable<SubstanceFormResults> {
     return new Observable(observer => {
