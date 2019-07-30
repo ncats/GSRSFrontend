@@ -10,7 +10,7 @@ import { SubstanceSummary } from '../substance/substance.model';
 export class SubstanceSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
   @Input() eventCategory: string;
-  @Output() selectionUpdated  = new EventEmitter<SubstanceSummary>();
+  @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   @Input() header = 'Substance';
@@ -26,12 +26,14 @@ export class SubstanceSelectorComponent implements OnInit {
 
   @Input()
   set subuuid(uuid: string) {
-    this.substanceService.getSubstanceSummary(uuid).subscribe(response => {
-      this.selectedSubstance = response;
-    });
+    if (uuid) {
+      this.substanceService.getSubstanceSummary(uuid).subscribe(response => {
+        this.selectedSubstance = response;
+      });
+    }
   }
 
-  processSubstanceSearch(searchValue: string): void {
+  processSubstanceSearch(searchValue: string = ''): void {
     const q = searchValue.replace('\"', '');
 
     const searchStr = `root_names_name:\"^${q}$\" OR ` +
