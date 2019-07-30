@@ -95,12 +95,16 @@ import { PropertyParametersDialogComponent } from './property-parameters-dialog/
     AmountFormComponent,
     CodeFormComponent,
     RelationshipFormComponent,
-    NoteFormComponent
+    NoteFormComponent,
+    PropertyFormComponent,
+    PropertyParameterFormComponent,
+    PropertyParametersDialogComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
-    ApplyReferenceComponent
+    ApplyReferenceComponent,
+    PropertyParametersDialogComponent
   ]
 })
 export class SubstanceFormModule { }

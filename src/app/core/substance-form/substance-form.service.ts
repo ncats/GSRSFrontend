@@ -236,7 +236,8 @@ export class SubstanceFormService {
 
   addSubstanceName(): void {
     const newName: SubstanceName = {
-      references: []
+      references: [],
+      access: []
     };
     this.substance.names.unshift(newName);
     this.substanceNamesEmitter.next(this.substance.names);
@@ -259,7 +260,8 @@ export class SubstanceFormService {
       this.ready().subscribe(substance => {
         if (this.substance.structure == null) {
           this.substance.structure = {
-            references: []
+            references: [],
+            access: []
           };
         }
         observer.next(this.substance.structure);
@@ -368,7 +370,8 @@ export class SubstanceFormService {
 
   addSubstanceCode(): void {
     const newCode: SubstanceCode = {
-      references: []
+      references: [],
+      access: []
     };
     this.substance.codes.unshift(newCode);
     this.substanceCodesEmitter.next(this.substance.codes);
@@ -404,7 +407,8 @@ export class SubstanceFormService {
     const newRelationship: SubstanceRelationship = {
       relatedSubstance: {},
       amount: {},
-      references: []
+      references: [],
+      access: []
     };
     this.substance.relationships.unshift(newRelationship);
     this.substanceRelationshipsEmitter.next(this.substance.relationships);
@@ -438,7 +442,8 @@ export class SubstanceFormService {
 
   addSubstanceNote(): void {
     const newNote: SubstanceNote = {
-      references: []
+      references: [],
+      access: []
     };
     this.substance.notes.unshift(newNote);
     this.substanceNotesEmitter.next(this.substance.notes);
@@ -472,7 +477,9 @@ export class SubstanceFormService {
 
   addSubstanceProperty(): void {
     const newProperty: SubstanceProperty = {
-      references: []
+      value: {},
+      references: [],
+      access: []
     };
     this.substance.properties.unshift(newProperty);
     this.substancePropertiesEmitter.next(this.substance.properties);
