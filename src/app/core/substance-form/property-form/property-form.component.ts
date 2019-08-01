@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SubstanceProperty, SubstanceSummary, SubstanceRelated, MediatorSubstance } from '../../substance/substance.model';
+import { SubstanceProperty, SubstanceSummary, SubstanceRelated, SubstanceParameter } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
+import { PropertyParameterDialogComponent } from '../property-parameter-dialog/property-parameter-dialog.component';
 
 @Component({
   selector: 'app-property-form',
@@ -21,7 +23,8 @@ export class PropertyFormComponent implements OnInit {
   propertyTypeControl = new FormControl('');
 
   constructor(
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -77,6 +80,29 @@ export class PropertyFormComponent implements OnInit {
 
   updateDefining(event: MatCheckboxChange): void {
     this.property.defining = event.checked;
+  }
+
+  openPropertyParameter(parameter: SubstanceParameter = {}): void {
+
+    const isNew = Object.keys(parameter).length === 0;
+    const parameterCopyString = JSON.stringify(parameter);
+
+    const dialogRef = this.dialog.open(PropertyParameterDialogComponent, {
+      data: JSON.parse(parameterCopyString),
+      width: '900px'
+    });
+
+    dialogRef.afterClosed().subscribe(newParameter => {
+      if (newParameter != null) {
+        if (isNew) {
+          this.property.parameters.unshift(newParameter);
+        } else {
+          Object.keys(newParameter).forEach(key => {
+            parameter[key] = newParameter[key];
+          });
+        }
+      }
+    });
   }
 
 }
