@@ -16,7 +16,7 @@ import {Subject} from 'rxjs';
 export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship> implements OnInit {
   type: string;
   relationships: Array<SubstanceRelationship> = [];
-  displayedColumns = ['relatedRecord', 'mediatorRecord', 'type', 'details', 'references'];
+  displayedColumns = ['relatedRecord', 'type', 'details', 'references'];
   private excludedRelationships: Array<string>;
   substanceUpdated = new Subject<SubstanceDetail>();
 
@@ -30,10 +30,8 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   }
 
   ngOnInit() {
-    console.log(this.substance);
     this.substanceUpdated.subscribe(substance => {
       this.relationships = [];
-      console.log(this.substance);
       this.substance = substance;
       if (this.type === 'RELATIONSHIPS'
         && this.configService.configData
@@ -48,6 +46,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
       }
 
       if (this.substance != null && this.type != null) {
+
         this.filterRelationhships();
         this.countUpdate.emit(this.relationships.length);
         this.filtered = this.relationships;
@@ -57,6 +56,8 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
         }, error => {
           console.log(error);
         });
+
+
       }
     });
   }
@@ -64,8 +65,8 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   private filterRelationhships(): void {
     if (this.substance.relationships && this.substance.relationships.length > 0) {
       this.substance.relationships.forEach(relationship => {
-        const typeParts = relationship.type.split('->');
-        const property = typeParts && typeParts.length && typeParts[0].trim() || '';
+        const typeParts = relationship.type;
+        const property = typeParts && typeParts.trim() || '';
         if (this.excludedRelationships != null && this.excludedRelationships instanceof Array) {
           let isInExcludedValues = false;
           this.excludedRelationships.forEach(value => {
@@ -80,7 +81,14 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
           this.relationships.push(relationship);
         }
       });
-      console.log(this.relationships);
+    }
+  }
+
+  private hasDetails(current): boolean {
+    if ((current.mediatorSubstance && current.mediatorSubstance.name) || (current.amount) || (current.qualification) || (current.interactionType)) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -98,4 +106,87 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     });
   }
 
+  formatValue(v) {
+    if (v) {
+      if (typeof v === 'object') {
+        if (v.display) {
+          return v.display;
+        } else if (v.value) {
+          return v.value;
+        } else {
+          return null;
+        }
+      } else {
+        return v;
+      }
+    }
+    return null;
+  }
+
+  displayAmount(amt): string {
+    let ret = '';
+    if (amt) {
+      if (typeof amt === 'object') {
+        if (amt) {
+          let addedunits = false;
+          let unittext = this.formatValue(amt.units);
+          if (!unittext) {
+            unittext = '';
+          }
+            const atype = this.formatValue(amt.type);
+            if (atype) {
+              ret += atype + '\n';
+            }
+            if (amt.average || amt.high || amt.low) {
+              if (amt.average) {
+                ret += amt.average;
+                if (amt.units) {
+                  ret += ' ' + unittext;
+                  addedunits = true;
+                }
+              }
+              if (amt.high || amt.low) {
+                ret += ' [';
+                if (amt.high && !amt.low) {
+                  ret += '<' + amt.high;
+                } else if (!amt.high && amt.low) {
+                  ret += '>' + amt.low;
+                } else if (amt.high && amt.low) {
+                  ret += amt.low + ' to ' + amt.high;
+                }
+                ret += '] ';
+                if (!addedunits) {
+                  if (amt.units) {
+                    ret += ' ' + unittext;
+                    addedunits = true;
+                  }
+                }
+              }
+              ret += ' (average) ';
+            }
+            if (amt.highLimit || amt.lowLimit) {
+              ret += '\n[';
+            }
+            if (amt.highLimit && !amt.lowLimit) {
+              ret += '<' + amt.highLimit;
+            } else if (!amt.highLimit && amt.lowLimit) {
+              ret += '>' + amt.lowLimit;
+            } else if (amt.highLimit && amt.lowLimit) {
+              ret += amt.lowLimit + ' to ' + amt.highLimit;
+            }
+            if (amt.highLimit || amt.lowLimit) {
+              ret += '] ';
+              if (!addedunits) {
+                if (amt.units) {
+                  ret += ' ' + unittext;
+                  addedunits = true;
+                }
+              }
+              ret += ' (limits)';
+            }
+          }
+      }
+    }
+    return ret;
+  }
 }

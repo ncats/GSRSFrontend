@@ -132,8 +132,8 @@ export function substanceRelationshipsFilter(
         if (substance.relationships && substance.relationships.length > 0) {
 
             for (let i = 0; i < substance.relationships.length; i++) {
-                const typeParts = substance.relationships[i].type.split('->');
-                const property = typeParts && typeParts.length && typeParts[0].trim() || '';
+                const typeParts = substance.relationships[i].type;
+                const property = typeParts && typeParts.trim() || '';
 
                 if (filter.value instanceof Array) {
                     let isInExcludeValues = false;
