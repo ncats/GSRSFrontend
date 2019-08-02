@@ -33,19 +33,19 @@
       <td mat-cell *matCellDef="let relationship">
         <button class = "mat-raised-button mat-primary" (click)="openModal(detailTemplate)" [disabled]="!hasDetails(relationship)" > View</button>
         <ng-template #detailTemplate>
-          <h2 mat-dialog-title>References</h2>
+          <h2 mat-dialog-title>Details</h2>
           <div mat-dialog-content>
-            <table>
+            <table class = "details-table mat-table">
               <tr>
-                <th>
+                <th class = "mat-header-cell">
                   Mediator Substance
                 </th>
-                <th>
+                <th  class = "mat-header-cell">
                   Details
                 </th>
               </tr>
               <tr>
-                <td >
+                <td class = "mat-cell">
                   <div class = "thumb-col" *ngIf = "relationship.mediatorSubstance">
                   <div>{{relationship.mediatorSubstance.linkingID}}</div>
                   <img class="structure-image" [src]="getSafeStructureImgUrl(relationship.mediatorSubstance.refuuid)">
@@ -59,7 +59,7 @@
                     <i>none</i>
                   </div>
                 </td>
-                <td>
+                <td class = "mat-cell">
                   <div class = "detail" *ngIf ="relationship.interactionType ">
                   <div class = "subhead">
                     Interaction Type:
@@ -88,7 +88,7 @@
                     Amount:
                   </div>
                   <div class = "subval">
-                    {{displayAmount(relationship.amount)}}<br><i>{{relationship.amount.nonNumericValue ? relationship.amount.nonNumericValue  : ''}}</i>
+                    {{displayAmount(relationship.amount)}} <i *ngIf = "relationship.amount.nonNumericValue">{{relationship.amount.nonNumericValue}}</i>
                   </div></div>
                 </td>
               </tr>

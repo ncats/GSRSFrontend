@@ -23,6 +23,11 @@ td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
   display: inline-block;
   width: 130px;
 }
+
 .subval{
   display: inline;
+}
+
+.details-table th, td {
+  padding: 10px;
 }
