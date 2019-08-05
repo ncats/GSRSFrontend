@@ -34,8 +34,8 @@ export class RelationshipFormComponent implements OnInit {
   @Input()
   set relationship(relationship: SubstanceRelationship) {
     this.privateRelationship = relationship;
-    this.relatedSubstanceUuid = this.privateRelationship.relatedSubstance && this.privateRelationship.relatedSubstance.uuid || '';
-    this.mediatorSubstanceUuid = this.privateRelationship.mediatorSubstance && this.privateRelationship.mediatorSubstance.uuid || '';
+    this.relatedSubstanceUuid = this.privateRelationship.relatedSubstance && this.privateRelationship.relatedSubstance.refuuid || '';
+    this.mediatorSubstanceUuid = this.privateRelationship.mediatorSubstance && this.privateRelationship.mediatorSubstance.refuuid || '';
     this.relationshipTypeControl.setValue(this.relationship.type);
     this.relationshipTypeControl.valueChanges.subscribe(value => {
       this.relationship.type = value;

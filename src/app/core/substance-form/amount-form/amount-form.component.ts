@@ -32,32 +32,42 @@ export class AmountFormComponent implements OnInit {
 
   @Input()
   set substanceAmount(amount: SubstanceAmount) {
-    this.privateSubstanceAmount = amount;
+    if (amount != null) {
+      this.privateSubstanceAmount = amount;
 
-    this.typeControl.setValue(this.privateSubstanceAmount.type);
-    this.typeControl.valueChanges.subscribe(value => {
-      this.privateSubstanceAmount.type = value;
-    });
-    this.averageControl.setValue(this.privateSubstanceAmount.average);
-    this.averageControl.valueChanges.subscribe(value => {
-      this.privateSubstanceAmount.average = value;
-    });
-    this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit);
-    this.lowLimitControl.valueChanges.subscribe(value => {
-      this.privateSubstanceAmount.lowLimit = value;
-    });
-    this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit);
-    this.highLimitControl.valueChanges.subscribe(value => {
-      this.privateSubstanceAmount.highLimit = value;
-    });
-    this.unitsControl.setValue(this.privateSubstanceAmount.units);
-    this.unitsControl.valueChanges.subscribe(value => {
-      this.privateSubstanceAmount.units = value;
-    });
-    this.nonNumericValueControl.setValue(this.privateSubstanceAmount.nonNumericValue);
-    this.nonNumericValueControl.valueChanges.subscribe(value => {
-      this.privateSubstanceAmount.nonNumericValue = value;
-    });
+      this.typeControl.setValue(this.privateSubstanceAmount.type);
+      this.typeControl.valueChanges.subscribe(value => {
+        this.privateSubstanceAmount.type = value;
+      });
+      this.averageControl.setValue(this.privateSubstanceAmount.average);
+      this.averageControl.valueChanges.subscribe(value => {
+        this.privateSubstanceAmount.average = value;
+      });
+      this.lowControl.setValue(this.privateSubstanceAmount.low);
+      this.lowControl.valueChanges.subscribe(value => {
+        this.privateSubstanceAmount.low = value;
+      });
+      this.highControl.setValue(this.privateSubstanceAmount.high);
+      this.highControl.valueChanges.subscribe(value => {
+        this.privateSubstanceAmount.high = value;
+      });
+      this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit);
+      this.lowLimitControl.valueChanges.subscribe(value => {
+        this.privateSubstanceAmount.lowLimit = value;
+      });
+      this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit);
+      this.highLimitControl.valueChanges.subscribe(value => {
+        this.privateSubstanceAmount.highLimit = value;
+      });
+      this.unitsControl.setValue(this.privateSubstanceAmount.units);
+      this.unitsControl.valueChanges.subscribe(value => {
+        this.privateSubstanceAmount.units = value;
+      });
+      this.nonNumericValueControl.setValue(this.privateSubstanceAmount.nonNumericValue);
+      this.nonNumericValueControl.valueChanges.subscribe(value => {
+        this.privateSubstanceAmount.nonNumericValue = value;
+      });
+    }
   }
 
   get substanceAmount(): SubstanceAmount {

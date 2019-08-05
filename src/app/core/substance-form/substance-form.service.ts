@@ -51,6 +51,10 @@ export class SubstanceFormService {
   loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail): void {
     setTimeout(() => {
 
+      this.computedMoieties = null;
+      this.deletedMoieties = [];
+      this.privateDomainsWithReferences = null;
+
       if (substance != null) {
         this.substance = substance;
       } else {
@@ -85,6 +89,10 @@ export class SubstanceFormService {
         this.substanceEmitter.next(this.substance);
       }
     });
+  }
+
+  unloadSubstance(): void {
+    this.substance = null;
   }
 
   ready(): Observable<void> {
@@ -514,6 +522,7 @@ export class SubstanceFormService {
       }
       this.substanceService.saveSubstance(this.substance).subscribe(substance => {
         this.substance = substance;
+        results.uuid = substance.uuid;
         this.definitionEmitter.next(this.getDefinition());
         this.substanceReferencesEmitter.next(this.substance.references);
         this.domainsWithReferencesEmitter.next(this.getDomainReferences());
@@ -524,9 +533,14 @@ export class SubstanceFormService {
         this.substanceRelationshipsEmitter.next(this.substance.relationships);
         this.substanceNamesEmitter.next(this.substance.notes);
         observer.next(results);
+        observer.complete();
       }, error => {
         results.isSuccessfull = false;
+        if (error && error.error && error.error.validationMessages) {
+          results.validationMessages = error.error.validationMessages;
+        }
         observer.error(results);
+        observer.complete();
       });
     });
   }

@@ -15,9 +15,9 @@ export class NameFormComponent implements OnInit {
   private privateName: SubstanceName;
   @Output() priorityUpdate = new EventEmitter<SubstanceName>();
   @Output() nameDeleted = new EventEmitter<SubstanceName>();
-  nameControl: FormControl;
+  nameControl = new FormControl('');
   nameTypes: Array<VocabularyTerm> = [];
-  nameTypeControl: FormControl;
+  nameTypeControl = new FormControl('');
   isDeleted = false;
 
   constructor(
@@ -30,19 +30,21 @@ export class NameFormComponent implements OnInit {
 
   @Input()
   set name(name: SubstanceName) {
-    this.privateName = name;
-    this.nameControl = new FormControl(this.name.name, [Validators.required]);
-    this.nameControl.valueChanges.subscribe(value => {
-      this.name.name = value;
-    });
-    this.nameTypeControl = new FormControl(this.name.type, [Validators.required]);
-    this.nameTypeControl.valueChanges.subscribe(value => {
-      this.name.type = value;
-    });
+    if (name != null) {
+      this.privateName = name;
+      this.nameControl = new FormControl(this.name.name, [Validators.required]);
+      this.nameControl.valueChanges.subscribe(value => {
+        this.name.name = value;
+      });
+      this.nameTypeControl = new FormControl(this.name.type, [Validators.required]);
+      this.nameTypeControl.valueChanges.subscribe(value => {
+        this.name.type = value;
+      });
+    }
   }
 
   get name(): SubstanceName {
-    return this.privateName;
+    return this.privateName || {};
   }
 
   getVocabularies(): void {

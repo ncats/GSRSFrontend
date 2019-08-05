@@ -4,27 +4,27 @@ import {
   AfterViewInit,
   ViewChildren,
   ViewContainerRef,
-  QueryList
+  QueryList,
+  OnDestroy
 } from '@angular/core';
 import { formSections } from './form-sections.constant';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail } from '../substance/substance.model';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { Subject } from 'rxjs';
 import { SubstanceFormSection } from './substance-form-section';
 import { SubstanceFormService } from './substance-form.service';
+import { ValidationMessage, SubstanceFormResults } from './substance-form.model';
 
 @Component({
   selector: 'app-substance-form',
   templateUrl: './substance-form.component.html',
   styleUrls: ['./substance-form.component.scss']
 })
-export class SubstanceFormComponent implements OnInit, AfterViewInit {
+export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   id?: string;
   formSections: Array<SubstanceFormSection> = [];
@@ -36,6 +36,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     'substance-form-moieties',
     'substance-form-references'
   ];
+  showSubmissionMessages = false;
+  submissionMessage: string;
+  validationMessages: Array<ValidationMessage>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -51,20 +54,31 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loadingService.setLoading(true);
-    this.id = this.activatedRoute.snapshot.params['id'];
-    if (this.id) {
-      this.gaService.sendPageView(`Substance Edit`);
-      this.getSubstanceDetails();
-    } else {
-      this.gaService.sendPageView(`Substance Register`);
-      this.subClass = this.activatedRoute.snapshot.queryParamMap.get('kind') || 'chemical';
-      this.substanceFormService.loadSubstance(this.subClass);
-      this.setFormSections(formSections[this.subClass]);
-    }
+    this.activatedRoute
+      .params
+      .subscribe(params => {
+        if (params['id']) {
+          const id = params['id'];
+          if (id !== this.id) {
+            this.id = id;
+            this.gaService.sendPageView(`Substance Edit`);
+            this.getSubstanceDetails();
+          }
+        } else {
+          setTimeout(() => {
+            this.gaService.sendPageView(`Substance Register`);
+            this.subClass = this.activatedRoute.snapshot.queryParamMap.get('kind') || 'chemical';
+            this.substanceFormService.loadSubstance(this.subClass);
+            this.setFormSections(formSections[this.subClass]);
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
+          });
+        }
+      });
   }
 
   ngAfterViewInit(): void {
-    this.dynamicComponents.changes
+    const subscription = this.dynamicComponents.changes
       .subscribe(() => {
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
@@ -80,7 +94,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
                 this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
               });
         });
+        subscription.unsubscribe();
       });
+  }
+
+  ngOnDestroy(): void {
+    this.substanceFormService.unloadSubstance();
   }
 
   getSubstanceDetails() {
@@ -102,6 +121,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
   }
 
   private setFormSections(sectionNames: Array<string> = []): void {
+    this.formSections = [];
     sectionNames.forEach(sectionName => {
       const formSection = new SubstanceFormSection(sectionName);
       this.formSections.push(formSection);
@@ -128,14 +148,51 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit {
     this.substanceFormService.saveSubstance().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
-      const notification: AppNotification = {
-        message: 'Substance was saved successfully!',
-        type: NotificationType.success
-      };
-      this.mainNotificationService.setNotification(notification);
-    }, error => {
+      this.validationMessages = null;
+      this.submissionMessage = 'Substance was saved successfully!';
+      this.showSubmissionMessages = true;
+      setTimeout(() => {
+        this.showSubmissionMessages = false;
+        this.submissionMessage = '';
+        if (!this.id) {
+          this.id = response.uuid;
+          this.router.navigate(['/substances', response.uuid, 'edit']);
+        }
+      }, 4000);
+    }, (error: SubstanceFormResults) => {
+      this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
       this.isLoading = false;
+      this.submissionMessage = null;
+      if (error.validationMessages && error.validationMessages.length) {
+        this.validationMessages = error.validationMessages.filter(message => message.messageType.toUpperCase() === 'ERROR');
+        this.showSubmissionMessages = true;
+      } else {
+        this.validationMessages = null;
+        this.submissionMessage = 'There was a problem with your submission';
+        this.showSubmissionMessages = true;
+        setTimeout(() => {
+          this.showSubmissionMessages = false;
+          this.submissionMessage = null;
+        }, 8000);
+      }
     });
+  }
+
+  dismissValidationMessage(index: number) {
+    this.validationMessages.splice(index, 1);
+
+    if (this.validationMessages.length === 0) {
+      this.showSubmissionMessages = false;
+    }
+  }
+
+  toggleValidation(): void {
+    this.showSubmissionMessages = !this.showSubmissionMessages;
+  }
+
+  dismissAllValidationMessages(): void {
+    this.showSubmissionMessages = false;
+    this.validationMessages = null;
   }
 }

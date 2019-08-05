@@ -7,7 +7,7 @@ export interface Vocabulary {
     domain: string;
     vocabularyTermType: string;
     fields: Array<any>;
-    terms: Array<any>;
+    terms: Array<VocabularyTerm>;
 }
 
 export interface VocabularyTerm {

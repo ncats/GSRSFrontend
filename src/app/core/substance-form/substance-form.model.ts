@@ -12,5 +12,16 @@ export interface SubstanceFormDefinition {
 }
 
 export interface SubstanceFormResults {
+    uuid?: string;
     isSuccessfull: boolean;
+    validationMessages?: Array<ValidationMessage>;
+}
+
+export interface ValidationMessage {
+    actionType: string;
+    appliedChange: boolean;
+    links: Array<string>;
+    message: string;
+    messageType: string;
+    suggestedChange: boolean;
 }
