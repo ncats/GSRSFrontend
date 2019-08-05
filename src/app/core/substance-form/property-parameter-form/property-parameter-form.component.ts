@@ -47,6 +47,7 @@ export class PropertyParameterFormComponent implements OnInit {
   }
 
   get isValid(): boolean {
-    return;
+    return this.nameControl.valid
+      && this.parameterTypeControl.valid;
   }
 }

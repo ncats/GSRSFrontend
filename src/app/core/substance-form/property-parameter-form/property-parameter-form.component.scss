@@ -24,4 +24,13 @@
     justify-content: space-between;
     padding: 0 10px;
     align-items: flex-end;
+
+    .name {
+        flex-grow: 1;
+        margin-right: 15px;
+    }
+
+    .type {
+        flex-grow: 1;
+    }
 }

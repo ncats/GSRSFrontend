@@ -12,9 +12,9 @@ export class PropertyParameterDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<PropertyParameterDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public subsParameter: SubstanceParameter = {}
+    @Inject(MAT_DIALOG_DATA) public subsParameter: SubstanceParameter
   ) {
-    this.isNew = Object.keys(subsParameter).length === 0;
+    this.isNew = Object.keys(subsParameter).length < 2;
   }
 
   ngOnInit() {

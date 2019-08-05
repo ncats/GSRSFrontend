@@ -50,9 +50,68 @@
           </button>
         </h4>
         <mat-list *ngIf="property.parameters">
-          <button mat-list-item (click)="openPropertyParameter(parameter)" *ngFor="let parameter of property.parameters">
-            parameter
-          </button>
+          <a mat-list-item (click)="openPropertyParameter(parameter)" *ngFor="let parameter of property.parameters">
+            <span>{{parameter.name}}</span>
+            <span *ngIf="parameter.value != null">
+              <span>
+                &nbsp;
+                {{parameter.value.type}}
+              </span>
+              <span *ngIf="(parameter.value.low != null && parameter.value.low != '')
+                  || (parameter.value.high != null && parameter.value.high != '')">
+                &nbsp;
+                [
+                <span *ngIf="parameter.value.high == null || parameter.value.high == ''">
+                  >
+                </span>
+                <span *ngIf="parameter.value.low == null || parameter.value.low == ''">
+                  >
+                </span>
+                <span *ngIf="parameter.value.low != null && parameter.value.low != ''">
+                  {{parameter.value.low}}
+                </span>
+                <span *ngIf="parameter.value.low != null && parameter.value.low != ''
+                    && parameter.value.high != null && parameter.value.high != ''">
+                  &nbsp;to&nbsp;
+                </span>
+                <span *ngIf="parameter.value.high != null && parameter.value.high != ''">
+                  {{parameter.value.high}}
+                </span>
+                ]
+              </span>
+              <span *ngIf="parameter.value.average">
+                &nbsp;
+                {{parameter.value.average}}
+                &nbsp;(average)
+              </span>
+              <span *ngIf="(parameter.value.lowLimit != null && parameter.value.lowLimit != '')
+                      || (parameter.value.highLimit != null && parameter.value.highLimit != '')">
+                  &nbsp;
+                  [
+                  <span *ngIf="parameter.value.highLimit == null || parameter.value.highLimit == ''">
+                    >
+                  </span>
+                  <span *ngIf="parameter.value.lowLimit == null || parameter.value.lowLimit == ''">
+                    >
+                  </span>
+                  <span *ngIf="parameter.value.lowLimit != null && parameter.value.lowLimit != ''">
+                    {{parameter.value.lowLimit}}
+                  </span>
+                  <span *ngIf="parameter.value.lowLimit != null && parameter.value.lowLimit != ''
+                        && parameter.value.highLimit != null && parameter.value.highLimit != ''">
+                    &nbsp;to&nbsp;
+                  </span>
+                  <span *ngIf="parameter.value.highLimit != null && parameter.value.highLimit != ''">
+                    {{parameter.value.highLimit}}
+                  </span>
+                  ]
+                  <span *ngIf="parameter.value.units">
+                    {{parameter.value.units}}
+                  </span>
+                  &nbsp;(limits)
+                </span>
+            </span>
+          </a>
         </mat-list>
       </div>
     </div>

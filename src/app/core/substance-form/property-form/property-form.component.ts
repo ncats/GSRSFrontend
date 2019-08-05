@@ -82,18 +82,25 @@ export class PropertyFormComponent implements OnInit {
     this.property.defining = event.checked;
   }
 
-  openPropertyParameter(parameter: SubstanceParameter = {}): void {
+  openPropertyParameter(parameter?: SubstanceParameter): void {
 
-    const isNew = Object.keys(parameter).length === 0;
+    let isNew: boolean;
+    if (parameter == null) {
+      isNew = true;
+      parameter = { value: {} };
+    }
     const parameterCopyString = JSON.stringify(parameter);
 
     const dialogRef = this.dialog.open(PropertyParameterDialogComponent, {
       data: JSON.parse(parameterCopyString),
-      width: '900px'
+      width: '1200px'
     });
 
     dialogRef.afterClosed().subscribe(newParameter => {
       if (newParameter != null) {
+        if (this.property.parameters == null) {
+          this.property.parameters = [];
+        }
         if (isNew) {
           this.property.parameters.unshift(newParameter);
         } else {

@@ -1,10 +1,10 @@
-<div class="reference-form-container">
+<div class="parameter-form-container">
   <div class="form-row">
     <mat-form-field class="name">
-      <input matInput placeholder="Name *" [formControl]=" nameControl" />
+      <input matInput placeholder="Name *" [formControl]="nameControl" />
     </mat-form-field>
-    <mat-form-field class="source-type">
-      <mat-label>Type *</mat-label>
+    <mat-form-field class="type">
+      <mat-label>Type</mat-label>
       <mat-select [formControl]="parameterTypeControl">
         <mat-option *ngFor="let propertyType of propertyTypeList" [value]="propertyType.value">
           {{propertyType.display}}
@@ -14,6 +14,6 @@
   </div>
   <div class="amount-form-container">
     <div class="amount-title">Amount</div>
-    <app-amount-form [substanceAmount]="relationship.amount"></app-amount-form>
+    <app-amount-form [substanceAmount]="parameter.value"></app-amount-form>
   </div>
 </div>
