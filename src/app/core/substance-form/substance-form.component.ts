@@ -165,7 +165,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.isLoading = false;
       this.submissionMessage = null;
       if (error.validationMessages && error.validationMessages.length) {
-        this.validationMessages = error.validationMessages.filter(message => message.messageType.toUpperCase() === 'ERROR');
+        this.validationMessages = error.validationMessages
+          .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
         this.showSubmissionMessages = true;
       } else {
         this.validationMessages = null;
