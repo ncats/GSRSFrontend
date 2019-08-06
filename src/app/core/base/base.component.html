@@ -4,24 +4,39 @@
       <img [src]="logoSrcPath" />
     </a>
   </span>
-  <span class="nav-big">
+  <!-- <span class="nav-big">
     <span class="nav-item" *ngFor="let navItem of navItems">
       <a [routerLink]="['/' + navItem.path]" [ngClass]="{active: mainPathSegment == navItem.path}">
         {{navItem.display}}
       </a>
     </span>
-  </span>
-  <span class="middle-fill"></span>
+  </span> -->
+  <!-- <span class="middle-fill"></span> -->
   <span class="nav-small">
     <button mat-icon-button [matMenuTriggerFor]="nav">
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
     <mat-menu #nav="matMenu">
-      <button mat-menu-item *ngFor="let navItem of navItems" [routerLink]="['/' + navItem.path]">
-        {{navItem.display}}
-      </button>
+      <div *ngFor="let navItem of navItems">
+        <button mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
+          {{navItem.display}}
+        </button>
+        <ng-container *ngIf="navItem.children">
+          <button mat-menu-item [matMenuTriggerFor]="childrenMenu">
+              {{navItem.display}}
+          </button>
+          <mat-menu #childrenMenu="matMenu">
+            <div *ngFor="let childNavItem of navItem.children">
+              <button mat-menu-item [routerLink]="['/' + childNavItem.path]" *ngIf="childNavItem.path">
+                {{childNavItem.display}}
+              </button>
+            </div>
+          </mat-menu>
+        </ng-container>
+      </div>
     </mat-menu>
   </span>
+  <span class="middle-fill"></span>
   <app-substance-text-search class="top-search" [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch">
   </app-substance-text-search>
   <div>

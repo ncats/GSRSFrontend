@@ -43,6 +43,16 @@
 
 .nav-small {
   padding-right: 10px;
+
+  .mat-icon-button {
+    width: 50px;
+    height: 50px;
+  }
+
+  .mat-icon {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .login-link {
@@ -62,14 +72,14 @@
   }
 }
 
-@media(max-width: $nav-breaking-point) {
-  .nav-big {
-    display: none;
-  }
-}
+// @media(max-width: $nav-breaking-point) {
+//   .nav-big {
+//     display: none;
+//   }
+// }
 
-@media(min-width: $nav-breaking-point) {
-  .nav-small {
-    display: none;
-  }
-}
+// @media(min-width: $nav-breaking-point) {
+//   .nav-small {
+//     display: none;
+//   }
+// }
