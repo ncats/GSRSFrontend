@@ -34,7 +34,7 @@ export class PropertyFormComponent implements OnInit {
   @Input()
   set property(property: SubstanceProperty) {
     this.privateProperty = property;
-    this.referencedSubstanceUuid = this.privateProperty.referencedSubstance && this.privateProperty.referencedSubstance.uuid || '';
+    this.referencedSubstanceUuid = this.privateProperty.referencedSubstance && this.privateProperty.referencedSubstance.refuuid || '';
     this.propertyNameControl.setValue(this.property.name);
     this.propertyNameControl.valueChanges.subscribe(value => {
       this.property.name = value;

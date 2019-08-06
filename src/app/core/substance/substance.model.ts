@@ -221,6 +221,7 @@ export interface SubstanceReference extends SubstanceBase {
     url?: string;
     _self?: string;
     documentDate?: number;
+    refuuid?: string;
 }
 
 export interface MediatorSubstance extends SubstanceBase {
