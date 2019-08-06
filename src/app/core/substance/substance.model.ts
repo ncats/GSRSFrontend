@@ -176,9 +176,16 @@ export interface SubstanceProperty extends SubstanceBase {
     propertyType?: string;
     value?: SubstanceAmount;
     defining?: boolean;
-    parameters?: Array<any>;
+    parameters?: Array<SubstanceParameter>;
     referencedSubstance?: SubstanceReference;
     references?: Array<SubstanceReference>;
+}
+
+export interface SubstanceParameter extends SubstanceBase {
+  name?: string;
+  type?: string;
+  references?: Array<string>;
+  value?: SubstanceAmount;
 }
 
 export interface SubstanceRelationship extends SubstanceBase {
@@ -214,6 +221,7 @@ export interface SubstanceReference extends SubstanceBase {
     url?: string;
     _self?: string;
     documentDate?: number;
+    refuuid?: string;
 }
 
 export interface MediatorSubstance extends SubstanceBase {
@@ -250,8 +258,10 @@ export interface PhysicalModification extends SubstanceModifications {
 
 export interface PhysicalModificationParameter extends PhysicalModification {
   parameterName?: string;
+  references?: Array<string>;
   amount?: SubstanceAmount;
 }
+
 export interface AgentModification extends SubstanceModifications {
   agentModificationProcess?: string;
   agentModificationRole?: string;

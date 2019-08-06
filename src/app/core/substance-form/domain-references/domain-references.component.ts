@@ -125,8 +125,11 @@ export class DomainReferencesComponent implements OnInit {
     });
   }
 
-  updateDomainReferences(referenceUuids: Array<string>): void {
-    this.domainReferenceUuids = referenceUuids || [];
+  updateDomainReferences(referenceUuids: Array<string> = []): void {
+    this.domainReferenceUuids.length = 0;
+    referenceUuids.forEach(uuid => {
+        this.domainReferenceUuids.push(uuid);
+    });
     const references = [];
     this.domainReferenceUuids.forEach((uuid: string) => {
       const substanceReference = this.substanceReferences.find(reference => reference.uuid === uuid);

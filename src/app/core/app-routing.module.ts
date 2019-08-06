@@ -25,6 +25,11 @@ const childRoutes: Routes = [
     component: SubstancesBrowseComponent
   },
   {
+    path: 'substances/register',
+    component: SubstanceFormComponent,
+    canActivate: [CanActivateSubstanceForm]
+  },
+  {
     path: 'substances/:id',
     component: SubstanceDetailsComponent
   },
@@ -44,12 +49,6 @@ const childRoutes: Routes = [
     path: 'login',
     component: LoginComponent
   },
-  // add this once components are capable of registering
-  // {
-  //   path: 'substances/register',
-  //   component: SubstanceFormComponent,
-  //  canActivate: [CanActivateSubstanceForm]
-  // },
   {
     path: 'substances/:id/edit',
     component: SubstanceFormComponent,

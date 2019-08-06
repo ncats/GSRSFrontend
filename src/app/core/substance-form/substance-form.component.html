@@ -1,14 +1,38 @@
 <div class="top-fixed">
   <div class="actions-container">
+    <button mat-button (click)="toggleValidation()" [disabled]="isLoading" *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+    </button>
     <span class="middle-fill"></span>
     <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading">Submit</button>
+  </div>
+  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+    <div class="submission-message" *ngIf="submissionMessage">
+      {{submissionMessage}}
+    </div>
+    <div *ngIf="validationMessages && validationMessages.length > 0">
+      <div class="submission-message">
+        Please correct or dismiss the following errors and submit again:
+      </div>
+      <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+        <div class="message-type">{{message.messageType}}</div>
+        <div class="message">{{message.message}}</div>
+        <button mat-icon-button matTooltip="Dismiss" (click)="dismissValidationMessage(i)">
+          <mat-icon svgIcon="cancel"></mat-icon>
+        </button>
+      </div>
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-button (click)="dismissAllValidationMessages()" [disabled]="isLoading">Dismiss messages</button>
+      </div>
+    </div>
   </div>
 </div>
 <div class="form-content-container">
   <div class="scrollable-container">
     <div class="cards-container">
       <mat-accordion multi="true">
-        <mat-expansion-panel 
+        <mat-expansion-panel
           [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
           *ngFor="let section of formSections; index as index; last as isLast"
           [id]="section.dynamicComponentName"

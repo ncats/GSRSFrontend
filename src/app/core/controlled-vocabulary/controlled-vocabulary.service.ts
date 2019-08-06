@@ -149,7 +149,19 @@ export class ControlledVocabularyService extends BaseHttpService {
                 };
               }
 
-              singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms;
+              singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms.sort(function(a, b) {
+                const termA = a.display.toUpperCase();
+                const termB = b.display.toUpperCase();
+                if (termA < termB) {
+                  return -1;
+                }
+                if (termA > termB) {
+                  return 1;
+                }
+                return 0;
+              });
+
+
               vocabulary.terms.forEach(vocabularyTerm => {
                 singleDomainVocabulary[vocabulary.domain].dictionary[vocabularyTerm.value] = vocabularyTerm;
               });

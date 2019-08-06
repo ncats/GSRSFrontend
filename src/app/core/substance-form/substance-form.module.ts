@@ -35,6 +35,10 @@ import { RelationshipFormComponent } from './relationship-form/relationship-form
 import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 import { ApplyReferenceComponent } from './apply-reference/apply-reference.component';
 import { NoteFormComponent } from './note-form/note-form.component';
+import { PropertyFormComponent } from './property-form/property-form.component';
+import { PropertyParameterFormComponent } from './property-parameter-form/property-parameter-form.component';
+import { PropertyParameterDialogComponent } from './property-parameter-dialog/property-parameter-dialog.component';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   imports: [
@@ -60,7 +64,8 @@ import { NoteFormComponent } from './note-form/note-form.component';
     MatBadgeModule,
     MatRadioModule,
     ExpandDetailsModule,
-    SubstanceSelectorModule
+    SubstanceSelectorModule,
+    MatListModule
   ],
   declarations: [
     AccessManagerComponent,
@@ -76,7 +81,10 @@ import { NoteFormComponent } from './note-form/note-form.component';
     CodeFormComponent,
     RelationshipFormComponent,
     ApplyReferenceComponent,
-    NoteFormComponent
+    NoteFormComponent,
+    PropertyFormComponent,
+    PropertyParameterFormComponent,
+    PropertyParameterDialogComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -89,12 +97,16 @@ import { NoteFormComponent } from './note-form/note-form.component';
     AmountFormComponent,
     CodeFormComponent,
     RelationshipFormComponent,
-    NoteFormComponent
+    NoteFormComponent,
+    PropertyFormComponent,
+    PropertyParameterFormComponent,
+    PropertyParameterDialogComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
-    ApplyReferenceComponent
+    ApplyReferenceComponent,
+    PropertyParameterDialogComponent
   ]
 })
 export class SubstanceFormModule { }
