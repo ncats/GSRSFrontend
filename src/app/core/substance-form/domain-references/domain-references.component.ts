@@ -19,7 +19,7 @@ export class DomainReferencesComponent implements OnInit {
   private substanceReferences: Array<SubstanceReference>;
   references: Array<SubstanceReference> = [];
   documentTypesDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
-  displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete'];
+  displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete', 'attachment'];
   tableData: MatTableDataSource<SubstanceReference>;
   isExpanded = false;
 

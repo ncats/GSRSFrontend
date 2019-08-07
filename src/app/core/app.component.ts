@@ -118,6 +118,9 @@ export class AppComponent {
       'cloud_upload',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-cloud_upload-24px.svg'));
     iconRegistry.addSvgIcon(
+      'cloud_download',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-cloud_download-24px.svg'));
+    iconRegistry.addSvgIcon(
       'attachment',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-attachment-24px.svg'));
   }
