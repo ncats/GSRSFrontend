@@ -169,6 +169,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.validationMessages = null;
       this.submissionMessage = 'Substance was saved successfully!';
       this.showSubmissionMessages = true;
+      this.validationResult = false;
       setTimeout(() => {
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
