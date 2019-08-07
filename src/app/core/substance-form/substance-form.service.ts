@@ -546,7 +546,6 @@ export class SubstanceFormService {
         observer.complete();
       }, error => {
         results.isSuccessfull = false;
-        console.log(error);
         if (error && error.error && error.error.validationMessages) {
           results.validationMessages = error.error.validationMessages;
         }
