@@ -10,6 +10,7 @@ import { SubstanceFacetParam } from './substance-facet-param.model';
 import { SubstanceHttpParams } from './substance-http-params';
 import { UtilsService } from '../utils/utils.service';
 import { map, switchMap, tap } from 'rxjs/operators';
+import {SubstanceFormResults, ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 
 @Injectable({
   providedIn: 'root'
@@ -451,6 +452,11 @@ export class SubstanceService extends BaseHttpService {
       body: substance
     };
     return this.http.request(method, url, options);
+  }
+
+  validateSubstance(substance: SubstanceDetail): Observable<ValidationResults> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
+    return this.http.post(url, substance);
   }
 
 }

@@ -12,7 +12,7 @@ import {
 } from '../substance/substance.model';
 import {
   SubstanceFormDefinition,
-  SubstanceFormResults
+  SubstanceFormResults, ValidationResults
 } from './substance-form.model';
 import { Observable, Subject } from 'rxjs';
 import { SubstanceService } from '../substance/substance.service';
@@ -502,6 +502,16 @@ export class SubstanceFormService {
   }
 
   // Properties end
+
+  validateSubstance(): Observable<ValidationResults> {
+      return new Observable(observer => {
+          this.substanceService.validateSubstance(this.substance).subscribe(results => {
+            observer.next(results);
+            observer.complete();
+          });
+        });
+    }
+
 
   saveSubstance(): Observable<SubstanceFormResults> {
     return new Observable(observer => {

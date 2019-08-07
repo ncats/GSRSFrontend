@@ -18,6 +18,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { SubstanceFormSection } from './substance-form-section';
 import { SubstanceFormService } from './substance-form.service';
 import { ValidationMessage, SubstanceFormResults } from './substance-form.model';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-substance-form',
@@ -39,6 +40,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   showSubmissionMessages = false;
   submissionMessage: string;
   validationMessages: Array<ValidationMessage>;
+  validationResult = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -142,6 +144,22 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }, 5000);
   }
 
+  validate(): void {
+    this.isLoading = true;
+    this.loadingService.setLoading(true);
+    this.substanceFormService.validateSubstance().subscribe(results => {
+      this.validationMessages = results.validationMessages.filter(
+        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+      this.validationResult = results.valid;
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      if (this.validationMessages.length === 0 && results.valid === true) {
+        this.submissionMessage = 'Substance is Valid. Would you like to submit?';
+      }
+    });
+  }
+
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
@@ -184,7 +202,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.validationMessages.splice(index, 1);
 
     if (this.validationMessages.length === 0) {
-      this.showSubmissionMessages = false;
+      this.submissionMessage = 'Substance is Valid. Would you like to submit?';
     }
   }
 
@@ -193,7 +211,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   dismissAllValidationMessages(): void {
-    this.showSubmissionMessages = false;
-    this.validationMessages = null;
+    for (let i = this.validationMessages.length - 1; i >= 0; i--) {
+      if ( this.validationMessages[i].messageType !== 'ERROR') {
+        this.validationMessages.splice(i, 1);
+      }
+    }
+    if (this.validationMessages.length === 0) {
+      this.submissionMessage = 'Substance is Valid. Would you like to submit?';
+    }
   }
 }

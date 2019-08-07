@@ -17,11 +17,21 @@ export interface SubstanceFormResults {
     validationMessages?: Array<ValidationMessage>;
 }
 
+export interface ValidationResults {
+  valid?: boolean;
+  validationMessages?: Array<ValidationMessage>;
+}
+
 export interface ValidationMessage {
     actionType: string;
     appliedChange: boolean;
-    links: Array<string>;
+    links: Array<MessageLink>;
     message: string;
     messageType: string;
     suggestedChange: boolean;
+}
+
+export interface MessageLink {
+  href: string;
+  text: string;
 }
