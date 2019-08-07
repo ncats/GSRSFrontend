@@ -145,11 +145,18 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   validate(): void {
+    this.isLoading = true;
+    this.loadingService.setLoading(true);
     this.substanceFormService.validateSubstance().subscribe(results => {
       this.validationMessages = results.validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
       this.validationResult = results.valid;
       this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      if (this.validationMessages.length === 0 && results.valid === true) {
+        this.submissionMessage = 'Substance is Valid. Would you like to submit?';
+      }
     });
   }
 
@@ -205,13 +212,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   dismissAllValidationMessages(): void {
     for (let i = this.validationMessages.length - 1; i >= 0; i--) {
-      console.log(this.validationMessages[i]);
-      console.log(i);
       if ( this.validationMessages[i].messageType !== 'ERROR') {
         this.validationMessages.splice(i, 1);
       }
     }
-    console.log(this.validationMessages);
     if (this.validationMessages.length === 0) {
       this.submissionMessage = 'Substance is Valid. Would you like to submit?';
     }
