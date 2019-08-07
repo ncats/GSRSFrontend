@@ -52,7 +52,7 @@
       </button>
       <mat-menu #documentMenu="matMenu">
         <a mat-menu-item [href]="reference.uploadedFile">Download</a>
-        <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Edit</button>
+        <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Replace</button>
         <button mat-menu-item (click)="reference.uploadedFile = null">Delete</button>
       </mat-menu>
     </div>
