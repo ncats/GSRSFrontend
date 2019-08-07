@@ -3,7 +3,7 @@ import { SubstanceReference } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
-import { SubstanceFormService } from '../substance-form.service';
+import { UtilsService } from '../../utils/utils.service';
 
 @Component({
   selector: 'app-reference-form',
@@ -23,7 +23,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private substanceFormService: SubstanceFormService
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
@@ -85,6 +85,14 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.referenceDeleted.emit(this.reference);
     }, 500);
+  }
+
+  fileSelected(file: File): void {
+    if (file != null) {
+      this.utilsService.uploadFile(file).subscribe(response => {
+        this.reference.uploadedFile = response;
+      });
+    }
   }
 
 }

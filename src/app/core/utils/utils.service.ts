@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { SubstanceSuggestionsGroup } from './substance-suggestions-group.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -117,5 +118,15 @@ export class UtilsService extends BaseHttpService {
     String.prototype.split.call(path, /[,[\].]+?/)
       .filter(Boolean)
       .reduce((a: any, c: string) => (Object.hasOwnProperty.call(a, c) ? a[c] : defaultValue), obj);
+  }
+
+  uploadFile(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file-name', file);
+    formData.append('file-type', file.type);
+    return this.http.post<any>(`${this.configService.configData.apiBaseUrl}upload`, formData)
+    .pipe(
+      map(response => response && response.url || '')
+    );
   }
 }

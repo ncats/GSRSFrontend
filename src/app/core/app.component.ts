@@ -114,6 +114,12 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'arrow_downward',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-arrow_downward-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'cloud_upload',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-cloud_upload-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'attachment',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-attachment-24px.svg'));
   }
 
 }

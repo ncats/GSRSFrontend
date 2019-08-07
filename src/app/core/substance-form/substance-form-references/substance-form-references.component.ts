@@ -44,6 +44,10 @@ export class SubstanceFormReferencesComponent extends SubstanceFormSectionBase i
     });
   }
 
+  addSubstanceReference(): void {
+    this.substanceFormService.addSubstanceReference({});
+  }
+
   deleteReference(reference: SubstanceReference): void {
     this.substanceFormService.deleteSubstanceReference(reference);
   }

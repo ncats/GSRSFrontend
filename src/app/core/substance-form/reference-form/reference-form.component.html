@@ -39,7 +39,24 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <span class="fill-middle"></span>
+    <div *ngIf="!reference.uploadedFile">
+      <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
+        <span>Upload Document</span>&nbsp;
+        <mat-icon svgIcon="cloud_upload"></mat-icon>
+      </button>
+    </div>
+    <div *ngIf="reference.uploadedFile">
+      <button mat-button [matMenuTriggerFor]="documentMenu">
+        Attachment
+        <mat-icon svgIcon="attachment"></mat-icon>
+      </button>
+      <mat-menu #documentMenu="matMenu">
+        <a mat-menu-item [href]="reference.uploadedFile">Download</a>
+        <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Edit</button>
+        <button mat-menu-item (click)="reference.uploadedFile = null">Delete</button>
+      </mat-menu>
+    </div>
+    <span class="middle-fill"></span>
     <div *ngIf="reference.uuid">
       <app-apply-reference [subReferenceUuid]="reference.uuid"></app-apply-reference>
     </div>

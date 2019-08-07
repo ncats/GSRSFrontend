@@ -39,6 +39,7 @@ import { PropertyFormComponent } from './property-form/property-form.component';
 import { PropertyParameterFormComponent } from './property-parameter-form/property-parameter-form.component';
 import { PropertyParameterDialogComponent } from './property-parameter-dialog/property-parameter-dialog.component';
 import { MatListModule } from '@angular/material/list';
+import { FileSelectModule } from 'file-select';
 
 @NgModule({
   imports: [
@@ -65,7 +66,8 @@ import { MatListModule } from '@angular/material/list';
     MatRadioModule,
     ExpandDetailsModule,
     SubstanceSelectorModule,
-    MatListModule
+    MatListModule,
+    FileSelectModule
   ],
   declarations: [
     AccessManagerComponent,
