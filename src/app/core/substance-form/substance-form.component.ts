@@ -157,6 +157,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       if (this.validationMessages.length === 0 && results.valid === true) {
         this.submissionMessage = 'Substance is Valid. Would you like to submit?';
       }
+    }, error => {
+      this.validationResult = false;
+      this.validationMessages = null;
+      this.submissionMessage = 'There are undetermined are errors with your substance. Please make some changes and try validating again';
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
     });
   }
 
