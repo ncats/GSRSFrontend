@@ -123,6 +123,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'attachment',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-attachment-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'undo',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-undo-24px.svg'));
   }
 
 }

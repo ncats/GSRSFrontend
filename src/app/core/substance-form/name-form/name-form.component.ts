@@ -5,6 +5,7 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { UtilsService } from '../../utils/utils.service';
 
 @Component({
   selector: 'app-name-form',
@@ -21,7 +22,8 @@ export class NameFormComponent implements OnInit {
   isDeleted = false;
 
   constructor(
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
@@ -79,10 +81,19 @@ export class NameFormComponent implements OnInit {
   }
 
   deleteName(): void {
-    this.isDeleted = true;
-    setTimeout(() => {
-      this.nameDeleted.emit(this.name);
-    }, 500);
+    this.name.$$deletedCode = this.utilsService.newUUID();
+
+    if (!this.name.name
+      && !this.name.type
+    ) {
+      setTimeout(() => {
+        this.nameDeleted.emit(this.name);
+      }, 500);
+    }
+  }
+
+  undoDelete(): void {
+    delete this.name.$$deletedCode;
   }
 
   getNameOrgs(name: SubstanceName): Array<SubstanceNameOrg> {

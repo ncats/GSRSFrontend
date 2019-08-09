@@ -168,3 +168,12 @@
     opacity: 0;
   }
 }
+
+.top-mat-menu  {
+  z-index: 1002;
+
+  ::ng-deep .cdk-overlay-pane,
+  ::ng-deep .cdk-overlay-connected-position-bounding-box {
+    z-index: 1002;
+  }
+}

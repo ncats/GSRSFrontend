@@ -252,7 +252,7 @@ export class SubstanceFormService {
   }
 
   deleteSubstanceName(name: SubstanceName): void {
-    const subNameIndex = this.substance.names.findIndex(subName => name.uuid === subName.uuid);
+    const subNameIndex = this.substance.names.findIndex(subName => name.$$deletedCode === subName.$$deletedCode);
     if (subNameIndex > -1) {
       this.substance.names.splice(subNameIndex, 1);
       this.substanceNamesEmitter.next(this.substance.names);
@@ -386,7 +386,7 @@ export class SubstanceFormService {
   }
 
   deleteSubstanceCode(code: SubstanceCode): void {
-    const subCodeIndex = this.substance.codes.findIndex(subCode => code.uuid === subCode.uuid);
+    const subCodeIndex = this.substance.codes.findIndex(subCode => code.$$deletedCode === subCode.$$deletedCode);
     if (subCodeIndex > -1) {
       this.substance.codes.splice(subCodeIndex, 1);
       this.substanceCodesEmitter.next(this.substance.codes);
@@ -423,7 +423,8 @@ export class SubstanceFormService {
   }
 
   deleteSubstanceRelationship(relationship: SubstanceRelationship): void {
-    const subRelationshipIndex = this.substance.relationships.findIndex(subRelationship => relationship.uuid === subRelationship.uuid);
+    const subRelationshipIndex = this.substance.relationships
+      .findIndex(subRelationship => relationship.$$deletedCode === subRelationship.$$deletedCode);
     if (subRelationshipIndex > -1) {
       this.substance.relationships.splice(subRelationshipIndex, 1);
       this.substanceRelationshipsEmitter.next(this.substance.relationships);
@@ -458,7 +459,7 @@ export class SubstanceFormService {
   }
 
   deleteSubstanceNote(note: SubstanceNote): void {
-    const subNoteIndex = this.substance.notes.findIndex(subNote => note.uuid === subNote.uuid);
+    const subNoteIndex = this.substance.notes.findIndex(subNote => note.$$deletedCode === subNote.$$deletedCode);
     if (subNoteIndex > -1) {
       this.substance.notes.splice(subNoteIndex, 1);
       this.substanceNotesEmitter.next(this.substance.notes);
@@ -494,7 +495,7 @@ export class SubstanceFormService {
   }
 
   deleteSubstanceProperty(property: SubstanceProperty): void {
-    const subPropertyIndex = this.substance.properties.findIndex(subProperty => property.uuid === subProperty.uuid);
+    const subPropertyIndex = this.substance.properties.findIndex(subProperty => property.$$deletedCode === subProperty.$$deletedCode);
     if (subPropertyIndex > -1) {
       this.substance.properties.splice(subPropertyIndex, 1);
       this.substancePropertiesEmitter.next(this.substance.properties);
@@ -504,14 +505,40 @@ export class SubstanceFormService {
   // Properties end
 
   validateSubstance(): Observable<ValidationResults> {
-      return new Observable(observer => {
-          this.substanceService.validateSubstance(this.substance).subscribe(results => {
-            observer.next(results);
-            observer.complete();
-          });
+    return new Observable(observer => {
+        this.substanceService.validateSubstance(this.substance).subscribe(results => {
+          observer.next(results);
+          observer.complete();
         });
-    }
+      });
+  }
 
+  removeDeletedComponents(): SubstanceDetail {
+    const substanceString = JSON.stringify(this.substance);
+    const substanceCopy: SubstanceDetail = JSON.parse(substanceString);
+    const deletablekeys = [
+      'names',
+      'codes',
+      'relationships',
+      'notes',
+      'properties',
+      'references'
+    ];
+
+    deletablekeys.forEach(property => {
+      if (substanceCopy[property] && substanceCopy[property].length) {
+        substanceCopy[property].map((item: any) => {
+          const hasDeleletedCode = item.$$deletedCode != null;
+          if (!hasDeleletedCode) {
+            delete item.$$deletedCode;
+            return item;
+          }
+        });
+      }
+    });
+
+    return substanceCopy;
+  }
 
   saveSubstance(): Observable<SubstanceFormResults> {
     return new Observable(observer => {
@@ -530,7 +557,10 @@ export class SubstanceFormService {
           }
         });
       }
-      this.substanceService.saveSubstance(this.substance).subscribe(substance => {
+
+      const substanceCopy = this.removeDeletedComponents();
+
+      this.substanceService.saveSubstance(substanceCopy).subscribe(substance => {
         this.substance = substance;
         results.uuid = substance.uuid;
         this.definitionEmitter.next(this.getDefinition());

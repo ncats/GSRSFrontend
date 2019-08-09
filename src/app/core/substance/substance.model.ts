@@ -6,6 +6,10 @@ export interface SubstanceBase {
     lastEditedBy?: string;
     deprecated?: boolean;
     access?: Array<string>;
+
+    // only to be used on client side
+    // delete property before sending to server
+    $$deletedCode?: string;
 }
 
 export interface SubstanceBaseExtended {

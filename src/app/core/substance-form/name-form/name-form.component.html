@@ -1,6 +1,9 @@
-<div class="name-form-container" appExpandDetails>
-  <div *ngIf="isDeleted" class="notification-backdrop">
-    Deleted
+<div class="name-form-container">
+  <div *ngIf="name.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
   </div>
   <div class="form-row">
     <div class="delete-container">
@@ -35,7 +38,7 @@
       </app-access-manager>
     </div>
   </div>
-  <div appExpandableDetails>
+  <div *ngIf="!name.$$deletedCode">
     <div class="form-row">
       <app-tag-selector class="tags" (tagsUpdate)="updateLanguages($event)" [tags]="name.languages" cvDomain="LANGUAGE"
         placeholder="Languages">
@@ -52,7 +55,7 @@
         <app-domain-references [referencesUuids]="name.references" #references></app-domain-references>
       </div>
     </div>
-    <div class="form-row">
+    <div class="form-row" *ngIf="name.type == 'of'">
       <div class="nameorgs-container">
         <app-name-orgs [nameOrgs]="getNameOrgs(name)" #nameOrgs></app-name-orgs>
       </div>
