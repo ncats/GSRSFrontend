@@ -169,8 +169,7 @@
   }
 }
 
-.top-mat-menu  {
-  z-index: 1002;
+::ng-deep .top-mat-menu-backdrop  {
 
   ::ng-deep .cdk-overlay-pane,
   ::ng-deep .cdk-overlay-connected-position-bounding-box {

@@ -13,10 +13,10 @@
   </span> -->
   <!-- <span class="middle-fill"></span> -->
   <span class="nav-small">
-    <button mat-icon-button [matMenuTriggerFor]="nav">
+    <button mat-icon-button [matMenuTriggerFor]="nav" (click)="increaseMenuZindex()">
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
-    <mat-menu #nav="matMenu">
+    <mat-menu #nav="matMenu" (closed)="removeZindex()">
       <div *ngFor="let navItem of navItems">
         <button mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
           {{navItem.display}}
@@ -44,10 +44,10 @@
       Login
     </button>
     <div>
-      <button mat-icon-button [matMenuTriggerFor]="accountMenu" *ngIf="auth">
+      <button mat-icon-button [matMenuTriggerFor]="accountMenu" *ngIf="auth" (click)="increaseMenuZindex()">
         <mat-icon>account_circle</mat-icon>
       </button>
-      <mat-menu #accountMenu="matMenu">
+      <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
         <button mat-menu-item (click)="authService.logout()">
           <span>Logout</span>
         </button>

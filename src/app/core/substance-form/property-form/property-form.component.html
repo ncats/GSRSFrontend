@@ -1,6 +1,9 @@
 <div class="property-form-container">
-  <div *ngIf="isDeleted" class="notification-backdrop">
-    Deleted
+  <div *ngIf="property.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
   </div>
   <div class="flex-column referenced-substance">
     <app-substance-selector (selectionUpdated)="referencedSubstanceUpdated($event)"
@@ -41,7 +44,7 @@
         </app-access-manager>
       </div>
     </div>
-    <div class="form-row">
+    <div class="form-row" *ngIf="!property.$$deletedCode">
       <div>
         <h4 class="parameters-title">
           Parameters
@@ -135,12 +138,14 @@
     </div>
   </div>
 </div>
-<div class="amount-form-container">
-  <div class="amount-title">Amount</div>
-  <app-amount-form [substanceAmount]="property.value"></app-amount-form>
-</div>
-<div class="form-row">
-  <div class="references-container">
-    <app-domain-references [referencesUuids]="property.references" #references></app-domain-references>
+<div *ngIf="!property.$$deletedCode">
+  <div class="amount-form-container">
+    <div class="amount-title">Amount</div>
+    <app-amount-form [substanceAmount]="property.value"></app-amount-form>
+  </div>
+  <div class="form-row">
+    <div class="references-container">
+      <app-domain-references [referencesUuids]="property.references" #references></app-domain-references>
+    </div>
   </div>
 </div>

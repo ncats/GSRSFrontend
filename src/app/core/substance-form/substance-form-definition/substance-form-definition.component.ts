@@ -6,8 +6,6 @@ import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
-import { Subject } from 'rxjs';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormDefinition } from '../substance-form.model';
 
@@ -19,9 +17,6 @@ import { SubstanceFormDefinition } from '../substance-form.model';
 export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
   definitionTypes: Array<VocabularyTerm>;
   definitionLevels: Array<VocabularyTerm>;
-  definitionTypeControl = new FormControl();
-  definitionLevelControl = new FormControl();
-  deprecatedControl = new FormControl();
   primarySubstance?: SubstanceSummary;
   showPrimarySubstanceOptions = false;
   definition: SubstanceFormDefinition;
@@ -42,14 +37,15 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
 
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
-      this.definition = definition;
+      this.definition = definition || {};
 
-      const definitionType = this.definition && this.definition.definitionType || 'primary';
-      this.definitionTypeControl.setValue(definitionType);
-      const definitionLevel = this.definition && this.definition.definitionLevel || 'complete';
-      this.definitionLevelControl.setValue(definitionLevel);
+      if (!this.definition.definitionType) {
+        this.definition.definitionType = 'primary';
+      }
 
-      this.deprecatedControl.setValue(this.definition.deprecated || false);
+      if (!this.definition.definitionLevel) {
+        this.definition.definitionLevel = 'complete';
+      }
 
       if (this.definition.definitionType === 'ALTERNATIVE') {
         this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
@@ -80,7 +76,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
   }
 
   updateDefinitionType(event: MatSelectChange): void {
-    this.definition.definitionType = event.value;
     if (this.definition.definitionType === 'PRIMARY' && this.definition.relationships != null && this.definition.relationships.length) {
       const indexToRemove = this.definition.relationships
         .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
@@ -89,11 +84,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
       }
       this.primarySubstance = null;
     }
-    this.substanceFormService.updateDefinition(this.definition);
-  }
-
-  updateDefinitionLevel(event: MatSelectChange): void {
-    this.definition.definitionLevel = event.value;
     this.substanceFormService.updateDefinition(this.definition);
   }
 
@@ -145,8 +135,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
     this.substanceFormService.updateDefinition(this.definition);
   }
 
-  updateDeprecate(event: MatCheckboxChange): void {
-    this.definition.deprecated = event.checked;
+  updateDefinition(): void {
     this.substanceFormService.updateDefinition(this.definition);
   }
 }

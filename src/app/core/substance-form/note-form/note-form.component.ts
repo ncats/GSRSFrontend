@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { SubstanceNote } from '../../substance/substance.model';
-import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { FormControl, Validators } from '@angular/forms';
+import { UtilsService } from '../../utils/utils.service';
 
 @Component({
   selector: 'app-note-form',
@@ -11,10 +11,11 @@ import { FormControl, Validators } from '@angular/forms';
 export class NoteFormComponent implements OnInit {
   private privateNote: SubstanceNote;
   @Output() noteDeleted = new EventEmitter<SubstanceNote>();
-  isDeleted = false;
-  noteControl = new FormControl('');
+  deleteTimer: any;
+  noteControl = new FormControl('', [Validators.required]);
 
   constructor(
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
@@ -34,10 +35,18 @@ export class NoteFormComponent implements OnInit {
   }
 
   deleteNote(): void {
-    this.isDeleted = true;
-    setTimeout(() => {
-      this.noteDeleted.emit(this.note);
-    }, 500);
+    this.privateNote.$$deletedCode = this.utilsService.newUUID();
+    if (!this.privateNote.note
+    ) {
+      this.deleteTimer = setTimeout(() => {
+        this.noteDeleted.emit(this.note);
+      }, 2000);
+    }
+  }
+
+  undoDelete(): void {
+    clearTimeout(this.deleteTimer);
+    delete this.privateNote.$$deletedCode;
   }
 
   updateAccess(access: Array<string>): void {

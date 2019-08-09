@@ -1,6 +1,9 @@
 <div class="note-form-container">
-  <div *ngIf="isDeleted" class="notification-backdrop">
-    Deleted
+  <div *ngIf="note.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
   </div>
   <div class="form-row">
     <div class="delete-container">
@@ -16,7 +19,7 @@
       </app-access-manager>
     </div>
   </div>
-  <div class="form-row">
+  <div class="form-row" *ngIf="!note.$$deletedCode">
     <div class="references-container">
       <app-domain-references [referencesUuids]="note.references" #references></app-domain-references>
     </div>

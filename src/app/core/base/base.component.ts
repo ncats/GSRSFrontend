@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
 import { ConfigService } from '../config/config.service';
-import { Observable } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-base',
   templateUrl: './base.component.html',
-  styleUrls: ['./base.component.scss']
+  styleUrls: ['./base.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class BaseComponent implements OnInit {
   mainPathSegment = '';
@@ -40,15 +41,18 @@ export class BaseComponent implements OnInit {
   auth?: Auth;
   environment: Environment;
   searchValue: string;
+  private overlayContainer: HTMLElement;
 
   constructor(
     private router: Router,
     public authService: AuthService,
     private configService: ConfigService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
       this.searchValue = this.activatedRoute.snapshot.queryParamMap.get('search');
@@ -107,5 +111,13 @@ export class BaseComponent implements OnInit {
     };
 
     this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+
+  increaseMenuZindex(): void {
+    this.overlayContainer.style.zIndex = '1001';
+  }
+
+  removeZindex(): void {
+    this.overlayContainer.style.zIndex = null;
   }
 }

@@ -3,6 +3,7 @@ import { SubstanceRelationship, SubstanceSummary, SubstanceRelated, MediatorSubs
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
+import { UtilsService } from '../../utils/utils.service';
 
 @Component({
   selector: 'app-relationship-form',
@@ -10,7 +11,6 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./relationship-form.component.scss']
 })
 export class RelationshipFormComponent implements OnInit {
-  isDeleted = false;
   private privateRelationship: SubstanceRelationship;
   relatedSubstanceUuid: string;
   mediatorSubstanceUuid: string;
@@ -22,9 +22,11 @@ export class RelationshipFormComponent implements OnInit {
   qualificationControl = new FormControl('');
   interactionTypeControl = new FormControl('');
   commentsControl = new FormControl('');
+  deleteTimer: any;
 
   constructor(
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
@@ -67,10 +69,19 @@ export class RelationshipFormComponent implements OnInit {
   }
 
   deleteRelationship(): void {
-    this.isDeleted = true;
-    setTimeout(() => {
-      this.relationshipDeleted.emit(this.relationship);
-    }, 500);
+    this.privateRelationship.$$deletedCode = this.utilsService.newUUID();
+    if ((!this.privateRelationship.relatedSubstance || !this.privateRelationship.relatedSubstance.refuuid)
+      && !this.privateRelationship.type
+    ) {
+      this.deleteTimer = setTimeout(() => {
+        this.relationshipDeleted.emit(this.relationship);
+      }, 2000);
+    }
+  }
+
+  undoDelete(): void {
+    clearTimeout(this.deleteTimer);
+    delete this.privateRelationship.$$deletedCode;
   }
 
   updateAccess(access: Array<string>): void {

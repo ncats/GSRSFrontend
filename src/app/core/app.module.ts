@@ -28,6 +28,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
@@ -119,7 +120,8 @@ import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
     SubstanceTextSearchModule,
     SubstanceCardsModule.forRoot(substanceCardsFilters),
     AuthModule,
-    SubstanceFormModule
+    SubstanceFormModule,
+    OverlayModule
   ],
   providers: [
     ConfigService,

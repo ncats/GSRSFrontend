@@ -31,7 +31,7 @@ export class SubstanceFormRelationshipsComponent extends SubstanceFormSectionBas
     this.substanceFormService.addSubstanceRelationship();
   }
 
-  deleteName(relationship: SubstanceRelationship): void {
+  deleteRelationship(relationship: SubstanceRelationship): void {
     this.substanceFormService.deleteSubstanceRelationship(relationship);
   }
 

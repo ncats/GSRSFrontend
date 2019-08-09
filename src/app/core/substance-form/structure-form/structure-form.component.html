@@ -1,11 +1,11 @@
 <form class="structure-form" *ngIf="structure">
   <div class="form-row">
     <mat-form-field class="mol-formula">
-      <input matInput placeholder="Molecular Formula *" [formControl]="molFormulaControl" />
+      <input matInput placeholder="Molecular Formula *" [(ngModel)]="structure.formula" name="formula" required />
     </mat-form-field>
     <mat-form-field class="stereochemistry">
       <mat-label>Stereochemistry</mat-label>
-      <mat-select [formControl]="stereochemistryControl">
+      <mat-select [(ngModel)]="structure.stereochemistry" name="stereochemistry">
         <mat-option *ngFor="let type of stereoChemistryTypeList" [value]="type.value">
           {{type.display}}
         </mat-option>
@@ -13,7 +13,7 @@
     </mat-form-field>
     <mat-form-field class="optical-activity">
       <mat-label>Optical Activity</mat-label>
-      <mat-select [formControl]="opticalActivityControl">
+      <mat-select [(ngModel)]="structure.opticalActivity" name="opticalActivity">
         <mat-option *ngFor="let activity of opticalActivityList" [value]="activity.value">
           {{activity.display}}
         </mat-option>
@@ -21,7 +21,7 @@
     </mat-form-field>
     <mat-form-field class="atropisomerism">
       <mat-label>Additional Stereochemistry</mat-label>
-      <mat-select [formControl]="atropisomerismControl">
+      <mat-select [(ngModel)]="structure.atropisomerism" name="opticalActivity">
         <mat-option *ngFor="let atropisomerism of atropisomerismList" [value]="atropisomerism.value">
           {{atropisomerism.display}}
         </mat-option>
@@ -68,7 +68,7 @@
   </div>
   <div class="form-row">
     <mat-form-field class="stereo-comments">
-      <textarea matInput placeholder="Stereo Comments" [formControl]="stereoCommentsControl"></textarea>
+      <textarea matInput placeholder="Stereo Comments" [(ngModel)]="structure.stereoComments" name="stereoComments"></textarea>
     </mat-form-field>
   </div>
 </form>

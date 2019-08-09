@@ -19,7 +19,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   publicDomainControl: FormControl;
   urlControl: FormControl;
   idControl: FormControl;
-  isDeleted = false;
+  deleteTimer: any;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -81,10 +81,20 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   }
 
   deleteReference(): void {
-    this.isDeleted = true;
-    setTimeout(() => {
-      this.referenceDeleted.emit(this.reference);
-    }, 500);
+    this.reference.$$deletedCode = this.utilsService.newUUID();
+    if (!this.reference.docType
+      && !this.reference.citation
+      && !this.reference.uploadedFile
+    ) {
+      this.deleteTimer = setTimeout(() => {
+        this.referenceDeleted.emit(this.reference);
+      }, 2000);
+    }
+  }
+
+  undoDelete(): void {
+    clearTimeout(this.deleteTimer);
+    delete this.reference.$$deletedCode;
   }
 
   fileSelected(file: File): void {

@@ -3,6 +3,7 @@ import { SubstanceCode } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
+import { UtilsService } from '../../utils/utils.service';
 
 @Component({
   selector: 'app-code-form',
@@ -15,16 +16,17 @@ export class CodeFormComponent implements OnInit {
   codeSystemControl = new FormControl('', [Validators.required]);
   codeSystemList: Array<VocabularyTerm> = [];
   codeSystemDictionary: { [termValue: string]: VocabularyTerm };
-  isDeleted = false;
   codeSystemType: string;
   codeTypeList: Array<VocabularyTerm> = [];
   codeTypeControl = new FormControl('');
   codeControl = new FormControl('');
   urlControl = new FormControl('');
   codeTextControl = new FormControl('');
+  deleteTimer: any;
 
   constructor(
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
@@ -72,10 +74,20 @@ export class CodeFormComponent implements OnInit {
   }
 
   deleteCode(): void {
-    this.isDeleted = true;
-    setTimeout(() => {
-      this.codeDeleted.emit(this.code);
-    }, 500);
+    this.privateCode.$$deletedCode = this.utilsService.newUUID();
+    if (!this.privateCode.codeSystem
+      && !this.privateCode.type
+      && !this.privateCode.code
+    ) {
+      this.deleteTimer = setTimeout(() => {
+        this.codeDeleted.emit(this.privateCode);
+      }, 2000);
+    }
+  }
+
+  undoDelete(): void {
+    clearTimeout(this.deleteTimer);
+    delete this.privateCode.$$deletedCode;
   }
 
   private setCodeSystemType(): void {

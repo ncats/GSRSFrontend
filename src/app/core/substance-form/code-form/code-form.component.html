@@ -1,6 +1,9 @@
 <div class="code-form-container">
-  <div *ngIf="isDeleted" class="notification-backdrop">
-    Deleted
+  <div *ngIf="code.$$deletedCode" class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
   </div>
   <div class="form-row">
     <div class="delete-container">
@@ -40,19 +43,21 @@
       </app-access-manager>
     </div>
   </div>
-  <div class="form-row">
-    <mat-form-field class="url">
-      <input matInput placeholder="Url" [formControl]="urlControl" />
-    </mat-form-field>
-  </div>
-  <div class="form-row">
-    <mat-form-field class="code-text">
-      <textarea matInput placeholder="Code Text" [formControl]="codeTextControl"></textarea>
-    </mat-form-field>
-  </div>
-  <div class="form-row">
-    <div class="references-container">
-      <app-domain-references [referencesUuids]="code.references" #references></app-domain-references>
+  <div *ngIf="!code.$$deletedCode">
+    <div class="form-row">
+      <mat-form-field class="url">
+        <input matInput placeholder="Url" [formControl]="urlControl" />
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field class="code-text">
+        <textarea matInput placeholder="Code Text" [formControl]="codeTextControl"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <div class="references-container">
+        <app-domain-references [referencesUuids]="code.references" #references></app-domain-references>
+      </div>
     </div>
   </div>
 </div>

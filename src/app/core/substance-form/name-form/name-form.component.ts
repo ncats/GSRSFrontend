@@ -19,7 +19,7 @@ export class NameFormComponent implements OnInit {
   nameControl = new FormControl('');
   nameTypes: Array<VocabularyTerm> = [];
   nameTypeControl = new FormControl('');
-  isDeleted = false;
+  deleteTimer: any;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -86,13 +86,14 @@ export class NameFormComponent implements OnInit {
     if (!this.name.name
       && !this.name.type
     ) {
-      setTimeout(() => {
+      this.deleteTimer = setTimeout(() => {
         this.nameDeleted.emit(this.name);
-      }, 500);
+      }, 2000);
     }
   }
 
   undoDelete(): void {
+    clearTimeout(this.deleteTimer);
     delete this.name.$$deletedCode;
   }
 

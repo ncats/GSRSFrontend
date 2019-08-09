@@ -55,8 +55,10 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   }
 
   clearTagsInput(): void {
-    this.tagInput.nativeElement.value = '';
-    this.tagControl.setValue(null);
+    setTimeout(() => {
+      this.tagInput.nativeElement.value = '';
+      this.tagControl.setValue(null);
+    });
   }
 
   remove(tag: string): void {

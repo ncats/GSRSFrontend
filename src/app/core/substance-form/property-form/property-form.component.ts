@@ -6,6 +6,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { PropertyParameterDialogComponent } from '../property-parameter-dialog/property-parameter-dialog.component';
+import { UtilsService } from '../../utils/utils.service';
 
 @Component({
   selector: 'app-property-form',
@@ -13,7 +14,7 @@ import { PropertyParameterDialogComponent } from '../property-parameter-dialog/p
   styleUrls: ['./property-form.component.scss']
 })
 export class PropertyFormComponent implements OnInit {
-  isDeleted = false;
+  deleteTimer: any;
   private privateProperty: SubstanceProperty;
   referencedSubstanceUuid: string;
   @Output() propertyDeleted = new EventEmitter<SubstanceProperty>();
@@ -24,7 +25,8 @@ export class PropertyFormComponent implements OnInit {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
@@ -57,10 +59,20 @@ export class PropertyFormComponent implements OnInit {
   }
 
   deleteProperty(): void {
-    this.isDeleted = true;
-    setTimeout(() => {
-      this.propertyDeleted.emit(this.property);
-    }, 500);
+    this.privateProperty.$$deletedCode = this.utilsService.newUUID();
+    if ((!this.privateProperty.referencedSubstance || !this.privateProperty.referencedSubstance.refuuid)
+      && !this.privateProperty.name
+      && !this.privateProperty.type
+    ) {
+      this.deleteTimer = setTimeout(() => {
+        this.propertyDeleted.emit(this.property);
+      }, 2000);
+    }
+  }
+
+  undoDelete(): void {
+    clearTimeout(this.deleteTimer);
+    delete this.privateProperty.$$deletedCode;
   }
 
   updateAccess(access: Array<string>): void {
