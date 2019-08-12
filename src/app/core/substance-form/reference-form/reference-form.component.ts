@@ -99,6 +99,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   undoDelete(): void {
     clearTimeout(this.deleteTimer);
     delete this.reference.$$deletedCode;
+    this.substanceFormService.emitReferencesUpdate();
   }
 
   fileSelected(file: File): void {

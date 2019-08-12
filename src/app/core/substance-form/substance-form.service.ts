@@ -14,7 +14,7 @@ import {
   SubstanceFormDefinition,
   SubstanceFormResults, ValidationResults
 } from './substance-form.model';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, observable } from 'rxjs';
 import { SubstanceService } from '../substance/substance.service';
 import { domainKeys, domainDisplayKeys } from './domain-references/domain-keys.constant';
 import { UtilsService } from '../utils/utils.service';
@@ -523,16 +523,20 @@ export class SubstanceFormService {
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {
       const substanceCopy = this.removeDeletedComponents();
+      console.log(substanceCopy);
       this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
         observer.next(results);
+        observer.complete();
+      }, error => {
+        observer.error();
         observer.complete();
       });
     });
   }
 
   removeDeletedComponents(): SubstanceDetail {
-    const substanceString = JSON.stringify(this.substance);
-    const substanceCopy: SubstanceDetail = JSON.parse(substanceString);
+    let substanceString = JSON.stringify(this.substance);
+    let substanceCopy: SubstanceDetail = JSON.parse(substanceString);
     const deletablekeys = [
       'names',
       'codes',
@@ -541,6 +545,7 @@ export class SubstanceFormService {
       'properties',
       'references'
     ];
+    const deletedReferenceUuids = [];
 
     deletablekeys.forEach(property => {
       if (substanceCopy[property] && substanceCopy[property].length) {
@@ -551,11 +556,23 @@ export class SubstanceFormService {
             delete item.$$deletedCode;
             return item;
           } else if (property === 'references') {
-            // write logic to remove delete references from domains
+            deletedReferenceUuids.push(item.uuid);
           }
         });
       }
     });
+
+    if (deletedReferenceUuids.length > 0) {
+      substanceString = JSON.stringify(substanceCopy);
+
+      deletedReferenceUuids.forEach(uuid => {
+        substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
+      });
+      substanceString = substanceString.replace(/,,/g, ',');
+      substanceString = substanceString.replace(/\[,/g, '[');
+      substanceString = substanceString.replace(/,\]/g, ']');
+      substanceCopy = JSON.parse(substanceString);
+    }
 
     return substanceCopy;
   }
