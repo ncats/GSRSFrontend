@@ -1,0 +1,151 @@
+<div class="property-form-container">
+  <div *ngIf="property.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="flex-column referenced-substance">
+    <app-substance-selector (selectionUpdated)="referencedSubstanceUpdated($event)"
+      eventCategory="substancePropertyReferencedSub" placeholder="Referenced Substance" header="Referenced Substance"
+      [subuuid]="referencedSubstanceUuid">
+    </app-substance-selector>
+  </div>
+  <div class="flex-column form-content">
+    <div class="form-row">
+      <div class="delete-container">
+        <button mat-icon-button matTooltip="Delete property" (click)="deleteProperty()">
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
+      <mat-form-field class="name">
+        <mat-label>Name *</mat-label>
+        <mat-select [formControl]="propertyNameControl">
+          <mat-option *ngFor="let propertyName of propertyNameList" [value]="propertyName.value">
+            {{propertyName.display}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="type">
+        <mat-label>Type</mat-label>
+        <mat-select [formControl]="propertyTypeControl">
+          <mat-option *ngFor="let propertyType of propertyTypeList" [value]="propertyType.value">
+            {{propertyType.display}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="checkbox-container column-checkbox">
+        <mat-checkbox (change)="updateDefining($event)" [checked]="property.defining">
+          Defining
+        </mat-checkbox>
+      </div>
+      <div>
+        <app-access-manager (accessOut)="updateAccess($event)" [access]="property.access">
+        </app-access-manager>
+      </div>
+    </div>
+    <div class="form-row" *ngIf="!property.$$deletedCode">
+      <div>
+        <h4 class="parameters-title">
+          Parameters
+          <button mat-icon-button (click)="openPropertyParameter()" matTooltip="Add parameter">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>
+          </button>
+        </h4>
+        <mat-list *ngIf="property.parameters">
+          <a mat-list-item (click)="openPropertyParameter(parameter)" *ngFor="let parameter of property.parameters">
+            <span>{{parameter.name}}</span>
+            <span *ngIf="parameter.value != null">
+              <span>
+                &nbsp;
+                {{parameter.value.type}}
+              </span>
+              <span *ngIf="parameter.value.average != null && parameter.value.average != ''">
+                &nbsp;-
+                &nbsp;
+                {{parameter.value.average}}
+                &nbsp;
+                {{parameter.value.units}}
+              </span>
+              <span *ngIf="(parameter.value.low != null && parameter.value.low != '')
+                  || (parameter.value.high != null && parameter.value.high != '')">
+                <span *ngIf="parameter.value.average == null || parameter.value.average == ''">
+                  &nbsp;
+                  -
+                </span>
+                &nbsp;
+                [
+                <span *ngIf="parameter.value.high == null || parameter.value.high == ''">
+                  >
+                </span>
+                <span *ngIf="parameter.value.low == null || parameter.value.low == ''">
+                  <
+                </span>
+                <span *ngIf="parameter.value.low != null && parameter.value.low != ''">
+                  {{parameter.value.low}}
+                </span>
+                <span *ngIf="parameter.value.low != null && parameter.value.low != ''
+                    && parameter.value.high != null && parameter.value.high != ''">
+                  &nbsp;to&nbsp;
+                </span>
+                <span *ngIf="parameter.value.high != null && parameter.value.high != ''">
+                  {{parameter.value.high}}
+                </span>
+                ]
+                <span *ngIf="parameter.value.average == null || parameter.value.average == ''">
+                  &nbsp;
+                  {{parameter.value.units}}
+                  &nbsp;
+                  (average)
+                </span>
+              </span>
+              <span *ngIf="parameter.value.average != null && parameter.value.average != ''">
+                &nbsp;
+                (average)
+              </span>
+              <span *ngIf="(parameter.value.lowLimit != null && parameter.value.lowLimit != '')
+                      || (parameter.value.highLimit != null && parameter.value.highLimit != '')">
+                &nbsp;-
+                &nbsp;
+                [
+                <span *ngIf="parameter.value.highLimit == null || parameter.value.highLimit == ''">
+                  >
+                </span>
+                <span *ngIf="parameter.value.lowLimit == null || parameter.value.lowLimit == ''">
+                  <
+                </span>
+                <span *ngIf="parameter.value.lowLimit != null && parameter.value.lowLimit != ''">
+                  {{parameter.value.lowLimit}}
+                </span>
+                <span *ngIf="parameter.value.lowLimit != null && parameter.value.lowLimit != ''
+                        && parameter.value.highLimit != null && parameter.value.highLimit != ''">
+                  &nbsp;to&nbsp;
+                </span>
+                <span *ngIf="parameter.value.highLimit != null && parameter.value.highLimit != ''">
+                  {{parameter.value.highLimit}}
+                </span>
+                ]
+                &nbsp;(limits)
+              </span>
+              <span *ngIf="parameter.value.nonNumericValue">
+                &nbsp;-&nbsp;
+                {{parameter.value.nonNumericValue}}
+              </span>
+            </span>
+          </a>
+        </mat-list>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!property.$$deletedCode">
+  <div class="amount-form-container">
+    <div class="amount-title">Amount</div>
+    <app-amount-form [substanceAmount]="property.value"></app-amount-form>
+  </div>
+  <div class="form-row">
+    <div class="references-container">
+      <app-domain-references [referencesUuids]="property.references" #references></app-domain-references>
+    </div>
+  </div>
+</div>

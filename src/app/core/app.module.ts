@@ -28,6 +28,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
@@ -43,11 +44,11 @@ import { FileSelectModule } from 'file-select';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic-component-loader.module';
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
-import { ScrollNavModule } from './scroll-nav/scroll-nav.module';
+import { ScrollToModule } from './scroll-to/scroll-to.module';
 import { TakePipe } from './utils/take.pipe';
 import { FacetDisplayPipe } from './utils/facet-display.pipe';
 import { EnvironmentModule } from '../../environments/environment';
-import { TopSearchModule } from './top-search/top-search.module';
+import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
@@ -56,6 +57,10 @@ import { SubstanceCardsModule } from './substance-details/substance-cards.module
 import { substanceCardsFilters } from './substance-details/substance-cards-filters.constant';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { SubstanceFormComponent } from './substance-form/substance-form.component';
+import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
+import { SubstanceFormModule } from './substance-form/substance-form.module';
+import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -69,8 +74,10 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     StructureImageModalComponent,
     TakePipe,
     FacetDisplayPipe,
+    FacetFilterPipe,
     SequenceSearchComponent,
-    TrackLinkEventDirective
+    TrackLinkEventDirective,
+    SubstanceFormComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -104,15 +111,17 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     FileSelectModule,
     MatListModule,
     DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
-    ScrollNavModule,
+    ScrollToModule,
     EnvironmentModule,
     MatMenuModule,
     MatButtonToggleModule,
     MatTooltipModule,
     MatTabsModule,
-    TopSearchModule,
+    SubstanceTextSearchModule,
     SubstanceCardsModule.forRoot(substanceCardsFilters),
-    AuthModule
+    AuthModule,
+    SubstanceFormModule,
+    OverlayModule
   ],
   providers: [
     ConfigService,
@@ -122,7 +131,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
         deps: [ConfigService],
         multi: true
     },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    CanActivateSubstanceForm
   ],
   bootstrap: [AppComponent],
   entryComponents: [StructureImageModalComponent]

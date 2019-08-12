@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of, Observer, ArgumentOutOfRangeError } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
-import { SubstanceSummary, SubstanceDetail } from './substance.model';
+import { SubstanceSummary, SubstanceDetail, SubstanceEdit } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
-import { StructurePostResponse } from '../utils/structure-post-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from './substance-facet-param.model';
 import { SubstanceHttpParams } from './substance-http-params';
 import { UtilsService } from '../utils/utils.service';
+import { map, switchMap, tap } from 'rxjs/operators';
+import {SubstanceFormResults, ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 
 @Injectable({
   providedIn: 'root'
@@ -382,9 +383,9 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
-  postSubstanceStructure(mol: string): Observable<StructurePostResponse> {
-    const url = `${this.configService.configData.apiBaseUrl}structure`;
-    return this.http.post<StructurePostResponse>(url, mol);
+  getFasta(id: string): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}export/${id}.fas`;
+    return this.http.get(url, { responseType: 'blob' as 'json' });
   }
 
   getSubstanceSummary(id: string): Observable<SubstanceSummary> {
@@ -392,29 +393,70 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<any>(url);
   }
 
-  getSubstanceDetails(id: string): Observable<SubstanceDetail> {
+  getEdits(id: string): Observable<Array<SubstanceEdit>> {
+    const url = `${this.apiBaseUrl}substances(${id})/@edits`;
+    return this.http.get<Array<SubstanceEdit>>(url, { withCredentials: true });
+  }
+
+  getSubstanceDetails(id: string, version?: string): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances(${id})`;
     let params = new HttpParams();
     params = params.append('view', 'full');
     const options = {
       params: params
     };
-    return this.http.get<SubstanceDetail>(url, options);
+    if (version) {
+
+      const editurl = `${this.apiBaseUrl}substances(${id})/@edits`;
+
+      return this.http.get<any>(editurl, { withCredentials: true }).pipe(
+        switchMap(response => {
+          response = response.filter(resp => resp.version === version);
+          return this.http.get<SubstanceDetail>(response[0].oldValue, options);
+        }));
+
+    } else {
+      return this.http.get<SubstanceDetail>(url, options);
+    }
   }
 
-  getSafeIconImgUrl(substance: SubstanceDetail, size: number): SafeUrl {
-    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg?size=${size.toString()}`;
+  checkVersion(id: string): any {
+    const verurl = `${this.apiBaseUrl}substances(${id})/version`;
+    return this.http.get<any>(verurl);
+  }
+
+  getSafeIconImgUrl(substance: SubstanceDetail, size?: number): SafeUrl {
+    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg`;
     const substanceType = substance.substanceClass;
     if ((substanceType === 'chemical') && (substance.structure.id)) {
       const structureId = substance.structure.id;
-      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;
+      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg`;
     } else if ((substanceType === 'polymer') && (substance.polymer.displayStructure.id)) {
       const structureId = substance.polymer.displayStructure.id;
-      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}`;
+      imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg`;
     } else {
       imgUrl = `assets/images/${substanceType}.svg`;
     }
+
+    if (size != null) {
+      imgUrl += `?size=${size.toString()}`;
+    }
+
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
+  }
+
+  saveSubstance(substance: SubstanceDetail): Observable<SubstanceDetail> {
+    const url = `${this.apiBaseUrl}substances`;
+    const method = substance.uuid ? 'PUT' : 'POST';
+    const options = {
+      body: substance
+    };
+    return this.http.request(method, url, options);
+  }
+
+  validateSubstance(substance: SubstanceDetail): Observable<ValidationResults> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
+    return this.http.post(url, substance);
   }
 
 }

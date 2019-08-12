@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
-import { SubstanceName } from '../../substance/substance.model';
-import { UtilsService } from '../../utils/utils.service';
-import { VocabularyTerm } from '../../utils/vocabulary.model';
+import {SubstanceDetail, SubstanceName} from '../../substance/substance.model';
+import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
+import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import {Subject, Subscription} from 'rxjs';
+import {Sort} from '@angular/material';
 
 @Component({
   selector: 'app-substance-names',
@@ -16,42 +18,66 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   displayedColumns: string[] = ['name', 'type', 'language', 'references'];
   languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
+  substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
-    private utilsService: UtilsService,
     private dialog: MatDialog,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private cvService: ControlledVocabularyService
   ) {
     super(gaService);
   }
 
   ngOnInit() {
-    if (this.substance != null && this.substance.names != null) {
-      this.names = this.substance.names;
-      this.filtered = this.substance.names;
-      this.countUpdate.emit(this.names.length);
-      this.pageChange();
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null && this.substance.names != null) {
+        this.names = this.substance.names;
+        this.filtered = this.substance.names;
+        this.countUpdate.emit(this.names.length);
+        this.searchControl.valueChanges.subscribe(value => {
+          this.filterList(value, this.names, this.analyticsEventCategory);
+        }, error => {
+          console.log(error);
+        });
+        this.getVocabularies();
 
-      this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.names, this.analyticsEventCategory);
-      }, error => {
-        console.log(error);
+        // move display name to top
+        this.filtered = this.names.slice().sort((a, b) => {
+          return (b.displayName === true ? 1 : -1);
+        });
+      }
+
+      this.pageChange();
       });
 
-      this.getLanguageVocabulary();
-      this.getTypeVocabulary();
+  }
+
+
+
+  sortData(sort: Sort) {
+    const data = this.names.slice();
+    if (!sort.active || sort.direction === '') {
+      this.filtered = data;
+      this.pageChange();
+      return;
     }
-  }
-
-  getLanguageVocabulary(): void {
-    this.utilsService.getDomainVocabulary('LANGUAGE').subscribe(response => {
-      this.languageVocabulary = response;
+    this.filtered = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'name': return compare(a.name.toUpperCase(), b.name.toUpperCase(), isAsc);
+        case 'type': return compare(a.type, b.type, isAsc);
+        case 'language': return compare(this.getLanguages(a), this.getLanguages(b), isAsc);
+        default: return 0;
+      }
     });
+    this.pageChange();
   }
 
-  getTypeVocabulary(): void {
-    this.utilsService.getDomainVocabulary('NAME_TYPE').subscribe(response => {
-      this.typeVocabulary = response;
+  getVocabularies(): void {
+    this.cvService.getDomainVocabulary('LANGUAGE', 'NAME_TYPE').subscribe(response => {
+      this.languageVocabulary = response['LANGUAGE'] && response['LANGUAGE'].dictionary;
+      this.typeVocabulary = response['NAME_TYPE'] && response['NAME_TYPE'].dictionary;
     });
   }
 
@@ -82,4 +108,8 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     });
   }
 
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

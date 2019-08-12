@@ -323,6 +323,14 @@
         "filterName": "exists",
         "propertyToCheck": "properties"
       }]
+    },
+    {
+      "card": "substance-history",
+      "title": "history",
+      "filters": [{
+        "filterName": "hasCredentials",
+        "propertyToCheck": "admin"
+      }]
     }
   ],
   "facets": {

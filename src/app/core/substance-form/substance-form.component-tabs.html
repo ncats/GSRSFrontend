@@ -1,0 +1,29 @@
+<div class="content-container">
+  <mat-card>
+    <mat-card-content>
+      <div class="substance-form-title" *ngIf="substance">
+        <span>
+          {{substance.uuid ? 'Editing' : 'Registering new'}} <span
+            class="capitalized">{{substance.substanceClass}}</span>
+        </span>
+        <span class="middle-fill"></span>
+        <span>
+          {{substance.approvalID}}
+        </span>
+      </div>
+      <mat-tab-group>
+        <mat-tab *ngFor="let section of formSections" [id]="section.dynamicComponentName" [label]="section.menuLabel">
+          <ng-template matTabContent>
+            <div class="scrollable-container">
+              <div #dynamicComponent></div>
+            </div>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+      <div class="form-actions">
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading">Submit</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

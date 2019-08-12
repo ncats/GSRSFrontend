@@ -2,13 +2,25 @@
   display: inline-flex;
   vertical-align: middle;
 }
-
+.version-dropdown{
+  width:50px;
+  border:0px;
+  height:20px;
+}
 .diverseWrapper{
   padding-bottom:20px;
 }
+.view-version {
+  margin-left:10px;
 
-.float-right {
+}
+::ng-deep .mat-form-field-infix{
+  border: 0px;
+}
+.options-area {
   float:right;
+  display: flex;
+  flex-direction: column;
 }
 
 .large-icon {
@@ -22,4 +34,9 @@
   width: 34px;
   min-width: 34px;
   margin: 2px;
+}
+
+.indent {
+  padding-left:12px;
+  padding-bottom:10px;
 }

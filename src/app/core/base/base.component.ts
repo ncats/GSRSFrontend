@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterEvent, NavigationEnd } from '@angular/router';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
 import { ConfigService } from '../config/config.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-base',
   templateUrl: './base.component.html',
-  styleUrls: ['./base.component.scss']
+  styleUrls: ['./base.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class BaseComponent implements OnInit {
   mainPathSegment = '';
@@ -24,19 +26,41 @@ export class BaseComponent implements OnInit {
     {
       display: 'Sequence Search',
       path: 'sequence-search'
+    },
+    {
+      display: 'Register',
+      children: [
+        {
+          display: 'Chemical',
+          path: 'substances/register'
+        }
+      ]
     }
   ];
   logoSrcPath: string;
   auth?: Auth;
   environment: Environment;
+  searchValue: string;
+  private overlayContainer: HTMLElement;
 
   constructor(
     private router: Router,
     public authService: AuthService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private activatedRoute: ActivatedRoute,
+    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+    if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
+      this.searchValue = this.activatedRoute.snapshot.queryParamMap.get('search');
+    }
+
+    this.activatedRoute.queryParamMap.subscribe(params => {
+      this.searchValue = params.get('search');
+    });
 
     this.authService.getAuth().subscribe(auth => {
       this.auth = auth;
@@ -66,4 +90,34 @@ export class BaseComponent implements OnInit {
     return mainPathPart;
   }
 
+  routeToLogin(): void {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        path: this.router.url
+      }
+    };
+
+    this.router.navigate(['/login'], navigationExtras);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.navigateToSearchResults(searchValue);
+  }
+
+  navigateToSearchResults(searchTerm: string) {
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: searchTerm ? { 'search': searchTerm } : null
+    };
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+
+  increaseMenuZindex(): void {
+    this.overlayContainer.style.zIndex = '1001';
+  }
+
+  removeZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
 }

@@ -1,0 +1,28 @@
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .amount-type, .amount-average, .low, .high,
+    .low-limit, .high-limit, .amount-units, .non-numeric-value {
+        flex-grow: 1;
+        padding-right: 15px;
+    }
+
+    .amount-type, .amount-units {
+        width: 125px;
+    }
+
+    .amount-average, .low, .high,
+    .low-limit, .high-limit {
+        width: 75px;
+    }
+
+    .non-numeric-value {
+        width: 100px;
+    }
+
+    .jurisdiction {
+        flex-grow: 1;
+    }
+}

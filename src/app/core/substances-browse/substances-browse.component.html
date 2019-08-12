@@ -7,7 +7,11 @@
             {{facet.name | facetDisplay}}
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <div class="facet-value" *ngFor="let value of facet.values">
+        <mat-form-field  class="">
+        <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name]" placeholder="Search  {{facet.name}}">
+        </mat-form-field>
+        <button mat-icon-button color="black" (click) = "searchText[facet.name] = ''"><mat-icon svgIcon="close"></mat-icon></button>
+          <div class="facet-value" *ngFor="let value of facet.values | facetFilter : searchText[facet.name]">
           <div class="facet-value-checkbox">
             <mat-checkbox class="include" matTooltip="Include" (change)="updateFacetSelection($event, facet.name, value.label, true)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
@@ -159,7 +163,37 @@
                     <img [src]="getSafeStructureImgUrl(substance.uuid)">
                   </div>
                 </div>
-              </div>
+                  <button *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer" mat-icon-button [matMenuTriggerFor]="downloadMenu">
+                    <mat-icon svgIcon="get_app"></mat-icon>
+                  </button>
+
+                  <button *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
+                    <mat-icon svgIcon="search"></mat-icon>
+                  </button>
+
+                <mat-menu #downloadMenu="matMenu">
+                  <a mat-menu-item *ngIf="substance.structure" (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+                    <span>Download Molfile</span>
+                  </a>
+                  <a mat-menu-item *ngIf="substance.polymer" (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+                    <span>Download Molfile</span>
+                  </a>
+                  <a mat-menu-item *ngIf="(substance.protein || substance.nucleicAcid) && !showAudit" (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')" >
+                    <span>Download Fasta</span>
+                  </a>
+                </mat-menu>
+
+                <mat-menu #searchMenu="matMenu" >
+                  <a mat-menu-item *ngIf="substance.structure"  [routerLink]="['/structure-search']" [queryParams]="{structure : substance.structure.id}" >
+                    <span>Search Structure</span>
+                  </a>
+                  <a mat-menu-item *ngIf="substance.polymer"  [routerLink]="['/structure-search']" [queryParams]="{structure : substance.polymer.displayStructure.id}" >
+                    <span>Search Structure</span>
+                  </a>
+                </mat-menu>
+
+                </div>
+
               <div>
                 <div class="substance-data substance-names" *ngIf="substance.names && substance.names.length">
                   <div class="label">Names:</div>
@@ -295,7 +329,13 @@
                   <span *ngFor="let codeSystemName of substance.codeSystemNames | take: 5">
                     <div>
                       <strong>{{codeSystemName}}</strong>:&nbsp;
-                      <span *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLastCodeObject">{{codeObject.code.trim()}}
+                      <span *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLastCodeObject">
+                        <span *ngIf="codeObject.url">
+                            <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent evCategory="substancesContent" evAction="link:code">
+                              {{codeObject.code.trim()}}
+                            </a>
+                          </span>
+                          <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}</span>
                         <span *ngIf="!isLastCodeObject">, </span>
                       </span>
                     </div>

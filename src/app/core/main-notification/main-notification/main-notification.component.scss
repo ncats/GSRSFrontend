@@ -3,13 +3,14 @@
 .main-notification {
     width: 100%;
     text-align: center;
-    position: absolute;
+    position: fixed;
     z-index: 100;
     transition: all 200ms ease;
     overflow: hidden;
     box-sizing: border-box;
     padding: 10px;
     font-weight: 500;
+    top: 64px;
 
     &.hidden {
         height: 0;

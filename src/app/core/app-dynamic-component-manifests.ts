@@ -122,5 +122,55 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-mixture-source',
     path: 'substance-mixture-source',
     loadChildren: './substance-details/substance-mixture-source/substance-mixture-source.module#SubstanceMixtureSourceModule',
+  },
+  {
+    componentId: 'substance-history',
+    path: 'substance-history',
+    loadChildren: './substance-details/substance-history/substance-history.module#SubstanceHistoryModule',
+  },
+  {
+    componentId: 'substance-form-definition',
+    path: 'substance-form-definition',
+    loadChildren: './substance-form/substance-form-definition/substance-form-definition.module#SubstanceFormDefinitionModule',
+  },
+  {
+    componentId: 'substance-form-references',
+    path: 'substance-form-references',
+    loadChildren: './substance-form/substance-form-references/substance-form-references.module#SubstanceFormReferencesModule',
+  },
+  {
+    componentId: 'substance-form-names',
+    path: 'substance-form-names',
+    loadChildren: './substance-form/substance-form-names/substance-form-names.module#SubstanceFormNamesModule',
+  },
+  {
+    componentId: 'substance-form-structure',
+    path: 'substance-form-structure',
+    loadChildren: './substance-form/substance-form-structure/substance-form-structure.module#SubstanceFormStructureModule',
+  },
+  {
+    componentId: 'substance-form-moieties',
+    path: 'substance-form-moieties',
+    loadChildren: './substance-form/substance-form-moieties/substance-form-moieties.module#SubstanceFormMoietiesModule',
+  },
+  {
+    componentId: 'substance-form-codes',
+    path: 'substance-form-codes',
+    loadChildren: './substance-form/substance-form-codes/substance-form-codes.module#SubstanceFormCodesModule',
+  },
+  {
+    componentId: 'substance-form-relationships',
+    path: 'substance-form-relationships',
+    loadChildren: './substance-form/substance-form-relationships/substance-form-relationships.module#SubstanceFormRelationshipsModule',
+  },
+  {
+    componentId: 'substance-form-notes',
+    path: 'substance-form-notes',
+    loadChildren: './substance-form/substance-form-notes/substance-form-notes.module#SubstanceFormNotesModule',
+  },
+  {
+    componentId: 'substance-form-properties',
+    path: 'substance-form-properties',
+    loadChildren: './substance-form/substance-form-properties/substance-form-properties.module#SubstanceFormPropertiesModule'
   }
 ];

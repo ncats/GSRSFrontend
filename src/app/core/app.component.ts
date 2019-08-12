@@ -96,6 +96,39 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'view_module',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-view_module-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'lock_open',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-lock_open-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'lock',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-lock-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'open_in_new',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-open_in_new-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'cancel',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-cancel-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'add_circle_outline',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-add_circle_outline-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'arrow_downward',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-arrow_downward-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'cloud_upload',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-cloud_upload-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'cloud_download',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-cloud_download-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'attachment',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-attachment-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'undo',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-undo-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'move_to_inbox',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-move_to_inbox-24px.svg'));
   }
 
 }

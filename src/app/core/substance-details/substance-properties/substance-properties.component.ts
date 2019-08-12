@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
-import {SubstanceAmount, SubstanceProperty} from '../../substance/substance.model';
+import {SubstanceAmount, SubstanceDetail, SubstanceProperty} from '../../substance/substance.model';
 import {UtilsService} from '../../utils/utils.service';
 import {SafeUrl} from '@angular/platform-browser';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-substance-properties',
@@ -10,8 +11,9 @@ import {SafeUrl} from '@angular/platform-browser';
   styleUrls: ['./substance-properties.component.scss']
 })
 export class SubstancePropertiesComponent extends SubstanceCardBase implements OnInit {
-properties: Array<SubstanceProperty> = [];
-displayedColumns: string[] = ['name', 'property type', 'amount', 'referenced substance', 'defining', 'parameters', 'references'];
+  properties: Array<SubstanceProperty> = [];
+  displayedColumns: string[] = ['name', 'property type', 'amount', 'referenced substance', 'defining', 'parameters', 'references'];
+  substanceUpdated = new Subject<SubstanceDetail>();
   constructor(
     private utilService: UtilsService
   ) {
@@ -19,10 +21,13 @@ displayedColumns: string[] = ['name', 'property type', 'amount', 'referenced sub
   }
 
   ngOnInit() {
-    if (this.substance != null && this.substance.properties != null) {
-      this.properties = this.substance.properties;
-    }
-    this.countUpdate.emit(this.properties.length);
+    this.substanceUpdated.subscribe(substance => {
+      this.substance = substance;
+      if (this.substance != null && this.substance.properties != null) {
+        this.properties = this.substance.properties;
+      }
+      this.countUpdate.emit(this.properties.length);
+    });
   }
 
   public toString(amount: SubstanceAmount) {

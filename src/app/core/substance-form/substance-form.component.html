@@ -1,0 +1,51 @@
+<div class="top-fixed">
+  <div class="actions-container">
+    <button mat-button (click)="toggleValidation()" [disabled]="isLoading" *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+    </button>
+    <span class="middle-fill"></span>
+    <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading ||  (validationMessages && validationMessages.length > 0) || (this.validationResult == false)">Submit</button>
+    <button mat-flat-button color="primary" class = "validate-button" (click)="validate()" >Validate</button>
+  </div>
+  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+    <div class="submission-message" *ngIf="submissionMessage">
+      {{submissionMessage}}
+    </div>
+    <div *ngIf="validationMessages && validationMessages.length > 0">
+      <div class="submission-message">
+        Please correct or dismiss the following errors and submit again:
+      </div>
+      <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
+        <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">{{message.messageType}}</div>
+        <div class="message">{{message.message}}<span *ngFor = "let link of message.links"><br/><a [href] = "link.href" target = "_blank">{{link.text}}</a></span></div>
+        <button mat-icon-button matTooltip="Dismiss" *ngIf = "message.messageType != 'ERROR'" (click)="dismissValidationMessage(i)">
+          <mat-icon svgIcon="cancel"></mat-icon>
+        </button>
+      </div>
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-button (click)="dismissAllValidationMessages()" [disabled]="isLoading">Dismiss messages</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="form-content-container">
+  <div class="scrollable-container">
+    <div class="cards-container">
+      <mat-accordion multi="true">
+        <mat-expansion-panel
+          [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
+          *ngFor="let section of formSections; index as index; last as isLast"
+          [id]="section.dynamicComponentName"
+          [ngClass]="{'hidden': section.isHidden}">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h2>{{section.menuLabel}}</h2>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div #dynamicComponent></div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>

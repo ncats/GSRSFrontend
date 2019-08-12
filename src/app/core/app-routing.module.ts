@@ -8,6 +8,8 @@ import { StructureSearchComponent } from './structure-search/structure-search.co
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { LoginComponent } from './auth/login/login.component';
+import { SubstanceFormComponent } from './substance-form/substance-form.component';
+import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 
 const childRoutes: Routes = [
   {
@@ -23,7 +25,16 @@ const childRoutes: Routes = [
     component: SubstancesBrowseComponent
   },
   {
+    path: 'substances/register',
+    component: SubstanceFormComponent,
+    canActivate: [CanActivateSubstanceForm]
+  },
+  {
     path: 'substances/:id',
+    component: SubstanceDetailsComponent
+  },
+  {
+    path: 'substances/:id/v/:version',
     component: SubstanceDetailsComponent
   },
   {
@@ -37,6 +48,11 @@ const childRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'substances/:id/edit',
+    component: SubstanceFormComponent,
+    canActivate: [CanActivateSubstanceForm]
   }
 ];
 

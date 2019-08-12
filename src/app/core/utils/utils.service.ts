@@ -1,20 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BaseHttpService } from '../base/base-http.service';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { SubstanceSuggestionsGroup } from './substance-suggestions-group.model';
-import { Vocabulary, VocabularyTerm } from './vocabulary.model';
-import { PagingResponse } from './paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService extends BaseHttpService {
-  private vocabularies: { [domain: string]: { [vocabularyValue: string]: VocabularyTerm } } = {};
-  private vocabularySubject: { [domain: string]: Subject<{ [vocabularyValue: string]: VocabularyTerm }> } = {};
-  private vocabularyLoadingIndicators: { [domain: string]: boolean } = {};
   private bodyElement: HTMLBodyElement;
   private matSidenavContentElement: HTMLElement;
 
@@ -30,112 +26,12 @@ export class UtilsService extends BaseHttpService {
     return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrl + 'suggest?q=' + searchTerm);
   }
 
-  getVocabularies(filter?: string, pageSize?: number, skip?: number): Observable<PagingResponse<Vocabulary>> {
-
-    const url = `${this.apiBaseUrl}vocabularies`;
-
-    let params = new HttpParams();
-
-    if (filter != null) {
-      params = params.append('filter', filter);
-    }
-
-    if (skip != null) {
-      params = params.append('skip', skip.toString());
-    }
-
-    if (pageSize != null) {
-      params = params.append('top', pageSize.toString());
-    }
-
-    const options = {
-      params: params
-    };
-
-    return this.http.get<PagingResponse<Vocabulary>>(url, options);
-  }
-
   getSafeStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean): SafeUrl {
     if (!stereo) {
       stereo = false;
     }
     const imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}`;
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
-  }
-
-  getDomainVocabulary(domain: string): Observable<{ [vocabularyValue: string]: VocabularyTerm }> {
-    return new Observable(observer => {
-
-      if (this.vocabularies[domain] != null) {
-        observer.next(this.vocabularies[domain]);
-        observer.complete();
-      } else if (this.vocabularyLoadingIndicators[domain] === true) {
-        const subscription = this.vocabularySubject[domain].subscribe(response => {
-          observer.next(response);
-          observer.complete();
-          subscription.unsubscribe();
-        }, error => {
-          observer.error(error);
-          observer.complete();
-          subscription.unsubscribe();
-        });
-      } else {
-        const subscription = this.fetchVocabulariesFromServer(domain).subscribe(response => {
-          observer.next(response);
-          observer.complete();
-          subscription.unsubscribe();
-        }, error => {
-          observer.error(error);
-          observer.complete();
-          subscription.unsubscribe();
-        });
-      }
-    });
-  }
-
-  private fetchVocabulariesFromServer(domain: string): Subject<{ [vocabularyValue: string]: VocabularyTerm }> {
-
-    this.vocabularyLoadingIndicators[domain] = true;
-
-    if (this.vocabularySubject[domain] == null) {
-      this.vocabularySubject[domain] = new Subject();
-    }
-
-    const url = `${this.apiBaseUrl}vocabularies`;
-
-    let params = new HttpParams();
-    const filter = `domain=\'${domain}\'`;
-    params = params.append('filter', filter);
-
-    const options = {
-      params: params
-    };
-
-    this.http.get<PagingResponse<Vocabulary>>(url, options).subscribe(response => {
-      if (response.content && response.content.length) {
-
-        const domainVocabulary = {};
-
-        response.content.forEach(vocabulary => {
-          if (vocabulary.terms && vocabulary.terms.length) {
-            vocabulary.terms.forEach(vocabularyTerm => {
-              domainVocabulary[vocabularyTerm.value] = vocabularyTerm;
-            });
-          }
-        });
-
-        this.vocabularySubject[domain].next(domainVocabulary);
-        this.vocabularies[domain] = domainVocabulary;
-        this.vocabularyLoadingIndicators[domain] = false;
-      } else {
-        this.vocabularySubject[domain].next({});
-        this.vocabularyLoadingIndicators[domain] = false;
-      }
-    }, error => {
-      this.vocabularySubject[domain].error(error);
-    });
-
-    return this.vocabularySubject[domain];
   }
 
   handleMatSidenavOpen(widthBreakingPoint?: number): void {
@@ -192,5 +88,45 @@ export class UtilsService extends BaseHttpService {
         .replace(/\s(.)/g, ($1) => $1.toUpperCase())
         .replace(/\s/g, '')
         .replace(/^(.)/, ($1) => $1.toLowerCase());
+  }
+
+  // https://gist.github.com/jed/982883
+  newUUID(
+    a?: number                  // placeholder
+  ) {
+    return a           // if the placeholder was passed, return
+      ? (              // a random number from 0 to 15
+        a ^            // unless b is 8,
+        Math.random()  // in which case
+        * 16           // a random number from
+        >> a / 4         // 8 to 11
+        ).toString(16) // in hexadecimal
+      : (              // or otherwise a concatenated string:
+        [1e7] as any +        // 10000000 +
+        -1e3 +         // -1000 +
+        -4e3 +         // -4000 +
+        -8e3 +         // -80000000 +
+        -1e11          // -100000000000,
+        ).replace(     // replacing
+          /[018]/g,    // zeroes, ones, and eights with
+          this.newUUID            // random hex digits
+        );
+  }
+
+  // https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_get
+  getObjectValue(obj: any, path: string, defaultValue: any = null): any {
+    String.prototype.split.call(path, /[,[\].]+?/)
+      .filter(Boolean)
+      .reduce((a: any, c: string) => (Object.hasOwnProperty.call(a, c) ? a[c] : defaultValue), obj);
+  }
+
+  uploadFile(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file-name', file);
+    formData.append('file-type', file.type);
+    return this.http.post<any>(`${this.configService.configData.apiBaseUrl}upload`, formData)
+    .pipe(
+      map(response => response && response.url || '')
+    );
   }
 }

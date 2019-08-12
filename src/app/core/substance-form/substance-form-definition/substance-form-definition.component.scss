@@ -1,0 +1,27 @@
+.substance-form-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.primary-substance-container {
+    max-width: 25%;
+}
+
+.section-header {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 11px;
+    text-align: left;
+    letter-spacing: .005px;
+}
+
+.references-container {
+    width: 100%;
+}
+
+.checkbox-container {
+    padding-top: 10px;
+}
+
+.definition-reference {
+    margin-bottom: 0;
+}
