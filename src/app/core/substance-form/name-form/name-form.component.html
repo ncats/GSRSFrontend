@@ -18,16 +18,16 @@
       </mat-radio-button>
     </div>
     <div class="checkbox-container column-checkbox">
-      <mat-checkbox (change)="updatePreferred($event)" [checked]="name.preferred" matTooltip="Additional Listing Name">
+      <mat-checkbox [(ngModel)]="name.preferred" matTooltip="Additional Listing Name">
         AL
       </mat-checkbox>
     </div>
     <mat-form-field class="name">
-      <input matInput placeholder="Name *" [formControl]="nameControl" />
+      <input matInput placeholder="Name" [(ngModel)]="name.name" required />
     </mat-form-field>
-    <mat-form-field class="name-type">
-      <mat-label>Type *</mat-label>
-      <mat-select [formControl]="nameTypeControl">
+    <mat-form-field class="name-type" required>
+      <mat-label>Type</mat-label>
+      <mat-select [(ngModel)]="name.type" required>
         <mat-option *ngFor="let nameType of nameTypes" [value]="nameType.value">
           {{nameType.display}}
         </mat-option>

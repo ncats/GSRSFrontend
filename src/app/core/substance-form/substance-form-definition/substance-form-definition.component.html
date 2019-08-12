@@ -2,7 +2,7 @@
   <div class="substance-form-row">
     <mat-form-field>
       <mat-label>Definition Type</mat-label>
-      <mat-select [(ngModel)]="definition.definitionType" name="definitionType" (selectionChange)="updateDefinitionType($event)">
+      <mat-select [(ngModel)]="definition.definitionType" name="definitionType" (selectionChange)="updateDefinitionType($event)" required>
         <mat-option *ngFor="let defitionType of definitionTypes" [value]="defitionType.value">
           {{defitionType.display}}
         </mat-option>

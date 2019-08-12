@@ -4,6 +4,7 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from '../../utils/utils.service';
+import { SubstanceFormService } from '../substance-form.service';
 
 @Component({
   selector: 'app-reference-form',
@@ -23,7 +24,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private substanceFormService: SubstanceFormService
   ) { }
 
   ngOnInit() {
@@ -89,6 +91,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
       this.deleteTimer = setTimeout(() => {
         this.referenceDeleted.emit(this.reference);
       }, 2000);
+    } else {
+      this.substanceFormService.emitReferencesUpdate();
     }
   }
 

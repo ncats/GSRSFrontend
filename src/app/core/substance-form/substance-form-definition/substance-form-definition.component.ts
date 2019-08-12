@@ -40,11 +40,11 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase i
       this.definition = definition || {};
 
       if (!this.definition.definitionType) {
-        this.definition.definitionType = 'primary';
+        this.definition.definitionType = 'PRIMARY';
       }
 
       if (!this.definition.definitionLevel) {
-        this.definition.definitionLevel = 'complete';
+        this.definition.definitionLevel = 'COMPLETE';
       }
 
       if (this.definition.definitionType === 'ALTERNATIVE') {

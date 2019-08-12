@@ -34,14 +34,12 @@ export class NameFormComponent implements OnInit {
   set name(name: SubstanceName) {
     if (name != null) {
       this.privateName = name;
-      this.nameControl = new FormControl(this.name.name, [Validators.required]);
-      this.nameControl.valueChanges.subscribe(value => {
-        this.name.name = value;
-      });
-      this.nameTypeControl = new FormControl(this.name.type, [Validators.required]);
-      this.nameTypeControl.valueChanges.subscribe(value => {
-        this.name.type = value;
-      });
+      if (!this.privateName.languages || this.privateName.languages.length === 0) {
+        this.privateName.languages = ['en'];
+      }
+      if (!this.privateName.type) {
+        this.privateName.type = 'cn';
+      }
     }
   }
 
@@ -74,10 +72,6 @@ export class NameFormComponent implements OnInit {
 
   updateJurisdiction(jurisdiction: Array<string>): void {
     this.name.nameJurisdiction = jurisdiction;
-  }
-
-  updatePreferred(event: MatCheckboxChange): void {
-    this.name.preferred = event.checked;
   }
 
   deleteName(): void {

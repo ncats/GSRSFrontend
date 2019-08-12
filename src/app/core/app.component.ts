@@ -126,6 +126,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'undo',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-undo-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'move_to_inbox',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-move_to_inbox-24px.svg'));
   }
 
 }

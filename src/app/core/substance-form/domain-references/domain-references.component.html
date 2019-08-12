@@ -9,14 +9,14 @@
               [matBadge]="referencesUuids && referencesUuids.length || 0"
               matBadgeOverlap="false" [hidden]="isExpanded"></span>
           </h4>
-          <button mat-icon-button [matMenuTriggerFor]="domainReferencesMenu" (click)="$event.stopPropagation()"
-            matTooltip="Add reference" *ngIf="isExpanded">
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>
-          </button>
-          <mat-menu #domainReferencesMenu="matMenu">
-            <button mat-menu-item (click)="addNewReference()">Add new</button>
-            <button mat-menu-item (click)="reuseExistingReference()">Reuse</button>
-          </mat-menu>
+          <div *ngIf="isExpanded">
+            <button mat-icon-button matTooltip="Create new reference" (click)="addNewReference(); $event.stopPropagation()">
+              <mat-icon svgIcon="add_circle_outline"></mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Reuse existing reference" (click)="reuseExistingReference(); $event.stopPropagation()" *ngIf="canReuse">
+              <mat-icon svgIcon="move_to_inbox"></mat-icon>
+            </button>
+          </div>
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div>

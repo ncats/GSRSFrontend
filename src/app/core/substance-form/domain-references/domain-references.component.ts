@@ -17,6 +17,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class DomainReferencesComponent implements OnInit {
   private domainReferenceUuids: Array<string>;
   private substanceReferences: Array<SubstanceReference>;
+  canReuse = false;
   references: Array<SubstanceReference> = [];
   documentTypesDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
   displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete', 'attachment'];
@@ -33,7 +34,12 @@ export class DomainReferencesComponent implements OnInit {
   ngOnInit() {
     this.getVocabularies();
     this.substanceFormService.substanceReferences.subscribe(references => {
-      this.substanceReferences = references || [];
+      if (references && references.length) {
+        this.substanceReferences = references.filter(reference => !reference.$$deletedCode);
+      } else {
+        this.substanceReferences = [];
+      }
+      this.canReuse = this.substanceReferences && this.substanceReferences.length > 0;
       this.loadReferences();
     });
   }
@@ -64,6 +70,8 @@ export class DomainReferencesComponent implements OnInit {
         }
       });
       this.tableData = new MatTableDataSource<SubstanceReference>(this.references);
+    } else {
+      this.references = [];
     }
   }
 
@@ -86,7 +94,10 @@ export class DomainReferencesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(newReference => {
       if (newReference != null) {
         newReference = this.substanceFormService.addSubstanceReference(newReference);
-        this.addDomainReference(newReference.uuid);
+        setTimeout(() => {
+          this.addDomainReference(newReference.uuid);
+        });
+        this.canReuse = true;
       }
     });
   }

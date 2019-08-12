@@ -143,13 +143,23 @@ export class SubstanceFormService {
 
   private getDefinition(): SubstanceFormDefinition {
 
+    if (!this.substance[this.subClass]) {
+      this.substance[this.subClass] = {
+        references: []
+      };
+    }
+
+    if (!this.substance[this.subClass].references) {
+      this.substance[this.subClass].references = [];
+    }
+
     const definition: SubstanceFormDefinition = {
       uuid: this.substance[this.subClass].uuid || this.substance[this.subClass].id,
       substanceClass: this.subClass,
       definitionType: this.substance.definitionType,
       definitionLevel: this.substance.definitionLevel,
       deprecated: this.substance.deprecated,
-      references: this.substance[this.subClass] && this.substance[this.subClass].references || [],
+      references: this.substance[this.subClass].references,
       access: this.substance.access,
       relationships: this.substance.relationships
     };
@@ -181,6 +191,7 @@ export class SubstanceFormService {
       this.substance.references = [];
     }
     this.substance.references.unshift(reference);
+    this.substanceReferencesEmitter.next(this.substance.references);
     return reference;
   }
 
@@ -218,10 +229,15 @@ export class SubstanceFormService {
   }
 
   deleteSubstanceReference(reference: SubstanceReference): void {
-    const subRefIndex = this.substance.references.findIndex(subReference => reference.uuid === subReference.uuid);
+    const subRefIndex = this.substance.references.findIndex(subReference => reference.$$deletedCode === subReference.$$deletedCode);
     if (subRefIndex > -1) {
       this.substance.references.splice(subRefIndex, 1);
+      this.substanceReferencesEmitter.next(this.substance.references);
     }
+  }
+
+  emitReferencesUpdate(): void {
+    this.substanceReferencesEmitter.next(this.substance.references);
   }
 
   // References end
@@ -506,11 +522,12 @@ export class SubstanceFormService {
 
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {
-        this.substanceService.validateSubstance(this.substance).subscribe(results => {
-          observer.next(results);
-          observer.complete();
-        });
+      const substanceCopy = this.removeDeletedComponents();
+      this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
+        observer.next(results);
+        observer.complete();
       });
+    });
   }
 
   removeDeletedComponents(): SubstanceDetail {
@@ -527,11 +544,14 @@ export class SubstanceFormService {
 
     deletablekeys.forEach(property => {
       if (substanceCopy[property] && substanceCopy[property].length) {
-        substanceCopy[property].map((item: any) => {
+
+        substanceCopy[property] = substanceCopy[property].map((item: any) => {
           const hasDeleletedCode = item.$$deletedCode != null;
           if (!hasDeleletedCode) {
             delete item.$$deletedCode;
             return item;
+          } else if (property === 'references') {
+            // write logic to remove delete references from domains
           }
         });
       }

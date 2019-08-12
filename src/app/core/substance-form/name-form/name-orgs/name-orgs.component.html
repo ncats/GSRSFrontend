@@ -4,7 +4,7 @@
       <mat-expansion-panel-header>
         <mat-panel-title [ngClass]="{'block-display': !isExpanded}">
           <h4 class="title" matTooltip="Expand name orgs">
-            Name Orgs
+            Naming Organizations
             <span [matBadge]="nameOrgs.length || 0" matBadgeOverlap="false" [hidden]="isExpanded"></span>
           </h4>
           <button mat-icon-button (click)="addNewNameOrg($event)" matTooltip="Add name org" *ngIf="isExpanded">
