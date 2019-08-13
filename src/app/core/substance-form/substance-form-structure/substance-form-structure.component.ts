@@ -4,6 +4,7 @@ import { Editor } from '../../structure-editor/structure.editor.model';
 import { SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { StructureService } from '../../structure/structure.service';
+import { LoadingService } from '../../loading/loading.service';
 
 @Component({
   selector: 'app-substance-form-structure',
@@ -16,13 +17,15 @@ export class SubstanceFormStructureComponent extends SubstanceFormSectionBase im
 
   constructor(
     private substanceFormService: SubstanceFormService,
-    private structureService: StructureService
+    private structureService: StructureService,
+    private loadingService: LoadingService
   ) {
     super();
   }
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Structure');
+    this.loadingService.setLoading(true);
     this.substanceFormService.substanceStructure.subscribe(structure => {
       this.structure = structure;
       this.loadStructure();
@@ -33,6 +36,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormSectionBase im
   }
 
   editorOnLoad(editor: Editor): void {
+    this.loadingService.setLoading(false);
     this.structureEditor = editor;
     this.loadStructure();
     this.structureEditor.structureUpdated().subscribe(molfile => {

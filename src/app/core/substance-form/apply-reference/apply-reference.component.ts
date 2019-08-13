@@ -36,12 +36,44 @@ export class ApplyReferenceComponent implements OnInit {
         this.applyReference(domain);
       });
     });
+    this.substanceFormService.emitReferencesUpdate();
+  }
+
+  applyToAllWithoutRef(): void {
+    if (this.domainsWithReferences.definition.domain.references == null
+      || this.domainsWithReferences.definition.domain.references.length === 0) {
+        this.applyReference(this.domainsWithReferences.definition.domain);
+    }
+
+    this.domainKeys.forEach(key => {
+      if (this.domainsWithReferences[key] && this.domainsWithReferences[key].domains && this.domainsWithReferences[key].domains.length) {
+        this.domainsWithReferences[key].domains.forEach(domain => {
+          if (!domain.references || domain.references.length === 0) {
+            this.applyReference(domain);
+          }
+        });
+      }
+    });
+    this.substanceFormService.emitReferencesUpdate();
   }
 
   applyToAllDomain(domainKey: string): void {
     this.domainsWithReferences[domainKey].domains.forEach(domain => {
       this.applyReference(domain);
     });
+    this.substanceFormService.emitReferencesUpdate();
+  }
+
+  applyToAllDomainWithoutRef(domainKey: string): void {
+    if (this.domainsWithReferences[domainKey] && this.domainsWithReferences[domainKey].domains
+      && this.domainsWithReferences[domainKey].domains.length) {
+        this.domainsWithReferences[domainKey].domains.forEach(domain => {
+          if (!domain.references || domain.references.length === 0) {
+            this.applyReference(domain);
+          }
+        });
+    }
+    this.substanceFormService.emitReferencesUpdate();
   }
 
   updateAppliedOtion(event: MatCheckboxChange, domain: any): void {

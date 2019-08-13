@@ -19,9 +19,7 @@ export class PropertyFormComponent implements OnInit {
   referencedSubstanceUuid: string;
   @Output() propertyDeleted = new EventEmitter<SubstanceProperty>();
   propertyNameList: Array<VocabularyTerm> = [];
-  propertyNameControl = new FormControl('');
   propertyTypeList: Array<VocabularyTerm> = [];
-  propertyTypeControl = new FormControl('');
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -37,14 +35,6 @@ export class PropertyFormComponent implements OnInit {
   set property(property: SubstanceProperty) {
     this.privateProperty = property;
     this.referencedSubstanceUuid = this.privateProperty.referencedSubstance && this.privateProperty.referencedSubstance.refuuid || '';
-    this.propertyNameControl.setValue(this.property.name);
-    this.propertyNameControl.valueChanges.subscribe(value => {
-      this.property.name = value;
-    });
-    this.propertyTypeControl.setValue(this.property.type);
-    this.propertyTypeControl.valueChanges.subscribe(value => {
-      this.property.type = value;
-    });
   }
 
   get property(): SubstanceProperty {
@@ -88,10 +78,6 @@ export class PropertyFormComponent implements OnInit {
       approvalID: substance.approvalID
     };
     this.property.referencedSubstance = referencedSubstance;
-  }
-
-  updateDefining(event: MatCheckboxChange): void {
-    this.property.defining = event.checked;
   }
 
   openPropertyParameter(parameter?: SubstanceParameter): void {

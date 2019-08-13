@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormSectionBase } from '../substance-form-section-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceRelationship } from '@gsrs-core/substance/substance.model';
+import { ScrollToService } from '../../scroll-to/scroll-to.service';
 
 @Component({
   selector: 'app-substance-form-relationships',
@@ -12,7 +13,8 @@ export class SubstanceFormRelationshipsComponent extends SubstanceFormSectionBas
   relationships: Array<SubstanceRelationship>;
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private scrollToService: ScrollToService
   ) {
     super();
   }
@@ -29,6 +31,9 @@ export class SubstanceFormRelationshipsComponent extends SubstanceFormSectionBas
 
   addRelationship(): void {
     this.substanceFormService.addSubstanceRelationship();
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-relationship-0`, 'center');
+    });
   }
 
   deleteRelationship(relationship: SubstanceRelationship): void {

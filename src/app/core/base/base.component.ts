@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute } from '@angular/router';
+import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
 import { ConfigService } from '../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { LoadingService } from '../loading/loading.service';
 
 @Component({
   selector: 'app-base',
@@ -48,7 +49,8 @@ export class BaseComponent implements OnInit {
     public authService: AuthService,
     private configService: ConfigService,
     private activatedRoute: ActivatedRoute,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private loadingService: LoadingService
   ) { }
 
   ngOnInit() {
@@ -78,6 +80,10 @@ export class BaseComponent implements OnInit {
 
       if (event instanceof NavigationEnd) {
         this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
+      }
+
+      if (event instanceof NavigationStart) {
+        this.loadingService.resetLoading();
       }
     });
 

@@ -19,8 +19,8 @@
         </button>
       </div>
       <mat-form-field class="name">
-        <mat-label>Name *</mat-label>
-        <mat-select [formControl]="propertyNameControl">
+        <mat-label>Name</mat-label>
+        <mat-select [(ngModel)]="property.name" required name="name">
           <mat-option *ngFor="let propertyName of propertyNameList" [value]="propertyName.value">
             {{propertyName.display}}
           </mat-option>
@@ -28,14 +28,14 @@
       </mat-form-field>
       <mat-form-field class="type">
         <mat-label>Type</mat-label>
-        <mat-select [formControl]="propertyTypeControl">
+        <mat-select [(ngModel)]="property.type" required name="type">
           <mat-option *ngFor="let propertyType of propertyTypeList" [value]="propertyType.value">
             {{propertyType.display}}
           </mat-option>
         </mat-select>
       </mat-form-field>
       <div class="checkbox-container column-checkbox">
-        <mat-checkbox (change)="updateDefining($event)" [checked]="property.defining">
+        <mat-checkbox [(ngModel)]="property.defining" name="defining">
           Defining
         </mat-checkbox>
       </div>

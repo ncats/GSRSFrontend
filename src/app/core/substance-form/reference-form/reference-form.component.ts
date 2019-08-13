@@ -15,11 +15,6 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   @Input() reference: SubstanceReference;
   @Output() referenceDeleted = new EventEmitter<SubstanceReference>();
   documentTypes: Array<VocabularyTerm> = [];
-  documentTypeControl: FormControl;
-  citationControl: FormControl;
-  publicDomainControl: FormControl;
-  urlControl: FormControl;
-  idControl: FormControl;
   deleteTimer: any;
 
   constructor(
@@ -29,31 +24,6 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    this.documentTypeControl = new FormControl(this.reference.docType, [Validators.required]);
-    this.documentTypeControl.valueChanges.subscribe(value => {
-      this.reference.docType = value;
-    });
-
-    this.citationControl = new FormControl(this.reference.citation, [Validators.required]);
-    this.citationControl.valueChanges.subscribe(value => {
-      this.reference.citation = value;
-    });
-
-    this.publicDomainControl = new FormControl(this.reference.publicDomain);
-    this.publicDomainControl.valueChanges.subscribe(value => {
-      this.reference.publicDomain = value;
-    });
-
-    this.urlControl = new FormControl(this.reference.url);
-    this.urlControl.valueChanges.subscribe(value => {
-      this.reference.url = value;
-    });
-
-    this.idControl = new FormControl(this.reference.id);
-    this.idControl.valueChanges.subscribe(value => {
-      this.reference.id = value;
-    });
-
     this.getVocabularies();
   }
 
@@ -75,11 +45,12 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   }
 
   get isValid(): boolean {
-    return this.documentTypeControl.valid
-      && this.citationControl.valid
-      && this.publicDomainControl.valid
-      && this.urlControl.valid
-      && this.idControl.valid;
+    if (this.reference.docType
+      && this.reference.citation) {
+        return true;
+    } else {
+      return false;
+    }
   }
 
   deleteReference(): void {

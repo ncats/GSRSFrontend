@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormSectionBase } from '../substance-form-section-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceProperty } from '@gsrs-core/substance/substance.model';
+import { ScrollToService } from '../../scroll-to/scroll-to.service';
 
 @Component({
   selector: 'app-substance-form-properties',
@@ -12,7 +13,8 @@ export class SubstanceFormPropertiesComponent extends SubstanceFormSectionBase i
   properties: Array<SubstanceProperty>;
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private scrollToService: ScrollToService
   ) {
     super();
   }
@@ -29,6 +31,9 @@ export class SubstanceFormPropertiesComponent extends SubstanceFormSectionBase i
 
   addProperty(): void {
     this.substanceFormService.addSubstanceProperty();
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-property-0`, 'center');
+    });
   }
 
   deleteProperty(property: SubstanceProperty): void {

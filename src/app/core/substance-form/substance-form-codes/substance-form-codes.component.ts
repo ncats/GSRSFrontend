@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormSectionBase } from '../substance-form-section-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceCode } from '@gsrs-core/substance/substance.model';
+import { ScrollToService } from '../../scroll-to/scroll-to.service';
 
 @Component({
   selector: 'app-substance-form-codes',
@@ -12,7 +13,8 @@ export class SubstanceFormCodesComponent extends SubstanceFormSectionBase implem
   codes: Array<SubstanceCode>;
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private scrollToService: ScrollToService
   ) {
     super();
   }
@@ -29,6 +31,9 @@ export class SubstanceFormCodesComponent extends SubstanceFormSectionBase implem
 
   addCode(): void {
     this.substanceFormService.addSubstanceCode();
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-code-0`, 'center');
+    });
   }
 
   deleteCode(code: SubstanceCode): void {

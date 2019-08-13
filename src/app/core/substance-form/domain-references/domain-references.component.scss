@@ -8,6 +8,12 @@
     box-shadow: none;
 }
 
+.domain-reference-header {
+    ::ng-deep .mat-expansion-indicator::after {
+        margin-right: 7px;
+    }
+}
+
 .mat-expansion-panel-header {
     padding: 0;
 }

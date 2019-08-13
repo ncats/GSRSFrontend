@@ -9,7 +9,8 @@ export class ScrollToTargetDirective implements AfterViewInit, OnDestroy {
   constructor(
     private elementRef: ElementRef,
     private scrollToService: ScrollToService
-  ) { }
+  ) {
+  }
 
   ngAfterViewInit() {
     if (this.elementRef.nativeElement.id != null) {

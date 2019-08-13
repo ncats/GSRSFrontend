@@ -4,6 +4,7 @@ import { SubstanceReference } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RefernceFormDialogComponent } from '../references-dialogs/refernce-form-dialog.component';
+import { ScrollToService } from '../../scroll-to/scroll-to.service';
 
 @Component({
   selector: 'app-substance-form-references',
@@ -15,7 +16,8 @@ export class SubstanceFormReferencesComponent extends SubstanceFormSectionBase i
 
   constructor(
     private substanceFormService: SubstanceFormService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private scrollToService: ScrollToService
   ) {
     super();
   }
@@ -45,7 +47,10 @@ export class SubstanceFormReferencesComponent extends SubstanceFormSectionBase i
   }
 
   addSubstanceReference(): void {
-    this.substanceFormService.addSubstanceReference({});
+    const addedReference = this.substanceFormService.addSubstanceReference({});
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(addedReference.uuid, 'center');
+    }, 10);
   }
 
   deleteReference(reference: SubstanceReference): void {

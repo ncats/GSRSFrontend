@@ -8,6 +8,7 @@ import { RefernceFormDialogComponent } from '../references-dialogs/refernce-form
 import { ReuseReferencesDialogComponent } from '../references-dialogs/reuse-references-dialog.component';
 import { ReuseReferencesDialogData } from '../references-dialogs/reuse-references-dialog-data.model';
 import { MatTableDataSource } from '@angular/material/table';
+import { UtilsService } from '../../utils/utils.service';
 
 @Component({
   selector: 'app-domain-references',
@@ -20,7 +21,7 @@ export class DomainReferencesComponent implements OnInit {
   canReuse = false;
   references: Array<SubstanceReference> = [];
   documentTypesDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
-  displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete', 'attachment'];
+  displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'remove', 'attachment', 'delete', 'apply'];
   tableData: MatTableDataSource<SubstanceReference>;
   isExpanded = false;
 
@@ -28,7 +29,8 @@ export class DomainReferencesComponent implements OnInit {
     private cvService: ControlledVocabularyService,
     private substanceFormService: SubstanceFormService,
     private dialog: MatDialog,
-    private element: ElementRef
+    private element: ElementRef,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
@@ -164,6 +166,11 @@ export class DomainReferencesComponent implements OnInit {
       this.references.splice(substanceReferenceIndex, 1);
     }
     this.tableData.data = this.references;
+  }
+
+  deleteReference(reference: SubstanceReference): void {
+    reference.$$deletedCode = this.utilsService.newUUID();
+    this.substanceFormService.emitReferencesUpdate();
   }
 
   panelOpened(): void {

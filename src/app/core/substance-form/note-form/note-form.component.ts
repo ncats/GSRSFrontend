@@ -12,7 +12,6 @@ export class NoteFormComponent implements OnInit {
   private privateNote: SubstanceNote;
   @Output() noteDeleted = new EventEmitter<SubstanceNote>();
   deleteTimer: any;
-  noteControl = new FormControl('', [Validators.required]);
 
   constructor(
     private utilsService: UtilsService
@@ -24,10 +23,6 @@ export class NoteFormComponent implements OnInit {
   @Input()
   set note(note: SubstanceNote) {
     this.privateNote = note;
-    this.noteControl.setValue(this.note.note);
-    this.noteControl.valueChanges.subscribe(value => {
-      this.note.note = value;
-    });
   }
 
   get note(): SubstanceNote {

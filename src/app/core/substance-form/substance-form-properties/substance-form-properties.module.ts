@@ -6,6 +6,7 @@ import { SubstanceFormModule } from '../substance-form.module';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { ScrollToModule } from '../../scroll-to/scroll-to.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { MatButtonModule } from '@angular/material/button';
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    ScrollToModule
   ],
   declarations: [
     SubstanceFormPropertiesComponent

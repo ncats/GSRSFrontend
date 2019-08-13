@@ -18,7 +18,6 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { SubstanceFormSection } from './substance-form-section';
 import { SubstanceFormService } from './substance-form.service';
 import { ValidationMessage, SubstanceFormResults } from './substance-form.model';
-import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-substance-form',

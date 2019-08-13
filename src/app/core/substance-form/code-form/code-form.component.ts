@@ -13,15 +13,10 @@ import { UtilsService } from '../../utils/utils.service';
 export class CodeFormComponent implements OnInit {
   private privateCode: SubstanceCode;
   @Output() codeDeleted = new EventEmitter<SubstanceCode>();
-  codeSystemControl = new FormControl('', [Validators.required]);
   codeSystemList: Array<VocabularyTerm> = [];
   codeSystemDictionary: { [termValue: string]: VocabularyTerm };
   codeSystemType: string;
   codeTypeList: Array<VocabularyTerm> = [];
-  codeTypeControl = new FormControl('');
-  codeControl = new FormControl('');
-  urlControl = new FormControl('');
-  codeTextControl = new FormControl('');
   deleteTimer: any;
 
   constructor(
@@ -36,28 +31,6 @@ export class CodeFormComponent implements OnInit {
   @Input()
   set code(code: SubstanceCode) {
     this.privateCode = code;
-    this.codeSystemControl.setValue(this.privateCode.codeSystem);
-    this.setCodeSystemType();
-    this.codeSystemControl.valueChanges.subscribe(value => {
-      this.privateCode.codeSystem = value;
-      this.setCodeSystemType();
-    });
-    this.codeTypeControl.setValue(this.code.type);
-    this.codeTypeControl.valueChanges.subscribe(value => {
-      this.code.type = value;
-    });
-    this.codeControl.setValue(this.code.code);
-    this.codeControl.valueChanges.subscribe(value => {
-      this.code.code = value;
-    });
-    this.urlControl.setValue(this.code.url);
-    this.urlControl.valueChanges.subscribe(value => {
-      this.code.url = value;
-    });
-    this.codeTextControl.setValue(this.code.comments);
-    this.codeTextControl.valueChanges.subscribe(value => {
-      this.code.comments = value;
-    });
   }
 
   get code(): SubstanceCode {
@@ -90,7 +63,7 @@ export class CodeFormComponent implements OnInit {
     delete this.privateCode.$$deletedCode;
   }
 
-  private setCodeSystemType(): void {
+  setCodeSystemType(): void {
     if (this.privateCode != null && this.codeSystemDictionary != null) {
       this.codeSystemType = this.codeSystemDictionary[this.privateCode.codeSystem]
         && this.codeSystemDictionary[this.privateCode.codeSystem].systemCategory || '';

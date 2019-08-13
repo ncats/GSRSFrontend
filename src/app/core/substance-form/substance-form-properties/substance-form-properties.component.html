@@ -4,7 +4,7 @@
     Add property <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
 </div>
-<div class="property" *ngFor="let property of properties; last as isLast">
+<div class="property" *ngFor="let property of properties; last as isLast; index as index" appScrollToTarget [id]="'substance-property-' + index">
   <app-property-form [property]="property" (propertyDeleted)="deleteProperty($event)"></app-property-form>
   <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormSectionBase } from '../substance-form-section-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceNote } from '@gsrs-core/substance/substance.model';
+import { ScrollToService } from '../../scroll-to/scroll-to.service';
 
 @Component({
   selector: 'app-substance-form-notes',
@@ -12,7 +13,8 @@ export class SubstanceFormNotesComponent extends SubstanceFormSectionBase implem
   notes: Array<SubstanceNote>;
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private scrollToService: ScrollToService
   ) {
     super();
   }
@@ -29,6 +31,9 @@ export class SubstanceFormNotesComponent extends SubstanceFormSectionBase implem
 
   addNote(): void {
     this.substanceFormService.addSubstanceNote();
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-note-0`, 'center');
+    });
   }
 
   deleteNote(note: SubstanceNote): void {

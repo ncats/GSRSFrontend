@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormSectionBase } from '../substance-form-section-base';
 import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
+import { ScrollToService } from '../../scroll-to/scroll-to.service';
 
 @Component({
   selector: 'app-substance-form-names',
@@ -12,7 +13,8 @@ export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implem
   names: Array<SubstanceName>;
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private scrollToService: ScrollToService
   ) {
     super();
   }
@@ -29,6 +31,9 @@ export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implem
 
   addName(): void {
     this.substanceFormService.addSubstanceName();
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-name-0`, 'center');
+    });
   }
 
   priorityUpdated(updatedName: SubstanceName): void {

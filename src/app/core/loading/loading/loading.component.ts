@@ -15,6 +15,7 @@ export class LoadingComponent implements OnInit {
 
   ngOnInit() {
     this.loadingService.loadingEvent.subscribe(isLoading => {
+      console.log(isLoading);
       this.isLoading = isLoading;
     });
   }
