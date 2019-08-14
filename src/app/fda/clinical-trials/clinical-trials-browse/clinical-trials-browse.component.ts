@@ -61,9 +61,33 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
   myAlert(s) {
     console.log("S "+s);
   }
+
+  mytest()  {
+    let x = null;
+    this.clinicalTrialService.getSubstanceDetailsFromName("OXYTOCIN")
+    .subscribe(detailsResponse => {
+      x = detailsResponse.uuid;
+      console.log("Getting details")
+    }, error => {
+      x = "ERROR";
+      console.log("There was an error getting details")
+     }, () => {
+      x = "WTF";
+      console.log("Getting details WTF")
+    });
+    return x;
+  }
+
+
   searchClinicalTrials() {
     this.loadingService.setLoading(true);
-    const skip = this.pageIndex * this.pageSize;
+    const skip = this.pageIndex * this.pageSize;  
+    let y = this.mytest();
+    console.log("printing y");
+
+    console.log(y);
+
+
     this.clinicalTrialService.getClinicalTrials(
       skip,
       this.pageSize
@@ -80,7 +104,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           // this.populateFacets(pagingResponse.facets);
         }
-
       }, error => {
         const notification: AppNotification = {
           message: 'There was an error trying to retrieve substances. Please refresh and try again.',

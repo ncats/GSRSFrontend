@@ -74,6 +74,7 @@ export class ClinicalTrialEditComponent implements OnInit {
   reportMiniSearchOutput(data) {
     console.log("doing reportMiniSearchOutput");
     console.log("data:" + JSON.stringify(data));
+    /*
     this.clinicalTrialService.getBdnumNameAll(data.value).subscribe(
         bdnumNameAll => {
           if(bdnumNameAll==null) {
@@ -96,6 +97,29 @@ export class ClinicalTrialEditComponent implements OnInit {
 
         }
     );
+    */
+
+   this.clinicalTrialService.getSubstanceDetailsFromName(data.value).subscribe(
+    substanceDetails => {
+      if(substanceDetails==null) {
+        this.dataSource.data[data.myIndex].bdnum=null;
+        console.log("here1");
+      } else {
+        // there is a fake substance called "NULL", LOL
+        if(substanceDetails.name===String("NULL")) {
+          this.dataSource.data[data.myIndex].bdnum=null;
+          console.log("here2.1");
+        } else {
+          this.dataSource.data[data.myIndex].name=data.value;
+          this.dataSource.data[data.myIndex].bdnum=substanceDetails.uuid;
+          console.log("data2.2:" + JSON.stringify(substanceDetails));
+        }
+      }
+    }, error => {
+      this.dataSource.data[data.myIndex].bdnum=null;
+      console.log("here3");
+    }
+);
     this.dataSource.data = this.dataSource.data;
     // console.log("data2:" + JSON.stringify(this._bdnumNameAll));
   }
@@ -142,7 +166,7 @@ export class ClinicalTrialEditComponent implements OnInit {
 //           nctNumber: this._nctNumber,
              id: element.id,
               bdnum: element.bdnum,
-              name: element.bdnumName.name
+              name: null // element.bdnumName.name
             }
           );
         });
