@@ -2,11 +2,11 @@
   <form>
     <mat-form-field [floatLabel]="'never'" class="search-form-field space-right-small">
       <input class="search" type="text" [placeholder]="placeholder" aria-label="Search substances" matInput
-        [formControl]="searchControl" [matAutocomplete]="auto">
+        [formControl]="searchControl" [matAutocomplete]="substanceSearchAuto" (focus)="focused()">
       <mat-hint *ngIf="hintMessage">{{hintMessage}}</mat-hint>
       <mat-error *ngIf="searchControl.invalid">{{errorMessage}}</mat-error>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="substanceSearchOptionSelected($event)"
-        (opened)="setStatus(true)" (closed)="setStatus(false)">
+      <mat-autocomplete #substanceSearchAuto="matAutocomplete" (optionSelected)="substanceSearchOptionSelected($event)"
+        (closed)="autoCompleteClosed()">
         <div *ngFor="let field of suggestionsFields">
           <div class="substance-suggestion-field"><span class='field-styling'><b>{{field['display']}}</b></span></div>
           <mat-option *ngFor="let suggestion of substanceSuggestionsGroup[field['value']]" [value]="suggestion.key">

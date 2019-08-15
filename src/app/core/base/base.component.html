@@ -37,7 +37,13 @@
     </mat-menu>
   </span>
   <span class="middle-fill"></span>
-  <app-substance-text-search class="top-search" [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch">
+  <app-substance-text-search
+    class="top-search"
+    [searchValue]="searchValue"
+    (searchPerformed)="processSubstanceSearch($event)"
+    eventCategory="topSearch"
+    (opened)="increaseMenuZindex()"
+    (closed)="removeZindex()">
   </app-substance-text-search>
   <div>
     <button mat-flat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment != 'login'">

@@ -62,8 +62,10 @@
 }
 
 .top-search {
+  flex-grow: 1;
+  max-width: 600px;
+
   ::ng-deep .mat-form-field {
-    width: 500px;
 
     .mat-form-field-label {
       font-size: 16px;
