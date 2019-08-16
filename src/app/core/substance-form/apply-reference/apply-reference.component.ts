@@ -1,26 +1,35 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { domainKeys } from '../domain-references/domain-keys.constant';
 import { DomainsWithReferences } from '../domain-references/domain.references.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-apply-reference',
   templateUrl: './apply-reference.component.html',
   styleUrls: ['./apply-reference.component.scss']
 })
-export class ApplyReferenceComponent implements OnInit {
+export class ApplyReferenceComponent implements OnInit, OnDestroy {
   domainKeys = domainKeys;
   domainsWithReferences: DomainsWithReferences;
   private privateSubReferenceUuid: string;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService
   ) { }
 
   ngOnInit() {
-    this.substanceFormService.domainsWithReferences.subscribe(domainsWithReferences => {
+    const subscription = this.substanceFormService.domainsWithReferences.subscribe(domainsWithReferences => {
       this.domainsWithReferences = domainsWithReferences;
+    });
+    this.subscriptions.push(subscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 

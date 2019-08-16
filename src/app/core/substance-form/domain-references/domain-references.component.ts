@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
@@ -9,13 +9,14 @@ import { ReuseReferencesDialogComponent } from '../references-dialogs/reuse-refe
 import { ReuseReferencesDialogData } from '../references-dialogs/reuse-references-dialog-data.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { UtilsService } from '../../utils/utils.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-domain-references',
   templateUrl: './domain-references.component.html',
   styleUrls: ['./domain-references.component.scss']
 })
-export class DomainReferencesComponent implements OnInit {
+export class DomainReferencesComponent implements OnInit, OnDestroy {
   private domainReferenceUuids: Array<string>;
   private substanceReferences: Array<SubstanceReference>;
   canReuse = false;
@@ -24,6 +25,7 @@ export class DomainReferencesComponent implements OnInit {
   displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'remove', 'attachment', 'delete', 'apply'];
   tableData: MatTableDataSource<SubstanceReference>;
   isExpanded = false;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -35,7 +37,7 @@ export class DomainReferencesComponent implements OnInit {
 
   ngOnInit() {
     this.getVocabularies();
-    this.substanceFormService.substanceReferences.subscribe(references => {
+    const referencesSubscription = this.substanceFormService.substanceReferences.subscribe(references => {
       if (references && references.length) {
         this.substanceReferences = references.filter(reference => !reference.$$deletedCode);
       } else {
@@ -43,6 +45,13 @@ export class DomainReferencesComponent implements OnInit {
       }
       this.canReuse = this.substanceReferences && this.substanceReferences.length > 0;
       this.loadReferences();
+    });
+    this.subscriptions.push(referencesSubscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 
@@ -57,9 +66,10 @@ export class DomainReferencesComponent implements OnInit {
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
+    const dictionarySubscription = this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
       this.documentTypesDictionary = response['DOCUMENT_TYPE'].dictionary;
     });
+    this.subscriptions.push(dictionarySubscription);
   }
 
   private loadReferences() {
@@ -77,23 +87,19 @@ export class DomainReferencesComponent implements OnInit {
     }
   }
 
-  addNewReference(uuid?: string): void {
+  addNewReference(): void {
 
-    let reference: SubstanceReference = {
+    const reference: SubstanceReference = {
       tags: [],
       access: []
     };
-
-    if (uuid != null) {
-      reference = this.substanceReferences.find(substanceReference => substanceReference.uuid === uuid);
-    }
 
     const dialogRef = this.dialog.open(RefernceFormDialogComponent, {
       data: reference,
       width: '900px'
     });
 
-    dialogRef.afterClosed().subscribe(newReference => {
+    const dialogSubscription = dialogRef.afterClosed().subscribe(newReference => {
       if (newReference != null) {
         newReference = this.substanceFormService.addSubstanceReference(newReference);
         setTimeout(() => {
@@ -102,6 +108,18 @@ export class DomainReferencesComponent implements OnInit {
         this.canReuse = true;
       }
     });
+    this.subscriptions.push(dialogSubscription);
+  }
+
+  openExistingReferenceForm(reference: SubstanceReference): void {
+
+    const dialogRef = this.dialog.open(RefernceFormDialogComponent, {
+      data: reference,
+      width: '900px'
+    });
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(updatedReference => {});
+    this.subscriptions.push(dialogSubscription);
   }
 
   addDomainReference(uuid: string): void {
@@ -131,11 +149,12 @@ export class DomainReferencesComponent implements OnInit {
       width: '900px'
     });
 
-    dialogRef.afterClosed().subscribe(domainRefereceUuids => {
+    const dialogSubscription = dialogRef.afterClosed().subscribe(domainRefereceUuids => {
       if (domainRefereceUuids != null) {
         this.updateDomainReferences(domainRefereceUuids);
       }
     });
+    this.subscriptions.push(dialogSubscription);
   }
 
   updateDomainReferences(referenceUuids: Array<string> = []): void {

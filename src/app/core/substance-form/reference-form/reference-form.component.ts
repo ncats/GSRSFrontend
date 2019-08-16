@@ -14,6 +14,7 @@ import { SubstanceFormService } from '../substance-form.service';
 export class ReferenceFormComponent implements OnInit, AfterViewInit {
   @Input() reference: SubstanceReference;
   @Output() referenceDeleted = new EventEmitter<SubstanceReference>();
+  @Input() hideDelete = false;
   documentTypes: Array<VocabularyTerm> = [];
   deleteTimer: any;
 
