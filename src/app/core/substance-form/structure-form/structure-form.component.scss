@@ -31,3 +31,17 @@
     width: 100%;
     padding-top: 10px;
 }
+
+.settings_container {
+    padding-left: 7px;
+
+    .mat-icon-button {
+        width: 45px;
+        height: 45px;
+      }
+    
+      .mat-icon {
+        width: 35px;
+        height: 35px;
+      }
+}

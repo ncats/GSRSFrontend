@@ -61,6 +61,7 @@ import { SubstanceFormComponent } from './substance-form/substance-form.componen
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import { SubstanceFormModule } from './substance-form/substance-form.module';
 import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
+import { NameResolverModule } from './name-resolver/name-resolver.module';
 
 @NgModule({
   declarations: [
@@ -121,7 +122,8 @@ import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
     SubstanceCardsModule.forRoot(substanceCardsFilters),
     AuthModule,
     SubstanceFormModule,
-    OverlayModule
+    OverlayModule,
+    NameResolverModule
   ],
   providers: [
     ConfigService,

@@ -5,6 +5,7 @@ import { SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { StructureService } from '../../structure/structure.service';
 import { LoadingService } from '../../loading/loading.service';
+import { StructurePostResponse } from '@gsrs-core/structure';
 
 @Component({
   selector: 'app-substance-form-structure',
@@ -14,6 +15,8 @@ import { LoadingService } from '../../loading/loading.service';
 export class SubstanceFormStructureComponent extends SubstanceFormBase implements OnInit, AfterViewInit {
   structureEditor: Editor;
   structure: SubstanceStructure;
+  userMessage: string;
+  userMessageTimer: any;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -52,17 +55,38 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   updateStructureForm(molfile: string): void {
     this.structureService.postStructure(molfile).subscribe(response => {
-      if (response.structure) {
-
-        Object.keys(response.structure).forEach(key => {
-          this.structure[key] = response.structure[key];
-        });
-
-        this.structure.uuid = '';
-
-        this.substanceFormService.updateMoieties(response.moieties);
-      }
+      this.processStructurePostResponse(response);
     });
+  }
+
+  processStructurePostResponse(structurePostResponse?: StructurePostResponse): void {
+    if (structurePostResponse && structurePostResponse.structure) {
+
+      Object.keys(structurePostResponse.structure).forEach(key => {
+        this.structure[key] = structurePostResponse.structure[key];
+      });
+
+      this.structure.uuid = '';
+
+      this.substanceFormService.updateMoieties(structurePostResponse.moieties);
+
+      if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
+        clearTimeout(this.userMessageTimer);
+
+        this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
+
+        this.userMessageTimer = setTimeout(() => {
+          this.userMessage = null;
+        }, 8000);
+      }
+    }
+  }
+
+  structureImported(structurePostResponse?: StructurePostResponse): void {
+    if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
+      this.structureEditor.setMolecule(structurePostResponse.structure.molfile);
+    }
+    this.processStructurePostResponse(structurePostResponse);
   }
 
 }

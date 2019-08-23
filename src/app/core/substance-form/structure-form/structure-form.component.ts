@@ -1,7 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
+import { MatDialog } from '@angular/material';
+import { StructureImportComponent } from '../../structure/structure-import/structure-import.component';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { StructurePostResponse } from '@gsrs-core/structure';
 
 @Component({
   selector: 'app-structure-form',
@@ -14,9 +18,13 @@ export class StructureFormComponent implements OnInit {
   opticalActivityList: Array<VocabularyTerm> = [];
   atropisomerismList: Array<VocabularyTerm> = [];
   @Input() hideAccess = false;
+  @Input() showSettings = false;
+  @Output() structureImported = new EventEmitter<StructurePostResponse>();
 
   constructor(
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private dialog: MatDialog,
+    private gaService: GoogleAnalyticsService
   ) { }
 
   ngOnInit() {
@@ -44,6 +52,21 @@ export class StructureFormComponent implements OnInit {
 
   updateAccess(access: Array<string>): void {
     this.privateStructure.access = access;
+  }
+
+  openStructureImportDialog(): void {
+    this.gaService.sendEvent('structureForm', 'button:import', 'import structure');
+    const dialogRef = this.dialog.open(StructureImportComponent, {
+      height: 'auto',
+      width: '650px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe((response?: StructurePostResponse) => {
+      if (response != null) {
+        this.structureImported.emit(response);
+      }
+    }, () => {});
   }
 
 }

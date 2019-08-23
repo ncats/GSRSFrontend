@@ -1,6 +1,9 @@
 <div>
-  <div style="position:relative">
+  <div>
     <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
   </div>
-  <app-structure-form [structure]="structure"></app-structure-form>
+  <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">
+    {{userMessage}}
+  </div>
+  <app-structure-form [structure]="structure" showSettings="true" (structureImported)="structureImported($event)"></app-structure-form>
 </div>
