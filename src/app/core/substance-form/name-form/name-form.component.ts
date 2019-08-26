@@ -1,18 +1,18 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceName, SubstanceNameOrg } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { UtilsService } from '../../utils/utils.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-name-form',
   templateUrl: './name-form.component.html',
   styleUrls: ['./name-form.component.scss']
 })
-export class NameFormComponent implements OnInit {
+export class NameFormComponent implements OnInit, OnDestroy {
   private privateName: SubstanceName;
   @Output() priorityUpdate = new EventEmitter<SubstanceName>();
   @Output() nameDeleted = new EventEmitter<SubstanceName>();
@@ -20,6 +20,7 @@ export class NameFormComponent implements OnInit {
   nameTypes: Array<VocabularyTerm> = [];
   nameTypeControl = new FormControl('');
   deleteTimer: any;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -28,6 +29,12 @@ export class NameFormComponent implements OnInit {
 
   ngOnInit() {
     this.getVocabularies();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   @Input()
@@ -48,47 +55,48 @@ export class NameFormComponent implements OnInit {
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('NAME_TYPE').subscribe(response => {
+    const subscription = this.cvService.getDomainVocabulary('NAME_TYPE').subscribe(response => {
       this.nameTypes = response['NAME_TYPE'].list;
     });
+    this.subscriptions.push(subscription);
   }
 
   priorityUpdated(event: MatRadioChange) {
-    this.name.displayName = (event.value === 'true');
-    this.priorityUpdate.emit(this.name);
+    this.privateName.displayName = (event.value === 'true');
+    this.priorityUpdate.emit(this.privateName);
   }
 
   updateAccess(access: Array<string>): void {
-    this.name.access = access;
+    this.privateName.access = access;
   }
 
   updateLanguages(languages: Array<string>): void {
-    this.name.languages = languages;
+    this.privateName.languages = languages;
   }
 
   updateDomains(domains: Array<string>): void {
-    this.name.domains = domains;
+    this.privateName.domains = domains;
   }
 
   updateJurisdiction(jurisdiction: Array<string>): void {
-    this.name.nameJurisdiction = jurisdiction;
+    this.privateName.nameJurisdiction = jurisdiction;
   }
 
   deleteName(): void {
-    this.name.$$deletedCode = this.utilsService.newUUID();
+    this.privateName.$$deletedCode = this.utilsService.newUUID();
 
-    if (!this.name.name
-      && !this.name.type
+    if (!this.privateName.name
+      && !this.privateName.type
     ) {
       this.deleteTimer = setTimeout(() => {
-        this.nameDeleted.emit(this.name);
+        this.nameDeleted.emit(this.privateName);
       }, 2000);
     }
   }
 
   undoDelete(): void {
     clearTimeout(this.deleteTimer);
-    delete this.name.$$deletedCode;
+    delete this.privateName.$$deletedCode;
   }
 
   getNameOrgs(name: SubstanceName): Array<SubstanceNameOrg> {

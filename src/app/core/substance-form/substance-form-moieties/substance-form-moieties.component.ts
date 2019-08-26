@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
-import { SubstanceFormSectionBase } from '../substance-form-section-base';
+import { SubstanceFormBase } from '../substance-form-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { StructureService } from '../../structure/structure.service';
 import { SubstanceMoiety } from '@gsrs-core/substance/substance.model';
@@ -10,7 +10,7 @@ import { SubstanceMoiety } from '@gsrs-core/substance/substance.model';
   templateUrl: './substance-form-moieties.component.html',
   styleUrls: ['./substance-form-moieties.component.scss']
 })
-export class SubstanceFormMoietiesComponent extends SubstanceFormSectionBase implements OnInit {
+export class SubstanceFormMoietiesComponent extends SubstanceFormBase implements OnInit {
   moieties: Array<SubstanceMoiety> = [];
 
   constructor(

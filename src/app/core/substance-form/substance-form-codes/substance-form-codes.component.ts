@@ -1,22 +1,27 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { SubstanceFormSectionBase } from '../substance-form-section-base';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceCode } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-form-codes',
   templateUrl: './substance-form-codes.component.html',
   styleUrls: ['./substance-form-codes.component.scss']
 })
-export class SubstanceFormCodesComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
+export class SubstanceFormCodesComponent extends SubstanceCardBaseFilteredList<SubstanceCode> implements OnInit, AfterViewInit, OnDestroy {
   codes: Array<SubstanceCode>;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService,
-    private scrollToService: ScrollToService
+    private scrollToService: ScrollToService,
+    public gaService: GoogleAnalyticsService
   ) {
-    super();
+    super(gaService);
+    this.analyticsEventCategory = 'substance form codes';
   }
 
   ngOnInit() {
@@ -24,8 +29,24 @@ export class SubstanceFormCodesComponent extends SubstanceFormSectionBase implem
   }
 
   ngAfterViewInit() {
-    this.substanceFormService.substanceCodes.subscribe(codes => {
+    const codesSubscription = this.substanceFormService.substanceCodes.subscribe(codes => {
       this.codes = codes;
+      this.filtered = codes;
+      const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
+        this.filterList(value, this.codes, this.analyticsEventCategory);
+      }, error => {
+        console.log(error);
+      });
+      this.subscriptions.push(searchSubscription);
+      this.page = 0;
+      this.pageChange();
+    });
+    this.subscriptions.push(codesSubscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 

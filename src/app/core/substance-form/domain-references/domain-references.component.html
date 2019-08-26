@@ -59,11 +59,10 @@
           </ng-container>
 
           <ng-container matColumnDef="goToReference">
-            <th mat-header-cell *matHeaderCellDef> Go </th>
+            <th mat-header-cell *matHeaderCellDef> Open </th>
             <td mat-cell *matCellDef="let reference">
-              <button mat-icon-button matTooltip="Go to original reference" appScrollToTrigger
-                [scrollToElementId]="reference.uuid">
-                <mat-icon svgIcon="arrow_downward"></mat-icon>
+              <button mat-icon-button matTooltip="Open reference form" (click)="openExistingReferenceForm(reference)">
+                <mat-icon svgIcon="open_in_new"></mat-icon>
               </button>
             </td>
           </ng-container>

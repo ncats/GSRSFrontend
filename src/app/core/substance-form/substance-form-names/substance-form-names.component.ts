@@ -1,22 +1,27 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { SubstanceFormSectionBase } from '../substance-form-section-base';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
 import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-form-names',
   templateUrl: './substance-form-names.component.html',
   styleUrls: ['./substance-form-names.component.scss']
 })
-export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
+export class SubstanceFormNamesComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit, AfterViewInit, OnDestroy {
   names: Array<SubstanceName>;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService,
-    private scrollToService: ScrollToService
+    private scrollToService: ScrollToService,
+    public gaService: GoogleAnalyticsService
   ) {
-    super();
+    super(gaService);
+    this.analyticsEventCategory = 'substance form names';
   }
 
   ngOnInit() {
@@ -24,8 +29,24 @@ export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implem
   }
 
   ngAfterViewInit() {
-    this.substanceFormService.substanceNames.subscribe(names => {
+    const namesSubscription = this.substanceFormService.substanceNames.subscribe(names => {
       this.names = names;
+      this.filtered = names;
+      const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
+        this.filterList(value, this.names, this.analyticsEventCategory);
+      }, error => {
+        console.log(error);
+      });
+      this.subscriptions.push(searchSubscription);
+      this.page = 0;
+      this.pageChange();
+    });
+    this.subscriptions.push(namesSubscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 
@@ -38,7 +59,7 @@ export class SubstanceFormNamesComponent extends SubstanceFormSectionBase implem
 
   priorityUpdated(updatedName: SubstanceName): void {
     this.names.forEach(name => {
-      if (name.uuid !== updatedName.uuid) {
+      if (name !== updatedName) {
         name.displayName = false;
       }
     });

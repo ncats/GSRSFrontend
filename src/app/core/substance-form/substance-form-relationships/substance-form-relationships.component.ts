@@ -1,31 +1,53 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { SubstanceFormSectionBase } from '../substance-form-section-base';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceRelationship } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-form-relationships',
   templateUrl: './substance-form-relationships.component.html',
   styleUrls: ['./substance-form-relationships.component.scss']
 })
-export class SubstanceFormRelationshipsComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
+export class SubstanceFormRelationshipsComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
+  implements OnInit, AfterViewInit, OnDestroy {
   relationships: Array<SubstanceRelationship>;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService,
-    private scrollToService: ScrollToService
+    private scrollToService: ScrollToService,
+    public gaService: GoogleAnalyticsService
   ) {
-    super();
+    super(gaService);
   }
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Relationships');
+    this.analyticsEventCategory = 'substance form relationships';
   }
 
   ngAfterViewInit() {
-    this.substanceFormService.substanceRelationships.subscribe(relationships => {
+    const relationshipsSubscription = this.substanceFormService.substanceRelationships.subscribe(relationships => {
       this.relationships = relationships;
+      this.filtered = relationships;
+      const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
+        this.filterList(value, this.relationships, this.analyticsEventCategory);
+      }, error => {
+        console.log(error);
+      });
+      this.subscriptions.push(searchSubscription);
+      this.page = 0;
+      this.pageChange();
+    });
+    this.subscriptions.push(relationshipsSubscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 

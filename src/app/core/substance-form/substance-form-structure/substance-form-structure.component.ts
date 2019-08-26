@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { SubstanceFormSectionBase } from '../substance-form-section-base';
+import { SubstanceFormBase } from '../substance-form-base';
 import { Editor } from '../../structure-editor/structure.editor.model';
 import { SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
@@ -11,7 +11,7 @@ import { LoadingService } from '../../loading/loading.service';
   templateUrl: './substance-form-structure.component.html',
   styleUrls: ['./substance-form-structure.component.scss']
 })
-export class SubstanceFormStructureComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
+export class SubstanceFormStructureComponent extends SubstanceFormBase implements OnInit, AfterViewInit {
   structureEditor: Editor;
   structure: SubstanceStructure;
 
