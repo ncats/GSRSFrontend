@@ -38,6 +38,9 @@
         <button mat-menu-item (click)="openNameResolverDialog()">
           Resolve name
         </button>
+        <button *ngIf="structure.id" mat-menu-item (click)="openStructureImageModal()">
+          View stereochemistry
+        </button>
       </mat-menu>
     </div>
   </div>

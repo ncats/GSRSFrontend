@@ -1,38 +1,27 @@
-<img class="structure-image structure-modal" *ngIf="structure" [src]="getSafeStructureImgUrl(structure)">
-<mat-tab-group *ngIf="smiles">
-  <mat-tab label="Systematic Names">
-    <h2>Systematic Names:</h2>
-      <ul>
-        <li *ngIf="!names || names.length == 0">
-          <i>None Recorded</i>
-        </li>
-        <li *ngFor="let name of names">
-          {{name}}
-        </li>
-      </ul>
-  </mat-tab>
-  <mat-tab label="SMILES">
-    <h2>SMILES:</h2>
-    <p>{{smiles}}</p>
-  </mat-tab>
-  <mat-tab label="InChi">
-    <h2>InChi</h2>
-    <p>{{inchi}}</p>
-  </mat-tab>
-</mat-tab-group>
-<div *ngIf="!smiles">
-  <h2>Systematic Names:</h2>
-  <ul>
-    <li *ngIf="!names || names.length == 0">
-      <i>None Recorded</i>
-    </li>
-    <li *ngFor="let name of names">
-      {{name}}
-    </li>
-  </ul>
+<div mat-dialog-content>
+  <div class="structure-image-content">
+    <button mat-mini-fab (click)="dismissDialog()">
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
+    <img *ngIf="structure" [src]="getSafeStructureImgUrl(structure)">
+    <mat-tab-group *ngIf="smiles || (names && names.length > 0) || inchi">
+      <mat-tab label="Systematic Names" *ngIf="names && names.length > 0">
+        <ul>
+          <li *ngFor="let name of names">
+            {{name}}
+          </li>
+        </ul>
+      </mat-tab>
+      <mat-tab label="SMILES" *ngIf="smiles">
+        <p>{{smiles}}</p>
+      </mat-tab>
+      <mat-tab label="InChi" *ngIf="inchi">
+        <p>{{inchi}}</p>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>
-<div class = 'flex-row'>
+<!-- <div mat-dialog-actions class='flex-row'>
   <span class="middle-fill"></span>
-  <button class = "modal-space-saver" mat-button (click)="dismissDialog()">Close</button>
-
-</div>
+  <button class="modal-space-saver" mat-button (click)="dismissDialog()">Close</button>
+</div> -->

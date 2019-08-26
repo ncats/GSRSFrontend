@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 import { StructureService } from '../structure/structure.service';
 import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-structure-search',
@@ -22,6 +23,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   showSimilarityCutoff = false;
   searchTypeControl = new FormControl();
   @ViewChild('contentContainer') contentContainer;
+  private overlayContainer: HTMLElement;
 
   constructor(
     public router: Router,
@@ -30,7 +32,8 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     private structureService: StructureService,
     private activatedRoute: ActivatedRoute,
     private renderer: Renderer2,
-    private gaService: GoogleAnalyticsService
+    private gaService: GoogleAnalyticsService,
+    private overlayContainerService: OverlayContainer
   ) {
     this.searchType = 'substructure';
   }
@@ -38,6 +41,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   ngOnInit() {
     this.gaService.sendPageView(`Structure Search`);
     this.loadingService.setLoading(true);
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit() {
@@ -121,8 +125,10 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       width: '650px',
       data: {}
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe((molfile?: string) => {
+      this.overlayContainer.style.zIndex = null;
       if (molfile != null) {
         this.editor.setMolecule(molfile);
       }

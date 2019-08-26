@@ -5,8 +5,10 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../../structure/structure-import/structure-import.component';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
-import { StructurePostResponse } from '@gsrs-core/structure';
+import { StructurePostResponse } from '../../structure/structure-post-response.model';
+import { StructureImageModalComponent } from '../../structure/structure-image-modal/structure-image-modal.component';
 import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-structure-form',
@@ -22,15 +24,18 @@ export class StructureFormComponent implements OnInit {
   @Input() showSettings = false;
   @Output() structureImported = new EventEmitter<StructurePostResponse>();
   @Output() nameResolved = new EventEmitter<string>();
+  private overlayContainer: HTMLElement;
 
   constructor(
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
-    private gaService: GoogleAnalyticsService
+    private gaService: GoogleAnalyticsService,
+    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
     this.getVocabularies();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   @Input()
@@ -63,8 +68,10 @@ export class StructureFormComponent implements OnInit {
       width: '650px',
       data: {}
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe((response?: StructurePostResponse) => {
+      this.overlayContainer.style.zIndex = null;
       if (response != null) {
         this.structureImported.emit(response);
       }
@@ -78,12 +85,34 @@ export class StructureFormComponent implements OnInit {
       width: '800px',
       data: {}
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe((molfile?: string) => {
+      this.overlayContainer.style.zIndex = null;
       if (molfile != null && molfile !== '') {
         this.nameResolved.emit(molfile);
       }
     }, () => {});
+  }
+
+  openStructureImageModal(): void {
+
+    const dialogRef = this.dialog.open(StructureImageModalComponent, {
+      height: '90%',
+      width: '650px',
+      panelClass: 'structure-image-panel',
+      data: {
+        structure: this.privateStructure.id
+      }
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 
 }

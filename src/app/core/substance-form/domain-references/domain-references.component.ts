@@ -10,6 +10,7 @@ import { ReuseReferencesDialogData } from '../references-dialogs/reuse-reference
 import { MatTableDataSource } from '@angular/material/table';
 import { UtilsService } from '../../utils/utils.service';
 import { Subscription } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-domain-references',
@@ -26,13 +27,15 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
   tableData: MatTableDataSource<SubstanceReference>;
   isExpanded = false;
   private subscriptions: Array<Subscription> = [];
+  private overlayContainer: HTMLElement;
 
   constructor(
     private cvService: ControlledVocabularyService,
     private substanceFormService: SubstanceFormService,
     private dialog: MatDialog,
     private element: ElementRef,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
@@ -47,6 +50,7 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
       this.loadReferences();
     });
     this.subscriptions.push(referencesSubscription);
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngOnDestroy() {
@@ -98,8 +102,10 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
       data: reference,
       width: '900px'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(newReference => {
+      this.overlayContainer.style.zIndex = null;
       if (newReference != null) {
         newReference = this.substanceFormService.addSubstanceReference(newReference);
         setTimeout(() => {
@@ -117,8 +123,11 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
       data: reference,
       width: '900px'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
-    const dialogSubscription = dialogRef.afterClosed().subscribe(updatedReference => {});
+    const dialogSubscription = dialogRef.afterClosed().subscribe(updatedReference => {
+      this.overlayContainer.style.zIndex = null;
+    });
     this.subscriptions.push(dialogSubscription);
   }
 
@@ -148,8 +157,10 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
       data: data,
       width: '900px'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(domainRefereceUuids => {
+      this.overlayContainer.style.zIndex = null;
       if (domainRefereceUuids != null) {
         this.updateDomainReferences(domainRefereceUuids);
       }

@@ -5,8 +5,9 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
-import {Subject, Subscription} from 'rxjs';
+import {Subject} from 'rxjs';
 import {Sort} from '@angular/material';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-substance-names',
@@ -19,11 +20,13 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   substanceUpdated = new Subject<SubstanceDetail>();
+  private overlayContainer: HTMLElement;
 
   constructor(
     private dialog: MatDialog,
     public gaService: GoogleAnalyticsService,
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private overlayContainerService: OverlayContainer
   ) {
     super(gaService);
   }
@@ -50,7 +53,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 
       this.pageChange();
       });
-
+      this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
 
@@ -103,8 +106,10 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       minWidth: '40%',
       maxWidth: '90%'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
     });
   }
 
