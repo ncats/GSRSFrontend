@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { LoadingService } from '../loading/loading.service';
 import { SubstanceSummary} from '../substance/substance.model';
@@ -20,6 +20,7 @@ export class NameResolverComponent implements OnInit {
   errorMessage: string;
   resolvedNames: Array<ResolverResponse>;
   matchedNames: PagingResponse<SubstanceSummary>;
+  @Output() structureSelected = new EventEmitter<string>();
 
   constructor(
     private loadingService: LoadingService,
@@ -64,7 +65,7 @@ export class NameResolverComponent implements OnInit {
   }
 
   applyStructure(molfile: string) {
-    // this.editor.setMolecule(molfile);
+    this.structureSelected.emit(molfile);
   }
 
 }

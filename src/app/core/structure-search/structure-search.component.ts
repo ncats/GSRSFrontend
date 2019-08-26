@@ -142,5 +142,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     return this.searchType;
   }
 
-
+  nameResolved(molfile: string): void {
+    this.editor.setMolecule(molfile);
+  }
 }

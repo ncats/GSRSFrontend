@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../../structure/structure-import/structure-import.component';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { StructurePostResponse } from '@gsrs-core/structure';
+import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
 
 @Component({
   selector: 'app-structure-form',
@@ -20,6 +21,7 @@ export class StructureFormComponent implements OnInit {
   @Input() hideAccess = false;
   @Input() showSettings = false;
   @Output() structureImported = new EventEmitter<StructurePostResponse>();
+  @Output() nameResolved = new EventEmitter<string>();
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -65,6 +67,21 @@ export class StructureFormComponent implements OnInit {
     dialogRef.afterClosed().subscribe((response?: StructurePostResponse) => {
       if (response != null) {
         this.structureImported.emit(response);
+      }
+    }, () => {});
+  }
+
+  openNameResolverDialog(): void {
+    this.gaService.sendEvent('structureForm', 'button:resolveName', 'resolve name');
+    const dialogRef = this.dialog.open(NameResolverDialogComponent, {
+      height: 'auto',
+      width: '800px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe((molfile?: string) => {
+      if (molfile != null && molfile !== '') {
+        this.nameResolved.emit(molfile);
       }
     }, () => {});
   }

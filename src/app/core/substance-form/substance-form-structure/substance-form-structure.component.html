@@ -5,5 +5,10 @@
   <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">
     {{userMessage}}
   </div>
-  <app-structure-form [structure]="structure" showSettings="true" (structureImported)="structureImported($event)"></app-structure-form>
+  <app-structure-form
+    [structure]="structure"
+    showSettings="true"
+    (structureImported)="structureImported($event)"
+    (nameResolved)="nameResolved($event)">
+  </app-structure-form>
 </div>

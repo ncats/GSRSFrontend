@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { SubstanceFormModule } from '../substance-form.module';
+import { NameResolverModule } from '../../name-resolver/name-resolver.module';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { SubstanceFormModule } from '../substance-form.module';
     ReactiveFormsModule,
     FormsModule,
     MatSelectModule,
-    SubstanceFormModule
+    SubstanceFormModule,
+    NameResolverModule
   ],
   declarations: [
     SubstanceFormStructureComponent

@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { LoadingModule } from '../loading/loading.module';
+import { NameResolverDialogComponent } from './name-resolver-dialog.component';
 
 @NgModule({
   imports: [
@@ -20,10 +21,15 @@ import { LoadingModule } from '../loading/loading.module';
     LoadingModule
   ],
   declarations: [
-    NameResolverComponent
+    NameResolverComponent,
+    NameResolverDialogComponent
   ],
   exports: [
-    NameResolverComponent
+    NameResolverComponent,
+    NameResolverDialogComponent
+  ],
+  entryComponents: [
+    NameResolverDialogComponent
   ]
 })
 export class NameResolverModule { }
