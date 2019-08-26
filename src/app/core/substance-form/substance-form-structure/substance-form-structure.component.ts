@@ -91,7 +91,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   nameResolved(molfile: string): void {
     this.updateStructureForm(molfile);
-    this.structureEditor.setMolecule(this.structure.molfile);
+    this.structureEditor.setMolecule(molfile);
   }
 
 }
