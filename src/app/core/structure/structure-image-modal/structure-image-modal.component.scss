@@ -1,10 +1,44 @@
-.structure-modal{
-  margin-top:-10%;
-  margin-bottom: -2%;
+::ng-deep {
+
+  .structure-image-panel {
+
+    .mat-dialog-container {
+      padding: 5px;
+      position: relative;
+    }
+    
+    .mat-dialog-content {
+      margin: 0;
+      padding: 0;
+      max-height: 100%;
+    }
+    
+    .mat-tab-body-content {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
 }
 
+img {
+  width: 100%;
+  height: auto;
+}
 
-.modal-space-saver{
-  margin-bottom: -10px;
-  margin-top: -5px;
+.mat-mini-fab {
+  position: absolute;
+  right: 17px;
+  top: 8px;
+  background-color: rgba(242, 242, 242, .85);
+  color: #404040;
+  width: 35px;
+  height: 35px;
+
+  &:not(:first-child) {
+      margin-top: 3px;
+  }
+
+  ::ng-deep .mat-button-wrapper {
+      padding: 0;
+  }
 }

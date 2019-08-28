@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingComponent } from './loading/loading.component';
-import { LoadingService } from './loading.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
@@ -11,9 +10,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   ],
   declarations: [
     LoadingComponent
-  ],
-  providers: [
-    LoadingService
   ],
   exports: [
     LoadingComponent

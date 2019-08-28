@@ -33,7 +33,7 @@ export class StructureImportComponent implements OnInit {
         this.isLoading = false;
         if (response && response.structure && response.structure.molfile) {
           this.gaService.sendEvent('structureImport', 'button:import', 'file imported');
-          this.dialogRef.close(response.structure.molfile);
+          this.dialogRef.close(response);
         } else {
           this.messageClass = 'error';
           this.message = 'You need to enter a valid molfile or smiles';

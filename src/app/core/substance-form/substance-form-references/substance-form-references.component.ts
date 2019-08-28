@@ -7,6 +7,7 @@ import { RefernceFormDialogComponent } from '../references-dialogs/refernce-form
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subscription } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-substance-form-references',
@@ -17,12 +18,14 @@ export class SubstanceFormReferencesComponent extends SubstanceCardBaseFilteredL
   implements OnInit, AfterViewInit, OnDestroy {
   references: Array<SubstanceReference>;
   private subscriptions: Array<Subscription> = [];
+  private overlayContainer: HTMLElement;
 
   constructor(
     private substanceFormService: SubstanceFormService,
     private dialog: MatDialog,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private overlayContainerService: OverlayContainer
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form references';
@@ -30,6 +33,7 @@ export class SubstanceFormReferencesComponent extends SubstanceCardBaseFilteredL
 
   ngOnInit() {
     this.menuLabelUpdate.emit('References');
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit() {
@@ -60,8 +64,10 @@ export class SubstanceFormReferencesComponent extends SubstanceCardBaseFilteredL
       data: reference,
       width: '900px'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(newReference => {
+      this.overlayContainer.style.zIndex = null;
       if (newReference != null) {
         this.substanceFormService.addSubstanceReference(newReference);
       }

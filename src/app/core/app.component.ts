@@ -132,6 +132,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'clear',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-clear-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'settings_applications',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-settings_applications-24px.svg'));
   }
 
 }

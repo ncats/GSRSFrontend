@@ -1,79 +1,46 @@
 <div class="search-content-container" #contentContainer>
   <mat-card>
-    <div class="editor-container">
-      <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
-    </div>
-    <div class="search-actions">
-      <div class="two">
-        <mat-form-field class="search-type-select">
-          <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)" [formControl]="searchTypeControl" value="substructure">
-            <mat-option value="substructure">
-              Substructure
-            </mat-option>
-            <mat-option value="similarity">
-              Similarity
-            </mat-option>
-            <mat-option value="exact">
-              Exact
-            </mat-option>
-            <mat-option value="flex">
-              Flex
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
-          <div>Similarity cutoff (tanimoto)</div>
-          <mat-slider min="0" max="1" step="0.01" [value]="similarityCutoff" (input)="searchCutoffChanged($event)"></mat-slider>
-          <div>{{similarityCutoff}}</div>
-        </div>
+    <div class="structure-editor-actions-container">
+      <div class="editor-container">
+        <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
       </div>
-      <div class="action-button-container three">
-        <button class="search-button" mat-raised-button color="primary" (click)="search()">Search</button>
-      </div>
-      <div class="action-button-container one">
-        <button class="import-button" mat-raised-button color="primary" (click)="openStructureImportDialog()">Import</button>
-      </div>
-    </div>
-  </mat-card>
-
-  <mat-card style = "display: block;
-
-width: 76%;">
-    <mat-card-title>
-      Get Structure From Name
-    </mat-card-title>
-    <mat-card-content>
-      <div class = "search">
-        <mat-form-field  class="">
-          <input class="search" type="text" placeholder="Search" aria-label="Resolve Name" matInput [formControl]="resolverControl" (keydown) = "resolveNameKey($event)">
-          <button mat-button matSuffix mat-icon-button (click) = "resolveName(resolverControl.value)">
-            <mat-icon class="resolver-search-icon" svgIcon="search"></mat-icon>
-          </button>
-        </mat-form-field>
-
-      </div>
-
-      <div class = "result-container">
-        {{errorMessage}}
-        <div class = 'name-result' *ngFor = "let name of resolvedNames">
-          <img [src]="getSafeStructureImgUrl(name.value.id)" /><br/>
-          {{name.source}}<br/><br/>
-          <button mat-raised-button color="primary" class = "name-result-button" (click)="applyStructure(name.value.molfile)">Apply Structure</button>
-          {{errorMessage}}
-        </div>
-
-          <ng-container *ngIf ="matchedNames">
-            <div class = 'name-result' *ngFor = "let name of matchedNames.content">
-               <img [src]="getSafeStructureImgUrl(name.uuid)" /><br/>
-             GSRS duplicate<br/>
-              {{  name._name}}
-             <br/>
-              <button *ngIf="name.structure" mat-raised-button color="primary" class = "name-result-button" (click)="applyStructure(name.structure.molfile)">Apply Structure</button><br/>
-              <button mat-raised-button color="primary" class = "name-result-button" [routerLink]="['/substances',name.uuid]">view</button>
+      <div class="search-actions">
+        <div class="two">
+          <mat-form-field class="search-type-select">
+            <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)" [formControl]="searchTypeControl" value="substructure">
+              <mat-option value="substructure">
+                Substructure
+              </mat-option>
+              <mat-option value="similarity">
+                Similarity
+              </mat-option>
+              <mat-option value="exact">
+                Exact
+              </mat-option>
+              <mat-option value="flex">
+                Flex
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
+            <div>Similarity cutoff (tanimoto)</div>
+            <mat-slider min="0" max="1" step="0.01" [value]="similarityCutoff" (input)="searchCutoffChanged($event)"></mat-slider>
+            <div>{{similarityCutoff}}</div>
           </div>
-          </ng-container>
-
+        </div>
+        <div class="action-button-container three">
+          <button class="search-button" mat-raised-button color="primary" (click)="search()">Search</button>
+        </div>
+        <div class="action-button-container one">
+          <button class="import-button" mat-raised-button color="primary" (click)="openStructureImportDialog()">Import</button>
+        </div>
       </div>
-    </mat-card-content>
+    </div>
+    <div>
+      <h4>
+        Get Structure From Name
+      </h4>
+      <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
+    </div>
   </mat-card>
 </div>
