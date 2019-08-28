@@ -29,6 +29,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
@@ -62,6 +63,7 @@ import { CanActivateSubstanceForm } from './substance-form/can-activate-substanc
 import { SubstanceFormModule } from './substance-form/substance-form.module';
 import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
 import { NameResolverModule } from './name-resolver/name-resolver.module';
+import { HighlightedSearchActionComponent } from './highlighted-search-action/highlighted-search-action.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +80,8 @@ import { NameResolverModule } from './name-resolver/name-resolver.module';
     FacetFilterPipe,
     SequenceSearchComponent,
     TrackLinkEventDirective,
-    SubstanceFormComponent
+    SubstanceFormComponent,
+    HighlightedSearchActionComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -123,7 +126,11 @@ import { NameResolverModule } from './name-resolver/name-resolver.module';
     AuthModule,
     SubstanceFormModule,
     OverlayModule,
+<<<<<<< src/app/core/app.module.ts
     NameResolverModule
+=======
+    MatBottomSheetModule
+>>>>>>> src/app/core/app.module.ts
   ],
   providers: [
     ConfigService,
@@ -137,6 +144,9 @@ import { NameResolverModule } from './name-resolver/name-resolver.module';
     CanActivateSubstanceForm
   ],
   bootstrap: [AppComponent],
-  entryComponents: [StructureImageModalComponent]
+  entryComponents: [
+    StructureImageModalComponent,
+    HighlightedSearchActionComponent
+  ]
 })
 export class AppModule {}
