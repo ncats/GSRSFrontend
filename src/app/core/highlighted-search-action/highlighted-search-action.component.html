@@ -1,0 +1,17 @@
+<div>
+  <div class="bottom-sheet-title">Search for:</div>
+  <div class="bottom-sheet-search-term">
+    "{{searchTerm}}"
+  </div>
+  <div class="bottom-sheet-actions">
+    <a mat-button [routerLink]="['/browse-substance']" [queryParams]="{search : searchTerm}" (click)="dismiss()">
+      In here
+      <mat-icon svgIcon="search"></mat-icon>
+    </a>
+    <span class="middle-fill"></span>
+    <a mat-button [routerLink]="['/browse-substance']" [queryParams]="{search : searchTerm}" (click)="dismiss()" target="_blank">
+      In different tab
+      <mat-icon svgIcon="open_in_new"></mat-icon>
+    </a>
+  </div>
+</div>

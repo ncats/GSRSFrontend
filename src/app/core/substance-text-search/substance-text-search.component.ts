@@ -145,7 +145,8 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           }
         }
       }
-      return field.replace(new RegExp(this.query, 'gi'), match => {
+      const query = this.query.replace(/(?=[() ])/g, '\\');
+      return field.replace(new RegExp(query, 'gi'), match => {
         return '<strong>' + match + '</strong>';
       });
     }
