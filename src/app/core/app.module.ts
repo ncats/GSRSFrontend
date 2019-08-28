@@ -126,11 +126,8 @@ import { HighlightedSearchActionComponent } from './highlighted-search-action/hi
     AuthModule,
     SubstanceFormModule,
     OverlayModule,
-<<<<<<< src/app/core/app.module.ts
-    NameResolverModule
-=======
+    NameResolverModule,
     MatBottomSheetModule
->>>>>>> src/app/core/app.module.ts
   ],
   providers: [
     ConfigService,
