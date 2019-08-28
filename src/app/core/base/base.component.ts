@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostListener } from '@angular/core';
 import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
@@ -6,6 +6,8 @@ import { Auth } from '../auth/auth.model';
 import { ConfigService } from '../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { LoadingService } from '../loading/loading.service';
+import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
+import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
 
 @Component({
   selector: 'app-base',
@@ -43,6 +45,8 @@ export class BaseComponent implements OnInit {
   environment: Environment;
   searchValue: string;
   private overlayContainer: HTMLElement;
+  private bottomSheetTimer: any;
+  private bottomSheetRef: MatBottomSheetRef;
 
   constructor(
     private router: Router,
@@ -50,7 +54,8 @@ export class BaseComponent implements OnInit {
     private configService: ConfigService,
     private activatedRoute: ActivatedRoute,
     private overlayContainerService: OverlayContainer,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private bottomSheet: MatBottomSheet
   ) { }
 
   ngOnInit() {
@@ -126,4 +131,45 @@ export class BaseComponent implements OnInit {
   removeZindex(): void {
     this.overlayContainer.style.zIndex = null;
   }
+
+  @HostListener('document:mouseup', ['$event'])
+  @HostListener('document:keyup', ['$event'])
+  @HostListener('document:selectionchange', ['$event'])
+  onKeyUp(event: Event) {
+    let text = '';
+    const activeEl: HTMLInputElement = event.target['activeElement'] as HTMLInputElement;
+    const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
+    if (
+      (activeElTagName === 'textarea') || (activeElTagName === 'input' &&
+      /^(?:text|search|password|tel|url)$/i.test(activeEl.type)) &&
+      (typeof activeEl.selectionStart === 'number')
+    ) {
+        text = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
+    } else if (window.getSelection) {
+        text = window.getSelection().toString();
+    }
+
+    clearTimeout(this.bottomSheetTimer);
+
+    if (text) {
+      this.bottomSheetTimer = setTimeout(() => {
+        this.openSearchBottomSheet(text);
+      }, 800);
+    }
+  }
+
+  openSearchBottomSheet(searchTerm: string): void {
+
+    if (searchTerm) {
+      if (this.bottomSheetRef != null) {
+        this.bottomSheetRef.dismiss();
+        this.bottomSheetRef = null;
+      }
+
+      this.bottomSheetRef = this.bottomSheet.open(HighlightedSearchActionComponent, {
+        data: { searchTerm: searchTerm }
+      });
+    }
+  }
+
 }
