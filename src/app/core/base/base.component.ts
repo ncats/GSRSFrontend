@@ -4,10 +4,11 @@ import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
 import { ConfigService } from '../config/config.service';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayContainer, Overlay } from '@angular/cdk/overlay';
 import { LoadingService } from '../loading/loading.service';
 import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-base',
@@ -45,8 +46,9 @@ export class BaseComponent implements OnInit {
   environment: Environment;
   searchValue: string;
   private overlayContainer: HTMLElement;
-  private bottomSheetTimer: any;
+  private bottomSheetOpenTimer: any;
   private bottomSheetRef: MatBottomSheetRef;
+  private bottomSheetCloseTimer: any;
 
   constructor(
     private router: Router,
@@ -134,42 +136,89 @@ export class BaseComponent implements OnInit {
 
   @HostListener('document:mouseup', ['$event'])
   @HostListener('document:keyup', ['$event'])
-  @HostListener('document:selectionchange', ['$event'])
+  // @HostListener('document:selectionchange', ['$event'])
   onKeyUp(event: Event) {
     let text = '';
-    const activeEl: HTMLInputElement = event.target['activeElement'] as HTMLInputElement;
-    const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
-    if (
-      (activeElTagName === 'textarea') || (activeElTagName === 'input' &&
-      /^(?:text|search|password|tel|url)$/i.test(activeEl.type)) &&
-      (typeof activeEl.selectionStart === 'number')
-    ) {
-        text = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
-    } else if (window.getSelection) {
-        text = window.getSelection().toString();
-    }
+    let selection: Selection;
+    let range: Range;
+    let selectionStart: number;
+    let selectionEnd: number;
+    const activeEl: HTMLInputElement = document.activeElement as HTMLInputElement;
 
-    clearTimeout(this.bottomSheetTimer);
+    if (activeEl != null) {
+      const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
+      if (
+        (activeElTagName === 'textarea') || (activeElTagName === 'input' &&
+          /^(?:text|search|password|tel|url)$/i.test(activeEl.type)) &&
+        (typeof activeEl.selectionStart === 'number')
+      ) {
+        selectionStart = activeEl.selectionStart;
+        selectionEnd = activeEl.selectionEnd;
+        text = activeEl.value.slice(selectionStart, selectionEnd);
+      } else if (window.getSelection) {
+        selection = window.getSelection();
+        range = selection.getRangeAt(0);
+        text = selection.toString();
+      }
 
-    if (text) {
-      this.bottomSheetTimer = setTimeout(() => {
-        this.openSearchBottomSheet(text);
-      }, 800);
+      clearTimeout(this.bottomSheetOpenTimer);
+
+      if (text) {
+        this.bottomSheetOpenTimer = setTimeout(() => {
+          const subscription = this.openSearchBottomSheet(text).subscribe(() => {
+            setTimeout(() => {
+              if (selection != null && range != null) {
+                selection.removeAllRanges();
+                selection.addRange(range);
+              } else if (selectionStart != null) {
+                activeEl.focus();
+                activeEl.selectionStart = selectionStart;
+                activeEl.selectionEnd = selectionEnd;
+              }
+            });
+          }, () => {
+          }, () => {
+            subscription.unsubscribe();
+          });
+        }, 600);
+      }
     }
   }
 
-  openSearchBottomSheet(searchTerm: string): void {
+  openSearchBottomSheet(searchTerm: string): Observable<void> {
 
-    if (searchTerm) {
-      if (this.bottomSheetRef != null) {
-        this.bottomSheetRef.dismiss();
-        this.bottomSheetRef = null;
+    return new Observable(observer => {
+
+      if (searchTerm) {
+
+        clearTimeout(this.bottomSheetCloseTimer);
+
+        if (this.bottomSheetRef != null) {
+          this.bottomSheetRef.dismiss();
+          this.bottomSheetRef = null;
+        }
+
+        this.bottomSheetRef = this.bottomSheet.open(HighlightedSearchActionComponent, {
+          data: { searchTerm: searchTerm },
+          hasBackdrop: false,
+          closeOnNavigation: true
+        });
+
+        this.bottomSheetRef.afterOpened().subscribe(() => {
+          observer.next();
+          observer.complete();
+        });
+        this.bottomSheetCloseTimer = setTimeout(() => {
+          if (this.bottomSheetRef != null) {
+            this.bottomSheetRef.dismiss();
+            this.bottomSheetRef = null;
+          }
+        }, 5000);
+      } else {
+        observer.error();
+        observer.complete();
       }
-
-      this.bottomSheetRef = this.bottomSheet.open(HighlightedSearchActionComponent, {
-        data: { searchTerm: searchTerm }
-      });
-    }
+    });
   }
 
 }
