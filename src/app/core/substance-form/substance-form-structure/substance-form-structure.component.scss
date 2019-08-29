@@ -1,0 +1,17 @@
+.messages-container {
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.05em;
+    -webkit-transition: all 500ms ease-out;
+    transition: all 500ms ease-out;
+    overflow: hidden;
+
+    &.collapsed {
+        max-height: 0;
+    }
+
+    &.expanded {
+        max-height: 500px;
+        padding: 10px 0 5px 0;
+    }
+}

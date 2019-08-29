@@ -22,14 +22,14 @@
           {{navItem.display}}
         </button>
         <ng-container *ngIf="navItem.children">
-          <button mat-menu-item [matMenuTriggerFor]="childrenMenu">
+          <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
               {{navItem.display}}
-          </button>
+          </a>
           <mat-menu #childrenMenu="matMenu">
             <div *ngFor="let childNavItem of navItem.children">
-              <button mat-menu-item [routerLink]="['/' + childNavItem.path]" *ngIf="childNavItem.path">
+              <a mat-menu-item [routerLink]="['/' + childNavItem.path]" *ngIf="childNavItem.path">
                 {{childNavItem.display}}
-              </button>
+              </a>
             </div>
           </mat-menu>
         </ng-container>

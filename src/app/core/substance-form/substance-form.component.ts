@@ -153,6 +153,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.substanceFormService.validateSubstance().subscribe(results => {
+      this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
       this.validationResult = results.valid;

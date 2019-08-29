@@ -4,6 +4,7 @@ import {SubstanceCode, SubstanceDetail} from '../../substance/substance.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-substance-codes',
@@ -15,10 +16,12 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   codes: Array<SubstanceCode> = [];
   displayedColumns: string[];
   substanceUpdated = new Subject<SubstanceDetail>();
+  private overlayContainer: HTMLElement;
 
   constructor(
     private dialog: MatDialog,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private overlayContainerService: OverlayContainer
   ) {
     super(gaService);
   }
@@ -50,7 +53,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
         }
       }
     });
-
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit(): void {
@@ -81,8 +84,10 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       minWidth: '40%',
       maxWidth: '90%'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
     });
   }
 }

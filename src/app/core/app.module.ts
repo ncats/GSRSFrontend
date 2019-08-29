@@ -62,6 +62,7 @@ import { SubstanceFormComponent } from './substance-form/substance-form.componen
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import { SubstanceFormModule } from './substance-form/substance-form.module';
 import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
+import { NameResolverModule } from './name-resolver/name-resolver.module';
 import { HighlightedSearchActionComponent } from './highlighted-search-action/highlighted-search-action.component';
 
 @NgModule({
@@ -125,6 +126,7 @@ import { HighlightedSearchActionComponent } from './highlighted-search-action/hi
     AuthModule,
     SubstanceFormModule,
     OverlayModule,
+    NameResolverModule,
     MatBottomSheetModule
   ],
   providers: [

@@ -3,8 +3,9 @@ import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail, SubstanceNote} from '../../substance/substance.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
-import  { ReadMoreComponent } from '@gsrs-core/substance-details/substance-notes/read-more/read-more.component';
+import { ReadMoreComponent } from '@gsrs-core/substance-details/substance-notes/read-more/read-more.component';
 import {Subject} from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-substance-notes',
@@ -15,11 +16,12 @@ export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit
   notes: Array<SubstanceNote> = [];
   displayedColumns: string[] = ['note', 'references'];
   substanceUpdated = new Subject<SubstanceDetail>();
-
+  private overlayContainer: HTMLElement;
 
   constructor(
     private dialog: MatDialog,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private overlayContainerService: OverlayContainer
   ) {
     super();
   }
@@ -32,6 +34,7 @@ export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit
       }
       this.countUpdate.emit(this.notes.length);
     });
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   openModal(templateRef) {
@@ -42,8 +45,10 @@ export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit
       minWidth: '40%',
       maxWidth: '90%'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
     });
   }
 
