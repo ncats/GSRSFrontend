@@ -43,7 +43,7 @@ export class NameResolverComponent implements OnInit {
     this.matchedNames = null;
     this.loadingService.setLoading(true);
     const n = name.replace('"', '');
-    const searchStr = 'root_names_name:"^${n}$" OR root_approvalID:"^${n}$" OR root_codes_BDNUM:"^${n}$"';
+    const searchStr = `root_names_name:"^${n}$" OR root_approvalID:"^${n}$" OR root_codes_BDNUM:"^${n}$"`;
     forkJoin(this.substanceService.getSubstanceSummaries(searchStr),
       this.structureService.resolveName(name)).subscribe(([local, remote]) => {
         this.loadingService.setLoading(false);

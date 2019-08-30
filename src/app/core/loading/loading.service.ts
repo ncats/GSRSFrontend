@@ -18,8 +18,6 @@ export class LoadingService {
       this.numProcesses--;
     }
     this.isLoading = this.numProcesses > 0;
-    console.log(this.isLoading);
-    console.log(this.numProcesses);
     this.loadingEventSubject.next(this.isLoading);
   }
 

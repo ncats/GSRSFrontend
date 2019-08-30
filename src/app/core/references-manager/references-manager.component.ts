@@ -23,11 +23,14 @@ export class ReferencesManagerComponent implements OnInit {
     if (this.substance) {
       this.subRef = this.substance.references;
     } else if (this.subUUID) {
-      this.substanceService.getSubstanceDetails(this.subUUID).subscribe(response => {
+      const subscription = this.substanceService.getSubstanceDetails(this.subUUID).subscribe(response => {
         if (response) {
           this.substance = response;
           this.subRef = this.substance.references;
         }
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
       });
     }
     if (this.subRef) {

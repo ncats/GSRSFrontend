@@ -26,4 +26,9 @@ export class HighlightedSearchActionComponent implements OnInit {
     this.bottomSheetRef.dismiss();
   }
 
+  get googleSearchUrl(): string {
+    const googleUrl = `http://www.google.com/search?q=${encodeURIComponent(this.searchTerm)}`;
+    return googleUrl;
+  }
+
 }

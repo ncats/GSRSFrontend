@@ -1,17 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MainNotificationService } from '../main-notification.service';
 import { AppNotification, NotificationType } from '../notification.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-notification',
   templateUrl: './main-notification.component.html',
   styleUrls: ['./main-notification.component.scss']
 })
-export class MainNotificationComponent implements OnInit {
+export class MainNotificationComponent implements OnInit, OnDestroy {
   @ViewChild('notification') appNotification: { nativeElement: HTMLElement };
   private notificationTimer: any;
   private notifcationType: NotificationType;
   public notificationMessage: string;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private notificationService: MainNotificationService
@@ -19,9 +21,17 @@ export class MainNotificationComponent implements OnInit {
 
   ngOnInit() {
     this.appNotification.nativeElement.classList.add('hidden');
-    this.notificationService.notificationEvent.subscribe(notification => {
+    const subscription = this.notificationService.notificationEvent.subscribe(notification => {
       this.setNotification(notification);
     });
+    this.subscriptions.push(subscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+    clearTimeout(this.notificationTimer);
   }
 
   setNotification(notification: AppNotification): void {

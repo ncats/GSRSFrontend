@@ -74,6 +74,10 @@
   }
 }
 
+::ng-deep .transparent-background {
+  background-color: transparent;
+}
+
 // @media(max-width: $nav-breaking-point) {
 //   .nav-big {
 //     display: none;

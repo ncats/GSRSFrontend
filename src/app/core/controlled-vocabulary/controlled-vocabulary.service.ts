@@ -206,7 +206,7 @@ export class ControlledVocabularyService extends BaseHttpService {
 
   search(domain: string, query: string): Observable<Array<VocabularyTerm>> {
     return new Observable(observer => {
-      this.getDomainVocabulary(domain).subscribe(response => {
+      const subscription = this.getDomainVocabulary(domain).subscribe(response => {
         const filteredTerms = response[domain].list.filter(term => term.value.toLowerCase().indexOf(query.toLowerCase()) > -1);
         let sortedTerms = [];
 
@@ -223,6 +223,7 @@ export class ControlledVocabularyService extends BaseHttpService {
         }
 
         observer.next(sortedTerms);
+        subscription.unsubscribe();
       });
     });
   }

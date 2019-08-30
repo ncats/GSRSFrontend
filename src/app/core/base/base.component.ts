@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy } from '@angular/core';
 import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
@@ -8,7 +8,7 @@ import { OverlayContainer, Overlay } from '@angular/cdk/overlay';
 import { LoadingService } from '../loading/loading.service';
 import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-base',
@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./base.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class BaseComponent implements OnInit {
+export class BaseComponent implements OnInit, OnDestroy {
   mainPathSegment = '';
   navItems = [
     {
@@ -49,6 +49,8 @@ export class BaseComponent implements OnInit {
   private bottomSheetOpenTimer: any;
   private bottomSheetRef: MatBottomSheetRef;
   private bottomSheetCloseTimer: any;
+  private selectedText: string;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private router: Router,
@@ -67,13 +69,15 @@ export class BaseComponent implements OnInit {
       this.searchValue = this.activatedRoute.snapshot.queryParamMap.get('search');
     }
 
-    this.activatedRoute.queryParamMap.subscribe(params => {
+    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
       this.searchValue = params.get('search');
     });
+    this.subscriptions.push(paramsSubscription);
 
-    this.authService.getAuth().subscribe(auth => {
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
       this.auth = auth;
     });
+    this.subscriptions.push(authSubscription);
 
     this.environment = this.configService.environment;
 
@@ -83,7 +87,7 @@ export class BaseComponent implements OnInit {
 
     this.logoSrcPath = `${this.environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
 
-    this.router.events.subscribe((event: RouterEvent) => {
+    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
 
       if (event instanceof NavigationEnd) {
         this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
@@ -93,8 +97,17 @@ export class BaseComponent implements OnInit {
         this.loadingService.resetLoading();
       }
     });
+    this.subscriptions.push(routerSubscription);
 
     this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+    clearTimeout(this.bottomSheetOpenTimer);
+    clearTimeout(this.bottomSheetCloseTimer);
   }
 
   getMainPathSegmentFromUrl(url: string): string {
@@ -163,7 +176,8 @@ export class BaseComponent implements OnInit {
 
       clearTimeout(this.bottomSheetOpenTimer);
 
-      if (text) {
+      if (text && text !== this.selectedText) {
+        this.selectedText = text;
         this.bottomSheetOpenTimer = setTimeout(() => {
           const subscription = this.openSearchBottomSheet(text).subscribe(() => {
             setTimeout(() => {
@@ -176,8 +190,11 @@ export class BaseComponent implements OnInit {
                 activeEl.selectionEnd = selectionEnd;
               }
             });
+            subscription.unsubscribe();
           }, () => {
+            subscription.unsubscribe();
           }, () => {
+            this.selectedText = '';
             subscription.unsubscribe();
           });
         }, 600);
@@ -204,16 +221,23 @@ export class BaseComponent implements OnInit {
           closeOnNavigation: true
         });
 
-        this.bottomSheetRef.afterOpened().subscribe(() => {
+        const openedSubscription = this.bottomSheetRef.afterOpened().subscribe(() => {
           observer.next();
-          observer.complete();
+          openedSubscription.unsubscribe();
         });
         this.bottomSheetCloseTimer = setTimeout(() => {
           if (this.bottomSheetRef != null) {
             this.bottomSheetRef.dismiss();
             this.bottomSheetRef = null;
+            observer.complete();
           }
         }, 5000);
+        const dismissedSubscription = this.bottomSheetRef.afterDismissed().subscribe(() => {
+          clearTimeout(this.bottomSheetCloseTimer);
+          this.bottomSheetRef = null;
+          observer.complete();
+          dismissedSubscription.unsubscribe();
+        });
       } else {
         observer.error();
         observer.complete();

@@ -1,10 +1,10 @@
-import { Directive, Input, ElementRef, HostListener, Renderer2, AfterViewInit, ContentChild } from '@angular/core';
+import { Directive, Input, ElementRef, HostListener, Renderer2, AfterViewInit, ContentChild, OnDestroy } from '@angular/core';
 import { ExpandableDetailsDirective } from './expandable-details.directive';
 
 @Directive({
   selector: '[appExpandDetails]',
 })
-export class ExpandDetailsDirective implements AfterViewInit {
+export class ExpandDetailsDirective implements AfterViewInit, OnDestroy {
   private focused = 0;
   private isExpanded = false;
   private isHovering = false;
@@ -13,11 +13,15 @@ export class ExpandDetailsDirective implements AfterViewInit {
   private timerToCollapse: any;
 
   constructor(
-    private element: ElementRef,
     private renderer: Renderer2
   ) { }
 
   ngAfterViewInit() {
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.timerToExpand);
+    clearTimeout(this.timerToCollapse);
   }
 
   @ContentChild(ExpandableDetailsDirective)
