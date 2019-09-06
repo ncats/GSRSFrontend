@@ -171,12 +171,12 @@ export class BaseComponent implements OnInit, OnDestroy {
       } else if (window.getSelection) {
         selection = window.getSelection();
         range = selection.getRangeAt(0);
-        text = selection.toString();
+        text = selection.toString().trim();
       }
 
       clearTimeout(this.bottomSheetOpenTimer);
 
-      if (text && text !== this.selectedText) {
+      if (text && text !== this.selectedText && text.length > 3) {
         this.selectedText = text;
         this.bottomSheetOpenTimer = setTimeout(() => {
           const subscription = this.openSearchBottomSheet(text).subscribe(() => {
