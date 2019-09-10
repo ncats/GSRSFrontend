@@ -3,6 +3,7 @@ import {SubstanceDetail, SubstanceReference} from '../../substance/substance.mod
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
+import {Sort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-substance-references',
@@ -41,4 +42,22 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
 
   }
 
+  sortData(sort: Sort) {
+    const data = this.references.slice();
+    if (!sort.active || sort.direction === '') {
+      this.filtered = data;
+      this.pageChange();
+      return;
+    }
+    this.filtered = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      return compare(a[sort.active].toUpperCase, b[sort.active].toUpperCase, isAsc);
+    });
+    this.pageChange();
+  }
+
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

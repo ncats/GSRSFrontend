@@ -64,6 +64,7 @@ import { SubstanceFormModule } from './substance-form/substance-form.module';
 import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
 import { NameResolverModule } from './name-resolver/name-resolver.module';
 import { HighlightedSearchActionComponent } from './highlighted-search-action/highlighted-search-action.component';
+import {GuidedSearchComponent} from '../guided-search/guided-search.component';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,8 @@ import { HighlightedSearchActionComponent } from './highlighted-search-action/hi
     FacetFilterPipe,
     SequenceSearchComponent,
     TrackLinkEventDirective,
+    SubstanceFormComponent,
+    GuidedSearchComponent
     SubstanceFormComponent,
     HighlightedSearchActionComponent
   ],

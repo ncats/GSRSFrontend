@@ -27,7 +27,7 @@
     </ng-container>
 
     <ng-container matColumnDef="references">
-      <th mat-header-cell *matHeaderCellDef> References </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> References </th>
       <td mat-cell *matCellDef="let name">
         <button class = "mat-raised-button mat-primary dialog-close" (click)="openModal(refTemplate)"  [disabled]="name.references.length <= 0">View</button>
 

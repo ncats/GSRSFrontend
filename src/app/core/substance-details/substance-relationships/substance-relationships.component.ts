@@ -8,6 +8,7 @@ import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-l
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import {Sort} from '@angular/material';
 
 @Component({
   selector: 'app-substance-relationships',
@@ -61,6 +62,24 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
         });
       }
     });
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+  }
+  sortData(sort: Sort) {
+    const data = this.relationships.slice();
+    if (!sort.active || sort.direction === '') {
+      this.filtered = data;
+      this.pageChange();
+      return;
+    }
+    this.filtered = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'relatedRecord': return compare(a.relatedSubstance.name.toUpperCase(), b.relatedSubstance.name.toUpperCase(), isAsc);
+        case 'type': return compare(a.type, b.type, isAsc);
+        default: return 0;
+      }
+    });
+    this.pageChange();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
@@ -196,4 +215,8 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     }
     return ret;
   }
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
