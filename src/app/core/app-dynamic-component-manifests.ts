@@ -172,5 +172,10 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-properties',
     path: 'substance-form-properties',
     loadChildren: './substance-form/substance-form-properties/substance-form-properties.module#SubstanceFormPropertiesModule'
+  },
+  {
+    componentId: 'substance-form-subunits',
+    path: 'substance-form-subunits',
+    loadChildren: './substance-form/substance-form-subunits/substance-form-subunits.module#SubstanceFormSubunitsModule'
   }
 ];

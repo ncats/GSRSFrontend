@@ -8,7 +8,8 @@ import {
   SubstanceCode,
   SubstanceRelationship,
   SubstanceNote,
-  SubstanceProperty
+  SubstanceProperty,
+  Subunit
 } from '../substance/substance.model';
 import {
   SubstanceFormDefinition,
@@ -41,6 +42,7 @@ export class SubstanceFormService {
   private domainsWithReferencesEmitter = new Subject<DomainsWithReferences>();
   private substanceNotesEmitter = new Subject<Array<SubstanceNote>>();
   private substancePropertiesEmitter = new Subject<Array<SubstanceProperty>>();
+  private substanceSubunitsEmitter = new Subject<Array<Subunit>>();
 
   constructor(
     private substanceService: SubstanceService,
@@ -54,9 +56,9 @@ export class SubstanceFormService {
       this.computedMoieties = null;
       this.deletedMoieties = [];
       this.privateDomainsWithReferences = null;
-
       if (substance != null) {
         this.substance = substance;
+        substanceClass = this.substance.substanceClass;
       } else {
         this.substance = {
           substanceClass: substanceClass,
@@ -67,13 +69,15 @@ export class SubstanceFormService {
           relationships: [],
         };
       }
-
+      console.log(this.substance);
       this.subClass = this.substance.substanceClass;
 
       if (this.subClass === 'chemical') {
         this.subClass = 'structure';
       } else if (this.subClass === 'specifiedSubstanceG1') {
         this.subClass = 'specifiedSubstance';
+      } else if (this.subClass === 'protein') {
+        this.subClass = 'protein';
       }
 
       if (this.substance[this.subClass] == null) {
@@ -519,6 +523,24 @@ export class SubstanceFormService {
   }
 
   // Properties end
+
+  //Subunits start
+
+  get substanceSubunits(): Observable<Array<Subunit>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (this.substance.protein.subunits == null) {
+          this.substance.protein.subunits = [];
+        }
+        observer.next(this.substance.protein.subunits);
+        this.substanceCodesEmitter.subscribe(subunits => {
+          observer.next(this.substance.protein.subunits );
+        });
+      });
+    });
+  }
+
+  //subunits end
 
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {
