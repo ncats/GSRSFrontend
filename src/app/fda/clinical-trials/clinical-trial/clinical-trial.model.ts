@@ -2,6 +2,9 @@ export interface ClinicalTrialDrug {
 	"id": "number",
 	"nctNumber": "string",
 	"bdnum": "string",
+	"substanceDisplayName": "string"
+
+/*
 	"bdnumName": {
 		"bdnum": "string",
 		"substanceId": "string",
@@ -11,6 +14,7 @@ export interface ClinicalTrialDrug {
 		"substanceType": "string",
 		"clinicalCount": "number"
 	}
+*/	
 }
 
 export interface BdnumNameAll {

@@ -36,23 +36,34 @@ export class ClinicalTrialService extends BaseHttpService {
     console.log(JSON.stringify(x));
     return x;
   }
+  
   getClinicalTrials(
       skip: number = 0,
       pageSize: number = 10
-    ): Observable<PagingResponse<ClinicalTrial>> {
-  
+    ): Observable<PagingResponse<ClinicalTrial>> {  
       let params = new HttpParams();
-
       params = params.append('skip', skip.toString());
       params = params.append('top', pageSize.toString());
-
       let url = `${this.apiBaseUrl}ctclinicaltrial`;
-  
+
       const options = {
         params: params
       };
       return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
     }
+
+    deleteClinicalTrial(id: string): Observable<any> {
+      // const url = `${this.apiBaseUrl}ctclinicaltrial(${id})`;
+      let url = "http://localhost:9000/ginas/app/api/v1/" + `ctclinicaltrial(${id})`;
+      let params = new HttpParams();
+      // params = params.append('view', 'full');
+      const options = {
+        params: params
+      };
+      let x = this.http.delete<ClinicalTrial>(url, options);
+      return x;
+    }
+
   
     
     getClinicalTrial(id: string): Observable<ClinicalTrial> {
@@ -82,8 +93,11 @@ export class ClinicalTrialService extends BaseHttpService {
 
     getSubstanceDetailsFromName(name: string) : Observable<any> {
       // const url = `${this.apiBaseUrl}clinicaltrial(${id})`;
-      let url = "http://localhost:9000/ginas/app/api/v1/substances("+encodeURIComponent(name)+')';
-
+      // let url = "http://localhost:9000/ginas/app/api/v1/substances("+encodeURIComponent(name)+')/uuid';
+      
+      let url = 'http://localhost:9000/ginas/app/api/v1/substances/search?q=root_names_name:"^'
+      + encodeURIComponent(name) +'$"&fdim=1';
+ 
       let params = new HttpParams();
       // params = params.append('view', 'full');
       const options = {
@@ -95,6 +109,19 @@ export class ClinicalTrialService extends BaseHttpService {
       return x;
     }
 
+    getSubstanceDetailsFromUUID(uuid: string) : Observable<any> {
+
+      let url = "http://localhost:9000/ginas/app/api/v1/substances("+encodeURIComponent(uuid)+')';
+      console.log("url: "+url)
+
+      let params = new HttpParams();
+      // params = params.append('view', 'full');
+      const options = {
+        params: params
+      };
+      let x = this.http.get<any>(url);;
+      return x;
+    }
 
     getSubstanceDetailsFromName_(name: string) {
       // let  queryString = '?root_names_name:"^'+name+'$"';
@@ -120,21 +147,42 @@ export class ClinicalTrialService extends BaseHttpService {
       return x;
     }
 
+    addClinicalTrial(body): Observable<ClinicalTrial> {
+      // const url = `${this.apiBaseUrl}ctclinicaltrial(${id})`;
+      let url = "http://localhost:9000/ginas/app/api/v1/" + `ctclinicaltrial`;
+      let params = new HttpParams();
+      const options = {
+        params: params,
+        type: 'JSON',
+        headers: {
+          'Content-type': 'application/json'
+      }
+  
+      };
+      let x = this.http.post<ClinicalTrial>(url, body, options);
+      return x;
+    }
+
     updateClinicalTrial(body): Observable<ClinicalTrial> {
       // const url = `${this.apiBaseUrl}ctclinicaltrial(${id})`;
       let url = "http://localhost:9000/ginas/app/api/v1/" + `ctclinicaltrial`;
       let params = new HttpParams();
       // params = params.append('view', 'full');
 
-      var play_session = 'PLAY_SESSION=51ba0b332b4ce19b24088a5452996db32bd1000d-ix.session=293873a2-521b-453f-976c-016e39ce74c0';
-      let headers: HttpHeaders = new HttpHeaders();
-      headers = headers.append('Cookie', play_session);  
+      // var play_session = 'PLAY_SESSION=51ba0b332b4ce19b24088a5452996db32bd1000d-ix.session=293873a2-521b-453f-976c-016e39ce74c0';
+      // let headers: HttpHeaders = new HttpHeaders();
+      // headers = headers.append('Cookie', play_session);  
       const options = {
-        params: params
+        params: params,
+headers: {
+        'Content-type': 'application/json'
+    }
+
       };
-      let x = this.http.put<ClinicalTrial>(url, body, {headers});
+
+
+      let x = this.http.put<ClinicalTrial>(url, body, options);
       return x;
     }
-   
 
 }

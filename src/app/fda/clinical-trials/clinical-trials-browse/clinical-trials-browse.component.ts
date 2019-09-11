@@ -12,6 +12,7 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
+import {AuthService} from '@gsrs-core/auth/auth.service';
 
 @Component({
   selector: 'app-clinical-trials-browse',
@@ -19,6 +20,7 @@ import { MatTableModule } from '@angular/material/table';
   styleUrls: ['./clinical-trials-browse.component.scss']
 })
 export class ClinicalTrialsBrowseComponent implements OnInit {
+  
   private _searchTerm?: string;
   public clinicalTrials: Array<ClinicalTrial>;
   public facets: Array<Facet> = [];
@@ -28,8 +30,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
   totalClinicalTrials: number;
   isLoading = true;
   isError = false;
-
-  displayedColumns: string[] = ['edit', 'nctNumber', 'title', 'lastUpdated'];
+  isAdmin: boolean;
+  displayedColumns: string[];
   dataSource = [];
 
   constructor(
@@ -38,10 +40,22 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
     private sanitizer: DomSanitizer,
     public configService: ConfigService,
     private loadingService: LoadingService,
-    private notificationService: MainNotificationService
+    private notificationService: MainNotificationService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
+    this.authService.hasRolesAsync('admin').subscribe(response => {
+      this.isAdmin = response;
+      console.log("clinical-trial-edit isAdmin: " +this.isAdmin);
+      if(this.isAdmin) {
+        this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated', 'delete'];
+       } else {
+         this.displayedColumns = ['nctNumber', 'title', 'lastUpdated'];
+       }
+    });
+    
+
     this.pageSize = 10;
     this.pageIndex = 0;
     this.activatedRoute
@@ -78,14 +92,54 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
     return x;
   }
 
+ deleteClinicalTrial(id) {
+    this.loadingService.setLoading(true);
+    this.clinicalTrialService.deleteClinicalTrial(id)
+      .subscribe(result => {
+        this.isError = false;
+        var i = 0;
+        this.dataSource.forEach(element=>{
+            if(element.nctNumber==id) {
+                this.dataSource.splice(i,1);
+
+                console.log("clinical-trials-browse ui found item to delete.");
+              } 
+              i++;           
+        });
+        const notification: AppNotification = {
+          message: 'You deleted the clinical trial record for:' + id,
+          type: NotificationType.success,
+          milisecondsToShow: 6000
+        };
+        this.isError = false;
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+        this.notificationService.setNotification(notification);
+        this.searchClinicalTrials();
+
+      }, error => {
+        const notification: AppNotification = {
+          message: 'There was an error trying to delete a clinical trial.',
+          type: NotificationType.error,
+          milisecondsToShow: 6000
+        };
+        this.isError = true;
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+        this.notificationService.setNotification(notification);
+      }, () => {
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+      });
+  }
+
 
   searchClinicalTrials() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;  
-    let y = this.mytest();
-    console.log("printing y");
-
-    console.log(y);
+    // let y = this.mytest2();
+    // console.log("printing");
+    // console.log(y);
 
 
     this.clinicalTrialService.getClinicalTrials(

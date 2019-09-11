@@ -12,6 +12,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical-trials-browse.component';
 import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
+import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
 import { MiniSearchComponent } from './mini-search/mini-search.component';
 
 
@@ -23,6 +24,10 @@ const clinicalTrialsRoutes: Routes = [
    {
     path: 'edit-clinical-trial/:nctNumber',
       component: ClinicalTrialEditComponent
+    },
+    {
+    path: 'add-clinical-trial',
+      component: ClinicalTrialAddComponent
     }
 ];
 
@@ -43,11 +48,13 @@ const clinicalTrialsRoutes: Routes = [
   declarations: [
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
+    ClinicalTrialAddComponent,
     MiniSearchComponent
   ],
   exports: [
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
+    ClinicalTrialAddComponent,
     MiniSearchComponent
   ]
 })

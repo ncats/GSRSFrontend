@@ -15,6 +15,9 @@ import { FormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
 import { jsonpCallbackContext } from '@angular/common/http/src/module';
 import { stringify } from '@angular/core/src/render3/util';
+import {AuthService} from '@gsrs-core/auth/auth.service';
+// import { Auth } from '../../../core/auth/auth.model';
+
 
 /**
  * @title Table with editing
@@ -27,7 +30,8 @@ import { stringify } from '@angular/core/src/render3/util';
 export class ClinicalTrialEditComponent implements OnInit {  
   clinicalTrial: ClinicalTrial; 
   // 'nctNumber',  
-  displayedColumns: string[] = ['id', 'name', 'bdnum', 'Delete'];
+  isAdmin: boolean;
+  displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
   public  _nctNumber: string;
 
@@ -48,10 +52,24 @@ export class ClinicalTrialEditComponent implements OnInit {
     private sanitizer: DomSanitizer,
     public configService: ConfigService,
     private loadingService: LoadingService,
-    private notificationService: MainNotificationService
+    private notificationService: MainNotificationService,
+    private authService: AuthService,
+
   ) { }
 
   ngOnInit() {
+    this.authService.hasRolesAsync('admin').subscribe(response => {
+      this.isAdmin = response;
+      console.log("clinical-trial-edit isAdmin: " +this.isAdmin);
+
+      if(this.isAdmin) {
+        this.displayedColumns=['id', 'name', 'bdnum', 'link', 'delete'];
+       } else {
+         this.displayedColumns=['name', 'bdnum', 'link'];
+       }   
+    });
+
+    
     this.pageSize = 10;
     this.pageIndex = 0;
     /*
@@ -62,7 +80,7 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.getClinicalTrial();
       });
     */ 
- 
+
         this.activatedRoute.paramMap.subscribe(params => {
         this._nctNumber = params.get("nctNumber");
         this.getClinicalTrial();       
@@ -98,23 +116,22 @@ export class ClinicalTrialEditComponent implements OnInit {
         }
     );
     */
-
+ 
    this.clinicalTrialService.getSubstanceDetailsFromName(data.value).subscribe(
     substanceDetails => {
-      if(substanceDetails==null) {
-        this.dataSource.data[data.myIndex].bdnum=null;
-        console.log("here1");
-      } else {
-        // there is a fake substance called "NULL", LOL
-        if(substanceDetails.name===String("NULL")) {
+      if(substanceDetails==null 
+          || substanceDetails.content==null 
+          || substanceDetails.content[0]==null  
+//          || substanceDetails.content[0].name===String("NULL")
+//          || substanceDetails.content[0].name===String("null")
+        ) {
           this.dataSource.data[data.myIndex].bdnum=null;
-          console.log("here2.1");
+          console.log("here1");
         } else {
           this.dataSource.data[data.myIndex].name=data.value;
-          this.dataSource.data[data.myIndex].bdnum=substanceDetails.uuid;
+          this.dataSource.data[data.myIndex].bdnum=substanceDetails.content[0].uuid;
           console.log("data2.2:" + JSON.stringify(substanceDetails));
         }
-      }
     }, error => {
       this.dataSource.data[data.myIndex].bdnum=null;
       console.log("here3");
@@ -151,6 +168,7 @@ export class ClinicalTrialEditComponent implements OnInit {
 
 
   getClinicalTrial() {
+    console.log()
     var that = this;
     var myData=[];
     this.loadingService.setLoading(true);
@@ -159,14 +177,10 @@ export class ClinicalTrialEditComponent implements OnInit {
       .subscribe( data => {
         this.isError = false;
         data.clinicalTrialDrug.forEach(element => {
-          console.log("xxx: " + JSON.stringify(element));
-          this.dataSource.data.push(
-            {
-//           nctNumber: element.nctNumber,
-//           nctNumber: this._nctNumber,
+          this.dataSource.data.push({
              id: element.id,
               bdnum: element.bdnum,
-              name: null // element.bdnumName.name
+              name: element.substanceDisplayName
             }
           );
         });
@@ -174,7 +188,7 @@ export class ClinicalTrialEditComponent implements OnInit {
 
         this.clinicalTrial=data;
         this.dataSource.data = this.dataSource.data;
-        console.log(JSON.stringify(this.dataSource.data));        
+        console.log(JSON.stringify(this.dataSource.data));
       }, error => {
         const notification: AppNotification = {
           message: 'There was an error trying to retrieve clinical trial. Please refresh and try again.',
@@ -189,7 +203,47 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
+/*
+      this.dataSource.data.forEach(element => {
+        var nameHolder;
+        that.clinicalTrialService.getSubstanceDetailsFromUUID(
+          element.bdnum
+        )
+          .subscribe( data => {
+         console.log("_name xyz n:"+ element.bdnum + "d: " + data._name);   
+         nameHolder=data._name;
+          }, error => {
+          });
+          this.dataSource.data[myIndex].name=nameHolder;  
+        });  
+        this.dataSource.data=this.dataSource.data;
+
+*/
+
   }
+
+
+  mytest2(uuid)  {
+    let x = null;
+    this.clinicalTrialService.getSubstanceDetailsFromUUID(uuid)
+    .subscribe(detailsResponse => {
+      console.log("Getting name");
+      console.log(detailsResponse);
+      if(detailsResponse._name!=null) {
+        x = detailsResponse._name;
+        console.log(x);
+      } else {
+        console.log("Was null bxc");
+      }
+    }, error => {
+      x = "ERROR";
+      console.log("There was an error getting details");
+     }, () => {
+    });
+    return x;
+  }
+
+
 
   // this needs testing.
 
@@ -217,14 +271,14 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.isError = false;
         this.dataSource.data=[];
         data.clinicalTrialDrug.forEach(element => {
-          console.log("xxx: " + JSON.stringify(element));          
+          console.log("xxx: " + JSON.stringify(element));
           this.dataSource.data.push(
             {
             // nctNumber: element.nctNumber,
               // nctNumber: this._nctNumber,
               id: element.id,
               bdnum: element.bdnum,
-              name: element.bdnumName.name
+              name: element.substanceDisplayName
             }
           );
           // Weird, why is this necessary?
@@ -232,10 +286,31 @@ export class ClinicalTrialEditComponent implements OnInit {
           this.dataSource.data = this.dataSource.data;
           console.log(JSON.stringify(this.dataSource.data));
         });
+        var message = "Success";
+        const notification: AppNotification = {
+          message: message,
+          type: NotificationType.success,
+          milisecondsToShow: 6000
+        };
+        this.isError = false;
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+        this.notificationService.setNotification(notification);
       }, error => {
         // what should we do on error? 
+        var message = 'There was an error trying to update clinical trial.';
+
+        var noChange = false;
+         if(error.error.validationMessages!=null) {
+          error.error.validationMessages.forEach(element => {
+            if(element.message!=null) {
+              message = message + " " + element.message;
+              console.log(element.message);
+            }    
+         });
+        }  
         const notification: AppNotification = {
-          message: 'There was an error trying to update clinical trial.',
+          message: message,
           type: NotificationType.error,
           milisecondsToShow: 6000
         };

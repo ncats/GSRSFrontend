@@ -1,0 +1,19 @@
+<div style="padding: 10px; margin-top: 60px; margin-left: 30px;  margin-right: 30px;  margin-bottom: 30px;" 
+class="example-container mat-elevation-z8">
+
+<div *ngIf="isAdmin">
+    <p>Add Clinical Trial from JSON</p>
+<!-- [formGroup]="jsonAddForm" -->
+  <form class="json-add-form">
+      <mat-form-field style="width: 100%; min-height: 40px;">
+        <textarea   matInput placeholder="JSON" [(ngModel)]="json" name="json"></textarea>
+      </mat-form-field>
+  </form>
+  <button mat-icon-button matSuffix aria-label="Add Clinical Trial" (click)="addClinicalTrial();">Add CT</button>
+  <button mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
+
+</div>
+  <div *ngIf="!isAdmin">
+    You must be an Admin to add a Clinical Trial.
+</div>
+</div>

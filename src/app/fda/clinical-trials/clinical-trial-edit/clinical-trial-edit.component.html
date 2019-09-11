@@ -1,14 +1,7 @@
-<div *ngIf="clinicalTrial">
-	<div>{{clinicalTrial.nctNumber}}</div>
-	<div>{{clinicalTrial.title}}</div>
-	<div>{{clinicalTrial.lastUpdated|date : "MM/dd/yyyy"}}</div>	
-</div>
 
-<div *ngIf="miniSearchOutputReported">
 
-xyz: {{miniSearchOutputReported}}
-</div>
-<div class="example-container mat-elevation-z8">
+<div style="padding: 10px; margin-top: 60px; margin-left: 30px;  margin-right: 30px;  margin-bottom: 30px;" 
+        class="example-container mat-elevation-z8">
 	<!-- div class="example-header">
 		<mat-form-field>
 			<input matInput #filter (keyup)="applyFilter($event.target.value)" placeholder="Filter">
@@ -17,8 +10,17 @@ xyz: {{miniSearchOutputReported}}
       </button>
 		</mat-form-field>
 	</div -->
-	<div>
+	<!-- TODO figure out how to get back to the browse facility same page as last time  -->
+	<div  *ngIf="clinicalTrial">
+		<div><a target="_new" title="see clinicaltrials.gov" href="https://clinicaltrials.gov/ct2/show/{{clinicalTrial.nctNumber}}">{{clinicalTrial.nctNumber}}</a></div>
+		<div  *ngIf="clinicalTrial.sponsorList">{{clinicalTrial.sponsorList.join("; ")}}</div>
+		<div>{{clinicalTrial.lastUpdated|date : "MM/dd/yyyy"}}</div>
+	</div>
+
+
+	<div *ngIf="isAdmin">
 		<button mat-icon-button matSuffix aria-label="Add" (click)="addRow();">Add</button>
+		<button mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
 
 	<mat-table #table [dataSource]="dataSource">
@@ -29,7 +31,7 @@ xyz: {{miniSearchOutputReported}}
 		  </ng-container>
 -->
 		<!-- id  -->
-		<ng-container matColumnDef="id">
+		<ng-container matColumnDef="id" style='width: 30px;'>
 			<mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
 			<mat-cell *matCellDef="let element">
 				<mat-form-field floatLabel="never">
@@ -41,37 +43,67 @@ xyz: {{miniSearchOutputReported}}
 		<ng-container matColumnDef="name">
 			<mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
 			<mat-cell *matCellDef="let element; let i = index;">
-				<mini-search [myIndex]="i" [myInitialSearch]="element && element.name" (miniSearchOutput)="reportMiniSearchOutput($event)"></mini-search>
+				<span *ngIf="!isAdmin"> 
+					{{element.name}}
+				</span> 
+				<span *ngIf="isAdmin">
+					<mini-search [myIndex]="i" [myInitialSearch]="element && element.name" (miniSearchOutput)="reportMiniSearchOutput($event)"></mini-search>
+				</span>
 			</mat-cell>
-		</ng-container>
+!		</ng-container>
 		<!-- bdnum -->
 		<ng-container matColumnDef="bdnum">
 			<mat-header-cell *matHeaderCellDef> bdnum </mat-header-cell>
 			<mat-cell *matCellDef="let element">
-				<mat-form-field floatLabel="never">
-					<input matInput placeholder="bdnum" [value]="element.bdnum" [(ngModel)]="element.bdnum">
-				</mat-form-field>
+					<span *ngIf="!isAdmin"> 
+					{{element.bdnum}}
+					</span> 
+					<span *ngIf="isAdmin"> 
+						<mat-form-field floatLabel="never">
+					<input  matInput placeholder="bdnum" [value]="element.bdnum" [(ngModel)]="element.bdnum">
+					</mat-form-field> 
+				</span> 
 			</mat-cell>
 		</ng-container>
-		<!-- bdnum -->
-		<ng-container matColumnDef="Delete">
+		<!-- link -->
+		<ng-container matColumnDef="link">
+			<mat-header-cell *matHeaderCellDef></mat-header-cell>
+			<mat-cell *matCellDef="let element">
+					<a [routerLink]="['/substances', element.bdnum]" >link</a>
+			</mat-cell>
+		</ng-container>
+
+		<!-- delete -->
+		<ng-container matColumnDef="delete">
 				<mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
 				<mat-cell *matCellDef="let element; let i = index">
 					<button mat-icon-button matSuffix aria-label="Del" (click)="removeRow(i);">Del</button>
 				</mat-cell>
-			</ng-container>
-	
+			</ng-container>	
 		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 		<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
 	</mat-table>
-	<div>
+	<div *ngIf="isAdmin">
+		<button mat-icon-button matSuffix aria-label="Add" (click)="addRow();">Add</button>
 		<button mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update</button>
 	</div>
+
+	<div style="margin-top: 50px">isAdmin: {{isAdmin}}</div>
+
 	<div *ngIf="clinicalTrial">
-		<div>{{clinicalTrial|json}}</div>
+		<div>&nbsp;</div>
+
+		<div>clinicalTrial: {{clinicalTrial|json}}</div>
 	</div>
+
 	<div *ngIf="dataSource.data">
-		<div>{{dataSource.data|json}}</div>
+		<div>&nbsp;</div>
+		<div>datasource.data: {{dataSource.data|json}}</div>
 	</div>
+
+	<div *ngIf="miniSearchOutputReported">
+			<div>&nbsp;</div>
+		<div>miniSearchOutputReported: {{miniSearchOutputReported}}</div>
+			</div>
 </div>
