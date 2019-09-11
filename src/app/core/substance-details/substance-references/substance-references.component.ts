@@ -4,6 +4,7 @@ import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-l
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
 import {Sort} from '@angular/material/sort';
+import {UtilsService} from '@gsrs-core/utils';
 
 @Component({
   selector: 'app-substance-references',
@@ -16,7 +17,8 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
   substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private utilsService: UtilsService
   ) {
     super(
       gaService
@@ -51,13 +53,10 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
     }
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
-      return compare(a[sort.active].toUpperCase, b[sort.active].toUpperCase, isAsc);
+      return this.utilsService.compare(a[sort.active].toUpperCase, b[sort.active].toUpperCase, isAsc);
     });
     this.pageChange();
   }
 
 }
 
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-}

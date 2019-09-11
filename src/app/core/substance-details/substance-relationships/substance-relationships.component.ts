@@ -74,8 +74,8 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'relatedRecord': return compare(a.relatedSubstance.name.toUpperCase(), b.relatedSubstance.name.toUpperCase(), isAsc);
-        case 'type': return compare(a.type, b.type, isAsc);
+        case 'relatedRecord': return this.utilService.compare(a.relatedSubstance.name.toUpperCase(), b.relatedSubstance.name.toUpperCase(), isAsc);
+        case 'type': return this.utilService.compare(a.type, b.type, isAsc);
         default: return 0;
       }
     });
@@ -215,8 +215,4 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     }
     return ret;
   }
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

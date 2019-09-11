@@ -6,6 +6,7 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import {Subject} from 'rxjs';
 import {Sort} from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import {UtilsService} from '@gsrs-core/utils';
 
 @Component({
   selector: 'app-substance-codes',
@@ -22,7 +23,8 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   constructor(
     private dialog: MatDialog,
     public gaService: GoogleAnalyticsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private utilsService: UtilsService
   ) {
     super(gaService);
   }
@@ -65,7 +67,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     }
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
-      return compare(a[sort.active], b[sort.active], isAsc);
+      return this.utilsService.compare(a[sort.active], b[sort.active], isAsc);
     });
     this.pageChange();
   }
@@ -106,6 +108,3 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 }
 
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-}
