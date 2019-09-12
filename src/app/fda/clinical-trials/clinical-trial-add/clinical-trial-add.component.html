@@ -2,15 +2,15 @@
 class="example-container mat-elevation-z8">
 
 <div *ngIf="isAdmin">
-    <p>Add Clinical Trial from JSON</p>
+    <p>Add/Update a Clinical Trial from JSON</p>
 <!-- [formGroup]="jsonAddForm" -->
   <form class="json-add-form">
       <mat-form-field style="width: 100%; min-height: 40px;">
         <textarea   matInput placeholder="JSON" [(ngModel)]="json" name="json"></textarea>
       </mat-form-field>
   </form>
-  <button mat-icon-button matSuffix aria-label="Add Clinical Trial" (click)="addClinicalTrial();">Add CT</button>
-  <button mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
+  <button style="width: 60px" mat-icon-button matSuffix aria-label="Add Clinical Trial" (click)="addClinicalTrial();">Add CT</button>
+  <button style="width: 60px" mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 
 </div>
   <div *ngIf="!isAdmin">

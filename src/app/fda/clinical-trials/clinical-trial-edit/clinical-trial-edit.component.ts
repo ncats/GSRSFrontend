@@ -55,7 +55,8 @@ export class ClinicalTrialEditComponent implements OnInit {
     private notificationService: MainNotificationService,
     private authService: AuthService,
 
-  ) { }
+  ) { 
+  }
 
   ngOnInit() {
     this.authService.hasRolesAsync('admin').subscribe(response => {
@@ -63,9 +64,9 @@ export class ClinicalTrialEditComponent implements OnInit {
       console.log("clinical-trial-edit isAdmin: " +this.isAdmin);
 
       if(this.isAdmin) {
-        this.displayedColumns=['id', 'name', 'bdnum', 'link', 'delete'];
+        this.displayedColumns=['id', 'name', 'substanceUuid', 'link', 'delete'];
        } else {
-         this.displayedColumns=['name', 'bdnum', 'link'];
+         this.displayedColumns=['name', 'substanceUuid', 'link'];
        }   
     });
 
@@ -125,15 +126,15 @@ export class ClinicalTrialEditComponent implements OnInit {
 //          || substanceDetails.content[0].name===String("NULL")
 //          || substanceDetails.content[0].name===String("null")
         ) {
-          this.dataSource.data[data.myIndex].bdnum=null;
-          console.log("here1");
+          this.dataSource.data[data.myIndex].substanceUuid=null;
+          console.log("here1: "+ console.log(JSON.stringify(data.value)));
         } else {
           this.dataSource.data[data.myIndex].name=data.value;
-          this.dataSource.data[data.myIndex].bdnum=substanceDetails.content[0].uuid;
+          this.dataSource.data[data.myIndex].substanceUuid=substanceDetails.content[0].uuid;
           console.log("data2.2:" + JSON.stringify(substanceDetails));
         }
     }, error => {
-      this.dataSource.data[data.myIndex].bdnum=null;
+      this.dataSource.data[data.myIndex].substanceUuid=null;
       console.log("here3");
     }
 );
@@ -142,15 +143,15 @@ export class ClinicalTrialEditComponent implements OnInit {
   }
 
   addRow() {
-    let model = { id: '', name:'',  bdnum: ''};
+    let model = { id: '', name:'',  substanceUuid: ''};
     this.dataSource.data.push(model);
     // why? 
     this.dataSource.data=this.dataSource.data;
     // console.log('hey man');    
-    // console.log(this.dataSource.data);
+    // console.log(this.dataSour  ce.data);
   }
   removeRow(i) {
-    let model = { id: '', name:'',  bdnum: ''};
+    let model = { id: '', name:'',  substanceUuid: ''};
     this.dataSource.data.splice(i,1);
     this.dataSource.data=this.dataSource.data;
     // console.log('hey man');    
@@ -179,7 +180,7 @@ export class ClinicalTrialEditComponent implements OnInit {
         data.clinicalTrialDrug.forEach(element => {
           this.dataSource.data.push({
              id: element.id,
-              bdnum: element.bdnum,
+             substanceUuid: element.substanceUuid,
               name: element.substanceDisplayName
             }
           );
@@ -188,7 +189,7 @@ export class ClinicalTrialEditComponent implements OnInit {
 
         this.clinicalTrial=data;
         this.dataSource.data = this.dataSource.data;
-        console.log(JSON.stringify(this.dataSource.data));
+        console.log("def" + JSON.stringify(this.dataSource.data));
       }, error => {
         const notification: AppNotification = {
           message: 'There was an error trying to retrieve clinical trial. Please refresh and try again.',
@@ -258,7 +259,7 @@ export class ClinicalTrialEditComponent implements OnInit {
       let ctd = {} as ClinicalTrialDrug;
       ctd.id=element.id;
       ctd.nctNumber=element.nctNumber;
-      ctd.bdnum=element.bdnum;
+      ctd.substanceUuid=element.substanceUuid;
       newClinicalTrialDrugs.push(ctd);
     });
     newClinicalTrial.clinicalTrialDrug=newClinicalTrialDrugs;
@@ -277,7 +278,7 @@ export class ClinicalTrialEditComponent implements OnInit {
             // nctNumber: element.nctNumber,
               // nctNumber: this._nctNumber,
               id: element.id,
-              bdnum: element.bdnum,
+              substanceUuid: element.substanceUuid,
               name: element.substanceDisplayName
             }
           );
@@ -330,5 +331,5 @@ export interface ClinicalTrialDrugSimple {
   // nctNumber: string;
   id: number;
   ingredientName: string;
-  bdnum: string;
+  substanceUuid: string;
 }

@@ -11,13 +11,15 @@
 		</mat-form-field>
 	</div -->
 	<!-- TODO figure out how to get back to the browse facility same page as last time  -->
+
 	<div  *ngIf="clinicalTrial">
-		<div><a target="_new" title="see clinicaltrials.gov" href="https://clinicaltrials.gov/ct2/show/{{clinicalTrial.nctNumber}}">{{clinicalTrial.nctNumber}}</a></div>
-		<div  *ngIf="clinicalTrial.sponsorList">{{clinicalTrial.sponsorList.join("; ")}}</div>
-		<div>{{clinicalTrial.lastUpdated|date : "MM/dd/yyyy"}}</div>
+		<p><a target="_new" title="see clinicaltrials.gov" href="https://clinicaltrials.gov/ct2/show/{{clinicalTrial.nctNumber}}">{{clinicalTrial.nctNumber}}</a>
+		&nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span></p>
+		<p *ngIf="clinicalTrial.sponsorList">{{clinicalTrial.sponsorList.join("; ")}}</p>
+		<p *ngIf="clinicalTrial.lastUpdated">{{clinicalTrial.lastUpdated|date : "MM/dd/yyyy"}}</p>
 	</div>
 
-
+	<h3>Substances in Clinical Trial</h3>
 	<div *ngIf="isAdmin">
 		<button mat-icon-button matSuffix aria-label="Add" (click)="addRow();">Add</button>
 		<button mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
@@ -51,16 +53,16 @@
 				</span>
 			</mat-cell>
 !		</ng-container>
-		<!-- bdnum -->
-		<ng-container matColumnDef="bdnum">
-			<mat-header-cell *matHeaderCellDef> bdnum </mat-header-cell>
+		<!-- substanceUuid -->
+		<ng-container matColumnDef="substanceUuid">
+			<mat-header-cell *matHeaderCellDef> substance UUID </mat-header-cell>
 			<mat-cell *matCellDef="let element">
 					<span *ngIf="!isAdmin"> 
-					{{element.bdnum}}
+					{{element.substanceUuid}}
 					</span> 
 					<span *ngIf="isAdmin"> 
 						<mat-form-field floatLabel="never">
-					<input  matInput placeholder="bdnum" [value]="element.bdnum" [(ngModel)]="element.bdnum">
+					<input  matInput placeholder="substanceUuid" [value]="element.substanceUuid" [(ngModel)]="element.substanceUuid">
 					</mat-form-field> 
 				</span> 
 			</mat-cell>
@@ -69,7 +71,7 @@
 		<ng-container matColumnDef="link">
 			<mat-header-cell *matHeaderCellDef></mat-header-cell>
 			<mat-cell *matCellDef="let element">
-					<a [routerLink]="['/substances', element.bdnum]" >link</a>
+					<a [routerLink]="['/substances', element.substanceUuid]" >link</a>
 			</mat-cell>
 		</ng-container>
 
@@ -84,26 +86,64 @@
 		<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
 	</mat-table>
+
+
 	<div *ngIf="isAdmin">
 		<button mat-icon-button matSuffix aria-label="Add" (click)="addRow();">Add</button>
-		<button mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update</button>
+		<button mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
 
-	<div style="margin-top: 50px">isAdmin: {{isAdmin}}</div>
+	<h3>Trial Details</h3>
 
-	<div *ngIf="clinicalTrial">
-		<div>&nbsp;</div>
+	<div>
+		<p>NCT Number: <a target="_new" title="see clinicaltrials.gov" href="https://clinicaltrials.gov/ct2/show/{{clinicalTrial.nctNumber}}">{{clinicalTrial.nctNumber}}</a></p>
+		<p *ngIf="clinicalTrial.title">Title: {{clinicalTrial.title}}</p>
+		<p *ngIf="clinicalTrial.title">Recruitment: {{clinicalTrial.recruitment}}</p>
+		<p *ngIf="clinicalTrial.title">Conditions: {{clinicalTrial.conditions}}</p>
+		<p *ngIf="clinicalTrial.sponsor">Sponsors: {{clinicalTrial.sponsor}}</p>
+		<p *ngIf="clinicalTrial.locations">Locations: {{clinicalTrial.locations}}</p>
+		<p *ngIf="clinicalTrial.intervention">Interventions: {{clinicalTrial.intervention}}</p>
+		<p *ngIf="clinicalTrial.fundedBys">Funded Bys: {{clinicalTrial.fundedBys}}</p>
+		<p *ngIf="clinicalTrial.phases">Phases: {{clinicalTrial.phases}}</p>
+		<p *ngIf="clinicalTrial.studyTypes">Study Types: {{clinicalTrial.studyTypes}}</p>
+		<p *ngIf="clinicalTrial.ageGroups">Age Groups: {{clinicalTrial.ageGroups}}</p>
+		<p *ngIf="clinicalTrial.gender">Gender: {{clinicalTrial.gender}}</p>
+		<p *ngIf="clinicalTrial.allocation">Allocation: {{clinicalTrial.allocation}}</p>
+		<p *ngIf="clinicalTrial.studyResults">Study Results: {{clinicalTrial.studyResults}}</p>
+		<p *ngIf="clinicalTrial.enrollment">Enrollment: {{clinicalTrial.enrollment}}</p>
+		<p *ngIf="clinicalTrial.otherIds">Other Ids: {{clinicalTrial.otherIds}}</p>
+		<p *ngIf="clinicalTrial.acronym">Acronym: {{clinicalTrial.acronym}}</p>
+		<p *ngIf="clinicalTrial.otherIds">Other Ids: {{clinicalTrial.otherIds}}</p>
+		<p *ngIf="clinicalTrial.studyStartDate">Study Start Date: {{clinicalTrial.studyStartDate}}</p>
+		<p *ngIf="clinicalTrial.lastVerified">Last Verified: {{clinicalTrial.lastVerified}}</p>
+		<p *ngIf="clinicalTrial.studyCompletionDate">Study Completion Date: {{clinicalTrial.studyCompletionDate}}</p>
+		<p *ngIf="clinicalTrial.primaryCompletionDate">Primary Completion Date: {{clinicalTrial.primaryCompletionDate}}</p>
+		<p *ngIf="clinicalTrial.studyStartDate">Study Start Date: {{clinicalTrial.studyStartDate}}</p>
+		<p *ngIf="clinicalTrial.firstReceived">First Received: {{clinicalTrial.firstReceived}}</p>
+		<p *ngIf="clinicalTrial.lastUpdated">Last Updated: {{clinicalTrial.lastUpdated}}</p>
+		<p>Url: <a target="_new" title="see clinicaltrials.gov" href="https://clinicaltrials.gov/ct2/show/{{clinicalTrial.nctNumber}}">{{clinicalTrial.url}}</a></p>
+		<p *ngIf="clinicalTrial.outcomeMeasures">Outcome Measures: {{clinicalTrial.outcomeMeasures}}</p>
 
-		<div>clinicalTrial: {{clinicalTrial|json}}</div>
 	</div>
+	
+	<div *ngIf="false">
+		<div style="margin-top: 50px">isAdmin: {{isAdmin}}</div>
 
-	<div *ngIf="dataSource.data">
-		<div>&nbsp;</div>
-		<div>datasource.data: {{dataSource.data|json}}</div>
-	</div>
-
-	<div *ngIf="miniSearchOutputReported">
+		<div *ngIf="clinicalTrial">
 			<div>&nbsp;</div>
-		<div>miniSearchOutputReported: {{miniSearchOutputReported}}</div>
-			</div>
+
+			<div>clinicalTrial: {{clinicalTrial|json}}</div>
+		</div>
+
+		<div *ngIf="dataSource.data">
+			<div>&nbsp;</div>
+			<div>datasource.data: {{dataSource.data|json}}</div>
+		</div>
+
+		<div *ngIf="miniSearchOutputReported">
+				<div>&nbsp;</div>
+			<div>miniSearchOutputReported: {{miniSearchOutputReported}}</div>
+		</div>
+	</div>
+
 </div>

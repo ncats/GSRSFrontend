@@ -71,22 +71,16 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.searchControl.setValue(this.myInitialSearch);
-    console.log("bbb"+this.myInitialSearch);
-
+    console.log("ngAfterViewInit initial search:" + this.myInitialSearch);
     this.trigger.panelClosingActions
       .subscribe(e => {
         if(e==null) {
         }
-
-        console.log(JSON.stringify(e));
-
+        //  console.log("e:" + JSON.stringify(e));
         var data = {value: this.searchControl.value, myIndex: this.myIndex}; 
         this.miniSearchOutput.emit(data);
-
-
-          this.trigger.closePanel();
-          console.log("In closing panel trigger subsciption")
-        
+        this.trigger.closePanel();
+        console.log("In closing panel trigger subsciption")
       });
   }
   
