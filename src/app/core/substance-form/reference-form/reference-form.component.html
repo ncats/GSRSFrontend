@@ -7,18 +7,20 @@
   </div>
   <div class="form-row">
     <mat-form-field class="source-type">
-      <mat-label>Source Type *</mat-label>
-      <mat-select [formControl]="documentTypeControl">
+      <mat-label>Source Type</mat-label>
+      <mat-select [(ngModel)]="reference.docType" required name="docType">
         <mat-option *ngFor="let documentType of documentTypes" [value]="documentType.value">
           {{documentType.display}}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field class="citation">
-      <input matInput placeholder="Source Text/Citation *" [formControl]="citationControl" />
+      <input matInput placeholder="Source Text/Citation" [(ngModel)]="reference.citation" required name="citation" />
     </mat-form-field>
     <div class="checkbox-container">
-      <mat-checkbox [formControl]="publicDomainControl">Public Domain</mat-checkbox>
+      <mat-checkbox [(ngModel)]="reference.publicDomain" name="publicDomain">
+        Public Domain
+      </mat-checkbox>
     </div>
     <div>
       <app-access-manager (accessOut)="updateAccess($event)" [access]="reference.access">
@@ -28,16 +30,16 @@
   <div *ngIf="!reference.$$deletedCode">
     <div class="form-row">
       <mat-form-field class="url">
-        <input matInput placeholder="URL" [formControl]="urlControl" />
+        <input matInput placeholder="URL" [(ngModel)]="reference.url" name="url" />
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Source Id" [formControl]="idControl" />
+        <input matInput placeholder="Source Id" [(ngModel)]="reference.id" name="id" />
       </mat-form-field>
       <app-tag-selector class="tags" (tagsUpdate)="updateTags($event)" [tags]="reference.tags"
         cvDomain="DOCUMENT_COLLECTION"></app-tag-selector>
     </div>
     <div class="form-row form-actions">
-      <div *ngIf="reference.uuid">
+      <div *ngIf="reference.uuid && !hideDelete">
         <button mat-button (click)="deleteReference()">
           <span>Delete</span>&nbsp;
           <mat-icon svgIcon="delete_forever"></mat-icon>

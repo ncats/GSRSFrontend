@@ -6,6 +6,12 @@
     padding: 0;
 }
 
+.name-orgs-header {
+    ::ng-deep .mat-expansion-indicator::after {
+        margin-right: 7px;
+    }
+}
+
 .name-orgs-content {
 
     .title {

@@ -1,7 +1,7 @@
 <form class="structure-form" *ngIf="structure">
   <div class="form-row">
     <mat-form-field class="mol-formula">
-      <input matInput placeholder="Molecular Formula *" [(ngModel)]="structure.formula" name="formula" required />
+      <input matInput placeholder="Molecular Formula" [(ngModel)]="structure.formula" name="formula" required />
     </mat-form-field>
     <mat-form-field class="stereochemistry">
       <mat-label>Stereochemistry</mat-label>
@@ -27,6 +27,22 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <div class="settings_container" *ngIf="showSettings">
+      <button mat-icon-button [matMenuTriggerFor]="settingsMenu" matTooltip="Advanced options">
+        <mat-icon svgIcon="settings_applications"></mat-icon>
+      </button>
+      <mat-menu #settingsMenu="matMenu">
+        <button mat-menu-item (click)="openStructureImportDialog()">
+          Import
+        </button>
+        <button mat-menu-item (click)="openNameResolverDialog()">
+          Resolve name
+        </button>
+        <button *ngIf="structure.id" mat-menu-item (click)="openStructureImageModal()">
+          View stereochemistry
+        </button>
+      </mat-menu>
+    </div>
   </div>
   <div class="form-row">
     <div class="key-value-pair">
@@ -67,8 +83,9 @@
     </div>
   </div>
   <div class="form-row">
-    <mat-form-field class="stereo-comments">
-      <textarea matInput placeholder="Stereo Comments" [(ngModel)]="structure.stereoComments" name="stereoComments"></textarea>
-    </mat-form-field>
+    <div class="stereo-comments">
+      <div class="textarea-label">Stereo Comments</div>
+      <textarea placeholder="Enter text here" [(ngModel)]="structure.stereoComments" name="stereoComments"></textarea>
+    </div>
   </div>
 </form>

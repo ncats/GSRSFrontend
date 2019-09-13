@@ -9,13 +9,11 @@ import { LoadingService } from '../loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { MatDialog, PageEvent } from '@angular/material';
+import { MatDialog, PageEvent, MatDialogRef } from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from '../substance/substance-facet-param.model';
-import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
-import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { StructureImageModalComponent } from '../structure/structure-image-modal/structure-image-modal.component';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { environment } from '../../../environments/environment';
@@ -24,6 +22,7 @@ import { Auth } from '../auth/auth.model';
 import { searchSortValues } from '../utils/search-sort-values';
 import { Location, LocationStrategy } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-substances-browse',
@@ -58,6 +57,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   showAudit: boolean;
   public facetBuilder: SubstanceFacetParam;
   searchText: string[] = [];
+  private overlayContainer: HTMLElement;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -68,13 +68,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     public utilsService: UtilsService,
     private router: Router,
     private dialog: MatDialog,
-    private topSearchService: SubstanceTextSearchService,
     public gaService: GoogleAnalyticsService,
     public authService: AuthService,
     private location: Location,
     private locationStrategy: LocationStrategy,
-    private sanitizer: DomSanitizer,
-    private structureService: StructureService
+    private structureService: StructureService,
+    private overlayContainerService: OverlayContainer
   ) {
     this.privateFacetParams = {};
     this.facetBuilder = {};
@@ -108,6 +107,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
         this.searchSubstances();
       });
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit() {
@@ -139,7 +139,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         }
         if (hasSelections === true) {
-          this.facetBuilder[category] = {'params' : params, hasSelections : true};
+          this.facetBuilder[category] = { 'params': params, hasSelections: true };
         }
       }
       this.privateFacetParams = this.facetBuilder;
@@ -242,7 +242,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.isLoading = false;
           this.loadingService.setLoading(this.isLoading);
         });
-        this.populateUrlQueryParameters();
+      this.populateUrlQueryParameters();
 
     }
   }
@@ -270,9 +270,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
     navigationExtras.queryParams['structureSearchTerm'] = this.privateStructureSearchTerm;
     navigationExtras.queryParams['sequenceSearchTerm'] = this.privateSequenceSearchTerm;
-    navigationExtras.queryParams['cutoff'] =  this.privateSearchCutoff;
+    navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
-    navigationExtras.queryParams['seqType'] =  this.privateSearchSeqType;
+    navigationExtras.queryParams['seqType'] = this.privateSearchSeqType;
     navigationExtras.queryParams['order'] = this.order;
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
@@ -657,27 +657,36 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
+    let data: any;
+
     if (substance.substanceClass === 'chemical') {
-      this.dialog.open(StructureImageModalComponent, {
-        height: 'auto',
-        width: '650px',
-        data: {
-          structure: substance.structure.id,
-          smiles: substance.structure.smiles,
-          uuid: substance.uuid,
-          names: substance.names
-        }
-      });
+      data = {
+        structure: substance.structure.id,
+        smiles: substance.structure.smiles,
+        uuid: substance.uuid,
+        names: substance.names
+      };
     } else {
-      this.dialog.open(StructureImageModalComponent, {
-        height: 'auto',
-        width: '650px',
-        data: {
-          structure: substance.polymer.displayStructure.id,
-          names: substance.names
-        }
-      });
+      data = {
+        structure: substance.polymer.displayStructure.id,
+        names: substance.names
+      };
     }
+
+    const dialogRef = this.dialog.open(StructureImageModalComponent, {
+      height: '90%',
+      width: '650px',
+      panelClass: 'structure-image-panel',
+      data: data
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 
   sendFacetsEvent(event: MatCheckboxChange, facetName: string): void {

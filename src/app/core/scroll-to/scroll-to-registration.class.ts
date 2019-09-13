@@ -9,7 +9,7 @@ export class ScrollToRegistration {
 
     constructor(
         triggerElement: HTMLAnchorElement | HTMLButtonElement | HTMLElement,
-        private vAlign: 'start' | 'center' | 'end' | 'nearest' | 'start',
+        private vAlign: 'start' | 'center' | 'end' | 'nearest',
         targetElement?: HTMLElement) {
         this.triggerElement = triggerElement;
         if (targetElement != null) {

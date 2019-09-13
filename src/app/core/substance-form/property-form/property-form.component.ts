@@ -7,6 +7,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { PropertyParameterDialogComponent } from '../property-parameter-dialog/property-parameter-dialog.component';
 import { UtilsService } from '../../utils/utils.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-property-form',
@@ -19,32 +20,25 @@ export class PropertyFormComponent implements OnInit {
   referencedSubstanceUuid: string;
   @Output() propertyDeleted = new EventEmitter<SubstanceProperty>();
   propertyNameList: Array<VocabularyTerm> = [];
-  propertyNameControl = new FormControl('');
   propertyTypeList: Array<VocabularyTerm> = [];
-  propertyTypeControl = new FormControl('');
+  private overlayContainer: HTMLElement;
 
   constructor(
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
     this.getVocabularies();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   @Input()
   set property(property: SubstanceProperty) {
     this.privateProperty = property;
     this.referencedSubstanceUuid = this.privateProperty.referencedSubstance && this.privateProperty.referencedSubstance.refuuid || '';
-    this.propertyNameControl.setValue(this.property.name);
-    this.propertyNameControl.valueChanges.subscribe(value => {
-      this.property.name = value;
-    });
-    this.propertyTypeControl.setValue(this.property.type);
-    this.propertyTypeControl.valueChanges.subscribe(value => {
-      this.property.type = value;
-    });
   }
 
   get property(): SubstanceProperty {
@@ -90,10 +84,6 @@ export class PropertyFormComponent implements OnInit {
     this.property.referencedSubstance = referencedSubstance;
   }
 
-  updateDefining(event: MatCheckboxChange): void {
-    this.property.defining = event.checked;
-  }
-
   openPropertyParameter(parameter?: SubstanceParameter): void {
 
     let isNew: boolean;
@@ -107,8 +97,10 @@ export class PropertyFormComponent implements OnInit {
       data: JSON.parse(parameterCopyString),
       width: '1200px'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe(newParameter => {
+      this.overlayContainer.style.zIndex = null;
       if (newParameter != null) {
         if (this.property.parameters == null) {
           this.property.parameters = [];

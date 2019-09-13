@@ -7,6 +7,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { ScrollToModule } from '../../scroll-to/scroll-to.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   imports: [
@@ -16,7 +20,12 @@ import { MatButtonModule } from '@angular/material/button';
     MatDividerModule,
     ScrollToModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatPaginatorModule,
+    MatInputModule
   ],
   declarations: [
     SubstanceFormReferencesComponent

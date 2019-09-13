@@ -1,23 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoadingService } from '../../loading/loading.service';
 import { MainNotificationService } from '../../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../../main-notification/notification.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   isLoaded = false;
   isLoading = true;
   loginForm = new FormGroup({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required)
   });
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private authService: AuthService,
@@ -29,7 +31,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loadingService.setLoading(true);
-    this.authService.getAuth().subscribe(auth => {
+    const subscription = this.authService.getAuth().subscribe(auth => {
       this.loadingService.setLoading(false);
       if (auth) {
         const route = this.activatedRoute.snapshot.queryParamMap.get('path') || '/browse-substance';
@@ -43,6 +45,13 @@ export class LoginComponent implements OnInit {
       this.isLoaded = true;
       this.isLoading = false;
     });
+    this.subscriptions.push(subscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   login() {
@@ -51,7 +60,8 @@ export class LoginComponent implements OnInit {
       this.isLoading = true;
       const username = this.loginForm.controls.username.value;
       const password = this.loginForm.controls.password.value;
-      this.authService.login(username, password).subscribe(auth => {
+      const subscription = this.authService.login(username, password).subscribe(auth => {
+        subscription.unsubscribe();
         this.loadingService.setLoading(false);
         if (auth) {
           const route = this.activatedRoute.snapshot.queryParamMap.get('path') || '/browse-substance';
@@ -60,6 +70,7 @@ export class LoginComponent implements OnInit {
           this.isLoading = false;
         }
       }, error => {
+        subscription.unsubscribe();
         const notification: AppNotification = {
           message: 'There was an error logging you in. Please check your credentials and try again.',
           type: NotificationType.error

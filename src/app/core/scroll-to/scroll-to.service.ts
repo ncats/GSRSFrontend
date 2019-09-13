@@ -5,7 +5,7 @@ import { ScrollToRegistration } from './scroll-to-registration.class';
   providedIn: 'root'
 })
 export class ScrollToService {
-  triggerElementsDictionary: { [ targetElementId: string ]: Array<ScrollToRegistration> } = {};
+  triggerElementsDictionary: { [targetElementId: string]: Array<ScrollToRegistration> } = {};
   targetElements: Array<HTMLElement> = [];
 
   constructor() { }
@@ -57,6 +57,19 @@ export class ScrollToService {
 
     if (indexToRemove > -1) {
       this.targetElements.splice(indexToRemove, 1);
+    }
+  }
+
+  scrollToElement(id: string, vAlign: 'start' | 'center' | 'end' | 'nearest' = 'start'): void {
+    const targetElement = this.targetElements.find(element => element.id === id);
+    if (targetElement != null) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: vAlign });
+      setTimeout(() => {
+        targetElement.classList.add('blink_me');
+        setTimeout(() => {
+          targetElement.classList.remove('blink_me');
+        }, 400);
+      }, 500);
     }
   }
 

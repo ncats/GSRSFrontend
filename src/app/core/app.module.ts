@@ -29,6 +29,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
@@ -61,6 +62,8 @@ import { SubstanceFormComponent } from './substance-form/substance-form.componen
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import { SubstanceFormModule } from './substance-form/substance-form.module';
 import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
+import { NameResolverModule } from './name-resolver/name-resolver.module';
+import { HighlightedSearchActionComponent } from './highlighted-search-action/highlighted-search-action.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +80,8 @@ import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
     FacetFilterPipe,
     SequenceSearchComponent,
     TrackLinkEventDirective,
-    SubstanceFormComponent
+    SubstanceFormComponent,
+    HighlightedSearchActionComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -121,7 +125,9 @@ import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
     SubstanceCardsModule.forRoot(substanceCardsFilters),
     AuthModule,
     SubstanceFormModule,
-    OverlayModule
+    OverlayModule,
+    NameResolverModule,
+    MatBottomSheetModule
   ],
   providers: [
     ConfigService,
@@ -135,6 +141,9 @@ import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
     CanActivateSubstanceForm
   ],
   bootstrap: [AppComponent],
-  entryComponents: [StructureImageModalComponent]
+  entryComponents: [
+    StructureImageModalComponent,
+    HighlightedSearchActionComponent
+  ]
 })
 export class AppModule {}

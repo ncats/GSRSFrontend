@@ -43,8 +43,11 @@ form {
 
 
 .search-container {
+  width: 100%;
+
   mat-form-field {
     overflow: hidden;
+    width: 100%;
   }
 }
 

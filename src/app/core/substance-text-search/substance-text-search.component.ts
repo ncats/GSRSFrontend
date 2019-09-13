@@ -1,12 +1,11 @@
 import {Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { environment } from '../../../environments/environment';
-import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-text-search',
@@ -23,10 +22,12 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   private searchContainerElement: HTMLElement;
   private query: string;
   @Input() eventCategory: string;
-  @Output() searchPerformed  = new EventEmitter<string>();
+  @Output() searchPerformed = new EventEmitter<string>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   private privateErrorMessage = '';
+  @Output() opened = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
 
   constructor(
     private utilsService: UtilsService,
@@ -71,6 +72,11 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
         }
       });
 
+      if (this.suggestionsFields != null && this.suggestionsFields.length > 0) {
+        this.matOpen = true;
+        this.opened.emit();
+      }
+
     }, error => {
       this.gaService.sendException('search suggestion error from API call');
       console.log(error);
@@ -102,9 +108,16 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
 
   ngOnDestroy() {}
 
-  setStatus(value) {
-    // get matAutocomplete status so highlight() doesn't get undefined #overflow
-    this.matOpen = value;
+  autoCompleteClosed(): void {
+    this.matOpen = false;
+    this.closed.emit();
+  }
+
+  focused(): void {
+    if (this.suggestionsFields != null && this.suggestionsFields.length > 0) {
+      this.matOpen = true;
+      this.opened.emit();
+    }
   }
 
   ngAfterViewInit() {
@@ -124,13 +137,16 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
     } else {
       if (this.matOpen) {
         this.testElem = document.querySelector('#overflow') as HTMLElement;
-        this.testElem.innerText = field;
-        if (this.testElem.scrollWidth > this.testElem.offsetWidth) {
-          const pos = field.toUpperCase().indexOf(this.query.toUpperCase());
-          field = '...' + field.substring(pos - 15, field.length);
+        if (this.testElem != null) {
+          this.testElem.innerText = field;
+          if (this.testElem.scrollWidth > this.testElem.offsetWidth) {
+            const pos = field.toUpperCase().indexOf(this.query.toUpperCase());
+            field = '...' + field.substring(pos - 15, field.length);
+          }
         }
       }
-      return field.replace(new RegExp(this.query, 'gi'), match => {
+      const query = this.query.replace(/(?=[() ])/g, '\\');
+      return field.replace(new RegExp(query, 'gi'), match => {
         return '<strong>' + match + '</strong>';
       });
     }
@@ -156,5 +172,4 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       this.searchContainerElement.classList.remove('deactivate-search');
     }, 300);
   }
-
 }

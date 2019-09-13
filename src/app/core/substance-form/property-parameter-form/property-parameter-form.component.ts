@@ -11,9 +11,7 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class PropertyParameterFormComponent implements OnInit {
   private privateParameter: SubstanceParameter;
-  nameControl = new FormControl('', [Validators.required]);
   propertyTypeList: Array<VocabularyTerm> = [];
-  parameterTypeControl = new FormControl('');
 
   constructor(
     private cvService: ControlledVocabularyService
@@ -26,14 +24,6 @@ export class PropertyParameterFormComponent implements OnInit {
   @Input()
   set parameter(parameter: SubstanceParameter) {
     this.privateParameter = parameter;
-    this.nameControl.setValue(this.privateParameter.name);
-    this.nameControl.valueChanges.subscribe(value => {
-      this.privateParameter.name = value;
-    });
-    this.parameterTypeControl.setValue(this.privateParameter.type);
-    this.parameterTypeControl.valueChanges.subscribe(value => {
-      this.privateParameter.type = value;
-    });
   }
 
   get parameter(): SubstanceParameter {
@@ -47,7 +37,7 @@ export class PropertyParameterFormComponent implements OnInit {
   }
 
   get isValid(): boolean {
-    return this.nameControl.valid
-      && this.parameterTypeControl.valid;
+    return (this.privateParameter.name != null || this.privateParameter.name !== '')
+      && (this.privateParameter.type != null || this.privateParameter.type !== '');
   }
 }

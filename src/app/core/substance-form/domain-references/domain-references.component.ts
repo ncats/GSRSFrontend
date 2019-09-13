@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
@@ -8,32 +8,39 @@ import { RefernceFormDialogComponent } from '../references-dialogs/refernce-form
 import { ReuseReferencesDialogComponent } from '../references-dialogs/reuse-references-dialog.component';
 import { ReuseReferencesDialogData } from '../references-dialogs/reuse-references-dialog-data.model';
 import { MatTableDataSource } from '@angular/material/table';
+import { UtilsService } from '../../utils/utils.service';
+import { Subscription } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-domain-references',
   templateUrl: './domain-references.component.html',
   styleUrls: ['./domain-references.component.scss']
 })
-export class DomainReferencesComponent implements OnInit {
+export class DomainReferencesComponent implements OnInit, OnDestroy {
   private domainReferenceUuids: Array<string>;
   private substanceReferences: Array<SubstanceReference>;
   canReuse = false;
   references: Array<SubstanceReference> = [];
   documentTypesDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
-  displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'delete', 'attachment'];
+  displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'remove', 'attachment', 'delete', 'apply'];
   tableData: MatTableDataSource<SubstanceReference>;
   isExpanded = false;
+  private subscriptions: Array<Subscription> = [];
+  private overlayContainer: HTMLElement;
 
   constructor(
     private cvService: ControlledVocabularyService,
     private substanceFormService: SubstanceFormService,
     private dialog: MatDialog,
-    private element: ElementRef
+    private element: ElementRef,
+    private utilsService: UtilsService,
+    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
     this.getVocabularies();
-    this.substanceFormService.substanceReferences.subscribe(references => {
+    const referencesSubscription = this.substanceFormService.substanceReferences.subscribe(references => {
       if (references && references.length) {
         this.substanceReferences = references.filter(reference => !reference.$$deletedCode);
       } else {
@@ -41,6 +48,14 @@ export class DomainReferencesComponent implements OnInit {
       }
       this.canReuse = this.substanceReferences && this.substanceReferences.length > 0;
       this.loadReferences();
+    });
+    this.subscriptions.push(referencesSubscription);
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 
@@ -55,9 +70,10 @@ export class DomainReferencesComponent implements OnInit {
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
+    const dictionarySubscription = this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
       this.documentTypesDictionary = response['DOCUMENT_TYPE'].dictionary;
     });
+    this.subscriptions.push(dictionarySubscription);
   }
 
   private loadReferences() {
@@ -75,23 +91,21 @@ export class DomainReferencesComponent implements OnInit {
     }
   }
 
-  addNewReference(uuid?: string): void {
+  addNewReference(): void {
 
-    let reference: SubstanceReference = {
+    const reference: SubstanceReference = {
       tags: [],
       access: []
     };
-
-    if (uuid != null) {
-      reference = this.substanceReferences.find(substanceReference => substanceReference.uuid === uuid);
-    }
 
     const dialogRef = this.dialog.open(RefernceFormDialogComponent, {
       data: reference,
       width: '900px'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe(newReference => {
+    const dialogSubscription = dialogRef.afterClosed().subscribe(newReference => {
+      this.overlayContainer.style.zIndex = null;
       if (newReference != null) {
         newReference = this.substanceFormService.addSubstanceReference(newReference);
         setTimeout(() => {
@@ -100,6 +114,21 @@ export class DomainReferencesComponent implements OnInit {
         this.canReuse = true;
       }
     });
+    this.subscriptions.push(dialogSubscription);
+  }
+
+  openExistingReferenceForm(reference: SubstanceReference): void {
+
+    const dialogRef = this.dialog.open(RefernceFormDialogComponent, {
+      data: reference,
+      width: '900px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(updatedReference => {
+      this.overlayContainer.style.zIndex = null;
+    });
+    this.subscriptions.push(dialogSubscription);
   }
 
   addDomainReference(uuid: string): void {
@@ -128,12 +157,15 @@ export class DomainReferencesComponent implements OnInit {
       data: data,
       width: '900px'
     });
+    this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe(domainRefereceUuids => {
+    const dialogSubscription = dialogRef.afterClosed().subscribe(domainRefereceUuids => {
+      this.overlayContainer.style.zIndex = null;
       if (domainRefereceUuids != null) {
         this.updateDomainReferences(domainRefereceUuids);
       }
     });
+    this.subscriptions.push(dialogSubscription);
   }
 
   updateDomainReferences(referenceUuids: Array<string> = []): void {
@@ -164,6 +196,11 @@ export class DomainReferencesComponent implements OnInit {
       this.references.splice(substanceReferenceIndex, 1);
     }
     this.tableData.data = this.references;
+  }
+
+  deleteReference(reference: SubstanceReference): void {
+    reference.$$deletedCode = this.utilsService.newUUID();
+    this.substanceFormService.emitReferencesUpdate();
   }
 
   panelOpened(): void {

@@ -42,12 +42,11 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
     private authService: AuthService
-  ) { }
+  ) { 
+
+  }
 
   ngOnInit() {
-
-    console.log("baseurl" + `${this.apiBaseUrl}whoami`);
-
 
     this.authService.hasRolesAsync('admin').subscribe(response => {
       this.isAdmin = response;

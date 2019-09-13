@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { SubstanceFormSectionBase } from '../substance-form-section-base';
+import { SubstanceFormBase } from '../substance-form-base';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl } from '@angular/forms';
@@ -14,7 +14,7 @@ import { SubstanceFormDefinition } from '../substance-form.model';
   templateUrl: './substance-form-definition.component.html',
   styleUrls: ['./substance-form-definition.component.scss']
 })
-export class SubstanceFormDefinitionComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
+export class SubstanceFormDefinitionComponent extends SubstanceFormBase implements OnInit, AfterViewInit {
   definitionTypes: Array<VocabularyTerm>;
   definitionLevels: Array<VocabularyTerm>;
   primarySubstance?: SubstanceSummary;

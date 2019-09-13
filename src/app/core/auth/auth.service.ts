@@ -20,11 +20,13 @@ export class AuthService extends BaseHttpService {
   ) {
     super(configService);
     this.isLoading = true;
-    this.fetchAuth().subscribe(auth => {
+    const subscription = this.fetchAuth().subscribe(auth => {
+      subscription.unsubscribe();
       this._auth = auth;
       this._authUpdate.next(auth);
       this.isLoading = false;
     }, error => {
+      subscription.unsubscribe();
       this._authUpdate.next(null);
       this.isLoading = false;
     });
@@ -62,11 +64,13 @@ export class AuthService extends BaseHttpService {
         observer.next(this._auth);
       } else if (!this.isLoading) {
         this.isLoading = true;
-        this.fetchAuth().subscribe(auth => {
+        const subscription = this.fetchAuth().subscribe(auth => {
+          subscription.unsubscribe();
           this._auth = auth;
           observer.next(this._auth);
           this.isLoading = false;
         }, error => {
+          subscription.unsubscribe();
           this.logout();
           this.isLoading = false;
         });
@@ -91,7 +95,11 @@ export class AuthService extends BaseHttpService {
       || this.configService.configData.apiBaseUrl.startsWith('/')
     ) {
       const url = (this.configService.configData && this.configService.configData.apiBaseUrl || '/') + 'logout';
-      this.http.get(url).subscribe();
+      const subscription = this.http.get(url).subscribe(response => {
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
+      });
     }
     sessionStorage.removeItem('authToken');
     this._auth = null;

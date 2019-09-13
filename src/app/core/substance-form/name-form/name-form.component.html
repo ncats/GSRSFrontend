@@ -23,11 +23,11 @@
       </mat-checkbox>
     </div>
     <mat-form-field class="name">
-      <input matInput placeholder="Name" [(ngModel)]="name.name" required />
+      <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" />
     </mat-form-field>
-    <mat-form-field class="name-type" required>
+    <mat-form-field class="name-type">
       <mat-label>Type</mat-label>
-      <mat-select [(ngModel)]="name.type" required>
+      <mat-select [(ngModel)]="name.type" required name="type">
         <mat-option *ngFor="let nameType of nameTypes" [value]="nameType.value">
           {{nameType.display}}
         </mat-option>

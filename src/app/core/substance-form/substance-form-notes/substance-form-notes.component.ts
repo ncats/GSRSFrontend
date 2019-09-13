@@ -1,20 +1,27 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { SubstanceFormSectionBase } from '../substance-form-section-base';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceNote } from '@gsrs-core/substance/substance.model';
+import { ScrollToService } from '../../scroll-to/scroll-to.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-form-notes',
   templateUrl: './substance-form-notes.component.html',
   styleUrls: ['./substance-form-notes.component.scss']
 })
-export class SubstanceFormNotesComponent extends SubstanceFormSectionBase implements OnInit, AfterViewInit {
+export class SubstanceFormNotesComponent extends SubstanceCardBaseFilteredList<SubstanceNote> implements OnInit, AfterViewInit, OnDestroy {
   notes: Array<SubstanceNote>;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private scrollToService: ScrollToService,
+    public gaService: GoogleAnalyticsService
   ) {
-    super();
+    super(gaService);
+    this.analyticsEventCategory = 'substance form notes';
   }
 
   ngOnInit() {
@@ -22,13 +29,32 @@ export class SubstanceFormNotesComponent extends SubstanceFormSectionBase implem
   }
 
   ngAfterViewInit() {
-    this.substanceFormService.substanceNotes.subscribe(notes => {
+    const notesSubscription = this.substanceFormService.substanceNotes.subscribe(notes => {
       this.notes = notes;
+      this.filtered = notes;
+      const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
+        this.filterList(value, this.notes, this.analyticsEventCategory);
+      }, error => {
+        console.log(error);
+      });
+      this.subscriptions.push(searchSubscription);
+      this.page = 0;
+      this.pageChange();
+    });
+    this.subscriptions.push(notesSubscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 
   addNote(): void {
     this.substanceFormService.addSubstanceNote();
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-note-0`, 'center');
+    });
   }
 
   deleteNote(note: SubstanceNote): void {

@@ -18,10 +18,6 @@ export class RelationshipFormComponent implements OnInit {
   relationshipTypeList: Array<VocabularyTerm> = [];
   qualificationList: Array<VocabularyTerm> = [];
   interactionTypeList: Array<VocabularyTerm> = [];
-  relationshipTypeControl = new FormControl('', [Validators.required]);
-  qualificationControl = new FormControl('');
-  interactionTypeControl = new FormControl('');
-  commentsControl = new FormControl('');
   deleteTimer: any;
 
   constructor(
@@ -36,24 +32,11 @@ export class RelationshipFormComponent implements OnInit {
   @Input()
   set relationship(relationship: SubstanceRelationship) {
     this.privateRelationship = relationship;
+    if (this.privateRelationship.amount == null) {
+      this.privateRelationship.amount = {};
+    }
     this.relatedSubstanceUuid = this.privateRelationship.relatedSubstance && this.privateRelationship.relatedSubstance.refuuid || '';
     this.mediatorSubstanceUuid = this.privateRelationship.mediatorSubstance && this.privateRelationship.mediatorSubstance.refuuid || '';
-    this.relationshipTypeControl.setValue(this.relationship.type);
-    this.relationshipTypeControl.valueChanges.subscribe(value => {
-      this.relationship.type = value;
-    });
-    this.qualificationControl.setValue(this.relationship.qualification);
-    this.qualificationControl.valueChanges.subscribe(value => {
-      this.relationship.qualification = value;
-    });
-    this.interactionTypeControl.setValue(this.relationship.interactionType);
-    this.interactionTypeControl.valueChanges.subscribe(value => {
-      this.relationship.interactionType = value;
-    });
-    this.commentsControl.setValue(this.relationship.comments);
-    this.commentsControl.valueChanges.subscribe(value => {
-      this.relationship.comments = value;
-    });
   }
 
   get relationship(): SubstanceRelationship {

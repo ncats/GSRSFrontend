@@ -18,7 +18,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { SubstanceFormSection } from './substance-form-section';
 import { SubstanceFormService } from './substance-form.service';
 import { ValidationMessage, SubstanceFormResults } from './substance-form.model';
-import {Observable} from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-form',
@@ -41,6 +41,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   submissionMessage: string;
   validationMessages: Array<ValidationMessage>;
   validationResult = false;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,7 +57,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnInit() {
     this.loadingService.setLoading(true);
-    this.activatedRoute
+    const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
         if (params['id']) {
@@ -77,6 +78,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           });
         }
       });
+    this.subscriptions.push(routeSubscription);
   }
 
   ngAfterViewInit(): void {
@@ -102,6 +104,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnDestroy(): void {
     this.substanceFormService.unloadSubstance();
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   getSubstanceDetails() {
@@ -148,6 +153,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.substanceFormService.validateSubstance().subscribe(results => {
+      this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
       this.validationResult = results.valid;

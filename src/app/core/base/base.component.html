@@ -22,14 +22,14 @@
           {{navItem.display}}
         </button>
         <ng-container *ngIf="navItem.children">
-          <button mat-menu-item [matMenuTriggerFor]="childrenMenu">
+          <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
               {{navItem.display}}
-          </button>
+          </a>
           <mat-menu #childrenMenu="matMenu">
             <div *ngFor="let childNavItem of navItem.children">
-              <button mat-menu-item [routerLink]="['/' + childNavItem.path]" *ngIf="childNavItem.path">
+              <a mat-menu-item [routerLink]="['/' + childNavItem.path]" *ngIf="childNavItem.path">
                 {{childNavItem.display}}
-              </button>
+              </a>
             </div>
           </mat-menu>
         </ng-container>
@@ -37,7 +37,13 @@
     </mat-menu>
   </span>
   <span class="middle-fill"></span>
-  <app-substance-text-search class="top-search" [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch">
+  <app-substance-text-search
+    class="top-search"
+    [searchValue]="searchValue"
+    (searchPerformed)="processSubstanceSearch($event)"
+    eventCategory="topSearch"
+    (opened)="increaseMenuZindex()"
+    (closed)="removeZindex()">
   </app-substance-text-search>
   <div>
     <button mat-flat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment != 'login'">

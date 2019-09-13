@@ -1,26 +1,35 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { domainKeys } from '../domain-references/domain-keys.constant';
 import { DomainsWithReferences } from '../domain-references/domain.references.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-apply-reference',
   templateUrl: './apply-reference.component.html',
   styleUrls: ['./apply-reference.component.scss']
 })
-export class ApplyReferenceComponent implements OnInit {
+export class ApplyReferenceComponent implements OnInit, OnDestroy {
   domainKeys = domainKeys;
   domainsWithReferences: DomainsWithReferences;
   private privateSubReferenceUuid: string;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService
   ) { }
 
   ngOnInit() {
-    this.substanceFormService.domainsWithReferences.subscribe(domainsWithReferences => {
+    const subscription = this.substanceFormService.domainsWithReferences.subscribe(domainsWithReferences => {
       this.domainsWithReferences = domainsWithReferences;
+    });
+    this.subscriptions.push(subscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 
@@ -36,12 +45,44 @@ export class ApplyReferenceComponent implements OnInit {
         this.applyReference(domain);
       });
     });
+    this.substanceFormService.emitReferencesUpdate();
+  }
+
+  applyToAllWithoutRef(): void {
+    if (this.domainsWithReferences.definition.domain.references == null
+      || this.domainsWithReferences.definition.domain.references.length === 0) {
+        this.applyReference(this.domainsWithReferences.definition.domain);
+    }
+
+    this.domainKeys.forEach(key => {
+      if (this.domainsWithReferences[key] && this.domainsWithReferences[key].domains && this.domainsWithReferences[key].domains.length) {
+        this.domainsWithReferences[key].domains.forEach(domain => {
+          if (!domain.references || domain.references.length === 0) {
+            this.applyReference(domain);
+          }
+        });
+      }
+    });
+    this.substanceFormService.emitReferencesUpdate();
   }
 
   applyToAllDomain(domainKey: string): void {
     this.domainsWithReferences[domainKey].domains.forEach(domain => {
       this.applyReference(domain);
     });
+    this.substanceFormService.emitReferencesUpdate();
+  }
+
+  applyToAllDomainWithoutRef(domainKey: string): void {
+    if (this.domainsWithReferences[domainKey] && this.domainsWithReferences[domainKey].domains
+      && this.domainsWithReferences[domainKey].domains.length) {
+        this.domainsWithReferences[domainKey].domains.forEach(domain => {
+          if (!domain.references || domain.references.length === 0) {
+            this.applyReference(domain);
+          }
+        });
+    }
+    this.substanceFormService.emitReferencesUpdate();
   }
 
   updateAppliedOtion(event: MatCheckboxChange, domain: any): void {

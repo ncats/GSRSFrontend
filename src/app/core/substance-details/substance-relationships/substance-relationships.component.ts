@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-substance-relationships',
@@ -19,12 +20,14 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   displayedColumns = ['relatedRecord', 'type', 'details', 'references'];
   private excludedRelationships: Array<string>;
   substanceUpdated = new Subject<SubstanceDetail>();
+  private overlayContainer: HTMLElement;
 
   constructor(
     private utilService: UtilsService,
     private configService: ConfigService,
     private dialog: MatDialog,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private overlayContainerService: OverlayContainer
   ) {
     super(gaService);
   }
@@ -56,10 +59,9 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
         }, error => {
           console.log(error);
         });
-
-
       }
     });
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   private filterRelationhships(): void {
@@ -85,7 +87,10 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   }
 
   private hasDetails(current): boolean {
-    if ((current.mediatorSubstance && current.mediatorSubstance.name) || (current.amount) || (current.qualification) || (current.interactionType)) {
+    if ((current.mediatorSubstance && current.mediatorSubstance.name)
+      || (current.amount)
+      || (current.qualification)
+      || (current.interactionType)) {
       return true;
     } else {
       return false;
@@ -101,8 +106,10 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     this.gaService.sendEvent(this.analyticsEventCategory, 'button', 'references view');
 
     const dialogRef = this.dialog.open(templateRef, {});
+    this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
     });
   }
 

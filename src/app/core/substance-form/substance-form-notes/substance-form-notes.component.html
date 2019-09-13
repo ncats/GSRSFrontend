@@ -1,10 +1,17 @@
 <div class="flex-row">
+  <mat-form-field [floatLabel]="'never'" class="search" *ngIf="notes && notes.length > pageSize">
+    <input matInput placeholder="Search" [formControl]="searchControl">
+  </mat-form-field>
   <span class="middle-fill"></span>
   <button mat-button (click)="addNote()">
     Add note <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
 </div>
-<div class="note" *ngFor="let note of notes; last as isLast">
+<div class="note" *ngFor="let note of paged; last as isLast; index as index" appScrollToTarget
+  [id]="'substance-note-' + index">
   <app-note-form [note]="note" (noteDeleted)="deleteNote($event)"></app-note-form>
   <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
 </div>
+<mat-paginator *ngIf="notes && notes.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true"
+  (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 15]">
+</mat-paginator>

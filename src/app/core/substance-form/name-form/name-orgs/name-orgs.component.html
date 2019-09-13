@@ -1,7 +1,7 @@
 <div class="name-orgs-content">
   <mat-accordion>
-    <mat-expansion-panel hideToggle="true" (closed)="panelClosed()" (opened)="panelOpened()">
-      <mat-expansion-panel-header>
+    <mat-expansion-panel (closed)="panelClosed()" (opened)="panelOpened()">
+      <mat-expansion-panel-header class="name-orgs-header">
         <mat-panel-title [ngClass]="{'block-display': !isExpanded}">
           <h4 class="title" matTooltip="Expand name orgs">
             Naming Organizations
