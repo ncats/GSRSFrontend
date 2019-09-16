@@ -8,6 +8,8 @@ import {MatIconModule, MatDialogModule, MatPaginatorModule, MatFormFieldModule, 
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
 import {RouterModule} from '@angular/router';
+import {MatSortModule} from '@angular/material/sort';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -23,7 +25,9 @@ import {RouterModule} from '@angular/router';
     ReactiveFormsModule,
     MatInputModule,
     CdkTableModule,
-    RouterModule
+    MatTooltipModule,
+    RouterModule,
+    MatSortModule
   ],
   declarations: [SubstanceRelationshipsComponent]
 })

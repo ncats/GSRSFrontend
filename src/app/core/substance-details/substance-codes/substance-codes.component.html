@@ -5,7 +5,7 @@
   </mat-form-field>
 </div>
 <div class="responsive">
-  <table [ngClass]="{ 'classification': type == 'classification' }" mat-table [dataSource]="paged">
+  <table [ngClass]="{ 'classification': type == 'classification' }" mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
 
     <ng-container matColumnDef="classificationTree">
       <th mat-header-cell *matHeaderCellDef> Classification Tree </th>
@@ -22,22 +22,22 @@
     </ng-container>
 
     <ng-container matColumnDef="codeSystem">
-      <th mat-header-cell *matHeaderCellDef> Code System </th>
+      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Code System </th>
       <td mat-cell *matCellDef="let code"> {{code.codeSystem}} </td>
     </ng-container>
 
     <ng-container matColumnDef="code">
-      <th mat-header-cell *matHeaderCellDef> Code </th>
+      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Code </th>
       <td mat-cell *matCellDef="let code"> {{code.code}} </td>
     </ng-container>
 
     <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef> Type </th>
+      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Type </th>
       <td mat-cell *matCellDef="let code"> {{code.type}} </td>
     </ng-container>
 
     <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Description </th>
       <td mat-cell *matCellDef="let code"> {{code.description}} </td>
     </ng-container>
 

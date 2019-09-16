@@ -81,6 +81,7 @@ import { HighlightedSearchActionComponent } from './highlighted-search-action/hi
     SequenceSearchComponent,
     TrackLinkEventDirective,
     SubstanceFormComponent,
+    SubstanceFormComponent,
     HighlightedSearchActionComponent
   ],
   imports: [
