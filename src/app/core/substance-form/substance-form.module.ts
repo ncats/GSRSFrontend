@@ -40,6 +40,11 @@ import { PropertyParameterFormComponent } from './property-parameter-form/proper
 import { PropertyParameterDialogComponent } from './property-parameter-dialog/property-parameter-dialog.component';
 import { MatListModule } from '@angular/material/list';
 import { FileSelectModule } from 'file-select';
+import { SubunitFormComponent } from './subunit-form/subunit-form.component';
+import {SubunitDisplayPipe} from '@gsrs-core/utils/subunit-display.pipe';
+import { OtherLinksFormComponent } from './other-links-form/other-links-form.component';
+import {DisulfideLinksFormComponent} from '@gsrs-core/substance-form/disulfide-links-form/disulfide-links-form.component';
+import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
 
 @NgModule({
   imports: [
@@ -86,7 +91,12 @@ import { FileSelectModule } from 'file-select';
     NoteFormComponent,
     PropertyFormComponent,
     PropertyParameterFormComponent,
-    PropertyParameterDialogComponent
+    PropertyParameterDialogComponent,
+    SubunitFormComponent,
+    SubunitDisplayPipe,
+    OtherLinksFormComponent,
+    DisulfideLinksFormComponent,
+    SubunitSelectorComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -102,7 +112,13 @@ import { FileSelectModule } from 'file-select';
     NoteFormComponent,
     PropertyFormComponent,
     PropertyParameterFormComponent,
-    PropertyParameterDialogComponent
+    PropertyParameterDialogComponent,
+    SubunitFormComponent,
+    SubunitDisplayPipe,
+    OtherLinksFormComponent,
+    DisulfideLinksFormComponent,
+    SubunitSelectorComponent
+
   ],
   entryComponents: [
     RefernceFormDialogComponent,

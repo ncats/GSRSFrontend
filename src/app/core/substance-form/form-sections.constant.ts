@@ -12,8 +12,11 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     ],
   protein: [
     'substance-form-definition',
-    'substance-form-names',
     'substance-form-subunits',
+    'substance-form-other-links',
+    'substance-form-disulfide-links',
+    'substance-form-glycosylation',
+    'substance-form-names',
     'substance-form-codes',
     'substance-form-relationships',
     'substance-form-notes',

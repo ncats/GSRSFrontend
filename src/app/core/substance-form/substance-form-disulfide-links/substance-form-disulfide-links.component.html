@@ -1,0 +1,12 @@
+<div class="responsive">
+  <button mat-button (click)="addLink()">
+    Add Link <mat-icon svgIcon="add_circle_outline"></mat-icon>
+  </button>
+  <div *ngFor = "let disulfideLink of disulfideLinks; last as isLast; index as index" >
+    <app-disulfide-links-form [link]="disulfideLink" (disulfideLinkDeleted)="deleteDisulfideLink($event)"></app-disulfide-links-form>
+    <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
+  </div>
+</div>
+
+
+

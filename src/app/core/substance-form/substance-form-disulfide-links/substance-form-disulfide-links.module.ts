@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {DynamicComponentLoaderModule} from '@gsrs-core/dynamic-component-loader';
-import {SubstanceFormSubunitsComponent} from '@gsrs-core/substance-form/substance-form-subunits/substance-form-subunits.component';
 import {SubstanceFormModule} from '@gsrs-core/substance-form/substance-form.module';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
@@ -13,11 +12,13 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+// tslint:disable-next-line:max-line-length
+import {SubstanceFormDisulfideLinksComponent} from '@gsrs-core/substance-form/substance-form-disulfide-links/substance-form-disulfide-links.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormSubunitsComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormDisulfideLinksComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -34,7 +35,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
   exports: [
   ],
   declarations: [
-    SubstanceFormSubunitsComponent
+    SubstanceFormDisulfideLinksComponent
   ]
 })
-export class SubstanceFormSubunitsModule { }
+export class SubstanceFormDisulfideLinksModule { }

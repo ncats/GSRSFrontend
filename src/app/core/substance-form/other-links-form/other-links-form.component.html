@@ -1,0 +1,30 @@
+<div class="link-form-container">
+  <div *ngIf="link.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete link" (click)="deleteLink()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+    <mat-form-field class="name-type">
+      <mat-label>Type</mat-label>
+    <mat-select [(ngModel)]="link.linkageType" required name="type">
+      <mat-option *ngFor="let linkageType of linkageTypes" [value]="linkageType.value">
+        {{linkageType.display}}
+      </mat-option>
+    </mat-select>
+    </mat-form-field>
+    <div>
+      <div class="label">link</div>
+      <div *ngFor = "let site of link.sites">
+        <input placeholder="Enter text here" [(ngModel)]="site.subunitIndex" required name="link" >
+        <input placeholder="Enter text here" [(ngModel)]="site.residueIndex" required name="link" >
+      </div>
+    </div>
+  </div>
+</div>

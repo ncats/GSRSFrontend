@@ -9,7 +9,7 @@ import {
   SubstanceRelationship,
   SubstanceNote,
   SubstanceProperty,
-  Subunit
+  Subunit, Link, DisulfideLink, Glycosylation
 } from '../substance/substance.model';
 import {
   SubstanceFormDefinition,
@@ -43,7 +43,9 @@ export class SubstanceFormService {
   private substanceNotesEmitter = new Subject<Array<SubstanceNote>>();
   private substancePropertiesEmitter = new Subject<Array<SubstanceProperty>>();
   private substanceSubunitsEmitter = new Subject<Array<Subunit>>();
-
+  private substanceOtherLinksEmitter = new Subject<Array<Link>>();
+  private substanceDisulfideLinksEmitter = new Subject<Array<DisulfideLink>>();
+  private substanceGlycosylationEmitter = new Subject<Glycosylation>();
   constructor(
     private substanceService: SubstanceService,
     public utilsService: UtilsService,
@@ -481,6 +483,9 @@ export class SubstanceFormService {
   deleteSubstanceNote(note: SubstanceNote): void {
     const subNoteIndex = this.substance.notes.findIndex(subNote => note.$$deletedCode === subNote.$$deletedCode);
     if (subNoteIndex > -1) {
+      console.log(subNoteIndex);
+      console.log(note);
+      console.log(note.$$deletedCode);
       this.substance.notes.splice(subNoteIndex, 1);
       this.substanceNotesEmitter.next(this.substance.notes);
     }
@@ -540,7 +545,118 @@ export class SubstanceFormService {
     });
   }
 
+
+  addSubstanceSubunit(): void {
+    const newSubunit: Subunit = {
+      references: [],
+      access: []
+    };
+    this.substance.protein.subunits.unshift(newSubunit);
+    this.substanceCodesEmitter.next(this.substance.protein.subunits);
+  }
+
+  deleteSubstanceSubunit(subunit: Subunit): void {
+    const subUnitIndex = this.substance.protein.subunits.findIndex(subUnit => subunit.$$deletedCode === subUnit.$$deletedCode);
+    if (subUnitIndex > -1) {
+      this.substance.protein.subunits.splice(subUnitIndex, 1);
+      this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
+    }
+  }
+
   //subunits end
+
+  // other links start
+
+  get substanceOtherLinks(): Observable<Array<Link>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (this.substance.protein.otherLinks == null) {
+          this.substance.protein.otherLinks = [];
+        }
+        console.log(this.substance.protein.otherLinks);
+        observer.next(this.substance.protein.otherLinks);
+        this.substanceCodesEmitter.subscribe(otherLinks => {
+          observer.next(this.substance.protein.otherLinks );
+        });
+      });
+    });
+  }
+
+
+  addSubstanceOtherLink(): void {
+    const newOtherLinks: Link = {
+      references: [],
+      access: []
+    };
+    this.substance.protein.otherLinks.unshift(newOtherLinks);
+    this.substanceCodesEmitter.next(this.substance.protein.otherLinks);
+  }
+
+  deleteSubstanceOtherLink(link: Link): void {
+    const subLinkIndex = this.substance.protein.otherLinks.findIndex(subCode => link.$$deletedCode === subCode.$$deletedCode);
+    console.log(link);
+    console.log(subLinkIndex);
+    console.log(link.$$deletedCode);
+    if (subLinkIndex > -1) {
+      this.substance.protein.otherLinks.splice(subLinkIndex, 1);
+      this.substanceOtherLinksEmitter.next(this.substance.codes);
+    }
+  }
+
+  // other links end
+
+  // disulfide links start
+
+  get substanceDisulfideLinks(): Observable<Array<Link>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (this.substance.protein.disulfideLinks == null) {
+          this.substance.protein.disulfideLinks = [];
+        }
+        console.log(this.substance.protein.disulfideLinks);
+        observer.next(this.substance.protein.disulfideLinks);
+        this.substanceDisulfideLinksEmitter.subscribe(disulfideLinks => {
+          observer.next(this.substance.protein.disulfideLinks );
+        });
+      });
+    });
+  }
+
+  addSubstanceDisulfideLink(): void {
+    const newDisulfideLinks: DisulfideLink = {
+    };
+    this.substance.protein.disulfideLinks.unshift(newDisulfideLinks);
+    this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
+  }
+
+  deleteSubstanceDisulfideLink(disulfideLink: DisulfideLink): void {
+  /*  const subLinkIndex = this.substance.protein.disulfideLinks.findIndex(subLink => disulfideLink.$$deletedCode === subLink.$$deletedCode);
+    if (subLinkIndex > -1) {
+      this.substance.protein.disulfideLinks.splice(subLinkIndex, 1);
+      this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
+    }*/
+  }
+
+  // disulfide links end
+
+  // Glycosylation start
+
+  get substanceGlycosylation(): Observable<Glycosylation> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (this.substance.protein.glycosylation == null) {
+          this.substance.protein.glycosylation = {};
+        }
+        console.log(this.substance.protein.glycosylation);
+        observer.next(this.substance.protein.glycosylation);
+        this.substanceCodesEmitter.subscribe(glycosylation => {
+          observer.next(this.substance.protein.glycosylation );
+        });
+      });
+    });
+  }
+
+  // Glycosylation end
 
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {

@@ -1,0 +1,32 @@
+<div *ngIf="glycosylation">
+  <div class="link-form-container">
+  <div class="form-row">
+    <mat-form-field class="name-type">
+      <mat-label>Type</mat-label>
+      <mat-select [(ngModel)]="glycosylation.glycosylationType" required name="type">
+        <mat-option *ngFor="let type of glycosylationTypes" [value]="type.value" >
+          {{type.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="link">
+      <div class="label">C</div>
+      <div *ngFor = "let site of glycosylation.CGlycosylationSites">
+        {{site.subunitIndex}}_{{site.residueIndex}}
+      </div>
+    </div>
+    <div class="link">
+      <div class="label">N</div>
+      <div *ngFor = "let site of glycosylation.NGlycosylationSites">
+        {{site.subunitIndex}}_{{site.residueIndex}}
+      </div>
+    </div>
+    <div class="link">
+      <div class="label">O</div>
+      <div *ngFor = "let site of glycosylation.OGlycosylationSites">
+        {{site.subunitIndex}}_{{site.residueIndex}}
+      </div>
+    </div>
+  </div>
+</div>
+</div>

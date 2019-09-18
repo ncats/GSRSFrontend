@@ -177,5 +177,20 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-subunits',
     path: 'substance-form-subunits',
     loadChildren: './substance-form/substance-form-subunits/substance-form-subunits.module#SubstanceFormSubunitsModule'
+  },
+  {
+    componentId: 'substance-form-other-links',
+    path: 'substance-form-other-links',
+    loadChildren: './substance-form/substance-form-other-links/substance-form-other-links.module#SubstanceFormOtherLinksModule'
+  },
+  {
+    componentId: 'substance-form-disulfide-links',
+    path: 'substance-form-disulfide-links',
+    loadChildren: './substance-form/substance-form-disulfide-links/substance-form-disulfide-links.module#SubstanceFormDisulfideLinksModule'
+  },
+  {
+    componentId: 'substance-form-glycosylation',
+    path: 'substance-form-glycosylation',
+    loadChildren: './substance-form/substance-form-glycosylation/substance-form-glycosylation.module#SubstanceFormGlycosylationModule'
   }
 ];

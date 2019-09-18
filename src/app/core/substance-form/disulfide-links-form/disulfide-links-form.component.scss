@@ -1,0 +1,31 @@
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, .8);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: #666;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .note {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+}

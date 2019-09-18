@@ -1,3 +1,19 @@
-<p>
-  substance-form-subunits works!
-</p>
+<div class="filters-container">
+  <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+    <mat-button-toggle value="details">
+      <mat-icon svgIcon="list"></mat-icon>
+    </mat-button-toggle>
+    <mat-button-toggle value="raw">
+      <mat-icon svgIcon="view_stream"></mat-icon>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+<div [ngClass]="view" class = "testing123">
+
+
+  <div   *ngFor="let subunit of subunits; let i = index">
+
+    <app-subunit-form [subunit]="subunit" [view] = "view" ></app-subunit-form>
+
+  </div>
+</div>

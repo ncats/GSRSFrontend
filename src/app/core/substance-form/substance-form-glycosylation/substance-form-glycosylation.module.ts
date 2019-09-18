@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {DynamicComponentLoaderModule} from '@gsrs-core/dynamic-component-loader';
-import {SubstanceFormSubunitsComponent} from '@gsrs-core/substance-form/substance-form-subunits/substance-form-subunits.component';
 import {SubstanceFormModule} from '@gsrs-core/substance-form/substance-form.module';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
@@ -13,11 +12,15 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {SubstanceFormGlycosylationComponent} from '@gsrs-core/substance-form/substance-form-glycosylation/substance-form-glycosylation.component';
+import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
+import {MatOptionModule} from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormSubunitsComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormGlycosylationComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -29,12 +32,14 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatPaginatorModule,
     MatTooltipModule,
     MatButtonToggleModule,
-    MatInputModule
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   exports: [
   ],
   declarations: [
-    SubstanceFormSubunitsComponent
+    SubstanceFormGlycosylationComponent
   ]
 })
-export class SubstanceFormSubunitsModule { }
+export class SubstanceFormGlycosylationModule { }
