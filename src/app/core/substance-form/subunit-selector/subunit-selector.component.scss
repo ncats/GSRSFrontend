@@ -1,0 +1,159 @@
+.details {
+  & .subunit {
+    display: none;
+  }
+
+  & .subunit-sequence {
+    display: block;
+  }
+}
+
+
+.show {
+  display:block;
+}
+
+.hide{
+  display:none;
+}
+
+.raw {
+  .subunit {
+    display: block;
+  }
+
+  .subunit-sequence {
+    display: none;
+  }
+}
+
+.raw {
+  & .subunit {
+    display: block;
+  }
+
+  & .subunit-sequence {
+    display: none;
+  }
+}
+
+.subunit-sequence {
+  margin-bottom: 30px;
+}
+
+.sequence-section-group {
+  width: 100%;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.section-number {
+  text-align: right;
+  padding: 0 10px;
+  font-size: .8em;
+}
+
+.sequence-section {
+  flex-grow: 0;
+  padding: 0 10px;
+  flex-basis: 20%;
+  flex-shrink: 0;
+}
+
+.section-units-container {
+  display: flex;
+
+  .section-unit {
+    flex-grow: 1;
+
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.subunit {
+  padding-top: 5px;
+  padding-bottom: 20px;
+
+  &:not(:last-child) {
+    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.raw-sequence {
+  word-break: break-all;
+  line-height: 26px;
+}
+
+.filters-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.subunit-form-container {
+  padding: 30px 10px 12px 10px;
+  position: relative;
+}
+
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, .8);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: #666;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.delete-container {
+  padding: 0 10px 8px 0;
+}
+
+
+.other{
+  color:white;
+  background-color:blue;
+}
+
+.glycosylation{
+  color:white;
+  background-color:darkgreen;
+}
+
+.disulfide{
+  color:white;
+  background-color:goldenrod;
+}
+
+.Nglycosylation{
+  color:white;
+  background-color:navy;
+}
+
+.Cglycosylation{
+  color:white;
+  background-color:green;
+}
+
+.Oglycosylation{
+  color:white;
+  background-color:orangered;
+}
+
+.selectedSite{
+  padding-left:2px;
+  padding-right:2px;
+}
+

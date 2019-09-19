@@ -124,7 +124,8 @@ import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-select
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
     ApplyReferenceComponent,
-    PropertyParameterDialogComponent
+    PropertyParameterDialogComponent,
+    SubunitSelectorComponent
   ]
 })
 export class SubstanceFormModule { }

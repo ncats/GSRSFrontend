@@ -24,6 +24,9 @@
       <div *ngFor = "let site of link.sites">
         <input placeholder="Enter text here" [(ngModel)]="site.subunitIndex" required name="link" >
         <input placeholder="Enter text here" [(ngModel)]="site.residueIndex" required name="link" >
+        <button mat-icon-button matTooltip="Undo" (click)="(openModal())">
+          <mat-icon svgIcon="menu"></mat-icon>
+        </button>
       </div>
     </div>
   </div>

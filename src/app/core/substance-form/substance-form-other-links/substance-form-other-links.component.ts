@@ -11,8 +11,8 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   templateUrl: './substance-form-other-links.component.html',
   styleUrls: ['./substance-form-other-links.component.scss']
 })
-export class SubstanceFormOtherLinksComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit, AfterViewInit, OnDestroy {
-  otherLinks: Array<SubstanceName>;
+export class SubstanceFormOtherLinksComponent extends SubstanceCardBaseFilteredList<Link> implements OnInit, AfterViewInit, OnDestroy {
+  otherLinks: Array<Link>;
   private subscriptions: Array<Subscription> = [];
   constructor(
     private substanceFormService: SubstanceFormService,

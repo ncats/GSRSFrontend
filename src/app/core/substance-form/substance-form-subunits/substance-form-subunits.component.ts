@@ -3,7 +3,7 @@ import {Subject, Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import { Subunit} from '@gsrs-core/substance';
+import {Link, Subunit} from '@gsrs-core/substance';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import _ from 'underscore';
@@ -55,11 +55,25 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
     this.view = event.value;
   }
 
+  addSubunit(): void {
+    this.substanceFormService.addSubstanceSubunit();
+    const next = 'substance-link-' + this.subunits.length;
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(next, 'center');
+    });
+    this.substanceFormService.emitSubunitUpdate();
+  }
+
+  deleteSubunit(subunit: Subunit): void {
+    this.substanceFormService.deleteSubstanceSubunit(subunit);
+  }
+
 }
 interface SubunitSequence {
   subunitIndex: number;
   sequencesSectionGroups: Array<SequenceSectionGroup>;
 }
+
 
 interface SequenceSectionGroup {
   sequenceSections: Array<SequenceSection>;

@@ -1,3 +1,12 @@
+<div class = "responsive">
+
+  <button mat-button (click)="addSubunit()">
+    Add link <mat-icon svgIcon="add_circle_outline"></mat-icon>
+  </button>
+
+
+</div>
+
 <div class="filters-container">
   <mat-button-toggle-group [value]="view" (change)="updateView($event)">
     <mat-button-toggle value="details">
@@ -8,12 +17,13 @@
     </mat-button-toggle>
   </mat-button-toggle-group>
 </div>
-<div [ngClass]="view" class = "testing123">
+<div [ngClass]="view">
 
 
-  <div   *ngFor="let subunit of subunits; let i = index">
+  <div   *ngFor="let subunit of subunits; last as isLast; index as index">
 
-    <app-subunit-form [subunit]="subunit" [view] = "view" ></app-subunit-form>
+    <app-subunit-form [subunit]="subunit" (subunitDeleted)="deleteSubunit($event)"></app-subunit-form>
+    <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
 
   </div>
 </div>

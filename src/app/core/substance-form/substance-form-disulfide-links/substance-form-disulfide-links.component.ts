@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {DisulfideLink, Link, SubstanceName} from '@gsrs-core/substance';
+import {DisulfideLink, Link, SubstanceName, Subunit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import {MatDialog} from '@angular/material/dialog';
@@ -19,6 +19,7 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
   disulfideLinks: Array<DisulfideLink>;
   private subscriptions: Array<Subscription> = [];
   cysteineBonds: number;
+  subunits: Array<Subunit>;
   constructor(
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
@@ -42,12 +43,9 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
 
     this.subscriptions.push(disulfideLinksSubscription);
     const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
-      console.log(subunits);
-      subunits.forEach(subunit => {
-        this.cysteineBonds = (subunit.sequence.match(/C/g) || []).length;
-      });
-      console.log(this.cysteineBonds);
       this.subscriptions.push(subunitsSubscription);
+      this.subunits = subunits;
+      this.countCysteine();
     });
   }
 
@@ -57,10 +55,21 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
     });
   }
 
+  countCysteine(): void {
+    console.log(this.subunits);
+    this.cysteineBonds = 0;
+    this.subunits.forEach(subunit => {
+      this.cysteineBonds += (subunit.sequence.toUpperCase().split('C').length - 1);
+      console.log(this.cysteineBonds);
+    });
+     this.cysteineBonds -= (this.disulfideLinks.length * 2);
+    console.log(this.cysteineBonds);
+  }
+
   addLink(): void {
-    this.substanceFormService.addSubstanceOtherLink();
+    this.substanceFormService.addSubstanceDisulfideLink();
     setTimeout(() => {
-      this.scrollToService.scrollToElement(`substance-name-0`, 'center');
+      this.scrollToService.scrollToElement(`substance-disulfide-link-0`, 'center');
     });
   }
 

@@ -1,10 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Link} from '@gsrs-core/substance';
+import {Link, SubstanceReference} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
+import {RefernceFormDialogComponent} from '@gsrs-core/substance-form/references-dialogs/refernce-form-dialog.component';
+import {SubstanceSelectorComponent} from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
   selector: 'app-other-links-form',
@@ -18,6 +20,8 @@ export class OtherLinksFormComponent implements OnInit {
   deleteTimer: any;
   linkageTypes: any;
   private subscriptions: Array<Subscription> = [];
+
+  private overlayContainer: HTMLElement;
 
   constructor(
   private cvService: ControlledVocabularyService,
@@ -60,6 +64,14 @@ export class OtherLinksFormComponent implements OnInit {
       this.linkageTypes = response['OTHER_LINKAGE_TYPE'].list;
     });
     this.subscriptions.push(subscription);
+  }
+
+  openModal(): void {
+
+    const dialogRef = this.dialog.open(SubstanceSelectorComponent, {
+      width: '900px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
   }
 
 }

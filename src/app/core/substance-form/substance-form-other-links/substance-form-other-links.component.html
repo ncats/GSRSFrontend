@@ -6,6 +6,8 @@
     <app-other-links-form [link]="links" (linkDeleted)="deleteLink($event)"></app-other-links-form>
     <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
   </div>
+
+  <app-subunit-selector></app-subunit-selector>
 </div>
 
 

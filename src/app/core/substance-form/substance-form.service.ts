@@ -538,7 +538,7 @@ export class SubstanceFormService {
           this.substance.protein.subunits = [];
         }
         observer.next(this.substance.protein.subunits);
-        this.substanceCodesEmitter.subscribe(subunits => {
+        this.substanceSubunitsEmitter.subscribe(subunits => {
           observer.next(this.substance.protein.subunits );
         });
       });
@@ -547,11 +547,14 @@ export class SubstanceFormService {
 
 
   addSubstanceSubunit(): void {
+    const index: number = this.substance.protein.subunits.length + 1;
     const newSubunit: Subunit = {
       references: [],
-      access: []
+      access: [],
+      sequence: '',
+      subunitIndex: index
     };
-    this.substance.protein.subunits.unshift(newSubunit);
+    this.substance.protein.subunits.push(newSubunit);
     this.substanceCodesEmitter.next(this.substance.protein.subunits);
   }
 
@@ -563,7 +566,11 @@ export class SubstanceFormService {
     }
   }
 
-  //subunits end
+  emitSubunitUpdate(): void {
+    this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
+  }
+
+  // subunits end
 
   // other links start
 
@@ -575,7 +582,7 @@ export class SubstanceFormService {
         }
         console.log(this.substance.protein.otherLinks);
         observer.next(this.substance.protein.otherLinks);
-        this.substanceCodesEmitter.subscribe(otherLinks => {
+        this.substanceOtherLinksEmitter.subscribe(otherLinks => {
           observer.next(this.substance.protein.otherLinks );
         });
       });
@@ -599,21 +606,23 @@ export class SubstanceFormService {
     console.log(link.$$deletedCode);
     if (subLinkIndex > -1) {
       this.substance.protein.otherLinks.splice(subLinkIndex, 1);
-      this.substanceOtherLinksEmitter.next(this.substance.codes);
+      this.substanceOtherLinksEmitter.next(this.substance.protein.otherLinks);
     }
   }
 
+  emitOtherLinkUpdate(): void {
+    this.substanceOtherLinksEmitter.next(this.substance.protein.otherLinks);
+  }
   // other links end
 
   // disulfide links start
 
-  get substanceDisulfideLinks(): Observable<Array<Link>> {
+  get substanceDisulfideLinks(): Observable<Array<DisulfideLink>> {
     return new Observable(observer => {
       this.ready().subscribe(() => {
         if (this.substance.protein.disulfideLinks == null) {
           this.substance.protein.disulfideLinks = [];
         }
-        console.log(this.substance.protein.disulfideLinks);
         observer.next(this.substance.protein.disulfideLinks);
         this.substanceDisulfideLinksEmitter.subscribe(disulfideLinks => {
           observer.next(this.substance.protein.disulfideLinks );
@@ -637,6 +646,9 @@ export class SubstanceFormService {
     }*/
   }
 
+  emitDisulfideLinkUpdate(): void {
+    this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
+  }
   // disulfide links end
 
   // Glycosylation start
@@ -649,11 +661,15 @@ export class SubstanceFormService {
         }
         console.log(this.substance.protein.glycosylation);
         observer.next(this.substance.protein.glycosylation);
-        this.substanceCodesEmitter.subscribe(glycosylation => {
+        this.substanceGlycosylationEmitter.subscribe(glycosylation => {
           observer.next(this.substance.protein.glycosylation );
         });
       });
     });
+  }
+
+  emitGlycosylationUpdate(): void {
+    this.substanceGlycosylationEmitter.next(this.substance.protein.glycosylation);
   }
 
   // Glycosylation end
@@ -746,6 +762,7 @@ export class SubstanceFormService {
         this.substanceCodesEmitter.next(this.substance.codes);
         this.substanceRelationshipsEmitter.next(this.substance.relationships);
         this.substanceNamesEmitter.next(this.substance.notes);
+        this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
         observer.next(results);
         observer.complete();
       }, error => {
