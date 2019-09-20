@@ -67,6 +67,23 @@
 				</span> 
 			</mat-cell>
 		</ng-container>
+
+		<ng-container matColumnDef="publicDomain">
+			<mat-header-cell *matHeaderCellDef> Public </mat-header-cell>
+			<mat-cell *matCellDef="let element">
+					<span *ngIf="!isAdmin"> 
+					{{element.publicDomain}}
+					</span> 
+					<span *ngIf="isAdmin"> 
+
+							<mat-checkbox style='margin-left: 15px;' [value]="element.publicDomain"  [(ngModel)] = "element.publicDomain"> 
+										<label>PD</label> 
+							</mat-checkbox>
+				</span> 
+			</mat-cell>
+		</ng-container>
+
+
 		<!-- link -->
 		<ng-container matColumnDef="link">
 			<mat-header-cell *matHeaderCellDef></mat-header-cell>
@@ -92,6 +109,7 @@
 		<button mat-icon-button matSuffix aria-label="Add" (click)="addRow();">Add</button>
 		<button mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
+	<div *ngIf="false && clinicalTrial">
 
 	<h3>Trial Details</h3>
 
@@ -125,8 +143,9 @@
 		<p *ngIf="clinicalTrial.outcomeMeasures">Outcome Measures: {{clinicalTrial.outcomeMeasures}}</p>
 
 	</div>
+	</div>
 	
-	<div *ngIf="false">
+	<div *ngIf="true">
 		<div style="margin-top: 50px">isAdmin: {{isAdmin}}</div>
 
 		<div *ngIf="clinicalTrial">

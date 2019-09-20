@@ -2,8 +2,9 @@ export interface ClinicalTrialDrug {
 	"id": "number",
 	"nctNumber": "string",
 	"substanceUuid": "string",
+	"publicDomain": "boolean",
 	"substanceDisplayName": "string"
-
+	
 /*
 	"bdnumName": {
 		"bdnum": "string",

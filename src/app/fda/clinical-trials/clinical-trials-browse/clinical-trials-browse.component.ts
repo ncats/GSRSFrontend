@@ -163,7 +163,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
         }
       }, error => {
         const notification: AppNotification = {
-          message: 'There was an error trying to retrieve substances. Please refresh and try again.',
+          message: 'There was an error trying to retrieve ClinicalTrials. Please refresh and try again.',
           type: NotificationType.error,
           milisecondsToShow: 6000
         };

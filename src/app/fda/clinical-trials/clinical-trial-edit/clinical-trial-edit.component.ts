@@ -13,6 +13,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
+import {MatCheckboxModule} from '@angular/material/checkbox'; 
 import { jsonpCallbackContext } from '@angular/common/http/src/module';
 import { stringify } from '@angular/core/src/render3/util';
 import {AuthService} from '@gsrs-core/auth/auth.service';
@@ -22,6 +23,7 @@ import {AuthService} from '@gsrs-core/auth/auth.service';
 /**
  * @title Table with editing
  */
+
 @Component({
   selector: 'app-clinical-trial-edit',
   templateUrl: './clinical-trial-edit.component.html',
@@ -64,10 +66,10 @@ export class ClinicalTrialEditComponent implements OnInit {
       console.log("clinical-trial-edit isAdmin: " +this.isAdmin);
 
       if(this.isAdmin) {
-        this.displayedColumns=['id', 'name', 'substanceUuid', 'link', 'delete'];
+        this.displayedColumns=['id', 'name', 'substanceUuid', 'publicDomain', 'link', 'delete'];
        } else {
-         this.displayedColumns=['name', 'substanceUuid', 'link'];
-       }   
+         this.displayedColumns=['name', 'substanceUuid', 'publicDomain', 'link'];
+       } 
     });
 
     
@@ -87,8 +89,6 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.getClinicalTrial();       
       })
   }
-  
-
 
   reportMiniSearchOutput(data) {
     console.log("doing reportMiniSearchOutput");
@@ -181,7 +181,8 @@ export class ClinicalTrialEditComponent implements OnInit {
           this.dataSource.data.push({
              id: element.id,
              substanceUuid: element.substanceUuid,
-              name: element.substanceDisplayName
+             name: element.substanceDisplayName,
+             publicDomain: element.publicDomain
             }
           );
         });
@@ -260,6 +261,7 @@ export class ClinicalTrialEditComponent implements OnInit {
       ctd.id=element.id;
       ctd.nctNumber=element.nctNumber;
       ctd.substanceUuid=element.substanceUuid;
+      ctd.publicDomain=element.publicDomain;
       newClinicalTrialDrugs.push(ctd);
     });
     newClinicalTrial.clinicalTrialDrug=newClinicalTrialDrugs;
@@ -279,7 +281,8 @@ export class ClinicalTrialEditComponent implements OnInit {
               // nctNumber: this._nctNumber,
               id: element.id,
               substanceUuid: element.substanceUuid,
-              name: element.substanceDisplayName
+              name: element.substanceDisplayName,
+              publicDomain: element.publicDomain
             }
           );
           // Weird, why is this necessary?
@@ -326,10 +329,12 @@ export class ClinicalTrialEditComponent implements OnInit {
   }
 } // end class
 
-
+// I think this can be deleted. 
+/*
 export interface ClinicalTrialDrugSimple {
   // nctNumber: string;
   id: number;
   ingredientName: string;
   substanceUuid: string;
 }
+*/

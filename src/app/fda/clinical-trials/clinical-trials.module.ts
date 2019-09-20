@@ -14,6 +14,7 @@ import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical
 import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
 import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
 import { MiniSearchComponent } from './mini-search/mini-search.component';
+import {MatCheckboxModule} from '@angular/material/checkbox'; 
 
 
 const clinicalTrialsRoutes: Routes = [
@@ -42,6 +43,7 @@ const clinicalTrialsRoutes: Routes = [
     MatPaginatorModule,
     ReactiveFormsModule,
     FormsModule,
+    MatCheckboxModule,
     CommonModule,
     RouterModule.forChild(clinicalTrialsRoutes)
   ],
