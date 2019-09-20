@@ -75,6 +75,20 @@
       ]
     },
     {
+      "card": "substance-subunits",
+      "title": "subunits",
+      "filters": [{
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "nucleicAcid"
+      },
+        {
+          "filterName": "exists",
+          "propertyToCheck": "nucleicAcid.subunits"
+        }
+      ]
+    },
+    {
       "card": "substance-glycosylation",
       "title": "glycosylation",
       "filters": [{

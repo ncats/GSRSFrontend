@@ -8,6 +8,7 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import {Subject} from 'rxjs';
 import {Sort} from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import {UtilsService} from '@gsrs-core/utils';
 
 @Component({
   selector: 'app-substance-names',
@@ -26,7 +27,8 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     private dialog: MatDialog,
     public gaService: GoogleAnalyticsService,
     private cvService: ControlledVocabularyService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private utilsService: UtilsService
   ) {
     super(gaService);
   }
@@ -68,9 +70,9 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'name': return compare(a.name.toUpperCase(), b.name.toUpperCase(), isAsc);
-        case 'type': return compare(a.type, b.type, isAsc);
-        case 'language': return compare(this.getLanguages(a), this.getLanguages(b), isAsc);
+        case 'name': return this.utilsService.compare(a.name.toUpperCase(), b.name.toUpperCase(), isAsc);
+        case 'type': return this.utilsService.compare(a.type, b.type, isAsc);
+        case 'language': return this.utilsService.compare(this.getLanguages(a), this.getLanguages(b), isAsc);
         default: return 0;
       }
     });
@@ -115,6 +117,3 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 
 }
 
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-}
