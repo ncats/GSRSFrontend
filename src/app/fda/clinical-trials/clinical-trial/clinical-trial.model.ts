@@ -2,7 +2,7 @@ export interface ClinicalTrialDrug {
 	"id": "number",
 	"nctNumber": "string",
 	"substanceUuid": "string",
-	"publicDomain": "boolean",
+	"protectedMatch": "boolean",
 	"substanceDisplayName": "string"
 	
 /*

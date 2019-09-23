@@ -66,9 +66,9 @@ export class ClinicalTrialEditComponent implements OnInit {
       console.log("clinical-trial-edit isAdmin: " +this.isAdmin);
 
       if(this.isAdmin) {
-        this.displayedColumns=['id', 'name', 'substanceUuid', 'publicDomain', 'link', 'delete'];
+        this.displayedColumns=['id', 'name', 'substanceUuid', 'protectedMatch', 'link', 'delete'];
        } else {
-         this.displayedColumns=['name', 'substanceUuid', 'publicDomain', 'link'];
+         this.displayedColumns=['name', 'substanceUuid', 'protectedMatch', 'link'];
        } 
     });
 
@@ -182,7 +182,7 @@ export class ClinicalTrialEditComponent implements OnInit {
              id: element.id,
              substanceUuid: element.substanceUuid,
              name: element.substanceDisplayName,
-             publicDomain: element.publicDomain
+             protectedMatch: element.protectedMatch
             }
           );
         });
@@ -261,7 +261,7 @@ export class ClinicalTrialEditComponent implements OnInit {
       ctd.id=element.id;
       ctd.nctNumber=element.nctNumber;
       ctd.substanceUuid=element.substanceUuid;
-      ctd.publicDomain=element.publicDomain;
+      ctd.protectedMatch=element.protectedMatch;
       newClinicalTrialDrugs.push(ctd);
     });
     newClinicalTrial.clinicalTrialDrug=newClinicalTrialDrugs;
@@ -282,7 +282,7 @@ export class ClinicalTrialEditComponent implements OnInit {
               id: element.id,
               substanceUuid: element.substanceUuid,
               name: element.substanceDisplayName,
-              publicDomain: element.publicDomain
+              protectedMatch: element.protectedMatch
             }
           );
           // Weird, why is this necessary?
@@ -302,16 +302,28 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.notificationService.setNotification(notification);
       }, error => {
         // what should we do on error? 
+        console.log("testing errors:" + JSON.stringify(error.error.errors));
+        
         var message = 'There was an error trying to update clinical trial.';
-
         var noChange = false;
-         if(error.error.validationMessages!=null) {
+
+        if(error.error.errors!=null) {
+         error.error.errors.forEach(element => {
+           if(element) {
+             message = message + " " + element;
+             console.log(element);
+           }    
+         });
+        }
+        if(error.error.validationMessages!=null) {
           error.error.validationMessages.forEach(element => {
             if(element.message!=null) {
               message = message + " " + element.message;
               console.log(element.message);
             }    
          });
+
+
         }  
         const notification: AppNotification = {
           message: message,
