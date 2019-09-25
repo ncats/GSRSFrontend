@@ -15,6 +15,7 @@ import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial
 import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
 import { MiniSearchComponent } from './mini-search/mini-search.component';
 import {MatCheckboxModule} from '@angular/material/checkbox'; 
+import { pipes2Br } from './filters/pipes-2-br';
 
 
 const clinicalTrialsRoutes: Routes = [
@@ -51,7 +52,8 @@ const clinicalTrialsRoutes: Routes = [
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
     ClinicalTrialAddComponent,
-    MiniSearchComponent
+    MiniSearchComponent,
+    pipes2Br
   ],
   exports: [
     ClinicalTrialsBrowseComponent,

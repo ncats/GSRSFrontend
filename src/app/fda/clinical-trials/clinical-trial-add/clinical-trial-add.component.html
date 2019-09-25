@@ -1,7 +1,7 @@
 <div style="padding: 10px; margin-top: 60px; margin-left: 30px;  margin-right: 30px;  margin-bottom: 30px;" 
 class="example-container mat-elevation-z8">
 
-<div *ngIf="isAdmin">
+<div *ngIf="canEdit">
     <p>Add/Update a Clinical Trial from JSON</p>
 <!-- [formGroup]="jsonAddForm" -->
   <form class="json-add-form">
@@ -13,7 +13,7 @@ class="example-container mat-elevation-z8">
   <button style="width: 60px" mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 
 </div>
-  <div *ngIf="!isAdmin">
-    You must be an Admin to add a Clinical Trial.
+  <div *ngIf="!canEdit">
+    You must have permission to add/update a Clinical Trial.
 </div>
 </div>

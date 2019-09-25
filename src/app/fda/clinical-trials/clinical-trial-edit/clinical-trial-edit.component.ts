@@ -17,6 +17,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { jsonpCallbackContext } from '@angular/common/http/src/module';
 import { stringify } from '@angular/core/src/render3/util';
 import {AuthService} from '@gsrs-core/auth/auth.service';
+import { pipes2Br } from '../filters/pipes-2-br';
+
 // import { Auth } from '../../../core/auth/auth.model';
 
 
@@ -339,6 +341,7 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.loadingService.setLoading(this.isLoading);
       });
   }
+
 } // end class
 
 // I think this can be deleted. 

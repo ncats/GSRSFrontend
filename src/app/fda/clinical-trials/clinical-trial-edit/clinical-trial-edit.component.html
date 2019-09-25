@@ -128,15 +128,34 @@
 	<div>
 		<p>NCT Number: <a target="_new" title="see clinicaltrials.gov" href="https://clinicaltrials.gov/ct2/show/{{clinicalTrial.nctNumber}}">{{clinicalTrial.nctNumber}}</a></p>
 		<p *ngIf="clinicalTrial.title">Title: {{clinicalTrial.title}}</p>
-		<p *ngIf="clinicalTrial.title">Recruitment: {{clinicalTrial.recruitment}}</p>
-		<p *ngIf="clinicalTrial.title">Conditions: {{clinicalTrial.conditions}}</p>
-		<p *ngIf="clinicalTrial.sponsor">Sponsors: {{clinicalTrial.sponsor}}</p>
-		<p *ngIf="clinicalTrial.locations">Locations: {{clinicalTrial.locations}}</p>
-		<p *ngIf="clinicalTrial.intervention">Interventions: {{clinicalTrial.intervention}}</p>
+
+		<p *ngIf="clinicalTrial.recruitment">Recruitment: {{clinicalTrial.recruitment}}</p>
+
+		<div *ngIf="clinicalTrial.conditions">
+				<p>Conditions:</p>
+				<div style="margin-left:2em;" *ngFor="let content of clinicalTrial.conditions.split('\|')">{{ content }}</div>
+		</div>
+		<div *ngIf="clinicalTrial.sponsors">
+				<p>Sponsors:</p>
+				<div style="margin-left:2em;" *ngFor="let content of clinicalTrial.sponsors.split('\|')">{{ content }}</div>
+		</div>
+		<div *ngIf="clinicalTrial.locations">
+			<p>Locations:</p>
+			<div style="margin-left:2em;" *ngFor="let content of clinicalTrial.locations.split('\|')">{{ content }}</div>
+		</div>
+		
+		<div *ngIf="clinicalTrial.intervention">
+			<p>Intervention:</p>
+			<div style="margin-left:2em;" *ngFor="let content of clinicalTrial.intervention.split('\|')">{{ content }}</div>
+		</div>
 		<p *ngIf="clinicalTrial.fundedBys">Funded Bys: {{clinicalTrial.fundedBys}}</p>
 		<p *ngIf="clinicalTrial.phases">Phases: {{clinicalTrial.phases}}</p>
 		<p *ngIf="clinicalTrial.studyTypes">Study Types: {{clinicalTrial.studyTypes}}</p>
 		<p *ngIf="clinicalTrial.ageGroups">Age Groups: {{clinicalTrial.ageGroups}}</p>
+		<div *ngIf="clinicalTrial.ageGroups">
+				<p>Age Groups:</p>
+				<div style="margin-left:2em;" *ngFor="let content of clinicalTrial.ageGroups.split('\|')">{{ content }}</div>
+		</div>
 		<p *ngIf="clinicalTrial.gender">Gender: {{clinicalTrial.gender}}</p>
 		<p *ngIf="clinicalTrial.allocation">Allocation: {{clinicalTrial.allocation}}</p>
 		<p *ngIf="clinicalTrial.studyResults">Study Results: {{clinicalTrial.studyResults}}</p>
@@ -150,8 +169,11 @@
 		<p *ngIf="clinicalTrial.studyStartDate">Study Start Date: {{clinicalTrial.studyStartDate|date : "MM/dd/yyyy"}}</p>
 		<p *ngIf="clinicalTrial.firstReceived">First Received: {{clinicalTrial.firstReceived|date : "MM/dd/yyyy"}}</p>
 		<p *ngIf="clinicalTrial.lastUpdated">Last Updated: {{clinicalTrial.lastUpdated|date : "MM/dd/yyyy"}}</p>
+		<div *ngIf="clinicalTrial.outcomeMeasures">
+				<p>Outcome Measures:</p>
+				<div style="margin-left:2em;" *ngFor="let content of clinicalTrial.outcomeMeasures.split('\|')">{{ content }}</div>
+		</div>
 		<p>Url: <a target="_new" title="see clinicaltrials.gov" href="https://clinicaltrials.gov/ct2/show/{{clinicalTrial.nctNumber}}">{{clinicalTrial.url}}</a></p>
-		<p *ngIf="clinicalTrial.outcomeMeasures">Outcome Measures: {{clinicalTrial.outcomeMeasures}}</p>
 
 	</div>
 	</div>

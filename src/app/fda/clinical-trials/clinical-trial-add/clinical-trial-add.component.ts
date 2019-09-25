@@ -22,7 +22,7 @@ export class ClinicalTrialAddComponent implements OnInit {
   // private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
   isLoading = true;
   isError = false;
-  isAdmin: boolean;
+  canEdit: boolean;
   json: String = '';
 
   constructor(
@@ -35,17 +35,20 @@ export class ClinicalTrialAddComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.authService.hasRolesAsync('admin').subscribe(response => {
-      this.isAdmin = response;
-      console.log("clinical-trial-add isAdmin: " +this.isAdmin);
+    const _roles = ['admin'];
+    // this.authService.hasRolesAsync(..._roles).subscribe(response => {
+    
+    this.authService.hasRolesAsync('Admin').subscribe(response => {
+      this.canEdit = response;
+      console.log("clinical-trial-add canEdit: " +this.canEdit);
     });
   }
   
 
  addClinicalTrial() {
     this.loadingService.setLoading(true);
-    console.log("xyz");
-    console.log(this.json);
+    // console.log("xyz");
+    // console.log(this.json);
 
     this.clinicalTrialService.addClinicalTrial(this.json)
       .subscribe(result => {
