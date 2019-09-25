@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, Routes, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
@@ -14,8 +14,9 @@ import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical
 import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
 import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
 import { MiniSearchComponent } from './mini-search/mini-search.component';
-import {MatCheckboxModule} from '@angular/material/checkbox'; 
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { pipes2Br } from './filters/pipes-2-br';
+import { ClinicalTrialService } from './clinical-trial/clinical-trial.service';
 
 
 const clinicalTrialsRoutes: Routes = [
@@ -67,5 +68,14 @@ export class ClinicalTrialsModule {
     clinicalTrialsRoutes.forEach(route => {
       router.config[0].children.push(route);
     });
+  }
+
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: ClinicalTrialsModule,
+      providers: [
+        ClinicalTrialService
+      ]
+    };
   }
  }

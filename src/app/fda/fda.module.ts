@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
@@ -28,9 +28,6 @@ const fdaRoutes: Routes = [
     ClinicalTrialsModule
   ],
   declarations: [ProductDetailsComponent],
-  providers: [
-    ProductService
-  ],
   exports: []
 })
 export class FdaModule {
@@ -40,5 +37,13 @@ export class FdaModule {
     fdaRoutes.forEach(route => {
       router.config[0].children.push(route);
     });
+  }
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: FdaModule,
+      providers: [
+        ProductService
+      ]
+    };
   }
 }
