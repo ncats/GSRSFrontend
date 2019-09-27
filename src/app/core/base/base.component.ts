@@ -150,7 +150,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   @HostListener('document:mouseup', ['$event'])
   @HostListener('document:keyup', ['$event'])
   // @HostListener('document:selectionchange', ['$event'])
-  onKeyUp(event: Event | KeyboardEvent | ClickEvent) {
+  onKeyUp(event: (KeyboardEvent | Event | any)) {
     const tabKeyCode = 9;
     let text = '';
     let selection: Selection;
