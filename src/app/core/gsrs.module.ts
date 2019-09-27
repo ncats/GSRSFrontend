@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
@@ -7,4 +7,10 @@ import { CommonModule } from '@angular/common';
   ],
   declarations: []
 })
-export class GsrsModule { }
+export class GsrsModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: GsrsModule
+    };
+  }
+}

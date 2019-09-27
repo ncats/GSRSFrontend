@@ -25,7 +25,7 @@ const fdaRoutes: Routes = [
     DynamicComponentLoaderModule.forRoot(fdaDynamicComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
     MatCardModule,
-    ClinicalTrialsModule
+    ClinicalTrialsModule.forRoot()
   ],
   declarations: [ProductDetailsComponent],
   exports: []
