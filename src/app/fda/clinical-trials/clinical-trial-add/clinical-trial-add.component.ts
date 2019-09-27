@@ -16,10 +16,10 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./clinical-trial-add.component.scss']
 })
 export class ClinicalTrialAddComponent implements OnInit {
-  
   public clinicalTrials: Array<ClinicalTrial>;
   // public facets: Array<Facet> = [];
   // private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
+  isTesting: Boolean = false;
   isLoading = true;
   isError = false;
   canEdit: boolean;
@@ -37,13 +37,11 @@ export class ClinicalTrialAddComponent implements OnInit {
   ngOnInit() {
     const _roles = ['admin'];
     // this.authService.hasRolesAsync(..._roles).subscribe(response => {
-    
     this.authService.hasRolesAsync('Admin').subscribe(response => {
       this.canEdit = response;
-      console.log("clinical-trial-add canEdit: " +this.canEdit);
+      console.log('clinical-trial-add canEdit: ' + this.canEdit);
     });
   }
-  
 
  addClinicalTrial() {
     this.loadingService.setLoading(true);
@@ -53,7 +51,6 @@ export class ClinicalTrialAddComponent implements OnInit {
     this.clinicalTrialService.addClinicalTrial(this.json)
       .subscribe(result => {
         this.isError = false;
-        var i = 0;
         const notification: AppNotification = {
           message: 'You added a clinical trial record.',
           type: NotificationType.success,
@@ -82,13 +79,14 @@ export class ClinicalTrialAddComponent implements OnInit {
   }
   updateClinicalTrial() {
     this.loadingService.setLoading(true);
-    console.log("xyz");
-    console.log(this.json);
-
+    if (this.isTesting) {
+      console.log('xyz');
+      console.log(this.json);
+    }
     this.clinicalTrialService.updateClinicalTrial(this.json)
       .subscribe(result => {
         this.isError = false;
-        var i = 0;
+        const i = 0;
         const notification: AppNotification = {
           message: 'You updated a clinical trial record.',
           type: NotificationType.success,

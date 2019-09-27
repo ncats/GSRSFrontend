@@ -1,6 +1,7 @@
 import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
+// __alex__ should make change here.
 environment.navItems = [
     // {
     //     display: 'FDA Sample Path',

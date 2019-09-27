@@ -13,7 +13,7 @@ import {MatAutocompleteTrigger} from '@angular/material';
   styleUrls: ['./mini-search.component.scss']
 })
 export class MiniSearchComponent implements OnInit, AfterViewInit {
-  
+
   @Input() myIndex: number;
   @Input() myInitialSearch: string;
 
@@ -21,24 +21,24 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
   // need to handle escape or none selected???
   // https://github.com/angular/material2/issues/3334
   // https://material.angular.io/components/autocomplete/api
-  // regarding myIndex, etc, think about how this could be generlized, so that an object 
+  // regarding myIndex, etc, think about how this could be generlized, so that an object
   // is added onto the data emitted. This would allow mini search to be used in other
   // contexts than in this assumed table type layout.
 
   // need to consider what happens when partial change to text is made but nothing is selected.
-  // might be too complicated to implement w/out a modal or something. 
-  
+  // might be too complicated to implement w/out a modal or something.
+
 
   @Output() miniSearchOutput = new EventEmitter<any>();
   @ViewChild(MatAutocompleteTrigger) trigger;
 
   searchControl = new FormControl();
-  
+
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
   suggestionsFields: Array<string>;
   mainPathSegment = '';
   // try to get this from the markup.
-  showIcon=false;
+  showIcon = false;
   suggestions: Array<any> = [];
   constructor(
     private utilsService: UtilsService,
@@ -71,19 +71,19 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.searchControl.setValue(this.myInitialSearch);
-    console.log("ngAfterViewInit initial search:" + this.myInitialSearch);
+    console.log('ngAfterViewInit initial search:' + this.myInitialSearch);
     this.trigger.panelClosingActions
       .subscribe(e => {
-        if(e==null) {
+        if (e == null) {
         }
-        //  console.log("e:" + JSON.stringify(e));
-        var data = {value: this.searchControl.value, myIndex: this.myIndex}; 
+        //  console.log('e:' + JSON.stringify(e));
+        const data = {value: this.searchControl.value, myIndex: this.myIndex};
         this.miniSearchOutput.emit(data);
         this.trigger.closePanel();
-        console.log("In closing panel trigger subsciption")
+        console.log('In closing panel trigger subsciption');
       });
   }
-  
+
   getMainPathSegmentFromUrl(url: string): string {
     const path = url.split('?')[0];
     const mainPathPart = path.split('/')[0];
@@ -92,8 +92,8 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
 
   substanceSearchOptionSelected(event?: MatAutocompleteSelectedEvent) {
     // this.navigateToSearchResults(event.option.value);
-    var data = {value: event.option.value,myIndex: this.myIndex}; 
-    console.log("xxx:" + JSON.stringify(data));
+    const data = {value: event.option.value, myIndex: this.myIndex};
+    console.log('xxx:' + JSON.stringify(data));
     this.miniSearchOutput.emit(data);
   }
 

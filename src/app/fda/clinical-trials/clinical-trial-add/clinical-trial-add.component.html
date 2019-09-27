@@ -9,9 +9,8 @@ class="example-container mat-elevation-z8">
         <textarea   matInput placeholder="JSON" [(ngModel)]="json" name="json"></textarea>
       </mat-form-field>
   </form>
-  <button style="width: 60px" mat-icon-button matSuffix aria-label="Add Clinical Trial" (click)="addClinicalTrial();">Add CT</button>
-  <button style="width: 60px" mat-icon-button matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
-
+  <button mat-flat-button color="primary" style="margin-right: 10px;"  matSuffix aria-label="Add Clinical Trial" (click)="addClinicalTrial();">Add CT</button>
+  <button mat-flat-button color="primary" style="margin-right: 10px;"  matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 </div>
   <div *ngIf="!canEdit">
     You must have permission to add/update a Clinical Trial.
