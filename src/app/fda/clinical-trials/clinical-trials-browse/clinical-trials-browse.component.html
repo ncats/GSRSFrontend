@@ -6,6 +6,14 @@ class="example-container mat-elevation-z8">
     Browse Clinical Trials 
     </p>
     <div>
+    <form class="json-add-form" style="margin-right: 10px; float: left">
+      <mat-form-field>
+        <input matInput placeholder="NCT Number" [(ngModel)]="jumpToValue" name="jumpToValue"/>
+      </mat-form-field>
+     </form>
+    <button mat-flat-button color="primary" style="position: relative; top: 12px; float: left; margin-right: 10px;"  matSuffix aria-label="Jump to NctNumber" (click)="jumpToClinicalTrial();">Go</button>
+    </div>
+    <div>
       <mat-paginator #paginator [length]="totalClinicalTrials" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
       (page)="changePage($event)">
     </mat-paginator>
@@ -54,4 +62,9 @@ class="example-container mat-elevation-z8">
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>  
     </table>
+    <div>
+      <mat-paginator #paginator [length]="totalClinicalTrials" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
+      (page)="changePage($event)">
+    </mat-paginator>
+    </div>
   </div>   

@@ -1,11 +1,10 @@
 
 
-<div style="padding: 10px; margin-top: 60px; margin-left: 30px;  margin-right: 30px;  margin-bottom: 30px;" 
-        class="example-container mat-elevation-z8">
+<div class="example-container mat-elevation-z8 edit-clinical-trial-page">
 	<!-- div class="example-header">
 		<mat-form-field>
 			<input matInput #filter (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-			<button mat-flat-button color="primary" style="margin-right: 10px;" matSuffix aria-label="clear" *ngIf="filter.value" (click)="filter.value=''; applyFilter('');">
+			<button mat-flat-button color="primary" matSuffix aria-label="clear" *ngIf="filter.value" (click)="filter.value=''; applyFilter('');">
         <mat-icon>close</mat-icon>
       </button>
 		</mat-form-field>
@@ -30,8 +29,8 @@
 	
 	<h3>Substances in Clinical Trial</h3>
 	<div *ngIf="isAdmin">
-		<button mat-flat-button color="primary" style="margin-right: 10px;" matSuffix aria-label="Add" (click)="addRow();">Add</button>
-		<button mat-flat-button color="primary" style="margin-right: 10px;" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
+		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
+		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
 
 	<mat-table #table [dataSource]="dataSource">
@@ -104,7 +103,7 @@
 		<ng-container matColumnDef="delete">
 				<mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
 				<mat-cell *matCellDef="let element; let i = index">
-					<button mat-flat-button color="primary" style="margin-right: 10px;" matSuffix aria-label="Del" (click)="removeRow(i);">Del</button>
+					<button mat-flat-button color="primary" matSuffix aria-label="Del" (click)="removeRow(i);">Del</button>
 				</mat-cell>
 			</ng-container>	
 		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -114,8 +113,8 @@
 
 
 	<div *ngIf="isAdmin">
-		<button mat-flat-button color="primary" style="margin-right: 10px;" matSuffix aria-label="Add" (click)="addRow();">Add</button>
-		<button mat-flat-button color="primary" style="margin-right: 10px;" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
+		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
+		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
 
 

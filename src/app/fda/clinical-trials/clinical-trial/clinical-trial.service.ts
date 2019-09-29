@@ -37,6 +37,7 @@ export class ClinicalTrialService extends BaseHttpService {
     skip: number = 0,
     pageSize: number = 10
   ): Observable<PagingResponse<ClinicalTrial>> {
+    console.log('skip: ' + skip);
     let params = new HttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
