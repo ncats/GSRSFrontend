@@ -57,7 +57,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
       if (this.isAdmin) {
         this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated', 'delete'];
        } else {
-         this.displayedColumns = ['nctNumber', 'title', 'lastUpdated'];
+         this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated'];
        }
     });
     this.pageSize = 10;

@@ -95,7 +95,7 @@
 		<ng-container matColumnDef="link">
 			<mat-header-cell *matHeaderCellDef></mat-header-cell>
 			<mat-cell *matCellDef="let element">
-					<a [routerLink]="['/substances', element.substanceUuid]" >link</a>
+					<a target="_new" [routerLink]="['/substances', element.substanceUuid]" >link</a>
 			</mat-cell>
 		</ng-container>
 
@@ -128,7 +128,12 @@
 		<p>NCT Number: <a target="_new" title="see clinicaltrials.gov" href="https://clinicaltrials.gov/ct2/show/{{clinicalTrial.nctNumber}}">{{clinicalTrial.nctNumber}}</a></p>
 		<p *ngIf="clinicalTrial.title">Title: {{clinicalTrial.title}}</p>
 
-		<p *ngIf="clinicalTrial.recruitment">Recruitment: {{clinicalTrial.recruitment}}</p>
+		<div *ngIf="clinicalTrial.intervention">
+			<p>Intervention:</p>
+			<div style="margin-left:2em;" *ngFor="let content of clinicalTrial.intervention.split('\|')">{{ content }}</div>
+		</div>
+
+    <p *ngIf="clinicalTrial.recruitment">Recruitment: {{clinicalTrial.recruitment}}</p>
 
 		<div *ngIf="clinicalTrial.conditions">
 				<p>Conditions:</p>
@@ -143,10 +148,6 @@
 			<div style="margin-left:2em;" *ngFor="let content of clinicalTrial.locations.split('\|')">{{ content }}</div>
 		</div>
 		
-		<div *ngIf="clinicalTrial.intervention">
-			<p>Intervention:</p>
-			<div style="margin-left:2em;" *ngFor="let content of clinicalTrial.intervention.split('\|')">{{ content }}</div>
-		</div>
 		<p *ngIf="clinicalTrial.fundedBys">Funded Bys: {{clinicalTrial.fundedBys}}</p>
 		<p *ngIf="clinicalTrial.phases">Phases: {{clinicalTrial.phases}}</p>
 		<p *ngIf="clinicalTrial.studyTypes">Study Types: {{clinicalTrial.studyTypes}}</p>
