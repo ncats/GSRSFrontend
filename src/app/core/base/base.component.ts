@@ -170,8 +170,10 @@ export class BaseComponent implements OnInit, OnDestroy {
         text = activeEl.value.slice(selectionStart, selectionEnd);
       } else if (window.getSelection) {
         selection = window.getSelection();
-        range = selection.getRangeAt(0);
-        text = selection.toString().trim();
+        if (selection && selection.rangeCount > 0) {
+          range = selection.getRangeAt(0);
+          text = selection.toString().trim();
+        }
       }
 
       clearTimeout(this.bottomSheetOpenTimer);

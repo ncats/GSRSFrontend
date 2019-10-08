@@ -10,7 +10,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./access-manager.component.scss']
 })
 export class AccessManagerComponent implements OnInit, AfterViewInit {
-  accessOptions: Array<VocabularyTerm>;
+  accessOptions: Array<VocabularyTerm> = [];
   privateAccess: Array<string> = [];
   @Output() accessOut = new EventEmitter<Array<string>>();
   tooltipMessage: string;
@@ -21,7 +21,9 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
     private element: ElementRef
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.getVocabularies();
+  }
 
   ngAfterViewInit() {}
 
@@ -29,10 +31,10 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
   set access(access: Array<string>) {
     if (access != null) {
       this.privateAccess = access;
-      this.getVocabularies();
     } else {
       this.privateAccess = [];
     }
+    this.crosscheckAccesses();
   }
 
   get access(): Array<string> {
@@ -59,7 +61,7 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
   private crosscheckAccesses() {
     this.tooltipMessage = 'Access is set to: ';
 
-    if (this.privateAccess.length > 0) {
+    if (this.privateAccess.length > 0 && this.accessOptions.length > 0) {
       this.privateAccess.forEach(accessOption => {
         for (let i = 0; i < this.accessOptions.length; i++) {
           if (accessOption === this.accessOptions[i].value) {
