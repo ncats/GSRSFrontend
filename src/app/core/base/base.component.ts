@@ -82,7 +82,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.environment = this.configService.environment;
 
     if (this.environment.navItems && this.environment.navItems.length) {
-      this.navItems.concat(this.environment.navItems);
+      this.navItems = this.navItems.concat(this.environment.navItems);
     }
 
     this.logoSrcPath = `${this.environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
@@ -150,7 +150,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   @HostListener('document:mouseup', ['$event'])
   @HostListener('document:keyup', ['$event'])
   // @HostListener('document:selectionchange', ['$event'])
-  onKeyUp(event: Event) {
+  onKeyUp(event: Event | KeyboardEvent | any) {
+    const tabKeyCode = 9;
     let text = '';
     let selection: Selection;
     let range: Range;
@@ -160,10 +161,10 @@ export class BaseComponent implements OnInit, OnDestroy {
 
     if (activeEl != null) {
       const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
-      if (
-        (activeElTagName === 'textarea') || (activeElTagName === 'input' &&
+      if (event.keyCode !== tabKeyCode &&
+        ((activeElTagName === 'textarea') || (activeElTagName === 'input' &&
           /^(?:text|search|password|tel|url)$/i.test(activeEl.type)) &&
-        (typeof activeEl.selectionStart === 'number')
+        (typeof activeEl.selectionStart === 'number'))
       ) {
         selectionStart = activeEl.selectionStart;
         selectionEnd = activeEl.selectionEnd;
