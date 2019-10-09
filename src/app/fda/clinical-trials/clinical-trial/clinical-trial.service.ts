@@ -35,13 +35,17 @@ export class ClinicalTrialService extends BaseHttpService {
 
   getClinicalTrials(
     skip: number = 0,
-    pageSize: number = 10
+    pageSize: number = 10,
+    searchTerm?: string
   ): Observable<PagingResponse<ClinicalTrial>> {
     // console.log('skip: ' + skip);
     let params = new HttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
-    const url = `${this.apiBaseUrl}ctclinicaltrial`;
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+    const url = `${this.apiBaseUrl}ctclinicaltrial/search`;
     const options = {
       params: params
     };

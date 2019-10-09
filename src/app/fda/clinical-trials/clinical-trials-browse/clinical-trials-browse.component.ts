@@ -27,7 +27,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
   pageIndex: number;
   pageSize: number;
-  jumpToValue: String;
+  jumpToValue: string;
   totalClinicalTrials: number;
   isLoading = true;
   isError = false;
@@ -62,6 +62,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
     });
     this.pageSize = 10;
     this.pageIndex = 0;
+    this._searchTerm = '';
+
     this.activatedRoute.queryParamMap.subscribe(params => {
       if (params.get('pageSize')) {
         this.pageSize = parseInt(params.get('pageSize'), null);
@@ -96,6 +98,13 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
       console.log('Getting details I am here');
     });
     return x;
+  }
+
+  setSearchTermValue() {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this._searchTerm = this._searchTerm.trim();
+    this.searchClinicalTrials();
   }
 
   jumpToClinicalTrial() {
@@ -163,7 +172,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
 
     this.clinicalTrialService.getClinicalTrials(
       skip,
-      this.pageSize
+      this.pageSize,
+      this.searchTerm
     )
       .subscribe(pagingResponse => {
         this.isError = false;
@@ -206,6 +216,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['facets'] = facetString;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+    navigationExtras.queryParams['searchTerm'] = this.searchTerm;
+
     this.location.replaceState(
       this.router.createUrlTree(
         [this.locationStrategy.path().split('?')[0]],
