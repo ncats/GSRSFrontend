@@ -46,4 +46,5 @@ export interface ClinicalTrial {
   'locationList': Array<string>;
   'sponsorList': Array<string>;
   'clinicalTrialDrug': Array<ClinicalTrialDrug>;
+  'internalVersion': number;
 }

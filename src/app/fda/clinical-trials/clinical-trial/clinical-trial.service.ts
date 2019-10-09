@@ -29,7 +29,7 @@ export class ClinicalTrialService extends BaseHttpService {
     const url = this.apiBaseUrl + 'ctclinicaltrial';
     // let url = this.apiBaseUrl + 'clinical-trial/';
     const x = this.http.get<any>(url);
-    console.log(JSON.stringify(x));
+    // console.log(JSON.stringify(x));
     return x;
   }
 
@@ -37,7 +37,7 @@ export class ClinicalTrialService extends BaseHttpService {
     skip: number = 0,
     pageSize: number = 10
   ): Observable<PagingResponse<ClinicalTrial>> {
-    console.log('skip: ' + skip);
+    // console.log('skip: ' + skip);
     let params = new HttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
@@ -81,7 +81,7 @@ export class ClinicalTrialService extends BaseHttpService {
       params: params
     };
     const x = this.http.get<BdnumNameAll>(url, options);
-    console.log(JSON.stringify(x));
+    // console.log(JSON.stringify(x));
     return x;
   }
 
@@ -103,7 +103,7 @@ export class ClinicalTrialService extends BaseHttpService {
   getSubstanceDetailsFromUUID(uuid: string): Observable<any> {
 
     const url = this.apiBaseUrl + 'substances(' + encodeURIComponent(uuid) + ')';
-    console.log('url: ' + url);
+    // console.log('url: ' + url);
 
     const params = new HttpParams();
     // params = params.append('view', 'full');
@@ -158,8 +158,8 @@ export class ClinicalTrialService extends BaseHttpService {
       }
 
     };
-
-
+    // this is actually geting the data from the PUT, but that gets lost in the subscribe routine.
+    // letting the prevous data remain; very annoying. Could this have something to do with const declarations?
     const x = this.http.put<ClinicalTrial>(url, body, options);
     return x;
   }
