@@ -16,7 +16,7 @@ class="example-container mat-elevation-z8">
     <div>
     <form class="filter-form" style="margin-right: 10px; float: left">
       <mat-form-field>
-        <input matInput placeholder="Search Term" [(ngModel)]="_searchTerm" name="_searchTerm"/>
+        <input matInput placeholder="Search Term" [(ngModel)]="_searchTerm" name="_searchTerm" (keyup.enter)="setSearchTermValue();" />
       </mat-form-field>
      </form>
      <button mat-flat-button color="primary" style="position: relative; top: 12px; float: left; margin-right: 10px;"  matSuffix aria-label="Search Clinical Trials" (click)="setSearchTermValue();">Go</button>
