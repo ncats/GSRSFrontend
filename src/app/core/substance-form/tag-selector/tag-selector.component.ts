@@ -20,7 +20,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   filteredOptions: Observable<Array<VocabularyTerm>>;
   tagControl = new FormControl();
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild('tagsAuto') matAutocomplete: MatAutocomplete;
   optionsDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
 
   constructor(
@@ -57,7 +57,10 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   clearTagsInput(): void {
     setTimeout(() => {
       this.tagInput.nativeElement.value = '';
-      this.tagControl.setValue(null);
+      console.log(this.matAutocomplete.isOpen);
+      if (!this.matAutocomplete.isOpen) {
+        this.tagControl.setValue(null);
+      }
     });
   }
 
@@ -69,11 +72,10 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
     this.tagsUpdate.emit(this.privateTags);
   }
 
-  selected(event: MatAutocompleteSelectedEvent): void {
+  tagSelected(event: MatAutocompleteSelectedEvent): void {
     this.privateTags.push(event.option.value);
-    this.tagInput.nativeElement.value = '';
-    this.tagControl.setValue(null);
     this.tagsUpdate.emit(this.privateTags);
+    this.clearTagsInput();
   }
 
   private _filter(value: string): Array<VocabularyTerm> {
