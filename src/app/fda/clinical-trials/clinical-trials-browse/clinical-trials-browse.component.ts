@@ -21,7 +21,7 @@ import { Location, LocationStrategy } from '@angular/common';
   styleUrls: ['./clinical-trials-browse.component.scss']
 })
 export class ClinicalTrialsBrowseComponent implements OnInit {
-  private _searchTerm?: string;
+  public _searchTerm?: string;
   public clinicalTrials: Array<ClinicalTrial>;
   public facets: Array<Facet> = [];
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
