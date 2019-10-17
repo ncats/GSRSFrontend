@@ -12,6 +12,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     ],
   protein: [
     'substance-form-definition',
+    'substance-form-protein-details',
     'substance-form-subunits',
     'substance-form-other-links',
     'substance-form-disulfide-links',
@@ -21,7 +22,10 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-relationships',
     'substance-form-notes',
     'substance-form-properties',
-    'substance-form-references'
+    'substance-form-references',
+    'substance-form-physical-modifications',
+    'substance-form-agent-modifications',
+    'substance-form-structural-modifications',
 
   ]
 };

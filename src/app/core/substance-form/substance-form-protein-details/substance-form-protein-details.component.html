@@ -1,0 +1,55 @@
+<div class="name-form-container">
+  <div class="form-row">
+    <mat-form-field class="location-type">
+      <mat-label>Location Type</mat-label>
+      <mat-select [(ngModel)]="protein.proteinType" required name="code">
+        <mat-option *ngFor="let modType of  proteinTypeList" [value]=" modType.value">
+          {{modType.display}}
+        </mat-option>
+        <mat-option *ngIf = "!inCV(  proteinTypeList, protein.proteinType)" value = "{{protein.proteinType}}">{{protein.proteinType}} (not in CV)</mat-option>
+        <mat-option value = 'other' >Other</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  <!--  <mat-form-field class="location-type">
+      <mat-label>Location Type</mat-label>{{protein.proteinSubType}}
+      <mat-select [(ngModel)]="protein.proteinSubType" name="code">
+        <mat-option *ngFor="let modType of  proteinSubTypeList" [value]=" modType.value">
+          {{modType.display}}
+        </mat-option>
+
+        <mat-option *ngIf = "!inCV(  proteinTypeList, protein.proteinSubType)" value = "{{protein.proteinSubType}}">{{protein.proteinSubType}} (not in CV)</mat-option>
+        <mat-option value = 'other' >Other</mat-option>
+      </mat-select>
+    </mat-form-field>-->
+    <div class = "mat-form-field-flex subtype">
+      <app-tag-selector class="tags" (tagsUpdate)="update($event)" [tags]="pipeToArray(protein.proteinSubType)"
+                        cvDomain="PROTEIN_SUBTYPE"></app-tag-selector>
+    </div>
+    <div class= "location-container">
+      <mat-form-field class="location-type">
+        <mat-label>Sequence Origin</mat-label>
+        <mat-select [(ngModel)]="protein.sequenceOrigin" name="code">
+          <mat-option *ngFor="let modType of  sequenceOriginList" [value]=" modType.value">
+            {{modType.display}}
+          </mat-option>
+          <mat-option *ngIf = "!inCV( sequenceOriginList, protein.sequenceOrigin)" value = "{{protein.sequenceOrigin}}">{{protein.sequenceOrigin}} (not in CV)</mat-option>
+          <mat-option value = 'other' >Other</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div *ngIf = "protein.sequenceOrigin == 'other'">
+        <br/>
+        <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
+      </div>
+    </div>
+    <mat-form-field class="location-type">
+      <mat-label>Sequence Type</mat-label>
+      <mat-select [(ngModel)]="protein.sequenceType" name="code">
+        <mat-option *ngFor="let modType of  sequenceTypeList" [value]=" modType.value">
+          {{modType.display}}
+        </mat-option>
+        <mat-option *ngIf = "!inCV( sequenceTypeList, protein.sequenceType)" value = "{{protein.sequenceType}}">{{protein.sequenceType}} (not in CV)</mat-option>
+        <mat-option value = 'other' >Other</mat-option>
+      </mat-select>
+    </mat-form-field>
+

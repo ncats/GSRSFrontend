@@ -45,6 +45,13 @@ import {SubunitDisplayPipe} from '@gsrs-core/utils/subunit-display.pipe';
 import { OtherLinksFormComponent } from './other-links-form/other-links-form.component';
 import {DisulfideLinksFormComponent} from '@gsrs-core/substance-form/disulfide-links-form/disulfide-links-form.component';
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
+import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
+import {StructuralModificationFormComponent} from '@gsrs-core/substance-form/structural-modification-form/structural-modification-form.component';
+import {AgentModificationFormComponent} from '@gsrs-core/substance-form/agent-modification-form/agent-modification-form.component';
+import {PhysicalModificationFormComponent} from '@gsrs-core/substance-form/physical-modification-form/physical-modification-form.component';
+import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
+import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/physical-parameter-form-dialog/physical-parameter-form-dialog.component';
+import {PhysicalParameterFormComponent} from '@gsrs-core/substance-form/physical-parameter-form/physical-parameter-form.component';
 
 @NgModule({
   imports: [
@@ -96,7 +103,14 @@ import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-select
     SubunitDisplayPipe,
     OtherLinksFormComponent,
     DisulfideLinksFormComponent,
-    SubunitSelectorComponent
+    SubunitSelectorComponent,
+    SubunitSelectorDialogComponent,
+    StructuralModificationFormComponent,
+    AgentModificationFormComponent,
+    PhysicalModificationFormComponent,
+    AmountFormDialogComponent,
+    PhysicalParameterFormDialogComponent,
+    PhysicalParameterFormComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -117,15 +131,25 @@ import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-select
     SubunitDisplayPipe,
     OtherLinksFormComponent,
     DisulfideLinksFormComponent,
-    SubunitSelectorComponent
-
+    SubunitSelectorComponent,
+    SubunitSelectorDialogComponent,
+    StructuralModificationFormComponent,
+    AgentModificationFormComponent,
+    PhysicalModificationFormComponent,
+    AmountFormDialogComponent,
+    PhysicalParameterFormDialogComponent,
+    PhysicalParameterFormComponent,
+    TagSelectorComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
     ApplyReferenceComponent,
     PropertyParameterDialogComponent,
-    SubunitSelectorComponent
+    SubunitSelectorComponent,
+    SubunitSelectorDialogComponent,
+    AmountFormDialogComponent,
+    PhysicalParameterFormDialogComponent
   ]
 })
 export class SubstanceFormModule { }

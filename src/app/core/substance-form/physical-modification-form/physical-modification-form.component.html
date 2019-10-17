@@ -1,0 +1,42 @@
+<div class="physical-form-container">
+  <div *ngIf="mod.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete name" (click)="deleteMod()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+    <mat-form-field class="mod-type">
+      <mat-label>Modification Type</mat-label>
+      <mat-select [(ngModel)]="mod.physicalModificationRole" required name="code">
+        <mat-option *ngFor="let modType of  modRoleList" [value]=" modType.value">
+          {{modType.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class = 'amount'>
+      <div class = "label">
+        Amount
+      </div>
+      <button mat-icon-button matTooltip="add" (click)="(openParameterDialog())">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
+      <div *ngFor = "let param of mod.parameters; index as index">{{index}}
+        {{param.parameterName}}
+      </div>
+    </div>
+    <div>
+      <mat-form-field class="group">
+        <input matInput placeholder="Group" [(ngModel)]="mod.modificationGroup" required name="group" />
+      </mat-form-field>
+    </div>
+
+
+  </div>
+</div>

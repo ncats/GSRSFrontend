@@ -9,7 +9,15 @@ import {
   SubstanceRelationship,
   SubstanceNote,
   SubstanceProperty,
-  Subunit, Link, DisulfideLink, Glycosylation
+  Subunit,
+  Link,
+  DisulfideLink,
+  Glycosylation,
+  Site,
+  AgentModification,
+  PhysicalModification,
+  StructuralModification,
+  PhysicalModificationParameter, Protein, ProteinFeatures, Feature
 } from '../substance/substance.model';
 import {
   SubstanceFormDefinition,
@@ -46,6 +54,15 @@ export class SubstanceFormService {
   private substanceOtherLinksEmitter = new Subject<Array<Link>>();
   private substanceDisulfideLinksEmitter = new Subject<Array<DisulfideLink>>();
   private substanceGlycosylationEmitter = new Subject<Glycosylation>();
+  private substanceCysteineEmitter = new Subject<Array<Site>>();
+  private substanceAgentModificationsEmitter = new Subject<Array<AgentModification>>();
+  private substancePhysicalModificationsEmitter = new Subject<Array<PhysicalModification>>();
+  private substanceStructuralModificationsEmitter = new Subject<Array<StructuralModification>>();
+  private customFeaturesEmitter = new Subject<Array<Feature>>();
+  private customFeatures: Array<Feature>;
+  private subunitSequence: Array<any>;
+  private allSitesArr: Array<DisplaySite>;
+  private allSitesEmitter = new Subject<Array<DisplaySite>>();
   constructor(
     private substanceService: SubstanceService,
     public utilsService: UtilsService,
@@ -62,14 +79,25 @@ export class SubstanceFormService {
         this.substance = substance;
         substanceClass = this.substance.substanceClass;
       } else {
-        this.substance = {
-          substanceClass: substanceClass,
-          references: [],
-          names: [],
-          structure: {},
-          codes: [],
-          relationships: [],
-        };
+        if (substanceClass == 'chemical') {
+          this.substance = {
+            substanceClass: substanceClass,
+            references: [],
+            names: [],
+            structure: {},
+            codes: [],
+            relationships: [],
+          };
+        } else {
+          this.substance = {
+            substanceClass: substanceClass,
+            references: [],
+            names: [],
+            protein: {},
+            codes: [],
+            relationships: [],
+          };
+        }
       }
       console.log(this.substance);
       this.subClass = this.substance.substanceClass;
@@ -174,6 +202,51 @@ export class SubstanceFormService {
   }
 
   // Definition end
+
+
+  get allSites(): Observable<Array<DisplaySite>> {
+    return new Observable(observer => {
+      if(!this.allSitesArr){
+        this.allSitesArr = [];
+      }
+      if(this.substance.protein.disulfideLinks){
+        this.substance.protein.disulfideLinks.forEach(link => {
+          link.sites.forEach(site => {
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
+            this.allSitesArr.push(newLink);
+          });
+        });
+      } else {
+        this.allSitesArr = [];
+      }
+      console.log(this.allSitesArr);
+      observer.next( this.allSitesArr);
+      this.allSitesEmitter.subscribe(protein => {
+        observer.next( this.allSitesArr);
+      });
+    });
+  }
+
+
+  // Class start
+
+  get substanceProtein(): Observable<Protein> {
+    console.log('get prot called');
+    return new Observable(observer => {
+      this.ready().subscribe(substance => {
+        if (this.substance.protein == null) {
+          this.substance.protein = {};
+        }
+        console.log(this.substance.protein);
+        observer.next(this.substance.protein);
+        this.substanceNamesEmitter.subscribe(protein => {
+          observer.next(this.substance.protein);
+        });
+      });
+    });
+  }
+
+// Class end
 
   // References start
 
@@ -483,9 +556,6 @@ export class SubstanceFormService {
   deleteSubstanceNote(note: SubstanceNote): void {
     const subNoteIndex = this.substance.notes.findIndex(subNote => note.$$deletedCode === subNote.$$deletedCode);
     if (subNoteIndex > -1) {
-      console.log(subNoteIndex);
-      console.log(note);
-      console.log(note.$$deletedCode);
       this.substance.notes.splice(subNoteIndex, 1);
       this.substanceNotesEmitter.next(this.substance.notes);
     }
@@ -580,7 +650,6 @@ export class SubstanceFormService {
         if (this.substance.protein.otherLinks == null) {
           this.substance.protein.otherLinks = [];
         }
-        console.log(this.substance.protein.otherLinks);
         observer.next(this.substance.protein.otherLinks);
         this.substanceOtherLinksEmitter.subscribe(otherLinks => {
           observer.next(this.substance.protein.otherLinks );
@@ -601,9 +670,6 @@ export class SubstanceFormService {
 
   deleteSubstanceOtherLink(link: Link): void {
     const subLinkIndex = this.substance.protein.otherLinks.findIndex(subCode => link.$$deletedCode === subCode.$$deletedCode);
-    console.log(link);
-    console.log(subLinkIndex);
-    console.log(link.$$deletedCode);
     if (subLinkIndex > -1) {
       this.substance.protein.otherLinks.splice(subLinkIndex, 1);
       this.substanceOtherLinksEmitter.next(this.substance.protein.otherLinks);
@@ -639,11 +705,11 @@ export class SubstanceFormService {
   }
 
   deleteSubstanceDisulfideLink(disulfideLink: DisulfideLink): void {
-  /*  const subLinkIndex = this.substance.protein.disulfideLinks.findIndex(subLink => disulfideLink.$$deletedCode === subLink.$$deletedCode);
+    const subLinkIndex = this.substance.protein.disulfideLinks.findIndex(subLink => disulfideLink.$$deletedCode === subLink.$$deletedCode);
     if (subLinkIndex > -1) {
       this.substance.protein.disulfideLinks.splice(subLinkIndex, 1);
       this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
-    }*/
+    }
   }
 
   emitDisulfideLinkUpdate(): void {
@@ -659,7 +725,6 @@ export class SubstanceFormService {
         if (this.substance.protein.glycosylation == null) {
           this.substance.protein.glycosylation = {};
         }
-        console.log(this.substance.protein.glycosylation);
         observer.next(this.substance.protein.glycosylation);
         this.substanceGlycosylationEmitter.subscribe(glycosylation => {
           observer.next(this.substance.protein.glycosylation );
@@ -673,6 +738,164 @@ export class SubstanceFormService {
   }
 
   // Glycosylation end
+
+  // modifications start
+
+  get substanceAgentModifications(): Observable<Array<AgentModification>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (this.substance.modifications.agentModifications == null) {
+          this.substance.modifications.agentModifications = [];
+        }
+        observer.next(this.substance.modifications.agentModifications);
+        this.substanceAgentModificationsEmitter.subscribe(agentModifications => {
+          observer.next(this.substance.modifications.agentModifications );
+        });
+      });
+    });
+  }
+
+  addSubstanceAgentModification(): void {
+    const newAgentModifications: AgentModification = {
+    };
+    this.substance.modifications.agentModifications.unshift(newAgentModifications);
+    this.substanceAgentModificationsEmitter.next(this.substance.modifications.agentModifications);
+  }
+
+  deleteSubstanceAgentModification(agentModification: AgentModification): void {
+    const agentModIndex = this.substance.modifications.agentModifications.findIndex(agentMod => agentModification.$$deletedCode === agentMod.$$deletedCode);
+    if (agentModIndex > -1) {
+      this.substance.modifications.agentModifications.splice(agentModIndex, 1);
+      this.substanceAgentModificationsEmitter.next(this.substance.modifications.agentModifications);
+    }
+  }
+
+// modifications end
+
+// modifications start
+
+  get substancePhysicalModifications(): Observable<Array<PhysicalModification>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (this.substance.modifications.physicalModifications == null) {
+          this.substance.modifications.physicalModifications = [];
+        }
+        observer.next(this.substance.modifications.physicalModifications);
+        this.substancePhysicalModificationsEmitter.subscribe(physicalModifications => {
+          observer.next(this.substance.modifications.physicalModifications );
+        });
+      });
+    });
+  }
+
+  addSubstancePhysicalModification(): void {
+    const newPhysicalModifications: PhysicalModification = {
+    };
+    this.substance.modifications.physicalModifications.unshift(newPhysicalModifications);
+    this.substancePhysicalModificationsEmitter.next(this.substance.modifications.physicalModifications);
+  }
+
+  deleteSubstancePhysicalModification(physicalModification: PhysicalModification): void {
+    const physicalModIndex = this.substance.modifications.physicalModifications.findIndex(physicalMod => physicalModification.$$deletedCode === physicalMod.$$deletedCode);
+    if (physicalModIndex > -1) {
+      this.substance.modifications.physicalModifications.splice(physicalModIndex, 1);
+      this.substancePhysicalModificationsEmitter.next(this.substance.modifications.physicalModifications);
+    }
+  }
+
+// modifications end
+
+  // modifications start
+
+  get substanceStructuralModifications(): Observable<Array<StructuralModification>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (this.substance.modifications.structuralModifications == null) {
+          this.substance.modifications.structuralModifications = [];
+        }
+        observer.next(this.substance.modifications.structuralModifications);
+        this.substanceStructuralModificationsEmitter.subscribe(structuralModifications => {
+          observer.next(this.substance.modifications.structuralModifications );
+        });
+      });
+    });
+  }
+
+  addSubstanceStructuralModification(): void {
+    const newStructuralModifications: StructuralModification = {
+    };
+    this.substance.modifications.structuralModifications.unshift(newStructuralModifications);
+    this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
+  }
+
+  deleteSubstanceStructuralModification(structuralModification: StructuralModification): void {
+    const structuralModIndex = this.substance.modifications.structuralModifications.findIndex(structuralMod => structuralModification.$$deletedCode === structuralMod.$$deletedCode);
+    if (structuralModIndex > -1) {
+      this.substance.modifications.structuralModifications.splice(structuralModIndex, 1);
+      this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
+    }
+  }
+
+// modifications end
+
+  // Cysteine start
+
+  emitCysteineUpdate(cysteine: Array<Site>): void {
+    this.substanceCysteineEmitter.next(cysteine);
+  }
+
+  get substanceCysteineSites(): Observable< Array<Site>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        let available = [];
+        for (let i = 0; i < this.substance.protein.subunits.length; i++) {
+          const sequence = this.substance.protein.subunits[i].sequence;
+          for (let j = 0; j < sequence.length; j++) {
+            const site = sequence[j];
+            if (site.toUpperCase() === 'C') {
+              available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+            }
+          }
+        }
+
+        this.substance.protein.disulfideLinks.forEach(link => {
+          if (link.sites) {
+            link.sites.forEach(site => {
+              available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
+            });
+          }
+        });
+        observer.next(available);
+        this.substanceCysteineEmitter.subscribe(disulfideLinks => {
+          console.log('self');
+          console.log(disulfideLinks);
+          observer.next(disulfideLinks);
+        });
+      });
+    });
+  }
+
+
+  //custom sites for proteins
+
+  emitCustomFeaturesUpdate(): void {
+    this.customFeaturesEmitter.next(this.customFeatures);
+  }
+
+
+  get CustomFeatures(): Observable<Array<Feature>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (this.customFeatures == null) {
+          this.customFeatures = [];
+        }
+        observer.next(this.customFeatures);
+        this.customFeaturesEmitter.subscribe(disulfideLinks => {
+          observer.next(this.customFeatures);
+        });
+      });
+    });
+  }
 
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {
@@ -775,4 +998,72 @@ export class SubstanceFormService {
       });
     });
   }
+
+  siteString(sites: Array<Site>): string {
+    if (sites.length === 0) {
+      return '';
+    }
+    if (sites.length === 1) {
+      return sites[0].subunitIndex + '_' + sites[0].residueIndex;
+    }
+    {
+      sites.sort(function (site1, site2) {
+        let d = site1.subunitIndex - site2.subunitIndex;
+        if (d === 0) {
+          d = site1.residueIndex - site2.residueIndex;
+        }
+        return d;
+
+      });
+      let csub = 0;
+      let cres = 0;
+      let rres = 0;
+      let finish = false;
+      let disp = '';
+      for (let i = 0; i < sites.length; i++) {
+
+        const site = sites[i];
+        if (site.subunitIndex == csub && site.residueIndex == cres) {
+          continue;
+        }
+        finish = false;
+        if (site.subunitIndex == csub) {
+          if (site.residueIndex == cres + 1) {
+            if (rres === 0) {
+              rres = cres;
+            }
+          } else {
+            finish = true;
+          }
+        } else {
+          finish = true;
+        }
+        if (finish && csub !== 0) {
+          if (rres !== 0) {
+            disp += csub + '_' + rres + '-' + csub + '_' + cres + '; ';
+          } else {
+            disp += csub + '_' + cres + '; ';
+          }
+          rres = 0;
+        }
+        csub = site.subunitIndex;
+        cres = site.residueIndex;
+      }
+      if (sites.length > 0) {
+        if (rres !== 0) {
+          disp += csub + '_' + rres + '-' + csub + '_' + cres;
+        } else {
+          disp += csub + '_' + cres;
+        }
+      }
+      return disp;
+    }
+  }
 }
+
+
+    interface DisplaySite {
+      type: string;
+      subunit: number;
+      residue: number;
+    }

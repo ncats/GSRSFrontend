@@ -192,5 +192,25 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-glycosylation',
     path: 'substance-form-glycosylation',
     loadChildren: './substance-form/substance-form-glycosylation/substance-form-glycosylation.module#SubstanceFormGlycosylationModule'
+  },
+  {
+    componentId: 'substance-form-structural-modifications',
+    path: 'substance-form-structural-modifications',
+    loadChildren: './substance-form/substance-form-structural-modifications/substance-form-structural-modifications.module#SubstanceFormStructuralModificationsModule'
+  },
+  {
+    componentId: 'substance-form-agent-modifications',
+    path: 'substance-form-agent-modifications',
+    loadChildren: './substance-form/substance-form-agent-modifications/substance-form-agent-modifications.module#SubstanceFormAgentModificationsModule'
+  },
+  {
+    componentId: 'substance-form-physical-modifications',
+    path: 'substance-form-physical-modifications',
+    loadChildren: './substance-form/substance-form-physical-modifications/substance-form-physical-modifications.module#SubstanceFormPhysicalModificationsModule'
+  },
+  {
+    componentId: 'substance-form-protein-details',
+    path: 'substance-form-protein-details',
+    loadChildren: './substance-form/substance-form-protein-details/substance-form-protein-details.module#SubstanceFormProteinDetailsModule'
   }
 ];

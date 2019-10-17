@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {DisulfideLink, Link, SubstanceName, Subunit} from '@gsrs-core/substance';
+import {DisulfideLink, Link, Site, SubstanceName, Subunit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import {MatDialog} from '@angular/material/dialog';
@@ -9,6 +9,8 @@ import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import { FormGroup, FormControl } from '@angular/forms';
+import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 
 @Component({
   selector: 'app-substance-form-disulfide-links',
@@ -19,6 +21,7 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
   disulfideLinks: Array<DisulfideLink>;
   private subscriptions: Array<Subscription> = [];
   cysteineBonds: number;
+  cysteine: Array<Site>;
   subunits: Array<Subunit>;
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -32,13 +35,12 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Disulfide Links');
-    console.log(this.disulfideLinks);
   }
 
   ngAfterViewInit() {
     const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
       this.disulfideLinks = disulfideLinks;
-      console.log(disulfideLinks);
+      this.countCysteine();
     });
 
     this.subscriptions.push(disulfideLinksSubscription);
@@ -47,6 +49,12 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
       this.subunits = subunits;
       this.countCysteine();
     });
+    this.subscriptions.push(subunitsSubscription);
+    const cysteineSubscription = this.substanceFormService.substanceCysteineSites.subscribe(cysteine => {
+      this.cysteine = cysteine;
+      this.countCysteine();
+    });
+    this.subscriptions.push(cysteineSubscription);
   }
 
   ngOnDestroy() {
@@ -56,14 +64,38 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
   }
 
   countCysteine(): void {
-    console.log(this.subunits);
     this.cysteineBonds = 0;
-    this.subunits.forEach(subunit => {
-      this.cysteineBonds += (subunit.sequence.toUpperCase().split('C').length - 1);
-      console.log(this.cysteineBonds);
+    if(this.subunits){
+      this.subunits.forEach(subunit => {
+        this.cysteineBonds += (subunit.sequence.toUpperCase().split('C').length - 1);
+      });
+    }
+    if (this.cysteine && this.cysteine.length){
+      this.cysteineBonds = this.cysteine.length;
+    } else {
+      this.cysteineBonds -= (this.disulfideLinks.length * 2);
+    }
+    this.getSuggestions();
+  }
+
+  getSuggestions(): void {
+    let available = [];
+    if(this.subunits){
+      for (let i = 0; i < this.subunits.length; i++) {
+        const sequence = this.subunits[i].sequence;
+        for (let j = 0; j < sequence.length; j++) {
+          const site = sequence[j];
+          if (site.toUpperCase() === 'C') {
+            available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+          }
+        }
+      }
+    }
+    this.disulfideLinks.forEach(link => {
+      link.sites.forEach(site => {
+        available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
+      });
     });
-     this.cysteineBonds -= (this.disulfideLinks.length * 2);
-    console.log(this.cysteineBonds);
   }
 
   addLink(): void {
@@ -76,5 +108,7 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
   deleteDisulfideLink(disulfideLink: DisulfideLink): void {
     this.substanceFormService.deleteSubstanceDisulfideLink(disulfideLink);
   }
+
+
 
 }

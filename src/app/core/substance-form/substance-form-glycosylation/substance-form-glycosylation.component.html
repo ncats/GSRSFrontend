@@ -9,23 +9,37 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <div class="link">
+    <div class="sites">
       <div class="label">C</div>
-      <div *ngFor = "let site of glycosylation.CGlycosylationSites">
-        {{site.subunitIndex}}_{{site.residueIndex}}
-      </div>
+      <button mat-icon-button matTooltip="Undo" (click)="(openDialog('C'))">
+      <mat-icon svgIcon="search"></mat-icon>
+    </button>
+      <span>
+      {{siteDisplay(glycosylation.CGlycosylationSites)}}
+      </span>
+      <button mat-icon-button matTooltip="Undo" (click)="(openDialog('C'))">
+        <mat-icon svgIcon="search"></mat-icon>
+      </button>
     </div>
-    <div class="link">
+    <div class="sites">
       <div class="label">N</div>
-      <div *ngFor = "let site of glycosylation.NGlycosylationSites">
-        {{site.subunitIndex}}_{{site.residueIndex}}
-      </div>
+      <button mat-icon-button matTooltip="Undo" (click)="(openDialog('N'))">
+        <mat-icon svgIcon="search"></mat-icon>
+      </button>
+      <span>
+      {{siteDisplay(glycosylation.NGlycosylationSites)}}
+      </span>
+
     </div>
-    <div class="link">
+    <div class="sites">
       <div class="label">O</div>
-      <div *ngFor = "let site of glycosylation.OGlycosylationSites">
-        {{site.subunitIndex}}_{{site.residueIndex}}
-      </div>
+      <button mat-icon-button matTooltip="Undo" (click)="(openDialog('O'))">
+        <mat-icon svgIcon="search"></mat-icon>
+      </button>
+      <span>
+      {{siteDisplay(glycosylation.OGlycosylationSites)}}
+      </span>
+
     </div>
   </div>
 </div>
