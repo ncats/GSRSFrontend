@@ -5,10 +5,13 @@
 
   & .subunit-sequence {
     display: block;
+    box-sizing: border-box;
   }
 }
 
-
+.sites-input {
+  width: 70%;
+}
 .show {
   display:block;
 }
@@ -20,6 +23,7 @@
 .raw {
   .subunit {
     display: block;
+    box-sizing: border-box;
   }
 
   .subunit-sequence {
@@ -153,7 +157,18 @@
 }
 
 .selectedSite{
-  padding-left:2px;
-  padding-right:2px;
+  padding-left:1px;
+  padding-right:1px;
 }
 
+.chosen {
+  color:black !important;
+  background-color:turquoise !important;
+}
+
+
+a {
+  display:block;
+  width: 15px !important;
+  text-align: center;
+}

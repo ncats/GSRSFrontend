@@ -30,6 +30,8 @@ export interface SubstanceBaseExtended {
     _self?: string;
     nucleicAcid?: NucleicAcid;
     changeReason?: string;
+
+  protein?: Protein;
 }
 
 
@@ -42,7 +44,6 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
     _relationships?: CountRef;
     _moieties?: CountRef;
     _properties?: CountRef;
-    protein?: Protein;
 }
 
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
@@ -250,15 +251,17 @@ export interface StructuralModification extends SubstanceModifications {
   structuralModificationType?: string;
   locationType?: string;
   residueModified?: string;
-  sites?: Array<ModificationSite>;
+  sites?: Array<Site>;
   extent?: string;
-  extentAmount?: string;
+  extentAmount?: SubstanceAmount;
   molecularFragment?: SubstanceRelated;
+  modificationGroup?: string;
 }
 
 export interface PhysicalModification extends SubstanceModifications {
   physicalModificationRole?: string;
   parameters?: Array<PhysicalModificationParameter>;
+    modificationGroup?: string;
 }
 
 export interface PhysicalModificationParameter extends PhysicalModification {
@@ -271,8 +274,9 @@ export interface AgentModification extends SubstanceModifications {
   agentModificationProcess?: string;
   agentModificationRole?: string;
   agentModificationType?: string;
-  amount?: string;
+  amount?: SubstanceAmount;
   agentSubstance?: SubstanceRelated;
+  modificationGroup?: string;
 }
 
 export interface ModificationSite extends StructuralModification {
@@ -347,7 +351,7 @@ export interface Link extends SubstanceBase {
     references?: Array<string>;
 }
 
-export interface DisulfideLink {
+export interface DisulfideLink extends SubstanceBase {
     sites?: Array<Site>;
     sitesShorthand?: string;
 }
@@ -364,4 +368,13 @@ export interface SubstanceEdit {
   refid: string;
   created: number;
   comments?: string;
+}
+
+export interface ProteinFeatures {
+    features: Array<Feature>;
+}
+
+export interface Feature {
+    sites?: Array<Site>;
+    name?: string;
 }

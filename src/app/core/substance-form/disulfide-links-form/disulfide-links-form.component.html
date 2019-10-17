@@ -1,4 +1,4 @@
-<div class="link-form-container">
+<div class="link-form-container" [formGroup]="testForm">
   <div *ngIf="link.$$deletedCode" class="notification-backdrop">
     Deleted&nbsp;
     <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
@@ -11,12 +11,18 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <div>
-      <div class="label">link</div>
-      <div *ngFor = "let site of link.sites">
-        <input placeholder="Enter text here" [(ngModel)]="site.subunitIndex" required name="link" >
-        <input placeholder="Enter text here" [(ngModel)]="site.residueIndex" required name="link" >
+      <div class = 'sites' *ngFor = "let site of link.sites;index as index">
+        <mat-form-field class="site test">
+          <mat-label>Site {{index}}</mat-label>
+        <mat-select [formControlName] = "'site'+index" (selectionChange)="updateSuggestions($event.value, index) " class ="site-select" >
+          <mat-option *ngFor="let cys of cysteine" [value]="cys">
+            {{cys.subunitIndex}}_{{cys.residueIndex}}
+          </mat-option>
+          <mat-option [value] = "site" >
+            {{site.subunitIndex}}_{{site.residueIndex}}
+          </mat-option>
+        </mat-select>
+        </mat-form-field>
       </div>
     </div>
   </div>
-</div>

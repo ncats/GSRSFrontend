@@ -57,7 +57,10 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   clearTagsInput(): void {
     setTimeout(() => {
       this.tagInput.nativeElement.value = '';
+      console.log(this.matAutocomplete.isOpen);
+      if (!this.matAutocomplete.isOpen) {
       this.tagControl.setValue(null);
+      }
     });
   }
 
@@ -71,9 +74,8 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.privateTags.push(event.option.value);
-    this.tagInput.nativeElement.value = '';
-    this.tagControl.setValue(null);
     this.tagsUpdate.emit(this.privateTags);
+    this.clearTagsInput();
   }
 
   private _filter(value: string): Array<VocabularyTerm> {

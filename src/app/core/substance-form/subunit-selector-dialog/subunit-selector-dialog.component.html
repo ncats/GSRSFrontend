@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>select links</h1>
+<mat-dialog-content>
+    <app-subunit-selector [card] = "data.card" [link] = "data.link" (sitesUpdate) = "updateSites($event)"></app-subunit-selector>
+</mat-dialog-content>
+      <mat-dialog-actions>
+
+        <div class="actions">
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button mat-button (click)="save()">
+        Save
+      </button>
+        </div>
+      </mat-dialog-actions>
+
+

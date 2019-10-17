@@ -21,13 +21,10 @@
     </mat-form-field>
     <div>
       <div class="label">link</div>
-      <div *ngFor = "let site of link.sites">
-        <input placeholder="Enter text here" [(ngModel)]="site.subunitIndex" required name="link" >
-        <input placeholder="Enter text here" [(ngModel)]="site.residueIndex" required name="link" >
-        <button mat-icon-button matTooltip="Undo" (click)="(openModal())">
-          <mat-icon svgIcon="menu"></mat-icon>
+      {{siteDisplay}}
+        <button mat-icon-button matTooltip="Undo" (click)="(openDialog())">
+          <mat-icon svgIcon="search"></mat-icon>
         </button>
-      </div>
     </div>
   </div>
 </div>

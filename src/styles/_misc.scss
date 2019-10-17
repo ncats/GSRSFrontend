@@ -199,3 +199,23 @@ textarea {
     font-size: 14px;
   }
 }
+
+.details {
+  & .subunit {
+    display: none;
+  }
+
+  & .subunit-sequence {
+    display: block;
+  }
+}
+
+.raw {
+  & .subunit {
+    display: block;
+  }
+
+  & .subunit-sequence {
+    display: none;
+  }
+}

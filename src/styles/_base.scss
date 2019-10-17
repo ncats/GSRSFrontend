@@ -16,4 +16,26 @@ div {
 a:hover, button:hover {
     cursor: pointer;
 }
-  
+
+
+.multiselect-dropdown .dropdown-btn {
+  display: inline-block;
+  border: 0px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, .87) !important;
+  width: 100%;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-align: left;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+
+  .dropdown-down {
+    border-top: 5px solid rgba(0, 0, 0, 0.54) !important;
+    border-left: 5px solid transparent !important;
+    border-right: 5px solid transparent !important;
+  }
+}

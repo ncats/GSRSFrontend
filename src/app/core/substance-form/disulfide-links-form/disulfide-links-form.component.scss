@@ -14,6 +14,11 @@
   color: #666;
 }
 
+.link-form-container {
+  padding: 30px 10px 12px 10px;
+  position: relative;
+}
+
 .form-row {
   display: flex;
   justify-content: space-between;
@@ -23,9 +28,19 @@
     padding: 0 10px 8px 0;
   }
 
-  .note {
+  .site {
     flex-grow: 1;
     padding-right: 15px;
+  }
+
+  .sites{
+    flex-grow: 1;
+    padding-right: 15px;
+    width:50%;
+  }
+
+  .site-select {
+    width:100px;
   }
 
 }

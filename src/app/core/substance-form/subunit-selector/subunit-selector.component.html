@@ -1,5 +1,26 @@
+<div *ngIf = "card !== 'feature'">
+  Sites:
+  <input [ngModel] = "sitesDisplay" class = "sites-input">
+</div>
+<div *ngIf = "card == 'feature'" >
+  <label>Feature Name</label>
+  <input class = "sites-input">
+  <br/>
+  <div class="form-row">
+    <span *ngIf = "selectState == 'first'">Select Starting Site</span>
+    <span *ngIf = "selectState == 'last'">Select Ending Site</span>
+    <span *ngIf = "newFeature[0]">
+    {{newFeature[0].subunitIndex}}_{{newFeature[0].residueIndex}} -
+  </span>
+    <span *ngIf = "newFeature[1]">
+    {{newFeature[1].subunitIndex}}_{{newFeature[1].residueIndex}}
+  </span>
 
-  <div class="subunit-sequence" *ngFor="let subunitSequence of subunitSequences">
+    <button (click) = "removeFeature()">Clear Selection</button>
+  </div>
+
+</div>
+ <!-- <div class="subunit-sequence" *ngFor="let subunitSequence of subunitSequences">
   <h4>Subunit {{subunitSequence.subunitIndex}}</h4>
   <div class="responsive">
     <div class="sequence-section-group" *ngFor="let sequencesSectionGroup of subunitSequence.sequencesSectionGroups">
@@ -7,11 +28,26 @@
         <div class="section-number">{{sequencesSectionGroup.sectionNumber}}</div>
         <div class="section-units-container">
             <span class="section-unit" *ngFor="let sectionUnit of sequencesSectionGroup.sectionUnits" [matTooltip]="getTooltipMessage(subunitSequence.subunitIndex, sectionUnit.unitIndex, sectionUnit.unitValue, sectionUnit.class? sectionUnit.class : '')">
-              <a class = "selectedSite" [ngClass]="sectionUnit.class" >{{sectionUnit.unitValue}}</a>
+              <a class = "selectedSite" [ngClass]="sectionUnit.class" (click) = "toggleSite(subunitSequence.subunitIndex, sectionUnit.unitIndex, sectionUnit.unitValue, $event)">{{sectionUnit.unitValue}}</a>
             </span>
         </div>
       </div>
     </div>
+  </div>
+</div>-->
+<div class="subunit-sequence" *ngFor="let sequence of testSequences">
+  <h4>Subunit {{sequence.subunitIndex}}</h4>
+  <div class="responsive">
+      <div *ngFor = "let set of sequence.subsections"  class="sequence-section-group">
+        <div *ngFor = "let num of set" class= "sequence-section">
+          <div class = "section-number">{{num[1]}}</div>
+          <div class = section-units-container>
+          <span *ngFor = "let subunit of sequence.subunits.slice(num[0],num[1])"  class="section-unit" >
+              <a class = "selectedSite" [ngClass]="subunit.class" (click) = "toggleSite(sequence.subunitIndex, subunit.unitIndex, subunit.unitValue, $event)">{{subunit.unitValue}}</a>
+        </span>
+          </div>
+        </div>
+      </div>
   </div>
 </div>
 

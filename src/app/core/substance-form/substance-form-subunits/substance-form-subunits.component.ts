@@ -7,6 +7,9 @@ import {Link, Subunit} from '@gsrs-core/substance';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import _ from 'underscore';
+import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {OverlayContainer} from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-substance-form-subunits',
@@ -20,12 +23,15 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
   private subscriptions: Array<Subscription> = [];
   toggle = {};
   view = 'details';
+  private overlayContainer: HTMLElement;
 
   constructor(
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private cvService: ControlledVocabularyService,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form subunits';
@@ -33,6 +39,7 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Subunits');
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit(): void {
@@ -66,6 +73,38 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
 
   deleteSubunit(subunit: Subunit): void {
     this.substanceFormService.deleteSubstanceSubunit(subunit);
+  }
+
+  getSequence(index: number): any {
+    let testing = {};
+    console.log(index);
+    console.log(this.subunitSequences);
+    this.subunitSequences.forEach(v => {
+      console.log(v);
+      if (v.subunitIndex === (index+1)) {
+        testing = v;
+        console.log(v);
+      }
+    });
+    console.log(testing);
+    return testing;
+
+  }
+
+
+  openDialog(): void {
+
+    const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
+      data: {'card': 'feature', 'link': []},
+      width: '1020px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
+      this.overlayContainer.style.zIndex = null;
+      console.log('other links dialog closed');
+    });
+    this.subscriptions.push(dialogSubscription);
   }
 
 }

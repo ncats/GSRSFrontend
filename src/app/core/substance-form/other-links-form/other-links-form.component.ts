@@ -1,12 +1,13 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Link, SubstanceReference} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
-import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
+import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
-import {RefernceFormDialogComponent} from '@gsrs-core/substance-form/references-dialogs/refernce-form-dialog.component';
-import {SubstanceSelectorComponent} from '@gsrs-core/substance-selector/substance-selector.component';
+import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
+import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
+import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 
 @Component({
   selector: 'app-other-links-form',
@@ -20,18 +21,21 @@ export class OtherLinksFormComponent implements OnInit {
   deleteTimer: any;
   linkageTypes: any;
   private subscriptions: Array<Subscription> = [];
-
   private overlayContainer: HTMLElement;
+  siteDisplay: string;
 
   constructor(
   private cvService: ControlledVocabularyService,
   private dialog: MatDialog,
   private utilsService: UtilsService,
-  private overlayContainerService: OverlayContainer
+  private overlayContainerService: OverlayContainer,
+  private substanceFormService: SubstanceFormService
   ) { }
 
   ngOnInit() {
     this.getVocabularies();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.updateDisplay();
   }
 
   @Input()
@@ -43,7 +47,9 @@ export class OtherLinksFormComponent implements OnInit {
   get link(): Link {
     return this.privateLink;
   }
-
+  updateDisplay(): void {
+    this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
+  }
   deleteLink(): void {
     this.privateLink.$$deletedCode = this.utilsService.newUUID();
     if (!this.privateLink
@@ -66,12 +72,26 @@ export class OtherLinksFormComponent implements OnInit {
     this.subscriptions.push(subscription);
   }
 
-  openModal(): void {
+  openDialog(): void {
 
-    const dialogRef = this.dialog.open(SubstanceSelectorComponent, {
-      width: '900px'
+    const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
+      data: {'card': 'other', 'link': this.privateLink.sites},
+      width: '990px'
     });
     this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
+      this.overlayContainer.style.zIndex = null;
+      console.log('otherlinks dialog closed');
+      this.privateLink.sites = newLinks;
+      this.updateDisplay();
+    });
+    this.subscriptions.push(dialogSubscription);
   }
+
+  inCV(vocab: Array<VocabularyTerm>, property: string) {
+    return vocab.some(r => property === r.value);
+  }
+
 
 }
