@@ -39,14 +39,11 @@ export class ClinicalTrialAddComponent implements OnInit {
     // this.authService.hasRolesAsync(..._roles).subscribe(response => {
     this.authService.hasRolesAsync('Admin').subscribe(response => {
       this.canEdit = response;
-      console.log('clinical-trial-add canEdit: ' + this.canEdit);
     });
   }
 
  addClinicalTrial() {
     this.loadingService.setLoading(true);
-    // console.log("xyz");
-    // console.log(this.json);
 
     this.clinicalTrialService.addClinicalTrial(this.json)
       .subscribe(result => {
