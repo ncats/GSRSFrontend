@@ -9,7 +9,7 @@ import { LoadingService } from '../loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { MatDialog, PageEvent, MatDialogRef } from '@angular/material';
+import { MatDialog, PageEvent } from '@angular/material';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SafeUrl } from '@angular/platform-browser';
@@ -20,9 +20,9 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
 import { searchSortValues } from '../utils/search-sort-values';
-import { Location, LocationStrategy } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { Location, LocationStrategy } from '@angular/common';
 
 @Component({
   selector: 'app-substances-browse',
@@ -70,10 +70,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private dialog: MatDialog,
     public gaService: GoogleAnalyticsService,
     public authService: AuthService,
-    private location: Location,
-    private locationStrategy: LocationStrategy,
     private structureService: StructureService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private location: Location,
+    private locationStrategy: LocationStrategy
   ) {
     this.privateFacetParams = {};
     this.facetBuilder = {};
@@ -84,6 +84,28 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageSize = 10;
     this.pageIndex = 0;
     this.facets = [];
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+    navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
+    navigationExtras.queryParams['structureSearchTerm'] = this.activatedRoute.snapshot.queryParams['structureSearchTerm'] || '';
+    navigationExtras.queryParams['sequenceSearchTerm'] = this.activatedRoute.snapshot.queryParams['sequenceSearchTerm'] || '';
+    navigationExtras.queryParams['cutoff'] = this.activatedRoute.snapshot.queryParams['cutoff'] || '';
+    navigationExtras.queryParams['type'] = this.activatedRoute.snapshot.queryParams['type'] || '';
+    navigationExtras.queryParams['seqType'] = this.activatedRoute.snapshot.queryParams['seqType'] || '';
+    navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
+    navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
+    navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
+    navigationExtras.queryParams['facets'] = this.activatedRoute.snapshot.queryParams['facets'] || '';
+    navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
+    this.location.replaceState(
+      this.router.createUrlTree(
+        [this.locationStrategy.path().split('?')[0].replace(environment.baseHref, '')],
+        navigationExtras
+      ).toString()
+    );
+
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
@@ -171,7 +193,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
-    this.searchSubstances();
+    this.populateUrlQueryParameters();
   }
 
   searchSubstances() {
@@ -242,8 +264,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.isLoading = false;
           this.loadingService.setLoading(this.isLoading);
         });
-      this.populateUrlQueryParameters();
-
     }
   }
 
@@ -278,11 +298,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['facets'] = facetString;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
-    this.location.replaceState(
-      this.router.createUrlTree(
-        [this.locationStrategy.path().split('?')[0]],
-        navigationExtras
-      ).toString()
+
+    this.router.navigate(
+      [],
+      navigationExtras
     );
   }
 
@@ -362,7 +381,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
     });
     this.gaService.sendEvent('substancesFiltering', 'button:apply-facet', eventLabel, eventValue);
-    this.searchSubstances();
+    this.populateUrlQueryParameters();
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
@@ -494,26 +513,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-structure-search', eventLabel);
 
-    // automatically calls searchSubstances() because of subscription to route changes
-    // route query params change in order to clear search query param
     this.privateStructureSearchTerm = '';
     this.privateSearchType = '';
     this.privateSearchCutoff = 0;
     this.smiles = '';
     this.pageIndex = 0;
-    this.router.navigate(
-      [],
-      {
-        relativeTo: this.activatedRoute,
-        queryParams: {
-          'structure_search': null,
-          'type': null,
-          'cutoff': null,
-          'smiles': null
-        },
-        queryParamsHandling: 'merge'
-      }
-    );
+
+    // automatically calls searchSubstances() because of subscription to route changes
+    this.populateUrlQueryParameters();
   }
 
   editSequenceSearh(): void {
@@ -539,26 +546,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       `${this.privateSequenceSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}-${this.privateSearchSeqType}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-sequence-search', eventLabel);
 
-    // automatically calls searchSubstances() because of subscription to route changes
-    // route query params change in order to clear search query param
     this.privateSequenceSearchTerm = '';
     this.privateSearchType = '';
     this.privateSearchCutoff = 0;
     this.privateSearchSeqType = '';
     this.pageIndex = 0;
-    this.router.navigate(
-      [],
-      {
-        relativeTo: this.activatedRoute,
-        queryParams: {
-          'sequence_search': null,
-          'type': null,
-          'cutoff': null,
-          'seq_type': null
-        },
-        queryParamsHandling: 'merge'
-      }
-    );
+
+    // automatically calls searchSubstances() because of subscription to route changes
+    this.populateUrlQueryParameters();
   }
 
   clearSearch(): void {
@@ -566,21 +561,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
 
-    // automatically calls searchSubstances() because of subscription to route changes
-    // route query params change in order to clear search query param
     this.privateSearchTerm = '';
     this.pageIndex = 0;
-    this.router.navigate(
-      [],
-      {
-        relativeTo: this.activatedRoute,
-        queryParams: {
-          'search': null,
-          'facets': null
-        },
-        queryParamsHandling: 'merge'
-      }
-    );
+
+    // automatically calls searchSubstances() because of subscription to route changes
+    this.populateUrlQueryParameters();
   }
 
   clearFilters(): void {
