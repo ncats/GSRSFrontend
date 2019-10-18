@@ -22,6 +22,7 @@ import { Auth } from '../auth/auth.model';
 import { searchSortValues } from '../utils/search-sort-values';
 import { StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { Location, LocationStrategy } from '@angular/common';
 
 @Component({
   selector: 'app-substances-browse',
@@ -70,7 +71,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     public gaService: GoogleAnalyticsService,
     public authService: AuthService,
     private structureService: StructureService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private location: Location,
+    private locationStrategy: LocationStrategy
   ) {
     this.privateFacetParams = {};
     this.facetBuilder = {};
@@ -81,6 +84,28 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageSize = 10;
     this.pageIndex = 0;
     this.facets = [];
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+    navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
+    navigationExtras.queryParams['structureSearchTerm'] = this.activatedRoute.snapshot.queryParams['structureSearchTerm'] || '';
+    navigationExtras.queryParams['sequenceSearchTerm'] = this.activatedRoute.snapshot.queryParams['sequenceSearchTerm'] || '';
+    navigationExtras.queryParams['cutoff'] = this.activatedRoute.snapshot.queryParams['cutoff'] || '';
+    navigationExtras.queryParams['type'] = this.activatedRoute.snapshot.queryParams['type'] || '';
+    navigationExtras.queryParams['seqType'] = this.activatedRoute.snapshot.queryParams['seqType'] || '';
+    navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
+    navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
+    navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
+    navigationExtras.queryParams['facets'] = this.activatedRoute.snapshot.queryParams['facets'] || '';
+    navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
+    this.location.replaceState(
+      this.router.createUrlTree(
+        [this.locationStrategy.path().split('?')[0].replace(environment.baseHref, '')],
+        navigationExtras
+      ).toString()
+    );
+
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
