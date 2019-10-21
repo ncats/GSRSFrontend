@@ -14,7 +14,6 @@ import { PageEvent, MatPaginatorIntl } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import {AuthService} from '@gsrs-core/auth/auth.service';
 import { Location, LocationStrategy } from '@angular/common';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-clinical-trials-browse',
@@ -221,7 +220,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
 
     this.location.replaceState(
       this.router.createUrlTree(
-        [this.locationStrategy.path().split('?')[0].replace(environment.baseHref, '')],
+        [this.locationStrategy.path().split('?')[0].replace(this.configService.environment.baseHref, '')],
         navigationExtras
       ).toString()
     );
