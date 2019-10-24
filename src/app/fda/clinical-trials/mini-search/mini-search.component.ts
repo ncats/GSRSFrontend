@@ -57,7 +57,6 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
       this.suggestionsFields = Object.keys(this.substanceSuggestionsGroup);
       this.suggestions = response['Name'];
     }, error => {
-      console.log(error);
     });
 
     this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
@@ -71,16 +70,11 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.searchControl.setValue(this.myInitialSearch);
-    console.log('ngAfterViewInit initial search:' + this.myInitialSearch);
     this.trigger.panelClosingActions
       .subscribe(e => {
-        if (e == null) {
-        }
-        //  console.log('e:' + JSON.stringify(e));
         const data = {value: this.searchControl.value, myIndex: this.myIndex};
         this.miniSearchOutput.emit(data);
         this.trigger.closePanel();
-        console.log('In closing panel trigger subsciption');
       });
   }
 
@@ -93,7 +87,6 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
   substanceSearchOptionSelected(event?: MatAutocompleteSelectedEvent) {
     // this.navigateToSearchResults(event.option.value);
     const data = {value: event.option.value, myIndex: this.myIndex};
-    console.log('xxx:' + JSON.stringify(data));
     this.miniSearchOutput.emit(data);
   }
 

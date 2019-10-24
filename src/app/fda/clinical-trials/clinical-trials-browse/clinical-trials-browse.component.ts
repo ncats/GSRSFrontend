@@ -53,7 +53,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
 
     this.authService.hasRolesAsync('admin').subscribe(response => {
       this.isAdmin = response;
-      console.log('clinical-trial-edit isAdmin: ' + this.isAdmin);
+      // console.log('clinical-trial-edit isAdmin: ' + this.isAdmin);
       if (this.isAdmin) {
         this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated', 'delete'];
        } else {
@@ -79,25 +79,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
     this.searchClinicalTrials();
-  }
-  myAlert(s) {
-    // console.log("S "+s);
-  }
-
-  mytest()  {
-    let x = null;
-    this.clinicalTrialService.getSubstanceDetailsFromName('OXYTOCIN')
-    .subscribe(detailsResponse => {
-      x = detailsResponse.uuid;
-      console.log('Getting details');
-    }, error => {
-      x = 'ERROR';
-      console.log('There was an error getting details');
-     }, () => {
-      x = 'I am here.';
-      console.log('Getting details I am here');
-    });
-    return x;
   }
 
   setSearchTermValue() {
@@ -129,8 +110,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
         this.dataSource.forEach(element => {
             if (element.nctNumber === id) {
                 this.dataSource.splice(i, 1);
-
-                console.log('clinical-trials-browse ui found item to delete.');
+                // console.log('clinical-trials-browse ui found item to delete.');
               }
               i++;
         });
@@ -165,11 +145,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
   searchClinicalTrials() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
-    // let y = this.mytest2();
-    // console.log("printing");
-    // console.log(y);
-
-
     this.clinicalTrialService.getClinicalTrials(
       skip,
       this.pageSize,
@@ -181,7 +156,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit {
         // didn't work unless I did it like this instead of
         // below export statement
         this.dataSource = this.clinicalTrials;
-        console.log(JSON.stringify(this.clinicalTrials));
         this.totalClinicalTrials = pagingResponse.total;
         this.facets = [];
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {

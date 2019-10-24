@@ -16,29 +16,12 @@ export class ClinicalTrialService extends BaseHttpService {
   ) {
     super(configService);
   }
-  getClinicalTrialsTest() {
-    return [
-      { 'id': 1, ctNumber: 'NCT01', substanceUuid: 'xyz1' },
-      { 'id': 2, ctNumber: 'NCT02', substanceUuid: 'xyz2' },
-      { 'id': 3, ctNumber: 'NCT03', substanceUuid: 'xyz3' },
-      { 'id': 4, ctNumber: 'NCT04', substanceUuid: 'xyz4' }
-    ];
-  }
-  getClinicalTrialsTest2(
-  ): Observable<Array<ClinicalTrial>> {
-    const url = this.apiBaseUrl + 'ctclinicaltrial';
-    // let url = this.apiBaseUrl + 'clinical-trial/';
-    const x = this.http.get<any>(url);
-    // console.log(JSON.stringify(x));
-    return x;
-  }
 
   getClinicalTrials(
     skip: number = 0,
     pageSize: number = 10,
     searchTerm?: string
   ): Observable<PagingResponse<ClinicalTrial>> {
-    // console.log('skip: ' + skip);
     let params = new HttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
@@ -76,19 +59,6 @@ export class ClinicalTrialService extends BaseHttpService {
     return x;
   }
 
-  getBdnumNameAll(ingredientName: string): Observable<BdnumNameAll> {
-    // const url = `${this.apiBaseUrl}clinicaltrial(${id})`;
-    const url = this.apiBaseUrl + `bdnumnameall?ingredientName=` + encodeURIComponent(ingredientName);
-    const params = new HttpParams();
-    // params = params.append('view', 'full');
-    const options = {
-      params: params
-    };
-    const x = this.http.get<BdnumNameAll>(url, options);
-    // console.log(JSON.stringify(x));
-    return x;
-  }
-
   getSubstanceDetailsFromName(name: string): Observable<any> {
     const url = this.apiBaseUrl + 'substances/search?q=root_names_name:"^'
       + encodeURIComponent(name) + '$"&fdim=1';
@@ -105,10 +75,7 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   getSubstanceDetailsFromUUID(uuid: string): Observable<any> {
-
     const url = this.apiBaseUrl + 'substances(' + encodeURIComponent(uuid) + ')';
-    // console.log('url: ' + url);
-
     const params = new HttpParams();
     // params = params.append('view', 'full');
     const options = {
@@ -118,25 +85,7 @@ export class ClinicalTrialService extends BaseHttpService {
     return x;
   }
 
-  getSubstanceDetailsFromName_(name: string) {
-    const url = this.apiBaseUrl + 'substances(' + encodeURIComponent(name) + ')';
-    const params = new HttpParams();
-    // params = params.append('root_names_name', '"^'+name+'$"');
-    const options = {
-      params: params
-    };
-    let x = null;
-    this.http.get(url).subscribe((res) => {
-      // console.log("trying getSubstanceDetailsFromName");
-      // console.log(res);
-      x = res;
-    });
-    // console.log(x);
-    return x;
-  }
-
   addClinicalTrial(body): Observable<ClinicalTrial> {
-    // const url = `${this.apiBaseUrl}ctclinicaltrial(${id})`;
     const url = this.apiBaseUrl + `ctclinicaltrial`;
     const params = new HttpParams();
     const options = {
@@ -151,7 +100,6 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   updateClinicalTrial(body): Observable<ClinicalTrial> {
-    // const url = `${this.apiBaseUrl}ctclinicaltrial(${id})`;
     const url = this.apiBaseUrl + `ctclinicaltrial`;
     const params = new HttpParams();
     // params = params.append('view', 'full');
@@ -167,5 +115,4 @@ export class ClinicalTrialService extends BaseHttpService {
     const x = this.http.put<ClinicalTrial>(url, body, options);
     return x;
   }
-
 }

@@ -29,14 +29,36 @@
     margin-bottom: .1em;
   }
 
- button { 
+ button {
    margin-right: 1em;
  }
 
-.edit-clinical-trial-page { 
+.clinical-trial-edit-page { 
   padding: 10px;
   margin-top: 60px;
   margin-left: 30px;
   margin-right: 30px;
   margin-bottom: 30px;
  }
+
+.indent-list { 
+  margin-left:2em;
+}
+
+.top-spacer {
+  margin-top: 50px;
+}
+
+.id-container {
+  width: 30px;
+}
+
+.protected-match-checkbox { 
+  margin-left: 15px;
+}
+.protected-match-icon { 
+  color:gray;
+}
+.match-complete-checkbox { 
+  margin-left: 15px;
+}

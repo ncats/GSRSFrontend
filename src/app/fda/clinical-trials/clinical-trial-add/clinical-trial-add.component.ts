@@ -17,8 +17,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class ClinicalTrialAddComponent implements OnInit {
   public clinicalTrials: Array<ClinicalTrial>;
-  // public facets: Array<Facet> = [];
-  // private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
   isTesting: Boolean = false;
   isLoading = true;
   isError = false;
@@ -76,14 +74,9 @@ export class ClinicalTrialAddComponent implements OnInit {
   }
   updateClinicalTrial() {
     this.loadingService.setLoading(true);
-    if (this.isTesting) {
-      console.log('xyz');
-      console.log(this.json);
-    }
     this.clinicalTrialService.updateClinicalTrial(this.json)
       .subscribe(result => {
         this.isError = false;
-        const i = 0;
         const notification: AppNotification = {
           message: 'You updated a clinical trial record.',
           type: NotificationType.success,

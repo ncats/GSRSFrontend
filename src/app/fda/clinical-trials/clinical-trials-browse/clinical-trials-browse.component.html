@@ -1,25 +1,14 @@
-<div style="padding: 10px; margin-top: 60px; margin-left: 30px;  margin-right: 30px;  margin-bottom: 30px;" 
-class="example-container mat-elevation-z8">
-
-
+<div class="example-container mat-elevation-z8 clinical-trials-browse-wrapper">
     <p>
     Browse Clinical Trials 
     </p>
-    <!-- div>
-    <form class="jump-to-form" style="margin-right: 10px; float: left">
-      <mat-form-field>
-        <input matInput placeholder="NCT Number" [(ngModel)]="jumpToValue" name="jumpToValue"/>
-      </mat-form-field>
-     </form>
-     <button mat-flat-button color="primary" style="position: relative; top: 12px; float: left; margin-right: 10px;"  matSuffix aria-label="Jump to NctNumber" (click)="jumpToClinicalTrial();">Go</button>
-    </div -->
     <div>
-    <form class="filter-form" style="margin-right: 10px; float: left">
+    <form class="filter-form clinical-trials-browse-filter-form">
       <mat-form-field>
         <input matInput placeholder="Search Term" [(ngModel)]="_searchTerm" name="_searchTerm" (keyup.enter)="setSearchTermValue();" />
       </mat-form-field>
      </form>
-     <button mat-flat-button color="primary" style="position: relative; top: 12px; float: left; margin-right: 10px;"  matSuffix aria-label="Search Clinical Trials" (click)="setSearchTermValue();">Go</button>
+     <button mat-flat-button color="primary" class="clinical-trials-browse-filter-form-button"  matSuffix aria-label="Search Clinical Trials" (click)="setSearchTermValue();">Go</button>
     </div>
     <div>
       <mat-paginator #paginator [length]="totalClinicalTrials" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"

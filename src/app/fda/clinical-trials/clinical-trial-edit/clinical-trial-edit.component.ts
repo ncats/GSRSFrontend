@@ -66,7 +66,6 @@ export class ClinicalTrialEditComponent implements OnInit {
     this.authService.hasRolesAsync('admin').subscribe(response => {
       this.isAdmin = response;
       if (this.isTesting) {
-        console.log('clinical-trial-edit isAdmin: ' + this.isAdmin);
       }
       if (this.isAdmin) {
         this.displayedColumns = ['id', 'name', 'substanceUuid', 'protectedMatch', 'link', 'delete'];
@@ -92,11 +91,6 @@ export class ClinicalTrialEditComponent implements OnInit {
   }
 
   reportMiniSearchOutput(data) {
-    if (this.isTesting)  {
-      console.log('doing reportMiniSearchOutput');
-      console.log('data:' + JSON.stringify(data));
-    }
-
    this.clinicalTrialService.getSubstanceDetailsFromName(data.value).subscribe(
     substanceDetails => {
       if (substanceDetails == null
@@ -106,15 +100,9 @@ export class ClinicalTrialEditComponent implements OnInit {
 //          || substanceDetails.content[0].name===String('null')
         ) {
           this.dataSource.data[data.myIndex].substanceUuid = null;
-          if (this.isTesting) {
-            console.log('Uuid is null: ' + console.log(JSON.stringify(data.value)));
-          }
         } else {
           this.dataSource.data[data.myIndex].name = data.value;
           this.dataSource.data[data.myIndex].substanceUuid = substanceDetails.content[0].uuid;
-          if (this.isTesting) {
-            console.log('Uuid is not null: ' + JSON.stringify(substanceDetails));
-          }
         }
     }, error => {
       this.dataSource.data[data.myIndex].substanceUuid = null;
@@ -130,8 +118,8 @@ export class ClinicalTrialEditComponent implements OnInit {
     // why?
     this.dataSource.data = this.dataSource.data;
   }
+
   removeRow(i) {
-    const model = { id: '', name: '',  substanceUuid: ''};
     this.dataSource.data.splice(i, 1);
     this.dataSource.data = this.dataSource.data;
   }
@@ -142,11 +130,8 @@ export class ClinicalTrialEditComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
-
   getClinicalTrial() {
-    // let that = this;
     this.loadingService.setLoading(true);
-    // console.log('xyz: '  + this._nctNumber);
     this.dataSource.data = [];
     this.clinicalTrialService.getClinicalTrial(this._nctNumber)
       .subscribe( data => {
@@ -163,7 +148,6 @@ export class ClinicalTrialEditComponent implements OnInit {
         // Weird, why is this necessary?
         this.clinicalTrial = data;
         this.dataSource.data = this.dataSource.data;
-        // console.log('def' + JSON.stringify(this.dataSource.data));
       }, error => {
         const notification: AppNotification = {
           message: 'There was an error trying to retrieve clinical trial. Please refresh and try again.',
@@ -178,27 +162,6 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
-  }
-
-
-  mytest2(uuid)  {
-    let x = null;
-    this.clinicalTrialService.getSubstanceDetailsFromUUID(uuid)
-    .subscribe(detailsResponse => {
-      // console.log('Getting name');
-      // console.log(detailsResponse);
-      if (detailsResponse._name != null) {
-        x = detailsResponse._name;
-        console.log(x);
-      } else {
-        console.log('Was null bxc');
-      }
-    }, error => {
-      x = 'ERROR';
-      // console.log('There was an error getting details');
-     }, () => {
-    });
-    return x;
   }
 
   updateClinicalTrial() {
@@ -216,9 +179,6 @@ export class ClinicalTrialEditComponent implements OnInit {
       newClinicalTrialDrugs.push(ctd);
     });
     newClinicalTrial.clinicalTrialDrug = newClinicalTrialDrugs;
-    if (this.isTesting) {
-      console.log('newClinicalTrialDrug: ' + JSON.stringify(newClinicalTrial));
-    }
     this.clinicalTrialService.updateClinicalTrial(
       newClinicalTrial
     )
@@ -229,14 +189,9 @@ export class ClinicalTrialEditComponent implements OnInit {
         // sneak back into the edit component. Thefore, for now, I am reloading
         // the data with the GET after a successful update.
         if (0) {
-        if (this.isTesting) {
-          console.log('this is the data');
-          console.log(data);
-        }
         this.isError = false;
         this.dataSource.data = [];
         data.clinicalTrialDrug.forEach(element => {
-          console.log('xxx: ' + JSON.stringify(element));
           this.dataSource.data.push(
             {
               id: element.id,
@@ -262,10 +217,6 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.loadingService.setLoading(this.isLoading);
         this.notificationService.setNotification(notification);
       }, error => {
-        // what should we do on error?
-        if (this.isTesting) {
-          console.log('testing errors:' + JSON.stringify(error.error.errors));
-        }
         let message = 'There was an error trying to update clinical trial.';
         const noChange = false;
         if (error.error.errors != null) {
