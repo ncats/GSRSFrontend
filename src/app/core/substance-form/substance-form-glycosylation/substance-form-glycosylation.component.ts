@@ -72,7 +72,7 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
     }
       const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': type, 'link': param},
-      width: '990px'
+      width: '1038px'
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {

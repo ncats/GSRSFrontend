@@ -7,6 +7,7 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 
 @Component({
   selector: 'app-disulfide-links-form',
@@ -16,7 +17,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
 
   private privateLink: Link;
-  public cysteine: Array<Site>;
+  public cysteine: Array<Site> = [];
   @Output() linkDeleted = new EventEmitter<Link>();
   deleteTimer: any;
   testForm = new FormGroup({
@@ -27,15 +28,15 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
       Validators.required
     ]),
   });
-  private subscriptions: Array<Subscription> = [];
+  private subscriptions: Array<Subscription> = []
+  private overlayContainer: HTMLElement;
 
   constructor(
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
-
+    private overlayContainerService: OverlayContainer,
     private substanceFormService: SubstanceFormService,
-    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
@@ -45,15 +46,17 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
     } else {
       this.privateLink.sites = [{}, {}];
     }
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
     ngAfterViewInit() {
-    console.log(this.privateLink);
-    const cysteineSubscription = this.substanceFormService.substanceCysteineSites.subscribe(cysteine => {
-      this.cysteine = cysteine;
-      this.subscriptions.push(cysteineSubscription);
-      //this.name.setValue(this.cysteine[0]);
+      setTimeout(() => {
+        const cysteineSubscription = this.substanceFormService.substanceCysteineSites.subscribe(cysteine => {
+          this.cysteine = cysteine;
+          this.subscriptions.push(cysteineSubscription);
+          //this.name.setValue(this.cysteine[0]);
 
-    });
+        });
+      });
   }
   @Input()
   set link(link: Link) {
@@ -72,11 +75,13 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
         this.linkDeleted.emit(this.link);
       }, 2000);
     }
+    this.substanceFormService.emitDisulfideLinkUpdate();
   }
 
   undoDelete(): void {
     clearTimeout(this.deleteTimer);
     delete this.privateLink.$$deletedCode;
+    this.substanceFormService.emitDisulfideLinkUpdate();
   }
 
   updateAccess(access: Array<string>): void {
@@ -84,8 +89,6 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
   }
 
   updateSuggestions(value: Site, pos: number): void {
-    console.log('update sug');
-    console.log(value);
     this.cysteine = this.cysteine.filter(function(r) { return (r.residueIndex !== value.residueIndex) || (r.subunitIndex !== value.subunitIndex); });
     if (this.privateLink.sites[pos] !== value) {
       if (this.privateLink.sites[pos].residueIndex) {
@@ -98,5 +101,23 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
     this.testForm.controls['site' + pos].setValue(value);
   }
 
+  openDialog(): void {
+
+    const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
+      data: {'card': 'disulfide', 'link': this.privateLink.sites},
+      width: '1040px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
+      this.overlayContainer.style.zIndex = null;
+      if(newLinks){
+        this.privateLink.sites = newLinks;
+        this.testForm.controls['site0'].setValue(this.privateLink.sites[0]);
+        this.testForm.controls['site1'].setValue(this.privateLink.sites[1] ? this.privateLink.sites[1] : {});
+      }
+    });
+    this.subscriptions.push(dialogSubscription);
+  }
 
 }

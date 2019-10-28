@@ -29,18 +29,20 @@
   }
 
   .site {
-    flex-grow: 1;
-    padding-right: 15px;
+    max-width:80px;
   }
 
-  .sites{
+
+  sites {
+    width:35%;
+  }
+ /* .sites{
     flex-grow: 1;
     padding-right: 15px;
-    width:50%;
-  }
+    width:40%;
+  }*/
 
   .site-select {
-    width:100px;
   }
 
 }

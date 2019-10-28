@@ -39,7 +39,7 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
       console.log(this.protein);
     });
     this.subscriptions.push(proteinSubscription);
-    this.getVocabularies();
+    setTimeout(() => {this.getVocabularies(); });
     this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All', unSelectAllText: 'UnSelect All', itemsShowLimit: 3, allowSearchFilter: true};
   }
 
@@ -48,7 +48,6 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
   }
 
   update(tags: Array<string>): void {
-    console.log(tags);
     this.protein.proteinSubType = tags.join('|');
   }
 

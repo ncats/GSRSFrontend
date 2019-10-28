@@ -2,7 +2,7 @@
 
 <div class="substance-form-row">
   <button mat-button (click)="addStructuralModification()">
-    Add Link <mat-icon svgIcon="add_circle_outline"></mat-icon>
+    Add Modification <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
 <div   *ngFor="let mod of modifications; last as isLast; index as index">
   <app-structural-modification-form [mod]="mod" ></app-structural-modification-form>

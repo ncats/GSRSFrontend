@@ -100,12 +100,12 @@
 }
 
 .extent, .amount {
-  width:33%;
+  width:40%;
 }
 
 
 .group, .access {
-  width: 45%;
+  width: 30%;
 }
 
 
@@ -195,4 +195,18 @@
     font-weight: 400;
     font-family: Roboto, "Helvetica Neue", sans-serif;
   }
+}
+
+
+.amount {
+  display:flex;
+}
+
+.amt-label {
+    padding-top:11px;
+}
+
+
+.parm-display {
+  padding-top:10px;
 }

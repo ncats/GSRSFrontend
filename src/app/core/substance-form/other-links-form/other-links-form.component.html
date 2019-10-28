@@ -11,19 +11,21 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <mat-form-field class="name-type">
-      <mat-label>Type</mat-label>
-    <mat-select [(ngModel)]="link.linkageType" required name="type">
-      <mat-option *ngFor="let linkageType of linkageTypes" [value]="linkageType.value">
-        {{linkageType.display}}
-      </mat-option>
-    </mat-select>
-    </mat-form-field>
-    <div>
+    <div class = "type">
+      <mat-form-field class="name-type">
+        <mat-label>Type</mat-label>
+        <mat-select [(ngModel)]="link.linkageType" required name="type">
+          <mat-option *ngFor="let linkageType of linkageTypes" [value]="linkageType.value">
+            {{linkageType.display}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class = "links">
       <div class="label">link</div>
       {{siteDisplay}}
-        <button mat-icon-button matTooltip="Undo" (click)="(openDialog())">
-          <mat-icon svgIcon="search"></mat-icon>
+        <button mat-icon-button matTooltip="Select sites from display" (click)="(openDialog())">
+          <mat-icon svgIcon="edit"></mat-icon>
         </button>
     </div>
   </div>

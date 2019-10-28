@@ -40,7 +40,6 @@ export class OtherLinksFormComponent implements OnInit {
 
   @Input()
   set link(link: Link) {
-    console.log(link);
     this.privateLink = link;
   }
 
@@ -76,13 +75,12 @@ export class OtherLinksFormComponent implements OnInit {
 
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'other', 'link': this.privateLink.sites},
-      width: '990px'
+      width: '1038px'
     });
     this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
       this.overlayContainer.style.zIndex = null;
-      console.log('otherlinks dialog closed');
       this.privateLink.sites = newLinks;
       this.updateDisplay();
     });

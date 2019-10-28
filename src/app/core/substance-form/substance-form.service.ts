@@ -61,6 +61,7 @@ export class SubstanceFormService {
   private customFeaturesEmitter = new Subject<Array<Feature>>();
   private customFeatures: Array<Feature>;
   private subunitSequence: Array<any>;
+  private cysteine: Array<Site>;
   private allSitesArr: Array<DisplaySite>;
   private allSitesEmitter = new Subject<Array<DisplaySite>>();
   constructor(
@@ -206,20 +207,52 @@ export class SubstanceFormService {
 
   get allSites(): Observable<Array<DisplaySite>> {
     return new Observable(observer => {
-      if(!this.allSitesArr){
+      if (!this.allSitesArr) {
         this.allSitesArr = [];
       }
-      if(this.substance.protein.disulfideLinks){
+      if (this.substance.protein.disulfideLinks) {
         this.substance.protein.disulfideLinks.forEach(link => {
           link.sites.forEach(site => {
             const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
             this.allSitesArr.push(newLink);
           });
         });
-      } else {
-        this.allSitesArr = [];
       }
-      console.log(this.allSitesArr);
+      if (this.substance.protein.otherLinks) {
+        this.substance.protein.otherLinks.forEach(link => {
+          if (link.sites) {
+            link.sites.forEach(site => {
+              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+              this.allSitesArr.push(newLink);
+            });
+          }
+        });
+      }
+
+      if (this.substance.protein.glycosylation) {
+        const glycosylation = this.substance.protein.glycosylation;
+        if (glycosylation.CGlycosylationSites) {
+
+          glycosylation.CGlycosylationSites.forEach(site => {
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
+            this.allSitesArr.push(newLink);
+          });
+        }
+
+        if (glycosylation.NGlycosylationSites) {
+          glycosylation.NGlycosylationSites.forEach(site => {
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
+            this.allSitesArr.push(newLink);
+          });
+        }
+
+        if (glycosylation.OGlycosylationSites) {
+          glycosylation.OGlycosylationSites.forEach(site => {
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
+            this.allSitesArr.push(newLink);
+          });
+        }
+      }
       observer.next( this.allSitesArr);
       this.allSitesEmitter.subscribe(protein => {
         observer.next( this.allSitesArr);
@@ -231,13 +264,11 @@ export class SubstanceFormService {
   // Class start
 
   get substanceProtein(): Observable<Protein> {
-    console.log('get prot called');
     return new Observable(observer => {
       this.ready().subscribe(substance => {
         if (this.substance.protein == null) {
           this.substance.protein = {};
         }
-        console.log(this.substance.protein);
         observer.next(this.substance.protein);
         this.substanceNamesEmitter.subscribe(protein => {
           observer.next(this.substance.protein);
@@ -588,7 +619,17 @@ export class SubstanceFormService {
     this.substance.properties.unshift(newProperty);
     this.substancePropertiesEmitter.next(this.substance.properties);
   }
-
+  addSubstancePropertyFromFeature(feature: any): void {
+    const newProperty: SubstanceProperty = {
+      value: {'nonNumericValue': feature.siteRange, 'type': 'Site Range'},
+      propertyType: 'PROTEIN FEATURE',
+      name: feature.name,
+      references: [],
+      access: []
+    };
+    this.substance.properties.unshift(newProperty);
+    this.substancePropertiesEmitter.next(this.substance.properties);
+  }
   deleteSubstanceProperty(property: SubstanceProperty): void {
     const subPropertyIndex = this.substance.properties.findIndex(subProperty => property.$$deletedCode === subProperty.$$deletedCode);
     if (subPropertyIndex > -1) {
@@ -844,6 +885,28 @@ export class SubstanceFormService {
     this.substanceCysteineEmitter.next(cysteine);
   }
 
+  recalculateCysteine(): void {
+    let available = [];
+    for (let i = 0; i < this.substance.protein.subunits.length; i++) {
+      const sequence = this.substance.protein.subunits[i].sequence;
+      for (let j = 0; j < sequence.length; j++) {
+        const site = sequence[j];
+        if (site.toUpperCase() === 'C') {
+          available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+        }
+      }
+    }
+
+    this.substance.protein.disulfideLinks.forEach(link => {
+      if (link.sites) {
+        link.sites.forEach(site => {
+          available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
+        });
+      }
+    });
+    this.substanceCysteineEmitter.next(available);
+  }
+
   get substanceCysteineSites(): Observable< Array<Site>> {
     return new Observable(observer => {
       this.ready().subscribe(() => {
@@ -865,10 +928,10 @@ export class SubstanceFormService {
             });
           }
         });
+        this.cysteine = available;
         observer.next(available);
         this.substanceCysteineEmitter.subscribe(disulfideLinks => {
-          console.log('self');
-          console.log(disulfideLinks);
+          this.cysteine = disulfideLinks;
           observer.next(disulfideLinks);
         });
       });
@@ -999,8 +1062,55 @@ export class SubstanceFormService {
     });
   }
 
+  siteDisplayToSite(site) {
+    const subres = site.split('_');
+
+    if (site.match(/^[0-9][0-9]*_[0-9][0-9]*$/g) === null) {
+      throw new Error('"' + site + '" is not a valid shorthand for a site. Must be of form "{subunit}_{residue}"');
+    }
+
+    return {
+      subunitIndex: subres[0] - 0,
+      residueIndex: subres[1] - 0
+    };
+  }
+
+  stringToSites (slist: string): Array<Site> {
+    slist = slist.replace(/ /g,'');
+      if (!slist) {return []; }
+      const toks = slist.split(';');
+    const  sites = [];
+      for (var i in toks) {
+        const  l = toks[i];
+        if (l === '') {continue; }
+        const  rng = l.split('-');
+        if (rng.length > 1) {
+          const site1 = this.siteDisplayToSite(rng[0]);
+          const site2 = this.siteDisplayToSite(rng[1]);
+          if (site1.subunitIndex != site2.subunitIndex) {
+            throw new Error('"' + rng + '" is not a valid shorthand for a site range. Must be between the same subunits.');
+          }
+          if (site2.residueIndex <= site1.residueIndex) {
+            throw new Error('"' + rng + '" is not a valid shorthand for a site range. Second residue index must be greater than first.');
+          }
+          sites.push(site1);
+          for (let j = site1.residueIndex + 1; j < site2.residueIndex; j++) {
+            sites.push({
+              subunitIndex: site1.subunitIndex,
+              residueIndex: j
+            });
+          }
+          sites.push(site2);
+        } else {
+          sites.push(this.siteDisplayToSite(rng[0]));
+        }
+      }
+      return sites;
+  }
+
   siteString(sites: Array<Site>): string {
-    if (sites.length === 0) {
+
+    if (!sites || sites.length === 0) {
       return '';
     }
     if (sites.length === 1) {

@@ -26,7 +26,6 @@ export class SubstanceFormOtherLinksComponent extends SubstanceCardBaseFilteredL
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Other Links');
-    console.log(this.otherLinks);
   }
 
   ngAfterViewInit() {

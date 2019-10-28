@@ -92,9 +92,12 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
       }
     }
     this.disulfideLinks.forEach(link => {
-      link.sites.forEach(site => {
-        available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
-      });
+      if(link.sites){
+        link.sites.forEach(site => {
+          available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
+        });
+      }
+
     });
   }
 
@@ -103,10 +106,12 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-disulfide-link-0`, 'center');
     });
+    this.substanceFormService.emitDisulfideLinkUpdate();
   }
 
   deleteDisulfideLink(disulfideLink: DisulfideLink): void {
     this.substanceFormService.deleteSubstanceDisulfideLink(disulfideLink);
+    this.substanceFormService.emitDisulfideLinkUpdate();
   }
 
 

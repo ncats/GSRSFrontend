@@ -28,8 +28,6 @@ export class PhysicalParameterFormDialogComponent implements OnInit {
   }
 
   save(): void {
-    console.log('saving dialog');
-    console.log(this.parameters);
     this.dialogRef.close(this.parameters);
   }
 

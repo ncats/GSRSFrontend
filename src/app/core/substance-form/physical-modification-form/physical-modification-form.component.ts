@@ -41,7 +41,6 @@ export class PhysicalModificationFormComponent implements OnInit {
   @Input()
   set mod(mod: PhysicalModification) {
     this.privateMod = mod;
-    console.log(this.privateMod);
 
   }
 
@@ -51,7 +50,6 @@ export class PhysicalModificationFormComponent implements OnInit {
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('PHYSICAL_MODIFICATION_ROLE').subscribe(response => {
-      console.log(response);
       this.modRoleList = response['PHYSICAL_MODIFICATION_ROLE'].list;
     });
   }

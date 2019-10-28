@@ -376,5 +376,6 @@ export interface ProteinFeatures {
 
 export interface Feature {
     sites?: Array<Site>;
+    siteRange?: string;
     name?: string;
 }

@@ -6,7 +6,6 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {Link, Subunit} from '@gsrs-core/substance';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
-import _ from 'underscore';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
@@ -24,6 +23,8 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
   toggle = {};
   view = 'details';
   private overlayContainer: HTMLElement;
+  features: any;
+  allSites: Array<DisplaySite> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -44,11 +45,82 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
 
   ngAfterViewInit(): void {
     const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
-      console.log('subunits changed');
       this.subunits = subunits;
       this.filtered = subunits;
       this.subscriptions.push(subunitsSubscription);
+
+      const featuresSubscription = this.substanceFormService.CustomFeatures.subscribe(features => {
+        this.features = features;
+        if (features) {
+          this.features = features;
+        }
+      });
+        this.subscriptions.push(featuresSubscription);
+
+      /*const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
+        disulfideLinks.forEach(link => {
+          link.sites.forEach(site => {
+            //this.disulfideSites.push(site);
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
+            this.allSites.push(newLink);
+          });
+        });
+      });
+      this.subscriptions.push(disulfideLinksSubscription);
+
+      const otherLinksSubscription = this.substanceFormService.substanceOtherLinks.subscribe(otherLinks => {
+        otherLinks.forEach(link => {
+          if (link.sites) {
+            link.sites.forEach(site => {
+              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+              this.allSites.push(newLink);
+              //    this.otherSites.push(site);
+            });
+          }
+        });
+      });
+      this.subscriptions.push(otherLinksSubscription);
+
+      const glycosylationSubscription = this.substanceFormService.substanceGlycosylation.subscribe(glycosylation => {
+
+
+        if (glycosylation.CGlycosylationSites) {
+
+          glycosylation.CGlycosylationSites.forEach(site => {
+            // this.CGlycosylationSites.push(site);
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
+            this.allSites.push(newLink);
+          });
+        }
+
+        if (glycosylation.NGlycosylationSites) {
+          glycosylation.NGlycosylationSites.forEach(site => {
+            //    this.NGlycosylationSites.push(site);
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
+            this.allSites.push(newLink);
+          });
+        }
+
+        if (glycosylation.OGlycosylationSites) {
+          glycosylation.OGlycosylationSites.forEach(site => {
+            //this.OGlycosylationSites.push(site);
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
+            this.allSites.push(newLink);
+          });
+        }
+
+      });*/
+
+      const allSub = this.substanceFormService.allSites.subscribe(features => {
+        this.allSites = features;
+        console.log(features);
+      });
+      this.subscriptions.push(allSub);
   });
+  }
+
+  getSites(index: number): Array<DisplaySite> {
+    return this.allSites.filter(s => (s.subunit === index));
   }
 
     ngOnDestroy() {
@@ -64,7 +136,7 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
 
   addSubunit(): void {
     this.substanceFormService.addSubstanceSubunit();
-    const next = 'substance-link-' + this.subunits.length;
+    const next = 'substance-subunit-' + this.subunits.length;
     setTimeout(() => {
       this.scrollToService.scrollToElement(next, 'center');
     });
@@ -77,16 +149,11 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
 
   getSequence(index: number): any {
     let testing = {};
-    console.log(index);
-    console.log(this.subunitSequences);
     this.subunitSequences.forEach(v => {
-      console.log(v);
-      if (v.subunitIndex === (index+1)) {
+      if (v.subunitIndex === (index + 1)) {
         testing = v;
-        console.log(v);
       }
     });
-    console.log(testing);
     return testing;
 
   }
@@ -96,11 +163,14 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
 
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'feature', 'link': []},
-      width: '1020px'
+      width: '1038px'
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
+    const dialogSubscription = dialogRef.afterClosed().subscribe(newFeature => {
+      if (newFeature) {
+        this.substanceFormService.addSubstancePropertyFromFeature(newFeature);
+      }
       this.overlayContainer.style.zIndex = null;
       console.log('other links dialog closed');
     });
@@ -126,4 +196,9 @@ interface SequenceSection {
 interface SequenceUnit {
   unitIndex: number;
   unitValue: string;
+}
+interface DisplaySite {
+  type: string;
+  subunit: number;
+  residue: number;
 }

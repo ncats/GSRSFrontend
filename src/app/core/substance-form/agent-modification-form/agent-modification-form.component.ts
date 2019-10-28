@@ -44,8 +44,6 @@ export class AgentModificationFormComponent implements OnInit {
       this.relatedSubstanceUuid = this.privateMod.agentSubstance.refuuid;
     }
 
-    console.log(this.privateMod);
-
   }
 
   get mod(): AgentModification {
@@ -54,7 +52,6 @@ export class AgentModificationFormComponent implements OnInit {
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('AGENT_MODIFICATION_TYPE', 'AGENT_MODIFICATION_PROCESS', 'ROLE').subscribe(response => {
-      console.log(response);
       this.modTypeList = response['AGENT_MODIFICATION_TYPE'].list;
       this.modProcessList = response['AGENT_MODIFICATION_PROCESS'].list;
       this.modRoleList = response['ROLE'].list;
@@ -64,7 +61,6 @@ export class AgentModificationFormComponent implements OnInit {
 
 
   openAmountDialog(): void {
-    console.log(this.mod.amount);
     if (!this.mod.amount) {
       this.mod.amount = {};
     }

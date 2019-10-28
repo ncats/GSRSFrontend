@@ -64,7 +64,6 @@ import { SubstanceFormModule } from './substance-form/substance-form.module';
 import {FacetFilterPipe} from '@gsrs-core/utils/facet-filter.pipe';
 import { NameResolverModule } from './name-resolver/name-resolver.module';
 import { HighlightedSearchActionComponent } from './highlighted-search-action/highlighted-search-action.component';
-import {GuidedSearchComponent} from '@gsrs-core/guided-search/guided-search.component';
 
 @NgModule({
   declarations: [
@@ -82,8 +81,7 @@ import {GuidedSearchComponent} from '@gsrs-core/guided-search/guided-search.comp
     SequenceSearchComponent,
     TrackLinkEventDirective,
     SubstanceFormComponent,
-    HighlightedSearchActionComponent,
-    GuidedSearchComponent,
+    HighlightedSearchActionComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

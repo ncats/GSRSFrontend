@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PropertyParameterDialogComponent } from '../property-parameter-dialog/property-parameter-dialog.component';
 import { UtilsService } from '../../utils/utils.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 
 @Component({
   selector: 'app-property-form',
@@ -114,6 +115,32 @@ export class PropertyFormComponent implements OnInit {
         }
       }
     });
+  }
+
+  openFeatureDialog() {
+    const feature = {'name': this.property.name, 'siteRange': this.property.value.nonNumericValue};
+    const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
+      data: {'card': 'feature', 'link': [], 'feature': feature},
+      width: '1048px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(features => {
+      this.overlayContainer.style.zIndex = null;
+      this.property.name = features.name;
+      this.property.value.nonNumericValue = features.siteRange;
+    });
+  }
+
+  addOtherOption(vocab: Array<VocabularyTerm>, property: string) {
+    if (vocab.some(r => property === r.value)) {
+    } else {
+    }
+    return vocab;
+  }
+
+  inCV(vocab: Array<VocabularyTerm>, property: string) {
+    return vocab.some(r => property === r.value);
   }
 
 }

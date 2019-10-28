@@ -3,6 +3,7 @@
   position: relative;
 }
 
+
 .notification-backdrop {
   position: absolute;
   top: 0;
@@ -19,14 +20,39 @@
   color: #666;
 }
 
-.form-row {
+.form-row2 {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  flex: 1 0 99%;
 
   .delete-container {
     padding: 0 10px 8px 0;
   }
 
+  .add-button {
+    width:20%;
+  }
 
+  .cysteine{
+    width:50%;
+  }
+
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.site-set{
+  flex: 1 0 48%;
+  margin: 5px;
+  max-width:50%;
+}
+
+
+.columns {
+  display: flex;
+  flex-wrap: wrap;
 }

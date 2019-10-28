@@ -5,16 +5,22 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
-  <div class="form-row">
-    <div class = "form-sub-row">
     <div class="delete-container">
       <button mat-icon-button matTooltip="Delete code" (click)="deleteCode()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
+      <div class="flex-column related-substance">
+        <div class = "related-holder">
+          <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+                                  eventCategory="substanceRelationshipRelatedSub" placeholder="Molecular Fragment" header="Molecular Fragment"
+                                  [subuuid]="relatedSubstanceUuid">
+          </app-substance-selector>
+        </div>
+      </div>
       <div class="flex-column form-content">
-        <div class="form-row">
 
+        <div class="form-row">
     <mat-form-field class="mod-type">
       <mat-label>Modification Type</mat-label>
       <mat-select [(ngModel)]="mod.structuralModificationType" required name="code">
@@ -31,7 +37,9 @@
               <mat-icon svgIcon="search"></mat-icon>
             </button>
           </div>
+        </div>
 
+        <div class="form-row">
           <mat-form-field class="extent">
             <mat-label>Extent</mat-label>
             <mat-select [(ngModel)]="mod.extent" required  name="code">
@@ -40,9 +48,6 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-
-        </div>
-        <div class = "form-row">
 
           <mat-form-field class="location-type">
             <mat-label>Location Type</mat-label>
@@ -64,33 +69,24 @@
             </div>
           </div>
 
+        </div>
 
 
+        <div class="form-row">
           <div class = 'amount' *ngIf = "mod.extent == 'PARTIAL'">
-            <div class = "label">
+            <div class = "label padded">
               Amount
             </div>
             <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
                <mat-icon svgIcon="add_circle_outline"></mat-icon>
             </button>
-            <div *ngIf = "mod.extentAmount">
+            <div *ngIf = "mod.extentAmount" class = "amount-display">
               {{displayAmount(mod.extentAmount)}}
             </div>
 
           </div>
-
+        </div>
         </div>
 
-
-
     </div>
 
-  </div>
-    <div class="flex-column related-substance">
-      <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-                              eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" header="Related Substance"
-                              [subuuid]="relatedSubstanceUuid">
-      </app-substance-selector>
-    </div>
-</div>
-</div>

@@ -9,7 +9,7 @@ import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
 import {SubstanceFormProteinDetailsComponent} from '@gsrs-core/substance-form/substance-form-protein-details/substance-form-protein-details.component';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
-import {TagSelectorComponent} from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @NgModule({
   imports: [

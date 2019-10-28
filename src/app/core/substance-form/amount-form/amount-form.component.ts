@@ -32,7 +32,6 @@ export class AmountFormComponent implements OnInit {
 
   @Input()
   set substanceAmount(amount: SubstanceAmount) {
-    console.log(amount);
     if (amount != null) {
       this.privateSubstanceAmount = amount;
 

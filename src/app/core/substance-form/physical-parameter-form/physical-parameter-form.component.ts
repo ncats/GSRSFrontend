@@ -21,8 +21,6 @@ export class PhysicalParameterFormComponent implements OnInit {
   }
 
   get parameter(): PhysicalModificationParameter {
-    console.log('returning param');
-    console.log(this.privateParameter);
     return this.privateParameter;
   }
   get isValid(): boolean {

@@ -40,12 +40,13 @@ export class StructuralModificationFormComponent implements OnInit {
     this.getVocabularies();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.updateDisplay();
+
   }
 
   @Input()
   set mod(mod: StructuralModification) {
     this.privateMod = mod;
-    this.relatedSubstanceUuid = this.privateMod.molecularFragment.refuuid;
+    this.relatedSubstanceUuid = this.privateMod.molecularFragment && this.privateMod.molecularFragment.refuuid || '';
   }
 
   get mod(): StructuralModification {
@@ -54,7 +55,6 @@ export class StructuralModificationFormComponent implements OnInit {
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('STRUCTURAL_MODIFICATION_TYPE', 'LOCATION_TYPE', 'EXTENT_TYPE').subscribe(response => {
-      console.log(response);
       this.modTypeList = response['STRUCTURAL_MODIFICATION_TYPE'].list;
       this.modLocationList = response['LOCATION_TYPE'].list;
      // this.setCodeSystemType();
@@ -110,7 +110,6 @@ export class StructuralModificationFormComponent implements OnInit {
   }
 
   openAmountDialog(): void {
-    console.log(this.mod.extentAmount);
     if(!this.mod.extentAmount){
       this.mod.extentAmount = {};
     }
@@ -128,7 +127,6 @@ export class StructuralModificationFormComponent implements OnInit {
   }
 
   updateDisplay(): void {
-    console.log(this.mod.sites);
     this.siteDisplay = this.substanceFormService.siteString(this.mod.sites);
   }
 

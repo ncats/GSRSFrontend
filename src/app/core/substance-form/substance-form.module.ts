@@ -52,6 +52,7 @@ import {PhysicalModificationFormComponent} from '@gsrs-core/substance-form/physi
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/physical-parameter-form-dialog/physical-parameter-form-dialog.component';
 import {PhysicalParameterFormComponent} from '@gsrs-core/substance-form/physical-parameter-form/physical-parameter-form.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @NgModule({
   imports: [
@@ -110,7 +111,8 @@ import {PhysicalParameterFormComponent} from '@gsrs-core/substance-form/physical
     PhysicalModificationFormComponent,
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
-    PhysicalParameterFormComponent
+    PhysicalParameterFormComponent,
+    CvInputComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -139,7 +141,8 @@ import {PhysicalParameterFormComponent} from '@gsrs-core/substance-form/physical
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
-    TagSelectorComponent
+    TagSelectorComponent,
+    CvInputComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,

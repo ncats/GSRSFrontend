@@ -21,15 +21,18 @@
     </mat-form-field>
 
     <div class = 'amount'>
-      <div class = "label">
-        Amount
+      <div class = "label amt-label">
+        Parameters
       </div>
       <button mat-icon-button matTooltip="add" (click)="(openParameterDialog())">
         <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
-      <div *ngFor = "let param of mod.parameters; index as index">{{index}}
-        {{param.parameterName}}
+      <div class = 'param-display'>
+        <div *ngFor = "let param of mod.parameters; index as index">{{index}}
+          {{param.parameterName}}
+        </div>
       </div>
+
     </div>
     <div>
       <mat-form-field class="group">

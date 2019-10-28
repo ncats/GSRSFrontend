@@ -19,13 +19,11 @@ export class AmountFormDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data.subsAmount);
     this.subsAmount = this.data.subsAmount;
     this.data = this.data.subsAmount;
   }
 
   save(): void {
-    console.log(this.data);
     this.dialogRef.close(this.data);
   }
 

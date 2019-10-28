@@ -57,7 +57,6 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   clearTagsInput(): void {
     setTimeout(() => {
       this.tagInput.nativeElement.value = '';
-      console.log(this.matAutocomplete.isOpen);
       if (!this.matAutocomplete.isOpen) {
       this.tagControl.setValue(null);
       }

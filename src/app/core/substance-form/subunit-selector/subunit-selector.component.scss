@@ -121,6 +121,12 @@
   justify-content: space-between;
   align-items: flex-end;
 }
+.form-row-2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .delete-container {
   padding: 0 10px 8px 0;
 }
@@ -156,6 +162,11 @@
   background-color:orangered;
 }
 
+.unavailable.Nglycosylation {
+  color:lightgrey;
+}
+
+
 .selectedSite{
   padding-left:1px;
   padding-right:1px;
@@ -166,9 +177,139 @@
   background-color:turquoise !important;
 }
 
+.feature{
+  color:white;
+  background-color:mediumpurple;
+}
 
-a {
+
+.feature-step {
+  width:50%;
+  font-size:15px;
+
+}
+
+.feature-display {
+  width:30%;
+}
+
+.name-type {
+  width:40%;
+  padding-right:50px;
+}
+.key-value-pair {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  width:50%;
+
+  .key {
+    font-size: 11px;
+    padding-bottom: 3.5px;
+    line-height: 11px;
+    color: rgba(0, 0, 0, 0.54);
+    font-weight: 400;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    width: 55px;
+  }
+
+  .value {
+    font-size: 15px;
+  }
+
+  .bold {
+    font-weight:bold;
+  }
+}
+.siteref {
   display:block;
-  width: 15px !important;
+  width: 15.5px !important;
   text-align: center;
+}
+
+.featlink {
+  padding-right:7px;
+  color: #4793d1;
+}
+.featlink a:hover {
+  font-weight:bold;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .code-system, .code-system-type, .type {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+  .code-text, .url {
+    flex-grow: 1;
+  }
+}
+
+.form-row-feature {
+  display: flex;
+  justify-content: flex-start;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .code-system, .code-system-type, .type {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+  .code-text, .url {
+    flex-grow: 1;
+  }
+}
+
+
+.clear-button {
+  width:40px;
+}
+
+.disulfide-form {
+  display: flex;
+  justify-content: flex-start;
+}
+.disulfide-display {
+  width : 100px;
+}
+
+.cys {
+  color: darkgreen;
+}
+
+.unavailable {
+  color:lightgrey;
+}
+
+
+
+.blink_me {
+  animation: blinker .5s linear 1;
+}
+@keyframes blinker {
+  50% {
+    background-color: red;
+  }
+}
+
+
+.invalid {
+  border: solid red;
+  color: red;
+}
+
+.valid {
+  color:black;
 }

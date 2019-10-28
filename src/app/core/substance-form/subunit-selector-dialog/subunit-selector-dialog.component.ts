@@ -9,32 +9,41 @@ import {RefernceFormDialogComponent} from '@gsrs-core/substance-form/references-
   styleUrls: ['./subunit-selector-dialog.component.scss']
 })
 export class SubunitSelectorDialogComponent implements OnInit {
-
+  feature: any;
+  warning = '';
   constructor(
     public dialogRef: MatDialogRef<SubunitSelectorDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any = {}
   ) {}
 
   ngOnInit() {
-    console.log(this.data);
-    console.log(this.data.links);
   }
 
   save(): void {
-    console.log('saving');
-    this.dialogRef.close(this.data.links);
-    console.log(this.data.links);
+    if (this.data.card === 'feature') {
+      if (this.feature && this.feature.name  && this.feature.name !== '') {
+        if (this.feature.siteRange) {
+          this.dialogRef.close(this.feature);
+        } else {
+          this.warning = 'Select a site Range before saving';
+        }
+      } else {
+        this.warning = 'Enter a feature name before saving';
+      }
+    } else {
+      this.dialogRef.close(this.data.links);
+    }
   }
 
   cancel(): void {
-    console.log('cancel'
-    );
     this.dialogRef.close();
   }
   updateSites(sites: any): void {
     this.data.links = sites;
-    console.log('updateSites');
-    console.log(sites);
+  }
+
+  updateFeature(feature: any): void {
+    this.feature = feature;
   }
 }
 
