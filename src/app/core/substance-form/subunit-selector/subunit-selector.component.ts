@@ -1,15 +1,10 @@
-import {AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output, Renderer2} from '@angular/core';
-import {DisulfideLink, Feature, Glycosylation, Link, ProteinFeatures, Site, Subunit} from '@gsrs-core/substance';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, Renderer2} from '@angular/core';
+import { Feature, Glycosylation, Link, Site, Subunit} from '@gsrs-core/substance';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {Subscription} from 'rxjs';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ReuseReferencesDialogData} from '@gsrs-core/substance-form/references-dialogs/reuse-references-dialog-data.model';
-import {ReuseReferencesDialogComponent} from '@gsrs-core/substance-form/references-dialogs/reuse-references-dialog.component';
-import index from '@angular/cli/lib/cli';
-import {any} from 'codelyzer/util/function';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
@@ -36,7 +31,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
   @Output() sitesUpdate = new EventEmitter<Array<Site>>();
   @Output() featureUpdate = new EventEmitter<any>();
   sites: Array<any> = [];
-  subunitSequences: Array<SubunitSequence>;
   sitesDisplay: string;
   subunits: Array<Subunit>;
   otherLinks: Array<Link>;
@@ -48,7 +42,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
   featureName: string;
   selectState: string;
   newFeature: Array<Site> = [];
-  testSequences: Array<TestSequence>;
+  subunitSequences: Array<TestSequence>;
   currentState = 'initial';
   newFeatureArray: Array<Array<Site>> = [];
   valid = true;
@@ -62,8 +56,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
     public gaService: GoogleAnalyticsService,
     private cvService: ControlledVocabularyService,
     private render: Renderer2
- // public dialogRef: MatDialogRef<ReuseReferencesDialogComponent>,
-  //@Inject(MAT_DIALOG_DATA) private data: ReuseReferencesDialogData
   ) {
 }
 
@@ -73,6 +65,8 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       this.sites = this.link;
       this.updateDisplay();
       this.sitesUpdate.emit(this.sites);
+    } else {
+      this.link = [];
     }
     if (this.feature) {
       this.convertFeature();
@@ -82,14 +76,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-
-   /* const testsub = this.substanceFormService.allSites.subscribe(test =>
-    {
-      console.log('subscribed');
-      this.allSites = test;
-    });
-    this.subscriptions.push(testsub);
-   */
     if ((!this.link.length) || (this.link.length === 0)) {
       this.selectState = 'first';
     } else if (this.link.length === 1) {
@@ -106,7 +92,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
         disulfideLinks.forEach(link => {
           link.sites.forEach(site => {
-            //this.disulfideSites.push(site);
               const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
              this.allSites.push(newLink);
           });
@@ -120,8 +105,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
             link.sites.forEach(site => {
               const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
               this.allSites.push(newLink);
-              console.log('selector other changes');
-              //    this.otherSites.push(site);
             });
           }
         });
@@ -133,18 +116,14 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
 
 
        if (glycosylation.CGlycosylationSites) {
-
          glycosylation.CGlycosylationSites.forEach(site => {
-           // this.CGlycosylationSites.push(site);
            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
            this.allSites.push(newLink);
-           console.log('selector C changes');
          });
        }
 
         if (glycosylation.NGlycosylationSites) {
           glycosylation.NGlycosylationSites.forEach(site => {
-            //    this.NGlycosylationSites.push(site);
             const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
             this.allSites.push(newLink);
           });
@@ -152,7 +131,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
 
         if (glycosylation.OGlycosylationSites) {
           glycosylation.OGlycosylationSites.forEach(site => {
-            //this.OGlycosylationSites.push(site);
             const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
             this.allSites.push(newLink);
           });
@@ -174,7 +152,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       });
     });
       this.subscriptions.push(propertiesSubscription);
-      setTimeout(() => {this.addStyle2(); });
+      setTimeout(() => {this.addStyle(); });
   }
 
   emitUpdate(): void {
@@ -183,7 +161,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       siterange = siterange + (feat[0].subunitIndex +
         '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex + ';');
     });
-    siterange = siterange +(this.newFeature[0].subunitIndex +
+    siterange = siterange + (this.newFeature[0].subunitIndex +
       '_' + this.newFeature[0].residueIndex + '-' + this.newFeature[1].subunitIndex + '_' + this.newFeature[1].residueIndex);
     const fullFeature = {'name': this.featureName, 'siteRange': siterange};
     this.featureUpdate.emit(fullFeature);
@@ -196,14 +174,19 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string, type: string): string {
+    const vocab = (this.vocabulary[unitValue] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue].display);
+    return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab}) \n ${type}`;
+  }
+
   removeFeature() {
+    this.newFeature = [];
     if (this.newFeature[1]) {
-      this.addFeature(this.newFeature,true);
-      this.addStyle2();
+      this.addFeature(this.newFeature, true);
+      this.addStyle();
       this.selectState = 'first';
-      this.newFeature = [];
     } else if (this.newFeature[0]) {
-      this.testSequences[this.newFeature[0].subunitIndex - 1].subunits[this.newFeature[0].residueIndex - 1].class = '';
+      this.subunitSequences[this.newFeature[0].subunitIndex - 1].subunits[this.newFeature[0].residueIndex - 1].class = '';
     }
   }
 
@@ -218,9 +201,9 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       }
       for (let i = start; i <= end; i++) {
         if (reverse) {
-          this.testSequences[subunitIndex - 1].subunits[i - 1].class = '';
+          this.subunitSequences[subunitIndex - 1].subunits[i - 1].class = '';
         } else {
-          this.testSequences[subunitIndex - 1].subunits[i - 1].class = 'chosen';
+          this.subunitSequences[subunitIndex - 1].subunits[i - 1].class = 'chosen';
         }
 
       }
@@ -228,17 +211,17 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
   }
 
   deleteFeature(event: any): void {
+    for (let i = event[0].residueIndex; i <= event[1].residueIndex; i++) {
+      this.subunitSequences[event[0].subunitIndex - 1].subunits[i - 1].class = '';
+    }
   this.newFeatureArray = this.newFeatureArray.filter(feat => ((event[0] !== feat[0]) && (event[1] !== feat[1])) );
+
   }
 
   pushFeature(): void {
-    console.log('add triggered');
-    if(this.newFeature.length === 2){
-      console.log('pushing');
-      //this.newFeatureArray[this.currentFeature] = this.newFeature;
+    if (this.newFeature.length === 2) {
       this.newFeatureArray.push(this.newFeature);
       this.newFeature = [];
-      //this.currentFeature++;
       this.selectState = 'first';
     }
   }
@@ -249,7 +232,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
     const end = Number(sites[1].split('_')[1]);
     const subunit = Number(sites[0].split('_')[0]);
     for (let i = start; i <= end; i++) {
-        this.testSequences[subunit - 1].subunits[i - 1].class = 'feature';
+        this.subunitSequences[subunit - 1].subunits[i - 1].class = 'feature';
     }
 }
   updateDisplay(): void  {
@@ -288,13 +271,11 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
             let siterange = '';
             this.newFeatureArray.forEach(feat => {
               siterange = siterange + (feat[0].subunitIndex +
-                '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex)
+                '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex);
             });
-            siterange = siterange +(this.newFeature[0].subunitIndex +
+            siterange = siterange + (this.newFeature[0].subunitIndex +
               '_' + this.newFeature[0].residueIndex + '-' + this.newFeature[1].subunitIndex + '_' + this.newFeature[1].residueIndex);
-            console.log(siterange);
             const fullFeature = {'name': this.featureName, 'siteRange': siterange};
-            console.log(fullFeature);
             this.featureUpdate.emit(fullFeature);
           }
 
@@ -311,11 +292,9 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
           let siterange = '';
           this.newFeatureArray.forEach(feat => {
             siterange = siterange + (feat[0].subunitIndex +
-              '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex)
+              '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex);
           });
-          console.log(siterange);
           const fullFeature = {'name': this.featureName, 'siteRange': siterange};
-          console.log(fullFeature);
 
           this.featureUpdate.emit(fullFeature);
         }
@@ -328,8 +307,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
             });
             this.render.removeClass(event.target, 'chosen');
 
-
-
           } else {
             this.sites.push(newobj);
             this.render.addClass(event.target, 'chosen');
@@ -340,13 +317,10 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
         } else {
           if (inSites) {
             this.render.removeClass(event.target, 'chosen');
-          } else if (this.selectState !== 'finshed') {
+          } else if (this.selectState !== 'finished') {
             this.render.removeClass(event.target, 'chosen');
           }
-          console.log(event.target.innerText);
           if (event.target.innerText === 'C') {
-            console.log('before ' + inSites + ' - ' + this.selectState);
-            console.log(this.sites);
 
             if (this.selectState === 'first') {
               if (!inSites) {
@@ -356,7 +330,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
                 this.sites[0] = newobj;
               } else {
                 this.render.removeClass(event.target, 'chosen');
-                console.log(event.target);
                 this.sites = this.sites.filter(function (r) {
                   return (r.residueIndex !== residue) || (r.subunitIndex !== subunit);
                 });
@@ -378,22 +351,14 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
                     return (r.residueIndex !== residue) || (r.subunitIndex !== subunit);
                   });
                } else {
-
-                 //this.sites[1] = newobj;
-                 console.log(this.sites);
-                 console.log(this.sites.length);
                }
             }
             this.updateDisplay();
             this.sitesUpdate.emit(this.sites);
-            console.log('after ' + inSites + ' - ' + this.selectState);
-            console.log(this.sites);
           } else {
             this.render.addClass(event.target, 'blink_me');
             setTimeout(
               function() {this.render.removeClass(event.target, 'blink_me'); }, 2000);
-
-
           }
        }
       }
@@ -401,25 +366,25 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       }
 
       clearSites(): void {
-        this.sites.forEach(site => {  this.testSequences[site.subunitIndex - 1].subunits[site.residueIndex - 1].class = ''; });
+        console.log('clearing sites');
+        this.sites.forEach(site => {  this.subunitSequences[site.subunitIndex - 1].subunits[site.residueIndex - 1].class = ''; });
         this.sites = [];
+
         this.selectState = 'first';
         this.updateDisplay();
-        console.log(this.sites);
-        console.log(this.selectState);
         }
 
-  addStyle2(): void {
-    if (this.testSequences && this.testSequences[0].subunits) {
+  addStyle(): void {
+    if (this.subunitSequences && this.subunitSequences[0].subunits) {
       this.allSites.forEach(site => {
-        if (this.testSequences[site.subunit - 1].subunits) {
-          this.testSequences[site.subunit - 1].subunits[site.residue - 1].class = site.type;
+        if (this.subunitSequences[site.subunit - 1].subunits) {
+          this.subunitSequences[site.subunit - 1].subunits[site.residue - 1].class = site.type;
         } else {
         }
       });
       this.sites.forEach(site => {
-        if (this.testSequences[site.subunitIndex - 1].subunits) {
-          this.testSequences[site.subunitIndex - 1].subunits[site.residueIndex - 1].class = 'chosen';
+        if (this.subunitSequences[site.subunitIndex - 1].subunits) {
+          this.subunitSequences[site.subunitIndex - 1].subunits[site.residueIndex - 1].class = 'chosen';
         } else {
         }
       });
@@ -433,43 +398,25 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
   }
 
   manualInput(event: any): void {
-    console.log(event);
     try {
-
-      const newsites = this.substanceFormService.stringToSites(event.replace(/ /g,''));
-      if(this.sites != newsites){
+      const newsites = this.substanceFormService.stringToSites(event.replace(/ /g, ''));
+      console.log(newsites);
+      if (this.sites !== newsites) {
         this.sites = newsites;
-        this.addStyle2();
+        this.addStyle();
+        this.sitesUpdate.emit(this.sites);
+      } else {
       }
-      console.log(this.sites);
-      console.log(this.sites);
-      console.log(this.substanceFormService.stringToSites(this.sitesDisplay));
       this.valid = true;
       this.sitesDisplay = event;
     } catch (e) {
-      console.log(e);
       this.valid = false;
     }
   }
 
-  stringToSites(event: any): void {
-  console.log(event);
-  try {
-  this.sites = this.substanceFormService.stringToSites(event.replace(/ /g,''));
-  console.log(this.sites);
-  console.log(this.substanceFormService.stringToSites(this.sitesDisplay));
-  this.valid = true;
-  this.sitesDisplay = event;
-} catch (e) {
-  console.log(e);
-  this.valid = false;
-}
-  }
-
-  convertFeature() {
+  convertFeature(): void {
     this.newFeatureArray = [];
     const siteSplit = this.feature.siteRange.split(';');
-      console.log(siteSplit);
       siteSplit.forEach(pair => {
         const sites = pair.split('-');
         const start = Number(sites[0].split('_')[1]);
@@ -485,7 +432,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
   }
 
   private processSubunits2(): void {
-    this.testSequences = [];
+    this.subunitSequences = [];
     let subunitIndex = 1;
     this.subunits.forEach(subunit => {
       const subsections = [];
@@ -493,7 +440,9 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       for (let count = 0; count < subunit.sequence.length; count = count + 10) {
         if ((count + 10) >= subunit.sequence.length) {
           currentSections.push([count, subunit.sequence.length]);
-          subsections.push(currentSections);
+          if ((count + 10) % 50 !== 0) {
+            subsections.push(currentSections);
+          }
         } else {
           currentSections.push([count, count + 10]);
         }
@@ -528,24 +477,19 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
         }
         index++;
       }
-      this.testSequences.push(thisTest);
+      this.subunitSequences.push(thisTest);
       subunitIndex++;
     });
-    setTimeout(() => {this.addStyle2(); if (this.feature) {this.convertFeature(); } });
+    setTimeout(() => {this.addStyle(); if (this.feature) {this.convertFeature(); } });
   }
 
-setClass(type: string): any{
-    let classes = {type: true , 'unavailable': this.card === 'disulfide'};
-    console.log(classes);
-    return classes;
-}
+  setClass(type: string): any {
+      const classes = {type: true , 'unavailable': this.card === 'disulfide'};
+      return classes;
+  }
 
 }
 
-interface SubunitSequence {
-  subunitIndex: number;
-  sequencesSectionGroups: Array<SequenceSectionGroup>;
-}
 
 interface SequenceSectionGroup {
   sequenceSections: Array<SequenceSection>;
@@ -570,10 +514,6 @@ interface DisplaySite {
   residue: number;
 }
 
-
-interface TestSequenceSet {
- sequences: Array<TestSequence>;
-}
 
 interface TestSequence {
   subunitIndex?: number;

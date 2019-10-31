@@ -1,14 +1,15 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {Subject, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import {Link, Subunit} from '@gsrs-core/substance';
+import {Subunit} from '@gsrs-core/substance';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
+import {SubunitSequence} from '@gsrs-core/substance-form/substance-form.model';
 
 @Component({
   selector: 'app-substance-form-subunits',
@@ -57,63 +58,8 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
       });
         this.subscriptions.push(featuresSubscription);
 
-      /*const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
-        disulfideLinks.forEach(link => {
-          link.sites.forEach(site => {
-            //this.disulfideSites.push(site);
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
-            this.allSites.push(newLink);
-          });
-        });
-      });
-      this.subscriptions.push(disulfideLinksSubscription);
-
-      const otherLinksSubscription = this.substanceFormService.substanceOtherLinks.subscribe(otherLinks => {
-        otherLinks.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
-              this.allSites.push(newLink);
-              //    this.otherSites.push(site);
-            });
-          }
-        });
-      });
-      this.subscriptions.push(otherLinksSubscription);
-
-      const glycosylationSubscription = this.substanceFormService.substanceGlycosylation.subscribe(glycosylation => {
-
-
-        if (glycosylation.CGlycosylationSites) {
-
-          glycosylation.CGlycosylationSites.forEach(site => {
-            // this.CGlycosylationSites.push(site);
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
-            this.allSites.push(newLink);
-          });
-        }
-
-        if (glycosylation.NGlycosylationSites) {
-          glycosylation.NGlycosylationSites.forEach(site => {
-            //    this.NGlycosylationSites.push(site);
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
-            this.allSites.push(newLink);
-          });
-        }
-
-        if (glycosylation.OGlycosylationSites) {
-          glycosylation.OGlycosylationSites.forEach(site => {
-            //this.OGlycosylationSites.push(site);
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
-            this.allSites.push(newLink);
-          });
-        }
-
-      });*/
-
       const allSub = this.substanceFormService.allSites.subscribe(features => {
         this.allSites = features;
-        console.log(features);
       });
       this.subscriptions.push(allSub);
   });
@@ -136,7 +82,8 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
 
   addSubunit(): void {
     this.substanceFormService.addSubstanceSubunit();
-    const next = 'substance-subunit-' + this.subunits.length;
+    const next = 'substance-subunit-' + (this.subunits.length - 1);
+    const element = document.getElementById(next) as HTMLElement;
     setTimeout(() => {
       this.scrollToService.scrollToElement(next, 'center');
     });
@@ -172,31 +119,12 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
         this.substanceFormService.addSubstancePropertyFromFeature(newFeature);
       }
       this.overlayContainer.style.zIndex = null;
-      console.log('other links dialog closed');
     });
     this.subscriptions.push(dialogSubscription);
   }
 
 }
-interface SubunitSequence {
-  subunitIndex: number;
-  sequencesSectionGroups: Array<SequenceSectionGroup>;
-}
 
-
-interface SequenceSectionGroup {
-  sequenceSections: Array<SequenceSection>;
-}
-
-interface SequenceSection {
-  sectionNumber: number;
-  sectionUnits: Array<SequenceUnit>;
-}
-
-interface SequenceUnit {
-  unitIndex: number;
-  unitValue: string;
-}
 interface DisplaySite {
   type: string;
   subunit: number;

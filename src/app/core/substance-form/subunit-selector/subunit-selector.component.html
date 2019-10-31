@@ -1,3 +1,4 @@
+
 <div *ngIf = "card !== 'feature'">
   Sites:
   <div *ngIf = "card !== 'disulfide'">
@@ -58,21 +59,8 @@
   </div>
 
 </div>
- <!-- <div class="subunit-sequence" *ngFor="let subunitSequence of subunitSequences">
-  <h4>Subunit {{subunitSequence.subunitIndex}}</h4>
-  <div class="responsive">
-    <div class="sequence-section-group" *ngFor="let sequencesSectionGroup of subunitSequence.sequencesSectionGroups">
-      <div class="sequence-section" *ngFor="let sequencesSectionGroup of sequencesSectionGroup.sequenceSections">
-        <div class="section-number">{{sequencesSectionGroup.sectionNumber}}</div>
-        <div class="section-units-container">
-            <span class="section-unit" *ngFor="let sectionUnit of sequencesSectionGroup.sectionUnits" [matTooltip]="getTooltipMessage(subunitSequence.subunitIndex, sectionUnit.unitIndex, sectionUnit.unitValue, sectionUnit.class? sectionUnit.class : '')">
-              <a class = "selectedSite" [ngClass]="sectionUnit.class" (click) = "toggleSite(subunitSequence.subunitIndex, sectionUnit.unitIndex, sectionUnit.unitValue, $event)">{{sectionUnit.unitValue}}</a>
-            </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>-->
+<mat-dialog-content>
+
 <div class="subunit-sequence" *ngFor="let sequence of testSequences">
   <h4>Subunit {{sequence.subunitIndex}}</h4>
   <div class="responsive">
@@ -81,7 +69,8 @@
           <div class = "section-number">{{num[1]}}</div>
           <div class = section-units-container>
           <span *ngFor = "let subunit of sequence.subunits.slice(num[0],num[1])"  class="section-unit" >
-              <a class = "selectedSite siteref"  [ngClass]="subunit.class" [@errorFlash] (click) = "toggleSite(sequence.subunitIndex, subunit.unitIndex, subunit.unitValue, $event)">{{subunit.unitValue}}</a>
+              <a class = "selectedSite siteref"  [ngClass]="subunit.class" [@errorFlash]
+                 (click) = "toggleSite(sequence.subunitIndex, subunit.unitIndex, subunit.unitValue, $event)">{{subunit.unitValue}}</a>
         </span>
           </div>
         </div>
@@ -89,3 +78,4 @@
   </div>
 </div>
 
+  </mat-dialog-content>

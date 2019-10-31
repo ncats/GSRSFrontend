@@ -44,7 +44,7 @@ export class SubstanceFormOtherLinksComponent extends SubstanceCardBaseFilteredL
   addOtherLink(): void {
     this.substanceFormService.addSubstanceOtherLink();
     setTimeout(() => {
-      this.scrollToService.scrollToElement(`substance-link-0`, 'center');
+      this.scrollToService.scrollToElement(`substance-other-links-0`, 'center');
     });
   }
 

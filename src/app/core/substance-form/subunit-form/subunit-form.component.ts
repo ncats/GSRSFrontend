@@ -9,15 +9,12 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {Feature, SubstanceName, SubstanceReference, Subunit} from '@gsrs-core/substance';
+import { Subunit} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
-import {UtilsService} from '@gsrs-core/utils';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {Subject, Subscription} from 'rxjs';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import {SubunitDisplayPipe} from '@gsrs-core/utils/subunit-display.pipe';
-import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 @Component({
   selector: 'app-subunit-form',
   templateUrl: './subunit-form.component.html',
@@ -29,11 +26,8 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   @Input() view: string;
   @Input() sites?: Array<any>;
   @Output() subunitDeleted = new EventEmitter<Subunit>();
-  privateAllSites: Array<DisplaySite>;
- // @Input() hideDelete = false;
   subunitSequence: SubunitSequence;
   vocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
-  //view = 'details';
   private subscriptions: Array<Subscription> = [];
   toggle = {};
   allSites: Array<DisplaySite> = [];
@@ -49,19 +43,6 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
   }
 
- /* @Input()
-  set allSites(sites: Array<DisplaySite>) {
-    console.log(sites);
-    if (sites != null) {
-      this.privateAllSites = sites;
-     // this.addStyle();
-      console.log(sites);
-    }
-  }
-
-  get allSites(): Array<DisplaySite> {
-    return this.privateAllSites || [];
-  }*/
 
 
   ngOnInit() {
@@ -71,12 +52,10 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   ngAfterViewInit() {
 
     const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
-      console.log('triggered in subunit card');
-      console.log(disulfideLinks);
       disulfideLinks.forEach(link => {
-        if(link.sites){
+        if (link.sites) {
           link.sites.forEach(site => {
-            if(site.subunitIndex === this.subunit.subunitIndex) {
+            if (site.subunitIndex === this.subunit.subunitIndex) {
               const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
               this.allSites.push(newLink);
             }
@@ -90,10 +69,9 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       otherLinks.forEach(link => {
         if (link.sites) {
           link.sites.forEach(site => {
-            if(site.subunitIndex === this.subunit.subunitIndex) {
+            if (site.subunitIndex === this.subunit.subunitIndex) {
               const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
               this.allSites.push(newLink);
-              console.log('SFC OL changes');
             }
           });
         }
@@ -107,11 +85,8 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       if (glycosylation.CGlycosylationSites) {
 
         glycosylation.CGlycosylationSites.forEach(site => {
-          // this.CGlycosylationSites.push(site);
-          if(site.subunitIndex === this.subunit.subunitIndex) {
+          if (site.subunitIndex === this.subunit.subunitIndex) {
             const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
-            console.log('SFC c changes');
-            console.log(site);
             this.allSites.push(newLink);
           }
         });
@@ -119,8 +94,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
       if (glycosylation.NGlycosylationSites) {
         glycosylation.NGlycosylationSites.forEach(site => {
-          //    this.NGlycosylationSites.push(site);
-          if(site.subunitIndex === this.subunit.subunitIndex) {
+          if (site.subunitIndex === this.subunit.subunitIndex) {
             const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
             this.allSites.push(newLink);
           }
@@ -129,14 +103,14 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
       if (glycosylation.OGlycosylationSites) {
         glycosylation.OGlycosylationSites.forEach(site => {
-          //this.OGlycosylationSites.push(site);
-          if(site.subunitIndex === this.subunit.subunitIndex) {
+          if (site.subunitIndex === this.subunit.subunitIndex) {
             const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
             this.allSites.push(newLink);
           }
 
         });
       }
+      this.subscriptions.push(glycosylationSubscription);
       const propertiesSubscription = this.substanceFormService.substanceProperties.subscribe( properties => {
         properties.forEach(prop => {
           if (prop.propertyType === 'PROTEIN FEATURE') {
@@ -155,10 +129,8 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       });
 
       this.subscriptions.push(propertiesSubscription);
-    console.log(this.allSites);
       setTimeout(() => {
-       if (this.subunitSequence){
-          console.log('adding style afterviewinit');
+       if (this.subunitSequence) {
          this.addStyle();
        }
       });
@@ -179,15 +151,12 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
       this.processSubunits();
     }, error => {
+      console.log(error);
       this.processSubunits();
     });
   }
 
   addStyle(): void {
-    console.log('about to add style');
-    console.log(this.allSites);
-    console.log(this.subunitSequence);
-    console.log(this.features);
     if (this.subunitSequence && this.subunitSequence.subunits) {
       this.allSites.forEach(site => {
         if (this.subunitSequence.subunits) {
@@ -195,11 +164,6 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
         } else {
         }
       });
-      /*if (this.features) {
-        this.features.forEach(feat => {
-          this.drawFeature(feat);
-        });
-      }*/
     }
 
   }
@@ -216,9 +180,12 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       const subsections = [];
       let currentSections = [];
       for (let count = 0; count < subunit.length; count = count + 10) {
+
         if ((count + 10) >= subunit.length) {
           currentSections.push([count, subunit.length]);
-          subsections.push(currentSections);
+          if ((count + 10) % 50 !== 0) {
+            subsections.push(currentSections);
+          }
         } else {
           currentSections.push([count, count + 10]);
         }
@@ -247,8 +214,9 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
         index++;
       }
       this.subunitSequence = thisTest;
+      console.log(this.subunitSequence);
 
-    setTimeout(() => {console.log('after sequencegen style'); this.addStyle(); });
+    setTimeout(() => {this.addStyle(); });
 
   }
 
@@ -258,33 +226,19 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   }
 
   private editSubunit(subunit: Subunit, input: string): void {
-    //  this.substanceFormService.addSubstanceSubunit();
-    // this.substanceFormService.assSubstanceSubunit();
     this.toggle[subunit.subunitIndex] = !this.toggle[subunit.subunitIndex];
     if (this.toggle[subunit.subunitIndex] === false) {
-      this.subunit.sequence = input.trim().replace(/\s/g, '');;
-      console.log(input);
+      this.subunit.sequence = input.trim().replace(/\s/g, '');
       this.substanceFormService.emitSubunitUpdate();
       this.substanceFormService.recalculateCysteine();
       this.processSubunits();
-      console.log('saved');
     } else {
       setTimeout(function () {
-        const textArea = document.getElementsByClassName("sequence-textarea");
-        [].forEach.call(textArea, function (area){
-           console.log(area.scrollHeight);
-           console.log(area.style.height);
+        const textArea = document.getElementsByClassName('sequence-textarea');
+        [].forEach.call(textArea, function (area) {
            area.style.height = (area.scrollHeight + 10) + 'px';
+          });
       });
-
-      });
-    }
-  }
-  addStyle2(): void {
-    if (this.subunitSequence) {
-      this.allSites.forEach(site => {
-          this.subunitSequence.subunits[site.residue - 1].class = site.type;
-        });
     }
   }
 
@@ -292,7 +246,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     this.substanceFormService.deleteSubstanceSubunit(subunit);
   }
 
-  cleanSequence(): void{
+  cleanSequence(): void {
     const valid = [];
     const test = this.subunit.sequence.split('');
     for (const key in this.vocabulary) {
@@ -304,6 +258,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
 
 }
+
 interface SubunitSequence {
   subunitIndex?: number;
   subsections?: Array<any>;

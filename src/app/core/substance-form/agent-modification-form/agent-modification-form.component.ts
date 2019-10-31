@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
-import {AgentModification, StructuralModification, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
+import {AgentModification, StructuralModification, SubstanceAmount, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
@@ -58,7 +58,20 @@ export class AgentModificationFormComponent implements OnInit {
     });
   }
 
+  deleteCode(): void {
+    this.privateMod.$$deletedCode = this.utilsService.newUUID();
+    if (!this.privateMod
+    ) {
+      this.deleteTimer = setTimeout(() => {
+        this.modDeleted.emit(this.privateMod);
+      }, 2000);
+    }
+  }
 
+  undoDelete(): void {
+    clearTimeout(this.deleteTimer);
+    delete this.privateMod.$$deletedCode;
+  }
 
   openAmountDialog(): void {
     if (!this.mod.amount) {
@@ -77,6 +90,11 @@ export class AgentModificationFormComponent implements OnInit {
     this.subscriptions.push(dialogSubscription);
   }
 
+  updateProcess(event: string){
+    this.privateMod.agentModificationProcess = event;
+    console.log(event);
+  }
+
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     const relatedSubstance: SubstanceRelated = {
       refPname: substance._name,
@@ -89,71 +107,8 @@ export class AgentModificationFormComponent implements OnInit {
     this.relatedSubstanceUuid = this.mod.agentSubstance.refuuid;
   }
 
-  displayAmount(amt): string {
-    let ret = '';
-    if (amt) {
-      if (typeof amt === 'object') {
-        if (amt) {
-          let addedunits = false;
-          let unittext = this.formatValue(amt.units);
-          if (!unittext) {
-            unittext = '';
-          }
-          const atype = this.formatValue(amt.type);
-          if (atype) {
-            ret += atype + '\n';
-          }
-          if (amt.average || amt.high || amt.low) {
-            if (amt.average) {
-              ret += amt.average;
-              if (amt.units) {
-                ret += ' ' + unittext;
-                addedunits = true;
-              }
-            }
-            if (amt.high || amt.low) {
-              ret += ' [';
-              if (amt.high && !amt.low) {
-                ret += '<' + amt.high;
-              } else if (!amt.high && amt.low) {
-                ret += '>' + amt.low;
-              } else if (amt.high && amt.low) {
-                ret += amt.low + ' to ' + amt.high;
-              }
-              ret += '] ';
-              if (!addedunits) {
-                if (amt.units) {
-                  ret += ' ' + unittext;
-                  addedunits = true;
-                }
-              }
-            }
-            ret += ' (average) ';
-          }
-          if (amt.highLimit || amt.lowLimit) {
-            ret += '\n[';
-          }
-          if (amt.highLimit && !amt.lowLimit) {
-            ret += '<' + amt.highLimit;
-          } else if (!amt.highLimit && amt.lowLimit) {
-            ret += '>' + amt.lowLimit;
-          } else if (amt.highLimit && amt.lowLimit) {
-            ret += amt.lowLimit + ' to ' + amt.highLimit;
-          }
-          if (amt.highLimit || amt.lowLimit) {
-            ret += '] ';
-            if (!addedunits) {
-              if (amt.units) {
-                ret += ' ' + unittext;
-                addedunits = true;
-              }
-            }
-            ret += ' (limits)';
-          }
-        }
-      }
-    }
-    return ret;
+  displayAmount(amt: SubstanceAmount): string {
+    return this.utilsService.displayAmount(amt);
   }
 
   formatValue(v) {

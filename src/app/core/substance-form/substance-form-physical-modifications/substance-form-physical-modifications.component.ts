@@ -44,7 +44,7 @@ export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBa
   addStructuralModification(): void {
     this.substanceFormService.addSubstancePhysicalModification();
     setTimeout(() => {
-      this.scrollToService.scrollToElement(`substance-code-0`, 'center');
+      this.scrollToService.scrollToElement(`substance-physical-modification-0`, 'center');
     });
   }
 

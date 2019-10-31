@@ -4,8 +4,7 @@
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
     </button>
     <span class="middle-fill"></span>
-    <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading ||  (validationMessages && validationMessages.length > 0) || (this.validationResult == false)">Submit</button>
-    <button mat-flat-button color="primary" class = "validate-button" (click)="validate()" >Validate</button>
+    <button mat-flat-button color="primary" class = "validate-button" (click)="validate()" >Validate / Submit</button>
   </div>
   <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
     <div class="submission-message" *ngIf="submissionMessage">
@@ -23,8 +22,8 @@
         </button>
       </div>
       <div class="dismiss-container">
-        <span class="middle-fill"></span>
-        <button mat-button (click)="dismissAllValidationMessages()" [disabled]="isLoading">Dismiss messages</button>
+        <span class="middle-fill"></span>{{this.validationResult}}
+        <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}} Submit</button>
       </div>
     </div>
   </div>

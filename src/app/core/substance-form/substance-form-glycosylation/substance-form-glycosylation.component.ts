@@ -54,6 +54,14 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
     });
   }
 
+  clearAll(): void {
+    this.glycosylation.CGlycosylationSites = [];
+    this.glycosylation.NGlycosylationSites = [];
+    this.glycosylation.OGlycosylationSites = [];
+    this.glycosylation.glycosylationType = null;
+    this.substanceFormService.emitGlycosylationUpdate();
+  }
+
   getVocabularies(): void {
     const subscription = this.cvService.getDomainVocabulary('GLYCOSYLATION_TYPE').subscribe(response => {
       this.glycosylationTypes = response['GLYCOSYLATION_TYPE'].list;
@@ -72,7 +80,7 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
     }
       const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': type, 'link': param},
-      width: '1038px'
+      width: '1040px'
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
@@ -84,13 +92,11 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
       } else {
         this.glycosylation.OGlycosylationSites = newLinks;
       }
-     // this.updateDisplay();
     });
     this.subscriptions.push(dialogSubscription);
   }
 
   siteDisplay(sites: Array<Site>) {
-
     return this.substanceFormService.siteString(sites);
   }
 

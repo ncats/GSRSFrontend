@@ -2,43 +2,36 @@
   <div class="link-form-container">
   <div class="form-row">
     <div class="name-type">
-      <mat-form-field class = "name-field">
-        <mat-label>Type</mat-label>
-        <mat-select [(ngModel)]="glycosylation.glycosylationType" required name="type">
-          <mat-option *ngFor="let type of glycosylationTypes" [value]="type.value" >
-            {{type.display}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <app-cv-input [vocabulary] = "glycosylationTypes" title = "Sequence Type" (valueChange) = "glycosylation.glycosylationType = $event" [model] = "glycosylation.glycosylationType"></app-cv-input>
+      <br/>
+      <br/>
+      <button mat-raised-button mat-primary (click) = 'clearAll()' >Clear Glycosylation</button>
     </div>
     <div class = 'types' >
       <div class="sites">
-        <div class="label"><b>C </b>Glycosylation Sites</div>
-        <button mat-icon-button matTooltip="Select sites from sequence" (click)="(openDialog('C'))">
+        <div class="label row-label"><b>C </b>Glycosylation Sites </div>
+        <div class = "row-sites"><button mat-icon-button matTooltip="Select sites from sequence" (click)="(openDialog('C'))">
           <mat-icon svgIcon="edit"></mat-icon>
         </button>
-        <span>
       {{siteDisplay(glycosylation.CGlycosylationSites)}}
-      </span>
+        </div>
       </div>
       <div class="sites">
-        <div class="label"><b>N </b>Glycosylation Sites</div>
-        <button mat-icon-button matTooltip="Select sites from sequence" (click)="(openDialog('N'))">
+        <div class="label row-label"><b>N </b>Glycosylation Sites</div>
+        <div class = "row-sites"><button mat-icon-button matTooltip="Select sites from sequence" (click)="(openDialog('N'))">
           <mat-icon svgIcon="edit"></mat-icon>
         </button>
-        <span>
       {{siteDisplay(glycosylation.NGlycosylationSites)}}
-      </span>
+      </div>
 
       </div>
       <div class="sites">
-        <div class="label"><b>O </b>Glycosylation Sites</div>
-        <button mat-icon-button matTooltip="Select sites from sequence" (click)="(openDialog('O'))">
+        <div class="label row-label"><b>O </b>Glycosylation Sites</div>
+        <div class = "row-sites"><button mat-icon-button matTooltip="Select sites from sequence" (click)="(openDialog('O'))">
           <mat-icon svgIcon="edit"></mat-icon>
         </button>
-        <span>
       {{siteDisplay(glycosylation.OGlycosylationSites)}}
-      </span>
+        </div>
 
       </div>
     </div>

@@ -11,15 +11,7 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <mat-form-field class="mod-type">
-      <mat-label>Modification Type</mat-label>
-      <mat-select [(ngModel)]="mod.physicalModificationRole" required name="code">
-        <mat-option *ngFor="let modType of  modRoleList" [value]=" modType.value">
-          {{modType.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
+    <app-cv-input [vocabulary] = "modRoleList" title = "Sequence Type" (valueChange) = "mod.physicalModificationRole = $event" [model] = "mod.physicalModificationRole"></app-cv-input>
     <div class = 'amount'>
       <div class = "label amt-label">
         Parameters

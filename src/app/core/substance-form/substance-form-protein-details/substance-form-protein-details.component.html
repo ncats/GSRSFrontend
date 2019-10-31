@@ -1,6 +1,6 @@
 <div class="name-form-container">
   <div class="form-row">
-      <app-cv-input [vocabulary] = "proteinTypeList" title = "Protein Type" [(model)] = protein.proteinType></app-cv-input>
+      <app-cv-input [vocabulary] = "proteinTypeList" title = "Protein Type" (valueChange) = "protein.proteinType = $event" [model] = protein.proteinType></app-cv-input>
      <!-- <mat-select [(ngModel)]="protein.proteinType" required name="code">
         <mat-option *ngFor="let modType of  proteinTypeList" [value]=" modType.value">
           {{modType.display}}
@@ -25,7 +25,7 @@
                         cvDomain="PROTEIN_SUBTYPE"></app-tag-selector>
     </div>
     <div class= "location-container">
-      <app-cv-input [vocabulary] = "sequenceOriginList" title = "Sequence Origin" [(model)] = "protein.sequenceOrigin"></app-cv-input>
+      <app-cv-input [vocabulary] = "sequenceOriginList" title = "Sequence Origin" (valueChange) = "protein.sequenceOrigin = $event" [model] = "protein.sequenceOrigin"></app-cv-input>
     <!--  <mat-form-field class="location-type">
         <mat-label>Sequence Origin</mat-label>
         <mat-select [(ngModel)]="protein.sequenceOrigin" name="code">
@@ -42,7 +42,7 @@
       </div>
     </div>-->
     </div>
-    <app-cv-input [vocabulary] = "sequenceTypeList" title = "Sequence Type" [(model)] = "protein.sequenceType"></app-cv-input>
+    <app-cv-input [vocabulary] = "sequenceTypeList" title = "Sequence Type" [model] = "protein.sequenceType" (valueChange)="protein.sequenceType = $event"></app-cv-input>
    <!-- <mat-form-field class="location-type">
       <mat-label>Sequence Type</mat-label>
       <mat-select [(ngModel)]="protein.sequenceType" name="code">

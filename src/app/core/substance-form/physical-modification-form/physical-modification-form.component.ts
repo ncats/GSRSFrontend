@@ -54,7 +54,21 @@ export class PhysicalModificationFormComponent implements OnInit {
     });
   }
 
+  deleteMod(): void {
+    this.privateMod.$$deletedCode = this.utilsService.newUUID();
+    if (!this.privateMod
+    ) {
+      this.deleteTimer = setTimeout(() => {
+        this.modDeleted.emit(this.mod);
+        this.substanceFormService.emitOtherLinkUpdate();
+      }, 1000);
+    }
+  }
 
+  undoDelete(): void {
+    clearTimeout(this.deleteTimer);
+    delete this.privateMod.$$deletedCode;
+  }
 
   openParameterDialog(): void {
     if (!this.mod.parameters) {

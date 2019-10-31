@@ -35,3 +35,28 @@ export interface MessageLink {
   href: string;
   text: string;
 }
+
+export interface SubunitSequence {
+  subunitIndex: number;
+  sequencesSectionGroups: Array<SequenceSectionGroup>;
+}
+
+
+export interface SequenceSectionGroup {
+  sequenceSections: Array<SequenceSection>;
+}
+
+export interface SequenceSection {
+  sectionNumber: number;
+  sectionUnits: Array<SequenceUnit>;
+}
+
+export interface SequenceUnit {
+  unitIndex: number;
+  unitValue: string;
+}
+export interface DisplaySite {
+  type: string;
+  subunit: number;
+  residue: number;
+}

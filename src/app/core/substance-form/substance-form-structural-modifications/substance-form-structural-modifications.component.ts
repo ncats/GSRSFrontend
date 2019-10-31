@@ -48,7 +48,4 @@ export class SubstanceFormStructuralModificationsComponent extends SubstanceCard
     });
   }
 
-  deleteStructuralModification(modification: StructuralModification): void {
-    this.substanceFormService.deleteSubstanceStructuralModification(modification);
-  }
 }

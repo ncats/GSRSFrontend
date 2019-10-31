@@ -11,6 +11,7 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   templateUrl: './substance-form-agent-modifications.component.html',
   styleUrls: ['./substance-form-agent-modifications.component.scss']
 })
+// tslint:disable-next-line:max-line-length
 export class SubstanceFormAgentModificationsComponent extends SubstanceCardBaseFilteredList<AgentModification> implements OnInit, AfterViewInit, OnDestroy{
   modifications: Array<AgentModification>;
   private subscriptions: Array<Subscription> = [];
@@ -44,7 +45,7 @@ export class SubstanceFormAgentModificationsComponent extends SubstanceCardBaseF
   addStructuralModification(): void {
     this.substanceFormService.addSubstanceAgentModification();
     setTimeout(() => {
-      this.scrollToService.scrollToElement(`substance-code-0`, 'center');
+      this.scrollToService.scrollToElement(`substance-agent-modification-0`, 'center');
     });
   }
 

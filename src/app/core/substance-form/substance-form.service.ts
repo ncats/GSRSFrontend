@@ -640,7 +640,7 @@ export class SubstanceFormService {
 
   // Properties end
 
-  //Subunits start
+  // Subunits start
 
   get substanceSubunits(): Observable<Array<Subunit>> {
     return new Observable(observer => {
@@ -755,6 +755,7 @@ export class SubstanceFormService {
 
   emitDisulfideLinkUpdate(): void {
     this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
+    this.recalculateCysteine();
   }
   // disulfide links end
 
@@ -963,6 +964,7 @@ export class SubstanceFormService {
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {
       const substanceCopy = this.removeDeletedComponents();
+      console.log(substanceCopy);
       this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
         observer.next(results);
         observer.complete();
@@ -1035,7 +1037,10 @@ export class SubstanceFormService {
       }
 
       const substanceCopy = this.removeDeletedComponents();
-
+      console.log(substanceCopy);
+      if(this.substance.protein){
+        console.log(this.substance.protein);
+      }
       this.substanceService.saveSubstance(substanceCopy).subscribe(substance => {
         this.substance = substance;
         results.uuid = substance.uuid;
@@ -1049,6 +1054,15 @@ export class SubstanceFormService {
         this.substanceRelationshipsEmitter.next(this.substance.relationships);
         this.substanceNamesEmitter.next(this.substance.notes);
         this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
+        this.substancePropertiesEmitter.next(this.substance.properties);
+        this.substanceOtherLinksEmitter.next(this.substance.protein.otherLinks);
+        this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
+        this.substanceGlycosylationEmitter.next(this.substance.protein.glycosylation);
+        this.substanceAgentModificationsEmitter.next(this.substance.modifications.agentModifications);
+        this.substancePhysicalModificationsEmitter.next(this.substance.modifications.physicalModifications);
+        this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
+        console.log(substance);
+        console.log(results);
         observer.next(results);
         observer.complete();
       }, error => {

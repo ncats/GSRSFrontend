@@ -13,6 +13,7 @@ import { IDropdownSettings} from 'ng-multiselect-dropdown';
   templateUrl: './substance-form-protein-details.component.html',
   styleUrls: ['./substance-form-protein-details.component.scss']
 })
+// tslint:disable-next-line:max-line-length
 export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilteredList<Protein> implements OnInit, AfterViewInit, OnDestroy {
 
   protein: Protein;
@@ -35,16 +36,21 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
     this.menuLabelUpdate.emit('Protein Details');
     const proteinSubscription = this.substanceFormService.substanceProtein.subscribe(protein => {
       this.protein = protein;
-
       console.log(this.protein);
+      setTimeout(() => {this.getVocabularies(); });
     });
     this.subscriptions.push(proteinSubscription);
-    setTimeout(() => {this.getVocabularies(); });
-    this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All', unSelectAllText: 'UnSelect All', itemsShowLimit: 3, allowSearchFilter: true};
+    this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All', itemsShowLimit: 3, allowSearchFilter: true};
   }
 
   ngAfterViewInit() {
+  }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   update(tags: Array<string>): void {
@@ -62,30 +68,18 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('PROTEIN_TYPE', 'PROTEIN_SUBTYPE', 'SEQUENCE_ORIGIN', 'SEQUENCE_TYPE').subscribe(response => {
+      console.log(this.protein.proteinType);
       this.proteinTypeList = this.addOtherOption(response['PROTEIN_TYPE'].list, this.protein.proteinType);
       this.proteinSubTypeList = this.addOtherOption(response['PROTEIN_SUBTYPE'].list, this.protein.proteinSubType);
       this.sequenceOriginList = this.addOtherOption(response['SEQUENCE_ORIGIN'].list, this.protein.sequenceOrigin);
       this.sequenceTypeList = this.addOtherOption(response['SEQUENCE_TYPE'].list, this.protein.sequenceType);
     });
   }
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
-  }
 
-  addOtherOption(vocab: Array<VocabularyTerm>, property: string) {
+  addOtherOption(vocab: Array<VocabularyTerm>, property: string): Array<VocabularyTerm> {
     if (vocab.some(r => property === r.value)) {
     } else {
     }
     return vocab;
-  }
-
-  inCV(vocab: Array<VocabularyTerm>, property: string) {
-    return vocab.some(r => property === r.value);
-  }
-
-  updateOrigin(event) {
-    this.protein.sequenceOrigin = event.value;
   }
 }

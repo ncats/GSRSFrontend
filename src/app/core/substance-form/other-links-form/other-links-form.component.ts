@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Link, SubstanceReference} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
@@ -14,7 +14,7 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
   templateUrl: './other-links-form.component.html',
   styleUrls: ['./other-links-form.component.scss']
 })
-export class OtherLinksFormComponent implements OnInit {
+export class OtherLinksFormComponent implements OnInit, OnDestroy {
 
   private privateLink: Link;
   @Output() linkDeleted = new EventEmitter<Link>();
@@ -38,6 +38,12 @@ export class OtherLinksFormComponent implements OnInit {
     this.updateDisplay();
   }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
   @Input()
   set link(link: Link) {
     this.privateLink = link;
@@ -46,16 +52,19 @@ export class OtherLinksFormComponent implements OnInit {
   get link(): Link {
     return this.privateLink;
   }
+
   updateDisplay(): void {
     this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
   }
+
   deleteLink(): void {
     this.privateLink.$$deletedCode = this.utilsService.newUUID();
     if (!this.privateLink
     ) {
       this.deleteTimer = setTimeout(() => {
         this.linkDeleted.emit(this.link);
-      }, 20);
+        this.substanceFormService.emitOtherLinkUpdate();
+      }, 1000);
     }
   }
 
@@ -75,20 +84,18 @@ export class OtherLinksFormComponent implements OnInit {
 
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'other', 'link': this.privateLink.sites},
-      width: '1038px'
+      width: '1040px'
     });
     this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
       this.overlayContainer.style.zIndex = null;
-      this.privateLink.sites = newLinks;
+      if (newLinks) {
+        this.privateLink.sites = newLinks;
+      }
       this.updateDisplay();
     });
     this.subscriptions.push(dialogSubscription);
-  }
-
-  inCV(vocab: Array<VocabularyTerm>, property: string) {
-    return vocab.some(r => property === r.value);
   }
 
 

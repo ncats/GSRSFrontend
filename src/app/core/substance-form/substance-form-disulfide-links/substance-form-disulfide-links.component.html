@@ -11,9 +11,11 @@
     </div>
   </div>
 
-  <div *ngFor = "let disulfideLink of disulfideLinks; last as isLast; index as index" class = "site-set">
-    <app-disulfide-links-form [link]="disulfideLink" (disulfideLinkDeleted)="deleteDisulfideLink($event)"></app-disulfide-links-form>
-    <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
+  <div *ngFor = "let disulfideLink of disulfideLinks; last as isLast; index as index"  appScrollToTarget [id]="'substance-disulfide-links-' + index"
+       class = "site-set" [ngClass] = "index % 2 === 0? 'side-border':''">
+    <mat-divider *ngIf = "index % 2 === 0" [vertical]="true" style = "height:50px;" [inset] = "true"></mat-divider>
+    <app-disulfide-links-form [link]="disulfideLink" (linkDeleted)="deleteDisulfideLink($event)"></app-disulfide-links-form>
+    <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast && (index !== disulfideLinks.length - 2)"></mat-divider>
   </div>
 </div>
 

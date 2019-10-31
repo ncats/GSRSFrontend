@@ -1,16 +1,10 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {DisulfideLink, Link, Site, SubstanceName, Subunit} from '@gsrs-core/substance';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {DisulfideLink, Site, Subunit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
-import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
-import {MatDialog} from '@angular/material/dialog';
-import {UtilsService} from '@gsrs-core/utils';
-import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import { FormGroup, FormControl } from '@angular/forms';
-import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 
 @Component({
   selector: 'app-substance-form-disulfide-links',
@@ -104,7 +98,7 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
   addLink(): void {
     this.substanceFormService.addSubstanceDisulfideLink();
     setTimeout(() => {
-      this.scrollToService.scrollToElement(`substance-disulfide-link-0`, 'center');
+      this.scrollToService.scrollToElement(`substance-disulfide-links-0`, 'center');
     });
     this.substanceFormService.emitDisulfideLinkUpdate();
   }

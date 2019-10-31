@@ -5,6 +5,11 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
+  <div class="delete-container">
+  <button mat-icon-button matTooltip="Delete code" (click)="deleteCode()">
+    <mat-icon svgIcon="delete_forever"></mat-icon>
+  </button>
+</div>
   <div class="flex-column related-substance">
     <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
                             eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" header="Related Substance"
@@ -13,24 +18,8 @@
   </div>
     <div class="flex-column form-content">
       <div class="form-row">
-    <mat-form-field class="mod-type">
-      <mat-label>Modification Type</mat-label>
-      <mat-select [(ngModel)]="mod.agentModificationType" required name="code">
-        <mat-option *ngFor="let modType of  modTypeList" [value]=" modType.value">
-          {{modType.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field class="mod-type">
-      <mat-label>Modification Process</mat-label>
-      <mat-select [(ngModel)]="mod.agentModificationProcess" required name="code">
-        <mat-option *ngFor="let modType of  modProcessList" [value]=" modType.value">
-          {{modType.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
+        <app-cv-input [vocabulary] = "modTypeList" title = "Sequence Type" [model] = "mod.agentModificationProcess" (valueChange)="updateProcess($event)"></app-cv-input>
+        <app-cv-input [vocabulary] = "modTypeList" title = "Sequence Type" [model] = "mod.agentModificationType" (valueChange)="mod.agentModificationType = $event"></app-cv-input>
     <mat-form-field class="mod-type">
       <mat-label>Modification Role</mat-label>
       <mat-select [(ngModel)]="mod.agentModificationRole" required name="code">

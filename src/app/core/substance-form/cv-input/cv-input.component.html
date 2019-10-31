@@ -1,14 +1,13 @@
-<mat-form-field>
+<mat-form-field [ngClass] = "privateMod === 'other'?'risen':''">
   <mat-label>{{title}}</mat-label>
   <mat-select [(ngModel)]="privateMod" required name="code">
   <mat-option *ngFor="let term of vocabulary" [value]=" term.value">
     {{term.display}}
   </mat-option>
-  <mat-option *ngIf = "!inCV(  vocabulary, privateMod)" value = "{{privateMod}}">{{privateMod}} (not in CV)</mat-option>
+  <mat-option *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== ''" value = "{{privateMod}}">{{privateMod}} (not in CV)</mat-option>
   <mat-option value = 'other' >Other (New Value)</mat-option>
 </mat-select>
 </mat-form-field>
-<div *ngIf = "privateMod == 'other'">
-  <br/>
+<div *ngIf = "privateMod === 'other'" class = "custom">
   <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
 </div>

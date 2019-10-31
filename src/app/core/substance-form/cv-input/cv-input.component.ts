@@ -15,12 +15,12 @@ export class CvInputComponent implements OnInit {
   @Input() title: string;
   @Output()
   valueChange = new EventEmitter<string>();
-  constructor() { }
   privateMod: any;
-  ngOnInit() {
 
+  constructor() { }
+
+  ngOnInit() {
     this.vocabulary = this.addOtherOption(this.vocabulary, this.privateMod);
-    console.log(this.title);
   }
 
   @Input()
@@ -30,23 +30,30 @@ export class CvInputComponent implements OnInit {
 
   }
 
-  get mod(): any {
+  get model(): any {
     return this.privateMod;
   }
 
-  addOtherOption(vocab: Array<VocabularyTerm>, property: string) {
-    if (vocab.some(r => property === r.value)) {
+  addOtherOption(vocab: Array<VocabularyTerm>, property: string): any {
+    if ((vocab) && (vocab.some(r => property === r.value))) {
     } else {
     }
     return vocab;
   }
 
-  inCV(vocab: Array<VocabularyTerm>, property: string) {
-    return vocab.some(r => property === r.value);
+  inCV(vocab: Array<VocabularyTerm>, property: string): boolean {
+    if (vocab) {
+      return vocab.some(r => property === r.value);
+    } else {
+      return true;
+    }
+
   }
 
-  updateOrigin(event) {
-    this.privateMod = event.value;
-    this.valueChange.emit(this.privateMod);
+  updateOrigin(event): void {
+    if (event && event.value !== '') {
+      this.privateMod = event.value;
+      this.valueChange.emit(this.privateMod);
+    }
   }
 }

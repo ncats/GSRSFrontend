@@ -28,7 +28,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
       Validators.required
     ]),
   });
-  private subscriptions: Array<Subscription> = []
+  private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
 
   constructor(
@@ -53,8 +53,6 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
         const cysteineSubscription = this.substanceFormService.substanceCysteineSites.subscribe(cysteine => {
           this.cysteine = cysteine;
           this.subscriptions.push(cysteineSubscription);
-          //this.name.setValue(this.cysteine[0]);
-
         });
       });
   }
@@ -69,12 +67,11 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
 
   deleteLink(): void {
     this.privateLink.$$deletedCode = this.utilsService.newUUID();
-    if (!this.privateLink
-    ) {
+   // if (!this.privateLink) {
       this.deleteTimer = setTimeout(() => {
         this.linkDeleted.emit(this.link);
-      }, 2000);
-    }
+      }, 1000);
+    //}
     this.substanceFormService.emitDisulfideLinkUpdate();
   }
 
@@ -111,7 +108,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
       this.overlayContainer.style.zIndex = null;
-      if(newLinks){
+      if (newLinks) {
         this.privateLink.sites = newLinks;
         this.testForm.controls['site0'].setValue(this.privateLink.sites[0]);
         this.testForm.controls['site1'].setValue(this.privateLink.sites[1] ? this.privateLink.sites[1] : {});
