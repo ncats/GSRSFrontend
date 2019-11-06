@@ -1,0 +1,10 @@
+<div class="na-form-container">
+  <div class="form-row">
+    <app-cv-input domain = "NUCLEIC_ACID_TYPE" title = "Nucleic Acid Type" (valueChange) = "updateTest($event)" [model] = nucleicAcid.nucleicAcidType></app-cv-input>
+    <app-cv-input domain = "NUCLEIC_ACID_SUBTYPE" title = "Sub Type" (valueChange) = "update('nucleicAcidSubType',$event)" [model] = "nucleicAcid.nucleicAcidSubType"></app-cv-input>
+    <div class= "location-container">
+      <app-cv-input domain = "SEQUENCE_ORIGIN" title = "Sequence Origin" (valueChange) = "update('sequenceOrigin',$event)" [model] = "nucleicAcid.sequenceOrigin"></app-cv-input>
+    </div>
+    <app-cv-input domain = "SEQUENCE_TYPE" title = "Sequence Type" [model] = "nucleicAcid.sequenceType" (valueChange)="update('sequenceType',$event)"></app-cv-input>
+  </div>
+</div>

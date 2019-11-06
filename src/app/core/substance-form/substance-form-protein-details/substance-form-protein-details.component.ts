@@ -36,8 +36,7 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
     this.menuLabelUpdate.emit('Protein Details');
     const proteinSubscription = this.substanceFormService.substanceProtein.subscribe(protein => {
       this.protein = protein;
-      console.log(this.protein);
-      setTimeout(() => {this.getVocabularies(); });
+      console.log(protein);
     });
     this.subscriptions.push(proteinSubscription);
     this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All',
@@ -57,6 +56,18 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
     this.protein.proteinSubType = tags.join('|');
   }
 
+  updateType(type: string): void {
+    this.protein.proteinType = type;
+  }
+
+  updateSequenceType(type: string): void {
+    this.protein.sequenceType = type;
+}
+
+updateOrigin(type: string): void {
+    this.protein.sequenceOrigin = type;
+}
+
   pipeToArray(string: string): Array<string> {
     if (string === '') {
       return [];
@@ -64,22 +75,5 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
       return string.split('|');
     }
 
-  }
-
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('PROTEIN_TYPE', 'PROTEIN_SUBTYPE', 'SEQUENCE_ORIGIN', 'SEQUENCE_TYPE').subscribe(response => {
-      console.log(this.protein.proteinType);
-      this.proteinTypeList = this.addOtherOption(response['PROTEIN_TYPE'].list, this.protein.proteinType);
-      this.proteinSubTypeList = this.addOtherOption(response['PROTEIN_SUBTYPE'].list, this.protein.proteinSubType);
-      this.sequenceOriginList = this.addOtherOption(response['SEQUENCE_ORIGIN'].list, this.protein.sequenceOrigin);
-      this.sequenceTypeList = this.addOtherOption(response['SEQUENCE_TYPE'].list, this.protein.sequenceType);
-    });
-  }
-
-  addOtherOption(vocab: Array<VocabularyTerm>, property: string): Array<VocabularyTerm> {
-    if (vocab.some(r => property === r.value)) {
-    } else {
-    }
-    return vocab;
   }
 }

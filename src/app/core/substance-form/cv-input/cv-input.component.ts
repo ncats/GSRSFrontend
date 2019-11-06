@@ -1,5 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
+import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
+import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {UtilsService} from '@gsrs-core/utils';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {Subscription} from 'rxjs';
+import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 
 /*
   used for any input that uses cv vocabulary to handle custom values after selecting 'other'
@@ -11,27 +17,49 @@ import {VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
   styleUrls: ['./cv-input.component.scss']
 })
 export class CvInputComponent implements OnInit {
-  @Input() vocabulary: any;
+  @Input() vocabulary?: any;
   @Input() title: string;
+  @Input() domain?: string;
   @Output()
   valueChange = new EventEmitter<string>();
+  vocabName = '';
   privateMod: any;
+  private overlayContainer: HTMLElement;
+  private subscriptions: Array<Subscription> = [];
 
-  constructor() { }
+  constructor(
+    public cvService: ControlledVocabularyService,
+    private dialog: MatDialog,
+    private utilsService: UtilsService,
+    private overlayContainerService: OverlayContainer
+  ) { }
 
   ngOnInit() {
-    this.vocabulary = this.addOtherOption(this.vocabulary, this.privateMod);
-  }
+    if (this.vocabulary) {
+      this.vocabulary = this.addOtherOption(this.vocabulary, this.privateMod);
+    } else {
+      this.vocabulary = [];
+    this.vocabName = this.domain;
+      this.cvService.getDomainVocabulary(this.vocabName).subscribe(response => {
+        this.vocabulary = response[this.vocabName].list;
+      });
+      }
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+    }
 
   @Input()
   set model(mod: any) {
     this.privateMod = mod;
-    this.valueChange.emit(this.privateMod);
 
   }
 
   get model(): any {
     return this.privateMod;
+  }
+
+  select(event: any): void {
+    this.privateMod = event;
+  this.valueChange.emit(this.privateMod);
   }
 
   addOtherOption(vocab: Array<VocabularyTerm>, property: string): any {
@@ -50,10 +78,37 @@ export class CvInputComponent implements OnInit {
 
   }
 
+  addToVocab() {
+    this.cvService.fetchFullVocabulary(this.vocabName).subscribe ( response => {
+      if (response.content && response.content.length > 0) {
+        const toPut = response.content[0];
+        this.openDialog(toPut, this.privateMod);
+      }
+    });
+  }
+
   updateOrigin(event): void {
     if (event && event.value !== '') {
       this.privateMod = event.value;
       this.valueChange.emit(this.privateMod);
     }
+  }
+
+  openDialog(vocab: any, term: string): void {
+    const dialogRef = this.dialog.open(CvDialogComponent, {
+      data: {'vocabulary': vocab, 'term': term},
+      width: '1040px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+      if (response ) {
+        const newTerm = response;
+        this.privateMod = response.display;
+        this.vocabulary.push(response);
+        this.valueChange.emit(this.privateMod);
+      }
+    });
+    this.subscriptions.push(dialogSubscription);
   }
 }

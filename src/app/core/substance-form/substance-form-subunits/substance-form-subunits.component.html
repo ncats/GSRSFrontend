@@ -23,7 +23,7 @@
 </div>
 <div [ngClass]="view">
   <div   *ngFor="let subunit of subunits; last as isLast; index as index" appScrollToTarget [id]="'substance-subunit-' + index" >
-    <app-subunit-form [subunit]="subunit"  (subunitDeleted)="deleteSubunit($event)"></app-subunit-form>
+    <app-subunit-form [subunit]="subunit"  [view] = 'substanceType' (subunitDeleted)="deleteSubunit($event)"></app-subunit-form>
     <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
   </div>
 

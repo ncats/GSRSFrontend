@@ -52,11 +52,9 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   get link(): Link {
     return this.privateLink;
   }
-
   updateDisplay(): void {
     this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
   }
-
   deleteLink(): void {
     this.privateLink.$$deletedCode = this.utilsService.newUUID();
     if (!this.privateLink

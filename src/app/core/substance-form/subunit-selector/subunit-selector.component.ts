@@ -87,8 +87,9 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       this.subunits = subunits;
       setTimeout(() => {this.processSubunits2(); });
     });
-    this.subscriptions.push(subunitsSubscription);
 
+    this.subscriptions.push(subunitsSubscription);
+    if (this.card !== 'link' && this.card !== 'sugar') {
       const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
         disulfideLinks.forEach(link => {
           link.sites.forEach(site => {
@@ -98,6 +99,8 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
         });
       });
       this.subscriptions.push(disulfideLinksSubscription);
+
+
 
       const otherLinksSubscription = this.substanceFormService.substanceOtherLinks.subscribe(otherLinks => {
         otherLinks.forEach(link => {
@@ -152,6 +155,33 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       });
     });
       this.subscriptions.push(propertiesSubscription);
+    } else if (this.card === 'link') {
+      const linksSubscription = this.substanceFormService.substanceLinks.subscribe(Links => {
+        Links.forEach(link => {
+          if (link.sites) {
+            link.sites.forEach(site => {
+              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+              this.allSites.push(newLink);
+            });
+          }
+        });
+      });
+      this.subscriptions.push(linksSubscription);
+    } else if (this.card === 'sugar') {
+      const linksSubscription = this.substanceFormService.substanceSugars.subscribe(Links => {
+        Links.forEach(link => {
+          if (link.sites) {
+            link.sites.forEach(site => {
+              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+              this.allSites.push(newLink);
+            });
+          }
+        });
+      });
+      this.subscriptions.push(linksSubscription);
+
+    }
+
       setTimeout(() => {this.addStyle(); });
   }
 
@@ -280,11 +310,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
           }
 
         } else if (this.selectState === 'finished') {
-         /* if (newobj.residueIndex > this.newFeature[0].residueIndex) {
-            this.newFeature[1] = newobj;
-          } else if (newobj.residueIndex < this.newFeature[0].residueIndex) {
-            this.newFeature[0] = newobj;
-          }*/
           this.pushFeature();
           this.newFeature[0] = newobj;
           this.render.addClass(event.target, 'chosen');
@@ -366,7 +391,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       }
 
       clearSites(): void {
-        console.log('clearing sites');
         this.sites.forEach(site => {  this.subunitSequences[site.subunitIndex - 1].subunits[site.residueIndex - 1].class = ''; });
         this.sites = [];
 
@@ -400,7 +424,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
   manualInput(event: any): void {
     try {
       const newsites = this.substanceFormService.stringToSites(event.replace(/ /g, ''));
-      console.log(newsites);
       if (this.sites !== newsites) {
         this.sites = newsites;
         this.addStyle();

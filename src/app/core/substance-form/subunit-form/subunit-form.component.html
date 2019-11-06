@@ -28,12 +28,12 @@
 
   <div class="subunit-sequence" *ngIf = "subunitSequence">
     <div class="responsive">{{subunitSequence.subsections.length}}
-      <div *ngFor = "let set of subunitSequence.subsections"  class="sequence-section-group">
-        <div *ngFor = "let num of set" class= "sequence-section">
+      <div *ngFor = "let set of subunitSequence.subsections;last as last1"  class="sequence-section-group">
+        <div *ngFor = "let num of set;last as last2" class= "sequence-section"  [ngClass] = "last1 && last2? 'last-section' : ''" >
           <div class = "section-number">{{num[1]}}</div>
           <div class = section-units-container>
           <span *ngFor = "let subunit of subunitSequence.subunits.slice(num[0],num[1])"  class="section-unit" >
-              <span class = "selectedSite" [ngClass]="subunit.class" >{{subunit.unitValue}}</span>
+              <span class = "selectedSite siteref" [ngClass]="subunit.class" >{{subunit.unitValue}}</span>
         </span>
           </div>
         </div>

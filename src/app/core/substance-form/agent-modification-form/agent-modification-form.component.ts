@@ -92,7 +92,6 @@ export class AgentModificationFormComponent implements OnInit {
 
   updateProcess(event: string){
     this.privateMod.agentModificationProcess = event;
-    console.log(event);
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {

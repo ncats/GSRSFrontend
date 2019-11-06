@@ -105,6 +105,7 @@ export class StructuralModificationFormComponent implements OnInit {
       this.overlayContainer.style.zIndex = null;
       this.mod.sites = newLinks;
       this.updateDisplay();
+      this.substanceFormService.emitStructralModificationsUpdate();
     });
     this.subscriptions.push(dialogSubscription);
   }

@@ -212,5 +212,30 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-protein-details',
     path: 'substance-form-protein-details',
     loadChildren: './substance-form/substance-form-protein-details/substance-form-protein-details.module#SubstanceFormProteinDetailsModule'
+  },
+  {
+    componentId: 'nucleic-acid-details-form',
+    path: 'nucleic-acid-details-form',
+    loadChildren: './substance-form/nucleic-acid-details-form/nucleic-acid-details-form.module#NucleicAcidDetailsFormModule'
+  },
+  {
+    componentId: 'substance-form-links',
+    path: 'substance-form-links',
+    loadChildren: './substance-form/substance-form-links/substance-form-links.module#SubstanceFormLinksModule'
+  },
+  {
+    componentId: 'substance-form-sugars',
+    path: 'substance-form-sugars',
+    loadChildren: './substance-form/substance-form-sugars/substance-form-sugars.module#SubstanceFormSugarsModule'
+  },
+  {
+    componentId: 'substance-form-mixture-details',
+    path: 'substance-form-mixture-details',
+    loadChildren: './substance-form/substance-form-mixture-details/substance-form-mixture-details.module#SubstanceFormMixtureDetailsModule'
+  },
+  {
+    componentId: 'substance-form-mixture-components',
+    path: 'substance-form-mixture-components',
+    loadChildren: './substance-form/substance-form-mixture-components/substance-form-mixture-components.module#SubstanceFormMixtureComponentsModule'
   }
 ];

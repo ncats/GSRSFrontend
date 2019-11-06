@@ -89,6 +89,9 @@ export interface NucleicAcid extends SubstanceBase {
   uuid?: string;
   references?: Array<string>;
   nucleicAcidType?: string;
+  nucleicAcidSubType?: string;
+  sequenceOrigin?: string;
+  sequenceType?: string;
   subunits?: Array<Subunit>;
   sugars?: Array<Sugar>;
   linkages?: Array<Linkage>;

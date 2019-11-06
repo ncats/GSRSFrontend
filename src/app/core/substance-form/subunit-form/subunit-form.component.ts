@@ -51,89 +51,106 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
   ngAfterViewInit() {
 
-    const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
-      disulfideLinks.forEach(link => {
-        if (link.sites) {
-          link.sites.forEach(site => {
-            if (site.subunitIndex === this.subunit.subunitIndex) {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
-              this.allSites.push(newLink);
-            }
-          });
-        }
-      });
-    });
-    this.subscriptions.push(disulfideLinksSubscription);
-
-    const otherLinksSubscription = this.substanceFormService.substanceOtherLinks.subscribe(otherLinks => {
-      otherLinks.forEach(link => {
-        if (link.sites) {
-          link.sites.forEach(site => {
-            if (site.subunitIndex === this.subunit.subunitIndex) {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
-              this.allSites.push(newLink);
-            }
-          });
-        }
-      });
-    });
-    this.subscriptions.push(otherLinksSubscription);
-
-    const glycosylationSubscription = this.substanceFormService.substanceGlycosylation.subscribe(glycosylation => {
-
-
-      if (glycosylation.CGlycosylationSites) {
-
-        glycosylation.CGlycosylationSites.forEach(site => {
-          if (site.subunitIndex === this.subunit.subunitIndex) {
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
-            this.allSites.push(newLink);
-          }
-        });
-      }
-
-      if (glycosylation.NGlycosylationSites) {
-        glycosylation.NGlycosylationSites.forEach(site => {
-          if (site.subunitIndex === this.subunit.subunitIndex) {
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
-            this.allSites.push(newLink);
-          }
-        });
-      }
-
-      if (glycosylation.OGlycosylationSites) {
-        glycosylation.OGlycosylationSites.forEach(site => {
-          if (site.subunitIndex === this.subunit.subunitIndex) {
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
-            this.allSites.push(newLink);
-          }
-
-        });
-      }
-      this.subscriptions.push(glycosylationSubscription);
-      const propertiesSubscription = this.substanceFormService.substanceProperties.subscribe( properties => {
-        properties.forEach(prop => {
-          if (prop.propertyType === 'PROTEIN FEATURE') {
-            const featArr = prop.value.nonNumericValue.split(';');
-            featArr.forEach(f => {
-              if (Number(f.split('_')[0]) === this.subunit.subunitIndex) {
-                const sites = f.split('-');
-                for (let i = Number(sites[0].split('_')[1]); i <= Number(sites[1].split('_')[1]); i++ ) {
-                  const newLink: DisplaySite = {residue: Number(i), subunit: this.subunit.subunitIndex, type: 'feature' };
-                  this.allSites.push(newLink);
-                }
+    if (this.view === 'protein'){
+      const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
+        disulfideLinks.forEach(link => {
+          if (link.sites) {
+            link.sites.forEach(site => {
+              if (site.subunitIndex === this.subunit.subunitIndex) {
+                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
+                this.allSites.push(newLink);
               }
             });
           }
         });
       });
+      this.subscriptions.push(disulfideLinksSubscription);
 
-      this.subscriptions.push(propertiesSubscription);
-      setTimeout(() => {
-       if (this.subunitSequence) {
-         this.addStyle();
-       }
+      const otherLinksSubscription = this.substanceFormService.substanceOtherLinks.subscribe(otherLinks => {
+        otherLinks.forEach(link => {
+          if (link.sites) {
+            link.sites.forEach(site => {
+              if (site.subunitIndex === this.subunit.subunitIndex) {
+                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+                this.allSites.push(newLink);
+              }
+            });
+          }
+        });
       });
+      this.subscriptions.push(otherLinksSubscription);
+
+      const glycosylationSubscription = this.substanceFormService.substanceGlycosylation.subscribe(glycosylation => {
+
+
+        if (glycosylation.CGlycosylationSites) {
+
+          glycosylation.CGlycosylationSites.forEach(site => {
+            if (site.subunitIndex === this.subunit.subunitIndex) {
+              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
+              this.allSites.push(newLink);
+            }
+          });
+        }
+
+        if (glycosylation.NGlycosylationSites) {
+          glycosylation.NGlycosylationSites.forEach(site => {
+            if (site.subunitIndex === this.subunit.subunitIndex) {
+              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
+              this.allSites.push(newLink);
+            }
+          });
+        }
+
+        if (glycosylation.OGlycosylationSites) {
+          glycosylation.OGlycosylationSites.forEach(site => {
+            if (site.subunitIndex === this.subunit.subunitIndex) {
+              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
+              this.allSites.push(newLink);
+            }
+
+          });
+        }
+        this.subscriptions.push(glycosylationSubscription);
+
+      });
+    }
+
+    const modificationSubscription = this.substanceFormService.substanceStructuralModifications.subscribe( mod => {
+      mod.forEach(sites => {
+        sites.sites.forEach(site => {
+          const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'modification'};
+          this.allSites.push(newLink);
+        });
+      });
+    });
+    this.subscriptions.push(modificationSubscription);
+
+    const propertiesSubscription = this.substanceFormService.substanceProperties.subscribe( properties => {
+      properties.forEach(prop => {
+        if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
+          const featArr = prop.value.nonNumericValue.split(';');
+          featArr.forEach(f => {
+            if (Number(f.split('_')[0]) === this.subunit.subunitIndex) {
+              const sites = f.split('-');
+              for (let i = Number(sites[0].split('_')[1]); i <= Number(sites[1].split('_')[1]); i++ ) {
+                const newLink: DisplaySite = {residue: Number(i), subunit: this.subunit.subunitIndex, type: 'feature' };
+                this.allSites.push(newLink);
+              }
+            }
+          });
+        }
+      });
+    });
+
+    this.subscriptions.push(propertiesSubscription);
+   // this.allSites = this.sites;
+    console.log('getting allsites again');
+    console.log(this.sites);
+    setTimeout(() => {
+      if (this.subunitSequence) {
+        this.addStyle();
+      }
     });
   }
 
@@ -214,7 +231,6 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
         index++;
       }
       this.subunitSequence = thisTest;
-      console.log(this.subunitSequence);
 
     setTimeout(() => {this.addStyle(); });
 
@@ -225,7 +241,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab})`;
   }
 
-  private editSubunit(subunit: Subunit, input: string): void {
+  editSubunit(subunit: Subunit, input: string): void {
     this.toggle[subunit.subunitIndex] = !this.toggle[subunit.subunitIndex];
     if (this.toggle[subunit.subunitIndex] === false) {
       this.subunit.sequence = input.trim().replace(/\s/g, '');

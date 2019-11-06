@@ -8,14 +8,15 @@
         <button mat-mini-fab (click)="editSelectedSubstance()">
             <mat-icon aria-label="Edit Selected Substance" svgIcon="edit"></mat-icon>
         </button>
-        <a mat-mini-fab target="_blank" [routerLink]="['/substances', selectedSubstance.uuid]">
+        <a *ngIf = "selectedSubstance.uuid" mat-mini-fab target="_blank" [routerLink]="['/substances', selectedSubstance.uuid]">
             <mat-icon aria-label="Open in new tab" svgIcon="open_in_new"></mat-icon>
         </a>
       </div>
       <div class="section-header">{{header}}</div>
-      <img class = "related-image" [src]="substanceService.getSafeIconImgUrl(selectedSubstance)">
+      <img class = "related-image" *ngIf = "selectedSubstance.uuid" [src]="substanceService.getSafeIconImgUrl(selectedSubstance)">
       <div>
         {{selectedSubstance._name}}
+        <span class = 'code' *ngIf = "errorMessage === 'Not in database'"><br/>NOT IN DATABASE</span>
       </div>
     </div>
   </div>

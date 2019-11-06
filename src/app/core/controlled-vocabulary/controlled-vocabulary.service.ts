@@ -227,4 +227,35 @@ export class ControlledVocabularyService extends BaseHttpService {
       });
     });
   }
+
+  public fetchFullVocabulary(domain: string): Observable<any> {
+
+    const url = `${this.apiBaseUrl}vocabularies/search`;
+    let params = new HttpParams();
+    params = params.append('top', '100000');
+
+    let domainLuceneQuery = '';
+    const responseDomainVocabulary: VocabularyDictionary = {};
+    this.vocabularyLoadingIndicators[domain] = true;
+    if (this.vocabularySubject[domain] == null) {
+      this.vocabularySubject[domain] = new Subject();
+    }
+
+    responseDomainVocabulary[domain] = {
+      dictionary: {},
+      list: []
+    };
+
+    domainLuceneQuery += `root_domain:${domain}`;
+    params = params.append('q', domainLuceneQuery);
+    const options = {
+      params: params
+    };
+    return this.http.get<PagingResponse<Vocabulary>>(url, options);
+  }
+
+  public addVocabTerm(vocab: any): Observable<any> {
+    const url = `${this.apiBaseUrl}vocabularies`;
+    return this.http.put( url, vocab);
+  }
 }

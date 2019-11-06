@@ -127,7 +127,7 @@ export class PropertyFormComponent implements OnInit {
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(features => {
       this.overlayContainer.style.zIndex = null;
-      this.property.name = features.name;
+      this.property.name = features.name || '';
       this.property.value.nonNumericValue = features.siteRange;
     });
   }

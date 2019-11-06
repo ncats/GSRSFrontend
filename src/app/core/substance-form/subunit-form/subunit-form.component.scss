@@ -172,6 +172,10 @@
   background-color:mediumpurple;
 }
 
+.modification{
+  color:white;
+  background-color:sienna;
+}
 
 .selectedSite{
   display:block;
@@ -181,4 +185,14 @@
 .chosen {
   color:black !important;
   background-color:turquoise !important;
+}
+
+.last-section {
+  flex-basis: 0!important;
+}
+
+.siteref {
+  display:block;
+  width: 15.5px !important;
+  text-align: center;
 }

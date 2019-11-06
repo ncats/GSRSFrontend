@@ -53,6 +53,10 @@ import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-d
 import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/physical-parameter-form-dialog/physical-parameter-form-dialog.component';
 import {PhysicalParameterFormComponent} from '@gsrs-core/substance-form/physical-parameter-form/physical-parameter-form.component';
 import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import {SugarFormComponent} from '@gsrs-core/substance-form/sugar-form/sugar-form.component';
+import {LinkFormComponent} from '@gsrs-core/substance-form/link-form/link-form.component';
+import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
+import {MixtureComponentFormComponent} from '@gsrs-core/substance-form/mixture-component-form/mixture-component-form.component';
 
 @NgModule({
   imports: [
@@ -103,6 +107,8 @@ import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.comp
     SubunitFormComponent,
     SubunitDisplayPipe,
     OtherLinksFormComponent,
+    LinkFormComponent,
+    SugarFormComponent,
     DisulfideLinksFormComponent,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
@@ -112,7 +118,9 @@ import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.comp
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
-    CvInputComponent
+    MixtureComponentFormComponent,
+    CvInputComponent,
+    CvDialogComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -141,8 +149,12 @@ import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.comp
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
+    MixtureComponentFormComponent,
     TagSelectorComponent,
-    CvInputComponent
+    LinkFormComponent,
+    SugarFormComponent,
+    CvInputComponent,
+    CvDialogComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
@@ -152,7 +164,8 @@ import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.comp
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
     AmountFormDialogComponent,
-    PhysicalParameterFormDialogComponent
+    PhysicalParameterFormDialogComponent,
+    CvDialogComponent
   ]
 })
 export class SubstanceFormModule { }
