@@ -47,106 +47,35 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
   ngOnInit() {
     this.getVocabularies();
+    this.allSites = [];
   }
 
   ngAfterViewInit() {
-
-    if (this.view === 'protein'){
-      const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
-        disulfideLinks.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              if (site.subunitIndex === this.subunit.subunitIndex) {
-                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
-                this.allSites.push(newLink);
-              }
-            });
-          }
-        });
+    setTimeout(() => {
+      const displaySequenceSubscription = this.substanceFormService.subunitDisplaySequences.subscribe(subunits => {
+        this.subunitSequence = subunits.filter(unit => unit.subunitIndex === this.subunit.subunitIndex)[0];
       });
-      this.subscriptions.push(disulfideLinksSubscription);
-
-      const otherLinksSubscription = this.substanceFormService.substanceOtherLinks.subscribe(otherLinks => {
-        otherLinks.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              if (site.subunitIndex === this.subunit.subunitIndex) {
-                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
-                this.allSites.push(newLink);
-              }
-            });
-          }
-        });
-      });
-      this.subscriptions.push(otherLinksSubscription);
-
-      const glycosylationSubscription = this.substanceFormService.substanceGlycosylation.subscribe(glycosylation => {
-
-
-        if (glycosylation.CGlycosylationSites) {
-
-          glycosylation.CGlycosylationSites.forEach(site => {
-            if (site.subunitIndex === this.subunit.subunitIndex) {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
-              this.allSites.push(newLink);
-            }
-          });
-        }
-
-        if (glycosylation.NGlycosylationSites) {
-          glycosylation.NGlycosylationSites.forEach(site => {
-            if (site.subunitIndex === this.subunit.subunitIndex) {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
-              this.allSites.push(newLink);
-            }
-          });
-        }
-
-        if (glycosylation.OGlycosylationSites) {
-          glycosylation.OGlycosylationSites.forEach(site => {
-            if (site.subunitIndex === this.subunit.subunitIndex) {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
-              this.allSites.push(newLink);
-            }
-
-          });
-        }
-        this.subscriptions.push(glycosylationSubscription);
-
-      });
-    }
-
-    const modificationSubscription = this.substanceFormService.substanceStructuralModifications.subscribe( mod => {
-      mod.forEach(sites => {
-        sites.sites.forEach(site => {
-          const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'modification'};
-          this.allSites.push(newLink);
-        });
-      });
-    });
-    this.subscriptions.push(modificationSubscription);
-
-    const propertiesSubscription = this.substanceFormService.substanceProperties.subscribe( properties => {
-      properties.forEach(prop => {
-        if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
-          const featArr = prop.value.nonNumericValue.split(';');
-          featArr.forEach(f => {
-            if (Number(f.split('_')[0]) === this.subunit.subunitIndex) {
-              const sites = f.split('-');
-              for (let i = Number(sites[0].split('_')[1]); i <= Number(sites[1].split('_')[1]); i++ ) {
-                const newLink: DisplaySite = {residue: Number(i), subunit: this.subunit.subunitIndex, type: 'feature' };
-                this.allSites.push(newLink);
-              }
-            }
-          });
-        }
-      });
+      this.subscriptions.push(displaySequenceSubscription);
     });
 
-    this.subscriptions.push(propertiesSubscription);
-   // this.allSites = this.sites;
-    console.log('getting allsites again');
-    console.log(this.sites);
+    const allSitesSubscription = this.substanceFormService.allSites.subscribe( allSites => {
+          const tempSitelist = [];
+          allSites.forEach(site => {
+            if (site.subunit === this.subunit.subunitIndex){
+              tempSitelist.push(site);
+            }
+          });
+          if (this.allSites != tempSitelist){
+            this.allSites = tempSitelist;
+          }
+      setTimeout(() => {
+        if (this.subunitSequence) {
+          this.addStyle();
+        }
+      });
+      }
+    );
+    this.subscriptions.push(allSitesSubscription);
     setTimeout(() => {
       if (this.subunitSequence) {
         this.addStyle();
@@ -166,74 +95,24 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
       this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
-      this.processSubunits();
     }, error => {
-      console.log(error);
-      this.processSubunits();
     });
   }
 
   addStyle(): void {
     if (this.subunitSequence && this.subunitSequence.subunits) {
+
       this.allSites.forEach(site => {
         if (this.subunitSequence.subunits) {
-          this.subunitSequence.subunits[site.residue - 1].class = site.type;
+          if (this.subunitSequence.subunits[site.residue - 1].class){
+            this.subunitSequence.subunits[site.residue - 1].class = this.subunitSequence.subunits[site.residue - 1].class + ' ' + site.type;
+          } else {
+            this.subunitSequence.subunits[site.residue - 1].class = site.type;
+          }
         } else {
         }
       });
     }
-
-  }
-
-  private processSubunits(): void {
-    const subunitIndex = this.subunit.subunitIndex;
-    this.subunit.sequence = this.subunit.sequence.trim().replace(/\s/g, '');
-    const sequence = this.subunit.sequence.trim().replace(/\s/g, '');
-
-    if (this.subunit.length !== this.subunit.sequence.length) {
-      this.subunit.length = this.subunit.sequence.length;
-    }
-    const subunit = this.subunit.sequence.trim().replace(/\s/g, '');
-      const subsections = [];
-      let currentSections = [];
-      for (let count = 0; count < subunit.length; count = count + 10) {
-
-        if ((count + 10) >= subunit.length) {
-          currentSections.push([count, subunit.length]);
-          if ((count + 10) % 50 !== 0) {
-            subsections.push(currentSections);
-          }
-        } else {
-          currentSections.push([count, count + 10]);
-        }
-        if ((count + 10) % 50 === 0) {
-          subsections.push(currentSections);
-          currentSections = [];
-        }
-      }
-      const thisTest: SubunitSequence =  {
-        subunitIndex: subunitIndex,
-        subunits: [],
-        subsections: subsections,
-        subgroups: currentSections
-      };
-      let index = 0;
-      const indexEnd = subunit.length;
-      while (index <= indexEnd) {
-        if (subunit[index]) {
-          const sequenceUnit: SequenceUnit = {
-            unitIndex: index + 1,
-            unitValue: subunit[index],
-            class: ''
-          };
-          thisTest.subunits.push(sequenceUnit);
-        }
-        index++;
-      }
-      this.subunitSequence = thisTest;
-
-    setTimeout(() => {this.addStyle(); });
-
   }
 
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
@@ -247,7 +126,6 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.subunit.sequence = input.trim().replace(/\s/g, '');
       this.substanceFormService.emitSubunitUpdate();
       this.substanceFormService.recalculateCysteine();
-      this.processSubunits();
     } else {
       setTimeout(function () {
         const textArea = document.getElementsByClassName('sequence-textarea');

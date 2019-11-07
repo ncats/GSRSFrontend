@@ -59,3 +59,52 @@
 
 .side-border {
 }
+
+.alternate-backgrounds2 {
+
+  &:nth-child(4n) {
+    background-color: rgba(68, 138, 255, .07);
+
+    ::ng-deep {
+
+      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+        background-color: rgba(68, 138, 255, .15);
+      }
+    }
+  }
+
+  &:nth-child(4n + 3) {
+    background-color: rgba(68, 138, 255, .07);
+
+    ::ng-deep {
+
+      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+        background-color: rgba(68, 138, 255, .15);
+      }
+    }
+  }
+
+  &:nth-child(4n+1) {
+    ::ng-deep {
+
+      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+        background-color: rgba(128, 128, 128, .15);
+      }
+    }
+  }
+
+  &:nth-child(4n+2) {
+    ::ng-deep {
+
+      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+        background-color: rgba(128, 128, 128, .15);
+      }
+    }
+  }
+
+  ::ng-deep {
+    .mat-expansion-panel, .mat-table, textarea {
+      background-color: transparent;
+    }
+  }
+}

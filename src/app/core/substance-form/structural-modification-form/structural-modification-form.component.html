@@ -20,7 +20,7 @@
       </div>
       <div class="flex-column form-content">
 
-        <div class="form-row">
+        <div class="form-row" *ngIf = "substanceType !== 'structurallyDiverse' && mod.locationType != 'RESIDUE_SPECIFIC'">
         <app-cv-input [vocabulary] = "modTypeList" title = "Sequence Type" [model] = "mod.structuralModificationType" (valueChange)= "mod.structuralModificationType = $event"></app-cv-input>
           <div class = 'sites'>
             <div class="label">Sites</div>

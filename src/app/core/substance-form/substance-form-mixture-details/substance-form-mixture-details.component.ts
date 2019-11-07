@@ -32,11 +32,9 @@ export class SubstanceFormMixtureDetailsComponent  extends SubstanceCardBaseFilt
   ngOnInit() {
     this.menuLabelUpdate.emit('Mixture Details');
     const mixtureSubscription = this.substanceFormService.substanceMixture.subscribe(mix => {
-      console.log(mix);
       this.mixture = mix;
       this.parent = mix.parentSubstance;
       this.relatedSubstanceUuid = this.mixture.parentSubstance && this.mixture.parentSubstance.refuuid || '';
-      console.log(this.relatedSubstanceUuid);
     });
     this.subscriptions.push(mixtureSubscription);
   }

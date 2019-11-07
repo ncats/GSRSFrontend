@@ -11,6 +11,7 @@
       <button mat-icon-button matTooltip="Clear Selection"  (click) = "clearSites()">
         <mat-icon svgIcon="clear"></mat-icon>
       </button>
+      <div>{{cysteineMessage}}</div>
     </div>
     </div>
 </div>
@@ -18,7 +19,7 @@
   <div class="form-row-feature">
   <mat-form-field class="name-type mat-form-field">
     <mat-label>Name</mat-label>
-  <input matInput class = "sites-input" [(ngModel)] = 'featureName' (change)="emitUpdate()" placeholder="Name" name ="name">
+  <input matInput class = "sites-input" [(ngModel)] = 'featureName' (change)="emitUpdate($event)" placeholder="Name" name ="name">
   </mat-form-field>
 <div class = "key-value-pair">
   <div class="key">

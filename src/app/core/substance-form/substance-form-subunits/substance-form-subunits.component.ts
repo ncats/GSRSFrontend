@@ -165,7 +165,6 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
 
     ngOnDestroy() {
       this.subscriptions.forEach(subscription => {
-        console.log(subscription);
         subscription.unsubscribe();
       });
     }

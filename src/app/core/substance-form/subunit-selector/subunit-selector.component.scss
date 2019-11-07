@@ -182,10 +182,14 @@
 }
 
 .feature{
-  color:white;
-  background-color:mediumpurple;
+  border-top:1px solid magenta;
+  border-bottom: 1px solid magenta;
 }
 
+.modification{
+  color:white;
+  background-color:sienna;
+}
 
 .feature-step {
   width:50%;
@@ -290,16 +294,17 @@
 }
 
 .cys {
-  color: darkgreen;
+  color: black;
+  font-weight: 500;
 }
 
 .unavailable {
-  color:lightgrey;
+  color:lightgrey!important;
 }
 
 
 
-.blink_me {
+.invalid_blink {
   animation: blinker .5s linear 1;
 }
 @keyframes blinker {

@@ -64,7 +64,7 @@
   display: flex;
 
   .section-unit {
-    flex-grow: 1;
+    /*flex-grow: 1;*/
 
     &:hover {
       cursor: default;
@@ -168,8 +168,8 @@
 }
 
 .feature{
-  color:white;
-  background-color:mediumpurple;
+  border-top:1px solid magenta;
+  border-bottom: 1px solid magenta;
 }
 
 .modification{

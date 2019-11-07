@@ -23,7 +23,7 @@ export class SubunitSelectorDialogComponent implements OnInit {
         if (this.feature.siteRange) {
           this.dialogRef.close(this.feature);
         } else {
-          this.warning = 'Select a site Range before saving';
+          this.warning = 'Select site Range(s) before saving';
         }
       } else {
         this.warning = 'Enter a feature name before saving';

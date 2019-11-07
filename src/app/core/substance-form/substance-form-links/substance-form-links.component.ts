@@ -68,7 +68,6 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
      });
     });
       this.invalidSites = subunitArray.length - linkArray.length;
-      console.log(this.invalidSites);
 
   }
 

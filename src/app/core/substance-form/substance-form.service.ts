@@ -20,8 +20,9 @@ import {
   PhysicalModificationParameter, Protein, ProteinFeatures, Feature, Sugar, Linkage, NucleicAcid, MixtureComponents, Mixture
 } from '../substance/substance.model';
 import {
+  SequenceUnit,
   SubstanceFormDefinition,
-  SubstanceFormResults, ValidationResults
+  SubstanceFormResults, SubunitSequence, ValidationResults
 } from './substance-form.model';
 import { Observable, Subject, observable } from 'rxjs';
 import { SubstanceService } from '../substance/substance.service';
@@ -69,6 +70,8 @@ export class SubstanceFormService {
   private cysteine: Array<Site>;
   private allSitesArr: Array<DisplaySite>;
   private allSitesEmitter = new Subject<Array<DisplaySite>>();
+  private displaySequences: Array<SubunitSequence>;
+  private displaySequencesEmitter  = new Subject<Array<SubunitSequence>>();
   constructor(
     private substanceService: SubstanceService,
     public utilsService: UtilsService,
@@ -235,24 +238,21 @@ export class SubstanceFormService {
   get allSites(): Observable<Array<DisplaySite>> {
     return new Observable(observer => {
       if (!this.allSitesArr) {
-        this.allSitesArr = [];
+        this.allSitesArr = this.getAllSites();
       }
-      this.allSitesArr = this.getAllSites();
-
       observer.next( this.allSitesArr);
-      this.allSitesEmitter.subscribe(protein => {
-        console.log(protein);
+      this.allSitesEmitter.subscribe(sites => {
         observer.next( this.allSitesArr);
       });
     });
   }
 
   emitAllsitesUpdate(): void {
-    this.substanceReferencesEmitter.next(this.getAllSites());
+    this.allSitesEmitter.next(this.getAllSites());
   }
 
 
-  getAllSites(): Array<any> {
+  getAllSites(): Array<DisplaySite> {
 
     let allSitesArr = [];
 
@@ -307,16 +307,40 @@ export class SubstanceFormService {
 
       });
     }
+    if(this.substance.properties){
+      this.substance.properties.forEach(prop => {
+        if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
+          const featArr = prop.value.nonNumericValue.split(';');
+          featArr.forEach(f => {
+              const sites = f.split('-');
+              const subunitIndex = Number(sites[0].split('_')[0]);
+              for (let i = Number(sites[0].split('_')[1]); i <= Number(sites[1].split('_')[1]); i++ ) {
+                const newLink: DisplaySite = {residue: Number(i), subunit: subunitIndex, type: 'feature' };
+                allSitesArr.push(newLink);
+              }
+          });
+        }
+      });
+    }
     return allSitesArr;
   }
 
+   // ### possibly use type to only partially calculate allsites?
+  recalculateAllSites(type?: string): void {
+    const newSites = this.getAllSites();
+    if (newSites !== this.allSitesArr){
+      this.allSitesArr = newSites;
+      this.allSitesEmitter.next(this.allSitesArr);
+    }
+  }
   // Class start
 
   get substanceProtein(): Observable<Protein> {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
         if (this.substance.protein == null) {
-          this.substance.protein = {proteinType:''};
+          // ### figure out why only proteinType takes forever to load causing a console error
+          this.substance.protein = {proteinType: ''};
         }
         observer.next(this.substance.protein);
         this.substanceProteinEmitter.subscribe(protein => {
@@ -756,6 +780,7 @@ export class SubstanceFormService {
       access: []
     };
     this.substance.properties.unshift(newProperty);
+    this.recalculateAllSites('features');
     this.substancePropertiesEmitter.next(this.substance.properties);
   }
   deleteSubstanceProperty(property: SubstanceProperty): void {
@@ -778,20 +803,33 @@ export class SubstanceFormService {
             this.substance.protein.subunits = [];
           }
           observer.next(this.substance.protein.subunits);
+          this.substanceSubunitsEmitter.subscribe(subunits => {
+              observer.next(this.substance.protein.subunits);
+          });
         } else {
           if (this.substance.nucleicAcid.subunits == null) {
             this.substance.protein.subunits = [];
           }
           observer.next(this.substance.nucleicAcid.subunits);
-        }
-
-        this.substanceSubunitsEmitter.subscribe(subunits => {
-          if (this.substance.substanceClass === 'protein') {
-            observer.next(this.substance.protein.subunits);
-          } else {
+          this.substanceSubunitsEmitter.subscribe(subunits => {
             observer.next(this.substance.nucleicAcid.subunits);
-          }
-        });
+          });
+        }
+      });
+    });
+  }
+
+  get subunitDisplaySequences(): Observable<Array<SubunitSequence>> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        if (!this.displaySequences) {
+          this.displaySequences = this.createSubunitDisplay();
+        }
+          observer.next(this.displaySequences);
+          this.displaySequencesEmitter.subscribe(newDisplay => {
+            this.displaySequences = newDisplay;
+            observer.next(this.displaySequences);
+          });
       });
     });
   }
@@ -807,7 +845,8 @@ export class SubstanceFormService {
         subunitIndex: index
       };
       this.substance.protein.subunits.push(newSubunit);
-      this.substanceCodesEmitter.next(this.substance.protein.subunits);
+      this.displaySequencesEmitter.next(this.createSubunitDisplay());
+      this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
     } else {
       const index: number = this.substance.nucleicAcid.subunits.length + 1;
       const newSubunit: Subunit = {
@@ -817,7 +856,8 @@ export class SubstanceFormService {
         subunitIndex: index
       };
       this.substance.nucleicAcid.subunits.push(newSubunit);
-      this.substanceCodesEmitter.next(this.substance.nucleicAcid.subunits);
+      this.displaySequencesEmitter.next(this.createSubunitDisplay());
+      this.substanceSubunitsEmitter.next(this.substance.nucleicAcid.subunits);
     }
 
   }
@@ -827,12 +867,14 @@ export class SubstanceFormService {
       const subUnitIndex = this.substance.protein.subunits.findIndex(subUnit => subunit.$$deletedCode === subUnit.$$deletedCode);
       if (subUnitIndex > -1) {
         this.substance.protein.subunits.splice(subUnitIndex, 1);
+        this.displaySequencesEmitter.next(this.createSubunitDisplay());
         this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
       }
     } else {
       const subUnitIndex = this.substance.nucleicAcid.subunits.findIndex(subUnit => subunit.$$deletedCode === subUnit.$$deletedCode);
       if (subUnitIndex > -1) {
         this.substance.nucleicAcid.subunits.splice(subUnitIndex, 1);
+        this.displaySequencesEmitter.next(this.createSubunitDisplay());
         this.substanceSubunitsEmitter.next(this.substance.nucleicAcid.subunits);
       }
     }
@@ -842,8 +884,10 @@ export class SubstanceFormService {
   emitSubunitUpdate(): void {
     if (this.substance.substanceClass === 'protein') {
       this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
+      this.displaySequencesEmitter.next(this.createSubunitDisplay());
     } else {
       this.substanceSubunitsEmitter.next(this.substance.nucleicAcid.subunits);
+      this.displaySequencesEmitter.next(this.createSubunitDisplay());
     }
   }
 
@@ -871,7 +915,7 @@ export class SubstanceFormService {
       access: []
     };
     this.substance.protein.otherLinks.unshift(newOtherLinks);
-    this.substanceCodesEmitter.next(this.substance.protein.otherLinks);
+    this.substanceOtherLinksEmitter.next(this.substance.protein.otherLinks);
   }
 
   deleteSubstanceOtherLink(link: Link): void {
@@ -883,6 +927,7 @@ export class SubstanceFormService {
   }
 
   emitOtherLinkUpdate(): void {
+    this.recalculateAllSites('other');
     this.substanceOtherLinksEmitter.next(this.substance.protein.otherLinks);
   }
   // other links end
@@ -919,6 +964,7 @@ export class SubstanceFormService {
   }
 
   emitDisulfideLinkUpdate(): void {
+    this.recalculateAllSites('disulfide');
     this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
     this.recalculateCysteine();
   }
@@ -941,6 +987,7 @@ export class SubstanceFormService {
   }
 
   emitGlycosylationUpdate(): void {
+    this.recalculateAllSites('glycosylation');
     this.substanceGlycosylationEmitter.next(this.substance.protein.glycosylation);
   }
 
@@ -1047,6 +1094,9 @@ export class SubstanceFormService {
   }
 
   emitStructralModificationsUpdate(): void {
+    if(this.substance.substanceClass === 'protein' || 'nucleic acid'){
+      this.recalculateAllSites('glycosylation');
+    }
     this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
   }
 
@@ -1450,7 +1500,65 @@ export class SubstanceFormService {
       return disp;
     }
   }
+
+  createSubunitDisplay(): Array<SubunitSequence> {
+    let subunits = [];
+    if (this.substance.substanceClass === 'protein'){
+      subunits = this.substance.protein.subunits;
+    } else {
+      subunits = this.substance.nucleicAcid.subunits;
+    }
+    const t0 = performance.now();
+    const subunitSequences = [];
+    let subunitIndex = 1;
+    subunits.forEach(subunit => {
+      const subsections = [];
+      let currentSections = [];
+      for (let count = 0; count < subunit.sequence.length; count = count + 10) {
+        if ((count + 10) >= subunit.sequence.length) {
+          currentSections.push([count, subunit.sequence.length]);
+          if ((count + 10) % 50 !== 0) {
+            subsections.push(currentSections);
+          }
+        } else {
+          currentSections.push([count, count + 10]);
+        }
+        if ((count + 10) % 50 === 0) {
+          subsections.push(currentSections);
+          currentSections = [];
+        }
+      }
+      const thisTest: TestSequence =  {
+        subunitIndex: subunitIndex,
+        subunits: [],
+        subsections: subsections,
+        subgroups: currentSections
+      };
+      let index = 0;
+      const indexEnd = subunit.sequence.length;
+      while (index <= indexEnd) {
+        if (subunit.sequence[index]) {
+          const sequenceUnit: SequenceUnit = {
+            unitIndex: index + 1,
+            unitValue: subunit.sequence[index],
+            class: ''
+          };
+          thisTest.subunits.push(sequenceUnit);
+        }
+        index++;
+      }
+      subunitSequences.push(thisTest);
+      subunitIndex++;
+    });
+    // this.addStyle();
+    const t1 = performance.now();
+    const totaltime = t1 - t0;
+    console.log('time to process subunit display: '+ totaltime);
+    return subunitSequences;
+  }
 }
+
+
 
 
     interface DisplaySite {
@@ -1458,3 +1566,11 @@ export class SubstanceFormService {
       subunit: number;
       residue: number;
     }
+
+interface TestSequence {
+  subunitIndex?: number;
+  subsections?: Array<any>;
+  subgroups?: Array<any>;
+  subunits?: Array<SequenceUnit>;
+}
+

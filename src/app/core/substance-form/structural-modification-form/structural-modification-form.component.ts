@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {StructuralModification, SubstanceCode, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {UtilsService} from '@gsrs-core/utils';
@@ -14,7 +14,7 @@ import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-d
   templateUrl: './structural-modification-form.component.html',
   styleUrls: ['./structural-modification-form.component.scss']
 })
-export class StructuralModificationFormComponent implements OnInit {
+export class StructuralModificationFormComponent implements OnInit, AfterViewInit {
   private privateMod: StructuralModification;
   @Output() modDeleted = new EventEmitter<StructuralModification>();
   modExtentList: Array<VocabularyTerm> = [];
@@ -27,6 +27,7 @@ export class StructuralModificationFormComponent implements OnInit {
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
   siteDisplay: string;
+  substanceType: string;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -40,7 +41,7 @@ export class StructuralModificationFormComponent implements OnInit {
     this.getVocabularies();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.updateDisplay();
-
+    this.getSubstanceType();
   }
 
   @Input()
@@ -53,11 +54,17 @@ export class StructuralModificationFormComponent implements OnInit {
     return this.privateMod;
   }
 
+  getSubstanceType(): void {
+    const definitionSubscription = this.substanceFormService.definition.subscribe( definition => {
+      this.substanceType = definition.substanceClass;
+    });
+    definitionSubscription.unsubscribe();
+  }
+
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('STRUCTURAL_MODIFICATION_TYPE', 'LOCATION_TYPE', 'EXTENT_TYPE').subscribe(response => {
       this.modTypeList = response['STRUCTURAL_MODIFICATION_TYPE'].list;
       this.modLocationList = response['LOCATION_TYPE'].list;
-     // this.setCodeSystemType();
       this.modExtentList = response['EXTENT_TYPE'].list;
     });
   }

@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, Renderer2} from '@angular/core';
-import { Feature, Glycosylation, Link, Site, Subunit} from '@gsrs-core/substance';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
+import {Feature, Glycosylation, Link, Site, SubstanceAmount, Subunit} from '@gsrs-core/substance';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
@@ -24,12 +24,13 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     ]),
   ]
 })
-export class SubunitSelectorComponent implements OnInit, AfterViewInit {
+export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() card: any;
   @Input() link?: Array<any>;
-  @Input() feature?: Feature;
+ // @Input() feature?: Feature;
   @Output() sitesUpdate = new EventEmitter<Array<Site>>();
   @Output() featureUpdate = new EventEmitter<any>();
+  privateFeature: Feature = {name: '', siteRange: ''};
   sites: Array<any> = [];
   sitesDisplay: string;
   subunits: Array<Subunit>;
@@ -39,13 +40,14 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
   vocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   private subscriptions: Array<Subscription> = [];
   features: Array<Feature>;
-  featureName: string;
+  featureName?: string;
   selectState: string;
   newFeature: Array<Site> = [];
-  subunitSequences: Array<TestSequence>;
+  subunitSequences: Array<TestSequence> = [];
   currentState = 'initial';
   newFeatureArray: Array<Array<Site>> = [];
   valid = true;
+  cysteineMessage: string;
   changeState() {
     this.currentState = this.currentState === 'initial' ? 'final' : 'initial';
   }
@@ -59,10 +61,20 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
   ) {
 }
 
+  @Input()
+  set feature(feat: Feature) {
+    this.privateFeature = feat;
+  }
+
+  get feature(): Feature {
+    return this.privateFeature;
+  }
+
   ngOnInit() {
     this.getVocabularies();
     if ( this.link && this.link.length > 0) {
       this.sites = this.link;
+      this.allSites = [];
       this.updateDisplay();
       this.sitesUpdate.emit(this.sites);
     } else {
@@ -71,11 +83,10 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
     if (this.feature) {
       this.convertFeature();
     }
-
     this.selectState = 'first';
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit()  {
     if ((!this.link.length) || (this.link.length === 0)) {
       this.selectState = 'first';
     } else if (this.link.length === 1) {
@@ -83,118 +94,80 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
     } else if (this.link.length === 2) {
       this.selectState = 'finished';
     }
-    const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
-      this.subunits = subunits;
-      setTimeout(() => {this.processSubunits2(); });
+    setTimeout(() => {
+      const subunitsSubscription = this.substanceFormService.subunitDisplaySequences.subscribe(subunits => {
+        this.subunitSequences = subunits;
+        if (this.card === 'disulfide') {
+          this.subunitSequences.forEach(testSequence => {
+            testSequence.subunits.forEach(sequenceUnit => {
+              if (sequenceUnit.unitValue !== 'C') {
+                sequenceUnit.class = 'unavailable';
+              } else {
+                sequenceUnit.class = 'cys';
+              }
+            });
+          });
+        }
+        if (this.feature) {
+          this.convertFeature();
+        }
+      });
+      this.subscriptions.push(subunitsSubscription);
+
+
+      const allSitesSubscription = this.substanceFormService.allSites.subscribe(allSites => {
+        this.allSites = this.allSites.concat(allSites);
+      });
+      this.subscriptions.push(allSitesSubscription);
+
+      if (this.card === 'link') {
+        const linksSubscription = this.substanceFormService.substanceLinks.subscribe(Links => {
+          Links.forEach(link => {
+            if (link.sites) {
+              link.sites.forEach(site => {
+                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+                this.allSites.push(newLink);
+              });
+            }
+          });
+
+        });
+        this.subscriptions.push(linksSubscription);
+      } else if (this.card === 'sugar') {
+        const linksSubscription = this.substanceFormService.substanceSugars.subscribe(Links => {
+          Links.forEach(link => {
+            if (link.sites) {
+              link.sites.forEach(site => {
+                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+                this.allSites.push(newLink);
+              });
+            }
+          });
+        });
+        this.subscriptions.push(linksSubscription);
+
+      }
+
+
+      // sort out universal timing of subunit and site processing
+      setTimeout(() => {
+        this.addStyle();
+      }, 100);
     });
-
-    this.subscriptions.push(subunitsSubscription);
-    if (this.card !== 'link' && this.card !== 'sugar') {
-      const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
-        disulfideLinks.forEach(link => {
-          link.sites.forEach(site => {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
-             this.allSites.push(newLink);
-          });
-        });
-      });
-      this.subscriptions.push(disulfideLinksSubscription);
-
-
-
-      const otherLinksSubscription = this.substanceFormService.substanceOtherLinks.subscribe(otherLinks => {
-        otherLinks.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
-              this.allSites.push(newLink);
-            });
-          }
-        });
-      });
-      this.subscriptions.push(otherLinksSubscription);
-
-      const glycosylationSubscription = this.substanceFormService.substanceGlycosylation.subscribe(glycosylation => {
-        this.glycosylation = glycosylation;
-
-
-       if (glycosylation.CGlycosylationSites) {
-         glycosylation.CGlycosylationSites.forEach(site => {
-           const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
-           this.allSites.push(newLink);
-         });
-       }
-
-        if (glycosylation.NGlycosylationSites) {
-          glycosylation.NGlycosylationSites.forEach(site => {
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
-            this.allSites.push(newLink);
-          });
-        }
-
-        if (glycosylation.OGlycosylationSites) {
-          glycosylation.OGlycosylationSites.forEach(site => {
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
-            this.allSites.push(newLink);
-          });
-        }
-
-
-
-      });
-    this.subscriptions.push(glycosylationSubscription);
-    const propertiesSubscription = this.substanceFormService.substanceProperties.subscribe( properties => {
-      this.features = [];
-      properties.forEach(prop => {
-        if (prop.propertyType === 'PROTEIN FEATURE') {
-          if ((!this.feature) || (prop.value.nonNumericValue !== this.feature.siteRange)) {
-            const tempFeature = {'name': prop.name, 'siteRange': prop.value.nonNumericValue};
-            this.features.push(tempFeature);
-          }
-        }
-      });
-    });
-      this.subscriptions.push(propertiesSubscription);
-    } else if (this.card === 'link') {
-      const linksSubscription = this.substanceFormService.substanceLinks.subscribe(Links => {
-        Links.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
-              this.allSites.push(newLink);
-            });
-          }
-        });
-      });
-      this.subscriptions.push(linksSubscription);
-    } else if (this.card === 'sugar') {
-      const linksSubscription = this.substanceFormService.substanceSugars.subscribe(Links => {
-        Links.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
-              this.allSites.push(newLink);
-            });
-          }
-        });
-      });
-      this.subscriptions.push(linksSubscription);
-
-    }
-
-      setTimeout(() => {this.addStyle(); });
   }
 
-  emitUpdate(): void {
-    let siterange = '';
-    this.newFeatureArray.forEach(feat => {
-      siterange = siterange + (feat[0].subunitIndex +
-        '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex + ';');
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
-    siterange = siterange + (this.newFeature[0].subunitIndex +
-      '_' + this.newFeature[0].residueIndex + '-' + this.newFeature[1].subunitIndex + '_' + this.newFeature[1].residueIndex);
-    const fullFeature = {'name': this.featureName, 'siteRange': siterange};
-    this.featureUpdate.emit(fullFeature);
+  }
+  emitUpdate(event: any): void {
+    // ### no idea why this would be undefined if it's declared earlier
+    if (!this.privateFeature){
+      this.privateFeature = {name: this.featureName, siteRange: ''};
+    }
+    this.featureUpdate.emit(this.privateFeature);
+    this.privateFeature.name = this.featureName;
   }
 
   getVocabularies(): void {
@@ -301,12 +274,12 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
             let siterange = '';
             this.newFeatureArray.forEach(feat => {
               siterange = siterange + (feat[0].subunitIndex +
-                '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex);
+                '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex+ ';');
             });
             siterange = siterange + (this.newFeature[0].subunitIndex +
               '_' + this.newFeature[0].residueIndex + '-' + this.newFeature[1].subunitIndex + '_' + this.newFeature[1].residueIndex);
-            const fullFeature = {'name': this.featureName, 'siteRange': siterange};
-            this.featureUpdate.emit(fullFeature);
+            this.privateFeature = {'name': this.featureName || '', 'siteRange': siterange};
+            this.featureUpdate.emit(this.privateFeature);
           }
 
         } else if (this.selectState === 'finished') {
@@ -319,9 +292,8 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
             siterange = siterange + (feat[0].subunitIndex +
               '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex);
           });
-          const fullFeature = {'name': this.featureName, 'siteRange': siterange};
-
-          this.featureUpdate.emit(fullFeature);
+          this.privateFeature = {'name': this.featureName || '', 'siteRange': siterange};
+          this.featureUpdate.emit(this.privateFeature);
         }
       } else {
         const inSites = this.sites.some(r => (r.residueIndex == residue) && (r.subunitIndex == subunit));
@@ -376,14 +348,15 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
                     return (r.residueIndex !== residue) || (r.subunitIndex !== subunit);
                   });
                } else {
+                  this.cysteineMessage = "You must clear existing sites to select new ones"
                }
             }
             this.updateDisplay();
             this.sitesUpdate.emit(this.sites);
           } else {
-            this.render.addClass(event.target, 'blink_me');
+            this.render.addClass(event.target, 'invalid_blink');
             setTimeout(
-              function() {this.render.removeClass(event.target, 'blink_me'); }, 2000);
+              function() {this.render.removeClass(event.target, 'invalid_blink'); }, 2000);
           }
        }
       }
@@ -393,17 +366,33 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       clearSites(): void {
         this.sites.forEach(site => {  this.subunitSequences[site.subunitIndex - 1].subunits[site.residueIndex - 1].class = ''; });
         this.sites = [];
-
+        this.cysteineMessage = '';
         this.selectState = 'first';
         this.updateDisplay();
         }
 
   addStyle(): void {
-    if (this.subunitSequences && this.subunitSequences[0].subunits) {
+    if (this.subunitSequences && this.subunitSequences[0] && this.subunitSequences[0].subunits) {
+      this.subunitSequences.forEach(sites => {
+        sites.subunits.forEach( site => {
+          if(this.card === 'disulfide' ){
+              if (site.unitValue !== 'C') {
+                site.class = 'unavailable';
+              } else {
+                site.class = 'cys';
+              }
+          } else {
+            site.class = '';
+          }
+        });
+      });
       this.allSites.forEach(site => {
         if (this.subunitSequences[site.subunit - 1].subunits) {
-          this.subunitSequences[site.subunit - 1].subunits[site.residue - 1].class = site.type;
-        } else {
+          if (this.subunitSequences[site.subunit - 1].subunits[site.residue - 1].class !== '') {
+            this.subunitSequences[site.subunit - 1].subunits[site.residue - 1].class = this.subunitSequences[site.subunit - 1].subunits[site.residue - 1].class + ' ' + site.type;
+          } else {
+            this.subunitSequences[site.subunit - 1].subunits[site.residue - 1].class = site.type;
+          }
         }
       });
       this.sites.forEach(site => {
@@ -454,7 +443,13 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
     this.selectState = 'first';
   }
 
-  private processSubunits2(): void {
+  private processSubunits(): void {
+
+  }
+
+}
+  /*private processSubunits2(): void {
+    const t0 = performance.now();
     this.subunitSequences = [];
     let subunitIndex = 1;
     this.subunits.forEach(subunit => {
@@ -503,26 +498,15 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit {
       this.subunitSequences.push(thisTest);
       subunitIndex++;
     });
-    setTimeout(() => {this.addStyle(); if (this.feature) {this.convertFeature(); } });
-  }
+    setTimeout(() => {
+     // this.addStyle();
+    if (this.feature) {this.convertFeature(); } });
+    const t1 = performance.now();
+    const totaltime = t1 - t0;
+    console.log(t1);
+    console.log('time to process subunit display: '+ totaltime);
+  }*/
 
-  setClass(type: string): any {
-      const classes = {type: true , 'unavailable': this.card === 'disulfide'};
-      return classes;
-  }
-
-}
-
-
-interface SequenceSectionGroup {
-  sequenceSections: Array<SequenceSection>;
-}
-
-interface SequenceSection {
-  sectionNumber: number;
-  sectionUnits: Array<SequenceUnit>;
-
-}
 
 interface SequenceUnit {
   unitIndex: number;

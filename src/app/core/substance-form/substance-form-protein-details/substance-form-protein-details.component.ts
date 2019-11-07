@@ -36,7 +36,6 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
     this.menuLabelUpdate.emit('Protein Details');
     const proteinSubscription = this.substanceFormService.substanceProtein.subscribe(protein => {
       this.protein = protein;
-      console.log(protein);
     });
     this.subscriptions.push(proteinSubscription);
     this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All',

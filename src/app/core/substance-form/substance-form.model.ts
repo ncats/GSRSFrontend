@@ -55,6 +55,8 @@ export interface SequenceSection {
 export interface SequenceUnit {
   unitIndex: number;
   unitValue: string;
+  class?: string;
+  type?: string;
 }
 export interface DisplaySite {
   type: string;
