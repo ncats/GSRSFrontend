@@ -1,5 +1,11 @@
 <div>
-  <div class="bottom-sheet-title">Search for:</div>
+  <div class="bottom-sheet-title">
+    <span>Search for:</span>
+    <span class="middle-fill"></span>
+    <button mat-icon-button (click)="dismiss()">
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
+  </div>
   <div class="bottom-sheet-search-term">
     "{{searchTerm}}"
   </div>

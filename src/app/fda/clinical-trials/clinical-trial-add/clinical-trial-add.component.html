@@ -1,0 +1,18 @@
+<div class="wrapper-container example-container mat-elevation-z8">
+  <div *ngIf="canEdit">
+    <p>Add/Update a Clinical Trial from JSON</p>
+    <!-- [formGroup]="jsonAddForm" -->
+    <form class="json-add-form">
+      <mat-form-field class="json-add-form-field">
+        <textarea matInput placeholder="JSON" [(ngModel)]="json" name="json"></textarea>
+      </mat-form-field>
+    </form>
+    <button mat-flat-button color="primary" class="clinical-trial-action-button" matSuffix aria-label="Add Clinical Trial"
+      (click)="addClinicalTrial();">Add CT</button>
+    <button mat-flat-button color="primary" class="clinical-trial-action-button" matSuffix aria-label="Update Clinical Trial"
+      (click)="updateClinicalTrial();">Update CT</button>
+  </div>
+  <div *ngIf="!canEdit">
+    You must have permission to add/update a Clinical Trial.
+  </div>
+</div>

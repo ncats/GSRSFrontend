@@ -117,7 +117,7 @@ import { HighlightedSearchActionComponent } from './highlighted-search-action/hi
     MatListModule,
     DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
     ScrollToModule,
-    EnvironmentModule,
+    EnvironmentModule.forRoot(),
     MatMenuModule,
     MatButtonToggleModule,
     MatTooltipModule,
