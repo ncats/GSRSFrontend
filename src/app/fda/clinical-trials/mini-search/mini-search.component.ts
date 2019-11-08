@@ -90,9 +90,9 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
     this.miniSearchOutput.emit(data);
   }
 
-  processSubstanceSearch() {
-    const searchTerm = this.searchControl.value;
-    this.navigateToSearchResults(searchTerm);
+  processSubstanceNameSearch() {
+    // will enhance in future
+    // const searchTerm = this.searchControl.value;
   }
 
   navigateToSearchResults(searchTerm: string) {

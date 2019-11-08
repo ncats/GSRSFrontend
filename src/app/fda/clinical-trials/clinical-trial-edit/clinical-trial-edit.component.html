@@ -3,7 +3,8 @@
 <div class="example-container mat-elevation-z8 clinical-trial-edit-page">
 	<div  *ngIf="clinicalTrial">
     <p *ngIf="clinicalTrial.nctNumber"><a target="_new" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a>
-		&nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span></p>
+    &nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span>
+  </p>
 		<p *ngIf="clinicalTrial.sponsorList">{{clinicalTrial.sponsorList.join("; ")}}</p>
 		<p *ngIf="clinicalTrial.lastUpdated" title="Last updated by CT.gov"> Last Updated: {{clinicalTrial.lastUpdated|date : "MM/dd/yyyy"}}</p>
 	</div>
@@ -16,8 +17,8 @@
 			</span> 
 		</div>
 	
-	<h3>Substances in Clinical Trial</h3>
-	<div *ngIf="isAdmin">
+	<h3>Substances in Clinical Trial <span *ngIf="clinicalTrial && clinicalTrial.clinicalTrialDrug"> ({{ clinicalTrial.clinicalTrialDrug.length}})</span></h3>
+  <div *ngIf="isAdmin">
 		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
 		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
