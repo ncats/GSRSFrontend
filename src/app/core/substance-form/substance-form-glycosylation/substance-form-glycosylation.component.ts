@@ -44,8 +44,8 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
   ngAfterViewInit() {
     const glycosylationSubscription = this.substanceFormService.substanceGlycosylation.subscribe(glycosylation => {
       this.glycosylation = glycosylation;
-    this.subscriptions.push(glycosylationSubscription);
   });
+    this.subscriptions.push(glycosylationSubscription);
   }
 
   ngOnDestroy() {
@@ -84,13 +84,16 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
+      console.log(newLinks);
       this.overlayContainer.style.zIndex = null;
-      if (type === 'N') {
-        this.glycosylation.NGlycosylationSites = newLinks;
-      } else if (type === 'C') {
-       this.glycosylation.CGlycosylationSites = newLinks;
-      } else {
-        this.glycosylation.OGlycosylationSites = newLinks;
+      if(newLinks){
+        if (type === 'N') {
+          this.glycosylation.NGlycosylationSites = newLinks;
+        } else if (type === 'C') {
+          this.glycosylation.CGlycosylationSites = newLinks;
+        } else {
+          this.glycosylation.OGlycosylationSites = newLinks;
+        }
       }
     });
     this.subscriptions.push(dialogSubscription);

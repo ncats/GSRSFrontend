@@ -10,7 +10,9 @@
   <mat-option value = 'other' >Other (New Value)</mat-option>
 </mat-select>
 </mat-form-field>
-  <button class = "add-term" mat-icon-button *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== 'other'" matTooltip = "add term to Controlled Vocabulary"(click) = "addToVocab()"><mat-icon svgIcon="add_circle_outline"></mat-icon></button>
+  <a class = "add-term" mat-icon-button *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== 'other'" matTooltip = "add term to Controlled Vocabulary"(click) = "addToVocab()">
+    add
+  </a>
 </div>
 <div *ngIf = "privateMod === 'other'" class = "custom">
   <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />

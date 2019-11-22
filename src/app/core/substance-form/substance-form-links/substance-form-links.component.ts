@@ -38,13 +38,15 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
     });
     this.subscriptions.push(linksSubscription);
     const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
-      this.subscriptions.push(subunitsSubscription);
       this.subunits = subunits;
       this.getRemainingSites();
     });
+   this.subscriptions.push(subunitsSubscription);
+
   }
 
   ngOnDestroy() {
+
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -55,7 +57,7 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
     const subunitArray = [];
     if (this.subunits && this.links) {
       this.subunits.forEach(unit => {
-        for (let i = 2; i <= unit.length; i++) {
+        for (let i = 2; i <= unit.sequence.length; i++) {
           subunitArray.push({subunitIndex: unit.subunitIndex, residueIndex: i});
         }
       });

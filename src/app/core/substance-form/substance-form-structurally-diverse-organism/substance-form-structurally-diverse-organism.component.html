@@ -1,0 +1,79 @@
+<div class="organism-form-container">
+  <div *ngIf = "part === 'whole'">
+    <div *ngIf = "structurallyDiverse.sourceMaterialClass === 'ORGANISM'">
+    <div class = 'form-row'>
+      <mat-form-field class="family">
+        <input matInput placeholder="Family" [(ngModel)]="structurallyDiverse.organismFamily" required name="Family" />
+      </mat-form-field>
+      <mat-form-field class="genus">
+        <input matInput placeholder="Genus" [(ngModel)]="structurallyDiverse.organismGenus" required name="genus" />
+      </mat-form-field>
+      <mat-form-field class="species">
+        <input matInput placeholder="Species" [(ngModel)]="structurallyDiverse.organismSpecies" required name="species" />
+      </mat-form-field>
+      <mat-form-field class="author">
+        <input matInput placeholder="Author" [(ngModel)]="structurallyDiverse.organismAuthor" required name="author" />
+      </mat-form-field>
+    </div>
+      <div class = 'form-row'>
+
+        <mat-form-field class="cv-field">
+          <input matInput placeholder="Infra Specific Name" [(ngModel)]="structurallyDiverse.infraSpecificName" required name="" />
+        </mat-form-field>
+
+        <app-cv-input class = 'cv-field' domain = "INFRA_SPECIFIC_TYPE" title = "Infra Specific Type" (valueChange) = "updateType($event)" [model] = "structurallyDiverse.infraSpecificType"></app-cv-input>
+
+        <app-cv-input  class = 'cv-field' domain = "DEVELOPMENTAL_STAGE" title = "Developmental Stage" (valueChange) = "updateStage($event)" [model] = "structurallyDiverse.developmentalStage"></app-cv-input>
+      </div>
+
+      <mat-divider class="form-divider" [inset]="true" ></mat-divider>
+
+    </div>
+    <div class = 'form-row'>
+      <div class="flex-column related-substance">
+        <app-substance-selector class = "related-substance"  (selectionUpdated)="paternalUpdated($event)"
+                                eventCategory="substanceRelationshipRelatedSub" placeholder="Hybrid Paternal Organism" header="Hybrid Paternal Organism"
+                                [subuuid]="paternalUuid">
+        </app-substance-selector>
+      </div>
+      <div class="flex-column related-substance">
+        <app-substance-selector class = "related-substance"  (selectionUpdated)="maternalUpdated($event)"
+                                eventCategory="substanceRelationshipRelatedSub" placeholder="Hybrid Maternal Organism" header="Hybrid Maternal Organism"
+                                [subuuid]="maternalUuid">
+        </app-substance-selector>
+      </div>
+    </div>
+  </div>
+  <div *ngIf = "part === 'fraction'" class = 'form-row'>
+    <div class = 'parent'>
+      <div class = 'form-row'>
+        <app-substance-selector class = "related-substance" (selectionUpdated)="sourceMaterialUpdated($event)"
+                                eventCategory="substanceRelationshipRelatedSub" placeholder="Source Material Parent" header="Source Material Parent"
+                                [subuuid]="parentUuid">
+        </app-substance-selector>
+      </div>
+    </div>
+
+    <mat-divider class="vertical-divider" [vertical]="true"></mat-divider>
+    <div class = 'details'>
+      <div class = 'form-row'>
+
+        <app-tag-selector class="tags" (tagsUpdate)="updatePart($event)" [tags]="structurallyDiverse.part" cvDomain="PART"
+                          placeholder="Part(s)">
+        </app-tag-selector>
+
+        <app-cv-input class = 'cv-field' domain = "PART_LOCATION" title = "Part Location" (valueChange) = "updateLocation($event)" [model] = "structurallyDiverse.partLocation"></app-cv-input>
+      </div>
+      <div class = 'form-row'>
+        <mat-form-field class="fraction-name">
+          <input matInput placeholder="Fraction Name" [(ngModel)]="structurallyDiverse.fractionName" name="Fraction Name" />
+        </mat-form-field>
+
+        <app-cv-input class = 'cv-field' domain = "FRACTION_MATERIAL_TYPE" title = "Fraction Material Type" (valueChange) = "updateMaterialType($event)" [model] = "structurallyDiverse.fractionMaterialType"></app-cv-input>
+        <app-cv-input class = 'cv-field' domain = "DEVELOPMENTAL_STAGE" title = "Developmental Stage" (valueChange) = "updateDevelopmentalStage($event)" [model] = "structurallyDiverse.developmentalStage"></app-cv-input>
+
+      </div>
+    </div>
+    </div>
+
+</div>

@@ -1,0 +1,25 @@
+.component-form-container {
+  padding: 30px 10px 12px 10px;
+  position: relative;
+}
+
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .related-substance, .type {
+    width: 30%;
+    flex-grow:1;
+    padding-right:15px
+  }
+
+  .type {
+    width: 30%;
+  }
+}

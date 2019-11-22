@@ -1,0 +1,26 @@
+<div class="component-form-container form-row">
+  <div *ngIf="component.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="delete-container">
+    <button mat-icon-button matTooltip="Delete code" (click)="deleteComponent()">
+      <mat-icon svgIcon="delete_forever"></mat-icon>
+    </button>
+  </div>
+    <div class = "related-substance">
+      <div class="flex-column ">
+        <app-substance-selector (selectionUpdated)="componentUpdated($event)"
+                                eventCategory="substanceRelationshipRelatedSub" placeholder="Mixture Component" header="Mixture Component"
+                                [subuuid]="relatedSubstanceUuid" [name] = "component.substance.name">
+        </app-substance-selector>
+      </div>
+    </div>
+
+    <div class ="type">
+      <app-cv-input  domain = "MIXTURE_TYPE" title = "Mixture Type" [model] = "component.type" (valueChange)="updateType($event)"></app-cv-input>
+    </div>
+
+</div>

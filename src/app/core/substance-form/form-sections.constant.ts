@@ -57,5 +57,20 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-properties',
     'substance-form-references',
 
+  ],
+  structurallyDiverse: [
+    'substance-form-definition',
+    'substance-form-names',
+    'substance-form-structurally-diverse-source',
+    'substance-form-structurally-diverse-organism',
+    'substance-form-agent-modifications',
+    'substance-form-structural-modifications',
+    'substance-form-physical-modifications',
+    'substance-form-codes',
+    'substance-form-relationships',
+    'substance-form-notes',
+    'substance-form-properties',
+    'substance-form-references',
+
   ]
 };

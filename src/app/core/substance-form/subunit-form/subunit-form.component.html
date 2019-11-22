@@ -41,4 +41,12 @@
     </div>
   </div>
 </div>
+  <div class = 'form-row'>
+    <div *ngIf = "substanceType === 'nucleicAcid'">
+      Generate links and sugars for this subunit as a
+      <button mat-button (click) = "generateSites('DNA')" [ngClass]="sequenceType === 'DNA'?'selected':''">DNA</button>
+      <button mat-button (click) = "generateSites('RNA')" [ngClass]="sequenceType === 'RNA'?'selected':''">RNA</button>
+      sequence
+    </div>
+  </div>
 </div>

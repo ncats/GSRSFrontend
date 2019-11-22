@@ -17,7 +17,16 @@ import {
   AgentModification,
   PhysicalModification,
   StructuralModification,
-  PhysicalModificationParameter, Protein, ProteinFeatures, Feature, Sugar, Linkage, NucleicAcid, MixtureComponents, Mixture
+  PhysicalModificationParameter,
+  Protein,
+  ProteinFeatures,
+  Feature,
+  Sugar,
+  Linkage,
+  NucleicAcid,
+  MixtureComponents,
+  Mixture,
+  StructurallyDiverse
 } from '../substance/substance.model';
 import {
   SequenceUnit,
@@ -64,6 +73,7 @@ export class SubstanceFormService {
   private substanceProteinEmitter = new Subject<Protein>();
   private substanceNucleicAcidEmitter = new Subject<NucleicAcid>();
   private substanceMixtureEmitter = new Subject<Mixture>();
+  private substanceStructurallyDiverseEmitter = new Subject<StructurallyDiverse>();
   private substanceMixtureComponentsEmitter = new Subject<Array<MixtureComponents>>();
   private customFeaturesEmitter = new Subject<Array<Feature>>();
   private customFeatures: Array<Feature>;
@@ -133,12 +143,6 @@ export class SubstanceFormService {
         this.subClass = 'structure';
       } else if (this.subClass === 'specifiedSubstanceG1') {
         this.subClass = 'specifiedSubstance';
-      } else if (this.subClass === 'protein') {
-        this.subClass = 'protein';
-      } else if (this.subClass === 'nucleicAcid') {
-        this.subClass = 'nucleicAcid';
-      } else if (this.subClass === 'mixture') {
-        this.subClass = 'mixture';
       }
 
       if (this.substance[this.subClass] == null) {
@@ -254,23 +258,29 @@ export class SubstanceFormService {
 
   getAllSites(): Array<DisplaySite> {
 
-    let allSitesArr = [];
+    const allSitesArr = [];
 
     if (this.substance.substanceClass === 'protein') {
     if (this.substance.protein.disulfideLinks) {
     this.substance.protein.disulfideLinks.forEach(link => {
-      link.sites.forEach(site => {
-      const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
-        allSitesArr.push(newLink);
-      });
+      if (link.sites) {
+        link.sites.forEach(site => {
+          if (site.subunitIndex && site.residueIndex) {
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
+            allSitesArr.push(newLink);
+          }
+        });
+      }
     });
     }
     if (this.substance.protein.otherLinks) {
       this.substance.protein.otherLinks.forEach(link => {
         if (link.sites) {
           link.sites.forEach(site => {
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
-            allSitesArr.push(newLink);
+            if (site.subunitIndex && site.residueIndex) {
+              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+              allSitesArr.push(newLink);
+            }
           });
         }
       });
@@ -292,22 +302,27 @@ export class SubstanceFormService {
 
       if (glycosylation.OGlycosylationSites) {
         glycosylation.OGlycosylationSites.forEach(site => {
-          const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
-          allSitesArr.push(newLink);
+          if (site.subunitIndex && site.residueIndex) {
+            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
+            allSitesArr.push(newLink);
+          }
         });
       }
     }
     }
     if (this.substance.modifications.structuralModifications) {
       this.substance.modifications.structuralModifications.forEach(mod => {
-        mod.sites.forEach(site => {
-          const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'modification'};
-          allSitesArr.push(newLink);
-        });
-
+        if (mod.sites) {
+          mod.sites.forEach(site => {
+            if (site.subunitIndex && site.residueIndex) {
+              const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'modification'};
+              allSitesArr.push(newLink);
+            }
+          });
+        }
       });
     }
-    if(this.substance.properties){
+    if (this.substance.properties) {
       this.substance.properties.forEach(prop => {
         if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
           const featArr = prop.value.nonNumericValue.split(';');
@@ -328,7 +343,7 @@ export class SubstanceFormService {
    // ### possibly use type to only partially calculate allsites?
   recalculateAllSites(type?: string): void {
     const newSites = this.getAllSites();
-    if (newSites !== this.allSitesArr){
+    if (newSites !== this.allSitesArr) {
       this.allSitesArr = newSites;
       this.allSitesEmitter.next(this.allSitesArr);
     }
@@ -368,7 +383,7 @@ export class SubstanceFormService {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
         if (this.substance.nucleicAcid == null) {
-          this.substance.nucleicAcid = {nucleicAcidType:''};
+          this.substance.nucleicAcid = {nucleicAcidType: ''};
 
         }
         observer.next(this.substance.nucleicAcid);
@@ -380,7 +395,24 @@ export class SubstanceFormService {
   }
 
 
+  // structurally diverse start
+  get substanceStructurallyDiverse(): Observable<Mixture> {
+    return new Observable(observer => {
+      this.ready().subscribe(substance => {
+        if (this.substance.structurallyDiverse == null) {
+          this.substance.structurallyDiverse = {$$diverseType: 'whole', part: ['WHOLE']};
+        }
+        observer.next(this.substance.structurallyDiverse);
+        this.substanceStructurallyDiverseEmitter.subscribe(mixture => {
+          observer.next(this.substance.structurallyDiverse);
+        });
+      });
+    });
+  }
 
+  emitStructurallyDiverseUpdate(): void {
+    this.substanceStructurallyDiverseEmitter.next(this.substance.structurallyDiverse);
+  }
   // mixture start
 
   get substanceMixture(): Observable<Mixture> {
@@ -858,6 +890,8 @@ export class SubstanceFormService {
       this.substance.nucleicAcid.subunits.push(newSubunit);
       this.displaySequencesEmitter.next(this.createSubunitDisplay());
       this.substanceSubunitsEmitter.next(this.substance.nucleicAcid.subunits);
+      this.emitSugarUpdate();
+      this.emitLinkUpdate();
     }
 
   }
@@ -876,6 +910,8 @@ export class SubstanceFormService {
         this.substance.nucleicAcid.subunits.splice(subUnitIndex, 1);
         this.displaySequencesEmitter.next(this.createSubunitDisplay());
         this.substanceSubunitsEmitter.next(this.substance.nucleicAcid.subunits);
+        this.emitSugarUpdate();
+        this.emitLinkUpdate();
       }
     }
 
@@ -888,6 +924,8 @@ export class SubstanceFormService {
     } else {
       this.substanceSubunitsEmitter.next(this.substance.nucleicAcid.subunits);
       this.displaySequencesEmitter.next(this.createSubunitDisplay());
+      this.emitSugarUpdate();
+      this.emitLinkUpdate();
     }
   }
 
@@ -955,6 +993,19 @@ export class SubstanceFormService {
     this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
   }
 
+  addCompleteDisulfideLinks(sites: any): void {
+    sites.forEach(link => {
+      const newSites = [{subunitIndex: link[0].subunitIndex, residueIndex: link[0].residueIndex},
+        {subunitIndex: link[1].subunitIndex, residueIndex: link[1].residueIndex},
+      ];
+      const newDisulfideLinks: DisulfideLink = {sites:
+        newSites
+      };
+      this.substance.protein.disulfideLinks.unshift(newDisulfideLinks);
+    });
+    this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
+  }
+
   deleteSubstanceDisulfideLink(disulfideLink: DisulfideLink): void {
     const subLinkIndex = this.substance.protein.disulfideLinks.findIndex(subLink => disulfideLink.$$deletedCode === subLink.$$deletedCode);
     if (subLinkIndex > -1) {
@@ -996,9 +1047,13 @@ export class SubstanceFormService {
   // modifications start
 
   get substanceAgentModifications(): Observable<Array<AgentModification>> {
+    this.checkModifications();
     return new Observable(observer => {
       this.ready().subscribe(() => {
-        if (!this.substance.modifications || this.substance.modifications.agentModifications == null) {
+        if (!this.substance.modifications ) {
+          this.substance.modifications = {};
+        }
+        if (!this.substance.modifications.agentModifications) {
           this.substance.modifications.agentModifications = [];
         }
         observer.next(this.substance.modifications.agentModifications);
@@ -1032,7 +1087,10 @@ export class SubstanceFormService {
     this.checkModifications();
       return new Observable(observer => {
       this.ready().subscribe(() => {
-        if (!this.substance.modifications || this.substance.modifications.physicalModifications == null) {
+        if (!this.substance.modifications ) {
+          this.substance.modifications = {};
+        }
+        if (!this.substance.modifications.physicalModifications) {
           this.substance.modifications.physicalModifications = [];
         }
         observer.next(this.substance.modifications.physicalModifications);
@@ -1066,7 +1124,10 @@ export class SubstanceFormService {
     this.checkModifications();
       return new Observable(observer => {
       this.ready().subscribe(() => {
-        if (!this.substance.modifications || this.substance.modifications.structuralModifications == null) {
+        if (!this.substance.modifications ) {
+          this.substance.modifications = {};
+        }
+        if (!this.substance.modifications.structuralModifications) {
           this.substance.modifications.structuralModifications = [];
         }
         observer.next(this.substance.modifications.structuralModifications);
@@ -1093,8 +1154,8 @@ export class SubstanceFormService {
     }
   }
 
-  emitStructralModificationsUpdate(): void {
-    if(this.substance.substanceClass === 'protein' || 'nucleic acid'){
+  emitStructuralModificationsUpdate(): void {
+    if (this.substance.substanceClass === 'protein' || 'nucleic acid') {
       this.recalculateAllSites('glycosylation');
     }
     this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
@@ -1105,9 +1166,9 @@ export class SubstanceFormService {
   checkModifications(): void {
       if (!this.substance.modifications || this.substance.modifications === null) {
         this.substance.modifications = {
-          agentModifications:[],
-          structuralModifications:[],
-          physicalModifications:[]
+          agentModifications: [],
+          structuralModifications: [],
+          physicalModifications: []
         };
       }
   }
@@ -1121,23 +1182,25 @@ export class SubstanceFormService {
 
   recalculateCysteine(): void {
     let available = [];
-    for (let i = 0; i < this.substance.protein.subunits.length; i++) {
-      const sequence = this.substance.protein.subunits[i].sequence;
-      for (let j = 0; j < sequence.length; j++) {
-        const site = sequence[j];
-        if (site.toUpperCase() === 'C') {
-          available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+    if (this.substance.substanceClass === 'protein') {
+      for (let i = 0; i < this.substance.protein.subunits.length; i++) {
+        const sequence = this.substance.protein.subunits[i].sequence;
+        for (let j = 0; j < sequence.length; j++) {
+          const site = sequence[j];
+          if (site.toUpperCase() === 'C') {
+            available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+          }
         }
       }
-    }
 
-    this.substance.protein.disulfideLinks.forEach(link => {
-      if (link.sites) {
-        link.sites.forEach(site => {
-          available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
-        });
-      }
-    });
+      this.substance.protein.disulfideLinks.forEach(link => {
+        if (link.sites) {
+          link.sites.forEach(site => {
+            available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
+          });
+        }
+      });
+    }
     this.substanceCysteineEmitter.next(available);
   }
 
@@ -1200,7 +1263,7 @@ export class SubstanceFormService {
 
   // begin link
 
-  get substanceLinks(): Observable<Array<Link>> {
+  get substanceLinks(): Observable<Array<Linkage>> {
     return new Observable(observer => {
       this.ready().subscribe(() => {
         if (this.substance.nucleicAcid.linkages == null) {
@@ -1215,7 +1278,7 @@ export class SubstanceFormService {
   }
 
   addSubstanceLink(): void {
-    const newLinks: Link = {
+    const newLinks: Linkage = {
       sites: []
     };
     this.substance.nucleicAcid.linkages.unshift(newLinks);
@@ -1439,6 +1502,30 @@ export class SubstanceFormService {
       return sites;
   }
 
+  addAnySiteType(data: any){
+    if(data.siteType === 'feature'){
+      this.addSubstancePropertyFromFeature(data.sentFeature);
+    } else if (data.siteType === 'other') {
+
+    } else if (data.siteType === 'CGlycosylation') {
+      this.substance.protein.glycosylation.CGlycosylationSites = this.substance.protein.glycosylation.CGlycosylationSites.concat(data.links);
+      this.emitGlycosylationUpdate();
+    } else if (data.siteType === 'NGlycosylation') {
+      this.substance.protein.glycosylation.NGlycosylationSites = this.substance.protein.glycosylation.NGlycosylationSites.concat(data.links);
+      this.emitGlycosylationUpdate();
+    } else if (data.siteType === 'OGlycosylation') {
+      this.substance.protein.glycosylation.OGlycosylationSites = this.substance.protein.glycosylation.OGlycosylationSites.concat(data.links);
+      this.emitGlycosylationUpdate();
+    } else if (data.siteType === 'disulfide') {
+      const newLink: Link =  {sites: data.links};
+      this.substance.protein.disulfideLinks.unshift(newLink);
+      this.emitDisulfideLinkUpdate();
+
+    } else if (data.siteType === 'modification') {
+
+    }
+  }
+
   siteString(sites: Array<Site>): string {
 
     if (!sites || sites.length === 0) {
@@ -1503,7 +1590,7 @@ export class SubstanceFormService {
 
   createSubunitDisplay(): Array<SubunitSequence> {
     let subunits = [];
-    if (this.substance.substanceClass === 'protein'){
+    if (this.substance.substanceClass === 'protein') {
       subunits = this.substance.protein.subunits;
     } else {
       subunits = this.substance.nucleicAcid.subunits;
@@ -1553,7 +1640,7 @@ export class SubstanceFormService {
     // this.addStyle();
     const t1 = performance.now();
     const totaltime = t1 - t0;
-    console.log('time to process subunit display: '+ totaltime);
+    console.log('time to process subunit display: ' + totaltime);
     return subunitSequences;
   }
 }

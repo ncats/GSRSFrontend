@@ -1,7 +1,7 @@
 <h1 mat-dialog-title  *ngIf = "data.card !== 'feature'">Select Sites</h1>
 <h1 mat-dialog-title *ngIf = "data.card === 'feature'">Add / Modify Feature</h1>
 
-       <app-subunit-selector  [card] = "data.card" [link] = "data.link" [feature] = "data.feature? data.feature : null" (sitesUpdate) = "updateSites($event)" (featureUpdate) = "updateFeature($event)"></app-subunit-selector>
+       <app-subunit-selector  [card] = "data.card" [link] = "data.link" [feature] = "data.feature? data.feature : null" (disulfidesUpdate)="updateDisulfides($event)" (sitesUpdate) = "updateSites($event)" (featureUpdate) = "updateFeature($event)" (cardTypeUpdate) = "updateCardType($event)"></app-subunit-selector>
 
 
       <mat-dialog-actions>

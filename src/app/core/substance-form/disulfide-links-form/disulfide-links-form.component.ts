@@ -99,19 +99,35 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
   }
 
   openDialog(): void {
-
+    let sentSites = this.privateLink.sites;
+    if(!sentSites[0].residueIndex || !sentSites[1].residueIndex){
+      sentSites = [];
+    }
+    console.log(sentSites);
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
-      data: {'card': 'disulfide', 'link': this.privateLink.sites},
+      data: {'card': 'disulfide', 'link': sentSites},
       width: '1040px'
     });
     this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
       this.overlayContainer.style.zIndex = null;
+      console.log(newLinks);
       if (newLinks) {
-        this.privateLink.sites = newLinks;
-        this.testForm.controls['site0'].setValue(this.privateLink.sites[0]);
-        this.testForm.controls['site1'].setValue(this.privateLink.sites[1] ? this.privateLink.sites[1] : {});
+        if(newLinks[0] && newLinks[0].subunitIndex){
+          this.privateLink.sites[0] = newLinks[0];
+          this.testForm.controls['site0'].setValue(this.privateLink.sites[0]);
+        } else {
+          this.privateLink.sites[0] = {};
+          this.testForm.controls['site0'].reset();
+        }
+        if(newLinks[1] && newLinks[1].subunitIndex){
+          this.privateLink.sites[1] = newLinks[1];
+          this.testForm.controls['site1'].setValue(this.privateLink.sites[1]);
+        } else {
+          this.privateLink.sites[1] = {};
+          this.testForm.controls['site1'].reset();
+        }
       }
     });
     this.subscriptions.push(dialogSubscription);

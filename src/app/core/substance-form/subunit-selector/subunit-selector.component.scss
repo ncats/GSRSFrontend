@@ -134,11 +134,50 @@
 .delete-container {
   padding: 0 10px 8px 0;
 }
+.form-header {
+  display:flex;
 
+  .form-input {
+    width:75%;
+  }
+  .key-row {
+    width:25%
+  }
+}
+.key-row {
+  justify-content: flex-end;
+  align-items: flex-end;
+
+width:100%;
+  .key-container {
+    width:250px;
+    align-items: flex-end;
+    display:flex;
+    font-size:13px;
+
+    .key-label {
+      width:125px;
+      display:flex;
+      padding-bottom:5px;
+    }
+  }
+
+}
+
+.key-color {
+  width:15px;
+  height:18px;
+  padding-right:5px;
+}
+
+.disulfide{
+  color:white;
+  background-color:teal;
+}
 
 .other{
   color:white;
-  background-color:blue;
+  background-color:darkslateblue;
 }
 
 .glycosylation{
@@ -146,39 +185,19 @@
   background-color:darkgreen;
 }
 
-.disulfide{
-  color:white;
-  background-color:goldenrod;
-}
-
 .Nglycosylation{
   color:white;
-  background-color:navy;
+  background-color:coral;
 }
 
 .Cglycosylation{
   color:white;
-  background-color:green;
+  background-color:darkorange;
 }
 
 .Oglycosylation{
   color:white;
-  background-color:orangered;
-}
-
-.unavailable.Nglycosylation {
-  color:lightgrey;
-}
-
-
-.selectedSite{
-  padding-left:1px;
-  padding-right:1px;
-}
-
-.chosen {
-  color:black !important;
-  background-color:turquoise !important;
+  background-color:darkgoldenrod;
 }
 
 .feature{
@@ -188,8 +207,24 @@
 
 .modification{
   color:white;
-  background-color:sienna;
+  background-color:DARKOLIVEGREEN;
 }
+
+.chosen {
+  color:black !important;
+  background-color:turquoise !important;
+}
+
+.new-disulfide {
+  color:black !important;
+  background-color:lightskyblue !important;
+}
+
+.selectedSite{
+  padding-left:1px;
+  padding-right:1px;
+}
+
 
 .feature-step {
   width:50%;
@@ -309,7 +344,7 @@
 }
 @keyframes blinker {
   50% {
-    background-color: red;
+   opacity: 0;
   }
 }
 
@@ -323,11 +358,19 @@
   color:black;
 }
 
-
+.invalid-cysteine {
+  color:red;
+}
 .last-section {
   flex-basis: 0!important;
 }
 
 .last-units {
 
+}
+
+.note {
+  padding-top:10px;
+  padding-left:15px;
+  font-size:14px;
 }

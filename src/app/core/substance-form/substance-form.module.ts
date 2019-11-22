@@ -57,6 +57,7 @@ import {SugarFormComponent} from '@gsrs-core/substance-form/sugar-form/sugar-for
 import {LinkFormComponent} from '@gsrs-core/substance-form/link-form/link-form.component';
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {MixtureComponentFormComponent} from '@gsrs-core/substance-form/mixture-component-form/mixture-component-form.component';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @NgModule({
   imports: [
@@ -84,7 +85,8 @@ import {MixtureComponentFormComponent} from '@gsrs-core/substance-form/mixture-c
     ExpandDetailsModule,
     SubstanceSelectorModule,
     MatListModule,
-    FileSelectModule
+    FileSelectModule,
+    MatButtonToggleModule
   ],
   declarations: [
     AccessManagerComponent,

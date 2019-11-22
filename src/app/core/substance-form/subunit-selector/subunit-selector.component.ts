@@ -27,9 +27,11 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() card: any;
   @Input() link?: Array<any>;
- // @Input() feature?: Feature;
   @Output() sitesUpdate = new EventEmitter<Array<Site>>();
   @Output() featureUpdate = new EventEmitter<any>();
+  @Output() disulfidesUpdate = new EventEmitter<any>();
+  @Output() cardTypeUpdate = new EventEmitter<string>();
+
   privateFeature: Feature = {name: '', siteRange: ''};
   sites: Array<any> = [];
   sitesDisplay: string;
@@ -48,9 +50,10 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
   newFeatureArray: Array<Array<Site>> = [];
   valid = true;
   cysteineMessage: string;
-  changeState() {
-    this.currentState = this.currentState === 'initial' ? 'final' : 'initial';
-  }
+  siteTotal: number;
+  disulfideArray: Array<Array<any>> = [];
+  showStyle = true;
+  startingCard: string;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -84,9 +87,11 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
       this.convertFeature();
     }
     this.selectState = 'first';
+    this.startingCard = this.card;
   }
 
   ngAfterViewInit()  {
+    this.siteTotal = 0;
     if ((!this.link.length) || (this.link.length === 0)) {
       this.selectState = 'first';
     } else if (this.link.length === 1) {
@@ -97,17 +102,20 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
     setTimeout(() => {
       const subunitsSubscription = this.substanceFormService.subunitDisplaySequences.subscribe(subunits => {
         this.subunitSequences = subunits;
-        if (this.card === 'disulfide') {
           this.subunitSequences.forEach(testSequence => {
-            testSequence.subunits.forEach(sequenceUnit => {
-              if (sequenceUnit.unitValue !== 'C') {
-                sequenceUnit.class = 'unavailable';
-              } else {
-                sequenceUnit.class = 'cys';
-              }
-            });
+            this.siteTotal = this.siteTotal + testSequence.subunits.length;
+            if (this.card === 'disulfide') {
+              testSequence.subunits.forEach(sequenceUnit => {
+                if (sequenceUnit.unitValue !== 'C') {
+                  sequenceUnit.class = 'unavailable';
+                } else {
+                  sequenceUnit.class = 'cys';
+                }
+              });
+            }
+            this.siteTotal > 5000 ? this.showStyle = false : this.showStyle = true;
           });
-        }
+
         if (this.feature) {
           this.convertFeature();
         }
@@ -134,7 +142,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
         });
         this.subscriptions.push(linksSubscription);
       } else if (this.card === 'sugar') {
-        const linksSubscription = this.substanceFormService.substanceSugars.subscribe(Links => {
+        const sugarSubscription = this.substanceFormService.substanceSugars.subscribe(Links => {
           Links.forEach(link => {
             if (link.sites) {
               link.sites.forEach(site => {
@@ -144,12 +152,8 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
             }
           });
         });
-        this.subscriptions.push(linksSubscription);
-
+        this.subscriptions.push(sugarSubscription);
       }
-
-
-      // sort out universal timing of subunit and site processing
       setTimeout(() => {
         this.addStyle();
       }, 100);
@@ -161,9 +165,10 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
       subscription.unsubscribe();
     });
   }
-  emitUpdate(event: any): void {
+
+  emitUpdate(event): void {
     // ### no idea why this would be undefined if it's declared earlier
-    if (!this.privateFeature){
+    if (!this.privateFeature) {
       this.privateFeature = {name: this.featureName, siteRange: ''};
     }
     this.featureUpdate.emit(this.privateFeature);
@@ -177,67 +182,23 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
+  switchType(event): void {
+    const type = event.value;
+    console.log(event);
+    this.card = type;
+    this.sites = [];
+    this.features = [];
+    this.sitesDisplay = '';
+    this.selectState = 'first';
+    this.cardTypeUpdate.emit(type);
+    this.addStyle();
+  }
+
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string, type: string): string {
     const vocab = (this.vocabulary[unitValue] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue].display);
     return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab}) \n ${type}`;
   }
 
-  removeFeature() {
-    this.newFeature = [];
-    if (this.newFeature[1]) {
-      this.addFeature(this.newFeature, true);
-      this.addStyle();
-      this.selectState = 'first';
-    } else if (this.newFeature[0]) {
-      this.subunitSequences[this.newFeature[0].subunitIndex - 1].subunits[this.newFeature[0].residueIndex - 1].class = '';
-    }
-  }
-
-  addFeature(feature: Array<Site>, reverse?: boolean) {
-    if (feature[0].subunitIndex === feature[1].subunitIndex) {
-      const subunitIndex = feature[0].subunitIndex;
-      let start = feature[0].residueIndex;
-      let end = feature[1].residueIndex;
-      if ( feature[0].residueIndex > feature[1].residueIndex) {
-        start = feature[1].residueIndex;
-        end = feature[0].residueIndex;
-      }
-      for (let i = start; i <= end; i++) {
-        if (reverse) {
-          this.subunitSequences[subunitIndex - 1].subunits[i - 1].class = '';
-        } else {
-          this.subunitSequences[subunitIndex - 1].subunits[i - 1].class = 'chosen';
-        }
-
-      }
-    }
-  }
-
-  deleteFeature(event: any): void {
-    for (let i = event[0].residueIndex; i <= event[1].residueIndex; i++) {
-      this.subunitSequences[event[0].subunitIndex - 1].subunits[i - 1].class = '';
-    }
-  this.newFeatureArray = this.newFeatureArray.filter(feat => ((event[0] !== feat[0]) && (event[1] !== feat[1])) );
-
-  }
-
-  pushFeature(): void {
-    if (this.newFeature.length === 2) {
-      this.newFeatureArray.push(this.newFeature);
-      this.newFeature = [];
-      this.selectState = 'first';
-    }
-  }
-
-  drawFeature(feature: Feature): void {
-    const sites = feature.siteRange.split('-');
-    const start = Number(sites[0].split('_')[1]);
-    const end = Number(sites[1].split('_')[1]);
-    const subunit = Number(sites[0].split('_')[0]);
-    for (let i = start; i <= end; i++) {
-        this.subunitSequences[subunit - 1].subunits[i - 1].class = 'feature';
-    }
-}
   updateDisplay(): void  {
     this.sites = this.sites.sort(function (s1, s2) {
       if (s1.subUnitIndex > s2.subunitIndex) {
@@ -252,49 +213,55 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
       }
     });
       this.sitesDisplay = this.substanceFormService.siteString(this.sites);
-
     }
 
+    toggleMultiDisulfide(subunit: any, residue: any, value: any, event): void {
+      const newobj = {subunitIndex: subunit, residueIndex: residue, event: event.target};
+      if (this.selectState === 'first') {
+        this.sites[0] = newobj;
+        this.render.addClass(event.target, 'chosen');
+        this.selectState = 'last';
+      } else if (this.selectState === 'last') {
+        if (this.sites[0] === newobj) {
+          this.selectState = 'first';
+          this.render.removeClass(event.target, 'chosen');
+        } else {
+          this.sites[1] = newobj;
+          this.disulfideArray.push(this.sites);
+          this.sites = [];
+          this.selectState = 'first';
+          this.renderDisulfideArray();
+          this.disulfidesUpdate.emit(this.disulfideArray);
+        }
+      }
+    }
 
-      toggleSite(subunit: any, residue: any, value: any, event: any): void {
+        deleteDisulfide(index: number): void {
+            this.disulfideArray[index].forEach(site => {
+              console.log(site);
+              this.render.removeClass(site.event, 'new-disulfide');
+            })
+            this.disulfideArray.splice(index, 1);
+          this.disulfidesUpdate.emit(this.disulfideArray);
+        }
+
+        renderDisulfideArray(): void {
+          this.disulfideArray.forEach(set => {
+            set.forEach(site =>{
+             this.render.removeClass(site.event, 'chosen');
+             this.render.addClass(site.event, 'new-disulfide');
+            });
+          });
+
+        }
+
+
+      toggleSite(subunit: any, residue: any, value: any, event): void {
         const newobj = {subunitIndex: subunit, residueIndex: residue};
       if (this.card === 'feature') {
-        if (this.selectState === 'first') {
-          this.newFeature[0] = newobj;
-          this.render.addClass(event.target, 'chosen');
-          this.selectState = 'last';
-        } else if (this.selectState === 'last') {
-          if (this.newFeature[0] === newobj) {
-            this.selectState = 'first';
-            this.render.removeClass(event.target, 'chosen');
-          } else {
-            this.newFeature[1] = newobj;
-            this.addFeature(this.newFeature);
-            this.selectState = 'finished';
-            let siterange = '';
-            this.newFeatureArray.forEach(feat => {
-              siterange = siterange + (feat[0].subunitIndex +
-                '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex+ ';');
-            });
-            siterange = siterange + (this.newFeature[0].subunitIndex +
-              '_' + this.newFeature[0].residueIndex + '-' + this.newFeature[1].subunitIndex + '_' + this.newFeature[1].residueIndex);
-            this.privateFeature = {'name': this.featureName || '', 'siteRange': siterange};
-            this.featureUpdate.emit(this.privateFeature);
-          }
-
-        } else if (this.selectState === 'finished') {
-          this.pushFeature();
-          this.newFeature[0] = newobj;
-          this.render.addClass(event.target, 'chosen');
-          this.selectState = 'last';
-          let siterange = '';
-          this.newFeatureArray.forEach(feat => {
-            siterange = siterange + (feat[0].subunitIndex +
-              '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex);
-          });
-          this.privateFeature = {'name': this.featureName || '', 'siteRange': siterange};
-          this.featureUpdate.emit(this.privateFeature);
-        }
+        this.toggleFeatureSite(subunit, residue, value, event);
+        } else if (this.card === 'multi-disulfide') {
+        this.toggleMultiDisulfide(subunit, residue, value, event);
       } else {
         const inSites = this.sites.some(r => (r.residueIndex == residue) && (r.subunitIndex == subunit));
         if (this.card !== 'disulfide') {
@@ -348,7 +315,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
                     return (r.residueIndex !== residue) || (r.subunitIndex !== subunit);
                   });
                } else {
-                  this.cysteineMessage = "You must clear existing sites to select new ones"
+                  this.cysteineMessage = 'You must clear existing sites to select new ones';
                }
             }
             this.updateDisplay();
@@ -364,18 +331,20 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
       }
 
       clearSites(): void {
-        this.sites.forEach(site => {  this.subunitSequences[site.subunitIndex - 1].subunits[site.residueIndex - 1].class = ''; });
+        this.sites.forEach(site => {  this.subunitSequences[site.subunitIndex - 1].subunits[site.residueIndex - 1].class = '';
+        });
         this.sites = [];
         this.cysteineMessage = '';
         this.selectState = 'first';
         this.updateDisplay();
+
         }
 
   addStyle(): void {
     if (this.subunitSequences && this.subunitSequences[0] && this.subunitSequences[0].subunits) {
       this.subunitSequences.forEach(sites => {
         sites.subunits.forEach( site => {
-          if(this.card === 'disulfide' ){
+          if (this.card === 'disulfide' || this.card === 'multi-disulfide' ) {
               if (site.unitValue !== 'C') {
                 site.class = 'unavailable';
               } else {
@@ -410,102 +379,155 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
 
   }
 
-  manualInput(event: any): void {
+  manualInput(event): void {
     try {
       const newsites = this.substanceFormService.stringToSites(event.replace(/ /g, ''));
       if (this.sites !== newsites) {
-        this.sites = newsites;
-        this.addStyle();
-        this.sitesUpdate.emit(this.sites);
+        if(this.card === 'disulfide'){
+          if(newsites.length < 3 && newsites.length > 0) {
+            this.sites[0] = newsites[0] ? newsites[0] : {};
+            this.sites[1] = newsites[1] ? newsites[1] : {};
+            this.valid = true;
+            this.sitesDisplay = event;
+            this.addStyle();
+          } else {
+            this.valid = false;
+          }
+        } else {
+          this.sites = newsites;
+          this.addStyle();
+          this.sitesUpdate.emit(this.sites);
+        }
       } else {
       }
       this.valid = true;
       this.sitesDisplay = event;
     } catch (e) {
+      console.log(e)
       this.valid = false;
+    }
+  }
+
+  // start feature specific
+
+  removeFeature(): void {
+    if (this.newFeature[1]) {
+      this.addFeature(this.newFeature, true);
+      this.addStyle();
+      this.selectState = 'first';
+    } else if (this.newFeature[0]) {
+      this.subunitSequences[this.newFeature[0].subunitIndex - 1].subunits[this.newFeature[0].residueIndex - 1].class = '';
+    }
+    this.newFeature = [];
+  }
+
+  addFeature(feature: Array<Site>, reverse?: boolean): void {
+    if (feature[0].subunitIndex === feature[1].subunitIndex) {
+      const subunitIndex = feature[0].subunitIndex;
+      let start = feature[0].residueIndex;
+      let end = feature[1].residueIndex;
+      if ( feature[0].residueIndex > feature[1].residueIndex) {
+        start = feature[1].residueIndex;
+        end = feature[0].residueIndex;
+      }
+      for (let i = start; i <= end; i++) {
+        if (reverse) {
+          this.subunitSequences[subunitIndex - 1].subunits[i - 1].class = '';
+        } else {
+          this.subunitSequences[subunitIndex - 1].subunits[i - 1].class = 'chosen';
+        }
+
+      }
+    }
+  }
+
+  deleteFeature(event): void {
+    for (let i = event[0].residueIndex; i <= event[1].residueIndex; i++) {
+      this.subunitSequences[event[0].subunitIndex - 1].subunits[i - 1].class = '';
+    }
+    this.newFeatureArray = this.newFeatureArray.filter(feat => ((event[0] !== feat[0]) && (event[1] !== feat[1])) );
+
+  }
+
+  pushFeature(): void {
+    if (this.newFeature.length === 2) {
+      this.newFeatureArray.push(this.newFeature);
+      this.newFeature = [];
+      this.selectState = 'first';
+    }
+  }
+
+  drawFeature(feature: Feature): void {
+    const sites = feature.siteRange.split('-');
+    const start = Number(sites[0].split('_')[1]);
+    const end = Number(sites[1].split('_')[1]);
+    const subunit = Number(sites[0].split('_')[0]);
+    for (let i = start; i <= end; i++) {
+      this.subunitSequences[subunit - 1].subunits[i - 1].class = 'feature';
+    }
+
+  }
+
+  toggleFeatureSite(subunit: any, residue: any, value: any, event): void {
+    const newobj = {subunitIndex: subunit, residueIndex: residue};
+    if (this.selectState === 'first') {
+      this.newFeature[0] = newobj;
+      this.render.addClass(event.target, 'chosen');
+      this.selectState = 'last';
+    } else if (this.selectState === 'last') {
+      if (this.newFeature[0] === newobj) {
+        this.selectState = 'first';
+        this.render.removeClass(event.target, 'chosen');
+      } else {
+        this.newFeature[1] = newobj;
+        this.addFeature(this.newFeature);
+        this.selectState = 'finished';
+        let siterange = '';
+        this.newFeatureArray.forEach(feat => {
+          siterange = siterange + (feat[0].subunitIndex +
+            '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex + ';');
+        });
+        siterange = siterange + (this.newFeature[0].subunitIndex +
+          '_' + this.newFeature[0].residueIndex + '-' + this.newFeature[1].subunitIndex + '_' + this.newFeature[1].residueIndex);
+        this.privateFeature = {'name': this.featureName || '', 'siteRange': siterange};
+        this.featureUpdate.emit(this.privateFeature);
+      }
+    } else if (this.selectState === 'finished') {
+      this.pushFeature();
+      this.newFeature[0] = newobj;
+      this.render.addClass(event.target, 'chosen');
+      this.selectState = 'last';
+      let siterange = '';
+      this.newFeatureArray.forEach(feat => {
+        siterange = siterange + (feat[0].subunitIndex +
+          '_' + feat[0].residueIndex + '-' + feat[1].subunitIndex + '_' + feat[1].residueIndex);
+      });
+      this.privateFeature = {'name': this.featureName || '', 'siteRange': siterange};
+      this.featureUpdate.emit(this.privateFeature);
     }
   }
 
   convertFeature(): void {
     this.newFeatureArray = [];
     const siteSplit = this.feature.siteRange.split(';');
-      siteSplit.forEach(pair => {
-        const sites = pair.split('-');
-        const start = Number(sites[0].split('_')[1]);
-        const end = Number(sites[1].split('_')[1]);
-        const subunit = Number(sites[0].split('_')[0]);
-        const newArr = [{subunitIndex: subunit, residueIndex: start}, {subunitIndex: subunit, residueIndex: end} ];
-        this.newFeatureArray.push( newArr );
-        this.addFeature(newArr);
-      });
+    siteSplit.forEach(pair => {
+      const sites = pair.split('-');
+      const start = Number(sites[0].split('_')[1]);
+      const end = Number(sites[1].split('_')[1]);
+      const subunit = Number(sites[0].split('_')[0]);
+      const newArr = [{subunitIndex: subunit, residueIndex: start}, {subunitIndex: subunit, residueIndex: end} ];
+      this.newFeatureArray.push( newArr );
+      this.addFeature(newArr);
+    });
     this.newFeature = [];
     this.featureName = this.feature.name;
     this.selectState = 'first';
   }
 
-  private processSubunits(): void {
-
-  }
+  // end Feature specific
 
 }
-  /*private processSubunits2(): void {
-    const t0 = performance.now();
-    this.subunitSequences = [];
-    let subunitIndex = 1;
-    this.subunits.forEach(subunit => {
-      const subsections = [];
-      let currentSections = [];
-      for (let count = 0; count < subunit.sequence.length; count = count + 10) {
-        if ((count + 10) >= subunit.sequence.length) {
-          currentSections.push([count, subunit.sequence.length]);
-          if ((count + 10) % 50 !== 0) {
-            subsections.push(currentSections);
-          }
-        } else {
-          currentSections.push([count, count + 10]);
-        }
-        if ((count + 10) % 50 === 0) {
-          subsections.push(currentSections);
-          currentSections = [];
-        }
-      }
-      const thisTest: TestSequence =  {
-        subunitIndex: subunitIndex,
-        subunits: [],
-        subsections: subsections,
-        subgroups: currentSections
-      };
-      let index = 0;
-      const indexEnd = subunit.sequence.length;
-      while (index <= indexEnd) {
-        if (subunit.sequence[index]) {
-          const sequenceUnit: SequenceUnit = {
-            unitIndex: index + 1,
-            unitValue: subunit.sequence[index],
-            class: ''
-          };
-          if (this.card === 'disulfide') {
-            if (sequenceUnit.unitValue !== 'C') {
-              sequenceUnit.class = 'unavailable';
-            } else {
-              sequenceUnit.class = 'cys';
-            }
-          }
-          thisTest.subunits.push(sequenceUnit);
-        }
-        index++;
-      }
-      this.subunitSequences.push(thisTest);
-      subunitIndex++;
-    });
-    setTimeout(() => {
-     // this.addStyle();
-    if (this.feature) {this.convertFeature(); } });
-    const t1 = performance.now();
-    const totaltime = t1 - t0;
-    console.log(t1);
-    console.log('time to process subunit display: '+ totaltime);
-  }*/
+
 
 
 interface SequenceUnit {
@@ -513,6 +535,7 @@ interface SequenceUnit {
   unitValue: string;
   class?: string;
   type?: string;
+  event?: any;
 }
 
 interface DisplaySite {

@@ -93,6 +93,10 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
       }
       this.updateDisplay();
     });
+    const dialogSubscription2 = dialogRef.backdropClick().subscribe(sub => {     }
+    );
+
+    dialogSubscription2.unsubscribe();
     this.subscriptions.push(dialogSubscription);
   }
 

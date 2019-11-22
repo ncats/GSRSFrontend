@@ -9,12 +9,14 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { Subunit} from '@gsrs-core/substance';
+import {Linkage, Site, Subunit, Sugar} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {Subject, Subscription} from 'rxjs';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import * as deepEqual from "deep-equal";
+
 @Component({
   selector: 'app-subunit-form',
   templateUrl: './subunit-form.component.html',
@@ -32,6 +34,11 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   toggle = {};
   allSites: Array<DisplaySite> = [];
   features: Array<any> = [];
+  sequenceSites: Array<any> = [];
+  sugars: Array<Sugar>;
+  links: Array<Linkage>;
+  sequenceType = '';
+  substanceType: string;
 
 
   constructor(
@@ -48,14 +55,27 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   ngOnInit() {
     this.getVocabularies();
     this.allSites = [];
+    const definitionSubscription = this.substanceFormService.definition.subscribe( definition => {
+      this.substanceType = definition.substanceClass;
+    });
+    definitionSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       const displaySequenceSubscription = this.substanceFormService.subunitDisplaySequences.subscribe(subunits => {
-        this.subunitSequence = subunits.filter(unit => unit.subunitIndex === this.subunit.subunitIndex)[0];
+        const newSubunits = subunits.filter(unit => unit.subunitIndex === this.subunit.subunitIndex)[0];
+        if(!this.subunitSequence || !deepEqual(this.subunitSequence, newSubunits)){
+          this.subunitSequence = newSubunits;
+          setTimeout(() => {
+            if (this.allSites) {
+              this.addStyle();
+            }
+          });
+        }
       });
       this.subscriptions.push(displaySequenceSubscription);
+
     });
 
     const allSitesSubscription = this.substanceFormService.allSites.subscribe( allSites => {
@@ -65,14 +85,15 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
               tempSitelist.push(site);
             }
           });
-          if (this.allSites != tempSitelist){
+          if (!this.allSites || this.allSites !== tempSitelist) {
             this.allSites = tempSitelist;
+            setTimeout(() => {
+              if (this.subunitSequence) {
+                this.addStyle();
+              }
+            });
           }
-      setTimeout(() => {
-        if (this.subunitSequence) {
-          this.addStyle();
-        }
-      });
+
       }
     );
     this.subscriptions.push(allSitesSubscription);
@@ -101,7 +122,6 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
   addStyle(): void {
     if (this.subunitSequence && this.subunitSequence.subunits) {
-
       this.allSites.forEach(site => {
         if (this.subunitSequence.subunits) {
           if (this.subunitSequence.subunits[site.residue - 1].class){
@@ -109,7 +129,6 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
           } else {
             this.subunitSequence.subunits[site.residue - 1].class = site.type;
           }
-        } else {
         }
       });
     }
@@ -150,6 +169,49 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
   }
 
+
+
+  generateSites(event): void {
+    this.sequenceType = event.value;
+    const sugarsSubscription = this.substanceFormService.substanceSugars.subscribe(sug => {
+      this.sugars = sug;
+    });
+
+    const linksSubscription = this.substanceFormService.substanceLinks.subscribe(l => {
+      this.links = l;
+    });
+    let sugarType = '';
+    if (event.value === 'DNA') {
+      sugarType = 'dR';
+    } else {
+      sugarType = 'R';
+    }
+    let sugarArray = [];
+    this.sugars.forEach(sugar => {
+      sugar.sites = sugar.sites.filter(s => s.subunitIndex !== this.subunit.subunitIndex);
+    });
+   // console.log(this.sugars);
+    const subunitArray = [];
+    for (let i = 1; i <= this.subunit.sequence.length; i++) {
+      subunitArray.push({subunitIndex: this.subunit.subunitIndex, residueIndex: i});
+    }
+      const newSugar: Sugar = {sugar: sugarType, sites: subunitArray};
+      this.sugars.push(newSugar);
+    this.links.forEach(link => {
+        link.sites = link.sites.filter(s => s.subunitIndex !== this.subunit.subunitIndex);
+      });
+   const linkageArray = [];
+    for (let i = 2; i <= this.subunit.sequence.length; i++) {
+      linkageArray.push({subunitIndex: this.subunit.subunitIndex, residueIndex: i});
+    }
+      const newLinkage: Linkage = {linkage: 'P', sites: linkageArray};
+      this.links.push(newLinkage);
+   // console.log('about to emit change');
+    this.substanceFormService.emitSugarUpdate();
+    this.substanceFormService.emitLinkUpdate();
+    linksSubscription.unsubscribe();
+    sugarsSubscription.unsubscribe();
+  }
 
 }
 

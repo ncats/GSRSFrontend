@@ -122,10 +122,6 @@
     width:30px;
   }
 
-.other{
-  color:white;
-  background-color:blue;
-}
 .subunit-label {
   font-size: 18px;
   font-weight: 400;
@@ -146,25 +142,34 @@
   color:white;
   background-color:darkgreen;
 }
-
 .disulfide{
   color:white;
-  background-color:goldenrod;
+  background-color:teal;
+}
+
+.other{
+  color:white;
+  background-color:darkslateblue;
+}
+
+.glycosylation{
+  color:white;
+  background-color:darkgreen;
 }
 
 .Nglycosylation{
   color:white;
-  background-color:navy;
+  background-color:coral;
 }
 
 .Cglycosylation{
   color:white;
-  background-color:green;
+  background-color:darkorange;
 }
 
 .Oglycosylation{
   color:white;
-  background-color:orangered;
+  background-color:darkgoldenrod;
 }
 
 .feature{
@@ -174,18 +179,18 @@
 
 .modification{
   color:white;
-  background-color:sienna;
+  background-color:DARKOLIVEGREEN;
 }
 
 .selectedSite{
   display:block;
   text-align: center;
 }
-
+/*
 .chosen {
   color:black !important;
   background-color:turquoise !important;
-}
+}*/
 
 .last-section {
   flex-basis: 0!important;

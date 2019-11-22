@@ -42,6 +42,15 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.updateDisplay();
     this.getSubstanceType();
+    const definitionSubscription = this.substanceFormService.definition.subscribe(definition => {
+      console.log(definition);
+      this.substanceType = definition.substanceClass;
+    });
+    this.subscriptions.push(definitionSubscription);
+  }
+
+  ngAfterViewInit(): void {
+
   }
 
   @Input()
@@ -104,7 +113,7 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
 
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'other', 'link': this.mod.sites},
-      width: '990px'
+      width: '1040px'
     });
     this.overlayContainer.style.zIndex = '1002';
 
@@ -112,7 +121,7 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
       this.overlayContainer.style.zIndex = null;
       this.mod.sites = newLinks;
       this.updateDisplay();
-      this.substanceFormService.emitStructralModificationsUpdate();
+      this.substanceFormService.emitStructuralModificationsUpdate();
     });
     this.subscriptions.push(dialogSubscription);
   }

@@ -50,6 +50,7 @@ export class LinkFormComponent implements OnInit, OnDestroy {
   }
 
   get link(): Link {
+    this.updateDisplay();
     return this.privateLink;
   }
 
@@ -64,7 +65,10 @@ export class LinkFormComponent implements OnInit, OnDestroy {
   }
 
   updateDisplay(): void {
-    this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
+    if(this.privateLink){
+      this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
+
+    }
   }
 
   deleteLink(): void {

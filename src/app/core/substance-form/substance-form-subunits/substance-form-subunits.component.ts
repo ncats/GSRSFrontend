@@ -3,7 +3,7 @@ import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import {Subunit} from '@gsrs-core/substance';
+import {Linkage, Site, Subunit, Sugar} from '@gsrs-core/substance';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
@@ -23,12 +23,15 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
   private subscriptions: Array<Subscription> = [];
   toggle = {};
   view = 'details';
+  sequenceType = '';
   substanceType: string;
   private overlayContainer: HTMLElement;
   features: any;
   allSites: Array<Array<DisplaySite>> = [];
-  subcount =0;
+  subcount = 0;
   sequenceSites: Array<any> = [];
+  sugars: Array<Sugar>;
+  links: Array<Linkage>;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -57,12 +60,13 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
     const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
       this.subunits = subunits;
       this.filtered = subunits;
-      this.subscriptions.push(subunitsSubscription);
+
 
       this.subunits.forEach(unit => {
         this.allSites[unit.subunitIndex] = [];
       });
     });
+    this.subscriptions.push(subunitsSubscription);
     /*
       if (this.substanceType === 'protein'){
         const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
@@ -152,14 +156,12 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
           }
         });
       });
-      console.log(this.allSites);
       this.subscriptions.push(propertiesSubscription);
 */
   }
 
   getSites(index: number): Array<DisplaySite> {
-    //console.log(this.subcount);
-    this.subcount = this.subcount +1;
+    this.subcount = this.subcount + 1;
     return this.allSites[index];
   }
 
@@ -199,13 +201,11 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
   }
 
   openDialog(): void {
-
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'feature', 'link': []},
       width: '1040px'
     });
     this.overlayContainer.style.zIndex = '1002';
-
     const dialogSubscription = dialogRef.afterClosed().subscribe(newFeature => {
       if (newFeature) {
         this.substanceFormService.addSubstancePropertyFromFeature(newFeature);
@@ -215,6 +215,21 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
       }
       this.overlayContainer.style.zIndex = null;
     });
+    this.subscriptions.push(dialogSubscription);
+  }
+
+  openAnyDialog(): void {
+    const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
+      data: {'card': 'any', 'link': []},
+      width: '1040px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      if(response) {
+        this.substanceFormService.addAnySiteType(response);
+      }
+      }
+    );
     this.subscriptions.push(dialogSubscription);
   }
 

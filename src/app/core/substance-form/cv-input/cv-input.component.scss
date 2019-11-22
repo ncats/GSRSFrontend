@@ -19,8 +19,20 @@
   display: flex;
   justify-content: space-around;
   align-items: flex-end;
+
+
 }
 
+.value, .display, .description {
+  flex-grow: 1;
+  padding-right: 15px;
+}
 .cv-field {
 
+}
+
+
+.add-term {
+  color:#229fdd;
+  font-style: italic;
 }

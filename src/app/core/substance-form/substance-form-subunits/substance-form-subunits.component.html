@@ -9,6 +9,11 @@
       Add Feature <mat-icon svgIcon="add_circle_outline"></mat-icon>
     </button>
   </div>
+  <div class ='add-button'>
+    <button mat-button (click) = "openAnyDialog()">
+      Add Any Site Type <mat-icon svgIcon="add_circle_outline"></mat-icon>
+    </button>
+  </div>
 </div>
 
 <div class="filters-container">
@@ -21,6 +26,7 @@
     </mat-button-toggle>
   </mat-button-toggle-group>
 </div>
+
 <div [ngClass]="view">
   <div   *ngFor="let subunit of subunits; last as isLast; index as index" appScrollToTarget [id]="'substance-subunit-' + index" >
     <app-subunit-form [subunit]="subunit"  [view] = 'substanceType' (subunitDeleted)="deleteSubunit($event)"></app-subunit-form>

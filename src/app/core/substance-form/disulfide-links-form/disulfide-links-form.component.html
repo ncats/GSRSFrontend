@@ -13,7 +13,7 @@
     </div>
       <div class = "sites" *ngFor = "let site of link.sites;index as index">
         <mat-form-field class="site">
-          <mat-label>{{index === 0? 'From' : 'To'}}</mat-label>
+          <mat-label>{{index === 0? 'To': 'From'}}</mat-label>
         <mat-select [formControlName] = "'site'+index"  (selectionChange)="updateSuggestions($event.value, index) " class ="site-select" >
           <mat-option *ngFor="let cys of cysteine" [value]="cys">
             {{cys.subunitIndex}}_{{cys.residueIndex}}

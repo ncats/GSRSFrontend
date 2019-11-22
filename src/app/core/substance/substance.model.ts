@@ -66,6 +66,7 @@ export interface StructurallyDiverse extends SubstanceBase {
     sourceMaterialType?: string;
     sourceMaterialState?: string;
     part?: Array<string>;
+    partLocation?: string;
     parentSubstance?: SubstanceRelated;
     references?: Array<string>;
     organismFamily?: string;
@@ -75,6 +76,12 @@ export interface StructurallyDiverse extends SubstanceBase {
     developmentalStage?: string;
     fractionMaterialType?: string;
     fractionName?: string;
+    infraSpecificName?: string;
+    infraSpecificType?: string;
+    hybridSpeciesMaternalOrganism?: SubstanceRelated;
+    hybridSpeciesPaternalOrganism?: SubstanceRelated;
+    $$diverseType?: string;
+    $$storedPart?: Array<string>;
 
 }
 

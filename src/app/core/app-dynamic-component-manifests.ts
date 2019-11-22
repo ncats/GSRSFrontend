@@ -237,5 +237,14 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-mixture-components',
     path: 'substance-form-mixture-components',
     loadChildren: './substance-form/substance-form-mixture-components/substance-form-mixture-components.module#SubstanceFormMixtureComponentsModule'
+  },
+  {
+    componentId: 'substance-form-structurally-diverse-source',
+    path: 'substance-form-structurally-diverse-source',
+    loadChildren: './substance-form/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.module#SubstanceFormStructurallyDiverseSourceModule'
+  },{
+    componentId: 'substance-form-structurally-diverse-organism',
+    path: 'substance-form-structurally-diverse-organism',
+    loadChildren: './substance-form/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.module#SubstanceFormStructurallyDiverseOrganismModule'
   }
 ];
