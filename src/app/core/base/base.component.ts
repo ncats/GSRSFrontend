@@ -124,6 +124,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(routerSubscription);
 
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
   }
 

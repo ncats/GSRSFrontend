@@ -121,7 +121,8 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
       if (newFeature) {
         this.substanceFormService.addSubstancePropertyFromFeature(newFeature);
         setTimeout(() => {
-          this.scrollToService.scrollToElement(`substance-property-0`, 'center');
+          //this.scrollToService.scrollToElement(`substance-property-0`, 'center');
+          alert('Feature added under "Properties"')
         });
       }
       this.overlayContainer.style.zIndex = null;

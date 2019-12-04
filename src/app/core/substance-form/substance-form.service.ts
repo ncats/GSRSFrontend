@@ -140,7 +140,9 @@ export class SubstanceFormService {
             substanceClass: substanceClass,
             references: [],
             names: [],
-            structurallyDiverse: {part: ['whole']},
+            structurallyDiverse: {part: ['whole'],
+              $$diverseType : "whole"
+            },
             codes: [],
             relationships: []
           };
@@ -927,14 +929,14 @@ export class SubstanceFormService {
     if (this.substance.substanceClass === 'protein') {
       const subUnitIndex = this.substance.protein.subunits.findIndex(subUnit => subunit.subunitIndex === subUnit.subunitIndex);
       if (subUnitIndex > -1) {
-        this.substance.protein.subunits.splice(subUnitIndex, 1);
+        this.rearrangeSubunitIndexes('protein',subunit.subunitIndex);
         this.displaySequencesEmitter.next(this.createSubunitDisplay());
         this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
       }
     } else {
       const subUnitIndex = this.substance.nucleicAcid.subunits.findIndex(subUnit => subunit.subunitIndex === subUnit.subunitIndex);
       if (subUnitIndex > -1) {
-        this.substance.nucleicAcid.subunits.splice(subUnitIndex, 1);
+        this.rearrangeNAIndexes('nucleicAdid',subunit.subunitIndex);
         this.displaySequencesEmitter.next(this.createSubunitDisplay());
         this.substanceSubunitsEmitter.next(this.substance.nucleicAcid.subunits);
         this.emitSugarUpdate();
@@ -942,6 +944,137 @@ export class SubstanceFormService {
       }
     }
 
+  }
+
+  rearrangeNAIndexes(type:string, index:number) {
+    const arrIndex = this.substance.nucleicAcid.subunits.findIndex(subUnit => index === subUnit.subunitIndex);
+    this.substance.nucleicAcid.subunits.splice(arrIndex, 1);
+    if (this.substance.nucleicAcid.subunits.length > (arrIndex - 1)) {
+      this.substance.nucleicAcid.subunits.forEach(subunit => {
+        if (subunit.subunitIndex > index) {
+
+          const newIndex = subunit.subunitIndex - 1;
+          subunit.subunitIndex = newIndex;
+        }
+      });
+      if (this.substance.nucleicAcid.sugars) {
+        this.substance.nucleicAcid.sugars.forEach(link => {
+          if (link.sites) {
+            link.sites = link.sites.filter(site => (site.subunitIndex !== index));
+            link.sites.forEach(site => {
+              if (site.subunitIndex && (site.subunitIndex > index)) {
+                site.subunitIndex = site.subunitIndex - 1;
+              }
+            });
+          }
+        });
+        this.emitSugarUpdate();
+      }
+      if (this.substance.nucleicAcid.linkages) {
+        this.substance.nucleicAcid.linkages.forEach(link => {
+          if (link.sites) {
+            link.sites = link.sites.filter(site => (site.subunitIndex !== index));
+            link.sites.forEach(site => {
+              if (site.subunitIndex && (site.subunitIndex > index)) {
+                site.subunitIndex = site.subunitIndex - 1;
+              }
+            });
+          }
+        });
+        this.emitSugarUpdate();
+      }
+    }
+  }
+
+  rearrangeSubunitIndexes(type:string, index:number){
+    const arrIndex = this.substance.protein.subunits.findIndex(subUnit => index === subUnit.subunitIndex);
+    this.substance.protein.subunits.splice(arrIndex, 1);
+    if(this.substance.protein.subunits.length > (arrIndex-1)) {
+      this.substance.protein.subunits.forEach(subunit => {
+        if (subunit.subunitIndex > index) {
+
+          const newIndex = subunit.subunitIndex - 1;
+          subunit.subunitIndex = newIndex;
+        }
+      });
+      if (this.substance.protein.disulfideLinks) {
+        this.substance.protein.disulfideLinks.forEach(link => {
+          if (link.sites) {
+            link.sites = link.sites.filter(site => (site.subunitIndex !== index));
+            link.sites.forEach(site => {
+              if (site.subunitIndex && (site.subunitIndex > index)) {
+                site.subunitIndex = site.subunitIndex - 1;
+              }
+            });
+          }
+        });
+        this.emitDisulfideLinkUpdate();
+      }
+      if (this.substance.protein.otherLinks) {
+        this.substance.protein.otherLinks.forEach(link => {
+          if (link.sites) {
+            link.sites = link.sites.filter(site => (site.subunitIndex !== index));
+            link.sites.forEach(site => {
+              if (site.subunitIndex && (site.subunitIndex > index)) {
+                site.subunitIndex = site.subunitIndex - 1;
+              }
+            });
+          }
+        });
+        this.emitOtherLinkUpdate();
+      }
+      if (this.substance.protein.glycosylation) {
+        const glycosylation = this.substance.protein.glycosylation;
+        if (glycosylation.CGlycosylationSites) {
+          glycosylation.CGlycosylationSites = glycosylation.CGlycosylationSites.filter(site => (site.subunitIndex !== index));
+          glycosylation.CGlycosylationSites.forEach(site => {
+            if (site.subunitIndex && (site.subunitIndex > index)) {
+              site.subunitIndex = site.subunitIndex - 1;
+            }
+          });
+        }
+        if (glycosylation.NGlycosylationSites) {
+          glycosylation.NGlycosylationSites = glycosylation.NGlycosylationSites.filter(site => (site.subunitIndex !== index));
+          glycosylation.NGlycosylationSites.forEach(site => {
+            if (site.subunitIndex && (site.subunitIndex > index)) {
+              site.subunitIndex = site.subunitIndex - 1;
+            }
+          });
+        }
+
+        if (glycosylation.OGlycosylationSites) {
+          glycosylation.OGlycosylationSites = glycosylation.OGlycosylationSites.filter(site => (site.subunitIndex !== index));
+          glycosylation.OGlycosylationSites.forEach(site => {
+            if (site.subunitIndex && (site.subunitIndex > index)) {
+              site.subunitIndex = site.subunitIndex - 1;
+            }
+          });
+        }
+        this.emitGlycosylationUpdate();
+      }
+        if (this.substance.modifications.structuralModifications) {
+          this.substance.modifications.structuralModifications.forEach(link => {
+            if (link.sites) {
+              link.sites = link.sites.filter(site => (site.subunitIndex !== index));
+              link.sites.forEach(site => {
+                if (site.subunitIndex && (site.subunitIndex > index)) {
+                  site.subunitIndex = site.subunitIndex - 1;
+                }
+              });
+            }
+          });
+          this.emitStructuralModificationsUpdate();
+        }
+        if (this.substance.properties) {
+          this.substance.properties.forEach(prop => {
+            if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
+              const featArr = prop.value.nonNumericValue.split(';');
+              featArr.forEach(f => {
+                });
+              }
+            });
+        }
+      }
   }
 
   emitSubunitUpdate(): void {
@@ -1684,60 +1817,48 @@ export class SubstanceFormService {
   }
 
   standardizeNames() {
-    let ascii = /^[ -~\t\n\r]+$/;
     let bad = /[^ -~\t\n\r]/g;
     let rep = "\u2019;';\u03B1;.ALPHA.;\u03B2;.BETA.;\u03B3;.GAMMA.;\u03B4;.DELTA.;\u03B5;.EPSILON.;\u03B6;.ZETA.;\u03B7;.ETA.;\u03B8;.THETA.;\u03B9;.IOTA.;\u03BA;.KAPPA.;\u03BB;.LAMBDA.;\u03BC;.MU.;\u03BD;.NU.;\u03BE;.XI.;\u03BF;.OMICRON.;\u03C0;.PI.;\u03C1;.RHO.;\u03C2;.SIGMA.;\u03C3;.SIGMA.;\u03C4;.TAU.;\u03C5;.UPSILON.;\u03C6;.PHI.;\u03C7;.CHI.;\u03C8;.PSI.;\u03C9;.OMEGA.;\u0391;.ALPHA.;\u0392;.BETA.;\u0393;.GAMMA.;\u0394;.DELTA.;\u0395;.EPSILON.;\u0396;.ZETA.;\u0397;.ETA.;\u0398;.THETA.;\u0399;.IOTA.;\u039A;.KAPPA.;\u039B;.LAMBDA.;\u039C;.MU.;\u039D;.NU.;\u039E;.XI.;\u039F;.OMICRON.;\u03A0;.PI.;\u03A1;.RHO.;\u03A3;.SIGMA.;\u03A4;.TAU.;\u03A5;.UPSILON.;\u03A6;.PHI.;\u03A7;.CHI.;\u03A8;.PSI.;\u03A9;.OMEGA.;\u2192;->;\xB1;+/-;\u2190;<-;\xB2;2;\xB3;3;\xB9;1;\u2070;0;\u2071;1;\u2072;2;\u2073;3;\u2074;4;\u2075;5;\u2076;6;\u2077;7;\u2078;8;\u2079;9;\u207A;+;\u207B;-;\u2080;0;\u2081;1;\u2082;2;\u2083;3;\u2084;4;\u2085;5;\u2086;6;\u2087;7;\u2088;8;\u2089;9;\u208A;+;\u208B;-".split(";");
-   // mk(rep);
     let map = {};
-
+    for (let s = 0; s < rep.length; s++) {
+      if (s % 2 == 0) {
+        let id = rep[s].charCodeAt(0);
+        map[id] = rep[s + 1];
+      }
+    }
     function replacer(match, got) {
       return map[got.charCodeAt(0)];
     }
-
     this.substance.names.forEach(n => {
-      let name = n.name;
-      name = name.replace(/([\u0390-\u03C9||\u2192|\u00B1-\u00B9|\u2070-\u208F|\u2190|])/g, replacer).trim();
-      name = name.replace(bad, "");
-      name = name.replace(/[[]([A-Z -.]*)\]$/g, " !!@!$1_!@!");
-      name = name.replace(/[ \t]+/g, " ");
-      name = name.replace(/[[]/g, "(");
-      name = name.replace(/[{]/g, "(");
-      name = name.replace(/\]/g, ")");
-      name = name.replace(/\"/g, "''");
-      name = name.replace(/[}]/g, ")");
-      name = name.replace(/\(([0-9]*CI,)*([0-9]*CI)\)$/gm, "");
-      name = name.replace(/[ ]*-[ ]*/g, "-");
-      name = name.trim();
-      name = name.replace("!!@!", "[");
-      name = name.replace("_!@!", "]");
-      n.name = name;
-    });
-
-
-    function mk(rep:any) {
-      for (let s = 0; s < rep.length; s++) {
-        if (s % 2 == 0) {
-          let id = rep[s].charCodeAt(0);
-          map[id] = rep[s + 1];
-        }
+      if (n.name){
+        let name = n.name;
+        name = name.replace(/([\u0390-\u03C9||\u2192|\u00B1-\u00B9|\u2070-\u208F|\u2190|])/g, replacer).trim();
+        name = name.replace(bad, "");
+        name = name.replace(/[[]([A-Z -.]*)\]$/g, " !!@!$1_!@!");
+        name = name.replace(/[ \t]+/g, " ");
+        name = name.replace(/[[]/g, "(");
+        name = name.replace(/[{]/g, "(");
+        name = name.replace(/\]/g, ")");
+        name = name.replace(/\"/g, "''");
+        name = name.replace(/[}]/g, ")");
+        name = name.replace(/\(([0-9]*CI,)*([0-9]*CI)\)$/gm, "");
+        name = name.replace(/[ ]*-[ ]*/g, "-");
+        name = name.trim();
+        name = name.replace("!!@!", "[");
+        name = name.replace("_!@!", "]");
+        n.name = name.toUpperCase();
       }
-    }
-
+    });
     this.substanceNamesEmitter.next(this.substance.names);
   }
+
 }
 
-
-
-
-
-
-
-    interface DisplaySite {
-      type: string;
-      subunit: number;
-      residue: number;
-    }
+interface DisplaySite {
+  type: string;
+  subunit: number;
+  residue: number;
+}
 
 interface TestSequence {
   subunitIndex?: number;

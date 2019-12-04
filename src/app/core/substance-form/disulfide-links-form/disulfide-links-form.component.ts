@@ -93,6 +93,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
       }
       this.privateLink.sites[pos] = value;
       this.substanceFormService.emitCysteineUpdate(this.cysteine);
+      this.substanceFormService.emitDisulfideLinkUpdate();
     } else {
     }
     this.testForm.controls['site' + pos].setValue(value);
@@ -103,7 +104,6 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
     if(!sentSites[0].residueIndex || !sentSites[1].residueIndex){
       sentSites = [];
     }
-    console.log(sentSites);
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'disulfide', 'link': sentSites},
       width: '1040px'
