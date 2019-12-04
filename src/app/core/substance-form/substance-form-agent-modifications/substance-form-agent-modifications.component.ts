@@ -49,7 +49,7 @@ export class SubstanceFormAgentModificationsComponent extends SubstanceCardBaseF
     });
   }
 
-  deleteStructuralModification(modification: AgentModification): void {
+  deleteAgentModification(modification: AgentModification): void {
     this.substanceFormService.deleteSubstanceAgentModification(modification);
   }
 }

@@ -67,97 +67,6 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
       });
     });
     this.subscriptions.push(subunitsSubscription);
-    /*
-      if (this.substanceType === 'protein'){
-        const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
-          disulfideLinks.forEach(link => {
-            if (link.sites) {
-              link.sites.forEach(site => {
-               // if (site.subunitIndex === this.subunit.subunitIndex) {
-                  const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'disulfide'};
-                  this.allSites[site.subunitIndex].push(newLink);
-                //}
-              });
-            }
-          });
-        });
-        this.subscriptions.push(disulfideLinksSubscription);
-
-        const otherLinksSubscription = this.substanceFormService.substanceOtherLinks.subscribe(otherLinks => {
-          otherLinks.forEach(link => {
-            if (link.sites) {
-              link.sites.forEach(site => {
-                  const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
-                  this.allSites[site.subunitIndex].push(newLink);
-
-              });
-            }
-          });
-        });
-        this.subscriptions.push(otherLinksSubscription);
-
-        const glycosylationSubscription = this.substanceFormService.substanceGlycosylation.subscribe(glycosylation => {
-
-
-          if (glycosylation.CGlycosylationSites) {
-
-            glycosylation.CGlycosylationSites.forEach(site => {
-                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Cglycosylation'};
-                this.allSites[site.subunitIndex].push(newLink);
-
-            });
-          }
-
-          if (glycosylation.NGlycosylationSites) {
-            glycosylation.NGlycosylationSites.forEach(site => {
-
-                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Nglycosylation'};
-                this.allSites[site.subunitIndex].push(newLink);
-
-            });
-          }
-
-          if (glycosylation.OGlycosylationSites) {
-            glycosylation.OGlycosylationSites.forEach(site => {
-                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'Oglycosylation'};
-                this.allSites[site.subunitIndex].push(newLink);
-            });
-          }
-          this.subscriptions.push(glycosylationSubscription);
-
-        });
-      }
-
-      const modificationSubscription = this.substanceFormService.substanceStructuralModifications.subscribe( mod => {
-        mod.forEach(sites => {
-          sites.sites.forEach(site => {
-            const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'modification'};
-            this.allSites[site.subunitIndex].push(newLink);
-          });
-        });
-      });
-      this.subscriptions.push(modificationSubscription);
-
-      const propertiesSubscription = this.substanceFormService.substanceProperties.subscribe( properties => {
-        properties.forEach(prop => {
-          if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
-            const featArr = prop.value.nonNumericValue.split(';');
-            featArr.forEach(f => {
-            //  if (Number(f.split('_')[0]) === this.subunit.subunitIndex) {
-                const sites = f.split('-');
-                const subunitIndex = Number(f.split('_')[0]);
-                console.log(subunitIndex);
-                for (let i = Number(sites[0].split('_')[1]); i <= Number(sites[1].split('_')[1]); i++ ) {
-                  const newLink: DisplaySite = {residue: Number(i), subunit: Number(f.split('_')[0]), type: 'feature' };
-                  this.allSites[subunitIndex].push(newLink);
-                }
-            //  }
-            });
-          }
-        });
-      });
-      this.subscriptions.push(propertiesSubscription);
-*/
   }
 
   getSites(index: number): Array<DisplaySite> {
@@ -186,6 +95,8 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
   }
 
   deleteSubunit(subunit: Subunit): void {
+    console.log('deleting in parent');
+    console.log(subunit);
     this.substanceFormService.deleteSubstanceSubunit(subunit);
   }
 

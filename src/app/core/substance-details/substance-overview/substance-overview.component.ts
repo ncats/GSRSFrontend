@@ -28,6 +28,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   isEditable = false;
   isAdmin = false;
   substanceUpdated = new Subject<SubstanceDetail>();
+  oldUrl: string;
   constructor(
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -50,6 +51,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHref = uri;
     this.getVersion();
+    this.oldUrl = this.substanceService.oldSiteRedirect('details',this.substance.uuid);
   }
 
   ngAfterViewInit() {

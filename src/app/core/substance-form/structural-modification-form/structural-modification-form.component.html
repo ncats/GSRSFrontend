@@ -6,7 +6,7 @@
     </button>
   </div>
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete code" (click)="deleteCode()">
+      <button mat-icon-button matTooltip="Delete code" (click)="deleteMod()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
@@ -20,8 +20,8 @@
       </div>
       <div class="flex-column form-content">
 
-        <div class="form-row" *ngIf = "substanceType !== 'structurallyDiverse' && mod.locationType != 'RESIDUE_SPECIFIC'">
-        <app-cv-input [vocabulary] = "modTypeList" title = "Sequence Type" [model] = "mod.structuralModificationType" (valueChange)= "mod.structuralModificationType = $event"></app-cv-input>
+        <div class="form-row" *ngIf = "substanceType === ('protein' || 'nucleicAcid') && mod.locationType != 'RESIDUE_SPECIFIC'">
+        <app-cv-input [vocabulary] = "modTypeList" title = "Type" [model] = "mod.structuralModificationType" (valueChange)= "mod.structuralModificationType = $event"></app-cv-input>
           <div class = 'sites'>
             <div class="label">Sites</div>
             {{siteDisplay}}
@@ -32,8 +32,8 @@
         </div>
 
    <div class="form-row">
-  <app-cv-input [vocabulary] = "modExtentList" title = "Sequence Type" (valueChange)= "mod.extent = $event" [model] = "mod.extent"></app-cv-input>
-  <app-cv-input [vocabulary] = "modLocationList" title = "Sequence Type" (valueChange)= "mod.locationType = $event" [model] = "mod.locationType"></app-cv-input>
+  <app-cv-input [vocabulary] = "modExtentList" title = "Extent" (valueChange)= "mod.extent = $event" [model] = "mod.extent"></app-cv-input>
+  <app-cv-input [vocabulary] = "modLocationList" title = "Location" (valueChange)= "mod.locationType = $event" [model] = "mod.locationType"></app-cv-input>
      <div class = "group-access">
        <div class = 'form-row'>
          <mat-form-field class="group">

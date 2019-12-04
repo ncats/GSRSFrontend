@@ -1,11 +1,11 @@
-<div>
+<div class = "subunit-container">
   <div *ngIf="subunit.$$deletedCode" class="notification-backdrop">
     Deleted&nbsp;
 
   </div>
   <div class = "form-row">
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete link" (click)="deleteSubunit($event)">
+      <button mat-icon-button matTooltip="Delete link" (click)="deleteSubunit()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
@@ -16,7 +16,7 @@
   </div>
 
 <div class="subunit-edit" [ngClass]="toggle[subunit.subunitIndex] ? 'show': 'hide'" >
-  <textarea #sequence cdkAutosizeMinRows="3" placeholder="Enter sequence here" [ngModel]="subunit.sequence  | subunitDisplay" class = "sequence-textarea"  name="edit"></textarea>
+  <textarea #sequence cdkAutosizeMinRows="3" placeholder="Enter sequence here"  [ngModel] = 'subunit.sequence' (change) = "change($event)" class = "sequence-textarea"  name="edit"></textarea>
 </div>
 <div [ngClass]="toggle[subunit.subunitIndex] ? 'hide': 'show'"  >
   <div class = "nest">
@@ -43,9 +43,9 @@
 </div>
   <div class = 'form-row'>
     <div *ngIf = "substanceType === 'nucleicAcid'">
-      Generate links and sugars for this subunit as a
-      <button mat-button (click) = "generateSites('DNA')" [ngClass]="sequenceType === 'DNA'?'selected':''">DNA</button>
-      <button mat-button (click) = "generateSites('RNA')" [ngClass]="sequenceType === 'RNA'?'selected':''">RNA</button>
+      Generate{{sequenceType? 'd':''}} links and sugars for this subunit as a
+      <button mat-button (click) = "generateSites('DNA')" [ngClass]="sequenceType === 'DNA'?'generated':''">DNA</button>
+      <button mat-button (click) = "generateSites('RNA')" [ngClass]="sequenceType === 'RNA'?'generated':''">RNA</button>
       sequence
     </div>
   </div>

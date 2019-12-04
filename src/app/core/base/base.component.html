@@ -27,7 +27,7 @@
           </a>
           <mat-menu #childrenMenu="matMenu">
             <div *ngFor="let childNavItem of navItem.children">
-              <a mat-menu-item [routerLink]="['/' + childNavItem.path]" *ngIf="childNavItem.path">
+              <a mat-menu-item [routerLink]="['/' + childNavItem.path]" [queryParams] = "childNavItem.params||{}" *ngIf="childNavItem.path">
                 {{childNavItem.display}}
               </a>
             </div>

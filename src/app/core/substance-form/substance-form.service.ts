@@ -39,6 +39,7 @@ import { domainKeys, domainDisplayKeys } from './domain-references/domain-keys.c
 import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
 import { DomainsWithReferences } from './domain-references/domain.references.model';
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -96,7 +97,6 @@ export class SubstanceFormService {
       this.privateDomainsWithReferences = null;
       if (substance != null) {
         this.substance = substance;
-        console.log(this.substance);
         substanceClass = this.substance.substanceClass;
       } else {
         if (substanceClass == 'chemical') {
@@ -113,7 +113,7 @@ export class SubstanceFormService {
             substanceClass: substanceClass,
             references: [],
             names: [],
-            protein: {},
+            protein: {proteinType: ''},
             codes: [],
             relationships: [],
           };
@@ -135,14 +135,33 @@ export class SubstanceFormService {
             codes: [],
             relationships: []
           };
+        } else if (substanceClass === 'structurallyDiverse') {
+          this.substance = {
+            substanceClass: substanceClass,
+            references: [],
+            names: [],
+            structurallyDiverse: {part: ['whole']},
+            codes: [],
+            relationships: []
+          };
+        } else {
+          this.substance = {
+            substanceClass: substanceClass,
+            references: [],
+            names: [],
+            codes: [],
+            relationships: []
+          }
         }
       }
       this.subClass = this.substance.substanceClass;
 
-      if (this.subClass === 'chemical') {
+      if (this.subClass == ('chemical' || 'polymer')) {
         this.subClass = 'structure';
       } else if (this.subClass === 'specifiedSubstanceG1') {
         this.subClass = 'specifiedSubstance';
+      } else if (this.subClass === 'polymer') {
+        this.subClass = 'displayStructure';
       }
 
       if (this.substance[this.subClass] == null) {
@@ -188,6 +207,7 @@ export class SubstanceFormService {
   get definition(): Observable<SubstanceFormDefinition> {
     return new Observable(observer => {
       this.ready().subscribe(() => {
+        const definition = this.getDefinition();
         observer.next(this.getDefinition());
         this.definitionEmitter.subscribe(definition => {
           observer.next(this.getDefinition());
@@ -208,6 +228,10 @@ export class SubstanceFormService {
         references: definition.references
       };
     }
+  }
+
+  getUuid(): string {
+    return this.substance.uuid;
   }
 
   private getDefinition(): SubstanceFormDefinition {
@@ -232,6 +256,7 @@ export class SubstanceFormService {
       access: this.substance.access,
       relationships: this.substance.relationships
     };
+
 
     return definition;
   }
@@ -396,7 +421,7 @@ export class SubstanceFormService {
 
 
   // structurally diverse start
-  get substanceStructurallyDiverse(): Observable<Mixture> {
+  get substanceStructurallyDiverse(): Observable<StructurallyDiverse> {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
         if (this.substance.structurallyDiverse == null) {
@@ -445,8 +470,9 @@ export class SubstanceFormService {
 
   addSubstanceMixtureComponent(): void {
     const newMix: MixtureComponents = {
+      substance: {},
     };
-    this.substance.names.unshift(newMix);
+    this.substance.mixture.components.unshift(newMix);
     this.substanceNamesEmitter.next(this.substance.mixture.components);
   }
 
@@ -831,7 +857,7 @@ export class SubstanceFormService {
     return new Observable(observer => {
       this.ready().subscribe(() => {
         if (this.substance.substanceClass === 'protein') {
-          if (this.substance.protein.subunits == null) {
+          if (!this.substance.protein.subunits) {
             this.substance.protein.subunits = [];
           }
           observer.next(this.substance.protein.subunits);
@@ -839,8 +865,8 @@ export class SubstanceFormService {
               observer.next(this.substance.protein.subunits);
           });
         } else {
-          if (this.substance.nucleicAcid.subunits == null) {
-            this.substance.protein.subunits = [];
+          if (!this.substance.nucleicAcid.subunits) {
+            this.substance.nucleicAcid.subunits = [];
           }
           observer.next(this.substance.nucleicAcid.subunits);
           this.substanceSubunitsEmitter.subscribe(subunits => {
@@ -880,7 +906,8 @@ export class SubstanceFormService {
       this.displaySequencesEmitter.next(this.createSubunitDisplay());
       this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
     } else {
-      const index: number = this.substance.nucleicAcid.subunits.length + 1;
+      let index = this.substance.nucleicAcid.subunits.length || 0;
+      index = index + 1;
       const newSubunit: Subunit = {
         references: [],
         access: [],
@@ -898,14 +925,14 @@ export class SubstanceFormService {
 
   deleteSubstanceSubunit(subunit: Subunit): void {
     if (this.substance.substanceClass === 'protein') {
-      const subUnitIndex = this.substance.protein.subunits.findIndex(subUnit => subunit.$$deletedCode === subUnit.$$deletedCode);
+      const subUnitIndex = this.substance.protein.subunits.findIndex(subUnit => subunit.subunitIndex === subUnit.subunitIndex);
       if (subUnitIndex > -1) {
         this.substance.protein.subunits.splice(subUnitIndex, 1);
         this.displaySequencesEmitter.next(this.createSubunitDisplay());
         this.substanceSubunitsEmitter.next(this.substance.protein.subunits);
       }
     } else {
-      const subUnitIndex = this.substance.nucleicAcid.subunits.findIndex(subUnit => subunit.$$deletedCode === subUnit.$$deletedCode);
+      const subUnitIndex = this.substance.nucleicAcid.subunits.findIndex(subUnit => subunit.subunitIndex === subUnit.subunitIndex);
       if (subUnitIndex > -1) {
         this.substance.nucleicAcid.subunits.splice(subUnitIndex, 1);
         this.displaySequencesEmitter.next(this.createSubunitDisplay());
@@ -1164,6 +1191,7 @@ export class SubstanceFormService {
 
 
   checkModifications(): void {
+    if(this.substance){
       if (!this.substance.modifications || this.substance.modifications === null) {
         this.substance.modifications = {
           agentModifications: [],
@@ -1171,6 +1199,7 @@ export class SubstanceFormService {
           physicalModifications: []
         };
       }
+    }
   }
 // modifications end
 
@@ -1351,6 +1380,14 @@ export class SubstanceFormService {
   }
 
   removeDeletedComponents(): SubstanceDetail {
+      if(this.substance.structurallyDiverse) {
+        if (this.substance.structurallyDiverse.$$diverseType) {
+          delete this.substance.structurallyDiverse.$$diverseType;
+        }
+        if (this.substance.structurallyDiverse.$$storedPart) {
+          delete this.substance.structurallyDiverse.$$storedPart;
+        }
+      }
     let substanceString = JSON.stringify(this.substance);
     let substanceCopy: SubstanceDetail = JSON.parse(substanceString);
     const deletablekeys = [
@@ -1430,8 +1467,10 @@ export class SubstanceFormService {
         } else if (this.substance.substanceClass === 'mixture') {
           this.substanceMixtureEmitter.next(this.substance.mixture);
           this.substanceSubunitsEmitter.next(this.substance.mixture.components);
+        } else if (this.substance.substanceClass === 'structurallyDiverse') {
+          this.substanceStructurallyDiverseEmitter.next(this.substance.structurallyDiverse);
         }
-        this.substanceReferencesEmitter.next(this.substance.references);
+          this.substanceReferencesEmitter.next(this.substance.references);
         this.domainsWithReferencesEmitter.next(this.getDomainReferences());
         this.substanceNamesEmitter.next(this.substance.names);
         this.substanceStructureEmitter.next(this.substance.structure);
@@ -1640,10 +1679,56 @@ export class SubstanceFormService {
     // this.addStyle();
     const t1 = performance.now();
     const totaltime = t1 - t0;
-    console.log('time to process subunit display: ' + totaltime);
+   // console.log('time to process subunit display: ' + totaltime);
     return subunitSequences;
   }
+
+  standardizeNames() {
+    let ascii = /^[ -~\t\n\r]+$/;
+    let bad = /[^ -~\t\n\r]/g;
+    let rep = "\u2019;';\u03B1;.ALPHA.;\u03B2;.BETA.;\u03B3;.GAMMA.;\u03B4;.DELTA.;\u03B5;.EPSILON.;\u03B6;.ZETA.;\u03B7;.ETA.;\u03B8;.THETA.;\u03B9;.IOTA.;\u03BA;.KAPPA.;\u03BB;.LAMBDA.;\u03BC;.MU.;\u03BD;.NU.;\u03BE;.XI.;\u03BF;.OMICRON.;\u03C0;.PI.;\u03C1;.RHO.;\u03C2;.SIGMA.;\u03C3;.SIGMA.;\u03C4;.TAU.;\u03C5;.UPSILON.;\u03C6;.PHI.;\u03C7;.CHI.;\u03C8;.PSI.;\u03C9;.OMEGA.;\u0391;.ALPHA.;\u0392;.BETA.;\u0393;.GAMMA.;\u0394;.DELTA.;\u0395;.EPSILON.;\u0396;.ZETA.;\u0397;.ETA.;\u0398;.THETA.;\u0399;.IOTA.;\u039A;.KAPPA.;\u039B;.LAMBDA.;\u039C;.MU.;\u039D;.NU.;\u039E;.XI.;\u039F;.OMICRON.;\u03A0;.PI.;\u03A1;.RHO.;\u03A3;.SIGMA.;\u03A4;.TAU.;\u03A5;.UPSILON.;\u03A6;.PHI.;\u03A7;.CHI.;\u03A8;.PSI.;\u03A9;.OMEGA.;\u2192;->;\xB1;+/-;\u2190;<-;\xB2;2;\xB3;3;\xB9;1;\u2070;0;\u2071;1;\u2072;2;\u2073;3;\u2074;4;\u2075;5;\u2076;6;\u2077;7;\u2078;8;\u2079;9;\u207A;+;\u207B;-;\u2080;0;\u2081;1;\u2082;2;\u2083;3;\u2084;4;\u2085;5;\u2086;6;\u2087;7;\u2088;8;\u2089;9;\u208A;+;\u208B;-".split(";");
+   // mk(rep);
+    let map = {};
+
+    function replacer(match, got) {
+      return map[got.charCodeAt(0)];
+    }
+
+    this.substance.names.forEach(n => {
+      let name = n.name;
+      name = name.replace(/([\u0390-\u03C9||\u2192|\u00B1-\u00B9|\u2070-\u208F|\u2190|])/g, replacer).trim();
+      name = name.replace(bad, "");
+      name = name.replace(/[[]([A-Z -.]*)\]$/g, " !!@!$1_!@!");
+      name = name.replace(/[ \t]+/g, " ");
+      name = name.replace(/[[]/g, "(");
+      name = name.replace(/[{]/g, "(");
+      name = name.replace(/\]/g, ")");
+      name = name.replace(/\"/g, "''");
+      name = name.replace(/[}]/g, ")");
+      name = name.replace(/\(([0-9]*CI,)*([0-9]*CI)\)$/gm, "");
+      name = name.replace(/[ ]*-[ ]*/g, "-");
+      name = name.trim();
+      name = name.replace("!!@!", "[");
+      name = name.replace("_!@!", "]");
+      n.name = name;
+    });
+
+
+    function mk(rep:any) {
+      for (let s = 0; s < rep.length; s++) {
+        if (s % 2 == 0) {
+          let id = rep[s].charCodeAt(0);
+          map[id] = rep[s + 1];
+        }
+      }
+    }
+
+    this.substanceNamesEmitter.next(this.substance.names);
+  }
 }
+
+
+
 
 
 

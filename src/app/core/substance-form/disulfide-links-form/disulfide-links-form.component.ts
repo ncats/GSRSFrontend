@@ -112,7 +112,6 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
       this.overlayContainer.style.zIndex = null;
-      console.log(newLinks);
       if (newLinks) {
         if(newLinks[0] && newLinks[0].subunitIndex){
           this.privateLink.sites[0] = newLinks[0];
@@ -129,6 +128,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
           this.testForm.controls['site1'].reset();
         }
       }
+      this.substanceFormService.emitDisulfideLinkUpdate();
     });
     this.subscriptions.push(dialogSubscription);
   }

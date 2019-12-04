@@ -23,3 +23,9 @@
     width: 30%;
   }
 }
+
+
+::ng-deep .related-substance img {
+  max-width:125px !important;
+  margin: auto;
+}

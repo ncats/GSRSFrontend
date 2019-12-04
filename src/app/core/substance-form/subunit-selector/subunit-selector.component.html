@@ -87,9 +87,9 @@
       <mat-form-field>
         <mat-label>Select link type to add</mat-label>
         <mat-select (valueChange)="switchType($event)" name="food">
-          <mat-option value = 'feature'>
+       <!--   <mat-option value = 'feature'>
             <span>Feature</span>
-          </mat-option>
+          </mat-option>-->
           <mat-option value = "other">
             <span>Other Link</span>
           </mat-option>
@@ -113,7 +113,7 @@
 
     </div>
   </div>
-<div class = "key-row">
+<div class = "key-row" *ngIf = 'substanceType === "protein"'>
     Key:
   <br/>
   <div class = "key-container">

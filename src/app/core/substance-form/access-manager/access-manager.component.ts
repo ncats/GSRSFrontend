@@ -32,6 +32,7 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
       this.getVocabularies();
     } else {
       this.privateAccess = [];
+      this.getVocabularies();
     }
   }
 

@@ -35,6 +35,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
   privateFeature: Feature = {name: '', siteRange: ''};
   sites: Array<any> = [];
   sitesDisplay: string;
+  substanceType: string;
   subunits: Array<Subunit>;
   otherLinks: Array<Link>;
   glycosylation: Glycosylation;
@@ -74,6 +75,10 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   ngOnInit() {
+    const definitionSubscription = this.substanceFormService.definition.subscribe( definition => {
+      this.substanceType = definition.substanceClass;
+    });
+    definitionSubscription.unsubscribe();
     this.getVocabularies();
     if ( this.link && this.link.length > 0) {
       this.sites = this.link;
@@ -183,7 +188,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   switchType(event): void {
-    const type = event.value;
+    const type = event;
     console.log(event);
     this.card = type;
     this.sites = [];
@@ -191,6 +196,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
     this.sitesDisplay = '';
     this.selectState = 'first';
     this.cardTypeUpdate.emit(type);
+    console.log('emitting card type update');
     this.addStyle();
   }
 

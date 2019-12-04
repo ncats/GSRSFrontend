@@ -48,7 +48,7 @@ export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBa
     });
   }
 
-  deleteStructuralModification(modification: PhysicalModification): void {
+  deletePhysicalModification(modification: PhysicalModification): void {
     this.substanceFormService.deleteSubstancePhysicalModification(modification);
   }
 }

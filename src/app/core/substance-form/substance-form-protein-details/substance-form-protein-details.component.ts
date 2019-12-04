@@ -18,10 +18,6 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
 
   protein: Protein;
   private subscriptions: Array<Subscription> = [];
-  proteinTypeList: Array<VocabularyTerm> = [];
-  proteinSubTypeList: Array<VocabularyTerm> = [];
-  sequenceOriginList: Array<VocabularyTerm> = [];
-  sequenceTypeList: Array<VocabularyTerm> = [];
   dropdownSettings: IDropdownSettings = {};
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -68,7 +64,7 @@ updateOrigin(type: string): void {
 }
 
   pipeToArray(string: string): Array<string> {
-    if (string === '') {
+    if (!string || string === '') {
       return [];
     } else {
       return string.split('|');

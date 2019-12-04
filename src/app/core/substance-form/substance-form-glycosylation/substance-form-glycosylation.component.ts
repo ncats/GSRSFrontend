@@ -84,7 +84,6 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
-      console.log(newLinks);
       this.overlayContainer.style.zIndex = null;
       if(newLinks){
         if (type === 'N') {
@@ -94,6 +93,7 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
         } else {
           this.glycosylation.OGlycosylationSites = newLinks;
         }
+        this.substanceFormService.emitGlycosylationUpdate();
       }
     });
     this.subscriptions.push(dialogSubscription);

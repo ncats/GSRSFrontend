@@ -72,5 +72,14 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-properties',
     'substance-form-references',
 
+  ],
+  concept: [
+    'substance-form-definition',
+    'substance-form-names',
+    'substance-form-codes',
+    'substance-form-relationships',
+    'substance-form-notes',
+    'substance-form-properties',
+    'substance-form-references',
   ]
 };

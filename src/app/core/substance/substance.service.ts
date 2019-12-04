@@ -94,6 +94,7 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
+
   searchSubstances(
     searchTerm?: string,
     pageSize: number = 10,
@@ -457,6 +458,14 @@ export class SubstanceService extends BaseHttpService {
   validateSubstance(substance: SubstanceDetail): Observable<ValidationResults> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
     return this.http.post(url, substance);
+  }
+
+  oldSiteRedirect(page: string, uuid: string) {
+    let url = this.baseUrl + 'substance/' + uuid;
+    if(page === 'edit') {
+      url = url +  '/edit';
+    }
+  return url;
   }
 
 }

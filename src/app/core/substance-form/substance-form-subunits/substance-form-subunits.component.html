@@ -9,7 +9,7 @@
       Add Feature <mat-icon svgIcon="add_circle_outline"></mat-icon>
     </button>
   </div>
-  <div class ='add-button'>
+  <div class ='add-button' *ngIf = 'substanceType === "protein"'>
     <button mat-button (click) = "openAnyDialog()">
       Add Any Site Type <mat-icon svgIcon="add_circle_outline"></mat-icon>
     </button>

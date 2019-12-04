@@ -1,6 +1,6 @@
 <div *ngIf="definition">
   <div class="substance-form-row">
-    <mat-form-field>
+    <mat-form-field *ngIf = 'definition.substanceClass !== "concept"'>
       <mat-label>Definition Type</mat-label>
       <mat-select [(ngModel)]="definition.definitionType" name="definitionType" (selectionChange)="updateDefinitionType($event)" required>
         <mat-option *ngFor="let defitionType of definitionTypes" [value]="defitionType.value">
@@ -9,14 +9,14 @@
       </mat-select>
     </mat-form-field>
     <div class="primary-substance-container" *ngIf="definition.definitionType == 'ALTERNATIVE'">
-      <app-substance-selector (selectionUpdated)="primartySubstanceUpdated($event)" 
+      <app-substance-selector (selectionUpdated)="primartySubstanceUpdated($event)"
         eventCategory="substanceFormDefinitionType"
         placeholder="Primary Substance"
         header="Primary Substance"
         [subuuid]="primarySubUuid">
       </app-substance-selector>
     </div>
-    <mat-form-field>
+    <mat-form-field  *ngIf = 'definition.substanceClass !== "concept"'>
       <mat-label>Definition Level</mat-label>
       <mat-select [(ngModel)]="definition.definitionLevel" name="definitionLevel" (selectionChange)="updateDefinition()">
         <mat-option *ngFor="let defitionLevel of definitionLevels" [value]="defitionLevel.value">
@@ -30,10 +30,17 @@
     <div>
       <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access"></app-access-manager>
     </div>
+    <a mat-icon-button [href]="getRedirect()" target = "_blank" matTooltip= "view in old application">
+      <mat-icon svgIcon="open_in_new"></mat-icon>
+    </a>
+
   </div>
-  <div class="substance-form-row" *ngIf="definition.substanceClass != 'concept'">
+  <div class="substance-form-row" *ngIf="definition.substanceClass !== 'concept'">
     <div class="references-container">
       <app-domain-references [referencesUuids]="definition.references" #references></app-domain-references>
     </div>
+  </div>
+  <div class = "substance-form-row" *ngIf="definition.substanceClass === 'concept'">
+    Concepts have no defining information, but are collections of terms, codes and related information. They can be promoted to a defined substance at a later time, when appropriat
   </div>
 </div>

@@ -15,7 +15,7 @@ import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-
 })
 export class LinkFormComponent implements OnInit, OnDestroy {
 
-  private privateLink: Linkage;
+  privateLink: Linkage;
   @Output() linkDeleted = new EventEmitter<Linkage>();
   @Input() remaining: Array<Site>;
   deleteTimer: any;

@@ -18,9 +18,9 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   definitionTypes: Array<VocabularyTerm>;
   definitionLevels: Array<VocabularyTerm>;
   primarySubstance?: SubstanceSummary;
-  showPrimarySubstanceOptions = false;
   definition: SubstanceFormDefinition;
   primarySubUuid: string;
+  uuid: string;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -38,7 +38,8 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
       this.definition = definition || {};
-
+      console.log(this.definition);
+      console.log(this.definition.references);
       if (!this.definition.definitionType) {
         this.definition.definitionType = 'PRIMARY';
       }
@@ -65,7 +66,17 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
           }
         });
       }
+      this.uuid = this.substanceFormService.getUuid();
+
     });
+  }
+
+  getRedirect() {
+    if(this.uuid){
+      return this.substanceService.oldSiteRedirect('edit',this.substanceFormService.getUuid());
+    } else {
+      return '#';
+    }
   }
 
   getVocabularies(): void {
@@ -138,4 +149,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   updateDefinition(): void {
     this.substanceFormService.updateDefinition(this.definition);
   }
+
+
 }

@@ -43,8 +43,8 @@ export class CvDialogComponent implements OnInit {
       this.vocabulary.terms.push(this.term);
       this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
         if (response.terms && response.terms.length === this.vocabulary.terms.length) {
-          this.message = 'Term <b>' + this.term.value + '</b> Added to <b>' + this.vocabulary.domain + '</b>';
-          setTimeout(() => {this.dialogRef.close(this.term);}, 1000);
+          this.message = 'Term ' + this.term.value + ' Added to ' + this.vocabulary.domain + '';
+          setTimeout(() => {this.dialogRef.close(this.term);}, 3000);
         }
       });
     } else {

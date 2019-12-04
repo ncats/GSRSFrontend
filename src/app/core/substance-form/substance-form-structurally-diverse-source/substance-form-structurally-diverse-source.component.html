@@ -1,6 +1,6 @@
 
 
-<div class = 'source-container'>
+<div class = 'source-container' *ngIf = "structurallyDiverse">
   <div class = 'form-row'>
     <app-cv-input class = 'cv-input' domain = "SOURCE_MATERIAL_CLASS" title = "Source Material Class"
                   (valueChange) = "update('class',$event)" [model] = "structurallyDiverse.sourceMaterialClass"></app-cv-input>

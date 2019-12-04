@@ -170,6 +170,9 @@
                   <button *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
                     <mat-icon svgIcon="search"></mat-icon>
                   </button>
+                <button *ngIf="(substance.structure || substance.protein || substance.structurallyDiverse || substance.mixture || substance.nucleicAcid) && showAudit" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" >
+                  <mat-icon svgIcon="edit"></mat-icon>
+                </button>
 
                 <mat-menu #downloadMenu="matMenu">
                   <a mat-menu-item *ngIf="substance.structure" (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
@@ -302,7 +305,7 @@
 
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef> Name </th>
-              <td mat-cell *matCellDef="let substance">{{substance._name}}</td>
+              <td mat-cell *matCellDef="let substance"><a class="table-view-name" [routerLink]="['/substances', substance.uuid]">{{substance._name}}</a></td>
             </ng-container>
 
             <ng-container matColumnDef="approvalID">
@@ -314,7 +317,7 @@
               <th mat-header-cell *matHeaderCellDef> Names </th>
               <td mat-cell *matCellDef="let substance">
                 <span *ngIf="substance.names && substance.names.length">
-                  <div *ngFor="let nameObject of substance.names | take: 5; last as isLast">
+                  <div *ngFor="let nameObject of substance.names | take: 4; last as isLast">
                     {{nameObject.name}}
                     <span *ngIf="!isLast">; </span>
                   </div>
@@ -353,9 +356,11 @@
       <div class="substance-tiles">
         <mat-card *ngFor="let substance of substances" class = "tile">
           <mat-card-title>
-            <a class="approval-id">
+            <div class = 'tile-title'>
+                <a class="approval-id">
               {{substance.approvalID}}
             </a>
+            </div>
           </mat-card-title>
 
           <mat-card-content>
@@ -372,7 +377,7 @@
                   </div>
                 </div>
                 <div class = "tile-name">
-                  <a class="substance-name" [routerLink]="['/substances', substance.uuid]">
+                  <a class="substance-name table-view-name" [routerLink]="['/substances', substance.uuid]">
                     {{substance._name}}
                   </a>
                 </div>

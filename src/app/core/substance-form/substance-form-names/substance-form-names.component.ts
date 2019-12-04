@@ -44,6 +44,10 @@ export class SubstanceFormNamesComponent extends SubstanceCardBaseFilteredList<S
     this.subscriptions.push(namesSubscription);
   }
 
+  standardize():void {
+    this.substanceFormService.standardizeNames();
+  }
+
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();

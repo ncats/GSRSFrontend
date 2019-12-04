@@ -12,23 +12,25 @@ import { MatIconModule } from '@angular/material/icon';
 import { SubstanceFormModule } from '../substance-form.module';
 import { ScrollToModule } from '../../scroll-to/scroll-to.module';
 import { SubstanceSelectorModule } from '../../substance-selector/substance-selector.module';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormDefinitionComponent),
-    ReactiveFormsModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatMenuModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    MatIconModule,
-    SubstanceFormModule,
-    ScrollToModule,
-    SubstanceSelectorModule
-  ],
+    imports: [
+        CommonModule,
+        DynamicComponentLoaderModule.forChild(SubstanceFormDefinitionComponent),
+        ReactiveFormsModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatMenuModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatIconModule,
+        SubstanceFormModule,
+        ScrollToModule,
+        SubstanceSelectorModule,
+        MatTooltipModule
+    ],
   declarations: [
     SubstanceFormDefinitionComponent
   ]

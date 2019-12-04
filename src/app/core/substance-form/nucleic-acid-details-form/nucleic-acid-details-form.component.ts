@@ -17,10 +17,6 @@ export class NucleicAcidDetailsFormComponent extends SubstanceCardBaseFilteredLi
 
   nucleicAcid: NucleicAcid;
 private subscriptions: Array<Subscription> = [];
-  nucleicAcidTypeList: Array<VocabularyTerm> = [];
-  nucleicAcidSubTypeList: Array<VocabularyTerm> = [];
-  sequenceOriginList: Array<VocabularyTerm> = [];
-  sequenceTypeList: Array<VocabularyTerm> = [];
   dropdownSettings: IDropdownSettings = {};
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -35,7 +31,6 @@ private subscriptions: Array<Subscription> = [];
     this.menuLabelUpdate.emit('Nucleic Acid Classification');
     const nucleicAcidSubscription = this.substanceFormService.substanceNucleicAcid.subscribe(nucleicAcid => {
       this.nucleicAcid = nucleicAcid;
-      setTimeout(() => {this.getVocabularies(); });
     });
     this.subscriptions.push(nucleicAcidSubscription);
     this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All',
@@ -52,8 +47,9 @@ private subscriptions: Array<Subscription> = [];
   }
 
   update( field: string, event: any): void {
-   // this.nucleicAcid[field] = event;
-    if (field === 'nucleicAcidSubType') {
+    if (field === 'nucleicAcidType') {
+      this.nucleicAcid.nucleicAcidType = event;
+    } else if (field === 'nucleicAcidSubType') {
       this.nucleicAcid.nucleicAcidSubType = event;
     } else if (field === 'sequenceOrigin') {
       this.nucleicAcid.sequenceOrigin = event;
@@ -61,18 +57,5 @@ private subscriptions: Array<Subscription> = [];
       this.nucleicAcid.sequenceType = event;
     }
   }
-
-  updateTest(event: any) {
-    this.nucleicAcid.nucleicAcidSubType = event;
-  }
-
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('NUCLEIC_ACID_TYPE', 'NUCLEIC_ACID_SUBTYPE', 'SEQUENCE_ORIGIN', 'SEQUENCE_TYPE').subscribe(response => {
-      this.nucleicAcidTypeList = response['NUCLEIC_ACID_TYPE'].list;
-      this.nucleicAcidSubTypeList = response['NUCLEIC_ACID_SUBTYPE'].list;
-      this.sequenceOriginList = response['SEQUENCE_ORIGIN'].list;
-      this.sequenceTypeList = response['SEQUENCE_TYPE'].list;
-    });
-}
 
 }

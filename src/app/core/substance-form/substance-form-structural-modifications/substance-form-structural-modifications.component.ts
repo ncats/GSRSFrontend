@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
-import {StructuralModification} from '@gsrs-core/substance';
+import {PhysicalModification, StructuralModification} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
@@ -46,6 +46,10 @@ export class SubstanceFormStructuralModificationsComponent extends SubstanceCard
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-structural-modification-0`, 'center');
     });
+  }
+
+  deleteStructuralModification(modification: StructuralModification): void {
+    this.substanceFormService.deleteSubstanceStructuralModification(modification);
   }
 
 }

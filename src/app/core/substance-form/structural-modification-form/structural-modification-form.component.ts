@@ -42,11 +42,6 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.updateDisplay();
     this.getSubstanceType();
-    const definitionSubscription = this.substanceFormService.definition.subscribe(definition => {
-      console.log(definition);
-      this.substanceType = definition.substanceClass;
-    });
-    this.subscriptions.push(definitionSubscription);
   }
 
   ngAfterViewInit(): void {
@@ -78,14 +73,11 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
     });
   }
 
-  deleteCode(): void {
+  deleteMod(): void {
     this.privateMod.$$deletedCode = this.utilsService.newUUID();
-    if (!this.privateMod
-    ) {
       this.deleteTimer = setTimeout(() => {
         this.modDeleted.emit(this.privateMod);
       }, 2000);
-    }
   }
 
   undoDelete(): void {
@@ -107,6 +99,8 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
     };
     this.mod.molecularFragment = relatedSubstance;
     this.relatedSubstanceUuid = this.mod.molecularFragment.refuuid;
+    console.log(this.mod.molecularFragment);
+    console.log(this.relatedSubstanceUuid)
   }
 
   openDialog(): void {

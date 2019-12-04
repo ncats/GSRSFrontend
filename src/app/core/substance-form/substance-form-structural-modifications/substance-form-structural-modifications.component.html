@@ -1,11 +1,11 @@
-
-
-<div class="substance-form-row">
+<div class="flex-row">
+  <span class="middle-fill"></span>
   <button mat-button (click)="addStructuralModification()">
     Add Modification <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
+</div>
 <div class = "alternate-backgrounds"  *ngFor="let mod of modifications; last as isLast; index as index"  appScrollToTarget [id]="'substance-structural-modification-' + index" >
-  <app-structural-modification-form [mod]="mod" ></app-structural-modification-form>
+  <app-structural-modification-form [mod]="mod" (modDeleted)="deleteStructuralModification($event)"></app-structural-modification-form>
   <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
 </div>
-</div>
+

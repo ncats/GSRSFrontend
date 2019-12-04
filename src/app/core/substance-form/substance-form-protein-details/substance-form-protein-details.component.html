@@ -1,8 +1,8 @@
-<div class="name-form-container">
+<div class="name-form-container" *ngIf = "protein">
   <div class="form-row">
-      <app-cv-input domain = "PROTEIN_TYPE" title = "Protein Type" (valueChange) = "updateType($event)" [model] = protein.proteinType></app-cv-input>
+      <app-cv-input domain = "PROTEIN_TYPE" title = "Protein Type" (valueChange) = "updateType($event)" [model] = "protein.proteinType"></app-cv-input>
     <div class = "mat-form-field-flex subtype">
-      <app-tag-selector class="tags" (tagsUpdate)="update($event)" [tags]="pipeToArray(protein.proteinSubType)"
+      <app-tag-selector placeholder = "protein subType" class="tags" (tagsUpdate)="update($event)" [tags]="pipeToArray(protein.proteinSubType)"
                         cvDomain="PROTEIN_SUBTYPE"></app-tag-selector>
     </div>
     <div class= "location-container">

@@ -90,6 +90,7 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
       this.overlayContainer.style.zIndex = null;
       if (newLinks) {
         this.privateLink.sites = newLinks;
+        this.substanceFormService.emitOtherLinkUpdate();
       }
       this.updateDisplay();
     });

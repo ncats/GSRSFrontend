@@ -53,10 +53,10 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
 
   ngOnInit() {
-    this.getVocabularies();
     this.allSites = [];
     const definitionSubscription = this.substanceFormService.definition.subscribe( definition => {
       this.substanceType = definition.substanceClass;
+      this.getVocabularies();
     });
     definitionSubscription.unsubscribe();
   }
@@ -65,6 +65,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     setTimeout(() => {
       const displaySequenceSubscription = this.substanceFormService.subunitDisplaySequences.subscribe(subunits => {
         const newSubunits = subunits.filter(unit => unit.subunitIndex === this.subunit.subunitIndex)[0];
+        console.log('triggered update in subunit form');
         if(!this.subunitSequence || !deepEqual(this.subunitSequence, newSubunits)){
           this.subunitSequence = newSubunits;
           setTimeout(() => {
@@ -114,10 +115,24 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
-      this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
-    }, error => {
-    });
+    const nonStandard: VocabularyTerm = {
+      "value":"X",
+      "display":"Non-standard Residue"
+    };
+    if( this.substanceType === 'protein'){
+      this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
+        this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
+        this.vocabulary.X = nonStandard;
+      }, error => {
+      });
+    } else {
+      this.cvService.getDomainVocabulary('NUCLEIC_ACID_BASE').subscribe(response => {
+        this.vocabulary = response['NUCLEIC_ACID_BASE'].dictionary;
+        this.vocabulary.X = nonStandard;
+      }, error => {
+      });
+    }
+
   }
 
   addStyle(): void {
@@ -154,25 +169,41 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       });
     }
   }
+change(event): void {
+  if (this.toggle[this.subunit.subunitIndex] === false) {
+    event.target.value = this.subunit.sequence;
+  }
+}
 
-  deleteSubunit(subunit: Subunit): void {
-    this.substanceFormService.deleteSubstanceSubunit(subunit);
+  deleteSubunit(): void {
+    console.log('emitting delete');
+    console.log(this.subunit);
+    this.subunitDeleted.emit(this.subunit);
   }
 
   cleanSequence(): void {
     const valid = [];
     const test = this.subunit.sequence.split('');
+    console.log(this.vocabulary);
     for (const key in this.vocabulary) {
       valid.push(this.vocabulary[key].value);
     }
-    this.subunit.sequence =  test.filter(char => valid.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+    const cleanedSequence =  test.filter(char => valid.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+    if (this.toggle[this.subunit.subunitIndex] === false) {
 
+    }
+    if(cleanedSequence !== this.subunit.sequence){
+      this.subunit.sequence = cleanedSequence;
+      this.substanceFormService.emitSubunitUpdate();
+      this.substanceFormService.recalculateCysteine();
+    }
   }
 
 
 
   generateSites(event): void {
-    this.sequenceType = event.value;
+    this.sequenceType = event;
+    console.log(this.sequenceType);
     const sugarsSubscription = this.substanceFormService.substanceSugars.subscribe(sug => {
       this.sugars = sug;
     });
@@ -181,16 +212,15 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.links = l;
     });
     let sugarType = '';
-    if (event.value === 'DNA') {
+    if (event === 'DNA') {
       sugarType = 'dR';
     } else {
       sugarType = 'R';
+      console.log('not dna');
     }
-    let sugarArray = [];
     this.sugars.forEach(sugar => {
       sugar.sites = sugar.sites.filter(s => s.subunitIndex !== this.subunit.subunitIndex);
     });
-   // console.log(this.sugars);
     const subunitArray = [];
     for (let i = 1; i <= this.subunit.sequence.length; i++) {
       subunitArray.push({subunitIndex: this.subunit.subunitIndex, residueIndex: i});
@@ -206,7 +236,6 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     }
       const newLinkage: Linkage = {linkage: 'P', sites: linkageArray};
       this.links.push(newLinkage);
-   // console.log('about to emit change');
     this.substanceFormService.emitSugarUpdate();
     this.substanceFormService.emitLinkUpdate();
     linksSubscription.unsubscribe();
