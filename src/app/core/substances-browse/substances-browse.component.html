@@ -1,7 +1,7 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop">
   <mat-sidenav #matSideNavInstance mode="side" opened="false">
     <mat-accordion multi="true">
-      <mat-expansion-panel *ngFor="let facet of facets" [expanded]="facetParams[facet.name] != null">
+      <mat-expansion-panel *ngFor="let facet of facets; index as topIndex" [expanded]="facetParams[facet.name] != null">
         <mat-expansion-panel-header>
           <mat-panel-title>
             {{facet.name | facetDisplay}}
@@ -11,7 +11,8 @@
         <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name]" placeholder="Search  {{facet.name}}">
         </mat-form-field>
         <button mat-icon-button color="black" (click) = "searchText[facet.name] = ''"><mat-icon svgIcon="close"></mat-icon></button>
-          <div class="facet-value" *ngFor="let value of facet.values | facetFilter : searchText[facet.name]">
+          <ng-container  *ngFor="let value of facet.values | facetFilter : searchText[facet.name]; index as index">
+            <div class="facet-value" *ngIf = "(index < 10 && toggle[topIndex] == true)||(toggle[topIndex] == false)">
           <div class="facet-value-checkbox">
             <mat-checkbox class="include" matTooltip="Include" (change)="updateFacetSelection($event, facet.name, value.label, true)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
@@ -32,6 +33,12 @@
           <div class="facet-value-count">
             {{value.count}}
           </div>
+            </div>
+        </ng-container>
+        <div>
+          <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
+            Show {{toggle[topIndex] === true ? 'all': 'less'}}
+          </a>
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
           <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch"

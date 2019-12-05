@@ -122,6 +122,7 @@ export class SubstanceService extends BaseHttpService {
     if (order != null && order !== '') {
       params = params.append('order', order);
     }
+    params = params.append('fdim','100');
 
     const options = {
       params: params

@@ -62,6 +62,11 @@ export class BaseComponent implements OnInit, OnDestroy {
           display: 'Concept',
           path: 'substances/register',
           params:{kind:'concept'}
+        },
+        {
+          display: 'G1 Specified Substance',
+          path: 'substances/register',
+          params:{kind:'specifiedSubstanceG1'}
         }
       ]
     }

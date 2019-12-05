@@ -1,0 +1,53 @@
+<div class="constituent-form-container">
+
+  <div *ngIf="constituent.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class = "form-row">
+  <div class="delete-container">
+    <button mat-icon-button matTooltip="Delete code" (click)="delete()">
+      <mat-icon svgIcon="delete_forever"></mat-icon>
+    </button>
+  </div>
+
+  <div class="flex-column related-substance">
+    <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+                            eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" header="Related Substance"
+                            [subuuid]="relatedSubstanceUuid">
+    </app-substance-selector>
+  </div>
+  <div class = "field-column">
+    <div class="role">
+      <app-cv-input domain = 'CONSTITUENT_ROLE' title = "constituent role" [model] = "privateConstituent.role" (valueChange)="updateProcess($event)"></app-cv-input>
+    </div>
+
+    <div class = 'amount'>
+      <div class = "label amt-label">
+        Amount
+        <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>
+        </button>
+      </div>
+
+      <div class = "amount-display">
+        <div *ngIf = "privateConstituent.amount">
+          {{displayAmount(privateConstituent.amount)}}
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class = "access">
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="constituent.access">
+      </app-access-manager>
+    </div>
+  </div>
+  <div class="form-row" *ngIf="!privateConstituent.$$deletedCode">
+    <div class="references-container">
+      <app-domain-references [referencesUuids]="privateConstituent.references" #references></app-domain-references>
+    </div>
+  </div>
+
+</div>

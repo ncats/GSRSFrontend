@@ -246,5 +246,10 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-structurally-diverse-organism',
     path: 'substance-form-structurally-diverse-organism',
     loadChildren: './substance-form/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.module#SubstanceFormStructurallyDiverseOrganismModule'
+  },
+  {
+    componentId: 'substance-form-constituents',
+    path: 'substance-form-constituents',
+    loadChildren: './substance-form/substance-form-constituents/substance-form-constituents.module#SubstanceFormConstituentsModule'
   }
 ];

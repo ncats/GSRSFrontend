@@ -58,6 +58,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public facetBuilder: SubstanceFacetParam;
   searchText: string[] = [];
   private overlayContainer: HTMLElement;
+  toggle: Array<boolean> = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -302,6 +303,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
             this.configService.configData.facets[facetKey].forEach(facet => {
               for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
+                this.toggle[facetIndex] = true;
                 if (facet === facets[facetIndex].name) {
                   if (facets[facetIndex].values != null && facets[facetIndex].values.length) {
                     let hasValues = false;

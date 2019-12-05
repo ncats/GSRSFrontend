@@ -58,6 +58,7 @@ import {LinkFormComponent} from '@gsrs-core/substance-form/link-form/link-form.c
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {MixtureComponentFormComponent} from '@gsrs-core/substance-form/mixture-component-form/mixture-component-form.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {ConstituentFormComponent} from "@gsrs-core/substance-form/constituent-form/constituent-form.component";
 
 @NgModule({
   imports: [
@@ -121,6 +122,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
     MixtureComponentFormComponent,
+    ConstituentFormComponent,
     CvInputComponent,
     CvDialogComponent
   ],
@@ -152,6 +154,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
     MixtureComponentFormComponent,
+    ConstituentFormComponent,
     TagSelectorComponent,
     LinkFormComponent,
     SugarFormComponent,

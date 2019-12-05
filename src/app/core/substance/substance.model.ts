@@ -59,6 +59,7 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
     protein?: Protein;
     mixture?: Mixture;
     modifications?: SubstanceModifications;
+    specifiedSubstance?: SpecifiedSubstance;
 }
 
 export interface StructurallyDiverse extends SubstanceBase {
@@ -90,6 +91,19 @@ export interface Polymer extends SubstanceBase {
   references?: Array<string>;
   displayStructure?: DisplayStructure;
   monomers?: Array<Monomer>;
+}
+
+export interface SpecifiedSubstance extends SubstanceBase {
+  uuid?: string;
+  references?: Array<string>;
+  constituents?: Array<Constituent>;
+}
+
+export interface Constituent extends SpecifiedSubstance {
+  role?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
+  substance?: SubstanceRelated;
 }
 
 export interface NucleicAcid extends SubstanceBase {
