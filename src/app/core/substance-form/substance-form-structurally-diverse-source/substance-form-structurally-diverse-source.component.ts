@@ -31,7 +31,7 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceC
     const structurallyDiverseSubscription = this.substanceFormService.substanceStructurallyDiverse.subscribe(structurallyDiverse => {
       this.structurallyDiverse = structurallyDiverse;
       if (!this.structurallyDiverse.$$diverseType) {
-        if (this.structurallyDiverse.part.length === 1 && this.structurallyDiverse.part[0] === 'WHOLE') {
+        if (this.structurallyDiverse.part.length === 1 && this.structurallyDiverse.part[0].toUpperCase() === ('WHOLE')) {
           this.structurallyDiverse.$$diverseType = 'whole';
         } else {
           this.structurallyDiverse.$$diverseType = 'fraction';

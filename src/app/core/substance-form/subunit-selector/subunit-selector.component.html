@@ -84,13 +84,13 @@
   <div *ngIf = '!disulfideArray || disulfideArray.length === 0'>Click on a starting site, then an ending site to create a new link</div>
 </div>
     <div class = 'card-selector' *ngIf = 'startingCard === "any"'>
-      <mat-form-field>
+      <mat-form-field class = "top-padding">
         <mat-label>Select link type to add</mat-label>
         <mat-select (valueChange)="switchType($event)" name="food">
        <!--   <mat-option value = 'feature'>
             <span>Feature</span>
           </mat-option>-->
-          <mat-option value = "other">
+          <mat-option value = "other" disabled>
             <span>Other Link</span>
           </mat-option>
           <mat-option value = "CGlycosylation">

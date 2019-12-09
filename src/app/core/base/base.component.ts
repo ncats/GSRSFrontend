@@ -201,7 +201,10 @@ export class BaseComponent implements OnInit, OnDestroy {
         text = activeEl.value.slice(selectionStart, selectionEnd);
       } else if (window.getSelection) {
         selection = window.getSelection();
-        range = selection.getRangeAt(0);
+        // ###### why just chrome?
+        if(selection.rangeCount > 0){
+          range = selection.getRangeAt(0);
+        }
         text = selection.toString();
       }
 
@@ -209,7 +212,7 @@ export class BaseComponent implements OnInit, OnDestroy {
 
       if (text && text !== this.selectedText) {
         this.selectedText = text;
-        this.bottomSheetOpenTimer = setTimeout(() => {
+       /* this.bottomSheetOpenTimer = setTimeout(() => {
           const subscription = this.openSearchBottomSheet(text).subscribe(() => {
             setTimeout(() => {
               if (selection != null && range != null) {
@@ -228,7 +231,7 @@ export class BaseComponent implements OnInit, OnDestroy {
             this.selectedText = '';
             subscription.unsubscribe();
           });
-        }, 600);
+        }, 600);*/
       }
     }
   }

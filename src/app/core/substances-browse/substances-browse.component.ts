@@ -210,8 +210,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.isError = false;
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
-          console.log(pagingResponse);
-          console.log(pagingResponse.facets);
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.populateFacets(pagingResponse.facets);
           }
@@ -330,7 +328,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         });
 
       }
-      console.log(this.facets);
       if (this.facets.length < 15) {
 
         const numFillFacets = 15 - this.facets.length;
@@ -344,7 +341,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         }, 'desc');
         const additionalFacets = _.take(sortedFacets, numFillFacets);
         this.facets = this.facets.concat(additionalFacets);
-        console.log(this.facets);
         sortedFacets = null;
       }
 

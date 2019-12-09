@@ -189,14 +189,12 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
 
   switchType(event): void {
     const type = event;
-    console.log(event);
     this.card = type;
     this.sites = [];
     this.features = [];
     this.sitesDisplay = '';
     this.selectState = 'first';
     this.cardTypeUpdate.emit(type);
-    console.log('emitting card type update');
     this.addStyle();
   }
 
@@ -244,7 +242,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
 
         deleteDisulfide(index: number): void {
             this.disulfideArray[index].forEach(site => {
-              console.log(site);
               this.render.removeClass(site.event, 'new-disulfide');
             })
             this.disulfideArray.splice(index, 1);

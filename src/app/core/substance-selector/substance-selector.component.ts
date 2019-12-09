@@ -31,17 +31,14 @@ export class SubstanceSelectorComponent implements OnInit {
     if (uuid) {
       this.substanceService.getSubstanceSummary(uuid).subscribe(response => {
         this.selectedSubstance = response;
-        console.log(response);
       }, error => {
         console.log(error);
-        if (this.name) {
+        if (this.name && this.name != '') {
           this.selectedSubstance = {_name: this.name};
         } else {
           this.selectedSubstance = {_name: ""};
         }
         this.errorMessage = 'Not in database';
-        console.log(this.selectedSubstance);
-        console.log(this.errorMessage);
       });
     }
   }

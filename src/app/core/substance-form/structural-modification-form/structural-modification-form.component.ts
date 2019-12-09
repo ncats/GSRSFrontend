@@ -99,8 +99,6 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
     };
     this.mod.molecularFragment = relatedSubstance;
     this.relatedSubstanceUuid = this.mod.molecularFragment.refuuid;
-    console.log(this.mod.molecularFragment);
-    console.log(this.relatedSubstanceUuid)
   }
 
   openDialog(): void {

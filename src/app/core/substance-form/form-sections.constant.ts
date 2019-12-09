@@ -29,11 +29,11 @@ export const formSections: { [substanceType: string]: Array<string> } = {
   ],
   nucleicAcid: [
     'substance-form-definition',
+    'substance-form-names',
     'nucleic-acid-details-form',
     'substance-form-subunits',
     'substance-form-links',
     'substance-form-sugars',
-    'substance-form-names',
     'substance-form-codes',
     'substance-form-relationships',
     'substance-form-properties',

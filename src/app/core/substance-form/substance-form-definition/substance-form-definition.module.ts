@@ -13,6 +13,7 @@ import { SubstanceFormModule } from '../substance-form.module';
 import { ScrollToModule } from '../../scroll-to/scroll-to.module';
 import { SubstanceSelectorModule } from '../../substance-selector/substance-selector.module';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
     imports: [
@@ -29,7 +30,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         SubstanceFormModule,
         ScrollToModule,
         SubstanceSelectorModule,
-        MatTooltipModule
+        MatTooltipModule,
+        RouterModule
     ],
   declarations: [
     SubstanceFormDefinitionComponent

@@ -52,11 +52,11 @@ export class MixtureComponentFormComponent implements OnInit {
 
   deleteComponent(): void {
     this.privateComp.$$deletedCode = this.utilsService.newUUID();
-    if (!this.privateComp
+    if (!this.privateComp || !this.component
     ) {
       this.deleteTimer = setTimeout(() => {
         this.componentDeleted.emit(this.privateComp);
-      }, 2000);
+      }, 1000);
     }
   }
 

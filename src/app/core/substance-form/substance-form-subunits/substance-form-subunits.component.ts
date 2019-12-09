@@ -95,8 +95,6 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
   }
 
   deleteSubunit(subunit: Subunit): void {
-    console.log('deleting in parent');
-    console.log(subunit);
     this.substanceFormService.deleteSubstanceSubunit(subunit);
   }
 

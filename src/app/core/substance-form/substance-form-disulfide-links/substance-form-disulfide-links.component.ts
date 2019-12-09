@@ -43,7 +43,6 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
   ngAfterViewInit() {
     const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
       this.disulfideLinks = disulfideLinks;
-      console.log(disulfideLinks);
       this.countCysteine();
     });
 

@@ -65,7 +65,6 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     setTimeout(() => {
       const displaySequenceSubscription = this.substanceFormService.subunitDisplaySequences.subscribe(subunits => {
         const newSubunits = subunits.filter(unit => unit.subunitIndex === this.subunit.subunitIndex)[0];
-        console.log('triggered update in subunit form');
         if(!this.subunitSequence || !deepEqual(this.subunitSequence, newSubunits)){
           this.subunitSequence = newSubunits;
           setTimeout(() => {
@@ -176,15 +175,12 @@ change(event): void {
 }
 
   deleteSubunit(): void {
-    console.log('emitting delete');
-    console.log(this.subunit);
     this.subunitDeleted.emit(this.subunit);
   }
 
   cleanSequence(): void {
     const valid = [];
     const test = this.subunit.sequence.split('');
-    console.log(this.vocabulary);
     for (const key in this.vocabulary) {
       valid.push(this.vocabulary[key].value);
     }
@@ -203,7 +199,6 @@ change(event): void {
 
   generateSites(event): void {
     this.sequenceType = event;
-    console.log(this.sequenceType);
     const sugarsSubscription = this.substanceFormService.substanceSugars.subscribe(sug => {
       this.sugars = sug;
     });
@@ -216,7 +211,6 @@ change(event): void {
       sugarType = 'dR';
     } else {
       sugarType = 'R';
-      console.log('not dna');
     }
     this.sugars.forEach(sugar => {
       sugar.sites = sugar.sites.filter(s => s.subunitIndex !== this.subunit.subunitIndex);

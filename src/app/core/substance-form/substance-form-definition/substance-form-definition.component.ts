@@ -38,8 +38,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
       this.definition = definition || {};
-      console.log(this.definition);
-      console.log(this.definition.references);
       if (!this.definition.definitionType) {
         this.definition.definitionType = 'PRIMARY';
       }
@@ -78,6 +76,8 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       return '#';
     }
   }
+
+
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('DEFINITION_TYPE', 'DEFINITION_LEVEL').subscribe(response => {

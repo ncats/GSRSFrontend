@@ -100,7 +100,6 @@ export class SubstanceFormService {
       this.privateDomainsWithReferences = null;
       if (substance != null) {
         this.substance = substance;
-        console.log(this.substance);
         substanceClass = this.substance.substanceClass;
       } else {
         if (substanceClass == 'chemical') {
@@ -245,6 +244,10 @@ export class SubstanceFormService {
         references: definition.references
       };
     }
+  }
+
+  getJson(){
+    return this.substance;
   }
 
   getUuid(): string {
@@ -1684,9 +1687,11 @@ export class SubstanceFormService {
         this.substanceRelationshipsEmitter.next(this.substance.relationships);
         this.substanceNamesEmitter.next(this.substance.notes);
         this.substancePropertiesEmitter.next(this.substance.properties);
-        this.substanceAgentModificationsEmitter.next(this.substance.modifications.agentModifications);
-        this.substancePhysicalModificationsEmitter.next(this.substance.modifications.physicalModifications);
-        this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
+        if(this.substance.modifications){
+          this.substanceAgentModificationsEmitter.next(this.substance.modifications.agentModifications);
+          this.substancePhysicalModificationsEmitter.next(this.substance.modifications.physicalModifications);
+          this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
+        }
         observer.next(results);
         observer.complete();
       }, error => {

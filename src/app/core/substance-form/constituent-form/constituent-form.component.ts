@@ -48,8 +48,7 @@ export class ConstituentFormComponent implements OnInit {
 
   delete(): void {
     this.privateConstituent.$$deletedCode = this.utilsService.newUUID();
-    if (!this.privateConstituent
-    ) {
+    if (!this.privateConstituent.substance) {
       this.deleteTimer = setTimeout(() => {
         this.constituentDeleted.emit(this.privateConstituent);
       }, 2000);

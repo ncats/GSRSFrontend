@@ -14,7 +14,7 @@
       <div class="flex-column ">
         <app-substance-selector (selectionUpdated)="componentUpdated($event)"
                                 eventCategory="substanceRelationshipRelatedSub" placeholder="Mixture Component" header="Mixture Component"
-                                [subuuid]="relatedSubstanceUuid" [name] = "component.substance.name">
+                                [subuuid]="relatedSubstanceUuid" [name] = "component.substance? component.substance.name : ''">
         </app-substance-selector>
       </div>
     </div>
