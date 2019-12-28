@@ -4,7 +4,7 @@ import { ApplicationService } from '../service/application.service';
 import { ApplicationSrs } from '../model/application.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
-//import * as _ from 'lodash';
+import * as _ from 'lodash';
 import { Facet } from '@gsrs-core/utils';
 import { LoadingService } from '@gsrs-core/loading';
 import { MatCheckboxChange } from '@angular/material/checkbox';
