@@ -12,6 +12,10 @@ environment.navItems = [
     //     path: 'fda-sample-inheritance'
     // }
     {
+        display: 'Browse App',
+        path: 'browse-applications'
+    },
+    {
         display: 'Browse Clinical Trials',
         path: 'browse-clinical-trials'
     }
