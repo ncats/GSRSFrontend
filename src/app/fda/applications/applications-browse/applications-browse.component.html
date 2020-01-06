@@ -91,43 +91,63 @@
           </mat-card-title>
           
           <mat-card-content>
+            <div class="substance-data">
+              <div class="label">Product:</div>
+              
+              <div>
+                  <span class="value">
+                  <div class="indent-list" *ngFor="let prod of application.applicationProductList">
+          
+                    <div class="indent-list" *ngFor="let prodName of prod.applicationProductNameList">
+                        {{ prodName.productName }}
+                    </div>
+            
+
+                  </div>
+                  </span>
+                </div>
+            </div>
+            <div class="substance-data">
+              <div class="label">Sponsor Name:</div>
+              <div>
+                <span class="value">{{application.sponsorName}}</span>
+              </div>
+            </div>
+            <div class="substance-data">
+              <div class="label">App Sub Type:</div>
+              <div>
+                <span class="value">{{application.appSubType}}</span>
+              </div>
+            </div>
+            <div class="substance-data">
+              <div class="label">Submit Date:</div>
+              <div>
+                <span class="value">{{application.submitDate}}</span>
+              </div>
+            </div>
+            <div class="substance-data">
+              <div class="label">Status Date:</div>
+              <div>
+                <span class="value">{{application.statusDate}}</span>
+              </div>
+            </div>
+            <div class="substance-data">
+              <div class="label">Center:</div>
+              <div>
+                <span class="value">{{application.center}}</span>
+              </div>
+            </div>
               <div class="substance-data">
-                  <div class="label">Sponsor Name:</div>
+                  <div class="label">Indications:&nbsp;<span class="badge">{{application.applicationIndicationList.length}}</span></div>
                   <div>
-                    <span class="value">{{application.sponsorName}}</span>
+                    <span class="value">
+                    <div class="indent-list" *ngFor="let ind of application.applicationIndicationList">
+                      {{ ind.indication }}
+                    </div>
+                    </span>
                   </div>
               </div>
-              <div class="substance-data">
-                  <div class="label">App Sub Type:</div>
-                  <div>
-                    <span class="value">{{application.appSubType}}</span>
-                  </div>
-              </div>
-              <div class="substance-data">
-                  <div class="label">Submit Date:</div>
-                  <div>
-                    <span class="value">{{application.submitDate}}</span>
-                  </div>
-              </div>
-              <div class="substance-data">
-                  <div class="label">Status Date:</div>
-                  <div>
-                    <span class="value">{{application.statusDate}}</span>
-                  </div>
-              </div>
-              <div class="substance-data">
-                  <div class="label">Center:</div>
-                  <div>
-                    <span class="value">{{application.center}}</span>
-                  </div>
-              </div>
-              <div class="substance-data" *ngIf="application.title">
-                  <div class="label">Title:</div>
-                  <div>
-                    <span class="value">{{application.title}}</span>
-                  </div>
-              </div>
-  
+          
           </mat-card-content>
   
         </mat-card>  

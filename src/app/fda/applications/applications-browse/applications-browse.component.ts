@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import { Facet } from '@gsrs-core/utils';
 import { LoadingService } from '@gsrs-core/loading';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import {MatBadgeModule} from '@angular/material/badge'; 
 import { MatSidenav } from '@angular/material/sidenav';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -141,6 +142,25 @@ export class ApplicationsBrowseComponent implements OnInit {
   }
 
   
+  changePage(pageEvent: PageEvent) {
+
+    let eventAction;
+    let eventValue;
+
+    if (this.pageSize !== pageEvent.pageSize) {
+      eventAction = 'select:page-size';
+      eventValue = pageEvent.pageSize;
+    } else if (this.pageIndex !== pageEvent.pageIndex) {
+      eventAction = 'icon-button:page-number';
+      eventValue = pageEvent.pageIndex + 1;
+    }
+
+    this.gaService.sendEvent('substancesContent', eventAction, 'pager', eventValue);
+
+    this.pageSize = pageEvent.pageSize;
+    this.pageIndex = pageEvent.pageIndex;
+    this.populateUrlQueryParameters();
+  }
 
   searchApplications() {
     this.loadingService.setLoading(true);
