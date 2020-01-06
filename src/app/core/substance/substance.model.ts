@@ -1,3 +1,5 @@
+import {StructuralUnit} from "@gsrs-core/substance/structural-unit.model";
+
 export interface SubstanceBase {
     uuid?: string;
     created?: number;
@@ -58,6 +60,7 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
     tags?: Array<string>;
     protein?: Protein;
     mixture?: Mixture;
+    polymer?: Polymer;
     modifications?: SubstanceModifications;
     specifiedSubstance?: SpecifiedSubstance;
 }
@@ -90,13 +93,27 @@ export interface Polymer extends SubstanceBase {
   uuid?: string;
   references?: Array<string>;
   displayStructure?: DisplayStructure;
+  idealizedStructure?: SubstanceStructure;
   monomers?: Array<Monomer>;
+  classification?: PolymerClassification;
+  structuralUnits?: Array<StructuralUnit>;
 }
 
 export interface SpecifiedSubstance extends SubstanceBase {
   uuid?: string;
   references?: Array<string>;
   constituents?: Array<Constituent>;
+}
+
+export interface PolymerClassification extends SubstanceBase {
+  uuid?: string;
+  references?: Array<string>;
+  polymerClass?: string;
+  polymerGeometry?: string;
+  polymerSubClass?: Array<string>;
+  parentSubstance?: SubstanceRelated;
+  access?: Array<string>;
+  sourceType?: string;
 }
 
 export interface Constituent extends SpecifiedSubstance {
@@ -152,8 +169,8 @@ export interface DisplayStructure extends Polymer {
 export interface Monomer extends Polymer {
   uuid?: string;
   type?: string;
-  amount?: Array<SubstanceAmount>;
-  monomerSubstance?: Array<SubstanceRelated>;
+  amount?: SubstanceAmount;
+  monomerSubstance?: SubstanceRelated;
 }
 
 export interface SubstanceRelated extends SubstanceBase {
@@ -280,6 +297,8 @@ export interface StructuralModification extends SubstanceModifications {
   extentAmount?: SubstanceAmount;
   molecularFragment?: SubstanceRelated;
   modificationGroup?: string;
+  comment?: string;
+  references?: Array<string>;
 }
 
 export interface PhysicalModification extends SubstanceModifications {

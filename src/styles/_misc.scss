@@ -1,7 +1,12 @@
 .middle-fill {
     flex: 1 1 auto;
 }
-
+ .unit-tooltip {
+  white-space: pre-line !important;
+}
+::ng-deep .unit-tooltip {
+  white-space: pre-line !important;
+}
 .margin-bottom {
     margin-bottom: 15px;
 }

@@ -21,6 +21,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   definition: SubstanceFormDefinition;
   primarySubUuid: string;
   uuid: string;
+  json:any;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -45,6 +46,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       if (!this.definition.definitionLevel) {
         this.definition.definitionLevel = 'COMPLETE';
       }
+      this.json = this.substanceFormService.getJson();
 
       if (this.definition.definitionType === 'ALTERNATIVE') {
         this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {

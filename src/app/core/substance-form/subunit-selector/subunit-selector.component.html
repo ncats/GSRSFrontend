@@ -117,15 +117,15 @@
     Key:
   <br/>
   <div class = "key-container">
-    <div class = "key-label"><div class = 'Cglycosylation key-color'> </div>C-Glycosylation</div>
+    <div class = "key-label"><div class = 'C-Glycosylation key-color'> </div>C-Glycosylation</div>
     <div class = "key-label"><div class = 'other key-color'> </div>Other Link</div>
   </div>
     <div class = "key-container">
-  <div class = "key-label"><div class = 'Oglycosylation key-color'> </div>O-Glycosylation</div>
+  <div class = "key-label"><div class = 'O-Glycosylation key-color'> </div>O-Glycosylation</div>
   <div class = "key-label"><div class = 'modification key-color'> </div>Modification</div>
     </div>
     <div class = "key-container">
-      <div class = "key-label"><div class = 'Nglycosylation key-color'> </div>N-Glycosylation</div>
+      <div class = "key-label"><div class = 'N-Glycosylation key-color'> </div>N-Glycosylation</div>
   <div class = "key-label"><div class = 'disulfide key-color'> </div>Disulfide Link</div>
 </div>
   <div class = "key-container">
@@ -146,7 +146,8 @@
           <div class = section-units-container >
           <span *ngFor = "let subunit of sequence.subunits.slice(num[0],num[1])"  class="section-unit" [ngClass] = "last1 && last2? 'last-units' : ''" >
               <a class = "selectedSite siteref" [id]="sequence.subunitIndex + '_' + subunit.unitIndex"  [ngClass]="subunit.class" [@errorFlash]
-                 (click) = "toggleSite(sequence.subunitIndex, subunit.unitIndex, subunit.unitValue, $event)">{{subunit.unitValue}}</a>
+                 (click) = "toggleSite(sequence.subunitIndex, subunit.unitIndex, subunit.unitValue, $event)" matTooltipClass="unit-tooltip"
+                 matTooltip ="{{getTooltipMessage(sequence.subunitIndex, subunit.unitIndex, subunit.unitValue,subunit.class || '').join('\n')}}">{{subunit.unitValue}}</a>
         </span>
           </div>
         </div>

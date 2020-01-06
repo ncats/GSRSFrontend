@@ -3,6 +3,7 @@
     <a routerLink="/home">
       <img [src]="logoSrcPath" />
     </a>
+    <span class = "version">Jan.3</span>
   </span>
   <!-- <span class="nav-big">
     <span class="nav-item" *ngFor="let navItem of navItems">
@@ -49,16 +50,19 @@
     <button mat-flat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment != 'login'">
       Login
     </button>
-    <div>
-      <button mat-icon-button [matMenuTriggerFor]="accountMenu" *ngIf="auth" (click)="increaseMenuZindex()">
-        <mat-icon>account_circle</mat-icon>
+      <div class = "logged-in" *ngIf="auth" >
+        <button class ="user-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()">
+        <mat-icon class = "user-icon" svgIcon="account_circle"></mat-icon>
       </button>
+        <br/>
+              <span class = "user" *ngIf="auth && auth.identifier" >{{auth.identifier}}</span>
+      </div>
       <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
         <button mat-menu-item (click)="authService.logout()">
           <span>Logout</span>
         </button>
+
       </mat-menu>
-    </div>
   </div>
 </mat-toolbar>
 <app-main-notification></app-main-notification>

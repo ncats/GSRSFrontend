@@ -66,12 +66,16 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       const displaySequenceSubscription = this.substanceFormService.subunitDisplaySequences.subscribe(subunits => {
         const newSubunits = subunits.filter(unit => unit.subunitIndex === this.subunit.subunitIndex)[0];
         if(!this.subunitSequence || !deepEqual(this.subunitSequence, newSubunits)){
-          this.subunitSequence = newSubunits;
-          setTimeout(() => {
-            if (this.allSites) {
-              this.addStyle();
-            }
-          });
+          if(this.subunitSequence && JSON.stringify(this.subunitSequence) != JSON.stringify(newSubunits) ) {
+            this.subunitSequence = newSubunits;
+            setTimeout(() => {
+              if (this.allSites) {
+                this.addStyle();
+                  }
+              });
+          } else {
+            this.subunitSequence = newSubunits;
+          }
         }
       });
       this.subscriptions.push(displaySequenceSubscription);
@@ -85,13 +89,15 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
               tempSitelist.push(site);
             }
           });
-          if (!this.allSites || this.allSites !== tempSitelist) {
+          if (this.allSites && this.allSites !== tempSitelist) {
             this.allSites = tempSitelist;
             setTimeout(() => {
               if (this.subunitSequence) {
                 this.addStyle();
               }
             });
+          } else if (!this.allSites){
+            this.allSites = tempSitelist
           }
 
       }
@@ -99,7 +105,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     this.subscriptions.push(allSitesSubscription);
     setTimeout(() => {
       if (this.subunitSequence) {
-        this.addStyle();
+       // this.addStyle('after subs');
       }
     });
   }
@@ -138,19 +144,39 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     if (this.subunitSequence && this.subunitSequence.subunits) {
       this.allSites.forEach(site => {
         if (this.subunitSequence.subunits) {
-          if (this.subunitSequence.subunits[site.residue - 1].class){
+          if (this.subunitSequence.subunits[site.residue - 1].class && this.subunitSequence.subunits[site.residue - 1].class !== site.type){
             this.subunitSequence.subunits[site.residue - 1].class = this.subunitSequence.subunits[site.residue - 1].class + ' ' + site.type;
           } else {
             this.subunitSequence.subunits[site.residue - 1].class = site.type;
           }
         }
       });
+      console.log(this.subunitSequence);
     }
   }
 
-  getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
+ /* getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
     const vocab = (this.vocabulary[unitValue.toUpperCase()] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue.toUpperCase()].display);
     return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab})`;
+  }*/
+
+  getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string, type: string): any {
+    const vocab = (this.vocabulary[unitValue] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue].display);
+    const arr = [];
+    const formatted = {'modification':'Structural Modification',
+      'other' : 'Other Link',
+      'C-Glycosylation': 'C-Glycosylation',
+      'N-Glycosylation': 'N-Glycosylation',
+      'O-Glycosylation': 'O-Glycosylation',
+      'feature': this.substanceType.toUpperCase() + ' Feature',
+      'disulfide': 'Disulfide Link'
+    };
+    arr.push( `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab})`);
+    const splitDisplay = type.split(" ");
+    splitDisplay.forEach(type => {
+      arr.push(formatted[type]|| '');
+    });
+    return arr;
   }
 
   editSubunit(subunit: Subunit, input: string): void {

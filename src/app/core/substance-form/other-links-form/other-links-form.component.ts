@@ -57,13 +57,10 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   }
   deleteLink(): void {
     this.privateLink.$$deletedCode = this.utilsService.newUUID();
-    if (!this.privateLink
-    ) {
       this.deleteTimer = setTimeout(() => {
         this.linkDeleted.emit(this.link);
         this.substanceFormService.emitOtherLinkUpdate();
-      }, 1000);
-    }
+      }, 2000);
   }
 
   undoDelete(): void {

@@ -59,6 +59,8 @@ import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.c
 import {MixtureComponentFormComponent} from '@gsrs-core/substance-form/mixture-component-form/mixture-component-form.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {ConstituentFormComponent} from "@gsrs-core/substance-form/constituent-form/constituent-form.component";
+import {MonomerFormComponent} from "@gsrs-core/substance-form/monomer-form/monomer-form.component";
+import {StructuralUnitFormComponent} from "@gsrs-core/substance-form/structural-unit-form/structural-unit-form.component";
 
 @NgModule({
   imports: [
@@ -124,7 +126,9 @@ import {ConstituentFormComponent} from "@gsrs-core/substance-form/constituent-fo
     MixtureComponentFormComponent,
     ConstituentFormComponent,
     CvInputComponent,
-    CvDialogComponent
+    CvDialogComponent,
+    MonomerFormComponent,
+    StructuralUnitFormComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -159,7 +163,9 @@ import {ConstituentFormComponent} from "@gsrs-core/substance-form/constituent-fo
     LinkFormComponent,
     SugarFormComponent,
     CvInputComponent,
-    CvDialogComponent
+    MonomerFormComponent,
+    CvDialogComponent,
+    StructuralUnitFormComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,

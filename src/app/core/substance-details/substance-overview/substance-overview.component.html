@@ -1,9 +1,9 @@
 <div *ngIf="substance">
   <div class='options-area'>
-    <a mat-icon-button [href]="oldUrl" target = "_blank" matTooltip= "view in old application">
+    <a mat-icon-button [href]="oldUrl" target = "_blank" matTooltip = "view in old application">
       <mat-icon svgIcon="open_in_new"></mat-icon>
     </a>
-    <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isEditable" matTooltip= 'edit record'>
+    <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isEditable" matTooltip = 'edit record'>
       <mat-icon svgIcon="edit"></mat-icon>
     </a>
     <button mat-icon-button [matMenuTriggerFor]="downloadMenu" matTooltip="download options">

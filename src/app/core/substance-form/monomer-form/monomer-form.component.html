@@ -1,0 +1,43 @@
+<div class="component-form-container form-row">
+  <div *ngIf="monomer.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="delete-container">
+    <button mat-icon-button matTooltip="Delete monomer" (click)="deleteComponent()">
+      <mat-icon svgIcon="delete_forever"></mat-icon>
+    </button>
+  </div>
+    <div class = "related-substance">
+      <div class="flex-column ">{{relatedSubstanceUuid}}
+        <app-substance-selector (selectionUpdated)="componentUpdated($event)"
+                                eventCategory="substanceRelationshipRelatedSub" placeholder= "Monomer Substance" header="Monomer Substance"
+                                [subuuid]="relatedSubstanceUuid" [name] = "privateMonomer.monomerSubstance? privateMonomer.monomerSubstance.name : ''">
+        </app-substance-selector>
+        <span *ngIf = "this.privateMonomer.monomerSubstance && this.privateMonomer.monomerSubstance.uuid
+                && !this.privateMonomer.monomerSubstance.refuuid ">
+          Error retrieving monomer, missing reference uuid for {{this.privateMonomer.monomerSubstance.name}}
+        </span>
+      </div>
+    </div>
+
+    <div class ="type">
+      <app-cv-input  domain = "MONOMER_TYPE" title = "Monomer Type" [model] = "monomer.type" (valueChange)="updateType($event)"></app-cv-input>
+    </div>
+
+  <div class = 'amount' >
+  <div class = "label padded">
+    Amount
+  </div>
+  <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
+    <mat-icon svgIcon="add_circle_outline"></mat-icon>
+  </button>
+  <div *ngIf = "privateMonomer.amount" class = "amount-display">
+    {{displayAmount(privateMonomer.amount)}}
+  </div>
+</div>
+
+
+</div>

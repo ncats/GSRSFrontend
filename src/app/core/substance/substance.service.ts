@@ -427,7 +427,7 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<any>(verurl);
   }
 
-  getSafeIconImgUrl(substance: SubstanceDetail, size?: number): SafeUrl {
+  getSafeIconImgUrl(substance: SubstanceDetail , size?: number): SafeUrl {
     let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg`;
     const substanceType = substance.substanceClass;
     if ((substanceType === 'chemical') && (substance.structure.id)) {
@@ -447,17 +447,27 @@ export class SubstanceService extends BaseHttpService {
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
+  getIconFromUuid(uuid: string): SafeUrl {
+    const imgUrl = `${this.configService.configData.apiBaseUrl}img/${uuid}.svg`;
+    return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
+
+  }
+
   saveSubstance(substance: SubstanceDetail): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances`;
     const method = substance.uuid ? 'PUT' : 'POST';
     const options = {
       body: substance
     };
+    console.log('returning save request');
+    console.log(substance);
     return this.http.request(method, url, options);
   }
 
   validateSubstance(substance: SubstanceDetail): Observable<ValidationResults> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
+    console.log('returning validate request');
+    console.log(substance);
     return this.http.post(url, substance);
   }
 

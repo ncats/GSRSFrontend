@@ -1,0 +1,47 @@
+  <div class = "unit-form-container">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete SRU" (click)="deleteSRU()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+      <div class = "form-row full">
+    <div class="flex-column related-substance">
+    <img class = "related-image" [src]="getIconFromUuid()">
+    </div>
+
+
+    <div class = "form-container">
+    <div class = "inner-row-top">
+      <app-cv-input domain="POLYMER_SRU_TYPE" class = "type" title = "Location" (valueChange)= "unit.type = $event" [model] = "unit.type"></app-cv-input>
+      <mat-form-field class="label">
+        <input matInput placeholder="Label" [(ngModel)]="unit.label" required name="label" />
+      </mat-form-field>
+      <mat-form-field class="attachment-count">
+        <input matInput placeholder="attachment count" [(ngModel)]="unit.attachmentCount" required name="attachment count" />
+      </mat-form-field>
+    </div>
+
+    <div class = "inner-row-bottom">
+      <div class = 'amount' >
+        <div class = "label padded">
+          Amount
+        </div>
+        <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>
+        </button>
+        <div *ngIf = "unit.amount" class = "amount-display">
+          {{displayAmount(unit.amount)}}
+        </div>
+      </div>
+      <mat-form-field class = "connectivity">
+        <mat-label>Connectivity</mat-label>
+        <textarea matInput [ngModel] = "unit._displayConnectivity">
+
+    </textarea>
+      </mat-form-field>
+    </div>
+      </div>
+      </div>
+    </div>
+
+

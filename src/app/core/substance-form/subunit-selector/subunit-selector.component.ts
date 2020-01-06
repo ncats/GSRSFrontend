@@ -198,9 +198,23 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
     this.addStyle();
   }
 
-  getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string, type: string): string {
+  getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string, type: string): any {
     const vocab = (this.vocabulary[unitValue] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue].display);
-    return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab}) \n ${type}`;
+    const arr = [];
+    const formatted = {'modification':'Structural Modification',
+                        'other' : 'Other Link',
+                        'C-Glycosylation': 'C-Glycosylation',
+                        'N-Glycosylation': 'N-Glycosylation',
+                        'O-Glycosylation': 'O-Glycosylation',
+                        'feature': this.substanceType.toUpperCase() + ' Feature',
+                        'disulfide': 'Disulfide Link'
+                      };
+    arr.push( `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab})`);
+    const splitDisplay = type.split(" ");
+    splitDisplay.forEach(type => {
+      arr.push(formatted[type]|| '');
+    });
+    return arr;
   }
 
   updateDisplay(): void  {
@@ -243,7 +257,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
         deleteDisulfide(index: number): void {
             this.disulfideArray[index].forEach(site => {
               this.render.removeClass(site.event, 'new-disulfide');
-            })
+            });
             this.disulfideArray.splice(index, 1);
           this.disulfidesUpdate.emit(this.disulfideArray);
         }
@@ -345,6 +359,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
 
   addStyle(): void {
     if (this.subunitSequences && this.subunitSequences[0] && this.subunitSequences[0].subunits) {
+      console.log(this.subunitSequences);
       this.subunitSequences.forEach(sites => {
         sites.subunits.forEach( site => {
           if (this.card === 'disulfide' || this.card === 'multi-disulfide' ) {
@@ -379,6 +394,8 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
         });
       }
     }
+    console.log(this.allSites);
+    console.log(this.sites);
 
   }
 

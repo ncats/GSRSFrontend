@@ -1,0 +1,11 @@
+<div class="flex-row">
+  <span class="middle-fill"></span>
+  <button mat-button (click)="addCode()">
+    Add Monomer <mat-icon svgIcon="add_circle_outline"></mat-icon>
+  </button>
+</div>
+<div class="monomer" *ngFor="let monomer of monomers; last as isLast; index as index" appScrollToTarget
+  [id]="'substance-monomer-' + index">
+  <app-monomer-form [monomer]="monomer" (monomerDeleted)="deleteCode($event)"></app-monomer-form>
+  <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
+</div>

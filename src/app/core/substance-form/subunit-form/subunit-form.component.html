@@ -33,7 +33,9 @@
           <div class = "section-number">{{num[1]}}</div>
           <div class = section-units-container>
           <span *ngFor = "let subunit of subunitSequence.subunits.slice(num[0],num[1])"  class="section-unit" >
-              <span class = "selectedSite siteref" [ngClass]="subunit.class" >{{subunit.unitValue}}</span>
+              <span class = "selectedSite siteref" matTooltipClass="unit-tooltip"
+                    matTooltip ="{{getTooltipMessage(subunitSequence.subunitIndex, subunit.unitIndex, subunit.unitValue,subunit.class || '').join('\n')}}"
+                    [ngClass]="subunit.class" >{{subunit.unitValue}}</span>
         </span>
           </div>
         </div>

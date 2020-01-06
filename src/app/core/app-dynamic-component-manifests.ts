@@ -251,5 +251,19 @@ export const dynamicComponentManifests: DynamicComponentManifest[] = [
     componentId: 'substance-form-constituents',
     path: 'substance-form-constituents',
     loadChildren: './substance-form/substance-form-constituents/substance-form-constituents.module#SubstanceFormConstituentsModule'
+  },
+  {
+    componentId: 'substance-form-polymer-classification',
+    path: 'substance-form-polymer-classification',
+    loadChildren: './substance-form/substance-form-polymer-classification/substance-form-polymer-classification.module#SubstanceFormPolymerClassificationModule'
+  },
+  {
+    componentId: 'substance-form-monomers',
+    path: 'substance-form-monomers',
+    loadChildren: './substance-form/substance-form-monomers/substance-form-monomers.module#SubstanceFormMonomersModule'
+  },{
+    componentId: 'substance-form-structural-units',
+    path: 'substance-form-structural-units',
+    loadChildren: './substance-form/substance-form-structural-units/substance-form-structural-units.module#SubstanceFormStructuralUnitsModule'
   }
 ];

@@ -29,6 +29,12 @@
 .redirect-links {
   a{
     color: #4793d1!important;
+    float:right;
+    text-decoration:none;
+  }
+
+  mat-icon {
+    transform: scale(0.75);
   }
 }
 

@@ -22,6 +22,7 @@ export class StructureFormComponent implements OnInit {
   atropisomerismList: Array<VocabularyTerm> = [];
   @Input() hideAccess = false;
   @Input() showSettings = false;
+  @Input() type?: string;
   @Output() structureImported = new EventEmitter<StructurePostResponse>();
   @Output() nameResolved = new EventEmitter<string>();
   private overlayContainer: HTMLElement;
@@ -114,5 +115,7 @@ export class StructureFormComponent implements OnInit {
       this.overlayContainer.style.zIndex = null;
     });
   }
+
+
 
 }

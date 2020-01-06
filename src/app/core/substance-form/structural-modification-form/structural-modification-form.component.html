@@ -20,9 +20,10 @@
       </div>
       <div class="flex-column form-content">
 
-        <div class="form-row" *ngIf = "substanceType === ('protein' || 'nucleicAcid') && mod.locationType != 'RESIDUE_SPECIFIC'">
-        <app-cv-input [vocabulary] = "modTypeList" title = "Type" [model] = "mod.structuralModificationType" (valueChange)= "mod.structuralModificationType = $event"></app-cv-input>
-          <div class = 'sites'>
+        <div class="form-row">
+        <app-cv-input [vocabulary] = "modTypeList" title = "Type" [model] = "mod.structuralModificationType"
+                      (valueChange)= "mod.structuralModificationType = $event"></app-cv-input>
+          <div class = 'sites' *ngIf = "mod.locationType !== 'RESIDUE_SPECIFIC'">
             <div class="label">Sites</div>
             {{siteDisplay}}
             <button mat-icon-button matTooltip="Undo" (click)="(openDialog())">
@@ -50,6 +51,11 @@
 
 
    <div class="form-row">
+     <div class="comment">
+       <div class="textarea-label">Comment</div>
+       <textarea placeholder="Enter text here" [(ngModel)]="mod.comment" name="comment">
+        </textarea>
+     </div>
      <div class = 'amount' *ngIf = "mod.extent == 'PARTIAL'">
        <div class = "label padded">
          Amount
@@ -62,6 +68,7 @@
        </div>
 
      </div>
+
    </div>
    </div>
 

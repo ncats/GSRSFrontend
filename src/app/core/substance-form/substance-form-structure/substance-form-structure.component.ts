@@ -17,6 +17,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   structure: SubstanceStructure;
   userMessage: string;
   userMessageTimer: any;
+  substanceType: string;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -27,15 +28,43 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   }
 
   ngOnInit() {
-    this.menuLabelUpdate.emit('Structure');
-    this.loadingService.setLoading(true);
-    this.substanceFormService.substanceStructure.subscribe(structure => {
-      this.structure = structure;
-      this.loadStructure();
+    this.substanceFormService.definition.subscribe(def =>{
+      this.substanceType = def.substanceClass;
+      console.log(this.substanceType);
+      if(this.substanceType === 'polymer') {
+        this.menuLabelUpdate.emit('Idealized Structure');
+        this.substanceFormService.substanceDisplayStructure.subscribe(structure => {
+          if(structure){
+            console.log('display found');
+            console.log(structure);
+            this.structure = structure;
+          } else {
+            this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
+              console.log('start using idealized');
+              this.structure = structure;
+            });
+          }
+          this.loadStructure();
+        });
+      }else {
+        this.menuLabelUpdate.emit('Structure');
+        this.substanceFormService.substanceStructure.subscribe(structure => {
+          this.structure = structure;
+          this.loadStructure();
+        });
+      }
     });
+
   }
 
   ngAfterViewInit() {
+    if(this.substanceType === 'polymer') {
+      this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
+        // this.structure = structure;
+        console.log('after view idealized update');
+        // this.loadStructure();
+      });
+    }
   }
 
   editorOnLoad(editor: Editor): void {
@@ -61,13 +90,11 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   processStructurePostResponse(structurePostResponse?: StructurePostResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
-
       Object.keys(structurePostResponse.structure).forEach(key => {
         this.structure[key] = structurePostResponse.structure[key];
       });
 
       this.structure.uuid = '';
-
       this.substanceFormService.updateMoieties(structurePostResponse.moieties);
 
       if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
@@ -82,6 +109,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     }
   }
 
+
+
   structureImported(structurePostResponse?: StructurePostResponse): void {
     if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
       this.structureEditor.setMolecule(structurePostResponse.structure.molfile);
@@ -92,6 +121,15 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   nameResolved(molfile: string): void {
     this.updateStructureForm(molfile);
     this.structureEditor.setMolecule(molfile);
+  }
+
+  generateSRU():void {
+    this.structureService.postStructure(this.structure.molfile).subscribe(response => {
+      console.log(response);
+      if(response.structuralUnits && response.structuralUnits.length > 0) {
+        this.substanceFormService.updateSRUs(response.structuralUnits);
+      }
+    });
   }
 
 }

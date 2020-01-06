@@ -2,8 +2,8 @@
   <mat-form-field [floatLabel]="'never'" class="search" *ngIf="names && names.length > pageSize">
     <input matInput placeholder="Search" [formControl]="searchControl">
   </mat-form-field>
-  <button mat-button (click)="standardize()">Standardize Names</button>
   <span class="middle-fill"></span>
+  <button class = 'standardize' mat-button (click)="standardize()">Standardize Names</button>
 
   <button mat-button (click)="addName()">
     Add name <mat-icon svgIcon="add_circle_outline"></mat-icon>

@@ -31,11 +31,11 @@
       <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access"></app-access-manager>
     </div>
     <div class = 'redirect-links' *ngIf = "definition.uuid" >
-      <a [href]="getRedirect()" target = "_blank" matTooltip= "open substance in older edit form">
+      <a [href]="getRedirect()" target = "_blank" matTooltip= "open old edit form in new tab">
         Old edit form <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
       </a>
       <br/>
-      <a [routerLink]="['/substances',definition.uuid]" target = "_blank" matTooltip= "view the details page for this substance">
+      <a [routerLink]="['/substances',definition.uuid]" target = "_blank" matTooltip= "open details page in new tab">
         Details page <mat-icon class = "icon" svgIcon="open_in_new"></mat-icon>
       </a>
     </div>
@@ -48,5 +48,4 @@
   <div class = "substance-form-row" *ngIf="definition.substanceClass === 'concept'">
     Concepts have no defining information, but are collections of terms, codes and related information. <br/> They can be promoted to a defined substance at a later time, when appropriate.
   </div>
-
 </div>

@@ -168,6 +168,15 @@ width:100%;
 
 }
 
+
+.unit-tooltip {
+  white-space: pre-line !important;
+}
+
+.mat-tooltip {
+  white-space: pre-line !important;
+
+}
 .key-color {
   width:15px;
   height:18px;
@@ -189,17 +198,17 @@ width:100%;
   background-color:#608000;
 }
 
-.Nglycosylation{
+.N-Glycosylation{
   color:white;
   background-color:#ff6666
 }
 
-.Cglycosylation{
+.C-Glycosylation{
   color:white;
   background-color:darkorange;
 }
 
-.Oglycosylation{
+.O-Glycosylation{
   color:white;
   //background-color:darkgoldenrod;
   background-color: #cca300;

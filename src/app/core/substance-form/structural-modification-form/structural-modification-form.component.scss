@@ -88,8 +88,14 @@
   }
 
   .amount {
-    width: 100%;
-    display: flex;
+    width: 45%;
+    padding-right: 15px;
+    flex-grow:1;
+  }
+  .comment {
+    width: 45%;
+    padding-right: 15px;
+    flex-grow:1;
   }
 }
 

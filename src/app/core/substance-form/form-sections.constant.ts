@@ -91,5 +91,19 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-notes',
     'substance-form-properties',
     'substance-form-references',
+  ],
+  polymer: [
+    'substance-form-definition',
+    'substance-form-names',
+    'substance-form-polymer-classification',
+    'substance-form-monomers',
+    'substance-form-structure',
+    'substance-form-structural-units',
+    'substance-form-moieties',
+    'substance-form-codes',
+    'substance-form-relationships',
+    'substance-form-notes',
+    'substance-form-properties',
+    'substance-form-references',
   ]
 };
