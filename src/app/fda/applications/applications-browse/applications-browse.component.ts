@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { ApplicationService } from '../service/application.service';
 import { ApplicationSrs } from '../model/application.model';
@@ -8,12 +8,17 @@ import * as _ from 'lodash';
 import { Facet } from '@gsrs-core/utils';
 import { LoadingService } from '@gsrs-core/loading';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSidenav } from '@angular/material/sidenav';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import {AuthService} from '@gsrs-core/auth/auth.service';
 import { Location, LocationStrategy } from '@angular/common';
+import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
+import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-applications-browse',
@@ -21,10 +26,15 @@ import { Location, LocationStrategy } from '@angular/common';
   styleUrls: ['./applications-browse.component.scss']
 })
 export class ApplicationsBrowseComponent implements OnInit {
+  private privateSearchTerm?: string;
   public _searchTerm?: string;
   public applications: Array<ApplicationSrs>;
   public facets: Array<Facet> = [];
+  private privateFacetParams: SubstanceFacetParam;
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
+  //view = 'cards';
+  hasBackdrop = false;
+  facetString: string;
   pageIndex: number;
   pageSize: number;
   jumpToValue: string;
@@ -34,6 +44,13 @@ export class ApplicationsBrowseComponent implements OnInit {
   isAdmin: boolean;
   displayedColumns: string[];
   dataSource = [];
+  public facetBuilder: SubstanceFacetParam;
+  //  public order: string;
+ // public sortValues = searchSortValues;
+ // showAudit: boolean;
+ // public facetBuilder: SubstanceFacetParam;
+  //searchText: string[] = [];
+  //private overlayContainer: HTMLElement;
 
   constructor(
     private applicationService: ApplicationService,
@@ -42,44 +59,88 @@ export class ApplicationsBrowseComponent implements OnInit {
     private locationStrategy: LocationStrategy,
     private router: Router,
     private sanitizer: DomSanitizer,
+    public gaService: GoogleAnalyticsService,
     public configService: ConfigService,
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
-    private authService: AuthService
-  ) {
+    private authService: AuthService,
+   // private overlayContainerService: OverlayContainer,
+  )  {
+    this.privateFacetParams = {};
+    this.facetBuilder = {};
   }
 
   ngOnInit() {
-
-    //this.applicationService.getApplications();
-    
-    /*
-    this.authService.hasRolesAsync('admin').subscribe(response => {
-      this.isAdmin = response;
-      // console.log('clinical-trial-edit isAdmin: ' + this.isAdmin);
-      if (this.isAdmin) {
-        this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated', 'delete'];
-       } else {
-         this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated'];
-       }
-    });
-    */
-
+    this.gaService.sendPageView('Browse Substances');
     this.pageSize = 10;
     this.pageIndex = 0;
     this._searchTerm = '';
+    /*this.facets = [];*/
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
+    navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
+    navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
+    navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
+    navigationExtras.queryParams['facets'] = this.activatedRoute.snapshot.queryParams['facets'] || '';
+    navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
+    this.location.replaceState(
+      this.router.createUrlTree(
+        [this.locationStrategy.path().split('?')[0].replace(environment.baseHref, '')],
+        navigationExtras
+      ).toString()
+    );
 
     this.activatedRoute.queryParamMap.subscribe(params => {
+
+      this.privateSearchTerm = params.get('search') || '';
+
       if (params.get('pageSize')) {
         this.pageSize = parseInt(params.get('pageSize'), null);
       }
       if (params.get('pageIndex')) {
         this.pageIndex = parseInt(params.get('pageIndex'), null);
       }
+      this.facetString = params.get('facets') || '';
+      this.facetsFromParams();
+
       this.searchApplications();
     });
-    
-  } 
+
+  }
+
+  facetsFromParams() {
+    if (this.facetString !== '') {
+      const categoryArray = this.facetString.split(',');
+      for (let i = 0; i < (categoryArray.length); i++) {
+        const categorySplit = categoryArray[i].split('*');
+        const category = categorySplit[0];
+        const fieldsArr = categorySplit[1].split('+');
+        const params: { [facetValueLabel: string]: boolean } = {};
+        let hasSelections = false;
+        for (let j = 0; j < fieldsArr.length; j++) {
+          const field = fieldsArr[j].split('.');
+          if (field[1] === 'true') {
+            params[field[0]] = true;
+            hasSelections = true;
+          } else if (field[1] === 'false') {
+            params[field[0]] = false;
+            hasSelections = true;
+          }
+        }
+        if (hasSelections === true) {
+          this.facetBuilder[category] = { 'params': params, hasSelections: true };
+        }
+      }
+      this.privateFacetParams = this.facetBuilder;
+    }
+
+  }
+
+  
 
   searchApplications() {
     this.loadingService.setLoading(true);
@@ -87,7 +148,8 @@ export class ApplicationsBrowseComponent implements OnInit {
     this.applicationService.getApplications(
       skip,
       this.pageSize,
-      this._searchTerm
+      this._searchTerm,
+      this.privateFacetParams,
     )
       .subscribe(pagingResponse => {
         this.isError = false;
@@ -97,8 +159,9 @@ export class ApplicationsBrowseComponent implements OnInit {
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
         this.facets = [];
+        console.log('Facet Count' + pagingResponse.facets.length);
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-          // this.populateFacets(pagingResponse.facets);
+           this.populateFacets(pagingResponse.facets);
         }
       }, error => {
         const notification: AppNotification = {
@@ -118,12 +181,6 @@ export class ApplicationsBrowseComponent implements OnInit {
   }
 
 
-  changePage(pageEvent: PageEvent) {
-    this.pageSize = pageEvent.pageSize;
-    this.pageIndex = pageEvent.pageIndex;
-    //this.searchClinicalTrials();
-  }
-
   setSearchTermValue() {
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -131,55 +188,127 @@ export class ApplicationsBrowseComponent implements OnInit {
     this.searchApplications();
   }
 
-  updateFacetSelection(event: MatCheckboxChange, facetName: string, facetValueLabel: string): void {
+  updateFacetSelection(
+    event: MatCheckboxChange,
+    facetName: string,
+    facetValueLabel: string,
+    include: boolean
+  ): void {
 
-    if (this._facetParams[facetName] == null) {
-      this._facetParams[facetName] = {};
+    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName} > ${facetValueLabel}`;
+    const eventValue = event.checked ? 1 : 0;
+    const eventAction = include ? 'include' : 'exclude';
+    this.gaService.sendEvent('substancesFiltering', `check:facet-${eventAction}`, eventLabel, eventValue);
+
+    if (this.privateFacetParams[facetName] == null) {
+      this.privateFacetParams[facetName] = {
+        params: {}
+      };
     }
 
-    this._facetParams[facetName][facetValueLabel] = event.checked;
+    if (include) {
+      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked || null;
+    } else {
+      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked === true ? false : null;
+    }
 
-    let facetHasSelectedValue = false;
+    let hasSelections = false;
+    let hasExcludeOption = false;
+    let includeOptionsLength = 0;
 
-    const facetValueKeys = Object.keys(this._facetParams[facetName]);
+    const facetValueKeys = Object.keys(this.privateFacetParams[facetName].params);
     for (let i = 0; i < facetValueKeys.length; i++) {
-      if (this._facetParams[facetName][facetValueKeys[i]]) {
-        facetHasSelectedValue = true;
-        break;
+      if (this.privateFacetParams[facetName].params[facetValueKeys[i]] != null) {
+        hasSelections = true;
+        if (this.privateFacetParams[facetName].params[facetValueKeys[i]] === false) {
+          hasExcludeOption = true;
+        } else {
+          includeOptionsLength++;
+        }
       }
     }
 
-    if (!facetHasSelectedValue) {
-      this._facetParams[facetName] = undefined;
-    }
-    this.pageIndex = 0;
-    //this.searchClinicalTrials();
+    this.privateFacetParams[facetName].hasSelections = hasSelections;
 
+    if (!hasExcludeOption && includeOptionsLength > 1) {
+      this.privateFacetParams[facetName].showAllMatchOption = true;
+    } else {
+      this.privateFacetParams[facetName].showAllMatchOption = false;
+      this.privateFacetParams[facetName].isAllMatch = false;
+    }
+
+    this.pageIndex = 0;
+  }
+
+
+  clearFacetSelection(
+    facetName?: string
+  ) {
+
+    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `facet: ${facetName}`;
+    let eventValue = 0;
+
+    const facetKeys = facetName != null ? [facetName] : Object.keys(this.privateFacetParams);
+
+    console.log('FACET Clear: ' + facetKeys );
+    if (facetKeys != null && facetKeys.length) {
+      facetKeys.forEach(facetKey => {
+        console.log(facetKey);
+        console.log(this.privateFacetParams[facetKey]);
+        console.log(this.privateFacetParams[facetKey].params);
+        if (this.privateFacetParams[facetKey] != null && this.privateFacetParams[facetKey].params != null) {
+          const facetValueKeys = Object.keys(this.privateFacetParams[facetKey].params);
+          facetValueKeys.forEach(facetParam => {
+            eventValue++;
+            console.log(this.privateFacetParams[facetKey].params[facetParam]);
+            this.privateFacetParams[facetKey].params[facetParam] = null;
+          });
+
+          this.privateFacetParams[facetKey].isAllMatch = false;
+          this.privateFacetParams[facetKey].showAllMatchOption = false;
+          this.privateFacetParams[facetKey].hasSelections = false;
+        }
+      });
+    }
+
+    this.gaService.sendEvent('substancesFiltering2', 'button:clear-facet', eventLabel, eventValue);
   }
 
   populateUrlQueryParameters(): void {
-  const navigationExtras: NavigationExtras = {
-    queryParams: {}
-  };
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
 
-  const catArr = [];
-  let facetString = '';
-  facetString = catArr.join(',');
-  navigationExtras.queryParams['pageSize'] = this.pageSize;
-  navigationExtras.queryParams['pageIndex'] = this.pageIndex;
-  navigationExtras.queryParams['facets'] = facetString;
-  navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
-  navigationExtras.queryParams['searchTerm'] = this._searchTerm;
+    const catArr = [];
+    let facetString = '';
+    for (const key of Object.keys(this.privateFacetParams)) {
+      if (this.privateFacetParams[key].hasSelections === true) {
+        const cat = this.privateFacetParams[key];
+        const valArr = [];
+        for (const subkey of Object.keys(cat.params)) {
+          if (typeof cat.params[subkey] === 'boolean') {
+            valArr.push(subkey + '.' + cat.params[subkey]);
+          }
+        }
+        catArr.push(key + '*' + valArr.join('+'));
+      }
+    }
+    facetString = catArr.join(',');
+    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    navigationExtras.queryParams['pageSize'] = this.pageSize;
+    navigationExtras.queryParams['pageIndex'] = this.pageIndex;
+    navigationExtras.queryParams['facets'] = facetString;
+    navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
 
-  this.location.replaceState(
-    this.router.createUrlTree(
-      [this.locationStrategy.path().split('?')[0].replace(this.configService.environment.baseHref, '')],
+    this.router.navigate(
+      [],
       navigationExtras
-    ).toString()
-  );
+    );
   }
 
+
   private populateFacets(facets: Array<Facet>): void {
+
     if (this.configService.configData.facets != null) {
       if (this.configService.configData.facets.default != null && this.configService.configData.facets.default.length) {
         this.configService.configData.facets.default.forEach(facet => {
@@ -207,6 +336,8 @@ export class ApplicationsBrowseComponent implements OnInit {
       }
     }
 
+    this.facets = facets;
+
     if (this.facets.length < 15) {
 
       const numFillFacets = 20 - this.facets.length;
@@ -224,13 +355,36 @@ export class ApplicationsBrowseComponent implements OnInit {
     }
   }
 
+  applyFacetsFilter(facetName: string) {
+    console.log('INSIDE applyFacetsFilter: ' + facetName);
+
+    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
+    let eventValue = 0;
+    Object.keys(this.privateFacetParams).forEach(key => {
+      if (this.privateFacetParams[key].params) {
+        eventValue = eventValue + Object.keys(this.privateFacetParams[key].params).length || 0;
+      }
+    });
+    this.gaService.sendEvent('substancesFiltering', 'button:apply-facet', eventLabel, eventValue);
+    this.populateUrlQueryParameters();
+  }
+
+  sendFacetsEvent(event: MatCheckboxChange, facetName: string): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
+    const eventValue = event.checked ? 1 : 0;
+    this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
+  }
+
   get searchTerm(): string {
-    return this._searchTerm;
+    return this.privateSearchTerm;
   }
 
-  get facetParams(): { [facetName: string]: { [facetValueLabel: string]: boolean } } {
-    return this._facetParams;
-  }
+ // get facetParams(): { [facetName: string]: { [facetValueLabel: string]: boolean } } {
+ //   return this._facetParams;
+//  }
 
+  get facetParams(): SubstanceFacetParam | { showAllMatchOption?: boolean } {
+    return this.privateFacetParams;
+  }
 
 }

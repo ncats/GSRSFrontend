@@ -1,11 +1,10 @@
 <br><br><br>
+<!--
 <h3>Browse Applications</h3>
-
-{{facets.length}}
-
+-->
 <mat-sidenav-container>
   
-  <mat-sidenav #matSideNavInstance mode="side" opened="false">
+  <mat-sidenav mode="side" opened>
 
     <mat-accordion multi="true">
       <mat-expansion-panel *ngFor="let facet of facets" [expanded]="facetParams[facet.name] != null">
@@ -15,78 +14,125 @@
               {{facet.name}}
             </mat-panel-title>
         </mat-expansion-panel-header>
-      
-      
-      
-      </mat-expansion-panel>  
+
+        <div class="facet-value" *ngFor="let value of facet.values">
+          <div class="facet-value-checkbox">
+              <mat-checkbox class="include" matTooltip="Include" (change)="updateFacetSelection($event, facet.name, value.label, true)"
+                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
+              </mat-checkbox>
+              <mat-checkbox class="exclude" matTooltip="Exclude" (change)="updateFacetSelection($event, facet.name, value.label, false)"
+                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
+              </mat-checkbox>
+          </div>
+          <div class="facet-value-label">
+            <span *ngIf = "value.label == 'approved'">
+              Validated (UNII)
+            </span>
+            <span *ngIf = "value.label != 'approved'">
+              {{value.label}}
+            </span>
+          </div>
+          <div class="middle-fill"></div>
+          <div class="facet-value-count">
+            {{value.count}}
+          </div>  
+        </div>
+          
+        <div class="facet-actions">
+          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch"
+            (click)="sendFacetsEvent($event, facet.name)">
+            All Match
+          </mat-checkbox>
+          <div class="pull-right">
+            <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
+              Clear
+            </button>
+            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading" (click)="applyFacetsFilter(facet.name)">
+              Apply
+            </button>
+          </div>
+        </div>
+          
+      </mat-expansion-panel>        
     </mat-accordion>  
+  
   </mat-sidenav>
+
 
   <mat-sidenav-content>
  
+    
     <!-- Pagination -->
     <div>
-      <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
-      (page)="changePage($event)">
-      </mat-paginator>
-    </div>
-
-    <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
-      <mat-icon svgIcon="chevron_right"></mat-icon>
-    </button>
-
-    <!-- Display Content Details -->
-    <div class="substance-cards">
-      
-      <mat-card *ngFor="let application of applications">
+        <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
+        (page)="changePage($event)">
+        </mat-paginator>
+      </div>
+  
+      <!--
+      <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+        <mat-icon svgIcon="chevron_right"></mat-icon>
+      </button>
+    -->
+  
+      <!-- Display Content Details -->
+      <div class="substance-cards">
         
-        <mat-card-title>
-          <a class="substance-name" [routerLink]="['/applicationssrs', application.id]">
-            {{application.appType}}&nbsp;{{application.appNumber}}
-          </a>
-          <span class="middle-fill"></span>
-          <a class="approval-id">
-            Status: {{application.status}}
-          </a>
-        </mat-card-title>
-        
-        <mat-card-content>
-            <div class="substance-data">
-                <div class="label">App Sub Type:</div>
-                <div>
-                  <span class="value">{{application.appSubType}}</span>
-                </div>
-            </div>
-            <div class="substance-data">
-                <div class="label">Submit Date:</div>
-                <div>
-                  <span class="value">{{application.submitDate}}</span>
-                </div>
-            </div>
-            <div class="substance-data">
-                <div class="label">Status Date:</div>
-                <div>
-                  <span class="value">{{application.statusDate}}</span>
-                </div>
-            </div>
-            <div class="substance-data">
-                <div class="label">Center:</div>
-                <div>
-                  <span class="value">{{application.center}}</span>
-                </div>
-            </div>
-            <div class="substance-data" *ngIf="application.title">
-                <div class="label">Title:</div>
-                <div>
-                  <span class="value">{{application.title}}</span>
-                </div>
-            </div>
-
-        </mat-card-content>
-
-      </mat-card>  
-    </div>
-
+        <mat-card *ngFor="let application of applications">
+          
+          <mat-card-title>
+            <a class="substance-name" [routerLink]="['/applicationssrs', application.id]">
+              {{application.appType}}&nbsp;{{application.appNumber}}
+            </a>
+            <span class="middle-fill"></span>
+            <a class="approval-id">
+              Status: {{application.status}}
+            </a>
+          </mat-card-title>
+          
+          <mat-card-content>
+              <div class="substance-data">
+                  <div class="label">Sponsor Name:</div>
+                  <div>
+                    <span class="value">{{application.sponsorName}}</span>
+                  </div>
+              </div>
+              <div class="substance-data">
+                  <div class="label">App Sub Type:</div>
+                  <div>
+                    <span class="value">{{application.appSubType}}</span>
+                  </div>
+              </div>
+              <div class="substance-data">
+                  <div class="label">Submit Date:</div>
+                  <div>
+                    <span class="value">{{application.submitDate}}</span>
+                  </div>
+              </div>
+              <div class="substance-data">
+                  <div class="label">Status Date:</div>
+                  <div>
+                    <span class="value">{{application.statusDate}}</span>
+                  </div>
+              </div>
+              <div class="substance-data">
+                  <div class="label">Center:</div>
+                  <div>
+                    <span class="value">{{application.center}}</span>
+                  </div>
+              </div>
+              <div class="substance-data" *ngIf="application.title">
+                  <div class="label">Title:</div>
+                  <div>
+                    <span class="value">{{application.title}}</span>
+                  </div>
+              </div>
+  
+          </mat-card-content>
+  
+        </mat-card>  
+      </div>
+  
   </mat-sidenav-content>  
 
 </mat-sidenav-container>

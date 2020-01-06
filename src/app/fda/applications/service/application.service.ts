@@ -5,6 +5,8 @@ import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { ApplicationSrs } from '../model/application.model';
+import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
+import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
 
 @Injectable(
   {
@@ -19,25 +21,28 @@ export class ApplicationService extends BaseHttpService {
     public configService: ConfigService
   ) {
     super(configService);
-  } 
+  }
 
   getApplications(
     skip: number = 0,
     pageSize: number = 10,
-    searchTerm?: string
+    searchTerm?: string,
+    facets?: SubstanceFacetParam
   ): Observable<PagingResponse<ApplicationSrs>> {
-    let params = new HttpParams();
+    let params = new SubstanceHttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
     if (searchTerm !== null && searchTerm !== '') {
       params = params.append('q', searchTerm);
     }
+
+    params = params.appendFacetParams(facets);
+
     const url = `${this.apiBaseUrl}applicationssrs/search`;
     const options = {
       params: params
     };
     return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
   }
-  
 
 } //class

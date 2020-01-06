@@ -88,7 +88,6 @@ export class GoogleAnalyticsService {
   }
 
   sendEvent(eventCategory?: string, eventAction?: string, eventLabel?: string, eventValue?: number): void {
-
     if (this.isActive) {
       const sendFields: SendFields = {
         hitType: 'event',
