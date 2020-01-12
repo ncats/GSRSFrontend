@@ -60,8 +60,7 @@
 
 
   <mat-sidenav-content>
- 
-    
+     
     <!-- Pagination -->
     <div>
         <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
@@ -84,6 +83,7 @@
             <a class="substance-name" [routerLink]="['/applicationssrs', application.id]">
               {{application.appType}}&nbsp;{{application.appNumber}}
             </a>
+            <span class="center">Center:&nbsp;{{application.center}}</span>
             <span class="middle-fill"></span>
             <a class="approval-id">
               Status: {{application.status}}
@@ -129,12 +129,6 @@
               <div class="label">Status Date:</div>
               <div>
                 <span class="value">{{application.statusDate}}</span>
-              </div>
-            </div>
-            <div class="substance-data">
-              <div class="label">Center:</div>
-              <div>
-                <span class="value">{{application.center}}</span>
               </div>
             </div>
               <div class="substance-data">

@@ -7,39 +7,39 @@
 <div class="responsive">
   <table mat-table [dataSource]="paged">
 
-    <ng-container matColumnDef="ndc">
+    <ng-container matColumnDef="Product NDC">
       <th mat-header-cell *matHeaderCellDef> Product NDC </th>
-      <td mat-cell *matCellDef="let product"> <a [routerLink]="['/products', product.id]">11111-0000</a> </td>
+      <td mat-cell *matCellDef="let product"> <div innerHTML="{{product['Product NDC']}}"></div></td>
     </ng-container>
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Product Name </th>
-      <td mat-cell *matCellDef="let product"> {{product.proprietaryName}} </td>
+      <td mat-cell *matCellDef="let product"> {{product['Product Name']}} </td>
     </ng-container>
 
     <ng-container matColumnDef="nonProprietaryName">
       <th mat-header-cell *matHeaderCellDef> Non Proprietary Name </th>
-      <td mat-cell *matCellDef="let product"> {{product.nonProprietaryName}} </td>
+      <td mat-cell *matCellDef="let product"> {{product['Non Proprietary Name']}} </td>
     </ng-container>
 
     <ng-container matColumnDef="labelerName">
       <th mat-header-cell *matHeaderCellDef> Labeler Name </th>
-      <td mat-cell *matCellDef="let product"> Labeler name </td>
+      <td mat-cell *matCellDef="let product"> {{product['Labeler Name']}} </td>
     </ng-container>
 
     <ng-container matColumnDef="applicationNumber">
       <th mat-header-cell *matHeaderCellDef> Application Number </th>
-      <td mat-cell *matCellDef="let product"> {{product.appNumber}} </td>
+      <td mat-cell *matCellDef="let product"> {{product['Application Number']}} </td>
     </ng-container>
 
     <ng-container matColumnDef="nameType">
       <th mat-header-cell *matHeaderCellDef> Product Name Type </th>
-      <td mat-cell *matCellDef="let product"> Name Type </td>
+      <td mat-cell *matCellDef="let product"> {{product['Product Name Type']}} </td>
     </ng-container>
 
     <ng-container matColumnDef="ingredientType">
       <th mat-header-cell *matHeaderCellDef> Ingredient Type </th>
-      <td mat-cell *matCellDef="let product"> Ingredient Type </td>
+      <td mat-cell *matCellDef="let product"> {{product['Ingredient Type']}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

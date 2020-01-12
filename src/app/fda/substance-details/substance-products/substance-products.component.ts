@@ -11,7 +11,7 @@ import { ProductService } from '../../product/product.service';
 export class SubstanceProductsComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
   public products: Array<any> = [];
   public displayedColumns: string[] = [
-    'ndc',
+    'Product NDC',
     'name',
     'nonProprietaryName',
     'labelerName',

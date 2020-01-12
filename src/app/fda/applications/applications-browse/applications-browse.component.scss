@@ -145,14 +145,21 @@
   white-space: normal;
 
   .substance-name {
-      color: #448aff;
-      padding-right: 10px;
+    color: #448aff;
+    padding-right: 10px;
   }
 
   .approval-id {
-      font-size: 16px;
-      color: red;
+    font-size: 16px;
+    color: red;
   }
+
+  .center {
+    font-size: 15px;
+    color: blue;
+    padding-left: 100px;
+    display: inline-block;
+}
 }
 
 .facet-value {
