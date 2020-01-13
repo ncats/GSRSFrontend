@@ -49,29 +49,15 @@ export class ApplicationService extends BaseHttpService {
   getSubstanceApplications(
     substanceId: string
   ): Observable<Array<any>> {
+    const url = 'http://localhost:9000/ginas/app/applicationListByBdnum?bdnum=0027112AA';
 
-    console.log('getSubApp');
-    let params = new SubstanceHttpParams();
-
-    substanceId = '0052175AA';
-
-    // params = params.appendFacetParams(facets);
-
-    const url = `${this.apiBaseUrl}applicationssrs/search?q=0052175AA`;
-    //const url = `${this.apiBaseUrl}applicationssrs/search?q=0052175AA`;
-     // + encodeURIComponent(substanceId) + '$"&fdim=1';
-
-    //const url = `${this.apiBaseUrl}applicationssrs/search`;
-    const options = {
-      params: params
-    };
     return this.http.get<Array<any>>(url).pipe(
-      map(products => {
-        console.log("AAA: " + products.content.length);
-        return products.content;
+      map(applications => {
+        console.log("Applications Length: " + applications.length);
+       return applications;
       })
     );
-  
+
   }
-  
+
 } //class

@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SubstanceApplicationComponent } from './substance-application/substance-application.component';
-
+import { SubstanceClinicalTrialsComponent } from './substance-clinical-trials/substance-clinical-trials.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -24,7 +24,8 @@ import { SubstanceApplicationComponent } from './substance-application/substance
   ],
   declarations: [
     SubstanceProductsComponent,
-    SubstanceApplicationComponent
+    SubstanceApplicationComponent,
+    SubstanceClinicalTrialsComponent
   ]
 })
 export class SubstanceProductsModule { }

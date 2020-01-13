@@ -11,12 +11,12 @@ import { ProductService } from '../../product/product.service';
 export class SubstanceProductsComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
   public products: Array<any> = [];
   public displayedColumns: string[] = [
-    'Product NDC',
+    'productNDC',
     'name',
     'nonProprietaryName',
     'labelerName',
     'applicationNumber',
-    'nameType',
+    'productNameType',
     'ingredientType'
   ];
 
@@ -36,6 +36,7 @@ export class SubstanceProductsComponent extends SubstanceCardBaseFilteredList<an
   getSubstanceProducts(): void {
     this.productService.getSubstanceProducts(this.substance.uuid).subscribe(products => {
       this.products = products;
+       console.log("product Length: " + products.length);
       this.filtered = products;
       this.pageChange();
 

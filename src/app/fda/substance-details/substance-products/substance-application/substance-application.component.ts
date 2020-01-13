@@ -23,13 +23,13 @@ export class SubstanceApplicationComponent extends SubstanceCardBaseFilteredList
 
   ngOnInit() {
     console.log("inside app substance details: ");
-    this.getSubstanceApplications();
+   
     if (this.substance) {
       console.log("SUBSTANCE");
     }
-    if (this.substance && this.substance.uuid) {
+    //if (this.substance && this.substance.uuid) {
       this.getSubstanceApplications();
-    }
+   // }
   }
 
   getSubstanceApplications(): void {
