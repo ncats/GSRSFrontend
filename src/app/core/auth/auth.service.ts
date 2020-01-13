@@ -141,4 +141,36 @@ export class AuthService extends BaseHttpService {
       }
     });
   }
+
+  hasAnyRoles(...roles: Array<Role|string>): boolean {
+    const rolesList = [...roles];
+
+    if (this._auth && this._auth.roles && rolesList && rolesList.length) {
+      for (let i = 0; i < rolesList.length; i++) {
+        let role = rolesList[i].toLowerCase();
+        role = role.charAt(0).toUpperCase() + role.slice(1);
+        if (this._auth.roles.includes(role as Role)) {
+          return true;
+        }
+      }
+    } else {
+      return false;
+    }
+    return false;
+  }
+
+  hasAnyRolesAsync(...roles: Array<Role|string>): Observable<boolean> {
+    return new Observable(observer => {
+      if (this.auth != null) {
+        observer.next(this.hasAnyRoles(...roles));
+        observer.complete();
+      } else {
+        const subscription = this.getAuth().subscribe(auth => {
+          observer.next(this.hasAnyRoles(...roles));
+          observer.complete();
+          subscription.unsubscribe();
+        });
+      }
+    });
+  }
 }
