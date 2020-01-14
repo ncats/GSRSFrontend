@@ -41,7 +41,7 @@ import { LoadingModule } from './loading/loading.module';
 import { MainNotificationModule } from './main-notification/main-notification.module';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { StructureEditorModule } from './structure-editor/structure-editor.module';
-import { FileSelectModule } from 'dist/file-select';
+import { FileSelectModule } from 'file-select';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic-component-loader.module';
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
