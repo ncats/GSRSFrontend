@@ -33,10 +33,12 @@
         "dist/ketcher-wrapper/*"
       ],
       "file-select": [
-        "/dist/file-select"
+        "dist/file-select",
+        "projects/file-select"
       ],
       "file-select/*": [
-        "/dist/file-select/*"
+        "dist/file-select/*",
+        "projects/file-select*"
       ],
       "@gsrs-core/*": [
         "src/app/core/*"
