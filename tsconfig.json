@@ -36,7 +36,7 @@
         "/dist/file-select"
       ],
       "file-select/*": [
-        "dist/file-select/*"
+        "/dist/file-select/*"
       ],
       "@gsrs-core/*": [
         "src/app/core/*"
