@@ -35,7 +35,7 @@ export class GoogleAnalyticsService {
     window['GoogleAnalyticsObject'] = this.analyticsObjectKey;
 
     window[this.analyticsObjectKey] = window[this.analyticsObjectKey] || function() {
-      (window[analyticsObjectKey].q = window[analyticsObjectKey] && window[analyticsObjectKey].q || []).push(arguments);
+      (window[analyticsObjectKey]['q'] = window[analyticsObjectKey] && window[analyticsObjectKey]['q'] || []).push(arguments);
     };
 
     window[this.analyticsObjectKey].l = + new Date;

@@ -44,7 +44,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   totalSubstances: number;
   isLoading = true;
   isError = false;
-  @ViewChild('matSideNavInstance') matSideNav: MatSidenav;
+  @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   view = 'cards';
   facetString: string;
