@@ -10,6 +10,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SubstanceApplicationComponent } from './substance-application/substance-application.component';
 import { SubstanceClinicalTrialsComponent } from './substance-clinical-trials/substance-clinical-trials.component';
+import { SubstanceAdverseEventPTComponent } from './substance-adverseevent/adverseeventpt/substance-adverseeventpt.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -25,7 +26,8 @@ import { SubstanceClinicalTrialsComponent } from './substance-clinical-trials/su
   declarations: [
     SubstanceProductsComponent,
     SubstanceApplicationComponent,
-    SubstanceClinicalTrialsComponent
+    SubstanceClinicalTrialsComponent,
+    SubstanceAdverseEventPTComponent,
   ]
 })
 export class SubstanceProductsModule { }

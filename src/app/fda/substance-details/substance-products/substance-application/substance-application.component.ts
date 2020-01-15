@@ -11,9 +11,9 @@ import { ApplicationService } from '../../../applications/service/application.se
 
 export class SubstanceApplicationComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
   public applications: Array<any> = [];
-  displayedColumns: string[] = ['appType', 'appNumber', 'center', 'sponsorName', 'applicationStatus', 'applicationSubType'];
-  //, 'applicationNumber', 'center', 'productName', 'sponsorName', 'applicationStatus', 'applicationSubType'];
-
+  displayedColumns: string[] = [
+    'appType', 'appNumber', 'center', 'sponsorName', 'applicationStatus', 'applicationSubType'];
+ 
   constructor(
     public gaService: GoogleAnalyticsService,
     private applicationService: ApplicationService
