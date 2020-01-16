@@ -6,6 +6,7 @@ import { BaseHttpService } from '@gsrs-core/base';
 import { ClinicalTrial } from './clinical-trial.model';
 import { BdnumNameAll } from './clinical-trial.model';
 import { PagingResponse } from '@gsrs-core/utils';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
@@ -115,4 +116,19 @@ export class ClinicalTrialService extends BaseHttpService {
     const x = this.http.put<ClinicalTrial>(url, body, options);
     return x;
   }
+
+  getSubstanceClinicalTrials(substanceId: string
+  ): Observable<Array<any>> {
+    const url = 'http://localhost:9000/ginas/app/clinicalTrialListByBdnum?bdnum=0249729AA';
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(clinicaltrials => {
+        console.log("Clinical Trials Length: " + clinicaltrials.length);
+       return clinicaltrials;
+      })
+    );
+  }
+  
+
+
 }

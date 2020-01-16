@@ -16,7 +16,17 @@ export class ProductService extends BaseHttpService {
   }
 
   getSubstanceProducts(substanceId: string): Observable<Array<any>> {
-    return this.http.get<Array<any>>('/assets/data/gsrs-products-test.json');
+ 
+    const url = 'http://localhost:9000/ginas/app/productListBySubstanceUuid?substanceUuid=' + substanceId;
+    //const url = `${this.apiBaseUrl}productelist/`;
+    return this.http.get<Array<any>>(url)
+    .pipe(
+      map(products => {
+        console.log("Products length: " + products.length);
+        return products;
+      })
+    );
+    //return this.http.get<Array<any>>('/assets/data/gsrs-products-test.json');
   }
 
   getProduct(productId: number): Observable<any> {

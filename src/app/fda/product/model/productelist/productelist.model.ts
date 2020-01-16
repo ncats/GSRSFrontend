@@ -1,25 +1,9 @@
-export interface ApplicationSrs {
-  id: number;
-  appType: string;
-  appNumber: string;
-  title: string;
-  sponsorName: string;
-  nonProprietaryName: string;
-  submitDate: number;
-  appSubType: string;
-  divisionClassDesc: string;
-  status: string;
-  center: string;
-  source: string;
-  publicDomain: string;
-  version: number;
-  provenance: string;
-  externalTitle: string;
-  statusDate: number;
-  applicationProductList: Array<ProductSrs>;
-  applicationIndicationList: Array<ApplicationIndicationSrs>;
+export interface ProductElist {
+  productId: string;
+  productNDC: string;
 }
 
+/*
 export interface ProductSrs {
   id: number;
   productName: string;
@@ -62,4 +46,5 @@ export interface ApplicationIndicationSrs {
   internalVersion: number;
 
 }
+*/
 

@@ -331,6 +331,12 @@
         "filterName": "hasCredentials",
         "propertyToCheck": "admin"
       }]
+    },
+    {
+      "card": "fda-substance-product",
+      "title": "Product",
+      "filters": [{
+      }]
     }
   ],
   "facets": {
