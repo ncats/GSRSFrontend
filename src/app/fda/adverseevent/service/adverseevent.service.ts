@@ -4,7 +4,7 @@ import { Observable, throwError, of } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
-import { ApplicationSrs } from '../model/application.model';
+// import { ApplicationSrs } from '../model/application.model';
 import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
 import { map } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { map } from 'rxjs/operators';
   }
 )
 
-export class ApplicationService extends BaseHttpService {
+export class AdverseEventService extends BaseHttpService {
 
   constructor(
     public http: HttpClient,
@@ -24,6 +24,7 @@ export class ApplicationService extends BaseHttpService {
     super(configService);
   }
 
+  /*
   getApplications(
     skip: number = 0,
     pageSize: number = 10,
@@ -45,19 +46,51 @@ export class ApplicationService extends BaseHttpService {
     };
     return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
   }
+*/
 
-  getSubstanceApplications(
+  getSubstanceAdverseEventPt(
     substanceId: string
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/applicationListByBdnum?bdnum=0027112AA';
+    const url = 'http://localhost:9000/ginas/app/adverseEventPtListByBdnum?bdnum=0011303AA';
 
     return this.http.get<Array<any>>(url).pipe(
-      map(applications => {
-        console.log("Applications Length: " + applications.length);
-       return applications;
+      map(adverseevent => {
+        console.log("Adverse Event PT Length: " + adverseevent.length);
+       return adverseevent;
+      })
+    );
+  }
+
+
+  getSubstanceAdverseEventDme(
+    substanceId: string
+  ): Observable<Array<any>> {
+    const url = 'http://localhost:9000/ginas/app/adverseEventDmeListByBdnum?bdnum=0011303AA';
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(adverseevent => {
+        console.log("Adverse Event PT Length: " + adverseevent.length);
+       return adverseevent;
       })
     );
 
   }
+
+  getSubstanceAdverseEventCvm(
+    substanceId: string
+  ): Observable<Array<any>> {
+    const url = 'http://localhost:9000/ginas/app/adverseEventCvmListByBdnum?bdnum=0011303AA';
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(adverseevent => {
+        console.log("Adverse Event PT Length: " + adverseevent.length);
+       return adverseevent;
+      })
+    );
+
+  }
+
+
+
 
 } //class
