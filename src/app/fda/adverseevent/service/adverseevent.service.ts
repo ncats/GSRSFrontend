@@ -48,10 +48,24 @@ export class AdverseEventService extends BaseHttpService {
   }
 */
 
-  getSubstanceAdverseEvent(
+  getSubstanceAdverseEventPt(
     substanceId: string
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventPTListByBdnum?bdnum=0011303AA';
+    const url = 'http://localhost:9000/ginas/app/adverseEventPtListByBdnum?bdnum=0011303AA';
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(adverseevent => {
+        console.log("Adverse Event PT Length: " + adverseevent.length);
+       return adverseevent;
+      })
+    );
+  }
+
+
+  getSubstanceAdverseEventDme(
+    substanceId: string
+  ): Observable<Array<any>> {
+    const url = 'http://localhost:9000/ginas/app/adverseEventDmeListByBdnum?bdnum=0011303AA';
 
     return this.http.get<Array<any>>(url).pipe(
       map(adverseevent => {
@@ -61,6 +75,22 @@ export class AdverseEventService extends BaseHttpService {
     );
 
   }
+
+  getSubstanceAdverseEventCvm(
+    substanceId: string
+  ): Observable<Array<any>> {
+    const url = 'http://localhost:9000/ginas/app/adverseEventCvmListByBdnum?bdnum=0011303AA';
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(adverseevent => {
+        console.log("Adverse Event PT Length: " + adverseevent.length);
+       return adverseevent;
+      })
+    );
+
+  }
+
+
 
 
 } //class
