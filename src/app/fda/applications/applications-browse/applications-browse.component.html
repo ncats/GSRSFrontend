@@ -63,33 +63,6 @@
      
     <!-- Pagination -->
     <div>
-<<<<<<< HEAD
-      <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
-      (page)="changePage($event)">
-      </mat-paginator>
-    </div>
-
-    <!--
-    <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
-      <mat-icon svgIcon="chevron_right"></mat-icon>
-    </button>
-  -->
-  
-    <!-- Display Content Details -->
-    <div class="substance-cards">
-      
-      <mat-card *ngFor="let application of applications">
-        
-        <mat-card-title>
-          <a class="substance-name" [routerLink]="['/applicationssrs', application.id]">
-            {{application.appType}}&nbsp;{{application.appNumber}}
-          </a>
-          <span class="middle-fill"></span>
-          <a class="approval-id">
-            Status: {{application.status}}
-          </a>
-        </mat-card-title>
-=======
         <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
         (page)="changePage($event)">
         </mat-paginator>
@@ -103,7 +76,6 @@
   
       <!-- Display Content Details -->
       <div class="substance-cards">
->>>>>>> GSRSFrontend_hub_Archana2
         
         <mat-card *ngFor="let application of applications">
           

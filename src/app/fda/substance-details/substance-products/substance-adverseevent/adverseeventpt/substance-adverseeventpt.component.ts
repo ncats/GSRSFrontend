@@ -9,7 +9,7 @@ import { AdverseEventService } from '../../../../adverseevent/service/adverseeve
   styleUrls: ['./substance-adverseeventpt.component.scss']
 })
 
-export class SubstanceAdverseEventPTComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
+export class SubstanceAdverseEventPtComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
   public adverseevents: Array<any> = [];
   displayedColumns: string[] = [
     'ptTerm',
@@ -39,7 +39,7 @@ export class SubstanceAdverseEventPTComponent extends SubstanceCardBaseFilteredL
   }
 
   getSubstanceAdverseEvent(): void {
-    this.adverseEventService.getSubstanceAdverseEvent('AAAAAAA').subscribe(adverseevents => {
+    this.adverseEventService.getSubstanceAdverseEventPt('A').subscribe(adverseevents => {
       console.log("AE PT LENGTH: " + adverseevents.length);
       this.adverseevents = adverseevents;
       this.filtered = adverseevents;

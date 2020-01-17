@@ -10,9 +10,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SubstanceApplicationComponent } from './substance-application/substance-application.component';
 import { SubstanceClinicalTrialsComponent } from './substance-clinical-trials/substance-clinical-trials.component';
-import { SubstanceAdverseEventPTComponent } from './substance-adverseevent/adverseeventpt/substance-adverseeventpt.component';
-import { SubstanceAdverseeventdmeComponent } from './substance-adverseevent/adverseeventpt/substance-adverseeventdme.component';
-import { SubstanceAdverseeventcvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
+import { SubstanceAdverseEventPtComponent } from './substance-adverseevent/adverseeventpt/substance-adverseeventpt.component';
+import { SubstanceAdverseEventDmeComponent } from './substance-adverseevent/adverseeventdme/substance-adverseeventdme.component';
+import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -29,9 +29,9 @@ import { SubstanceAdverseeventcvmComponent } from './substance-adverseevent/adve
     SubstanceProductsComponent,
     SubstanceApplicationComponent,
     SubstanceClinicalTrialsComponent,
-    SubstanceAdverseEventPTComponent,
-    SubstanceAdverseeventdmeComponent,
-    SubstanceAdverseeventcvmComponent,
+    SubstanceAdverseEventPtComponent,
+    SubstanceAdverseEventDmeComponent,
+    SubstanceAdverseEventCvmComponent,
   ]
 })
 export class SubstanceProductsModule { }
