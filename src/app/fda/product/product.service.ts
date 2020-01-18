@@ -15,9 +15,9 @@ export class ProductService extends BaseHttpService {
     super(configService);
   }
 
-  getSubstanceProducts(substanceId: string): Observable<Array<any>> {
+  getSubstanceProducts(substanceUuid: string): Observable<Array<any>> {
  
-    const url = 'http://localhost:9000/ginas/app/productListBySubstanceUuid?substanceUuid=' + substanceId;
+    const url = 'http://localhost:9000/ginas/app/productListBySubstanceUuid?substanceUuid=' + substanceUuid;
     //const url = `${this.apiBaseUrl}productelist/`;
     return this.http.get<Array<any>>(url)
     .pipe(

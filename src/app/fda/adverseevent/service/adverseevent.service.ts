@@ -24,34 +24,10 @@ export class AdverseEventService extends BaseHttpService {
     super(configService);
   }
 
-  /*
-  getApplications(
-    skip: number = 0,
-    pageSize: number = 10,
-    searchTerm?: string,
-    facets?: SubstanceFacetParam
-  ): Observable<PagingResponse<ApplicationSrs>> {
-    let params = new SubstanceHttpParams();
-    params = params.append('skip', skip.toString());
-    params = params.append('top', pageSize.toString());
-    if (searchTerm !== null && searchTerm !== '') {
-      params = params.append('q', searchTerm);
-    }
-
-    params = params.appendFacetParams(facets);
-
-    const url = `${this.apiBaseUrl}applicationssrs/search`;
-    const options = {
-      params: params
-    };
-    return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
-  }
-*/
-
   getSubstanceAdverseEventPt(
-    substanceId: string
+    bdnum: string
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventPtListByBdnum?bdnum=0011303AA';
+    const url = 'http://localhost:9000/ginas/app/adverseEventPtListByBdnum?bdnum=' + bdnum;
 
     return this.http.get<Array<any>>(url).pipe(
       map(adverseevent => {
@@ -61,11 +37,10 @@ export class AdverseEventService extends BaseHttpService {
     );
   }
 
-
   getSubstanceAdverseEventDme(
-    substanceId: string
+    bdnum: string
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventDmeListByBdnum?bdnum=0011303AA';
+    const url = 'http://localhost:9000/ginas/app/adverseEventDmeListByBdnum?bdnum=' + bdnum;
 
     return this.http.get<Array<any>>(url).pipe(
       map(adverseevent => {
@@ -77,9 +52,9 @@ export class AdverseEventService extends BaseHttpService {
   }
 
   getSubstanceAdverseEventCvm(
-    substanceId: string
+    bdnum: string
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventCvmListByBdnum?bdnum=0011303AA';
+    const url = 'http://localhost:9000/ginas/app/adverseEventCvmListByBdnum?bdnum=' + bdnum;
 
     return this.http.get<Array<any>>(url).pipe(
       map(adverseevent => {
@@ -89,8 +64,5 @@ export class AdverseEventService extends BaseHttpService {
     );
 
   }
-
-
-
 
 } //class

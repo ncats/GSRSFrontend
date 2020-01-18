@@ -9,6 +9,8 @@ import { ProductService } from '../../product/product.service';
   styleUrls: ['./substance-products.component.scss']
 })
 export class SubstanceProductsComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
+  
+  public bdnum;
   public products: Array<any> = [];
   public displayedColumns: string[] = [
     'productNDC',
@@ -28,12 +30,32 @@ export class SubstanceProductsComponent extends SubstanceCardBaseFilteredList<an
   }
 
   ngOnInit() {
+
+    // Get Bdnum
+    this.getBdnum();
+
     if (this.substance && this.substance.uuid) {
       this.getSubstanceProducts();
     }
   }
 
+  getBdnum() {
+    if (this.substance) {
+      if (this.substance.codes.length > 0) {
+          this.substance.codes.forEach(element => {
+            if (element.codeSystem && element.codeSystem == "BDNUM") {
+              if (element.type && element.type == "PRIMARY") {
+                console.log("BDNUM: " + element.code + "    " + element.type);  
+                this.bdnum = element.code;
+              }       
+            }
+          });
+      }
+    }
+  }
+
   getSubstanceProducts(): void {
+    console.log("IN PROD BDNUM: " + this.bdnum);
     this.productService.getSubstanceProducts(this.substance.uuid).subscribe(products => {
       this.products = products;
        console.log("product Length: " + products.length);

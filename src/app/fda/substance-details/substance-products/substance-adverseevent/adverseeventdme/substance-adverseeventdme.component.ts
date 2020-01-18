@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
@@ -12,9 +12,11 @@ import { AdverseEventService } from '../../../../adverseevent/service/adverseeve
 export class SubstanceAdverseEventDmeComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
   public adverseevents: Array<any> = [];
   displayedColumns: string[] = [
+    'dmeReactions','ptTermMeddra','caseCount', 'dmeCount','dmeCountPercent','weightedAvgPrr'
   ];
    
- 
+  @Input() bdnum: string;
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private adverseEventService: AdverseEventService
@@ -34,7 +36,7 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceCardBaseFiltered
   }
 
   getSubstanceAdverseEvent(): void {
-    this.adverseEventService.  getSubstanceAdverseEventDme('AAAAAAA').subscribe(adverseevents => {
+    this.adverseEventService.  getSubstanceAdverseEventDme(this.bdnum).subscribe(adverseevents => {
       console.log("AE DME LENGTH: " + adverseevents.length);
       this.adverseevents = adverseevents;
       this.filtered = adverseevents;

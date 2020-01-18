@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ApplicationService } from '../../../applications/service/application.service';
@@ -14,6 +14,8 @@ export class SubstanceApplicationComponent extends SubstanceCardBaseFilteredList
   displayedColumns: string[] = [
     'appType', 'appNumber', 'center', 'sponsorName', 'applicationStatus', 'applicationSubType'];
  
+  @Input() bdnum: string;
+  
   constructor(
     public gaService: GoogleAnalyticsService,
     private applicationService: ApplicationService
@@ -23,18 +25,15 @@ export class SubstanceApplicationComponent extends SubstanceCardBaseFilteredList
 
   ngOnInit() {
     console.log("inside app substance details: ");
-   
-    if (this.substance) {
-      console.log("SUBSTANCE");
-    }
+  
     //if (this.substance && this.substance.uuid) {
       this.getSubstanceApplications();
    // }
   }
 
   getSubstanceApplications(): void {
-    this.applicationService.getSubstanceApplications('AAAAAAA').subscribe(applications => {
-      console.log("LENGTH: " + applications.length);
+    this.applicationService.getSubstanceApplications(this.bdnum).subscribe(applications => {
+      console.log("LENGTH: " + applications.length + '  ' + this.bdnum);
       this.applications = applications;
       this.filtered = applications;
       this.pageChange();

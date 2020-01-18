@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
@@ -19,7 +19,8 @@ export class SubstanceAdverseEventPtComponent extends SubstanceCardBaseFilteredL
     'prr'
   ];
    
- 
+  @Input() bdnum: string;
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private adverseEventService: AdverseEventService
@@ -39,7 +40,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceCardBaseFilteredL
   }
 
   getSubstanceAdverseEvent(): void {
-    this.adverseEventService.getSubstanceAdverseEventPt('A').subscribe(adverseevents => {
+    this.adverseEventService.getSubstanceAdverseEventPt(this.bdnum).subscribe(adverseevents => {
       console.log("AE PT LENGTH: " + adverseevents.length);
       this.adverseevents = adverseevents;
       this.filtered = adverseevents;

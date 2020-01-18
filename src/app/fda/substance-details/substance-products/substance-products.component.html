@@ -52,8 +52,13 @@
   [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
 
-<app-substance-application></app-substance-application>
+<app-substance-application [bdnum]="bdnum"></app-substance-application>
 
 <app-substance-clinical-trials></app-substance-clinical-trials>
 
-<app-substance-adverseeventpt></app-substance-adverseeventpt>
+<app-substance-adverseeventpt [bdnum]="bdnum"></app-substance-adverseeventpt>
+
+<app-substance-adverseeventdme [bdnum]="bdnum"></app-substance-adverseeventdme>
+
+<app-substance-adverseeventcvm [bdnum]="bdnum"></app-substance-adverseeventcvm>
+

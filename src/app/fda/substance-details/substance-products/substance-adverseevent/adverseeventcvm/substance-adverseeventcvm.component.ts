@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
@@ -12,9 +12,11 @@ import { AdverseEventService } from '../../../../adverseevent/service/adverseeve
 export class SubstanceAdverseEventCvmComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
   public adverseevents: Array<any> = [];
   displayedColumns: string[] = [
+    'adverseEvent','species','adverseEventCount', 'routeOfAdmin'
   ];
    
- 
+  @Input() bdnum: string;
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private adverseEventService: AdverseEventService
@@ -34,7 +36,7 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceCardBaseFiltered
   }
 
   getSubstanceAdverseEvent(): void {
-    this.adverseEventService.getSubstanceAdverseEventCvm('A').subscribe(adverseevents => {
+    this.adverseEventService.getSubstanceAdverseEventCvm(this.bdnum).subscribe(adverseevents => {
       console.log("AE PT LENGTH: " + adverseevents.length);
       this.adverseevents = adverseevents;
       this.filtered = adverseevents;
