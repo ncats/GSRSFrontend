@@ -8,6 +8,8 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class ProductService extends BaseHttpService {
 
+  totalRecords: 0;
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
@@ -15,15 +17,17 @@ export class ProductService extends BaseHttpService {
     super(configService);
   }
 
-  getSubstanceProducts(substanceUuid: string): Observable<Array<any>> {
+  getSubstanceProducts(substanceUuid: string, page:number, pageSize: number): Observable<Array<any>> {
  
-    const url = 'http://localhost:9000/ginas/app/productListBySubstanceUuid?substanceUuid=' + substanceUuid;
+    const url = 'http://localhost:9000/ginas/app/productListBySubstanceUuid?substanceUuid=' + substanceUuid + '&page=' + (page+1) + '&pageSize=' + pageSize;
     //const url = `${this.apiBaseUrl}productelist/`;
     return this.http.get<Array<any>>(url)
     .pipe(
-      map(products => {
-        console.log("Products length: " + products.length);
-        return products;
+      map(res => {
+        this.totalRecords = res['totalRecords'];
+       // console.log("AAAA: " + JSON.stringify(res['totalRecords']));
+       // console.log("dataAA " +  JSON.stringify(res['data'])); 
+        return res['data'];
       })
     );
     //return this.http.get<Array<any>>('/assets/data/gsrs-products-test.json');

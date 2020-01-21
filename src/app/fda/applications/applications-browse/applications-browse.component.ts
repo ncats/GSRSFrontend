@@ -72,7 +72,7 @@ export class ApplicationsBrowseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.gaService.sendPageView('Browse Substances');
+    this.gaService.sendPageView('Browse Applications');
     this.pageSize = 10;
     this.pageIndex = 0;
     this._searchTerm = '';
@@ -155,7 +155,7 @@ export class ApplicationsBrowseComponent implements OnInit {
       eventValue = pageEvent.pageIndex + 1;
     }
 
-    this.gaService.sendEvent('substancesContent', eventAction, 'pager', eventValue);
+    this.gaService.sendEvent('applicationsContent', eventAction, 'pager', eventValue);
 
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
