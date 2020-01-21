@@ -22,7 +22,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   similarityCutoff?: number;
   showSimilarityCutoff = false;
   searchTypeControl = new FormControl();
-  @ViewChild('contentContainer') contentContainer;
+  @ViewChild('contentContainer', { static: true }) contentContainer;
   private overlayContainer: HTMLElement;
 
   constructor(

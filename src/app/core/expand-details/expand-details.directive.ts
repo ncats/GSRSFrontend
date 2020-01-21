@@ -24,7 +24,7 @@ export class ExpandDetailsDirective implements AfterViewInit, OnDestroy {
     clearTimeout(this.timerToCollapse);
   }
 
-  @ContentChild(ExpandableDetailsDirective)
+  @ContentChild(ExpandableDetailsDirective, {static: false})
   set expandableDetails(expandableDetails: ExpandableDetailsDirective) {
     this.expandableDetailsElement = expandableDetails.element.nativeElement;
   }

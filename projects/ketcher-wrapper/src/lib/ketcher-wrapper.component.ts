@@ -8,7 +8,7 @@ import { Ketcher } from './ketcher.model';
   styleUrls: ['./ketcher-wrapper.component.scss']
 })
 export class KetcherWrapperComponent implements OnInit {
-  @ViewChild('ketcherFrame') ketcherFrame: { nativeElement: HTMLIFrameElement };
+  @ViewChild('ketcherFrame', { static: true }) ketcherFrame: { nativeElement: HTMLIFrameElement };
   @Input() ketcherFilePath: string;
   @Output() ketcherOnLoad = new EventEmitter<Ketcher>();
   safeKetcherFilePath: SafeUrl;

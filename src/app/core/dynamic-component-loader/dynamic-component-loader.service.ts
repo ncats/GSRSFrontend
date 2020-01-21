@@ -1,7 +1,14 @@
-import { ComponentFactory, Inject, Injectable, Injector, NgModuleFactory, NgModuleFactoryLoader } from '@angular/core';
-import { Observable } from 'rxjs';
-import { from as ObservableFromPromise } from 'rxjs';
-import { throwError as ObservableThrow } from 'rxjs';
+import {
+  ComponentFactory,
+  Inject,
+  Injectable,
+  Injector,
+  NgModuleFactory,
+  NgModuleFactoryLoader,
+  Compiler
+} from '@angular/core';
+import { from, Observable, throwError, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 import {
   DYNAMIC_COMPONENT,
@@ -17,29 +24,91 @@ export class DynamicComponentLoader {
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private manifests: DynamicComponentManifest[],
     private loader: NgModuleFactoryLoader,
     private injector: Injector,
+    private compiler: Compiler
   ) {
   }
 
-  /** Retrieve a ComponentFactory, based on the specified componentId (defined in the DynamicComponentManifest array). */
+  /**
+ * Get the value as an observable
+ *
+ * @template T
+ * @param {(T | NgModuleFactory<T> | Promise<T> | Observable<T>)} value
+ * @returns
+ * @memberof LibConfigService
+ */
+  private _wrapIntoObservable<T>(value: T | NgModuleFactory<T> | Promise<T> | Observable<T>) {
+    if (value instanceof Observable) {
+      return value;
+    } else if (value instanceof Promise) {
+      return from(value);
+    } else {
+      return of(value);
+    }
+  }
+
+  /**
+   *  Retrieve a ComponentFactory, based on the specified componentId
+   *  (defined in the DynamicComponentManifest array).
+   *
+   * @template T
+   * @param {string} componentId
+   * @param {Injector} [injector]
+   * @returns {Observable<ComponentFactory<T>>}
+   * @memberof DynamicComponentLoader
+   */
   getComponentFactory<T>(componentId: string, injector?: Injector): Observable<ComponentFactory<T>> {
     const manifestsFlat = this.manifests.reduce((acc, val) => acc.concat(val), []);
     const manifest = manifestsFlat
       .find(m => m.componentId === componentId);
     if (!manifest) {
-      return ObservableThrow(`DynamicComponentLoader: Unknown componentId "${componentId}"`);
+      return throwError(`DynamicComponentLoader: Unknown componentId "${componentId}"`);
     }
 
     const path = manifest.loadChildren;
 
-    const p = this.load<T>(path, componentId, injector);
-    return ObservableFromPromise(p);
+    if (!path) {
+      throw new Error(`${componentId} unknown!`);
+    }
+
+    // Check the path type
+    if (path instanceof Function) {
+      return this._wrapIntoObservable(path()).pipe(mergeMap((t: any) => {
+        let moduleFactory = null;
+        const offlineMode = this.compiler instanceof Compiler;
+        //  true means AOT enalbed compiler (Prod build), false means JIT enabled compiler (Dev build)
+        moduleFactory = offlineMode ? t : this.compiler.compileModuleSync(t);
+        return this.loadFactory<T>(moduleFactory, componentId, injector);
+      }));
+    } else {
+      return from(this.load<T>(path, componentId, injector));
+    }
   }
 
-  load<T>(path: string, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
-    return this.loader.load(path)
-      .then((ngModuleFactory) => this.loadFactory<T>(ngModuleFactory, componentId, injector));
+    /**
+   * Get the instance of the component factory
+   *
+   * @template T
+   * @param {string} path
+   * @param {string} componentId
+   * @param {Injector} [injector]
+   * @returns {Promise<ComponentFactory<T>>}
+   * @memberof DynamicComponentLoader
+   */
+  async load<T>(path: string, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
+    const ngModuleFactory = await this.loader.load(path);
+    return await this.loadFactory<T>(ngModuleFactory, componentId, injector);
   }
 
+    /**
+   * Load the factory object
+   *
+   * @template T
+   * @param {NgModuleFactory<any>} ngModuleFactory
+   * @param {string} componentId
+   * @param {Injector} [injector]
+   * @returns {Promise<ComponentFactory<T>>}
+   * @memberof DynamicComponentLoader
+   */
   loadFactory<T>(ngModuleFactory: NgModuleFactory<any>, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
     const moduleRef = ngModuleFactory.create(injector || this.injector);
     const dynamicComponentType = moduleRef.injector.get(DYNAMIC_COMPONENT, null);
@@ -60,13 +129,23 @@ export class DynamicComponentLoader {
         );
       }
 
-      const path = dynamicModule.loadChildren;
+      const path = dynamicModule.loadChildren as any;
 
       if (!path) {
         throw new Error(`${componentId} unknown!`);
       }
 
-      return this.load<T>(path, componentId, injector);
+      if (path instanceof Function) {
+        return this._wrapIntoObservable(path()).pipe(mergeMap((t: any) => {
+          let moduleFactory = null;
+          const offlineMode = this.compiler instanceof Compiler;
+          //  true means AOT enalbed compiler (Prod build), false means JIT enabled compiler (Dev build)
+          moduleFactory = offlineMode ? t : this.compiler.compileModuleSync(t);
+          return this.loadFactory<T>(moduleFactory, componentId, injector);
+        })).toPromise();
+      } else {
+        return this.load<T>(path, componentId, injector);
+      }
     }
 
     return Promise.resolve(moduleRef.componentFactoryResolver.resolveComponentFactory<T>(dynamicComponentType));

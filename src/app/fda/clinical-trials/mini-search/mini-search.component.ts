@@ -30,7 +30,7 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
 
 
   @Output() miniSearchOutput = new EventEmitter<any>();
-  @ViewChild(MatAutocompleteTrigger) trigger;
+  @ViewChild(MatAutocompleteTrigger, { static: true }) trigger;
 
   searchControl = new FormControl();
 
