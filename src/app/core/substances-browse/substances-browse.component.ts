@@ -23,6 +23,8 @@ import { searchSortValues } from '../utils/search-sort-values';
 import { StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location, LocationStrategy } from '@angular/common';
+import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
+import { CardDynamicSectionDirective } from './card-dynamic-section/card-dynamic-section.directive';
 
 @Component({
   selector: 'app-substances-browse',
@@ -701,5 +703,4 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     document.body.appendChild(downloadLink);
     downloadLink.click();
   }
-
 }

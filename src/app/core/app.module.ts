@@ -64,6 +64,8 @@ import { SubstanceFormModule } from './substance-form/substance-form.module';
 import { FacetFilterPipe } from './utils/facet-filter.pipe';
 import { NameResolverModule } from './name-resolver/name-resolver.module';
 import { HighlightedSearchActionComponent } from './highlighted-search-action/highlighted-search-action.component';
+import { CardDynamicSectionDirective } from './substances-browse/card-dynamic-section/card-dynamic-section.directive';
+import { SubstanceSummaryCardComponent } from './substances-browse/substance-summary-card/substance-summary-card.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +84,9 @@ import { HighlightedSearchActionComponent } from './highlighted-search-action/hi
     TrackLinkEventDirective,
     SubstanceFormComponent,
     SubstanceFormComponent,
-    HighlightedSearchActionComponent
+    HighlightedSearchActionComponent,
+    CardDynamicSectionDirective,
+    SubstanceSummaryCardComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
