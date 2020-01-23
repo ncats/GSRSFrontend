@@ -21,7 +21,8 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   definition: SubstanceFormDefinition;
   primarySubUuid: string;
   uuid: string;
-  json:any;
+  json: any;
+  substanceClass: string;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -39,6 +40,15 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
       this.definition = definition || {};
+      if (this.definition.substanceClass === 'structure') {
+        this.substanceClass = 'chemical';
+      } else if (this.definition.substanceClass === 'nucleicAcid') {
+        this.substanceClass = 'Nucleic Acid';
+      } else if (this.definition.substanceClass === 'structurallyDiverse') {
+        this.substanceClass = 'Structurally Diverse';
+      } else {
+        this.substanceClass = this.definition.substanceClass;
+      }
       if (!this.definition.definitionType) {
         this.definition.definitionType = 'PRIMARY';
       }
@@ -69,17 +79,17 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       this.uuid = this.substanceFormService.getUuid();
 
     });
+
   }
 
+
   getRedirect() {
-    if(this.uuid){
-      return this.substanceService.oldSiteRedirect('edit',this.substanceFormService.getUuid());
+    if (this.uuid) {
+      return this.substanceService.oldSiteRedirect('edit', this.substanceFormService.getUuid());
     } else {
       return '#';
     }
   }
-
-
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('DEFINITION_TYPE', 'DEFINITION_LEVEL').subscribe(response => {

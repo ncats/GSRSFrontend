@@ -1,5 +1,5 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop">
-  <mat-sidenav #matSideNavInstance mode="side" opened="false">
+  <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
     <mat-accordion multi="true">
       <mat-expansion-panel *ngFor="let facet of facets; index as topIndex" [expanded]="facetParams[facet.name] != null">
         <mat-expansion-panel-header>
@@ -12,7 +12,7 @@
         </mat-form-field>
         <button mat-icon-button color="black" (click) = "searchText[facet.name] = ''"><mat-icon svgIcon="close"></mat-icon></button>
           <ng-container  *ngFor="let value of facet.values | facetFilter : searchText[facet.name]; index as index">
-            <div class="facet-value" *ngIf = "(index < 10 && toggle[topIndex] == true)||(toggle[topIndex] == false)">
+            <div class="facet-value" >
           <div class="facet-value-checkbox">
             <mat-checkbox class="include" matTooltip="Include" (change)="updateFacetSelection($event, facet.name, value.label, true)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
@@ -39,6 +39,9 @@
           <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
             Show {{toggle[topIndex] === true ? 'all': 'less'}}
           </a>
+         <!-- <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf = "facet.values.length > 10">{{facet.values.length}}
+            Show mas
+          </a>-->
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
           <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch"
@@ -114,11 +117,11 @@
       </div>
       <div class="controls-container">
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-          <mat-button-toggle value="table">
+          <mat-button-toggle value="table" matTooltip = "Table view">
             <mat-icon svgIcon="list"></mat-icon>
           </mat-button-toggle>
-          <mat-button-toggle value="cards">
-            <mat-icon svgIcon="view_stream"></mat-icon>
+          <mat-button-toggle value="cards" matTooltip = "full view">
+            <mat-icon svgIcon="view_stream" matTooltip = "Tile view"></mat-icon>
           </mat-button-toggle>
           <mat-button-toggle value="tiles">
             <mat-icon svgIcon="view_module"></mat-icon>
@@ -170,14 +173,14 @@
                     <img [src]="getSafeStructureImgUrl(substance.uuid)">
                   </div>
                 </div>
-                  <button *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer" mat-icon-button [matMenuTriggerFor]="downloadMenu">
+                  <button  matTooltip = "download substance"  *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer" mat-icon-button [matMenuTriggerFor]="downloadMenu">
                     <mat-icon svgIcon="get_app"></mat-icon>
                   </button>
 
-                  <button *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
+                  <button *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu" matTooltip = "search for structure">
                     <mat-icon svgIcon="search"></mat-icon>
                   </button>
-                <button *ngIf="(substance.structure || substance.protein || substance.structurallyDiverse || substance.mixture || substance.nucleicAcid) && showAudit" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" >
+                <button *ngIf="showAudit" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip = "edit substance" >
                   <mat-icon svgIcon="edit"></mat-icon>
                 </button>
 
@@ -219,7 +222,7 @@
                 <div class="substance-data substance-code-systems" *ngIf="substance.codeSystems">
                   <div class="label">Codes:</div>
                   <div>
-                    <div class="margin-bottom" *ngFor="let codeSystemName of substance.codeSystemNames | take: 5">
+                    <div class="margin-bottom" *ngFor="let codeSystemName of sortCodeSystems(substance.codeSystemNames) | take: 5">
                       <div class="code-system">
                         <span class="label">{{codeSystemName}}</span>:&nbsp;
                         <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">

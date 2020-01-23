@@ -39,8 +39,8 @@ import { domainKeys, domainDisplayKeys } from './domain-references/domain-keys.c
 import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
 import { DomainsWithReferences } from './domain-references/domain.references.model';
-import {map} from "rxjs/operators";
-import {StructuralUnit} from "@gsrs-core/substance";
+import {map} from 'rxjs/operators';
+import {StructuralUnit} from '@gsrs-core/substance';
 import {DataDictionary} from '../utils/data-dictionary';
 @Injectable({
   providedIn: 'root'
@@ -108,7 +108,7 @@ export class SubstanceFormService {
         console.log(substance);
         substanceClass = this.substance.substanceClass;
       } else {
-        if (substanceClass == 'chemical') {
+        if (substanceClass === 'chemical') {
           this.substance = {
             substanceClass: substanceClass,
             references: [],
@@ -151,7 +151,7 @@ export class SubstanceFormService {
             names: [],
             structurallyDiverse: {
               part: ['whole'],
-              $$diverseType: "whole"
+              $$diverseType: 'whole'
             },
             codes: [],
             relationships: []
@@ -163,7 +163,7 @@ export class SubstanceFormService {
             names: [],
             structurallyDiverse: {
               part: ['whole'],
-              $$diverseType: "whole"
+              $$diverseType: 'whole'
             },
             codes: [],
             relationships: []
@@ -174,7 +174,7 @@ export class SubstanceFormService {
           references: [],
           names: [],
           polymer: {
-            idealizedStructure:{},
+            idealizedStructure: {},
             monomers: [],
           },
           codes: [],
@@ -188,7 +188,7 @@ export class SubstanceFormService {
             names: [],
             codes: [],
             relationships: []
-          }
+          };
         }
       }
       this.subClass = this.substance.substanceClass;
@@ -212,14 +212,15 @@ export class SubstanceFormService {
         this.substanceEmitter.next(this.substance);
       }
 
-      if(this.substance.substanceClass === 'polymer'){
+      if (this.substance.substanceClass === 'polymer') {
         this.substance.moieties = [];
-        if(this.substance.polymer.idealizedStructure != null && this.substance.polymer.idealizedStructure.molfile != null)
+        if (this.substance.polymer.idealizedStructure != null && this.substance.polymer.idealizedStructure.molfile != null) {
         this.structureService.postStructure(this.substance.polymer.idealizedStructure.molfile).subscribe(response => {
           this.computedMoieties = response.moieties;
           this.substance.moieties = response.moieties;
           this.substanceEmitter.next(this.substance);
         });
+        }
       }
     });
   }
@@ -275,7 +276,7 @@ export class SubstanceFormService {
     }
   }
 
-  getJson(){
+  getJson() {
     return this.substance;
   }
 
@@ -465,6 +466,8 @@ export class SubstanceFormService {
       this.ready().subscribe(substance => {
         if (this.substance.polymer.structuralUnits == null) {
           this.substance.polymer.structuralUnits = [];
+        } else {
+          this.setSRUConnectivityDisplay(this.substance.polymer.structuralUnits);
         }
         observer.next(this.substance.polymer.structuralUnits );
         this.substanceSRUEmitter.subscribe(poly => {
@@ -754,7 +757,6 @@ export class SubstanceFormService {
   get substanceIdealizedStructure(): Observable<SubstanceStructure> {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
-        console.log('why is this called for chem');
         if (this.substance.polymer.idealizedStructure == null) {
           this.substance.polymer.idealizedStructure = {
             references: [],
@@ -783,7 +785,6 @@ export class SubstanceFormService {
         }
         observer.next(this.substance.structure);
         this.substanceStructureEmitter.subscribe(structure => {
-          console.log('structure emitted');
           observer.next(this.substance.structure);
         });
       });
@@ -808,9 +809,9 @@ export class SubstanceFormService {
   updateMoieties(moieties: Array<SubstanceMoiety>): any {
 
     const moietiesCopy = moieties.slice();
-    const substanceMoietiesCopy = this.substance.moieties? this.substance.moieties.slice() : [];
+    const substanceMoietiesCopy = this.substance.moieties ? this.substance.moieties.slice() : [];
 
-    if(this.substance.moieties) {
+    if (this.substance.moieties) {
       this.substance.moieties.forEach((subMoiety, index) => {
         const matchingMoietyIndex = moietiesCopy.findIndex(moiety => moiety.hash === subMoiety.hash);
 
@@ -1039,8 +1040,6 @@ export class SubstanceFormService {
   get substanceSubunits(): Observable<Array<Subunit>> {
     return new Observable(observer => {
       this.ready().subscribe(() => {
-        console.log(this.substance);
-        console.log(this.substance.substanceClass);
         if (this.substance.substanceClass === 'protein') {
           if (!this.substance.protein.subunits) {
             this.substance.protein.subunits = [];
@@ -1350,15 +1349,20 @@ export class SubstanceFormService {
       };
       this.substance.protein.disulfideLinks.unshift(newDisulfideLinks);
     });
-    this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
+    this.emitDisulfideLinkUpdate();
   }
 
   deleteSubstanceDisulfideLink(disulfideLink: DisulfideLink): void {
     const subLinkIndex = this.substance.protein.disulfideLinks.findIndex(subLink => disulfideLink.$$deletedCode === subLink.$$deletedCode);
     if (subLinkIndex > -1) {
       this.substance.protein.disulfideLinks.splice(subLinkIndex, 1);
-      this.substanceDisulfideLinksEmitter.next(this.substance.protein.disulfideLinks);
+      this.emitDisulfideLinkUpdate();
     }
+  }
+
+  deleteAllDisulfideLinks(): void {
+    this.substance.protein.disulfideLinks = [];
+    this.emitDisulfideLinkUpdate();
   }
 
   emitDisulfideLinkUpdate(): void {
@@ -1487,7 +1491,7 @@ export class SubstanceFormService {
 
   addSubstanceStructuralModification(): void {
     this.checkModifications();
-    const newStructuralModifications: StructuralModification = {references:[]};
+    const newStructuralModifications: StructuralModification = {references: []};
     this.substance.modifications.structuralModifications.unshift(newStructuralModifications);
     this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
   }
@@ -1750,7 +1754,6 @@ export class SubstanceFormService {
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {
       const substanceCopy = this.removeDeletedComponents();
-      console.log(substanceCopy);
       this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
         observer.next(results);
         observer.complete();
@@ -1836,7 +1839,6 @@ export class SubstanceFormService {
 
       const substanceCopy = this.removeDeletedComponents();
       this.substanceService.saveSubstance(substanceCopy).subscribe(substance => {
-        console.log('triggered savesubstance)');
         this.substance = substance;
         results.uuid = substance.uuid;
         this.definitionEmitter.next(this.getDefinition());
@@ -1864,7 +1866,7 @@ export class SubstanceFormService {
         this.substanceRelationshipsEmitter.next(this.substance.relationships);
         this.substanceNamesEmitter.next(this.substance.notes);
         this.substancePropertiesEmitter.next(this.substance.properties);
-        if(this.substance.modifications){
+        if (this.substance.modifications) {
           this.structuralModRefToComment();
           this.substanceAgentModificationsEmitter.next(this.substance.modifications.agentModifications);
           this.substancePhysicalModificationsEmitter.next(this.substance.modifications.physicalModifications);
@@ -2073,17 +2075,16 @@ export class SubstanceFormService {
     // this.addStyle();
     const t1 = performance.now();
     const totaltime = t1 - t0;
-    // console.log('time to process subunit display: ' + totaltime);
     return subunitSequences;
   }
 
   standardizeNames() {
-    let bad = /[^ -~\t\n\r]/g;
-    let rep = "\u2019;';\u03B1;.ALPHA.;\u03B2;.BETA.;\u03B3;.GAMMA.;\u03B4;.DELTA.;\u03B5;.EPSILON.;\u03B6;.ZETA.;\u03B7;.ETA.;\u03B8;.THETA.;\u03B9;.IOTA.;\u03BA;.KAPPA.;\u03BB;.LAMBDA.;\u03BC;.MU.;\u03BD;.NU.;\u03BE;.XI.;\u03BF;.OMICRON.;\u03C0;.PI.;\u03C1;.RHO.;\u03C2;.SIGMA.;\u03C3;.SIGMA.;\u03C4;.TAU.;\u03C5;.UPSILON.;\u03C6;.PHI.;\u03C7;.CHI.;\u03C8;.PSI.;\u03C9;.OMEGA.;\u0391;.ALPHA.;\u0392;.BETA.;\u0393;.GAMMA.;\u0394;.DELTA.;\u0395;.EPSILON.;\u0396;.ZETA.;\u0397;.ETA.;\u0398;.THETA.;\u0399;.IOTA.;\u039A;.KAPPA.;\u039B;.LAMBDA.;\u039C;.MU.;\u039D;.NU.;\u039E;.XI.;\u039F;.OMICRON.;\u03A0;.PI.;\u03A1;.RHO.;\u03A3;.SIGMA.;\u03A4;.TAU.;\u03A5;.UPSILON.;\u03A6;.PHI.;\u03A7;.CHI.;\u03A8;.PSI.;\u03A9;.OMEGA.;\u2192;->;\xB1;+/-;\u2190;<-;\xB2;2;\xB3;3;\xB9;1;\u2070;0;\u2071;1;\u2072;2;\u2073;3;\u2074;4;\u2075;5;\u2076;6;\u2077;7;\u2078;8;\u2079;9;\u207A;+;\u207B;-;\u2080;0;\u2081;1;\u2082;2;\u2083;3;\u2084;4;\u2085;5;\u2086;6;\u2087;7;\u2088;8;\u2089;9;\u208A;+;\u208B;-".split(";");
-    let map = {};
+    const bad = /[^ -~\t\n\r]/g;
+    const rep = '\u2019;\';\u03B1;.ALPHA.;\u03B2;.BETA.;\u03B3;.GAMMA.;\u03B4;.DELTA.;\u03B5;.EPSILON.;\u03B6;.ZETA.;\u03B7;.ETA.;\u03B8;.THETA.;\u03B9;.IOTA.;\u03BA;.KAPPA.;\u03BB;.LAMBDA.;\u03BC;.MU.;\u03BD;.NU.;\u03BE;.XI.;\u03BF;.OMICRON.;\u03C0;.PI.;\u03C1;.RHO.;\u03C2;.SIGMA.;\u03C3;.SIGMA.;\u03C4;.TAU.;\u03C5;.UPSILON.;\u03C6;.PHI.;\u03C7;.CHI.;\u03C8;.PSI.;\u03C9;.OMEGA.;\u0391;.ALPHA.;\u0392;.BETA.;\u0393;.GAMMA.;\u0394;.DELTA.;\u0395;.EPSILON.;\u0396;.ZETA.;\u0397;.ETA.;\u0398;.THETA.;\u0399;.IOTA.;\u039A;.KAPPA.;\u039B;.LAMBDA.;\u039C;.MU.;\u039D;.NU.;\u039E;.XI.;\u039F;.OMICRON.;\u03A0;.PI.;\u03A1;.RHO.;\u03A3;.SIGMA.;\u03A4;.TAU.;\u03A5;.UPSILON.;\u03A6;.PHI.;\u03A7;.CHI.;\u03A8;.PSI.;\u03A9;.OMEGA.;\u2192;->;\xB1;+/-;\u2190;<-;\xB2;2;\xB3;3;\xB9;1;\u2070;0;\u2071;1;\u2072;2;\u2073;3;\u2074;4;\u2075;5;\u2076;6;\u2077;7;\u2078;8;\u2079;9;\u207A;+;\u207B;-;\u2080;0;\u2081;1;\u2082;2;\u2083;3;\u2084;4;\u2085;5;\u2086;6;\u2087;7;\u2088;8;\u2089;9;\u208A;+;\u208B;-'.split(';');
+    const map = {};
     for (let s = 0; s < rep.length; s++) {
       if (s % 2 == 0) {
-        let id = rep[s].charCodeAt(0);
+        const id = rep[s].charCodeAt(0);
         map[id] = rep[s + 1];
       }
     }
@@ -2096,19 +2097,19 @@ export class SubstanceFormService {
       if (n.name) {
         let name = n.name;
         name = name.replace(/([\u0390-\u03C9||\u2192|\u00B1-\u00B9|\u2070-\u208F|\u2190|])/g, replacer).trim();
-        name = name.replace(bad, "");
-        name = name.replace(/[[]([A-Z -.]*)\]$/g, " !!@!$1_!@!");
-        name = name.replace(/[ \t]+/g, " ");
-        name = name.replace(/[[]/g, "(");
-        name = name.replace(/[{]/g, "(");
-        name = name.replace(/\]/g, ")");
-        name = name.replace(/\"/g, "''");
-        name = name.replace(/[}]/g, ")");
-        name = name.replace(/\(([0-9]*CI,)*([0-9]*CI)\)$/gm, "");
-        name = name.replace(/[ ]*-[ ]*/g, "-");
+        name = name.replace(bad, '');
+        name = name.replace(/[[]([A-Z -.]*)\]$/g, ' !!@!$1_!@!');
+        name = name.replace(/[ \t]+/g, ' ');
+        name = name.replace(/[[]/g, '(');
+        name = name.replace(/[{]/g, '(');
+        name = name.replace(/\]/g, ')');
+        name = name.replace(/\"/g, '\'\'');
+        name = name.replace(/[}]/g, ')');
+        name = name.replace(/\(([0-9]*CI,)*([0-9]*CI)\)$/gm, '');
+        name = name.replace(/[ ]*-[ ]*/g, '-');
         name = name.trim();
-        name = name.replace("!!@!", "[");
-        name = name.replace("_!@!", "]");
+        name = name.replace('!!@!', '[');
+        name = name.replace('_!@!', ']');
         n.name = name.toUpperCase();
       }
     });
@@ -2117,13 +2118,13 @@ export class SubstanceFormService {
 
 
   getAttachmentMapUnits(srus: any) {
-    let rmap = {};
-    for (let i in srus) {
+    const rmap = {};
+    for (const i in srus) {
       let lab = srus[i].label;
       if (!lab) {
-        lab = "{" + i + "}";
+        lab = '{' + i + '}';
       }
-      for (let k in srus[i].attachmentMap) {
+      for (const k in srus[i].attachmentMap) {
         if (srus[i].attachmentMap.hasOwnProperty(k)) {
           rmap[k] = lab;
         }
@@ -2132,34 +2133,34 @@ export class SubstanceFormService {
     return rmap;
   }
   sruConnectivityToDisplay(amap: any, rmap: any) {
-    let disp = "";
-    for (let k in amap) {
+    let disp = '';
+    for (const k in amap) {
       if (amap.hasOwnProperty(k)) {
-        let start = rmap[k] + "_" + k;
-        for (let i in amap[k]) {
-          let end = rmap[amap[k][i]] + "_" + amap[k][i];
-          disp += start + "-" + end + ";\n";
+        const start = rmap[k] + '_' + k;
+        for (const i in amap[k]) {
+          const end = rmap[amap[k][i]] + '_' + amap[k][i];
+          disp += start + '-' + end + ';\n';
         }
       }
     }
-    if (disp === "") return undefined;
+    if (disp === '') { return undefined; }
     return disp;
   }
   sruDisplayToConnectivity(display: any) {
     if (!display) {
       return {};
     }
-    let errors = [];
-    let connections = display.split(";");
-    let regex = /^\s*[A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)[-][A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)\s*$/g;
-    let map = {};
+    const errors = [];
+    const connections = display.split(';');
+    const regex = /^\s*[A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)[-][A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)\s*$/g;
+    const map = {};
     for (let i = 0; i < connections.length; i++) {
-      let con = connections[i].trim();
-      if (con === "") continue;
+      const con = connections[i].trim();
+      if (con === '') { continue; }
       regex.lastIndex = 0;
-      let res = regex.exec(con);
+      const res = regex.exec(con);
       if (res == null) {
-        let text = "Connection '" + con + "' is not properly formatted";
+        const text = 'Connection \'' + con + '\' is not properly formatted';
         errors.push({
           text: text,
           type: 'warning'
@@ -2177,16 +2178,16 @@ export class SubstanceFormService {
     return map;
   }
   setSRUConnectivityDisplay(srus: any) {
-    let rmap = this.getAttachmentMapUnits(srus);
-    for (let i in srus) {
-      let disp = this.sruConnectivityToDisplay(srus[i].attachmentMap, rmap);
+    const rmap = this.getAttachmentMapUnits(srus);
+    for (const i in srus) {
+      const disp = this.sruConnectivityToDisplay(srus[i].attachmentMap, rmap);
       srus[i]._displayConnectivity = disp;
     }
   }
 
   setSRUFromConnectivityDisplay(srus: any) {
-    for (let i in srus) {
-      let map = this.sruDisplayToConnectivity(srus[i]._displayConnectivity);
+    for (const i in srus) {
+      const map = this.sruDisplayToConnectivity(srus[i]._displayConnectivity);
       srus[i].attachmentMap = map;
     }
   }

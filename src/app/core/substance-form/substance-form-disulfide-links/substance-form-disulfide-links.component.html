@@ -20,7 +20,12 @@
     <app-disulfide-links-form [link]="disulfideLink" (linkDeleted)="deleteDisulfideLink($event)"></app-disulfide-links-form>
     <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast && (index !== disulfideLinks.length - 2)"></mat-divider>
   </div>
+
 </div>
+
+<div class = "flex-row" *ngIf = "disulfideLinks && disulfideLinks.length > 0"><button mat-raised-button mat-primary (click) ="deleteAllDisulfideLinks()">
+  Delete All Links
+</button></div>
 
 
 

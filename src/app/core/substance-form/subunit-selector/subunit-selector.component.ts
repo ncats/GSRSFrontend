@@ -280,7 +280,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
         } else if (this.card === 'multi-disulfide') {
         this.toggleMultiDisulfide(subunit, residue, value, event);
       } else {
-        const inSites = this.sites.some(r => (r.residueIndex == residue) && (r.subunitIndex == subunit));
+        const inSites = this.sites.some(r => (r.residueIndex === residue) && (r.subunitIndex === subunit));
         if (this.card !== 'disulfide') {
           if (inSites) {
             this.sites = this.sites.filter(function (r) {
@@ -359,7 +359,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
 
   addStyle(): void {
     if (this.subunitSequences && this.subunitSequences[0] && this.subunitSequences[0].subunits) {
-      console.log(this.subunitSequences);
       this.subunitSequences.forEach(sites => {
         sites.subunits.forEach( site => {
           if (this.card === 'disulfide' || this.card === 'multi-disulfide' ) {
@@ -394,8 +393,6 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
         });
       }
     }
-    console.log(this.allSites);
-    console.log(this.sites);
 
   }
 

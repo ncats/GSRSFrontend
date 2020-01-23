@@ -6,7 +6,8 @@
 
 
 
-.tags {
+.related-substance {
+  width: 45%;
 }
 
 .field-row {
@@ -27,8 +28,12 @@
     flex-grow: 1;
     padding-right: 15px;
   }
+
+  .class, .type, .tags, .geometry {
+    max-width: 250px;
+  }
 }
 
 .field-container {
-  width:70%;
+  width: 55%;
 }

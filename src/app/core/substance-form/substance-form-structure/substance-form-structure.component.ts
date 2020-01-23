@@ -30,17 +30,13 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   ngOnInit() {
     this.substanceFormService.definition.subscribe(def =>{
       this.substanceType = def.substanceClass;
-      console.log(this.substanceType);
       if(this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
         this.substanceFormService.substanceDisplayStructure.subscribe(structure => {
           if(structure){
-            console.log('display found');
-            console.log(structure);
             this.structure = structure;
           } else {
             this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
-              console.log('start using idealized');
               this.structure = structure;
             });
           }
@@ -61,7 +57,6 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     if(this.substanceType === 'polymer') {
       this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
         // this.structure = structure;
-        console.log('after view idealized update');
         // this.loadStructure();
       });
     }
@@ -123,10 +118,9 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     this.structureEditor.setMolecule(molfile);
   }
 
-  generateSRU():void {
+  generateSRU(): void {
     this.structureService.postStructure(this.structure.molfile).subscribe(response => {
-      console.log(response);
-      if(response.structuralUnits && response.structuralUnits.length > 0) {
+      if (response.structuralUnits && response.structuralUnits.length > 0) {
         this.substanceFormService.updateSRUs(response.structuralUnits);
       }
     });

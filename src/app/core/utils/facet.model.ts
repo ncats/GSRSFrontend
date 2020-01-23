@@ -10,6 +10,9 @@ export interface Facet {
     enhanced: boolean;
     prefix: string;
     _self: string;
+    $fdim?: number;
+    $total?: number;
+    $fskip?: number;
 }
 
 /**

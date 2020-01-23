@@ -130,6 +130,37 @@ export class UtilsService extends BaseHttpService {
     );
   }
 
+  sruDisplayToConnectivity(display: string): any {
+    if (!display) {
+      return {};
+    }
+    const errors = [];
+    const connections = display.split(';');
+    const regex = /^\s*[A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)[-][A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)\s*$/g;
+    const map = {$errors: []};
+    for (let i = 0; i < connections.length; i++) {
+      const con = connections[i].trim();
+      if (con === '') { continue; }
+      regex.lastIndex = 0;
+      const res = regex.exec(con);
+      if (res == null) {
+        const text = 'Connection \'' + con + '\' is not properly formatted';
+        errors.push({ text: text, type: 'warning' });
+      } else {
+        if (!map[res[1]]) {
+          map[res[1]] = [];
+        }
+        map[res[1]].push(res[2]);
+      }
+    }
+    if (errors.length > 0) {
+      map.$errors = errors;
+    }
+    return map;
+
+  }
+
+
   displayAmount(amt): string {
 
     function formatValue(v) {

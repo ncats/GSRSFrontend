@@ -18,6 +18,9 @@ export class LoadingService {
       this.numProcesses--;
     }
     this.isLoading = this.numProcesses > 0;
+    if (this.numProcesses < 0) {
+      this.numProcesses = 0;
+    }
     this.loadingEventSubject.next(this.isLoading);
   }
 

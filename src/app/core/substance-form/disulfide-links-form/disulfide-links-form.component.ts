@@ -101,7 +101,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
 
   openDialog(): void {
     let sentSites = this.privateLink.sites;
-    if(!sentSites[0].residueIndex || !sentSites[1].residueIndex){
+    if (!sentSites[0].residueIndex || !sentSites[1].residueIndex) {
       sentSites = [];
     }
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
@@ -113,14 +113,14 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
       this.overlayContainer.style.zIndex = null;
       if (newLinks) {
-        if(newLinks[0] && newLinks[0].subunitIndex){
+        if (newLinks[0] && newLinks[0].subunitIndex) {
           this.privateLink.sites[0] = newLinks[0];
           this.testForm.controls['site0'].setValue(this.privateLink.sites[0]);
         } else {
           this.privateLink.sites[0] = {};
           this.testForm.controls['site0'].reset();
         }
-        if(newLinks[1] && newLinks[1].subunitIndex){
+        if (newLinks[1] && newLinks[1].subunitIndex) {
           this.privateLink.sites[1] = newLinks[1];
           this.testForm.controls['site1'].setValue(this.privateLink.sites[1]);
         } else {

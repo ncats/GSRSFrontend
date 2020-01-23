@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {DataDictionary} from "@gsrs-core/utils/data-dictionary";
+import {DataDictionary} from '@gsrs-core/utils/data-dictionary';
 
 
 @Injectable({
@@ -11,11 +11,11 @@ export class DataDictionaryService {
 
 
 
-  getDictionaryRow(key: string): any{
+  getDictionaryRow(key: string): any {
     return this.dataDictionary[key];
   }
 
-  getDictionaryField(key:string, field: string): string {
+  getDictionaryField(key: string, field: string): string {
     return this.dataDictionary[key][field];
   }
 }

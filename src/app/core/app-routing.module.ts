@@ -30,6 +30,11 @@ const childRoutes: Routes = [
     canActivate: [CanActivateSubstanceForm]
   },
   {
+    path: 'substances/register/:type',
+    component: SubstanceFormComponent,
+    canActivate: [CanActivateSubstanceForm]
+  },
+  {
     path: 'substances/:id',
     component: SubstanceDetailsComponent
   },

@@ -1,4 +1,7 @@
 <div *ngIf="definition">
+  <div class="substance-form-row form-header">
+    {{uuid ? 'Editing' : 'Registering New'}} {{substanceClass.toUpperCase()}}
+  </div>
   <div class="substance-form-row">
     <mat-form-field *ngIf = 'definition.substanceClass !== "concept"'>
       <mat-label>Definition Type</mat-label>
@@ -35,7 +38,7 @@
         Old edit form <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
       </a>
       <br/>
-      <a [routerLink]="['/substances',definition.uuid]" target = "_blank" matTooltip= "open details page in new tab">
+      <a [routerLink]="['/substances', uuid]" target = "_blank" matTooltip= "open details page in new tab">
         Details page <mat-icon class = "icon" svgIcon="open_in_new"></mat-icon>
       </a>
     </div>

@@ -40,37 +40,31 @@ export class BaseComponent implements OnInit, OnDestroy {
         },
         {
           display: 'Protein',
-          path: 'substances/register',
-          params:{kind:'protein'}
-        },{
+          path: 'substances/register/protein',
+        },
+        {
           display: 'Polymer',
-          path: 'substances/register',
-          params:{kind:'polymer'}
+          path: 'substances/register/polymer',
         },
         {
           display: 'Nucleic Acid',
-          path: 'substances/register',
-          params:{kind:'nucleicAcid'}
+          path: 'substances/register/nucleicAcid',
         },
         {
           display: 'Mixture',
-          path: 'substances/register',
-          params:{kind:'mixture'}
+          path: 'substances/register/mixture',
         },
         {
           display: 'Structurally Diverse',
-          path: 'substances/register',
-          params:{kind:'structurallyDiverse'}
+          path: 'substances/register/structurallyDiverse',
         },
         {
           display: 'Concept',
-          path: 'substances/register',
-          params:{kind:'concept'}
+          path: 'substances/register/concept',
         },
         {
           display: 'G1 Specified Substance',
-          path: 'substances/register',
-          params:{kind:'specifiedSubstanceG1'}
+          path: 'substances/register/specifiedSubstanceG1',
         }
       ]
     }

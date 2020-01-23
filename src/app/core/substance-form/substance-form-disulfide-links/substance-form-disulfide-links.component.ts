@@ -116,6 +116,11 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
     this.substanceFormService.emitDisulfideLinkUpdate();
   }
 
+  deleteAllDisulfideLinks(): void {
+    this.substanceFormService.deleteAllDisulfideLinks();
+    this.substanceFormService.emitDisulfideLinkUpdate();
+  }
+
   openDialog(): void {
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'multi-disulfide', 'link': []},

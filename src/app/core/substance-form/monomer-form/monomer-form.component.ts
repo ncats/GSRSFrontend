@@ -35,7 +35,6 @@ export class MonomerFormComponent implements OnInit, AfterViewInit {
   @Input()
   set monomer(monomer: Monomer) {
     this.privateMonomer = monomer;
-    console.log(this.privateMonomer);
     if(this.privateMonomer.monomerSubstance){
       this.relatedSubstanceUuid = this.privateMonomer.monomerSubstance.refuuid;
     } else {
@@ -53,7 +52,6 @@ export class MonomerFormComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.privateMonomer);
   }
 
 

@@ -707,6 +707,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
+  moreFacets(index: number, facet: Facet) {
+      this.substanceService.retrieveFacetValues(this.facets[index]).subscribe( resp => {
+        this.facets[index]._self = resp.uri;
+        this.facets[index].values = this.facets[index].values.concat(resp.content);
+        facet = this.facets[index];
+      });
+
+  }
+
   downloadFile(response: any, filename: string): void {
     const dataType = response.type;
     const binaryData = [];
@@ -716,6 +725,23 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     downloadLink.setAttribute('download', filename);
     document.body.appendChild(downloadLink);
     downloadLink.click();
+  }
+
+  sortCodeSystems(codes: Array<string>): Array<string> {
+    if ( this.configService.configData && this.configService.configData.codeSystemOrder &&
+      this.configService.configData.codeSystemOrder.length > 0) {
+      const order = this.configService.configData.codeSystemOrder;
+      for (let i =  order.length - 1; i >= 0; i--) {
+        for (let j = 0; j <= codes.length; j++) {
+          if (order[i] === codes[j]) {
+            const a = codes.splice(j, 1);   // removes the item
+            codes.unshift(a[0]);         // adds it back to the beginning
+            break;
+          }
+        }
+      }
+   }
+    return codes;
   }
 
 }

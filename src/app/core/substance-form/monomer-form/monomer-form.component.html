@@ -11,7 +11,7 @@
     </button>
   </div>
     <div class = "related-substance">
-      <div class="flex-column ">{{relatedSubstanceUuid}}
+      <div class="flex-column ">
         <app-substance-selector (selectionUpdated)="componentUpdated($event)"
                                 eventCategory="substanceRelationshipRelatedSub" placeholder= "Monomer Substance" header="Monomer Substance"
                                 [subuuid]="relatedSubstanceUuid" [name] = "privateMonomer.monomerSubstance? privateMonomer.monomerSubstance.name : ''">

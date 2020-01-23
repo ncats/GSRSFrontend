@@ -3,7 +3,7 @@
     <input matInput placeholder="Search" [formControl]="searchControl">
   </mat-form-field>
   <span class="middle-fill"></span>
-  <button class = 'standardize' mat-button (click)="standardize()">Standardize Names</button>
+  <button *ngIf="names && names.length > 0" class = 'standardize' mat-button (click)="standardize()">Standardize Names</button>
 
   <button mat-button (click)="addName()">
     Add name <mat-icon svgIcon="add_circle_outline"></mat-icon>

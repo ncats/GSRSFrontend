@@ -151,7 +151,6 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
           }
         }
       });
-      console.log(this.subunitSequence);
     }
   }
 
