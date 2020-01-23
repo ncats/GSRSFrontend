@@ -62,5 +62,3 @@ export class DynamicComponentLoaderModule {
     };
   }
 }
-
-export { LazyLoadedComponentManifest as DynamicComponentManifest } from './dynamic-component-manifest';

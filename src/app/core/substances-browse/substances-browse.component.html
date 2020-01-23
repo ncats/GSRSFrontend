@@ -138,7 +138,11 @@
         </mat-paginator>
       </div>
       <div class="substance-cards">
-        <app-substance-summary-card *ngFor="let substance of substances" [substance]="substance">
+        <app-substance-summary-card
+          *ngFor="let substance of substances"
+          [substance]="substance"
+          (openImage)="openImageModal($event)"
+          [showAudit]="showAudit">
         </app-substance-summary-card>
       </div>
       <div class="substance-table">

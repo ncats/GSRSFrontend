@@ -1,8 +1,8 @@
 import {
-  DynamicComponentManifest,
-} from './dynamic-component-loader/dynamic-component-loader.module';
+  LazyLoadedComponentManifest
+} from './dynamic-component-loader/dynamic-component-manifest';
 
-export const dynamicComponentManifests: DynamicComponentManifest[] = [
+export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'structure-details',
     path: 'structure-details',
