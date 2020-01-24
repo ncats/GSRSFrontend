@@ -19,7 +19,7 @@
     "start:gsrs:pre-prod": "npm run build-libraries && ng serve --aot=true --configuration=gsrs.pre-prod",
     "start:gsrs:prod": "npm run build-libraries && ng serve --aot=true --configuration=gsrs.prod",
     "build:fda:pre-prod": "npm run build-libraries && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=fda.pre-prod && node process-index.js && npm run build-server",
-    "build:fda:prod": "npm run build-libraries && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=fda.prod && node process-index.js && npm npm run copy-dojo && run build-server",
+    "build:fda:prod": "npm run build-libraries && ng build --aot=true --configuration=fda.prod && node process-index.js && npm npm run copy-dojo && run build-server",
     "build:gsrs:pre-prod": "npm run build-libraries && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=gsrs.pre-prod && node process-index.js && npm run build-server",
     "build:gsrs:prod": "npm run build-libraries && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=gsrs.prod && node process-index.js && npm run build-server",
     "build": "ng build --aot=true",

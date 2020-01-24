@@ -33,10 +33,17 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         this.subunits = this.substance.protein.subunits;
         this.countUpdate.emit(this.subunits.length);
         this.getVocabularies();
+      } else if (this.substance != null
+        && this.substance.nucleicAcid != null
+        && this.substance.nucleicAcid.subunits != null
+        && this.substance.nucleicAcid.subunits.length) {
+        this.subunits = this.substance.nucleicAcid.subunits;
+        this.countUpdate.emit(this.subunits.length);
+        this.getVocabularies();
       }
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       this.subunits = this.substance.protein.subunits;

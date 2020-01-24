@@ -5,10 +5,10 @@
   </mat-form-field>
 </div>
 <div class="responsive">
-  <table mat-table [dataSource]="paged">
+  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
 
   <ng-container matColumnDef="relatedRecord">
-      <th mat-header-cell *matHeaderCellDef> Related Record </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Related Record</th>
       <td class="text-center" mat-cell *matCellDef="let relationship">
         <div class = "thumb-col">
           <div>{{relationship.relatedSubstance.linkingID}}</div>
@@ -24,12 +24,12 @@
     </ng-container>
 
     <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef> Type </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
       <td mat-cell *matCellDef="let relationship"> {{relationship.type}} </td>
     </ng-container>
 
     <ng-container matColumnDef="details">
-      <th mat-header-cell *matHeaderCellDef> Details </th>
+      <th mat-header-cell *matHeaderCellDef > Details </th>
       <td mat-cell *matCellDef="let relationship">
         <button class = "mat-raised-button mat-primary" (click)="openModal(detailTemplate)" [disabled]="!hasDetails(relationship)" > View</button>
         <ng-template #detailTemplate>

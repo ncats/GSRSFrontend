@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div>
   <div>
     <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
@@ -17,3 +18,19 @@
   <button class = "mat-flat-button mat-primary" color = "primary" (click) = "generateSRU()" matTooltip = "generate structural units for this structure">Generate SRUs</button>
 </div>
 </div>
+=======
+<div>
+  <div>
+    <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
+  </div>
+  <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">
+    {{userMessage}}
+  </div>
+  <app-structure-form
+    [structure]="structure"
+    showSettings="true"
+    (structureImported)="structureImported($event)"
+    (nameResolved)="nameResolved($event)">
+  </app-structure-form>
+</div>
+>>>>>>> development_version_update

@@ -1,0 +1,13 @@
+.counts-container {
+    display: flex;
+    margin-top: 15px;
+    align-items: stretch;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.counts-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}

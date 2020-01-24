@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { BaseHttpService } from '../base/base-http.service';
 import { ConfigService } from '../config/config.service';
 import { Auth, Role } from './auth.model';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class AuthService extends BaseHttpService {
 
   constructor(
     public configService: ConfigService,
-    private http: HttpClient
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     super(configService);
     this.isLoading = true;
@@ -47,7 +49,7 @@ export class AuthService extends BaseHttpService {
 
     return this.http.get<Auth>(`${this.apiBaseUrl}whoami`, options).pipe(
       map(auth => {
-        if (auth && auth.computedToken) {
+        if (isPlatformBrowser(this.platformId) && auth && auth.computedToken) {
           sessionStorage.setItem('authToken', auth.computedToken);
         }
         this._auth = auth;
@@ -101,7 +103,9 @@ export class AuthService extends BaseHttpService {
         subscription.unsubscribe();
       });
     }
-    sessionStorage.removeItem('authToken');
+    if (isPlatformBrowser(this.platformId)) {
+      sessionStorage.removeItem('authToken');
+    }
     this._auth = null;
     this._authUpdate.next(null);
   }
@@ -131,6 +135,38 @@ export class AuthService extends BaseHttpService {
       } else {
         const subscription = this.getAuth().subscribe(auth => {
           observer.next(this.hasRoles(...roles));
+          observer.complete();
+          subscription.unsubscribe();
+        });
+      }
+    });
+  }
+
+  hasAnyRoles(...roles: Array<Role|string>): boolean {
+    const rolesList = [...roles];
+
+    if (this._auth && this._auth.roles && rolesList && rolesList.length) {
+      for (let i = 0; i < rolesList.length; i++) {
+        let role = rolesList[i].toLowerCase();
+        role = role.charAt(0).toUpperCase() + role.slice(1);
+        if (this._auth.roles.includes(role as Role)) {
+          return true;
+        }
+      }
+    } else {
+      return false;
+    }
+    return false;
+  }
+
+  hasAnyRolesAsync(...roles: Array<Role|string>): Observable<boolean> {
+    return new Observable(observer => {
+      if (this.auth != null) {
+        observer.next(this.hasAnyRoles(...roles));
+        observer.complete();
+      } else {
+        const subscription = this.getAuth().subscribe(auth => {
+          observer.next(this.hasAnyRoles(...roles));
           observer.complete();
           subscription.unsubscribe();
         });

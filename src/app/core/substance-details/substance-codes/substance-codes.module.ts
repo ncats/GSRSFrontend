@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
 import {MatDialogModule} from '@angular/material';
+import {MatSortModule} from '@angular/material/sort';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import {MatDialogModule} from '@angular/material';
     RouterModule,
     MatIconModule,
     ReferencesManagerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSortModule
   ],
   declarations: [
     SubstanceCodesComponent

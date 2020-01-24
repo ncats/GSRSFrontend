@@ -4,7 +4,9 @@ import {SubstanceCode, SubstanceDetail} from '../../substance/substance.model';
 import {MatDialog} from '@angular/material';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
+import {Sort} from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import {UtilsService} from '@gsrs-core/utils';
 
 @Component({
   selector: 'app-substance-codes',
@@ -21,7 +23,8 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   constructor(
     private dialog: MatDialog,
     public gaService: GoogleAnalyticsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private utilsService: UtilsService
   ) {
     super(gaService);
   }
@@ -54,6 +57,19 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       }
     });
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+  }
+  sortData(sort: Sort) {
+    const data = this.codes.slice();
+    if (!sort.active || sort.direction === '') {
+      this.filtered = data;
+      this.pageChange();
+      return;
+    }
+    this.filtered = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      return this.utilsService.compare(a[sort.active], b[sort.active], isAsc);
+    });
+    this.pageChange();
   }
 
   ngAfterViewInit(): void {
@@ -91,3 +107,4 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     });
   }
 }
+

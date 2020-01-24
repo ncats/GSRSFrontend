@@ -76,10 +76,6 @@
     display: flex;
     align-items: center;
 
-    .mat-button-toggle-group {
-        max-height: 36px;
-    }
-
     .mat-paginator {
         margin-left: auto;
     }
@@ -398,7 +394,7 @@
     }
 }
 
-.zoom{
+.zoom:hover{
   cursor:zoom-in;
 }
 

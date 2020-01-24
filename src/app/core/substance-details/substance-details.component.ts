@@ -37,7 +37,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   substance: SubstanceDetail;
   substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
-  @ViewChild('matSideNavInstance') matSideNav: MatSidenav;
+  @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   substanceUpdated = new Subject<SubstanceDetail>();
   constructor(

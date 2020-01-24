@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./main-notification.component.scss']
 })
 export class MainNotificationComponent implements OnInit, OnDestroy {
-  @ViewChild('notification') appNotification: { nativeElement: HTMLElement };
+  @ViewChild('notification', { static: true }) appNotification: { nativeElement: HTMLElement };
   private notificationTimer: any;
   private notifcationType: NotificationType;
   public notificationMessage: string;
