@@ -12,16 +12,16 @@ import { mergeMap } from 'rxjs/operators';
 
 import {
   DYNAMIC_COMPONENT,
-  DYNAMIC_COMPONENT_MANIFESTS,
+  LAZY_LOADED_COMPONENT_MANIFESTS,
   DYNAMIC_MODULE,
-  DynamicComponentManifest,
+  LazyLoadedComponentManifest,
 } from './dynamic-component-manifest';
 
 @Injectable()
 export class DynamicComponentLoader {
 
   constructor(
-    @Inject(DYNAMIC_COMPONENT_MANIFESTS) private manifests: DynamicComponentManifest[],
+    @Inject(LAZY_LOADED_COMPONENT_MANIFESTS) private manifests: LazyLoadedComponentManifest[],
     private loader: NgModuleFactoryLoader,
     private injector: Injector,
     private compiler: Compiler
@@ -113,7 +113,7 @@ export class DynamicComponentLoader {
     const moduleRef = ngModuleFactory.create(injector || this.injector);
     const dynamicComponentType = moduleRef.injector.get(DYNAMIC_COMPONENT, null);
     if (!dynamicComponentType) {
-      const dynamicModule: DynamicComponentManifest = moduleRef.injector.get(DYNAMIC_MODULE, null);
+      const dynamicModule: LazyLoadedComponentManifest = moduleRef.injector.get(DYNAMIC_MODULE, null);
 
       if (!dynamicModule) {
         throw new Error(
