@@ -47,7 +47,7 @@
     (closed)="removeZindex()">
   </app-substance-text-search>
   <div>
-    <button mat-flat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment != 'login'">
+    <button mat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment != 'login'">
       Login
     </button>
       <div class = "logged-in" *ngIf="auth" >

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div class="flex-row">
   <mat-form-field [floatLabel]="'never'" class="search" *ngIf="names && names.length > pageSize">
     <input matInput placeholder="Search" [formControl]="searchControl">
@@ -18,21 +17,3 @@
 <mat-paginator *ngIf="names && names.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
   [pageSizeOptions]="[5, 10, 15]">
 </mat-paginator>
-=======
-<div class="flex-row">
-  <mat-form-field [floatLabel]="'never'" class="search" *ngIf="names && names.length > pageSize">
-    <input matInput placeholder="Search" [formControl]="searchControl">
-  </mat-form-field>
-  <span class="middle-fill"></span>
-  <button mat-button (click)="addName()">
-    Add name <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
-</div>
-<div class="name" *ngFor="let name of paged; last as isLast; index as index" appScrollToTarget [id]="'substance-name-' + index">
-  <app-name-form [name]="name" (priorityUpdate)="priorityUpdated($event)" (nameDeleted)="deleteName($event)"></app-name-form>
-  <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
-</div>
-<mat-paginator *ngIf="names && names.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
-  [pageSizeOptions]="[5, 10, 15]">
-</mat-paginator>
->>>>>>> development_version_update

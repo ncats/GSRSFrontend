@@ -57,6 +57,7 @@
     "jsdraw-wrapper": "file:dist/jsdraw-wrapper/jsdraw-wrapper-0.0.1.tgz",
     "ketcher-wrapper": "file:dist/ketcher-wrapper/ketcher-wrapper-0.0.1.tgz",
     "lodash": "4.17.10",
+    "ng-multiselect-dropdown": "^0.2.10",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.4",
     "ts-loader": "4.5.0",
