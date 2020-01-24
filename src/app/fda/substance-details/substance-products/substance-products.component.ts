@@ -31,8 +31,8 @@ export class SubstanceProductsComponent extends SubstanceCardBaseFilteredList<an
     'ingredientType'
   ];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatSort) sort: MatSort;
 
   //ngAfterViewInit() {
     //this.myDataSource.paginator = this.paginator;
