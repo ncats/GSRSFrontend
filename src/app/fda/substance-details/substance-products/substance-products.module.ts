@@ -16,7 +16,7 @@ import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adve
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceProductsComponent),
+    //DynamicComponentLoaderModule.forChild(SubstanceProductsComponent),
     MatTableModule,
     CdkTableModule,
     MatPaginatorModule,
