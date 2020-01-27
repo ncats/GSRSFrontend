@@ -39,6 +39,11 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
+<!--
 <mat-paginator [length]="filtered && filtered.length || 0" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
+  [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
+-->
+<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true" (page)="getSubstanceClinicalTrials($event)"
   [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>

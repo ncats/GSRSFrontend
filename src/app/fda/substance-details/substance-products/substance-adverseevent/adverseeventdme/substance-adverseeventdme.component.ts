@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
+import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/substance-details-base-table-display';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-substance-adverseeventdme',
@@ -9,39 +11,32 @@ import { AdverseEventService } from '../../../../adverseevent/service/adverseeve
   styleUrls: ['./substance-adverseeventdme.component.scss']
 })
 
-export class SubstanceAdverseEventDmeComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
-  public adverseevents: Array<any> = [];
+export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+ 
   displayedColumns: string[] = [
     'dmeReactions','ptTermMeddra','caseCount', 'dmeCount','dmeCountPercent','weightedAvgPrr'
   ];
    
-  @Input() bdnum: string;
-
   constructor(
     public gaService: GoogleAnalyticsService,
     private adverseEventService: AdverseEventService
   ) {
-    super(gaService);
+    super(gaService, adverseEventService);
   }
 
   ngOnInit() {
-    console.log("inside Adverse DME substance details: ");
-   
-    if (this.substance) {
-      console.log("SUBSTANCE");
+    if (this.bdnum) {
+      this.getSubstanceAdverseEventDme();
     }
-    //if (this.substance && this.substance.uuid) {
-      this.getSubstanceAdverseEvent();
-   // }
   }
 
-  getSubstanceAdverseEvent(): void {
-    this.adverseEventService.  getSubstanceAdverseEventDme(this.bdnum).subscribe(adverseevents => {
-      console.log("AE DME LENGTH: " + adverseevents.length);
-      this.adverseevents = adverseevents;
-      this.filtered = adverseevents;
-      this.pageChange();
-
+  getSubstanceAdverseEventDme(pageEvent?: PageEvent): void {
+    this.setPageEvent(pageEvent);
+    
+    this.adverseEventService.getSubstanceAdverseEventDme(this.bdnum, this.page, this.pageSize).subscribe(results => {
+      this.setResultData(results);  
+    });
+      /*
       this.searchControl.valueChanges.subscribe(value => {
         this.filterList(value, this.adverseevents, this.analyticsEventCategory);
       }, error => {
@@ -49,6 +44,7 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceCardBaseFiltered
       });
       this.countUpdate.emit(adverseevents.length);
     });
+    */
   }
     
 }

@@ -17,6 +17,8 @@ import { map } from 'rxjs/operators';
 
 export class AdverseEventService extends BaseHttpService {
 
+  totalRecords: 0;
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService
@@ -25,41 +27,44 @@ export class AdverseEventService extends BaseHttpService {
   }
 
   getSubstanceAdverseEventPt(
-    bdnum: string
+    bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventPtListByBdnum?bdnum=' + bdnum;
+    const url = 'http://localhost:9000/ginas/app/adverseEventPtListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
 
-    return this.http.get<Array<any>>(url).pipe(
-      map(adverseevent => {
-        console.log("Adverse Event PT Length: " + adverseevent.length);
-       return adverseevent;
+    return this.http.get<Array<any>>(url)
+    .pipe(
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
       })
     );
   }
 
   getSubstanceAdverseEventDme(
-    bdnum: string
+    bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventDmeListByBdnum?bdnum=' + bdnum;
+    const url = 'http://localhost:9000/ginas/app/adverseEventDmeListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
 
-    return this.http.get<Array<any>>(url).pipe(
-      map(adverseevent => {
-        console.log("Adverse Event PT Length: " + adverseevent.length);
-       return adverseevent;
+    return this.http.get<Array<any>>(url)
+    .pipe(
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
       })
     );
 
   }
 
   getSubstanceAdverseEventCvm(
-    bdnum: string
+    bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventCvmListByBdnum?bdnum=' + bdnum;
+    const url = 'http://localhost:9000/ginas/app/adverseEventCvmListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
 
-    return this.http.get<Array<any>>(url).pipe(
-      map(adverseevent => {
-        console.log("Adverse Event PT Length: " + adverseevent.length);
-       return adverseevent;
+    return this.http.get<Array<any>>(url)
+    .pipe(
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
       })
     );
 

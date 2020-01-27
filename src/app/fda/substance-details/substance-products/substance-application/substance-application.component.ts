@@ -10,6 +10,7 @@ import { ApplicationService } from '../../../applications/service/application.se
 })
 
 export class SubstanceApplicationComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
+
   public applications: Array<any> = [];
   displayedColumns: string[] = [
     'appType', 'appNumber', 'center', 'sponsorName', 'applicationStatus', 'applicationSubType'];
@@ -24,8 +25,6 @@ export class SubstanceApplicationComponent extends SubstanceCardBaseFilteredList
   }
 
   ngOnInit() {
-    console.log("inside app substance details: ");
-  
     //if (this.substance && this.substance.uuid) {
       this.getSubstanceApplications();
    // }

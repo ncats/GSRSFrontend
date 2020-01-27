@@ -11,6 +11,8 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
 
+  totalRecords: 0;
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService
@@ -115,14 +117,14 @@ export class ClinicalTrialService extends BaseHttpService {
     return x;
   }
 
-  getSubstanceClinicalTrials(substanceId: string
+  getSubstanceClinicalTrials(bdnum: string, page:number, pageSize: number
     ): Observable<Array<any>> {
-      const url = 'http://localhost:9000/ginas/app/clinicalTrialListByBdnum?bdnum=0249729AA';
+      const url = 'http://localhost:9000/ginas/app/clinicalTrialListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
   
       return this.http.get<Array<any>>(url).pipe(
-        map(clinicaltrials => {
-          console.log("Clinical Trials Length: " + clinicaltrials.length);
-         return clinicaltrials;
+        map(results => {
+          this.totalRecords = results['totalRecords'];
+          return results['data'];
         })
       );
     }

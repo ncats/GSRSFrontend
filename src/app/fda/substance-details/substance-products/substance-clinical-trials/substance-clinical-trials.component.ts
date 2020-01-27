@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';;
+import { Component, OnInit, Input } from '@angular/core';;
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/clinical-trial.service';
+import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-substance-clinical-trials',
@@ -9,8 +11,8 @@ import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/cl
   styleUrls: ['./substance-clinical-trials.component.scss']
 })
 
-export class SubstanceClinicalTrialsComponent extends SubstanceCardBaseFilteredList<any> implements OnInit {
-  public clinicaltrials: Array<any> = [];
+export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+  
   displayedColumns: string[] = [
     'nctNumber',
     'title',
@@ -23,27 +25,23 @@ export class SubstanceClinicalTrialsComponent extends SubstanceCardBaseFilteredL
     public gaService: GoogleAnalyticsService,
     private clinicalTrialService: ClinicalTrialService
   ) {
-    super(gaService);
+    super(gaService, clinicalTrialService);
   }
 
   ngOnInit() {
-    console.log("Inside Substance Clinical Trials: ");
-   
-    if (this.substance) {
-      console.log("SUBSTANCE");
-    }
-    //if (this.substance && this.substance.uuid) {
+    if (this.bdnum) {
       this.getSubstanceClinicalTrials();
-   // }
+    }
   }
 
-  getSubstanceClinicalTrials(): void {
-    this.clinicalTrialService.getSubstanceClinicalTrials('AAAAAAA').subscribe(clinicaltrials => {
-      console.log("Clinical LENGTH: " + clinicaltrials.length);
-      this.clinicaltrials = clinicaltrials;
-      this.filtered = clinicaltrials;
-      this.pageChange();
+  getSubstanceClinicalTrials(pageEvent?: PageEvent): void {
+    this.setPageEvent(pageEvent);
 
+    this.clinicalTrialService.getSubstanceClinicalTrials(this.bdnum, this.page, this.pageSize).subscribe(results => {
+      this.setResultData(results);
+    });
+  
+  /*
       this.searchControl.valueChanges.subscribe(value => {
         this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
       }, error => {
@@ -51,6 +49,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceCardBaseFilteredL
       });
       this.countUpdate.emit(clinicaltrials.length);
     });
+    */
   }
     
 }

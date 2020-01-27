@@ -12,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
 import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
 import { ApplicationsModule} from './applications/applications.module';
+import { GeneralService} from './service/general.service';
 
 const fdaRoutes: Routes = [
   {
@@ -51,7 +52,8 @@ export class FdaModule {
     return {
       ngModule: FdaModule,
       providers: [
-        ProductService
+        ProductService,
+        GeneralService
       ]
     };
   }

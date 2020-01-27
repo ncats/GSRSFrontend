@@ -23,11 +23,9 @@ export class ProductService extends BaseHttpService {
     //const url = `${this.apiBaseUrl}productelist/`;
     return this.http.get<Array<any>>(url)
     .pipe(
-      map(res => {
-        this.totalRecords = res['totalRecords'];
-       // console.log("AAAA: " + JSON.stringify(res['totalRecords']));
-       // console.log("dataAA " +  JSON.stringify(res['data'])); 
-        return res['data'];
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
       })
     );
     //return this.http.get<Array<any>>('/assets/data/gsrs-products-test.json');
