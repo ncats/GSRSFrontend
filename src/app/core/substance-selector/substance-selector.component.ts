@@ -13,7 +13,7 @@ export class SubstanceSelectorComponent implements OnInit {
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
-  @Input() header? = 'Substance';
+  @Input() header = 'Substance';
   @Input() name?: string;
   errorMessage: string;
   showOptions: boolean;
@@ -33,10 +33,10 @@ export class SubstanceSelectorComponent implements OnInit {
         this.selectedSubstance = response;
       }, error => {
         console.log(error);
-        if (this.name && this.name != '') {
+        if (this.name && this.name !== '') {
           this.selectedSubstance = {_name: this.name};
         } else {
-          this.selectedSubstance = {_name: ""};
+          this.selectedSubstance = {_name: ''};
         }
         this.errorMessage = 'Not in database';
       });
