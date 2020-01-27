@@ -117,7 +117,8 @@ export class ClinicalTrialService extends BaseHttpService {
     return x;
   }
 
-  getSubstanceClinicalTrials(bdnum: string, page:number, pageSize: number
+  getSubstanceClinicalTrials(
+    bdnum: string, page:number, pageSize: number
     ): Observable<Array<any>> {
       const url = 'http://localhost:9000/ginas/app/clinicalTrialListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
   

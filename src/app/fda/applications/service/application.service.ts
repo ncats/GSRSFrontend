@@ -17,6 +17,8 @@ import { map } from 'rxjs/operators';
 
 export class ApplicationService extends BaseHttpService {
 
+  totalRecords: 0;
+  
   constructor(
     public http: HttpClient,
     public configService: ConfigService
@@ -47,17 +49,16 @@ export class ApplicationService extends BaseHttpService {
   }
 
   getSubstanceApplications(
-    bdnum: string
+    bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/applicationListByBdnum?bdnum=' + bdnum;
+    const url = 'http://localhost:9000/ginas/app/applicationListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url).pipe(
-      map(applications => {
-        console.log("Applications Length: " + applications.length);
-       return applications;
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
       })
     );
-
   }
 
 } //class
