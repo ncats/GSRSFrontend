@@ -5,7 +5,11 @@
         [formControl]="searchControl" [matAutocomplete]="substanceSearchAuto" (focus)="focused()">
       <mat-hint *ngIf="hintMessage">{{hintMessage}}</mat-hint>
       <mat-error *ngIf="searchControl.invalid">{{errorMessage}}</mat-error>
-      <mat-autocomplete #substanceSearchAuto="matAutocomplete" (optionSelected)="substanceSearchOptionSelected($event)"
+      <mat-autocomplete
+        class="substance-select"
+        panelWidth="auto"
+        #substanceSearchAuto="matAutocomplete"
+        (optionSelected)="substanceSearchOptionSelected($event)"
         (closed)="autoCompleteClosed()">
         <div *ngFor="let field of suggestionsFields">
           <div class="substance-suggestion-field"><span class='field-styling'><b>{{field['display']}}</b></span></div>

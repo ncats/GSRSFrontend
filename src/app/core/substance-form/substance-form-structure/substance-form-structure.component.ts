@@ -18,6 +18,9 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   userMessage: string;
   userMessageTimer: any;
   substanceType: string;
+  anchorElement: HTMLAnchorElement;
+  smiles: string;
+  mol: string;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -28,6 +31,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   }
 
   ngOnInit() {
+    this.anchorElement = document.createElement('a') as HTMLAnchorElement;
     this.substanceFormService.definition.subscribe(def =>{
       this.substanceType = def.substanceClass;
       if(this.substanceType === 'polymer') {
@@ -67,6 +71,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     this.structureEditor = editor;
     this.loadStructure();
     this.structureEditor.structureUpdated().subscribe(molfile => {
+      this.smiles = null;
+      this.mol = null;
       this.updateStructureForm(molfile);
     });
   }
@@ -85,6 +91,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   processStructurePostResponse(structurePostResponse?: StructurePostResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
+      this.smiles = structurePostResponse.structure.smiles;
+      this.mol = structurePostResponse.structure.molfile;
       Object.keys(structurePostResponse.structure).forEach(key => {
         this.structure[key] = structurePostResponse.structure[key];
       });
@@ -126,4 +134,32 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     });
   }
 
+  download(type: 'mol'|'smiles'): void {
+    if (type === 'mol') {
+      this.downloadMol();
+    } else {
+      this.downloadSmiles();
+    }
+  }
+
+  private downloadMol(): void {
+    if (this.mol != null) {
+      const file = new Blob([this.mol], { type: 'chemical/x-mdl-molfile'});
+      this.anchorElement.download = 'substance_structure.mol';
+      this.downloadFile(file);
+    }
+  }
+
+  private downloadSmiles(): void {
+    if (this.smiles != null) {
+      const file = new Blob([this.smiles], { type: 'text/plain'});
+      this.anchorElement.download = 'substance_smiles.txt';
+      this.downloadFile(file);
+    }
+  }
+
+  private downloadFile(file: Blob): void {
+    this.anchorElement.href = window.URL.createObjectURL(file);
+    this.anchorElement.click();
+  }
 }

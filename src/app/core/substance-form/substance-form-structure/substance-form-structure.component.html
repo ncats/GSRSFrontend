@@ -11,7 +11,8 @@
     showSettings="true"
     [type]="substanceType"
     (structureImported)="structureImported($event)"
-    (nameResolved)="nameResolved($event)">
+    (nameResolved)="nameResolved($event)"
+    (download)="download($event)">
   </app-structure-form>
 <div class = "button-container" *ngIf = "substanceType === 'polymer'">
   <button class = "mat-flat-button mat-primary" color = "primary" (click) = "generateSRU()" matTooltip = "generate structural units for this structure">Generate SRUs</button>

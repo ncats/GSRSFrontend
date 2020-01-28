@@ -38,9 +38,17 @@
         <button mat-menu-item (click)="openNameResolverDialog()">
           Resolve name
         </button>
-        <button *ngIf="structure.id" mat-menu-item (click)="openStructureImageModal()">
-          View stereochemistry
-        </button>
+        <span *ngIf="structure.id">
+          <button mat-menu-item (click)="downloadStructure('mol')">
+            Dowload mol
+          </button>
+          <button mat-menu-item (click)="downloadStructure('smiles')">
+            Download smiles
+          </button>
+          <button mat-menu-item (click)="openStructureImageModal()">
+            View stereochemistry
+          </button>
+        </span>
       </mat-menu>
     </div>
   </div>
@@ -103,9 +111,17 @@
       <button mat-menu-item (click)="openNameResolverDialog()">
         Resolve name
       </button>
-      <button *ngIf="structure.id" mat-menu-item (click)="openStructureImageModal()">
-        View stereochemistry
-      </button>
+      <span *ngIf="structure.id">
+        <button mat-menu-item (click)="downloadStructure('mol')">
+          Dowload mol
+        </button>
+        <button mat-menu-item (click)="downloadStructure('smiles')">
+          Download smiles
+        </button>
+        <button mat-menu-item (click)="openStructureImageModal()">
+          View stereochemistry
+        </button>
+      </span>
     </mat-menu>
   </div>
 </form>
