@@ -6,7 +6,9 @@
 
     <ng-container matColumnDef="nctNumber">
       <th mat-header-cell *matHeaderCellDef> NCT Number </th>
-      <td mat-cell *matCellDef="let clinical"> {{clinical.nctNumber}} </td>
+      <td mat-cell *matCellDef="let clinical"> 
+        <a [routerLink]="['/details-clinical-trial', clinical.nctNumber]"{{clinical.nctNumber}}></a>
+      </td>
     </ng-container>
     
     <ng-container matColumnDef="title">

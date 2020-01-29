@@ -29,7 +29,7 @@ export class AdverseEventService extends BaseHttpService {
   getSubstanceAdverseEventPt(
     bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventPtListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
+    const url = this.baseUrl + 'adverseEventPtListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
     .pipe(
@@ -43,7 +43,7 @@ export class AdverseEventService extends BaseHttpService {
   getSubstanceAdverseEventDme(
     bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventDmeListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
+    const url = this.baseUrl + 'adverseEventDmeListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
     .pipe(
@@ -58,7 +58,7 @@ export class AdverseEventService extends BaseHttpService {
   getSubstanceAdverseEventCvm(
     bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/adverseEventCvmListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
+    const url = this.baseUrl + 'adverseEventCvmListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
     .pipe(

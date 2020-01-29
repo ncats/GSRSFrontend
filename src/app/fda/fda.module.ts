@@ -13,6 +13,7 @@ import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
 import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
 import { ApplicationsModule} from './applications/applications.module';
 import { GeneralService} from './service/general.service';
+import { MatTabsModule } from '@angular/material/tabs';
 
 const fdaRoutes: Routes = [
   {
@@ -28,6 +29,7 @@ const fdaRoutes: Routes = [
     DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
     MatCardModule,
+    MatTabsModule,
     ClinicalTrialsModule.forRoot(),
     ApplicationsModule
   ],

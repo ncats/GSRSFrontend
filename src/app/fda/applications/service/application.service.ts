@@ -51,7 +51,7 @@ export class ApplicationService extends BaseHttpService {
   getSubstanceApplications(
     bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {
-    const url = 'http://localhost:9000/ginas/app/applicationListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
+    const url = this.baseUrl + 'applicationListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url).pipe(
       map(results => {

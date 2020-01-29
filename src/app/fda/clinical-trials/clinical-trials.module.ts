@@ -17,6 +17,7 @@ import { MiniSearchComponent } from './mini-search/mini-search.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { pipes2Br } from './filters/pipes-2-br';
 import { ClinicalTrialService } from './clinical-trial/clinical-trial.service';
+import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details.component';
 
 
 const clinicalTrialsRoutes: Routes = [
@@ -31,6 +32,10 @@ const clinicalTrialsRoutes: Routes = [
     {
     path: 'add-clinical-trial',
       component: ClinicalTrialAddComponent
+    },
+    {
+    path: 'details-clinical-trial/:nctNumber',
+      component: ClinicalTrialDetailsComponent
     }
 ];
 
@@ -54,7 +59,8 @@ const clinicalTrialsRoutes: Routes = [
     ClinicalTrialEditComponent,
     ClinicalTrialAddComponent,
     MiniSearchComponent,
-    pipes2Br
+    pipes2Br,
+    ClinicalTrialDetailsComponent
   ],
   exports: [
     ClinicalTrialsBrowseComponent,
