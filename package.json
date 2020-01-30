@@ -16,7 +16,7 @@
     "start:fda:local": "npm run build-libraries && npm run copy-libs-src && ng serve --aot=true --configuration=fda.local --sourceMap=false",
     "start:fda:pre-prod": "npm run build-libraries && npm run copy-libs-src && ng serve --aot=true --configuration=fda.pre-prod --sourceMap=false",
     "start:fda:prod": "npm run build-libraries && npm run copy-libs-src && ng serve --aot=true --configuration=fda.prod --sourceMap=false",
-    "start:gsrs:dev": "npm run build-libraries && npm run copy-libs-src && ng serve --aot=true --configuration=gsrs.dev --sourceMap=false",
+    "start:gsrs:dev": "npm run build-libraries && npm run copy-libs-src && ng serve --aot=true --configuration=gsrs.dev --sourceMap=true",
     "start:gsrs:local": "npm run build-libraries && npm run copy-libs-src && ng serve --aot=true --configuration=gsrs.local --sourceMap=false",
     "start:gsrs:pre-prod": "npm run build-libraries && npm run copy-libs-src && ng serve --aot=true --configuration=gsrs.pre-prod --sourceMap=false",
     "start:gsrs:prod": "npm run build-libraries && npm run copy-libs-src && ng serve --aot=true --configuration=gsrs.prod --sourceMap=false",

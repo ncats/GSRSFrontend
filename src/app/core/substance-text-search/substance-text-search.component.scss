@@ -57,10 +57,6 @@ form {
   transition: all 250ms linear;
 }
 
-.substance-select {
-  max-width: 400px;
-}
-
 @media(min-width: $nav-breaking-point) {
 
   .activate-search-button {
@@ -153,4 +149,8 @@ form {
   to {
     width: 0;
   }
+}
+
+::ng-deep .substance-select {
+  max-width: 500px !important;
 }
