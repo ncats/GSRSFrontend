@@ -13,7 +13,16 @@
     
         <ng-container matColumnDef="productNDC">
           <th mat-header-cell *matHeaderCellDef> Product NDC </th>
-          <td mat-cell *matCellDef="let product"><a [routerLink]="['/products', product.productNDC]">{{product.productNDC}}></a></td>
+          <td mat-cell *matCellDef="let product">
+            {{product.fromTable}}
+            {{product.id}}
+            <div *ngIf="product.fromTable === 'SRS'">
+            <a [routerLink]="['/productDetailsSrs2', product.id]">{{product.productNDC}}</a>
+            </div>
+          <div *ngIf="product.fromTable != 'SRS'">
+              <a [routerLink]="['/productDetailsSrs2', product.id]">{{product.productNDC}}</a>
+          </div>
+          </td>
         </ng-container>
        
         <ng-container matColumnDef="name">

@@ -34,12 +34,14 @@ export class ProductService extends BaseHttpService {
   }
 
   getProduct(productId: number): Observable<any> {
-    const url = this.baseUrl + 'productListBySubstanceUuid?substanceUuid=' + productId;
+    const url = this.baseUrl + 'productDetailsSrs2?id=' + productId;
     
-    return this.http.get<any>('/assets/data/gsrs-products-test.json').pipe(
-      map(products => {
-        return products[0];
+    return this.http.get<any>(url)
+    .pipe(
+      map(result => {
+        return result;
       })
     );
   }
+
 }

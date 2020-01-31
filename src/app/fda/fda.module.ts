@@ -19,6 +19,10 @@ const fdaRoutes: Routes = [
   {
     path: 'products/:id',
     component: ProductDetailsComponent
+  },
+  {
+    path: 'productDetailsSrs2/:id',
+    component: ProductDetailsComponent
   }
 ];
 
