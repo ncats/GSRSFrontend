@@ -1,0 +1,226 @@
+<div class="details-container margintop80px">
+  <mat-card>
+    <mat-card-title>
+      Product Elist Details
+    </mat-card-title>
+    <mat-card-content *ngIf="product">
+      
+      <div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+            Product NDC:
+          </div>
+          <div class="product-property-value">
+            {{product.productNDC}}
+          </div>
+        </div>
+        <div class="product-property">
+          <div class="product-property-key">
+            Application Number:
+          </div>
+          <div class="product-property-value">
+            {{product.applicationNumber}}
+          </div>
+        </div>
+      </div>
+      
+      <div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+            Product Name:
+          </div>
+          <div class="product-property-value">
+            {{product.productName}}
+          </div>
+        </div>
+        <div class="product-property">
+          <div class="product-property-key">
+            Product Name Type:
+          </div>
+          <div class="product-property-value">
+            {{product.productTypeName}}
+          </div>
+        </div>
+      </div>
+      
+      <div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+            Non Proprietary Name:
+          </div>
+          <div class="product-property-value">
+            {{product.nonProprietaryName}}
+          </div>
+        </div>
+        <div class="product-property">
+          <div class="product-property-key">
+            Proprietary Name Suffix:
+          </div>
+          <div class="product-property-value">
+            {{product.proprietaryNameSuffix}}
+          </div>
+        </div>
+      </div>
+      <div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+            Labeler Name:
+          </div>
+          <div class="product-property-value">
+            {{product.labelerName}}
+          </div>
+        </div>
+        <div class="product-property">
+          <div class="product-property-key">
+            Dosage Form Name:
+          </div>
+          <div class="product-property-value">
+             {{product.dosageFormName}}
+          </div>
+        </div>
+      </div>
+      <div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+            Marketing Category Name:
+          </div>
+          <div class="product-property-value">
+            {{product.marketingCategoryCode}}
+          </div>
+        </div>
+        <div class="product-property">
+          <div class="product-property-key">
+            Start Marketing Date:
+          </div>
+          <div class="product-property-value">
+            {{product.startMarketingDate}}
+          </div>
+        </div>
+      </div>
+      <div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+            Route Name:
+          </div>
+          <div class="product-property-value">
+
+          </div>
+        </div>
+        <div class="product-property">
+          <div class="product-property-key">
+            End Marketing Date:
+          </div>
+          <div class="product-property-value">
+            {{product.endMarketingDate}}
+          </div>
+        </div>
+      </div>
+      <div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+            Color:
+          </div>
+          <div class="product-property-value">
+
+          </div>
+        </div>
+        <div class="product-property">
+          <div class="product-property-key">
+            Flavor:
+          </div>
+          <div class="product-property-value">
+
+          </div>
+        </div>
+      </div>
+      <div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+            Shape:
+          </div>
+          <div class="product-property-value">
+
+          </div>
+        </div>
+        <div class="product-property">
+          <div class="product-property-key">
+            Imprint Text:
+          </div>
+          <div class="product-property-value">
+
+          </div>
+        </div>
+      </div>
+      <div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+            Size (mm):
+          </div>
+          <div class="product-property-value">
+
+          </div>
+        </div>
+        <div class="product-property">
+          <div class="product-property-key">
+            Number of Fragments:
+          </div>
+          <div class="product-property-value">
+
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="details-container">
+  <mat-card>
+    <mat-card-title>
+      Product Active
+    </mat-card-title>
+    <mat-card-content>
+      <table class="tableStyle">
+        <tr height="30px" >
+            <td><b>Name</b></td>
+            <td><b>Active Moiety Name</b></td>
+            <td><b>Structure</b></td>
+            <td><b>Unii</b></td>
+            <td><b>Strength Number (Unit)</b></td>
+        </tr>
+        <tr *ngFor="let x of product.prodActiveElistList">
+          <td>{{ x.name }}</td>
+          <td>{{ x.activeMoietyName }}</td>
+          <td></td>
+          <td>{{ x.unii }}</td>
+          <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+        </tr>
+      </table>
+  </mat-card-content>
+  </mat-card>    
+</div>
+
+<div class="details-container">
+    <mat-card>
+      <mat-card-title>
+        Product Active
+      </mat-card-title>
+      <mat-card-content>
+        <table class="tableStyle">
+          <tr height="30px" >
+              <td><b>Name</b></td>
+              <td><b>Unii</b></td>
+              <td><b>Strength Number (Unit)</b></td>
+          </tr>
+          <tr *ngFor="let x of product.prodInactiveElistList">
+            <td>{{ x.name }}</td>
+            <td>{{ x.unii }}</td>
+            <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+          </tr>
+        </table>
+    </mat-card-content>
+    </mat-card>    
+  </div>
+
+
+<div class="font9px colorgray padleft200px">Source:Elist</div>
+

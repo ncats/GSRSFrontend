@@ -33,9 +33,9 @@ export class ProductService extends BaseHttpService {
 
   }
 
-  getProduct(productId: number): Observable<any> {
-    const url = this.baseUrl + 'productDetailsSrs2?id=' + productId;
-    
+  getProduct(productId: string, src: string): Observable<any> {
+    const url = this.baseUrl + 'productDetails2?id=' + productId + '&src=' + src;
+
     return this.http.get<any>(url)
     .pipe(
       map(result => {

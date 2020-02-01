@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { ProductService } from '../../product/product.service';
+import { ProductService } from '../../product/service/product.service';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table-display';
