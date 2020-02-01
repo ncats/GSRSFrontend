@@ -8,12 +8,12 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { SafeUrl } from '@angular/platform-browser';
 
-/*
+
 @Component({
   selector: 'app-clinical-trial-details-base',
   template: '',
-  styleUrl: '[]
-*/
+  styleUrls: ['./clinical-trial-details-base.component.scss']
+})
 
 export class ClinicalTrialDetailsBaseComponent implements OnInit {
 

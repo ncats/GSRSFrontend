@@ -9,7 +9,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { MatCardModule } from '@angular/material/card';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical-trials-browse.component';
 import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
 import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
@@ -36,11 +36,11 @@ const clinicalTrialsRoutes: Routes = [
       component: ClinicalTrialAddComponent
     },
     {
-    path: 'clinicalTrialDetails/:nctNumber',
+    path: 'clinicalTrialDetails/:nctNumber/:src',
       component: ClinicalTrialDetailsComponent
     },
     {
-    path: 'clinicalTrialEuropeDetails/:nctNumber',
+    path: 'clinicalTrialEuropeDetails/:nctNumber/:src',
       component: ClinicalTrialEuropeDetailsComponent
     }
 ];
@@ -54,6 +54,7 @@ const clinicalTrialsRoutes: Routes = [
     MatIconModule,
     MatButtonModule,
     MatPaginatorModule,
+    MatCardModule,
     ReactiveFormsModule,
     FormsModule,
     MatCheckboxModule,

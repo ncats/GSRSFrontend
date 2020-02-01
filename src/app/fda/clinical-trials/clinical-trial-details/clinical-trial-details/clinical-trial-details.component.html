@@ -1,4 +1,148 @@
-<br><br><br>
-<br><br><br>
-<p>clinical-trial-details works!</p>
-{{clinicalTrial.nctNumber}}
+<div class="details-container margintop80px">
+  <mat-card>
+    <mat-card-title>
+        Clinical Trial Details
+    </mat-card-title>
+    <mat-card-content *ngIf="clinicalTrial">
+			
+			<div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+						NCT Number:
+          </div>
+          <div class="product-property-value">
+            {{clinicalTrial.nctNumber}}
+          </div>
+				</div>
+				<div class="product-property">
+					<div class="product-property-key">
+						Recruitment:
+					</div>
+					<div class="product-property-value">
+						{{clinicalTrial.recruitment}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+						Title:
+          </div>
+          <div class="product-property-value">
+            {{clinicalTrial.title}}
+          </div>
+				</div>
+				<div class="product-property">
+					<div class="product-property-key">
+						Conditions:
+					</div>
+					<div class="product-property-value">
+						{{clinicalTrial.conditions}}
+					</div>
+				</div>
+			</div>
+
+			<div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+						Sponsor:
+          </div>
+          <div class="product-property-value">
+            {{clinicalTrial.sponsor}}
+          </div>
+				</div>
+				<div class="product-property">
+					<div class="product-property-key">
+						Intervention:
+					</div>
+					<div class="product-property-value">
+						{{clinicalTrial.intervention}}
+					</div>
+				</div>
+			</div>
+
+			<div class="product-details-row">
+        <div class="product-property">
+          <div class="product-property-key">
+						Funded Bys:
+          </div>
+          <div class="product-property-value">
+            {{clinicalTrial.fundedBys}}
+          </div>
+				</div>
+				<div class="product-property">
+					<div class="product-property-key">
+						Phases:
+					</div>
+					<div class="product-property-value">
+						{{clinicalTrial.phases}}
+					</div>
+				</div>
+			</div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<p>clinial Trial details works!</p>
+<table class="bordergray" width="98%">
+    <tr valign="top">
+        <td class="label3">Study Types:</td>
+        <td style="word-wrap:break-word;width:330px;">{{clinicalTrial.studyTypes}}</td>
+        <td class="label3">Age Groups:</td>
+        <td>{{clinicalTrial.ageGroups}}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label3">Study Designs:</td>
+        <td style="word-wrap:break-word;width:330px;">{{clinicalTrial.studyDesigns}}</td>
+        <td class="label3">Gender:</td>
+        <td>{{clinicalTrial.gender}}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label3">Study Results:</td>
+        <td style="word-wrap:break-word;width:330px;">{{clinicalTrial.studyResults}}</td>
+        <td class="label3">Enrollment:</td>
+        <td>{{clinicalTrial.enrollment}}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label3">Other Ids:</td>
+        <td style="word-wrap:break-word;width:330px;">{{clinicalTrial.otherIds}}</td>
+        <td class="label3">Acronym:</td>
+        <td>{{clinicalTrial.acronym}}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label3">Study Start Date:</td>
+        <td style="word-wrap:break-word;width:330px;">{{clinicalTrial.startDate}}</td>
+        <td class="label3">Last Verified:</td>
+        <td>{{clinicalTrial.lastVerified}}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label3">Study Completion Date:</td>
+        <td style="word-wrap:break-word;width:330px;">{{clinicalTrial.completionDate}}</td>
+        <td class="label3">Primary Completion Date:</td>
+        <td>{{clinicalTrial.primaryCompletionDate}}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label3">First Received:</td>
+        <td style="word-wrap:break-word;width:330px;">{{clinicalTrial.firstReceived}}</td>
+        <td class="label3">Last Updated:</td>
+        <td>{{clinicalTrial.lastUpdated}}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label3">url:</td>
+        <td style="word-wrap:break-word;width:330px;"><a href="clinicalTrial.url" target="_blank">{{clinicalTrial.url}}</a></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr valign="top">
+        <td class="label3">Outcome Measures:</td>
+        <td colspan="3">{{clinicalTrial.outcomeMeasures}}</td>
+    </tr>
+    <tr>
+        <td class="label3">Locations:</td>
+        <td colspan="3">
+           
+        </td>
+    </tr>
+</table>
