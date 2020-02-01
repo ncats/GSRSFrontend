@@ -121,7 +121,7 @@ export class ClinicalTrialService extends BaseHttpService {
     bdnum: string, page: number, pageSize: number
     ): Observable<Array<any>> {
       const url = this.baseUrl + 'clinicalTrialListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
-  
+
       return this.http.get<Array<any>>(url).pipe(
         map(results => {
           this.totalRecords = results['totalRecords'];
@@ -131,10 +131,10 @@ export class ClinicalTrialService extends BaseHttpService {
     }
 
   getClinicalTrialDetails(
-      nctNumber: string
+      nctNumber: string, src: string
       ): Observable<any> {
-        const url = this.baseUrl + 'clinicalTrialDetails2?nctNumber=' + nctNumber;
-    
+        const url = this.baseUrl + 'clinicalTrialDetails2?nctNumber=' + nctNumber + '&src=' + src;
+
         return this.http.get<any>(url).pipe(
           map(results => {
             return results;

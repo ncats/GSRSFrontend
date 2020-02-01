@@ -17,8 +17,10 @@ import { MiniSearchComponent } from './mini-search/mini-search.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { pipes2Br } from './filters/pipes-2-br';
 import { ClinicalTrialService } from './clinical-trial/clinical-trial.service';
-import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details.component';
-
+import { ClinicalTrialDetailsBaseComponent } from './clinical-trial-details/clinical-trial-details-base.component';
+import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details/clinical-trial-details.component';
+// tslint:disable-next-line: max-line-length
+import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/clinical-trial-europe-details/clinical-trial-europe-details.component';
 
 const clinicalTrialsRoutes: Routes = [
    {
@@ -34,8 +36,12 @@ const clinicalTrialsRoutes: Routes = [
       component: ClinicalTrialAddComponent
     },
     {
-    path: 'details-clinical-trial/:nctNumber',
+    path: 'clinicalTrialDetails/:nctNumber',
       component: ClinicalTrialDetailsComponent
+    },
+    {
+    path: 'clinicalTrialEuropeDetails/:nctNumber',
+      component: ClinicalTrialEuropeDetailsComponent
     }
 ];
 
@@ -60,7 +66,9 @@ const clinicalTrialsRoutes: Routes = [
     ClinicalTrialAddComponent,
     MiniSearchComponent,
     pipes2Br,
-    ClinicalTrialDetailsComponent
+    ClinicalTrialDetailsComponent,
+    ClinicalTrialEuropeDetailsComponent,
+    ClinicalTrialDetailsBaseComponent
   ],
   exports: [
     ClinicalTrialsBrowseComponent,

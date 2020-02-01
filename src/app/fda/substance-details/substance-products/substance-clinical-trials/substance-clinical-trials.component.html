@@ -8,6 +8,14 @@
       <th mat-header-cell *matHeaderCellDef> NCT Number </th>
       <td mat-cell *matCellDef="let clinical"> 
         <a [routerLink]="['/details-clinical-trial', clinical.nctNumber]"{{clinical.nctNumber}}></a>
+      
+        <div *ngIf="clinical.fromTable === 'SRS'">
+          <a [routerLink]="['/clinicalTrialDetails', clinical.nctNumber, 'srs']" target="_blank">{{product.productNDC}}</a>
+        </div>
+        <div *ngIf="clinical.fromTable != 'SRS'">
+          <a [routerLink]="['/clinicalTrialEuropeDetails', clinical.nctNumber, 'eu']" target="_blank">{{product.productNDC}}</a>
+          <br><span class="font9px colorgray">(Europe)</span>
+        </div>
       </td>
     </ng-container>
     
