@@ -1,10 +1,9 @@
 import { HttpParams } from '@angular/common/http';
 import { ClinicalTrialFacetParam } from './clinical-trial-facet-param.model';
-import { HttpParamsOptions } from '@angular/common/http/src/params';
 
 export class ClinicalTrialHttpParams extends HttpParams {
 
-    constructor(options?: HttpParamsOptions) {
+    constructor(options?: any) {
         super(options);
     }
 
