@@ -100,6 +100,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
     navigationExtras.queryParams['facets'] = this.activatedRoute.snapshot.queryParams['facets'] || '';
     navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
+    navigationExtras.queryParams['view'] = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.location.replaceState(
       this.router.createUrlTree(
         [this.locationStrategy.path().split('?')[0].replace(environment.baseHref, '')],
@@ -118,6 +119,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         this.privateSearchSeqType = params.get('seq_type') || '';
         this.smiles = params.get('smiles') || '';
         this.order = params.get('order') || '';
+        this.view = params.get('view') || 'cards';
 
         if (params.get('pageSize')) {
           this.pageSize = parseInt(params.get('pageSize'), null);
@@ -299,6 +301,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['facets'] = facetString;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+    navigationExtras.queryParams['view'] = this.view;
 
     this.router.navigate(
       [],
