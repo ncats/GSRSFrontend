@@ -369,5 +369,12 @@
       "Family",
       "Parts"
     ]
-  }
+  },
+  "codeSystemOrder": [
+    "BDNUM",
+    "CAS",
+    "WHO-ATC",
+    "EVMPD",
+    "NCI"
+  ]
 }

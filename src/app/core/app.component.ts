@@ -137,10 +137,10 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-settings_applications-24px.svg'));
     iconRegistry.addSvgIcon(
       'file_copy',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-file-copy-24px.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-file_copy-24px.svg'));
     iconRegistry.addSvgIcon(
       'outline-file_copy',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-file-copy-24px.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-file_copy-24px.svg'));
   }
 
 }
