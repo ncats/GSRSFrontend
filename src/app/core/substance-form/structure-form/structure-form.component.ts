@@ -25,6 +25,7 @@ export class StructureFormComponent implements OnInit {
   @Input() type?: string;
   @Output() structureImported = new EventEmitter<StructurePostResponse>();
   @Output() nameResolved = new EventEmitter<string>();
+  @Output() download = new EventEmitter<'mol'|'smiles'>();
   private overlayContainer: HTMLElement;
 
   constructor(
@@ -116,6 +117,8 @@ export class StructureFormComponent implements OnInit {
     });
   }
 
-
+  downloadStructure(type: 'mol'|'smiles'): void {
+    this.download.emit(type);
+  }
 
 }

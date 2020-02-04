@@ -1,7 +1,8 @@
 <div class="substance-selector-container">
     <app-substance-text-search
+      [ngClass]="{'hidden': selectedSubstance}"
       (searchPerformed)="processSubstanceSearch($event)" [eventCategory]="eventCategory"
-      [placeholder]="placeholder" *ngIf="!selectedSubstance">
+      [placeholder]="placeholder">
     </app-substance-text-search>
     <div class="selected-substance" *ngIf="selectedSubstance" (mouseenter)="showOptions = true" (mouseleave)="showOptions = false">
       <div class="selected-substance-options" *ngIf="showOptions">

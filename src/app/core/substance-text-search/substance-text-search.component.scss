@@ -150,3 +150,7 @@ form {
     width: 0;
   }
 }
+
+::ng-deep .substance-select {
+  max-width: 500px !important;
+}

@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormBase } from '../substance-form-base';
 import { Editor } from '../../structure-editor/structure.editor.model';
 import { SubstanceStructure } from '@gsrs-core/substance/substance.model';
@@ -66,6 +66,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     this.structureEditor = editor;
     this.loadStructure();
     this.structureEditor.structureUpdated().subscribe(molfile => {
+      this.smiles = null;
+      this.mol = null;
       this.updateStructureForm(molfile);
     });
   }
@@ -160,5 +162,4 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     this.anchorElement.href = window.URL.createObjectURL(file);
     this.anchorElement.click();
   }
-
 }
