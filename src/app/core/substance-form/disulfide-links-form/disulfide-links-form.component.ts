@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Link, Site} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
@@ -14,7 +14,7 @@ import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-
   templateUrl: './disulfide-links-form.component.html',
   styleUrls: ['./disulfide-links-form.component.scss']
 })
-export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
+export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private privateLink: Link;
   public cysteine: Array<Site> = [];
@@ -52,10 +52,18 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         const cysteineSubscription = this.substanceFormService.substanceCysteineSites.subscribe(cysteine => {
           this.cysteine = cysteine;
-          this.subscriptions.push(cysteineSubscription);
         });
+        this.subscriptions.push(cysteineSubscription);
+
       });
   }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
   @Input()
   set link(link: Link) {
     this.privateLink = link;

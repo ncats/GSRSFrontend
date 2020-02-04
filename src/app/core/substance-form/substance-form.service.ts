@@ -17,9 +17,7 @@ import {
   AgentModification,
   PhysicalModification,
   StructuralModification,
-  PhysicalModificationParameter,
   Protein,
-  ProteinFeatures,
   Feature,
   Sugar,
   Linkage,
@@ -806,7 +804,7 @@ export class SubstanceFormService {
   }
 
 
-  updateMoieties(moieties: Array<SubstanceMoiety>): any {
+  updateMoieties(moieties: Array<SubstanceMoiety>): void {
 
     const moietiesCopy = moieties.slice();
     const substanceMoietiesCopy = this.substance.moieties ? this.substance.moieties.slice() : [];
@@ -1614,7 +1612,7 @@ export class SubstanceFormService {
   }
 
 
-  //custom sites for proteins
+  // custom sites for proteins
 
   emitCustomFeaturesUpdate(): void {
     this.customFeaturesEmitter.next(this.customFeatures);
@@ -2185,12 +2183,7 @@ export class SubstanceFormService {
     }
   }
 
-  setSRUFromConnectivityDisplay(srus: any) {
-    for (const i in srus) {
-      const map = this.sruDisplayToConnectivity(srus[i]._displayConnectivity);
-      srus[i].attachmentMap = map;
-    }
-  }
+
 
 }
 

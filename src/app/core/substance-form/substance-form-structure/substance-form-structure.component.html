@@ -1,9 +1,11 @@
 <div>
   <div>
-    <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
-  </div>
-  <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">
-    {{userMessage}}
+    <div>
+      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
+    </div>
+    <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">
+      {{userMessage}}
+    </div>
   </div>
 
   <app-structure-form

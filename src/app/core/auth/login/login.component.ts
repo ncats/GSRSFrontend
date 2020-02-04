@@ -64,7 +64,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         subscription.unsubscribe();
         this.loadingService.setLoading(false);
         if (auth) {
-          console.log(auth);
           const route = this.activatedRoute.snapshot.queryParamMap.get('path') || '/browse-substance';
           this.router.navigate([route]);
         } else {

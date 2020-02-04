@@ -23,6 +23,8 @@ import { searchSortValues } from '../utils/search-sort-values';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location, LocationStrategy } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
+import {switchMap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-substances-browse',
@@ -48,7 +50,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   hasBackdrop = false;
   view = 'cards';
   facetString: string;
-  displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes'];
+  displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes', 'actions'];
   public smiles: string;
   private argsHash?: number;
   public auth?: Auth;
@@ -59,6 +61,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   searchText: string[] = [];
   private overlayContainer: HTMLElement;
   toggle: Array<boolean> = [];
+  searchtext2: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -687,20 +690,43 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.downloadFile(response, filename);
     });
   }
+
   getFasta(id: string, filename: string): void {
     this.substanceService.getFasta(id).subscribe(response => {
       this.downloadFile(response, filename);
     });
   }
-//uncomment when substanceservice is updated
-  /*moreFacets(index: number, facet: Facet) {
-      this.substanceService.retrieveFacetValues(this.facets[index]).subscribe( resp => {
-        this.facets[index]._self = resp.uri;
-        this.facets[index].values = this.facets[index].values.concat(resp.content);
-        facet = this.facets[index];
-      });
 
-  }*/
+  moreFacets(index: number, facet: Facet) {
+      this.substanceService.retrieveNextFacetValues(this.facets[index]).subscribe( resp => {
+        this.facets[index].$next = resp.$next;
+        this.facets[index].values = this.facets[index].values.concat(resp.content);
+        this.facets[index].$fetched = this.facets[index].values;
+        this.facets[index].$total = resp.ftotal;
+      });
+  }
+
+  lessFacets(index: number) {
+     this.substanceService.retrieveFacetValues(this.facets[index]).subscribe( response => {
+       this.facets[index].values = response.content;
+       this.facets[index].$fetched = response.content;
+       this.facets[index].$next = response.$next;
+     });
+  }
+
+  filterFacets(index: number, event: any) {
+    const facet = this.facets[index];
+    if (event.length > 0) {
+      const processed = facet.name.replace(' ', '+');
+      this.substanceService.filterFacets(event, processed).subscribe(response => {
+        facet.values = response.content;
+      });
+    } else {
+      this.substanceService.retrieveFacetValues(facet).subscribe(response => {
+        facet.values = response.content;
+      });
+    }
+  }
 
   downloadFile(response: any, filename: string): void {
     const dataType = response.type;

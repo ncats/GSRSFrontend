@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {Component, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import { SubstanceFormBase } from '../substance-form-base';
 import { Editor } from '../../structure-editor/structure.editor.model';
 import { SubstanceStructure } from '@gsrs-core/substance/substance.model';
@@ -18,6 +18,9 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   userMessage: string;
   userMessageTimer: any;
   substanceType: string;
+  anchorElement: HTMLAnchorElement;
+  smiles: string;
+  mol: string;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -28,12 +31,13 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   }
 
   ngOnInit() {
-    this.substanceFormService.definition.subscribe(def =>{
+    this.anchorElement = document.createElement('a') as HTMLAnchorElement;
+    this.substanceFormService.definition.subscribe(def => {
       this.substanceType = def.substanceClass;
-      if(this.substanceType === 'polymer') {
+      if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
         this.substanceFormService.substanceDisplayStructure.subscribe(structure => {
-          if(structure){
+          if (structure) {
             this.structure = structure;
           } else {
             this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
@@ -42,7 +46,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
           }
           this.loadStructure();
         });
-      }else {
+      } else {
         this.menuLabelUpdate.emit('Structure');
         this.substanceFormService.substanceStructure.subscribe(structure => {
           this.structure = structure;
@@ -54,12 +58,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   }
 
   ngAfterViewInit() {
-    if(this.substanceType === 'polymer') {
-      this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
-        // this.structure = structure;
-        // this.loadStructure();
-      });
-    }
+
   }
 
   editorOnLoad(editor: Editor): void {
@@ -77,6 +76,11 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     }
   }
 
+  molvecUpdate(mol: any): void {
+    this.updateStructureForm(mol);
+    this.structureEditor.setMolecule(mol);
+  }
+
   updateStructureForm(molfile: string): void {
     this.structureService.postStructure(molfile).subscribe(response => {
       this.processStructurePostResponse(response);
@@ -85,6 +89,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   processStructurePostResponse(structurePostResponse?: StructurePostResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
+      this.smiles = structurePostResponse.structure.smiles;
+      this.mol = structurePostResponse.structure.molfile;
       Object.keys(structurePostResponse.structure).forEach(key => {
         this.structure[key] = structurePostResponse.structure[key];
       });
@@ -124,6 +130,35 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
         this.substanceFormService.updateSRUs(response.structuralUnits);
       }
     });
+  }
+
+  download(type: 'mol'|'smiles'): void {
+    if (type === 'mol') {
+      this.downloadMol();
+    } else {
+      this.downloadSmiles();
+    }
+  }
+
+  private downloadMol(): void {
+    if (this.mol != null) {
+      const file = new Blob([this.mol], { type: 'chemical/x-mdl-molfile'});
+      this.anchorElement.download = 'substance_structure.mol';
+      this.downloadFile(file);
+    }
+  }
+
+  private downloadSmiles(): void {
+    if (this.smiles != null) {
+      const file = new Blob([this.smiles], { type: 'text/plain'});
+      this.anchorElement.download = 'substance_smiles.txt';
+      this.downloadFile(file);
+    }
+  }
+
+  private downloadFile(file: Blob): void {
+    this.anchorElement.href = window.URL.createObjectURL(file);
+    this.anchorElement.click();
   }
 
 }

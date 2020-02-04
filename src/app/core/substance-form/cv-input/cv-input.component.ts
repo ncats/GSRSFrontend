@@ -6,7 +6,7 @@ import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
-import {DataDictionaryService} from "@gsrs-core/utils/data-dictionary.service";
+import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
 
 /*
   used for any input that uses cv vocabulary to handle custom values after selecting 'other'
@@ -41,15 +41,14 @@ export class CvInputComponent implements OnInit {
   ngOnInit() {
     if (this.vocabulary) {
       this.vocabulary = this.addOtherOption(this.vocabulary, this.privateMod);
-    } else if (this.key){
+    } else if (this.key) {
       this.dictionary = this.dictionaryService.getDictionaryRow(this.key);
       this.title = this.dictionary.fieldName;
       this.vocabName = this.dictionary.CVDomain;
       this.cvService.getDomainVocabulary(this.vocabName).subscribe(response => {
         this.vocabulary = response[this.vocabName].list;
       });
-    }
-    else {
+    } else {
       this.vocabulary = [];
     this.vocabName = this.domain;
       this.cvService.getDomainVocabulary(this.vocabName).subscribe(response => {

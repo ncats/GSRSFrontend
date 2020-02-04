@@ -13,6 +13,8 @@ export interface Facet {
     $fdim?: number;
     $total?: number;
     $fskip?: number;
+    $next?: string;
+    $fetched: Array<FacetValue>;
 }
 
 /**

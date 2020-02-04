@@ -58,9 +58,11 @@ import {LinkFormComponent} from '@gsrs-core/substance-form/link-form/link-form.c
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {MixtureComponentFormComponent} from '@gsrs-core/substance-form/mixture-component-form/mixture-component-form.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {ConstituentFormComponent} from "@gsrs-core/substance-form/constituent-form/constituent-form.component";
-import {MonomerFormComponent} from "@gsrs-core/substance-form/monomer-form/monomer-form.component";
-import {StructuralUnitFormComponent} from "@gsrs-core/substance-form/structural-unit-form/structural-unit-form.component";
+import {ConstituentFormComponent} from '@gsrs-core/substance-form/constituent-form/constituent-form.component';
+import {MonomerFormComponent} from '@gsrs-core/substance-form/monomer-form/monomer-form.component';
+import {StructuralUnitFormComponent} from '@gsrs-core/substance-form/structural-unit-form/structural-unit-form.component';
+import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
+import {NgxJsonViewerModule} from 'ngx-json-viewer';
 
 @NgModule({
   imports: [
@@ -89,7 +91,8 @@ import {StructuralUnitFormComponent} from "@gsrs-core/substance-form/structural-
     SubstanceSelectorModule,
     MatListModule,
     FileSelectModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    NgxJsonViewerModule
   ],
   declarations: [
     AccessManagerComponent,
@@ -128,7 +131,8 @@ import {StructuralUnitFormComponent} from "@gsrs-core/substance-form/structural-
     CvInputComponent,
     CvDialogComponent,
     MonomerFormComponent,
-    StructuralUnitFormComponent
+    StructuralUnitFormComponent,
+    JsonDialogComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -165,7 +169,8 @@ import {StructuralUnitFormComponent} from "@gsrs-core/substance-form/structural-
     CvInputComponent,
     MonomerFormComponent,
     CvDialogComponent,
-    StructuralUnitFormComponent
+    StructuralUnitFormComponent,
+    JsonDialogComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
@@ -176,7 +181,8 @@ import {StructuralUnitFormComponent} from "@gsrs-core/substance-form/structural-
     SubunitSelectorDialogComponent,
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
-    CvDialogComponent
+    CvDialogComponent,
+    JsonDialogComponent
   ]
 })
 export class SubstanceFormModule { }

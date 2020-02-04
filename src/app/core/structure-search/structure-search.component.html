@@ -2,7 +2,7 @@
   <mat-card>
     <div class="structure-editor-actions-container">
       <div class="editor-container">
-        <app-structure-editor (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
+        <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)"></app-structure-editor>
       </div>
       <div class="search-actions">
         <div class="two">
