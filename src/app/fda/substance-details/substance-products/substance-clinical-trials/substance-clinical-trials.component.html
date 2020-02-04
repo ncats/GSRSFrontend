@@ -10,7 +10,7 @@
          
         <div *ngIf="clinical.fromSource === 'EU'">
           <a [routerLink]="['/clinicalTrialEuropeDetails', clinical.nctNumber, 'eu']" target="_blank">{{clinical.nctNumber}}</a>
-          <br><span class="font9px colorgray">(Europe)</span>
+          <br><span class="font10px colorgray">(Europe)</span>
        </div>
         <div *ngIf="clinical.fromSource != 'EU'">
           <a [routerLink]="['/clinicalTrialDetails', clinical.nctNumber, 'srs']" target="_blank">{{clinical.nctNumber}}</a>

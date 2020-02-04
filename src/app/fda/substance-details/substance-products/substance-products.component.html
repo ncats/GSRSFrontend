@@ -19,7 +19,7 @@
             </div>
             <div *ngIf="product.fromTable != 'SRS'">
               <a [routerLink]="['/productElistDetails', product.id, 'elist']" target="_blank">{{product.productNDC}}</a>
-              <br><span class="font9px colorgray">(Elist)</span>
+              <br><span class="font10px colorgray">(Elist)</span>
             </div>
           </td>
         </ng-container>
@@ -80,7 +80,7 @@
     <app-substance-adverseeventdme [bdnum]="bdnum"></app-substance-adverseeventdme>
   </mat-tab>
 
-  <mat-tab label="Adverse Event CVM" *ngIf="">
+  <mat-tab label="Adverse Event CVM">
     <app-substance-adverseeventcvm [bdnum]="bdnum"></app-substance-adverseeventcvm>
   </mat-tab>
 

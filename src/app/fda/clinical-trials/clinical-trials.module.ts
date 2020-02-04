@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical-trials-browse.component';
 import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
 import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
@@ -55,6 +56,7 @@ const clinicalTrialsRoutes: Routes = [
     MatButtonModule,
     MatPaginatorModule,
     MatCardModule,
+    MatTabsModule,
     ReactiveFormsModule,
     FormsModule,
     MatCheckboxModule,
