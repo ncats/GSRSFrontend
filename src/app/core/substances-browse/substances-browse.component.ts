@@ -23,6 +23,7 @@ import { searchSortValues } from '../utils/search-sort-values';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location, LocationStrategy } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substances-browse',
@@ -60,6 +61,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private overlayContainer: HTMLElement;
   toggle: Array<boolean> = [];
   searchtext2: string;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -87,62 +89,32 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = 0;
     this.facets = [];
 
-    const navigationExtras: NavigationExtras = {
-      queryParams: {}
-    };
-    navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
-    navigationExtras.queryParams['structureSearchTerm'] = this.activatedRoute.snapshot.queryParams['structureSearchTerm'] || '';
-    navigationExtras.queryParams['sequenceSearchTerm'] = this.activatedRoute.snapshot.queryParams['sequenceSearchTerm'] || '';
-    navigationExtras.queryParams['cutoff'] = this.activatedRoute.snapshot.queryParams['cutoff'] || '';
-    navigationExtras.queryParams['type'] = this.activatedRoute.snapshot.queryParams['type'] || '';
-    navigationExtras.queryParams['seqType'] = this.activatedRoute.snapshot.queryParams['seqType'] || '';
-    navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
-    navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
-    navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
-    navigationExtras.queryParams['facets'] = this.activatedRoute.snapshot.queryParams['facets'] || '';
-    navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
-    navigationExtras.queryParams['view'] = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
-    this.location.replaceState(
-      this.router.createUrlTree(
-        [this.locationStrategy.path().split('?')[0].replace(environment.baseHref, '')],
-        navigationExtras
-      ).toString()
-    );
-
-    this.activatedRoute
-      .queryParamMap
-      .subscribe(params => {
-        this.privateSearchTerm = params.get('search') || '';
-        this.privateStructureSearchTerm = params.get('structure_search') || '';
-        this.privateSequenceSearchTerm = params.get('sequence_search') || '';
-        this.privateSearchType = params.get('type') || '';
-        this.privateSearchCutoff = Number(params.get('cutoff')) || 0;
-        this.privateSearchSeqType = params.get('seq_type') || '';
-        this.smiles = params.get('smiles') || '';
-        this.order = params.get('order') || '';
-        this.view = params.get('view') || 'cards';
-
-        if (params.get('pageSize')) {
-          this.pageSize = parseInt(params.get('pageSize'), null);
-        }
-        if (params.get('pageIndex')) {
-          this.pageIndex = parseInt(params.get('pageIndex'), null);
-        }
-        this.facetString = params.get('facets') || '';
-        this.facetsFromParams();
-
-        this.searchSubstances();
-      });
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
+    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
+    this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
+    this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
+    this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
+    this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
+    this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
+    this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
+    this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+    this.facetString = this.activatedRoute.snapshot.queryParams['facets'] || '';
+    this.facetsFromParams();
+    this.searchSubstances();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit() {
-    this.matSideNav.openedStart.subscribe(() => {
+    const openSubscription =  this.matSideNav.openedStart.subscribe(() => {
       this.utilsService.handleMatSidenavOpen(1100);
     });
-    this.matSideNav.closedStart.subscribe(() => {
+    this.subscriptions.push(openSubscription);
+    const closeSubscription = this.matSideNav.closedStart.subscribe(() => {
       this.utilsService.handleMatSidenavClose();
     });
+    this.subscriptions.push(closeSubscription);
   }
 
   facetsFromParams() {
@@ -165,7 +137,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         }
         if (hasSelections === true) {
-          this.facetBuilder[category] = { 'params': params, hasSelections: true };
+          this.facetBuilder[category] = { params: params, hasSelections: true, isAllMatch: false };
+          const paramsString = JSON.stringify(params);
+          const newHash = this.utilsService.hashCode(paramsString, this.facetBuilder[category].isAllMatch.toString());
+          this.facetBuilder[category].currentStateHash = newHash;
         }
       }
       this.privateFacetParams = this.facetBuilder;
@@ -173,7 +148,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -198,6 +177,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
     this.populateUrlQueryParameters();
+    this.searchSubstances();
   }
 
   searchSubstances() {
@@ -219,7 +199,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
-      this.substanceService.getSubstancesDetails({
+      const subscription = this.substanceService.getSubstancesDetails({
         searchTerm: this.privateSearchTerm,
         structureSearchTerm: this.privateStructureSearchTerm,
         sequenceSearchTerm: this.privateSequenceSearchTerm,
@@ -267,8 +247,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         }, () => {
           this.isLoading = false;
           this.loadingService.setLoading(this.isLoading);
+          subscription.unsubscribe();
         });
     }
+
   }
 
   populateUrlQueryParameters(): void {
@@ -279,7 +261,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const catArr = [];
     let facetString = '';
     for (const key of Object.keys(this.privateFacetParams)) {
-      if (this.privateFacetParams[key].hasSelections === true) {
+      if (this.privateFacetParams[key].isUpdated === true) {
         const cat = this.privateFacetParams[key];
         const valArr = [];
         for (const subkey of Object.keys(cat.params)) {
@@ -288,15 +270,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         }
         catArr.push(key + '*' + valArr.join('+'));
+        const paramsString = JSON.stringify(this.privateFacetParams[key].params);
+        const newHash = this.utilsService.hashCode(paramsString, this.privateFacetParams[key].isAllMatch.toString());
+        this.privateFacetParams[key].currentStateHash = newHash;
+        this.privateFacetParams[key].isUpdated = false;
       }
     }
     facetString = catArr.join(',');
-    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
-    navigationExtras.queryParams['structureSearchTerm'] = this.privateStructureSearchTerm;
-    navigationExtras.queryParams['sequenceSearchTerm'] = this.privateSequenceSearchTerm;
+    navigationExtras.queryParams['search'] = this.privateSearchTerm;
+    navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
+    navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
-    navigationExtras.queryParams['seqType'] = this.privateSearchSeqType;
+    navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType;
+    navigationExtras.queryParams['smiles'] = this.smiles;
     navigationExtras.queryParams['order'] = this.order;
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
@@ -304,15 +291,18 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
     navigationExtras.queryParams['view'] = this.view;
 
-    this.router.navigate(
-      [],
-      navigationExtras
-    );
+    const urlTree = this.router.createUrlTree([], {
+      queryParams: navigationExtras.queryParams,
+      queryParamsHandling: 'merge',
+      preserveFragment: true
+    });
+    this.location.go(urlTree.toString());
   }
 
   private populateFacets(facets: Array<Facet>): void {
-    this.authService.getAuth().subscribe(auth => {
-      this.facets = [];
+    const subscription = this.authService.getAuth().subscribe(auth => {
+      subscription.unsubscribe();
+      let newFacets = [];
       this.auth = auth;
       this.showAudit = this.authService.hasRoles('admin');
       if (this.configService.configData.facets != null) {
@@ -338,7 +328,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                     if (hasValues) {
                       const facetToAdd = facets.splice(facetIndex, 1);
                       facetIndex--;
-                      this.facets.push(facetToAdd[0]);
+                      newFacets.push(facetToAdd[0]);
                       this.searchText.push(facetToAdd[0].name);
                     }
                   }
@@ -352,9 +342,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
       }
 
-      if (this.facets.length < 15) {
+      if (newFacets.length < 15) {
 
-        const numFillFacets = 15 - this.facets.length;
+        const numFillFacets = 15 - newFacets.length;
 
         let sortedFacets = _.orderBy(facets, facet => {
           let valuesTotal = 0;
@@ -364,16 +354,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           return valuesTotal;
         }, 'desc');
         const additionalFacets = _.take(sortedFacets, numFillFacets);
-        this.facets = this.facets.concat(additionalFacets);
+        newFacets = newFacets.concat(additionalFacets);
         sortedFacets = null;
       }
 
-      if (this.facets.length > 0) {
+      if (newFacets.length > 0) {
         this.processResponsiveness();
       } else {
         this.matSideNav.close();
       }
-
+      this.facets = newFacets;
       this.cleanFacets();
     });
   }
@@ -388,6 +378,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
     this.gaService.sendEvent('substancesFiltering', 'button:apply-facet', eventLabel, eventValue);
     this.populateUrlQueryParameters();
+    this.searchSubstances();
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
@@ -411,16 +402,24 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const eventAction = include ? 'include' : 'exclude';
     this.gaService.sendEvent('substancesFiltering', `check:facet-${eventAction}`, eventLabel, eventValue);
 
+    let paramsString: string;
+    let isAllMatchString: string;
+
     if (this.privateFacetParams[facetName] == null) {
       this.privateFacetParams[facetName] = {
-        params: {}
+        params: {},
+        isAllMatch: false
       };
+      paramsString = JSON.stringify(this.privateFacetParams[facetName].params);
+      isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
+      const stateHash = this.utilsService.hashCode(paramsString, isAllMatchString);
+      this.privateFacetParams[facetName].currentStateHash = stateHash;
     }
 
     if (include) {
-      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked || null;
+      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked || undefined;
     } else {
-      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked === true ? false : null;
+      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked === true ? false : undefined;
     }
 
     let hasSelections = false;
@@ -448,6 +447,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.privateFacetParams[facetName].isAllMatch = false;
     }
 
+    paramsString = JSON.stringify(this.privateFacetParams[facetName].params);
+    isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
+    const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
+    this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
+
     this.pageIndex = 0;
   }
 
@@ -472,6 +476,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.privateFacetParams[facetKey].isAllMatch = false;
           this.privateFacetParams[facetKey].showAllMatchOption = false;
           this.privateFacetParams[facetKey].hasSelections = false;
+
+          const paramsString = JSON.stringify(this.privateFacetParams[facetName].params);
+          const isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
+          const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
+          this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
         }
       });
     }
@@ -525,8 +534,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.smiles = '';
     this.pageIndex = 0;
 
-    // automatically calls searchSubstances() because of subscription to route changes
     this.populateUrlQueryParameters();
+    this.searchSubstances();
   }
 
   editSequenceSearh(): void {
@@ -558,8 +567,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSearchSeqType = '';
     this.pageIndex = 0;
 
-    // automatically calls searchSubstances() because of subscription to route changes
     this.populateUrlQueryParameters();
+    this.searchSubstances();
   }
 
   clearSearch(): void {
@@ -570,8 +579,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSearchTerm = '';
     this.pageIndex = 0;
 
-    // automatically calls searchSubstances() because of subscription to route changes
     this.populateUrlQueryParameters();
+    this.searchSubstances();
   }
 
   clearFilters(): void {
@@ -673,10 +682,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe(() => {
+    const subscription = dialogRef.afterClosed().subscribe(() => {
       this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
     }, () => {
       this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
     });
   }
 
@@ -687,44 +698,62 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   getMol(id: string, filename: string): void {
-    this.structureService.downloadMolfile(id).subscribe(response => {
+    const subscription = this.structureService.downloadMolfile(id).subscribe(response => {
       this.downloadFile(response, filename);
+      subscription.unsubscribe();
+    }, error => {
+      subscription.unsubscribe();
     });
   }
 
   getFasta(id: string, filename: string): void {
-    this.substanceService.getFasta(id).subscribe(response => {
+    const subscription = this.substanceService.getFasta(id).subscribe(response => {
       this.downloadFile(response, filename);
+      subscription.unsubscribe();
+    }, error => {
+      subscription.unsubscribe();
     });
   }
 
   moreFacets(index: number, facet: Facet) {
-      this.substanceService.retrieveNextFacetValues(this.facets[index]).subscribe( resp => {
+    const subscription = this.substanceService.retrieveNextFacetValues(this.facets[index]).subscribe( resp => {
         this.facets[index].$next = resp.$next;
         this.facets[index].values = this.facets[index].values.concat(resp.content);
         this.facets[index].$fetched = this.facets[index].values;
         this.facets[index].$total = resp.ftotal;
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
       });
   }
 
   lessFacets(index: number) {
-     this.substanceService.retrieveFacetValues(this.facets[index]).subscribe( response => {
+    const subscription = this.substanceService.retrieveFacetValues(this.facets[index]).subscribe( response => {
        this.facets[index].values = response.content;
        this.facets[index].$fetched = response.content;
        this.facets[index].$next = response.$next;
-     });
+       subscription.unsubscribe();
+     }, error => {
+      subscription.unsubscribe();
+    });
   }
 
   filterFacets(index: number, event: any) {
     const facet = this.facets[index];
     if (event.length > 0) {
       const processed = facet.name.replace(' ', '+');
-      this.substanceService.filterFacets(event, processed).subscribe(response => {
+      const subscription = this.substanceService.filterFacets(event, processed).subscribe(response => {
         facet.values = response.content;
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
       });
     } else {
-      this.substanceService.retrieveFacetValues(facet).subscribe(response => {
+      const subscription = this.substanceService.retrieveFacetValues(facet).subscribe(response => {
         facet.values = response.content;
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
       });
     }
   }
