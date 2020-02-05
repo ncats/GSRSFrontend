@@ -33,7 +33,7 @@ export class ProductDetailsBaseComponent implements OnInit {
     this.loadingService.setLoading(true);
     this.productId = this.activatedRoute.snapshot.params['id'];
     this.src = this.activatedRoute.snapshot.params['src'];
-    console.log(this.productId);
+
     if (this.productId != null) {
       this.getProduct();
     } else {

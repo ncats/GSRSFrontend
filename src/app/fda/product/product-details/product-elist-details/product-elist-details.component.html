@@ -1,174 +1,182 @@
-<div class="details-container margintop80px">
+<div class="details-container margintop90px">
   <mat-card>
     <mat-card-title>
       Product Elist Details
     </mat-card-title>
-    <mat-card-content *ngIf="product">
-      
-      <div class="product-details-row">
-        <div class="product-property">
-          <div class="product-property-key">
+    <div class="title">Product Elist Details</div>
+    <mat-card-content>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
             Product NDC:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
             {{product.productNDC}}
           </div>
         </div>
-        <div class="product-property">
-          <div class="product-property-key">
+        <div class="row-property">
+          <div class="row-property-key">
             Application Number:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
             {{product.applicationNumber}}
           </div>
         </div>
       </div>
-      
-      <div class="product-details-row">
-        <div class="product-property">
-          <div class="product-property-key">
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
             Product Name:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
             {{product.productName}}
           </div>
         </div>
-        <div class="product-property">
-          <div class="product-property-key">
+        <div class="row-property">
+          <div class="row-property-key">
             Product Name Type:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
             {{product.productTypeName}}
           </div>
         </div>
       </div>
-      
-      <div class="product-details-row">
-        <div class="product-property">
-          <div class="product-property-key">
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
             Non Proprietary Name:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
             {{product.nonProprietaryName}}
           </div>
         </div>
-        <div class="product-property">
-          <div class="product-property-key">
+        <div class="row-property">
+          <div class="row-property-key">
             Proprietary Name Suffix:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
             {{product.proprietaryNameSuffix}}
           </div>
         </div>
       </div>
-      <div class="product-details-row">
-        <div class="product-property">
-          <div class="product-property-key">
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
             Labeler Name:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
             {{product.labelerName}}
           </div>
         </div>
-        <div class="product-property">
-          <div class="product-property-key">
+        <div class="row-property">
+          <div class="row-property-key">
             Dosage Form Name:
           </div>
-          <div class="product-property-value">
-             {{product.dosageFormName}}
+          <div class="row-property-value">
+            {{product.dosageFormName}}
           </div>
         </div>
       </div>
-      <div class="product-details-row">
-        <div class="product-property">
-          <div class="product-property-key">
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
             Marketing Category Name:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
             {{product.marketingCategoryCode}}
           </div>
         </div>
-        <div class="product-property">
-          <div class="product-property-key">
+        <div class="row-property">
+          <div class="row-property-key">
             Start Marketing Date:
           </div>
-          <div class="product-property-value">
-            {{product.startMarketingDate}}
+          <div class="row-property-value">
+            {{product.startMarketingDate|date: 'MM/dd/yyyy'}}
           </div>
         </div>
       </div>
-      <div class="product-details-row">
-        <div class="product-property">
-          <div class="product-property-key">
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
             Route Name:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
 
           </div>
         </div>
-        <div class="product-property">
-          <div class="product-property-key">
+        <div class="row-property">
+          <div class="row-property-key">
             End Marketing Date:
           </div>
-          <div class="product-property-value">
-            {{product.endMarketingDate}}
+          <div class="row-property-value">
+            {{product.endMarketingDate|date: 'MM/dd/yyyy'}}
           </div>
         </div>
       </div>
-      <div class="product-details-row">
-        <div class="product-property">
-          <div class="product-property-key">
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
             Color:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
 
           </div>
         </div>
-        <div class="product-property">
-          <div class="product-property-key">
+        <div class="row-property">
+          <div class="row-property-key">
             Flavor:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
 
           </div>
         </div>
       </div>
-      <div class="product-details-row">
-        <div class="product-property">
-          <div class="product-property-key">
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
             Shape:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
 
           </div>
         </div>
-        <div class="product-property">
-          <div class="product-property-key">
+        <div class="row-property">
+          <div class="row-property-key">
             Imprint Text:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
 
           </div>
         </div>
       </div>
-      <div class="product-details-row">
-        <div class="product-property">
-          <div class="product-property-key">
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
             Size (mm):
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
 
           </div>
         </div>
-        <div class="product-property">
-          <div class="product-property-key">
+        <div class="row-property">
+          <div class="row-property-key">
             Number of Fragments:
           </div>
-          <div class="product-property-value">
+          <div class="row-property-value">
 
           </div>
         </div>
       </div>
+
     </mat-card-content>
   </mat-card>
 </div>
@@ -180,12 +188,12 @@
     </mat-card-title>
     <mat-card-content>
       <table class="tableStyle">
-        <tr height="30px" >
-            <td><b>Name</b></td>
-            <td><b>Active Moiety Name</b></td>
-            <td><b>Structure</b></td>
-            <td><b>Unii</b></td>
-            <td><b>Strength Number (Unit)</b></td>
+        <tr height="30px">
+          <td><b>Name</b></td>
+          <td><b>Active Moiety Name</b></td>
+          <td><b>Structure</b></td>
+          <td><b>Unii</b></td>
+          <td><b>Strength Number (Unit)</b></td>
         </tr>
         <tr *ngFor="let x of product.prodActiveElistList">
           <td>{{ x.name }}</td>
@@ -195,32 +203,28 @@
           <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
         </tr>
       </table>
-  </mat-card-content>
-  </mat-card>    
+    </mat-card-content>
+  </mat-card>
 </div>
 
 <div class="details-container">
-    <mat-card>
-      <mat-card-title>
-        Product Active
-      </mat-card-title>
-      <mat-card-content>
-        <table class="tableStyle">
-          <tr height="30px" >
-              <td><b>Name</b></td>
-              <td><b>Unii</b></td>
-              <td><b>Strength Number (Unit)</b></td>
-          </tr>
-          <tr *ngFor="let x of product.prodInactiveElistList">
-            <td>{{ x.name }}</td>
-            <td>{{ x.unii }}</td>
-            <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
-          </tr>
-        </table>
+  <mat-card>
+    <mat-card-title>
+      Product Active
+    </mat-card-title>
+    <mat-card-content>
+      <table class="tableStyle">
+        <tr height="30px">
+          <td><b>Name</b></td>
+          <td><b>Unii</b></td>
+          <td><b>Strength Number (Unit)</b></td>
+        </tr>
+        <tr *ngFor="let x of product.prodInactiveElistList">
+          <td>{{ x.name }}</td>
+          <td>{{ x.unii }}</td>
+          <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+        </tr>
+      </table>
     </mat-card-content>
-    </mat-card>    
-  </div>
-
-
-<div class="font9px colorgray padleft200px">Source:Elist</div>
-
+  </mat-card>
+</div>

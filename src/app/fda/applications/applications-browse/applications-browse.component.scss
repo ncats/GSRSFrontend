@@ -420,3 +420,29 @@ margin:auto;
 .font9px{
   font-size: 9px;
 }
+
+.bordergray {
+  border:1px solid gray;
+}
+
+.titlePosition {
+  position:absolute;
+  z-index:100;
+  left:0px;
+  top:20px;
+}
+
+.paginationPosition {
+  position:absolute;
+  z-index:200;
+  left:500px;
+  top:20px;
+}
+
+.title {
+  color: #27288a;
+  font-size: 24px;
+  font-weight: 600px;
+  padding-left:15px;
+  padding-top: 10px;
+}

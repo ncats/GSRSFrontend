@@ -36,7 +36,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     this.loadingService.setLoading(true);
     this.nctNumber = this.activatedRoute.snapshot.params['nctNumber'];
     this.src = this.activatedRoute.snapshot.params['src'];
-    console.log(this.nctNumber);
+   
     if (this.nctNumber != null) {
       this.getClinicalTrialDetails();
     } else {

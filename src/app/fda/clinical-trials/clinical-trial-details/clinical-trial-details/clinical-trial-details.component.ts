@@ -7,6 +7,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component'
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-clinical-trial-details',
@@ -30,6 +31,9 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
 
   ngOnInit() {
     super.ngOnInit();
+
+    this.flagIconSrcPath = `${environment.baseHref || '/'}assets/icons/fda/united-states.svg`;
+ 
   }
 
 }

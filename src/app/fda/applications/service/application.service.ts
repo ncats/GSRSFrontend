@@ -48,6 +48,18 @@ export class ApplicationService extends BaseHttpService {
     return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
   }
 
+  getClinicalTrialApplication(
+    appType: string, appNumber: string
+  ): Observable<Array<any>> {
+    const url = this.baseUrl + 'getClinicalTrialApplication?appType=' + appType + '&appNumber=' + appNumber;
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   getSubstanceApplications(
     bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {

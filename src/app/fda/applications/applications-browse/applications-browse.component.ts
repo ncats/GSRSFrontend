@@ -46,6 +46,10 @@ export class ApplicationsBrowseComponent implements OnInit {
   displayedColumns: string[];
   dataSource = [];
   public facetBuilder: SubstanceFacetParam;
+  appType: string;
+  appNumber: string;
+  clinicalTrialApplication: any;
+
   //  public order: string;
  // public sortValues = searchSortValues;
  // showAudit: boolean;
@@ -54,7 +58,7 @@ export class ApplicationsBrowseComponent implements OnInit {
   //private overlayContainer: HTMLElement;
 
   constructor(
-    private applicationService: ApplicationService,
+    public applicationService: ApplicationService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private locationStrategy: LocationStrategy,
@@ -141,7 +145,6 @@ export class ApplicationsBrowseComponent implements OnInit {
 
   }
 
-  
   changePage(pageEvent: PageEvent) {
 
     let eventAction;
@@ -179,7 +182,6 @@ export class ApplicationsBrowseComponent implements OnInit {
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
         this.facets = [];
-        console.log('Facet Count' + pagingResponse.facets.length);
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
            this.populateFacets(pagingResponse.facets);
         }
@@ -270,12 +272,11 @@ export class ApplicationsBrowseComponent implements OnInit {
 
     const facetKeys = facetName != null ? [facetName] : Object.keys(this.privateFacetParams);
 
-    console.log('FACET Clear: ' + facetKeys );
     if (facetKeys != null && facetKeys.length) {
       facetKeys.forEach(facetKey => {
-        console.log(facetKey);
-        console.log(this.privateFacetParams[facetKey]);
-        console.log(this.privateFacetParams[facetKey].params);
+        //console.log(facetKey);
+        //console.log(this.privateFacetParams[facetKey]);
+        //console.log(this.privateFacetParams[facetKey].params);
         if (this.privateFacetParams[facetKey] != null && this.privateFacetParams[facetKey].params != null) {
           const facetValueKeys = Object.keys(this.privateFacetParams[facetKey].params);
           facetValueKeys.forEach(facetParam => {
@@ -405,6 +406,11 @@ export class ApplicationsBrowseComponent implements OnInit {
 
   get facetParams(): SubstanceFacetParam | { showAllMatchOption?: boolean } {
     return this.privateFacetParams;
+  }
+
+  get getClinicalTrialApplication() {
+    //this.clinicalTrialApplication = 
+    return this.applicationService.getClinicalTrialApplication(this.appType, this.appNumber);
   }
 
 }

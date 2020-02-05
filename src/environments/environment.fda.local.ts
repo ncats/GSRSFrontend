@@ -12,7 +12,7 @@ environment.navItems = [
     //     path: 'fda-sample-inheritance'
     // }
     {
-        display: 'Browse App',
+        display: 'Browse Application',
         path: 'browse-applications'
     },
     {

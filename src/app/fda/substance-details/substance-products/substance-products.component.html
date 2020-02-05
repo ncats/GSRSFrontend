@@ -14,6 +14,8 @@
         <ng-container matColumnDef="productNDC">
           <th mat-header-cell *matHeaderCellDef> Product NDC </th>
           <td mat-cell *matCellDef="let product">
+            {{product.productNDC}}
+            <!--
             <div *ngIf="product.fromTable === 'SRS'">
               <a [routerLink]="['/productDetails', product.id, 'srs']" target="_blank">{{product.productNDC}}</a>
             </div>
@@ -21,6 +23,7 @@
               <a [routerLink]="['/productElistDetails', product.id, 'elist']" target="_blank">{{product.productNDC}}</a>
               <br><span class="font10px colorgray">(Elist)</span>
             </div>
+          -->
           </td>
         </ng-container>
        

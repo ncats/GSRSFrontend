@@ -55,16 +55,16 @@
 .row-property-key {
 	min-width: 50%;
 	max-width: 50%;
-	padding: 6px;
-	font-weight: 500;
-	font-size: 12px;
-	background-color: #edeff2;
+	padding: 7px;
+  font-size: 12px;
+  font-weight: 500;
+	/*background-color: #edeff2;*/
 }
 
 .row-property-value {
 	min-width: 50%;
 	max-width: 50%;
-	padding: 6px;
+	padding: 7px;
 	font-size: 12px;
 }
 
@@ -72,8 +72,8 @@
 	min-width: 13%;
 	max-width: 13%;
 	padding: 6px;
-	font-weight: 500;
-	font-size: 12px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .row-property-value-2 {
@@ -97,12 +97,16 @@
   margin-top: -10px;
 }
 
-.margintop80px {
-  margin-top: 80px;
+.margintop90px {
+  margin-top: 90px;
 }
 
 .padtop17px {
   padding-top: 17px;
+}
+
+.padleft20px {
+  padding-left: 20px;
 }
 
 .padleft200px {
@@ -179,7 +183,8 @@
 
 
 table.blueTable {
-  font-family: Verdana, Geneva, sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  /*font-family: Verdana, Geneva, sans-serif;*/
   border: 1px solid #1C6EA4;
   background-color: #EEEEEE;
   width: 100%;
@@ -192,6 +197,7 @@ table.blueTable td, table.blueTable th {
 }
 table.blueTable tbody td {
   font-size: 12px;
+  vertical-align: top;
 }
 table.blueTable tr:nth-child(even) {
   background: #DAE9F5;
@@ -202,7 +208,7 @@ table.blueTable thead {
 }
 table.blueTable thead th {
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 400;
   color: #FFFFFF;
   border-left: 1px solid #D0E4F5;
 }
