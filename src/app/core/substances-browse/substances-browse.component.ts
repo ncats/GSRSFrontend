@@ -22,7 +22,6 @@ import { Auth } from '../auth/auth.model';
 import { searchSortValues } from '../utils/search-sort-values';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location, LocationStrategy } from '@angular/common';
-import { StructureService } from '@gsrs-core/structure';
 
 @Component({
   selector: 'app-substances-browse',
