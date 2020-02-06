@@ -5,9 +5,14 @@ export interface SubstanceFormDefinition {
     substanceClass?: string;
     definitionType?: string;
     definitionLevel?: string;
+    created?: number;
+    createdBy?: string;
+    lastEdited?: number;
+    lastEditedBy?: string;
     deprecated?: boolean;
     references?: Array<string>;
     access?: Array<string>;
+    status?: string;
     relationships?: Array<SubstanceRelationship>;
 }
 

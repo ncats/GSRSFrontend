@@ -14,6 +14,7 @@ import { ScrollToModule } from '../../scroll-to/scroll-to.module';
 import { SubstanceSelectorModule } from '../../substance-selector/substance-selector.module';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {RouterModule} from "@angular/router";
+import {MatRadioModule} from "@angular/material/radio";
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import {RouterModule} from "@angular/router";
         ScrollToModule,
         SubstanceSelectorModule,
         MatTooltipModule,
-        RouterModule
+        RouterModule,
+        MatRadioModule
     ],
   declarations: [
     SubstanceFormDefinitionComponent

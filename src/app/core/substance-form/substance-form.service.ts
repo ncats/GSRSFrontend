@@ -37,9 +37,7 @@ import { domainKeys, domainDisplayKeys } from './domain-references/domain-keys.c
 import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
 import { DomainsWithReferences } from './domain-references/domain.references.model';
-import {map} from 'rxjs/operators';
 import {StructuralUnit} from '@gsrs-core/substance';
-import {DataDictionary} from '../utils/data-dictionary';
 @Injectable({
   providedIn: 'root'
 })
@@ -103,7 +101,6 @@ export class SubstanceFormService {
       this.privateDomainsWithReferences = null;
       if (substance != null) {
         this.substance = substance;
-        console.log(substance);
         substanceClass = this.substance.substanceClass;
       } else {
         if (substanceClass === 'chemical') {
@@ -242,8 +239,51 @@ export class SubstanceFormService {
     });
   }
 
-  getSubstanceValue(key: string): any {
-    return this.substance[key];
+  switchType(substance: SubstanceDetail, newClass: string) {
+    const fieldGetter = {
+      'protein': ['protein', 'modifications', 'properties'],
+      'chemical': ['structure', 'moieties', 'modifications', 'properties'],
+      'structurallyDiverse': ['structurallyDiverse', 'modifications', 'properties'],
+      'polymer': ['polymer', 'modifications', 'properties'],
+      'nucleicAcid': ['nucleicAcid', 'modifications', 'properties'],
+      'mixture' : ['mixture', 'modifications', 'properties'],
+      'specifiedSubstanceG1' : []
+    };
+    if (fieldGetter[newClass]) {
+      fieldGetter[newClass].forEach(function (x) {
+        if (substance[x]) {
+          delete substance[x];
+        }
+      });
+    }
+    substance.substanceClass = newClass;
+    if (newClass === 'chemical') {
+      substance.structure = {};
+    } else if (newClass === 'protein') {
+      substance.protein = {proteinType: ''};
+
+    } else if (newClass === 'nucleicAcid') {
+      substance.nucleicAcid = {};
+    } else if (newClass === 'mixture') {
+      substance.mixture = {};
+    } else if (newClass === 'structurallyDiverse') {
+      substance.structurallyDiverse = {
+        part: ['whole'],
+        $$diverseType: 'whole'
+      };
+    } else if (newClass === 'specifiedSubstanceG1') {
+      substance.structurallyDiverse = {
+        part: ['whole'],
+        $$diverseType: 'whole'
+      };
+    } else if (newClass === 'polymer') {
+      substance.polymer = {
+        idealizedStructure: {},
+        monomers: [],
+      };
+    }
+    alert('Substance type switched. Submit changes to save');
+    return substance;
   }
 
   // Definition Start
@@ -261,10 +301,18 @@ export class SubstanceFormService {
   }
 
   updateDefinition(definition: SubstanceFormDefinition): void {
+    console.log(definition);
     this.substance.definitionType = definition.definitionType;
     this.substance.definitionLevel = definition.definitionLevel;
     this.substance.deprecated = definition.deprecated;
     this.substance.access = definition.access;
+    this.substance.created = definition.created;
+    this.substance.createdBy = definition.createdBy;
+    this.substance.lastEdited = definition.lastEdited;
+    this.substance.lastEditedBy = definition.lastEditedBy;
+    if (definition.status) {
+      this.substance.status = definition.status;
+    }
     if (this.substance[definition.substanceClass]) {
       this.substance[definition.substanceClass].references = definition.references;
     } else {
@@ -282,6 +330,11 @@ export class SubstanceFormService {
     return this.substance.uuid;
   }
 
+  changeStatus(status: string): void {
+    this.substance.status = status;
+    alert('Status changed to ' + status);
+  }
+
   private getDefinition(): SubstanceFormDefinition {
 
     if (!this.substance[this.subClass]) {
@@ -294,6 +347,8 @@ export class SubstanceFormService {
       this.substance[this.subClass].references = [];
     }
 
+
+
     const definition: SubstanceFormDefinition = {
       uuid: this.substance[this.subClass].uuid || this.substance[this.subClass].id,
       substanceClass: this.subClass,
@@ -302,8 +357,15 @@ export class SubstanceFormService {
       deprecated: this.substance.deprecated,
       references: this.substance[this.subClass].references,
       access: this.substance.access,
-      relationships: this.substance.relationships
+      relationships: this.substance.relationships,
+      created: this.substance.created,
+      createdBy: this.substance.createdBy,
+      lastEdited: this.substance.lastEdited,
+      lastEditedBy: this.substance.lastEditedBy,
     };
+    if (this.substance.status) {
+      definition.status = this.substance.status;
+    }
 
     return definition;
   }
