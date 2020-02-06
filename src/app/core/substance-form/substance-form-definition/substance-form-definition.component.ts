@@ -8,6 +8,8 @@ import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormDefinition } from '../substance-form.model';
+import {Router} from '@angular/router';
+import {AuthService} from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-form-definition',
@@ -22,12 +24,25 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   primarySubUuid: string;
   uuid: string;
   json: any;
+  feature: string;
   substanceClass: string;
+  isAdmin: boolean;
+  status: string;
+  classes = ['protein',
+  'chemical',
+  'structurallyDiverse',
+  'polymer',
+  'nucleicAcid',
+  'mixture',
+  'specifiedSubstanceG1'];
 
   constructor(
     private cvService: ControlledVocabularyService,
     public substanceService: SubstanceService,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private router: Router,
+    private authService: AuthService
+
   ) {
     super();
   }
@@ -35,11 +50,26 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   ngOnInit() {
     this.menuLabelUpdate.emit('Definition');
     this.getVocabularies();
+    this.isAdmin = this.authService.hasRoles('admin');
+  }
+
+  useFeature(feature: any): void {
+    this.feature = feature.value;
+  }
+
+  changeClass(type: any): void {
+    this.router.navigate(['/substances', this.uuid, 'edit'], { queryParams: { switch: type.value } });
+  }
+
+  changeStatus(status: any): void {
+    console.log(status);
+    this.substanceFormService.changeStatus(status.value);
   }
 
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
       this.definition = definition || {};
+      console.log(definition);
       if (this.definition.substanceClass === 'structure') {
         this.substanceClass = 'chemical';
       } else if (this.definition.substanceClass === 'nucleicAcid') {
@@ -57,7 +87,10 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
         this.definition.definitionLevel = 'COMPLETE';
       }
       this.json = this.substanceFormService.getJson();
-
+      if (this.definition.status) {
+        this.status = this.definition.status;
+        console.log(this.status);
+      }
       if (this.definition.definitionType === 'ALTERNATIVE') {
         this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
           const type = vocabularyResponse['RELATIONSHIP_TYPE']

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
@@ -17,7 +17,7 @@ import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
   templateUrl: './cv-input.component.html',
   styleUrls: ['./cv-input.component.scss']
 })
-export class CvInputComponent implements OnInit {
+export class CvInputComponent implements OnInit, OnDestroy {
   @Input() vocabulary?: any;
   @Input() title?: string;
   @Input() domain?: string;
@@ -57,6 +57,12 @@ export class CvInputComponent implements OnInit {
       }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
 
   @Input()
   set model(mod: any) {
@@ -114,7 +120,6 @@ export class CvInputComponent implements OnInit {
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
       if (response ) {
-        const newTerm = response;
         this.privateMod = response.display;
         this.vocabulary.push(response);
         this.valueChange.emit(this.privateMod);

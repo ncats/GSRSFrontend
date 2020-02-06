@@ -3,6 +3,10 @@
     justify-content: space-between;
 }
 
+.advanced-row{
+  justify-content: right;
+}
+
 .primary-substance-container {
     max-width: 25%;
 }
@@ -47,4 +51,31 @@
 
 .icon {
   font-size:10px !important;
+}
+
+.set-status {
+  ::ng-deep .mat-radio-label {
+    flex-direction: column-reverse;
+  }
+
+  ::ng-deep .mat-radio-label-content {
+    padding-left: 5px;
+    font-size: 11px;
+    padding-bottom: 4px;
+    color: rgba(0, 0, 0, 0.54);
+    font-weight: 400;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+  }
+}
+
+.status-label {
+  padding-right:10px;
+}
+
+.message-field {
+  width: 50%;
+}
+
+.advanced, .admin-functions {
+  width: 33%;
 }

@@ -76,7 +76,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           if (id !== this.id) {
             this.id = id;
             this.gaService.sendPageView(`Substance Edit`);
-            this.getSubstanceDetails();
+            const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
+            if (newType) {
+              this.getSubstanceDetails(newType);
+            } else {
+              this.getSubstanceDetails();
+            }
           }
         } else {
           this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
@@ -139,9 +144,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.subscriptions.push(dialogSubscription);
   }
 
-  getSubstanceDetails(): void {
+  getSubstanceDetails(newType?: string): void {
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
+        if (newType) {
+          response = this.substanceFormService.switchType(response, newType);
+        }
         this.substanceFormService.loadSubstance(response.substanceClass, response);
         this.setFormSections(formSections[response.substanceClass]);
       } else {

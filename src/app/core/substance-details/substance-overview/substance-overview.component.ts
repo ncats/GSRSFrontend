@@ -44,7 +44,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
-    this.isEditable = this.authService.hasRoles('admin')
+    this.isEditable = (this.authService.hasRoles('updater') || this.authService.hasRoles('superUpdater'))
       && this.substance.substanceClass != null
       && formSections[this.substance.substanceClass.toLowerCase()] != null;
     this.getSubtypeRefs(this.substance);
