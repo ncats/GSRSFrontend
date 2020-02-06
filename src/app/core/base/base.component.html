@@ -18,9 +18,9 @@
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()">
       <div *ngFor="let navItem of navItems">
-        <button mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
+        <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
           {{navItem.display}}
-        </button>
+        </a>
         <ng-container *ngIf="navItem.children">
           <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
               {{navItem.display}}

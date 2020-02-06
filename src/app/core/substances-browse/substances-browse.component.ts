@@ -301,7 +301,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   private populateFacets(facets: Array<Facet>): void {
     const subscription = this.authService.getAuth().subscribe(auth => {
-      subscription.unsubscribe();
       let newFacets = [];
       this.auth = auth;
       this.showAudit = this.authService.hasRoles('admin');
