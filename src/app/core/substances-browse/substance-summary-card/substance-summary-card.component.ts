@@ -34,7 +34,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.isAdmin = this.authService.hasRoles('admin');
+    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   @Input()

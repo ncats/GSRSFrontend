@@ -62,6 +62,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   toggle: Array<boolean> = [];
   searchtext2: string;
   private subscriptions: Array<Subscription> = [];
+  isAdmin: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -104,6 +105,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.facetsFromParams();
     this.searchSubstances();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   ngAfterViewInit() {
