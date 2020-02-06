@@ -1,7 +1,7 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop">
   <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
     <mat-accordion multi="true">
-      <mat-expansion-panel *ngFor="let facet of facets; index as topIndex" [expanded]="facetParams[facet.name] != null">
+      <mat-expansion-panel *ngFor="let facet of facets; index as topIndex" [expanded]="false || facetParams[facet.name] != null">
         <mat-expansion-panel-header>
           <mat-panel-title>
             {{facet.name | facetDisplay}}
@@ -60,10 +60,10 @@
             All Match
           </mat-checkbox>
           <div class="pull-right">
-            <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
+            <button *ngIf="facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
               Clear
             </button>
-            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading"
+            <button *ngIf="facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary" [disabled]="isLoading"
               (click)="applyFacetsFilter(facet.name)">
               Apply
             </button>
