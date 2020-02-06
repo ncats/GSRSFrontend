@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { DynamicComponentLoaderModule } from '@gsrs-core/dynamic-component-loader';
-import { fdaDynamicComponentManifests } from './fda-dynamic-componet-manifests';
+import { fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests } from './fda-dynamic-componet-manifests';
 import { SubstanceCardsModule } from '@gsrs-core/substance-details';
 import { fdaSubstanceCardsFilters } from './substance-details/fda-substance-cards-filters.constant';
 import { ProductService } from './product/product.service';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { MatCardModule } from '@angular/material/card';
 import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
+import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
 
 const fdaRoutes: Routes = [
   {
@@ -22,13 +23,19 @@ const fdaRoutes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(fdaRoutes),
-    DynamicComponentLoaderModule.forRoot(fdaDynamicComponentManifests),
+    DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
     MatCardModule,
     ClinicalTrialsModule.forRoot()
   ],
-  declarations: [ProductDetailsComponent],
-  exports: []
+  declarations: [
+    ProductDetailsComponent,
+    SubstanceCountsComponent
+  ],
+  exports: [],
+  entryComponents: [
+    SubstanceCountsComponent
+  ]
 })
 export class FdaModule {
   constructor(

@@ -20,7 +20,6 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
 import { searchSortValues } from '../utils/search-sort-values';
-import { StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location, LocationStrategy } from '@angular/common';
 
@@ -44,7 +43,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   totalSubstances: number;
   isLoading = true;
   isError = false;
-  @ViewChild('matSideNavInstance') matSideNav: MatSidenav;
+  @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   view = 'cards';
   facetString: string;
@@ -70,7 +69,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private dialog: MatDialog,
     public gaService: GoogleAnalyticsService,
     public authService: AuthService,
-    private structureService: StructureService,
     private overlayContainerService: OverlayContainer,
     private location: Location,
     private locationStrategy: LocationStrategy
@@ -679,27 +677,4 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const eventValue = event.checked ? 1 : 0;
     this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
   }
-
-  getMol(id: string, filename: string): void {
-    this.structureService.downloadMolfile(id).subscribe(response => {
-      this.downloadFile(response, filename);
-    });
-  }
-  getFasta(id: string, filename: string): void {
-    this.substanceService.getFasta(id).subscribe(response => {
-      this.downloadFile(response, filename);
-    });
-  }
-
-  downloadFile(response: any, filename: string): void {
-    const dataType = response.type;
-    const binaryData = [];
-    binaryData.push(response);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, { type: dataType }));
-    downloadLink.setAttribute('download', filename);
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-  }
-
 }

@@ -1,10 +1,9 @@
 import { HttpParams } from '@angular/common/http';
 import { SubstanceFacetParam } from './substance-facet-param.model';
-import { HttpParamsOptions } from '@angular/common/http/src/params';
 
 export class SubstanceHttpParams extends HttpParams {
 
-    constructor(options?: HttpParamsOptions) {
+    constructor(options?: any) {
         super(options);
     }
 

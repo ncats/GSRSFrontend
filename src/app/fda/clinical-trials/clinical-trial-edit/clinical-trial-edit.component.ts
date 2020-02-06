@@ -14,8 +14,6 @@ import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import { jsonpCallbackContext } from '@angular/common/http/src/module';
-import { stringify } from '@angular/core/src/render3/util';
 import {AuthService} from '@gsrs-core/auth/auth.service';
 import { pipes2Br } from '../filters/pipes-2-br';
 
