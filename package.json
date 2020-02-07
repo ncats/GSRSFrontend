@@ -26,6 +26,7 @@
     "build:gsrs:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=gsrs.prod && node process-index.js && npm run copy-libs-dist && npm run build-server",
     "test": "ng test",
     "lint": "ng lint",
+    "tslint": "tslint",
     "e2e": "ng e2e",
     "serve:ssr": "node dist/server",
     "webpack:server": "webpack --config webpack.server.config.js --progress --colors"
@@ -78,6 +79,7 @@
     "cheerio": "1.0.0-rc.2",
     "codelyzer": "5.0.1",
     "cpx": "1.5.0",
+    "husky": "4.2.1",
     "jasmine-core": "2.99.1",
     "jasmine-spec-reporter": "4.2.1",
     "karma": "1.7.1",
