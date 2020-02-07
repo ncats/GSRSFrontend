@@ -4,6 +4,12 @@
       "title": "overview"
     },
     {
+      "card": "fda-substance-product",
+      "title": "Products, Applications, Clinical Trials, Adverse Events",
+      "filters": [{
+      }]
+    },
+    {
       "card": "substance-primary-definition",
       "title": "primary definition",
       "filters": [{

@@ -16,4 +16,4 @@ export const fdaDynamicSubSummaryComponentManifests: Array<DynamicComponentManif
     {
         component: SubstanceCountsComponent
     }
-]
+];

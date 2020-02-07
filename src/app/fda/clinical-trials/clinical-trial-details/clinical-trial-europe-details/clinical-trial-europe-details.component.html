@@ -1,0 +1,276 @@
+<div class="details-container margintop90px" *ngIf="clinicalTrial">
+
+  <div class="details-box">
+    <div class="font20px box">
+      <img [src]="flagIconSrcPath" width="25px" height="30px">
+      &nbsp;<b>Clinical Trial Europe Details</b>
+    </div>
+    <div class="row">
+      <div class="row-property-key-2">
+        Eudract Number:
+      </div>
+      <div class="row-property-value-2">
+        <a href="{{clinicalTrial.url}}" target="_blank"><span
+            class="font14px fontbold colororange">{{clinicalTrial.eudractNumber}}</span></a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-property-key-2">
+        Title:
+      </div>
+      <div class="row-property-value-2">
+        {{clinicalTrial.title}}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-property-key-2">
+        Sponsor Name:
+      </div>
+      <div class="row-property-value-2">
+        {{clinicalTrial.sponsorName}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="details-container">
+  <!-- Tabs-->
+  <div class="mat-card bordergray">
+    <mat-tab-group>
+
+      <mat-tab label="Clinical Trial Europe">
+        <div class="details-container">
+          <mat-card>
+            <div class="title">Clinical Trial Europe</div>
+            <mat-card-content>
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Eudract Number:
+                  </div>
+                  <div class="row-property-value">
+                    <a href="{{clinicalTrial.url}}" target="_blank"><span
+                        class="font14px fontbold colororange">{{clinicalTrial.eudractNumber}}</span></a>
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Trial Status:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.trialStatus}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Title:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.title}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Trial Results:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.trialResults}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Sponsor Name:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.sponsorName}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Date First Entered DB:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.dateFirstEnteredDb|date: 'MM/dd/yyyy'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    National Competent Authority:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.nationalCompetentAuthority}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    National Competent Authority Decision:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.competentAuthorityDecision}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Date Competent Authority Decision:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.competentAuthorityDecisionDate|date: 'MM/dd/yyyy'}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Ethics Competent Opinion Approved:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.ethicsComOpinionApp}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Ethics Competent Opinion Reason:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.ethicsComOpinionReason}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Date Ethics Competent Opinion Reason:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.ethicsComOpinionDate|date: 'MM/dd/yyyy'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Country:
+                  </div>
+                  <div class="row-property-value">
+                    {{clinicalTrial.country}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Website Url:
+                  </div>
+                  <div class="row-property-value">
+                    <a href="{{clinicalTrial.url}}" target="_blank">{{clinicalTrial.url}}</a>
+                  </div>
+                </div>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Product">
+        <div class="details-container">
+          <mat-card>
+            <div class="title">Product</div>
+            <mat-card-content>
+              <table width="98%" class="bordergray blueTable padleft20px">
+                <thead>
+                  <tr valign="top">
+                    <th width="60px">#</th>
+                    <th width="200px">Medical Condition Investigated</th>
+                    <th width="200px">Medical Condition Investigated EZ</th>
+                    <th width="200px">Medical Condition Therapy Area</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeMedicalList; let i = index">
+                    <td>{{i+1}}</td>
+                    <td>{{x.medicalCondInvesigated}}</td>
+                    <td>{{x.medicalCondInvesigatedEz}}</td>
+                    <td>{{x.medicalCondTherapyArea}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Medical ({{clinicalTrial.clinicalTrialEuropeMedicalList.length}})">
+        <div class="details-container">
+          <mat-card>
+            <div class="title">Medical</div>
+            <mat-card-content>
+              <table width="98%" class="bordergray blueTable padleft20px">
+                <thead>
+                  <tr valign="top">
+                    <th width="60px">#</th>
+                    <th width="200px">Medical Condition Investigated</th>
+                    <th width="200px">Medical Condition Investigated EZ</th>
+                    <th width="200px">Medical Condition Therapy Area</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeMedicalList; let i = index">
+                    <td>{{i+1}}</td>
+                    <td>{{x.medicalCondInvesigated}}</td>
+                    <td>{{x.medicalCondInvesigatedEz}}</td>
+                    <td>{{x.medicalCondTherapyArea}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Meddra ({{clinicalTrial.clinicalTrialEuropeMeddraList.length}})">
+        <div class="details-container">
+          <mat-card>
+            <div class="title">Meddra in Clinical Trial</div>
+            <mat-card-content>
+              <table width="98%" class="bordergray blueTable">
+                <thead>
+                  <tr valign="top">
+                    <th width="60px">#</th>
+                    <th width="200px">Meddra Version</th>
+                    <th width="200px">Meddra Class Code</th>
+                    <th width="200px">Meddra Term</th>
+                    <th width="200px">Meddra System Organ Class</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeMeddraList; let i = index">
+                    <td>{{i+1}}</td>
+                    <td>{{x.meddraVersion}}</td>
+                    <td>{{x.meddraClassCode}}</td>
+                    <td>{{x.meddraTerm}}</td>
+                    <td>{{x.meddraSystemOrganClass}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </div>
+</div>

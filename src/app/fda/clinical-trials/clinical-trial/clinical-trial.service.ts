@@ -6,9 +6,12 @@ import { BaseHttpService } from '@gsrs-core/base';
 import { ClinicalTrial } from './clinical-trial.model';
 import { BdnumNameAll } from './clinical-trial.model';
 import { PagingResponse } from '@gsrs-core/utils';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
+
+  totalRecords: 0;
 
   constructor(
     public http: HttpClient,
@@ -45,8 +48,6 @@ export class ClinicalTrialService extends BaseHttpService {
     const x = this.http.delete<ClinicalTrial>(url, options);
     return x;
   }
-
-
 
   getClinicalTrial(id: string): Observable<ClinicalTrial> {
     const url = this.apiBaseUrl + `ctclinicaltrial(${id})`;
@@ -115,4 +116,30 @@ export class ClinicalTrialService extends BaseHttpService {
     const x = this.http.put<ClinicalTrial>(url, body, options);
     return x;
   }
+
+  getSubstanceClinicalTrials(
+    bdnum: string, page: number, pageSize: number
+  ): Observable<Array<any>> {
+    const url = this.baseUrl + 'clinicalTrialListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
+      })
+    );
+  }
+
+  getClinicalTrialDetails(
+    nctNumber: string, src: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'clinicalTrialDetails2?nctNumber=' + nctNumber + '&src=' + src;
+
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
 }

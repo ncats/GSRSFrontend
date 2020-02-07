@@ -1,53 +1,92 @@
-<div class="flex-row">
-  <span class="middle-fill"></span>
-  <mat-form-field [floatLabel]="'never'" class="search">
-    <input matInput placeholder="Search" [formControl]="searchControl">
-  </mat-form-field>
-</div>
-<div class="responsive">
-  <table mat-table [dataSource]="paged">
+<mat-tab-group>
+  
+  <mat-tab label="Product">
+    <div class="flex-row">
+      <span class="middle-fill"></span>
+      <mat-form-field [floatLabel]="'never'" class="search">
+        <input matInput placeholder="Search" [formControl]="searchControl">
+      </mat-form-field>
+    </div>
+    
+    <div class="responsive">
+      <table mat-table [dataSource]="paged">
+    
+        <ng-container matColumnDef="productNDC">
+          <th mat-header-cell *matHeaderCellDef> Product NDC </th>
+          <td mat-cell *matCellDef="let product">
+            {{product.productNDC}}
+            <!--
+            <div *ngIf="product.fromTable === 'SRS'">
+              <a [routerLink]="['/productDetails', product.id, 'srs']" target="_blank">{{product.productNDC}}</a>
+            </div>
+            <div *ngIf="product.fromTable != 'SRS'">
+              <a [routerLink]="['/productElistDetails', product.id, 'elist']" target="_blank">{{product.productNDC}}</a>
+              <br><span class="font10px colorgray">(Elist)</span>
+            </div>
+          -->
+          </td>
+        </ng-container>
+       
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Product Name </th>
+          <td mat-cell *matCellDef="let product"> {{product.productName}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="nonProprietaryName">
+          <th mat-header-cell *matHeaderCellDef> Non Proprietary Name </th>
+          <td mat-cell *matCellDef="let product"> {{product.nonProprietaryName}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="labelerName">
+          <th mat-header-cell *matHeaderCellDef> Labeler Name </th>
+          <td mat-cell *matCellDef="let product"> {{product.labelerName}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="applicationNumber">
+          <th mat-header-cell *matHeaderCellDef> Application Number </th>
+          <td mat-cell *matCellDef="let product"> {{product.applicationNumber}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="productNameType">
+          <th mat-header-cell *matHeaderCellDef> Product Name Type </th>
+          <td mat-cell *matCellDef="let product"> {{product.productNameType}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="ingredientType">
+          <th mat-header-cell *matHeaderCellDef> Ingredient Type </th>
+          <td mat-cell *matCellDef="let product"> {{product.ingredientType}} </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+    
+    <mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true" (page)="getSubstanceProducts($event)"
+      [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+  </mat-tab>
+  
+  <mat-tab label="Application">
+    <app-substance-application [bdnum]="bdnum"></app-substance-application>
+  </mat-tab>
 
-    <ng-container matColumnDef="ndc">
-      <th mat-header-cell *matHeaderCellDef> Product NDC </th>
-      <td mat-cell *matCellDef="let product"> <a [routerLink]="['/products', product.id]">11111-0000</a> </td>
-    </ng-container>
+  <mat-tab label="Clinical Trial">
+    <app-substance-clinical-trials [bdnum]="bdnum"></app-substance-clinical-trials>
+  </mat-tab>
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Product Name </th>
-      <td mat-cell *matCellDef="let product"> {{product.proprietaryName}} </td>
-    </ng-container>
+  <mat-tab label="Adverse Event PT">
+    <app-substance-adverseeventpt [bdnum]="bdnum"></app-substance-adverseeventpt>
+  </mat-tab>
 
-    <ng-container matColumnDef="nonProprietaryName">
-      <th mat-header-cell *matHeaderCellDef> Non Proprietary Name </th>
-      <td mat-cell *matCellDef="let product"> {{product.nonProprietaryName}} </td>
-    </ng-container>
+  <mat-tab label="Adverse Event DME">
+    <app-substance-adverseeventdme [bdnum]="bdnum"></app-substance-adverseeventdme>
+  </mat-tab>
 
-    <ng-container matColumnDef="labelerName">
-      <th mat-header-cell *matHeaderCellDef> Labeler Name </th>
-      <td mat-cell *matCellDef="let product"> Labeler name </td>
-    </ng-container>
+  <mat-tab label="Adverse Event CVM">
+    <app-substance-adverseeventcvm [bdnum]="bdnum"></app-substance-adverseeventcvm>
+  </mat-tab>
 
-    <ng-container matColumnDef="applicationNumber">
-      <th mat-header-cell *matHeaderCellDef> Application Number </th>
-      <td mat-cell *matCellDef="let product"> {{product.appNumber}} </td>
-    </ng-container>
+</mat-tab-group>
 
-    <ng-container matColumnDef="nameType">
-      <th mat-header-cell *matHeaderCellDef> Product Name Type </th>
-      <td mat-cell *matCellDef="let product"> Name Type </td>
-    </ng-container>
 
-    <ng-container matColumnDef="ingredientType">
-      <th mat-header-cell *matHeaderCellDef> Ingredient Type </th>
-      <td mat-cell *matCellDef="let product"> Ingredient Type </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
-<mat-paginator [length]="filtered && filtered.length || 0" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
-  [pageSizeOptions]="[5, 10, 25, 100]">
-</mat-paginator>
-
-<app-substance-application></app-substance-application>

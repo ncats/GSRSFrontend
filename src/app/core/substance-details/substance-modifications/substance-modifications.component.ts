@@ -88,7 +88,7 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
       if (val.trim().length <= 0) {
         val = 'empty value';
       }
-    }else{
+    } else {
       val = 'empty value';
     }
 
