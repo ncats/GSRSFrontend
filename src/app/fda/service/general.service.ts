@@ -16,7 +16,7 @@ export class GeneralService extends BaseHttpService {
   }
 
   getSearchCount(substanceUuid: string): Observable<any> {
-  const url = 'http://localhost:9000/ginas/app/getSubstanceSearchCountBySubstanceUuid?substanceUuid=' + substanceUuid;
+  const url = this.baseUrl + 'getSubstanceSearchCountBySubstanceUuid?substanceUuid=' + substanceUuid;
   return this.http.get<any>(url)
   .pipe(
     map(res => {

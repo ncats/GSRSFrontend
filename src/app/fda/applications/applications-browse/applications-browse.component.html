@@ -81,9 +81,9 @@
 
     <!-- Display Content Details -->
     <div class="substance-cards">
-      <mat-card *ngFor="let application of applications">
+      <mat-card class="bordergray" *ngFor="let application of applications">
 
-        <mat-card-title>
+        <mat-card-title class="borderlightorange-bottom">
           <a class="substance-name" [routerLink]="['/applicationssrs', application.id]">
             {{application.appType}}&nbsp;{{application.appNumber}}
           </a>
@@ -95,75 +95,101 @@
         </mat-card-title>
 
         <mat-card-content>
-          <div class="substance-data">
-            <div class="label">Product:</div>
 
-            <div>
-              <span class="value">
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Product Name:<br>
+                Ingredient Name:
+              </div>
+              <div class="row-property-value">
                 <div class="indent-list" *ngFor="let prod of application.applicationProductList">
-
                   <div class="indent-list" *ngFor="let prodName of prod.applicationProductNameList">
-                    {{ prodName.productName }}
+                      
+                      &#9642;&nbsp;{{ prodName.productName }}
+                     
                   </div>
-
-
+                  <div class="indent-list" *ngFor="let ing of prod.applicationIngredientList">
+                    {{ ing.bdnum }}
+                  </div>
                 </div>
-              </span>
+              </div>
             </div>
-          </div>
-          <div class="substance-data">
-            <div class="label">Sponsor Name:</div>
-            <div>
-              <span class="value">{{application.sponsorName}}</span>
-            </div>
-          </div>
-          <div class="substance-data">
-            <div class="label">App Sub Type:</div>
-            <div>
-              <span class="value">{{application.appSubType}}</span>
-            </div>
-          </div>
-          <div class="substance-data">
-            <div class="label">Submit Date:</div>
-            <div>
-              <span class="value">{{application.submitDate}}</span>
+            <div class="row-property">
+              <div class="row-property-key">
+                Title:
+              </div>
+              <div class="row-property-value">
+                {{application.title}}
+              </div>
             </div>
           </div>
 
-          <div class="substance-data">
-            <div class="label">Status Date:</div>
-            <div>
-              <span class="value">{{application.statusDate}}</span>
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Sponsor Name:
+              </div>
+              <div class="row-property-value">
+                {{ application.sponsorName}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Submit Date:
+              </div>
+              <div class="row-property-value">
+                {{application.submitDate}}
+              </div>
             </div>
           </div>
-          
-          <div class="substance-data">
-            <div class="label">Clinical Trials:&nbsp;<span
-                
-                class="badge">0</span></div>
-            <div>
-              <span class="value">
-              <!--
-                <div class="indent-list" *ngFor="let ind of application.applicationIndication">
-                  {{ ind.appType }}
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                App Sub Type:
+              </div>
+              <div class="row-property-value">
+                {{ application.appSubType}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Status Date:
+              </div>
+              <div class="row-property-value">
+                {{application.statusDate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Indications:&nbsp;<span class="badge">{{application.applicationIndicationList.length}}</span>
+              </div>
+              <div class="row-property-value">
+                <div class="" *ngFor="let ind of application.applicationIndicationList">
+                  &bull;&nbsp;{{ ind.indication }}
                 </div>
-              -->
-              </span>
+              </div>
+            </div>
+
+            <div class="row-property">
+              <div class="row-property-key">
+                Clinical Trials:&nbsp;<span class="badge">0
+                  <!-- {{application.clinicalTrialList.length}}-->
+                </span>
+              </div>
+              <div class="row-property-value">
+                <!--
+                      <div class="" *ngFor="let clinical of application.clinicalTrialList">
+                          &bull;&nbsp;{{ clinical.nctNumber }}
+                        </div>
+                        -->
+              </div>
             </div>
           </div>
-
-          <div class="substance-data">
-            <div class="label">Indications:&nbsp;<span
-                class="badge">{{application.applicationIndicationList.length}}</span></div>
-            <div>
-              <span class="value">
-                <div class="indent-list" *ngFor="let ind of application.applicationIndicationList">
-                  {{ ind.indication }}
-                </div>
-              </span>
-            </div>
-          </div>
-
         </mat-card-content>
 
       </mat-card>

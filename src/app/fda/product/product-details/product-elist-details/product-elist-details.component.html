@@ -1,9 +1,8 @@
 <div class="details-container margintop90px">
-  <mat-card>
+  <mat-card class="bordergray">
     <mat-card-title>
-      Product Elist Details
+      Product Details
     </mat-card-title>
-    <div class="title">Product Elist Details</div>
     <mat-card-content>
 
       <div class="row">
@@ -182,12 +181,13 @@
 </div>
 
 <div class="details-container">
-  <mat-card>
+  <mat-card class="bordergray">
     <mat-card-title>
-      Product Active
+      Product Active ({{product.prodActiveElistList.length}})
     </mat-card-title>
     <mat-card-content>
-      <table class="tableStyle">
+      <table class="">
+        <thead>
         <tr height="30px">
           <td><b>Name</b></td>
           <td><b>Active Moiety Name</b></td>
@@ -195,6 +195,8 @@
           <td><b>Unii</b></td>
           <td><b>Strength Number (Unit)</b></td>
         </tr>
+        </thead>
+        <tbody>
         <tr *ngFor="let x of product.prodActiveElistList">
           <td>{{ x.name }}</td>
           <td>{{ x.activeMoietyName }}</td>
@@ -202,6 +204,7 @@
           <td>{{ x.unii }}</td>
           <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
         </tr>
+      </tbody>
       </table>
     </mat-card-content>
   </mat-card>

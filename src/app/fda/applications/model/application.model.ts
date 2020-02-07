@@ -18,6 +18,7 @@ export interface ApplicationSrs {
   statusDate: number;
   applicationProductList: Array<ProductSrs>;
   applicationIndicationList: Array<ApplicationIndicationSrs>;
+  clinicalTrialList: Array<ClinicalTrial>;
 }
 
 export interface ProductSrs {
@@ -33,6 +34,7 @@ export interface ProductSrs {
   internalVersion: number;
   applicationProductNameList: Array<ProductNameSrs>;
   applicationIngredientList: Array<ApplicationIngredient>;
+  clinicalTrialList: Array<ClinicalTrial>;
 }
 
 export interface ProductNameSrs {
@@ -60,6 +62,9 @@ export interface ApplicationIndicationSrs {
   reviewedBy: string;
   reviewDate: number;
   internalVersion: number;
+}
 
+export interface ClinicalTrial {
+  nctNumber: String;
 }
 

@@ -15,7 +15,6 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
   constructor(private generalService: GeneralService) { }
 
   ngOnInit() {
-   // console.log(this.substance);
     this.getSearchCount();
   }
 

@@ -119,26 +119,27 @@ export class ClinicalTrialService extends BaseHttpService {
 
   getSubstanceClinicalTrials(
     bdnum: string, page: number, pageSize: number
-    ): Observable<Array<any>> {
-      const url = this.baseUrl + 'clinicalTrialListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+  ): Observable<Array<any>> {
+    const url = this.baseUrl + 'clinicalTrialListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
-      return this.http.get<Array<any>>(url).pipe(
-        map(results => {
-          this.totalRecords = results['totalRecords'];
-          return results['data'];
-        })
-      );
-    }
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
+      })
+    );
+  }
 
   getClinicalTrialDetails(
-      nctNumber: string, src: string
-      ): Observable<any> {
-        const url = this.baseUrl + 'clinicalTrialDetails2?nctNumber=' + nctNumber + '&src=' + src;
+    nctNumber: string, src: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'clinicalTrialDetails2?nctNumber=' + nctNumber + '&src=' + src;
 
-        return this.http.get<any>(url).pipe(
-          map(results => {
-            return results;
-          })
-        );
-      }
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+  
 }

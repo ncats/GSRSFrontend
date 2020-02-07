@@ -40,35 +40,74 @@ export class ApplicationService extends BaseHttpService {
     }
 
     params = params.appendFacetParams(facets);
+    let app : PagingResponse<ApplicationSrs>;
+    let clinical : Array<any> = [];
 
     const url = `${this.apiBaseUrl}applicationssrs/search`;
     const options = {
       params: params
     };
     return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
+    
   }
 
+  /*
   getClinicalTrialApplication(
-    appType: string, appNumber: string
+    applications: Array<ApplicationSrs>
   ): Observable<Array<any>> {
-    const url = this.baseUrl + 'getClinicalTrialApplication?appType=' + appType + '&appNumber=' + appNumber;
+
+    //appType: string, appNumber: string
+    let clinicalTrial: Array<any> = [];
+
+  //: Observable<Array<any>> {
+    //console.log("clinical2 " + application.appType + "  " + application.appNumber);
+    applications.forEach((element, index) => {
+      console.log("AAA: " + element.appType + "  " +element.appNumber);
+      const url = this.baseUrl + 'getClinicalTrialApplication2?appType=' + element.appType + '&appNumber=' + element.appNumber;
+    //  clinicalTrial = this.http.get<Array<any>>(url)
+    });
 
     return this.http.get<Array<any>>(url).pipe(
       map(results => {
         return results;
       })
     );
+    
   }
-
+*/
   getSubstanceApplications(
     bdnum: string, page:number, pageSize: number
   ): Observable<Array<any>> {
+  
     const url = this.baseUrl + 'applicationListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url).pipe(
       map(results => {
         this.totalRecords = results['totalRecords'];
         return results['data'];
+      })
+    );
+  }
+
+  getApplicationDetails(
+    id: number, src: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'applicationDetails2?id=' + id;
+
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getApplicationDarrtsDetails(
+    appType: string, appNumber: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'applicationDarrtsDetails2?appType=' + appType + '&appNumber=' + appNumber;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
       })
     );
   }

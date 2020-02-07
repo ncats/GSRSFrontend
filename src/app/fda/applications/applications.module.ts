@@ -30,11 +30,22 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { ApplicationDetailsComponent } from './application-details/application-details/application-details.component';
+import { ApplicationDarrtsDetailsComponent } from './application-details/application-darrts-details/application-darrts-details.component';
+import { ApplicationDetailsBaseComponent } from './application-details/application-details-base.component';
 
 const applicationRoutes: Routes = [
   {
     path: 'browse-applications',
     component: ApplicationsBrowseComponent
+  },
+  {
+  path: 'applicationDetails/:id/:src',
+    component: ApplicationDetailsComponent
+  },
+  {
+  path: 'applicationDarrtsDetails/:appType/:appNumber',
+    component: ApplicationDarrtsDetailsComponent
   }
 ];
 
@@ -69,7 +80,12 @@ const applicationRoutes: Routes = [
     ReactiveFormsModule,
     OverlayModule
   ],
-  declarations: [ApplicationsBrowseComponent],
+  declarations: [
+    ApplicationsBrowseComponent, 
+    ApplicationDetailsComponent, 
+    ApplicationDarrtsDetailsComponent, 
+    ApplicationDetailsBaseComponent
+  ],
   exports: [
     ApplicationsBrowseComponent
   ]

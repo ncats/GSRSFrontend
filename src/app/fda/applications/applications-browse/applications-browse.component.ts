@@ -1,21 +1,21 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { ApplicationService } from '../service/application.service';
-import { ApplicationSrs } from '../model/application.model';
+import { ApplicationSrs, ClinicalTrial } from '../model/application.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
 import * as _ from 'lodash';
 import { Facet } from '@gsrs-core/utils';
 import { LoadingService } from '@gsrs-core/loading';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import {MatBadgeModule} from '@angular/material/badge'; 
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
-import {AuthService} from '@gsrs-core/auth/auth.service';
+import { AuthService } from '@gsrs-core/auth/auth.service';
 import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
@@ -26,7 +26,7 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './applications-browse.component.html',
   styleUrls: ['./applications-browse.component.scss']
 })
-export class ApplicationsBrowseComponent implements OnInit {
+export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   private privateSearchTerm?: string;
   public _searchTerm?: string;
   public applications: Array<ApplicationSrs>;
@@ -48,12 +48,12 @@ export class ApplicationsBrowseComponent implements OnInit {
   public facetBuilder: SubstanceFacetParam;
   appType: string;
   appNumber: string;
-  clinicalTrialApplication: any;
+  clinicalTrialApplication: Array<any>;
 
   //  public order: string;
- // public sortValues = searchSortValues;
- // showAudit: boolean;
- // public facetBuilder: SubstanceFacetParam;
+  // public sortValues = searchSortValues;
+  // showAudit: boolean;
+  // public facetBuilder: SubstanceFacetParam;
   //searchText: string[] = [];
   //private overlayContainer: HTMLElement;
 
@@ -69,8 +69,8 @@ export class ApplicationsBrowseComponent implements OnInit {
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
     private authService: AuthService,
-   // private overlayContainerService: OverlayContainer,
-  )  {
+    // private overlayContainerService: OverlayContainer,
+  ) {
     this.privateFacetParams = {};
     this.facetBuilder = {};
   }
@@ -114,7 +114,9 @@ export class ApplicationsBrowseComponent implements OnInit {
 
       this.searchApplications();
     });
+  }
 
+  ngAfterViewInit() {
   }
 
   facetsFromParams() {
@@ -182,8 +184,9 @@ export class ApplicationsBrowseComponent implements OnInit {
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
         this.facets = [];
+        //this.applicationService.getClinicalTrialApplication(this.applications);
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-           this.populateFacets(pagingResponse.facets);
+          this.populateFacets(pagingResponse.facets);
         }
       }, error => {
         const notification: AppNotification = {
@@ -199,7 +202,7 @@ export class ApplicationsBrowseComponent implements OnInit {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
-      this.populateUrlQueryParameters()
+    this.populateUrlQueryParameters()
   }
 
 
@@ -274,14 +277,10 @@ export class ApplicationsBrowseComponent implements OnInit {
 
     if (facetKeys != null && facetKeys.length) {
       facetKeys.forEach(facetKey => {
-        //console.log(facetKey);
-        //console.log(this.privateFacetParams[facetKey]);
-        //console.log(this.privateFacetParams[facetKey].params);
         if (this.privateFacetParams[facetKey] != null && this.privateFacetParams[facetKey].params != null) {
           const facetValueKeys = Object.keys(this.privateFacetParams[facetKey].params);
           facetValueKeys.forEach(facetParam => {
             eventValue++;
-            console.log(this.privateFacetParams[facetKey].params[facetParam]);
             this.privateFacetParams[facetKey].params[facetParam] = null;
           });
 
@@ -327,7 +326,6 @@ export class ApplicationsBrowseComponent implements OnInit {
     );
   }
 
-
   private populateFacets(facets: Array<Facet>): void {
 
     if (this.configService.configData.facets != null) {
@@ -357,6 +355,15 @@ export class ApplicationsBrowseComponent implements OnInit {
       }
     }
 
+    //Remove ix.Class from facet
+    for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
+      if (facets[facetIndex].name == "ix.Class") {
+        if (facetIndex !== -1) {
+          facets.splice(facetIndex, 1);
+        }
+      }
+    }
+
     this.facets = facets;
 
     if (this.facets.length < 15) {
@@ -377,8 +384,6 @@ export class ApplicationsBrowseComponent implements OnInit {
   }
 
   applyFacetsFilter(facetName: string) {
-    console.log('INSIDE applyFacetsFilter: ' + facetName);
-
     const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     let eventValue = 0;
     Object.keys(this.privateFacetParams).forEach(key => {
@@ -400,17 +405,39 @@ export class ApplicationsBrowseComponent implements OnInit {
     return this.privateSearchTerm;
   }
 
- // get facetParams(): { [facetName: string]: { [facetValueLabel: string]: boolean } } {
- //   return this._facetParams;
-//  }
+  // get facetParams(): { [facetName: string]: { [facetValueLabel: string]: boolean } } {
+  //   return this._facetParams;
+  //  }
 
   get facetParams(): SubstanceFacetParam | { showAllMatchOption?: boolean } {
     return this.privateFacetParams;
   }
 
-  get getClinicalTrialApplication() {
-    //this.clinicalTrialApplication = 
-    return this.applicationService.getClinicalTrialApplication(this.appType, this.appNumber);
-  }
+  //appType: string, appNumber: string
+  /*
+  getClinicalTrialApplication() {
+    let clinicalTrial: Array<any> = [];
+    let app: any;
 
-}
+    console.log('clinical');
+    this.applications.forEach((element, index) => {
+      //app = element;
+      this.applicationService.getClinicalTrialApplication(element.appType, element.appNumber).subscribe(response => {
+        clinicalTrial = response;
+        //element.clinicalTrialList = response;
+        
+        clinicalTrial.forEach(element1 => {
+          if (element1.nctn != null) {
+            element.clinicalTrialList[0].nctNumber = element1.nctn;
+          }
+
+          console.log("NCT length: " + clinicalTrial.length);
+        });
+        
+
+        });
+        
+      });
+    }
+*/
+  }
