@@ -16,7 +16,7 @@ import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial
 import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
 import { MiniSearchComponent } from './mini-search/mini-search.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import { pipes2Br } from './filters/pipes-2-br';
+import { Pipes2Br } from './filters/pipes-2-br';
 import { ClinicalTrialService } from './clinical-trial/clinical-trial.service';
 import { ClinicalTrialDetailsBaseComponent } from './clinical-trial-details/clinical-trial-details-base.component';
 import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details/clinical-trial-details.component';
@@ -68,7 +68,7 @@ const clinicalTrialsRoutes: Routes = [
     ClinicalTrialEditComponent,
     ClinicalTrialAddComponent,
     MiniSearchComponent,
-    pipes2Br,
+    Pipes2Br,
     ClinicalTrialDetailsComponent,
     ClinicalTrialEuropeDetailsComponent,
     ClinicalTrialDetailsBaseComponent

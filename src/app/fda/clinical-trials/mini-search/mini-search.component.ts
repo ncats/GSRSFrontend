@@ -8,7 +8,7 @@ import { UtilsService } from '@gsrs-core/utils';
 import {MatAutocompleteTrigger} from '@angular/material';
 
 @Component({
-  selector: 'mini-search',
+  selector: 'app-mini-search',
   templateUrl: './mini-search.component.html',
   styleUrls: ['./mini-search.component.scss']
 })
