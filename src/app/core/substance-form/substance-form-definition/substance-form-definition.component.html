@@ -60,8 +60,14 @@
           <mat-option value="unapprove">
             Un-approve record (Remove approval ID)
           </mat-option>
-          <mat-option value="concept" (select) = "concept()" [disabled]="definition.substanceClass != 'concept'" >
+          <mat-option value="concept"  [disabled]="definition.substanceClass != 'concept'" >
             Set concept status to non-approved
+          </mat-option>
+          <mat-option value="glyco"  [disabled]="definition.substanceClass != 'protein'" >
+            Predict N-Glycosylation Sites
+          </mat-option>
+          <mat-option value="disulfide"  [disabled]="definition.substanceClass != 'protein'" >
+            Predict disulfide links by protein type
           </mat-option>
         </mat-select>
       </mat-form-field>
