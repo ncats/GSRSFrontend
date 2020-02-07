@@ -29,7 +29,8 @@
     "tslint": "tslint",
     "e2e": "ng e2e",
     "serve:ssr": "node dist/server",
-    "webpack:server": "webpack --config webpack.server.config.js --progress --colors"
+    "webpack:server": "webpack --config webpack.server.config.js --progress --colors",
+    "precommit": "ng lint"
   },
   "private": true,
   "dependencies": {
