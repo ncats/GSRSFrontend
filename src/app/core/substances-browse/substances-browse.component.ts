@@ -368,7 +368,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.facets = newFacets;
       this.cleanFacets();
     });
-    subscription.unsubscribe();
   }
 
   applyFacetsFilter(facetName: string) {
