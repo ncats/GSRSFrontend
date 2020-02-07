@@ -6,6 +6,8 @@ import { BaseHttpService } from '@gsrs-core/base';
 import { ClinicalTrial } from './clinical-trial.model';
 import { BdnumNameAll } from './clinical-trial.model';
 import { PagingResponse } from '@gsrs-core/utils';
+import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
+import { ClinicalTrialHttpParams } from '../misc/clinical-trial-http-params';
 
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
@@ -18,15 +20,38 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   getClinicalTrials(
-    skip: number = 0,
-    pageSize: number = 10,
-    searchTerm?: string
-  ): Observable<PagingResponse<ClinicalTrial>> {
-    let params = new HttpParams();
-    params = params.append('skip', skip.toString());
-    params = params.append('top', pageSize.toString());
-    if (searchTerm !== null && searchTerm !== '') {
-      params = params.append('q', searchTerm);
+    args: {
+      searchTerm?: string,
+      cutoff?: number,
+      type?: string,
+      pageSize?: number,
+      order?: string,
+      facets?: ClinicalTrialFacetParam,
+      skip?: number
+    } = {}): Observable<PagingResponse<ClinicalTrial>> {
+    if (!args.searchTerm) {  args.searchTerm = ''; }
+    if (!args.pageSize) {  args.pageSize = 10; }
+    if (!args.skip) {  args.skip = 0; }
+     console.log("args.pageSize: "+ args.pageSize);
+
+    let params = new ClinicalTrialHttpParams();
+    params = params.append('skip', args.skip.toString());
+    params = params.append('top', args.pageSize.toString());
+    if (args.searchTerm !== null && args.searchTerm !== '') {
+      if (args.type !== null && args.type !== '') {
+        if (args.type == 'uuid' ) {
+          params = params.append('q', "root_clinicalTrialDrug_substanceUuid:\"^"+ args.searchTerm +"$\"");
+        } else if (args.type == 'title') {
+          params = params.append('q', "root_title:\""+ args.searchTerm +"\"");
+        } else { 
+          params = params.append('q', args.searchTerm);
+        }
+      } else { 
+        params = params.append('q', args.searchTerm);
+      }
+    }
+    if (args.facets !== null) {
+      params = params.appendFacetParams(args.facets);
     }
     const url = `${this.apiBaseUrl}ctclinicaltrial/search`;
     const options = {
@@ -45,8 +70,6 @@ export class ClinicalTrialService extends BaseHttpService {
     const x = this.http.delete<ClinicalTrial>(url, options);
     return x;
   }
-
-
 
   getClinicalTrial(id: string): Observable<ClinicalTrial> {
     const url = this.apiBaseUrl + `ctclinicaltrial(${id})`;

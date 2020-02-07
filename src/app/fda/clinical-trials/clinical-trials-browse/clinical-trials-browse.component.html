@@ -1,14 +1,93 @@
+<mat-sidenav-container [hasBackdrop]="hasBackdrop">  
+  <mat-sidenav #matSideNavInstance mode="side" opened="true">
+    <mat-accordion multi="true">
+      <mat-expansion-panel *ngFor="let facet of facets" [expanded]="facetParams[facet.name] != null">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ facet.name | facetDisplay }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-form-field  class="">
+        <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name]" placeholder="Search  {{facet.name}}">
+        </mat-form-field>
+        <button mat-icon-button color="black" (click) = "searchText[facet.name] = ''"><mat-icon svgIcon="close"></mat-icon></button>
+          <div class="facet-value" *ngFor="let value of facet.values | facetFilter : searchText[facet.name]">
+          <div class="facet-value-checkbox">
+            <mat-checkbox class="include" matTooltip="Include" (change)="updateFacetSelection($event, facet.name, value.label, true)"
+              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
+            </mat-checkbox>
+            <mat-checkbox class="exclude" matTooltip="Exclude" (change)="updateFacetSelection($event, facet.name, value.label, false)"
+              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
+            </mat-checkbox>
+          </div>
+          <div class="facet-value-label">
+              <span *ngIf = "value.label == 'approved'">
+                Validated (UNII)
+             </span>
+                <span *ngIf = "value.label != 'approved'">
+                {{value.label}}
+              </span>
+          </div>  
+          <div class="middle-fill"></div>
+          <div class="facet-value-count">
+            {{value.count}}
+          </div>
+        </div>
+        <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
+          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch"
+            (click)="sendFacetsEvent($event, facet.name)">
+            All Match
+          </mat-checkbox>
+          <div class="pull-right">
+            <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
+              Clear
+            </button>
+            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading" (click)="applyFacetsFilter(facet.name)">
+              Apply
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-sidenav>
+<mat-sidenav-content>
+
 <div class="example-container mat-elevation-z8 clinical-trials-browse-wrapper">
     <p>
     Browse Clinical Trials 
     </p>
     <div>
     <form class="filter-form clinical-trials-browse-filter-form">
-      <mat-form-field>
-        <input matInput placeholder="Search Term" [(ngModel)]="_searchTerm" name="_searchTerm" (keyup.enter)="setSearchTermValue();" />
+      <mat-form-field class='clinical-trials-browse-filter-form-searchTerm'>
+        <input matInput placeholder="Search Term" [(ngModel)]="searchTerm" name="searchTerm" (keyup.enter)="setSearchTermValue();" />
       </mat-form-field>
-     </form>
-     <button mat-flat-button color="primary" class="clinical-trials-browse-filter-form-button"  matSuffix aria-label="Search Clinical Trials" (click)="setSearchTermValue();">Go</button>
+      
+      <mat-form-field class='clinical-trials-browse-filter-form-searchType'>
+        <mat-label>Type</mat-label>
+        <mat-select  [(ngModel)]="searchType" name="searchType">
+          <mat-option *ngFor="let searchType of searchTypes" [value]="searchType.value">
+            {{searchType.title}}
+         </mat-option>
+        </mat-select>
+      </mat-form-field>
+     <button mat-flat-button color="primary" class="clinical-trials-browse-filter-form-button-open"  matSuffix aria-label="Search Clinical Trials" (click)="setSearchTermValue();">Go</button>
+     <span *ngIf="!showHelp">
+      <button mat-icon-button aria-label="Show Help" (click)="toggleShowHelp()">?</button>
+    </span>
+    </form>
+    <mat-card *ngIf="showHelp" class='show-help-box'>
+      <div style="display: flex">
+      <span class="middle-fill"></span>
+      <button class="clinical-trials-browse-filter-form-help-button-close" mat-icon-button (click)="toggleShowHelp()">
+        <mat-icon svgIcon="close"></mat-icon>
+      </button>
+      </div>
+      <div>
+        <p><strong>All</strong> - search in all indexed fields; wild cards work (e.g health*).</p>
+        <p><strong>Title</strong> - search for full words in title field.</p>
+        <!-- p><strong>UUID</strong> -  search for trials having a specific Substance UUID</p -->
+      </div>
+    </mat-card>
     </div>
     <div>
       <mat-paginator #paginator [length]="totalClinicalTrials" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
@@ -67,4 +146,6 @@
       (page)="changePage($event)">
     </mat-paginator>
     </div>
-  </div>   
+  </div>
+</mat-sidenav-content>
+</mat-sidenav-container>

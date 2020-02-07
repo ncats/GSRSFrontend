@@ -129,9 +129,9 @@
 				<p>Conditions:</p>
         <div class="indent-list" *ngFor="let content of clinicalTrial.conditions.split('\|')">{{ content }}</div>
 		</div>
-		<div *ngIf="clinicalTrial.sponsors">
-				<p>Sponsors:</p>
-				<div class="indent-list" *ngFor="let content of clinicalTrial.sponsors.split('\|')">{{ content }}</div>
+		<div *ngIf="clinicalTrial.sponsor">
+				<p>Sponsor:</p>
+				<div class="indent-list" *ngFor="let content of clinicalTrial.sponsor.split('\|')">{{ content }}</div>
 		</div>
 		<div *ngIf="clinicalTrial.locations">
 			<p>Locations:</p>
