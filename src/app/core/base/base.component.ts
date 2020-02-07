@@ -110,7 +110,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.environment = this.configService.environment;
 
     if (this.environment.navItems && this.environment.navItems.length) {
-      this.navItems.concat(this.environment.navItems);
+      this.navItems = this.navItems.concat(this.environment.navItems);
     }
 
     this.logoSrcPath = `${this.environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
