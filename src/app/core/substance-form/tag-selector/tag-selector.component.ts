@@ -38,7 +38,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
         this.optionsDictionary = response[this.cvDomain].dictionary;
 
         this.filteredOptions = this.tagControl.valueChanges.pipe(
-          startWith(null),
+          startWith(<string>null),
           map((tag: string | null) => tag ? this._filter(tag)
             : this.allOptions.filter(option => this.privateTags.indexOf(option.value) === -1)));
       });

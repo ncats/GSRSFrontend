@@ -86,7 +86,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         document.write = (content) => {
           if (content === '<style type="text/css">input._scil_dropdown::-ms-clear {display: none;}</style>') {
             const styleElement = document.createElement('style');
-            styleElement.type = 'text/css';
+            // styleElement.type = 'text/css';
             styleElement.innerHTML = 'input._scil_dropdown::-ms-clear {display: none;}';
             document.getElementsByTagName('head')[0].appendChild(styleElement);
           } else {
@@ -99,7 +99,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           node.src = this.jsdrawScriptUrls[i];
           node.type = 'text/javascript';
           node.async = false;
-          node.charset = 'utf-8';
+          // node.charset = 'utf-8';
           document.getElementsByTagName('head')[0].appendChild(node);
         }
       }
