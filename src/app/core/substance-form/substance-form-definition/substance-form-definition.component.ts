@@ -58,7 +58,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   }
 
   changeClass(type: any): void {
-    console.log(type);
     this.router.navigate(['/substances', this.uuid, 'edit'], { queryParams: { switch: type.value } });
   }
 
@@ -86,7 +85,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
       this.definition = definition || {};
-      console.log(definition);
       if (this.definition.substanceClass === 'structure') {
         this.substanceClass = 'chemical';
       } else if (this.definition.substanceClass === 'nucleicAcid') {
@@ -106,7 +104,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       this.json = this.substanceFormService.getJson();
       if (this.definition.status) {
         this.status = this.definition.status;
-        console.log(this.status);
       }
       if (this.definition.definitionType === 'ALTERNATIVE') {
         this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {

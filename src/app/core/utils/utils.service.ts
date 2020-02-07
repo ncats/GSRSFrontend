@@ -137,7 +137,7 @@ export class UtilsService extends BaseHttpService {
     const errors = [];
     const connections = display.split(';');
     const regex = /^\s*[A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)[-][A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)\s*$/g;
-    const map = {$errors: []};
+    const mapper = {$errors: []};
     for (let i = 0; i < connections.length; i++) {
       const con = connections[i].trim();
       if (con === '') { continue; }
@@ -147,16 +147,16 @@ export class UtilsService extends BaseHttpService {
         const text = 'Connection \'' + con + '\' is not properly formatted';
         errors.push({ text: text, type: 'warning' });
       } else {
-        if (!map[res[1]]) {
-          map[res[1]] = [];
+        if (!mapper[res[1]]) {
+          mapper[res[1]] = [];
         }
-        map[res[1]].push(res[2]);
+        mapper[res[1]].push(res[2]);
       }
     }
     if (errors.length > 0) {
-      map.$errors = errors;
+      mapper.$errors = errors;
     }
-    return map;
+    return mapper;
 
   }
 

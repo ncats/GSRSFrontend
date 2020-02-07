@@ -35,7 +35,7 @@ export class MixtureComponentFormComponent implements OnInit {
   @Input()
   set component(component: MixtureComponents) {
     this.privateComp = component;
-    if(this.privateComp.substance){
+    if (this.privateComp.substance) {
       this.relatedSubstanceUuid = this.privateComp.substance.refuuid;
     }
 

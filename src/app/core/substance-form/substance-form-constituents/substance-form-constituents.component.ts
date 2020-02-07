@@ -11,7 +11,8 @@ import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance
   templateUrl: './substance-form-constituents.component.html',
   styleUrls: ['./substance-form-constituents.component.scss']
 })
-export class SubstanceFormConstituentsComponent extends SubstanceCardBaseFilteredList<Constituent> implements OnInit, AfterViewInit, OnDestroy{
+export class SubstanceFormConstituentsComponent extends SubstanceCardBaseFilteredList<Constituent>
+  implements OnInit, AfterViewInit, OnDestroy {
 
   constituents: Array<Constituent>;
   private subscriptions: Array<Subscription> = [];

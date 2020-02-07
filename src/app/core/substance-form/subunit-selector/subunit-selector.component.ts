@@ -490,21 +490,17 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
 
   toggleFeatureSite(subunit: any, residue: any, value: any, event): void {
     const newobj = { subunitIndex: subunit, residueIndex: residue };
-    console.log(this.selectState);
     if (this.selectState === 'first') {
       this.newFeature[0] = newobj;
       this.render.addClass(event.target, 'chosen');
       this.selectState = 'last';
     } else if (this.selectState === 'last') {
-      console.log(this.newFeature[0]);
-      console.log(newobj);
-      if ((this.newFeature[0].subunitIndex == newobj.subunitIndex) &&
-        (this.newFeature[0].residueIndex == newobj.residueIndex)) {
+      if ((this.newFeature[0].subunitIndex === newobj.subunitIndex) &&
+        (this.newFeature[0].residueIndex === newobj.residueIndex)) {
 
         this.selectState = 'first';
         this.render.removeClass(event.target, 'chosen');
       } else {
-        console.log('why are these not the same?');
         this.newFeature[1] = newobj;
         this.addFeature(this.newFeature);
         this.selectState = 'finished';

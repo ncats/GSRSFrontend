@@ -11,7 +11,8 @@ import { Subscription } from 'rxjs';
   templateUrl: './substance-form-monomers.component.html',
   styleUrls: ['./substance-form-monomers.component.scss']
 })
-export class SubstanceFormMonomersComponent extends SubstanceCardBaseFilteredList<SubstanceCode> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormMonomersComponent extends SubstanceCardBaseFilteredList<SubstanceCode>
+  implements OnInit, AfterViewInit, OnDestroy {
   monomers: Array<SubstanceCode>;
   private subscriptions: Array<Subscription> = [];
 

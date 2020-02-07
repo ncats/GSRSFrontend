@@ -15,7 +15,7 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
 import {Subject, Subscription} from 'rxjs';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import * as deepEqual from "deep-equal";
+import * as deepEqual from 'deep-equal';
 
 @Component({
   selector: 'app-subunit-form',
@@ -65,8 +65,8 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     setTimeout(() => {
       const displaySequenceSubscription = this.substanceFormService.subunitDisplaySequences.subscribe(subunits => {
         const newSubunits = subunits.filter(unit => unit.subunitIndex === this.subunit.subunitIndex)[0];
-        if(!this.subunitSequence || !deepEqual(this.subunitSequence, newSubunits)){
-          if(this.subunitSequence && JSON.stringify(this.subunitSequence) != JSON.stringify(newSubunits) ) {
+        if (!this.subunitSequence || !deepEqual(this.subunitSequence, newSubunits)) {
+          if (this.subunitSequence && JSON.stringify(this.subunitSequence) !== JSON.stringify(newSubunits) ) {
             this.subunitSequence = newSubunits;
             setTimeout(() => {
               if (this.allSites) {
@@ -85,7 +85,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     const allSitesSubscription = this.substanceFormService.allSites.subscribe( allSites => {
           const tempSitelist = [];
           allSites.forEach(site => {
-            if (site.subunit === this.subunit.subunitIndex){
+            if (site.subunit === this.subunit.subunitIndex) {
               tempSitelist.push(site);
             }
           });
@@ -96,8 +96,8 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
                 this.addStyle();
               }
             });
-          } else if (!this.allSites){
-            this.allSites = tempSitelist
+          } else if (!this.allSites) {
+            this.allSites = tempSitelist;
           }
 
       }
@@ -121,10 +121,10 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
   getVocabularies(): void {
     const nonStandard: VocabularyTerm = {
-      "value":"X",
-      "display":"Non-standard Residue"
+      'value': 'X',
+      'display': 'Non-standard Residue'
     };
-    if( this.substanceType === 'protein'){
+    if ( this.substanceType === 'protein') {
       this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
         this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
         this.vocabulary.X = nonStandard;
@@ -144,7 +144,8 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     if (this.subunitSequence && this.subunitSequence.subunits) {
       this.allSites.forEach(site => {
         if (this.subunitSequence.subunits) {
-          if (this.subunitSequence.subunits[site.residue - 1].class && this.subunitSequence.subunits[site.residue - 1].class !== site.type){
+          if (this.subunitSequence.subunits[site.residue - 1].class
+            && this.subunitSequence.subunits[site.residue - 1].class !== site.type) {
             this.subunitSequence.subunits[site.residue - 1].class = this.subunitSequence.subunits[site.residue - 1].class + ' ' + site.type;
           } else {
             this.subunitSequence.subunits[site.residue - 1].class = site.type;
@@ -162,7 +163,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string, type: string): any {
     const vocab = (this.vocabulary[unitValue] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue].display);
     const arr = [];
-    const formatted = {'modification':'Structural Modification',
+    const formatted = {'modification': 'Structural Modification',
       'other' : 'Other Link',
       'C-Glycosylation': 'C-Glycosylation',
       'N-Glycosylation': 'N-Glycosylation',
@@ -171,9 +172,9 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       'disulfide': 'Disulfide Link'
     };
     arr.push( `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab})`);
-    const splitDisplay = type.split(" ");
-    splitDisplay.forEach(type => {
-      arr.push(formatted[type]|| '');
+    const splitDisplay = type.split(' ');
+    splitDisplay.forEach(type2 => {
+      arr.push(formatted[type2] || '');
     });
     return arr;
   }
@@ -206,6 +207,7 @@ change(event): void {
   cleanSequence(): void {
     const valid = [];
     const test = this.subunit.sequence.split('');
+    // tslint:disable-next-line:forin
     for (const key in this.vocabulary) {
       valid.push(this.vocabulary[key].value);
     }
@@ -213,7 +215,7 @@ change(event): void {
     if (this.toggle[this.subunit.subunitIndex] === false) {
 
     }
-    if(cleanedSequence !== this.subunit.sequence){
+    if (cleanedSequence !== this.subunit.sequence) {
       this.subunit.sequence = cleanedSequence;
       this.substanceFormService.emitSubunitUpdate();
       this.substanceFormService.recalculateCysteine();

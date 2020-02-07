@@ -11,7 +11,8 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   templateUrl: './substance-form-structural-modifications.component.html',
   styleUrls: ['./substance-form-structural-modifications.component.scss']
 })
-export class SubstanceFormStructuralModificationsComponent extends SubstanceCardBaseFilteredList<StructuralModification> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormStructuralModificationsComponent extends SubstanceCardBaseFilteredList<StructuralModification>
+  implements OnInit, AfterViewInit, OnDestroy {
   modifications: Array<StructuralModification>;
   private subscriptions: Array<Subscription> = [];
 

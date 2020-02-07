@@ -35,10 +35,10 @@ export class MonomerFormComponent implements OnInit, AfterViewInit {
   @Input()
   set monomer(monomer: Monomer) {
     this.privateMonomer = monomer;
-    if(this.privateMonomer.monomerSubstance){
+    if (this.privateMonomer.monomerSubstance) {
       this.relatedSubstanceUuid = this.privateMonomer.monomerSubstance.refuuid;
     } else {
-      this.relatedSubstanceUuid = "";
+      this.relatedSubstanceUuid = '';
     }
 
   }

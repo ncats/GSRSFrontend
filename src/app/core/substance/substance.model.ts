@@ -1,4 +1,4 @@
-import {StructuralUnit} from "@gsrs-core/substance/structural-unit.model";
+import {StructuralUnit} from '@gsrs-core/substance/structural-unit.model';
 
 export interface SubstanceBase {
     uuid?: string;

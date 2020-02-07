@@ -11,7 +11,8 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   templateUrl: './substance-form-structural-units.component.html',
   styleUrls: ['./substance-form-structural-units.component.scss']
 })
-export class SubstanceFormStructuralUnitsComponent extends SubstanceCardBaseFilteredList<StructuralUnit> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormStructuralUnitsComponent extends SubstanceCardBaseFilteredList<StructuralUnit>
+  implements OnInit, AfterViewInit, OnDestroy {
   structuralUnits: Array<StructuralUnit>;
   private subscriptions: Array<Subscription> = [];
 

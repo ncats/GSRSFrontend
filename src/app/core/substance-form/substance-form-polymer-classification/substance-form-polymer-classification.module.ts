@@ -7,8 +7,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
-import {SubstanceFormPolymerClassificationComponent} from "@gsrs-core/substance-form/substance-form-polymer-classification/substance-form-polymer-classification.component";
-import {SubstanceSelectorModule} from "@gsrs-core/substance-selector/substance-selector.module";
+import {SubstanceFormPolymerClassificationComponent} from '@gsrs-core/substance-form/substance-form-polymer-classification/substance-form-polymer-classification.component';
+import {SubstanceSelectorModule} from '@gsrs-core/substance-selector/substance-selector.module';
 
 @NgModule({
   imports: [

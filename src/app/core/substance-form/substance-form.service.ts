@@ -371,7 +371,6 @@ unapproveRecord() {
   }
 
   updateDefinition(definition: SubstanceFormDefinition): void {
-    console.log(definition);
     this.substance.definitionType = definition.definitionType;
     this.substance.definitionLevel = definition.definitionLevel;
     this.substance.deprecated = definition.deprecated;
@@ -1553,7 +1552,8 @@ unapproveRecord() {
   }
 
   deleteSubstanceAgentModification(agentModification: AgentModification): void {
-    const agentModIndex = this.substance.modifications.agentModifications.findIndex(agentMod => agentModification.$$deletedCode === agentMod.$$deletedCode);
+    const agentModIndex = this.substance.modifications.agentModifications.findIndex(
+      agentMod => agentModification.$$deletedCode === agentMod.$$deletedCode);
     if (agentModIndex > -1) {
       this.substance.modifications.agentModifications.splice(agentModIndex, 1);
       this.substanceAgentModificationsEmitter.next(this.substance.modifications.agentModifications);
@@ -1589,7 +1589,8 @@ unapproveRecord() {
   }
 
   deleteSubstancePhysicalModification(physicalModification: PhysicalModification): void {
-    const physicalModIndex = this.substance.modifications.physicalModifications.findIndex(physicalMod => physicalModification.$$deletedCode === physicalMod.$$deletedCode);
+    const physicalModIndex = this.substance.modifications.physicalModifications.findIndex(
+      physicalMod => physicalModification.$$deletedCode === physicalMod.$$deletedCode);
     if (physicalModIndex > -1) {
       this.substance.modifications.physicalModifications.splice(physicalModIndex, 1);
       this.substancePhysicalModificationsEmitter.next(this.substance.modifications.physicalModifications);
@@ -1627,7 +1628,8 @@ unapproveRecord() {
   }
 
   deleteSubstanceStructuralModification(structuralModification: StructuralModification): void {
-    const structuralModIndex = this.substance.modifications.structuralModifications.findIndex(structuralMod => structuralModification.$$deletedCode === structuralMod.$$deletedCode);
+    const structuralModIndex = this.substance.modifications.structuralModifications.findIndex(
+      structuralMod => structuralModification.$$deletedCode === structuralMod.$$deletedCode);
     if (structuralModIndex > -1) {
       this.substance.modifications.structuralModifications.splice(structuralModIndex, 1);
       this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
@@ -1704,7 +1706,7 @@ unapproveRecord() {
       this.substance.protein.disulfideLinks.forEach(link => {
         if (link.sites) {
           link.sites.forEach(site => {
-            available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
+            available = available.filter(r => (r.residueIndex !== site.residueIndex) || (r.subunitIndex !== site.subunitIndex));
           });
         }
       });
@@ -1729,7 +1731,7 @@ unapproveRecord() {
         this.substance.protein.disulfideLinks.forEach(link => {
           if (link.sites) {
             link.sites.forEach(site => {
-              available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
+              available = available.filter(r => (r.residueIndex !== site.residueIndex) || (r.subunitIndex !== site.subunitIndex));
             });
           }
         });
@@ -1867,7 +1869,8 @@ unapproveRecord() {
   }
 
   deleteSubstanceConstituent(sugar: Sugar): void {
-    const constituentIndex = this.substance.specifiedSubstance.constituents.findIndex(subCode => sugar.$$deletedCode === subCode.$$deletedCode);
+    const constituentIndex = this.substance.specifiedSubstance.constituents.findIndex(
+      subCode => sugar.$$deletedCode === subCode.$$deletedCode);
     if (constituentIndex > -1) {
       this.substance.specifiedSubstance.constituents.splice(constituentIndex, 1);
       this.substanceConstituentsEmitter.next(this.substance.specifiedSubstance.constituents);
@@ -2037,6 +2040,7 @@ unapproveRecord() {
     }
     const toks = slist.split(';');
     const sites = [];
+    // tslint:disable-next-line:forin
     for (const i in toks) {
       const l = toks[i];
       if (l === '') {
@@ -2046,7 +2050,7 @@ unapproveRecord() {
       if (rng.length > 1) {
         const site1 = this.siteDisplayToSite(rng[0]);
         const site2 = this.siteDisplayToSite(rng[1]);
-        if (site1.subunitIndex != site2.subunitIndex) {
+        if (site1.subunitIndex !== site2.subunitIndex) {
           throw new Error('"' + rng + '" is not a valid shorthand for a site range. Must be between the same subunits.');
         }
         if (site2.residueIndex <= site1.residueIndex) {
@@ -2119,12 +2123,12 @@ unapproveRecord() {
       for (let i = 0; i < sites.length; i++) {
 
         const site = sites[i];
-        if (site.subunitIndex == csub && site.residueIndex == cres) {
+        if (site.subunitIndex === csub && site.residueIndex === cres) {
           continue;
         }
         finish = false;
-        if (site.subunitIndex == csub) {
-          if (site.residueIndex == cres + 1) {
+        if (site.subunitIndex === csub) {
+          if (site.residueIndex === cres + 1) {
             if (rres === 0) {
               rres = cres;
             }
@@ -2271,6 +2275,7 @@ unapproveRecord() {
     for (const k in amap) {
       if (amap.hasOwnProperty(k)) {
         const start = rmap[k] + '_' + k;
+        // tslint:disable-next-line:forin
         for (const i in amap[k]) {
           const end = rmap[amap[k][i]] + '_' + amap[k][i];
           disp += start + '-' + end + ';\n';

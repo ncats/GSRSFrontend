@@ -20,7 +20,6 @@ export class CanActivateSubstanceForm implements CanActivate {
                 if (auth) {
                     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').subscribe(response => {
                         if (response) {
-                            console.log(response);
                             observer.next(true);
                             observer.complete();
                         } else {

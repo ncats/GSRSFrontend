@@ -465,8 +465,6 @@ export class SubstanceService extends BaseHttpService {
 
   validateSubstance(substance: SubstanceDetail): Observable<ValidationResults> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
-    console.log('returning validate request');
-    console.log(substance);
     return this.http.post(url, substance);
   }
 

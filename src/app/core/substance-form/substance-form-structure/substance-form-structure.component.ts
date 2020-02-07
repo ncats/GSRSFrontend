@@ -40,8 +40,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
           if (structure) {
             this.structure = structure;
           } else {
-            this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
-              this.structure = structure;
+            this.substanceFormService.substanceIdealizedStructure.subscribe(structure2 => {
+              this.structure = structure2;
             });
           }
           this.loadStructure();

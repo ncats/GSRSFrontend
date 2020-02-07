@@ -40,7 +40,7 @@ export class AgentModificationFormComponent implements OnInit {
   @Input()
   set mod(mod: AgentModification) {
     this.privateMod = mod;
-    if(this.privateMod.agentSubstance){
+    if (this.privateMod.agentSubstance) {
       this.relatedSubstanceUuid = this.privateMod.agentSubstance.refuuid;
     }
 
@@ -90,7 +90,7 @@ export class AgentModificationFormComponent implements OnInit {
     this.subscriptions.push(dialogSubscription);
   }
 
-  updateProcess(event: string){
+  updateProcess(event: string) {
     this.privateMod.agentModificationProcess = event;
   }
 

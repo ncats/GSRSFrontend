@@ -79,7 +79,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
       this.deleteTimer = setTimeout(() => {
         this.linkDeleted.emit(this.link);
       }, 1000);
-    //}
+    // }
     this.substanceFormService.emitDisulfideLinkUpdate();
   }
 
@@ -94,7 +94,9 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
   }
 
   updateSuggestions(value: Site, pos: number): void {
-    this.cysteine = this.cysteine.filter(function(r) { return (r.residueIndex !== value.residueIndex) || (r.subunitIndex !== value.subunitIndex); });
+    this.cysteine = this.cysteine.filter(function(r) {
+      return (r.residueIndex !== value.residueIndex) || (r.subunitIndex !== value.subunitIndex);
+    });
     if (this.privateLink.sites[pos] !== value) {
       if (this.privateLink.sites[pos].residueIndex) {
         this.cysteine.push(this.privateLink.sites[pos]);

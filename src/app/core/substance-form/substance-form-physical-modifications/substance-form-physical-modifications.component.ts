@@ -11,7 +11,8 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   templateUrl: './substance-form-physical-modifications.component.html',
   styleUrls: ['./substance-form-physical-modifications.component.scss']
 })
-export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBaseFilteredList<PhysicalModification> implements OnInit, AfterViewInit, OnDestroy{
+export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBaseFilteredList<PhysicalModification>
+  implements OnInit, AfterViewInit, OnDestroy {
   modifications: Array<PhysicalModification>;
   private subscriptions: Array<Subscription> = [];
 
