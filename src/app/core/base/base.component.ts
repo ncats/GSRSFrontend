@@ -165,7 +165,7 @@ export class BaseComponent implements OnInit, OnDestroy {
       queryParams: searchTerm ? { 'search': searchTerm } : null
     };
 
-    this.router.navigate(['/browse-substance'], navigationExtras)
+    this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
   increaseMenuZindex(): void {
