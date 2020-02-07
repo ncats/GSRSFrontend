@@ -1,7 +1,7 @@
 <div class="details-container margintop90px">
   <mat-card class="bordergray">
     <mat-card-title>
-      Product Details
+      Product Details&nbsp;<span class="font10px colorgray">(Elist)</span>
     </mat-card-title>
     <mat-card-content>
 
@@ -11,7 +11,11 @@
             Product NDC:
           </div>
           <div class="row-property-value">
-            {{product.productNDC}}
+            <ng-container *ngIf="product.productNDC !== null">
+              <a href="{{product.prodNDCUrl}}" target="_blank">
+                <span class="colororange font16px fontbold">{{product.productNDC}}</span>
+              </a>
+            </ng-container>
           </div>
         </div>
         <div class="row-property">
@@ -20,6 +24,8 @@
           </div>
           <div class="row-property-value">
             {{product.applicationNumber}}
+            <img class="structure-img" [src]="getSafeStructureImgUrl('')">
+
           </div>
         </div>
       </div>
@@ -182,51 +188,55 @@
 
 <div class="details-container">
   <mat-card class="bordergray">
-    <mat-card-title>
-      Product Active ({{product.prodActiveElistList.length}})
+    <mat-card-title class="title2">
+      Active Ingredient ({{product.prodActiveElistList.length}})
     </mat-card-title>
-    <mat-card-content>
-      <table class="">
+    <mat-card-content *ngIf="product.prodActiveElistList.length > 0">
+      <table class="blueTable">
         <thead>
-        <tr height="30px">
-          <td><b>Name</b></td>
-          <td><b>Active Moiety Name</b></td>
-          <td><b>Structure</b></td>
-          <td><b>Unii</b></td>
-          <td><b>Strength Number (Unit)</b></td>
-        </tr>
+          <tr>
+            <th>Name</th>
+            <th>Active Moiety Name</th>
+            <th>Structure</th>
+            <th>Unii</th>
+            <th>Strength Number (Unit)</th>
+          </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let x of product.prodActiveElistList">
-          <td>{{ x.name }}</td>
-          <td>{{ x.activeMoietyName }}</td>
-          <td></td>
-          <td>{{ x.unii }}</td>
-          <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
-        </tr>
-      </tbody>
+          <tr *ngFor="let x of product.prodActiveElistList">
+            <td>{{ x.name }}</td>
+            <td>{{ x.activeMoietyName }}</td>
+            <td></td>
+            <td>{{ x.unii }}</td>
+            <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+          </tr>
+        </tbody>
       </table>
     </mat-card-content>
   </mat-card>
 </div>
 
 <div class="details-container">
-  <mat-card>
-    <mat-card-title>
-      Product Active
+  <mat-card class="bordergray marginbottom80px">
+    <mat-card-title class="title2">
+      Inactive Ingredient&nbsp;({{product.prodInactiveElistList.length}})
     </mat-card-title>
-    <mat-card-content>
-      <table class="tableStyle">
-        <tr height="30px">
-          <td><b>Name</b></td>
-          <td><b>Unii</b></td>
-          <td><b>Strength Number (Unit)</b></td>
-        </tr>
-        <tr *ngFor="let x of product.prodInactiveElistList">
-          <td>{{ x.name }}</td>
-          <td>{{ x.unii }}</td>
-          <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
-        </tr>
+    <mat-card-content *ngIf="product.prodInactiveElistList.length > 0">
+      <table class="blueTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Unii</th>
+            <th>Strength Number (Unit)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of product.prodInactiveElistList">
+            <td>{{ x.name }}</td>
+            <td>{{ x.unii }}</td>
+            <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+          </tr>
+        </tbody>
       </table>
     </mat-card-content>
   </mat-card>

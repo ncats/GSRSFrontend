@@ -1,9 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
+import { Component, OnInit } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/substance-details-base-table-display';
-import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-substance-adverseeventpt',

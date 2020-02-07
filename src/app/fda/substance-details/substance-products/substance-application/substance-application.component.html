@@ -5,7 +5,15 @@
 
     <ng-container matColumnDef="appType">
       <th mat-header-cell *matHeaderCellDef> Application Type </th>
-      <td mat-cell *matCellDef="let application"> {{application.appType}} </td>
+      <td mat-cell *matCellDef="let application">
+          <div *ngIf="application.fromTable === 'SRS'">
+              <a [routerLink]="['/applicationDetails', application.id]" target="_blank">{{application.appType}}</a>
+            </div>
+            <div *ngIf="application.fromTable != 'SRS'">
+              <a [routerLink]="['/applicationDarrtsDetails', application.appType, application.appNumber]" target="_blank">{{application.appType}}</a>
+              <br><span class="font10px colorgray">(Darrts)</span>
+            </div>
+      </td>
     </ng-container>
     
     <ng-container matColumnDef="appNumber">
