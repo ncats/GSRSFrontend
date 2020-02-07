@@ -55,31 +55,53 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   useFeature(feature: any): void {
     this.feature = feature.value;
+    if (this.feature === 'glyco') {
+      this.glyco();
+    } else if (this.feature === 'disulfide') {
+      this.disulfide();
+    }if (this.feature === 'concept') {
+      this.concept();
+    }
   }
 
   changeClass(type: any): void {
     this.router.navigate(['/substances', this.uuid, 'edit'], { queryParams: { switch: type.value } });
+    this.feature = undefined;
   }
 
   setPrivate(): void {
     this.substanceFormService.setDefinitionPrivate();
+    this.feature = undefined;
   }
 
   setPublic(): void {
     this.substanceFormService.setDefinitionPublic();
+    this.feature = undefined;
   }
 
   changeStatus(status: any): void {
-    console.log(status);
     this.substanceFormService.changeStatus(status.value);
+    this.feature = undefined;
   }
 
   unapprove(): void {
     this.substanceFormService.unapproveRecord();
+    this.feature = undefined;
   }
 
   concept(): void {
     this.substanceFormService.conceptNonApproved();
+    this.feature = undefined;
+  }
+
+  glyco(): void {
+    this.substanceFormService.predictSites();
+    this.feature = undefined;
+  }
+
+  disulfide(): void {
+    this.substanceFormService.disulfideLinks();
+    this.feature = undefined;
   }
 
   ngAfterViewInit() {

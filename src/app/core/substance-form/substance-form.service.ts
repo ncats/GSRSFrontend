@@ -38,6 +38,7 @@ import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
 import { DomainsWithReferences } from './domain-references/domain.references.model';
 import {StructuralUnit} from '@gsrs-core/substance';
+import * as _ from 'lodash';
 @Injectable({
   providedIn: 'root'
 })
@@ -2326,6 +2327,156 @@ unapproveRecord() {
   }
 
 
+  disulfideLinks() {
+    console.log('called');
+    const KNOWN_DISULFIDE_PATTERNS = {};
+    ('IGG4	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' + 'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' + 'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
+      const tup = s.split('\t');
+
+      const list = _.chain(tup[1].split(',')).map(function (t) {
+        return _.map(t.split('-'), function (temp) {
+          return +temp - 0;
+        });
+      }).value();
+
+      KNOWN_DISULFIDE_PATTERNS[tup[0]] = list;
+    });
+    const proteinSubstance = this.substance;
+    const prot = proteinSubstance.protein;
+    const pattern = KNOWN_DISULFIDE_PATTERNS[prot.proteinSubType];
+
+    if (!pattern) {
+      alert('Unknown disulfide pattern for protein subtype:"' + prot.proteinSubType + '"');
+      return;
+    } else {
+      if (!confirm('Would you like to set the disulfide pattern for:"' + prot.proteinSubType + '"')) {
+        return;
+      }
+    }
+    let ng = '';
+    let og = '';
+    let cg = '';
+    const realList = [];
+    const cst = [];
+
+    let cs = _.chain(prot.subunits).map(function (s) {
+      const sid = s.subunitIndex;
+      let i1 = 1;
+
+      const v = _.chain(s.sequence).map(function (r) {
+        return {
+          'i': i1++,
+          'r': r
+        };
+      }).filter(function (r) {
+        return r.r === 'C';
+      }).map(function (r) {
+        return {
+          'su': sid,
+          'r': r.r,
+          'ri': r.i
+        };
+      }).value();
+
+      for (let i = 0; i < v.length; i++) {
+        cst.push(v[i]);
+      }
+
+      return v;
+    }).value();
+    cs = cst;
+    for (let i = 0; i < cs.length; i++) {
+      const c1 = cs[i];
+      const real: any = {};
+      real.subunitIndex = c1['su'];
+      real.residueIndex = c1['ri'];
+      real.display = c1['su'] + '_' + c1['ri'];
+      real.value = real.display;
+      realList.push(real);
+    }
+    const newDS = _.chain(pattern).map(function (sl) {
+      return [realList[sl[0]], realList[sl[1]]];
+    }).map(function (s) {
+      return {
+        'sites': s,
+        'sitesShorthand': s[0].display + ';' + s[1].display
+      };
+    }).value();
+
+    if (prot.glycosylation) {
+      if (prot.glycosylation.NGlycosylationSites) {
+        const s = prot.glycosylation.NGlycosylationSites;
+        ng =  _.chain(s).map(function (s1) {
+          return s1.subunitIndex + '_' + s1.residueIndex;
+        }).value().join(';');
+      }
+
+      if (prot.glycosylation.CGlycosylationSites) {
+        const s = prot.glycosylation.CGlycosylationSites;
+        cg = _.chain(s).map(function (s1) {
+          return s1.subunitIndex + '_' + s1.residueIndex;
+        }).value().join(';');
+      }
+
+      if (prot.glycosylation.OGlycosylationSites) {
+        const s = prot.glycosylation.OGlycosylationSites;
+        og = _.chain(s).map(function (s1) {
+          return s1.subunitIndex + '_' + s1.residueIndex;
+        }).value().join(';');
+      }
+    }
+
+    this.substance.protein.disulfideLinks = newDS;
+    this.emitDisulfideLinkUpdate();
+    alert('Found and added ' + newDS.length + 'sites');
+
+
+
+  }
+
+
+  predictSites() {
+    function setJson(json) {
+
+    }
+
+    function gfinder(sn, seq) {
+      const re = new RegExp('N[^P][ST]', 'g');
+      let xArray;
+      const sites = [];
+
+      while (xArray = re.exec(seq)) {
+        const ri = xArray.index + 1;
+        sites.push({
+          subunitIndex: sn,
+          residueIndex: ri
+        });
+      }
+
+      return sites;
+    }
+
+    function proteinGlycFinder(proteinSubstance) {
+      return _.chain(proteinSubstance.protein.subunits).flatMap(function (su) {
+        return gfinder(su.subunitIndex, su.sequence);
+      }).value();
+    }
+
+    const sub = this.substance;
+    const gsites = proteinGlycFinder(sub);
+    console.log(gsites);
+    if (gsites.length === 0) {
+      alert('No potential N-Glycosylation sites found');
+
+    } else {
+      alert('Found: ' + gsites.length + ' glycosylation sites. Submit record to save changes');
+      sub.protein.glycosylation.NGlycosylationSites = gsites;
+      setJson(sub);
+    }
+
+    // gsites.$$displayString = angular.element(document.body).injector().get('siteList').siteString(gsites);
+
+  }
 
 }
 

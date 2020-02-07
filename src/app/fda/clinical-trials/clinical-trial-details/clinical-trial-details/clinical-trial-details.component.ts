@@ -3,11 +3,10 @@ import { ClinicalTrialService } from '../../clinical-trial/clinical-trial.servic
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component';
-import { environment } from 'src/environments/environment';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-clinical-trial-details',
