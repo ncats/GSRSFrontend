@@ -15,7 +15,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
 
   displayedColumns: string[] = [
     'appType', 'appNumber', 'center', 'sponsorName', 'applicationStatus', 'applicationSubType'];
- 
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private applicationService: ApplicationService
@@ -35,7 +35,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     this.applicationService.getSubstanceApplications(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
     });
-  
+
   /*
       this.searchControl.valueChanges.subscribe(value => {
         this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
@@ -46,5 +46,5 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     });
     */
   }
-    
+
 }

@@ -12,7 +12,7 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
- 
+
   displayedColumns: string[] = [
     'ptTerm',
     'primSoc',
@@ -20,7 +20,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     'ptCount',
     'prr'
   ];
-   
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private adverseEventService: AdverseEventService
@@ -36,9 +36,9 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
   getSubstanceAdverseEventPt(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
-    
+
     this.adverseEventService.getSubstanceAdverseEventPt(this.bdnum, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);  
+      this.setResultData(results);
     });
 
 /*
@@ -50,5 +50,5 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
       this.countUpdate.emit(adverseevents.length);
     });*/
   }
-    
+
 }

@@ -16,7 +16,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class ApplicationDetailsBaseComponent implements OnInit {
 
-  id : number;
+  id: number;
   src: string;
   appType: string;
   appNumber: string;
@@ -35,9 +35,9 @@ export class ApplicationDetailsBaseComponent implements OnInit {
 
   ngOnInit() {
     this.loadingService.setLoading(true);
-    //this.id = this.activatedRoute.snapshot.params['id'];
-    //this.src = this.activatedRoute.snapshot.params['src'];
-   
+    // this.id = this.activatedRoute.snapshot.params['id'];
+    // this.src = this.activatedRoute.snapshot.params['src'];
+
     if (this.id > 0) {
       this.getApplicationDetails();
     } else {
@@ -47,7 +47,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   }
 
   getApplicationDetails(): void {
-    this.applicationService.getApplicationDetails(this.id, this.src).subscribe(response => {
+    this.applicationService.getApplicationDetails(this.id).subscribe(response => {
       this.application = response;
       this.loadingService.setLoading(false);
     }, error => {
@@ -66,7 +66,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     setTimeout(() => {
       this.router.navigate(['/browse-substance']);
     }, 5000);
-    
+
   }
 
 }

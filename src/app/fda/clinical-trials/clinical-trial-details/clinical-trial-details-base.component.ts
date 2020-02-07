@@ -16,7 +16,7 @@ import { environment } from '../../../../environments/environment';
 })
 
 export class ClinicalTrialDetailsBaseComponent implements OnInit {
- 
+
   nctNumber: string;
   src: string;
   clinicalTrial: any;
@@ -36,7 +36,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     this.loadingService.setLoading(true);
     this.nctNumber = this.activatedRoute.snapshot.params['nctNumber'];
     this.src = this.activatedRoute.snapshot.params['src'];
-   
+
     if (this.nctNumber != null) {
       this.getClinicalTrialDetails();
     } else {

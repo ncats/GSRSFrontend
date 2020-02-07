@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';;
+import { Component, OnInit, Input } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/clinical-trial.service';
@@ -12,7 +12,7 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
-  
+
   displayedColumns: string[] = [
     'nctNumber',
     'title',
@@ -40,7 +40,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     this.clinicalTrialService.getSubstanceClinicalTrials(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
     });
-  
+
   /*
       this.searchControl.valueChanges.subscribe(value => {
         this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
@@ -51,5 +51,5 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     });
     */
   }
-    
+
 }

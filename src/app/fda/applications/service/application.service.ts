@@ -18,7 +18,7 @@ import { map } from 'rxjs/operators';
 export class ApplicationService extends BaseHttpService {
 
   totalRecords: 0;
-  
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService
@@ -40,15 +40,13 @@ export class ApplicationService extends BaseHttpService {
     }
 
     params = params.appendFacetParams(facets);
-    let app : PagingResponse<ApplicationSrs>;
-    let clinical : Array<any> = [];
 
     const url = `${this.apiBaseUrl}applicationssrs/search`;
     const options = {
       params: params
     };
     return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
-    
+
   }
 
   /*
@@ -72,14 +70,14 @@ export class ApplicationService extends BaseHttpService {
         return results;
       })
     );
-    
+
   }
 */
   getSubstanceApplications(
-    bdnum: string, page:number, pageSize: number
+    bdnum: string, page: number, pageSize: number
   ): Observable<Array<any>> {
-  
-    const url = this.baseUrl + 'applicationListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
+
+    const url = this.baseUrl + 'applicationListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url).pipe(
       map(results => {
@@ -90,7 +88,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   getApplicationDetails(
-    id: number, src: string
+    id: number
   ): Observable<any> {
     const url = this.baseUrl + 'applicationDetails2?id=' + id;
 
@@ -112,4 +110,4 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
-} //class
+} // class

@@ -1,12 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
-import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
-import { PagingResponse } from '@gsrs-core/utils';
-// import { ApplicationSrs } from '../model/application.model';
-import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
-import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
+import { ConfigService } from '@gsrs-core/config';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable(
@@ -27,9 +23,9 @@ export class AdverseEventService extends BaseHttpService {
   }
 
   getSubstanceAdverseEventPt(
-    bdnum: string, page:number, pageSize: number
+    bdnum: string, page: number, pageSize: number
   ): Observable<Array<any>> {
-    const url = this.baseUrl + 'adverseEventPtListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
+    const url = this.baseUrl + 'adverseEventPtListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
     .pipe(
@@ -41,9 +37,9 @@ export class AdverseEventService extends BaseHttpService {
   }
 
   getSubstanceAdverseEventDme(
-    bdnum: string, page:number, pageSize: number
+    bdnum: string, page: number, pageSize: number
   ): Observable<Array<any>> {
-    const url = this.baseUrl + 'adverseEventDmeListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
+    const url = this.baseUrl + 'adverseEventDmeListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
     .pipe(
@@ -56,9 +52,9 @@ export class AdverseEventService extends BaseHttpService {
   }
 
   getSubstanceAdverseEventCvm(
-    bdnum: string, page:number, pageSize: number
+    bdnum: string, page: number, pageSize: number
   ): Observable<Array<any>> {
-    const url = this.baseUrl + 'adverseEventCvmListByBdnum?bdnum=' + bdnum + '&page=' + (page+1) + '&pageSize=' + pageSize;
+    const url = this.baseUrl + 'adverseEventCvmListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
     .pipe(
@@ -70,4 +66,4 @@ export class AdverseEventService extends BaseHttpService {
 
   }
 
-} //class
+} // class

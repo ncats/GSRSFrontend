@@ -5,14 +5,13 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 
 export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredList<any> implements OnInit {
-  
-  totalRecords: number = 0;
+
+  totalRecords: 0;
   public results: Array<any> = [];
 
   @Input() bdnum: string;
-  
+
   ngOnInit(): void {
-    throw new Error("Method not implemented.");
   }
 
   constructor(
@@ -28,16 +27,16 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
       this.page = pageEvent.pageIndex;
       this.pageSize = pageEvent.pageSize;
     }
-  } 
+  }
 
   setResultData(results: Array<any>, totalRecords?: number): void {
     this.results = results;
     this.filtered = results;
     this.totalRecords = this.service.totalRecords;
-    this.pageChangeFda();  
-  } 
+    this.pageChangeFda();
+  }
 
-  pageChangeFda(pageEvent?: PageEvent, analyticsEventCategory?: string): void {    
+  pageChangeFda(pageEvent?: PageEvent, analyticsEventCategory?: string): void {
     if (pageEvent != null) {
 
       /*
@@ -66,7 +65,7 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
       } else {
           break;
       }
-    }      
+    }
   }
 
 }

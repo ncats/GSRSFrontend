@@ -25,14 +25,13 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-  ) { 
+  ) {
     super(applicationService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService);
   }
-  
+
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.params['id'];
-    this.src = this.activatedRoute.snapshot.params['src'];
-   
+
     super.ngOnInit();
 
   }

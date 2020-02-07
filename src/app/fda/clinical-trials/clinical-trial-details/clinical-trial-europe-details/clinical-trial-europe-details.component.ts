@@ -6,7 +6,7 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
-import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component'
+import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -28,12 +28,12 @@ export class ClinicalTrialEuropeDetailsComponent extends ClinicalTrialDetailsBas
   ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
     router, gaService, utilsService);
   }
-  
+
   ngOnInit() {
     super.ngOnInit();
 
     this.flagIconSrcPath = `${environment.baseHref || '/'}assets/icons/fda/european-union.svg`;
- 
+
   }
 
 }

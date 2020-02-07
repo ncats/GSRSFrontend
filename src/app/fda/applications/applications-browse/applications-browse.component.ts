@@ -33,7 +33,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   public facets: Array<Facet> = [];
   private privateFacetParams: SubstanceFacetParam;
   private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
-  //view = 'cards';
+  // view = 'cards';
   hasBackdrop = false;
   facetString: string;
   pageIndex: number;
@@ -54,8 +54,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   // public sortValues = searchSortValues;
   // showAudit: boolean;
   // public facetBuilder: SubstanceFacetParam;
-  //searchText: string[] = [];
-  //private overlayContainer: HTMLElement;
+  // searchText: string[] = [];
+  // private overlayContainer: HTMLElement;
 
   constructor(
     public applicationService: ApplicationService,
@@ -184,7 +184,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
         this.facets = [];
-        //this.applicationService.getClinicalTrialApplication(this.applications);
+        // this.applicationService.getClinicalTrialApplication(this.applications);
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.populateFacets(pagingResponse.facets);
         }
@@ -202,7 +202,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
-    this.populateUrlQueryParameters()
+    this.populateUrlQueryParameters();
   }
 
 
@@ -355,9 +355,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
       }
     }
 
-    //Remove ix.Class from facet
+    // Remove ix.Class from facet
     for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
-      if (facets[facetIndex].name == "ix.Class") {
+      if (facets[facetIndex].name === 'ix.Class') {
         if (facetIndex !== -1) {
           facets.splice(facetIndex, 1);
         }
@@ -413,7 +413,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     return this.privateFacetParams;
   }
 
-  //appType: string, appNumber: string
+  // appType: string, appNumber: string
   /*
   getClinicalTrialApplication() {
     let clinicalTrial: Array<any> = [];
@@ -425,7 +425,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
       this.applicationService.getClinicalTrialApplication(element.appType, element.appNumber).subscribe(response => {
         clinicalTrial = response;
         //element.clinicalTrialList = response;
-        
+
         clinicalTrial.forEach(element1 => {
           if (element1.nctn != null) {
             element.clinicalTrialList[0].nctNumber = element1.nctn;
@@ -433,10 +433,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
 
           console.log("NCT length: " + clinicalTrial.length);
         });
-        
+
 
         });
-        
+
       });
     }
 */

@@ -3,7 +3,7 @@ import { ConfigService } from '../config/config.service';
 export abstract class BaseHttpService {
   public apiBaseUrl: string;
   public baseUrl: string;
-  
+
   constructor(
     public configService: ConfigService
   ) {

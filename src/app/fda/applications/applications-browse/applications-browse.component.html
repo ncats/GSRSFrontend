@@ -84,9 +84,10 @@
       <mat-card class="bordergray" *ngFor="let application of applications">
 
         <mat-card-title class="borderlightorange-bottom">
-          <a class="substance-name" [routerLink]="['/applicationssrs', application.id]">
+          <a class="substance-name" [routerLink]="['/applicationDetails', application.id]">
             {{application.appType}}&nbsp;{{application.appNumber}}
           </a>
+       
           <span class="center">Center:&nbsp;{{application.center}}</span>
           <span class="middle-fill"></span>
           <a class="approval-id">

@@ -12,11 +12,11 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
- 
+
   displayedColumns: string[] = [
-    'adverseEvent','species','adverseEventCount', 'routeOfAdmin'
+    'adverseEvent', 'species', 'adverseEventCount', 'routeOfAdmin'
   ];
-   
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private adverseEventService: AdverseEventService
@@ -32,9 +32,9 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
 
   getSubstanceAdverseEventCvm(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
-    
+
     this.adverseEventService.getSubstanceAdverseEventCvm(this.bdnum, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);  
+      this.setResultData(results);
     });
       /*
       this.searchControl.valueChanges.subscribe(value => {
@@ -46,6 +46,6 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
     });
     */
   }
-    
+
 }
 

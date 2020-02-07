@@ -13,7 +13,7 @@ import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table
 })
 
 export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
-  
+
   public displayedColumns: string[] = [
     'productNDC',
     'name',
@@ -33,10 +33,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
   ngOnInit() {
     if (this.substance && this.substance.uuid) {
-      //Get Bdnum
+      // Get Bdnum
       this.getBdnum();
-      
-      //Get Product Data based on substance uuid
+
+      // Get Product Data based on substance uuid
       this.getSubstanceProducts();
     }
   }
@@ -45,10 +45,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     if (this.substance) {
       if (this.substance.codes.length > 0) {
           this.substance.codes.forEach(element => {
-            if (element.codeSystem && element.codeSystem == "BDNUM") {
-              if (element.type && element.type == "PRIMARY") {
+            if (element.codeSystem && element.codeSystem === 'BDNUM') {
+              if (element.type && element.type === 'PRIMARY') {
                 this.bdnum = element.code;
-              }       
+              }
             }
           });
       }
@@ -62,5 +62,5 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       this.setResultData(results);
     });
   }
-   
+
 }

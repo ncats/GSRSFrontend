@@ -33,6 +33,8 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { ApplicationDetailsComponent } from './application-details/application-details/application-details.component';
 import { ApplicationDarrtsDetailsComponent } from './application-details/application-darrts-details/application-darrts-details.component';
 import { ApplicationDetailsBaseComponent } from './application-details/application-details-base.component';
+import { ApplicationEditComponent } from './application-edit/application-edit.component';
+import { ApplicationAddComponent } from './application-add/application-add.component';
 
 const applicationRoutes: Routes = [
   {
@@ -40,12 +42,16 @@ const applicationRoutes: Routes = [
     component: ApplicationsBrowseComponent
   },
   {
-  path: 'applicationDetails/:id/:src',
+    path: 'applicationDetails/:id',
     component: ApplicationDetailsComponent
   },
   {
-  path: 'applicationDarrtsDetails/:appType/:appNumber',
+    path: 'applicationDarrtsDetails/:appType/:appNumber',
     component: ApplicationDarrtsDetailsComponent
+  },
+  {
+    path: 'application/:id/edit',
+    component: ApplicationEditComponent
   }
 ];
 
@@ -81,31 +87,33 @@ const applicationRoutes: Routes = [
     OverlayModule
   ],
   declarations: [
-    ApplicationsBrowseComponent, 
-    ApplicationDetailsComponent, 
-    ApplicationDarrtsDetailsComponent, 
-    ApplicationDetailsBaseComponent
+    ApplicationsBrowseComponent,
+    ApplicationDetailsComponent,
+    ApplicationDarrtsDetailsComponent,
+    ApplicationDetailsBaseComponent,
+    ApplicationEditComponent,
+    ApplicationAddComponent
   ],
   exports: [
     ApplicationsBrowseComponent
   ]
 })
 
-export class ApplicationsModule { 
+export class ApplicationsModule {
   constructor(router: Router) {
     applicationRoutes.forEach(route => {
       router.config[0].children.push(route);
     });
   }
 
-static forRoot(): ModuleWithProviders {
-  return {
-    ngModule: ApplicationsModule,
-    providers: [
-      ApplicationService
-    ]
-  };
-}
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: ApplicationsModule,
+      providers: [
+        ApplicationService
+      ]
+    };
+  }
 
 }
 

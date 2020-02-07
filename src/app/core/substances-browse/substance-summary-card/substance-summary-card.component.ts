@@ -85,6 +85,6 @@ export class SubstanceSummaryCardComponent implements OnInit {
       const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
       const componentRef = viewContainerRef.createComponent(componentFactory);
       (<SubstanceSummaryDynamicContent>componentRef.instance).substance = this.privateSubstance;
-    })
+    });
   }
 }

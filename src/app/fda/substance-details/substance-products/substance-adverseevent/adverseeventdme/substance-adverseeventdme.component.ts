@@ -12,11 +12,11 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
- 
+
   displayedColumns: string[] = [
-    'dmeReactions','ptTermMeddra','caseCount', 'dmeCount','dmeCountPercent','weightedAvgPrr'
+    'dmeReactions', 'ptTermMeddra', 'caseCount', 'dmeCount', 'dmeCountPercent', 'weightedAvgPrr'
   ];
-   
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private adverseEventService: AdverseEventService
@@ -32,9 +32,9 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
 
   getSubstanceAdverseEventDme(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
-    
+
     this.adverseEventService.getSubstanceAdverseEventDme(this.bdnum, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);  
+      this.setResultData(results);
     });
       /*
       this.searchControl.valueChanges.subscribe(value => {
@@ -46,5 +46,5 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
     });
     */
   }
-    
+
 }

@@ -141,5 +141,5 @@ export class ClinicalTrialService extends BaseHttpService {
       })
     );
   }
-  
+
 }

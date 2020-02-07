@@ -21,7 +21,8 @@ export class ProductService extends BaseHttpService {
     substanceUuid: string, page: number, pageSize: number
     ): Observable<Array<any>> {
 
-    const url = this.baseUrl + 'productListBySubstanceUuid?substanceUuid=' + substanceUuid + '&page=' + (page+1) + '&pageSize=' + pageSize;
+    const funcName = 'productListBySubstanceUuid?substanceUuid=';
+    const url = this.baseUrl + funcName + substanceUuid + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
     .pipe(

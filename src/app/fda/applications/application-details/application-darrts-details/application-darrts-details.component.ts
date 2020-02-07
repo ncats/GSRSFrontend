@@ -26,21 +26,21 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-  ) { 
+  ) {
     super(applicationService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService);
   }
-  
+
   ngOnInit() {
     this.appType = this.activatedRoute.snapshot.params['appType'];
     this.appNumber = this.activatedRoute.snapshot.params['appNumber'];
     this.loadingService.setLoading(true);
-  
+
     if ((this.appType != null) && (this.appNumber != null)) {
       this.getApplicationDarrtsDetails();
     } else {
       this.handleSubstanceRetrivalError();
     }
-    //super.ngOnInit();
+    // super.ngOnInit();
   }
 
   getApplicationDarrtsDetails(): void {
