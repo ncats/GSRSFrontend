@@ -22,8 +22,11 @@ import { Auth } from '../auth/auth.model';
 import { searchSortValues } from '../utils/search-sort-values';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location, LocationStrategy } from '@angular/common';
+<<<<<<< HEAD
 import { StructureService } from '@gsrs-core/structure';
 import { Subscription } from 'rxjs';
+=======
+>>>>>>> development
 
 @Component({
   selector: 'app-substances-browse',
@@ -49,7 +52,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   hasBackdrop = false;
   view = 'cards';
   facetString: string;
+<<<<<<< HEAD
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes', 'actions'];
+=======
+  displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes'];
+>>>>>>> development
   public smiles: string;
   private argsHash?: number;
   public auth?: Auth;
@@ -59,10 +66,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public facetBuilder: SubstanceFacetParam;
   searchText: string[] = [];
   private overlayContainer: HTMLElement;
+<<<<<<< HEAD
   toggle: Array<boolean> = [];
   searchtext2: string;
   private subscriptions: Array<Subscription> = [];
   isAdmin: boolean;
+=======
+>>>>>>> development
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -75,7 +85,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private dialog: MatDialog,
     public gaService: GoogleAnalyticsService,
     public authService: AuthService,
+<<<<<<< HEAD
     private structureService: StructureService,
+=======
+>>>>>>> development
     private overlayContainerService: OverlayContainer,
     private location: Location,
     private locationStrategy: LocationStrategy
@@ -90,6 +103,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = 0;
     this.facets = [];
 
+<<<<<<< HEAD
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
@@ -117,6 +131,62 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
+=======
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+    navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
+    navigationExtras.queryParams['structureSearchTerm'] = this.activatedRoute.snapshot.queryParams['structureSearchTerm'] || '';
+    navigationExtras.queryParams['sequenceSearchTerm'] = this.activatedRoute.snapshot.queryParams['sequenceSearchTerm'] || '';
+    navigationExtras.queryParams['cutoff'] = this.activatedRoute.snapshot.queryParams['cutoff'] || '';
+    navigationExtras.queryParams['type'] = this.activatedRoute.snapshot.queryParams['type'] || '';
+    navigationExtras.queryParams['seqType'] = this.activatedRoute.snapshot.queryParams['seqType'] || '';
+    navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
+    navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
+    navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
+    navigationExtras.queryParams['facets'] = this.activatedRoute.snapshot.queryParams['facets'] || '';
+    navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
+    this.location.replaceState(
+      this.router.createUrlTree(
+        [this.locationStrategy.path().split('?')[0].replace(environment.baseHref, '')],
+        navigationExtras
+      ).toString()
+    );
+
+    this.activatedRoute
+      .queryParamMap
+      .subscribe(params => {
+        this.privateSearchTerm = params.get('search') || '';
+        this.privateStructureSearchTerm = params.get('structure_search') || '';
+        this.privateSequenceSearchTerm = params.get('sequence_search') || '';
+        this.privateSearchType = params.get('type') || '';
+        this.privateSearchCutoff = Number(params.get('cutoff')) || 0;
+        this.privateSearchSeqType = params.get('seq_type') || '';
+        this.smiles = params.get('smiles') || '';
+        this.order = params.get('order') || '';
+
+        if (params.get('pageSize')) {
+          this.pageSize = parseInt(params.get('pageSize'), null);
+        }
+        if (params.get('pageIndex')) {
+          this.pageIndex = parseInt(params.get('pageIndex'), null);
+        }
+        this.facetString = params.get('facets') || '';
+        this.facetsFromParams();
+
+        this.searchSubstances();
+      });
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+  }
+
+  ngAfterViewInit() {
+    this.matSideNav.openedStart.subscribe(() => {
+      this.utilsService.handleMatSidenavOpen(1100);
+    });
+    this.matSideNav.closedStart.subscribe(() => {
+      this.utilsService.handleMatSidenavClose();
+    });
+>>>>>>> development
   }
 
   facetsFromParams() {
@@ -139,10 +209,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         }
         if (hasSelections === true) {
+<<<<<<< HEAD
           this.facetBuilder[category] = { params: params, hasSelections: true, isAllMatch: false };
           const paramsString = JSON.stringify(params);
           const newHash = this.utilsService.hashCode(paramsString, this.facetBuilder[category].isAllMatch.toString());
           this.facetBuilder[category].currentStateHash = newHash;
+=======
+          this.facetBuilder[category] = { 'params': params, hasSelections: true };
+>>>>>>> development
         }
       }
       this.privateFacetParams = this.facetBuilder;
@@ -150,11 +224,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
+<<<<<<< HEAD
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
   }
+=======
+  ngOnDestroy() { }
+>>>>>>> development
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -179,7 +257,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
     this.populateUrlQueryParameters();
+<<<<<<< HEAD
     this.searchSubstances();
+=======
+>>>>>>> development
   }
 
   searchSubstances() {
@@ -201,7 +282,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
+<<<<<<< HEAD
       const subscription = this.substanceService.getSubstancesDetails({
+=======
+      this.substanceService.getSubstancesDetails({
+>>>>>>> development
         searchTerm: this.privateSearchTerm,
         structureSearchTerm: this.privateStructureSearchTerm,
         sequenceSearchTerm: this.privateSequenceSearchTerm,

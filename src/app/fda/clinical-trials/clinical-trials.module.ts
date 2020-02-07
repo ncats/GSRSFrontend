@@ -9,7 +9,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical-trials-browse.component';
 import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
 import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
@@ -17,7 +18,10 @@ import { MiniSearchComponent } from './mini-search/mini-search.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { pipes2Br } from './filters/pipes-2-br';
 import { ClinicalTrialService } from './clinical-trial/clinical-trial.service';
-
+import { ClinicalTrialDetailsBaseComponent } from './clinical-trial-details/clinical-trial-details-base.component';
+import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details/clinical-trial-details.component';
+// tslint:disable-next-line: max-line-length
+import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/clinical-trial-europe-details/clinical-trial-europe-details.component';
 
 const clinicalTrialsRoutes: Routes = [
    {
@@ -31,6 +35,14 @@ const clinicalTrialsRoutes: Routes = [
     {
     path: 'add-clinical-trial',
       component: ClinicalTrialAddComponent
+    },
+    {
+    path: 'clinicalTrialDetails/:nctNumber/:src',
+      component: ClinicalTrialDetailsComponent
+    },
+    {
+    path: 'clinicalTrialEuropeDetails/:nctNumber/:src',
+      component: ClinicalTrialEuropeDetailsComponent
     }
 ];
 
@@ -43,6 +55,8 @@ const clinicalTrialsRoutes: Routes = [
     MatIconModule,
     MatButtonModule,
     MatPaginatorModule,
+    MatCardModule,
+    MatTabsModule,
     ReactiveFormsModule,
     FormsModule,
     MatCheckboxModule,
@@ -54,7 +68,10 @@ const clinicalTrialsRoutes: Routes = [
     ClinicalTrialEditComponent,
     ClinicalTrialAddComponent,
     MiniSearchComponent,
-    pipes2Br
+    pipes2Br,
+    ClinicalTrialDetailsComponent,
+    ClinicalTrialEuropeDetailsComponent,
+    ClinicalTrialDetailsBaseComponent
   ],
   exports: [
     ClinicalTrialsBrowseComponent,

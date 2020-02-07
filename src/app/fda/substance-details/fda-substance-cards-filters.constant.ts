@@ -33,7 +33,7 @@ export function productsFilter(
 ): Observable<boolean> {
     return new Observable(observer => {
         http.get('/assets/data/gsrs-products-test.json').subscribe((response: Array<any>) => {
-            console.log(response);
+
             if (response && response.length) {
                 observer.next(true);
             } else {

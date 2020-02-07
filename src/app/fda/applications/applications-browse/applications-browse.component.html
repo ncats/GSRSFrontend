@@ -1,0 +1,200 @@
+<br><br><br>
+
+<mat-sidenav-container>
+
+  <mat-sidenav mode="side" opened>
+
+    <mat-accordion multi="true">
+      <mat-expansion-panel *ngFor="let facet of facets" [expanded]="facetParams[facet.name] != null">
+
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{facet.name}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="facet-value" *ngFor="let value of facet.values">
+          <div class="facet-value-checkbox">
+            <mat-checkbox class="include" matTooltip="Include"
+              (change)="updateFacetSelection($event, facet.name, value.label, true)"
+              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
+            </mat-checkbox>
+            <mat-checkbox class="exclude" matTooltip="Exclude"
+              (change)="updateFacetSelection($event, facet.name, value.label, false)"
+              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
+            </mat-checkbox>
+          </div>
+          <div class="facet-value-label">
+            <span *ngIf="value.label == 'approved'">
+              Validated (UNII)
+            </span>
+            <span *ngIf="value.label != 'approved'">
+              {{value.label}}
+            </span>
+          </div>
+          <div class="middle-fill"></div>
+          <div class="facet-value-count">
+            {{value.count}}
+          </div>
+        </div>
+
+        <div class="facet-actions">
+          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
+            [(ngModel)]="facetParams[facet.name].isAllMatch" (click)="sendFacetsEvent($event, facet.name)">
+            All Match
+          </mat-checkbox>
+          <div class="pull-right">
+            <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
+              Clear
+            </button>
+            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading"
+              (click)="applyFacetsFilter(facet.name)">
+              Apply
+            </button>
+          </div>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
+  </mat-sidenav>
+
+
+  <!-- Browse Application Content -->
+  <mat-sidenav-content>
+    <div class="titlePosition">
+      <div class="title">Browse Applications</div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="paginationPosition">
+      <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
+      </mat-paginator>
+    </div>
+    <br><br><br><br>
+    <!--
+      <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+        <mat-icon svgIcon="chevron_right"></mat-icon>
+      </button>
+    -->
+
+    <!-- Display Content Details -->
+    <div class="substance-cards">
+      <mat-card class="bordergray" *ngFor="let application of applications">
+
+        <mat-card-title class="borderlightorange-bottom">
+          <a class="substance-name" [routerLink]="['/applicationDetails', application.id]">
+            {{application.appType}}&nbsp;{{application.appNumber}}
+          </a>
+       
+          <span class="center">Center:&nbsp;{{application.center}}</span>
+          <span class="middle-fill"></span>
+          <a class="approval-id">
+            Status: {{application.status}}
+          </a>
+        </mat-card-title>
+
+        <mat-card-content>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Product Name:<br>
+                Ingredient Name:
+              </div>
+              <div class="row-property-value">
+                <div class="indent-list" *ngFor="let prod of application.applicationProductList">
+                  <div class="indent-list" *ngFor="let prodName of prod.applicationProductNameList">
+                      
+                      &#9642;&nbsp;{{ prodName.productName }}
+                     
+                  </div>
+                  <div class="indent-list" *ngFor="let ing of prod.applicationIngredientList">
+                    {{ ing.bdnum }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Title:
+              </div>
+              <div class="row-property-value">
+                {{application.title}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Sponsor Name:
+              </div>
+              <div class="row-property-value">
+                {{ application.sponsorName}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Submit Date:
+              </div>
+              <div class="row-property-value">
+                {{application.submitDate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                App Sub Type:
+              </div>
+              <div class="row-property-value">
+                {{ application.appSubType}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Status Date:
+              </div>
+              <div class="row-property-value">
+                {{application.statusDate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Indications:&nbsp;<span class="badge">{{application.applicationIndicationList.length}}</span>
+              </div>
+              <div class="row-property-value">
+                <div class="" *ngFor="let ind of application.applicationIndicationList">
+                  &bull;&nbsp;{{ ind.indication }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row-property">
+              <div class="row-property-key">
+                Clinical Trials:&nbsp;<span class="badge">0
+                  <!-- {{application.clinicalTrialList.length}}-->
+                </span>
+              </div>
+              <div class="row-property-value">
+                <!--
+                      <div class="" *ngFor="let clinical of application.clinicalTrialList">
+                          &bull;&nbsp;{{ clinical.nctNumber }}
+                        </div>
+                        -->
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+      </mat-card>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

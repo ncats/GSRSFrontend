@@ -1,0 +1,233 @@
+<div class="details-container margintop90px">
+  <mat-card class="bordergray">
+    <mat-card-title>
+      Product Details
+    </mat-card-title>
+    <mat-card-content>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
+            Product NDC:
+          </div>
+          <div class="row-property-value">
+            {{product.productNDC}}
+          </div>
+        </div>
+        <div class="row-property">
+          <div class="row-property-key">
+            Application Number:
+          </div>
+          <div class="row-property-value">
+            {{product.applicationNumber}}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
+            Product Name:
+          </div>
+          <div class="row-property-value">
+            {{product.productName}}
+          </div>
+        </div>
+        <div class="row-property">
+          <div class="row-property-key">
+            Product Name Type:
+          </div>
+          <div class="row-property-value">
+            {{product.productTypeName}}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
+            Non Proprietary Name:
+          </div>
+          <div class="row-property-value">
+            {{product.nonProprietaryName}}
+          </div>
+        </div>
+        <div class="row-property">
+          <div class="row-property-key">
+            Proprietary Name Suffix:
+          </div>
+          <div class="row-property-value">
+            {{product.proprietaryNameSuffix}}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
+            Labeler Name:
+          </div>
+          <div class="row-property-value">
+            {{product.labelerName}}
+          </div>
+        </div>
+        <div class="row-property">
+          <div class="row-property-key">
+            Dosage Form Name:
+          </div>
+          <div class="row-property-value">
+            {{product.dosageFormName}}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
+            Marketing Category Name:
+          </div>
+          <div class="row-property-value">
+            {{product.marketingCategoryCode}}
+          </div>
+        </div>
+        <div class="row-property">
+          <div class="row-property-key">
+            Start Marketing Date:
+          </div>
+          <div class="row-property-value">
+            {{product.startMarketingDate|date: 'MM/dd/yyyy'}}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
+            Route Name:
+          </div>
+          <div class="row-property-value">
+
+          </div>
+        </div>
+        <div class="row-property">
+          <div class="row-property-key">
+            End Marketing Date:
+          </div>
+          <div class="row-property-value">
+            {{product.endMarketingDate|date: 'MM/dd/yyyy'}}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
+            Color:
+          </div>
+          <div class="row-property-value">
+
+          </div>
+        </div>
+        <div class="row-property">
+          <div class="row-property-key">
+            Flavor:
+          </div>
+          <div class="row-property-value">
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
+            Shape:
+          </div>
+          <div class="row-property-value">
+
+          </div>
+        </div>
+        <div class="row-property">
+          <div class="row-property-key">
+            Imprint Text:
+          </div>
+          <div class="row-property-value">
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-property">
+          <div class="row-property-key">
+            Size (mm):
+          </div>
+          <div class="row-property-value">
+
+          </div>
+        </div>
+        <div class="row-property">
+          <div class="row-property-key">
+            Number of Fragments:
+          </div>
+          <div class="row-property-value">
+
+          </div>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="details-container">
+  <mat-card class="bordergray">
+    <mat-card-title>
+      Product Active ({{product.prodActiveElistList.length}})
+    </mat-card-title>
+    <mat-card-content>
+      <table class="">
+        <thead>
+        <tr height="30px">
+          <td><b>Name</b></td>
+          <td><b>Active Moiety Name</b></td>
+          <td><b>Structure</b></td>
+          <td><b>Unii</b></td>
+          <td><b>Strength Number (Unit)</b></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let x of product.prodActiveElistList">
+          <td>{{ x.name }}</td>
+          <td>{{ x.activeMoietyName }}</td>
+          <td></td>
+          <td>{{ x.unii }}</td>
+          <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+        </tr>
+      </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="details-container">
+  <mat-card>
+    <mat-card-title>
+      Product Active
+    </mat-card-title>
+    <mat-card-content>
+      <table class="tableStyle">
+        <tr height="30px">
+          <td><b>Name</b></td>
+          <td><b>Unii</b></td>
+          <td><b>Strength Number (Unit)</b></td>
+        </tr>
+        <tr *ngFor="let x of product.prodInactiveElistList">
+          <td>{{ x.name }}</td>
+          <td>{{ x.unii }}</td>
+          <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
