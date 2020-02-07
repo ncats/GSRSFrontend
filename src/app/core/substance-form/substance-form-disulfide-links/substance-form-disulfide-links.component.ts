@@ -67,12 +67,12 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
 
   countCysteine(): void {
     this.cysteineBonds = 0;
-    if(this.subunits){
+    if (this.subunits) {
       this.subunits.forEach(subunit => {
         this.cysteineBonds += (subunit.sequence.toUpperCase().split('C').length - 1);
       });
     }
-    if (this.cysteine && this.cysteine.length){
+    if (this.cysteine && this.cysteine.length) {
       this.cysteineBonds = this.cysteine.length;
     } else {
       this.cysteineBonds -= (this.disulfideLinks.length * 2);
@@ -82,7 +82,7 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
 
   getSuggestions(): void {
     let available = [];
-    if(this.subunits){
+    if (this.subunits) {
       for (let i = 0; i < this.subunits.length; i++) {
         const sequence = this.subunits[i].sequence;
         for (let j = 0; j < sequence.length; j++) {
@@ -94,7 +94,7 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
       }
     }
     this.disulfideLinks.forEach(link => {
-      if(link.sites){
+      if (link.sites) {
         link.sites.forEach(site => {
           available = available.filter(r => (r.residueIndex != site.residueIndex) || (r.subunitIndex != site.subunitIndex));
         });

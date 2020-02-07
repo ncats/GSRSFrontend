@@ -27,9 +27,9 @@ export class CvDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.vocabulary = this.data.vocabulary;
-    //this.term.value = this.data.term;
-    //this.term.display = this.data.term;
+    // this.vocabulary = this.data.vocabulary;
+    // this.term.value = this.data.term;
+    // this.term.display = this.data.term;
   }
 
   submit(): void {
@@ -44,7 +44,7 @@ export class CvDialogComponent implements OnInit {
       this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
         if (response.terms && response.terms.length === this.vocabulary.terms.length) {
           this.message = 'Term ' + this.term.value + ' Added to ' + this.vocabulary.domain + '';
-          setTimeout(() => {this.dialogRef.close(this.term);}, 3000);
+          setTimeout(() => {this.dialogRef.close(this.term); }, 3000);
         }
       });
     } else {

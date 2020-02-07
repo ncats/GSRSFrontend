@@ -200,7 +200,7 @@ export class BaseComponent implements OnInit, OnDestroy {
       } else if (window.getSelection) {
         selection = window.getSelection();
         // ###### why just chrome?
-        if(selection.rangeCount > 0){
+        if (selection.rangeCount > 0) {
           range = selection.getRangeAt(0);
         }
         text = selection.toString();

@@ -119,8 +119,8 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
       if (newFeature) {
         this.substanceFormService.addSubstancePropertyFromFeature(newFeature);
         setTimeout(() => {
-          //this.scrollToService.scrollToElement(`substance-property-0`, 'center');
-          alert('Feature added under "Properties"')
+          // this.scrollToService.scrollToElement(`substance-property-0`, 'center');
+          alert('Feature added under "Properties"');
         });
       }
       this.overlayContainer.style.zIndex = null;
@@ -135,7 +135,7 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
-      if(response) {
+      if (response) {
         this.substanceFormService.addAnySiteType(response);
       }
       }

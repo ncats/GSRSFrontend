@@ -74,7 +74,7 @@ export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
     if (sugar) {
       this.siteDisplay = this.substanceFormService.siteString(sugar.sites);
     } else {
-      if(this.privateSugar){
+      if (this.privateSugar) {
         this.siteDisplay = this.substanceFormService.siteString(this.privateSugar.sites);
       }
     }

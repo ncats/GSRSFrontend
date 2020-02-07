@@ -44,7 +44,7 @@ export class SubstanceFormNamesComponent extends SubstanceCardBaseFilteredList<S
     this.subscriptions.push(namesSubscription);
   }
 
-  standardize():void {
+  standardize(): void {
     this.substanceFormService.standardizeNames();
   }
 

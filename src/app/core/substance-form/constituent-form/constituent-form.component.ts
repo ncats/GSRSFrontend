@@ -77,7 +77,7 @@ export class ConstituentFormComponent implements OnInit {
     this.subscriptions.push(dialogSubscription);
   }
 
-  updateProcess(event: string){
+  updateProcess(event: string) {
     this.privateConstituent.role = event;
   }
 

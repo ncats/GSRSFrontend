@@ -85,7 +85,7 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
       this.overlayContainer.style.zIndex = null;
-      if(newLinks){
+      if (newLinks) {
         if (type === 'N') {
           this.glycosylation.NGlycosylationSites = newLinks;
         } else if (type === 'C') {

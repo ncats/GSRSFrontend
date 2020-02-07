@@ -55,7 +55,7 @@ export class LinkFormComponent implements OnInit, OnDestroy {
   }
 
   addRemainingSites(): void {
-    if(this.privateLink.sites){
+    if (this.privateLink.sites) {
       this.privateLink.sites = this.privateLink.sites.concat(this.remaining);
     } else {
       this.privateLink.sites = this.remaining;
@@ -65,7 +65,7 @@ export class LinkFormComponent implements OnInit, OnDestroy {
   }
 
   updateDisplay(): void {
-    if(this.privateLink){
+    if (this.privateLink) {
       this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
 
     }

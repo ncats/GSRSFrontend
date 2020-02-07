@@ -12,7 +12,7 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   styleUrls: ['./substance-form-agent-modifications.component.scss']
 })
 // tslint:disable-next-line:max-line-length
-export class SubstanceFormAgentModificationsComponent extends SubstanceCardBaseFilteredList<AgentModification> implements OnInit, AfterViewInit, OnDestroy{
+export class SubstanceFormAgentModificationsComponent extends SubstanceCardBaseFilteredList<AgentModification> implements OnInit, AfterViewInit, OnDestroy {
   modifications: Array<AgentModification>;
   private subscriptions: Array<Subscription> = [];
 

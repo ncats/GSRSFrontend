@@ -15,7 +15,7 @@ export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<SubunitSelectorDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any = {}
-  ) {dialogRef.disableClose = true;}
+  ) {dialogRef.disableClose = true; }
 
   ngOnInit() {
     this.dialogRef.backdropClick().subscribe(fun => {
@@ -36,7 +36,7 @@ export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
   }
 
   invalidFeatureConfirm(): void {
-    let cn = confirm('Feature is missing information and will not be saved. Close the dialog anyway?');
+    const cn = confirm('Feature is missing information and will not be saved. Close the dialog anyway?');
     if (cn) {
       this.dialogRef.close();
     }
@@ -56,7 +56,7 @@ export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
       } else {
         this.warning = 'Enter a feature name before saving';
       }
-    } else if(this.data.card === 'multi-disulfide'){
+    } else if (this.data.card === 'multi-disulfide') {
       this.dialogRef.close(this.disulfides);
     } else if (this.data.card === 'any') {
 

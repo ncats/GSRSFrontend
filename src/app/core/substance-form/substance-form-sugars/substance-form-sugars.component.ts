@@ -85,9 +85,9 @@ export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<
 
 
   private findElements<T, V>(array: T[], property: string, value: V): T[] {
-    let foundElements: T[] = [];
-    for(let element of array) {
-      if(element[property] === value) {
+    const foundElements: T[] = [];
+    for (const element of array) {
+      if (element[property] === value) {
         foundElements.push(element);
       }
     }

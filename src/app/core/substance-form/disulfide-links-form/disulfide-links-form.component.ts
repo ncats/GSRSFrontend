@@ -79,7 +79,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
       this.deleteTimer = setTimeout(() => {
         this.linkDeleted.emit(this.link);
       }, 1000);
-    //}
+    // }
     this.substanceFormService.emitDisulfideLinkUpdate();
   }
 

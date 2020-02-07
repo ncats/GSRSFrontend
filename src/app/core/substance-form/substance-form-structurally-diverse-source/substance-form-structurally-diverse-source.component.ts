@@ -56,14 +56,14 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceC
     }
   }
 
-  updateType(event: any): void{
+  updateType(event: any): void {
     this.structurallyDiverse.$$diverseType = event.value;
     if (this.structurallyDiverse.$$diverseType === 'whole') {
       this.structurallyDiverse.$$storedPart = this.structurallyDiverse.part;
       this.structurallyDiverse.part = ['WHOLE'];
     } else {
 
-      if(this.structurallyDiverse.$$storedPart) {
+      if (this.structurallyDiverse.$$storedPart) {
         this.structurallyDiverse.part = this.structurallyDiverse.$$storedPart;
       } else {
         this.structurallyDiverse.part = [];

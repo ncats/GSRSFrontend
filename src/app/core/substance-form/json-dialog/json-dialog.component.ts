@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {MatDialogRef} from '@angular/material/dialog';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
-import {DomSanitizer} from "@angular/platform-browser";
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-json-dialog',
