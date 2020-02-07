@@ -39,6 +39,10 @@
           <mat-icon svgIcon="search"></mat-icon>
         </button>
 
+        <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </button>
+
         <mat-menu #downloadMenu="matMenu">
           <a mat-menu-item *ngIf="substance.structure"
             (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
@@ -62,6 +66,19 @@
           <a mat-menu-item *ngIf="substance.polymer" [routerLink]="['/structure-search']"
             [queryParams]="{structure : substance.polymer.displayStructure.id}">
             <span>Search Structure</span>
+          </a>
+
+        </mat-menu>
+
+        <mat-menu #editMenu="matMenu">
+          <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin" matTooltip = 'edit record'>
+            <span>Edit Substance</span>
+          </a>
+          <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" *ngIf="isAdmin" matTooltip = 'copy substance to new registration form'>
+            <span>Copy Substance to New Form</span>
+          </a>
+          <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin" matTooltip = 'copy definition to new registration form'>
+            <span>Copy Definition to New Form</span>
           </a>
         </mat-menu>
 

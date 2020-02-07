@@ -5,7 +5,7 @@ import {
   ViewChildren,
   ViewContainerRef,
   QueryList,
-  OnDestroy
+  OnDestroy, HostListener
 } from '@angular/core';
 import { formSections } from './form-sections.constant';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,6 +19,11 @@ import { SubstanceFormSection } from './substance-form-section';
 import { SubstanceFormService } from './substance-form.service';
 import { ValidationMessage, SubstanceFormResults } from './substance-form.model';
 import { Subscription } from 'rxjs';
+import {SubstanceReference} from '@gsrs-core/substance';
+import {RefernceFormDialogComponent} from '@gsrs-core/substance-form/references-dialogs/refernce-form-dialog.component';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {MatDialog} from '@angular/material/dialog';
+import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 
 @Component({
   selector: 'app-substance-form',
@@ -42,6 +47,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   validationMessages: Array<ValidationMessage>;
   validationResult = false;
   private subscriptions: Array<Subscription> = [];
+  copy: string;
+  private overlayContainer: HTMLElement;
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -51,12 +59,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private router: Router,
     private dynamicComponentLoader: DynamicComponentLoader,
     private gaService: GoogleAnalyticsService,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private overlayContainerService: OverlayContainer,
+    private dialog: MatDialog,
   ) {
   }
 
   ngOnInit() {
     this.loadingService.setLoading(true);
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -65,17 +76,29 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           if (id !== this.id) {
             this.id = id;
             this.gaService.sendPageView(`Substance Edit`);
-            this.getSubstanceDetails();
+            const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
+            if (newType) {
+              this.getSubstanceDetails(newType);
+            } else {
+              this.getSubstanceDetails();
+            }
           }
         } else {
+          this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
+          if (this.copy) {
+            const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
+            this.getPartialSubstanceDetails(this.copy, copyType);
+            this.gaService.sendPageView(`Substance Register`);
+          } else {
           setTimeout(() => {
             this.gaService.sendPageView(`Substance Register`);
-            this.subClass = this.activatedRoute.snapshot.queryParamMap.get('kind') || 'chemical';
+            this.subClass = this.activatedRoute.snapshot.params['type'] || 'chemical';
             this.substanceFormService.loadSubstance(this.subClass);
             this.setFormSections(formSections[this.subClass]);
             this.loadingService.setLoading(false);
             this.isLoading = false;
           });
+          }
         }
       });
     this.subscriptions.push(routeSubscription);
@@ -109,9 +132,24 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  getSubstanceDetails() {
+  showJSON(): void {
+      const dialogRef = this.dialog.open(JsonDialogComponent, {
+        width: '90%'
+      });
+      this.overlayContainer.style.zIndex = '1002';
+
+      const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+
+      });
+      this.subscriptions.push(dialogSubscription);
+  }
+
+  getSubstanceDetails(newType?: string): void {
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
+        if (newType) {
+          response = this.substanceFormService.switchType(response, newType);
+        }
         this.substanceFormService.loadSubstance(response.substanceClass, response);
         this.setFormSections(formSections[response.substanceClass]);
       } else {
@@ -126,6 +164,32 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.handleSubstanceRetrivalError();
     });
   }
+
+  getPartialSubstanceDetails(uuid: string, type: string): void {
+    this.substanceService.getSubstanceDetails(uuid).subscribe(response => {
+      if (response) {
+        delete response.uuid;
+        if (type) {
+          response.names = [];
+          response.notes = [];
+          response.codes = [];
+          response.relationships = [];
+        }
+        this.substanceFormService.loadSubstance(response.substanceClass, response);
+        this.setFormSections(formSections[response.substanceClass]);
+      } else {
+        this.handleSubstanceRetrivalError();
+      }
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }, error => {
+      this.gaService.sendException('getSubstanceDetails: error from API call');
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.handleSubstanceRetrivalError();
+    });
+  }
+
 
   private setFormSections(sectionNames: Array<string> = []): void {
     this.formSections = [];
@@ -164,6 +228,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.submissionMessage = 'Substance is Valid. Would you like to submit?';
       }
     }, error => {
+      console.log(error);
       this.validationResult = false;
       this.validationMessages = null;
       this.submissionMessage = 'There are undetermined are errors with your substance. Please make some changes and try validating again';
@@ -197,6 +262,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.isLoading = false;
       this.submissionMessage = null;
       if (error.validationMessages && error.validationMessages.length) {
+        this.validationResult = error.isSuccessfull;
         this.validationMessages = error.validationMessages
           .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
         this.showSubmissionMessages = true;

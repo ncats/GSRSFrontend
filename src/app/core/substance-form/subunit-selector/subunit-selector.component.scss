@@ -1,0 +1,390 @@
+.details {
+  & .subunit {
+    display: none;
+  }
+
+  & .subunit-sequence {
+    display: block;
+    box-sizing: border-box;
+  }
+}
+
+.form-fields {
+  position: sticky;
+  top: 0px;
+}
+.sites-input {
+  width: 70%;
+}
+.show {
+  display:block;
+}
+
+.hide{
+  display:none;
+}
+
+.top-padding {
+  padding-top:10px;
+}
+
+.raw {
+  .subunit {
+    display: block;
+    box-sizing: border-box;
+  }
+
+  .subunit-sequence {
+    display: none;
+  }
+}
+
+.raw {
+  & .subunit {
+    display: block;
+  }
+
+  & .subunit-sequence {
+    display: none;
+  }
+}
+
+.subunit-sequence {
+  margin-bottom: 30px;
+}
+
+.sequence-section-group {
+  width: 100%;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.section-number {
+  text-align: right;
+  padding: 0 10px;
+  font-size: .8em;
+}
+
+.sequence-section {
+  flex-grow: 0;
+  padding: 0 10px;
+  flex-basis: 20%;
+  flex-shrink: 0;
+}
+
+.section-units-container {
+  display: flex;
+
+  .section-unit {
+  /*  flex-grow: 1;*/
+
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.subunit {
+  padding-top: 5px;
+  padding-bottom: 20px;
+
+  &:not(:last-child) {
+    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.raw-sequence {
+  word-break: break-all;
+  line-height: 26px;
+}
+
+.filters-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.subunit-form-container {
+  padding: 30px 10px 12px 10px;
+  position: relative;
+}
+
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, .8);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: #666;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.form-row-2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-container {
+  padding: 0 10px 8px 0;
+}
+.form-header {
+  display:flex;
+
+  .form-input {
+    width:75%;
+  }
+  .key-row {
+    width:25%
+  }
+}
+.key-row {
+  justify-content: flex-end;
+  align-items: flex-end;
+
+width:100%;
+  .key-container {
+    width:250px;
+    align-items: flex-end;
+    display:flex;
+    font-size:13px;
+
+    .key-label {
+      width:125px;
+      display:flex;
+      padding-bottom:5px;
+    }
+  }
+
+}
+
+
+.unit-tooltip {
+  white-space: pre-line !important;
+}
+
+.mat-tooltip {
+  white-space: pre-line !important;
+
+}
+.key-color {
+  width:15px;
+  height:18px;
+  padding-right:5px;
+}
+
+.disulfide{
+  color:white;
+  background-color:#0066cc;
+}
+
+.other{
+  color:white;
+  background-color:darkslateblue;
+}
+
+.glycosylation{
+  color:white;
+  background-color:#608000;
+}
+
+.N-Glycosylation{
+  color:white;
+  background-color:#ff6666
+}
+
+.C-Glycosylation{
+  color:white;
+  background-color:darkorange;
+}
+
+.O-Glycosylation{
+  color:white;
+  //background-color:darkgoldenrod;
+  background-color: #cca300;
+}
+
+.feature{
+  border-top:1px solid magenta;
+  border-bottom: 1px solid magenta;
+}
+
+.modification{
+  color:white;
+  background-color:darkgreen;
+}
+
+.chosen {
+  color:black !important;
+  background-color:turquoise !important;
+}
+
+.new-disulfide {
+  color:black !important;
+  background-color:lightskyblue !important;
+}
+
+.selectedSite{
+  padding-left:1px;
+  padding-right:1px;
+}
+
+
+.feature-step {
+  width:50%;
+  font-size:15px;
+
+}
+
+.feature-display {
+  width:30%;
+}
+
+.name-type {
+  width:40%;
+  padding-right:50px;
+}
+.key-value-pair {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  width:50%;
+
+  .key {
+    font-size: 11px;
+    padding-bottom: 3.5px;
+    line-height: 11px;
+    color: rgba(0, 0, 0, 0.54);
+    font-weight: 400;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    width: 55px;
+  }
+
+  .value {
+    font-size: 15px;
+  }
+
+  .bold {
+    font-weight:bold;
+  }
+}
+.siteref {
+  display:block;
+  width: 15.5px !important;
+  text-align: center;
+}
+
+.featlink {
+  padding-right:7px;
+  color: #4793d1;
+}
+.featlink a:hover {
+  font-weight:bold;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .code-system, .code-system-type, .type {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+  .code-text, .url {
+    flex-grow: 1;
+  }
+}
+
+.form-row-feature {
+  display: flex;
+  justify-content: flex-start;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .code-system, .code-system-type, .type {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+  .code-text, .url {
+    flex-grow: 1;
+  }
+}
+
+
+.clear-button {
+  width:40px;
+}
+
+.disulfide-form {
+  display: flex;
+  justify-content: flex-start;
+}
+.disulfide-display {
+  width : 100px;
+}
+
+.cys {
+  color: black;
+  font-weight: 500;
+}
+
+.unavailable {
+  color:lightgrey!important;
+}
+
+
+
+.invalid_blink {
+  animation: blinker .5s linear 1;
+}
+@keyframes blinker {
+  50% {
+   opacity: 0;
+  }
+}
+
+
+.invalid {
+  border: solid red;
+  color: red;
+}
+
+.valid {
+  color:black;
+}
+
+.invalid-cysteine {
+  color:red;
+}
+.last-section {
+  flex-basis: 0!important;
+}
+
+.last-units {
+
+}
+
+.note {
+  padding-top:10px;
+  padding-left:15px;
+  font-size:14px;
+}

@@ -1,5 +1,78 @@
 @import '../../../styles/variables';
 
+.version {
+  color: #182c4d;
+  font-size:10pt;
+  padding-left: 5px;
+}
+
+.user {
+  font-size:12px;
+}
+
+.user-button {
+ margin-bottom:-5px;
+
+  ::ng-deep mat-icon {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+  ::ng-deep svg {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+
+  mat-icon {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+
+  svg {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+
+}
+
+:host ::ng-deep .mat-icon {
+  height: 30px !important;
+  width: 30px  !important;
+  margin-bottom: -10px  !important;
+}
+
+
+.mat-icon .user-icon {
+  height: 30px;
+  width: 30px;
+  margin-bottom: -10px;
+}
+
+.logged-in {
+  margin:auto;
+  text-align:center;
+  max-width:75px;
+  overflow:hidden;
+
+
+  .mat-icon, user-icon {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+    line-height: unset;
+  }
+  ::ng-deep svg {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+
+}
+
+
 .mat-toolbar {
   position: fixed;
   top: 0;

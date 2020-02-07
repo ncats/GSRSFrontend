@@ -11,6 +11,7 @@ import { SubstanceHttpParams } from './substance-http-params';
 import { UtilsService } from '../utils/utils.service';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {SubstanceFormResults, ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
+import {Facet} from '@gsrs-core/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +95,7 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
+
   searchSubstances(
     searchTerm?: string,
     pageSize: number = 10,
@@ -121,6 +123,7 @@ export class SubstanceService extends BaseHttpService {
     if (order != null && order !== '') {
       params = params.append('order', order);
     }
+    params = params.append('fdim', '10');
 
     const options = {
       params: params
@@ -425,7 +428,7 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<any>(verurl);
   }
 
-  getSafeIconImgUrl(substance: SubstanceDetail, size?: number): SafeUrl {
+  getSafeIconImgUrl(substance: SubstanceDetail , size?: number): SafeUrl {
     let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg`;
     const substanceType = substance.substanceClass;
     if ((substanceType === 'chemical') && (substance.structure.id)) {
@@ -445,6 +448,12 @@ export class SubstanceService extends BaseHttpService {
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
+  getIconFromUuid(uuid: string): SafeUrl {
+    const imgUrl = `${this.configService.configData.apiBaseUrl}img/${uuid}.svg`;
+    return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
+
+  }
+
   saveSubstance(substance: SubstanceDetail): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances`;
     const method = substance.uuid ? 'PUT' : 'POST';
@@ -457,6 +466,42 @@ export class SubstanceService extends BaseHttpService {
   validateSubstance(substance: SubstanceDetail): Observable<ValidationResults> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
     return this.http.post(url, substance);
+  }
+
+  oldSiteRedirect(page: string, uuid: string) {
+    let url = this.baseUrl + 'substance/' + uuid;
+    if (page === 'edit') {
+      url = url +  '/edit';
+    }
+  return url;
+  }
+
+  filterFacets(name: string, category: string ): Observable<any> {
+    const url =  `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
+    return this.http.get(url);
+  }
+
+  retrieveFacetValues(facet: Facet): Observable<any> {
+    const url = facet._self;
+    return this.http.get<any>(url);
+  }
+
+  retrieveNextFacetValues(facet: Facet): Observable<any> {
+    const url = facet._self;
+    if (!facet.$next) {
+      return this.http.get<any>(url).pipe(
+        switchMap(response => {
+          if (response) {
+            const next = response.nextPageUri;
+            return this.http.get<any>(next);
+          } else {
+            return 'nada';
+          }
+        }));
+    } else {
+      return this.http.get<any>(facet.$next);
+    }
+
   }
 
 }

@@ -35,3 +35,8 @@
         display: block;
     }
 }
+
+.custom-badge > .mat-badge-content {
+  background-color: white !important;
+  color: rgb(71, 147, 209) !important;
+}

@@ -7,7 +7,6 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { SafeUrl } from '@angular/platform-browser';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-clinical-trial-details-base',

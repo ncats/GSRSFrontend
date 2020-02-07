@@ -1,0 +1,56 @@
+.organism-form-container {
+  padding: 30px 10px 12px 10px;
+  position: relative;
+}
+
+
+.form-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+
+
+
+  .checkbox-container, .radio-container {
+    padding-bottom: 18px;
+  }
+
+  .radio-container, .checkbox-container {
+    padding-right: 15px;
+  }
+
+  .family, .genus, .species, .author, .cv-field, .related-substance, .fraction-name, .tags {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.parent{
+  width:23%;
+}
+.vertical-divider {
+  margin-left:10px;
+  margin-right:30px;
+  height: 100%;
+  min-height:150px;
+}
+
+.details {
+  width:74%;
+}
+
+::ng-deep .related-substance img {
+  max-width:125px !important;
+  margin: auto;
+}
+
+.form-divider {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

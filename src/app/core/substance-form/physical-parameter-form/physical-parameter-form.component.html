@@ -1,0 +1,11 @@
+<div class="parameter-form-container">
+  <div class="form-row">
+    <mat-form-field class="name">
+      <input matInput placeholder="Name" [(ngModel)]="parameter.parameterName" required name="name" />
+    </mat-form-field>
+  </div>
+  <div class="amount-form-container">
+    <div class="amount-title">Amount</div>
+    <app-amount-form [substanceAmount]="parameter.amount"></app-amount-form>
+  </div>
+</div>

@@ -84,7 +84,7 @@
 .cards {
 
     .controls-container {
-        max-width: 928px;
+       // max-width: 928px;
     }
 
     .substance-cards {
@@ -150,7 +150,13 @@
         color: red;
     }
 }
+.table-view-name {
+  color: #448aff;
+}
 
+.tile-title {
+  height:19px;
+}
 .facet-value {
     padding: 6px 0;
     overflow: hidden;
@@ -404,4 +410,12 @@
 
 .sort{
   margin:auto;
+}
+
+.show-more {
+  color:#448aff;
+}
+
+.show-more:hover {
+  text-decoration: underline;
 }

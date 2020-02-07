@@ -130,6 +130,122 @@ export class UtilsService extends BaseHttpService {
     );
   }
 
+  sruDisplayToConnectivity(display: string): any {
+    if (!display) {
+      return {};
+    }
+    const errors = [];
+    const connections = display.split(';');
+    const regex = /^\s*[A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)[-][A-Za-z][A-Za-z]*[0-9]*_(R[0-9][0-9]*)\s*$/g;
+    const mapper = {$errors: []};
+    for (let i = 0; i < connections.length; i++) {
+      const con = connections[i].trim();
+      if (con === '') { continue; }
+      regex.lastIndex = 0;
+      const res = regex.exec(con);
+      if (res == null) {
+        const text = 'Connection \'' + con + '\' is not properly formatted';
+        errors.push({ text: text, type: 'warning' });
+      } else {
+        if (!mapper[res[1]]) {
+          mapper[res[1]] = [];
+        }
+        mapper[res[1]].push(res[2]);
+      }
+    }
+    if (errors.length > 0) {
+      mapper.$errors = errors;
+    }
+    return mapper;
+
+  }
+
+
+  displayAmount(amt): string {
+
+    function formatValue(v) {
+      if (v) {
+        if (typeof v === 'object') {
+          if (v.display) {
+            return v.display;
+          } else if (v.value) {
+            return v.value;
+          } else {
+            return null;
+          }
+        } else {
+          return v;
+        }
+      }
+      return null;
+    }
+
+    let ret = '';
+    if (amt) {
+      if (typeof amt === 'object') {
+        if (amt) {
+          let addedunits = false;
+          let unittext = formatValue(amt.units);
+          if (!unittext) {
+            unittext = '';
+          }
+          const atype = formatValue(amt.type);
+          if (atype) {
+            ret += atype + '\n';
+          }
+          if (amt.average || amt.high || amt.low) {
+            if (amt.average) {
+              ret += amt.average;
+              if (amt.units) {
+                ret += ' ' + unittext;
+                addedunits = true;
+              }
+            }
+            if (amt.high || amt.low) {
+              ret += ' [';
+              if (amt.high && !amt.low) {
+                ret += '<' + amt.high;
+              } else if (!amt.high && amt.low) {
+                ret += '>' + amt.low;
+              } else if (amt.high && amt.low) {
+                ret += amt.low + ' to ' + amt.high;
+              }
+              ret += '] ';
+              if (!addedunits) {
+                if (amt.units) {
+                  ret += ' ' + unittext;
+                  addedunits = true;
+                }
+              }
+            }
+            ret += ' (average) ';
+          }
+          if (amt.highLimit || amt.lowLimit) {
+            ret += '\n[';
+          }
+          if (amt.highLimit && !amt.lowLimit) {
+            ret += '<' + amt.highLimit;
+          } else if (!amt.highLimit && amt.lowLimit) {
+            ret += '>' + amt.lowLimit;
+          } else if (amt.highLimit && amt.lowLimit) {
+            ret += amt.lowLimit + ' to ' + amt.highLimit;
+          }
+          if (amt.highLimit || amt.lowLimit) {
+            ret += '] ';
+            if (!addedunits) {
+              if (amt.units) {
+                ret += ' ' + unittext;
+                addedunits = true;
+              }
+            }
+            ret += ' (limits)';
+          }
+        }
+      }
+    }
+    return ret;
+  }
+
   compare(a: number | string, b: number | string, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }

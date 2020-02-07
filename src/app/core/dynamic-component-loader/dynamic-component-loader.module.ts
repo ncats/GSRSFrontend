@@ -2,8 +2,6 @@ import {
     ANALYZE_FOR_ENTRY_COMPONENTS,
     ModuleWithProviders,
     NgModule,
-    NgModuleFactoryLoader,
-    SystemJsNgModuleLoader,
     Type,
 } from '@angular/core';
 import { ROUTES } from '@angular/router';
@@ -28,7 +26,6 @@ export class DynamicComponentLoaderModule {
       ngModule: DynamicComponentLoaderModule,
       providers: [
         DynamicComponentLoader,
-        { provide: NgModuleFactoryLoader, useClass: SystemJsNgModuleLoader },
         // provider for Angular CLI to analyze
         { provide: ROUTES, useValue: lazyLoadedManifests, multi: true },
         // provider for DynamicComponentLoader to analyze

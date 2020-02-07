@@ -10,6 +10,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {formSections} from '@gsrs-core/substance-form/form-sections.constant';
 import {Subject} from 'rxjs';
+import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 
 @Component({
   selector: 'app-substance-overview',
@@ -28,6 +29,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   isEditable = false;
   isAdmin = false;
   substanceUpdated = new Subject<SubstanceDetail>();
+  oldUrl: string;
   constructor(
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -35,14 +37,14 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     private substanceService: SubstanceService,
     private router: Router,
     private authService: AuthService,
-    private activeRoute: ActivatedRoute
+    private cvService: ControlledVocabularyService
   ) {
     super();
   }
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
-    this.isEditable = this.authService.hasRoles('admin')
+    this.isEditable = (this.authService.hasRoles('updater') || this.authService.hasRoles('superUpdater'))
       && this.substance.substanceClass != null
       && formSections[this.substance.substanceClass.toLowerCase()] != null;
     this.getSubtypeRefs(this.substance);
@@ -50,6 +52,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHref = uri;
     this.getVersion();
+    this.getClassFromCv();
+    this.oldUrl = this.substanceService.oldSiteRedirect('details', this.substance.uuid);
   }
 
   ngAfterViewInit() {
@@ -110,6 +114,17 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
   getSafeStructureImgUrl(structureId: string, size: number = 400): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size);
+  }
+
+  getClassFromCv(): void {
+    this.cvService.getDomainVocabulary('SUBSTANCE_CLASS').subscribe(response => {
+      const classes = response['SUBSTANCE_CLASS'].list;
+      classes.forEach( c => {
+        if (c.value === this.substance.substanceClass) {
+          this.substance.substanceClass = c.display;
+        }
+      });
+    });
   }
 
 

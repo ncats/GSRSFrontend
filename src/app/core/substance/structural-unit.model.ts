@@ -1,6 +1,7 @@
-import { SubstanceStructure } from './substance.model';
+import {SubstanceAmount, SubstanceStructure} from './substance.model';
 
 export interface StructuralUnit {
+    uuid?: string;
     structure: string;
     type: string;
     label: string;
@@ -8,4 +9,7 @@ export interface StructuralUnit {
     amap: Array<number>;
     attachmentCount: number;
     _structure: SubstanceStructure;
+  _displayConnectivity?: string;
+    amount?: SubstanceAmount;
+  $$deletedCode?: string;
 }

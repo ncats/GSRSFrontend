@@ -1,0 +1,58 @@
+.source-container {
+  padding: 30px 10px 12px 10px;
+  position: relative;
+}
+
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+
+
+  .checkbox-container, .radio-container {
+    padding-bottom: 18px;
+  }
+
+  .radio-container, .checkbox-container {
+    padding-right: 15px;
+  }
+
+  .cv-input {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+}
+
+
+.column-radio {
+  ::ng-deep .mat-radio-label {
+    flex-direction: column-reverse;
+  }
+
+  ::ng-deep .mat-radio-label-content {
+    padding-left: 0;
+    font-size: 11px;
+    padding-bottom: 4px;
+    color: rgba(0, 0, 0, 0.54);
+    font-weight: 400;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+  }
+}
+
+
+::ng-deep .related-substance img {
+  max-width:125px !important;
+  margin: auto;
+}
+
+
+
+.type {
+  ::ng-deep mat-radio-button {
+    padding-right:15px;
+  }
+
+}

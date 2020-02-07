@@ -19,6 +19,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceDetail;
   @Output() openImage = new EventEmitter<SubstanceDetail>();
   @Input() showAudit: boolean;
+  isAdmin = false;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
 
   constructor(
@@ -32,7 +33,9 @@ export class SubstanceSummaryCardComponent implements OnInit {
 
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+  }
 
   @Input()
   set substance(substance: SubstanceDetail) {

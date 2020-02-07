@@ -36,7 +36,6 @@ export class SubstanceFormRelationshipsComponent extends SubstanceCardBaseFilter
       const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
         this.filterList(value, this.relationships, this.analyticsEventCategory);
       }, error => {
-        console.log(error);
       });
       this.subscriptions.push(searchSubscription);
       this.page = 0;

@@ -14,8 +14,10 @@ export class SubstanceSelectorComponent implements OnInit {
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   @Input() header = 'Substance';
+  @Input() name?: string;
   errorMessage: string;
   showOptions: boolean;
+  displayName: string;
 
   constructor(
     public substanceService: SubstanceService,
@@ -29,6 +31,14 @@ export class SubstanceSelectorComponent implements OnInit {
     if (uuid) {
       this.substanceService.getSubstanceSummary(uuid).subscribe(response => {
         this.selectedSubstance = response;
+      }, error => {
+        console.log(error);
+        if (this.name && this.name !== '') {
+          this.selectedSubstance = {_name: this.name};
+        } else {
+          this.selectedSubstance = {_name: ''};
+        }
+        this.errorMessage = 'Not in database';
       });
     }
   }

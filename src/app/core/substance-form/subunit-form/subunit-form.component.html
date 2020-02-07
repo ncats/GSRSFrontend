@@ -1,0 +1,54 @@
+<div class = "subunit-container">
+  <div *ngIf="subunit.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+
+  </div>
+  <div class = "form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete link" (click)="deleteSubunit()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+    <div class = "subunit-label">Subunit {{subunit.subunitIndex}}</div>
+    <div class = "buttons">
+      <button class = "mat-button mat-primary action-button" (click) = 'editSubunit(subunit, sequence.value)'>{{toggle[subunit.subunitIndex] ? 'save': 'edit'}}</button> <button class = "mat-button action-button mat-primary"  (click) = cleanSequence()>clean</button>
+    </div>
+  </div>
+
+<div class="subunit-edit" [ngClass]="toggle[subunit.subunitIndex] ? 'show': 'hide'" >
+  <textarea #sequence cdkAutosizeMinRows="3" placeholder="Enter sequence here"  [ngModel] = 'subunit.sequence' (change) = "change($event)" class = "sequence-textarea"  name="edit"></textarea>
+</div>
+<div [ngClass]="toggle[subunit.subunitIndex] ? 'hide': 'show'"  >
+  <div class = "nest">
+    <div class="subunit">
+      <div class="raw-sequence">{{subunit.sequence}}</div>
+    </div>
+  </div>
+
+
+  <div class="subunit-sequence" *ngIf = "subunitSequence">
+    <div class="responsive">{{subunitSequence.subsections.length}}
+      <div *ngFor = "let set of subunitSequence.subsections;last as last1"  class="sequence-section-group">
+        <div *ngFor = "let num of set;last as last2" class= "sequence-section"  [ngClass] = "last1 && last2? 'last-section' : ''" >
+          <div class = "section-number">{{num[1]}}</div>
+          <div class = section-units-container>
+          <span *ngFor = "let subunit of subunitSequence.subunits.slice(num[0],num[1])"  class="section-unit" >
+              <span class = "selectedSite siteref" matTooltipClass="unit-tooltip"
+                    matTooltip ="{{getTooltipMessage(subunitSequence.subunitIndex, subunit.unitIndex, subunit.unitValue,subunit.class || '').join('\n')}}"
+                    [ngClass]="subunit.class" >{{subunit.unitValue}}</span>
+        </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class = 'form-row'>
+    <div *ngIf = "substanceType === 'nucleicAcid'">
+      Generate{{sequenceType? 'd':''}} links and sugars for this subunit as a
+      <button mat-button (click) = "generateSites('DNA')" [ngClass]="sequenceType === 'DNA'?'generated':''">DNA</button>
+      <button mat-button (click) = "generateSites('RNA')" [ngClass]="sequenceType === 'RNA'?'generated':''">RNA</button>
+      sequence
+    </div>
+  </div>
+</div>

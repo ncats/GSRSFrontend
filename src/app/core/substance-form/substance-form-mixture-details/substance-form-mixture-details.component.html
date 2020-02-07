@@ -1,0 +1,9 @@
+<div class = "mixture-details-container">
+  <div class="flex-column related-substance">
+    <app-substance-selector (selectionUpdated)="parentSubstanceUpdated($event)"
+                            eventCategory="substanceRelationshipRelatedSub" placeholder="Parent Substance" header="Parent Substance"
+                            [subuuid]="relatedSubstanceUuid">
+    </app-substance-selector>
+  </div>
+
+</div>

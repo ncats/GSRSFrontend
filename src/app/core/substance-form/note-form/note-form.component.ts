@@ -35,7 +35,7 @@ export class NoteFormComponent implements OnInit {
     ) {
       this.deleteTimer = setTimeout(() => {
         this.noteDeleted.emit(this.note);
-      }, 2000);
+      }, 20);
     }
   }
 

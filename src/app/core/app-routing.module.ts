@@ -10,6 +10,7 @@ import { SequenceSearchComponent } from './sequence-search/sequence-search.compo
 import { LoginComponent } from './auth/login/login.component';
 import { SubstanceFormComponent } from './substance-form/substance-form.component';
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
+import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 
 const childRoutes: Routes = [
   {
@@ -27,7 +28,12 @@ const childRoutes: Routes = [
   {
     path: 'substances/register',
     component: SubstanceFormComponent,
-    canActivate: [CanActivateSubstanceForm]
+    canActivate: [CanRegisterSubstanceForm]
+  },
+  {
+    path: 'substances/register/:type',
+    component: SubstanceFormComponent,
+    canActivate: [CanRegisterSubstanceForm]
   },
   {
     path: 'substances/:id',

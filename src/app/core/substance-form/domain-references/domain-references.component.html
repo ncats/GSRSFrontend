@@ -5,7 +5,7 @@
         <mat-panel-title [ngClass]="{'block-display': !isExpanded}">
           <h4 class="title" matTooltip="Expand references">
             References
-            <span [matBadge]="referencesUuids && referencesUuids.length || 0" matBadgeOverlap="false"
+            <span [matBadge]="referencesUuids && referencesUuids.length || 0" class = "custom-badge" matBadgeOverlap="false"
               [hidden]="isExpanded"></span>
           </h4>
           <div *ngIf="isExpanded">

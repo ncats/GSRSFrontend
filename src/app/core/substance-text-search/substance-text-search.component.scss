@@ -11,7 +11,7 @@ form {
   .mat-input-element {
     font-size: 16px;
   }
-  
+
 }
 
 .substance-suggestion-field {
@@ -87,7 +87,7 @@ form {
       height: 64px;
       padding-right: 16px;
       padding-left: 16px;
-      background-color: #448aff;
+      background-color: #4793d1;
       overflow: hidden;
 
       form {
@@ -149,4 +149,8 @@ form {
   to {
     width: 0;
   }
+}
+
+::ng-deep .substance-select {
+  max-width: 500px !important;
 }

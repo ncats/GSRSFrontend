@@ -5,15 +5,21 @@ export interface SubstanceFormDefinition {
     substanceClass?: string;
     definitionType?: string;
     definitionLevel?: string;
+    created?: number;
+    createdBy?: string;
+    lastEdited?: number;
+    lastEditedBy?: string;
     deprecated?: boolean;
     references?: Array<string>;
     access?: Array<string>;
+    status?: string;
     relationships?: Array<SubstanceRelationship>;
 }
 
 export interface SubstanceFormResults {
     uuid?: string;
     isSuccessfull: boolean;
+    valid?: boolean;
     validationMessages?: Array<ValidationMessage>;
 }
 
@@ -34,4 +40,31 @@ export interface ValidationMessage {
 export interface MessageLink {
   href: string;
   text: string;
+}
+
+export interface SubunitSequence {
+  subunitIndex: number;
+  sequencesSectionGroups: Array<SequenceSectionGroup>;
+}
+
+
+export interface SequenceSectionGroup {
+  sequenceSections: Array<SequenceSection>;
+}
+
+export interface SequenceSection {
+  sectionNumber: number;
+  sectionUnits: Array<SequenceUnit>;
+}
+
+export interface SequenceUnit {
+  unitIndex: number;
+  unitValue: string;
+  class?: string;
+  type?: string;
+}
+export interface DisplaySite {
+  type: string;
+  subunit: number;
+  residue: number;
 }

@@ -1,0 +1,25 @@
+#structure_canvas {
+  margin:auto;
+  display: flex;
+  align-content: center;
+  text-align: center;
+}
+
+#canvas-container {
+  width:100%;
+  text-align:center;
+}
+
+.canvas-message {
+  font-weight:bold;
+  color:red;
+}
+
+.canvas-label {
+  padding-top: 5px;
+}
+
+.toggle {
+  margin-left:10px;
+  font-weight:bold;
+}

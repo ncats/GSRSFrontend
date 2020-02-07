@@ -36,7 +36,35 @@ export class BaseComponent implements OnInit, OnDestroy {
       children: [
         {
           display: 'Chemical',
-          path: 'substances/register'
+          path: 'substances/register',
+        },
+        {
+          display: 'Protein',
+          path: 'substances/register/protein',
+        },
+        {
+          display: 'Polymer',
+          path: 'substances/register/polymer',
+        },
+        {
+          display: 'Nucleic Acid',
+          path: 'substances/register/nucleicAcid',
+        },
+        {
+          display: 'Mixture',
+          path: 'substances/register/mixture',
+        },
+        {
+          display: 'Structurally Diverse',
+          path: 'substances/register/structurallyDiverse',
+        },
+        {
+          display: 'Concept',
+          path: 'substances/register/concept',
+        },
+        {
+          display: 'G1 Specified Substance',
+          path: 'substances/register/specifiedSubstanceG1',
         }
       ]
     }
@@ -82,7 +110,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.environment = this.configService.environment;
 
     if (this.environment.navItems && this.environment.navItems.length) {
-      this.navItems = this.navItems.concat(this.environment.navItems);
+      this.navItems.concat(this.environment.navItems);
     }
 
     this.logoSrcPath = `${this.environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
@@ -99,6 +127,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(routerSubscription);
 
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
   }
 
@@ -150,8 +179,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   @HostListener('document:mouseup', ['$event'])
   @HostListener('document:keyup', ['$event'])
   // @HostListener('document:selectionchange', ['$event'])
-  onKeyUp(event: Event | KeyboardEvent | any) {
-    const tabKeyCode = 9;
+  onKeyUp(event: Event) {
     let text = '';
     let selection: Selection;
     let range: Range;
@@ -161,27 +189,28 @@ export class BaseComponent implements OnInit, OnDestroy {
 
     if (activeEl != null) {
       const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
-      if (event.keyCode !== tabKeyCode &&
-        ((activeElTagName === 'textarea') || (activeElTagName === 'input' &&
+      if (
+        (activeElTagName === 'textarea') || (activeElTagName === 'input' &&
           /^(?:text|search|password|tel|url)$/i.test(activeEl.type)) &&
-        (typeof activeEl.selectionStart === 'number'))
+        (typeof activeEl.selectionStart === 'number')
       ) {
         selectionStart = activeEl.selectionStart;
         selectionEnd = activeEl.selectionEnd;
         text = activeEl.value.slice(selectionStart, selectionEnd);
       } else if (window.getSelection) {
         selection = window.getSelection();
-        if (selection && selection.rangeCount > 0) {
+        // ###### why just chrome?
+        if (selection.rangeCount > 0) {
           range = selection.getRangeAt(0);
-          text = selection.toString().trim();
         }
+        text = selection.toString();
       }
 
       clearTimeout(this.bottomSheetOpenTimer);
 
-      if (text && text !== this.selectedText && text.length > 3) {
+      if (text && text !== this.selectedText) {
         this.selectedText = text;
-        this.bottomSheetOpenTimer = setTimeout(() => {
+       /* this.bottomSheetOpenTimer = setTimeout(() => {
           const subscription = this.openSearchBottomSheet(text).subscribe(() => {
             setTimeout(() => {
               if (selection != null && range != null) {
@@ -200,7 +229,7 @@ export class BaseComponent implements OnInit, OnDestroy {
             this.selectedText = '';
             subscription.unsubscribe();
           });
-        }, 600);
+        }, 600);*/
       }
     }
   }

@@ -139,7 +139,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
           }
         }
         if (hasSelections === true) {
-          this.facetBuilder[category] = { 'params': params, hasSelections: true };
+          this.facetBuilder[category] = { 'params': params, hasSelections: true, isAllMatch: false };
         }
       }
       this.privateFacetParams = this.facetBuilder;
@@ -227,7 +227,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
 
     if (this.privateFacetParams[facetName] == null) {
       this.privateFacetParams[facetName] = {
-        params: {}
+        params: {},
+        isAllMatch: false
       };
     }
 
