@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {MatDialogRef} from '@angular/material/dialog';
-import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
-import {DomSanitizer} from "@angular/platform-browser";
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-json-dialog',
@@ -10,7 +9,7 @@ import {DomSanitizer} from "@angular/platform-browser";
   styleUrls: ['./json-dialog.component.scss']
 })
 export class JsonDialogComponent implements OnInit {
-  public dialogRef: MatDialogRef<AmountFormDialogComponent>;
+  public dialogRef: MatDialogRef<JsonDialogComponent>;
   public json: any;
   expand = true;
   raw = false;
@@ -18,7 +17,8 @@ export class JsonDialogComponent implements OnInit {
 
   constructor(
     private substanceFormService: SubstanceFormService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    @Inject(MAT_DIALOG_DATA) public data: any
 
   ) { }
 

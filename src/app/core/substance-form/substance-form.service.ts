@@ -286,6 +286,75 @@ export class SubstanceFormService {
     return substance;
   }
 
+  setDefinitionPrivate() {
+    if (this.substance.structurallyDiverse) {
+      this.setPrivate(this.substance.structurallyDiverse);
+    } else if (this.substance.protein) {
+      this.setPrivate(this.substance.protein);
+    } else if (this.substance.structure) {
+      this.setPrivate(this.substance.structure);
+    } else if (this.substance.mixture) {
+      this.setPrivate(this.substance.mixture);
+    } else if (this.substance.polymer) {
+      this.setPrivate(this.substance.polymer);
+    } else if (this.substance.nucleicAcid) {
+      this.setPrivate(this.substance.nucleicAcid);
+    } else if (this.substance.specifiedSubstance) {
+      this.setPrivate(this.substance.specifiedSubstance);
+    } else {
+      console.log('not found');
+    }
+  }
+   setPrivate(e) {
+      e.access = ['protected'];
+      alert('Substance definition now set to protected, please submit to save change');
+    }
+
+
+  setDefinitionPublic() {
+
+    if (this.substance.structurallyDiverse) {
+      this.setPublic(this.substance.structurallyDiverse);
+    } else if (this.substance.protein) {
+      this.setPublic(this.substance.protein);
+    } else if (this.substance.structure) {
+      this.setPublic(this.substance.structure);
+    } else if (this.substance.mixture) {
+      this.setPublic(this.substance.mixture);
+    } else if (this.substance.polymer) {
+      this.setPublic(this.substance.polymer);
+    } else if (this.substance.nucleicAcid) {
+      this.setPublic(this.substance.nucleicAcid);
+    } else if (this.substance.specifiedSubstance) {
+      this.setPublic(this.substance.specifiedSubstance);
+    } else {
+      console.log('not found');
+    }
+  }
+
+  conceptNonApproved() {
+    if (this.substance.substanceClass === 'concept') {
+      this.substance.status = 'non-approved';
+      alert('Concept status set to "non approved", please submit to save changes');
+    } else {
+      alert('Can only change status of concept records');
+    }
+  }
+
+unapproveRecord() {
+    const old = this.substance.approvalID;
+    this.substance.approvalID = null;
+    this.substance.status = null;
+    this.substance.approved = null;
+    this.substance.approvedBy = null;
+  alert('Removed approvalID \'' + old + '\'. Submit record to save.');
+  }
+
+  setPublic(e) {
+    e.access = [];
+    console.log(e.access);
+    alert('Substance definition set to be PUBLIC, please submit to save change');
+  }
   // Definition Start
 
   get definition(): Observable<SubstanceFormDefinition> {
@@ -293,6 +362,7 @@ export class SubstanceFormService {
       this.ready().subscribe(() => {
         const definition = this.getDefinition();
         observer.next(this.getDefinition());
+        // tslint:disable-next-line:no-shadowed-variable
         this.definitionEmitter.subscribe(definition => {
           observer.next(this.getDefinition());
         });
@@ -2003,13 +2073,16 @@ export class SubstanceFormService {
     } else if (data.siteType === 'other') {
 
     } else if (data.siteType === 'CGlycosylation') {
-      this.substance.protein.glycosylation.CGlycosylationSites = this.substance.protein.glycosylation.CGlycosylationSites.concat(data.links);
+      this.substance.protein.glycosylation.CGlycosylationSites =
+        this.substance.protein.glycosylation.CGlycosylationSites.concat(data.links);
       this.emitGlycosylationUpdate();
     } else if (data.siteType === 'NGlycosylation') {
-      this.substance.protein.glycosylation.NGlycosylationSites = this.substance.protein.glycosylation.NGlycosylationSites.concat(data.links);
+      this.substance.protein.glycosylation.NGlycosylationSites =
+        this.substance.protein.glycosylation.NGlycosylationSites.concat(data.links);
       this.emitGlycosylationUpdate();
     } else if (data.siteType === 'OGlycosylation') {
-      this.substance.protein.glycosylation.OGlycosylationSites = this.substance.protein.glycosylation.OGlycosylationSites.concat(data.links);
+      this.substance.protein.glycosylation.OGlycosylationSites =
+        this.substance.protein.glycosylation.OGlycosylationSites.concat(data.links);
       this.emitGlycosylationUpdate();
     } else if (data.siteType === 'disulfide') {
       const newLink: Link = {sites: data.links};
@@ -2143,7 +2216,7 @@ export class SubstanceFormService {
     const rep = '\u2019;\';\u03B1;.ALPHA.;\u03B2;.BETA.;\u03B3;.GAMMA.;\u03B4;.DELTA.;\u03B5;.EPSILON.;\u03B6;.ZETA.;\u03B7;.ETA.;\u03B8;.THETA.;\u03B9;.IOTA.;\u03BA;.KAPPA.;\u03BB;.LAMBDA.;\u03BC;.MU.;\u03BD;.NU.;\u03BE;.XI.;\u03BF;.OMICRON.;\u03C0;.PI.;\u03C1;.RHO.;\u03C2;.SIGMA.;\u03C3;.SIGMA.;\u03C4;.TAU.;\u03C5;.UPSILON.;\u03C6;.PHI.;\u03C7;.CHI.;\u03C8;.PSI.;\u03C9;.OMEGA.;\u0391;.ALPHA.;\u0392;.BETA.;\u0393;.GAMMA.;\u0394;.DELTA.;\u0395;.EPSILON.;\u0396;.ZETA.;\u0397;.ETA.;\u0398;.THETA.;\u0399;.IOTA.;\u039A;.KAPPA.;\u039B;.LAMBDA.;\u039C;.MU.;\u039D;.NU.;\u039E;.XI.;\u039F;.OMICRON.;\u03A0;.PI.;\u03A1;.RHO.;\u03A3;.SIGMA.;\u03A4;.TAU.;\u03A5;.UPSILON.;\u03A6;.PHI.;\u03A7;.CHI.;\u03A8;.PSI.;\u03A9;.OMEGA.;\u2192;->;\xB1;+/-;\u2190;<-;\xB2;2;\xB3;3;\xB9;1;\u2070;0;\u2071;1;\u2072;2;\u2073;3;\u2074;4;\u2075;5;\u2076;6;\u2077;7;\u2078;8;\u2079;9;\u207A;+;\u207B;-;\u2080;0;\u2081;1;\u2082;2;\u2083;3;\u2084;4;\u2085;5;\u2086;6;\u2087;7;\u2088;8;\u2089;9;\u208A;+;\u208B;-'.split(';');
     const map = {};
     for (let s = 0; s < rep.length; s++) {
-      if (s % 2 == 0) {
+      if (s % 2 === 0) {
         const id = rep[s].charCodeAt(0);
         map[id] = rep[s + 1];
       }
@@ -2179,6 +2252,7 @@ export class SubstanceFormService {
 
   getAttachmentMapUnits(srus: any) {
     const rmap = {};
+    // tslint:disable-next-line:forin
     for (const i in srus) {
       let lab = srus[i].label;
       if (!lab) {
@@ -2239,6 +2313,7 @@ export class SubstanceFormService {
   }
   setSRUConnectivityDisplay(srus: any) {
     const rmap = this.getAttachmentMapUnits(srus);
+    // tslint:disable-next-line:forin
     for (const i in srus) {
       const disp = this.sruConnectivityToDisplay(srus[i].attachmentMap, rmap);
       srus[i]._displayConnectivity = disp;

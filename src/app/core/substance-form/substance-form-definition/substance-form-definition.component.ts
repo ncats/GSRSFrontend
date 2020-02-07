@@ -58,12 +58,29 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   }
 
   changeClass(type: any): void {
+    console.log(type);
     this.router.navigate(['/substances', this.uuid, 'edit'], { queryParams: { switch: type.value } });
+  }
+
+  setPrivate(): void {
+    this.substanceFormService.setDefinitionPrivate();
+  }
+
+  setPublic(): void {
+    this.substanceFormService.setDefinitionPublic();
   }
 
   changeStatus(status: any): void {
     console.log(status);
     this.substanceFormService.changeStatus(status.value);
+  }
+
+  unapprove(): void {
+    this.substanceFormService.unapproveRecord();
+  }
+
+  concept(): void {
+    this.substanceFormService.conceptNonApproved();
   }
 
   ngAfterViewInit() {

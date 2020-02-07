@@ -3,6 +3,18 @@
     <a mat-icon-button [href]="oldUrl" target = "_blank" matTooltip = "view in old application">
       <mat-icon svgIcon="open_in_new"></mat-icon>
     </a>
+    <button mat-icon-button [matMenuTriggerFor]="editMenu" matTooltip="edit form options" *ngIf = "isEditable">
+      <mat-icon svgIcon="edit"></mat-icon>
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="downloadMenu" matTooltip="download options">
+      <mat-icon svgIcon="get_app"></mat-icon>
+    </button>
+    <mat-menu #downloadMenu="matMenu" xPosition="before">
+      <a *ngIf = "substance.uuid" mat-menu-item [href]="downloadJsonHref" download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
+        <span>Download JSON</span>
+      </a>
+    </mat-menu>
+    <mat-menu #editMenu="matMenu" xPosition="before">
     <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isEditable" matTooltip = 'edit record'>
       <mat-icon svgIcon="edit"></mat-icon>
     </a>
@@ -12,13 +24,6 @@
     <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" *ngIf="isEditable" matTooltip = 'copy definition to new registration form'>
       <mat-icon svgIcon="outline-file_copy"></mat-icon>
     </a>
-    <button mat-icon-button [matMenuTriggerFor]="downloadMenu" matTooltip="download options">
-      <mat-icon svgIcon="get_app"></mat-icon>
-    </button>
-    <mat-menu #downloadMenu="matMenu" xPosition="before">
-      <a *ngIf = "substance.uuid" mat-menu-item [href]="downloadJsonHref" download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
-        <span>Download JSON</span>
-      </a>
     </mat-menu>
   </div>
   <div>

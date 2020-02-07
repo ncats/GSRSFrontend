@@ -48,14 +48,30 @@
       <mat-form-field>
         <mat-label>Advanced Features</mat-label>
         <mat-select name="Feature" [ngModel]="feature" (selectionChange)="useFeature($event)" >
-          <mat-option value="changeClass">
+          <mat-option value="changeClass" [disabled] = "!uuid">
             Change Substance Class
           </mat-option>
           <mat-option value="setStatus">
             Change Status to approved / pending
           </mat-option>
+          <mat-option value="setDef">
+            Set Definition to private / public
+          </mat-option>
+          <mat-option value="unapprove">
+            Un-approve record (Remove approval ID)
+          </mat-option>
+          <mat-option value="concept" (select) = "concept()" [disabled]="definition.substanceClass != 'concept'" >
+            Set concept status to non-approved
+          </mat-option>
         </mat-select>
       </mat-form-field>
+    </div>
+    <div class = "unapprove advanced" *ngIf  = "feature === 'unapprove'">
+      <span>Are you sure you'd like to remove the approvalID?</span>
+      <button mat-flat-button (click) ="unapprove()">Confirm</button>
+      <button mat-flat-button (click) = "feature = ''">Cancel</button>
+
+
     </div>
     <div class = "changeClass advanced" *ngIf  = "feature === 'changeClass'">
       <mat-form-field>
@@ -66,6 +82,12 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+    </div>
+    <div class = "set-def advanced" *ngIf  = "feature === 'setDef'">
+      <span> Set Definition to</span>
+      <button mat-flat-button (click) ="setPrivate()">Private</button>
+      <button mat-flat-button (click) ="setPublic()">Public</button>
+
     </div>
     <div class = 'set-status advanced' *ngIf  = "feature === 'setStatus'">
       <label id="status-label">Set Status: </label>
