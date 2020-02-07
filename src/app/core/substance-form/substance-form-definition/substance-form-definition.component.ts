@@ -8,6 +8,8 @@ import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormDefinition } from '../substance-form.model';
+import {Router} from '@angular/router';
+import {AuthService} from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-form-definition',
@@ -18,14 +20,29 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   definitionTypes: Array<VocabularyTerm>;
   definitionLevels: Array<VocabularyTerm>;
   primarySubstance?: SubstanceSummary;
-  showPrimarySubstanceOptions = false;
   definition: SubstanceFormDefinition;
   primarySubUuid: string;
+  uuid: string;
+  json: any;
+  feature: string;
+  substanceClass: string;
+  isAdmin: boolean;
+  status: string;
+  classes = ['protein',
+  'chemical',
+  'structurallyDiverse',
+  'polymer',
+  'nucleicAcid',
+  'mixture',
+  'specifiedSubstanceG1'];
 
   constructor(
     private cvService: ControlledVocabularyService,
     public substanceService: SubstanceService,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private router: Router,
+    private authService: AuthService
+
   ) {
     super();
   }
@@ -33,12 +50,50 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   ngOnInit() {
     this.menuLabelUpdate.emit('Definition');
     this.getVocabularies();
+    this.isAdmin = this.authService.hasRoles('admin');
+  }
+
+  useFeature(feature: any): void {
+    this.feature = feature.value;
+  }
+
+  changeClass(type: any): void {
+    this.router.navigate(['/substances', this.uuid, 'edit'], { queryParams: { switch: type.value } });
+  }
+
+  setPrivate(): void {
+    this.substanceFormService.setDefinitionPrivate();
+  }
+
+  setPublic(): void {
+    this.substanceFormService.setDefinitionPublic();
+  }
+
+  changeStatus(status: any): void {
+    console.log(status);
+    this.substanceFormService.changeStatus(status.value);
+  }
+
+  unapprove(): void {
+    this.substanceFormService.unapproveRecord();
+  }
+
+  concept(): void {
+    this.substanceFormService.conceptNonApproved();
   }
 
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
       this.definition = definition || {};
-
+      if (this.definition.substanceClass === 'structure') {
+        this.substanceClass = 'chemical';
+      } else if (this.definition.substanceClass === 'nucleicAcid') {
+        this.substanceClass = 'Nucleic Acid';
+      } else if (this.definition.substanceClass === 'structurallyDiverse') {
+        this.substanceClass = 'Structurally Diverse';
+      } else {
+        this.substanceClass = this.definition.substanceClass;
+      }
       if (!this.definition.definitionType) {
         this.definition.definitionType = 'PRIMARY';
       }
@@ -46,7 +101,10 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       if (!this.definition.definitionLevel) {
         this.definition.definitionLevel = 'COMPLETE';
       }
-
+      this.json = this.substanceFormService.getJson();
+      if (this.definition.status) {
+        this.status = this.definition.status;
+      }
       if (this.definition.definitionType === 'ALTERNATIVE') {
         this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
           const type = vocabularyResponse['RELATIONSHIP_TYPE']
@@ -65,7 +123,19 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
           }
         });
       }
+      this.uuid = this.substanceFormService.getUuid();
+
     });
+
+  }
+
+
+  getRedirect() {
+    if (this.uuid) {
+      return this.substanceService.oldSiteRedirect('edit', this.substanceFormService.getUuid());
+    } else {
+      return '#';
+    }
   }
 
   getVocabularies(): void {
@@ -138,4 +208,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   updateDefinition(): void {
     this.substanceFormService.updateDefinition(this.definition);
   }
+
+
 }

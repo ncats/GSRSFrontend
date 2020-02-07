@@ -1,0 +1,108 @@
+.constituent-form-container {
+  padding: 30px 10px 12px 10px;
+  position: relative;
+}
+
+.related-substance {
+  max-width: 60%;
+  width: 60%;
+  padding-right:20px;
+}
+
+::ng-deep .related-substance img {
+  max-width:125px !important;
+  margin: auto;
+}
+
+
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, .8);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: #666;
+}
+
+.form-row {
+  align-items: flex-start;
+  align-content: flex-start;
+  display: flex;
+  justify-content: space-between;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .field-column {
+    width : 70%;
+
+    .amount {
+      width: 100%;
+      margin-top: 37px;
+    }
+
+    .role {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+  }
+
+  .code-system, .code-system-type, .type {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+  .code-text, .url {
+    flex-grow: 1;
+  }
+
+
+  .access {
+    width:15%;
+  }
+}
+
+.references-container {
+  width: 100%;
+}
+
+
+.padded {
+  padding-right:20px;
+}
+.amount-display {
+  padding-top:11px;
+}
+.form-actions {
+  justify-content: flex-start;
+  margin: 5px 0 10px 0;
+}
+.form-content {
+  flex-grow: 1;
+}
+
+.mod-type, .location-type {
+  width: 33%;
+}
+
+.sites, .group-access {
+  width:33%;
+}
+
+.extent, .amount {
+  width:33%;
+}
+
+
+.group, .access {
+  width: 45%;
+}

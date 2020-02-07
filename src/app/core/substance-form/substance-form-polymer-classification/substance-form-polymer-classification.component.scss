@@ -1,0 +1,39 @@
+
+
+
+.subtype {
+}
+
+
+
+.related-substance {
+  width: 45%;
+}
+
+.field-row {
+  display:flex;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  align-items: flex-start;
+
+  .checkbox-container {
+    padding-bottom: 18px;
+  }
+
+  .geometry, .type, .subtype, .class, .subtype, .form-block {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+  .class, .type, .tags, .geometry {
+    max-width: 250px;
+  }
+}
+
+.field-container {
+  width: 55%;
+}

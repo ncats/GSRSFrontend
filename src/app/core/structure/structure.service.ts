@@ -17,8 +17,7 @@ export class StructureService {
   constructor(
     private sanitizer: DomSanitizer,
     public configService: ConfigService,
-    private http: HttpClient,
-    private cvService: ControlledVocabularyService
+    private http: HttpClient
   ) {
   }
 
@@ -64,5 +63,11 @@ export class StructureService {
   postStructure(mol: string): Observable<StructurePostResponse> {
     const url = `${this.configService.configData.apiBaseUrl}structure`;
     return this.http.post<StructurePostResponse>(url, mol);
+  }
+
+  molvec(file: any): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/foo/ocrStructure`;
+    return this.http.post<any>(url, file);
+
   }
 }

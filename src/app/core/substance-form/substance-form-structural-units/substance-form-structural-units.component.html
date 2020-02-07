@@ -1,0 +1,7 @@
+<div class="responsive">
+  <div class = "alternate-backgrounds"  *ngFor="let unit of structuralUnits; last as isLast; index as index"  appScrollToTarget [id]="'substance-structural-modification-' + index" >
+    <app-structural-unit-form [unit]="unit" (unitDeleted)="deleteSRU($event)" ></app-structural-unit-form>
+    <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
+  </div>
+</div>
+

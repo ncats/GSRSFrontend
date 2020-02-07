@@ -7,7 +7,7 @@
         <input [placeholder]="placeholder" #tagInput [formControl]="tagControl" [matAutocomplete]="tagsAuto"
             [matChipInputFor]="chipList" matChipInputAddOnBlur="false" (blur)="clearTagsInput()">
     </mat-chip-list>
-    <mat-autocomplete #tagsAuto="matAutocomplete" (optionSelected)="tagSelected($event)" (closed)="clearTagsInput()">
+    <mat-autocomplete #tagsAuto="matAutocomplete" (optionSelected)="selected($event)" (closed)="clearTagsInput()">
         <mat-option *ngFor="let option of filteredOptions | async" [value]="option.value">
             {{option.display}}
         </mat-option>

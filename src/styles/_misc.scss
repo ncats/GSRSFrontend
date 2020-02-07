@@ -1,7 +1,12 @@
 .middle-fill {
     flex: 1 1 auto;
 }
-
+ .unit-tooltip {
+  white-space: pre-line !important;
+}
+::ng-deep .unit-tooltip {
+  white-space: pre-line !important;
+}
 .margin-bottom {
     margin-bottom: 15px;
 }
@@ -197,5 +202,25 @@ textarea {
     color: rgba(0, 0, 0, 0.54);
     font-weight: 400;
     font-size: 14px;
+  }
+}
+
+.details {
+  & .subunit {
+    display: none;
+  }
+
+  & .subunit-sequence {
+    display: block;
+  }
+}
+
+.raw {
+  & .subunit {
+    display: block;
+  }
+
+  & .subunit-sequence {
+    display: none;
   }
 }

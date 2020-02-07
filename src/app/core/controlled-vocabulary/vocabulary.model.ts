@@ -11,19 +11,19 @@ export interface Vocabulary {
 }
 
 export interface VocabularyTerm {
-    version: number;
-    created: number;
-    modified: number;
-    deprecated: boolean;
+    version?: number;
+    created?: number;
+    modified?: number;
+    deprecated?: boolean;
     value: string;
     display: string;
-    description: string;
-    origin: string;
-    filters: Array<any>;
-    hidden: boolean;
-    selected: boolean;
-    fragmentStructure: string;
-    simplifiedStructure: string;
+    description?: string;
+    origin?: string;
+    filters?: Array<any>;
+    hidden?: boolean;
+    selected?: boolean;
+    fragmentStructure?: string;
+    simplifiedStructure?: string;
     systemCategory?: string;
 }
 

@@ -17,6 +17,10 @@
     }
 }
 
+.polymer-form {
+  display:flex;
+}
+
 .key-value-pair {
     display: flex;
     flex-direction: column;
@@ -39,7 +43,7 @@
         width: 45px;
         height: 45px;
       }
-    
+
       .mat-icon {
         width: 35px;
         height: 35px;

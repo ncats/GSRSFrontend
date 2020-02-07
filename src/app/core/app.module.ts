@@ -66,6 +66,7 @@ import { NameResolverModule } from './name-resolver/name-resolver.module';
 import { HighlightedSearchActionComponent } from './highlighted-search-action/highlighted-search-action.component';
 import { CardDynamicSectionDirective } from './substances-browse/card-dynamic-section/card-dynamic-section.directive';
 import { SubstanceSummaryCardComponent } from './substances-browse/substance-summary-card/substance-summary-card.component';
+import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 
 @NgModule({
   declarations: [
@@ -143,7 +144,8 @@ import { SubstanceSummaryCardComponent } from './substances-browse/substance-sum
         multi: true
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    CanActivateSubstanceForm
+    CanActivateSubstanceForm,
+    CanRegisterSubstanceForm
   ],
   bootstrap: [AppComponent],
   entryComponents: [

@@ -5,7 +5,7 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
-  <div class="flex-column referenced-substance">
+  <div class="flex-column referenced-substance"  *ngIf = "property.propertyType !== 'PROTEIN FEATURE' && property.propertyType !== 'NUCLEIC ACID FEATURE'">
     <app-substance-selector (selectionUpdated)="referencedSubstanceUpdated($event)"
       eventCategory="substancePropertyReferencedSub" placeholder="Referenced Substance" header="Referenced Substance"
       [subuuid]="referencedSubstanceUuid">
@@ -24,20 +24,32 @@
           <mat-option *ngFor="let propertyName of propertyNameList" [value]="propertyName.value">
             {{propertyName.display}}
           </mat-option>
+          <mat-option *ngIf = "!inCV(  propertyNameList, property.name)" value = "{{property.name}}">{{property.name}}</mat-option>
+          <mat-option value = 'other' >Other</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field class="type">
         <mat-label>Type</mat-label>
-        <mat-select [(ngModel)]="property.type" required name="type">
+        <mat-select [(ngModel)]="property.propertyType" required name="type">
           <mat-option *ngFor="let propertyType of propertyTypeList" [value]="propertyType.value">
             {{propertyType.display}}
           </mat-option>
+          <mat-option *ngIf = "!inCV(  propertyTypeList, property.propertyType)" value = "{{property.propertyType}}">{{property.propertyType}}</mat-option>
+          <mat-option value = 'other' >Other</mat-option>
         </mat-select>
       </mat-form-field>
       <div class="checkbox-container column-checkbox">
         <mat-checkbox [(ngModel)]="property.defining" name="defining">
           Defining
         </mat-checkbox>
+      </div>
+      <div  *ngIf = "property.propertyType === 'PROTEIN FEATURE' || property.propertyType === 'NUCLEIC ACID FEATURE'">
+        <div class="amount-title">Site Range</div>
+        <div>{{property.value.nonNumericValue}}
+          <button mat-icon-button (click) = "openFeatureDialog()" matTooltip="Edit Feature Sites">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
+        </div>
       </div>
       <div>
         <app-access-manager (accessOut)="updateAccess($event)" [access]="property.access">
@@ -139,7 +151,7 @@
   </div>
 </div>
 <div *ngIf="!property.$$deletedCode">
-  <div class="amount-form-container">
+  <div class="amount-form-container"  *ngIf = "property.propertyType !== 'PROTEIN FEATURE' && property.propertyType !== 'NUCLEIC ACID FEATURE'">
     <div class="amount-title">Amount</div>
     <app-amount-form [substanceAmount]="property.value"></app-amount-form>
   </div>

@@ -1,20 +1,19 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop">
-  <mat-sidenav #matSideNavInstance mode="side" opened="false">
+  <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
     <mat-accordion multi="true">
-      <mat-expansion-panel *ngFor="let facet of facets" [expanded]="facetParams[facet.name] != null">
+      <mat-expansion-panel *ngFor="let facet of facets; index as topIndex" [expanded]="false || facetParams[facet.name] != null">
         <mat-expansion-panel-header>
           <mat-panel-title>
             {{facet.name | facetDisplay}}
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-form-field class="">
-          <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name]"
+          <input matInput class="search" type="text" [ngModel] = "searchText[facet.name]" (ngModelChange) = "filterFacets(topIndex, $event)"
             placeholder="Search  {{facet.name}}">
         </mat-form-field>
-        <button mat-icon-button color="black" (click)="searchText[facet.name] = ''">
-          <mat-icon svgIcon="close"></mat-icon>
-        </button>
-        <div class="facet-value" *ngFor="let value of facet.values | facetFilter : searchText[facet.name]">
+        <button mat-icon-button color="black" (click) = "searchText[facet.name] = ''"><mat-icon svgIcon="close"></mat-icon></button>
+          <ng-container  *ngFor="let value of facet.values | facetFilter : searchText[facet.name]; index as index">
+            <div class="facet-value" >
           <div class="facet-value-checkbox">
             <mat-checkbox class="include" matTooltip="Include"
               (change)="updateFacetSelection($event, facet.name, value.label, true)"
@@ -37,6 +36,23 @@
           <div class="facet-value-count">
             {{value.count}}
           </div>
+            </div>
+        </ng-container>
+        <div>
+         <!--- <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
+            Show {{toggle[topIndex] === true ? 'all': 'less'}}
+          </a>-->
+          <span  *ngIf = "facet.values && facet.values.length >= 10 && (
+           !searchText[facet.name] || searchText[facet.name] == '')">
+             <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf ="(!facet.$total ||
+              facet.$total > facet.values.length)">
+            More...{{searchText[facet.name]}}
+          </a>
+             <a class="show-more" *ngIf = "facet.values.length > 10" (click)="lessFacets(topIndex)">
+            Show Less {{searchText[facet.name]}}
+          </a>
+          </span>
+
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
           <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
@@ -44,10 +60,10 @@
             All Match
           </mat-checkbox>
           <div class="pull-right">
-            <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
+            <button *ngIf="facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
               Clear
             </button>
-            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading"
+            <button *ngIf="facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary" [disabled]="isLoading"
               (click)="applyFacetsFilter(facet.name)">
               Apply
             </button>
@@ -113,11 +129,11 @@
       </div>
       <div class="controls-container">
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-          <mat-button-toggle value="table">
+          <mat-button-toggle value="table" matTooltip = "Table view">
             <mat-icon svgIcon="list"></mat-icon>
           </mat-button-toggle>
-          <mat-button-toggle value="cards">
-            <mat-icon svgIcon="view_stream"></mat-icon>
+          <mat-button-toggle value="cards" matTooltip = "full view">
+            <mat-icon svgIcon="view_stream" matTooltip = "Tile view"></mat-icon>
           </mat-button-toggle>
           <mat-button-toggle value="tiles">
             <mat-icon svgIcon="view_module"></mat-icon>
@@ -151,7 +167,7 @@
 
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef> Name </th>
-              <td mat-cell *matCellDef="let substance">{{substance._name}}</td>
+              <td mat-cell *matCellDef="let substance"><a class="table-view-name" [routerLink]="['/substances', substance.uuid]">{{substance._name}}</a></td>
             </ng-container>
 
             <ng-container matColumnDef="approvalID">
@@ -163,7 +179,7 @@
               <th mat-header-cell *matHeaderCellDef> Names </th>
               <td mat-cell *matCellDef="let substance">
                 <span *ngIf="substance.names && substance.names.length">
-                  <div *ngFor="let nameObject of substance.names | take: 5; last as isLast">
+                  <div *ngFor="let nameObject of substance.names | take: 4; last as isLast">
                     {{nameObject.name}}
                     <span *ngIf="!isLast">; </span>
                   </div>
@@ -175,7 +191,7 @@
               <th mat-header-cell *matHeaderCellDef> Codes </th>
               <td mat-cell *matCellDef="let substance">
                 <span *ngIf="substance.codeSystems">
-                  <span *ngFor="let codeSystemName of substance.codeSystemNames | take: 5">
+                  <span *ngFor="let codeSystemName of sortCodeSystems(substance.codeSystemNames) | take: 5">
                     <div>
                       <strong>{{codeSystemName}}</strong>:&nbsp;
                       <span *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLastCodeObject">
@@ -193,6 +209,62 @@
                 </span>
               </td>
             </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Actions </th>
+              <td mat-cell *matCellDef="let substance">
+                <button
+                  *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer"
+                  mat-icon-button [matMenuTriggerFor]="downloadMenu">
+                  <mat-icon svgIcon="get_app"></mat-icon>
+                </button>
+
+                <button *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
+                  <mat-icon svgIcon="search"></mat-icon>
+                </button>
+
+                <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                  <mat-icon svgIcon="edit"></mat-icon>
+                </button>
+
+                <mat-menu #downloadMenu="matMenu">
+                  <a mat-menu-item *ngIf="substance.structure"
+                     (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+                    <span>Download Molfile</span>
+                  </a>
+                  <a mat-menu-item *ngIf="substance.polymer"
+                     (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+                    <span>Download Molfile</span>
+                  </a>
+                  <a mat-menu-item *ngIf="(substance.protein || substance.nucleicAcid) && !showAudit"
+                     (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')">
+                    <span>Download Fasta</span>
+                  </a>
+                </mat-menu>
+
+                <mat-menu #searchMenu="matMenu">
+                  <a mat-menu-item *ngIf="substance.structure" [routerLink]="['/structure-search']"
+                     [queryParams]="{structure : substance.structure.id}">
+                    <span>Search Structure</span>
+                  </a>
+                  <a mat-menu-item *ngIf="substance.polymer" [routerLink]="['/structure-search']"
+                     [queryParams]="{structure : substance.polymer.displayStructure.id}">
+                    <span>Search Structure</span>
+                  </a>
+                </mat-menu>
+
+                <mat-menu #editMenu="matMenu">
+                  <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin" matTooltip = 'edit record'>
+                    <span>Edit Substance</span>
+                  </a>
+                  <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" *ngIf="isAdmin" matTooltip = 'copy substance to new registration form'>
+                    <span>Copy Substance to New Form</span>
+                  </a>
+                  <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin" matTooltip = 'copy definition to new registration form'>
+                    <span>Copy Definition to New Form</span>
+                  </a>
+                </mat-menu>
+              </td>
+            </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -203,9 +275,11 @@
       <div class="substance-tiles">
         <mat-card *ngFor="let substance of substances" class="tile">
           <mat-card-title>
-            <a class="approval-id">
+            <div class = 'tile-title'>
+                <a class="approval-id">
               {{substance.approvalID}}
             </a>
+            </div>
           </mat-card-title>
 
           <mat-card-content>
@@ -222,7 +296,7 @@
                   </div>
                 </div>
                 <div class="tile-name">
-                  <a class="substance-name" [routerLink]="['/substances', substance.uuid]">
+                  <a class="substance-name table-view-name" [routerLink]="['/substances', substance.uuid]">
                     {{substance._name}}
                   </a>
                 </div>

@@ -1,0 +1,41 @@
+<div *ngIf="glycosylation">
+  <div class="link-form-container">
+  <div class="form-row">
+    <div class="name-type">
+      <app-cv-input key = "Protein Glycosylation Type" title = "Sequence Type" (valueChange) = "glycosylation.glycosylationType = $event" [model] = "glycosylation.glycosylationType"></app-cv-input>
+      <br/>
+      <br/>
+      <button mat-raised-button mat-primary (click) = 'clearAll()' >Clear Glycosylation</button>
+    </div>
+    <div class = 'types' >
+      <div class="sites">
+        <div class="label row-label"><b>C </b>Glycosylation Sites </div>
+        <div class = "row-sites"><button mat-icon-button matTooltip="Select sites from sequence" (click)="(openDialog('C'))">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </button>
+      {{siteDisplay(glycosylation.CGlycosylationSites)}}
+        </div>
+      </div>
+      <div class="sites">
+        <div class="label row-label"><b>N </b>Glycosylation Sites</div>
+        <div class = "row-sites"><button mat-icon-button matTooltip="Select sites from sequence" (click)="(openDialog('N'))">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </button>
+      {{siteDisplay(glycosylation.NGlycosylationSites)}}
+      </div>
+
+      </div>
+      <div class="sites">
+        <div class="label row-label"><b>O </b>Glycosylation Sites</div>
+        <div class = "row-sites"><button mat-icon-button matTooltip="Select sites from sequence" (click)="(openDialog('O'))">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </button>
+      {{siteDisplay(glycosylation.OGlycosylationSites)}}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>

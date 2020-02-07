@@ -115,7 +115,7 @@ export class AuthService extends BaseHttpService {
 
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
       for (let i = 0; i < rolesList.length; i++) {
-        let role = rolesList[i].toLowerCase();
+        let role = rolesList[i].charAt(0).toLowerCase() + rolesList[i].slice(1);
         role = role.charAt(0).toUpperCase() + role.slice(1);
         if (!this._auth.roles.includes(role as Role)) {
           return false;
@@ -144,10 +144,9 @@ export class AuthService extends BaseHttpService {
 
   hasAnyRoles(...roles: Array<Role|string>): boolean {
     const rolesList = [...roles];
-
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
       for (let i = 0; i < rolesList.length; i++) {
-        let role = rolesList[i].toLowerCase();
+        let role = rolesList[i].charAt(0).toLowerCase() + rolesList[i].slice(1);
         role = role.charAt(0).toUpperCase() + role.slice(1);
         if (this._auth.roles.includes(role as Role)) {
           return true;

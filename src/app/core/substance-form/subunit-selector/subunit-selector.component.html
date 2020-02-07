@@ -1,0 +1,162 @@
+<div class = 'form-header'>
+  <div class = "form-input">
+<div *ngIf = "card !== 'feature' && card!=='multi-disulfide'" >
+  Sites:
+  <div *ngIf = "card !== 'disulfide'">
+  <input [ngModel] = "sitesDisplay" class = "sites-input" (ngModelChange)="manualInput($event)" [ngClass]="valid ? 'valid':'invalid'">
+  </div>
+  <div *ngIf = "card === 'disulfide'" class = 'disulfide-form' [ngClass]="valid ? 'valid':'invalid-cysteine'">
+      <input [ngModel] = "sitesDisplay" (ngModelChange)="manualInput($event)" class = "sites-input disulfide-display">
+
+    <div class = 'clear-button'>
+      <button mat-icon-button matTooltip="Clear Selection"  (click) = "clearSites()">
+        <mat-icon svgIcon="clear"></mat-icon>
+      </button>
+    </div>
+      <div class = 'cysteine-message'>{{cysteineMessage}}</div>
+
+    </div>
+</div>
+<div *ngIf = "card == 'feature'" >
+  <div class="form-row-feature">
+  <mat-form-field class="name-type mat-form-field">
+    <mat-label>Name</mat-label>
+  <input matInput class = "sites-input" [(ngModel)] = 'featureName' (change)="emitUpdate($event)" placeholder="Name" name ="name">
+  </mat-form-field>
+<div class = "key-value-pair">
+  <div class="key">
+    Site Range
+  </div>
+<div class = 'value'>
+  <span *ngFor = "let feat of newFeatureArray;index as index" class = 'link-cont'>
+    <a (click) = "deleteFeature(feat)" class ='featlink' matTooltip = "Delete sequence section">
+        {{feat[0].subunitIndex}}_{{feat[0].residueIndex}}-{{feat[1].subunitIndex}}_{{feat[1].residueIndex}};
+      </a>
+  </span>
+  <span class="bold">
+    <span *ngIf = "newFeature[0]">
+        {{newFeature[0].subunitIndex}}_{{newFeature[0].residueIndex}} -
+      </span>
+    <span *ngIf = "newFeature[1]">
+        {{newFeature[1].subunitIndex}}_{{newFeature[1].residueIndex}}
+      </span>
+  </span>
+</div>
+  <div class = 'clear-button'>
+    <button mat-icon-button matTooltip="Clear Current Selection"  (click) = "removeFeature()">
+      <mat-icon svgIcon="clear"></mat-icon>
+    </button>
+  </div>
+
+</div>
+
+
+  </div>
+
+  <div class="form-row-2">
+    <div class = "feature-step">
+      <span *ngIf = "selectState == 'first'">Select Starting Site</span>
+      <span *ngIf = "selectState == 'last'">Select Ending Site</span>
+      <span *ngIf = "selectState == 'finished' && (featureName === '' || featureName === null)">Enter a Feature Name </span>
+      <span *ngIf = "selectState == 'finished'">Click a new site to add an additional range</span>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf = "card === 'multi-disulfide'">
+  <b>Links:</b>
+   <span *ngFor = "let set of disulfideArray;index as index" class = 'link-cont'>
+     <a (click) = "deleteDisulfide(index)" class ='featlink' matTooltip = "Delete sequence section">
+        {{set[0].subunitIndex}}_{{set[0].residueIndex}}, {{set[1].subunitIndex}}_{{set[1].residueIndex}};
+      </a>
+   </span>
+  <span class="bold">
+    <span *ngIf = "sites[0]">
+        {{sites[0].subunitIndex}}_{{sites[0].residueIndex}} -
+      </span>
+    <span *ngIf = "newFeature[1]">
+        {{sites[1].subunitIndex}}_{{sites[1].residueIndex}}
+      </span>
+  </span>
+<br/>
+  <div class ='note' *ngIf = 'disulfideArray && disulfideArray.length > 0'>click on a link above to delete it, or another starting site to add additional links</div>
+  <div *ngIf = '!disulfideArray || disulfideArray.length === 0'>Click on a starting site, then an ending site to create a new link</div>
+</div>
+    <div class = 'card-selector' *ngIf = 'startingCard === "any"'>
+      <mat-form-field class = "top-padding">
+        <mat-label>Select link type to add</mat-label>
+        <mat-select (valueChange)="switchType($event)" name="food">
+       <!--   <mat-option value = 'feature'>
+            <span>Feature</span>
+          </mat-option>-->
+          <mat-option value = "other" disabled>
+            <span>Other Link</span>
+          </mat-option>
+          <mat-option value = "CGlycosylation">
+            <span>C-Glycosylation Sites</span>
+          </mat-option>
+          <mat-option value = "NGlycosylation">
+            <span>N-Glycosylation Sites</span>
+          </mat-option>
+          <mat-option value = "OGlycosylation">
+            <span>O-Glycosylation Sites</span>
+          </mat-option>
+          <mat-option value = "disulfide">
+            <span>Disulfide Link</span>
+          </mat-option>
+          <mat-option value = "modification" disabled>
+            <span>Structural Modification</span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+  </div>
+<div class = "key-row" *ngIf = 'substanceType === "protein"'>
+    Key:
+  <br/>
+  <div class = "key-container">
+    <div class = "key-label"><div class = 'C-Glycosylation key-color'> </div>C-Glycosylation</div>
+    <div class = "key-label"><div class = 'other key-color'> </div>Other Link</div>
+  </div>
+    <div class = "key-container">
+  <div class = "key-label"><div class = 'O-Glycosylation key-color'> </div>O-Glycosylation</div>
+  <div class = "key-label"><div class = 'modification key-color'> </div>Modification</div>
+    </div>
+    <div class = "key-container">
+      <div class = "key-label"><div class = 'N-Glycosylation key-color'> </div>N-Glycosylation</div>
+  <div class = "key-label"><div class = 'disulfide key-color'> </div>Disulfide Link</div>
+</div>
+  <div class = "key-container">
+    <div class = "key-label"><div class = 'feature key-color'> </div>Feature</div>
+    <div class = "key-label"><div class = 'chosen key-color'> </div>currently selected</div>
+  </div>
+
+</div>
+</div>
+<mat-dialog-content>
+<span *ngIf = "showStyle">
+<div class="subunit-sequence" *ngFor="let sequence of subunitSequences" >
+  <h4>Subunit {{sequence.subunitIndex}}</h4>
+  <div class="responsive">
+      <div *ngFor = "let set of sequence.subsections;last as last1"  class="sequence-section-group">
+        <div *ngFor = "let num of set; last as last2" class= "sequence-section" [ngClass] = "last1 && last2? 'last-section' : ''" >
+          <div class = "section-number">{{num[1]}}</div>
+          <div class = section-units-container >
+          <span *ngFor = "let subunit of sequence.subunits.slice(num[0],num[1])"  class="section-unit" [ngClass] = "last1 && last2? 'last-units' : ''" >
+              <a class = "selectedSite siteref" [id]="sequence.subunitIndex + '_' + subunit.unitIndex"  [ngClass]="subunit.class" [@errorFlash]
+                 (click) = "toggleSite(sequence.subunitIndex, subunit.unitIndex, subunit.unitValue, $event)" matTooltipClass="unit-tooltip"
+                 matTooltip ="{{getTooltipMessage(sequence.subunitIndex, subunit.unitIndex, subunit.unitValue,subunit.class || '').join('\n')}}">{{subunit.unitValue}}</a>
+        </span>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+</span>
+  <div *ngIf = "!showStyle" >
+    Total sequence length of <b>{{siteTotal}}</b> is too long to display. Please enter sites manually
+  </div>
+
+  </mat-dialog-content>

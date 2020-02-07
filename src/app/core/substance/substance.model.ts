@@ -1,3 +1,5 @@
+import {StructuralUnit} from '@gsrs-core/substance/structural-unit.model';
+
 export interface SubstanceBase {
     uuid?: string;
     created?: number;
@@ -30,6 +32,8 @@ export interface SubstanceBaseExtended {
     _self?: string;
     nucleicAcid?: NucleicAcid;
     changeReason?: string;
+
+  protein?: Protein;
 }
 
 
@@ -42,7 +46,6 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
     _relationships?: CountRef;
     _moieties?: CountRef;
     _properties?: CountRef;
-    protein?: Protein;
 }
 
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
@@ -57,7 +60,9 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
     tags?: Array<string>;
     protein?: Protein;
     mixture?: Mixture;
+    polymer?: Polymer;
     modifications?: SubstanceModifications;
+    specifiedSubstance?: SpecifiedSubstance;
 }
 
 export interface StructurallyDiverse extends SubstanceBase {
@@ -65,6 +70,7 @@ export interface StructurallyDiverse extends SubstanceBase {
     sourceMaterialType?: string;
     sourceMaterialState?: string;
     part?: Array<string>;
+    partLocation?: string;
     parentSubstance?: SubstanceRelated;
     references?: Array<string>;
     organismFamily?: string;
@@ -74,6 +80,12 @@ export interface StructurallyDiverse extends SubstanceBase {
     developmentalStage?: string;
     fractionMaterialType?: string;
     fractionName?: string;
+    infraSpecificName?: string;
+    infraSpecificType?: string;
+    hybridSpeciesMaternalOrganism?: SubstanceRelated;
+    hybridSpeciesPaternalOrganism?: SubstanceRelated;
+    $$diverseType?: string;
+    $$storedPart?: Array<string>;
 
 }
 
@@ -81,13 +93,43 @@ export interface Polymer extends SubstanceBase {
   uuid?: string;
   references?: Array<string>;
   displayStructure?: DisplayStructure;
+  idealizedStructure?: SubstanceStructure;
   monomers?: Array<Monomer>;
+  classification?: PolymerClassification;
+  structuralUnits?: Array<StructuralUnit>;
+}
+
+export interface SpecifiedSubstance extends SubstanceBase {
+  uuid?: string;
+  references?: Array<string>;
+  constituents?: Array<Constituent>;
+}
+
+export interface PolymerClassification extends SubstanceBase {
+  uuid?: string;
+  references?: Array<string>;
+  polymerClass?: string;
+  polymerGeometry?: string;
+  polymerSubClass?: Array<string>;
+  parentSubstance?: SubstanceRelated;
+  access?: Array<string>;
+  sourceType?: string;
+}
+
+export interface Constituent extends SpecifiedSubstance {
+  role?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
+  substance?: SubstanceRelated;
 }
 
 export interface NucleicAcid extends SubstanceBase {
   uuid?: string;
   references?: Array<string>;
   nucleicAcidType?: string;
+  nucleicAcidSubType?: string;
+  sequenceOrigin?: string;
+  sequenceType?: string;
   subunits?: Array<Subunit>;
   sugars?: Array<Sugar>;
   linkages?: Array<Linkage>;
@@ -127,8 +169,8 @@ export interface DisplayStructure extends Polymer {
 export interface Monomer extends Polymer {
   uuid?: string;
   type?: string;
-  amount?: Array<SubstanceAmount>;
-  monomerSubstance?: Array<SubstanceRelated>;
+  amount?: SubstanceAmount;
+  monomerSubstance?: SubstanceRelated;
 }
 
 export interface SubstanceRelated extends SubstanceBase {
@@ -250,15 +292,19 @@ export interface StructuralModification extends SubstanceModifications {
   structuralModificationType?: string;
   locationType?: string;
   residueModified?: string;
-  sites?: Array<ModificationSite>;
+  sites?: Array<Site>;
   extent?: string;
-  extentAmount?: string;
+  extentAmount?: SubstanceAmount;
   molecularFragment?: SubstanceRelated;
+  modificationGroup?: string;
+  comment?: string;
+  references?: Array<string>;
 }
 
 export interface PhysicalModification extends SubstanceModifications {
   physicalModificationRole?: string;
   parameters?: Array<PhysicalModificationParameter>;
+    modificationGroup?: string;
 }
 
 export interface PhysicalModificationParameter extends PhysicalModification {
@@ -271,8 +317,9 @@ export interface AgentModification extends SubstanceModifications {
   agentModificationProcess?: string;
   agentModificationRole?: string;
   agentModificationType?: string;
-  amount?: string;
+  amount?: SubstanceAmount;
   agentSubstance?: SubstanceRelated;
+  modificationGroup?: string;
 }
 
 export interface ModificationSite extends StructuralModification {
@@ -347,7 +394,7 @@ export interface Link extends SubstanceBase {
     references?: Array<string>;
 }
 
-export interface DisulfideLink {
+export interface DisulfideLink extends SubstanceBase {
     sites?: Array<Site>;
     sitesShorthand?: string;
 }
@@ -364,4 +411,14 @@ export interface SubstanceEdit {
   refid: string;
   created: number;
   comments?: string;
+}
+
+export interface ProteinFeatures {
+    features: Array<Feature>;
+}
+
+export interface Feature {
+    sites?: Array<Site>;
+    siteRange?: string;
+    name?: string;
 }

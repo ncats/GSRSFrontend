@@ -8,6 +8,6 @@ export abstract class BaseHttpService {
     public configService: ConfigService
   ) {
     this.apiBaseUrl = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    this.baseUrl = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }`;
+    this.baseUrl = (this.configService.configData && this.configService.configData.apiBaseUrl) || '/';
   }
 }
