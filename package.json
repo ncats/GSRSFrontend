@@ -99,5 +99,10 @@
     "tslint": "5.20.1",
     "typescript": "3.5.3",
     "webpack-cli": "3.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run ng lint"
+    }
   }
 }

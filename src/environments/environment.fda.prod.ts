@@ -6,14 +6,10 @@ environment.production = true;
 environment.baseHref = '/ginas/app/beta/';
 environment.appId = 'fda';
 environment.navItems = [
-//     {
-//         display: 'FDA Sample Path',
-//         path: 'fda-sample-path'
-//     },
-//     {
-//         display: 'FDA Sample Inheritance',
-//         path: 'fda-sample-inheritance'
-//     }
+    {
+        display: 'Browse Application',
+        path: 'browse-applications'
+    },
     {
         display: 'Browse Clinical Trials',
         path: 'browse-clinical-trials'

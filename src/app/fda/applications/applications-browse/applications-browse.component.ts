@@ -19,7 +19,7 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
-import { environment } from '../../../../environments/environment';
+import { Environment } from '@environment';
 
 @Component({
   selector: 'app-applications-browse',
@@ -49,6 +49,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   appType: string;
   appNumber: string;
   clinicalTrialApplication: Array<any>;
+  environment: Environment;
 
   //  public order: string;
   // public sortValues = searchSortValues;
@@ -76,6 +77,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.environment = this.configService.environment;
     this.gaService.sendPageView('Browse Applications');
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -94,7 +96,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
     this.location.replaceState(
       this.router.createUrlTree(
-        [this.locationStrategy.path().split('?')[0].replace(environment.baseHref, '')],
+        [this.locationStrategy.path().split('?')[0].replace(this.environment.baseHref, '')],
         navigationExtras
       ).toString()
     );
@@ -220,7 +222,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     include: boolean
   ): void {
 
-    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName} > ${facetValueLabel}`;
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName} > ${facetValueLabel}`;
     const eventValue = event.checked ? 1 : 0;
     const eventAction = include ? 'include' : 'exclude';
     this.gaService.sendEvent('substancesFiltering', `check:facet-${eventAction}`, eventLabel, eventValue);
@@ -271,7 +273,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     facetName?: string
   ) {
 
-    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `facet: ${facetName}`;
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `facet: ${facetName}`;
     let eventValue = 0;
 
     const facetKeys = facetName != null ? [facetName] : Object.keys(this.privateFacetParams);
@@ -385,7 +387,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   applyFacetsFilter(facetName: string) {
-    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     let eventValue = 0;
     Object.keys(this.privateFacetParams).forEach(key => {
       if (this.privateFacetParams[key].params) {
@@ -397,7 +399,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   sendFacetsEvent(event: MatCheckboxChange, facetName: string): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     const eventValue = event.checked ? 1 : 0;
     this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
   }
