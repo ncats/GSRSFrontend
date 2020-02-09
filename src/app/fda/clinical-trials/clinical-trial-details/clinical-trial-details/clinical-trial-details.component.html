@@ -12,6 +12,10 @@
       <div class="row-property-value-2">
         <a href="{{clinicalTrial.url}}" target="_blank"><span
             class="font14px fontbold colororange">{{clinicalTrial.nctNumber}}</span></a>
+        &nbsp;&nbsp;&nbsp;
+        <!--
+        <a [routerLink]="['/edit-clinical-trial', clinicalTrial.nctNumber]" target="_blank" title="Update Clinical Trial US">Update</a>
+        -->  
       </div>
     </div>
 
@@ -200,7 +204,6 @@
                 </div>
               </div>
 
-
               <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
@@ -271,10 +274,10 @@
 
               <div class="row">
                 <div class="row-property-2">
-                  <div class="row-property-key">
+                  <div class="row-property-key-3">
                     Outcome Measures:
                   </div>
-                  <div class="row-property-value">
+                  <div class="row-property-value-3">
                     {{clinicalTrial.outcomeMeasures}}
                   </div>
                 </div>
@@ -349,12 +352,18 @@
                     <tr valign="top">
                       <th width="60px">#</th>
                       <th width="200px">Substance Name</th>
+                      <th width="200px">Structure</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let x of clinicalTrial.clinicalTrialDrug; let i = index">
                       <td>{{i+1}}</td>
                       <td>{{x.substanceDisplayName}}</td>
+                      <td>
+                          <div *ngIf="x.substanceId">
+                              <img class="structure-img" [src]="getSafeStructureImgUrl(x.substanceId)">
+                            </div>
+                      </td>
                     </tr>
                   </tbody>
                 </table>

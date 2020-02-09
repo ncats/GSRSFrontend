@@ -130,6 +130,19 @@ export class ClinicalTrialService extends BaseHttpService {
     );
   }
 
+  getSubstanceClinicalTrialsEurope(
+    bdnum: string, page: number, pageSize: number
+  ): Observable<Array<any>> {
+    const url = this.baseUrl + 'clinicalTrialEuropeListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
+      })
+    );
+  }
+
   getClinicalTrialDetails(
     nctNumber: string, src: string
   ): Observable<any> {

@@ -217,24 +217,31 @@
           <mat-card>
             <div class="title">Medical</div>
             <mat-card-content>
-              <table width="98%" class="bordergray blueTable padleft20px">
-                <thead>
-                  <tr valign="top">
-                    <th width="60px">#</th>
-                    <th width="200px">Medical Condition Investigated</th>
-                    <th width="200px">Medical Condition Investigated EZ</th>
-                    <th width="200px">Medical Condition Therapy Area</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeMedicalList; let i = index">
-                    <td>{{i+1}}</td>
-                    <td>{{x.medicalCondInvesigated}}</td>
-                    <td>{{x.medicalCondInvesigatedEz}}</td>
-                    <td>{{x.medicalCondTherapyArea}}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div *ngIf="clinicalTrial.clinicalTrialEuropeMedicalList.length > 0; else noRecordMed">
+                <table width="98%" class="bordergray blueTable padleft20px">
+                  <thead>
+                    <tr valign="top">
+                      <th width="60px">#</th>
+                      <th width="200px">Medical Condition Investigated</th>
+                      <th width="200px">Medical Condition Investigated EZ</th>
+                      <th width="200px">Medical Condition Therapy Area</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeMedicalList; let i = index">
+                      <td>{{i+1}}</td>
+                      <td>{{x.medicalCondInvesigated}}</td>
+                      <td>{{x.medicalCondInvesigatedEz}}</td>
+                      <td>{{x.medicalCondTherapyArea}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <ng-template #noRecordMed>
+                <p><br>
+                  There is no Medical Data for this Clinical Trial
+                </p>
+              </ng-template>
             </mat-card-content>
           </mat-card>
         </div>
@@ -245,26 +252,33 @@
           <mat-card>
             <div class="title">Meddra in Clinical Trial</div>
             <mat-card-content>
-              <table width="98%" class="bordergray blueTable">
-                <thead>
-                  <tr valign="top">
-                    <th width="60px">#</th>
-                    <th width="200px">Meddra Version</th>
-                    <th width="200px">Meddra Class Code</th>
-                    <th width="200px">Meddra Term</th>
-                    <th width="200px">Meddra System Organ Class</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeMeddraList; let i = index">
-                    <td>{{i+1}}</td>
-                    <td>{{x.meddraVersion}}</td>
-                    <td>{{x.meddraClassCode}}</td>
-                    <td>{{x.meddraTerm}}</td>
-                    <td>{{x.meddraSystemOrganClass}}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div *ngIf="clinicalTrial.clinicalTrialEuropeMeddraList.length > 0; else noRecordMeddra">
+                <table width="98%" class="bordergray blueTable">
+                  <thead>
+                    <tr valign="top">
+                      <th width="60px">#</th>
+                      <th width="200px">Meddra Version</th>
+                      <th width="200px">Meddra Class Code</th>
+                      <th width="200px">Meddra Term</th>
+                      <th width="200px">Meddra System Organ Class</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeMeddraList; let i = index">
+                      <td>{{i+1}}</td>
+                      <td>{{x.meddraVersion}}</td>
+                      <td>{{x.meddraClassCode}}</td>
+                      <td>{{x.meddraTerm}}</td>
+                      <td>{{x.meddraSystemOrganClass}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <ng-template #noRecordMeddra>
+                <p><br>
+                  There is no Meddra Data for this Clinical Trial
+                </p>
+              </ng-template>
             </mat-card-content>
           </mat-card>
         </div>

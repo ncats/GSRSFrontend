@@ -113,6 +113,10 @@
   margin-top: -10px;
 }
 
+.margintop30px {
+  margin-top: 30px;
+}
+
 .margintop90px {
   margin-top: 90px;
 }
@@ -173,6 +177,10 @@
     border: 1px solid gray;
 }
 
+.textaligncenter {
+  text-align: center;
+}
+
 table.blueTable {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   /*font-family: Verdana, Geneva, sans-serif;*/
@@ -191,10 +199,11 @@ table.blueTable td, table.blueTable th {
 table.blueTable tbody td {
   font-size: 12px;
   vertical-align: top;
+  padding: 10px 10px;
 }
 
 table.blueTable tr:nth-child(even) {
-  background: #DAE9F5;
+  background: #f5faee;
 }
 
 table.blueTable thead {
@@ -207,6 +216,7 @@ table.blueTable thead th {
   font-weight: 700;
   color: #1a1a1a;
   border-left: 1px solid #D0E4F5;
+  padding: 10px 10px;
 }
 
 table.blueTable thead th:first-child {

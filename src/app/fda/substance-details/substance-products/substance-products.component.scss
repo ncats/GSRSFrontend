@@ -2,6 +2,10 @@ td.mat-cell {
     vertical-align: top;
 }
 
+.bordergray {
+  border: 1px solid gray;
+}
+
 .font10px {
   font-size: 10px;
 }
@@ -9,3 +13,21 @@ td.mat-cell {
 .colorgray {
   color: gray;
 }
+
+.tabhide .mat-tab-list .mat-tab-labels {
+  display: none;
+}
+
+.mat-tab-labels, .mat-tab-label, .mat-tab-link {
+  // color: red;
+   color: blue;
+  // font-size: 14px;
+  // background-color: gray;
+}
+
+/*
+.mat-tab-group.mat-primary .mat-ink-bar {
+  background: white;
+  height: 5px;
+}
+*/

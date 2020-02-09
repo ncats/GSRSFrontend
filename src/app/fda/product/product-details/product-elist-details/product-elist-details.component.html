@@ -1,5 +1,5 @@
 <div class="details-container margintop90px">
-  <mat-card class="bordergray">
+  <mat-card class="bordergray" *ngIf="product">
     <mat-card-title>
       Product Details&nbsp;<span class="font10px colorgray">(Elist)</span>
     </mat-card-title>
@@ -13,7 +13,11 @@
           <div class="row-property-value">
             <ng-container *ngIf="product.productNDC !== null">
               <a href="{{product.prodNDCUrl}}" target="_blank">
-                <span class="colororange font16px fontbold">{{product.productNDC}}</span>
+                {{product.productNDC}}
+              </a>
+              &nbsp;&nbsp;
+              <a href="{{product.prodNDCUrl}}" target="_blank">
+                <img [src]="iconSrcPath">
               </a>
             </ng-container>
           </div>
@@ -24,8 +28,6 @@
           </div>
           <div class="row-property-value">
             {{product.applicationNumber}}
-            <img class="structure-img" [src]="getSafeStructureImgUrl('')">
-
           </div>
         </div>
       </div>
@@ -36,7 +38,7 @@
             Product Name:
           </div>
           <div class="row-property-value">
-            {{product.productName}}
+            <span class="colororange font16px fontbold">{{product.productName}}</span>
           </div>
         </div>
         <div class="row-property">
@@ -131,7 +133,7 @@
             Color:
           </div>
           <div class="row-property-value">
-
+            {{product.prodCharElist.colorName}}
           </div>
         </div>
         <div class="row-property">
@@ -139,7 +141,7 @@
             Flavor:
           </div>
           <div class="row-property-value">
-
+            {{product.prodCharElist.flavorName}}
           </div>
         </div>
       </div>
@@ -150,15 +152,16 @@
             Shape:
           </div>
           <div class="row-property-value">
-
+            {{product.prodCharElist.shapeName}}
           </div>
         </div>
+
         <div class="row-property">
           <div class="row-property-key">
             Imprint Text:
           </div>
           <div class="row-property-value">
-
+            {{product.prodCharElist.imprintText}}
           </div>
         </div>
       </div>
@@ -169,7 +172,7 @@
             Size (mm):
           </div>
           <div class="row-property-value">
-
+            {{product.prodCharElist.sizeMm}}
           </div>
         </div>
         <div class="row-property">
@@ -177,7 +180,7 @@
             Number of Fragments:
           </div>
           <div class="row-property-value">
-
+            {{product.prodCharElist.numberOfFragments}}
           </div>
         </div>
       </div>
@@ -186,7 +189,7 @@
   </mat-card>
 </div>
 
-<div class="details-container">
+<div class="details-container margintop30px">
   <mat-card class="bordergray">
     <mat-card-title class="title2">
       Active Ingredient ({{product.prodActiveElistList.length}})
@@ -195,6 +198,7 @@
       <table class="blueTable">
         <thead>
           <tr>
+            <th>#</th>
             <th>Name</th>
             <th>Active Moiety Name</th>
             <th>Structure</th>
@@ -203,10 +207,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let x of product.prodActiveElistList">
-            <td>{{ x.name }}</td>
-            <td>{{ x.activeMoietyName }}</td>
-            <td></td>
+          <tr *ngFor="let x of product.prodActiveElistList; let i = index">
+            <td>{{i + 1}}</td>
+            <td>
+              <div *ngIf="x.substanceId">
+                <a [routerLink]="['/substances', x.substanceId]" target="_blank">{{x.name}}</a>
+              </div>
+            </td>
+            <td>{{ x.activeMoietyName }}
+            </td>
+            <td class="textaligncenter">
+              <div *ngIf="x.substanceId">
+                <img class="structure-img" [src]="getSafeStructureImgUrl(x.substanceId)">
+              </div>
+            </td>
             <td>{{ x.unii }}</td>
             <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
           </tr>
@@ -216,7 +230,7 @@
   </mat-card>
 </div>
 
-<div class="details-container">
+<div class="details-container margintop30px">
   <mat-card class="bordergray marginbottom80px">
     <mat-card-title class="title2">
       Inactive Ingredient&nbsp;({{product.prodInactiveElistList.length}})
@@ -225,14 +239,20 @@
       <table class="blueTable">
         <thead>
           <tr>
+            <th>#</th>
             <th>Name</th>
             <th>Unii</th>
             <th>Strength Number (Unit)</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let x of product.prodInactiveElistList">
-            <td>{{ x.name }}</td>
+          <tr *ngFor="let x of product.prodInactiveElistList; let i = index">
+            <td>{{i + 1}}</td>
+            <td>
+              <div *ngIf="x.substanceId">
+                <a [routerLink]="['/substances', x.substanceId]" target="_blank">{{x.name}}</a>
+              </div>
+            </td>
             <td>{{ x.unii }}</td>
             <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
           </tr>

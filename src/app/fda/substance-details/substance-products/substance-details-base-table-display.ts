@@ -8,7 +8,7 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
 
   totalRecords: 0;
   public results: Array<any> = [];
-  
+
   @Input() bdnum: string;
 
   ngOnInit(): void {

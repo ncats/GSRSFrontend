@@ -88,6 +88,21 @@
 	font-size: 12px;
 }
 
+.row-property-key-3 {
+	min-width: 18%;
+	max-width: 18%;
+	padding: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.row-property-value-3 {
+	min-width: 82%;
+	max-width: 82%;
+	padding: 6px;
+	font-size: 12px;
+}
+
 .title {
   font-size: 15px;
   font-weight: bold;
@@ -191,32 +206,40 @@ table.blueTable {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   /*font-family: Verdana, Geneva, sans-serif;*/
   border: 1px solid #1C6EA4;
-  background-color: #EEEEEE;
+  background-color: #f2f2f2;
   width: 100%;
   text-align: left;
   border-collapse: collapse;
 }
+
 table.blueTable td, table.blueTable th {
   border: 1px solid #AAAAAA;
   padding: 3px 2px;
 }
+
 table.blueTable tbody td {
   font-size: 12px;
   vertical-align: top;
+  padding: 10px 10px;
 }
+
 table.blueTable tr:nth-child(even) {
-  background: #DAE9F5;
+  background: #f5faee;
 }
+
 table.blueTable thead {
-  background: #1C6EA4;
+  background:  #e8ebe1;
   border-bottom: 1px solid #444444;
 }
+
 table.blueTable thead th {
   font-size: 12px;
-  font-weight: 400;
-  color: #FFFFFF;
+  font-weight: 700;
+  color: #1a1a1a;
   border-left: 1px solid #D0E4F5;
+  padding: 10px 10px;
 }
+
 table.blueTable thead th:first-child {
   border-left: none;
 }
@@ -228,12 +251,15 @@ table.blueTable tfoot {
   background: #D0E4F5;
   border-top: 2px solid #444444;
 }
+
 table.blueTable tfoot td {
   font-size: 14px;
 }
+
 table.blueTable tfoot .links {
   text-align: right;
 }
+
 table.blueTable tfoot .links a{
   display: inline-block;
   background: #1C6EA4;

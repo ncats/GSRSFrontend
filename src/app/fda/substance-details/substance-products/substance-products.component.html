@@ -1,7 +1,8 @@
-<mat-tab-group>
-  
-  <mat-tab label="Product">
-    <!--
+<div class="bordergray">
+  <mat-tab-group>
+
+    <mat-tab label="Product">
+      <!--
     <div class="flex-row">
       <span class="middle-fill"></span>
       <mat-form-field [floatLabel]="'never'" class="search">
@@ -9,83 +10,95 @@
       </mat-form-field>
     </div>
     -->
-    <div class="responsive">
-      <table mat-table [dataSource]="paged">
-    
-        <ng-container matColumnDef="productNDC">
-          <th mat-header-cell *matHeaderCellDef> Product NDC </th>
-          <td mat-cell *matCellDef="let product">
-            <div *ngIf="product.fromTable === 'SRS'">
-              <a [routerLink]="['/productDetails', product.id, 'srs']" target="_blank">{{product.productNDC}}</a>
-            </div>
-            <div *ngIf="product.fromTable != 'SRS'">
-              <a [routerLink]="['/productElistDetails', product.id, 'elist']" target="_blank">{{product.productNDC}}</a>
-              <br><span class="font10px colorgray">(Elist)</span>
-            </div>
-          
-          </td>
-        </ng-container>
-       
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Product Name </th>
-          <td mat-cell *matCellDef="let product"> {{product.productName}} </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="nonProprietaryName">
-          <th mat-header-cell *matHeaderCellDef> Non Proprietary Name </th>
-          <td mat-cell *matCellDef="let product"> {{product.nonProprietaryName}} </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="labelerName">
-          <th mat-header-cell *matHeaderCellDef> Labeler Name </th>
-          <td mat-cell *matCellDef="let product"> {{product.labelerName}} </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="applicationNumber">
-          <th mat-header-cell *matHeaderCellDef> Application Number </th>
-          <td mat-cell *matCellDef="let product"> {{product.applicationNumber}} </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="productNameType">
-          <th mat-header-cell *matHeaderCellDef> Product Name Type </th>
-          <td mat-cell *matCellDef="let product"> {{product.productNameType}} </td>
-        </ng-container>
-        
-        <ng-container matColumnDef="ingredientType">
-          <th mat-header-cell *matHeaderCellDef> Ingredient Type </th>
-          <td mat-cell *matCellDef="let product"> {{product.ingredientType}} </td>
-        </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+      <div class="responsive">
+        <table mat-table [dataSource]="paged">
+
+          <ng-container matColumnDef="productNDC">
+            <th mat-header-cell *matHeaderCellDef> Product NDC </th>
+            <td mat-cell *matCellDef="let product">
+              <div *ngIf="product.fromTable === 'SRS'">
+                <a [routerLink]="['/productDetails', product.id, 'srs']" target="_blank">{{product.productNDC}}</a>
+              </div>
+              <div *ngIf="product.fromTable != 'SRS'">
+                <a [routerLink]="['/productElistDetails', product.id, 'elist']"
+                  target="_blank">{{product.productNDC}}</a>
+                <br><span class="font10px colorgray">(Elist)</span>
+              </div>
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Product Name </th>
+            <td mat-cell *matCellDef="let product"> {{product.productName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nonProprietaryName">
+            <th mat-header-cell *matHeaderCellDef> Non Proprietary Name </th>
+            <td mat-cell *matCellDef="let product"> {{product.nonProprietaryName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="labelerName">
+            <th mat-header-cell *matHeaderCellDef> Labeler Name </th>
+            <td mat-cell *matCellDef="let product"> {{product.labelerName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="applicationNumber">
+            <th mat-header-cell *matHeaderCellDef> Application Number </th>
+            <td mat-cell *matCellDef="let product"> {{product.applicationNumber}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="productNameType">
+            <th mat-header-cell *matHeaderCellDef> Product Name Type </th>
+            <td mat-cell *matCellDef="let product"> {{product.productNameType}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ingredientType">
+            <th mat-header-cell *matHeaderCellDef> Ingredient Type </th>
+            <td mat-cell *matCellDef="let product"> {{product.ingredientType}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
+        (page)="getSubstanceProducts($event)" [pageSizeOptions]="[5, 10, 25, 100]">
+      </mat-paginator>
+    </mat-tab>
+
+    <mat-tab label="Application ({{applicationCount}})">
+      <app-substance-application [bdnum]="bdnum" (countApplicationOut)="getApplicationCount($event)">
+      </app-substance-application>
+    </mat-tab>
+
+    <div>
+      <mat-tab label="Clinical Trial ({{clinicalTrialCount}})">
+        <app-substance-clinical-trials [bdnum]="bdnum" (countClinicalTrialOut)="getClinicalTrialCount($event)">
+        </app-substance-clinical-trials>
+      </mat-tab>
     </div>
-    
-    <mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true" (page)="getSubstanceProducts($event)"
-      [pageSizeOptions]="[5, 10, 25, 100]">
-    </mat-paginator>
-  </mat-tab>
-  
-  <mat-tab label="Application">
-    <app-substance-application [bdnum]="bdnum"></app-substance-application>
-  </mat-tab>
 
-  <mat-tab label="Clinical Trial">
-    <app-substance-clinical-trials [bdnum]="bdnum"></app-substance-clinical-trials>
-  </mat-tab>
+    <mat-tab label="Clinical Trial Europe ({{clinicalTrialEuCount}})">
+      <app-substance-clinical-trials-eu [bdnum]="bdnum" (countClinicalTrialEuOut)="getClinicalTrialEuCount($event)">
+      </app-substance-clinical-trials-eu>
+    </mat-tab>
 
-  <mat-tab label="Adverse Event PT">
-    <app-substance-adverseeventpt [bdnum]="bdnum"></app-substance-adverseeventpt>
-  </mat-tab>
+    <mat-tab label="Adverse Event PT ({{advPtCount}})">
+      <app-substance-adverseeventpt [bdnum]="bdnum" (countAdvPtOut)="getAdvPtCount($event)">
+      </app-substance-adverseeventpt>
+    </mat-tab>
 
-  <mat-tab label="Adverse Event DME">
-    <app-substance-adverseeventdme [bdnum]="bdnum"></app-substance-adverseeventdme>
-  </mat-tab>
+    <mat-tab label="Adverse Event DME ({{advDmeCount}})">
+      <app-substance-adverseeventdme [bdnum]="bdnum" (countAdvDmeOut)="getAdvDmeCount($event)">
+      </app-substance-adverseeventdme>
+    </mat-tab>
 
-  <mat-tab label="Adverse Event CVM">
-    <app-substance-adverseeventcvm [bdnum]="bdnum"></app-substance-adverseeventcvm>
-  </mat-tab>
+    <mat-tab label="Adverse Event CVM ({{advCvmCount}})">
+      <app-substance-adverseeventcvm [bdnum]="bdnum" (countAdvCvmOut)="getAdvCvmCount($event)">
+      </app-substance-adverseeventcvm>
+    </mat-tab>
 
-</mat-tab-group>
-
-
+  </mat-tab-group>
+</div>

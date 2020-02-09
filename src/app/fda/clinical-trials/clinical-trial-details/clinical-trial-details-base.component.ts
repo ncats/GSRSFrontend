@@ -65,7 +65,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     }, 5000);
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 600): SafeUrl {
+  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size, true);
   }
 }

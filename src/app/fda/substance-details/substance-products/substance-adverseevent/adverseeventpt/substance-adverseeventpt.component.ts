@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
@@ -11,6 +11,10 @@ import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/su
 })
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+
+  advPtCount = 0;
+
+  @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'ptTerm',
@@ -38,6 +42,9 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
     this.adverseEventService.getSubstanceAdverseEventPt(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
+      this.advPtCount = results.length;
+      console.log('PT Count: ' + this.advPtCount);
+      this.countAdvPtOut.emit(this.advPtCount);
     });
 
 /*
