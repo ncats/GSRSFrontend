@@ -1,3 +1,14 @@
+.clinical-trials-browse-edit1 {
+  text-decoration: none;
+}
+
+.clinical-trials-browse-edit2 {
+  text-decoration: none; 
+  font-size:  1.5em;
+  padding: .5em;
+}
+
+
 .clinical-trials-browse-wrapper {
   padding: 10px;
   margin-top: 60px;
@@ -8,9 +19,29 @@
 
 .clinical-trials-browse-filter-form { 
   margin-right: 10px;
-  float: left;
 }
 
 .clinical-trials-browse-filter-form-button { 
-  position: relative; top: 12px; float: left; margin-right: 10px;
+  margin-right: 10px;
+}
+
+.clinical-trials-browse-filter-form-help-button-open { 
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.clinical-trials-browse-filter-form-searchTerm {
+  margin-right: 10px;  
+}
+
+.clinical-trials-browse-filter-form-searchType {
+  margin-right: 10px; 
+}
+
+
+.show-help-box {
+  max-width: 600px;
+  
 }
