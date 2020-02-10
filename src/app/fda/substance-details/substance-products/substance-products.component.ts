@@ -16,6 +16,7 @@ import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adve
 
 export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, AfterViewInit {
 
+  productCount = 0;
   applicationCount = 0;
   clinicalTrialCount = 0;
   clinicalTrialEuCount = 0;
@@ -96,6 +97,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
     this.productService.getSubstanceProducts(this.substance.uuid, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
+      this.productCount = results.length;
     });
   }
 

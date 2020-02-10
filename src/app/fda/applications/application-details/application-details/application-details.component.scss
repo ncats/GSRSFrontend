@@ -53,8 +53,8 @@
   }
   
   .row-property-key {
-      min-width: 35%;
-      max-width: 35%;
+      min-width: 45%;
+      max-width: 45%;
       padding: 7px;
     font-size: 12px;
     font-weight: 500;
@@ -62,8 +62,8 @@
   }
   
   .row-property-value {
-      min-width: 65%;
-      max-width: 65%;
+      min-width: 55%;
+      max-width: 55%;
       padding: 7px;
       font-size: 12px;
   }
@@ -107,6 +107,20 @@
     white-space: nowrap;
     white-space: normal;
     font-size:18px;
+    font-weight: 500;
+    padding-bottom: 5px;
+  }
+
+  .title3 {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+    white-space: normal;
+    font-size:14px;
+    color: navy;
   }
 
   .margintopneg10px {

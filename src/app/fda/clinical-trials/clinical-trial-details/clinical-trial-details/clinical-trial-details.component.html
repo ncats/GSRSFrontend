@@ -15,7 +15,7 @@
         &nbsp;&nbsp;&nbsp;
         <!--
         <a [routerLink]="['/edit-clinical-trial', clinicalTrial.nctNumber]" target="_blank" title="Update Clinical Trial US">Update</a>
-        -->  
+        -->
       </div>
     </div>
 
@@ -358,11 +358,16 @@
                   <tbody>
                     <tr *ngFor="let x of clinicalTrial.clinicalTrialDrug; let i = index">
                       <td>{{i+1}}</td>
-                      <td>{{x.substanceDisplayName}}</td>
                       <td>
-                          <div *ngIf="x.substanceId">
-                              <img class="structure-img" [src]="getSafeStructureImgUrl(x.substanceId)">
-                            </div>
+                        <div *ngIf="x.substanceUuid">
+                          <a [routerLink]="['/substances', x.substanceUuid]"
+                            target="_blank">{{x.substanceDisplayName}}</a>
+                        </div>
+                      </td>
+                      <td>
+                        <div *ngIf="x.substanceUuid">
+                          <img class="structure-img" [src]="getSafeStructureImgUrl(x.substanceUuid)">
+                        </div>
                       </td>
                     </tr>
                   </tbody>

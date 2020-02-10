@@ -21,7 +21,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     'nctNumber',
     'title',
     'sponsorName',
-    'productName' 
+    'productName'
   ];
 
   constructor(
