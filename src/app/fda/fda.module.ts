@@ -16,6 +16,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ProductDetailsBaseComponent } from './product/product-details/product-details-base.component';
 import { ProductDetailsComponent } from './product/product-details/product-details/product-details.component';
 import { ProductElistDetailsComponent } from './product/product-details/product-elist-details/product-elist-details.component';
+import { ApplicationsBrowseComponent } from './applications/applications-browse/applications-browse.component';
+import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
 
 const fdaRoutes: Routes = [
   {
@@ -29,6 +31,14 @@ const fdaRoutes: Routes = [
   {
     path: 'productDetails/:id/:src',
     component: ProductDetailsComponent
+  },
+  {
+    path: 'browse-applications',
+    component: ApplicationsBrowseComponent
+  },
+  {
+    path: 'browse-clinical-trial',
+    component: ClinicalTrialsBrowseComponent
   }
 ];
 
