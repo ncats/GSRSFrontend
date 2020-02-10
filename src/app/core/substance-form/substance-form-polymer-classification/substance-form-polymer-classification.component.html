@@ -1,0 +1,30 @@
+<div class="name-form-container" *ngIf = "classification">
+  <div class="form-row">
+    <div class = "field-container">
+      <div class = "field-row">
+      <app-cv-input class = "class" domain = "POLYMER_CLASS" title = "Polymer Class"
+                    (valueChange) = "updateClass($event)" [model] = "classification.polymerClass"></app-cv-input>
+        <app-cv-input class = "type" domain = "POLYMER_SOURCE_TYPE" title = "Source Type"
+                      (valueChange) = "updateType($event)" [model] = "classification.sourceType"></app-cv-input>
+
+      </div>
+      <div class = "field-row">
+        <app-tag-selector  placeholder = "polymer subclass" class = "tags subtype"
+                           (tagsUpdate)="update($event)" [tags]="classification.polymerSubClass"
+                           cvDomain="POLYMER_SUBCLASS"></app-tag-selector>
+      <app-cv-input class = "geometry" domain = "POLYMER_GEOMETRY" title = "Polymer Geometry"
+                    [model] = "classification.polymerGeometry" (valueChange)="updateGeometry($event)"></app-cv-input>
+
+    </div>
+    </div>
+    <div class="flex-column related-substance">
+      <app-substance-selector (selectionUpdated)="parentSubstanceUpdated($event)"
+                              eventCategory="substanceRelationshipRelatedSub" placeholder="Parent Substance" header="Parent Substance"
+                              [subuuid]="relatedSubstanceUuid">
+      </app-substance-selector>
+    </div>
+    <app-access-manager (accessOut)="updateAccess($event)" [access]="classification.access">
+    </app-access-manager>
+  </div>
+</div>
+

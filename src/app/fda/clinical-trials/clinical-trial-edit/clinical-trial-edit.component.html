@@ -1,5 +1,3 @@
-
-
 <div class="example-container mat-elevation-z8 clinical-trial-edit-page">
 	<div  *ngIf="clinicalTrial">
     <p *ngIf="clinicalTrial.nctNumber"><a target="_new" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a>
@@ -47,10 +45,10 @@
 					{{element.name}}
 				</span> 
 				<span *ngIf="isAdmin">
-					<mini-search [myIndex]="i" [myInitialSearch]="element && element.name" (miniSearchOutput)="reportMiniSearchOutput($event)"></mini-search>
+					<app-mini-search [myIndex]="i" [myInitialSearch]="element && element.name" (miniSearchOutput)="reportMiniSearchOutput($event)"></app-mini-search>
 				</span>
 			</mat-cell>
-!		</ng-container>
+		</ng-container>
 		<!-- substanceUuid -->
 		<ng-container matColumnDef="substanceUuid">
 			<mat-header-cell *matHeaderCellDef> Substance UUID </mat-header-cell>
@@ -188,5 +186,4 @@
 			<div>miniSearchOutputReported: {{miniSearchOutputReported}}</div>
 		</div>
 	</div>
-
 </div>

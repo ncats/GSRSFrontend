@@ -6,11 +6,14 @@ import { BaseHttpService } from '@gsrs-core/base';
 import { ClinicalTrial } from './clinical-trial.model';
 import { BdnumNameAll } from './clinical-trial.model';
 import { PagingResponse } from '@gsrs-core/utils';
+import { map } from 'rxjs/operators';
 import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
 import { ClinicalTrialHttpParams } from '../misc/clinical-trial-http-params';
 
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
+
+  totalRecords: 0;
 
   constructor(
     public http: HttpClient,
@@ -32,21 +35,22 @@ export class ClinicalTrialService extends BaseHttpService {
     if (!args.searchTerm) {  args.searchTerm = ''; }
     if (!args.pageSize) {  args.pageSize = 10; }
     if (!args.skip) {  args.skip = 0; }
-     console.log("args.pageSize: "+ args.pageSize);
-
+    console.log('args.searchTerm: ' + args.searchTerm);
     let params = new ClinicalTrialHttpParams();
     params = params.append('skip', args.skip.toString());
     params = params.append('top', args.pageSize.toString());
     if (args.searchTerm !== null && args.searchTerm !== '') {
       if (args.type !== null && args.type !== '') {
-        if (args.type == 'uuid' ) {
-          params = params.append('q', "root_clinicalTrialDrug_substanceUuid:\"^"+ args.searchTerm +"$\"");
-        } else if (args.type == 'title') {
-          params = params.append('q', "root_title:\""+ args.searchTerm +"\"");
-        } else { 
+        if (args.type === 'nctNumber' ) {
+          params = params.append('q', 'root_NCT Number:\"^' + args.searchTerm + '$\"');
+        } else if (args.type === 'substanceUuid' ) {
+          params = params.append('q', 'root_suuids:\"^' + args.searchTerm + '$\"');
+        } else if (args.type === 'title') {
+          params = params.append('q', 'root_title:\"' + args.searchTerm + '\"');
+        } else {
           params = params.append('q', args.searchTerm);
         }
-      } else { 
+      } else {
         params = params.append('q', args.searchTerm);
       }
     }
@@ -59,6 +63,28 @@ export class ClinicalTrialService extends BaseHttpService {
     };
     return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
   }
+
+
+ // need to resolve
+ getClinicalTrials_archana (
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string
+  ): Observable<PagingResponse<ClinicalTrial>> {
+    let params = new HttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+    const url = `${this.apiBaseUrl}ctclinicaltrial/search`;
+    const options = {
+      params: params
+    };
+    return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
+  }
+
+
 
   deleteClinicalTrial(id: string): Observable<any> {
     const url = `${this.apiBaseUrl}ctclinicaltrial(${id})`;
@@ -138,4 +164,30 @@ export class ClinicalTrialService extends BaseHttpService {
     const x = this.http.put<ClinicalTrial>(url, body, options);
     return x;
   }
+
+  getSubstanceClinicalTrials(
+    bdnum: string, page: number, pageSize: number
+  ): Observable<Array<any>> {
+    const url = this.baseUrl + 'clinicalTrialListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
+      })
+    );
+  }
+
+  getClinicalTrialDetails(
+    nctNumber: string, src: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'clinicalTrialDetails2?nctNumber=' + nctNumber + '&src=' + src;
+
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
 }

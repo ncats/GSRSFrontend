@@ -50,6 +50,10 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnDestroy() {}
 
+  molvecUpdate(mol: any) {
+    this.editor.setMolecule(mol);
+  }
+
   editorOnLoad(editor: Editor): void {
     this.loadingService.setLoading(false);
     this.editor = editor;

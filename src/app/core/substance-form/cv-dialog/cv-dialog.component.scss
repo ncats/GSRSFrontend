@@ -1,0 +1,19 @@
+.form-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+
+  .value, .display, .description {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+}
+
+
+.value, .display {
+  max-width: 23%;
+}
+
+.description {
+  max-width:50%;
+}

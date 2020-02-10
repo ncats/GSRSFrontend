@@ -1,0 +1,39 @@
+<div class="counts-container" *ngIf="searchCount">
+    <div class="counts-column">
+        <div>
+            Applicaction Count:
+        </div>
+        <div>
+            <div innerHTML="{{searchCount.appCountConcat}}"></div>
+        </div>
+    </div>
+    <div class="counts-column">
+        <div>
+            Product Count:
+        </div>
+        <div>
+            <span>Active: </span>
+            <span>{{searchCount.prodActiveCount}}</span>
+        </div>
+        <div>
+            <span>Inactive: </span>
+            <span>{{searchCount.prodInactiveCount}}</span>
+        </div>
+    </div>
+    <div class="counts-column">
+        <div>
+            Clinical Trial Count:
+        </div>
+        <div>
+            {{searchCount.clinicalCount}}
+        </div>
+    </div>
+    <div class="counts-column">
+        <div>
+            Adverse Event Count:
+        </div>
+        <div>
+            {{searchCount.adverseEventCount}}
+        </div>
+    </div>
+</div>

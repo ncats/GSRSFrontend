@@ -30,13 +30,13 @@ import { FacetFilterPipe } from '../../utils/facet-filter.pipe';
 })
 
 export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
-  private privateSearchTerm?: string;
-  private privateSearchType?: string = 'all';
+  public privateSearchTerm = '';
+  private privateSearchType = 'all';
   private privateSearchCutoff?: number;
   public clinicalTrials: Array<ClinicalTrial>;
   public facets: Array<Facet> = [];
   private privateFacetParams: ClinicalTrialFacetParam;
-  showHelp: boolean = false;
+  showHelp = false;
   pageIndex: number;
   pageSize: number;
   totalClinicalTrials: number;
@@ -120,33 +120,37 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
 
   ngOnInit() {
 
-    this.authService.hasRolesAsync('admin').subscribe(response => {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.facets = [];
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
+    this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || 'all';
+    this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
+    this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+    this.facetString = this.activatedRoute.snapshot.queryParams['facets'] || '';
+    this.facetsFromParams();
+    // this.searchSubstances();
+    // ??
+    // this.overlayContainer = this.overlayContainerService.getContainerElement();
+    // this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
       this.isAdmin = response;
-      // console.log('clinical-trial-edit isAdmin: ' + this.isAdmin);
       if (this.isAdmin) {
         this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated', 'delete'];
        } else {
          this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated'];
        }
     });
-    this.pageSize = 10;
-    this.pageIndex = 0;
-    this.searchTypes=[{"title": "All", 'value': 'all'}, {"title": "Title", 'value': 'title'}, {"title": "UUID", 'value': 'uuid'}];
-    // this._searchTerm = '';
-    this.facets = [];
-
-    this.activatedRoute.queryParamMap.subscribe(params => {
-      if (params.get('pageSize')) {
-        this.pageSize = parseInt(params.get('pageSize'), null);
-      }
-      if (params.get('pageIndex')) {
-        this.pageIndex = parseInt(params.get('pageIndex'), null);
-      }
-      this.facetString = params.get('facets') || '';
-      this.facetsFromParams();
-
-      this.searchClinicalTrials();
-    });
+    this.searchTypes = [
+      {'title': 'All', 'value': 'all'},
+      {'title': 'Title', 'value': 'title'},
+      // Yes, Keep for later.
+      // {'title': 'NCT Number', 'value': 'nctNumber'},
+      // {'title': 'UUID', 'value': 'substanceUuid'}
+    ];
+    this.searchClinicalTrials();
   }
 
   changePage(pageEvent: PageEvent) {
@@ -163,20 +167,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     this.searchClinicalTrials();
   }
 
-
-  jumpToClinicalTrial() {
-    if (this.jumpToValue === null) {
-      alert('Undefined NCT Number.');
-      return;
-    }
-    this.jumpToValue = this.jumpToValue.trim();
-    if (!(this.jumpToValue.match('^NCT\\d+'))) {
-      alert('Bad NCT Number.');
-      return;
-    }
-    this.router.navigate(['/edit-clinical-trial', this.jumpToValue]);
-  }
-
   deleteClinicalTrial(id) {
     this.loadingService.setLoading(true);
     this.clinicalTrialService.deleteClinicalTrial(id)
@@ -189,6 +179,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
                 // console.log('clinical-trials-browse ui found item to delete.');
               }
               i++;
+              this.dataSource = this.dataSource;
         });
         const notification: AppNotification = {
           message: 'You deleted the clinical trial record for:' + id,
@@ -199,8 +190,9 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
         this.notificationService.setNotification(notification);
+        // the method is called but
+        // can't get refresh after delete ???
         this.searchClinicalTrials();
-
       }, error => {
         const notification: AppNotification = {
           message: 'There was an error trying to delete a clinical trial.',
@@ -263,9 +255,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
+    }
   }
-  }
-
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
@@ -525,7 +516,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
   }
 
   set searchType(s: string) {
-    console.log("here" + s);
     this.privateSearchType = s;
   }
 
@@ -533,7 +523,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     return this.privateSearchType;
   }
 
-  toggleShowHelp() { 
+  toggleShowHelp() {
     this.showHelp = !this.showHelp;
   }
 

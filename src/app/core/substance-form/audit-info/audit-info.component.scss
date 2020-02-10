@@ -1,0 +1,23 @@
+.audit-container {
+  width:100%;
+  display:flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding-left: 15px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding-top: 10px;
+  padding-bottom: 2px;
+}
+
+.spacer {
+  padding-left: 5px;
+  padding-right: 10px;
+}
+
+.static {
+  padding-right: 3px;
+}
+
+.name, .date {
+  padding-right:5px;
+}

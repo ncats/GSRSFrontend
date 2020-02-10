@@ -1,18 +1,20 @@
 <div class="top-fixed">
   <div class="actions-container">
+    <button mat-flat-button color="primary" class = "validate-button" (click)="showJSON()" >Show JSON</button>
+
     <button mat-button (click)="toggleValidation()" [disabled]="isLoading" *ngIf="validationMessages && validationMessages.length > 0">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
     </button>
     <span class="middle-fill"></span>
-    <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading ||  (validationMessages && validationMessages.length > 0) || (this.validationResult == false)">Submit</button>
-    <button mat-flat-button color="primary" class = "validate-button" (click)="validate()" >Validate</button>
+    <button mat-flat-button color="primary" class = "validate-button" (click)="validate()" >Validate and Submit</button>
   </div>
   <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
     <div class="submission-message" *ngIf="submissionMessage">
       {{submissionMessage}}
     </div>
-    <div *ngIf="validationMessages && validationMessages.length > 0">
-      <div class="submission-message">
+    <div *ngIf="validationMessages">
+<span *ngIf = " validationMessages.length > 0"   >
+   <div class="submission-message">
         Please correct or dismiss the following errors and submit again:
       </div>
       <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
@@ -22,9 +24,10 @@
           <mat-icon svgIcon="cancel"></mat-icon>
         </button>
       </div>
+</span>
       <div class="dismiss-container">
         <span class="middle-fill"></span>
-        <button mat-button (click)="dismissAllValidationMessages()" [disabled]="isLoading">Dismiss messages</button>
+        <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}} Submit</button>
       </div>
     </div>
   </div>

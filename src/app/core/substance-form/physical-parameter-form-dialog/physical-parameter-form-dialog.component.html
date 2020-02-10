@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>{{isNew ? 'Add' : 'Edit'}} Parameter</h1>
+<div mat-dialog-content>
+  <div class="flex-row">
+    <span class="middle-fill"></span>
+    <button mat-button (click)="addStructuralModificationParameter()">
+      Add Parameter <mat-icon svgIcon="add_circle_outline"></mat-icon>
+    </button>
+  </div>
+  <div *ngIf="parameters">
+    <div *ngFor = "let parameter of parameters;index as index; last as last">
+      <div class="form-row">
+    <app-physical-parameter-form [parameter] = "parameter">
+    </app-physical-parameter-form>
+      </div>
+      <mat-divider class="form-divider" [inset]="true" *ngIf="!last"></mat-divider>
+    </div>
+    <div class="form-row">
+    <div class="actions">
+      <span class="middle-fill"></span>
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button mat-button [disabled]="!parameters" (click)="save()">
+        Save
+      </button>
+    </div>
+    </div>
+
+</div>

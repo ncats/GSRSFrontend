@@ -1,6 +1,9 @@
 <div *ngIf="definition">
+  <div class="substance-form-row form-header">
+    {{uuid ? 'Editing' : 'Registering New'}} {{substanceClass.toUpperCase()}}
+  </div>
   <div class="substance-form-row">
-    <mat-form-field>
+    <mat-form-field *ngIf = 'definition.substanceClass !== "concept"'>
       <mat-label>Definition Type</mat-label>
       <mat-select [(ngModel)]="definition.definitionType" name="definitionType" (selectionChange)="updateDefinitionType($event)" required>
         <mat-option *ngFor="let defitionType of definitionTypes" [value]="defitionType.value">
@@ -9,14 +12,14 @@
       </mat-select>
     </mat-form-field>
     <div class="primary-substance-container" *ngIf="definition.definitionType == 'ALTERNATIVE'">
-      <app-substance-selector (selectionUpdated)="primartySubstanceUpdated($event)" 
+      <app-substance-selector (selectionUpdated)="primartySubstanceUpdated($event)"
         eventCategory="substanceFormDefinitionType"
         placeholder="Primary Substance"
         header="Primary Substance"
         [subuuid]="primarySubUuid">
       </app-substance-selector>
     </div>
-    <mat-form-field>
+    <mat-form-field  *ngIf = 'definition.substanceClass !== "concept"'>
       <mat-label>Definition Level</mat-label>
       <mat-select [(ngModel)]="definition.definitionLevel" name="definitionLevel" (selectionChange)="updateDefinition()">
         <mat-option *ngFor="let defitionLevel of definitionLevels" [value]="defitionLevel.value">
@@ -30,10 +33,92 @@
     <div>
       <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access"></app-access-manager>
     </div>
+    <div class = 'redirect-links' *ngIf = "definition.uuid" >
+      <a [href]="getRedirect()" target = "_blank" matTooltip= "open old edit form in new tab">
+        Old edit form <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
+      </a>
+      <br/>
+      <a [routerLink]="['/substances', uuid]" target = "_blank" matTooltip= "open details page in new tab">
+        Details page <mat-icon class = "icon" svgIcon="open_in_new"></mat-icon>
+      </a>
+    </div>
   </div>
-  <div class="substance-form-row" *ngIf="definition.substanceClass != 'concept'">
+  <div class = "substance-form-row advanced-row" *ngIf = "isAdmin === true">
+    <div class = "admin-functions">
+      <mat-form-field>
+        <mat-label>Advanced Features</mat-label>
+        <mat-select name="Feature" [ngModel]="feature" (selectionChange)="useFeature($event)" >
+          <mat-option value="changeClass" [disabled] = "!uuid">
+            Change Substance Class
+          </mat-option>
+          <mat-option value="setStatus">
+            Change Status to approved / pending
+          </mat-option>
+          <mat-option value="setDef">
+            Set Definition to private / public
+          </mat-option>
+          <mat-option value="unapprove">
+            Un-approve record (Remove approval ID)
+          </mat-option>
+          <mat-option value="concept"  [disabled]="definition.substanceClass != 'concept'" >
+            Set concept status to non-approved
+          </mat-option>
+          <mat-option value="glyco"  [disabled]="definition.substanceClass != 'protein'" >
+            Predict N-Glycosylation Sites
+          </mat-option>
+          <mat-option value="disulfide"  [disabled]="definition.substanceClass != 'protein'" >
+            Predict disulfide links by protein type
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class = "unapprove advanced" *ngIf  = "feature === 'unapprove'">
+      <span>Are you sure you'd like to remove the approvalID?</span>
+      <button mat-flat-button (click) ="unapprove()">Confirm</button>
+      <button mat-flat-button (click) = "feature = ''">Cancel</button>
+
+
+    </div>
+    <div class = "changeClass advanced" *ngIf  = "feature === 'changeClass'">
+      <mat-form-field>
+        <mat-label>New Class</mat-label>
+        <mat-select name="definitionType" (selectionChange)="changeClass($event)" >
+          <mat-option *ngFor="let class of classes" [value]="class" [disabled] = "class === definition.substanceClass">
+            {{class}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class = "set-def advanced" *ngIf  = "feature === 'setDef'">
+      <span> Set Definition to</span>
+      <button mat-flat-button (click) ="setPrivate()">Private</button>
+      <button mat-flat-button (click) ="setPublic()">Public</button>
+
+    </div>
+    <div class = 'set-status advanced' *ngIf  = "feature === 'setStatus'">
+      <label id="status-label">Set Status: </label>
+      <mat-radio-group
+        [ngModel]="status"
+        (change)="changeStatus($event)"
+        aria-labelledby="example-radio-group-label"
+        class="status-group">
+        <mat-radio-button class="status"  value = "approved" [checked] = "status === 'approved'">
+          Approved
+        </mat-radio-button>
+        <mat-radio-button class="status"  value = "pending" [checked] = "status === 'pending'">
+          Pending
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+  <div class="substance-form-row" *ngIf="definition.substanceClass !== 'concept'">
     <div class="references-container">
       <app-domain-references [referencesUuids]="definition.references" #references></app-domain-references>
     </div>
   </div>
+
+  <div class = "substance-form-row" *ngIf="definition.substanceClass === 'concept'">
+    Concepts have no defining information, but are collections of terms, codes and related information. <br/> They can be promoted to a defined substance at a later time, when appropriate.
+  </div>
+  <app-audit-info [source] = "definition"></app-audit-info>
 </div>

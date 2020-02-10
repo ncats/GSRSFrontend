@@ -1,3 +1,18 @@
+<div appDragDropPaste (dropHandler)="onDropHandler($event)">
+
 <ncats-ketcher-wrapper [ketcherFilePath]="ketcherFilePath" (ketcherOnLoad)="ketcherOnLoad($event)" *ngIf="structureEditor == 'ketcher'">
 </ncats-ketcher-wrapper>
 <ncats-jsdraw-wrapper (jsDrawOnLoad)="jsDrawOnLoad($event)" *ngIf="structureEditor == 'jsdraw'"></ncats-jsdraw-wrapper>
+
+<div id ="canvas-container">
+  <div>Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file</div>
+  <div id = "canvas-label canvas" *ngIf = "height > 0">Original Image:
+    <a class = "blue-font toggle" (click) = "canvasToggle = !canvasToggle">{{canvasToggle? 'hide': 'show'}}</a>
+  </div>
+  <div [hidden]="!canvasToggle">
+    <div class = "canvas-message canvas" *ngIf = "canvasMessage !== ''">{{canvasMessage}}</div>
+    <canvas #structure_canvas id = "structure_canvas" [height] = 'height' [width] = "width" >
+    </canvas>
+  </div>
+</div>
+</div>

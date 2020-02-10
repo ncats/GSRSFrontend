@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { StructureEditorComponent } from './structure-editor.component';
+import {DragDropPasteDirective} from '@gsrs-core/substance-form/substance-form-structure/drag-drop-paste.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { StructureEditorComponent } from './structure-editor.component';
   ],
   declarations: [
     StructureImportComponent,
-    StructureEditorComponent
+    StructureEditorComponent,
+    DragDropPasteDirective
   ],
   exports: [
     StructureImportComponent,

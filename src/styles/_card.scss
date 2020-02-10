@@ -1,8 +1,9 @@
 .mat-card {
-    max-width: 1028px;
+    max-width: 1228px;
     width: 100%;
     box-sizing: border-box;
     margin-bottom: 20px;
+    margin: auto;
 }
 
 .mat-card-title {
@@ -20,4 +21,33 @@
         flex-direction: column;
         align-items: flex-start;
     }
+}
+
+.alternate-backgrounds {
+
+  &:nth-child(odd) {
+    background-color: rgba(68, 138, 255, .07);
+
+    ::ng-deep {
+
+      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+        background-color: rgba(68, 138, 255, .15);
+      }
+    }
+  }
+
+  &:nth-child(even) {
+    ::ng-deep {
+
+      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+        background-color: rgba(128, 128, 128, .15);
+      }
+    }
+  }
+
+  ::ng-deep {
+    .mat-expansion-panel, .mat-table, textarea {
+      background-color: transparent;
+    }
+  }
 }

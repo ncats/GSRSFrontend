@@ -14,15 +14,18 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical-trials-browse.component';
 import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
 import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
 import { MiniSearchComponent } from './mini-search/mini-search.component';
 import { ClinicalTrialService } from './clinical-trial/clinical-trial.service';
+import { ClinicalTrialDetailsBaseComponent } from './clinical-trial-details/clinical-trial-details-base.component';
+import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details/clinical-trial-details.component';
+// tslint:disable-next-line: max-line-length
+import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/clinical-trial-europe-details/clinical-trial-europe-details.component';
 import { FacetDisplayPipe } from '../utils/facet-display.pipe';
 import { FacetFilterPipe } from '../utils/facet-filter.pipe';
-
-
 
 const clinicalTrialsRoutes: Routes = [
    {
@@ -36,9 +39,17 @@ const clinicalTrialsRoutes: Routes = [
     {
     path: 'add-clinical-trial',
       component: ClinicalTrialAddComponent
+    },
+    {
+    path: 'clinicalTrialDetails/:nctNumber/:src',
+      component: ClinicalTrialDetailsComponent
+    },
+    {
+    path: 'clinicalTrialEuropeDetails/:nctNumber/:src',
+      component: ClinicalTrialEuropeDetailsComponent
     }
 ];
-
+// abcd
 @NgModule({
   imports: [
     MatTableModule,
@@ -51,6 +62,7 @@ const clinicalTrialsRoutes: Routes = [
     MatSidenavModule,
     MatExpansionModule,
     MatCardModule,
+    MatTabsModule,
     ReactiveFormsModule,
     FormsModule,
     MatCheckboxModule,
@@ -59,18 +71,21 @@ const clinicalTrialsRoutes: Routes = [
     RouterModule.forChild(clinicalTrialsRoutes)
   ],
   declarations: [
+    MiniSearchComponent,
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
     ClinicalTrialAddComponent,
-    MiniSearchComponent,
     FacetFilterPipe,
-    FacetDisplayPipe
+    FacetDisplayPipe,
+    ClinicalTrialDetailsComponent,
+    ClinicalTrialEuropeDetailsComponent,
+    ClinicalTrialDetailsBaseComponent
   ],
   exports: [
+    MiniSearchComponent,
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
-    ClinicalTrialAddComponent,
-    MiniSearchComponent
+    ClinicalTrialAddComponent
   ]
 })
 export class ClinicalTrialsModule {

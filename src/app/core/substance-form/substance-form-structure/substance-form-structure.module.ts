@@ -9,6 +9,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
+import { DragDropPasteDirective } from '@gsrs-core/substance-form/substance-form-structure/drag-drop-paste.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,7 @@ import { NameResolverModule } from '../../name-resolver/name-resolver.module';
     NameResolverModule
   ],
   declarations: [
-    SubstanceFormStructureComponent
+    SubstanceFormStructureComponent,
   ]
 })
 export class SubstanceFormStructureModule { }

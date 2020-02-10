@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Add Term to CV - {{vocabulary.domain}}</h1>
+<div mat-dialog-content>
+
+  <div>
+    <div  class = 'form-row'>
+      <mat-form-field class="value">
+        <input matInput placeholder="Value" [(ngModel)]="term.value" required name="value" />
+      </mat-form-field>
+      <mat-form-field class="display">
+        <input matInput placeholder="display" [(ngModel)]="term.display" required name="display" />
+      </mat-form-field>
+      <mat-form-field class="description">
+        <input matInput placeholder="description" [(ngModel)]="term.description" required name="description" />
+      </mat-form-field>
+    </div>
+
+    <br/><br/>
+    <div class = 'message-field'>{{message}}</div>
+    <div class="actions">
+      <span class="middle-fill"></span>
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button mat-button [disabled]="!term.description || term.value === ''" (click)="submit()">
+        Save
+      </button>
+    </div>
+  </div>
+</div>

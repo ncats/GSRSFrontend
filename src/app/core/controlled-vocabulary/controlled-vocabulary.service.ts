@@ -150,21 +150,15 @@ export class ControlledVocabularyService extends BaseHttpService {
               }
 
               singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms.sort(function(a, b) {
-                if (a.display == null) {
+                const termA = a.display.toUpperCase();
+                const termB = b.display.toUpperCase();
+                if (termA < termB) {
                   return -1;
-                } else if (b.display == null) {
-                  return 1;
-                } else {
-                  const termA = a.display.toUpperCase();
-                  const termB = b.display.toUpperCase();
-                  if (termA < termB) {
-                    return -1;
-                  }
-                  if (termA > termB) {
-                    return 1;
-                  }
-                  return 0;
                 }
+                if (termA > termB) {
+                  return 1;
+                }
+                return 0;
               });
 
 
@@ -232,5 +226,36 @@ export class ControlledVocabularyService extends BaseHttpService {
         subscription.unsubscribe();
       });
     });
+  }
+
+  public fetchFullVocabulary(domain: string): Observable<any> {
+
+    const url = `${this.apiBaseUrl}vocabularies/search`;
+    let params = new HttpParams();
+    params = params.append('top', '100000');
+
+    let domainLuceneQuery = '';
+    const responseDomainVocabulary: VocabularyDictionary = {};
+    this.vocabularyLoadingIndicators[domain] = true;
+    if (this.vocabularySubject[domain] == null) {
+      this.vocabularySubject[domain] = new Subject();
+    }
+
+    responseDomainVocabulary[domain] = {
+      dictionary: {},
+      list: []
+    };
+
+    domainLuceneQuery += `root_domain:${domain}`;
+    params = params.append('q', domainLuceneQuery);
+    const options = {
+      params: params
+    };
+    return this.http.get<PagingResponse<Vocabulary>>(url, options);
+  }
+
+  public addVocabTerm(vocab: any): Observable<any> {
+    const url = `${this.apiBaseUrl}vocabularies`;
+    return this.http.put( url, vocab);
   }
 }

@@ -3,21 +3,43 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { DynamicComponentLoaderModule } from '@gsrs-core/dynamic-component-loader';
-import { fdaDynamicComponentManifests } from './fda-dynamic-componet-manifests';
+import { fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests } from './fda-dynamic-componet-manifests';
 import { SubstanceCardsModule } from '@gsrs-core/substance-details';
 import { fdaSubstanceCardsFilters } from './substance-details/fda-substance-cards-filters.constant';
-import { ProductService } from './product/product.service';
-import { ProductDetailsComponent } from './product-details/product-details.component';
+import { ProductService } from './product/service/product.service';
 import { MatCardModule } from '@angular/material/card';
 import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
-// import { FacetDisplayPipe } from './utils/facet-display.pipe';
-// import { FacetFilterPipe } from './utils/facet-filter.pipe';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
+import { ApplicationsModule} from './applications/applications.module';
+import { GeneralService} from './service/general.service';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ProductDetailsBaseComponent } from './product/product-details/product-details-base.component';
+import { ProductDetailsComponent } from './product/product-details/product-details/product-details.component';
+import { ProductElistDetailsComponent } from './product/product-details/product-elist-details/product-elist-details.component';
+import { ApplicationsBrowseComponent } from './applications/applications-browse/applications-browse.component';
+import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
 
 const fdaRoutes: Routes = [
   {
     path: 'products/:id',
+    component: ProductElistDetailsComponent
+  },
+  {
+    path: 'productElistDetails/:id/:src',
+    component: ProductElistDetailsComponent
+  },
+  {
+    path: 'productDetails/:id/:src',
     component: ProductDetailsComponent
+  },
+  {
+    path: 'browse-applications',
+    component: ApplicationsBrowseComponent
+  },
+  {
+    path: 'browse-clinical-trial',
+    component: ClinicalTrialsBrowseComponent
   }
 ];
 
@@ -25,14 +47,26 @@ const fdaRoutes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(fdaRoutes),
-    DynamicComponentLoaderModule.forRoot(fdaDynamicComponentManifests),
+    DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
     MatCardModule,
     MatExpansionModule,
-    ClinicalTrialsModule.forRoot()
+    ClinicalTrialsModule.forRoot(),
+    MatTabsModule,
+    ClinicalTrialsModule.forRoot(),
+    ApplicationsModule
   ],
-  declarations: [ProductDetailsComponent],
-  exports: []
+  declarations: [
+    ProductElistDetailsComponent,
+    SubstanceCountsComponent,
+    ProductDetailsBaseComponent,
+    ProductDetailsComponent,
+    ProductElistDetailsComponent
+  ],
+  exports: [],
+  entryComponents: [
+    SubstanceCountsComponent
+  ]
 })
 export class FdaModule {
   constructor(
@@ -46,7 +80,8 @@ export class FdaModule {
     return {
       ngModule: FdaModule,
       providers: [
-        ProductService
+        ProductService,
+        GeneralService
       ]
     };
   }

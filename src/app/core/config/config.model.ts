@@ -4,6 +4,7 @@ export interface Config {
     version?: string;
     substanceDetailsCards?: Array<SubstanceDetailsCard>;
     facets?: { [permission: string]: Array<string> };
+    codeSystemOrder?: Array<string>;
 }
 
 export interface SubstanceDetailsCard {

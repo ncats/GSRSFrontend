@@ -73,4 +73,6 @@ export class StructureImportComponent implements OnInit {
     this.dialogRef.close();
   }
 
+
+
 }

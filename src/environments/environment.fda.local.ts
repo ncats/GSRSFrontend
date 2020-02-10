@@ -3,14 +3,10 @@ import { baseEnvironment } from './_base-environment';
 export const environment = baseEnvironment;
 // __alex__ should make change here.
 environment.navItems = [
-    // {
-    //     display: 'FDA Sample Path',
-    //     path: 'fda-sample-path'
-    // },
-    // {
-    //     display: 'FDA Sample Inheritance',
-    //     path: 'fda-sample-inheritance'
-    // }
+    {
+        display: 'Browse Application',
+        path: 'browse-applications'
+    },
     {
         display: 'Browse Clinical Trials',
         path: 'browse-clinical-trials'

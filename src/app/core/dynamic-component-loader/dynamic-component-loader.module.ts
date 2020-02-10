@@ -2,8 +2,6 @@ import {
     ANALYZE_FOR_ENTRY_COMPONENTS,
     ModuleWithProviders,
     NgModule,
-    NgModuleFactoryLoader,
-    SystemJsNgModuleLoader,
     Type,
 } from '@angular/core';
 import { ROUTES } from '@angular/router';
@@ -11,27 +9,32 @@ import { ROUTES } from '@angular/router';
 import { DynamicComponentLoader } from './dynamic-component-loader.service';
 import {
   DYNAMIC_COMPONENT,
-  DYNAMIC_COMPONENT_MANIFESTS,
+  LAZY_LOADED_COMPONENT_MANIFESTS,
   DYNAMIC_MODULE,
-  DynamicComponentManifest,
+  DYNAMIC_COMPONENT_MANIFESTS,
+  LazyLoadedComponentManifest,
+  DynamicComponentManifest
 } from './dynamic-component-manifest';
 
 @NgModule()
 export class DynamicComponentLoaderModule {
-  static forRoot(manifests: DynamicComponentManifest[]): ModuleWithProviders {
+  static forRoot(
+      lazyLoadedManifests: LazyLoadedComponentManifest[] = [],
+      dynamicManifests: DynamicComponentManifest<any>[] = []
+    ): ModuleWithProviders {
     return {
       ngModule: DynamicComponentLoaderModule,
       providers: [
         DynamicComponentLoader,
-        { provide: NgModuleFactoryLoader, useClass: SystemJsNgModuleLoader },
         // provider for Angular CLI to analyze
-        { provide: ROUTES, useValue: manifests, multi: true },
+        { provide: ROUTES, useValue: lazyLoadedManifests, multi: true },
         // provider for DynamicComponentLoader to analyze
-        { provide: DYNAMIC_COMPONENT_MANIFESTS, useValue: manifests, multi: true },
+        { provide: LAZY_LOADED_COMPONENT_MANIFESTS, useValue: lazyLoadedManifests, multi: true },
+        { provide: DYNAMIC_COMPONENT_MANIFESTS, useValue: dynamicManifests, multi: true }
       ],
     };
   }
-  static forModule(manifest: DynamicComponentManifest): ModuleWithProviders {
+  static forModule(manifest: LazyLoadedComponentManifest): ModuleWithProviders {
     return {
       ngModule: DynamicComponentLoaderModule,
       providers: [
@@ -56,5 +59,3 @@ export class DynamicComponentLoaderModule {
     };
   }
 }
-
-export { DynamicComponentManifest } from './dynamic-component-manifest';

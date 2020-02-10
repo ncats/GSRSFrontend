@@ -18,16 +18,16 @@
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()">
       <div *ngFor="let navItem of navItems">
-        <button mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
+        <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
           {{navItem.display}}
-        </button>
+        </a>
         <ng-container *ngIf="navItem.children">
           <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
               {{navItem.display}}
           </a>
           <mat-menu #childrenMenu="matMenu">
             <div *ngFor="let childNavItem of navItem.children">
-              <a mat-menu-item [routerLink]="['/' + childNavItem.path]" *ngIf="childNavItem.path">
+              <a mat-menu-item [routerLink]="['/' + childNavItem.path]" [queryParams] = "childNavItem.params||{}" *ngIf="childNavItem.path">
                 {{childNavItem.display}}
               </a>
             </div>
@@ -49,16 +49,19 @@
     <button mat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment != 'login'">
       Login
     </button>
-    <div>
-      <button mat-icon-button [matMenuTriggerFor]="accountMenu" *ngIf="auth" (click)="increaseMenuZindex()">
-        <mat-icon>account_circle</mat-icon>
+      <div class = "logged-in" *ngIf="auth" >
+        <button class ="user-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()">
+        <mat-icon class = "user-icon" svgIcon="account_circle"></mat-icon>
       </button>
+        <br/>
+              <span class = "user" *ngIf="auth && auth.identifier" >{{auth.identifier}}</span>
+      </div>
       <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
         <button mat-menu-item (click)="authService.logout()">
           <span>Logout</span>
         </button>
+
       </mat-menu>
-    </div>
   </div>
 </mat-toolbar>
 <app-main-notification></app-main-notification>

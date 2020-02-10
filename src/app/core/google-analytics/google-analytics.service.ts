@@ -60,7 +60,7 @@ export class GoogleAnalyticsService {
     node.src = 'https://www.google-analytics.com/analytics.js';
     node.type = 'text/javascript';
     node.async = true;
-    node.charset = 'utf-8';
+    // node.charset = 'utf-8';
     document.getElementsByTagName('head')[0].appendChild(node);
   }
 

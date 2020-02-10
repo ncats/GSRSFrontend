@@ -1,0 +1,24 @@
+
+
+<div class = 'source-container' *ngIf = "structurallyDiverse">
+  <div class = 'form-row'>
+    <app-cv-input class = 'cv-input' domain = "SOURCE_MATERIAL_CLASS" title = "Source Material Class"
+                  (valueChange) = "update('class',$event)" [model] = "structurallyDiverse.sourceMaterialClass"></app-cv-input>
+    <app-cv-input class = 'cv-input'  domain = "SOURCE_MATERIAL_TYPE" title = "Source Material Type"
+                  (valueChange) = "update('type',$event)" [model] = "structurallyDiverse.sourceMaterialType"></app-cv-input>
+    <app-cv-input class = 'cv-input'  *ngIf = "structurallyDiverse.sourceMaterialClass === 'ORGANISM'" domain = "SOURCE_MATERIAL_STATE" title = "Source Material State"
+                  (valueChange) = "update('state',$event)" [model] = "structurallyDiverse.sourceMaterialState"></app-cv-input>
+    <div class = 'column-radio'>
+    <mat-radio-group class = 'type'(change) = 'updateType($event)'>
+      <mat-radio-button  value = 'whole' [checked] = 'structurallyDiverse.$$diverseType === "whole"'>Whole</mat-radio-button>
+      <mat-radio-button value = 'fraction' [checked] = 'structurallyDiverse.$$diverseType !== "whole"'>Part/ Fraction</mat-radio-button>
+    </mat-radio-group>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+

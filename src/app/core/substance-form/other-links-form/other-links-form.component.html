@@ -1,0 +1,25 @@
+<div class="link-form-container">
+  <div *ngIf="link.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete link" (click)="deleteLink()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+    <div class = "type">
+      <app-cv-input domain = "OTHER_LINKAGE_TYPE" title = "Sequence Type" (valueChange) = "link.linkageType = $event" [model] = "link.linkageType"></app-cv-input>
+    </div>
+    <div class = "links">
+      <div class="label">link</div>
+      {{siteDisplay}}
+        <button mat-icon-button matTooltip="Select sites from display" (click)="(openDialog())">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </button>
+    </div>
+  </div>
+</div>

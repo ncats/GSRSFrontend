@@ -1,0 +1,25 @@
+
+
+
+.subtype {
+  width: 33%;
+}
+
+
+
+.tags {
+  width: 100%;
+}
+
+
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  align-items: flex-end;
+
+  .checkbox-container {
+    padding-bottom: 18px;
+  }
+}

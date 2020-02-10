@@ -1,4 +1,4 @@
-<form class="structure-form" *ngIf="structure">
+<form class="structure-form" *ngIf="structure && type === 'structure'" >
   <div class="form-row">
     <mat-form-field class="mol-formula">
       <input matInput placeholder="Molecular Formula" [(ngModel)]="structure.formula" name="formula" required />
@@ -38,9 +38,17 @@
         <button mat-menu-item (click)="openNameResolverDialog()">
           Resolve name
         </button>
-        <button *ngIf="structure.id" mat-menu-item (click)="openStructureImageModal()">
-          View stereochemistry
-        </button>
+        <span *ngIf="structure.id">
+          <button mat-menu-item (click)="downloadStructure('mol')">
+            Dowload mol
+          </button>
+          <button mat-menu-item (click)="downloadStructure('smiles')">
+            Download smiles
+          </button>
+          <button mat-menu-item (click)="openStructureImageModal()">
+            View stereochemistry
+          </button>
+        </span>
       </mat-menu>
     </div>
   </div>
@@ -89,3 +97,32 @@
     </div>
   </div>
 </form>
+<div class = "form-row" *ngIf= "structure && type === 'polymer'" >
+  <span class = "middle-fill"></span>
+  <form class="structure-form polymer-form" >
+  <div class="settings_container" *ngIf="showSettings">
+    <button mat-icon-button [matMenuTriggerFor]="settingsMenu" matTooltip="Advanced options">
+      <mat-icon svgIcon="settings_applications"></mat-icon>
+    </button>
+    <mat-menu #settingsMenu="matMenu">
+      <button mat-menu-item (click)="openStructureImportDialog()">
+        Import
+      </button>
+      <button mat-menu-item (click)="openNameResolverDialog()">
+        Resolve name
+      </button>
+      <span *ngIf="structure.id">
+        <button mat-menu-item (click)="downloadStructure('mol')">
+          Dowload mol
+        </button>
+        <button mat-menu-item (click)="downloadStructure('smiles')">
+          Download smiles
+        </button>
+        <button mat-menu-item (click)="openStructureImageModal()">
+          View stereochemistry
+        </button>
+      </span>
+    </mat-menu>
+  </div>
+</form>
+</div>

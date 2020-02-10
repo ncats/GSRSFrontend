@@ -1,0 +1,32 @@
+<div class="link-form-container" [formGroup]="testForm">
+  <div *ngIf="link.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete link" (click)="deleteLink()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+      <div class = "sites" *ngFor = "let site of link.sites;index as index">
+        <mat-form-field class="site">
+          <mat-label>{{index === 0? 'To': 'From'}}</mat-label>
+        <mat-select [formControlName] = "'site'+index"  (selectionChange)="updateSuggestions($event.value, index) " class ="site-select" >
+          <mat-option *ngFor="let cys of cysteine" [value]="cys">
+            {{cys.subunitIndex}}_{{cys.residueIndex}}
+          </mat-option>
+          <mat-option [value] = "site" >
+            {{site.subunitIndex}}_{{site.residueIndex}}
+          </mat-option>
+        </mat-select>
+        </mat-form-field>
+      </div>
+
+    <button mat-icon-button matTooltip="Select from sequence view" (click)="openDialog()">
+      <mat-icon svgIcon="edit"></mat-icon>
+    </button>
+    </div>
+  </div>

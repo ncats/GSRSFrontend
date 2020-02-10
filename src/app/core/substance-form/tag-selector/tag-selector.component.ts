@@ -19,8 +19,8 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   allOptions: Array<VocabularyTerm>;
   filteredOptions: Observable<Array<VocabularyTerm>>;
   tagControl = new FormControl();
-  @ViewChild('tagInput', { static: true }) tagInput: ElementRef<HTMLInputElement>;
-  @ViewChild('tagsAuto', { static: true }) matAutocomplete: MatAutocomplete;
+  @ViewChild('tagInput', {static: true}) tagInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', {static: true}) matAutocomplete: MatAutocomplete;
   optionsDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
 
   constructor(
@@ -38,7 +38,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
         this.optionsDictionary = response[this.cvDomain].dictionary;
 
         this.filteredOptions = this.tagControl.valueChanges.pipe(
-          startWith(null),
+          startWith(<string>null),
           map((tag: string | null) => tag ? this._filter(tag)
             : this.allOptions.filter(option => this.privateTags.indexOf(option.value) === -1)));
       });
@@ -57,9 +57,8 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   clearTagsInput(): void {
     setTimeout(() => {
       this.tagInput.nativeElement.value = '';
-      console.log(this.matAutocomplete.isOpen);
       if (!this.matAutocomplete.isOpen) {
-        this.tagControl.setValue(null);
+      this.tagControl.setValue(null);
       }
     });
   }
@@ -72,7 +71,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
     this.tagsUpdate.emit(this.privateTags);
   }
 
-  tagSelected(event: MatAutocompleteSelectedEvent): void {
+  selected(event: MatAutocompleteSelectedEvent): void {
     this.privateTags.push(event.option.value);
     this.tagsUpdate.emit(this.privateTags);
     this.clearTagsInput();
@@ -85,5 +84,4 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
       return this.privateTags.indexOf(option.value) === -1 && option.display.toLowerCase().indexOf(filterValue) > -1;
     });
   }
-
 }
