@@ -1,12 +1,14 @@
-.middle-image-container {
+.middle-content-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 66px;
+    padding-top: 120px;
+}
 
-    img {
-        height: 30%;
-        width: auto;
-        margin-top: 20%;
-    }
+.search-section {
+    margin: 0 10px 0 20px;
+}
+
+.register-section {
+    margin: 0 20px 0 10px;
 }
