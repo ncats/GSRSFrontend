@@ -20,7 +20,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   filteredOptions: Observable<Array<VocabularyTerm>>;
   tagControl = new FormControl();
   @ViewChild('tagInput', {static: true}) tagInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', {static: true}) matAutocomplete: MatAutocomplete;
+  @ViewChild('tagsAuto', {static: true}) matAutocomplete: MatAutocomplete;
   optionsDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
 
   constructor(

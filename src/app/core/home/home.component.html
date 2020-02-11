@@ -1,5 +1,25 @@
-<div class="middle-image-container">
-  <a routerLink="/browse-substance">
-    <img [src]="roundLogoSrcPath" />
-  </a>
+<div class="middle-content-container">
+  <mat-card class="search-section">
+    <mat-card-title>
+      Search
+    </mat-card-title>
+    <mat-card-content>
+      <mat-nav-list>
+        <a mat-list-item routerLink="/browse-substance"> 
+          Browse All Substances
+        </a>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/applications'" target="_blank"> 
+          Browse All Applications
+        </a>
+      </mat-nav-list>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="register-section">
+    <mat-card-title>
+      Register (Login to Register)
+    </mat-card-title>
+    <mat-card-content>
+      
+    </mat-card-content>
+  </mat-card>
 </div>
