@@ -26,6 +26,7 @@ export class ConfigService {
                 if (config.apiBaseUrl == null && environment.apiBaseUrl != null) {
                     config.apiBaseUrl = environment.apiBaseUrl;
                 }
+                config.apiUrlDomain = config.apiBaseUrl.split(/\/(!?\/\/)/)[0];
                 if (config.googleAnalyticsId == null && environment.googleAnalyticsId != null) {
                     config.googleAnalyticsId = environment.googleAnalyticsId;
                 }
