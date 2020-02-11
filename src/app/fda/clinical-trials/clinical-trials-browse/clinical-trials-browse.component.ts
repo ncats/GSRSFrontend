@@ -356,7 +356,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
         });
 
       }
-      // leaving out for now; in earlier version produced unexpected results.
+      // leaving out for now; produces unexpected results in my case.
       if (newFacets.length < 15) {
 
         const numFillFacets = 15 - newFacets.length;

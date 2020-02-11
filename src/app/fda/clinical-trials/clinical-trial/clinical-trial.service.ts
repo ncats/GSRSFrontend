@@ -42,7 +42,6 @@ export class ClinicalTrialService extends BaseHttpService {
       if (args.type !== null && args.type !== '') {
         if (args.type === 'nctNumber' ) {
           // not working yet
-
           params = params.append('q', 'root_ctId:\"^' + args.searchTerm + '$\"');
         } else if (args.type === 'substanceUuid' ) {
           // not working yet
