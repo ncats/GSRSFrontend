@@ -30,6 +30,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   isAdmin = false;
   substanceUpdated = new Subject<SubstanceDetail>();
   oldUrl: string;
+  displayStatus: string;
   constructor(
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -54,6 +55,12 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.getVersion();
     this.getClassFromCv();
     this.oldUrl = this.substanceService.oldSiteRedirect('details', this.substance.uuid);
+    if(this.substance.status === 'approved') {
+      this.substance.status = 'Validated (UNII)';
+    }
+    if(this.substance.status === 'non-approved') {
+      this.substance.status = 'non-Validated';
+    }
   }
 
   ngAfterViewInit() {

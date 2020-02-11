@@ -2,6 +2,9 @@
   <div class="substance-form-row form-header">
     {{uuid ? 'Editing' : 'Registering New'}} {{substanceClass.toUpperCase()}}
   </div>
+  <div class="substance-form-row form-name" *ngIf = "definition._name">
+    <div>Preferred Term: <span class = "name">{{definition._name}}</span></div>
+  </div>
   <div class="substance-form-row">
     <mat-form-field *ngIf = 'definition.substanceClass !== "concept"'>
       <mat-label>Definition Type</mat-label>

@@ -65,6 +65,7 @@ import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-di
 
 import {NgxJsonViewerModule} from 'ngx-json-viewer';
 import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import {AdvancedFeaturesComponent} from "@gsrs-core/substance-form/advanced-features/advanced-features.component";
 
 @NgModule({
   imports: [
@@ -135,7 +136,8 @@ import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-inf
     MonomerFormComponent,
     StructuralUnitFormComponent,
     JsonDialogComponent,
-    AuditInfoComponent
+    AuditInfoComponent,
+    AdvancedFeaturesComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -174,7 +176,8 @@ import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-inf
     CvDialogComponent,
     StructuralUnitFormComponent,
     JsonDialogComponent,
-    AuditInfoComponent
+    AuditInfoComponent,
+    AdvancedFeaturesComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
@@ -187,7 +190,8 @@ import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-inf
     PhysicalParameterFormDialogComponent,
     CvDialogComponent,
     JsonDialogComponent,
-    AuditInfoComponent
+    AuditInfoComponent,
+    AdvancedFeaturesComponent
   ]
 })
 export class SubstanceFormModule { }

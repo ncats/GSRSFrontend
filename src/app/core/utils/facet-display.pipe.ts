@@ -6,6 +6,25 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FacetDisplayPipe implements PipeTransform {
 
   transform(name: any, args?: any): any {
+    if (args) {
+      if (args === 'types') {
+        if (name === 'structurallyDiverse') {
+          return 'Structurally Diverse';
+        } else if (name === 'nucleicAcid') {
+          return 'Nucleic Acid';
+        } else if (name === 'specifiedSubstanceG1') {
+          return 'G1 Specified Substance';
+        } else {
+          return name.charAt(0).toUpperCase() + name.slice(1);
+        }
+      } else if (args === 'status') {
+        if (name === 'approved') {
+          return 'Validated (UNII)';
+        } else if (name === 'non-approved') {
+          return 'non-Validated';
+        }
+      }
+    }
     if (name.toLowerCase() === 'substancestereochemistry') {
       return 'Stereochemistry';
     }
@@ -30,6 +49,9 @@ export class FacetDisplayPipe implements PipeTransform {
     if (name === 'GInAS Tag') {
       return 'Source Tag';
     }
+
+
+
     return name.trim();
   }
 

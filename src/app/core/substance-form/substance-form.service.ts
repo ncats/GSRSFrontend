@@ -432,6 +432,7 @@ unapproveRecord() {
       createdBy: this.substance.createdBy,
       lastEdited: this.substance.lastEdited,
       lastEditedBy: this.substance.lastEditedBy,
+      _name: this.substance._name
     };
     if (this.substance.status) {
       definition.status = this.substance.status;
@@ -2464,7 +2465,6 @@ unapproveRecord() {
 
     const sub = this.substance;
     const gsites = proteinGlycFinder(sub);
-    console.log(gsites);
     if (gsites.length === 0) {
       alert('No potential N-Glycosylation sites found');
 
