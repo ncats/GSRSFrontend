@@ -25,11 +25,14 @@
             </mat-checkbox>
           </div>
           <div class="facet-value-label">
-            <span *ngIf="value.label == 'approved'">
-              Validated (UNII)
-            </span>
-            <span *ngIf="value.label != 'approved'">
+            <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
               {{value.label}}
+            </span>
+            <span *ngIf = "facet.name === 'Substance Class'">
+              {{value.label | facetDisplay: 'types'}}
+            </span>
+            <span *ngIf="facet.name === 'Record Status'">
+              {{value.label | facetDisplay: 'status'}}
             </span>
           </div>
           <div class="middle-fill"></div>
