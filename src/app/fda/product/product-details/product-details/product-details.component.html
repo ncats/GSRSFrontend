@@ -15,20 +15,24 @@
         </thead>
         <tbody>
           <tr *ngFor="let prodName of product.productNameList; let indexName = index">
-            <td>{{ prodName.productName }}</td>
+            <td>
+              <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
+            </td>
             <td>{{ prodName.productNameType }}</td>
             <td>
               <div *ngFor="let prodPart of prodName.productTermAndTermPartList; let indexPart = index">
-                  <b>Term:</b>&nbsp;{{prodPart.productTerm}}
-                  <b>Term Part:</b>&nbsp;{{prodPart.productTermPart}}<br><br>
+                <b>Term:</b>&nbsp;{{prodPart.productTerm}}
+                <b>Term Part:</b>&nbsp;&nbsp;{{prodPart.productTermPart}}<br><br>
               </div>
             </td>
           </tr>
-          <tr>
+
+          <tr *ngIf="product.productNameList.length < 1">
             <td colspan="3">
-              <div ng-show="product.productNameList.length < 1">No Product Name Available</div>
+              No Product Name Available
             </td>
           </tr>
+
         </tbody>
       </table>
 
