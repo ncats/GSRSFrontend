@@ -8,7 +8,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment';
-import { AuthService } from '@gsrs-core/auth/auth.service';
+// import { AuthService } from '@gsrs-core/auth/auth.service';
 
 @Component({
   selector: 'app-application-details-base',
@@ -34,12 +34,12 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
-    private authService: AuthService,
+    // private authService: AuthService,
   ) { }
 
   ngOnInit() {
 
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    // this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
 
     this.loadingService.setLoading(true);
     // this.id = this.activatedRoute.snapshot.params['id'];
