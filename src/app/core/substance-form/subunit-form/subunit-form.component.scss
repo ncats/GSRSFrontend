@@ -132,7 +132,10 @@
 }
 
 .buttons {
-  width: 30%;
+  width: 60%;
+  display:flex;
+
+
 }
 
 .action-button {
@@ -210,4 +213,19 @@
 
 .subunit-container {
   padding: 5px;
+}
+
+.button-link {
+  color: #4793d1;
+  text-decoration: none;
+  vertical-align: middle;
+  font-weight: 500;
+  text-align: center;
+  line-height: 46px;
+}
+.convert {
+  padding-right:40px;
+}
+.spacer {
+  width: 20%;
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
-import {DisplayStructure, SubstanceDetail} from '../../substance/substance.model';
+import {DisplayStructure, Polymer, PolymerClassification, SubstanceDetail} from '../../substance/substance.model';
 import { SafeUrl } from '@angular/platform-browser';
 import { UtilsService } from '../../utils/utils.service';
 import {Subject} from 'rxjs';
@@ -13,6 +13,8 @@ import {Subject} from 'rxjs';
 export class SubstancePolymerStructureComponent extends SubstanceCardBase implements OnInit {
   structure: DisplayStructure;
   substanceUpdated = new Subject<SubstanceDetail>();
+  classification: PolymerClassification;
+  relatedSubstanceUuid: string;
 
   constructor(
     private utilsService: UtilsService,
@@ -25,7 +27,9 @@ export class SubstancePolymerStructureComponent extends SubstanceCardBase implem
       this.substance = substance;
       if (this.substance != null) {
         this.structure = this.substance.polymer.displayStructure;
+        this.classification = this.substance.polymer.classification;
       }
+      this.relatedSubstanceUuid = this.classification.parentSubstance && this.classification.parentSubstance.refuuid || '';
     });
   }
 
