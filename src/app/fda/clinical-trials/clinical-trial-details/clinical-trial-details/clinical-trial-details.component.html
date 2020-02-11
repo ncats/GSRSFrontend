@@ -289,8 +289,10 @@
                     Locations:
                   </div>
                   <div class="row-property-value">
-                    <div *ngFor="let x of clinicalTrial.locationList; let i = index">
-                      {{i+1}}.{{x}}
+                    <div *ngIf="clinicalTrial.locationList.length > 0">
+                      <div *ngFor="let x of clinicalTrial.locationList; let i = index">
+                        {{i+1}}.{{x}}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -306,7 +308,6 @@
           <mat-card>
             <div class="title">Applications in Clinical Trial </div>
             <mat-card-content>
-
               <div *ngIf="clinicalTrial.clinicalTrialApplicationList.length > 0; else noRecordApp">
                 <table width="98%" class="bordergray blueTable padleft20px">
                   <thead>
@@ -330,7 +331,8 @@
                     </tr>
                   </tbody>
                 </table>
-              </div>
+                
+                </div>
               <ng-template #noRecordApp>
                 <p><br>
                   There is no Application Data for this Clinical Trial
@@ -382,7 +384,7 @@
           </mat-card>
         </div>
       </mat-tab>
-
+  
     </mat-tab-group>
 
   </div>

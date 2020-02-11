@@ -110,4 +110,8 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  getUpdateApplicationUrl(): string {
+    return this.baseUrl + 'updateApplication?applicationId=';
+  }
+
 } // class

@@ -6,6 +6,7 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
+import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ApplicationDetailsBaseComponent} from '../application-details-base.component';
 
 @Component({
@@ -24,12 +25,18 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
+    authService: AuthService,
   ) {
-    super(applicationService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService);
+    super(applicationService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, authService);
   }
 
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.params['id'];
+
+    console.log('ADMIN' + this.isAdmin);
+    if (this.isAdmin === true) {
+      this.updateApplicationUrl = this.applicationService.getUpdateApplicationUrl();
+    }
 
     super.ngOnInit();
 

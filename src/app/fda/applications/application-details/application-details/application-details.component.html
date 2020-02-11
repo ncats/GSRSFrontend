@@ -3,6 +3,10 @@
     <mat-card class="bordergray">
       <mat-card-title>
         Application Details
+        &nbsp;&nbsp;
+        <span *ngIf="updateApplicationUrl">
+          <a href="{{updateApplicationUrl}}">Update</a>
+        </span>
       </mat-card-title>
 
       <mat-card-content>
@@ -183,6 +187,7 @@
     </mat-card>
   </div>
 
+
   <br>
   <div class="details-container">
     <mat-card class="bordergray">
@@ -248,7 +253,6 @@
             </div>
           </div>
 
-
           <div class="row">
             <div class="row-property">
               <div class="row-property-key">
@@ -313,9 +317,11 @@
           <br>
           <!-- End Ingredient loop -->
 
+
         </div> <!-- repeat prod -->
       </mat-card-content>
     </mat-card>
   </div>
+
 </div>
 <br><br><br><br>
