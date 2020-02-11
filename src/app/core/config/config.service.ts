@@ -26,7 +26,12 @@ export class ConfigService {
                 if (config.apiBaseUrl == null && environment.apiBaseUrl != null) {
                     config.apiBaseUrl = environment.apiBaseUrl;
                 }
-                config.apiUrlDomain = config.apiBaseUrl.split(/\/(!?\/\/)/)[0];
+                if (config.apiBaseUrl.indexOf('//') > -1) {
+                    const parts = config.apiBaseUrl.split('/');
+                    config.apiUrlDomain = `${parts[0]}//${parts[2]}`;
+                } else {
+                    config.apiUrlDomain = '';
+                }
                 if (config.googleAnalyticsId == null && environment.googleAnalyticsId != null) {
                     config.googleAnalyticsId = environment.googleAnalyticsId;
                 }

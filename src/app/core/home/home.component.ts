@@ -21,6 +21,5 @@ export class HomeComponent implements OnInit {
     this.gaService.sendPageView(`Home`);
     this.environment = this.configService.environment;
     this.baseDomain = this.configService.configData.apiUrlDomain;
-    console.log(this.configService.configData.apiUrlDomain);
   }
 }

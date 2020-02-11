@@ -151,6 +151,14 @@
   background-color: transparent;
 }
 
+.classic-view-container {
+  padding-left: 15px;
+
+  ::ng-deep .mat-raised-button {
+    color: #296ca3;
+  }
+}
+
 // @media(max-width: $nav-breaking-point) {
 //   .nav-big {
 //     display: none;
