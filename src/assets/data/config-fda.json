@@ -368,6 +368,15 @@
       "Product Name Type",
       "Product Dosage Form"
     ],
+    "ctclinicaltrial": [
+      "Has Substances",
+      "CT Matching Complete",
+      "Last Updated Year",
+      "Primary Completion Year",
+      "First Posted Year",
+      "Study Types",
+      "Intervention Type"
+    ],
     "admin": [
       "root_lastEditedBy",
       "Material Type",

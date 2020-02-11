@@ -12,6 +12,10 @@
       <div class="row-property-value-2">
         <a href="{{clinicalTrial.url}}" target="_blank"><span
             class="font14px fontbold colororange">{{clinicalTrial.nctNumber}}</span></a>
+        &nbsp;&nbsp;&nbsp;
+        <!--
+        <a [routerLink]="['/edit-clinical-trial', clinicalTrial.nctNumber]" target="_blank" title="Update Clinical Trial US">Update</a>
+        -->
       </div>
     </div>
 
@@ -200,7 +204,6 @@
                 </div>
               </div>
 
-
               <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
@@ -271,10 +274,10 @@
 
               <div class="row">
                 <div class="row-property-2">
-                  <div class="row-property-key">
+                  <div class="row-property-key-3">
                     Outcome Measures:
                   </div>
-                  <div class="row-property-value">
+                  <div class="row-property-value-3">
                     {{clinicalTrial.outcomeMeasures}}
                   </div>
                 </div>
@@ -286,8 +289,10 @@
                     Locations:
                   </div>
                   <div class="row-property-value">
-                    <div *ngFor="let x of clinicalTrial.locationList; let i = index">
-                      {{i+1}}.{{x}}
+                    <div *ngIf="clinicalTrial.locationList.length > 0">
+                      <div *ngFor="let x of clinicalTrial.locationList; let i = index">
+                        {{i+1}}.{{x}}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -303,7 +308,6 @@
           <mat-card>
             <div class="title">Applications in Clinical Trial </div>
             <mat-card-content>
-
               <div *ngIf="clinicalTrial.clinicalTrialApplicationList.length > 0; else noRecordApp">
                 <table width="98%" class="bordergray blueTable padleft20px">
                   <thead>
@@ -327,7 +331,8 @@
                     </tr>
                   </tbody>
                 </table>
-              </div>
+                
+                </div>
               <ng-template #noRecordApp>
                 <p><br>
                   There is no Application Data for this Clinical Trial
@@ -349,12 +354,23 @@
                     <tr valign="top">
                       <th width="60px">#</th>
                       <th width="200px">Substance Name</th>
+                      <th width="200px">Structure</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let x of clinicalTrial.clinicalTrialDrug; let i = index">
                       <td>{{i+1}}</td>
-                      <td>{{x.substanceDisplayName}}</td>
+                      <td>
+                        <div *ngIf="x.substanceUuid">
+                          <a [routerLink]="['/substances', x.substanceUuid]"
+                            target="_blank">{{x.substanceDisplayName}}</a>
+                        </div>
+                      </td>
+                      <td>
+                        <div *ngIf="x.substanceUuid">
+                          <img class="structure-img" [src]="getSafeStructureImgUrl(x.substanceUuid)">
+                        </div>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -368,7 +384,7 @@
           </mat-card>
         </div>
       </mat-tab>
-
+  
     </mat-tab-group>
 
   </div>

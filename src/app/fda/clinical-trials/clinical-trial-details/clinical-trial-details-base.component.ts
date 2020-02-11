@@ -7,6 +7,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { SafeUrl } from '@angular/platform-browser';
+import { ClinicalTrial } from '../../applications/model/application.model';
 
 @Component({
   selector: 'app-clinical-trial-details-base',
@@ -65,7 +66,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     }, 5000);
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 600): SafeUrl {
+  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size, true);
   }
 }

@@ -8,6 +8,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment';
+// import { AuthService } from '@gsrs-core/auth/auth.service';
 
 @Component({
   selector: 'app-application-details-base',
@@ -22,6 +23,8 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   appNumber: string;
   application: any;
   flagIconSrcPath: string;
+  isAdmin = false;
+  updateApplicationUrl: string;
 
   constructor(
     public applicationService: ApplicationService,
@@ -30,10 +33,14 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     private mainNotificationService: MainNotificationService,
     private router: Router,
     private gaService: GoogleAnalyticsService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    // private authService: AuthService,
   ) { }
 
   ngOnInit() {
+
+    // this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+
     this.loadingService.setLoading(true);
     // this.id = this.activatedRoute.snapshot.params['id'];
     // this.src = this.activatedRoute.snapshot.params['src'];

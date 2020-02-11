@@ -84,7 +84,7 @@
       <mat-card class="bordergray" *ngFor="let application of applications">
 
         <mat-card-title class="borderlightorange-bottom">
-          <a class="substance-name" [routerLink]="['/applicationDetails', application.id]">
+          <a class="substance-name" [routerLink]="['/applicationDetails', application.id]" target="_blank">
             {{application.appType}}&nbsp;{{application.appNumber}}
           </a>
        

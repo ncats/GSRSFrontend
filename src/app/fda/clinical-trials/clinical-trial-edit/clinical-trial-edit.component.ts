@@ -15,7 +15,6 @@ import { FormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {AuthService} from '@gsrs-core/auth/auth.service';
-import { Pipes2Br } from '../filters/pipes-2-br';
 
 // import { Auth } from '../../../core/auth/auth.model';
 

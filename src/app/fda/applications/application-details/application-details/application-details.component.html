@@ -1,3 +1,329 @@
-<br><br><br><br>
+<div *ngIf="application">
+  <div class="details-container margintop90px">
+    <mat-card class="bordergray">
+      <mat-card-title>
+        Application Details
+        &nbsp;&nbsp;
+        <!--
+        <span *ngIf="updateApplicationUrl">
+          <a href="{{updateApplicationUrl}}">Update</a>
+        </span>
+      -->
+      </mat-card-title>
 
-<p>Application Details</p>
+      <mat-card-content>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Type and Number:
+            </div>
+            <div class="row-property-value">
+              <span
+                class="colororange font14px fontbold"><b>{{application.appType}}&nbsp;{{application.appNumber}}</b></span>
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Center:
+            </div>
+            <div class="row-property-value">
+              {{application.center}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Sponsor Name:
+            </div>
+            <div class="row-property-value">
+              {{application.sponsorName}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Non Proprietary Name:
+            </div>
+            <div class="row-property-value">
+              {{application.nonProprietaryName}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Title:
+            </div>
+            <div class="row-property-value">
+              {{application.title}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              External Title:
+            </div>
+            <div class="row-property-value">
+              {{application.externalTitle}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Public Domain:
+            </div>
+            <div class="row-property-value">
+              {{application.publicDomain}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Version:
+            </div>
+            <div class="row-property-value">
+              {{application.version}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Sub Type:
+            </div>
+            <div class="row-property-value">
+              {{application.appSubType}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Division Class Desc:
+            </div>
+            <div class="row-property-value">
+              {{application.divisionClassDesc}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Status:
+            </div>
+            <div class="row-property-value">
+              {{application.status}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Submit Date:
+            </div>
+            <div class="row-property-value">
+              {{application.submitDate}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Source:
+            </div>
+            <div class="row-property-value">
+              {{application.source}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Status Date:
+            </div>
+            <div class="row-property-value">
+              {{application.statusDate}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Indications:
+            </div>
+            <div class="row-property-value">
+
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+
+            </div>
+            <div class="row-property-value">
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Clinical Trials:
+            </div>
+            <div class="row-property-value">
+
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+
+            </div>
+            <div class="row-property-value">
+
+            </div>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+  <br>
+  <div class="details-container">
+    <mat-card class="bordergray">
+      <mat-card-content>
+        <div *ngFor="let prod of application.applicationProductList; let i = index">
+            <div class="title2">
+                Product {{i + 1}}
+            </div> 
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Product Name:
+              </div>
+              <div class="row-property-value">
+
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Product Name Type:
+              </div>
+              <div class="row-property-value">
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Dosage Form:
+              </div>
+              <div class="row-property-value">
+                {{prod.dosageForm}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Route of Administration:
+              </div>
+              <div class="row-property-value">
+                {{prod.routeAdmin}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Amount:
+              </div>
+              <div class="row-property-value">
+
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Unit of Presentation:
+              </div>
+              <div class="row-property-value">
+                {{prod.unitPresentation}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Unit:
+              </div>
+              <div class="row-property-value">
+                {{prod.unit}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Reviewed By:
+              </div>
+              <div class="row-property-value">
+                {{prod.reviewedBy}}&nbsp;{{prod.reviewDate|date: 'MM/dd/yyyy'}}
+              </div>
+            </div>
+          </div>
+
+          <!-- Display Ingredient -->
+          <mat-card class="bordergray">
+            <mat-card-title class="title2">
+              <span class="title3">Substances in Application ({{prod.applicationIngredientList.length}})</span>
+            </mat-card-title>
+            <mat-card-content>
+              <table class="blueTable">
+                <thead>
+                  <tr height="30px">
+                    <th>Applicant Ingredient Name</th>
+                    <th>Ingredient Name</th>
+                    <th>Basis Of Strength</th>
+                    <th>Ingredient Type</th>
+                    <th>Average</th>
+                    <th>Low</th>
+                    <th>High</th>
+                    <th>Unit</th>
+                    <th>Grade</th>
+                    <th>Reviewed By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let ingred of prod.applicationIngredientList; let i = index">
+                    <td>{{ ingred.applicantIngredName }}</td>
+                    <td>
+                      <div *ngIf="ingred.substanceId">
+                        <a [routerLink]="['/substances', ingred.substanceId]" target="_blank">{{ingred.ingredientName}}</a>
+                      </div>
+                    </td>
+                    <td>{{ ingred.basisOfStrengthName }}</td>
+                    <td>{{ ingred.ingredientType }}</td>
+                    <td>{{ ingred.average }}</td>
+                    <td>{{ ingred.low }}</td>
+                    <td>{{ ingred.high }}</td>
+                    <td>{{ ingred.unit }}</td>
+                    <td>{{ ingred.grade }}</td>
+                    <td>{{ ingred.reviewedBy }}&nbsp;{{ ingred.reviewDate|date: 'MM/dd/yyyy' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card-content>
+          </mat-card>
+          <br>
+          <!-- End Ingredient loop -->
+
+
+        </div> <!-- repeat prod -->
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>
+<br><br><br><br>

@@ -1,4 +1,6 @@
-<h3>Adverse Event CVM</h3>
+<div class="padtop5px padleft25px font15px colorblue">
+  <b>Adverse Event CVM</b>
+</div>
 
 <!--
 <div class="flex-row">
@@ -9,7 +11,7 @@
 </div>
 -->
 
-<div class="responsive"> 
+<div class="responsive">
   <table mat-table [dataSource]="paged">
 
     <ng-container matColumnDef="adverseEvent">
@@ -36,6 +38,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
-<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true" (page)="getSubstanceAdverseEventCvm($event)"
-  [pageSizeOptions]="[5, 10, 25, 100]">
+<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
+  (page)="getSubstanceAdverseEventCvm($event)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>

@@ -1,23 +1,26 @@
-
-<h3>Clinical Trials</h3>
+<div class="padtop5px padleft25px font15px colorblue">
+  <b>Clinical Trial</b>
+</div>
 
 <div class="responsive">
   <table mat-table [dataSource]="paged">
 
     <ng-container matColumnDef="nctNumber">
       <th mat-header-cell *matHeaderCellDef> NCT Number </th>
-      <td mat-cell *matCellDef="let clinical"> 
-         
+      <td mat-cell *matCellDef="let clinical">
+
         <div *ngIf="clinical.fromSource === 'EU'">
-          <a [routerLink]="['/clinicalTrialEuropeDetails', clinical.nctNumber, 'eu']" target="_blank">{{clinical.nctNumber}}</a>
+          <a [routerLink]="['/clinicalTrialEuropeDetails', clinical.nctNumber, 'eu']"
+            target="_blank">{{clinical.nctNumber}}</a>
           <br><span class="font10px colorgray">(Europe)</span>
-       </div>
+        </div>
         <div *ngIf="clinical.fromSource != 'EU'">
-          <a [routerLink]="['/clinicalTrialDetails', clinical.nctNumber, 'srs']" target="_blank">{{clinical.nctNumber}}</a>
+          <a [routerLink]="['/clinicalTrialDetails', clinical.nctNumber, 'srs']"
+            target="_blank">{{clinical.nctNumber}}</a>
         </div>
       </td>
     </ng-container>
-    
+
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef> Title </th>
       <td mat-cell *matCellDef="let clinical"> {{clinical.title}} </td>
@@ -37,12 +40,12 @@
       <th mat-header-cell *matHeaderCellDef> Outcome Measures </th>
       <td mat-cell *matCellDef="let clinical"> {{clinical.outcomeMeasures}} </td>
     </ng-container>
-    
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
 
-<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true" (page)="getSubstanceClinicalTrials($event)"
-  [pageSizeOptions]="[5, 10, 25, 100]">
+<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
+  (page)="getSubstanceClinicalTrials($event)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
