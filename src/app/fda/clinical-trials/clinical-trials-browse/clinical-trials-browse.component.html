@@ -132,8 +132,8 @@
     
       <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element">
-              <button mat-icon-button matSuffix aria-label="Del" (click)="deleteClinicalTrial(element.nctNumber);">Del</button>
+          <td mat-cell *matCellDef="let element; let index = index">
+              <button mat-icon-button matSuffix aria-label="Del" (click)="deleteClinicalTrial(index);">Del</button>
             </td>
         </ng-container>
       

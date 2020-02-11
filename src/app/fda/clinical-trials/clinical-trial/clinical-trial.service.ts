@@ -35,16 +35,18 @@ export class ClinicalTrialService extends BaseHttpService {
     if (!args.searchTerm) {  args.searchTerm = ''; }
     if (!args.pageSize) {  args.pageSize = 10; }
     if (!args.skip) {  args.skip = 0; }
-    console.log('args.searchTerm: ' + args.searchTerm);
     let params = new ClinicalTrialHttpParams();
     params = params.append('skip', args.skip.toString());
     params = params.append('top', args.pageSize.toString());
     if (args.searchTerm !== null && args.searchTerm !== '') {
       if (args.type !== null && args.type !== '') {
         if (args.type === 'nctNumber' ) {
-          params = params.append('q', 'root_NCT Number:\"^' + args.searchTerm + '$\"');
+          // not working yet
+
+          params = params.append('q', 'root_ctId:\"^' + args.searchTerm + '$\"');
         } else if (args.type === 'substanceUuid' ) {
-          params = params.append('q', 'root_suuids:\"^' + args.searchTerm + '$\"');
+          // not working yet
+          params = params.append('q', 'root_clinicalTrialDrug_substanceUuid:\"^' + args.searchTerm + '$\"');
         } else if (args.type === 'title') {
           params = params.append('q', 'root_title:\"' + args.searchTerm + '\"');
         } else {
