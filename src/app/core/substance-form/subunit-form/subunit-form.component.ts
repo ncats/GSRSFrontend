@@ -231,10 +231,6 @@ change(event): void {
   convertSequence(): void {
     const dashes = true;
     const dict = 'A	Ala;C	Cys;D	Asp;E	Glu;F	Phe;G	Gly;H	His;I	Ile;K	Lys;L	Leu;M	Met;N	Asn;P	Pro;Q	Gln;R	Arg;S	Ser;T	Thr;V	Val;W	Trp;Y	Tyr';
-    this.subunit.sequence = convert(this.subunit.sequence, false);
-    this.substanceFormService.emitSubunitUpdate();
-    this.substanceFormService.recalculateCysteine();
-    function convert(seq, to3) {
       let arr = [];
       const obj = {};
       let n = '';
@@ -246,34 +242,25 @@ change(event): void {
         obj[arr2[1].toUpperCase()] = arr2[0];
       }
       let seqarr = [];
-      if (to3) {
-        seqarr = seq.split('');
-      } else {
-        seqarr = seq.replace(/[ ]/g, '-').split('-');
-      }
+
+        seqarr = this.subunit.sequence.replace(/[ ]/g, '-').split('-');
+
       for (let i = 0; i < seqarr.length; i++) {
         let trans = obj[seqarr[i].toUpperCase()];
         if (seqarr[i].length > 3) {
           n = n + seqarr[i];
           continue;
         }
-        if (to3) {
-          if (i > 0) {
-            n = n + '-';
-          }
-          if (trans === undefined) {
-            trans = 'Unk';
-          }
-        } else {
           if (trans === undefined) {
             trans = 'X';
           }
-        }
 
         n = n + trans;
       }
-      return n;
-    }
+
+      this.subunit.sequence = n;
+    this.substanceFormService.emitSubunitUpdate();
+    this.substanceFormService.recalculateCysteine();
   }
 
 
