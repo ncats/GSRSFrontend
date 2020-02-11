@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { ConfigService } from '@gsrs-core/config';
+import { Environment } from '@environment';
 
 @Component({
   selector: 'app-home',
@@ -8,14 +9,18 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  roundLogoSrcPath: string;
+  environment: Environment;
+  baseDomain: string;
 
   constructor(
-    private gaService: GoogleAnalyticsService
+    private gaService: GoogleAnalyticsService,
+    private configService: ConfigService
   ) { }
 
   ngOnInit() {
     this.gaService.sendPageView(`Home`);
-    this.roundLogoSrcPath = `${environment.baseHref || '/'}assets/images/gsrs-logo-round.svg`;
+    this.environment = this.configService.environment;
+    this.baseDomain = this.configService.configData.apiUrlDomain;
+    console.log(this.configService.configData.apiUrlDomain);
   }
 }

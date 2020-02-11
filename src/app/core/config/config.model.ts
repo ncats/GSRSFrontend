@@ -1,5 +1,6 @@
 export interface Config {
     apiBaseUrl?: string;
+    apiUrlDomain?: string;
     googleAnalyticsId?: string;
     version?: string;
     substanceDetailsCards?: Array<SubstanceDetailsCard>;
