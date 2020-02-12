@@ -3,7 +3,7 @@ export interface ClinicalTrialFacetParam {
 }
 
 export interface FacetNameParam {
-    isAllMatch?: boolean;
+    isAllMatch: boolean;
     params: {
         [facetValueLabel: string]: boolean;
     };
@@ -12,4 +12,6 @@ export interface FacetNameParam {
 export interface FacetNameParam {
     showAllMatchOption?: boolean;
     hasSelections?: boolean;
+    currentStateHash?: number;
+    isUpdated?: boolean;
 }

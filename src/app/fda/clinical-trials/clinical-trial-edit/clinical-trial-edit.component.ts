@@ -60,7 +60,7 @@ export class ClinicalTrialEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.hasRolesAsync('admin').subscribe(response => {
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
       this.isAdmin = response;
       if (this.isTesting) {
       }
