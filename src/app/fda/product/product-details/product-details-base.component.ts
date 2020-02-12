@@ -18,6 +18,7 @@ export class ProductDetailsBaseComponent implements OnInit {
   productId: string;
   src: string;
   product: any;
+  iconSrcPath: string;
 
   constructor(
     private producService: ProductService,
@@ -63,7 +64,9 @@ export class ProductDetailsBaseComponent implements OnInit {
     }, 5000);
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 600): SafeUrl {
+  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size, true);
   }
+
+
 }

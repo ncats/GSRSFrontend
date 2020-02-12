@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ApplicationService } from '../../../applications/service/application.service';
@@ -12,6 +12,10 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+
+  applicationCount = 0;
+
+  @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'appType', 'appNumber', 'center', 'sponsorName', 'applicationStatus', 'applicationSubType'];
@@ -34,17 +38,19 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
 
     this.applicationService.getSubstanceApplications(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
+      this.applicationCount = results.length;
+      this.countApplicationOut.emit(this.applicationCount);
     });
 
-  /*
-      this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
-      }, error => {
-        console.log(error);
+    /*
+        this.searchControl.valueChanges.subscribe(value => {
+          this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
+        }, error => {
+          console.log(error);
+        });
+        this.countUpdate.emit(clinicaltrials.length);
       });
-      this.countUpdate.emit(clinicaltrials.length);
-    });
-    */
+      */
   }
 
 }

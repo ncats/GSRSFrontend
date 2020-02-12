@@ -11,7 +11,15 @@
     </div>
     <div class = "subunit-label">Subunit {{subunit.subunitIndex}}</div>
     <div class = "buttons">
-      <button class = "mat-button mat-primary action-button" (click) = 'editSubunit(subunit, sequence.value)'>{{toggle[subunit.subunitIndex] ? 'save': 'edit'}}</button> <button class = "mat-button action-button mat-primary"  (click) = cleanSequence()>clean</button>
+      <button class = "mat-button mat-primary action-button" (click) = 'editSubunit(subunit, sequence.value)'>
+        {{toggle[subunit.subunitIndex] ? 'save': 'edit'}}</button>
+      <button class = "mat-button action-button mat-primary" (click) = cleanSequence()>
+        clean</button>
+      <span class = "spacer"> </span>
+      <button class = "mat-button action-button mat-primary convert" matTooltip = "convert 3 letter sequence to 1 letter"  (click) = convertSequence()>
+        convert</button>
+
+      <a class = "button-link " matTooltip ="search for sequence in a new tab" target = "_blank" href = "/sequence-search?sequence={{subunit.sequence}}&seq_type={{searchType}}">sequence search</a>
     </div>
   </div>
 

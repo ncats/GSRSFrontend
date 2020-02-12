@@ -6,23 +6,22 @@ import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/subst
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-substance-clinical-trials',
-  templateUrl: './substance-clinical-trials.component.html',
-  styleUrls: ['./substance-clinical-trials.component.scss']
+  selector: 'app-substance-clinical-trials-eu',
+  templateUrl: './substance-clinical-trials-eu.component.html',
+  styleUrls: ['./substance-clinical-trials-eu.component.scss']
 })
 
-export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
-  clinicalTrialCount = 0;
+  clinicalTrialEuCount = 0;
 
-  @Output() countClinicalTrialOut: EventEmitter<number> = new EventEmitter<number>();
+  @Output() countClinicalTrialEuOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'nctNumber',
     'title',
     'sponsorName',
-    'conditions',
-    'outcomemeasures'
+    'productName'
   ];
 
   constructor(
@@ -41,10 +40,10 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   getSubstanceClinicalTrials(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
 
-    this.clinicalTrialService.getSubstanceClinicalTrials(this.bdnum, this.page, this.pageSize).subscribe(results => {
+    this.clinicalTrialService.getSubstanceClinicalTrialsEurope(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
-      this.clinicalTrialCount = results.length;
-      this.countClinicalTrialOut.emit(this.clinicalTrialCount);
+      this.clinicalTrialEuCount = results.length;
+      this.countClinicalTrialEuOut.emit(this.clinicalTrialEuCount);
     });
 
     /*
@@ -59,3 +58,4 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   }
 
 }
+

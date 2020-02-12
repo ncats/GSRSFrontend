@@ -3,3 +3,44 @@
     <img class="structure-img" [src]="getSafeStructureImgUrl(structure.id)">
   </div>
 </div>
+
+
+
+
+<div class = flex-row *ngIf ="classification">
+  <div class = "classification">
+
+    <div class="name-value" *ngIf = "classification.polymerClass" >
+      <div class="name">Polymer Class:</div>
+      <div class="value">{{classification.polymerClass}}</div>
+    </div>
+
+    <div class="name-value" *ngIf = "classification.sourceType" >
+      <div class="name">Source Type:</div>
+      <div class="value">{{classification.sourceType}}</div>
+    </div>
+
+    <div class="name-value" *ngIf = "classification.polymerSubClass" >
+      <div class="name">Polymer SubClass:</div>
+      <div class="value">{{classification.polymerSubClass}}</div>
+    </div>
+  </div>
+  <div>
+    <div class = "selected-substance" *ngIf="classification.parentSubstance" >
+      <div class="name">Parent Substance</div>
+      <div *ngIf="classification.parentSubstance && classification.parentSubstance.linkingID" class="code">
+        {{classification.parentSubstance.linkingID}}</div>
+      <img class="image-icon"  *ngIf = "relatedSubstanceUuid && relatedSubstanceUuid !== '' "
+           [src]="getSafeStructureImgUrl(relatedSubstanceUuid)">
+      <div>
+        <a class="substance-name" [routerLink]="['/substances', relatedSubstanceUuid || '']">
+          {{classification.parentSubstance.name}}
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+

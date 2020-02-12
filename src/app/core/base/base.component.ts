@@ -79,6 +79,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   private bottomSheetCloseTimer: any;
   private selectedText: string;
   private subscriptions: Array<Subscription> = [];
+  baseDomain: string;
 
   constructor(
     private router: Router,
@@ -91,6 +92,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.baseDomain = this.configService.configData.apiUrlDomain;
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     if (this.activatedRoute.snapshot.queryParamMap.has('search')) {

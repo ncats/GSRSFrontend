@@ -1,14 +1,28 @@
 .middle-content-container {
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding-top: 120px;
+    padding-top: 90px;
 }
 
 .search-section {
     margin: 0 10px 0 20px;
+    width: 300px;
 }
 
 .register-section {
     margin: 0 20px 0 10px;
+    width: auto;
+}
+
+.register-card-content {
+    display: flex;
+
+    .register-other {
+        margin-top: 40px;
+        margin-left: 20px; 
+    }
+}
+
+.mat-list-base {
+    position: relative;
 }

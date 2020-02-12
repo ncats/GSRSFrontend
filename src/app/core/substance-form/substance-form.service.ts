@@ -432,6 +432,7 @@ unapproveRecord() {
       createdBy: this.substance.createdBy,
       lastEdited: this.substance.lastEdited,
       lastEditedBy: this.substance.lastEditedBy,
+      _name: this.substance._name
     };
     if (this.substance.status) {
       definition.status = this.substance.status;
