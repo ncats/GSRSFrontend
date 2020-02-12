@@ -459,8 +459,8 @@ margin:auto;
 }
 
 .row-property-key {
-	min-width: 28%;
-	max-width: 28%;
+	min-width: 30%;
+	max-width: 30%;
 	padding: 7px;
   font-size: 12px;
   font-weight: 600;
@@ -468,11 +468,36 @@ margin:auto;
 }
 
 .row-property-value {
-	min-width: 72%;
-	max-width: 72%;
+	min-width: 70%;
+	max-width: 70%;
 	padding: 5px;
 	font-size: 13px;
 }
+
+
+.row-property-2 {
+  display: flex;
+  width: 100%;
+
+	/*padding: 8px;*/
+}
+
+.row-property-key-2 {
+	min-width: 15%;
+	max-width: 15%;
+	padding: 7px;
+  font-size: 12px;
+  font-weight: 600;
+	/*background-color: #edeff2;*/
+}
+
+.row-property-value-2 {
+	min-width: 85%;
+	max-width: 85%;
+	padding: 5px;
+	font-size: 13px;
+}
+
 
 .font9px{
   font-size: 9px;

@@ -87,7 +87,7 @@
           <a class="substance-name" [routerLink]="['/applicationDetails', application.id]" target="_blank">
             {{application.appType}}&nbsp;{{application.appNumber}}
           </a>
-       
+
           <span class="center">Center:&nbsp;{{application.center}}</span>
           <span class="middle-fill"></span>
           <a class="approval-id">
@@ -97,25 +97,57 @@
 
         <mat-card-content>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Product Name:<br>
-                Ingredient Name:
-              </div>
-              <div class="row-property-value">
-                <div class="indent-list" *ngFor="let prod of application.applicationProductList">
-                  <div class="indent-list" *ngFor="let prodName of prod.applicationProductNameList">
-                      
-                      &#9642;&nbsp;{{ prodName.productName }}
-                     
+
+          <!--Product-->
+
+          <div *ngFor="let prod of application.applicationProductList; let index = index">
+
+            <div class="row">
+              <div class="row-property-2">
+                <div class="row-property-key-2">
+                  Product Name {{index + 1}}:
+                </div>
+                <div class="row-property-value-2">
+                  <div *ngIf="prod.applicationProductNameList.length > 0; else noProdNameList">
+                    <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
+
+                      <div *ngIf="prodName.productName; else noProd">
+                        &#9642;&nbsp;{{ prodName.productName }}
+                      </div>
+                      <ng-template #noProd>
+                        (No Product)
+                      </ng-template>
+
+                    </div> <!-- repeat Product Name -->
                   </div>
-                  <div class="indent-list" *ngFor="let ing of prod.applicationIngredientList">
-                    {{ ing.bdnum }}
-                  </div>
+                  <ng-template #noProdNameList>
+                    (No Product)
+                  </ng-template>
                 </div>
               </div>
             </div>
+
+            <div *ngFor="let ing of prod.applicationIngredientList; let indexIng = index">
+              <div class=" row">
+                <div class="row-property-2">
+                  <div class="row-property-key-2">
+                    Ingredient Name: {{ index + 1}}:
+                  </div>
+                  <div class="row-property-value-2">
+                    <div *ngIf="ing.bdnum; else noIngred">
+                      &#9642;&nbsp;{{ ing.bdnum }}
+                    </div>
+                    <ng-template #noIngred>
+                      (No Ingredient)
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- repeat Ingred -->
+
+          </div> <!-- repeat Prod-->
+
+          <!--
             <div class="row-property">
               <div class="row-property-key">
                 Title:
@@ -124,7 +156,7 @@
                 {{application.title}}
               </div>
             </div>
-          </div>
+          -->
 
           <div class="row">
             <div class="row-property">
