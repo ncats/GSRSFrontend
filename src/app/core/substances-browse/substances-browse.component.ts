@@ -263,7 +263,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const catArr = [];
     let facetString = '';
     for (const key of Object.keys(this.privateFacetParams)) {
-      if (this.privateFacetParams[key].isUpdated === true) {
+      if (this.privateFacetParams[key].hasSelections === true) {
         const cat = this.privateFacetParams[key];
         const valArr = [];
         for (const subkey of Object.keys(cat.params)) {
