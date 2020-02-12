@@ -10,7 +10,7 @@
           Browse All Substances
         </a>
         <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + '/ginas/app/applications'" target="_blank">
+        <a mat-list-item [href]="baseDomain + '/ginas/app/applications'" target="_blank" color="accent">
           <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
           Browse All Applications
         </a>
@@ -59,14 +59,14 @@
   </mat-card>
   <mat-card class="register-section">
     <mat-card-title>
-      Register (Login to Register)
+      Register<span *ngIf="!isAuthenticated"> (Login to Register)</span>
     </mat-card-title>
     <mat-card-content>
       <div class="register-card-content">
         <div>
           <mat-nav-list>
             <h3 matSubheader>Register a Substance</h3>
-            <a mat-list-item routerLink="/substances/register">
+            <a mat-list-item routerLink="/substances/register/chemical">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
               Chemical
             </a>
