@@ -280,7 +280,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     const catArr = [];
     let facetString = '';
     for (const key of Object.keys(this.privateFacetParams)) {
-      if (this.privateFacetParams[key].isUpdated === true) {
+      if (this.privateFacetParams[key] && this.privateFacetParams[key].isUpdated === true) {
         const cat = this.privateFacetParams[key];
         const valArr = [];
         for (const subkey of Object.keys(cat.params)) {
@@ -357,7 +357,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
 
       }
       // leaving out for now; produces unexpected results in my case.
-      if (newFacets.length < 15) {
+      if (0 && newFacets.length < 15) {
 
         const numFillFacets = 15 - newFacets.length;
 
@@ -388,7 +388,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     // const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     let eventValue = 0;
     Object.keys(this.privateFacetParams).forEach(key => {
-      if (this.privateFacetParams[key].params) {
+      if (this.privateFacetParams[key] && this.privateFacetParams[key].params) {
         eventValue = eventValue + Object.keys(this.privateFacetParams[key].params).length || 0;
       }
     });
