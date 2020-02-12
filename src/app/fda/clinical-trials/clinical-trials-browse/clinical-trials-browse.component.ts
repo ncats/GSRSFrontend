@@ -149,8 +149,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     this.searchTypes = [
       {'title': 'All', 'value': 'all'},
       {'title': 'Title', 'value': 'title'},
-      {'title': 'NCT Number', 'value': 'nctNumber'},
-      {'title': 'UUID', 'value': 'substanceUuid'}
+      {'title': 'NCT Number', 'value': 'nctNumber'}
+      // , {'title': 'UUID', 'value': 'substanceUuid'}
     ];
     this.searchClinicalTrials();
   }
