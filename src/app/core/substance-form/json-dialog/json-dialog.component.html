@@ -1,10 +1,10 @@
 <div mat-dialog-title>
   <h1 >JSON Object structure</h1>
   <div class = 'flex-row actions'>
-    <button mat-flat-button color="primary" (click) = "raw = !raw">{{raw? 'Show Object':'Show Raw'}}</button>
+    <button mat-flat-button color="primary" (click) = "raw = !raw">{{raw? 'Show Object':'Show Raw'}}</button>&nbsp;
     <button mat-flat-button *ngIf = "!raw" (click) = "expand = !expand">{{expand? 'collapse':'expand'}}</button>
     <span class = "middle-fill"></span>
-    <a  mat-flat-button [href]="downloadJsonHref" download="{{json.uuid? json.uuid.toString() : json.substanceClass}}.json">
+    <a  mat-flat-button color="primary" [href]="downloadJsonHref" download="{{json.uuid? json.uuid.toString() : json.substanceClass}}.json">
       <span>Export JSON</span>
     </a>
 
@@ -21,7 +21,7 @@
 </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button matDialogClose>Close</button>
+  <button mat-flat-button color="primary" matDialogClose>Close</button>
 
   <span class="middle-fill"></span>
 

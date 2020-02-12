@@ -45,4 +45,18 @@ export class ProductService extends BaseHttpService {
     );
   }
 
+  getIngredientNameByBdnum(
+    bdnum: string)
+    : Observable<any> {
+    const url = this.baseUrl + 'getIngredientNameByBdnum?bdnum=' + bdnum;
+
+    return this.http.get<any>(url)
+    .pipe(
+      map(result => {
+        return result;
+      })
+    );
+  }
+
+
 }

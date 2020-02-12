@@ -44,7 +44,7 @@
             Non Proprietary Name/INN/USAN Name/Generic Name:
           </div>
           <div class="row-property-value">
-            {{nonProprietaryName}}
+            {{product.nonProprietaryName}}
           </div>
         </div>
         <div class="row-property">
@@ -147,7 +147,7 @@
             Source
           </div>
           <div class="row-property-value">
-            {{product.Source}}
+            {{product.source}}
           </div>
         </div>
       </div>
@@ -197,7 +197,10 @@
             Product Code:/Product Type:
           </div>
           <div class="row-property-value">
-
+              <div *ngFor="let prodCode of product.productCodeList; let indexCode = index">
+                  <b>Product Code:</b>&nbsp;{{prodCode.productCode}}&nbsp;&nbsp;
+                  <b>Product Type:</b>&nbsp;&nbsp;{{prodCode.productCodeType}}<br><br>
+                </div>
           </div>
         </div>
         <div class="row-property">
@@ -263,11 +266,11 @@
 
             <br>
             <div class="row">
-              <div class="row-property">
-                <div class="row-property-key">
+              <div class="row-property-2">
+                <div class="row-property-key-2">
                   Dosage Form:
                 </div>
-                <div class="row-property-value">
+                <div class="row-property-value-2">
                   {{ prodComp.dosageForm }}
                 </div>
               </div>
