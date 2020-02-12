@@ -83,6 +83,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
   private classicLinkQueryParams = {};
+  isAdmin = false;
 
   constructor(
     private router: Router,
@@ -98,6 +99,12 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
+      this.isAdmin = response;
+    });
+    this.subscriptions.push(roleSubscription);
+
     this.baseDomain = this.configService.configData.apiUrlDomain;
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -320,7 +327,29 @@ export class BaseComponent implements OnInit, OnDestroy {
   setClassicLinkQueryParams(paramMap?: ParamMap, params?: { [queryParam: string]: string }): void {
 
     if (paramMap != null) {
+      const paramsDict = {};
+      paramsDict['q'] = paramMap.get('search')
+        || paramMap.get('structure_search')
+        || paramMap.get('sequence_search')
+        || paramMap.get('structure');
 
+      if (paramMap.get('sequence_search')) {
+        paramsDict['type'] = 'sequence';
+        paramsDict['identity'] = paramMap.get('cutoff');
+        paramsDict['identityType'] = paramMap.get('type');
+      } else if (paramMap.get('structure_search') || paramMap.get('structure')) {
+        paramsDict['cutoff'] = paramMap.get('cutoff');
+        paramsDict['type'] = paramMap.get('type');
+      }
+
+      paramsDict['id'] = paramMap.get('sequence');
+      paramsDict['seqType'] = paramMap.get('seq_type');
+
+      Object.keys(paramsDict).forEach(key => {
+        if (paramsDict[key] != null) {
+          this.classicLinkQueryParams[key] = paramsDict[key];
+        }
+      });
     }
 
     if (params != null) {
@@ -330,12 +359,11 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
 
     let queryParamsString = '';
-    console.log(this.classicLinkQueryParams);
     Object.keys(this.classicLinkQueryParams).forEach((key, index) => {
       const separator = index && '&' || '?';
       queryParamsString += `${separator}${key}=${this.classicLinkQueryParams[key]}`;
     });
-    console.log(queryParamsString);
+
     this.classicLinkQueryParamsString = queryParamsString;
   }
 
