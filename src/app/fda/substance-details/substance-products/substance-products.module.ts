@@ -14,6 +14,7 @@ import { SubstanceClinicalTrialsComponent } from './substance-clinical-trials/su
 import { SubstanceAdverseEventPtComponent } from './substance-adverseevent/adverseeventpt/substance-adverseeventpt.component';
 import { SubstanceAdverseEventDmeComponent } from './substance-adverseevent/adverseeventdme/substance-adverseeventdme.component';
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
+import { SubstanceClinicalTrialsEuropeComponent } from './substance-clinical-trials-eu/substance-clinical-trials-eu.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -34,6 +35,7 @@ import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adve
     SubstanceAdverseEventPtComponent,
     SubstanceAdverseEventDmeComponent,
     SubstanceAdverseEventCvmComponent,
+    SubstanceClinicalTrialsEuropeComponent,
   ]
 })
 export class SubstanceProductsModule { }

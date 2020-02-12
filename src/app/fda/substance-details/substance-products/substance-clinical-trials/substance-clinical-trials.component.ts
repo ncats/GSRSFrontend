@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/clinical-trial.service';
@@ -12,6 +12,10 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+
+  clinicalTrialCount = 0;
+
+  @Output() countClinicalTrialOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'nctNumber',
@@ -39,17 +43,19 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
     this.clinicalTrialService.getSubstanceClinicalTrials(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
+      this.clinicalTrialCount = results.length;
+      this.countClinicalTrialOut.emit(this.clinicalTrialCount);
     });
 
-  /*
-      this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
-      }, error => {
-        console.log(error);
+    /*
+        this.searchControl.valueChanges.subscribe(value => {
+          this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
+        }, error => {
+          console.log(error);
+        });
+        this.countUpdate.emit(clinicaltrials.length);
       });
-      this.countUpdate.emit(clinicaltrials.length);
-    });
-    */
+      */
   }
 
 }

@@ -1,9 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/substance-details-base-table-display';
-import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-substance-adverseeventpt',
@@ -12,6 +11,10 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+
+  advPtCount = 0;
+
+  @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'ptTerm',
@@ -39,6 +42,8 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
     this.adverseEventService.getSubstanceAdverseEventPt(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
+      this.advPtCount = results.length;
+      this.countAdvPtOut.emit(this.advPtCount);
     });
 
 /*

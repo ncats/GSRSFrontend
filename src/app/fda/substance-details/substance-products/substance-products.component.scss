@@ -2,10 +2,49 @@ td.mat-cell {
     vertical-align: top;
 }
 
+.bordergray {
+  border: 1px solid gray;
+}
+
 .font10px {
-  font-size: 10px;
+	font-size: 10px;
 }
-  
+
+.font15px {
+  font-size: 15px;
+}
+
 .colorgray {
-  color: gray;
+	color: gray;
 }
+
+.padleft25px {
+	padding-left: 25px;
+}
+
+.padtop5px {
+  padding-top: 5px;
+}
+
+.colorblue {
+  color: #4b4572;
+}
+
+
+.tabhide .mat-tab-list .mat-tab-labels {
+  display: none;
+}
+
+.mat-tab-labels, .mat-tab-label, .mat-tab-link {
+  // color: red;
+   color: blue;
+  // font-size: 14px;
+  // background-color: gray;
+}
+
+/*
+.mat-tab-group.mat-primary .mat-ink-bar {
+  background: white;
+  height: 5px;
+}
+*/

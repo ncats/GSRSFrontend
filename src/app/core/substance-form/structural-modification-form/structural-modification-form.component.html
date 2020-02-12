@@ -21,7 +21,7 @@
       <div class="flex-column form-content">
 
         <div class="form-row">
-        <app-cv-input [vocabulary] = "modTypeList" title = "Type" [model] = "mod.structuralModificationType"
+        <app-cv-input cvDomain="STRUCTURAL_MODIFICATION_TYPE" title = "Modification Type" [model] = "mod.structuralModificationType"
                       (valueChange)= "mod.structuralModificationType = $event"></app-cv-input>
           <div class = 'sites' *ngIf = "mod.locationType !== 'RESIDUE_SPECIFIC'">
             <div class="label">Sites</div>
@@ -29,6 +29,11 @@
             <button mat-icon-button matTooltip="Undo" (click)="(openDialog())">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
+          </div>
+          <div class = 'residues' *ngIf = "mod.locationType === 'RESIDUE_SPECIFIC'">
+            <mat-form-field class="group">
+              <input matInput placeholder="Residue Modified" [(ngModel)]="mod.residueModified"  name="Residue Modified" />
+            </mat-form-field>
           </div>
         </div>
 

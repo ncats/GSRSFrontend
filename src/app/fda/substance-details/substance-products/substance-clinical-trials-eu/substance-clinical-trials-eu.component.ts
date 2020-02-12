@@ -1,0 +1,61 @@
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/clinical-trial.service';
+import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
+import { PageEvent } from '@angular/material/paginator';
+
+@Component({
+  selector: 'app-substance-clinical-trials-eu',
+  templateUrl: './substance-clinical-trials-eu.component.html',
+  styleUrls: ['./substance-clinical-trials-eu.component.scss']
+})
+
+export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+
+  clinicalTrialEuCount = 0;
+
+  @Output() countClinicalTrialEuOut: EventEmitter<number> = new EventEmitter<number>();
+
+  displayedColumns: string[] = [
+    'nctNumber',
+    'title',
+    'sponsorName',
+    'productName'
+  ];
+
+  constructor(
+    public gaService: GoogleAnalyticsService,
+    private clinicalTrialService: ClinicalTrialService
+  ) {
+    super(gaService, clinicalTrialService);
+  }
+
+  ngOnInit() {
+    if (this.bdnum) {
+      this.getSubstanceClinicalTrials();
+    }
+  }
+
+  getSubstanceClinicalTrials(pageEvent?: PageEvent): void {
+    this.setPageEvent(pageEvent);
+
+    this.clinicalTrialService.getSubstanceClinicalTrialsEurope(this.bdnum, this.page, this.pageSize).subscribe(results => {
+      this.setResultData(results);
+      this.clinicalTrialEuCount = results.length;
+      this.countClinicalTrialEuOut.emit(this.clinicalTrialEuCount);
+    });
+
+    /*
+        this.searchControl.valueChanges.subscribe(value => {
+          this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
+        }, error => {
+          console.log(error);
+        });
+        this.countUpdate.emit(clinicaltrials.length);
+      });
+      */
+  }
+
+}
+

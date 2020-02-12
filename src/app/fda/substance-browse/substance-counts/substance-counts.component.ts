@@ -11,10 +11,12 @@ import { GeneralService } from '../../service/general.service';
 export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamicContent {
   substance: SubstanceDetail;
   searchCount: any;
+  substanceId: string;
 
   constructor(private generalService: GeneralService) { }
 
   ngOnInit() {
+    this.substanceId = this.substance.uuid;
     this.getSearchCount();
   }
 

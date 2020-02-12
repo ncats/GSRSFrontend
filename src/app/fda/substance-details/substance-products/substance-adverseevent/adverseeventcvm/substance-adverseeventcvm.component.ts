@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
@@ -12,6 +12,10 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+
+  advCvmCount = 0;
+
+  @Output() countAdvCvmOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'adverseEvent', 'species', 'adverseEventCount', 'routeOfAdmin'
@@ -35,6 +39,9 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
 
     this.adverseEventService.getSubstanceAdverseEventCvm(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
+      this.advCvmCount = results.length;
+      this.countAdvCvmOut.emit(this.advCvmCount);
+
     });
       /*
       this.searchControl.valueChanges.subscribe(value => {

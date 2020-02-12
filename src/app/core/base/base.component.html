@@ -23,11 +23,12 @@
         </a>
         <ng-container *ngIf="navItem.children">
           <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
-              {{navItem.display}}
+            {{navItem.display}}
           </a>
           <mat-menu #childrenMenu="matMenu">
             <div *ngFor="let childNavItem of navItem.children">
-              <a mat-menu-item [routerLink]="['/' + childNavItem.path]" [queryParams] = "childNavItem.params||{}" *ngIf="childNavItem.path">
+              <a mat-menu-item [routerLink]="['/' + childNavItem.path]" [queryParams]="childNavItem.params||{}"
+                *ngIf="childNavItem.path">
                 {{childNavItem.display}}
               </a>
             </div>
@@ -37,31 +38,33 @@
     </mat-menu>
   </span>
   <span class="middle-fill"></span>
-  <app-substance-text-search
-    class="top-search"
-    [searchValue]="searchValue"
-    (searchPerformed)="processSubstanceSearch($event)"
-    eventCategory="topSearch"
-    (opened)="increaseMenuZindex()"
+  <app-substance-text-search class="top-search" [searchValue]="searchValue"
+    (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
     (closed)="removeZindex()">
   </app-substance-text-search>
   <div>
     <button mat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment != 'login'">
       Login
     </button>
-      <div class = "logged-in" *ngIf="auth" >
-        <button class ="user-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()">
-        <mat-icon class = "user-icon" svgIcon="account_circle"></mat-icon>
+    <div class="logged-in" *ngIf="auth">
+      <button class="user-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()">
+        <mat-icon class="user-icon" svgIcon="account_circle"></mat-icon>
       </button>
-        <br/>
-              <span class = "user" *ngIf="auth && auth.identifier" >{{auth.identifier}}</span>
-      </div>
-      <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
-        <button mat-menu-item (click)="authService.logout()">
-          <span>Logout</span>
-        </button>
+      <br />
+      <span class="user" *ngIf="auth && auth.identifier">{{auth.identifier}}</span>
+    </div>
+    <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
+      <button mat-menu-item (click)="authService.logout()">
+        <span>Logout</span>
+      </button>
 
-      </mat-menu>
+    </mat-menu>
+  </div>
+  <div class="classic-view-container">
+    <a mat-raised-button [href]="baseDomain + '/ginas/app/'" target="_blank">
+      Classic View
+      <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+    </a>
   </div>
 </mat-toolbar>
 <app-main-notification></app-main-notification>

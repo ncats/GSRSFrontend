@@ -7,6 +7,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ProductDetailsBaseComponent} from '../product-details-base.component';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-product-elist-details',
@@ -30,6 +31,9 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
 
   ngOnInit() {
     super.ngOnInit();
+
+    this.iconSrcPath = `${environment.baseHref || '/'}assets/icons/fda/icon_dailymed.png`;
+
   }
 
 }

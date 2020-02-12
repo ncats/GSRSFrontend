@@ -5,23 +5,27 @@ import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials-browse/clinical-trials-browse.component';
 import { ClinicalTrialEditComponent } from './clinical-trial-edit/clinical-trial-edit.component';
 import { ClinicalTrialAddComponent } from './clinical-trial-add/clinical-trial-add.component';
 import { MiniSearchComponent } from './mini-search/mini-search.component';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import { Pipes2Br } from './filters/pipes-2-br';
 import { ClinicalTrialService } from './clinical-trial/clinical-trial.service';
 import { ClinicalTrialDetailsBaseComponent } from './clinical-trial-details/clinical-trial-details-base.component';
 import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details/clinical-trial-details.component';
 // tslint:disable-next-line: max-line-length
 import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/clinical-trial-europe-details/clinical-trial-europe-details.component';
+import { FacetDisplayPipe } from '../utils/facet-display.pipe';
+import { FacetFilterPipe } from '../utils/facet-filter.pipe';
 
 const clinicalTrialsRoutes: Routes = [
    {
@@ -45,7 +49,7 @@ const clinicalTrialsRoutes: Routes = [
       component: ClinicalTrialEuropeDetailsComponent
     }
 ];
-
+// abcd
 @NgModule({
   imports: [
     MatTableModule,
@@ -55,29 +59,33 @@ const clinicalTrialsRoutes: Routes = [
     MatIconModule,
     MatButtonModule,
     MatPaginatorModule,
+    MatSidenavModule,
+    MatExpansionModule,
     MatCardModule,
     MatTabsModule,
     ReactiveFormsModule,
     FormsModule,
     MatCheckboxModule,
+    MatSelectModule,
     CommonModule,
     RouterModule.forChild(clinicalTrialsRoutes)
   ],
   declarations: [
+    MiniSearchComponent,
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
     ClinicalTrialAddComponent,
-    MiniSearchComponent,
-    Pipes2Br,
+    FacetFilterPipe,
+    FacetDisplayPipe,
     ClinicalTrialDetailsComponent,
     ClinicalTrialEuropeDetailsComponent,
     ClinicalTrialDetailsBaseComponent
   ],
   exports: [
+    MiniSearchComponent,
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
-    ClinicalTrialAddComponent,
-    MiniSearchComponent
+    ClinicalTrialAddComponent
   ]
 })
 export class ClinicalTrialsModule {

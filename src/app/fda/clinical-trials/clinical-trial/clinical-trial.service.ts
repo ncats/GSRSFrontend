@@ -7,6 +7,8 @@ import { ClinicalTrial } from './clinical-trial.model';
 import { BdnumNameAll } from './clinical-trial.model';
 import { PagingResponse } from '@gsrs-core/utils';
 import { map } from 'rxjs/operators';
+import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
+import { ClinicalTrialHttpParams } from '../misc/clinical-trial-http-params';
 
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
@@ -21,6 +23,50 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   getClinicalTrials(
+    args: {
+      searchTerm?: string,
+      cutoff?: number,
+      type?: string,
+      pageSize?: number,
+      order?: string,
+      facets?: ClinicalTrialFacetParam,
+      skip?: number
+    } = {}): Observable<PagingResponse<ClinicalTrial>> {
+    if (!args.searchTerm) {  args.searchTerm = ''; }
+    if (!args.pageSize) {  args.pageSize = 10; }
+    if (!args.skip) {  args.skip = 0; }
+    console.log('args.searchTerm: ' + args.searchTerm);
+    let params = new ClinicalTrialHttpParams();
+    params = params.append('skip', args.skip.toString());
+    params = params.append('top', args.pageSize.toString());
+    if (args.searchTerm !== null && args.searchTerm !== '') {
+      if (args.type !== null && args.type !== '') {
+        if (args.type === 'nctNumber' ) {
+          params = params.append('q', 'root_NCT Number:\"^' + args.searchTerm + '$\"');
+        } else if (args.type === 'substanceUuid' ) {
+          params = params.append('q', 'root_suuids:\"^' + args.searchTerm + '$\"');
+        } else if (args.type === 'title') {
+          params = params.append('q', 'root_title:\"' + args.searchTerm + '\"');
+        } else {
+          params = params.append('q', args.searchTerm);
+        }
+      } else {
+        params = params.append('q', args.searchTerm);
+      }
+    }
+    if (args.facets !== null) {
+      params = params.appendFacetParams(args.facets);
+    }
+    const url = `${this.apiBaseUrl}ctclinicaltrial/search`;
+    const options = {
+      params: params
+    };
+    return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
+  }
+
+
+ // need to resolve
+ getClinicalTrials_archana (
     skip: number = 0,
     pageSize: number = 10,
     searchTerm?: string
@@ -37,6 +83,8 @@ export class ClinicalTrialService extends BaseHttpService {
     };
     return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
   }
+
+
 
   deleteClinicalTrial(id: string): Observable<any> {
     const url = `${this.apiBaseUrl}ctclinicaltrial(${id})`;
@@ -121,6 +169,19 @@ export class ClinicalTrialService extends BaseHttpService {
     bdnum: string, page: number, pageSize: number
   ): Observable<Array<any>> {
     const url = this.baseUrl + 'clinicalTrialListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        this.totalRecords = results['totalRecords'];
+        return results['data'];
+      })
+    );
+  }
+
+  getSubstanceClinicalTrialsEurope(
+    bdnum: string, page: number, pageSize: number
+  ): Observable<Array<any>> {
+    const url = this.baseUrl + 'clinicalTrialEuropeListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url).pipe(
       map(results => {

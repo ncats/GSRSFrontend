@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
@@ -12,6 +12,10 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+
+  advDmeCount = 0;
+
+  @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'dmeReactions', 'ptTermMeddra', 'caseCount', 'dmeCount', 'dmeCountPercent', 'weightedAvgPrr'
@@ -35,6 +39,8 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
 
     this.adverseEventService.getSubstanceAdverseEventDme(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
+      this.advDmeCount = results.length;
+      this.countAdvDmeOut.emit(this.advDmeCount);
     });
       /*
       this.searchControl.valueChanges.subscribe(value => {

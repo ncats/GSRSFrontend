@@ -9,29 +9,17 @@ import { fdaSubstanceCardsFilters } from './substance-details/fda-substance-card
 import { ProductService } from './product/service/product.service';
 import { MatCardModule } from '@angular/material/card';
 import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
 import { ApplicationsModule} from './applications/applications.module';
+import { ProductModule} from './product/product.module';
 import { GeneralService} from './service/general.service';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ProductDetailsBaseComponent } from './product/product-details/product-details-base.component';
-import { ProductDetailsComponent } from './product/product-details/product-details/product-details.component';
-import { ProductElistDetailsComponent } from './product/product-details/product-elist-details/product-elist-details.component';
+
 import { ApplicationsBrowseComponent } from './applications/applications-browse/applications-browse.component';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
 
 const fdaRoutes: Routes = [
-  {
-    path: 'products/:id',
-    component: ProductElistDetailsComponent
-  },
-  {
-    path: 'productElistDetails/:id/:src',
-    component: ProductElistDetailsComponent
-  },
-  {
-    path: 'productDetails/:id/:src',
-    component: ProductDetailsComponent
-  },
   {
     path: 'browse-applications',
     component: ApplicationsBrowseComponent
@@ -49,16 +37,15 @@ const fdaRoutes: Routes = [
     DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
     MatCardModule,
+    MatExpansionModule,
+    ClinicalTrialsModule.forRoot(),
     MatTabsModule,
     ClinicalTrialsModule.forRoot(),
-    ApplicationsModule
+    ApplicationsModule,
+    ProductModule
   ],
   declarations: [
-    ProductElistDetailsComponent,
     SubstanceCountsComponent,
-    ProductDetailsBaseComponent,
-    ProductDetailsComponent,
-    ProductElistDetailsComponent
   ],
   exports: [],
   entryComponents: [
