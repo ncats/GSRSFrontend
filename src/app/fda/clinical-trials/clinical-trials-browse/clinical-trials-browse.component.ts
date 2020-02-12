@@ -12,8 +12,9 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import {AuthService} from '@gsrs-core/auth/auth.service';
+import { Auth } from '@gsrs-core/auth/auth.model';
 import { Location, LocationStrategy } from '@angular/common';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -50,14 +51,15 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
   displayedColumns: string[];
   public smiles: string;
   private argsHash?: number;
-  // public auth?: Auth;
+  public auth?: Auth;
+  showAudit: boolean;
   public order: string;
   // public sortValues = searchSortValues;
-  showAudit: boolean;
   public facetBuilder: ClinicalTrialFacetParam;
   searchText: string[] = [];
   private overlayContainer: HTMLElement;
-  dataSource = [];
+  toggle: Array<boolean> = [];
+  dataSource = new MatTableDataSource<ClinicalTrial>([]);
   isAdmin: boolean;
   jumpToValue: string;
 
@@ -90,6 +92,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     });
   }
 
+  // see substances code
   facetsFromParams() {
     if (this.facetString !== '') {
       const categoryArray = this.facetString.split(',');
@@ -110,13 +113,17 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
           }
         }
         if (hasSelections === true) {
-          this.facetBuilder[category] = { 'params': params, hasSelections: true };
+          this.facetBuilder[category] = { params: params, hasSelections: true, isAllMatch: false };
+          const paramsString = JSON.stringify(params);
+          const newHash = this.utilsService.hashCode(paramsString, this.facetBuilder[category].isAllMatch.toString());
+          this.facetBuilder[category].currentStateHash = newHash;
         }
       }
       this.privateFacetParams = this.facetBuilder;
     }
 
   }
+
 
   ngOnInit() {
 
@@ -131,12 +138,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.facetString = this.activatedRoute.snapshot.queryParams['facets'] || '';
     this.facetsFromParams();
-    // this.searchSubstances();
-    // ??
-    // this.overlayContainer = this.overlayContainerService.getContainerElement();
-    // this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
+    this.isAdmin = response;
       if (this.isAdmin) {
         this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated', 'delete'];
        } else {
@@ -146,16 +149,35 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     this.searchTypes = [
       {'title': 'All', 'value': 'all'},
       {'title': 'Title', 'value': 'title'},
-      // Yes, Keep for later.
-      // {'title': 'NCT Number', 'value': 'nctNumber'},
-      // {'title': 'UUID', 'value': 'substanceUuid'}
+      {'title': 'NCT Number', 'value': 'nctNumber'}
+      // , {'title': 'UUID', 'value': 'substanceUuid'}
     ];
     this.searchClinicalTrials();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.processResponsiveness();
+  }
+
   changePage(pageEvent: PageEvent) {
+
+    let eventAction;
+    let eventValue;
+
+    if (this.pageSize !== pageEvent.pageSize) {
+      eventAction = 'select:page-size';
+      eventValue = pageEvent.pageSize;
+    } else if (this.pageIndex !== pageEvent.pageIndex) {
+      eventAction = 'icon-button:page-number';
+      eventValue = pageEvent.pageIndex + 1;
+    }
+
+    // this.gaService.sendEvent('substancesContent', eventAction, 'pager', eventValue);
+
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
+    this.populateUrlQueryParameters();
     this.searchClinicalTrials();
   }
 
@@ -167,22 +189,15 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     this.searchClinicalTrials();
   }
 
-  deleteClinicalTrial(id) {
+  deleteClinicalTrial(index: number) {
     this.loadingService.setLoading(true);
-    this.clinicalTrialService.deleteClinicalTrial(id)
+    this.clinicalTrialService.deleteClinicalTrial(this.clinicalTrials[index].nctNumber)
       .subscribe(result => {
         this.isError = false;
-        let i = 0;
-        this.dataSource.forEach(element => {
-            if (element.nctNumber === id) {
-                this.dataSource.splice(i, 1);
-                // console.log('clinical-trials-browse ui found item to delete.');
-              }
-              i++;
-              this.dataSource = this.dataSource;
-        });
+        const deletedClinicalTrials = this.clinicalTrials.splice(index, 1);
+        this.dataSource.data = this.clinicalTrials;
         const notification: AppNotification = {
-          message: 'You deleted the clinical trial record for:' + id,
+          message: 'You deleted the clinical trial record for:' + deletedClinicalTrials[0].nctNumber,
           type: NotificationType.success,
           milisecondsToShow: 6000
         };
@@ -190,9 +205,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
         this.notificationService.setNotification(notification);
-        // the method is called but
-        // can't get refresh after delete ???
-        this.searchClinicalTrials();
       }, error => {
         const notification: AppNotification = {
           message: 'There was an error trying to delete a clinical trial.',
@@ -236,7 +248,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
       .subscribe(pagingResponse => {
         this.isError = false;
         this.clinicalTrials = pagingResponse.content;
-        this.dataSource = this.clinicalTrials;
+        this.dataSource.data = this.clinicalTrials;
+
         this.totalClinicalTrials = pagingResponse.total;
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.populateFacets(pagingResponse.facets);
@@ -258,6 +271,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     }
   }
 
+  // see substances code
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {}
@@ -266,7 +280,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     const catArr = [];
     let facetString = '';
     for (const key of Object.keys(this.privateFacetParams)) {
-      if (this.privateFacetParams[key].hasSelections === true) {
+      if (this.privateFacetParams[key] && this.privateFacetParams[key].isUpdated === true) {
         const cat = this.privateFacetParams[key];
         const valArr = [];
         for (const subkey of Object.keys(cat.params)) {
@@ -275,6 +289,10 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
           }
         }
         catArr.push(key + '*' + valArr.join('+'));
+        const paramsString = JSON.stringify(this.privateFacetParams[key].params);
+        const newHash = this.utilsService.hashCode(paramsString, this.privateFacetParams[key].isAllMatch.toString());
+        this.privateFacetParams[key].currentStateHash = newHash;
+        this.privateFacetParams[key].isUpdated = false;
       }
     }
     facetString = catArr.join(',');
@@ -287,18 +305,21 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     navigationExtras.queryParams['facets'] = facetString;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
 
-    this.router.navigate(
-      [],
-      navigationExtras
-    );
+    const urlTree = this.router.createUrlTree([], {
+      queryParams: navigationExtras.queryParams,
+      queryParamsHandling: 'merge',
+      preserveFragment: true
+    });
+    this.location.go(urlTree.toString());
   }
 
 
+  // see substances code
   private populateFacets(facets: Array<Facet>): void {
-    // this.authService.getAuth().subscribe(auth => {
-      this.facets = [];
-      // this.auth = auth;
-      // this.showAudit = this.authService.hasRoles('admin');
+    const subscription = this.authService.getAuth().subscribe(auth => {
+      let newFacets = [];
+      this.auth = auth;
+      this.showAudit = this.authService.hasRoles('admin');
       if (this.configService.configData.facets != null) {
 
         const facetKeys = Object.keys(this.configService.configData.facets) || [];
@@ -308,6 +329,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
             && (facetKey === 'ctclinicaltrial' || this.authService.hasRoles(facetKey))) {
             this.configService.configData.facets[facetKey].forEach(facet => {
               for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
+                this.toggle[facetIndex] = true;
                 if (facet === facets[facetIndex].name) {
                   if (facets[facetIndex].values != null && facets[facetIndex].values.length) {
                     let hasValues = false;
@@ -321,7 +343,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
                     if (hasValues) {
                       const facetToAdd = facets.splice(facetIndex, 1);
                       facetIndex--;
-                      this.facets.push(facetToAdd[0]);
+                      newFacets.push(facetToAdd[0]);
                       this.searchText.push(facetToAdd[0].name);
                     }
                   }
@@ -334,10 +356,10 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
         });
 
       }
+      // leaving out for now; produces unexpected results in my case.
+      if (0 && newFacets.length < 15) {
 
-      if (0 && this.facets.length < 15) {
-
-        const numFillFacets = 15 - this.facets.length;
+        const numFillFacets = 15 - newFacets.length;
 
         let sortedFacets = _.orderBy(facets, facet => {
           let valuesTotal = 0;
@@ -347,32 +369,34 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
           return valuesTotal;
         }, 'desc');
         const additionalFacets = _.take(sortedFacets, numFillFacets);
-        this.facets = this.facets.concat(additionalFacets);
+        newFacets = newFacets.concat(additionalFacets);
         sortedFacets = null;
       }
 
-      if (this.facets.length > 0) {
+      if (newFacets.length > 0) {
         this.processResponsiveness();
       } else {
         this.matSideNav.close();
       }
-
+      this.facets = newFacets;
       this.cleanFacets();
-    // });
+    });
   }
 
-
+  // see substances code
   applyFacetsFilter(facetName: string) {
     // const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     let eventValue = 0;
     Object.keys(this.privateFacetParams).forEach(key => {
-      if (this.privateFacetParams[key].params) {
+      if (this.privateFacetParams[key] && this.privateFacetParams[key].params) {
         eventValue = eventValue + Object.keys(this.privateFacetParams[key].params).length || 0;
       }
     });
     // this.gaService.sendEvent('substancesFiltering', 'button:apply-facet', eventLabel, eventValue);
     this.populateUrlQueryParameters();
+    this.searchClinicalTrials();
   }
+
 
   updateFacetSelection(
     event: MatCheckboxChange,
@@ -380,21 +404,30 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     facetValueLabel: string,
     include: boolean
   ): void {
+
     // const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName} > ${facetValueLabel}`;
     const eventValue = event.checked ? 1 : 0;
     const eventAction = include ? 'include' : 'exclude';
-    //  this.gaService.sendEvent('substancesFiltering', `check:facet-${eventAction}`, eventLabel, eventValue);
+    // this.gaService.sendEvent('substancesFiltering', `check:facet-${eventAction}`, eventLabel, eventValue);
+
+    let paramsString: string;
+    let isAllMatchString: string;
 
     if (this.privateFacetParams[facetName] == null) {
       this.privateFacetParams[facetName] = {
-        params: {}
+        params: {},
+        isAllMatch: false
       };
+      paramsString = JSON.stringify(this.privateFacetParams[facetName].params);
+      isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
+      const stateHash = this.utilsService.hashCode(paramsString, isAllMatchString);
+      this.privateFacetParams[facetName].currentStateHash = stateHash;
     }
 
     if (include) {
-      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked || null;
+      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked || undefined;
     } else {
-      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked === true ? false : null;
+      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked === true ? false : undefined;
     }
 
     let hasSelections = false;
@@ -422,8 +455,13 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
       this.privateFacetParams[facetName].isAllMatch = false;
     }
 
+    paramsString = JSON.stringify(this.privateFacetParams[facetName].params);
+    isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
+    const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
+    this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
     this.pageIndex = 0;
   }
+
 
   clearFacetSelection(
     facetName?: string
@@ -446,6 +484,10 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
           this.privateFacetParams[facetKey].isAllMatch = false;
           this.privateFacetParams[facetKey].showAllMatchOption = false;
           this.privateFacetParams[facetKey].hasSelections = false;
+          const paramsString = JSON.stringify(this.privateFacetParams[facetName].params);
+          const isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
+          const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
+          this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
         }
       });
     }
