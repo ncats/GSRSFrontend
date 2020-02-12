@@ -36,6 +36,13 @@ mat-panel-title {
     }
 }
 
+::ng-deep .nav-chevron {
+    svg {
+        height: 24px;
+        width: 24px;
+    }
+}
+
 @media(max-width: 1100px) {
     .title-container {
         padding-left: 25px;
