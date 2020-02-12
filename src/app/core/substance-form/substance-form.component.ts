@@ -173,6 +173,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           response.names = [];
           response.notes = [];
           response.codes = [];
+          if (response._name) {
+            delete response._name;
+          }
           response.relationships = [];
         }
         this.substanceFormService.loadSubstance(response.substanceClass, response);

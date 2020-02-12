@@ -39,6 +39,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   links: Array<Linkage>;
   sequenceType = '';
   substanceType: string;
+  searchType: string;
 
 
   constructor(
@@ -56,6 +57,11 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     this.allSites = [];
     const definitionSubscription = this.substanceFormService.definition.subscribe( definition => {
       this.substanceType = definition.substanceClass;
+      if (this.substanceType === 'protein') {
+        this.searchType = 'Protein';
+      } else {
+        this.searchType = 'Nucleicacid';
+      }
       this.getVocabularies();
     });
     definitionSubscription.unsubscribe();
@@ -220,6 +226,41 @@ change(event): void {
       this.substanceFormService.emitSubunitUpdate();
       this.substanceFormService.recalculateCysteine();
     }
+  }
+
+  convertSequence(): void {
+    const dashes = true;
+    const dict = 'A	Ala;C	Cys;D	Asp;E	Glu;F	Phe;G	Gly;H	His;I	Ile;K	Lys;L	Leu;M	Met;N	Asn;P	Pro;Q	Gln;R	Arg;S	Ser;T	Thr;V	Val;W	Trp;Y	Tyr';
+      let arr = [];
+      const obj = {};
+      let n = '';
+      arr = dict.split(';');
+      for (let i = 0; i < arr.length; i++) {
+        let arr2 = [];
+        arr2 = arr[i].split('\t');
+        obj[arr2[0]] = arr2[1];
+        obj[arr2[1].toUpperCase()] = arr2[0];
+      }
+      let seqarr = [];
+
+        seqarr = this.subunit.sequence.replace(/[ ]/g, '-').split('-');
+
+      for (let i = 0; i < seqarr.length; i++) {
+        let trans = obj[seqarr[i].toUpperCase()];
+        if (seqarr[i].length > 3) {
+          n = n + seqarr[i];
+          continue;
+        }
+          if (trans === undefined) {
+            trans = 'X';
+          }
+
+        n = n + trans;
+      }
+
+      this.subunit.sequence = n;
+    this.substanceFormService.emitSubunitUpdate();
+    this.substanceFormService.recalculateCysteine();
   }
 
 

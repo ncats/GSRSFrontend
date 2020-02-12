@@ -2,3 +2,24 @@
   justify-content: center;
   align-items:center;
 }
+.image-icon {
+  width: 150px;
+  height: auto;
+}
+
+.classification {
+  width: 50%;
+}
+.selected-substance {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  width:50%;
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-width: 200px;
+  }
+}

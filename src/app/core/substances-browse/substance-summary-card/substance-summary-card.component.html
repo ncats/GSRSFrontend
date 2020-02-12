@@ -29,6 +29,9 @@
             <img [src]="getSafeStructureImgUrl(substance.uuid)">
           </div>
         </div>
+        <div class = 'definition' *ngIf = "substance.definitionLevel === 'REPRESENTATIVE'">
+          REPRESENTATIVE DEFINITION
+        </div>
         <button
           *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer"
           mat-icon-button [matMenuTriggerFor]="downloadMenu">

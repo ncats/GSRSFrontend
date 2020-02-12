@@ -5,11 +5,54 @@
     </mat-card-title>
     <mat-card-content>
       <mat-nav-list>
-        <a mat-list-item routerLink="/browse-substance"> 
+        <a mat-list-item routerLink="/browse-substance">
+          <mat-icon matListIcon svgIcon="search"></mat-icon>
           Browse All Substances
         </a>
-        <a mat-list-item [href]="baseDomain + '/ginas/app/applications'" target="_blank"> 
+        <mat-divider></mat-divider>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/applications'" target="_blank">
+          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
           Browse All Applications
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=substance'" target="_blank">
+          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          Substance
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=prod'" target="_blank">
+          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          Product
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=app'" target="_blank">
+          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          Application
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=clinical'" target="_blank">
+          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          Clinical Trial
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=biomarker'" target="_blank">
+          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          Biomarker
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=indication'" target="_blank">
+          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          Indication/Sponsor
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=adverse'" target="_blank">
+          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          Adverse Event
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch'" target="_blank">
+          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          Advanced Search
         </a>
       </mat-nav-list>
     </mat-card-content>
@@ -19,7 +62,95 @@
       Register (Login to Register)
     </mat-card-title>
     <mat-card-content>
-      
+      <div class="register-card-content">
+        <div>
+          <mat-nav-list>
+            <h3 matSubheader>Register a Substance</h3>
+            <a mat-list-item routerLink="/substances/register">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              Chemical
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/substances/register/protein">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              Protein
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/substances/register/polymer">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              Polymer
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/substances/register/nucleicAcid">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              Nucleic Acid
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/substances/register/structurallyDiverse">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              Structurally Diverse
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/substances/register/concept">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              Concept
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/substances/register/mixture">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              Mixture
+            </a>
+          </mat-nav-list>
+        </div>
+        <div>
+          <mat-nav-list class="register-other">
+            <a mat-list-item [href]="baseDomain + '/substances/register/specifiedSubstanceG1'" target="_blank">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              Specified Substance Group 1
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG2'" target="_blank">
+              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              Specified Substance Group 2
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG3'" target="_blank">
+              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              Specified Substance Group 3
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG4'" target="_blank">
+              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              Specified Substance Group 4
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG4Manufacturing'" target="_blank">
+              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              Specified Substance Group 4 Manufacturing
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item [href]="baseDomain + '/ginas/app/registerProduct'" target="_blank">
+              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              Product
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item [href]="baseDomain + '/ginas/app/registerApplication'" target="_blank">
+              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              Application
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item [href]="baseDomain + '/ginas/app/registerBiomarker'" target="_blank">
+              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              Biomarker
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item [href]="baseDomain + '/ginas/app/registerIndication'" target="_blank">
+              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              Indication
+            </a>
+          </mat-nav-list>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

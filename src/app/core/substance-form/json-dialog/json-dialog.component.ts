@@ -24,7 +24,7 @@ export class JsonDialogComponent implements OnInit {
 
   ngOnInit() {
     this.json = this.substanceFormService.getJson();
-    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(this.json));
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(this.json)));
     this.downloadJsonHref = uri;
   }
 
