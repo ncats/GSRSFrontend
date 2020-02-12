@@ -21,8 +21,8 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.authService.getAuth().subscribe(auth => {
-      this.isAuthenticated = auth != null;
+    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
+      this.isAuthenticated = response;
     });
     this.gaService.sendPageView(`Home`);
     this.environment = this.configService.environment;
