@@ -2,7 +2,7 @@
   <div class="actions-container">
     <button mat-flat-button color="primary" class = "validate-button" (click)="showJSON()" >Show JSON</button>
 
-    <button mat-button (click)="toggleValidation()" [disabled]="isLoading" *ngIf="validationMessages && validationMessages.length > 0">
+    <button mat-button (click)="toggleValidation()" [disabled]="isLoading" *ngIf="showSubmissionMessages">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
     </button>
     <span class="middle-fill"></span>
