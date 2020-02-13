@@ -474,7 +474,6 @@ margin:auto;
 	font-size: 13px;
 }
 
-
 .row-property-2 {
   display: flex;
   width: 100%;
@@ -503,6 +502,30 @@ margin:auto;
   font-size: 9px;
 }
 
+.font10px{
+  font-size: 10px;
+}
+
+.font12px{
+  font-size: 12px;
+}
+
+.colorgray {
+  color: gray;
+}
+
+.colorred {
+  color: red;
+}
+
+.colorgreen {
+  color: green;
+}
+
+.colororange {
+  color: orange;
+}
+
 .bordergray {
   border:1px solid gray;
 }
@@ -513,4 +536,8 @@ margin:auto;
 
 .borderlightgray {
   border:1px solid #bbc2a4;
+}
+
+.padtop5px {
+  padding-top: 5px;
 }

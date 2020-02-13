@@ -110,8 +110,32 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  getSubstanceDetailsByBdnum(
+    bdnum: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'getSubstanceDetailsByBdnum?bdnum=' + bdnum;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getSubstanceRelationship(
+    substanceId: string
+  ): Observable<Array<any>> {
+    const url = this.baseUrl + 'getRelationshipBySubstanceId?substanceId=' + substanceId;
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        return results['data'];
+      })
+    );
+  }
+
   getUpdateApplicationUrl(): string {
     return this.baseUrl + 'updateApplication?applicationId=';
   }
+
+
 
 } // class

@@ -99,7 +99,6 @@
 
 
           <!--Product-->
-
           <div *ngFor="let prod of application.applicationProductList; let index = index">
 
             <div class="row">
@@ -134,15 +133,49 @@
                     Ingredient Name: {{ index + 1}}:
                   </div>
                   <div class="row-property-value-2">
+
+                    <!-- Display Ingredient Name -->
                     <div *ngIf="ing.bdnum; else noIngred">
-                      &#9642;&nbsp;{{ ing.bdnum }}
+                      <span class="colorred">&diams;</span>
+                      <a [routerLink]="['/substances', ing.substanceId]" target="_blank">{{ing.ingredientName}}</a>
+                      <br>
+
+                      <!-- Display Ingredient Type -->
+                      <div *ngIf="ing.ingredientType">
+                        <div *ngIf="ing.ingredientType === 'Active Ingredient'; else otherIngredType">
+                          &nbsp;&nbsp;<span class="colorgreen">
+                            ({{ ing.ingredientType }})
+                          </span>
+                        </div>
+                        <ng-template #otherIngredType>
+                          &nbsp;&nbsp;({{ ing.ingredientType }})
+                        </ng-template>
+                      </div>
+
+                      <!-- Active Moiety -->
+                      <div *ngIf="ing.activeMoietyUnii; else noActiveUnii" class="padtop5px">
+                        <span class="colororange">&diams;</span>
+                        <a [routerLink]="['/substances', ing.activeMoietyUnii]" target="_blank">
+                          {{ ing.activeMoietyName }}</a>
+                        <span class="font10px colorgray">&nbsp;(Active Moiety)</span><br>
+                        <br>
+                      </div>
+                      <ng-template #noActiveUnii>
+                        <div *ngIf="ing.activeMoietyName">
+                          {{ ing.activeMoietyName }}
+                          <span class="font10px colorgray">&nbsp;(Active Moiety)</span><br>
+                        </div>
+                      </ng-template>
+
                     </div>
                     <ng-template #noIngred>
                       (No Ingredient)
                     </ng-template>
                   </div>
+
                 </div>
               </div>
+
             </div> <!-- repeat Ingred -->
 
           </div> <!-- repeat Prod-->

@@ -186,6 +186,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
         this.facets = [];
+
+        this.getSubstanceDetailsByBdnum();
+
         // this.applicationService.getClinicalTrialApplication(this.applications);
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.populateFacets(pagingResponse.facets);
@@ -416,6 +419,56 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     return this.privateFacetParams;
   }
 
+  getSubstanceDetailsByBdnum(): void {
+    let bdnumName: any;
+    let relationship: any;
+    let substanceId: string;
+
+    this.applications.forEach((element, index) => {
+
+      element.applicationProductList.forEach((elementProd, indexProd) => {
+
+        elementProd.applicationIngredientList.forEach((elementIngred, indexIngred) => {
+
+          // Get Substance Details such as Name, Substance Id, unii
+          if (elementIngred.bdnum != null) {
+
+            this.applicationService.getSubstanceDetailsByBdnum(elementIngred.bdnum).subscribe(response => {
+              bdnumName = response;
+              if (bdnumName != null) {
+                if (bdnumName.name != null) {
+                  elementIngred.ingredientName = bdnumName.name;
+
+                  if (bdnumName.substanceId != null) {
+                    substanceId = bdnumName.substanceId;
+                    elementIngred.substanceId = substanceId;
+
+                    // Get Active Moiety - Relationship
+                    this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
+                      relationship = responseRel;
+                      relationship.forEach((elementRel, indexRel) => {
+                        if (elementRel.relationshipName != null) {
+                          elementIngred.activeMoietyName = elementRel.relationshipName;
+                          elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
+                        }
+                      });
+
+                    });
+
+                  }
+                }
+              }
+            });
+
+          }
+        });
+
+      });
+
+    });
+
+  }
+
   // appType: string, appNumber: string
   /*
   getClinicalTrialApplication() {
@@ -443,4 +496,4 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
       });
     }
 */
-  }
+}
