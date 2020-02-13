@@ -320,5 +320,11 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'substance-form-structural-units',
     loadChildren: () => import('./substance-form/substance-form-structural-units/substance-form-structural-units.module')
       .then(m => m.SubstanceFormStructuralUnitsModule)
+  },
+  {
+    componentId: 'substance-form-change-reason',
+    path: 'substance-form-change-reason',
+    loadChildren: () => import('./substance-form/substance-form-change-reason/substance-form-change-reason.module')
+      .then(m => m.SubstanceFormChangeReasonModule),
   }
 ];
