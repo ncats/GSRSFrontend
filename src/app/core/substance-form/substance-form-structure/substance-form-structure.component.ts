@@ -75,6 +75,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   loadStructure(): void {
     if (this.structure && this.structureEditor && this.structure.molfile) {
       this.structureEditor.setMolecule(this.structure.molfile);
+      this.smiles = this.structure.smiles;
+      this.mol = this.structure.molfile;
     }
   }
 
