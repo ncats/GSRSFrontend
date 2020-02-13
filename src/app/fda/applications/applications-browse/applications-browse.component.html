@@ -155,14 +155,14 @@
                       <!-- Active Moiety -->
                       <div *ngIf="ing.activeMoietyUnii; else noActiveUnii" class="padtop5px">
                         <span class="colororange">&diams;</span>
-                        <a [routerLink]="['/substances', ing.activeMoietyUnii]" target="_blank">
-                          {{ ing.activeMoietyName }}</a>
+                        <a [routerLink]="['/substances', ing.activeMoietyUnii]"
+                          target="_blank">{{ing.activeMoietyName}}</a>
                         <span class="font10px colorgray">&nbsp;(Active Moiety)</span><br>
                         <br>
                       </div>
                       <ng-template #noActiveUnii>
                         <div *ngIf="ing.activeMoietyName">
-                          {{ ing.activeMoietyName }}
+                          {{ing.activeMoietyName}}
                           <span class="font10px colorgray">&nbsp;(Active Moiety)</span><br>
                         </div>
                       </ng-template>
