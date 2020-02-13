@@ -49,6 +49,11 @@ export interface ApplicationIngredient {
   applicantIngredName: string;
   bdnum: string;
   internalVersion: number;
+  substanceId: string;
+  ingredientName: string;
+  activeMoietyUnii: string;
+  activeMoietyName: string;
+
 }
 
 export interface ApplicationIndicationSrs {
