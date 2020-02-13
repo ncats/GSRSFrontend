@@ -104,7 +104,7 @@
      <ng-container matColumnDef="edit">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-            <a class="clinical-trials-browse-edit1"  title="Edit in this tab" [routerLink]="['/edit-clinical-trial', element.nctNumber]" [queryParams]="{}" >Edit</a>&nbsp;<a class="clinical-trials-browse-edit2" target="_new" title="Edit in new tab" [href]="'/edit-clinical-trial/' + element.nctNumber">+</a>
+            <a class="clinical-trials-browse-edit1"  title="Edit in this tab" [routerLink]="['/edit-clinical-trial', element.nctNumber]" [queryParams]="{}" >Edit</a>&nbsp;<a class="clinical-trials-browse-edit2" target="_new" title="Edit in new tab" [href]="'edit-clinical-trial/' + element.nctNumber">+</a>
           </td>
       </ng-container>
       
