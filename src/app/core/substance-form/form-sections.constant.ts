@@ -8,7 +8,8 @@ export const formSections: { [substanceType: string]: Array<string> } = {
         'substance-form-relationships',
         'substance-form-notes',
         'substance-form-properties',
-        'substance-form-references'
+        'substance-form-references',
+        'substance-form-change-reason'
     ],
   protein: [
     'substance-form-definition',
@@ -26,6 +27,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-notes',
     'substance-form-properties',
     'substance-form-references',
+    'substance-form-change-reason'
   ],
   nucleicAcid: [
     'substance-form-definition',
@@ -42,6 +44,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-physical-modifications',
     'substance-form-agent-modifications',
     'substance-form-structural-modifications',
+    'substance-form-change-reason'
   ],
   mixture: [
     'substance-form-definition',
@@ -56,7 +59,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-notes',
     'substance-form-properties',
     'substance-form-references',
-
+    'substance-form-change-reason'
   ],
   structurallyDiverse: [
     'substance-form-definition',
@@ -71,7 +74,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-notes',
     'substance-form-properties',
     'substance-form-references',
-
+    'substance-form-change-reason'
   ],
   concept: [
     'substance-form-definition',
@@ -81,6 +84,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-notes',
     'substance-form-properties',
     'substance-form-references',
+    'substance-form-change-reason'
   ],
   specifiedSubstanceG1: [
     'substance-form-definition',
@@ -91,6 +95,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-notes',
     'substance-form-properties',
     'substance-form-references',
+    'substance-form-change-reason'
   ],
   polymer: [
     'substance-form-definition',
@@ -105,5 +110,6 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-notes',
     'substance-form-properties',
     'substance-form-references',
+    'substance-form-change-reason'
   ]
 };

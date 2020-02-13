@@ -86,6 +86,7 @@ export class SubstanceFormService {
   private allSitesEmitter = new Subject<Array<DisplaySite>>();
   private displaySequences: Array<SubunitSequence>;
   private displaySequencesEmitter = new Subject<Array<SubunitSequence>>();
+  private substanceChangeReasonEmitter = new Subject<string>();
 
   constructor(
     private substanceService: SubstanceService,
@@ -1885,6 +1886,25 @@ unapproveRecord() {
 
   // end constituents
 
+  // start change reason
+
+  get changeReason(): Observable<string> {
+    return new Observable(observer => {
+      this.ready().subscribe(() => {
+        observer.next(this.substance.changeReason);
+        this.substanceChangeReasonEmitter.subscribe(changeReason => {
+          observer.next(this.substance.changeReason);
+        });
+      });
+    });
+  }
+
+  updateChangeReason(changeReason: string): void {
+    this.substance.changeReason = changeReason;
+    this.substanceChangeReasonEmitter.next(this.substance.changeReason);
+  }
+
+  // end change reason
 
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {
@@ -2008,6 +2028,7 @@ unapproveRecord() {
           this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
 
         }
+        this.substanceChangeReasonEmitter.next(this.substance.changeReason);
         observer.next(results);
         observer.complete();
       }, error => {

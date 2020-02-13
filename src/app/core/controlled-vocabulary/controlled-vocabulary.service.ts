@@ -150,8 +150,8 @@ export class ControlledVocabularyService extends BaseHttpService {
               }
 
               singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms.sort(function(a, b) {
-                const termA = a.display.toUpperCase();
-                const termB = b.display.toUpperCase();
+                const termA = (a.display && a.display.toUpperCase()) || (a.value && a.value.toUpperCase()) || '';
+                const termB = (b.display && b.display.toUpperCase()) || (b.value && b.value.toUpperCase()) || '';
                 if (termA < termB) {
                   return -1;
                 }

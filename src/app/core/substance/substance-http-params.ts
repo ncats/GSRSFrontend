@@ -28,6 +28,7 @@ export class SubstanceHttpParams extends HttpParams {
                 }
             });
         }
+        clone = clone.append('facet', '!Deprecated/Deprecated');
         return clone;
     }
 
