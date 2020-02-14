@@ -61,13 +61,14 @@ export class LoadingService {
 
   private setOverlay(): void {
     if (!this.isOverlayAttached) {
+      this.isOverlayAttached = true;
       this.overlayRef.attach(this.loadingPortal);
       this.overlayContainer.style.zIndex = '1002';
-      this.isOverlayAttached = true;
     }
   }
 
   private removeOverlay(): void {
+    this.isOverlayAttached = false;
     this.overlayRef.detach();
     this.overlayContainer.style.zIndex = null;
   }
