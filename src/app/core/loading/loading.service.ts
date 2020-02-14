@@ -14,6 +14,7 @@ export class LoadingService {
   private overlayRef: OverlayRef;
   private loadingPortal: ComponentPortal<LoadingOverlayComponent>;
   private overlayContainer: HTMLElement;
+  private isOverlayAttached = false;
 
   constructor(
     private overlayService: Overlay,
@@ -59,11 +60,15 @@ export class LoadingService {
   }
 
   private setOverlay(): void {
-    this.overlayRef.attach(this.loadingPortal);
-    this.overlayContainer.style.zIndex = '1002';
+    if (!this.isOverlayAttached) {
+      this.isOverlayAttached = true;
+      this.overlayRef.attach(this.loadingPortal);
+      this.overlayContainer.style.zIndex = '1002';
+    }
   }
 
   private removeOverlay(): void {
+    this.isOverlayAttached = false;
     this.overlayRef.detach();
     this.overlayContainer.style.zIndex = null;
   }
