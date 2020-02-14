@@ -170,7 +170,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   searchApplications() {
-    this.loadingService.setLoading(true);
+    // this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
     this.applicationService.getApplications(
       skip,
@@ -201,11 +201,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
         };
         this.isError = true;
         this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
+       // this.loadingService.setLoading(this.isLoading);
         this.notificationService.setNotification(notification);
       }, () => {
         this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
+       // this.loadingService.setLoading(this.isLoading);
       });
     this.populateUrlQueryParameters();
   }
