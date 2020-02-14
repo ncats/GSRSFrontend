@@ -31,7 +31,7 @@ export class ProductDetailsBaseComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-   // this.loadingService.setLoading(true);
+    this.loadingService.setLoading(true);
     this.productId = this.activatedRoute.snapshot.params['id'];
     this.src = this.activatedRoute.snapshot.params['src'];
 
@@ -45,14 +45,14 @@ export class ProductDetailsBaseComponent implements OnInit {
   getProduct(): void {
     this.producService.getProduct(this.productId, this.src).subscribe(response => {
       this.product = response;
-    //  this.loadingService.setLoading(false);
+      this.loadingService.setLoading(false);
     }, error => {
       this.handleSubstanceRetrivalError();
     });
   }
 
   private handleSubstanceRetrivalError() {
-    // this.loadingService.setLoading(false);
+     this.loadingService.setLoading(false);
     const notification: AppNotification = {
       message: 'The web address above is incorrect. You\'re being forwarded to Browse Substances',
       type: NotificationType.error,
