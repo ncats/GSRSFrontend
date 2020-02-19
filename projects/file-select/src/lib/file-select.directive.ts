@@ -5,9 +5,9 @@ import { HTMLInputEvent } from './html-input-event.model';
   selector: '[ncatsFileSelect]'
 })
 export class FileSelectDirective implements OnInit, OnDestroy {
-  @Input() accept: string;
+  @Input() accept?: string;
   @Output() selectedFile: EventEmitter<File> = new EventEmitter();
-  private fileInputElement: HTMLInputElement;
+  private fileInputElement?: HTMLInputElement;
 
   constructor(private el: ElementRef) { }
 
@@ -16,7 +16,7 @@ export class FileSelectDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    document.body.removeChild(this.fileInputElement);
+    document.body.removeChild(this.fileInputElement as Node);
   }
 
   addHiddenFileInput() {
@@ -31,7 +31,7 @@ export class FileSelectDirective implements OnInit, OnDestroy {
     }
 
     this.fileInputElement.onchange = (event: HTMLInputEvent) => {
-      if (event.target.files && event.target.files.length > 0) {
+      if (event.target && event.target.files && event.target.files.length > 0) {
         this.selectedFile.emit(event.target.files[event.target.files.length - 1]);
       }
       event.preventDefault();
