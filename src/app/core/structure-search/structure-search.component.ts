@@ -131,10 +131,11 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe((molfile?: string) => {
+    dialogRef.afterClosed().subscribe((structurePostResponse?: StructurePostResponse) => {
       this.overlayContainer.style.zIndex = null;
-      if (molfile != null) {
-        this.editor.setMolecule(molfile);
+
+      if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
+        this.editor.setMolecule(structurePostResponse.structure.molfile);
       }
     }, () => {});
   }
