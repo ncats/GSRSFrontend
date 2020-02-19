@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras } from '@angular/router';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras, UrlTree } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { Observable } from 'rxjs';
 import {Role} from '@gsrs-core/auth/auth.model';
@@ -15,8 +15,7 @@ export class CanRegisterSubstanceForm implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
-    console.log('here');
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
     return new Observable(observer => {
       this.authService.getAuth().subscribe(auth => {
         if (auth) {
@@ -25,9 +24,8 @@ export class CanRegisterSubstanceForm implements CanActivate {
               observer.next(true);
               observer.complete();
             } else {
-              observer.next(false);
+              observer.next(this.router.parseUrl('/browse-substance'));
               observer.complete();
-              this.router.navigate(['/browse-substance']);
             }
           });
         } else {
@@ -36,9 +34,8 @@ export class CanRegisterSubstanceForm implements CanActivate {
               path: state.url
             }
           };
-          observer.next(false);
+          observer.next(this.router.createUrlTree(['/login'], navigationExtras));
           observer.complete();
-          this.router.navigate(['/login'], navigationExtras);
         }
       });
     });
