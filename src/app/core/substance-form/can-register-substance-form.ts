@@ -16,6 +16,7 @@ export class CanRegisterSubstanceForm implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
+    console.log('here');
     return new Observable(observer => {
       this.authService.getAuth().subscribe(auth => {
         if (auth) {

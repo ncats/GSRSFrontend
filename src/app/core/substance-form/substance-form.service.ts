@@ -44,6 +44,7 @@ import * as _ from 'lodash';
 })
 export class SubstanceFormService {
   private substance: SubstanceDetail;
+  private substanceStateHash?: number;
   private substanceEmitter = new Subject<SubstanceDetail>();
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private substanceReferencesEmitter = new Subject<Array<SubstanceReference>>();
@@ -97,7 +98,6 @@ export class SubstanceFormService {
 
   loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail): void {
     setTimeout(() => {
-
       this.computedMoieties = null;
       this.deletedMoieties = [];
       this.privateDomainsWithReferences = null;
@@ -219,6 +219,8 @@ export class SubstanceFormService {
         });
         }
       }
+      const substanceString = JSON.stringify(this.substance);
+      this.substanceStateHash = this.utilsService.hashCode(substanceString);
     });
   }
 
@@ -357,6 +359,13 @@ unapproveRecord() {
     console.log(e.access);
     alert('Substance definition set to be PUBLIC, please submit to save change');
   }
+
+  get isSubstanceUpdated(): boolean {
+    const substanceString = JSON.stringify(this.substance);
+    console.log(this.substanceStateHash !== this.utilsService.hashCode(substanceString));
+    return this.substanceStateHash !== this.utilsService.hashCode(substanceString);
+  }
+
   // Definition Start
 
   get definition(): Observable<SubstanceFormDefinition> {
@@ -2029,6 +2038,7 @@ unapproveRecord() {
 
         }
         this.substanceChangeReasonEmitter.next(this.substance.changeReason);
+        this.substanceStateHash = this.utilsService.hashCode(this.substance);
         observer.next(results);
         observer.complete();
       }, error => {

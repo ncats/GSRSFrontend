@@ -303,4 +303,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.submissionMessage = 'Substance is Valid. Would you like to submit?';
     }
   }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+      if (this.substanceFormService.isSubstanceUpdated) {
+          $event.returnValue = true;
+      }
+  }
 }
