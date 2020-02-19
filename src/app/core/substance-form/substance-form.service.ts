@@ -1905,46 +1905,7 @@ unapproveRecord() {
   }
 
   // end change reason
-  
-  // removes the null values recursively from objects
-  // this includes nulls in arrays and as values in objects
-  // note that this will mutate the supplied variable and
-  // also return that mutated form
-  removeNulls<T>(o: T): T {
-    const ARR="[object Array]";  //array identifier
-    const OBJ="[object Object]"; //obj identifier
 
-    //is an array
-    if (Object.prototype.toString.call(o) == ARR) {
-      //loop through array
-      for (let key = 0; key < o.length; key++) {
-        //call recursively
-        this.removeNulls(o[key]);
-        if (o[key] === null) {
-          o.splice(key, 1);
-          key--;
-        }
-      }
-      
-    //is an object
-    } else if (Object.prototype.toString.call(o) == OBJ) {
-      var keys = Object.keys(o);
-      for (let ki = 0; ki < keys.length; ki++) {
-        let key = keys[ki];
-
-        //call recursively 
-        let value = this.removeNulls(o[key]);
-
-        //remove null values
-        if (value === null) {
-          delete o[key];
-        }
-
-      }
-    }
-    return o;
-  }
-  
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {
       const substanceCopy = this.removeDeletedComponents();
@@ -1984,14 +1945,14 @@ unapproveRecord() {
     deletablekeys.forEach(property => {
       if (substanceCopy[property] && substanceCopy[property].length) {
 
-        substanceCopy[property] = substanceCopy[property].map((item: any) => {
+        substanceCopy[property] = substanceCopy[property].filter((item: any) => {
           const hasDeleletedCode = item.$$deletedCode != null;
           if (!hasDeleletedCode) {
             delete item.$$deletedCode;
-            return item;
           } else if (property === 'references') {
             deletedReferenceUuids.push(item.uuid);
           }
+          return hasDeleletedCode;
         });
       }
     });
@@ -2010,7 +1971,7 @@ unapproveRecord() {
       substanceCopy = JSON.parse(substanceString);
     }
 
-    return this.removeNulls(substanceCopy);
+    return substanceCopy;
   }
 
   saveSubstance(): Observable<SubstanceFormResults> {
