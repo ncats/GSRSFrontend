@@ -1945,14 +1945,14 @@ unapproveRecord() {
     deletablekeys.forEach(property => {
       if (substanceCopy[property] && substanceCopy[property].length) {
 
-        substanceCopy[property] = substanceCopy[property].map((item: any) => {
+        substanceCopy[property] = substanceCopy[property].filter((item: any) => {
           const hasDeleletedCode = item.$$deletedCode != null;
           if (!hasDeleletedCode) {
             delete item.$$deletedCode;
-            return item;
           } else if (property === 'references') {
             deletedReferenceUuids.push(item.uuid);
           }
+          return hasDeleletedCode;
         });
       }
     });
