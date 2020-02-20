@@ -184,10 +184,6 @@
         </div>
       </mat-tab>
 
-      <mat-tab label="product">
-
-      </mat-tab>
-      <!--
       <mat-tab label="Product ({{clinicalTrial.clinicalTrialEuropeProductList.length}})">
         <div class="details-container">
           <mat-card>
@@ -212,7 +208,7 @@
                     <td>{{i+1}}</td>
                     <td>{{x.productName}}</td>
                     <td>{{x.tradeName}}</td>
-                    <td></td>
+                    <td><div innerHTML="{{x.prodIngredName}}"></div></td>
                     <td>{{x.impRoutesAdmin}}</td>
                     <td>{{x.pharmaceuticalForm}}</td>
                     <td>{{x.impSection}}</td>
@@ -230,7 +226,7 @@
           </mat-card>
         </div>
       </mat-tab>
-       -->
+      
       
        <mat-tab label="Medical ({{clinicalTrial.clinicalTrialEuropeMedicalList.length}})">
         <div class="details-container">
