@@ -3,9 +3,14 @@
     <a mat-icon-button [href]="oldUrl" target = "_blank" matTooltip = "view in old application">
       <mat-icon svgIcon="open_in_new"></mat-icon>
     </a>
-    <button mat-icon-button [matMenuTriggerFor]="editMenu" matTooltip="edit form options" *ngIf = "isEditable">
+    <button mat-icon-button [matMenuTriggerFor]="editMenu" matTooltip="edit form options" *ngIf = "isEditable; else editClassic">
       <mat-icon svgIcon="edit"></mat-icon>
     </button>
+    <ng-template #editClassic>
+      <a mat-icon-button [href]="baseDomain + '/ginas/app/substance/' + substance.uuid + '/edit'" target="_blank">
+        <mat-icon svgIcon="edit"></mat-icon>
+      </a>
+    </ng-template>
     <button mat-icon-button [matMenuTriggerFor]="downloadMenu" matTooltip="download options">
       <mat-icon svgIcon="get_app"></mat-icon>
     </button>
@@ -15,13 +20,13 @@
       </a>
     </mat-menu>
     <mat-menu #editMenu="matMenu" xPosition="before">
-    <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isEditable" matTooltip = 'edit record'>
+    <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip = 'edit record'>
       <mat-icon svgIcon="edit"></mat-icon>
     </a>
-    <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" *ngIf="isEditable" matTooltip = 'copy substance to new registration form'>
+    <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" matTooltip = 'copy substance to new registration form'>
       <mat-icon svgIcon="file_copy"></mat-icon>
     </a>
-    <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" *ngIf="isEditable" matTooltip = 'copy definition to new registration form'>
+    <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" matTooltip = 'copy definition to new registration form'>
       <mat-icon svgIcon="outline-file_copy"></mat-icon>
     </a>
     </mat-menu>

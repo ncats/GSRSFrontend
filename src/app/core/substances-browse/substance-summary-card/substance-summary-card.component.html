@@ -74,13 +74,13 @@
         </mat-menu>
 
         <mat-menu #editMenu="matMenu">
-          <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin" matTooltip = 'edit record'>
+          <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip = 'edit record'>
             <span>Edit Substance</span>
           </a>
-          <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" *ngIf="isAdmin" matTooltip = 'copy substance to new registration form'>
+          <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" matTooltip = 'copy substance to new registration form'>
             <span>Copy Substance to New Form</span>
           </a>
-          <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin" matTooltip = 'copy definition to new registration form'>
+          <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" matTooltip = 'copy definition to new registration form'>
             <span>Copy Definition to New Form</span>
           </a>
         </mat-menu>

@@ -4,6 +4,8 @@ import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader'
 
 import { AppModule } from './app.module';
 import { AppComponent } from './app.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { UniversalInterceptor } from './config/universal.interceptor';
 
 @NgModule({
   imports: [
@@ -12,7 +14,11 @@ import { AppComponent } from './app.component';
     ModuleMapLoaderModule
   ],
   providers: [
-    // Add universal-only providers here
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UniversalInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [ AppComponent ],
 })

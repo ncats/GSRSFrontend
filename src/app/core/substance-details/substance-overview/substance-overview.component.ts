@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {formSections} from '@gsrs-core/substance-form/form-sections.constant';
 import {Subject} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-overview',
@@ -30,6 +31,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   isAdmin = false;
   substanceUpdated = new Subject<SubstanceDetail>();
   oldUrl: string;
+  baseDomain: string;
   constructor(
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -37,9 +39,11 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     private substanceService: SubstanceService,
     private router: Router,
     private authService: AuthService,
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private configService: ConfigService
   ) {
     super();
+    this.baseDomain = this.configService.configData.apiUrlDomain;
   }
 
   ngOnInit() {
