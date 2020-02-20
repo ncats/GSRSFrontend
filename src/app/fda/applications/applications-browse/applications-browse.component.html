@@ -90,13 +90,12 @@
 
           <span class="center">Center:&nbsp;{{application.center}}</span>
           <span class="middle-fill"></span>
-          <a class="approval-id">
+          <a class="approval-id" [routerLink]="['/applicationDetails', application.id]" target="_blank">
             Status: {{application.status}}
           </a>
         </mat-card-title>
 
         <mat-card-content>
-
 
           <!--Product-->
           <div *ngFor="let prod of application.applicationProductList; let index = index">
