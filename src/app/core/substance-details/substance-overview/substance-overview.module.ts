@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {SubstanceClassPipe} from '@gsrs-core/utils/substance-class.pipe';
 @NgModule({
   imports: [
     CommonModule,
@@ -26,6 +27,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatMenuModule,
     MatButtonModule
   ],
-  declarations: [SubstanceOverviewComponent]
+  declarations: [SubstanceOverviewComponent, SubstanceClassPipe]
 })
 export class SubstanceOverviewModule { }

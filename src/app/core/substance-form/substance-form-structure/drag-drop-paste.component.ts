@@ -29,10 +29,6 @@ export class DragDropPasteDirective {
     this.handleInputChange(e);
   }
 
-  @HostListener('paste', ['$event']) blockPaste(e: any) {
-    this.handlePaste(e);
-  }
-
   OnInit() {
   }
 

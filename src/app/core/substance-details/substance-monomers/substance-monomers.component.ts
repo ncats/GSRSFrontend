@@ -13,7 +13,7 @@ import {Subject} from 'rxjs';
 })
 export class SubstanceMonomersComponent extends SubstanceCardBaseFilteredList<Monomer> implements OnInit {
   monomers: Array<Monomer>;
-  displayedColumns: string[] = ['material', 'amount', 'type'];
+  displayedColumns: string[] = ['material', 'amount', 'type', 'defining'];
   substanceUpdated = new Subject<SubstanceDetail>();
   constructor(
     private utilsService: UtilsService,
@@ -39,6 +39,10 @@ export class SubstanceMonomersComponent extends SubstanceCardBaseFilteredList<Mo
       }
     });
 
+  }
+
+  displayAmount(amt): string {
+    return this.utilsService.displayAmount(amt);
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {

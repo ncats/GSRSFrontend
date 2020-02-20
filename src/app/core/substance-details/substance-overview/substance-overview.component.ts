@@ -11,7 +11,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {formSections} from '@gsrs-core/substance-form/form-sections.constant';
 import {Subject} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
-import { ConfigService } from '@gsrs-core/config';
+import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
+import {ConfigService} from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-overview',
@@ -52,7 +53,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.canEdit = canEdit;
       this.isEditable = canEdit
         && this.substance.substanceClass != null
-        && formSections[this.substance.substanceClass.toLowerCase()] != null;
+        && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
     });
     this.getSubtypeRefs(this.substance);
     const theJSON = JSON.stringify(this.substance);

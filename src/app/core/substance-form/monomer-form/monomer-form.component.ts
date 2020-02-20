@@ -51,6 +51,10 @@ export class MonomerFormComponent implements OnInit, AfterViewInit {
     this.privateMonomer.type = event;
   }
 
+  definingChange(event: any): void {
+    this.privateMonomer.defining = event.checked;
+  }
+
   ngAfterViewInit(): void {
   }
 
