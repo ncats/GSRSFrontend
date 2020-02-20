@@ -53,12 +53,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   ) { }
 
   ngOnDestroy(): void {
-    window.removeEventListener('drop', () => {
-    });
-    window.removeEventListener('dragover', () => {
-    });
-    window.removeEventListener('paste', () => {
-    });
+    window.removeEventListener('drop', this.preventDrag);
+    window.removeEventListener('dragover', this.preventDrag);
+    window.removeEventListener('paste', this.checkPaste);
   }
 
   ngAfterViewInit(): void {
@@ -66,19 +63,21 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.canvasCopy = <HTMLCanvasElement>this.myCanvas.nativeElement;
   }
 
+  private preventDrag = (e: Event) => {
+    e.preventDefault();
+  }
+
+  private checkPaste = (e: Event) => {
+    if (this.jsdraw && this.jsdraw.activated) {
+      e.preventDefault();
+      this.catchPaste(e);
+    }
+  }
+
   ngOnInit() {
-    window.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-    window.addEventListener('drop', (e) => {
-      e.preventDefault();
-    });
-    window.addEventListener('paste', (e) => {
-      if (this.jsdraw && this.jsdraw.activated) {
-        e.preventDefault();
-        this.catchPaste(e);
-      }
-    });
+    window.addEventListener('dragover', this.preventDrag);
+    window.addEventListener('drop', this.preventDrag);
+    window.addEventListener('paste', this.checkPaste);
 
     if (isPlatformBrowser(this.platformId)) {
       this.ketcherFilePath = `${environment.baseHref || '/'}assets/ketcher/ketcher.html`;
