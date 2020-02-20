@@ -3,14 +3,16 @@
     <a mat-icon-button [href]="oldUrl" target = "_blank" matTooltip = "view in old application">
       <mat-icon svgIcon="open_in_new"></mat-icon>
     </a>
-    <button mat-icon-button [matMenuTriggerFor]="editMenu" matTooltip="edit form options" *ngIf = "isEditable; else editClassic">
-      <mat-icon svgIcon="edit"></mat-icon>
-    </button>
-    <ng-template #editClassic>
-      <a mat-icon-button [href]="baseDomain + '/ginas/app/substance/' + substance.uuid + '/edit'" target="_blank">
+    <span *ngIf="canEdit">
+      <button mat-icon-button [matMenuTriggerFor]="editMenu" matTooltip="edit form options" *ngIf = "isEditable; else editClassic">
         <mat-icon svgIcon="edit"></mat-icon>
-      </a>
-    </ng-template>
+      </button>
+      <ng-template #editClassic>
+        <a mat-icon-button [href]="baseDomain + '/ginas/app/substance/' + substance.uuid + '/edit'" target="_blank">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </a>
+      </ng-template>
+    </span>
     <button mat-icon-button [matMenuTriggerFor]="downloadMenu" matTooltip="download options">
       <mat-icon svgIcon="get_app"></mat-icon>
     </button>
