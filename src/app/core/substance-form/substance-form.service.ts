@@ -1018,7 +1018,7 @@ unapproveRecord() {
           this.substance.moieties.push(undeletedMoiety);
         } else {
           moietyCopy.uuid = '';
-          if(this.substance.moieties){
+          if (this.substance.moieties) {
             this.substance.moieties.push(moietyCopy);
           }
         }

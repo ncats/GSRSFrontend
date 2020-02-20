@@ -5,7 +5,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class SubstanceClassPipe implements PipeTransform {
   transform(name: string, item2?: string): string {
-    const tempName = name.toLowerCase().replace(' ','');
+    const tempName = name.toLowerCase().replace(' ', '');
     if (tempName === 'chemical') {
       return 'Chemical';
     } else if (tempName === 'nucleicacid') {
