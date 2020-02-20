@@ -333,7 +333,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   private populateFacets(facets: Array<Facet>): void {
-
     if (this.configService.configData.facets != null) {
       if (this.configService.configData.facets.default != null && this.configService.configData.facets.default.length) {
         this.configService.configData.facets.default.forEach(facet => {
@@ -348,11 +347,16 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
                   }
                 }
 
+                // Commenting the following lines at this moment.  These lines are causing not to display
+                // Application Type and Application Status facets in Browse Application page. It is causing conflict
+                // between Browse Substance facets in config file.
+                /*
                 if (hasValues) {
                   const facetToAdd = facets.splice(facetIndex, 1);
                   facetIndex--;
                   this.facets.push(facetToAdd[0]);
                 }
+                */
               }
               break;
             }
