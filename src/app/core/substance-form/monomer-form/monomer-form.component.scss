@@ -13,19 +13,29 @@
     padding: 0 10px 8px 0;
   }
 
-  .related-substance, .type {
+  .related-substance{
     width: 30%;
+  }
+
+  .type {
+    width: 25%;
     flex-grow:1;
     padding-right:15px
   }
 
-  .type {
-    width: 30%;
+  .amount {
+    min-width: 15%;
   }
 }
 
-
+.amount-label {
+  padding-bottom:10px;
+}
 ::ng-deep .related-substance img {
   max-width:125px !important;
   margin: auto;
+}
+
+.defining {
+  padding-bottom:20px;
 }

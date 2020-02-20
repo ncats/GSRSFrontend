@@ -28,16 +28,19 @@
     </div>
 
   <div class = 'amount' >
-  <div class = "label padded">
+  <div class = "label padded amount-label">
     Amount
-  </div>
   <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
     <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
+  </div>
   <div *ngIf = "privateMonomer.amount" class = "amount-display">
     {{displayAmount(privateMonomer.amount)}}
   </div>
 </div>
+  <div class = "defining">
+    <mat-checkbox [checked] = "privateMonomer.defining" (change)="definingChange($event)">Defining</mat-checkbox>
+  </div>
 
 
 </div>
