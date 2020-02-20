@@ -57,6 +57,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     });
     window.removeEventListener('dragover', () => {
     });
+    window.removeEventListener('paste', () => {
+    });
   }
 
   ngAfterViewInit(): void {
@@ -70,6 +72,12 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     });
     window.addEventListener('drop', (e) => {
       e.preventDefault();
+    });
+    window.addEventListener('paste', (e) => {
+      if (this.jsdraw && this.jsdraw.activated) {
+        e.preventDefault();
+        this.catchPaste(e);
+      }
     });
 
     if (isPlatformBrowser(this.platformId)) {
@@ -172,5 +180,42 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       });
     };
   }
+
+
+  catchPaste(e): void {
+    const send: any = {};
+    let valid = false;
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      const blob = items[i].getAsFile();
+      if (items[i].type.indexOf('image') !== -1) {
+        valid = true;
+        send.type = 'image';
+        const reader = new FileReader();
+        send.file = blob;
+        reader.readAsDataURL(blob);
+        const that = this;
+        reader.onloadend = () => {
+          setTimeout(() => {
+            const img = reader.result.toString();
+            that.createImage(img);
+          });
+        };
+      } else if (items[i].type === 'text/plain') {
+        const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        this.structureService.postStructure(text).subscribe(response => {
+          if (response.structure && response.structure.molfile) {
+            this.loadedMolfile.emit(text);
+          }
+        });
+
+      }
+    }
+
+
+    }
+
+
+
 
 }

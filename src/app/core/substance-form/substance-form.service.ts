@@ -774,14 +774,14 @@ unapproveRecord() {
   addSubstanceMixtureComponent(): void {
     const newMix: MixtureComponents = {};
     this.substance.mixture.components.unshift(newMix);
-    this.substanceNamesEmitter.next(this.substance.mixture.components);
+    this.substanceMixtureComponentsEmitter.next(this.substance.mixture.components);
   }
 
   deleteSubstanceMixtureComponent(mix: MixtureComponents): void {
     const subNameIndex = this.substance.mixture.components.findIndex(subName => mix.$$deletedCode === subName.$$deletedCode);
     if (subNameIndex > -1) {
       this.substance.mixture.components.splice(subNameIndex, 1);
-      this.substanceNamesEmitter.next(this.substance.mixture.components);
+      this.substanceMixtureComponentsEmitter.next(this.substance.mixture.components);
     }
   }
 
@@ -993,7 +993,9 @@ unapproveRecord() {
           this.substance.moieties.push(undeletedMoiety);
         } else {
           moietyCopy.uuid = '';
-          this.substance.moieties.push(moietyCopy);
+          if(this.substance.moieties){
+            this.substance.moieties.push(moietyCopy);
+          }
         }
       });
     }

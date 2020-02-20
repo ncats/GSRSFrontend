@@ -1,5 +1,6 @@
 export interface JSDraw {
     options: JSDrawOptions;
+    activated?: boolean;
     setMolfile(molfile: string): void;
     getMolfile(): string;
     getXml(): string;
