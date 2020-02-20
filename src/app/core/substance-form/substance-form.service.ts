@@ -220,7 +220,6 @@ export class SubstanceFormService {
         }
       }
       const substanceString = JSON.stringify(this.substance);
-      console.log(substanceString);
       this.substanceStateHash = this.utilsService.hashCode(substanceString);
     });
   }
@@ -357,14 +356,11 @@ unapproveRecord() {
 
   setPublic(e) {
     e.access = [];
-    console.log(e.access);
     alert('Substance definition set to be PUBLIC, please submit to save change');
   }
 
   get isSubstanceUpdated(): boolean {
     const substanceString = JSON.stringify(this.substance);
-    console.log(this.substanceStateHash !== this.utilsService.hashCode(substanceString));
-    console.log(substanceString);
     return this.substanceStateHash !== this.utilsService.hashCode(substanceString);
   }
 
@@ -424,14 +420,12 @@ unapproveRecord() {
         references: []
       };
       const substanceString = JSON.stringify(this.substance);
-      console.log(substanceString);
       this.substanceStateHash = this.utilsService.hashCode(substanceString);
     }
 
     if (!this.substance[this.subClass].references) {
       this.substance[this.subClass].references = [];
       const substanceString = JSON.stringify(this.substance);
-      console.log(substanceString);
       this.substanceStateHash = this.utilsService.hashCode(substanceString);
     }
 
@@ -1228,7 +1222,6 @@ unapproveRecord() {
           if (!this.substance.protein.subunits) {
             this.substance.protein.subunits = [];
             const substanceString = JSON.stringify(this.substance);
-  
             this.substanceStateHash = this.utilsService.hashCode(substanceString);
           }
           observer.next(this.substance.protein.subunits);
@@ -1239,7 +1232,6 @@ unapproveRecord() {
           if (!this.substance.nucleicAcid.subunits) {
             this.substance.nucleicAcid.subunits = [];
             const substanceString = JSON.stringify(this.substance);
-  
             this.substanceStateHash = this.utilsService.hashCode(substanceString);
           }
           observer.next(this.substance.nucleicAcid.subunits);
@@ -2040,13 +2032,14 @@ unapproveRecord() {
       if (substanceCopy[property] && substanceCopy[property].length) {
 
         substanceCopy[property] = substanceCopy[property].filter((item: any) => {
+
           const hasDeleletedCode = item.$$deletedCode != null;
           if (!hasDeleletedCode) {
             delete item.$$deletedCode;
           } else if (property === 'references') {
             deletedReferenceUuids.push(item.uuid);
           }
-          return hasDeleletedCode;
+          return !hasDeleletedCode;
         });
       }
     });
@@ -2445,7 +2438,7 @@ unapproveRecord() {
 
 
   disulfideLinks() {
-    console.log('called');
+
     const KNOWN_DISULFIDE_PATTERNS = {};
     ('IGG4	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' + 'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' + 'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
       const tup = s.split('\t');
@@ -2581,7 +2574,7 @@ unapproveRecord() {
 
     const sub = this.substance;
     const gsites = proteinGlycFinder(sub);
-    console.log(gsites);
+
     if (gsites.length === 0) {
       alert('No potential N-Glycosylation sites found');
 
