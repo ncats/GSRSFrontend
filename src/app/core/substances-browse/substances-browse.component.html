@@ -274,7 +274,6 @@
           </table>
         </div>
       </div>
-
       <div class="substance-tiles">
         <mat-card *ngFor="let substance of substances" class="tile">
           <mat-card-title>
@@ -309,7 +308,11 @@
           </mat-card-content>
         </mat-card>
       </div>
-
+      <div class="controls-container">
+          <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
+          </mat-paginator>
+        </div>
     </div>
     <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
       Your search did not return any results. Please try modifying it or
