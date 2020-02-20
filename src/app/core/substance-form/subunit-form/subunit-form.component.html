@@ -19,7 +19,7 @@
       <button class = "mat-button action-button mat-primary convert" matTooltip = "convert 3 letter sequence to 1 letter"  (click) = convertSequence()>
         convert</button>
 
-      <a class = "button-link " matTooltip ="search for sequence in a new tab" target = "_blank" href = "/sequence-search?sequence={{subunit.sequence}}&seq_type={{searchType}}">sequence search</a>
+      <a class = "button-link " matTooltip ="search for sequence in a new tab" target = "_blank" [routerLink]="['/sequence-search']" [queryParams]="{sequence : subunit.sequence, seq_type: searchType}">sequence search</a>
     </div>
   </div>
 
