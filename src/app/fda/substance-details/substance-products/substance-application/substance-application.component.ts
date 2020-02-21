@@ -26,7 +26,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     private applicationService: ApplicationService,
     public authService: AuthService
   ) {
-    super(gaService, applicationService, authService);
+    super(gaService, applicationService);
   }
 
   ngOnInit() {

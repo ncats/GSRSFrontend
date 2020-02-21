@@ -6,7 +6,6 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table-display';
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
-import { AuthService } from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-products',
@@ -38,15 +37,11 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   constructor(
     public gaService: GoogleAnalyticsService,
     private productService: ProductService,
-    public authService: AuthService
   ) {
-    super(gaService, productService, authService);
+    super(gaService, productService);
   }
 
   ngOnInit() {
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-
-    this.isAdmin = true;
 
     if (this.substance && this.substance.uuid) {
       // Get Bdnum
