@@ -22,6 +22,7 @@ export interface SubstanceFormResults {
     isSuccessfull: boolean;
     valid?: boolean;
     validationMessages?: Array<ValidationMessage>;
+    serverError?: any;
 }
 
 export interface ValidationResults {
