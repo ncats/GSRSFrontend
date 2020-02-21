@@ -45,6 +45,7 @@ export class ApplicationService extends BaseHttpService {
     const options = {
       params: params
     };
+
     return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
 
   }

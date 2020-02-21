@@ -7,6 +7,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SubstanceApplicationComponent } from './substance-application/substance-application.component';
@@ -24,6 +25,7 @@ import { SubstanceClinicalTrialsEuropeComponent } from './substance-clinical-tri
     MatPaginatorModule,
     MatInputModule,
     MatTabsModule,
+    MatIconModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule

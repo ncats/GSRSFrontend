@@ -4,6 +4,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ApplicationService } from '../../../applications/service/application.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { PageEvent } from '@angular/material/paginator';
+import { AuthService } from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-application',
@@ -22,12 +23,16 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    public authService: AuthService
   ) {
-    super(gaService, applicationService);
+    super(gaService, applicationService, authService);
   }
 
   ngOnInit() {
+
+    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+
     if (this.bdnum) {
       this.getSubstanceApplications();
     }
@@ -51,6 +56,10 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         this.countUpdate.emit(clinicaltrials.length);
       });
       */
+  }
+
+  get updateApplicationUrl(): string {
+    return this.applicationService.getUpdateApplicationUrl();
   }
 
 }

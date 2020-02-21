@@ -4,6 +4,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/clinical-trial.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { PageEvent } from '@angular/material/paginator';
+import { AuthService } from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-clinical-trials-eu',
@@ -26,9 +27,10 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private clinicalTrialService: ClinicalTrialService
+    private clinicalTrialService: ClinicalTrialService,
+    public authService: AuthService
   ) {
-    super(gaService, clinicalTrialService);
+    super(gaService, clinicalTrialService, authService);
   }
 
   ngOnInit() {
