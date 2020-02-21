@@ -13,7 +13,7 @@ export class FacetFilterPipe implements PipeTransform {
     searchText = searchText.toLowerCase();
     return items.filter( it => {
       // the need to check the label is why this can't be a more general pipe
-      return it.label.toLowerCase().includes(searchText);
+      return it.label.toLowerCase().indexOf(searchText) > -1;
     });
   }
 }

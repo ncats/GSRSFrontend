@@ -2,17 +2,6 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
       "outDir": "../out-tsc/app",
-      "baseUrl": "./",
-      "module": "commonjs",
-      "types": [],
-      "paths": {
-        "@gsrs-core/*": [
-          "app/core/*"
-        ],
-        "@environment": [
-          "environments/environment.model.ts"
-        ]
-      }
     },
     "exclude": [
       "testing",
