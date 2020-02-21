@@ -24,6 +24,10 @@ import {RefernceFormDialogComponent} from '@gsrs-core/substance-form/references-
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
+import * as _ from 'lodash';
+import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
+
+
 
 @Component({
   selector: 'app-substance-form',
@@ -49,6 +53,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   private subscriptions: Array<Subscription> = [];
   copy: string;
   private overlayContainer: HTMLElement;
+  serverError: boolean;
 
 
   constructor(
@@ -169,15 +174,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.substanceService.getSubstanceDetails(uuid).subscribe(response => {
       if (response) {
         delete response.uuid;
-        if (type) {
-          response.names = [];
-          response.notes = [];
-          response.codes = [];
-          if (response._name) {
-            delete response._name;
-          }
-          response.relationships = [];
+        if (response._name) {
+          delete response._name;
         }
+        this.scrub(response, type);
         this.substanceFormService.loadSubstance(response.substanceClass, response);
         this.setFormSections(formSections[response.substanceClass]);
       } else {
@@ -218,6 +218,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   validate(): void {
     this.isLoading = true;
+    this.serverError = false;
     this.loadingService.setLoading(true);
     this.substanceFormService.validateSubstance().subscribe(results => {
       this.submissionMessage = null;
@@ -231,11 +232,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.submissionMessage = 'Substance is Valid. Would you like to submit?';
       }
     }, error => {
-      console.log(error);
-      this.validationResult = false;
-      this.validationMessages = null;
-      this.submissionMessage = 'There are undetermined are errors with your substance. Please make some changes and try validating again';
-      this.showSubmissionMessages = true;
+      this.addServerError(error);
       this.loadingService.setLoading(false);
       this.isLoading = false;
     });
@@ -270,9 +267,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
         this.showSubmissionMessages = true;
       } else {
-        this.validationMessages = null;
         this.submissionMessage = 'There was a problem with your submission';
-        this.showSubmissionMessages = true;
+        this.addServerError(error.serverError);
         setTimeout(() => {
           this.showSubmissionMessages = false;
           this.submissionMessage = null;
@@ -287,6 +283,30 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.validationMessages.length === 0) {
       this.submissionMessage = 'Substance is Valid. Would you like to submit?';
     }
+  }
+
+  addServerError (error: any): void {
+    this.serverError = true;
+    this.validationResult = false;
+    this.validationMessages = null;
+
+    const message: ValidationMessage = {
+      actionType: 'server failure',
+      links: [],
+      appliedChange: false,
+      suggestedChange: false,
+      messageType : 'ERROR',
+      message : 'Unknown Server Error'
+    };
+    if ( error.error && error.error.message ) {
+      message.message =  'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
+    } else if (error.error && (typeof error.error) === 'string') {
+        message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
+    } else if (error.message ) {
+      message.message = 'Server Error ' + (error.status + ': ' || '') + error.message;
+    }
+    this.validationMessages = [message];
+    this.showSubmissionMessages = true;
   }
 
   toggleValidation(): void {
@@ -309,5 +329,99 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       if (this.substanceFormService.isSubstanceUpdated) {
           $event.returnValue = true;
       }
+  }
+
+  scrub(oldraw: any, importType: string): any {
+    function guid() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+    }
+    const old = oldraw;
+    const uuidHolders = defiant.json.search(old, '//*[uuid]');
+    const map = {};
+    for (let i = 0; i < uuidHolders.length; i++) {
+      const ouuid = uuidHolders[i].uuid;
+      if (map[ouuid]) {
+        uuidHolders[i].uuid = map[ouuid];
+      } else {
+        const nid = guid();
+        uuidHolders[i].uuid = nid;
+        map[ouuid] = nid;
+      }
+    }
+    const refHolders = defiant.json.search(old, '//*[references]');
+    for (let i = 0; i < refHolders.length; i++) {
+      const refs = refHolders[i].references;
+      for (let j = 0; j < refs.length; j++) {
+        const or = refs[j];
+        if (typeof or === 'object') { continue; }
+        refs[j] = map[or];
+      }
+    }
+    defiant.json.search(old, '//*[uuid]');
+    _.remove(old.codes, {
+      codeSystem: 'BDNUM'
+    });
+    const createHolders = defiant.json.search(old, '//*[created]');
+    for (let i = 0; i < createHolders.length; i++) {
+      const rec = createHolders[i];
+      delete rec['created'];
+      delete rec['createdBy'];
+      delete rec['lastEdited'];
+      delete rec['lastEditedBy'];
+    }
+    delete old.approvalID;
+    delete old.approved;
+    delete old.approvedBy;
+    old.status = 'pending';
+    if ((importType) && (importType === 'definition')) {
+      old.names = [];
+      old.codes = [];
+      old.notes = [];
+      old.relationships = [];
+    }
+    delete old['createdBy'];
+    delete old['created'];
+    delete old['lastEdited'];
+    delete old['lastEditedBy'];
+    delete old['version'];
+    delete old['$$update'];
+    delete old['changeReason'];
+
+
+    if (true) {
+      const refSet = {};
+
+      const refHolders2 = defiant.json.search(old, '//*[references]');
+      for (let i = 0; i < refHolders2.length; i++) {
+        const refs = refHolders2[i].references;
+        for (let j = 0; j < refs.length; j++) {
+          const or = refs[j];
+          if (typeof or === 'object') { continue; }
+          refSet[or] = true;
+        }
+      }
+
+      const nrefs = _.chain(old.references)
+        .filter(function(ref) {
+          if (refSet[ref.uuid]) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .value();
+
+      old.references = nrefs;
+
+    }
+
+
+    return old;
   }
 }

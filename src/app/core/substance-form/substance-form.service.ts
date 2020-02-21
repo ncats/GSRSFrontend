@@ -2125,6 +2125,8 @@ unapproveRecord() {
         results.isSuccessfull = false;
         if (error && error.error && error.error.validationMessages) {
           results.validationMessages = error.error.validationMessages;
+        } else {
+          results.serverError = error;
         }
         observer.error(results);
         observer.complete();

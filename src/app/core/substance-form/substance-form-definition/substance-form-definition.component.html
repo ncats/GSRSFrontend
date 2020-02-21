@@ -75,13 +75,6 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class = "unapprove advanced" *ngIf  = "feature === 'unapprove'">
-      <span>Are you sure you'd like to remove the approvalID?</span>
-      <button mat-flat-button (click) ="unapprove()">Confirm</button>
-      <button mat-flat-button (click) = "feature = ''">Cancel</button>
-
-
-    </div>
     <div class = "changeClass advanced" *ngIf  = "feature === 'changeClass'">
       <mat-form-field>
         <mat-label>New Class</mat-label>
