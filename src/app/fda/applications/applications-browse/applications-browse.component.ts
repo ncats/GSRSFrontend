@@ -116,6 +116,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
 
       this.searchApplications();
     });
+
+    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+
   }
 
   ngAfterViewInit() {
@@ -194,6 +197,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
           this.populateFacets(pagingResponse.facets);
         }
       }, error => {
+        console.log('error');
         const notification: AppNotification = {
           message: 'There was an error trying to retrieve Applicationss. Please refresh and try again.',
           type: NotificationType.error,
@@ -471,6 +475,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
 
     });
 
+  }
+
+
+  get updateApplicationUrl(): string {
+    return this.applicationService.getUpdateApplicationUrl();
   }
 
   // appType: string, appNumber: string

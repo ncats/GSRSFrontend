@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/substance-details-base-table-display';
+import { AuthService } from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-adverseeventpt',
@@ -26,9 +27,10 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private adverseEventService: AdverseEventService
+    private adverseEventService: AdverseEventService,
+    public authService: AuthService
   ) {
-    super(gaService, adverseEventService);
+    super(gaService, adverseEventService, authService);
   }
 
   ngOnInit() {

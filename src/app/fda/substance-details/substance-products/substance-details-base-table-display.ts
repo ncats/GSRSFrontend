@@ -3,24 +3,27 @@ import { PageEvent } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
+import { AuthService } from '@gsrs-core/auth';
 
 export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredList<any> implements OnInit {
 
   totalRecords: 0;
   public results: Array<any> = [];
+  isAdmin = false;
 
   @Input() bdnum: string;
 
-  ngOnInit(): void {
-  }
-
   constructor(
     public gaService: GoogleAnalyticsService,
-    private service
+    private service,
+    public authService: AuthService,
   ) {
       super(gaService);
      // this.service = service;
     }
+
+  ngOnInit(): void {
+  }
 
   setPageEvent(pageEvent?: PageEvent): void {
     if (pageEvent != null) {
