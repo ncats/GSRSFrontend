@@ -7,6 +7,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component';
 import {environment} from '../../../../../environments/environment';
+import { AuthService } from '@gsrs-core/auth/auth.service';
 
 @Component({
   selector: 'app-clinical-trial-details',
@@ -16,6 +17,8 @@ import {environment} from '../../../../../environments/environment';
 
 export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseComponent implements OnInit {
 
+  isAdmin = false;
+
   constructor(
     clinicalTrialService: ClinicalTrialService,
     activatedRoute: ActivatedRoute,
@@ -24,12 +27,15 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
+    public authService: AuthService
   ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
     router, gaService, utilsService);
   }
 
   ngOnInit() {
     super.ngOnInit();
+
+    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
 
     this.flagIconSrcPath = `${environment.baseHref || '/'}assets/icons/fda/united-states.svg`;
 

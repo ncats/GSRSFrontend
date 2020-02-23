@@ -4,7 +4,6 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/substance-details-base-table-display';
 import { PageEvent } from '@angular/material/paginator';
-import { AuthService } from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-adverseeventdme',
@@ -24,10 +23,9 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private adverseEventService: AdverseEventService,
-    public authService: AuthService
+    private adverseEventService: AdverseEventService
   ) {
-    super(gaService, adverseEventService, authService);
+    super(gaService, adverseEventService);
   }
 
   ngOnInit() {
@@ -41,7 +39,7 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
 
     this.adverseEventService.getSubstanceAdverseEventDme(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
-      this.advDmeCount = results.length;
+      this.advDmeCount = this.totalRecords;
       this.countAdvDmeOut.emit(this.advDmeCount);
     });
       /*

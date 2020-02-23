@@ -55,7 +55,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   // public sortValues = searchSortValues;
   // showAudit: boolean;
   // public facetBuilder: SubstanceFacetParam;
-  // searchText: string[] = [];
+   searchText: string[] = [];
   // private overlayContainer: HTMLElement;
 
   constructor(
@@ -413,6 +413,49 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     const eventValue = event.checked ? 1 : 0;
     this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
+  }
+
+  moreFacets(index: number, facet: Facet) {
+    const subscription = this.applicationService.retrieveNextFacetValues(this.facets[index]).subscribe( resp => {
+        this.facets[index].$next = resp.$next;
+        this.facets[index].values = this.facets[index].values.concat(resp.content);
+        this.facets[index].$fetched = this.facets[index].values;
+        this.facets[index].$total = resp.ftotal;
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
+      });
+  }
+
+  lessFacets(index: number) {
+    const subscription = this.applicationService.retrieveFacetValues(this.facets[index]).subscribe( response => {
+       this.facets[index].values = response.content;
+       this.facets[index].$fetched = response.content;
+       this.facets[index].$next = response.$next;
+       subscription.unsubscribe();
+     }, error => {
+      subscription.unsubscribe();
+    });
+  }
+
+  filterFacets(index: number, event: any) {
+    const facet = this.facets[index];
+    if (event.length > 0) {
+      const processed = facet.name.replace(' ', '+');
+      const subscription = this.applicationService.filterFacets(event, processed).subscribe(response => {
+        facet.values = response.content;
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
+      });
+    } else {
+      const subscription = this.applicationService.retrieveFacetValues(facet).subscribe(response => {
+        facet.values = response.content;
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
+      });
+    }
   }
 
   get searchTerm(): string {

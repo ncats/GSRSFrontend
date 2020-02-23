@@ -3,7 +3,6 @@ import { PageEvent } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
-import { AuthService } from '@gsrs-core/auth';
 
 export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredList<any> implements OnInit {
 
@@ -15,8 +14,7 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private service,
-    public authService: AuthService,
+    private service
   ) {
       super(gaService);
      // this.service = service;
