@@ -98,7 +98,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
     this.productService.getSubstanceProducts(this.substance.uuid, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
-      this.productCount = results.length;
+      this.productCount = this.totalRecords;
     });
   }
 

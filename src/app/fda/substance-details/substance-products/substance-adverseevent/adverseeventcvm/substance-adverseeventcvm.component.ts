@@ -39,7 +39,7 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
 
     this.adverseEventService.getSubstanceAdverseEventCvm(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
-      this.advCvmCount = results.length;
+      this.advCvmCount = this.totalRecords;
       this.countAdvCvmOut.emit(this.advCvmCount);
 
     });

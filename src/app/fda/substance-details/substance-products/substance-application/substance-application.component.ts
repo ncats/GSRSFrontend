@@ -43,7 +43,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
 
     this.applicationService.getSubstanceApplications(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
-      this.applicationCount = results.length;
+      this.applicationCount = this.totalRecords;
       this.countApplicationOut.emit(this.applicationCount);
     });
 
