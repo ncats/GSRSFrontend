@@ -39,6 +39,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchSeqType?: string;
   public substances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
+  public displayFacets: Array<DisplayFacet> = [];
   private privateFacetParams: SubstanceFacetParam;
   pageIndex: number;
   pageSize: number;
@@ -263,7 +264,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const catArr = [];
     let facetString = '';
     for (const key of Object.keys(this.privateFacetParams)) {
-      if (this.privateFacetParams[key].hasSelections === true) {
+      if (this.privateFacetParams[key] !== undefined && this.privateFacetParams[key].hasSelections === true) {
         const cat = this.privateFacetParams[key];
         const valArr = [];
         for (const subkey of Object.keys(cat.params)) {
@@ -374,13 +375,41 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     let eventValue = 0;
     Object.keys(this.privateFacetParams).forEach(key => {
-      if (this.privateFacetParams[key].params) {
+      if (this.privateFacetParams[key] && this.privateFacetParams[key].params) {
         eventValue = eventValue + Object.keys(this.privateFacetParams[key].params).length || 0;
       }
     });
     this.gaService.sendEvent('substancesFiltering', 'button:apply-facet', eventLabel, eventValue);
     this.populateUrlQueryParameters();
     this.searchSubstances();
+    this.getLabelFacets();
+  }
+
+  removeFacet(facet: any): void {
+    const mockEvent = {'checked': false};
+    this.updateFacetSelection(mockEvent, facet.type, facet.val, facet.bool);
+
+    setTimeout(() => {
+      this.applyFacetsFilter(facet.type);
+    });
+  }
+
+  getLabelFacets() {
+    this.displayFacets = [];
+    Object.keys(this.privateFacetParams).forEach(key => {
+      if (this.privateFacetParams[key] && this.privateFacetParams[key].params) {
+        Object.keys(this.privateFacetParams[key].params).forEach(sub => {
+          if (this.privateFacetParams[key].params[sub] !== undefined){
+            const facet = {
+              'type': key,
+              'val' : sub,
+              'bool': this.privateFacetParams[key].params[sub]
+            };
+            this.displayFacets.push(facet);
+          }
+        });
+      }
+      });
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
@@ -393,12 +422,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
 
   updateFacetSelection(
-    event: MatCheckboxChange,
+    event: any,
     facetName: string,
     facetValueLabel: string,
     include: boolean
   ): void {
-
     const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName} > ${facetValueLabel}`;
     const eventValue = event.checked ? 1 : 0;
     const eventAction = include ? 'include' : 'exclude';
@@ -502,6 +530,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         });
       }
+      this.getLabelFacets();
     }
   }
 
@@ -788,4 +817,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     return codes;
   }
 
+}
+
+interface DisplayFacet {
+  type: string;
+  bool: boolean;
+  val: string;
 }
