@@ -103,20 +103,14 @@
         </div>
 
         <div class="row">
-          <div class="row-property">
-            <div class="row-property-key">
+          <div class="row-property-2">
+            <div class="row-property-key-2">
               Indication:
             </div>
-            <div class="row-property-value">
-
-            </div>
-          </div>
-          <div class="row-property">
-            <div class="row-property-key">
-
-            </div>
-            <div class="row-property-value">
-
+            <div class="row-property-value-2">
+              <div *ngFor="let ind of application.indicationList; let i = index">
+                &bull;&nbsp;{{ind}} <br>
+              </div>
             </div>
           </div>
         </div>

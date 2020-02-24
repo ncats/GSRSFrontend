@@ -15,6 +15,9 @@ import { AuthService } from '@gsrs-core/auth';
 export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
   applicationCount = 0;
+  centerList = '';
+  center = '';
+  fromTable = '';
 
   @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -34,18 +37,44 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
 
     if (this.bdnum) {
-      this.getSubstanceApplications();
+
+      this.getApplicationCenterByBdnum();
+      // this.getSubstanceApplications();
+    }
+  }
+
+  getApplicationCenterByBdnum(): string {
+    this.applicationService.getApplicationCenterByBdnum(this.bdnum).subscribe(results => {
+      this.centerList = results.centerList;
+    });
+    return this.centerList;
+  }
+
+  applicationTabSelected($event) {
+    if ($event) {
+      const evt: any = $event.tab;
+      const textLabel: string = evt.textLabel;
+      // Get Center and fromTable/Source from Tab Label
+      if (textLabel != null) {
+        const index = textLabel.indexOf(' ');
+        this.center = textLabel.slice(0, index);
+        this.fromTable = textLabel.slice(index + 1, textLabel.length);
+
+        this.getSubstanceApplications();
+      }
+
     }
   }
 
   getSubstanceApplications(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
 
-    this.applicationService.getSubstanceApplications(this.bdnum, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);
-      this.applicationCount = this.totalRecords;
-      this.countApplicationOut.emit(this.applicationCount);
-    });
+    this.applicationService.getSubstanceApplications(this.bdnum, this.center, this.fromTable, this.page, this.pageSize)
+      .subscribe(results => {
+        this.setResultData(results);
+        this.applicationCount = this.totalRecords;
+        this.countApplicationOut.emit(this.applicationCount);
+      });
 
     /*
         this.searchControl.valueChanges.subscribe(value => {
@@ -57,6 +86,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
       });
       */
   }
+
 
   get updateApplicationUrl(): string {
     return this.applicationService.getUpdateApplicationUrl();
