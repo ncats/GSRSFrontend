@@ -76,4 +76,8 @@ export class ApplicationDetailsBaseComponent implements OnInit {
 
   }
 
+  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
+    return this.utilsService.getSafeStructureImgUrl(structureId, size, true);
+  }
+
 }

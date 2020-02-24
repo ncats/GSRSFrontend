@@ -104,10 +104,11 @@ export class ApplicationService extends BaseHttpService {
   }
 */
   getSubstanceApplications(
-    bdnum: string, page: number, pageSize: number
+    bdnum: string, center: string, fromTable: string, page: number, pageSize: number
   ): Observable<Array<any>> {
 
-    const url = this.baseUrl + 'applicationListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    const func = this.baseUrl + 'applicationListByBdnum?bdnum=';
+    const url =  func + bdnum + '&center=' + center + '&fromTable=' + fromTable + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url).pipe(
       map(results => {
@@ -151,6 +152,17 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  getApplicationCenterByBdnum(
+    bdnum: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'getApplicationCenterByBdnum2?bdnum=' + bdnum;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   getSubstanceRelationship(
     substanceId: string
   ): Observable<Array<any>> {
@@ -161,6 +173,7 @@ export class ApplicationService extends BaseHttpService {
       })
     );
   }
+
 
   getUpdateApplicationUrl(): string {
     return this.baseUrl + 'updateApplication?applicationId=';
