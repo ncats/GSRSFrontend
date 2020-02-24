@@ -109,7 +109,7 @@ export class AuthService extends BaseHttpService {
       for (let i = 0; i < rolesList.length; i++) {
         let role = rolesList[i].charAt(0).toLowerCase() + rolesList[i].slice(1);
         role = role.charAt(0).toUpperCase() + role.slice(1);
-        if (!this._auth.roles.includes(role as Role)) {
+        if (this._auth.roles.indexOf(role as Role) === -1) {
           return false;
         }
       }
@@ -139,7 +139,7 @@ export class AuthService extends BaseHttpService {
       for (let i = 0; i < rolesList.length; i++) {
         let role = rolesList[i].charAt(0).toLowerCase() + rolesList[i].slice(1);
         role = role.charAt(0).toUpperCase() + role.slice(1);
-        if (this._auth.roles.includes(role as Role)) {
+        if (this._auth.roles.indexOf(role as Role) > -1) {
           return true;
         }
       }

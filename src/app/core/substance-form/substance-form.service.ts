@@ -44,6 +44,7 @@ import * as _ from 'lodash';
 })
 export class SubstanceFormService {
   private substance: SubstanceDetail;
+  private substanceStateHash?: number;
   private substanceEmitter = new Subject<SubstanceDetail>();
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private substanceReferencesEmitter = new Subject<Array<SubstanceReference>>();
@@ -97,7 +98,6 @@ export class SubstanceFormService {
 
   loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail): void {
     setTimeout(() => {
-
       this.computedMoieties = null;
       this.deletedMoieties = [];
       this.privateDomainsWithReferences = null;
@@ -219,6 +219,8 @@ export class SubstanceFormService {
         });
         }
       }
+      const substanceString = JSON.stringify(this.substance);
+      this.substanceStateHash = this.utilsService.hashCode(substanceString);
     });
   }
 
@@ -354,9 +356,14 @@ unapproveRecord() {
 
   setPublic(e) {
     e.access = [];
-    console.log(e.access);
     alert('Substance definition set to be PUBLIC, please submit to save change');
   }
+
+  get isSubstanceUpdated(): boolean {
+    const substanceString = JSON.stringify(this.substance);
+    return this.substanceStateHash !== this.utilsService.hashCode(substanceString);
+  }
+
   // Definition Start
 
   get definition(): Observable<SubstanceFormDefinition> {
@@ -412,10 +419,14 @@ unapproveRecord() {
       this.substance[this.subClass] = {
         references: []
       };
+      const substanceString = JSON.stringify(this.substance);
+      this.substanceStateHash = this.utilsService.hashCode(substanceString);
     }
 
     if (!this.substance[this.subClass].references) {
       this.substance[this.subClass].references = [];
+      const substanceString = JSON.stringify(this.substance);
+      this.substanceStateHash = this.utilsService.hashCode(substanceString);
     }
 
 
@@ -598,6 +609,9 @@ unapproveRecord() {
       this.ready().subscribe(substance => {
         if (this.substance.polymer.structuralUnits == null) {
           this.substance.polymer.structuralUnits = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         } else {
           this.setSRUConnectivityDisplay(this.substance.polymer.structuralUnits);
         }
@@ -642,6 +656,9 @@ unapproveRecord() {
       this.ready().subscribe(substance => {
         if (this.substance.polymer.monomers == null) {
           this.substance.polymer.monomers = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.polymer.monomers );
         this.substanceMonomerEmitter.subscribe(poly => {
@@ -753,6 +770,9 @@ unapproveRecord() {
       this.ready().subscribe(substance => {
         if (this.substance.mixture.components == null) {
           this.substance.mixture.components = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.mixture.components);
         this.substanceMixtureComponentsEmitter.subscribe(names => {
@@ -765,14 +785,14 @@ unapproveRecord() {
   addSubstanceMixtureComponent(): void {
     const newMix: MixtureComponents = {};
     this.substance.mixture.components.unshift(newMix);
-    this.substanceNamesEmitter.next(this.substance.mixture.components);
+    this.substanceMixtureComponentsEmitter.next(this.substance.mixture.components);
   }
 
   deleteSubstanceMixtureComponent(mix: MixtureComponents): void {
     const subNameIndex = this.substance.mixture.components.findIndex(subName => mix.$$deletedCode === subName.$$deletedCode);
     if (subNameIndex > -1) {
       this.substance.mixture.components.splice(subNameIndex, 1);
-      this.substanceNamesEmitter.next(this.substance.mixture.components);
+      this.substanceMixtureComponentsEmitter.next(this.substance.mixture.components);
     }
   }
 
@@ -785,6 +805,9 @@ unapproveRecord() {
       this.ready().subscribe(substance => {
         if (this.substance.references == null) {
           this.substance.references = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.references);
         this.substanceReferencesEmitter.subscribe(references => {
@@ -858,6 +881,9 @@ unapproveRecord() {
       this.ready().subscribe(substance => {
         if (this.substance.names == null) {
           this.substance.names = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.names);
         this.substanceNamesEmitter.subscribe(names => {
@@ -894,6 +920,8 @@ unapproveRecord() {
             references: [],
             access: []
           };
+          const substanceString = JSON.stringify(this.substance);
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.polymer.idealizedStructure);
         this.substanceIdealizedStructureEmitter.subscribe(structure => {
@@ -914,6 +942,9 @@ unapproveRecord() {
             references: [],
             access: []
           };
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.structure);
         this.substanceStructureEmitter.subscribe(structure => {
@@ -928,6 +959,9 @@ unapproveRecord() {
       this.ready().subscribe(substance => {
         if (this.substance.moieties == null) {
           this.substance.moieties = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.moieties);
         this.substanceMoietiesEmitter.subscribe(moieties => {
@@ -984,7 +1018,9 @@ unapproveRecord() {
           this.substance.moieties.push(undeletedMoiety);
         } else {
           moietyCopy.uuid = '';
-          this.substance.moieties.push(moietyCopy);
+          if (this.substance.moieties) {
+            this.substance.moieties.push(moietyCopy);
+          }
         }
       });
     }
@@ -1013,6 +1049,9 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (this.substance.codes == null) {
           this.substance.codes = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.codes);
         this.substanceCodesEmitter.subscribe(codes => {
@@ -1048,6 +1087,9 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (this.substance.relationships == null) {
           this.substance.relationships = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.relationships);
         this.substanceRelationshipsEmitter.subscribe(relationships => {
@@ -1086,6 +1128,9 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (this.substance.notes == null) {
           this.substance.notes = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.notes);
         this.substanceNotesEmitter.subscribe(notes => {
@@ -1121,6 +1166,9 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (this.substance.properties == null) {
           this.substance.properties = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.properties);
         this.substancePropertiesEmitter.subscribe(properties => {
@@ -1175,6 +1223,8 @@ unapproveRecord() {
         if (this.substance.substanceClass === 'protein') {
           if (!this.substance.protein.subunits) {
             this.substance.protein.subunits = [];
+            const substanceString = JSON.stringify(this.substance);
+            this.substanceStateHash = this.utilsService.hashCode(substanceString);
           }
           observer.next(this.substance.protein.subunits);
           this.substanceSubunitsEmitter.subscribe(subunits => {
@@ -1183,6 +1233,8 @@ unapproveRecord() {
         } else {
           if (!this.substance.nucleicAcid.subunits) {
             this.substance.nucleicAcid.subunits = [];
+            const substanceString = JSON.stringify(this.substance);
+            this.substanceStateHash = this.utilsService.hashCode(substanceString);
           }
           observer.next(this.substance.nucleicAcid.subunits);
           this.substanceSubunitsEmitter.subscribe(subunits => {
@@ -1415,6 +1467,9 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (this.substance.protein.otherLinks == null) {
           this.substance.protein.otherLinks = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.protein.otherLinks);
         this.substanceOtherLinksEmitter.subscribe(otherLinks => {
@@ -1455,6 +1510,9 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (this.substance.protein.disulfideLinks == null) {
           this.substance.protein.disulfideLinks = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.protein.disulfideLinks);
         this.substanceDisulfideLinksEmitter.subscribe(disulfideLinks => {
@@ -1536,9 +1594,15 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (!this.substance.modifications) {
           this.substance.modifications = {};
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         if (!this.substance.modifications.agentModifications) {
           this.substance.modifications.agentModifications = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.modifications.agentModifications);
         this.substanceAgentModificationsEmitter.subscribe(agentModifications => {
@@ -1573,9 +1637,15 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (!this.substance.modifications) {
           this.substance.modifications = {};
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         if (!this.substance.modifications.physicalModifications) {
           this.substance.modifications.physicalModifications = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.modifications.physicalModifications);
         this.substancePhysicalModificationsEmitter.subscribe(physicalModifications => {
@@ -1610,9 +1680,15 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (!this.substance.modifications) {
           this.substance.modifications = {};
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         if (!this.substance.modifications.structuralModifications) {
           this.substance.modifications.structuralModifications = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         this.structuralModRefToComment();
         observer.next(this.substance.modifications.structuralModifications);
@@ -1681,6 +1757,9 @@ unapproveRecord() {
           structuralModifications: [],
           physicalModifications: []
         };
+        const substanceString = JSON.stringify(this.substance);
+
+        this.substanceStateHash = this.utilsService.hashCode(substanceString);
       }
     }
   }
@@ -1780,6 +1859,9 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (this.substance.nucleicAcid.linkages == null) {
           this.substance.nucleicAcid.linkages = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.nucleicAcid.linkages);
         this.substanceLinksEmitter.subscribe(links => {
@@ -1817,6 +1899,9 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (this.substance.nucleicAcid.sugars == null) {
           this.substance.nucleicAcid.sugars = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.nucleicAcid.sugars);
         this.substanceSugarsEmitter.subscribe(sugars => {
@@ -1856,6 +1941,9 @@ unapproveRecord() {
       this.ready().subscribe(() => {
         if (this.substance.specifiedSubstance.constituents == null) {
           this.substance.specifiedSubstance.constituents = [];
+          const substanceString = JSON.stringify(this.substance);
+
+          this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
         observer.next(this.substance.specifiedSubstance.constituents);
         this.substanceConstituentsEmitter.subscribe(sugars => {
@@ -1945,14 +2033,15 @@ unapproveRecord() {
     deletablekeys.forEach(property => {
       if (substanceCopy[property] && substanceCopy[property].length) {
 
-        substanceCopy[property] = substanceCopy[property].map((item: any) => {
+        substanceCopy[property] = substanceCopy[property].filter((item: any) => {
+
           const hasDeleletedCode = item.$$deletedCode != null;
           if (!hasDeleletedCode) {
             delete item.$$deletedCode;
-            return item;
           } else if (property === 'references') {
             deletedReferenceUuids.push(item.uuid);
           }
+          return !hasDeleletedCode;
         });
       }
     });
@@ -2029,12 +2118,15 @@ unapproveRecord() {
 
         }
         this.substanceChangeReasonEmitter.next(this.substance.changeReason);
+        this.substanceStateHash = this.utilsService.hashCode(this.substance);
         observer.next(results);
         observer.complete();
       }, error => {
         results.isSuccessfull = false;
         if (error && error.error && error.error.validationMessages) {
           results.validationMessages = error.error.validationMessages;
+        } else {
+          results.serverError = error;
         }
         observer.error(results);
         observer.complete();
@@ -2350,7 +2442,7 @@ unapproveRecord() {
 
 
   disulfideLinks() {
-    console.log('called');
+
     const KNOWN_DISULFIDE_PATTERNS = {};
     ('IGG4	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' + 'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' + 'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
       const tup = s.split('\t');
@@ -2486,7 +2578,7 @@ unapproveRecord() {
 
     const sub = this.substance;
     const gsites = proteinGlycFinder(sub);
-    console.log(gsites);
+
     if (gsites.length === 0) {
       alert('No potential N-Glycosylation sites found');
 

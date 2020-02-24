@@ -33,7 +33,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadingService.setLoading(true);
+   // this.loadingService.setLoading(true);
     this.nctNumber = this.activatedRoute.snapshot.params['nctNumber'];
     this.src = this.activatedRoute.snapshot.params['src'];
 
@@ -47,14 +47,14 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
   getClinicalTrialDetails(): void {
     this.clinicalTrialService.getClinicalTrialDetails(this.nctNumber, this.src).subscribe(response => {
       this.clinicalTrial = response;
-      this.loadingService.setLoading(false);
+   //   this.loadingService.setLoading(false);
     }, error => {
       this.handleSubstanceRetrivalError();
     });
   }
 
   private handleSubstanceRetrivalError() {
-    this.loadingService.setLoading(false);
+   // this.loadingService.setLoading(false);
     const notification: AppNotification = {
       message: 'The web address above is incorrect. You\'re being forwarded to Browse Substances',
       type: NotificationType.error,

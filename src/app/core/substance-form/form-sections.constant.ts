@@ -104,7 +104,6 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-monomers',
     'substance-form-structure',
     'substance-form-structural-units',
-    'substance-form-moieties',
     'substance-form-codes',
     'substance-form-relationships',
     'substance-form-notes',

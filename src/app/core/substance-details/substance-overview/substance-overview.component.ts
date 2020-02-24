@@ -11,6 +11,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {formSections} from '@gsrs-core/substance-form/form-sections.constant';
 import {Subject} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
+import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
+import {ConfigService} from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-overview',
@@ -30,6 +32,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   isAdmin = false;
   substanceUpdated = new Subject<SubstanceDetail>();
   oldUrl: string;
+  baseDomain: string;
   constructor(
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -37,16 +40,21 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     private substanceService: SubstanceService,
     private router: Router,
     private authService: AuthService,
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private configService: ConfigService
   ) {
     super();
+    this.baseDomain = this.configService.configData.apiUrlDomain;
   }
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
-    this.isEditable = (this.authService.hasRoles('updater') || this.authService.hasRoles('superUpdater'))
-      && this.substance.substanceClass != null
-      && formSections[this.substance.substanceClass.toLowerCase()] != null;
+    this.authService.hasAnyRolesAsync('updater', 'superUpdater').subscribe(canEdit => {
+      this.canEdit = canEdit;
+      this.isEditable = canEdit
+        && this.substance.substanceClass != null
+        && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
+    });
     this.getSubtypeRefs(this.substance);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));

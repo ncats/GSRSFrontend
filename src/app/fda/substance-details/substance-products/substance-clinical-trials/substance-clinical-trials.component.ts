@@ -43,7 +43,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
     this.clinicalTrialService.getSubstanceClinicalTrials(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
-      this.clinicalTrialCount = results.length;
+      this.clinicalTrialCount = this.totalRecords;
       this.countClinicalTrialOut.emit(this.clinicalTrialCount);
     });
 

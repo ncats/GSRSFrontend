@@ -51,7 +51,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       this.substanceSuggestionsGroup = response;
       const showTypes = [ 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
       this.suggestionsFields =   Object.keys(this.substanceSuggestionsGroup).filter(function(item) {
-        return showTypes.includes(item);
+        return showTypes.indexOf(item) > -1;
       });
      /* this.suggestionsFields.forEach((value, index) => {
         if (value === 'Approval_ID') {

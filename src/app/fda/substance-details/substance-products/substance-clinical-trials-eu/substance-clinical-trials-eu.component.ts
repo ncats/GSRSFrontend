@@ -42,7 +42,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
 
     this.clinicalTrialService.getSubstanceClinicalTrialsEurope(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
-      this.clinicalTrialEuCount = results.length;
+      this.clinicalTrialEuCount = this.totalRecords;
       this.countClinicalTrialEuOut.emit(this.clinicalTrialEuCount);
     });
 

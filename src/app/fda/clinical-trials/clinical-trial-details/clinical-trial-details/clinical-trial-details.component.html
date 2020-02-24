@@ -4,6 +4,11 @@
     <div class="font20px box">
       <img [src]="flagIconSrcPath" width="25px" height="30px">
       &nbsp;<b>Clinical Trial US Details</b>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <a [routerLink]="['/edit-clinical-trial', clinicalTrial.nctNumber]" [queryParams]="{}" target="_blank"
+        *ngIf="isAdmin" title='Edit Clinical Trial US Record'>
+        <mat-icon svgIcon="edit"></mat-icon>
+      </a>
     </div>
     <div class="row">
       <div class="row-property-key-2">
@@ -331,8 +336,8 @@
                     </tr>
                   </tbody>
                 </table>
-                
-                </div>
+
+              </div>
               <ng-template #noRecordApp>
                 <p><br>
                   There is no Application Data for this Clinical Trial
@@ -384,7 +389,7 @@
           </mat-card>
         </div>
       </mat-tab>
-  
+
     </mat-tab-group>
 
   </div>

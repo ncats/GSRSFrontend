@@ -184,55 +184,53 @@
         </div>
       </mat-tab>
 
-      <mat-tab label="product">
-
-      </mat-tab>
-      <!--
       <mat-tab label="Product ({{clinicalTrial.clinicalTrialEuropeProductList.length}})">
         <div class="details-container">
           <mat-card>
             <div class="title">Products in Clinical Trial</div>
             <mat-card-content>
-                <div *ngIf="clinicalTrial.clinicalTrialEuropeProductList.length > 0; else noRecordProd">
-              <table width="98%" class="bordergray blueTable padleft20px">
-                <thead>
-                  <tr valign="top">
-                    <th width="60px">#</th>
-                    <th width="200px">Product Name</th>
-                    <th width="200px">Trade Name</th>
-                    <th width="200px">Substances</th>
-                    <th width="200px">IMP Route of Administration</th>
-                    <th width="200px">Pharmaceutical Form</th>
-                    <th width="200px">IMP Sections</th>
-                    <th width="200px">IMP Role</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeProductList; let i = index">
-                    <td>{{i+1}}</td>
-                    <td>{{x.productName}}</td>
-                    <td>{{x.tradeName}}</td>
-                    <td></td>
-                    <td>{{x.impRoutesAdmin}}</td>
-                    <td>{{x.pharmaceuticalForm}}</td>
-                    <td>{{x.impSection}}</td>
-                    <td>{{x.impRole}}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div *ngIf="clinicalTrial.clinicalTrialEuropeProductList.length > 0; else noRecordProd">
+                <table width="98%" class="bordergray blueTable padleft20px">
+                  <thead>
+                    <tr valign="top">
+                      <th width="60px">#</th>
+                      <th width="200px">Product Name</th>
+                      <th width="200px">Trade Name</th>
+                      <th width="200px">Substances</th>
+                      <th width="200px">IMP Route of Administration</th>
+                      <th width="200px">Pharmaceutical Form</th>
+                      <th width="200px">IMP Sections</th>
+                      <th width="200px">IMP Role</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeProductList; let i = index">
+                      <td>{{i+1}}</td>
+                      <td>{{x.productName}}</td>
+                      <td>{{x.tradeName}}</td>
+                      <td>
+                        <div [innerHTML]="x.prodIngredName"></div>
+                      </td>
+                      <td>{{x.impRoutesAdmin}}</td>
+                      <td>{{x.pharmaceuticalForm}}</td>
+                      <td>{{x.impSection}}</td>
+                      <td>{{x.impRole}}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               <ng-template #noRecordProd>
-                  <p><br>
-                    There is no Product and Substance Data for this Clinical Trial
-                  </p>
-                </ng-template>
+                <p><br>
+                  There is no Product and Substance Data for this Clinical Trial
+                </p>
+              </ng-template>
             </mat-card-content>
           </mat-card>
         </div>
       </mat-tab>
-       -->
-      
-       <mat-tab label="Medical ({{clinicalTrial.clinicalTrialEuropeMedicalList.length}})">
+
+
+      <mat-tab label="Medical ({{clinicalTrial.clinicalTrialEuropeMedicalList.length}})">
         <div class="details-container">
           <mat-card>
             <div class="title">Medical Conditions in Clinical Trial</div>

@@ -61,6 +61,11 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       this.disulfide();
     }if (this.feature === 'concept') {
       this.concept();
+    } if (this.feature === 'unapprove') {
+      if (confirm('Are you sure you\'d like to remove the approvalID?')) {
+        this.substanceFormService.unapproveRecord();
+      }
+      this.feature = undefined;
     }
   }
 
@@ -81,11 +86,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   changeStatus(status: any): void {
     this.substanceFormService.changeStatus(status.value);
-    this.feature = undefined;
-  }
-
-  unapprove(): void {
-    this.substanceFormService.unapproveRecord();
     this.feature = undefined;
   }
 

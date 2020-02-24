@@ -81,7 +81,7 @@
     </button>
     <div class="side-nav-content" [ngClass]="view" *ngIf="substances && substances.length">
       <div class="search-parameters">
-        <div class="mat-elevation-z2" *ngIf="searchTerm">
+        <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
           <div>
             <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
             <span class="no-break">{{this.searchTerm}}</span>
@@ -91,6 +91,22 @@
               <mat-icon svgIcon="delete_forever"></mat-icon>
             </button>
           </div>
+        </div>
+        <div class="mat-elevation-z2 selected-parameter"  *ngFor = "let facet of displayFacets">
+          <div class = 'selected-container'>
+            <span class="capitalized font-medium-bold selected-label">
+                          <mat-icon class = "not-icon" svgIcon="not_interested" *ngIf = "!facet.bool"></mat-icon>
+              {{facet.type}}:
+            </span>
+            <span class="no-break selected-value">
+              {{facet.val}}
+            </span>
+          </div>
+            <div class="actions-container">
+              <button mat-icon-button class = "display-button" color="primary" (click) = "removeFacet(facet)">
+                <mat-icon class = "display-icon" svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
         </div>
         <div class="mat-elevation-z2" *ngIf="smiles">
           <div>
@@ -274,7 +290,6 @@
           </table>
         </div>
       </div>
-
       <div class="substance-tiles">
         <mat-card *ngFor="let substance of substances" class="tile">
           <mat-card-title>
@@ -309,7 +324,11 @@
           </mat-card-content>
         </mat-card>
       </div>
-
+      <div class="controls-container">
+          <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
+          </mat-paginator>
+        </div>
     </div>
     <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
       Your search did not return any results. Please try modifying it or

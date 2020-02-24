@@ -11,6 +11,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { SubstanceFormComponent } from './substance-form/substance-form.component';
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
+import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate-substance-form.guard';
 
 const childRoutes: Routes = [
   {
@@ -28,12 +29,14 @@ const childRoutes: Routes = [
   {
     path: 'substances/register',
     component: SubstanceFormComponent,
-    canActivate: [CanRegisterSubstanceForm]
+    canActivate: [CanRegisterSubstanceForm],
+    canDeactivate: [CanDeactivateSubstanceFormGuard]
   },
   {
     path: 'substances/register/:type',
     component: SubstanceFormComponent,
-    canActivate: [CanRegisterSubstanceForm]
+    canActivate: [CanRegisterSubstanceForm],
+    canDeactivate: [CanDeactivateSubstanceFormGuard]
   },
   {
     path: 'substances/:id',
@@ -58,7 +61,8 @@ const childRoutes: Routes = [
   {
     path: 'substances/:id/edit',
     component: SubstanceFormComponent,
-    canActivate: [CanActivateSubstanceForm]
+    canActivate: [CanActivateSubstanceForm],
+    canDeactivate: [CanDeactivateSubstanceFormGuard]
   }
 ];
 

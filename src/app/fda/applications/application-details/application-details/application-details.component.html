@@ -4,11 +4,11 @@
       <mat-card-title>
         Application Details
         &nbsp;&nbsp;
-        <!--
-        <span *ngIf="updateApplicationUrl">
-          <a href="{{updateApplicationUrl}}">Update</a>
-        </span>
-      -->
+        &nbsp;&nbsp;
+        <a [href]="updateApplicationUrl + application.id" target="_blank" *ngIf="isAdmin"
+          matTooltip='Edit GSRS Application Record'>
+          <mat-icon svgIcon="edit"></mat-icon>
+        </a>
       </mat-card-title>
 
       <mat-card-content>
@@ -20,7 +20,7 @@
             </div>
             <div class="row-property-value">
               <span
-                class="colororange font14px fontbold"><b>{{application.appType}}&nbsp;{{application.appNumber}}</b></span>
+                class="colororange font16px fontbold"><b>{{application.appType}}&nbsp;{{application.appNumber}}</b></span>
             </div>
           </div>
           <div class="row-property">
@@ -148,74 +148,190 @@
         </div>
 
         <div class="row">
-          <div class="row-property">
-            <div class="row-property-key">
+          <div class="row-property-2">
+            <div class="row-property-key-2">
               Indications:
             </div>
-            <div class="row-property-value">
-
-            </div>
-          </div>
-          <div class="row-property">
-            <div class="row-property-key">
-
-            </div>
-            <div class="row-property-value">
-
+            <div class="row-property-value-2">
+              <div *ngFor="let ind of application.applicationIndicationList; let i = index">
+                &bull;&nbsp;{{ind.indication}} <br>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="row">
-          <div class="row-property">
-            <div class="row-property-key">
+          <div class="row-property-2">
+            <div class="row-property-key-2">
               Clinical Trials:
             </div>
-            <div class="row-property-value">
-
+            <div class="row-property-value-2">
+              <div *ngIf="application.clinicalTrialList.length > 0">
+                <table class="blueTable">
+                  <thead>
+                    <tr height="30px">
+                      <th width="60px">NCT Number</th>
+                      <th width="100px">Clinical Trials Gov Website</th>
+                      <th width="100px">Title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let clinical of application.clinicalTrialList; let i = index">
+                      <td>
+                        <a [routerLink]="['/clinicalTrialDetails', clinical.nctNumber, 'srs']"
+                          target="_blank">{{clinical.nctNumber}}</a>
+                      </td>
+                      <td>
+                        <a [href]="clinical.url" target="_blank"
+                          matTooltip='View Clinical Trial US Record'>{{ clinical.url }}</a>
+                      </td>
+                      <td>
+                        {{ clinical.title }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-          <div class="row-property">
-            <div class="row-property-key">
 
-            </div>
-            <div class="row-property-value">
-
-            </div>
-          </div>
         </div>
 
       </mat-card-content>
     </mat-card>
   </div>
 
+  <!-- Display Application History -->
+  <div class="" *ngIf="application.applicationHistoryList.length > 0">
+    <br>
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        <span class="title3">Application History ({{application.applicationHistoryList.length}})</span>
+      </mat-card-title>
+      <mat-card-content>
+        <table class="blueTable">
+          <thead>
+            <tr height="30px">
+              <th width="200px">Product Name</th>
+              <th width="150px">Sponsor Name</th>
+              <th width="150px">Status</th>
+              <th width="150px">Status Date</th>
+              <th width="100px">Create Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ingred of application.applicationHistoryList; let i = index">
+              <td>{{ ingred.productName }}</td>
+              <td>{{ ingred.sponsorName }}</td>
+              <td>{{ ingred.status }}</td>
+              <td>{{ ingred.statusDate|date: 'MM/dd/yyyy' }}</td>
+              <td>{{ ingred.createDate|date: 'MM/dd/yyyy' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- End Technical Effect loop -->
+
+  <!-- Display Technical Effect -->
+  <div class="" *ngIf="application.productTechEffectList.length > 0">
+    <br>
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        <span class="title3">Technical Effect ({{application.productTechEffectList.length}})</span>
+      </mat-card-title>
+      <mat-card-content>
+        <table class="blueTable">
+          <thead>
+            <tr height="30px">
+              <th>Technical Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ingred of application.productTechEffectList; let i = index">
+              <td>{{ ingred.technicalEffect }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- End Technical Effect loop -->
+
+  <!-- Display Effected Product -->
+  <div class="" *ngIf="application.productEffectedList.length > 0">
+    <br>
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        <span class="title3">Effected Product ({{application.productEffectedList.length}})</span>
+      </mat-card-title>
+      <mat-card-content>
+        <table class="blueTable">
+          <thead>
+            <tr height="30px">
+              <th>Effected Product</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ingred of application.productEffectedList; let i = index">
+              <td>{{ ingred.effectedProduct }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- End Effected Product loop -->
 
   <br>
   <div class="details-container">
     <mat-card class="bordergray">
       <mat-card-content>
         <div *ngFor="let prod of application.applicationProductList; let i = index">
-            <div class="title2">
-                Product {{i + 1}}
-            </div> 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Product Name:
-              </div>
-              <div class="row-property-value">
+          <div class="title2">
+            Product {{i + 1}}
+          </div>
 
+          <!-- Product Names-->
+          <div *ngIf="prod.applicationProductNameList.length > 0; else noRecordProdName">
+            <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Product Name:
+                </div>
+                <div class="row-property-value">
+                  {{prodName.productName}}
+                </div>
               </div>
-            </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Product Name Type:
-              </div>
-              <div class="row-property-value">
-
+              <div class="row-property">
+                <div class="row-property-key">
+                  Product Name Type:
+                </div>
+                <div class="row-property-value">
+                  {{prodName.productNameType}}
+                </div>
               </div>
             </div>
           </div>
+          <ng-template #noRecordProdName>
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Product Name:
+                </div>
+                <div class="row-property-value">
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Product Name Type:
+                </div>
+                <div class="row-property-value">
+                </div>
+              </div>
+            </div>
+          </ng-template>
 
           <div class="row">
             <div class="row-property">
@@ -242,7 +358,7 @@
                 Amount:
               </div>
               <div class="row-property-value">
-
+                {{prod.amount}}
               </div>
             </div>
             <div class="row-property">
@@ -275,7 +391,7 @@
           </div>
 
           <!-- Display Ingredient -->
-          <mat-card class="bordergray">
+          <mat-card class="bordergray margintop10px">
             <mat-card-title class="title2">
               <span class="title3">Substances in Application ({{prod.applicationIngredientList.length}})</span>
             </mat-card-title>
@@ -300,10 +416,16 @@
                     <td>{{ ingred.applicantIngredName }}</td>
                     <td>
                       <div *ngIf="ingred.substanceId">
-                        <a [routerLink]="['/substances', ingred.substanceId]" target="_blank">{{ingred.ingredientName}}</a>
+                        <a [routerLink]="['/substances', ingred.substanceId]"
+                          target="_blank">{{ingred.ingredientName}}</a>
                       </div>
                     </td>
-                    <td>{{ ingred.basisOfStrengthName }}</td>
+                    <td>
+                      <div *ngIf="ingred.basisOfStrengthSubstanceId">
+                        <a [routerLink]="['/substances', ingred.basisOfStrengthSubstanceId]"
+                          target="_blank">{{ingred.basisOfStrengthName}}</a>
+                      </div>
+                    </td>
                     <td>{{ ingred.ingredientType }}</td>
                     <td>{{ ingred.average }}</td>
                     <td>{{ ingred.low }}</td>

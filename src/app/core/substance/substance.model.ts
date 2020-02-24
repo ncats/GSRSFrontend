@@ -169,6 +169,7 @@ export interface DisplayStructure extends Polymer {
 export interface Monomer extends Polymer {
   uuid?: string;
   type?: string;
+  defining?: boolean;
   amount?: SubstanceAmount;
   monomerSubstance?: SubstanceRelated;
 }

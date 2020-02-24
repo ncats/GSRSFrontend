@@ -25,7 +25,7 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-    // authService: AuthService,
+    public authService: AuthService,
   ) {
     super(applicationService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService);
     // , authService);
@@ -34,15 +34,13 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.params['id'];
 
-    // console.log('ADMIN' + this.isAdmin);
-    /*
-    if (this.isAdmin === true) {
-      this.updateApplicationUrl = this.applicationService.getUpdateApplicationUrl();
-    }
-    */
+    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
 
     super.ngOnInit();
+  }
 
+  get updateApplicationUrl(): string {
+    return this.applicationService.getUpdateApplicationUrl();
   }
 
 }

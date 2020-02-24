@@ -14,7 +14,7 @@
     </div>
     <div *ngIf="validationMessages">
 <span *ngIf = " validationMessages.length > 0"   >
-   <div class="submission-message">
+   <div class="submission-message" *ngIf = '!serverError'>
         Please correct or dismiss the following errors and submit again:
       </div>
       <div class="validation-message" *ngFor="let message of validationMessages; index as i" >

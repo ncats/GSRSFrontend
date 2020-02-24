@@ -55,7 +55,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   // public sortValues = searchSortValues;
   // showAudit: boolean;
   // public facetBuilder: SubstanceFacetParam;
-  // searchText: string[] = [];
+   searchText: string[] = [];
   // private overlayContainer: HTMLElement;
 
   constructor(
@@ -116,6 +116,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
 
       this.searchApplications();
     });
+
+    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+
   }
 
   ngAfterViewInit() {
@@ -194,6 +197,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
           this.populateFacets(pagingResponse.facets);
         }
       }, error => {
+        console.log('error');
         const notification: AppNotification = {
           message: 'There was an error trying to retrieve Applicationss. Please refresh and try again.',
           type: NotificationType.error,
@@ -333,7 +337,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   private populateFacets(facets: Array<Facet>): void {
-
     if (this.configService.configData.facets != null) {
       if (this.configService.configData.facets.default != null && this.configService.configData.facets.default.length) {
         this.configService.configData.facets.default.forEach(facet => {
@@ -348,11 +351,16 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
                   }
                 }
 
+                // Commenting the following lines at this moment.  These lines are causing not to display
+                // Application Type and Application Status facets in Browse Application page. It is causing conflict
+                // between Browse Substance facets in config file.
+                /*
                 if (hasValues) {
                   const facetToAdd = facets.splice(facetIndex, 1);
                   facetIndex--;
                   this.facets.push(facetToAdd[0]);
                 }
+                */
               }
               break;
             }
@@ -405,6 +413,49 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     const eventValue = event.checked ? 1 : 0;
     this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
+  }
+
+  moreFacets(index: number, facet: Facet) {
+    const subscription = this.applicationService.retrieveNextFacetValues(this.facets[index]).subscribe( resp => {
+        this.facets[index].$next = resp.$next;
+        this.facets[index].values = this.facets[index].values.concat(resp.content);
+        this.facets[index].$fetched = this.facets[index].values;
+        this.facets[index].$total = resp.ftotal;
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
+      });
+  }
+
+  lessFacets(index: number) {
+    const subscription = this.applicationService.retrieveFacetValues(this.facets[index]).subscribe( response => {
+       this.facets[index].values = response.content;
+       this.facets[index].$fetched = response.content;
+       this.facets[index].$next = response.$next;
+       subscription.unsubscribe();
+     }, error => {
+      subscription.unsubscribe();
+    });
+  }
+
+  filterFacets(index: number, event: any) {
+    const facet = this.facets[index];
+    if (event.length > 0) {
+      const processed = facet.name.replace(' ', '+');
+      const subscription = this.applicationService.filterFacets(event, processed).subscribe(response => {
+        facet.values = response.content;
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
+      });
+    } else {
+      const subscription = this.applicationService.retrieveFacetValues(facet).subscribe(response => {
+        facet.values = response.content;
+        subscription.unsubscribe();
+      }, error => {
+        subscription.unsubscribe();
+      });
+    }
   }
 
   get searchTerm(): string {
@@ -467,6 +518,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
 
     });
 
+  }
+
+
+  get updateApplicationUrl(): string {
+    return this.applicationService.getUpdateApplicationUrl();
   }
 
   // appType: string, appNumber: string

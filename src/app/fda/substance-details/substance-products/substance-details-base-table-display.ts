@@ -8,11 +8,9 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
 
   totalRecords: 0;
   public results: Array<any> = [];
+  isAdmin = false;
 
   @Input() bdnum: string;
-
-  ngOnInit(): void {
-  }
 
   constructor(
     public gaService: GoogleAnalyticsService,
@@ -21,6 +19,9 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
       super(gaService);
      // this.service = service;
     }
+
+  ngOnInit(): void {
+  }
 
   setPageEvent(pageEvent?: PageEvent): void {
     if (pageEvent != null) {

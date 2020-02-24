@@ -39,7 +39,7 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
 
     this.adverseEventService.getSubstanceAdverseEventDme(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
-      this.advDmeCount = results.length;
+      this.advDmeCount = this.totalRecords;
       this.countAdvDmeOut.emit(this.advDmeCount);
     });
       /*

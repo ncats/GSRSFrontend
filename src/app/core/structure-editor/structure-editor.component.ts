@@ -53,10 +53,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   ) { }
 
   ngOnDestroy(): void {
-    window.removeEventListener('drop', () => {
-    });
-    window.removeEventListener('dragover', () => {
-    });
+    window.removeEventListener('drop', this.preventDrag);
+    window.removeEventListener('dragover', this.preventDrag);
+    window.removeEventListener('paste', this.checkPaste);
   }
 
   ngAfterViewInit(): void {
@@ -64,13 +63,21 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.canvasCopy = <HTMLCanvasElement>this.myCanvas.nativeElement;
   }
 
+  private preventDrag = (e: Event) => {
+    e.preventDefault();
+  }
+
+  private checkPaste = (e: Event) => {
+    if (this.jsdraw && this.jsdraw.activated) {
+      e.preventDefault();
+      this.catchPaste(e);
+    }
+  }
+
   ngOnInit() {
-    window.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-    window.addEventListener('drop', (e) => {
-      e.preventDefault();
-    });
+    window.addEventListener('dragover', this.preventDrag);
+    window.addEventListener('drop', this.preventDrag);
+    window.addEventListener('paste', this.checkPaste);
 
     if (isPlatformBrowser(this.platformId)) {
       this.ketcherFilePath = `${environment.baseHref || '/'}assets/ketcher/ketcher.html`;
@@ -172,5 +179,42 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       });
     };
   }
+
+
+  catchPaste(e): void {
+    const send: any = {};
+    let valid = false;
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      const blob = items[i].getAsFile();
+      if (items[i].type.indexOf('image') !== -1) {
+        valid = true;
+        send.type = 'image';
+        const reader = new FileReader();
+        send.file = blob;
+        reader.readAsDataURL(blob);
+        const that = this;
+        reader.onloadend = () => {
+          setTimeout(() => {
+            const img = reader.result.toString();
+            that.createImage(img);
+          });
+        };
+      } else if (items[i].type === 'text/plain') {
+        const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        this.structureService.postStructure(text).subscribe(response => {
+          if (response.structure && response.structure.molfile) {
+            this.loadedMolfile.emit(text);
+          }
+        });
+
+      }
+    }
+
+
+    }
+
+
+
 
 }

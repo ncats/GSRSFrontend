@@ -7,7 +7,8 @@ import { PagingResponse } from '@gsrs-core/utils';
 import { ApplicationSrs } from '../model/application.model';
 import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
-import { map } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
+import {Facet} from '@gsrs-core/utils';
 
 @Injectable(
   {
@@ -45,7 +46,36 @@ export class ApplicationService extends BaseHttpService {
     const options = {
       params: params
     };
+
     return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
+
+  }
+
+  filterFacets(name: string, category: string ): Observable<any> {
+    const url =  `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
+    return this.http.get(url);
+  }
+
+  retrieveFacetValues(facet: Facet): Observable<any> {
+    const url = facet._self;
+    return this.http.get<any>(url);
+  }
+
+  retrieveNextFacetValues(facet: Facet): Observable<any> {
+    const url = facet._self;
+    if (!facet.$next) {
+      return this.http.get<any>(url).pipe(
+        switchMap(response => {
+          if (response) {
+            const next = response.nextPageUri;
+            return this.http.get<any>(next);
+          } else {
+            return 'nada';
+          }
+        }));
+    } else {
+      return this.http.get<any>(facet.$next);
+    }
 
   }
 
@@ -74,10 +104,11 @@ export class ApplicationService extends BaseHttpService {
   }
 */
   getSubstanceApplications(
-    bdnum: string, page: number, pageSize: number
+    bdnum: string, center: string, fromTable: string, page: number, pageSize: number
   ): Observable<Array<any>> {
 
-    const url = this.baseUrl + 'applicationListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    const func = this.baseUrl + 'applicationListByBdnum?bdnum=';
+    const url =  func + bdnum + '&center=' + center + '&fromTable=' + fromTable + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url).pipe(
       map(results => {
@@ -121,6 +152,17 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  getApplicationCenterByBdnum(
+    bdnum: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'getApplicationCenterByBdnum2?bdnum=' + bdnum;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   getSubstanceRelationship(
     substanceId: string
   ): Observable<Array<any>> {
@@ -131,6 +173,7 @@ export class ApplicationService extends BaseHttpService {
       })
     );
   }
+
 
   getUpdateApplicationUrl(): string {
     return this.baseUrl + 'updateApplication?applicationId=';

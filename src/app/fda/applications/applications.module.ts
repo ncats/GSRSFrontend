@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-
 import { ApplicationsBrowseComponent } from './applications-browse/applications-browse.component';
 import { ApplicationService } from './service/application.service';
 
@@ -35,6 +34,7 @@ import { ApplicationDarrtsDetailsComponent } from './application-details/applica
 import { ApplicationDetailsBaseComponent } from './application-details/application-details-base.component';
 import { ApplicationEditComponent } from './application-edit/application-edit.component';
 import { ApplicationAddComponent } from './application-add/application-add.component';
+import { FacetFilterFdaPipe } from '../utils/facet-filter-fda.pipe';
 
 const applicationRoutes: Routes = [
   {
@@ -92,7 +92,8 @@ const applicationRoutes: Routes = [
     ApplicationDarrtsDetailsComponent,
     ApplicationDetailsBaseComponent,
     ApplicationEditComponent,
-    ApplicationAddComponent
+    ApplicationAddComponent,
+    FacetFilterFdaPipe,
   ],
   exports: [
     ApplicationsBrowseComponent

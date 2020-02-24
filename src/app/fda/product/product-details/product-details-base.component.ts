@@ -52,7 +52,7 @@ export class ProductDetailsBaseComponent implements OnInit {
   }
 
   private handleSubstanceRetrivalError() {
-    this.loadingService.setLoading(false);
+     this.loadingService.setLoading(false);
     const notification: AppNotification = {
       message: 'The web address above is incorrect. You\'re being forwarded to Browse Substances',
       type: NotificationType.error,

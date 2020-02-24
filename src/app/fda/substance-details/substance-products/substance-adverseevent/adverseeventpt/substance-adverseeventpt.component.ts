@@ -42,7 +42,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
     this.adverseEventService.getSubstanceAdverseEventPt(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
-      this.advPtCount = results.length;
+      this.advPtCount = this.totalRecords;
       this.countAdvPtOut.emit(this.advPtCount);
     });
 
