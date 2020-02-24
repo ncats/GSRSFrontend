@@ -34,7 +34,7 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.params['id'];
 
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
 
     super.ngOnInit();
   }

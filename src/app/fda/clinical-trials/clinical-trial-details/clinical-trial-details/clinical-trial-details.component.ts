@@ -35,7 +35,7 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
   ngOnInit() {
     super.ngOnInit();
 
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
 
     this.flagIconSrcPath = `${environment.baseHref || '/'}assets/icons/fda/united-states.svg`;
 
