@@ -90,6 +90,10 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-find_replace-24px.svg'));
 
     iconRegistry.addSvgIcon(
+      'not_interested',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-not_interested-24px.svg'));
+
+    iconRegistry.addSvgIcon(
       'spellcheck',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-spellcheck-24px.svg'));
 
