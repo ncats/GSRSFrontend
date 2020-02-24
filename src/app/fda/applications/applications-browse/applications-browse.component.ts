@@ -117,7 +117,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
       this.searchApplications();
     });
 
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
 
   }
 

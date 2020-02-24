@@ -18,6 +18,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   centerList = '';
   center = '';
   fromTable = '';
+  loadingStatus = '';
 
   @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -34,10 +35,9 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
 
   ngOnInit() {
 
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
 
     if (this.bdnum) {
-
       this.getApplicationCenterByBdnum();
       // this.getSubstanceApplications();
     }
@@ -56,11 +56,16 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
       const textLabel: string = evt.textLabel;
       // Get Center and fromTable/Source from Tab Label
       if (textLabel != null) {
+        this.loadingStatus = 'Loading data...';
         const index = textLabel.indexOf(' ');
         this.center = textLabel.slice(0, index);
         this.fromTable = textLabel.slice(index + 1, textLabel.length);
 
+        // set the current result data to empty or null.
+        this.paged = [];
+
         this.getSubstanceApplications();
+
       }
 
     }
@@ -74,6 +79,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         this.setResultData(results);
         this.applicationCount = this.totalRecords;
         this.countApplicationOut.emit(this.applicationCount);
+        this.loadingStatus = '';
       });
 
     /*
