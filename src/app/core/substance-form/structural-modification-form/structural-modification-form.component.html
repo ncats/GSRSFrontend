@@ -21,7 +21,7 @@
       <div class="flex-column form-content">
 
         <div class="form-row">
-        <app-cv-input domain="STRUCTURAL_MODIFICATION_TYPE" title = "Modification Type" [model] = "mod.structuralModificationType"
+        <app-cv-input key = "Structural Modification Structural Modification Type"  title = "Modification Type" [model] = "mod.structuralModificationType"
                       (valueChange)= "mod.structuralModificationType = $event"></app-cv-input>
           <div class = 'sites' *ngIf = "mod.locationType !== 'RESIDUE_SPECIFIC'">
             <div class="label">Sites</div>
