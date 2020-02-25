@@ -49,8 +49,6 @@
 
 
 /* copied from substances  */
-
-
 ::ng-deep .mat-expansion-panel-content > .mat-expansion-panel-body {
   padding: 0 12px 10px;
 }
@@ -92,6 +90,8 @@
 
 .search-parameters {
   display: flex;
+  width: 100%;
+  flex-wrap: wrap;
 
   &.center {
       margin-top: 10px;
@@ -99,7 +99,10 @@
   }
 
   & > div {
-      padding: 5px 10px;
+
+      padding-left:10px;
+      padding-right: 2px;
+      margin-left:5px;
       margin-bottom: 5px;
       display: flex;
       align-items: center;
@@ -109,6 +112,10 @@
       margin-left: auto;
       flex-shrink: 0;
   }
+.selected-parameter {
+  padding-right:5px;
+  font-size:14px;
+}
 }
 
 .controls-container {
@@ -472,3 +479,36 @@ color:#448aff;
 .show-more:hover {
 text-decoration: underline;
 }
+
+
+.selected-container {
+font-size:14px;
+}
+
+.selected-label {
+padding-right:5px;
+}
+
+.selected-parameter {
+height:36px;
+}
+
+.selected-container {
+max-width:700px;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.selected-label {
+max-width:200px;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+.not-icon {
+height:18px !important;
+width: 18px !important;
+vertical-align: bottom;
+}
+
+

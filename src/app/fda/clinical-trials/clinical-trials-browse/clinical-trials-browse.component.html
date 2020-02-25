@@ -1,48 +1,73 @@
-<mat-sidenav-container [hasBackdrop]="hasBackdrop">  
-  <mat-sidenav #matSideNavInstance mode="side" opened="true">
+<mat-sidenav-container [hasBackdrop]="hasBackdrop">
+  <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="true">
     <mat-accordion multi="true">
-      <mat-expansion-panel *ngFor="let facet of facets" [expanded]="facetParams[facet.name] != null">
+      <mat-expansion-panel *ngFor="let facet of facets; index as topIndex" [expanded]="false || facetParams[facet.name] != null">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{ facet.name | facetDisplay }}
+            {{facet.name | facetDisplay}}
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-form-field  class="">
-        <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name]" placeholder="Search  {{facet.name}}">
+        <mat-form-field class="">
+          <input matInput class="search" type="text" [ngModel] = "searchText[facet.name]" (ngModelChange) = "filterFacets(topIndex, $event)"
+            placeholder="Search  {{facet.name}}">
         </mat-form-field>
         <button mat-icon-button color="black" (click) = "searchText[facet.name] = ''"><mat-icon svgIcon="close"></mat-icon></button>
-          <div class="facet-value" *ngFor="let value of facet.values | facetFilter : searchText[facet.name]">
+          <ng-container  *ngFor="let value of facet.values | facetFilter : searchText[facet.name]; index as index">
+            <div class="facet-value" >
           <div class="facet-value-checkbox">
-            <mat-checkbox class="include" matTooltip="Include" (change)="updateFacetSelection($event, facet.name, value.label, true)"
+            <mat-checkbox class="include" matTooltip="Include"
+              (change)="updateFacetSelection($event, facet.name, value.label, true)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
             </mat-checkbox>
-            <mat-checkbox class="exclude" matTooltip="Exclude" (change)="updateFacetSelection($event, facet.name, value.label, false)"
+            <mat-checkbox class="exclude" matTooltip="Exclude"
+              (change)="updateFacetSelection($event, facet.name, value.label, false)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
             </mat-checkbox>
           </div>
           <div class="facet-value-label">
-              <span *ngIf = "value.label == 'approved'">
-                Validated (UNII)
-             </span>
-                <span *ngIf = "value.label != 'approved'">
-                {{value.label}}
-              </span>
-          </div>  
+            <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
+              {{value.label}}
+            </span>
+            <span *ngIf = "facet.name === 'Substance Class'">
+              {{value.label | facetDisplay: 'types'}}
+            </span>
+            <span *ngIf="facet.name === 'Record Status'">
+              {{value.label | facetDisplay: 'status'}}
+            </span>
+          </div>
           <div class="middle-fill"></div>
           <div class="facet-value-count">
             {{value.count}}
           </div>
+            </div>
+        </ng-container>
+        <div>
+         <!--- <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
+            Show {{toggle[topIndex] === true ? 'all': 'less'}}
+          </a>-->
+          <span  *ngIf = "facet.values && facet.values.length >= 10 && (
+           !searchText[facet.name] || searchText[facet.name] == '')">
+             <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf ="(!facet.$total ||
+              facet.$total > facet.values.length)">
+            More...{{searchText[facet.name]}}
+          </a>
+             <a class="show-more" *ngIf = "facet.values.length > 10" (click)="lessFacets(topIndex)">
+            Show Less {{searchText[facet.name]}}
+          </a>
+          </span>
+
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
-          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption" [(ngModel)]="facetParams[facet.name].isAllMatch"
-            (click)="sendFacetsEvent($event, facet.name)">
+          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
+            [(ngModel)]="facetParams[facet.name].isAllMatch" (click)="sendFacetsEvent($event, facet.name)">
             All Match
           </mat-checkbox>
           <div class="pull-right">
-            <button mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
+            <button *ngIf="facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
               Clear
             </button>
-            <button class="apply-button" mat-flat-button color="primary" [disabled]="isLoading" (click)="applyFacetsFilter(facet.name)">
+            <button *ngIf="facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary" [disabled]="isLoading"
+              (click)="applyFacetsFilter(facet.name)">
               Apply
             </button>
           </div>
@@ -53,7 +78,7 @@
 <mat-sidenav-content>
 
 <div class="example-container mat-elevation-z8 clinical-trials-browse-wrapper">
-    <p>Browse Clinical Trials</p>
+    <h3>Browse Clinical Trials</h3>
     <div>
     <form class="filter-form clinical-trials-browse-filter-form">
       <mat-form-field class='clinical-trials-browse-filter-form-searchTerm'>
