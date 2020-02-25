@@ -45,6 +45,15 @@ td.mat-cell {
   font-size: 12px;
 }
 
+.info-container {
+  margin-bottom: 15px;
+
+  a {
+    color: rgb(0, 0, 255);;
+    text-decoration: none;
+  }
+}
+
 /*
 .mat-tab-group.mat-primary .mat-ink-bar {
   background: white;

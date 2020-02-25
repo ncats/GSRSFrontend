@@ -1,3 +1,11 @@
+<mat-card class="welcome-banner" *ngIf="!isClosedWelcomeMessage">
+  <div class="close-container">
+    <button mat-icon-button (click)="closeWelcomeMessage()">
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
+  </div>
+  Welcome to the new user interface for GSRS 2.5! Please be aware that you can return to the classic view by clicking the white button on the top right. Please send any feedback to <a [href]="'mailto:' + contactEmail">{{contactEmail}}</a>.
+</mat-card>
 <div class="middle-content-container">
   <mat-card class="search-section">
     <mat-card-title>

@@ -41,6 +41,9 @@
       <a mat-menu-item *ngIf="isAdmin" [href]="baseDomain + '/ginas/app/admin'" target="_blank">
         Admin
       </a>
+      <a mat-menu-item [href]="'mailto:' + contactEmail">
+        Contact Us
+      </a>
     </mat-menu>
   </span>
   <span class="middle-fill"></span>

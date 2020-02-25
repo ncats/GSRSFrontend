@@ -9,6 +9,7 @@ export interface Environment {
     googleAnalyticsId: string;
     version: string;
     isAnalyticsPrivate: boolean;
+    contactEmail: string;
 }
 
 export interface NavItem {

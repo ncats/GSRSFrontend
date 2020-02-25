@@ -6,6 +6,7 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table-display';
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-products',
@@ -34,9 +35,12 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     'ingredientType'
   ];
 
+  baseDomain: string;
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private productService: ProductService,
+    private configService: ConfigService
   ) {
     super(gaService, productService);
   }
@@ -50,6 +54,8 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       // Get Product Data based on substance uuid
       this.getSubstanceProducts();
     }
+
+    this.baseDomain = this.configService.configData.apiUrlDomain;
   }
 
   ngAfterViewInit() {

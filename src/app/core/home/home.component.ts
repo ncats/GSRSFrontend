@@ -13,12 +13,16 @@ export class HomeComponent implements OnInit {
   environment: Environment;
   baseDomain: string;
   isAuthenticated = false;
+  contactEmail: string;
+  isClosedWelcomeMessage = true;
 
   constructor(
     private gaService: GoogleAnalyticsService,
     private configService: ConfigService,
     private authService: AuthService
-  ) { }
+  ) {
+    this.contactEmail = this.configService.configData.contactEmail;
+  }
 
   ngOnInit() {
     this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
@@ -27,5 +31,11 @@ export class HomeComponent implements OnInit {
     this.gaService.sendPageView(`Home`);
     this.environment = this.configService.environment;
     this.baseDomain = this.configService.configData.apiUrlDomain;
+    this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';
+  }
+
+  closeWelcomeMessage(): void {
+    this.isClosedWelcomeMessage = true;
+    localStorage.setItem('isClosedWelcomeMessage', this.isClosedWelcomeMessage.toString());
   }
 }
