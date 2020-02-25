@@ -20,6 +20,10 @@ export const substanceCardsFilters: Array<SubstanceCardFilter> = [
         filter: existsFilter
     },
     {
+      name: 'anyExists',
+      filter: anyExistsFilter
+    },
+    {
         name: 'substanceCodes',
         filter: substanceCodesFilter
     },
@@ -94,6 +98,27 @@ export function existsFilter(
         observer.next(isApproved);
         observer.complete();
     });
+}
+
+export function anyExistsFilter(
+  substance: SubstanceDetail,
+  filter: SubstanceCardFilterParameters
+): Observable<boolean> {
+  return new Observable(observer => {
+    let isApproved = false;
+    if (filter.propertyToCheck != null) {
+      const evaluatedProperties = filter.propertyToCheck.split('|');
+      evaluatedProperties.forEach( property => {
+        const evaluatedProperty = getEvaluatedProperty(substance, property);
+        if (evaluatedProperty != null
+          && (evaluatedProperty.length && evaluatedProperty.length > 0)) {
+          isApproved = true;
+        }
+      });
+    }
+    observer.next(isApproved);
+    observer.complete();
+  });
 }
 
 export function substanceCodesFilter(
