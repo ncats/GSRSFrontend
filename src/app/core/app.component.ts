@@ -144,9 +144,28 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-file_copy-24px.svg'));
     iconRegistry.addSvgIcon(
       'outline-file_copy',
-    sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-file_copy-24px.svg')); iconRegistry.addSvgIcon(
+    sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-file_copy-24px.svg'));
+    iconRegistry.addSvgIcon(
       'outline-description',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-description-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'local-pharmacy',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-local_pharmacy-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'insert-chart',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-insert_chart-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'youtube',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-youtube_searched_for-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'find-in-page',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-find_in_page-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'note',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-note-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'pageview',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-pageview-24px.svg'));
   }
 
 }

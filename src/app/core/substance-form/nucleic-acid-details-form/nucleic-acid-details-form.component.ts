@@ -46,6 +46,10 @@ private subscriptions: Array<Subscription> = [];
     });
   }
 
+  updateAccess(access: Array<string>): void {
+    this.nucleicAcid.access = access;
+  }
+
   update( field: string, event: any): void {
     if (field === 'nucleicAcidType') {
       this.nucleicAcid.nucleicAcidType = event;

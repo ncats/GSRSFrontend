@@ -6,6 +6,10 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { UtilsService } from '../../utils/utils.service';
 import { Subscription } from 'rxjs';
+import {NameResolverDialogComponent} from '@gsrs-core/name-resolver/name-resolver-dialog.component';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {MatDialog} from '@angular/material/dialog';
+import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 
 @Component({
   selector: 'app-name-form',
@@ -21,14 +25,24 @@ export class NameFormComponent implements OnInit, OnDestroy {
   nameTypeControl = new FormControl('');
   deleteTimer: any;
   private subscriptions: Array<Subscription> = [];
+  overlayContainer: HTMLElement;
+  substanceType = '';
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private dialog: MatDialog,
+    private substanceFormService: SubstanceFormService,
+    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
     this.getVocabularies();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+    const definition = this.substanceFormService.definition.subscribe(def => {
+      this.substanceType = def.substanceClass;
+    });
+    definition.unsubscribe();
   }
 
   ngOnDestroy() {
@@ -97,6 +111,21 @@ export class NameFormComponent implements OnInit, OnDestroy {
   undoDelete(): void {
     clearTimeout(this.deleteTimer);
     delete this.privateName.$$deletedCode;
+  }
+
+  resolve(): void {
+    const dialogRef = this.dialog.open(NameResolverDialogComponent, {
+      height: 'auto',
+      width: '800px',
+      data: {'name': this.privateName.name}
+    });
+    this.overlayContainer.style.zIndex = '1002';
+    dialogRef.afterClosed().subscribe((molfile?: string) => {
+      this.overlayContainer.style.zIndex = null;
+      if (molfile != null && molfile !== '') {
+        this.substanceFormService.resolvedName(molfile);
+      }
+    }, () => {});
   }
 
   getNameOrgs(name: SubstanceName): Array<SubstanceNameOrg> {

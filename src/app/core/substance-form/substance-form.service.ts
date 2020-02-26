@@ -88,6 +88,9 @@ export class SubstanceFormService {
   private displaySequences: Array<SubunitSequence>;
   private displaySequencesEmitter = new Subject<Array<SubunitSequence>>();
   private substanceChangeReasonEmitter = new Subject<string>();
+  private nameResolver = new Subject<string>();
+  resolvedMol = this.nameResolver.asObservable();
+
 
   constructor(
     private substanceService: SubstanceService,
@@ -306,7 +309,6 @@ export class SubstanceFormService {
     } else if (this.substance.specifiedSubstance) {
       this.setPrivate(this.substance.specifiedSubstance);
     } else {
-      console.log('not found');
     }
   }
    setPrivate(e) {
@@ -332,7 +334,6 @@ export class SubstanceFormService {
     } else if (this.substance.specifiedSubstance) {
       this.setPublic(this.substance.specifiedSubstance);
     } else {
-      console.log('not found');
     }
   }
 
@@ -586,7 +587,12 @@ unapproveRecord() {
     }
   }
 
+  resolvedName(mol: string): void {
+    this.nameResolver.next(mol);
+  }
+
   // Class start
+
 
   // Polymer start
 

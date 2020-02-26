@@ -25,6 +25,7 @@
     <mat-form-field class="name">
       <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" />
     </mat-form-field>
+    <a class = "resolve" *ngIf = "name.name && name.name.length > 0 && substanceType === 'structure'" (click) = "resolve()" >resolve</a>
     <mat-form-field class="name-type">
       <mat-label>Type</mat-label>
       <mat-select [(ngModel)]="name.type" required name="type">

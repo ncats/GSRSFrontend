@@ -3,6 +3,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { ConfigService } from '@gsrs-core/config';
 import { Environment } from '@environment';
 import { AuthService } from '@gsrs-core/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private gaService: GoogleAnalyticsService,
     private configService: ConfigService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
   }
@@ -37,5 +39,9 @@ export class HomeComponent implements OnInit {
   closeWelcomeMessage(): void {
     this.isClosedWelcomeMessage = true;
     localStorage.setItem('isClosedWelcomeMessage', this.isClosedWelcomeMessage.toString());
+  }
+
+  browseSubstances(): void {
+    this.router.navigate(['/browse-substance']);
   }
 }

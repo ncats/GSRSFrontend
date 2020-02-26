@@ -443,6 +443,12 @@
   margin:auto;
 }
 
+.advanced {
+  padding-left:20px;
+  color:#448aff;
+
+}
+
 .show-more {
   color:#448aff;
 }
@@ -451,6 +457,19 @@
   text-decoration: underline;
 }
 
+.facet-options {
+  width: 100%;
+  display:flex;
+}
+
+.more-content {
+  width:45%;
+}
+
+.advanced-container {
+  width:55%;
+  content-align:right;
+}
 
 .selected-container {
   font-size:14px;

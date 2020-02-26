@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { LoadingService } from '../loading/loading.service';
 import { SubstanceSummary} from '../substance/substance.model';
@@ -21,6 +21,7 @@ export class NameResolverComponent implements OnInit {
   resolvedNames: Array<ResolverResponse>;
   matchedNames: PagingResponse<SubstanceSummary>;
   @Output() structureSelected = new EventEmitter<string>();
+  @Input() startingName?: string;
 
   constructor(
     private loadingService: LoadingService,
@@ -29,6 +30,12 @@ export class NameResolverComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.startingName) {
+      this.resolverControl.setValue(this.startingName);
+      setTimeout( () => {
+        this.resolveName(this.startingName);
+      });
+    }
   }
 
   resolveNameKey(event: any): void {

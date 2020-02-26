@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 
@@ -8,13 +8,17 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
   styleUrls: ['./name-resolver-dialog.component.scss']
 })
 export class NameResolverDialogComponent implements OnInit {
-
+  name: string;
   constructor(
     public dialogRef: MatDialogRef<NameResolverDialogComponent>,
     public gaService: GoogleAnalyticsService,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
+    if (this.data.name) {
+      this.name = this.data.name;
+    }
   }
 
   nameResolved(molfile: string): void {
