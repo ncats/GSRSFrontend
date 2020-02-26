@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -10,13 +10,14 @@ import { StructureImageModalComponent } from '../../structure/structure-image-mo
 import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-structure-form',
   templateUrl: './structure-form.component.html',
   styleUrls: ['./structure-form.component.scss']
 })
-export class StructureFormComponent implements OnInit {
+export class StructureFormComponent implements OnInit, OnDestroy {
   private privateStructure: SubstanceStructure | SubstanceMoiety = {};
   stereoChemistryTypeList: Array<VocabularyTerm> = [];
   opticalActivityList: Array<VocabularyTerm> = [];
@@ -28,6 +29,8 @@ export class StructureFormComponent implements OnInit {
   @Output() nameResolved = new EventEmitter<string>();
   @Output() download = new EventEmitter<'mol'|'smiles'>();
   private overlayContainer: HTMLElement;
+  private subscriptions: Array<Subscription> = [];
+
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -40,8 +43,15 @@ export class StructureFormComponent implements OnInit {
   ngOnInit() {
     this.getVocabularies();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.substanceFormService.resolvedMol.subscribe(mol => {
+    const resolver = this.substanceFormService.resolvedMol.subscribe(mol => {
       this.nameResolved.emit(mol);
+    });
+    this.subscriptions.push(resolver);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 

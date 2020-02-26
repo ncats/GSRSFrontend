@@ -309,7 +309,6 @@ export class SubstanceFormService {
     } else if (this.substance.specifiedSubstance) {
       this.setPrivate(this.substance.specifiedSubstance);
     } else {
-      console.log('not found');
     }
   }
    setPrivate(e) {
@@ -335,7 +334,6 @@ export class SubstanceFormService {
     } else if (this.substance.specifiedSubstance) {
       this.setPublic(this.substance.specifiedSubstance);
     } else {
-      console.log('not found');
     }
   }
 
@@ -589,7 +587,7 @@ unapproveRecord() {
     }
   }
 
-  resolvedName(mol: string) {
+  resolvedName(mol: string): void {
     this.nameResolver.next(mol);
   }
 

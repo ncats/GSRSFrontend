@@ -113,7 +113,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
     delete this.privateName.$$deletedCode;
   }
 
-  resolve() {
+  resolve(): void {
     const dialogRef = this.dialog.open(NameResolverDialogComponent, {
       height: 'auto',
       width: '800px',
