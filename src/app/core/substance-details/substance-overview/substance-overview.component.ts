@@ -56,9 +56,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
         && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
     });
     this.getSubtypeRefs(this.substance);
-    console.log(this.substance);
-
-    console.log(this.substance.structurallyDiverse);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHref = uri;
