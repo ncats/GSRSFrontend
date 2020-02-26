@@ -48,6 +48,10 @@ export class SubstanceFormMixtureDetailsComponent  extends SubstanceCardBaseFilt
     });
   }
 
+  updateAccess(access: Array<string>): void {
+    this.mixture.access = access;
+  }
+
   parentSubstanceUpdated(substance: SubstanceSummary): void {
     const relatedSubstance: SubstanceRelated = {
       refPname: substance._name,

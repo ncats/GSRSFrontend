@@ -47,7 +47,11 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
     });
   }
 
-  update(tags: Array<string>): void {
+  updateAccess(access: Array<string>): void {
+    this.protein.access = access;
+  }
+
+    update(tags: Array<string>): void {
     this.protein.proteinSubType = tags.join('|');
   }
 

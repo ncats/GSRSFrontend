@@ -6,17 +6,29 @@
   </div>
   Welcome to the new user interface for GSRS 2.5! Please be aware that you can return to the classic view by clicking the white button on the top right. Please send any feedback to <a [href]="'mailto:' + contactEmail">{{contactEmail}}</a>.
 </mat-card>
+<div *ngIf="isClosedWelcomeMessage" class = "closed-welcome-padding">
+</div>
+
+<div class = "button-container">
+  <button mat-raised-button class = "big-button">Enter Browse Substances</button>
+</div>
 <div class="middle-content-container">
+
   <mat-card class="search-section">
     <mat-card-title>
       Search
     </mat-card-title>
-    <mat-card-content>
+
+    <mat-card-content class = "left-search">
       <mat-nav-list>
+        <h3  class = "register-header">
+          <img class = "old-icon" src = "/assets/icons/home/icon_browseall.png">
+          Search GSRS</h3>
         <a mat-list-item routerLink="/browse-substance">
           <mat-icon matListIcon svgIcon="search"></mat-icon>
           Browse All Substances
         </a>
+
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/browse-applications">
           <mat-icon matListIcon svgIcon="search"></mat-icon>
@@ -24,44 +36,72 @@
         </a>
         <mat-divider></mat-divider>
         <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=substance'">
-          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          <mat-icon matListIcon svgIcon="pageview"></mat-icon>
           Substance
+          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
         </a>
+
         <mat-divider></mat-divider>
         <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=prod'">
-          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          <mat-icon matListIcon svgIcon="local-pharmacy"></mat-icon>
           Product
+          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
         </a>
+
         <mat-divider></mat-divider>
         <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=app'">
-          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          <mat-icon matListIcon svgIcon="find-in-page"></mat-icon>
           Application
+          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
         </a>
+
         <mat-divider></mat-divider>
         <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=clinical'">
-          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
+
           Clinical Trial
+          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
         </a>
+
         <mat-divider></mat-divider>
         <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=biomarker'">
-          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
+
           Biomarker
+          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
         </a>
+
         <mat-divider></mat-divider>
         <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=indication'">
-          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
+
           Indication/Sponsor
+          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
         </a>
+
         <mat-divider></mat-divider>
         <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=adverse'">
-          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
-          Adverse Event
+          <mat-icon matListIcon svgIcon="note"></mat-icon>
+
+
+          Adverse Event <mat-icon class = "shrunken-icon" svgIcon="open_in_new"></mat-icon>
+
         </a>
+
         <mat-divider></mat-divider>
         <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch'">
-          <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+          <mat-icon matListIcon svgIcon="youtube"></mat-icon>
+
           Advanced Search
+          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
         </a>
+
       </mat-nav-list>
     </mat-card-content>
   </mat-card>
@@ -71,9 +111,11 @@
     </mat-card-title>
     <mat-card-content>
       <div class="register-card-content">
-        <div>
-          <mat-nav-list>
-            <h3 matSubheader>Register a Substance</h3>
+        <div class="register-main">
+          <mat-nav-list class = "main-list">
+            <h3 class = "register-header">
+              <img class = "old-icon" src = "/assets/icons/home/icon_registersubstance.png">
+              Register a Substance</h3>
             <a mat-list-item routerLink="/substances/register/chemical">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
               Chemical
@@ -110,51 +152,78 @@
             </a>
           </mat-nav-list>
         </div>
-        <div>
-          <mat-nav-list class="register-other">
-            <a mat-list-item [href]="baseDomain + '/substances/register/specifiedSubstanceG1'">
+        <mat-divider [vertical]="true" class = "divider-vertical"></mat-divider>
+        <div  class="register-other">
+          <h3  class = "register-header">
+            <img class = "old-icon" src = "/assets/icons/home/icon_application.png">
+            Other Registration</h3>
+          <mat-nav-list class = "other-list">
+            <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
               Specified Substance Group 1
             </a>
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG2'">
-              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
               Specified Substance Group 2
+              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
             </a>
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG3'">
-              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
               Specified Substance Group 3
+              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
             </a>
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG4'">
-              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
               Specified Substance Group 4
+              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
             </a>
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG4Manufacturing'">
-              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
               Specified Substance Group 4 Manufacturing
+              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
             </a>
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + '/ginas/app/registerProduct'">
-              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
               Product
+              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
             </a>
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + '/ginas/app/registerApplication'">
-              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
               Application
+              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
             </a>
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + '/ginas/app/registerBiomarker'">
-              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
               Biomarker
+              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
             </a>
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + '/ginas/app/registerIndication'">
-              <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
               Indication
+              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+
             </a>
           </mat-nav-list>
         </div>
@@ -162,3 +231,4 @@
     </mat-card-content>
   </mat-card>
 </div>
+

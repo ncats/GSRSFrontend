@@ -63,6 +63,7 @@
         <div class="name">Sequence Origin</div>
       <div class="value blue-font">{{substance.protein.sequenceOrigin}}</div>
       </div>
+    </div>
       <div *ngIf="substance.nucleicAcid" class="">
         <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidType">
           <div class="name">Protein Type</div>
@@ -80,69 +81,69 @@
           <div class="name">Sequence Origin</div>
           <div class="value blue-font">{{substance.nucleicAcid.sequenceOrigin}}</div>
         </div>
-    <div *ngIf="substance.structurallyDiverse" class="diverseWrapper">
-      <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialClass">
-        <div class="name">Source Materials Class</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialClass}}</div>
       </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialType">
-        <div class="name">Source Materials Type</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialType}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialState">
-        <div class="name">Source Materials State</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialState}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.parentSubstance">
-        <div class="name">Source Materials Parent</div>
-        <div class="thumb-col">
-          <img class="image-thumb"
-            [src]="getSafeStructureImgUrl(substance.structurallyDiverse.parentSubstance.refuuid)">
-          <div>
-            <a class="substance-name"
-              [routerLink]="['/substances', substance.structurallyDiverse.parentSubstance.refuuid]">
-              {{substance.structurallyDiverse.parentSubstance.refPname}}
-            </a>
+      <div *ngIf="substance.structurallyDiverse" class="diverseWrapper">
+        <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialClass">
+          <div class="name">Source Materials Class</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialClass}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialType">
+          <div class="name">Source Materials Type</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialType}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialState">
+          <div class="name">Source Materials State</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialState}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.parentSubstance">
+          <div class="name">Source Materials Parent</div>
+          <div class="thumb-col">
+            <img class="image-thumb"
+                 [src]="getSafeStructureImgUrl(substance.structurallyDiverse.parentSubstance.refuuid)">
+            <div>
+              <a class="substance-name"
+                 [routerLink]="['/substances', substance.structurallyDiverse.parentSubstance.refuuid]">
+                {{substance.structurallyDiverse.parentSubstance.refPname}}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.organismFamily">
-        <div class="name">Organism Family</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.organismFamily}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.organismGenus">
-        <div class="name">Organism Genus</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.organismGenus}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.organismSpecies">
-        <div class="name">Organism Species</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.organismSpecies}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.organismAuthor">
-        <div class="name">Organism Author</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.organismAuthor}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.developmentalStage">
-        <div class="name">Developmental Stage</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.developmentalStage}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.part?.length > 0">
-        <div class="name">Part</div>
-        <div class="value blue-font">
+        <div class="name-value" *ngIf="substance.structurallyDiverse.organismFamily">
+          <div class="name">Organism Family</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.organismFamily}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.organismGenus">
+          <div class="name">Organism Genus</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.organismGenus}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.organismSpecies">
+          <div class="name">Organism Species</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.organismSpecies}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.organismAuthor">
+          <div class="name">Organism Author</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.organismAuthor}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.developmentalStage">
+          <div class="name">Developmental Stage</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.developmentalStage}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.part?.length > 0">
+          <div class="name">Part</div>
+          <div class="value blue-font">
           <span *ngFor="let part of substance.structurallyDiverse.part; last as isLast">
             {{part}}<span *ngIf="!isLast">, </span>
           </span></div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.fractionMaterialType">
+          <div class="name">Fraction Materials Type</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.fractionMaterialType}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.fractionName">
+          <div class="name">Fraction Name</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.fractionName}}</div>
+        </div>
       </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.fractionMaterialType">
-        <div class="name">Fraction Materials Type</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.fractionMaterialType}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.fractionName">
-        <div class="name">Fraction Name</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.fractionName}}</div>
-      </div>
-
-  </div>
     <div *ngIf = "!isAdmin" class="name-value">
         <div class="name">Record Version</div>
         <div class="value blue-font">{{substance.version}}</div>

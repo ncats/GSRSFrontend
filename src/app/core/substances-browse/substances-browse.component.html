@@ -19,10 +19,10 @@
               (change)="updateFacetSelection($event, facet.name, value.label, true)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
             </mat-checkbox>
-            <!-- <mat-checkbox class="exclude" matTooltip="Exclude"
+            <mat-checkbox class="exclude" matTooltip="Exclude"  [hidden]= "!advanced"
               (change)="updateFacetSelection($event, facet.name, value.label, false)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
-            </mat-checkbox> -->
+            </mat-checkbox>
           </div>
           <div class="facet-value-label">
             <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
@@ -45,7 +45,9 @@
          <!--- <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
             Show {{toggle[topIndex] === true ? 'all': 'less'}}
           </a>-->
-          <span  *ngIf = "facet.values && facet.values.length >= 10 && (
+          <div class = "facet-options">
+            <div class = "more-content">
+            <span *ngIf = "facet.values && facet.values.length >= 10 && (
            !searchText[facet.name] || searchText[facet.name] == '')">
              <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf ="(!facet.$total ||
               facet.$total > facet.values.length)">
@@ -54,7 +56,14 @@
              <a class="show-more" *ngIf = "facet.values.length > 10" (click)="lessFacets(topIndex)">
             Show Less {{searchText[facet.name]}}
           </a>
-          </span>
+            </span>
+          </div>
+            <div class = "advanced-container">
+                          <a class = "advanced" (click) = "advanced = !advanced">advanced options</a>
+            </div>
+          </div>
+
+
 
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">

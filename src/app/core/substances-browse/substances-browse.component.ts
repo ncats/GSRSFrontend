@@ -64,6 +64,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   searchtext2: string;
   private subscriptions: Array<Subscription> = [];
   isAdmin: boolean;
+  advanced: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -90,6 +91,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageSize = 10;
     this.pageIndex = 0;
     this.facets = [];
+    this.advanced = false;
 
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
