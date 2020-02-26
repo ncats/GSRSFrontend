@@ -399,7 +399,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     Object.keys(this.privateFacetParams).forEach(key => {
       if (this.privateFacetParams[key] && this.privateFacetParams[key].params) {
         Object.keys(this.privateFacetParams[key].params).forEach(sub => {
-          if (this.privateFacetParams[key].params[sub] !== undefined){
+          if (this.privateFacetParams[key].params[sub] !== undefined) {
             const facet = {
               'type': key,
               'val' : sub,
