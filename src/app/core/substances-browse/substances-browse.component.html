@@ -19,10 +19,10 @@
               (change)="updateFacetSelection($event, facet.name, value.label, true)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
             </mat-checkbox>
-            <mat-checkbox class="exclude" matTooltip="Exclude"
+            <!-- <mat-checkbox class="exclude" matTooltip="Exclude"
               (change)="updateFacetSelection($event, facet.name, value.label, false)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
-            </mat-checkbox>
+            </mat-checkbox> -->
           </div>
           <div class="facet-value-label">
             <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">

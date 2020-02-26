@@ -1,4 +1,5 @@
 {
+  "contactEmail": "GSRSSupport@fda.hhs.gov",
   "substanceDetailsCards": [{
       "card": "substance-overview",
       "title": "overview"
@@ -290,8 +291,8 @@
       "card": "substance-modifications",
       "title": "substance modifications",
       "filters": [{
-        "filterName": "exists",
-        "propertyToCheck": "modifications.structuralModifications"
+        "filterName": "anyExists",
+        "propertyToCheck": "modifications.structuralModifications|modifications.physicalModifications|modifications.agentModifications"
       }]
     },
     {
@@ -375,7 +376,10 @@
       "Primary Completion Year",
       "First Posted Year",
       "Study Types",
-      "Intervention Type"
+      "Gender",
+      "Age Groups",
+      "Intervention Type",
+      "Study Results"
     ],
     "admin": [
       "root_lastEditedBy",

@@ -34,3 +34,13 @@ a.mat-list-item {
 .mat-list-base .mat-list-item .mat-list-icon {
     color: rgba(0, 0, 0, 0.87);
 }
+
+.welcome-banner {
+    margin-top: 75px;
+  
+    .close-container {
+      display: flex;
+      justify-content: flex-end;
+      color: #296ca3;
+    }
+  }

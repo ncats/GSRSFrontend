@@ -1,4 +1,8 @@
-
+<div class="info-container">
+  <a *ngIf="substance && substance.uuid" [href]="baseDomain + '/ginas/app/substance/' + substance.uuid + '#fdadetails'" target="_blank">
+    For data export, sorting and searching of the tabs below please use the classic view here
+  </a>
+</div>
 <div class="bordergray">
   <mat-tab-group>
 

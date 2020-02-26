@@ -38,6 +38,9 @@ export class ConfigService {
                 if (config.version == null && environment.version != null) {
                     config.version = environment.version;
                 }
+                if (config.contactEmail == null && environment.contactEmail != null) {
+                    config.contactEmail = environment.contactEmail;
+                }
                 this._configData = config;
             })
             .catch((err: any) => Promise.resolve());

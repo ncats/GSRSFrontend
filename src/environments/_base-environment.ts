@@ -9,7 +9,8 @@ export const baseEnvironment: Environment = {
     navItems: [],
     googleAnalyticsId: '',
     version: '2.3.4',
-    isAnalyticsPrivate: false
+    isAnalyticsPrivate: false,
+    contactEmail: 'ginas@mail.nih.gov'
 };
 
 

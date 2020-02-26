@@ -36,6 +36,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
   private privateSearchCutoff?: number;
   public clinicalTrials: Array<ClinicalTrial>;
   public facets: Array<Facet> = [];
+  public displayFacets: Array<DisplayFacet> = [];
   private privateFacetParams: ClinicalTrialFacetParam;
   showHelp = false;
   pageIndex: number;
@@ -280,7 +281,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     const catArr = [];
     let facetString = '';
     for (const key of Object.keys(this.privateFacetParams)) {
-      if (this.privateFacetParams[key] && this.privateFacetParams[key].isUpdated === true) {
+      if (this.privateFacetParams[key] !== undefined && this.privateFacetParams[key].hasSelections === true) {
         const cat = this.privateFacetParams[key];
         const valArr = [];
         for (const subkey of Object.keys(cat.params)) {
@@ -317,6 +318,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
   // see substances code
   private populateFacets(facets: Array<Facet>): void {
     const subscription = this.authService.getAuth().subscribe(auth => {
+
       let newFacets = [];
       this.auth = auth;
       this.showAudit = this.authService.hasRoles('admin');
@@ -395,11 +397,41 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     // this.gaService.sendEvent('substancesFiltering', 'button:apply-facet', eventLabel, eventValue);
     this.populateUrlQueryParameters();
     this.searchClinicalTrials();
+    this.getLabelFacets();
   }
 
+  // see substances code
+  removeFacet(facet: any): void {
+    const mockEvent = {'checked': false};
+    this.updateFacetSelection(mockEvent, facet.type, facet.val, facet.bool);
 
+    setTimeout(() => {
+      this.applyFacetsFilter(facet.type);
+    });
+  }
+
+  // see substances code
+  getLabelFacets() {
+    this.displayFacets = [];
+    Object.keys(this.privateFacetParams).forEach(key => {
+      if (this.privateFacetParams[key] && this.privateFacetParams[key].params) {
+        Object.keys(this.privateFacetParams[key].params).forEach(sub => {
+          if (this.privateFacetParams[key].params[sub] !== undefined) {
+            const facet = {
+              'type': key,
+              'val' : sub,
+              'bool': this.privateFacetParams[key].params[sub]
+            };
+            this.displayFacets.push(facet);
+          }
+        });
+      }
+      });
+  }
+
+  // see substances code
   updateFacetSelection(
-    event: MatCheckboxChange,
+    event: any,
     facetName: string,
     facetValueLabel: string,
     include: boolean
@@ -462,7 +494,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     this.pageIndex = 0;
   }
 
-
+  // see substances code
   clearFacetSelection(
     facetName?: string
   ) {
@@ -495,6 +527,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     // this.gaService.sendEvent('substancesFiltering', 'button:clear-facet', eventLabel, eventValue);
   }
 
+  // see substances code
   cleanFacets(): void {
     if (this.privateFacetParams != null) {
       const facetParamsKeys = Object.keys(this.privateFacetParams);
@@ -507,12 +540,16 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
           }
         });
       }
+      this.getLabelFacets();
     }
   }
+
+  // see substances code
   get facetParams(): ClinicalTrialFacetParam | { showAllMatchOption?: boolean } {
     return this.privateFacetParams;
   }
 
+  // see substances code
   private processResponsiveness = () => {
     if (window) {
       if (window.innerWidth < 1100) {
@@ -525,11 +562,13 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     }
   }
 
+  // see substances code
   openSideNav() {
     // this.gaService.sendEvent('substancesFiltering', 'button:sidenav', 'open');
     this.matSideNav.open();
   }
 
+  // see substances code
   sendFacetsEvent(event: MatCheckboxChange, facetName: string): void {
 //    const eventLabel = environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     const eventValue = event.checked ? 1 : 0;
@@ -569,4 +608,10 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     this.showHelp = !this.showHelp;
   }
 
+}
+
+interface DisplayFacet {
+  type: string;
+  bool: boolean;
+  val: string;
 }

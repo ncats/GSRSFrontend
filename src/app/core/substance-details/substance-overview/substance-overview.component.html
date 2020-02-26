@@ -46,6 +46,40 @@
       <div class="name">Record Status</div>
       <div class="value blue-font">{{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}</div>
     </div>
+    <div *ngIf="substance.protein" class="">
+      <div class="name-value" *ngIf="substance.protein.proteinType">
+        <div class="name">Protein Type</div>
+        <div class="value blue-font">{{substance.protein.proteinType}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.protein.proteinSubType">
+        <div class="name">Protein Sub-type</div>
+        <div class="value blue-font">{{substance.protein.proteinSubType.replace('|', ', ')}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.protein.sequenceType">
+        <div class="name">Sequence Type</div>
+        <div class="value blue-font">{{substance.protein.sequenceType}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.protein.sequenceOrigin">
+        <div class="name">Sequence Origin</div>
+      <div class="value blue-font">{{substance.protein.sequenceOrigin}}</div>
+      </div>
+      <div *ngIf="substance.nucleicAcid" class="">
+        <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidType">
+          <div class="name">Protein Type</div>
+          <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidType}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidSubType">
+          <div class="name">Protein Sub-type</div>
+          <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.replace('|', ', ')}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.nucleicAcid.sequenceType">
+          <div class="name">Sequence Type</div>
+          <div class="value blue-font">{{substance.nucleicAcid.sequenceType}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.nucleicAcid.sequenceOrigin">
+          <div class="name">Sequence Origin</div>
+          <div class="value blue-font">{{substance.nucleicAcid.sequenceOrigin}}</div>
+        </div>
     <div *ngIf="substance.structurallyDiverse" class="diverseWrapper">
       <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialClass">
         <div class="name">Source Materials Class</div>

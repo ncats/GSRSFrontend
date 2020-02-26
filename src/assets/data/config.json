@@ -284,8 +284,8 @@
       "card": "substance-modifications",
       "title": "substance modifications",
       "filters": [{
-        "filterName": "exists",
-        "propertyToCheck": "modifications.structuralModifications"
+        "filterName": "anyExists",
+        "propertyToCheck": "modifications.structuralModifications|modifications.physicalModifications|modifications.agentModifications"
       }]
     },
     {

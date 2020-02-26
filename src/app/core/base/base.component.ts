@@ -84,6 +84,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   classicLinkQueryParamsString: string;
   private classicLinkQueryParams = {};
   isAdmin = false;
+  contactEmail: string;
 
   constructor(
     private router: Router,
@@ -96,6 +97,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   ) {
     this.classicLinkPath = '/ginas/app/';
     this.classicLinkQueryParamsString = '';
+    this.contactEmail = this.configService.configData.contactEmail;
   }
 
   ngOnInit() {
