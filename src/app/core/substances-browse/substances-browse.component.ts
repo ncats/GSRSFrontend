@@ -38,6 +38,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   public substances: Array<SubstanceDetail>;
+  public exactMatchSubstances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
   public displayFacets: Array<DisplayFacet> = [];
   private privateFacetParams: SubstanceFacetParam;
@@ -46,7 +47,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   totalSubstances: number;
   isLoading = true;
   isError = false;
-  @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
+  @ViewChild('matSideNavInstance', { static: false }) matSideNav: MatSidenav;
   hasBackdrop = false;
   view = 'cards';
   facetString: string;
@@ -64,7 +65,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   searchtext2: string;
   private subscriptions: Array<Subscription> = [];
   isAdmin: boolean;
-  advanced: boolean;
+  showExactMatches = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -91,7 +92,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageSize = 10;
     this.pageIndex = 0;
     this.facets = [];
-    this.advanced = false;
 
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
@@ -218,6 +218,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       })
         .subscribe(pagingResponse => {
           this.isError = false;
+
+          if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0) {
+            this.exactMatchSubstances = pagingResponse.exactMatches;
+            this.exactMatchSubstances.forEach((substance: SubstanceDetail) => {
+              this.processSubstanceCodes(substance);
+            });
+            this.showExactMatches = true;
+          }
+
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
@@ -225,18 +234,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
 
           this.substances.forEach((substance: SubstanceDetail) => {
-            if (substance.codes && substance.codes.length > 0) {
-              substance.codeSystemNames = [];
-              substance.codeSystems = {};
-              _.forEach(substance.codes, code => {
-                if (substance.codeSystems[code.codeSystem]) {
-                  substance.codeSystems[code.codeSystem].push(code);
-                } else {
-                  substance.codeSystems[code.codeSystem] = [code];
-                  substance.codeSystemNames.push(code.codeSystem);
-                }
-              });
-            }
+            this.processSubstanceCodes(substance);
           });
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API cal');
@@ -256,6 +254,21 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         });
     }
 
+  }
+
+  processSubstanceCodes (substance: SubstanceDetail): void {
+    if (substance.codes && substance.codes.length > 0) {
+      substance.codeSystemNames = [];
+      substance.codeSystems = {};
+      _.forEach(substance.codes, code => {
+        if (substance.codeSystems[code.codeSystem]) {
+          substance.codeSystems[code.codeSystem].push(code);
+        } else {
+          substance.codeSystems[code.codeSystem] = [code];
+          substance.codeSystemNames.push(code.codeSystem);
+        }
+      });
+    }
   }
 
   populateUrlQueryParameters(): void {
@@ -817,6 +830,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
    }
     return codes;
+  }
+
+  showAllRecords(): void {
+    this.showExactMatches = false;
+    this.processResponsiveness();
   }
 
 }

@@ -298,6 +298,28 @@
     margin-bottom: 5px;
 }
 
+.exact-matches-container {
+    margin-top: 80px;
+}
+
+.exact-match-control {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+
+    button {
+        margin-top: 15px;
+    }
+}
+
+.facet-advanced-options-link {
+    margin-top: 7px;
+    color: #448aff;
+}
+
 @media(max-width: 1100px) {
     .controls-container, .search-parameters {
         padding-left: 30px;

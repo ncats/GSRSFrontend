@@ -20,6 +20,7 @@ export interface PagingResponse<T> {
     query: string;
     sideway?: Array<any>;
     content: Array<T>;
+    exactMatches?: Array<T>;
     facets?: Array<Facet>;
     filter?: string;
 }
