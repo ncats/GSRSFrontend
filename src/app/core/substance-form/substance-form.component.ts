@@ -348,10 +348,16 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       const ouuid = uuidHolders[i].uuid;
       if (map[ouuid]) {
         uuidHolders[i].uuid = map[ouuid];
+        if(uuidHolders[i].id){
+             uuidHolders[i].id = map[ouuid];
+        }
       } else {
         const nid = guid();
         uuidHolders[i].uuid = nid;
         map[ouuid] = nid;
+        if(uuidHolders[i].id){
+             uuidHolders[i].id = nid;
+        }
       }
     }
     const refHolders = defiant.json.search(old, '//*[references]');
