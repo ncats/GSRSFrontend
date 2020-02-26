@@ -15,6 +15,7 @@ export interface Facet {
     $fskip?: number;
     $next?: string;
     $fetched: Array<FacetValue>;
+    $showAdvanced?: boolean;
 }
 
 /**
