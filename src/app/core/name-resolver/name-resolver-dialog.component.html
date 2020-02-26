@@ -2,8 +2,7 @@
   Get Structure From Name
 </h1>
 <div mat-dialog-content>
-  <app-name-resolver *ngIf = "name" (structureSelected)="nameResolved($event)" [startingName] = "name"></app-name-resolver>
-  <app-name-resolver *ngIf = "!name" (structureSelected)="nameResolved($event)"></app-name-resolver>
+  <app-name-resolver (structureSelected)="nameResolved($event)" [startingName] = "name"></app-name-resolver>
 </div>
 <div class="flex-row" mat-dialog-actions>
   <span class="middle-fill"></span>

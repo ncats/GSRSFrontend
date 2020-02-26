@@ -20,9 +20,10 @@ export class SubstanceGlycosylationComponent extends SubstanceCardBase implement
   ngOnInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
+      this.sites = [];
       if (this.substance != null
         && this.substance.protein != null
-        && this.substance.protein.glycosylation.glycosylationType != null) {
+        && this.substance.protein.glycosylation) {
         this.glycosylation = this.substance.protein.glycosylation;
         for (const link of this.glycosylation.CGlycosylationSites) {
           this.sites.push({type: 'C', site: link.subunitIndex + '_' + link.residueIndex});
