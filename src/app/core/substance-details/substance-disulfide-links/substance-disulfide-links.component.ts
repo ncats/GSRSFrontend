@@ -27,7 +27,6 @@ export class SubstanceDisulfideLinksComponent extends SubstanceCardBase implemen
         && this.substance.protein != null
         && this.substance.protein.disulfideLinks != null
         && this.substance.protein.disulfideLinks.length) {
-        console.log(this.substance.protein.disulfideLinks.length);
         this.disulfideLinks = this.substance.protein.disulfideLinks;
         for (const link of this.disulfideLinks) {
           if(link.sites && link.sites.length > 1){
