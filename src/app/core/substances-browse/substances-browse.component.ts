@@ -219,7 +219,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         .subscribe(pagingResponse => {
           this.isError = false;
 
-          if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0) {
+          if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0
+              && pagingResponse.skip ==0 
+              && (!pagingResponse.sideway || pagingResponse.sideway.length<2)
+             ) {
             this.exactMatchSubstances = pagingResponse.exactMatches;
             this.exactMatchSubstances.forEach((substance: SubstanceDetail) => {
               this.processSubstanceCodes(substance);
