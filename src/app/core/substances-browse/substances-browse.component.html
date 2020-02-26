@@ -19,10 +19,11 @@
               (change)="updateFacetSelection($event, facet.name, value.label, true)"
               [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
             </mat-checkbox>
-            <!-- <mat-checkbox class="exclude" matTooltip="Exclude"
+            <mat-checkbox class="exclude" matTooltip="Exclude"
               (change)="updateFacetSelection($event, facet.name, value.label, false)"
-              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
-            </mat-checkbox> -->
+              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false"
+              *ngIf="facet.$showAdvanced">
+            </mat-checkbox>
           </div>
           <div class="facet-value-label">
             <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
@@ -55,7 +56,11 @@
             Show Less {{searchText[facet.name]}}
           </a>
           </span>
-
+        </div>
+        <div class="facet-advanced-options-link">
+          <a (click)="facet.$showAdvanced = !facet.$showAdvanced">
+            <span *ngIf="facet.$showAdvanced">hide </span>advanced options
+          </a>
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
           <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
