@@ -9,6 +9,7 @@ import { StructurePostResponse } from '../../structure/structure-post-response.m
 import { StructureImageModalComponent } from '../../structure/structure-image-modal/structure-image-modal.component';
 import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 
 @Component({
   selector: 'app-structure-form',
@@ -32,12 +33,16 @@ export class StructureFormComponent implements OnInit {
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private gaService: GoogleAnalyticsService,
+    private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
     this.getVocabularies();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.substanceFormService.resolvedMol.subscribe(mol => {
+      this.nameResolved.emit(mol);
+    });
   }
 
   @Input()

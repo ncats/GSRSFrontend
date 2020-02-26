@@ -88,6 +88,9 @@ export class SubstanceFormService {
   private displaySequences: Array<SubunitSequence>;
   private displaySequencesEmitter = new Subject<Array<SubunitSequence>>();
   private substanceChangeReasonEmitter = new Subject<string>();
+  private nameResolver = new Subject<string>();
+  resolvedMol = this.nameResolver.asObservable();
+
 
   constructor(
     private substanceService: SubstanceService,
@@ -586,7 +589,12 @@ unapproveRecord() {
     }
   }
 
+  resolvedName(mol: string) {
+    this.nameResolver.next(mol);
+  }
+
   // Class start
+
 
   // Polymer start
 
