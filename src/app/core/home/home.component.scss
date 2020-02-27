@@ -89,7 +89,9 @@ a.mat-list-item {
 }
 
 .button-container {
-  margin-left:20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 15px;
 
   .big-button {

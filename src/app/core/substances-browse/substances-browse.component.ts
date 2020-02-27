@@ -66,6 +66,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private subscriptions: Array<Subscription> = [];
   isAdmin: boolean;
   showExactMatches = false;
+  imageLoc: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -93,6 +94,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = 0;
     this.facets = [];
 
+
+
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
@@ -100,7 +103,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
     this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
@@ -109,6 +112,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+
   }
 
   ngAfterViewInit() {
@@ -219,7 +223,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         .subscribe(pagingResponse => {
           this.isError = false;
 
-          if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0) {
+          if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0
+            && pagingResponse.skip === 0
+            && (!pagingResponse.sideway || pagingResponse.sideway.length < 2)
+          ) {
             this.exactMatchSubstances = pagingResponse.exactMatches;
             this.exactMatchSubstances.forEach((substance: SubstanceDetail) => {
               this.processSubstanceCodes(substance);
@@ -269,6 +276,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         }
       });
     }
+  }
+
+  editForm(uuid: any): void {
+    this.router.navigate(['/substances/' + uuid + '/edit']);
   }
 
   populateUrlQueryParameters(): void {

@@ -246,9 +246,15 @@
                   <mat-icon svgIcon="search"></mat-icon>
                 </button>
 
-                <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                <button *ngIf="isAdmin" mat-icon-button (click) = "editForm(substance.uuid)">
                   <mat-icon svgIcon="edit"></mat-icon>
                 </button>
+
+                <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                  <mat-icon svgIcon="file_copy"></mat-icon>
+                </button>
+
+
 
                 <mat-menu #downloadMenu="matMenu">
                   <a mat-menu-item *ngIf="substance.structure"
