@@ -87,10 +87,10 @@
 
       </div>
       <div>
-        <div class="substance-data substance-names" *ngIf="substance.names && substance.names.length">
+        <div class="substance-data substance-names" *ngIf="names && names.length">
           <div class="label">Names:</div>
           <div>
-            <div class="value space-bottom" *ngFor="let nameObject of substance.names | take: 5">
+            <div class="value space-bottom" *ngFor="let nameObject of names | take: 5">
               {{nameObject.name}}
               <span *ngIf="nameObject.displayName == true" matTooltip="Accepted Name">
                 <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
@@ -98,13 +98,13 @@
             </div>
           </div>
         </div>
-        <div class="substance-data substance-code-systems" *ngIf="substance.codeSystems">
+        <div class="substance-data substance-code-systems" *ngIf="codeSystems">
           <div class="label">Codes:</div>
           <div>
-            <div class="margin-bottom" *ngFor="let codeSystemName of substance.codeSystemNames | take: 5">
+            <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5">
               <div class="code-system">
                 <span class="label">{{codeSystemName}}</span>:&nbsp;
-                <span class="value" *ngFor="let codeObject of substance.codeSystems[codeSystemName]; last as isLast">
+                <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast">
                   <span *ngIf="codeObject.url">
                     <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
                       evCategory="substancesContent" evAction="link:code">
