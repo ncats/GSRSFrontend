@@ -3,14 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
-import { SubstanceSummary, SubstanceDetail, SubstanceEdit } from './substance.model';
+import { SubstanceSummary, SubstanceDetail, SubstanceEdit, SubstanceName, SubstanceCode, SubstanceRelationship } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from './substance-facet-param.model';
 import { SubstanceHttpParams } from './substance-http-params';
 import { UtilsService } from '../utils/utils.service';
-import { map, switchMap, tap } from 'rxjs/operators';
-import {SubstanceFormResults, ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
+import { switchMap } from 'rxjs/operators';
+import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet} from '@gsrs-core/utils';
 
 @Injectable({
@@ -28,7 +28,7 @@ export class SubstanceService extends BaseHttpService {
     super(configService);
   }
 
-  getSubstancesDetails(args: {
+  getSubstancesSummaries(args: {
     searchTerm?: string,
     structureSearchTerm?: string,
     sequenceSearchTerm?: string,
@@ -39,7 +39,7 @@ export class SubstanceService extends BaseHttpService {
     order?: string,
     facets?: SubstanceFacetParam,
     skip?: number
-  } = {}): Observable<PagingResponse<SubstanceDetail>> {
+  } = {}): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
 
       if (args.structureSearchTerm != null && args.structureSearchTerm !== '') {
@@ -102,10 +102,9 @@ export class SubstanceService extends BaseHttpService {
     facets?: SubstanceFacetParam,
     order?: string,
     skip: number = 0
-  ): Observable<PagingResponse<SubstanceDetail>> {
+  ): Observable<PagingResponse<SubstanceSummary>> {
 
     let params = new SubstanceHttpParams();
-    params = params.append('view', 'full');
     let url = this.apiBaseUrl;
 
     url += 'substances/search';
@@ -128,7 +127,7 @@ export class SubstanceService extends BaseHttpService {
     const options = {
       params: params
     };
-    return this.http.get<PagingResponse<SubstanceDetail>>(url, options);
+    return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
   searchSubstanceStructures(
@@ -140,12 +139,11 @@ export class SubstanceService extends BaseHttpService {
     order?: string,
     skip: number = 0,
     sync: boolean = false
-  ): Observable<PagingResponse<SubstanceDetail>> {
+  ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
       let params = new SubstanceHttpParams();
-      params = params.append('view', 'full');
       let url = this.apiBaseUrl;
-      let structureFacetsKey;
+      let structureFacetsKey: number;
 
       structureFacetsKey = this.utilsService.hashCode(searchTerm, type, cutoff);
 
@@ -194,8 +192,7 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip,
-              'full'
+              skip
             );
           } else {
             observer.next(response);
@@ -219,10 +216,9 @@ export class SubstanceService extends BaseHttpService {
     order?: string,
     skip: number = 0,
     sync: boolean = false
-  ): Observable<PagingResponse<SubstanceDetail>> {
+  ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
       let params = new SubstanceHttpParams();
-      params = params.append('view', 'full');
       let url = this.apiBaseUrl;
       let structureFacetsKey;
 
@@ -269,8 +265,7 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip,
-              'full'
+              skip
             );
           } else {
             observer.next(response);
@@ -354,10 +349,10 @@ export class SubstanceService extends BaseHttpService {
       params: params
     };
 
-    return this.http.get<PagingResponse<SubstanceDetail>>(url, options);
+    return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
-  getSubstanceSummaries(
+  getQuickSubstancesSummaries(
     searchTerm?: string,
     getFacets?: boolean,
     facets?: SubstanceFacetParam
@@ -421,6 +416,21 @@ export class SubstanceService extends BaseHttpService {
     } else {
       return this.http.get<SubstanceDetail>(url, options);
     }
+  }
+
+  getSubstanceNames(id: string): Observable<Array<SubstanceName>> {
+    const url = `${this.apiBaseUrl}substances(${id})/names`;
+    return this.http.get<Array<SubstanceName>>(url);
+  }
+
+  getSubstanceCodes(id: string): Observable<Array<SubstanceCode>> {
+    const url = `${this.apiBaseUrl}substances(${id})/codes`;
+    return this.http.get<Array<SubstanceCode>>(url);
+  }
+
+  getSubstanceRelationships(id: string): Observable<Array<SubstanceRelationship>> {
+    const url = `${this.apiBaseUrl}substances(${id})/relationships`;
+    return this.http.get<Array<SubstanceRelationship>>(url);
   }
 
   checkVersion(id: string): any {
