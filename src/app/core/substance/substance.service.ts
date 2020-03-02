@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
-import { SubstanceSummary, SubstanceDetail, SubstanceEdit, SubstanceName, SubstanceCode } from './substance.model';
+import { SubstanceSummary, SubstanceDetail, SubstanceEdit, SubstanceName, SubstanceCode, SubstanceRelationship } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from './substance-facet-param.model';
@@ -426,6 +426,11 @@ export class SubstanceService extends BaseHttpService {
   getSubstanceCodes(id: string): Observable<Array<SubstanceCode>> {
     const url = `${this.apiBaseUrl}substances(${id})/codes`;
     return this.http.get<Array<SubstanceCode>>(url);
+  }
+
+  getSubstanceRelationships(id: string): Observable<Array<SubstanceRelationship>> {
+    const url = `${this.apiBaseUrl}substances(${id})/relationships`;
+    return this.http.get<Array<SubstanceRelationship>>(url);
   }
 
   checkVersion(id: string): any {

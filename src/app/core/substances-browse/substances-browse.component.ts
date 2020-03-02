@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail, SubstanceName, SubstanceCode } from '../substance/substance.model';
+import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceRelationship } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
 import * as _ from 'lodash';
 import { Facet } from '../utils/facet.model';
@@ -256,15 +256,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           if (this.exactMatchSubstances && this.exactMatchSubstances.length > 0) {
             this.exactMatchSubstances.forEach(substance => {
               this.setSubstanceNames(substance.uuid);
-            });
-            this.exactMatchSubstances.forEach((substance: SubstanceDetail) => {
               this.setSubstanceCodes(substance.uuid);
             });
+
           }
           this.substances.forEach(substance => {
             this.setSubstanceNames(substance.uuid);
-          });
-          this.substances.forEach((substance: SubstanceDetail) => {
             this.setSubstanceCodes(substance.uuid);
           });
           this.isLoading = false;

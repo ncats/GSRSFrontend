@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
-import { SubstanceDetail, SubstanceName, SubstanceSummary, SubstanceCode } from '../../substance/substance.model';
+import { SubstanceDetail, SubstanceName, SubstanceSummary, SubstanceCode, SubstanceRelationship } from '../../substance/substance.model';
 import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
 import { CardDynamicSectionDirective } from '../card-dynamic-section/card-dynamic-section.directive';
 import { UtilsService } from '../../utils/utils.service';
