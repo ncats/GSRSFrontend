@@ -18,9 +18,7 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
   private privateMod: StructuralModification;
   @Output() modDeleted = new EventEmitter<StructuralModification>();
   modExtentList: Array<VocabularyTerm> = [];
-  modSystemDictionary: { [termValue: string]: VocabularyTerm };
   modLocationList: Array<VocabularyTerm> = [];
-  modSystemType: string;
   modTypeList: Array<VocabularyTerm> = [];
   deleteTimer: any;
   relatedSubstanceUuid: string;
