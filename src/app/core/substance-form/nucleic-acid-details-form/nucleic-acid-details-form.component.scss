@@ -22,4 +22,9 @@
   .checkbox-container {
     padding-bottom: 18px;
   }
+
+  .type, .subtype, .origin, .sequence, .seqtype {
+    flex-grow: 1;
+    padding-right: 10px;
+  }
 }

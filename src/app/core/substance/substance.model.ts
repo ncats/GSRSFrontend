@@ -124,7 +124,7 @@ export interface NucleicAcid extends SubstanceBase {
   uuid?: string;
   references?: Array<string>;
   nucleicAcidType?: string;
-  nucleicAcidSubType?: string;
+  nucleicAcidSubType?: Array<string>;
   sequenceOrigin?: string;
   sequenceType?: string;
   subunits?: Array<Subunit>;
