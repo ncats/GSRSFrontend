@@ -298,7 +298,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       messageType : 'ERROR',
       message : 'Unknown Server Error'
     };
-    if ( error.error && error.error.message ) {
+    if ( error && error.error && error.error.message ) {
       message.message =  'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
     } else if (error.error && (typeof error.error) === 'string') {
         message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;

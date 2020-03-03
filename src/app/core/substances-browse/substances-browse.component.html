@@ -250,9 +250,13 @@
                     <mat-icon svgIcon="search"></mat-icon>
                   </button>
 
-                  <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
-                    <mat-icon svgIcon="edit"></mat-icon>
-                  </button>
+                <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin" matTooltip = 'edit record'>
+                  <mat-icon svgIcon="edit"></mat-icon>
+                </a>
+
+                <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                  <mat-icon svgIcon="file_copy"></mat-icon>
+                </button>
 
                   <mat-menu #downloadMenu="matMenu">
                     <a mat-menu-item *ngIf="substance.structure"
@@ -281,9 +285,6 @@
                   </mat-menu>
 
                   <mat-menu #editMenu="matMenu">
-                    <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin" matTooltip = 'edit record'>
-                      <span>Edit Substance</span>
-                    </a>
                     <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" *ngIf="isAdmin" matTooltip = 'copy substance to new registration form'>
                       <span>Copy Substance to New Form</span>
                     </a>

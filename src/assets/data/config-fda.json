@@ -90,8 +90,8 @@
           "value": "protein"
         },
         {
-          "filterName": "exists",
-          "propertyToCheck": "protein.glycosylation.glycosylationType"
+          "filterName": "anyExists",
+          "propertyToCheck": "protein.glycosylation.glycosylationType|protein.glycosylation.CGlycosylationSites|protein.glycosylation.NGlycosylationSites|protein.glycosylation.OGlycosylationSites"
         }
       ]
     },
