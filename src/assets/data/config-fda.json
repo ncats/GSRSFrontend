@@ -90,8 +90,8 @@
           "value": "protein"
         },
         {
-          "filterName": "exists",
-          "propertyToCheck": "protein.glycosylation.glycosylationType"
+          "filterName": "anyExists",
+          "propertyToCheck": "protein.glycosylation.glycosylationType|protein.glycosylation.CGlycosylationSites|protein.glycosylation.NGlycosylationSites|protein.glycosylation.OGlycosylationSites"
         }
       ]
     },
@@ -256,6 +256,20 @@
         {
           "filterName": "exists",
           "propertyToCheck": "polymer.monomers"
+        }
+      ]
+    },
+    {
+      "card": "substance-structural-units",
+      "title": "Structural Units",
+      "filters": [{
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "polymer"
+      },
+        {
+          "filterName": "exists",
+          "propertyToCheck": "polymer.structuralUnits"
         }
       ]
     },

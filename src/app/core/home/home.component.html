@@ -22,7 +22,7 @@
     <mat-card-content class = "left-search">
       <mat-nav-list>
         <h3  class = "register-header">
-          <img class = "old-icon" src = "/assets/icons/home/icon_browseall.png">
+          <img class = "old-icon" [src]="browseAll">
           Search GSRS</h3>
         <a mat-list-item routerLink="/browse-substance">
           <mat-icon matListIcon svgIcon="search"></mat-icon>
@@ -35,6 +35,13 @@
           Browse All Applications
         </a>
         <mat-divider></mat-divider>
+
+        <a mat-list-item routerLink="/browse-clinical-trials">
+          <mat-icon matListIcon svgIcon="search"></mat-icon>
+          Browse All Clinical Trials
+        </a>
+        <mat-divider></mat-divider>
+
         <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=substance'">
           <mat-icon matListIcon svgIcon="pageview"></mat-icon>
           Substance
@@ -114,7 +121,7 @@
         <div class="register-main">
           <mat-nav-list class = "main-list">
             <h3 class = "register-header">
-              <img class = "old-icon" src = "/assets/icons/home/icon_registersubstance.png">
+              <img class = "old-icon" [src]="chemicon">
               Register a Substance</h3>
             <a mat-list-item routerLink="/substances/register/chemical">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
@@ -155,7 +162,7 @@
         <mat-divider [vertical]="true" class = "divider-vertical"></mat-divider>
         <div  class="register-other">
           <h3  class = "register-header">
-            <img class = "old-icon" src = "/assets/icons/home/icon_application.png">
+            <img class = "old-icon" [src]="application">
             Other Registration</h3>
           <mat-nav-list class = "other-list">
             <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">

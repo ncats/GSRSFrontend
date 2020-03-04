@@ -108,7 +108,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
     this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
@@ -128,6 +128,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
+    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   facetsFromParams() {

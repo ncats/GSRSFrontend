@@ -12,8 +12,8 @@ import { environment } from '../../../environments/environment';
 })
 export class SequenceSearchComponent implements OnInit, OnDestroy {
   sequenceSearchForm = new FormGroup({
-    cutoff: new FormControl(0.5, [Validators.min(0), Validators.max(1), Validators.required]),
-    type: new FormControl('SUB', Validators.required),
+    cutoff: new FormControl(0.9, [Validators.min(0), Validators.max(1), Validators.required]),
+    type: new FormControl('GLOBAL', Validators.required),
     sequenceType: new FormControl('Protein', Validators.required),
     sequence: new FormControl('', Validators.required)
   });

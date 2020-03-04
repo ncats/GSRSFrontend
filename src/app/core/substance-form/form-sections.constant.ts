@@ -108,6 +108,9 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-relationships',
     'substance-form-notes',
     'substance-form-properties',
+    'substance-form-agent-modifications',
+    'substance-form-structural-modifications',
+    'substance-form-physical-modifications',
     'substance-form-references',
     'substance-form-change-reason'
   ]
