@@ -9,7 +9,7 @@ import { AuthService } from '@gsrs-core/auth';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { StructureService } from '@gsrs-core/structure';
 import { SubstanceSummaryDynamicContent } from './substance-summary-dynamic-content.component';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-substance-summary-card',
