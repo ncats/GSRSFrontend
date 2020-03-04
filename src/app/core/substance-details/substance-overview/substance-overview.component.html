@@ -71,7 +71,7 @@
         </div>
         <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidSubType">
           <div class="name">Nucleic Acid Sub-type</div>
-          <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.replace('|', ', ')}}</div>
+          <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.join(', ')}}</div>
         </div>
         <div class="name-value" *ngIf="substance.nucleicAcid.sequenceType">
           <div class="name">Sequence Type</div>
