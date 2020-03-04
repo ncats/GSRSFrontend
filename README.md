@@ -33,7 +33,9 @@ This will create a folder that's used in other build scripts.
 
 ## Install Application Packages
 
-After you have cloned the application to your local computer, open your favorite command line, navigate to the root directory (where the package.json is located), and run the following command:
+After you have cloned the application to your local computer, and prepared the dojo dependencies, open your favorite command line, navigate to the root directory (where the package.json is located), 
+and copy the `package.dev.json` file to a new file called `package.json`, then run the command:
+
 
 - `npm install`
 
@@ -42,6 +44,7 @@ The first time you do this, it will take a while to download all required packag
 
 You should repeat this step whenever somebody adds a new package to the application. It's probably not a bad idea to run it whenever you start working on the application
 
+
 ## Perform a One-Time Build
 
 You'll have to run the following commands the first time you work on the application to make sure a few libraries are built and ready to be used by the application:
@@ -49,6 +52,8 @@ You'll have to run the following commands the first time you work on the applica
 - `ng build --prod file-select`
 - `ng build --prod ketcher-wrapper`
 - `ng build --prod jsdraw-wrapper`
+
+After this is done, the file `package.real.json` should be copied and replace the `package.json` file. 
 
 ## Run Application for Specific Environment
 
