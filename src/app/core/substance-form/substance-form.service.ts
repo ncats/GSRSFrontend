@@ -1707,7 +1707,7 @@ unapproveRecord() {
 
   addSubstanceStructuralModification(): void {
     this.checkModifications();
-    const newStructuralModifications: StructuralModification = {references: []};
+    const newStructuralModifications: StructuralModification = {references: [], sites: [], access: []};
     this.substance.modifications.structuralModifications.unshift(newStructuralModifications);
     this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
   }
