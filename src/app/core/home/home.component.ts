@@ -4,7 +4,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { Environment } from '@environment';
 import { AuthService } from '@gsrs-core/auth';
 import { Router } from '@angular/router';
-import {environment} from "../../../environments/environment";
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   imageLoc: any;
 
   browseAll: string;
-  application:string;
+  application: string;
   chemicon: string;
 
   constructor(
@@ -34,8 +34,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.application = `${environment.baseHref || '/'}assets/icons/home/icon_application.png`;
-    this.browseAll = `${environment.baseHref || '/'}assets/icons/home/icon_registersubstance.png`;
-    this.chemicon = `${environment.baseHref || '/'}assets/icons/home/icon_browseall.png`;
+    this.browseAll = `${environment.baseHref || '/'}assets/icons/home/icon_browseall.png`;
+    this.chemicon = `${environment.baseHref || '/'}assets/icons/home/icon_registersubstance.png`;
 
     this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
       this.isAuthenticated = response;

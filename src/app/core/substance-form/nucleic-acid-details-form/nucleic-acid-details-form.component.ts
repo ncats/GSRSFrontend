@@ -53,13 +53,16 @@ private subscriptions: Array<Subscription> = [];
   update( field: string, event: any): void {
     if (field === 'nucleicAcidType') {
       this.nucleicAcid.nucleicAcidType = event;
-    } else if (field === 'nucleicAcidSubType') {
-      this.nucleicAcid.nucleicAcidSubType = event;
     } else if (field === 'sequenceOrigin') {
       this.nucleicAcid.sequenceOrigin = event;
     } else if (field === 'sequenceType') {
       this.nucleicAcid.sequenceType = event;
     }
   }
+
+  updateSubtype(tags: Array<string>) {
+      this.nucleicAcid.nucleicAcidSubType = tags;
+  }
+
 
 }

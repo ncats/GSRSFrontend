@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
-import { SubstanceDetail } from '../../substance/substance.model';
+import { SubstanceDetail, SubstanceName, SubstanceSummary, SubstanceCode, SubstanceRelationship } from '../../substance/substance.model';
 import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
 import { CardDynamicSectionDirective } from '../card-dynamic-section/card-dynamic-section.directive';
 import { UtilsService } from '../../utils/utils.service';
@@ -17,11 +17,14 @@ import {Router} from "@angular/router";
   styleUrls: ['./substance-summary-card.component.scss']
 })
 export class SubstanceSummaryCardComponent implements OnInit {
-  private privateSubstance: SubstanceDetail;
-  @Output() openImage = new EventEmitter<SubstanceDetail>();
+  private privateSubstance: SubstanceSummary;
+  @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Input() showAudit: boolean;
   isAdmin = false;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
+  @Input() names?: Array<SubstanceName>;
+  @Input() codeSystemNames?: Array<string>;
+  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
 
   constructor(
     public utilsService: UtilsService,
@@ -32,7 +35,6 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private componentFactoryResolver: ComponentFactoryResolver,
     private router: Router,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
-
   ) { }
 
   ngOnInit() {
@@ -40,14 +42,14 @@ export class SubstanceSummaryCardComponent implements OnInit {
   }
 
   @Input()
-  set substance(substance: SubstanceDetail) {
+  set substance(substance: SubstanceSummary) {
     if (substance != null) {
       this.privateSubstance = substance;
       this.loadDynamicContent();
     }
   }
 
-  get substance(): SubstanceDetail {
+  get substance(): SubstanceSummary {
     return this.privateSubstance;
   }
 

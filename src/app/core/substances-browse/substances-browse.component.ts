@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail } from '../substance/substance.model';
+import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceRelationship } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
 import * as _ from 'lodash';
 import { Facet } from '../utils/facet.model';
@@ -23,7 +23,8 @@ import { searchSortValues } from '../utils/search-sort-values';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location, LocationStrategy } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-substances-browse',
@@ -66,7 +67,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private subscriptions: Array<Subscription> = [];
   isAdmin: boolean;
   showExactMatches = false;
-  imageLoc: any;
+  names: { [substanceId: string]: Array<SubstanceName> } = {};
+  codes: {
+    [substanceId: string]: {
+      codeSystemNames?: Array<string>
+      codeSystems?: { [codeSystem: string]: Array<SubstanceCode> }
+    }
+  } = {};
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -94,8 +101,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = 0;
     this.facets = [];
 
-
-
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
@@ -112,11 +117,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-
   }
 
   ngAfterViewInit() {
-    const openSubscription =  this.matSideNav.openedStart.subscribe(() => {
+    const openSubscription = this.matSideNav.openedStart.subscribe(() => {
       this.utilsService.handleMatSidenavOpen(1100);
     });
     this.subscriptions.push(openSubscription);
@@ -124,6 +128,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
+    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   facetsFromParams() {
@@ -208,7 +213,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
-      const subscription = this.substanceService.getSubstancesDetails({
+      const subscription = this.substanceService.getSubstancesSummaries({
         searchTerm: this.privateSearchTerm,
         structureSearchTerm: this.privateStructureSearchTerm,
         sequenceSearchTerm: this.privateSequenceSearchTerm,
@@ -228,9 +233,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             && (!pagingResponse.sideway || pagingResponse.sideway.length < 2)
           ) {
             this.exactMatchSubstances = pagingResponse.exactMatches;
-            this.exactMatchSubstances.forEach((substance: SubstanceDetail) => {
-              this.processSubstanceCodes(substance);
-            });
             this.showExactMatches = true;
           }
 
@@ -239,10 +241,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.populateFacets(pagingResponse.facets);
           }
-
-          this.substances.forEach((substance: SubstanceDetail) => {
-            this.processSubstanceCodes(substance);
-          });
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
@@ -255,31 +253,56 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.loadingService.setLoading(this.isLoading);
           this.notificationService.setNotification(notification);
         }, () => {
+          subscription.unsubscribe();
+          if (this.exactMatchSubstances && this.exactMatchSubstances.length > 0) {
+            this.exactMatchSubstances.forEach(substance => {
+              this.setSubstanceNames(substance.uuid);
+              this.setSubstanceCodes(substance.uuid);
+            });
+
+          }
+          this.substances.forEach(substance => {
+            this.setSubstanceNames(substance.uuid);
+            this.setSubstanceCodes(substance.uuid);
+          });
           this.isLoading = false;
           this.loadingService.setLoading(this.isLoading);
-          subscription.unsubscribe();
         });
     }
 
   }
 
-  processSubstanceCodes (substance: SubstanceDetail): void {
-    if (substance.codes && substance.codes.length > 0) {
-      substance.codeSystemNames = [];
-      substance.codeSystems = {};
-      _.forEach(substance.codes, code => {
-        if (substance.codeSystems[code.codeSystem]) {
-          substance.codeSystems[code.codeSystem].push(code);
-        } else {
-          substance.codeSystems[code.codeSystem] = [code];
-          substance.codeSystemNames.push(code.codeSystem);
-        }
-      });
-    }
+  setSubstanceNames(substanceId: string): void {
+    this.loadingService.setLoading(true);
+    this.substanceService.getSubstanceNames(substanceId).pipe(take(1)).subscribe(names => {
+      this.names[substanceId] = names;
+      this.loadingService.setLoading(false);
+    }, error => {
+      this.loadingService.setLoading(false);
+    });
   }
 
-  editForm(uuid: any): void {
-    this.router.navigate(['/substances/' + uuid + '/edit']);
+  setSubstanceCodes(substanceId: string): void {
+    this.loadingService.setLoading(true);
+    this.substanceService.getSubstanceCodes(substanceId).pipe(take(1)).subscribe(codes => {
+      if (codes && codes.length > 0) {
+        this.codes[substanceId] = {
+          codeSystemNames: [],
+          codeSystems: {}
+        };
+        codes.forEach(code => {
+          if (this.codes[substanceId].codeSystems[code.codeSystem]) {
+            this.codes[substanceId].codeSystems[code.codeSystem].push(code);
+          } else {
+            this.codes[substanceId].codeSystems[code.codeSystem] = [code];
+            this.codes[substanceId].codeSystemNames.push(code.codeSystem);
+          }
+        });
+      }
+      this.loadingService.setLoading(false);
+    }, error => {
+      this.loadingService.setLoading(false);
+    });
   }
 
   populateUrlQueryParameters(): void {
@@ -395,6 +418,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.facets = newFacets;
       this.cleanFacets();
     });
+    this.subscriptions.push(subscription);
   }
 
   applyFacetsFilter(facetName: string) {
@@ -412,7 +436,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   removeFacet(facet: any): void {
-    const mockEvent = {'checked': false};
+    const mockEvent = { 'checked': false };
     this.updateFacetSelection(mockEvent, facet.type, facet.val, facet.bool);
 
     setTimeout(() => {
@@ -428,14 +452,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           if (this.privateFacetParams[key].params[sub] !== undefined) {
             const facet = {
               'type': key,
-              'val' : sub,
+              'val': sub,
               'bool': this.privateFacetParams[key].params[sub]
             };
             this.displayFacets.push(facet);
           }
         });
       }
-      });
+    });
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
@@ -773,24 +797,24 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   moreFacets(index: number, facet: Facet) {
-    const subscription = this.substanceService.retrieveNextFacetValues(this.facets[index]).subscribe( resp => {
-        this.facets[index].$next = resp.$next;
-        this.facets[index].values = this.facets[index].values.concat(resp.content);
-        this.facets[index].$fetched = this.facets[index].values;
-        this.facets[index].$total = resp.ftotal;
-        subscription.unsubscribe();
-      }, error => {
-        subscription.unsubscribe();
-      });
+    const subscription = this.substanceService.retrieveNextFacetValues(this.facets[index]).subscribe(resp => {
+      this.facets[index].$next = resp.$next;
+      this.facets[index].values = this.facets[index].values.concat(resp.content);
+      this.facets[index].$fetched = this.facets[index].values;
+      this.facets[index].$total = resp.ftotal;
+      subscription.unsubscribe();
+    }, error => {
+      subscription.unsubscribe();
+    });
   }
 
   lessFacets(index: number) {
-    const subscription = this.substanceService.retrieveFacetValues(this.facets[index]).subscribe( response => {
-       this.facets[index].values = response.content;
-       this.facets[index].$fetched = response.content;
-       this.facets[index].$next = response.$next;
-       subscription.unsubscribe();
-     }, error => {
+    const subscription = this.substanceService.retrieveFacetValues(this.facets[index]).subscribe(response => {
+      this.facets[index].values = response.content;
+      this.facets[index].$fetched = response.content;
+      this.facets[index].$next = response.$next;
+      subscription.unsubscribe();
+    }, error => {
       subscription.unsubscribe();
     });
   }
@@ -827,10 +851,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   sortCodeSystems(codes: Array<string>): Array<string> {
-    if ( this.configService.configData && this.configService.configData.codeSystemOrder &&
+    if (this.configService.configData && this.configService.configData.codeSystemOrder &&
       this.configService.configData.codeSystemOrder.length > 0) {
       const order = this.configService.configData.codeSystemOrder;
-      for (let i =  order.length - 1; i >= 0; i--) {
+      for (let i = order.length - 1; i >= 0; i--) {
         for (let j = 0; j <= codes.length; j++) {
           if (order[i] === codes[j]) {
             const a = codes.splice(j, 1);   // removes the item
@@ -839,7 +863,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         }
       }
-   }
+    }
     return codes;
   }
 

@@ -50,7 +50,7 @@ export class SubstanceSelectorComponent implements OnInit {
       `root_approvalID:\"^${q}$\" OR ` +
       `root_codes_BDNUM:\"^${q}$\"`;
 
-    this.substanceService.getSubstanceSummaries(searchStr, true).subscribe(response => {
+    this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       if (response.content && response.content.length) {
         this.selectedSubstance = response.content[0];
         this.selectionUpdated.emit(this.selectedSubstance);

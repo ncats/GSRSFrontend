@@ -66,11 +66,11 @@
     </div>
       <div *ngIf="substance.nucleicAcid" class="diverseWrapper">
         <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidType">
-          <div class="name">Protein Type</div>
+          <div class="name">Nucleic Acid Type</div>
           <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidType}}</div>
         </div>
         <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidSubType">
-          <div class="name">Protein Sub-type</div>
+          <div class="name">Nucleic Acid Sub-type</div>
           <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.replace('|', ', ')}}</div>
         </div>
         <div class="name-value" *ngIf="substance.nucleicAcid.sequenceType">

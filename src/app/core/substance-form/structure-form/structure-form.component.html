@@ -13,7 +13,7 @@
     </mat-form-field>
     <mat-form-field class="optical-activity">
       <mat-label>Optical Activity</mat-label>
-      <mat-select [(ngModel)]="structure.opticalActivity" name="opticalActivity">
+      <mat-select [value] = "optical" (selectionChange)="updateOptical($event)" name="opticalActivity">
         <mat-option *ngFor="let activity of opticalActivityList" [value]="activity.value">
           {{activity.display}}
         </mat-option>
