@@ -22,6 +22,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   stereoChemistryTypeList: Array<VocabularyTerm> = [];
   opticalActivityList: Array<VocabularyTerm> = [];
   atropisomerismList: Array<VocabularyTerm> = [];
+  optical: string;
   @Input() hideAccess = false;
   @Input() showSettings = false;
   @Input() type?: string;
@@ -59,6 +60,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   set structure(updatedStructure: SubstanceStructure | SubstanceMoiety) {
     if (updatedStructure != null) {
       this.privateStructure = updatedStructure;
+      this.optical = this.privateStructure.opticalActivity;
     }
   }
 
@@ -76,6 +78,11 @@ export class StructureFormComponent implements OnInit, OnDestroy {
 
   updateAccess(access: Array<string>): void {
     this.privateStructure.access = access;
+  }
+
+  updateOptical(select: any): void {
+    this.optical = select.value;
+    this.privateStructure.opticalActivity = this.optical;
   }
 
   openStructureImportDialog(): void {
