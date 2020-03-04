@@ -1998,8 +1998,6 @@ unapproveRecord() {
       }
     }
 
-    this.structuralModCommentToRef();
-
     let substanceString = JSON.stringify(this.substance);
     let substanceCopy: SubstanceDetail = JSON.parse(substanceString);
 
