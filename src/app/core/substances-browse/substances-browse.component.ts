@@ -298,6 +298,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.codes[substanceId].codeSystemNames.push(code.codeSystem);
           }
         });
+        this.codes[substanceId].codeSystemNames = this.sortCodeSystems(this.codes[substanceId].codeSystemNames);
       }
       this.loadingService.setLoading(false);
     }, error => {
