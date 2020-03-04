@@ -2002,7 +2002,7 @@ unapproveRecord() {
 
   validateSubstance(): Observable<ValidationResults> {
     return new Observable(observer => {
-      const substanceCopy = this.removeDeletedComponents();
+      const substanceCopy = this.cleanSubstance();
       this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
         observer.next(results);
         observer.complete();
@@ -2013,7 +2013,7 @@ unapproveRecord() {
     });
   }
 
-  removeDeletedComponents(): SubstanceDetail {
+  cleanSubstance(): SubstanceDetail {
     if (this.substance.structurallyDiverse) {
       if (this.substance.structurallyDiverse.$$diverseType) {
         delete this.substance.structurallyDiverse.$$diverseType;
@@ -2022,42 +2022,48 @@ unapproveRecord() {
         delete this.substance.structurallyDiverse.$$storedPart;
       }
     }
-      this.structuralModCommentToRef();
 
-      let substanceString = JSON.stringify(this.substance);
+    this.structuralModCommentToRef();
+
+    let substanceString = JSON.stringify(this.substance);
     let substanceCopy: SubstanceDetail = JSON.parse(substanceString);
-    const deletablekeys = [
-      'names',
-      'codes',
-      'relationships',
-      'notes',
-      'properties',
-      'references'
-    ];
-    const deletedReferenceUuids = [];
 
-    deletablekeys.forEach(property => {
-      if (substanceCopy[property] && substanceCopy[property].length) {
+    const response = this.cleanObject(substanceCopy);
+    console.log(substanceCopy);
+    console.log(response);
+    const deletedUuids = response.deletedUuids;
+    // const deletablekeys = [
+    //   'names',
+    //   'codes',
+    //   'relationships',
+    //   'notes',
+    //   'properties',
+    //   'references',
+    //   'polymer.monomers'
+    // ];
+    // const deletedReferenceUuids = [];
 
-        substanceCopy[property] = substanceCopy[property].filter((item: any) => {
+    // deletablekeys.forEach(deletableKey => {
+    //   if (substanceCopy[deletableKey] && substanceCopy[deletableKey].length) {
+    //     substanceCopy[deletableKey] = substanceCopy[deletableKey].filter((item: any) => {
 
-          const hasDeleletedCode = item.$$deletedCode != null;
-          if (!hasDeleletedCode) {
-            delete item.$$deletedCode;
-          } else if (property === 'references') {
-            deletedReferenceUuids.push(item.uuid);
-          }
-          return !hasDeleletedCode;
-        });
-      }
-    });
+    //       const hasDeleletedCode = item.$$deletedCode != null;
+    //       if (!hasDeleletedCode) {
+    //         delete item.$$deletedCode;
+    //       } else if (deletableKey === 'references') {
+    //         deletedReferenceUuids.push(item.uuid);
+    //       }
+    //       return !hasDeleletedCode;
+    //     });
+    //   }
+    // });
 
 
 
-    if (deletedReferenceUuids.length > 0) {
+    if (deletedUuids.length > 0) {
       substanceString = JSON.stringify(substanceCopy);
 
-      deletedReferenceUuids.forEach(uuid => {
+      deletedUuids.forEach(uuid => {
         substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
       });
       substanceString = substanceString.replace(/,,/g, ',');
@@ -2067,6 +2073,42 @@ unapproveRecord() {
     }
 
     return substanceCopy;
+  }
+
+  private cleanObject(substanceProperty: any, deletedUuids: Array<string> = []): { deletedUuids: Array<string>, isDeleted: boolean } {
+    if (Object.prototype.toString.call(substanceProperty) === '[object Object]') {
+
+      const hasDeleletedCode = substanceProperty.$$deletedCode != null;
+      if (!hasDeleletedCode) {
+        delete substanceProperty.$$deletedCode;
+        Object.keys(substanceProperty).forEach(key => {
+          if (Object.prototype.toString.call(substanceProperty[key]) === '[object Array]') {
+            substanceProperty[key] = substanceProperty[key].filter(childProperty => {
+              const response = this.cleanObject(childProperty, deletedUuids);
+              return !response.isDeleted;
+            });
+          } else if (Object.prototype.toString.call(substanceProperty[key]) === '[object Object]') {
+            this.cleanObject(substanceProperty[key], deletedUuids);
+          }
+        });
+      } else if (substanceProperty.uuid != null) {
+        deletedUuids.push(substanceProperty.uuid);
+      }
+
+      return {
+        deletedUuids: deletedUuids,
+        isDeleted: hasDeleletedCode
+      };
+    } else if (Object.prototype.toString.call(substanceProperty) === '[object Array]') {
+      substanceProperty.forEach(childProperty => {
+        this.cleanObject(childProperty, deletedUuids);
+      });
+    } else {
+      return {
+        deletedUuids: deletedUuids,
+        isDeleted: false
+      };
+    }
   }
 
   saveSubstance(): Observable<SubstanceFormResults> {
@@ -2087,7 +2129,7 @@ unapproveRecord() {
         });
       }
 
-      const substanceCopy = this.removeDeletedComponents();
+      const substanceCopy = this.cleanSubstance();
       this.substanceService.saveSubstance(substanceCopy).subscribe(substance => {
         this.substance = substance;
         results.uuid = substance.uuid;
