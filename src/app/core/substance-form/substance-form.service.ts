@@ -1998,34 +1998,6 @@ unapproveRecord() {
       }
     }
 
-      let substanceString = JSON.stringify(this.substance);
-    let substanceCopy: SubstanceDetail = JSON.parse(substanceString);
-    const deletablekeys = [
-      'names',
-      'codes',
-      'relationships',
-      'notes',
-      'properties',
-      'references'
-    ];
-    const deletedReferenceUuids = [];
-
-    deletablekeys.forEach(property => {
-      if (substanceCopy[property] && substanceCopy[property].length) {
-
-        substanceCopy[property] = substanceCopy[property].filter((item: any) => {
-
-          const hasDeleletedCode = item.$$deletedCode != null;
-          if (!hasDeleletedCode) {
-            delete item.$$deletedCode;
-          } else if (property === 'references') {
-            deletedReferenceUuids.push(item.uuid);
-          }
-          return !hasDeleletedCode;
-        });
-      }
-    });
-
     this.structuralModCommentToRef();
 
     let substanceString = JSON.stringify(this.substance);
