@@ -1,0 +1,145 @@
+.unit-form-container {
+  padding: 30px 10px 12px 10px;
+  position: relative;
+  display:flex;
+}
+
+.related-substance {
+  max-width: 20%;
+  width: 20%;
+}
+
+::ng-deep .related-substance img {
+  max-width:125px !important;
+  margin: auto;
+}
+
+.structure-image {
+  max-width: 150px;
+}
+
+.full {
+  width:100%;
+}
+
+.form-container {
+  width:80%;
+}
+
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, .8);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: #666;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .label, .attachment-count, .type, .amount, .connectivity {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+  .connectivity {
+    width: 50%;
+  }
+
+  .amount {
+    width: 50%;
+    padding-right: 15px;
+  }
+}
+
+.inner-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .label, .attachment-count, .type {
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+
+  .connectivity {
+    width: 100%;
+  }
+
+  .connectivity-container {
+    width:50%;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .amount {
+    width: 50%;
+    padding-right: 15px;
+  }
+}
+
+.inner-row-bottom {
+  display:flex;
+  .connectivity {
+    width: 50%;
+  }
+
+  .amount {
+    width: 50%;
+    padding-right: 15px;
+  }
+}
+
+
+.references-container {
+  width: 100%;
+}
+
+.padded {
+  padding-right:20px;
+}
+.amount-display {
+  padding-top:11px;
+}
+.form-actions {
+  justify-content: flex-start;
+  margin: 5px 0 10px 0;
+}
+.form-content {
+  flex-grow: 1;
+}
+
+.mod-type, .location-type {
+  width: 33%;
+}
+
+.sites, .group-access {
+  width:33%;
+}
+
+.extent, .amount {
+  width:33%;
+}
+
+
+.group, .access {
+  width: 45%;
+}
