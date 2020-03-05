@@ -21,6 +21,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   anchorElement: HTMLAnchorElement;
   smiles: string;
   mol: string;
+  isInitializing: boolean = true;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -70,6 +71,15 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
       this.mol = null;
       this.updateStructureForm(molfile);
     });
+    this.isInitializing=false;
+  }
+  
+  startInitializing(): void {
+    this.isInitializing=true;
+  }
+
+  endInitializing(): void {
+    this.isInitializing=false;
   }
 
   loadStructure(): void {
@@ -86,9 +96,11 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   }
 
   updateStructureForm(molfile: string): void {
-    this.structureService.postStructure(molfile).subscribe(response => {
-      this.processStructurePostResponse(response);
-    });
+    if(!this.isInitializing){
+       this.structureService.postStructure(molfile).subscribe(response => {
+          this.processStructurePostResponse(response);
+       });
+    }
   }
 
   processStructurePostResponse(structurePostResponse?: StructurePostResponse): void {
