@@ -316,6 +316,20 @@
       ]
     },
     {
+      "card": "substance-constituents",
+      "title": "specified substance constituents",
+      "filters": [{
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "specifiedSubstanceG1"
+      },
+        {
+          "filterName": "exists",
+          "propertyToCheck": "specifiedSubstance.constituents"
+        }
+      ]
+    },
+    {
       "card": "substance-mixture-source",
       "title": "mixture source",
       "filters": [{
