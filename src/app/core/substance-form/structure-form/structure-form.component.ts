@@ -59,16 +59,20 @@ export class StructureFormComponent implements OnInit, OnDestroy {
 
   @Input()
   set structure(updatedStructure: SubstanceStructure | SubstanceMoiety) {
+
+
     if (updatedStructure != null) {
       this.privateStructure = updatedStructure;
-      this.optical = this.privateStructure.opticalActivity;
-      if(this.optical === 'NONE' && !this.inCV(this.opticalActivityList, this.optical)) {
-        this.optical = 'none';
+      if (this.privateStructure.opticalActivity === 'NONE' && !this.inCV(this.opticalActivityList, this.privateStructure.opticalActivity)) {
+        this.privateStructure.opticalActivity = 'none';
       }
     }
   }
 
   get structure(): (SubstanceStructure | SubstanceMoiety) {
+    if (this.privateStructure.opticalActivity === 'NONE' && !this.inCV(this.opticalActivityList, this.privateStructure.opticalActivity)) {
+      this.privateStructure.opticalActivity = 'none';
+    }
     return this.privateStructure;
   }
 
@@ -77,7 +81,6 @@ export class StructureFormComponent implements OnInit, OnDestroy {
       this.stereoChemistryTypeList = response['STEREOCHEMISTRY_TYPE'].list;
       this.opticalActivityList = response['OPTICAL_ACTIVITY'].list;
       this.atropisomerismList = response['ATROPISOMERISM'].list;
-      this.updateOptical({'value': this.privateStructure.opticalActivity});
     });
   }
 
@@ -85,13 +88,6 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     this.privateStructure.access = access;
   }
 
-  updateOptical(select: any): void {
-    this.optical = select.value;
-    if(this.optical === 'NONE' && !this.inCV(this.opticalActivityList, this.optical)) {
-      this.optical = 'none';
-    }
-    this.privateStructure.opticalActivity = this.optical;
-  }
 
   inCV(vocab: Array<VocabularyTerm>, property: string): boolean {
     if (vocab) {
