@@ -48,6 +48,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
       this.nameResolved.emit(mol);
     });
     this.subscriptions.push(resolver);
+    this.optical = this.privateStructure.opticalActivity;
   }
 
   ngOnDestroy() {
@@ -61,6 +62,9 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     if (updatedStructure != null) {
       this.privateStructure = updatedStructure;
       this.optical = this.privateStructure.opticalActivity;
+      if(this.optical === 'NONE' && !this.inCV(this.opticalActivityList, this.optical)) {
+        this.optical = 'none';
+      }
     }
   }
 
@@ -73,6 +77,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
       this.stereoChemistryTypeList = response['STEREOCHEMISTRY_TYPE'].list;
       this.opticalActivityList = response['OPTICAL_ACTIVITY'].list;
       this.atropisomerismList = response['ATROPISOMERISM'].list;
+      this.updateOptical({'value': this.privateStructure.opticalActivity});
     });
   }
 
@@ -82,9 +87,20 @@ export class StructureFormComponent implements OnInit, OnDestroy {
 
   updateOptical(select: any): void {
     this.optical = select.value;
+    if(this.optical === 'NONE' && !this.inCV(this.opticalActivityList, this.optical)) {
+      this.optical = 'none';
+    }
     this.privateStructure.opticalActivity = this.optical;
   }
 
+  inCV(vocab: Array<VocabularyTerm>, property: string): boolean {
+    if (vocab) {
+      return vocab.some(r => property === r.value);
+    } else {
+      return true;
+    }
+
+  }
   openStructureImportDialog(): void {
     this.gaService.sendEvent('structureForm', 'button:import', 'import structure');
     const dialogRef = this.dialog.open(StructureImportComponent, {

@@ -11,7 +11,7 @@
   <mat-option value = 'other' >Other (New Value)</mat-option>
 </mat-select>
 </mat-form-field>
-  <a class = "add-term" mat-icon-button *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== 'other' || isAdmin"
+  <a class = "add-term" mat-icon-button *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== 'other' && isAdmin"
      matTooltip = "add term to Controlled Vocabulary"(click) = "addToVocab()">
     add
   </a>

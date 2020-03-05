@@ -12,9 +12,17 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <app-cv-input class="optical-activity" key = "Moiety Optical Activity"  title = "Optical Activity" [model] = "optical"
-                  (valueChange)= "updateOptical($event)" name = "opticalActivity">
-    </app-cv-input>
+    <mat-form-field class="optical-activity">
+      <mat-label>Optical Activity</mat-label>
+      <mat-select [value] = "optical" (selectionChange)="updateOptical($event)" name="opticalActivity">
+        <mat-option *ngFor="let activity of opticalActivityList" [value]="activity.value">
+          {{activity.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  <div *ngIf = "optical === 'other'" class = "custom">
+    <input matInput placeholder="Custom value" (focusout) = "updateOptical($event.target)" name="custom" />
+  </div>
 
     <app-cv-input class="atropisomerism" key = 'Structure Has Atropisomerism'  title = "Additional Stereochemistry" [model] = "structure.atropisomerism"
                   (valueChange)= "structure.atropisomerism = $event" name = "opticalActivity">

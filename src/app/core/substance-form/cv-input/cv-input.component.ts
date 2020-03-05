@@ -7,7 +7,7 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
-import {AuthService} from "@gsrs-core/auth";
+import {AuthService} from '@gsrs-core/auth';
 
 /*
   used for any input that uses cv vocabulary to handle custom values after selecting 'other'
