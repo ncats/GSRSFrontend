@@ -3,6 +3,7 @@
     <mat-form-field class="mol-formula">
       <input matInput placeholder="Molecular Formula" [(ngModel)]="structure.formula" name="formula" required />
     </mat-form-field>
+
     <mat-form-field class="stereochemistry">
       <mat-label>Stereochemistry</mat-label>
       <mat-select [(ngModel)]="structure.stereochemistry" name="stereochemistry">
@@ -11,22 +12,13 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="optical-activity">
-      <mat-label>Optical Activity</mat-label>
-      <mat-select [value] = "optical" (selectionChange)="updateOptical($event)" name="opticalActivity">
-        <mat-option *ngFor="let activity of opticalActivityList" [value]="activity.value">
-          {{activity.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="atropisomerism">
-      <mat-label>Additional Stereochemistry</mat-label>
-      <mat-select [(ngModel)]="structure.atropisomerism" name="opticalActivity">
-        <mat-option *ngFor="let atropisomerism of atropisomerismList" [value]="atropisomerism.value">
-          {{atropisomerism.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <app-cv-input class="optical-activity" key = "Moiety Optical Activity"  title = "Optical Activity" [model] = "optical"
+                  (valueChange)= "updateOptical($event)" name = "opticalActivity">
+    </app-cv-input>
+
+    <app-cv-input class="atropisomerism" key = 'Structure Has Atropisomerism'  title = "Additional Stereochemistry" [model] = "structure.atropisomerism"
+                  (valueChange)= "structure.atropisomerism = $event" name = "opticalActivity">
+    </app-cv-input>
     <div class="settings_container" *ngIf="showSettings">
       <button mat-icon-button [matMenuTriggerFor]="settingsMenu" matTooltip="Advanced options">
         <mat-icon svgIcon="settings_applications"></mat-icon>

@@ -18,26 +18,14 @@
           <mat-icon svgIcon="delete_forever"></mat-icon>
         </button>
       </div>
-      <mat-form-field class="name">
-        <mat-label>Name</mat-label>
-        <mat-select [(ngModel)]="property.name" required name="name">
-          <mat-option *ngFor="let propertyName of propertyNameList" [value]="propertyName.value">
-            {{propertyName.display}}
-          </mat-option>
-          <mat-option *ngIf = "!inCV(  propertyNameList, property.name)" value = "{{property.name}}">{{property.name}}</mat-option>
-          <mat-option value = 'other' >Other</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="type">
-        <mat-label>Type</mat-label>
-        <mat-select [(ngModel)]="property.propertyType" required name="type">
-          <mat-option *ngFor="let propertyType of propertyTypeList" [value]="propertyType.value">
-            {{propertyType.display}}
-          </mat-option>
-          <mat-option *ngIf = "!inCV(  propertyTypeList, property.propertyType)" value = "{{property.propertyType}}">{{property.propertyType}}</mat-option>
-          <mat-option value = 'other' >Other</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <app-cv-input required = 'true' class="name property-name" key = "Property Name"  title = "Name" [model] = "property.name"
+                    (valueChange)= "property.name = $event">
+      </app-cv-input>
+
+      <app-cv-input required = 'true' class="type" key = "Property Property Type"  title = "Property Type" [model] = "property.propertyType"
+                    (valueChange)= "property.propertyType = $event" name = "type">
+      </app-cv-input>
+
       <div class="checkbox-container column-checkbox">
         <mat-checkbox [(ngModel)]="property.defining" name="defining">
           Defining

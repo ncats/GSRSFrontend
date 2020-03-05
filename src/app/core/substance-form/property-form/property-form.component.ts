@@ -32,7 +32,6 @@ export class PropertyFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getVocabularies();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
@@ -44,13 +43,6 @@ export class PropertyFormComponent implements OnInit {
 
   get property(): SubstanceProperty {
     return this.privateProperty;
-  }
-
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('PROPERTY_NAME', 'PROPERTY_TYPE').subscribe(response => {
-      this.propertyNameList = response['PROPERTY_NAME'].list;
-      this.propertyTypeList = response['PROPERTY_TYPE'].list;
-    });
   }
 
   deleteProperty(): void {
@@ -139,8 +131,5 @@ export class PropertyFormComponent implements OnInit {
     return vocab;
   }
 
-  inCV(vocab: Array<VocabularyTerm>, property: string) {
-    return vocab.some(r => property === r.value);
-  }
 
 }

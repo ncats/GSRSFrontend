@@ -11,14 +11,9 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <mat-form-field class="code-system">
-      <mat-label>Code System</mat-label>
-      <mat-select [(ngModel)]="code.codeSystem" required (selectionChange)="setCodeSystemType()" name="code">
-        <mat-option *ngFor="let codeSystem of codeSystemList" [value]="codeSystem.value">
-          {{codeSystem.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <app-cv-input required = 'true' class="code-system" key = 'Code System'  title = "Code System" name = "code"
+                  [model] = "code.codeSystem" (valueChange)= "setCodeSystemType($event)">
+    </app-cv-input>
     <div class="key-value-pair code-system-type" *ngIf="code.codeSystem">
       <div class="key">
         Code System Type
@@ -27,14 +22,9 @@
         {{codeSystemType}}
       </div>
     </div>
-    <mat-form-field class="type">
-      <mat-label>Type</mat-label>
-      <mat-select [(ngModel)]="code.type" required name="type">
-        <mat-option *ngFor="let codeType of codeTypeList" [value]="codeType.value">
-          {{codeType.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <app-cv-input class = "type" required = 'true' domain = "CODE_TYPE"  title = "Type" name = "type"
+                  [model] = "code.type" (valueChange)= "code.type = $event">
+    </app-cv-input>
     <mat-form-field class="code">
       <input matInput placeholder="Code" [(ngModel)]="code.code" required name="code" />
     </mat-form-field>

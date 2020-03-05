@@ -21,7 +21,6 @@ export class NameFormComponent implements OnInit, OnDestroy {
   @Output() priorityUpdate = new EventEmitter<SubstanceName>();
   @Output() nameDeleted = new EventEmitter<SubstanceName>();
   nameControl = new FormControl('');
-  nameTypes: Array<VocabularyTerm> = [];
   nameTypeControl = new FormControl('');
   deleteTimer: any;
   private subscriptions: Array<Subscription> = [];
@@ -37,7 +36,6 @@ export class NameFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.getVocabularies();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const definition = this.substanceFormService.definition.subscribe(def => {
       this.substanceType = def.substanceClass;
@@ -66,13 +64,6 @@ export class NameFormComponent implements OnInit, OnDestroy {
 
   get name(): SubstanceName {
     return this.privateName || {};
-  }
-
-  getVocabularies(): void {
-    const subscription = this.cvService.getDomainVocabulary('NAME_TYPE').subscribe(response => {
-      this.nameTypes = response['NAME_TYPE'].list;
-    });
-    this.subscriptions.push(subscription);
   }
 
   priorityUpdated(event: MatRadioChange) {

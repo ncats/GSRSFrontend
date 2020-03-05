@@ -18,36 +18,45 @@
           <mat-icon svgIcon="delete_forever"></mat-icon>
         </button>
       </div>
-      <mat-form-field class="type">
+      <app-cv-input class = "type" required = 'true' domain = "RELATIONSHIP_TYPE"  title = "Type" name = "type"
+                    [model] = "relationship.type" (valueChange)= "relationship.type = $event">
+      </app-cv-input>
+    <!--  <mat-form-field class="type">
         <mat-label>Type</mat-label>
         <mat-select [(ngModel)]="relationship.type" required name="type">
           <mat-option *ngFor="let relationshipType of relationshipTypeList" [value]="relationshipType.value">
             {{relationshipType.display}}
           </mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field>-->
       <div>
         <app-access-manager (accessOut)="updateAccess($event)" [access]="relationship.access">
         </app-access-manager>
       </div>
     </div>
     <div class="form-row">
-      <mat-form-field class="qualification">
+      <app-cv-input class = "qualification" key = "Relationship Qualification"  title = "Qualification" name = "Qualification"
+                    [model] = "relationship.qualification" (valueChange)= "relationship.qualification = $event">
+      </app-cv-input>
+      <!--<mat-form-field class="qualification">
         <mat-label>Qualification</mat-label>
         <mat-select [(ngModel)]="relationship.qualification" name="qualification">
           <mat-option *ngFor="let qualification of qualificationList" [value]="qualification.value">
             {{qualification.display}}
           </mat-option>
         </mat-select>
-      </mat-form-field>
-      <mat-form-field class="interaction-type">
+      </mat-form-field>-->
+      <app-cv-input class = "interaction-type" key = "Relationship Interaction Type"  title = "Interaction Type" name = "Interaction Type"
+                    [model] = "relationship.interactionType" (valueChange)= "relationship.interactionType = $event">
+      </app-cv-input>
+     <!-- <mat-form-field class="interaction-type">
         <mat-label>Interaction Type</mat-label>
         <mat-select [(ngModel)]="relationship.interactionType" name="interactionType">
           <mat-option *ngFor="let interactionType of interactionTypeList" [value]="interactionType.value">
             {{interactionType.display}}
           </mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field>-->
     </div>
     <div class="form-row">
       <div class="comments">
