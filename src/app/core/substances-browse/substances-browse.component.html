@@ -15,7 +15,7 @@
           <button mat-icon-button color="black" (click) = "clearFacetSearch(topIndex, facet.name)"><mat-icon svgIcon="close"></mat-icon></button>
         </div>
         <mat-progress-bar class="facet-search-loading" mode="indeterminate" *ngIf="searchText[facet.name] && searchText[facet.name].isLoading"></mat-progress-bar>
-          <ng-container  *ngFor="let value of facet.values | facetFilter : searchText[facet.name].value; index as index">
+          <ng-container  *ngFor="let value of facet.values; index as index">
             <div class="facet-value" >
           <div class="facet-value-checkbox">
             <mat-checkbox class="include" matTooltip="Include"

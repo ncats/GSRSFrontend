@@ -133,7 +133,28 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         }
       })
     ).subscribe(response => {
-      this.activeSearchedFaced.values = response.content;
+      this.activeSearchedFaced.values = this.activeSearchedFaced.values.filter(value => {
+        let removeFacet = true;
+
+        let isInSearhResults = false;
+
+        for (let i = 0; i < response.content.length; i++) {
+          if (response.content[i].label === value.label) {
+            isInSearhResults = true;
+            break;
+          }
+        }
+
+        if (!isInSearhResults
+          && this.facetParams[this.activeSearchedFaced.name] != null
+          && (this.facetParams[this.activeSearchedFaced.name].params[value.label] === true
+            || this.facetParams[this.activeSearchedFaced.name].params[value.label] === false)) {
+              removeFacet = false;
+            }
+
+        return !removeFacet;
+      });
+      this.activeSearchedFaced.values = this.activeSearchedFaced.values.concat(response.content);
       this.searchText[this.activeSearchedFaced.name].isLoading = false;
     }, error => {
       this.searchText[this.activeSearchedFaced.name].isLoading = false;
