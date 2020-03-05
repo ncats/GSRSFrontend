@@ -102,6 +102,14 @@ export class AuthService extends BaseHttpService {
     this._authUpdate.next(null);
   }
 
+  public getUser(): string {
+    if (this._auth && this._auth.identifier) {
+      return this._auth.identifier;
+    } else {
+      return '';
+    }
+  }
+
   hasRoles(...roles: Array<Role|string>): boolean {
     const rolesList = [...roles];
 

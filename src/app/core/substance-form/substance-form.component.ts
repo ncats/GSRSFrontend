@@ -17,7 +17,7 @@ import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-comp
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { SubstanceFormSection } from './substance-form-section';
 import { SubstanceFormService } from './substance-form.service';
-import { ValidationMessage, SubstanceFormResults } from './substance-form.model';
+import {ValidationMessage, SubstanceFormResults, SubstanceFormDefinition} from './substance-form.model';
 import { Subscription } from 'rxjs';
 import {SubstanceReference} from '@gsrs-core/substance';
 import {RefernceFormDialogComponent} from '@gsrs-core/substance-form/references-dialogs/refernce-form-dialog.component';
@@ -26,6 +26,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import * as _ from 'lodash';
 import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
+import {Auth, AuthService} from '@gsrs-core/auth';
+import {take} from 'rxjs/operators';
 
 
 
@@ -54,6 +56,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   copy: string;
   private overlayContainer: HTMLElement;
   serverError: boolean;
+  canApprove: boolean;
+  approving: boolean;
+  definition: SubstanceFormDefinition;
+  user: string;
 
 
   constructor(
@@ -67,6 +73,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
+    private authService: AuthService
   ) {
   }
 
@@ -107,6 +114,20 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       });
     this.subscriptions.push(routeSubscription);
+    this.approving = false;
+    this.substanceFormService.definition.subscribe(response => {
+      this.definition = response;
+      setTimeout(() => {
+        this.canApprove = this.canBeApproved();
+      });
+    });
+    this.authService.getAuth().pipe(take(1)).subscribe(auth => {
+      this.user = auth.identifier;
+      setTimeout(() => {
+        this.canApprove = this.canBeApproved();
+      });
+    });
+
   }
 
   ngAfterViewInit(): void {
@@ -137,6 +158,26 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
+  canBeApproved(): boolean {
+
+    console.log(this.user);
+    if(this.definition && this.definition.lastEditedBy && this.user){
+      console.log(this.definition.lastEditedBy);
+
+      const lastEdit = this.definition.lastEditedBy;
+      if (!lastEdit) {
+        return false;
+      }
+      if (this.definition.status === 'approved') {
+        return false;
+      }
+      if (lastEdit === this.user) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   showJSON(): void {
       const dialogRef = this.dialog.open(JsonDialogComponent, {
         width: '90%'
@@ -148,6 +189,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
       this.subscriptions.push(dialogSubscription);
   }
+
 
   getSubstanceDetails(newType?: string): void {
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
@@ -216,7 +258,18 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }, 5000);
   }
 
-  validate(): void {
+  approve(): void {
+    this.substanceFormService.approveSubstance().subscribe(response => {
+      console.log(response);
+    });
+  }
+
+  startApproval(): void {
+
+  }
+
+  validate(validationType?: string ): void {
+    console.log(validationType);
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -230,6 +283,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.isLoading = false;
       if (this.validationMessages.length === 0 && results.valid === true) {
         this.submissionMessage = 'Substance is Valid. Would you like to submit?';
+      }
+      if (validationType && validationType === 'approval' ) {
+        this.approving = true;
+        this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
       }
     }, error => {
       this.addServerError(error);

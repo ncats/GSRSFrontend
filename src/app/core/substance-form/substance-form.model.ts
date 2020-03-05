@@ -13,6 +13,7 @@ export interface SubstanceFormDefinition {
     references?: Array<string>;
     access?: Array<string>;
     status?: string;
+    approvalID?: string;
     _name?: string;
     relationships?: Array<SubstanceRelationship>;
 }
