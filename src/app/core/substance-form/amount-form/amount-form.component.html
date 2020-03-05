@@ -1,13 +1,23 @@
 <form class="amount-form" *ngIf="substanceAmount">
   <div class="form-row">
+    <div class = "other-container">
+    <div>
     <mat-form-field class="amount-type">
       <mat-label>Type *</mat-label>
       <mat-select [formControl]="typeControl">
         <mat-option *ngFor="let type of amountTypeList" [value]="type.value">
           {{type.display}}
         </mat-option>
+        <mat-option *ngIf = "privateSubstanceAmount.type && !inCV(  amountTypeList, privateSubstanceAmount.type) && privateSubstanceAmount.type !== ''"
+                    value = "{{privateSubstanceAmount.type}}">{{privateSubstanceAmount.type}} (not in CV)</mat-option>
+        <mat-option value = 'other' >Other (New Value)</mat-option>
       </mat-select>
     </mat-form-field>
+  </div>
+  <div *ngIf = "privateSubstanceAmount.type === 'other'" class = "custom">
+    <input matInput placeholder="Custom value" (focusout) = "updateType($event.target)" name="custom" />
+  </div>
+    </div>
     <mat-form-field class="amount-average">
       <input matInput placeholder="Average" [formControl]="averageControl" />
     </mat-form-field>
@@ -23,14 +33,24 @@
     <mat-form-field class="high-limit">
       <input matInput placeholder="High Limit" [formControl]="highLimitControl" />
     </mat-form-field>
-    <mat-form-field class="amount-units">
-      <mat-label>Units</mat-label>
-      <mat-select [formControl]="unitsControl">
-        <mat-option *ngFor="let unit of amountUnitList" [value]="unit.value">
-          {{unit.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class = "other-container">{{privateSubstanceAmount.units}}
+    <div>
+      <mat-form-field class="amount-units">
+        <mat-label>Units</mat-label>
+        <mat-select [formControl]="unitsControl">
+          <mat-option *ngFor="let unit of amountUnitList" [value]="unit.value">
+            {{unit.display}}
+          </mat-option>
+          <mat-option *ngIf = "privateSubstanceAmount.units && !inCV(  amountUnitList, privateSubstanceAmount.units) && privateSubstanceAmount.units !== ''"
+                      value = "{{privateSubstanceAmount.units}}">{{privateSubstanceAmount.units}} (not in CV)</mat-option>
+          <mat-option value = 'other' >Other (New Value)</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf = "privateSubstanceAmount.units === 'other'" class = "custom">
+      <input matInput placeholder="Custom value" (focusout) = "updateUnits($event.target)" name="custom" />
+    </div>
+    </div>
     <mat-form-field class="non-numeric-value">
         <input matInput placeholder="Non-numeric Value" [formControl]="nonNumericValueControl" />
       </mat-form-field>

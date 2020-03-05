@@ -7,6 +7,7 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
+import {AuthService} from "@gsrs-core/auth";
 
 /*
   used for any input that uses cv vocabulary to handle custom values after selecting 'other'
@@ -30,13 +31,15 @@ export class CvInputComponent implements OnInit, OnDestroy {
   dictionary: any;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
+  isAdmin: boolean;
 
   constructor(
     public cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private dictionaryService: DataDictionaryService
+    private dictionaryService: DataDictionaryService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
@@ -62,7 +65,8 @@ export class CvInputComponent implements OnInit, OnDestroy {
 
     }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    }
+    this.isAdmin = this.authService.hasRoles('admin');
+  }
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
