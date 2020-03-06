@@ -458,6 +458,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       } else {
         this.matSideNav.close();
       }
+
+      for (let facetIndex = 0; facetIndex < newFacets.length; facetIndex++) {
+        if (newFacets[facetIndex].name === 'ix.Class') {
+          if (facetIndex !== -1) {
+            newFacets.splice(facetIndex, 1);
+          }
+        }
+      }
       this.facets = newFacets;
       this.cleanFacets();
     });
