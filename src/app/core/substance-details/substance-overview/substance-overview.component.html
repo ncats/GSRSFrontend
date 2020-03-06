@@ -42,6 +42,10 @@
       <div class="name">Record UNII</div>
       <div class="value blue-font">{{substance._approvalIDDisplay}}</div>
     </div>
+    <div class="name-value" *ngIf="defaultCodes">
+      <div class="name">{{defaultCodeSystem}}</div>
+      <div class="value blue-font">{{defaultCodes}}</div>
+    </div>
     <div class="name-value">
       <div class="name">Record Status</div>
       <div class="value blue-font">{{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}</div>
