@@ -330,6 +330,8 @@
                     <a class="substance-name table-view-name" [routerLink]="['/substances', substance.uuid]">
                       {{substance._name}}
                     </a>
+                    <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
+                    </mat-icon>
                   </div>
 
                 </div>
