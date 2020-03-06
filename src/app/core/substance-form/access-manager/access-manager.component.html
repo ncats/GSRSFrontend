@@ -5,8 +5,8 @@
     [matTooltip]="tooltipMessage"
     (menuOpened)="menuOpened()"
     (menuClosed)="menuClosed()">
-    <mat-icon *ngIf="access.length">lock</mat-icon>
-    <mat-icon *ngIf="!access.length">lock_open</mat-icon>
+    <mat-icon svgIcon="lock" *ngIf="access.length"></mat-icon>
+    <mat-icon svgIcon="lock_open" *ngIf="!access.length"></mat-icon>
     <span>Access</span>
   </button>
   <mat-menu #accessMenu="matMenu" xPosition="before">

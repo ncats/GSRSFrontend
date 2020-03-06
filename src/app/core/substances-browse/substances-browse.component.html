@@ -8,7 +8,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="facet-search-container">
-          <mat-form-field class="">
+          <mat-form-field *ngIf="searchText[facet.name]">
             <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value" (ngModelChange)="filterFacets(topIndex, $event, facet.name)"
               placeholder="Search  {{facet.name}}">
           </mat-form-field>
@@ -53,10 +53,10 @@
            !searchText[facet.name] || searchText[facet.name].value == '')">
              <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf ="(!facet.$total ||
               facet.$total > facet.values.length)">
-            More...{{searchText[facet.name].value}}
+            More...{{searchText[facet.name] && searchText[facet.name].value || ''}}
           </a>
              <a class="show-more" *ngIf = "facet.values.length > 10" (click)="lessFacets(topIndex)">
-            Show Less {{searchText[facet.name].value}}
+            Show Less {{searchText[facet.name] &&searchText[facet.name].value || ''}}
           </a>
           </span>
         </div>
@@ -330,6 +330,8 @@
                     <a class="substance-name table-view-name" [routerLink]="['/substances', substance.uuid]">
                       {{substance._name}}
                     </a>
+                    <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
+                    </mat-icon>
                   </div>
 
                 </div>
