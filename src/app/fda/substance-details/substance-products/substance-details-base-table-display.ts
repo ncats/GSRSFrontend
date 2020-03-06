@@ -61,7 +61,7 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
 
     this.paged = [];
 
-    if(this.filtered){
+    if (this.filtered) {
      for (let i = 0; i < this.filtered.length; i++) {
        if (this.filtered[i] != null) {
           this.paged.push(this.filtered[i]);

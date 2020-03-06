@@ -30,7 +30,8 @@
               </mat-checkbox>
               <mat-checkbox class="exclude" matTooltip="Exclude"
                 (change)="updateFacetSelection($event, facet.name, value.label, false)"
-                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
+                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false"
+                *ngIf="facet.$showAdvanced">
               </mat-checkbox>
             </div>
             <div class="facet-value-label">
@@ -87,7 +88,11 @@
           </div>
         </div>
       -->
-
+      <div class="facet-advanced-options-link">
+        <a (click)="facet.$showAdvanced = !facet.$showAdvanced">
+          <span *ngIf="facet.$showAdvanced">hide </span>advanced options
+        </a>
+      </div>
         <div class="facet-actions">
           <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
             [(ngModel)]="facetParams[facet.name].isAllMatch" (click)="sendFacetsEvent($event, facet.name)">

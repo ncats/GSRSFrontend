@@ -17,7 +17,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   vocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   view = 'details';
   substanceUpdated = new Subject<SubstanceDetail>();
-  cvType : string = 'AMINO_ACID_RESIDUE';
+  cvType = 'AMINO_ACID_RESIDUE';
 
 
   constructor(
@@ -34,7 +34,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         && this.substance.protein.subunits.length) {
         this.subunits = this.substance.protein.subunits;
         this.countUpdate.emit(this.subunits.length);
-	this.cvType = 'AMINO_ACID_RESIDUE';
+        this.cvType = 'AMINO_ACID_RESIDUE';
         this.getVocabularies();
       } else if (this.substance != null
         && this.substance.nucleicAcid != null
@@ -42,7 +42,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         && this.substance.nucleicAcid.subunits.length) {
         this.subunits = this.substance.nucleicAcid.subunits;
         this.countUpdate.emit(this.subunits.length);
-	this.cvType = 'NUCLEIC_ACID_BASE';
+        this.cvType = 'NUCLEIC_ACID_BASE';
         this.getVocabularies();
       }
   }
@@ -50,9 +50,9 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   ngAfterViewInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
-      if(this.substance.protein){
+      if (this.substance.protein) {
           this.subunits = this.substance.protein.subunits;
-      }else if(this.substance.nucleicAcid){
+      } else if (this.substance.nucleicAcid) {
           this.subunits = this.substance.nucleicAcid.subunits;
       }
       this.countUpdate.emit(this.subunits.length);

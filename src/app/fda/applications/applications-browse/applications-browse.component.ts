@@ -377,40 +377,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   private populateFacets(facets: Array<Facet>): void {
-    if (this.configService.configData.facets != null) {
-      if (this.configService.configData.facets.default != null && this.configService.configData.facets.default.length) {
-        this.configService.configData.facets.default.forEach(facet => {
-          for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
-            if (facet === facets[facetIndex].name) {
-              if (facets[facetIndex].values != null && facets[facetIndex].values.length) {
-                let hasValues = false;
-                for (let valueIndex = 0; valueIndex < facets[facetIndex].values.length; valueIndex++) {
-                  if (facets[facetIndex].values[valueIndex].count) {
-                    hasValues = true;
-                    break;
-                  }
-                }
-                this.searchText[facets[facetIndex].name] = { value: '', isLoading: false};
-                // Commenting the following lines at this moment.  These lines are causing not to display
-                // Application Type and Application Status facets in Browse Application page. It is causing conflict
-                // between Browse Substance facets in config file.
-                /*
-                if (hasValues) {
-                  const facetToAdd = facets.splice(facetIndex, 1);
-                  facetIndex--;
-                  this.facets.push(facetToAdd[0]);
-                }
-                */
-              }
-              break;
-            }
-          }
-        });
-      }
-    }
-
-    // Remove ix.Class from facet
     for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
+      this.searchText[facets[facetIndex].name] = { value: '', isLoading: false};
       if (facets[facetIndex].name === 'ix.Class') {
         if (facetIndex !== -1) {
           facets.splice(facetIndex, 1);
