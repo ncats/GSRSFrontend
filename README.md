@@ -33,7 +33,7 @@ The first time you do this, it will take a while to download all required packag
 You should repeat this step whenever somebody adds a new package to the application. It's probably not a bad idea to run it whenever you start working on the application
 
 
-## Perform a One-Time Build
+## Perform a One-Time Build of dependencies
 
 You'll have to run the following commands the first time you work on the application to make sure a few libraries are built and ready to be used by the application:
 
