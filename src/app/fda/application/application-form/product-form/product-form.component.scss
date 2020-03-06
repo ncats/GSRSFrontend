@@ -1,0 +1,20 @@
+.details-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+    /*padding: 20px;*/
+  }
+  
+.details-box {
+  max-width: 1028px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+  
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}

@@ -1,0 +1,123 @@
+<br>
+<div *ngIf="application">
+  <div class="details-container margintop90px">
+    <mat-card class="bordergray">
+
+      <mat-card-title>
+        Register Application
+      </mat-card-title>
+
+      <mat-card-content>
+        <br>
+        <div class="form-row">
+          <mat-form-field class="">
+            <mat-label>Center</mat-label>
+            <mat-select matNativeControl [(ngModel)]="application.center" name="center" required>
+              <mat-option *ngFor="let center of centerList" [value]="center.value">
+                {{center.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <mat-label>Application Type</mat-label>
+            <mat-select matNativeControl [(ngModel)]="application.appType" name="appType" required>
+              <mat-option *ngFor="let appType of appTypeList" [value]="appType.value">
+                {{appType.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input matInput placeholder="Application Number" [(ngModel)]="application.appNumber" name="appNumber"
+              required />
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <mat-label>Application Status</mat-label>
+            <mat-select matNativeControl [(ngModel)]="application.appStatus" name="appStatus">
+              <mat-option *ngFor="let appStatus of appStatusList" [value]="appStatus.value">
+                {{appStatus.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input matInput placeholder="Submit Date" [(ngModel)]="application.submitDate" name="submitDate" />
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input matInput placeholder="Status Date" [(ngModel)]="application.statusDate" name="statusDate" />
+          </mat-form-field>
+        </div>
+
+        <!-- SECOND ROW -->
+        <div class="form-row">
+          <mat-form-field class="">
+            <mat-label>Public Domain</mat-label>
+            <mat-select matNativeControl [(ngModel)]="application.publicDomain" name="publicDomain">
+              <mat-option *ngFor="let publicDomain of publicDomainList" [value]="publicDomain.value">
+                {{publicDomain.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input matInput placeholder="Non Proprietary Name" [(ngModel)]="application.nonProprietaryName"
+              name="nonProprietaryName" />
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input matInput placeholder="Sponsor Name" [(ngModel)]="application.sponsorName" name="sponsorName" />
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <mat-label>Application Sub Type</mat-label>
+            <mat-select matNativeControl [(ngModel)]="application.appSubType" name="appSubType">
+              <mat-option *ngFor="let appSubType of appSubTypeList" [value]="appSubType.value">
+                {{appSubType.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input matInput placeholder="Division Class Desc" [(ngModel)]="application.divisionClassDesc"
+              name="divisionClassDesc" />
+          </mat-form-field>
+        </div>
+
+
+        <!-- THIRD ROW -->
+        <div class="form-row">
+          <mat-form-field class="">
+            <input matInput placeholder="Title" [(ngModel)]="application.title" name="title" />
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input matInput placeholder="External Title" [(ngModel)]="application.externalTitle" name="externalTitle" />
+          </mat-form-field>
+        </div>
+
+
+        <!-- FOURTH ROW : Indication -->
+        <!--
+        <div class="form-row">
+          <div *ngFor="let ind of application.applicationIndicationList">
+            <mat-form-field class="">
+              <input matInput placeholder="Indication" [(ngModel)]="ind.indication" name="indication" />
+            </mat-form-field>   
+          </div>
+        </div>
+      -->
+      
+        <!-- FOURTH ROW : Product -->
+        <div class="form-row">
+          <app-product-form [application]="application"></app-product-form>
+        </div>
+
+
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+</div>
