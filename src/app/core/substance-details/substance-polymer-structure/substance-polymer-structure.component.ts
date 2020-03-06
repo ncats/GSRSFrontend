@@ -26,7 +26,7 @@ export class SubstancePolymerStructureComponent extends SubstanceCardBase implem
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       if (this.substance != null) {
-        this.structure = this.substance.polymer.displayStructure;
+        this.structure = this.substance.polymer.idealizedStructure;
         this.classification = this.substance.polymer.classification;
       }
       this.relatedSubstanceUuid = this.classification.parentSubstance && this.classification.parentSubstance.refuuid || '';
