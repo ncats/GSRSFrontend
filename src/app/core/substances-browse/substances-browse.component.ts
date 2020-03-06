@@ -437,10 +437,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
       }
 
+/* Commented out for now, would show extra facets if not enough shown
       if (newFacets.length < 15) {
-
         const numFillFacets = 15 - newFacets.length;
-
         let sortedFacets = _.orderBy(facets, facet => {
           let valuesTotal = 0;
           facet.values.forEach(value => {
@@ -452,6 +451,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         newFacets = newFacets.concat(additionalFacets);
         sortedFacets = null;
       }
+*/
 
       if (newFacets.length > 0) {
         this.processResponsiveness();
