@@ -22,18 +22,15 @@
         AL
       </mat-checkbox>
     </div>
+
     <mat-form-field class="name">
       <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" />
     </mat-form-field>
     <a class = "resolve" *ngIf = "name.name && name.name.length > 0 && substanceType === 'structure'" (click) = "resolve()" >resolve</a>
-    <mat-form-field class="name-type">
-      <mat-label>Type</mat-label>
-      <mat-select [(ngModel)]="name.type" required name="type">
-        <mat-option *ngFor="let nameType of nameTypes" [value]="nameType.value">
-          {{nameType.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+
+    <app-cv-input required = 'true' class="name-type" key = "Name Type Code"  title = "Type" [model] = "name.type"
+                  (valueChange)= "name.type = $event">
+    </app-cv-input>
     <div>
       <app-access-manager (accessOut)="updateAccess($event)" [access]="name.access">
       </app-access-manager>

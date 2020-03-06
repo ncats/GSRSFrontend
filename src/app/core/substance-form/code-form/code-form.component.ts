@@ -63,7 +63,10 @@ export class CodeFormComponent implements OnInit {
     delete this.privateCode.$$deletedCode;
   }
 
-  setCodeSystemType(): void {
+  setCodeSystemType(event?: any): void {
+    if (event) {
+      this.code.codeSystem = event;
+    }
     if (this.privateCode != null && this.codeSystemDictionary != null) {
       this.codeSystemType = this.codeSystemDictionary[this.privateCode.codeSystem]
         && this.codeSystemDictionary[this.privateCode.codeSystem].systemCategory || '';

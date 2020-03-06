@@ -7,6 +7,7 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
+import {AuthService} from '@gsrs-core/auth';
 
 /*
   used for any input that uses cv vocabulary to handle custom values after selecting 'other'
@@ -22,6 +23,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
   @Input() title?: string;
   @Input() domain?: string;
   @Input() key?: string;
+  @Input() required?: boolean;
   @Output()
   valueChange = new EventEmitter<string>();
   vocabName = '';
@@ -29,13 +31,15 @@ export class CvInputComponent implements OnInit, OnDestroy {
   dictionary: any;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
+  isAdmin: boolean;
 
   constructor(
     public cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private dictionaryService: DataDictionaryService
+    private dictionaryService: DataDictionaryService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
@@ -43,20 +47,26 @@ export class CvInputComponent implements OnInit, OnDestroy {
       this.vocabulary = this.addOtherOption(this.vocabulary, this.privateMod);
     } else if (this.key) {
       this.dictionary = this.dictionaryService.getDictionaryRow(this.key);
-      this.title = this.dictionary.fieldName;
+      if (!this.title) {
+        this.title = this.dictionary.fieldName;
+      }
       this.vocabName = this.dictionary.CVDomain;
-      this.cvService.getDomainVocabulary(this.vocabName).subscribe(response => {
+     const cvSubscription =  this.cvService.getDomainVocabulary(this.vocabName).subscribe(response => {
         this.vocabulary = response[this.vocabName].list;
       });
+      this.subscriptions.push(cvSubscription);
     } else {
       this.vocabulary = [];
     this.vocabName = this.domain;
-      this.cvService.getDomainVocabulary(this.vocabName).subscribe(response => {
+      const cvSubscription =  this.cvService.getDomainVocabulary(this.vocabName).subscribe(response => {
         this.vocabulary = response[this.vocabName].list;
       });
-      }
-    this.overlayContainer = this.overlayContainerService.getContainerElement();
+      this.subscriptions.push(cvSubscription);
+
     }
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.isAdmin = this.authService.hasRoles('admin');
+  }
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
@@ -96,12 +106,13 @@ export class CvInputComponent implements OnInit, OnDestroy {
   }
 
   addToVocab() {
-    this.cvService.fetchFullVocabulary(this.vocabName).subscribe ( response => {
+    const vocabSubscription = this.cvService.fetchFullVocabulary(this.vocabName).subscribe ( response => {
       if (response.content && response.content.length > 0) {
         const toPut = response.content[0];
         this.openDialog(toPut, this.privateMod);
       }
     });
+    this.subscriptions.push(vocabSubscription);
   }
 
   updateOrigin(event): void {
