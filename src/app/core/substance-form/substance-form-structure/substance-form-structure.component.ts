@@ -37,13 +37,16 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
       this.substanceType = def.substanceClass;
       if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
-        this.substanceFormService.substanceDisplayStructure.subscribe(structure => {
+        this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
           if (structure) {
             this.structure = structure;
           } else {
-            this.substanceFormService.substanceIdealizedStructure.subscribe(structure2 => {
-              this.structure = structure2;
-            });
+	   // while we also want to do something with display structures eventually,
+           // this isn't the place to do it, I don't think ...
+           //
+           // this.substanceFormService.substanceDisplayStructure.subscribe(structure2 => {
+           //   this.structure = structure2;
+           // });
           }
           this.loadStructure();
         });
