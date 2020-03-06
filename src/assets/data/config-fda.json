@@ -87,20 +87,6 @@
       "filters": [{
         "filterName": "equals",
         "propertyToCheck": "substanceClass",
-        "value": "protein"
-      },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "protein.subunits"
-        }
-      ]
-    },
-    {
-      "card": "substance-subunits",
-      "title": "subunits",
-      "filters": [{
-        "filterName": "equals",
-        "propertyToCheck": "substanceClass",
         "value": "nucleicAcid"
       },
         {
