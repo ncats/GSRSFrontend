@@ -23,8 +23,8 @@ import { searchSortValues } from '../utils/search-sort-values';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location, LocationStrategy } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
-import { Subscription, Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Subscription, Observable, Subject } from 'rxjs';
+import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-substances-browse',
@@ -60,7 +60,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public sortValues = searchSortValues;
   showAudit: boolean;
   public facetBuilder: SubstanceFacetParam;
-  searchText: string[] = [];
+  searchText: { [faceName: string]: { value: string, isLoading: boolean } } = {};
   private overlayContainer: HTMLElement;
   toggle: Array<boolean> = [];
   searchtext2: string;
@@ -74,6 +74,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       codeSystems?: { [codeSystem: string]: Array<SubstanceCode> }
     }
   } = {};
+  private facetSearchChanged = new Subject<{ index: number, query: any}>();
+  private activeSearchedFaced: Facet;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -117,6 +119,46 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+
+    this.facetSearchChanged.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(event => {
+        const facet = this.facets[event.index];
+        if (event.query.length > 0) {
+          const processed = facet.name.replace(' ', '+');
+          return this.substanceService.filterFacets(event.query, processed).pipe(take(1));
+        } else {
+          return this.substanceService.retrieveFacetValues(facet).pipe(take(1));
+        }
+      })
+    ).subscribe(response => {
+      this.activeSearchedFaced.values = this.activeSearchedFaced.values.filter(value => {
+        let removeFacet = true;
+
+        let isInSearhResults = false;
+
+        for (let i = 0; i < response.content.length; i++) {
+          if (response.content[i].label === value.label) {
+            isInSearhResults = true;
+            break;
+          }
+        }
+
+        if (!isInSearhResults
+          && this.facetParams[this.activeSearchedFaced.name] != null
+          && (this.facetParams[this.activeSearchedFaced.name].params[value.label] === true
+            || this.facetParams[this.activeSearchedFaced.name].params[value.label] === false)) {
+              removeFacet = false;
+            }
+
+        return !removeFacet;
+      });
+      this.activeSearchedFaced.values = this.activeSearchedFaced.values.concat(response.content);
+      this.searchText[this.activeSearchedFaced.name].isLoading = false;
+    }, error => {
+      this.searchText[this.activeSearchedFaced.name].isLoading = false;
+    });
   }
 
   ngAfterViewInit() {
@@ -298,6 +340,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.codes[substanceId].codeSystemNames.push(code.codeSystem);
           }
         });
+        this.codes[substanceId].codeSystemNames = this.sortCodeSystems(this.codes[substanceId].codeSystemNames);
       }
       this.loadingService.setLoading(false);
     }, error => {
@@ -381,7 +424,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                       const facetToAdd = facets.splice(facetIndex, 1);
                       facetIndex--;
                       newFacets.push(facetToAdd[0]);
-                      this.searchText.push(facetToAdd[0].name);
+                      this.searchText[facetToAdd[0].name] = { value: '', isLoading: false};
                     }
                   }
                   break;
@@ -394,10 +437,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
       }
 
+/* Commented out for now, would show extra facets if not enough shown
       if (newFacets.length < 15) {
-
         const numFillFacets = 15 - newFacets.length;
-
         let sortedFacets = _.orderBy(facets, facet => {
           let valuesTotal = 0;
           facet.values.forEach(value => {
@@ -409,11 +451,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         newFacets = newFacets.concat(additionalFacets);
         sortedFacets = null;
       }
+*/
 
       if (newFacets.length > 0) {
         this.processResponsiveness();
       } else {
         this.matSideNav.close();
+      }
+
+      for (let facetIndex = 0; facetIndex < newFacets.length; facetIndex++) {
+        if (newFacets[facetIndex].name === 'ix.Class') {
+          if (facetIndex !== -1) {
+            newFacets.splice(facetIndex, 1);
+          }
+        }
       }
       this.facets = newFacets;
       this.cleanFacets();
@@ -819,24 +870,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
-  filterFacets(index: number, event: any) {
-    const facet = this.facets[index];
-    if (event.length > 0) {
-      const processed = facet.name.replace(' ', '+');
-      const subscription = this.substanceService.filterFacets(event, processed).subscribe(response => {
-        facet.values = response.content;
-        subscription.unsubscribe();
-      }, error => {
-        subscription.unsubscribe();
-      });
-    } else {
-      const subscription = this.substanceService.retrieveFacetValues(facet).subscribe(response => {
-        facet.values = response.content;
-        subscription.unsubscribe();
-      }, error => {
-        subscription.unsubscribe();
-      });
-    }
+  filterFacets(index: number, event: any, faceName: string): void {
+    this.searchText[faceName].isLoading = true;
+    this.activeSearchedFaced = this.facets[index];
+    this.facetSearchChanged.next({index: index, query: event});
+  }
+
+  clearFacetSearch(index: number, facetName: string): void {
+    this.searchText[facetName].value = '';
+    this.filterFacets(index, '', facetName);
   }
 
   downloadFile(response: any, filename: string): void {

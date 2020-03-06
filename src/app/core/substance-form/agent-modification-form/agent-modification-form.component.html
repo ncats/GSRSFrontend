@@ -18,7 +18,7 @@
   </div>
     <div class="flex-column form-content">
       <div class="form-row">
-        <app-cv-input [vocabulary] = "modTypeList" title = "Modification Role" [model] = "mod.agentModificationProcess" (valueChange)="updateProcess($event)"></app-cv-input>
+        <app-cv-input [vocabulary] = "modTypeList" title = "Modification Process" [model] = "mod.agentModificationProcess" (valueChange)="updateProcess($event)"></app-cv-input>
         <app-cv-input [vocabulary] = "modTypeList" title = "Modification Type" [model] = "mod.agentModificationType" (valueChange)="mod.agentModificationType = $event"></app-cv-input>
     <mat-form-field class="mod-type">
       <mat-label>Modification Role</mat-label>

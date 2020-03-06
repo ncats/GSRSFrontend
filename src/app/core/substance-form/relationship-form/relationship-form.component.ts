@@ -15,9 +15,6 @@ export class RelationshipFormComponent implements OnInit {
   relatedSubstanceUuid: string;
   mediatorSubstanceUuid: string;
   @Output() relationshipDeleted = new EventEmitter<SubstanceRelationship>();
-  relationshipTypeList: Array<VocabularyTerm> = [];
-  qualificationList: Array<VocabularyTerm> = [];
-  interactionTypeList: Array<VocabularyTerm> = [];
   deleteTimer: any;
 
   constructor(
@@ -26,7 +23,6 @@ export class RelationshipFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getVocabularies();
   }
 
   @Input()
@@ -43,13 +39,6 @@ export class RelationshipFormComponent implements OnInit {
     return this.privateRelationship;
   }
 
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE', 'QUALIFICATION', 'INTERACTION_TYPE').subscribe(response => {
-      this.relationshipTypeList = response['RELATIONSHIP_TYPE'].list;
-      this.qualificationList = response['QUALIFICATION'].list;
-      this.interactionTypeList = response['INTERACTION_TYPE'].list;
-    });
-  }
 
   deleteRelationship(): void {
     this.privateRelationship.$$deletedCode = this.utilsService.newUUID();

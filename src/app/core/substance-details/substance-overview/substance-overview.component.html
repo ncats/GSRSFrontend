@@ -42,6 +42,23 @@
       <div class="name">Record UNII</div>
       <div class="value blue-font">{{substance._approvalIDDisplay}}</div>
     </div>
+    <div class="name-value" *ngIf="defaultCodes">
+      <div class="name">{{defaultCodeSystem}}</div>
+      <div class="value blue-font">{{defaultCodes}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Record Protection Status</div>
+      <div class="value blue-font">
+        <span *ngIf="(substance.access && substance.access.length > 0) else lockedIndicator">
+          <span>Not a public record</span>&nbsp;
+          <mat-icon svgIcon="lock"></mat-icon>
+        </span>
+        <ng-template #lockedIndicator>
+          <span>Public record</span>&nbsp;
+          <mat-icon svgIcon="lock_open"></mat-icon>
+        </ng-template>
+      </div>
+    </div>
     <div class="name-value">
       <div class="name">Record Status</div>
       <div class="value blue-font">{{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}</div>
@@ -66,12 +83,12 @@
     </div>
       <div *ngIf="substance.nucleicAcid" class="diverseWrapper">
         <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidType">
-          <div class="name">Protein Type</div>
+          <div class="name">Nucleic Acid Type</div>
           <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidType}}</div>
         </div>
         <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidSubType">
-          <div class="name">Protein Sub-type</div>
-          <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.replace('|', ', ')}}</div>
+          <div class="name">Nucleic Acid Sub-type</div>
+          <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.join(', ')}}</div>
         </div>
         <div class="name-value" *ngIf="substance.nucleicAcid.sequenceType">
           <div class="name">Sequence Type</div>

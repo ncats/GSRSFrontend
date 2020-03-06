@@ -82,6 +82,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceMonomersModule),
   },
   {
+    componentId: 'substance-structural-units',
+    path: 'substance-structural-units',
+    loadChildren: () => import('./substance-details/substance-structural-units/substance-structural-units.module')
+      .then(m => m.SubstanceStructuralUnitsModule),
+  },
+  {
     componentId: 'substance-mixture-components',
     path: 'substance-mixture-components',
     loadChildren: () => import('./substance-details/substance-mixture-components/substance-mixture-components.module')
@@ -128,6 +134,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'substance-properties',
     loadChildren: () => import('./substance-details/substance-properties/substance-properties.module')
       .then(m => m.SubstancePropertiesModule),
+  },
+  {
+    componentId: 'substance-constituents',
+    path: 'substance-constituents',
+    loadChildren: () => import('./substance-details/substance-constituents/substance-constituents.module')
+      .then(m => m.SubstanceConstituentsModule),
   },
   {
     componentId: 'substance-primary-definition',

@@ -21,6 +21,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   anchorElement: HTMLAnchorElement;
   smiles: string;
   mol: string;
+  isInitializing = true;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -36,13 +37,16 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
       this.substanceType = def.substanceClass;
       if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
-        this.substanceFormService.substanceDisplayStructure.subscribe(structure => {
+        this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
           if (structure) {
             this.structure = structure;
           } else {
-            this.substanceFormService.substanceIdealizedStructure.subscribe(structure2 => {
-              this.structure = structure2;
-            });
+	   // while we also want to do something with display structures eventually,
+           // this isn't the place to do it, I don't think ...
+           //
+           // this.substanceFormService.substanceDisplayStructure.subscribe(structure2 => {
+           //   this.structure = structure2;
+           // });
           }
           this.loadStructure();
         });
@@ -70,13 +74,24 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
       this.mol = null;
       this.updateStructureForm(molfile);
     });
+    this.isInitializing = false;
+  }
+
+  startInitializing(): void {
+    this.isInitializing = true;
+  }
+
+  endInitializing(): void {
+    this.isInitializing = false;
   }
 
   loadStructure(): void {
     if (this.structure && this.structureEditor && this.structure.molfile) {
+      this.isInitializing = true;
       this.structureEditor.setMolecule(this.structure.molfile);
       this.smiles = this.structure.smiles;
       this.mol = this.structure.molfile;
+      this.isInitializing = false;
     }
   }
 
@@ -86,9 +101,11 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   }
 
   updateStructureForm(molfile: string): void {
-    this.structureService.postStructure(molfile).subscribe(response => {
-      this.processStructurePostResponse(response);
-    });
+    if (!this.isInitializing) {
+       this.structureService.postStructure(molfile).subscribe(response => {
+          this.processStructurePostResponse(response);
+       });
+    }
   }
 
   processStructurePostResponse(structurePostResponse?: StructurePostResponse): void {

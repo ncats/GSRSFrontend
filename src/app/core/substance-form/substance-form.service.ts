@@ -1696,7 +1696,6 @@ unapproveRecord() {
 
           this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
-        this.structuralModRefToComment();
         observer.next(this.substance.modifications.structuralModifications);
         this.substanceStructuralModificationsEmitter.subscribe(structuralModifications => {
           observer.next(this.substance.modifications.structuralModifications);
@@ -1707,7 +1706,7 @@ unapproveRecord() {
 
   addSubstanceStructuralModification(): void {
     this.checkModifications();
-    const newStructuralModifications: StructuralModification = {references: []};
+    const newStructuralModifications: StructuralModification = {references: [], sites: [], access: []};
     this.substance.modifications.structuralModifications.unshift(newStructuralModifications);
     this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
   }
@@ -1728,31 +1727,7 @@ unapproveRecord() {
     this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
   }
 
-  structuralModRefToComment() {
-    if (this.substance.modifications && this.substance.modifications.structuralModifications) {
-      this.substance.modifications.structuralModifications.forEach(mod => {
-        if (mod.references) {
-          mod.references.forEach(ref => {
-            if (ref.substr(0, 8) === 'comment:') {
-              mod.comment = ref.substr(8);
-            }
-          });
-          mod.references = mod.references.filter(ref => ref.substr(0, 8) !== 'comment:');
-        }
-      });
-    }
-  }
 
-  structuralModCommentToRef() {
-    if (this.substance.modifications && this.substance.modifications.structuralModifications) {
-      this.substance.modifications.structuralModifications.forEach(mod => {
-        if (mod.comment) {
-          mod.references.push('comment:' + mod.comment);
-          delete mod.comment;
-        }
-      });
-    }
-  }
 
 
   checkModifications(): void {
@@ -2023,8 +1998,6 @@ unapproveRecord() {
       }
     }
 
-    this.structuralModCommentToRef();
-
     let substanceString = JSON.stringify(this.substance);
     let substanceCopy: SubstanceDetail = JSON.parse(substanceString);
 
@@ -2159,7 +2132,6 @@ unapproveRecord() {
         this.substanceNamesEmitter.next(this.substance.notes);
         this.substancePropertiesEmitter.next(this.substance.properties);
         if (this.substance.modifications) {
-          this.structuralModRefToComment();
           this.substanceAgentModificationsEmitter.next(this.substance.modifications.agentModifications);
           this.substancePhysicalModificationsEmitter.next(this.substance.modifications.physicalModifications);
           this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
@@ -2179,7 +2151,6 @@ unapproveRecord() {
         observer.error(results);
         observer.complete();
       });
-        this.structuralModRefToComment();
     });
   }
 

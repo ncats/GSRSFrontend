@@ -9,6 +9,7 @@ import { AuthService } from '@gsrs-core/auth';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { StructureService } from '@gsrs-core/structure';
 import { SubstanceSummaryDynamicContent } from './substance-summary-dynamic-content.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -32,6 +33,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private substanceService: SubstanceService,
     private structureService: StructureService,
     private componentFactoryResolver: ComponentFactoryResolver,
+    private router: Router,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
@@ -59,6 +61,9 @@ export class SubstanceSummaryCardComponent implements OnInit {
     this.openImage.emit(this.substance);
   }
 
+  editForm(): void {
+    this.router.navigate(['/substances/' + this.substance.uuid + '/edit']);
+  }
   getFasta(id: string, filename: string): void {
     this.substanceService.getFasta(id).subscribe(response => {
       this.downloadFile(response, filename);
