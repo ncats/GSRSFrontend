@@ -47,6 +47,19 @@
       <div class="value blue-font">{{defaultCodes}}</div>
     </div>
     <div class="name-value">
+      <div class="name">Record Protection Status</div>
+      <div class="value blue-font">
+        <span *ngIf="(substance.access && substance.access.length > 0) else lockedIndicator">
+          <span>Not a public record</span>&nbsp;
+          <mat-icon svgIcon="lock"></mat-icon>
+        </span>
+        <ng-template #lockedIndicator>
+          <span>Public record</span>&nbsp;
+          <mat-icon svgIcon="lock_open"></mat-icon>
+        </ng-template>
+      </div>
+    </div>
+    <div class="name-value">
       <div class="name">Record Status</div>
       <div class="value blue-font">{{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}</div>
     </div>
