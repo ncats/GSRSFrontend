@@ -26,6 +26,7 @@ import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical
 import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/clinical-trial-europe-details/clinical-trial-europe-details.component';
 import { FacetDisplayPipe } from '../utils/facet-display.pipe';
 import { FacetFilterPipe } from '../utils/facet-filter.pipe';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const clinicalTrialsRoutes: Routes = [
    {
@@ -68,7 +69,8 @@ const clinicalTrialsRoutes: Routes = [
     MatCheckboxModule,
     MatSelectModule,
     CommonModule,
-    RouterModule.forChild(clinicalTrialsRoutes)
+    RouterModule.forChild(clinicalTrialsRoutes),
+    MatProgressBarModule
   ],
   declarations: [
     MiniSearchComponent,

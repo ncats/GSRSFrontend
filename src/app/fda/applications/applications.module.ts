@@ -35,6 +35,7 @@ import { ApplicationDetailsBaseComponent } from './application-details/applicati
 import { ApplicationEditComponent } from './application-edit/application-edit.component';
 import { ApplicationAddComponent } from './application-add/application-add.component';
 import { FacetFilterFdaPipe } from '../utils/facet-filter-fda.pipe';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const applicationRoutes: Routes = [
   {
@@ -84,7 +85,8 @@ const applicationRoutes: Routes = [
     MatBottomSheetModule,
     FormsModule,
     ReactiveFormsModule,
-    OverlayModule
+    OverlayModule,
+    MatProgressBarModule
   ],
   declarations: [
     ApplicationsBrowseComponent,
