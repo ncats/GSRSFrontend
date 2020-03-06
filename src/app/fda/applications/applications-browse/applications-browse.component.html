@@ -13,14 +13,15 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-form-field class="">
-          <input matInput class="search" type="text" [ngModel]="searchText[facet.name]"
-            (ngModelChange)="filterFacets(topIndex, $event)" placeholder="Search  {{facet.name}}">
-        </mat-form-field>
-        <button mat-icon-button color="black" (click)="searchText[facet.name] = ''">
-          <mat-icon svgIcon="close"></mat-icon>
-        </button>
-        <ng-container *ngFor="let value of facet.values | facetFilterFda : searchText[facet.name]; index as index">
+        <div class="facet-search-container">
+          <mat-form-field *ngIf="searchText[facet.name]">
+            <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value" (ngModelChange)="filterFacets(topIndex, $event, facet.name)"
+              placeholder="Search  {{facet.name}}">
+          </mat-form-field>
+          <button mat-icon-button color="black" (click) = "clearFacetSearch(topIndex, facet.name)"><mat-icon svgIcon="close"></mat-icon></button>
+        </div>
+        <mat-progress-bar class="facet-search-loading" mode="indeterminate" *ngIf="searchText[facet.name] && searchText[facet.name].isLoading"></mat-progress-bar>
+          <ng-container  *ngFor="let value of facet.values; index as index">
           <div class="facet-value">
             <div class="facet-value-checkbox">
               <mat-checkbox class="include" matTooltip="Include"
@@ -48,13 +49,13 @@
               Show {{toggle[topIndex] === true ? 'all': 'less'}}
             </a>-->
           <span *ngIf="facet.values && facet.values.length >= 10 && (
-             !searchText[facet.name] || searchText[facet.name] == '')">
+            !searchText[facet.name] || searchText[facet.name].value == '')">
             <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf="(!facet.$total ||
                 facet.$total > facet.values.length)">
-              More...{{searchText[facet.name]}}
+                More...{{searchText[facet.name] && searchText[facet.name].value || ''}}
             </a>
             <a class="show-more" *ngIf="facet.values.length > 10" (click)="lessFacets(topIndex)">
-              Show Less {{searchText[facet.name]}}
+              Show Less {{searchText[facet.name] &&searchText[facet.name].value || ''}}
             </a>
           </span>
 

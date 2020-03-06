@@ -1,25 +1,24 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { ApplicationService } from '../service/application.service';
-import { ApplicationSrs, ClinicalTrial } from '../model/application.model';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ApplicationSrs } from '../model/application.model';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
 import * as _ from 'lodash';
 import { Facet } from '@gsrs-core/utils';
 import { LoadingService } from '@gsrs-core/loading';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatSidenav } from '@angular/material/sidenav';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { PageEvent, MatPaginatorIntl } from '@angular/material';
-import { MatTableModule } from '@angular/material/table';
+import { PageEvent } from '@angular/material';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 import { Environment } from '@environment';
+import { Subscription, Observable, Subject } from 'rxjs';
+import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-applications-browse',
@@ -55,8 +54,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   // public sortValues = searchSortValues;
   // showAudit: boolean;
   // public facetBuilder: SubstanceFacetParam;
-   searchText: string[] = [];
+  searchText: { [faceName: string]: { value: string, isLoading: boolean } } = {};
   // private overlayContainer: HTMLElement;
+  private facetSearchChanged = new Subject<{ index: number, query: any}>();
+  private activeSearchedFaced: Facet;
 
   constructor(
     public applicationService: ApplicationService,
@@ -119,6 +120,45 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
 
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
 
+    this.facetSearchChanged.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(event => {
+        const facet = this.facets[event.index];
+        if (event.query.length > 0) {
+          const processed = facet.name.replace(' ', '+');
+          return this.applicationService.filterFacets(event.query, processed).pipe(take(1));
+        } else {
+          return this.applicationService.retrieveFacetValues(facet).pipe(take(1));
+        }
+      })
+    ).subscribe(response => {
+      this.activeSearchedFaced.values = this.activeSearchedFaced.values.filter(value => {
+        let removeFacet = true;
+
+        let isInSearhResults = false;
+
+        for (let i = 0; i < response.content.length; i++) {
+          if (response.content[i].label === value.label) {
+            isInSearhResults = true;
+            break;
+          }
+        }
+
+        if (!isInSearhResults
+          && this.facetParams[this.activeSearchedFaced.name] != null
+          && (this.facetParams[this.activeSearchedFaced.name].params[value.label] === true
+            || this.facetParams[this.activeSearchedFaced.name].params[value.label] === false)) {
+              removeFacet = false;
+            }
+
+        return !removeFacet;
+      });
+      this.activeSearchedFaced.values = this.activeSearchedFaced.values.concat(response.content);
+      this.searchText[this.activeSearchedFaced.name].isLoading = false;
+    }, error => {
+      this.searchText[this.activeSearchedFaced.name].isLoading = false;
+    });
   }
 
   ngAfterViewInit() {
@@ -350,7 +390,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
                     break;
                   }
                 }
-
+                this.searchText[facets[facetIndex].name] = { value: '', isLoading: false};
                 // Commenting the following lines at this moment.  These lines are causing not to display
                 // Application Type and Application Status facets in Browse Application page. It is causing conflict
                 // between Browse Substance facets in config file.
@@ -379,22 +419,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     }
 
     this.facets = facets;
-
-    if (this.facets.length < 15) {
-
-      const numFillFacets = 20 - this.facets.length;
-
-      let sortedFacets = _.orderBy(facets, facet => {
-        let valuesTotal = 0;
-        facet.values.forEach(value => {
-          valuesTotal += value.count;
-        });
-        return valuesTotal;
-      }, 'desc');
-      const additionalFacets = _.take(sortedFacets, numFillFacets);
-      this.facets = this.facets.concat(additionalFacets);
-      sortedFacets = null;
-    }
   }
 
   applyFacetsFilter(facetName: string) {
@@ -438,24 +462,15 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     });
   }
 
-  filterFacets(index: number, event: any) {
-    const facet = this.facets[index];
-    if (event.length > 0) {
-      const processed = facet.name.replace(' ', '+');
-      const subscription = this.applicationService.filterFacets(event, processed).subscribe(response => {
-        facet.values = response.content;
-        subscription.unsubscribe();
-      }, error => {
-        subscription.unsubscribe();
-      });
-    } else {
-      const subscription = this.applicationService.retrieveFacetValues(facet).subscribe(response => {
-        facet.values = response.content;
-        subscription.unsubscribe();
-      }, error => {
-        subscription.unsubscribe();
-      });
-    }
+  filterFacets(index: number, event: any, faceName: string): void {
+    this.searchText[faceName].isLoading = true;
+    this.activeSearchedFaced = this.facets[index];
+    this.facetSearchChanged.next({index: index, query: event});
+  }
+
+  clearFacetSearch(index: number, facetName: string): void {
+    this.searchText[facetName].value = '';
+    this.filterFacets(index, '', facetName);
   }
 
   get searchTerm(): string {
