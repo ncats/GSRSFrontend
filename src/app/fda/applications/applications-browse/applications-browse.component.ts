@@ -377,17 +377,16 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   private populateFacets(facets: Array<Facet>): void {
-    const indexesToRemove = [];
-    for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
-      this.searchText[facets[facetIndex].name] = { value: '', isLoading: false};
-      if (facets[facetIndex].name === 'ix.Class') {
-        indexesToRemove.push(facetIndex);
+    facets = facets.filter(facet => {
+      let include = true;
+      if (facet.name === 'ix.Class') {
+        include = false;
+      } else {
+        this.searchText[facet.name] = { value: '', isLoading: false};
       }
-    }
-    indexesToRemove.forEach(index => {
-      facets.splice(index, 1);
+      return include;
     });
-    this.facets = facets;
+    this.facets =  facets;
   }
 
   applyFacetsFilter(facetName: string) {
