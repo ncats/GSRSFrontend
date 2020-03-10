@@ -13,7 +13,7 @@ environment.navItems = [
     },
     {
         display: 'Register Application',
-        path: 'register/application'
+        path: 'application/register'
     }
 ];
 environment.appId = 'fda';

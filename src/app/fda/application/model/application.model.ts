@@ -5,7 +5,7 @@ export interface ApplicationSrs {
   title?: string;
   sponsorName?: string;
   nonProprietaryName?: string;
-  submitDate?: number;
+  submitDate?: string;
   appSubType?: string;
   divisionClassDesc?: string;
   status?: string;
@@ -16,9 +16,18 @@ export interface ApplicationSrs {
   provenance?: string;
   externalTitle?: string;
   statusDate?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  isDisabled?: boolean;
   applicationProductList?: Array<ProductSrs>;
   applicationIndicationList?: Array<ApplicationIndicationSrs>;
   clinicalTrialList?: Array<ClinicalTrial>;
+  productTechEffectList?: Array<ProductTechnicalEffect>;
+  productEffectedList?: Array<ProductEffected>;
+  applicationHistoryList?: Array<ApplicationSrsHistory>;
 }
 
 export interface ProductSrs {
@@ -31,6 +40,10 @@ export interface ProductSrs {
   unit?: string;
   reviewedBy?: string;
   reviewDate?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
   internalVersion?: number;
   applicationProductNameList?: Array<ProductNameSrs>;
   applicationIngredientList?: Array<ApplicationIngredient>;
@@ -40,6 +53,10 @@ export interface ProductNameSrs {
   id?: number;
   productName?: string;
   productNameType?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
   internalVersion?: number;
 }
 
@@ -47,11 +64,40 @@ export interface ApplicationIngredient {
   id?: number;
   applicantIngredName?: string;
   bdnum?: string;
+  basisOfStrengthBdnum?: string;
   internalVersion?: number;
   substanceId?: string;
   ingredientName?: string;
   activeMoietyUnii?: string;
   activeMoietyName?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  average?: string;
+  low?: string;
+  high?: string;
+  ingredientType?: string;
+  unit?: string;
+  farmSubstanceId?: number;
+  farmSubstance?: string;
+  reviewedBy?: string;
+  reviewDate?: number;
+  grade?: string;
+  basisOfStrengthName?: string;
+  ingBasisMessage?: string;
+  ingNameMessage?: string;
+  basisOfStrengthSubstanceId?: string;
+  subRelationshipList?: Array<SubRelationship>;
+}
+
+export interface SubRelationship {
+  id?: string;
+  substanceId?: string;
+  ownerBdnum?: string;
+  relationshipType?: string;
+  relationshipName?: string;
+  relationshipUnii?: string;
 }
 
 export interface ApplicationIndicationSrs {
@@ -65,6 +111,35 @@ export interface ApplicationIndicationSrs {
   reviewedBy?: string;
   reviewDate?: number;
   internalVersion?: number;
+}
+
+export interface ProductTechnicalEffect {
+  id?: number;
+  technicalEffect?: string;
+  farmTechEffectId?: number;
+  substanceId?: number;
+  createdBy?: string;
+  createDate?: number;
+  internalVersion?: number;
+}
+
+export interface ProductEffected {
+  id?: number;
+  effectedProduct?: string;
+  farmProductId?: number;
+  substanceId?: number;
+  createdBy?: string;
+  createDate?: number;
+  internalVersion?: number;
+}
+
+export interface ApplicationSrsHistory {
+  id?: number;
+  productName?: string;
+  sponsorName?: string;
+  status?: string;
+  statusDate?: number;
+  createDate?: number;
 }
 
 export interface ClinicalTrial {

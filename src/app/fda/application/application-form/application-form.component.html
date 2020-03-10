@@ -97,7 +97,7 @@
             <input matInput placeholder="External Title" [(ngModel)]="application.externalTitle" name="externalTitle" />
           </mat-form-field>
         </div>
-
+     
 
         <!-- FOURTH ROW : Indication -->
         <!--
@@ -115,7 +115,7 @@
           <app-product-form [application]="application"></app-product-form>
         </div>
 
-
+        <button mat-flat-button color="primary" class = "validate-button" (click)="showJSON()" >Show JSON</button>
       </mat-card-content>
 
     </mat-card>

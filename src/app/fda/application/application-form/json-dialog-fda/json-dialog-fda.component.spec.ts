@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApplicationEditComponent } from './application-edit.component';
+import { JsonDialogComponent } from './json-dialog.component';
 
-describe('ApplicationEditComponent', () => {
-  let component: ApplicationEditComponent;
-  let fixture: ComponentFixture<ApplicationEditComponent>;
+describe('JsonDialogComponent', () => {
+  let component: JsonDialogComponent;
+  let fixture: ComponentFixture<JsonDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ApplicationEditComponent ]
+      declarations: [ JsonDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ApplicationEditComponent);
+    fixture = TestBed.createComponent(JsonDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

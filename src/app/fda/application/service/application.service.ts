@@ -177,19 +177,25 @@ export class ApplicationService extends BaseHttpService {
   }
 
   loadApplication(application?: ApplicationSrs): void {
-    if (application != null) {
-      this.application = application;
+    setTimeout(() => {
+      console.log('AAAAA');
+      if (application != null) {
+        this.application = application;
+        console.log('AFTER' + JSON.stringify(this.application));
+      } else {
+        this.application = {
+          applicationIndicationList: [],
+          applicationProductList: [{
+            applicationProductNameList: [],
+            applicationIngredientList: [{}]
+          }]
+        };
+      }
+    });
+  }
 
-    } else {
-      this.application = {
-        applicationIndicationList: [],
-        applicationProductList: [{
-          applicationProductNameList: [],
-          applicationIngredientList: [{}]
-        }]
-      };
-    }
-
+  getJson() {
+    return this.application;
   }
 
   getUpdateApplicationUrl(): string {

@@ -11,10 +11,11 @@ import { MatCardModule } from '@angular/material/card';
 import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
-import { ApplicationModule} from './application/applications.module';
+import { ApplicationModule} from './application/application.module';
 import { ProductModule} from './product/product.module';
 import { GeneralService} from './service/general.service';
 import { MatTabsModule } from '@angular/material/tabs';
+
 // import { FacetDisplayPipe } from '../fda/utils/facet-display.pipe';
 // import { FacetFilterPipe } from '../fda/utils/facet-filter.pipe';
 
@@ -22,10 +23,6 @@ import { ApplicationsBrowseComponent } from './application/applications-browse/a
 import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
 
 const fdaRoutes: Routes = [
-  {
-    path: 'browse-applications',
-    component: ApplicationsBrowseComponent
-  },
   {
     path: 'browse-clinical-trial',
     component: ClinicalTrialsBrowseComponent
@@ -47,7 +44,7 @@ const fdaRoutes: Routes = [
     ProductModule
   ],
   declarations: [
-    SubstanceCountsComponent,
+    SubstanceCountsComponent
     // FacetFilterPipe,
     // FacetDisplayPipe
   ],

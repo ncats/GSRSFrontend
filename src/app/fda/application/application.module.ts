@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, Routes, RouterModule } from '@angular/router';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {NgxJsonViewerModule} from 'ngx-json-viewer';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -33,10 +34,11 @@ import { ApplicationDetailsComponent } from './application-details/application-d
 import { ApplicationDarrtsDetailsComponent } from './application-details/application-darrts-details/application-darrts-details.component';
 import { ApplicationDetailsBaseComponent } from './application-details/application-details-base.component';
 import { ApplicationFormComponent } from './application-form/application-form.component';
-import { ApplicationService } from './service/application.service';
-import { FacetFilterFdaPipe } from '../utils/facet-filter-fda.pipe';
 import { ProductFormComponent } from './application-form/product-form/product-form.component';
 import { IngredientFormComponent } from './application-form/ingredient-form/ingredient-form.component';
+import { JsonDialogFdaComponent } from './application-form/json-dialog-fda/json-dialog-fda.component';
+import { ApplicationService } from './service/application.service';
+import { FacetFilterFdaPipe } from '../utils/facet-filter-fda.pipe';
 
 const applicationRoutes: Routes = [
   {
@@ -52,7 +54,11 @@ const applicationRoutes: Routes = [
     component: ApplicationDarrtsDetailsComponent
   },
   {
-    path: 'register/application',
+    path: 'application/register',
+    component: ApplicationFormComponent
+  },
+  {
+    path: 'application/:id/edit',
     component: ApplicationFormComponent
   }
 ];
@@ -86,7 +92,8 @@ const applicationRoutes: Routes = [
     MatBottomSheetModule,
     FormsModule,
     ReactiveFormsModule,
-    OverlayModule
+    OverlayModule,
+    NgxJsonViewerModule
   ],
   declarations: [
     ApplicationsBrowseComponent,
@@ -97,9 +104,14 @@ const applicationRoutes: Routes = [
     FacetFilterFdaPipe,
     ProductFormComponent,
     IngredientFormComponent,
+    JsonDialogFdaComponent
   ],
   exports: [
-    ApplicationsBrowseComponent
+    ApplicationsBrowseComponent,
+    JsonDialogFdaComponent
+  ],
+  entryComponents: [
+    JsonDialogFdaComponent
   ]
 })
 
