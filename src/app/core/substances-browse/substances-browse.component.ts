@@ -25,6 +25,7 @@ import { Location, LocationStrategy } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 
 @Component({
   selector: 'app-substances-browse',
@@ -76,6 +77,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   } = {};
   private facetSearchChanged = new Subject<{ index: number, query: any}>();
   private activeSearchedFaced: Facet;
+  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion>} = {};
+  matchTypes?: Array<string> = [];
+  narrowSearchSuggestionsCount = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -283,6 +287,23 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.populateFacets(pagingResponse.facets);
           }
+          this.narrowSearchSuggestions = {};
+          this.matchTypes = [];
+          this.narrowSearchSuggestionsCount = 0;
+          if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+            pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+              if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+                this.narrowSearchSuggestions[suggestion.matchType] = [];
+                if (suggestion.matchType === 'WORD') {
+                  this.matchTypes.unshift(suggestion.matchType);
+                } else {
+                  this.matchTypes.push(suggestion.matchType);
+                }
+              }
+              this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+              this.narrowSearchSuggestionsCount++;
+            });
+          }
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
@@ -312,6 +333,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         });
     }
 
+  }
+
+  restricSearh(searchTerm: string): void {
+    this.privateSearchTerm = searchTerm;
+    this.searchSubstances();
   }
 
   setSubstanceNames(substanceId: string): void {
@@ -914,6 +940,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.processResponsiveness();
   }
 
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
 }
 
 interface DisplayFacet {
