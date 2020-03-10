@@ -118,7 +118,9 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
             unitIndex: index + sectionNumberAddend + 1,
             unitValue: sequenceSectionString[index]
           };
-
+          if (!this.vocabulary[sequenceUnit.unitValue.toUpperCase()]) {
+              sequenceUnit.class = 'error';
+          }
           sequenceSection.sectionUnits.push(sequenceUnit);
           index++;
         } else {
@@ -138,7 +140,13 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   }
 
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
-    return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${this.vocabulary[unitValue.toUpperCase()].display})`;
+    let vocabDisplay = '';
+    if (this.vocabulary[unitValue.toUpperCase()]) {
+      vocabDisplay = this.vocabulary[unitValue.toUpperCase()].display;
+    } else {
+      vocabDisplay = 'UNDEFINED';
+    }
+    return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocabDisplay})`;
   }
 
   updateView(event): void {
@@ -164,4 +172,5 @@ interface SequenceSection {
 interface SequenceUnit {
   unitIndex: number;
   unitValue: string;
+  class?: string;
 }
