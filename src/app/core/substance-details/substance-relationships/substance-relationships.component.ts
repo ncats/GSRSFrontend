@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceDetail, SubstanceRelationship} from '../../substance/substance.model';
-import { SafeUrl } from '@angular/platform-browser';
 import { UtilsService } from '../../utils/utils.service';
 import { ConfigService } from '../../config/config.service';
 import { MatDialog } from '@angular/material';
@@ -115,10 +114,6 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     } else {
       return false;
     }
-  }
-
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilService.getSafeStructureImgUrl(structureId, size);
   }
 
   openModal(templateRef) {

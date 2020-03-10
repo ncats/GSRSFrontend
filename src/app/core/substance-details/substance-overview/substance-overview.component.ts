@@ -137,10 +137,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     }
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 400): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
-  }
-
   getClassFromCv(): void {
     this.cvService.getDomainVocabulary('SUBSTANCE_CLASS').subscribe(response => {
       const classes = response['SUBSTANCE_CLASS'].list;

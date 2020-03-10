@@ -3,7 +3,7 @@
     This is a Definitional Concept of
     <div *ngFor="let definition of definitions">
       <div class="thumb-col">
-       <img class="image-thumb" [src]="getSafeStructureImgUrl(definition.refuuid)">
+       <img class="image-thumb" appSubstanceImage [entityId]="definition.refuuid">
         <div>
           <a class="substance-name" [routerLink]="['/substances', definition.refuuid]" >
             {{definition.refPname}}

@@ -39,10 +39,6 @@ export class SubstanceConstituentsComponent extends SubstanceCardBaseFilteredLis
     });
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
-  }
-
   public toString(amount: SubstanceAmount): string {
     return this.utilsService.displayAmount(amount);
   }

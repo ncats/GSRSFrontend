@@ -539,15 +539,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
-  }
-
-  getSafeStructureImgUrlLarge(structureId: string, size: number = 175): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
-  }
-
-
   updateFacetSelection(
     event: any,
     facetName: string,

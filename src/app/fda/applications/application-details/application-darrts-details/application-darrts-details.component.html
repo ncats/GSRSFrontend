@@ -153,7 +153,7 @@
               </td>
               <td>
                 <div *ngIf="x.substanceId">
-                  <img class="structure-img" [src]="getSafeStructureImgUrl(x.substanceId)">
+                  <img class="structure-img" appSubstanceImage [entityId]="x.substanceId">
                 </div>
               </td>
               <td>{{ x.bdnum }}</td>

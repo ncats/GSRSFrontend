@@ -64,10 +64,6 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   });
   }
 
-  getSafeStructureImgUrl(stereo: boolean, structureId: string, size: number = 150): SafeUrl {
-    return this.utilService.getSafeStructureImgUrl(structureId, size, stereo);
-  }
-
   toggleReferences() {
 
     const value = this.showDef ? 0 : 1;

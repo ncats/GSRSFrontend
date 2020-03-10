@@ -68,6 +68,7 @@ import { HighlightedSearchActionComponent } from './highlighted-search-action/hi
 import { CardDynamicSectionDirective } from './substances-browse/card-dynamic-section/card-dynamic-section.directive';
 import { SubstanceSummaryCardComponent } from './substances-browse/substance-summary-card/substance-summary-card.component';
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
+import { SubstanceImageModule } from './substance/substance-image.module';
 
 @NgModule({
   declarations: [
@@ -135,7 +136,8 @@ import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-s
     OverlayModule,
     NameResolverModule,
     MatBottomSheetModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    SubstanceImageModule
   ],
   providers: [
     ConfigService,

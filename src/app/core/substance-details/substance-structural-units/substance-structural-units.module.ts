@@ -7,6 +7,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import {SubstanceStructuralUnitsComponent} from '@gsrs-core/substance-details/substance-structural-units/substance-structural-units.component';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import {SubstanceStructuralUnitsComponent} from '@gsrs-core/substance-details/su
     MatInputModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    SubstanceImageModule
   ],
   declarations: [SubstanceStructuralUnitsComponent]
 })

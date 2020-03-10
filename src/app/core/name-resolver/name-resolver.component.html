@@ -13,7 +13,7 @@
   <div class="result-container">
     {{errorMessage}}
     <div class='name-result' *ngFor="let name of resolvedNames">
-      <img [src]="getSafeStructureImgUrl(name.value.id)" /><br />
+      <img appSubstanceImage [entityId]="name.value.id" /><br />
       {{name.source}}<br /><br />
       <button mat-raised-button color="primary" class="name-result-button"
         (click)="applyStructure(name.value.molfile)">Apply Structure</button>
@@ -22,7 +22,7 @@
 
     <ng-container *ngIf="matchedNames">
       <div class='name-result' *ngFor="let name of matchedNames.content">
-        <img [src]="getSafeStructureImgUrl(name.uuid)" /><br />
+        <img appSubstanceImage [entityId]="name.uuid" /><br />
         GSRS duplicate<br />
         {{  name._name}}
         <br />

@@ -14,6 +14,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatInputModule} from '@angular/material/input';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import {MatInputModule} from '@angular/material/input';
     CdkTableModule,
     MatTooltipModule,
     RouterModule,
-    MatSortModule
+    MatSortModule,
+    SubstanceImageModule
   ],
   declarations: [
     SubstanceConstituentsComponent

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
 import {MixtureComponents, SubstanceDetail} from '../../substance/substance.model';
-import { SafeUrl} from '@angular/platform-browser';
-import {UtilsService} from '../../utils/utils.service';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -17,9 +15,7 @@ export class SubstanceMixtureComponentsComponent extends SubstanceCardBase imple
   presentInOne: Array<MixtureComponents>;
   substanceUpdated = new Subject<SubstanceDetail>();
 
-  constructor(
-    private utilsService: UtilsService,
-  ) {
+  constructor() {
     super();
   }
 
@@ -37,10 +33,5 @@ export class SubstanceMixtureComponentsComponent extends SubstanceCardBase imple
       }
     });
   }
-
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
-  }
-
 
 }

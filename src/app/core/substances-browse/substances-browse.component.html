@@ -357,11 +357,11 @@
                   <div class="image-thumbnail">
                     <div *ngIf="substance.structure || substance.polymer">
                       <a class="zoom" (click)="openImageModal(substance)">
-                        <img [src]="getSafeStructureImgUrlLarge(substance.uuid)">
+                        <img appSubstanceImage [entityId]="substance.uuid">
                       </a>
                     </div>
                     <div *ngIf="!substance.structure && !substance.polymer">
-                      <img class="image-other" [src]="getSafeStructureImgUrlLarge(substance.uuid)">
+                      <img class="image-other" appSubstanceImage [entityId]="substance.uuid" size="175">
                     </div>
                   </div>
                   <div class="tile-name">

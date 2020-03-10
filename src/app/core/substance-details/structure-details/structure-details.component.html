@@ -49,7 +49,7 @@
     <div class = 'float-right'>
       <a class="mat-icon-button" title="Download molfile" [href]="molfileHref" download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.mol"><mat-icon svgIcon="get_app"></mat-icon></a>
     </div>
-    <img class="structure-img" [src]="getSafeStructureImgUrl(showStereo, structure.id)">
+    <img class="structure-img" appSubstanceImage [entityId]="structure.id" [stereo]="showStereo">
     <br/>
       <button class ="mat-raised-button mat-primary" [disabled]="structure.definedStereo == 0" (click)="toggleStereo()">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
 

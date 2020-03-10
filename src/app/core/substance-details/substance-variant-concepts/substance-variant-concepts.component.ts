@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
-import {UtilsService} from '../../utils/utils.service';
 import {SubstanceDetail, SubstanceRelated} from '../../substance/substance.model';
-import {SafeUrl} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -16,7 +14,6 @@ export class SubstanceVariantConceptsComponent extends SubstanceCardBase impleme
   substanceUpdated = new Subject<SubstanceDetail>();
 
   constructor(
-    private utilsService: UtilsService
   ) {
     super();
   }
@@ -34,10 +31,6 @@ export class SubstanceVariantConceptsComponent extends SubstanceCardBase impleme
 
       }
     });
-  }
-
-  getSafeStructureImgUrl(structureId: string, size: number = 400): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
 }

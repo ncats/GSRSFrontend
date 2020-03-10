@@ -6,7 +6,7 @@
     </div>
       <div class = "form-row full">
     <div class="flex-column related-substance">
-    <img class = "related-image" [src]="getIconFromUuid()">
+    <img class = "related-image" appSubstanceImage [entityId]="unit && (unit.uuid || (unit._structure && unit._structure.id))">
     </div>
 
 
