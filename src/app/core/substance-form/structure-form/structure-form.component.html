@@ -37,11 +37,8 @@
           Resolve name
         </button>
         <span *ngIf="structure.id">
-          <button mat-menu-item (click)="downloadStructure('mol')">
-            Download mol
-          </button>
-          <button mat-menu-item (click)="downloadStructure('smiles')">
-            Download smiles
+          <button mat-menu-item (click)="exportStructure()">
+            Export
           </button>
           <button mat-menu-item (click)="openStructureImageModal()">
             View stereochemistry

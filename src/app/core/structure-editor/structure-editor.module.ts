@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KetcherWrapperModule } from 'ketcher-wrapper';
 import { JsdrawWrapperModule } from 'jsdraw-wrapper';
@@ -14,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { StructureEditorComponent } from './structure-editor.component';
 import {DragDropPasteDirective} from '@gsrs-core/substance-form/substance-form-structure/drag-drop-paste.component';
+import { StructureModule } from '@gsrs-core/structure/structure.module';
 
 @NgModule({
   imports: [
@@ -27,19 +27,15 @@ import {DragDropPasteDirective} from '@gsrs-core/substance-form/substance-form-s
     ReactiveFormsModule,
     KetcherWrapperModule,
     JsdrawWrapperModule,
-    FileSelectModule
+    FileSelectModule,
+    StructureModule
   ],
   declarations: [
-    StructureImportComponent,
     StructureEditorComponent,
     DragDropPasteDirective
   ],
   exports: [
-    StructureImportComponent,
     StructureEditorComponent
-  ],
-  entryComponents: [
-    StructureImportComponent
   ]
 })
 export class StructureEditorModule { }
