@@ -30,6 +30,7 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { ProductDetailsBaseComponent } from './product-details/product-details-base.component';
 import { ProductDetailsComponent } from './product-details/product-details/product-details.component';
 import { ProductElistDetailsComponent } from './product-details/product-elist-details/product-elist-details.component';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 const productRoutes: Routes = [
     {
@@ -75,7 +76,8 @@ const productRoutes: Routes = [
     MatBottomSheetModule,
     FormsModule,
     ReactiveFormsModule,
-    OverlayModule
+    OverlayModule,
+    SubstanceImageModule
   ],
   declarations: [
     ProductDetailsBaseComponent,

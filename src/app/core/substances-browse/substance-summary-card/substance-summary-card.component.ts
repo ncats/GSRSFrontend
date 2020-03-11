@@ -53,10 +53,6 @@ export class SubstanceSummaryCardComponent implements OnInit {
     return this.privateSubstance;
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
-  }
-
   openImageModal(): void {
     this.openImage.emit(this.substance);
   }

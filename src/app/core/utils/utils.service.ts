@@ -34,6 +34,13 @@ export class UtilsService extends BaseHttpService {
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
+  getStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean): string {
+    if (!stereo) {
+      stereo = false;
+    }
+    return `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}`;
+  }
+
   handleMatSidenavOpen(widthBreakingPoint?: number): void {
 
     if (widthBreakingPoint == null || (window && window.innerWidth < widthBreakingPoint)) {

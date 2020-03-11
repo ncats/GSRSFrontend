@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
 import {SubstanceAmount, SubstanceDetail, SubstanceProperty} from '../../substance/substance.model';
-import {UtilsService} from '../../utils/utils.service';
-import {SafeUrl} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -15,7 +13,6 @@ export class SubstancePropertiesComponent extends SubstanceCardBase implements O
   displayedColumns: string[] = ['name', 'property type', 'amount', 'referenced substance', 'defining', 'parameters', 'references'];
   substanceUpdated = new Subject<SubstanceDetail>();
   constructor(
-    private utilService: UtilsService
   ) {
     super();
   }
@@ -61,10 +58,6 @@ export class SubstancePropertiesComponent extends SubstanceCardBase implements O
 
 
     return val;
-  }
-
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilService.getSafeStructureImgUrl(structureId, size);
   }
 
 }

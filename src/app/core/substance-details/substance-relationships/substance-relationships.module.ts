@@ -10,6 +10,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {RouterModule} from '@angular/router';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     CdkTableModule,
     MatTooltipModule,
     RouterModule,
-    MatSortModule
+    MatSortModule,
+    SubstanceImageModule
   ],
   declarations: [SubstanceRelationshipsComponent]
 })

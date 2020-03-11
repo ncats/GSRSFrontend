@@ -4,13 +4,15 @@ import { SubstanceFormMoietiesComponent } from './substance-form-moieties.compon
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { SubstanceFormModule } from '../substance-form.module';
 import { MatDividerModule } from '@angular/material/divider';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
     CommonModule,
     DynamicComponentLoaderModule.forChild(SubstanceFormMoietiesComponent),
     SubstanceFormModule,
-    MatDividerModule
+    MatDividerModule,
+    SubstanceImageModule
   ],
   declarations: [
     SubstanceFormMoietiesComponent

@@ -36,6 +36,7 @@ import { ApplicationEditComponent } from './application-edit/application-edit.co
 import { ApplicationAddComponent } from './application-add/application-add.component';
 import { FacetFilterFdaPipe } from '../utils/facet-filter-fda.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 const applicationRoutes: Routes = [
   {
@@ -86,7 +87,8 @@ const applicationRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    SubstanceImageModule
   ],
   declarations: [
     ApplicationsBrowseComponent,

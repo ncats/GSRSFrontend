@@ -3,14 +3,16 @@ import { CommonModule } from '@angular/common';
 import {DynamicComponentLoaderModule} from '../../dynamic-component-loader/dynamic-component-loader.module';
 import {SubstanceVariantConceptsComponent} from './substance-variant-concepts.component';
 import {RouterModule} from '@angular/router';
-import {MatInputModule, MatTableModule} from '@angular/material';
+import { MatTableModule} from '@angular/material';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
     CommonModule,
     DynamicComponentLoaderModule.forChild(SubstanceVariantConceptsComponent),
     RouterModule,
-    MatTableModule
+    MatTableModule,
+    SubstanceImageModule
   ],
   declarations: [SubstanceVariantConceptsComponent]
 })

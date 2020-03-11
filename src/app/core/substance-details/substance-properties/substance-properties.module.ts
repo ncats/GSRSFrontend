@@ -5,6 +5,7 @@ import {SubstancePropertiesComponent} from './substance-properties.component';
 import {MatInputModule, MatPaginatorModule, MatTableModule} from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
 import {RouterModule} from '@angular/router';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import {RouterModule} from '@angular/router';
     CdkTableModule,
     MatPaginatorModule,
     MatInputModule,
-    RouterModule
+    RouterModule,
+    SubstanceImageModule
   ],
   declarations: [SubstancePropertiesComponent]
 })

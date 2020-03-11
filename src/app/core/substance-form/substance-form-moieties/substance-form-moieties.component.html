@@ -2,7 +2,7 @@
   <div class="flex-row">
       <div class="moiety-structure flex-colum">
         <div class="structure-title">Moiety Structure</div>
-        <img [src]="getSafeStructureImgUrl(moiety.id)">
+        <img appSubstanceImage [entityId]="moiety.id">
       </div>
       <div class="structure-form-container flex-column">
         <app-structure-form [structure]="moiety" hideAccess="true"></app-structure-form>
