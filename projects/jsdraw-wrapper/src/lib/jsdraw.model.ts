@@ -3,6 +3,7 @@ export interface JSDraw {
     activated?: boolean;
     setMolfile(molfile: string): void;
     getMolfile(): string;
+    getSmiles(): string;
     getXml(): string;
 }
 
