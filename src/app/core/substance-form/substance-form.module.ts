@@ -65,6 +65,7 @@ import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-di
 import {NgxJsonViewerModule} from 'ngx-json-viewer';
 import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
 import { RouterModule } from '@angular/router';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
@@ -95,7 +96,8 @@ import { RouterModule } from '@angular/router';
     FileSelectModule,
     MatButtonToggleModule,
     NgxJsonViewerModule,
-    RouterModule
+    RouterModule,
+    SubstanceImageModule
   ],
   declarations: [
     AccessManagerComponent,

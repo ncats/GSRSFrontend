@@ -41,6 +41,14 @@ export class EditorImplementation implements Editor {
         }
     }
 
+    getSmiles(): string {
+        if (this.ketcher != null) {
+            return this.ketcher.getSmiles();
+        } else if (this.jsdraw != null) {
+            return this.jsdraw.getSmiles();
+        }
+    }
+
     private clean(molfile: string): string {
         molfile = molfile.replace(/M[ ]*SMT.*mul.*/g, '@')
             .replace(/\n/g, '|_|')

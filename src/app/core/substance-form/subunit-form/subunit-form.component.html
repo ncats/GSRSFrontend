@@ -11,7 +11,7 @@
     </div>
     <div class = "subunit-label">Subunit {{subunit.subunitIndex}}</div>
     <div class = "buttons">
-      <button class = "mat-button mat-primary action-button" (click) = 'editSubunit(subunit, sequence.value)'>
+      <button class = "mat-button mat-primary action-button" (click) = 'editSubunit(subunit, editSequence)'>
         {{toggle[subunit.subunitIndex] ? 'save': 'edit'}}</button>
       <button class = "mat-button action-button mat-primary" (click) = cleanSequence()>
         clean</button>
@@ -24,7 +24,7 @@
   </div>
 
 <div class="subunit-edit" [ngClass]="toggle[subunit.subunitIndex] ? 'show': 'hide'" >
-  <textarea #sequence cdkAutosizeMinRows="3" placeholder="Enter sequence here"  [ngModel] = 'subunit.sequence' (change) = "change($event)" class = "sequence-textarea"  name="edit"></textarea>
+  <textarea #sequence cdkAutosizeMinRows="3" placeholder="Enter sequence here"  [(ngModel)] = 'editSequence' (change) = "change($event)" class = "sequence-textarea"  name="edit"></textarea>
 </div>
 <div [ngClass]="toggle[subunit.subunitIndex] ? 'hide': 'show'"  >
   <div class = "nest">

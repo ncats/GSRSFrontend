@@ -45,8 +45,4 @@ export class SubstanceMonomersComponent extends SubstanceCardBaseFilteredList<Mo
     return this.utilsService.displayAmount(amt);
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
-  }
-
 }

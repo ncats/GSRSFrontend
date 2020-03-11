@@ -15,7 +15,7 @@
       <td mat-cell *matCellDef="let con">
         <div class = "thumb-col">
           <div>{{con.substance.linkingID}}</div>
-          <img class="structure-image" [src]="getSafeStructureImgUrl(con.substance.refuuid)">
+          <img class="structure-image" appSubstanceImage [entityId]="con.substance.refuuid">
           <div>
             <a class="substance-name" [routerLink]="['/substances', con.substance.refuuid]" >
               {{con.substance.name}}

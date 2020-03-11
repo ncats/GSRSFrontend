@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {DisplayStructure, Polymer, PolymerClassification, SubstanceDetail} from '../../substance/substance.model';
-import { SafeUrl } from '@angular/platform-browser';
-import { UtilsService } from '../../utils/utils.service';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -17,7 +15,6 @@ export class SubstancePolymerStructureComponent extends SubstanceCardBase implem
   relatedSubstanceUuid: string;
 
   constructor(
-    private utilsService: UtilsService,
   ) {
     super();
   }
@@ -31,9 +28,5 @@ export class SubstancePolymerStructureComponent extends SubstanceCardBase implem
       }
       this.relatedSubstanceUuid = this.classification.parentSubstance && this.classification.parentSubstance.refuuid || '';
     });
-  }
-
-  getSafeStructureImgUrl(structureId: string, size: number = 400): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 }

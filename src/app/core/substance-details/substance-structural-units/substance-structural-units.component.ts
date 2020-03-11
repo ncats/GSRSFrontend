@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {Monomer, SubstanceDetail} from '../../substance/substance.model';
-import { SafeUrl } from '@angular/platform-browser';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
@@ -53,10 +52,6 @@ export class SubstanceStructuralUnitsComponent extends SubstanceCardBaseFiltered
     display = display.replace(',', ', ');
 
     return display;
-  }
-
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
 }

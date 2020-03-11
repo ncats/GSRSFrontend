@@ -23,6 +23,7 @@ import { UtilsService } from '../utils/utils.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { environment } from '../../../environments/environment';
 import {Subject, Subscription} from 'rxjs';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-substance-details',
@@ -51,7 +52,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private substanceCardsService: SubstanceCardsService,
     private utilsService: UtilsService,
     private gaService: GoogleAnalyticsService,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private titleService: Title
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
@@ -73,6 +75,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
          } else {
            this.getSubstanceDetails(this.id);
          }
+
 
        });
 
@@ -143,6 +146,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   getSubstanceDetails(id: string, version?: string) {
     this.substanceService.getSubstanceDetails(id, version).subscribe(response => {
       if (response) {
+        this.titleService.setTitle(response._name);
         this.substance = response;
         this.substanceUpdated.next(response);
         this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {

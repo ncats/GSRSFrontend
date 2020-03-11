@@ -380,6 +380,22 @@
     color: #f0ad4e;
 }
 
+.narrow-search-suggestions-container {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.narrow-search-suggestions {
+    padding: 12px 20px;
+    width: auto;
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+
 @media(max-width: 600px) {
 
     .substance-content {

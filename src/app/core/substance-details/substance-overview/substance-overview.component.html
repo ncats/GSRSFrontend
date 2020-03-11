@@ -116,7 +116,7 @@
           <div class="name">Source Materials Parent</div>
           <div class="thumb-col">
             <img class="image-thumb"
-                 [src]="getSafeStructureImgUrl(substance.structurallyDiverse.parentSubstance.refuuid)">
+              appSubstanceImage [entityId]="substance.structurallyDiverse.parentSubstance.refuuid" size="400">
             <div>
               <a class="substance-name"
                  [routerLink]="['/substances', substance.structurallyDiverse.parentSubstance.refuuid]">

@@ -373,7 +373,7 @@
                       </td>
                       <td>
                         <div *ngIf="x.substanceUuid">
-                          <img class="structure-img" [src]="getSafeStructureImgUrl(x.substanceUuid)">
+                          <img class="structure-img" appSubstanceImage [entityId]="x.substanceUuid">
                         </div>
                       </td>
                     </tr>

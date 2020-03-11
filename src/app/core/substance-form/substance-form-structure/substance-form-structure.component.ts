@@ -41,12 +41,12 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
           if (structure) {
             this.structure = structure;
           } else {
-	   // while we also want to do something with display structures eventually,
-           // this isn't the place to do it, I don't think ...
-           //
-           // this.substanceFormService.substanceDisplayStructure.subscribe(structure2 => {
-           //   this.structure = structure2;
-           // });
+            // while we also want to do something with display structures eventually,
+            // this isn't the place to do it, I don't think ...
+            //
+            // this.substanceFormService.substanceDisplayStructure.subscribe(structure2 => {
+            //   this.structure = structure2;
+            // });
           }
           this.loadStructure();
         });
@@ -102,9 +102,9 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   updateStructureForm(molfile: string): void {
     if (!this.isInitializing) {
-       this.structureService.postStructure(molfile).subscribe(response => {
-          this.processStructurePostResponse(response);
-       });
+      this.structureService.postStructure(molfile).subscribe(response => {
+        this.processStructurePostResponse(response);
+      });
     }
   }
 
@@ -153,7 +153,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     });
   }
 
-  download(type: 'mol'|'smiles'): void {
+  download(type: 'mol' | 'smiles'): void {
     if (type === 'mol') {
       this.downloadMol();
     } else {
@@ -163,7 +163,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   private downloadMol(): void {
     if (this.mol != null) {
-      const file = new Blob([this.mol], { type: 'chemical/x-mdl-molfile'});
+      const file = new Blob([this.mol], { type: 'chemical/x-mdl-molfile' });
       this.anchorElement.download = 'substance_structure.mol';
       this.downloadFile(file);
     }
@@ -171,7 +171,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   private downloadSmiles(): void {
     if (this.smiles != null) {
-      const file = new Blob([this.smiles], { type: 'text/plain'});
+      const file = new Blob([this.smiles], { type: 'text/plain' });
       this.anchorElement.download = 'substance_smiles.txt';
       this.downloadFile(file);
     }

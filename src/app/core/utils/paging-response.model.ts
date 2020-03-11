@@ -19,8 +19,17 @@ export interface PagingResponse<T> {
     top: number;
     query: string;
     sideway?: Array<any>;
+    narrowSearchSuggestions?: Array<NarrowSearchSuggestion>;
     content: Array<T>;
     exactMatches?: Array<T>;
     facets?: Array<Facet>;
     filter?: string;
+}
+
+export interface NarrowSearchSuggestion {
+    matchType: string;
+    count: number;
+    displayField: string;
+    luceneField: string;
+    luceneQuery: string;
 }

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceDetail, SubstanceRelated} from '../../substance/substance.model';
-import {UtilsService} from '../../utils/utils.service';
-import {SafeUrl} from '@angular/platform-browser';
 import {SubstanceCardBase} from '../substance-card-base';
 import {Subject} from 'rxjs';
 
@@ -14,7 +12,6 @@ export class SubstanceMixtureSourceComponent extends SubstanceCardBase implement
  parent: SubstanceRelated;
   substanceUpdated = new Subject<SubstanceDetail>();
   constructor(
-    private utilsService: UtilsService
   ) {
     super();
   }
@@ -26,10 +23,6 @@ export class SubstanceMixtureSourceComponent extends SubstanceCardBase implement
         this.parent = this.substance.mixture.parentSubstance;
       }
     });
-  }
-
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
 }

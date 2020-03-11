@@ -67,10 +67,6 @@ export class NameResolverComponent implements OnInit {
       });
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.structureService.getSafeStructureImgUrl(structureId, size);
-  }
-
   applyStructure(molfile: string) {
     this.structureSelected.emit(molfile);
   }

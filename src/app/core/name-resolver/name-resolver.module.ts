@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { LoadingModule } from '../loading/loading.module';
 import { NameResolverDialogComponent } from './name-resolver-dialog.component';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { NameResolverDialogComponent } from './name-resolver-dialog.component';
     MatButtonModule,
     MatIconModule,
     RouterModule,
-    LoadingModule
+    LoadingModule,
+    SubstanceImageModule
   ],
   declarations: [
     NameResolverComponent,

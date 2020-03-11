@@ -1,13 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
-import {Subscription} from 'rxjs';
-import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
-import {MatDialog} from '@angular/material/dialog';
-import {UtilsService} from '@gsrs-core/utils';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {StructuralUnit, SubstanceCode, SubstanceService} from '@gsrs-core/substance';
-import {SafeUrl} from '@angular/platform-browser';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AmountFormDialogComponent } from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
+import { Subscription } from 'rxjs';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
+import { MatDialog } from '@angular/material/dialog';
+import { UtilsService } from '@gsrs-core/utils';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { StructuralUnit, SubstanceCode, SubstanceService } from '@gsrs-core/substance';
+import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-structural-unit-form',
@@ -16,7 +16,7 @@ import {SafeUrl} from '@angular/platform-browser';
 })
 export class StructuralUnitFormComponent implements OnInit {
   @Input() unit: StructuralUnit;
-  @Output() unitDeleted  = new EventEmitter<StructuralUnit>();
+  @Output() unitDeleted = new EventEmitter<StructuralUnit>();
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
   siteDisplay: string;
@@ -44,11 +44,12 @@ export class StructuralUnitFormComponent implements OnInit {
       if (this.unit.type === 'SRU-BLOCK') {
         this.unit.amount = {
           type: 'DEGREE OF POLYMERIZATION',
-          units: 'per polymer'};
+          units: 'per polymer'
+        };
       }
     }
     const dialogRef = this.dialog.open(AmountFormDialogComponent, {
-      data: {'subsAmount': this.unit.amount},
+      data: { 'subsAmount': this.unit.amount },
       width: '1040px'
     });
     this.overlayContainer.style.zIndex = '1002';
@@ -76,13 +77,10 @@ export class StructuralUnitFormComponent implements OnInit {
 
   deleteSRU(): void {
     this.unit.$$deletedCode = this.utilsService.newUUID();
-        this.unitDeleted.emit(this.unit);
-    }
+    this.unitDeleted.emit(this.unit);
+  }
 
-  getIconFromUuid(): SafeUrl {
-    return this.substanceService.getIconFromUuid(this.unit.uuid || this.unit._structure.id);
-  }
-  }
+}
 
 
 

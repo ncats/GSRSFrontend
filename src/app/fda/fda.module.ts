@@ -15,10 +15,6 @@ import { ApplicationModule} from './application/application.module';
 import { ProductModule} from './product/product.module';
 import { GeneralService} from './service/general.service';
 import { MatTabsModule } from '@angular/material/tabs';
-
-// import { FacetDisplayPipe } from '../fda/utils/facet-display.pipe';
-// import { FacetFilterPipe } from '../fda/utils/facet-filter.pipe';
-
 import { ApplicationsBrowseComponent } from './application/applications-browse/applications-browse.component';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
 

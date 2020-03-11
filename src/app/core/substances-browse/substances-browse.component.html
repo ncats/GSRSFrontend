@@ -1,7 +1,8 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
   <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
     <mat-accordion multi="true">
-      <mat-expansion-panel *ngFor="let facet of facets; index as topIndex" [expanded]="false || facetParams[facet.name] != null">
+      <mat-expansion-panel *ngFor="let facet of facets; index as topIndex"
+        [expanded]="false || facetParams[facet.name] != null">
         <mat-expansion-panel-header>
           <mat-panel-title>
             {{facet.name | facetDisplay}}
@@ -9,55 +10,58 @@
         </mat-expansion-panel-header>
         <div class="facet-search-container">
           <mat-form-field *ngIf="searchText[facet.name]">
-            <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value" (ngModelChange)="filterFacets(topIndex, $event, facet.name)"
-              placeholder="Search  {{facet.name}}">
+            <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value"
+              (ngModelChange)="filterFacets(topIndex, $event, facet.name)" placeholder="Search  {{facet.name}}">
           </mat-form-field>
-          <button mat-icon-button color="black" (click) = "clearFacetSearch(topIndex, facet.name)"><mat-icon svgIcon="close"></mat-icon></button>
+          <button mat-icon-button color="black" (click)="clearFacetSearch(topIndex, facet.name)">
+            <mat-icon svgIcon="close"></mat-icon>
+          </button>
         </div>
-        <mat-progress-bar class="facet-search-loading" mode="indeterminate" *ngIf="searchText[facet.name] && searchText[facet.name].isLoading"></mat-progress-bar>
-          <ng-container  *ngFor="let value of facet.values; index as index">
-            <div class="facet-value" >
-          <div class="facet-value-checkbox">
-            <mat-checkbox class="include" matTooltip="Include"
-              (change)="updateFacetSelection($event, facet.name, value.label, true)"
-              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
-            </mat-checkbox>
-            <mat-checkbox class="exclude" matTooltip="Exclude"
-              (change)="updateFacetSelection($event, facet.name, value.label, false)"
-              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false"
-              *ngIf="facet.$showAdvanced">
-            </mat-checkbox>
-          </div>
-          <div class="facet-value-label">
-            <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
-              {{value.label}}
-            </span>
-            <span *ngIf = "facet.name === 'Substance Class'">
-              {{value.label | facetDisplay: 'types'}}
-            </span>
-            <span *ngIf="facet.name === 'Record Status'">
-              {{value.label | facetDisplay: 'status'}}
-            </span>
-          </div>
-          <div class="middle-fill"></div>
-          <div class="facet-value-count">
-            {{value.count}}
-          </div>
+        <mat-progress-bar class="facet-search-loading" mode="indeterminate"
+          *ngIf="searchText[facet.name] && searchText[facet.name].isLoading"></mat-progress-bar>
+        <ng-container *ngFor="let value of facet.values; index as index">
+          <div class="facet-value">
+            <div class="facet-value-checkbox">
+              <mat-checkbox class="include" matTooltip="Include"
+                (change)="updateFacetSelection($event, facet.name, value.label, true)"
+                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
+              </mat-checkbox>
+              <mat-checkbox class="exclude" matTooltip="Exclude"
+                (change)="updateFacetSelection($event, facet.name, value.label, false)"
+                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false"
+                *ngIf="facet.$showAdvanced">
+              </mat-checkbox>
             </div>
+            <div class="facet-value-label">
+              <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
+                {{value.label}}
+              </span>
+              <span *ngIf="facet.name === 'Substance Class'">
+                {{value.label | facetDisplay: 'types'}}
+              </span>
+              <span *ngIf="facet.name === 'Record Status'">
+                {{value.label | facetDisplay: 'status'}}
+              </span>
+            </div>
+            <div class="middle-fill"></div>
+            <div class="facet-value-count">
+              {{value.count}}
+            </div>
+          </div>
         </ng-container>
         <div>
-         <!--- <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
+          <!--- <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
             Show {{toggle[topIndex] === true ? 'all': 'less'}}
           </a>-->
-          <span  *ngIf = "facet.values && facet.values.length >= 10 && (
+          <span *ngIf="facet.values && facet.values.length >= 10 && (
            !searchText[facet.name] || searchText[facet.name].value == '')">
-             <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf ="(!facet.$total ||
+            <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf="(!facet.$total ||
               facet.$total > facet.values.length)">
-            More...{{searchText[facet.name] && searchText[facet.name].value || ''}}
-          </a>
-             <a class="show-more" *ngIf = "facet.values.length > 10" (click)="lessFacets(topIndex)">
-            Show Less {{searchText[facet.name] &&searchText[facet.name].value || ''}}
-          </a>
+              More...{{searchText[facet.name] && searchText[facet.name].value || ''}}
+            </a>
+            <a class="show-more" *ngIf="facet.values.length > 10" (click)="lessFacets(topIndex)">
+              Show Less {{searchText[facet.name] &&searchText[facet.name].value || ''}}
+            </a>
           </span>
         </div>
         <div class="facet-advanced-options-link">
@@ -71,11 +75,12 @@
             All Match
           </mat-checkbox>
           <div class="pull-right">
-            <button *ngIf="facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
+            <button *ngIf="facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading"
+              (click)="clearFacetSelection(facet.name)">
               Clear
             </button>
-            <button *ngIf="facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary" [disabled]="isLoading"
-              (click)="applyFacetsFilter(facet.name)">
+            <button *ngIf="facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary"
+              [disabled]="isLoading" (click)="applyFacetsFilter(facet.name)">
               Apply
             </button>
           </div>
@@ -88,79 +93,107 @@
       <mat-icon svgIcon="chevron_right"></mat-icon>
     </button>
     <div class="side-nav-content" *ngIf="substances && substances.length">
-      <div class="search-parameters">
-        <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+      <div class="narrow-search-suggestions-container" *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
+        <div class="mat-elevation-z2 narrow-search-suggestions">
           <div>
-            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-            <span class="no-break">{{this.searchTerm}}</span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button color="primary" (click)="clearSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-        <div class="mat-elevation-z2 selected-parameter"  *ngFor = "let facet of displayFacets">
-          <div class = 'selected-container'>
-            <span class="capitalized font-medium-bold selected-label">
-                          <mat-icon class = "not-icon" svgIcon="not_interested" *ngIf = "!facet.bool"></mat-icon>
-              {{facet.type}}:
-            </span>
-            <span class="no-break selected-value">
-              {{facet.val}}
-            </span>
-          </div>
-            <div class="actions-container">
-              <button mat-icon-button class = "display-button" color="primary" (click) = "removeFacet(facet)">
-                <mat-icon class = "display-icon" svgIcon="delete_forever"></mat-icon>
+            Would you like to restrict the search for this to field?
+          </div>&nbsp;
+          <button mat-flat-button color="primary" [matMenuTriggerFor]="searchSuggestions" (menuOpened)="increaseOverlayZindex()" (menuClosed)="decreaseOverlayZindex()">
+            <span>Matches</span>&nbsp;
+            {{narrowSearchSuggestionsCount}}
+          </button>
+          <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
+            <div *ngFor="let matchType of matchTypes">
+              <div class="match-type">
+                {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+              </div>
+              <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]" (click)="restricSearh(suggestion.luceneQuery)">
+                <div class="suggestion-display">
+                  {{suggestion.displayField}}
+                </div>
+                <div class="suggestion-count">
+                  {{suggestion.count}}
+                </div>
               </button>
             </div>
-        </div>
-        <div class="mat-elevation-z2" *ngIf="smiles">
-          <div>
-            <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
-            &nbsp;
-            <span class="no-break">
-              <span>{{this.smiles}}</span>
-              <span *ngIf="searchType && searchType == 'similarity'">
-                &nbsp;&ge; {{searchCutoff}}
-              </span>
-            </span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button color="primary" (click)="editStructureSearch()">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="clearStructureSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-        <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
-          <div>
-            <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
-            &nbsp;
-            <span class="no-break">
-              <span>{{getSequenceDisplay(sequenceSearchTerm)}}</span>
-            </span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button color="primary" (click)="editSequenceSearh()">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
+          </mat-menu>
         </div>
       </div>
+      <ng-template #filterParameters>
+        <div class="search-parameters">
+          <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+            <div>
+              <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+              <span class="no-break">{{this.searchTerm}}</span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button color="primary" (click)="clearSearch()">
+                <mat-icon svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+            <div class='selected-container'>
+              <span class="capitalized font-medium-bold selected-label">
+                <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+                {{facet.type}}:
+              </span>
+              <span class="no-break selected-value">
+                {{facet.val}}
+              </span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button class="display-button" color="primary" (click)="removeFacet(facet)">
+                <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="mat-elevation-z2" *ngIf="smiles">
+            <div>
+              <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
+              &nbsp;
+              <span class="no-break">
+                <span>{{this.smiles}}</span>
+                <span *ngIf="searchType && searchType == 'similarity'">
+                  &nbsp;&ge; {{searchCutoff}}
+                </span>
+              </span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button color="primary" (click)="editStructureSearch()">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="clearStructureSearch()">
+                <mat-icon svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
+            <div>
+              <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
+              &nbsp;
+              <span class="no-break">
+                <span>{{getSequenceDisplay(sequenceSearchTerm)}}</span>
+              </span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button color="primary" (click)="editSequenceSearh()">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
+                <mat-icon svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
       <div class="controls-container">
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-          <mat-button-toggle value="table" matTooltip = "Table view">
+          <mat-button-toggle value="table" matTooltip="Table view">
             <mat-icon svgIcon="list"></mat-icon>
           </mat-button-toggle>
-          <mat-button-toggle value="cards" matTooltip = "full view">
-            <mat-icon svgIcon="view_stream" matTooltip = "Tile view"></mat-icon>
+          <mat-button-toggle value="cards" matTooltip="full view">
+            <mat-icon svgIcon="view_stream" matTooltip="Tile view"></mat-icon>
           </mat-button-toggle>
           <mat-button-toggle value="tiles">
             <mat-icon svgIcon="view_module"></mat-icon>
@@ -182,12 +215,8 @@
       </div>
       <div [ngClass]="view">
         <div class="substance-cards">
-          <app-substance-summary-card
-            *ngFor="let substance of substances"
-            [substance]="substance"
-            (openImage)="openImageModal($event)"
-            [showAudit]="showAudit"
-            [names]="names[substance.uuid]"
+          <app-substance-summary-card *ngFor="let substance of substances" [substance]="substance"
+            (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
             [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
             [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems">
           </app-substance-summary-card>
@@ -198,7 +227,8 @@
 
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let substance"><a class="table-view-name" [routerLink]="['/substances', substance.uuid]">{{substance._name}}</a></td>
+                <td mat-cell *matCellDef="let substance"><a class="table-view-name"
+                    [routerLink]="['/substances', substance.uuid]">{{substance._name}}</a></td>
               </ng-container>
 
               <ng-container matColumnDef="approvalID">
@@ -222,10 +252,12 @@
                 <th mat-header-cell *matHeaderCellDef> Codes </th>
                 <td mat-cell *matCellDef="let substance">
                   <span *ngIf="codes[substance.uuid] && codes[substance.uuid].codeSystems">
-                    <span *ngFor="let codeSystemName of sortCodeSystems(codes[substance.uuid].codeSystemNames) | take: 5">
+                    <span
+                      *ngFor="let codeSystemName of sortCodeSystems(codes[substance.uuid].codeSystemNames) | take: 5">
                       <div>
                         <strong>{{codeSystemName}}</strong>:&nbsp;
-                        <span *ngFor="let codeObject of codes[substance.uuid].codeSystems[codeSystemName]; last as isLastCodeObject">
+                        <span
+                          *ngFor="let codeObject of codes[substance.uuid].codeSystems[codeSystemName]; last as isLastCodeObject">
                           <span *ngIf="codeObject.url">
                             <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
                               evCategory="substancesContent" evAction="link:code">
@@ -249,17 +281,19 @@
                     <mat-icon svgIcon="get_app"></mat-icon>
                   </button>
 
-                  <button *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
+                  <button *ngIf="substance.structure || substance.polymer" mat-icon-button
+                    [matMenuTriggerFor]="searchMenu">
                     <mat-icon svgIcon="search"></mat-icon>
                   </button>
 
-                <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin" matTooltip = 'edit record'>
-                  <mat-icon svgIcon="edit"></mat-icon>
-                </a>
+                  <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin"
+                    matTooltip='edit record'>
+                    <mat-icon svgIcon="edit"></mat-icon>
+                  </a>
 
-                <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
-                  <mat-icon svgIcon="file_copy"></mat-icon>
-                </button>
+                  <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                    <mat-icon svgIcon="file_copy"></mat-icon>
+                  </button>
 
                   <mat-menu #downloadMenu="matMenu">
                     <a mat-menu-item *ngIf="substance.structure"
@@ -288,10 +322,14 @@
                   </mat-menu>
 
                   <mat-menu #editMenu="matMenu">
-                    <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" *ngIf="isAdmin" matTooltip = 'copy substance to new registration form'>
+                    <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
+                      [queryParams]="{copy:substance.uuid}" *ngIf="isAdmin"
+                      matTooltip='copy substance to new registration form'>
                       <span>Copy Substance to New Form</span>
                     </a>
-                    <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin" matTooltip = 'copy definition to new registration form'>
+                    <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
+                      [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin"
+                      matTooltip='copy definition to new registration form'>
                       <span>Copy Definition to New Form</span>
                     </a>
                   </mat-menu>
@@ -306,10 +344,10 @@
         <div class="substance-tiles">
           <mat-card *ngFor="let substance of substances" class="tile">
             <mat-card-title>
-              <div class = 'tile-title'>
-                  <a class="approval-id">
-                {{substance.approvalID}}
-              </a>
+              <div class='tile-title'>
+                <a class="approval-id">
+                  {{substance.approvalID}}
+                </a>
               </div>
             </mat-card-title>
 
@@ -319,11 +357,11 @@
                   <div class="image-thumbnail">
                     <div *ngIf="substance.structure || substance.polymer">
                       <a class="zoom" (click)="openImageModal(substance)">
-                        <img [src]="getSafeStructureImgUrlLarge(substance.uuid)">
+                        <img appSubstanceImage [entityId]="substance.uuid">
                       </a>
                     </div>
                     <div *ngIf="!substance.structure && !substance.polymer">
-                      <img class="image-other" [src]="getSafeStructureImgUrlLarge(substance.uuid)">
+                      <img class="image-other" appSubstanceImage [entityId]="substance.uuid" size="175">
                     </div>
                   </div>
                   <div class="tile-name">
@@ -341,10 +379,10 @@
         </div>
       </div>
       <div class="controls-container">
-          <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
-          </mat-paginator>
-        </div>
+        <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
+        </mat-paginator>
+      </div>
     </div>
     <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
       Your search did not return any results. Please try modifying it or
@@ -404,20 +442,16 @@
 </mat-sidenav-container>
 <div [ngClass]="{ hidden: !showExactMatches, 'exact-matches-container': true }">
   <div class="exact-match-control">
-      <div>
-        There is one exact (name or code) match for {{this.searchTerm}}
-      </div>
-      <button mat-raised-button color="primary" (click)="showAllRecords()">
-        Show All Records Matching Search
-      </button>
+    <div>
+      There is one exact (name or code) match for {{this.searchTerm}}
+    </div>
+    <button mat-raised-button color="primary" (click)="showAllRecords()">
+      Show All Records Matching Search
+    </button>
   </div>
   <div class="substance-cards">
-    <app-substance-summary-card
-      *ngFor="let substance of exactMatchSubstances"
-      [substance]="substance"
-      (openImage)="openImageModal($event)"
-      [showAudit]="showAudit"
-      [names]="names[substance.uuid]">
+    <app-substance-summary-card *ngFor="let substance of exactMatchSubstances" [substance]="substance"
+      (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]">
     </app-substance-summary-card>
   </div>
 </div>

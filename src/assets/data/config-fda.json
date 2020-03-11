@@ -87,20 +87,6 @@
       "filters": [{
         "filterName": "equals",
         "propertyToCheck": "substanceClass",
-        "value": "protein"
-      },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "protein.subunits"
-        }
-      ]
-    },
-    {
-      "card": "substance-subunits",
-      "title": "subunits",
-      "filters": [{
-        "filterName": "equals",
-        "propertyToCheck": "substanceClass",
         "value": "nucleicAcid"
       },
         {
@@ -209,6 +195,20 @@
     },
     {
       "card": "substance-relationships",
+      "type": "SUB_CONCEPT->SUBSTANCE",
+      "title": "variant concepts",
+      "filters": [{
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+        {
+          "filterName": "substanceRelationships",
+          "value": "SUB_CONCEPT->SUBSTANCE"
+        }
+      ]
+    },
+    {
+      "card": "substance-relationships",
       "type": "RELATIONSHIPS",
       "title": "relationships",
       "filters": [{
@@ -217,7 +217,7 @@
         },
         {
           "filterName": "substanceRelationships",
-          "value": ["METABOLITE", "IMPURITY", "ACTIVE MOIETY", "CONSTITUENT"]
+          "value": ["METABOLITE", "IMPURITY", "ACTIVE MOIETY", "CONSTITUENT", "SUB_CONCEPT->SUBSTANCE"]
         }
       ]
     },

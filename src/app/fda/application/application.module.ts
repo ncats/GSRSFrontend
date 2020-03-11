@@ -39,6 +39,8 @@ import { IngredientFormComponent } from './application-form/ingredient-form/ingr
 import { JsonDialogFdaComponent } from './application-form/json-dialog-fda/json-dialog-fda.component';
 import { ApplicationService } from './service/application.service';
 import { FacetFilterFdaPipe } from '../utils/facet-filter-fda.pipe';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 const applicationRoutes: Routes = [
   {
@@ -94,6 +96,8 @@ const applicationRoutes: Routes = [
     ReactiveFormsModule,
     OverlayModule,
     NgxJsonViewerModule
+    MatProgressBarModule,
+    SubstanceImageModule
   ],
   declarations: [
     ApplicationsBrowseComponent,
