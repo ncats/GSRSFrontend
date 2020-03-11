@@ -51,7 +51,6 @@ import { TakePipe } from './utils/take.pipe';
 import { FacetDisplayPipe } from './utils/facet-display.pipe';
 import { EnvironmentModule } from '../../environments/environment';
 import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
-import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
@@ -69,6 +68,7 @@ import { CardDynamicSectionDirective } from './substances-browse/card-dynamic-se
 import { SubstanceSummaryCardComponent } from './substances-browse/substance-summary-card/substance-summary-card.component';
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 import { SubstanceImageModule } from './substance/substance-image.module';
+import { StructureModule } from './structure/structure.module';
 
 @NgModule({
   declarations: [
@@ -79,7 +79,6 @@ import { SubstanceImageModule } from './substance/substance-image.module';
     SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent,
-    StructureImageModalComponent,
     TakePipe,
     FacetDisplayPipe,
     FacetFilterPipe,
@@ -137,7 +136,8 @@ import { SubstanceImageModule } from './substance/substance-image.module';
     NameResolverModule,
     MatBottomSheetModule,
     MatProgressBarModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    StructureModule
   ],
   providers: [
     ConfigService,
@@ -153,7 +153,6 @@ import { SubstanceImageModule } from './substance/substance-image.module';
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    StructureImageModalComponent,
     HighlightedSearchActionComponent
   ]
 })

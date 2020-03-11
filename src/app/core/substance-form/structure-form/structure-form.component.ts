@@ -28,7 +28,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   @Input() type?: string;
   @Output() structureImported = new EventEmitter<StructurePostResponse>();
   @Output() nameResolved = new EventEmitter<string>();
-  @Output() download = new EventEmitter<'mol'|'smiles'>();
+  @Output() export = new EventEmitter<void>();
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
@@ -151,8 +151,8 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  downloadStructure(type: 'mol'|'smiles'): void {
-    this.download.emit(type);
+  exportStructure(): void {
+    this.export.emit();
   }
 
 }
