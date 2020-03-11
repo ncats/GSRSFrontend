@@ -15,8 +15,9 @@ import { Ketcher } from 'ketcher-wrapper';
 import { EditorImplementation } from './structure-editor-implementation.model';
 import { JSDraw } from 'jsdraw-wrapper';
 import { environment } from '../../../environments/environment';
-import {StructureService} from '@gsrs-core/structure';
-import {LoadingService} from '@gsrs-core/loading';
+import { StructureService } from '@gsrs-core/structure';
+import { LoadingService } from '@gsrs-core/loading';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-structure-editor',
@@ -24,8 +25,9 @@ import {LoadingService} from '@gsrs-core/loading';
   styleUrls: ['./structure-editor.component.scss']
 })
 export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Output() editorOnLoad = new EventEmitter<any>();
-  @Output() loadedMolfile = new EventEmitter<any>();
+  editor: EditorImplementation;
+  @Output() editorOnLoad = new EventEmitter<EditorImplementation>();
+  @Output() loadedMolfile = new EventEmitter<string>();
   private ketcher: Ketcher;
   private jsdraw: JSDraw;
   structureEditor: string;
@@ -36,7 +38,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   width = 0;
   canvasToggle = true;
   canvasMessage = '';
-  @ViewChild('structure_canvas', {static: false})myCanvas: ElementRef;
+  @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
   public context: CanvasRenderingContext2D;
   public canvasCopy: HTMLCanvasElement;
   private jsdrawScriptUrls = [
@@ -115,12 +117,14 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   ketcherOnLoad(ketcher: Ketcher): void {
     this.ketcher = ketcher;
-    this.editorOnLoad.emit(new EditorImplementation(this.ketcher));
+    this.editor = new EditorImplementation(this.ketcher);
+    this.editorOnLoad.emit(this.editor);
   }
 
   jsDrawOnLoad(jsdraw: JSDraw): void {
     this.jsdraw = jsdraw;
-    this.editorOnLoad.emit(new EditorImplementation(null, this.jsdraw));
+    this.editor = new EditorImplementation(null, this.jsdraw);
+    this.editorOnLoad.emit(this.editor);
   }
 
   get _jsdrawScriptUrls(): Array<string> {
@@ -130,7 +134,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   onDropHandler(object: any): void {
     if (object.invalidFlag) {
       this.canvasMessage = 'The selected file could not be read';
-    }  else {
+    } else {
       const img = object.event.target.result;
       this.createImage(img);
     }
@@ -212,9 +216,17 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
 
 
+  }
+
+  cleanStructure() {
+    const smiles = this.editor.getSmiles();
+    if (smiles != null && smiles !== '') {
+      this.structureService.postStructure(smiles).pipe(take(1)).subscribe(response => {
+        if (response && response.structure && response.structure.molfile) {
+          this.editor.setMolecule(response.structure.molfile);
+        }
+      });
     }
-
-
-
+  }
 
 }
