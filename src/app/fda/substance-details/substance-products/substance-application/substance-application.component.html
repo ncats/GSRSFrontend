@@ -5,6 +5,12 @@
       <b> {{appCenter}}</b>
       &nbsp;&nbsp;&nbsp;
       <span class="colorred">{{loadingStatus}}</span>
+      &nbsp;&nbsp;&nbsp;
+      <a [href]="exportUrl" target="_blank" matTooltip='ApplicationRecords' *ngIf="totalRecords > 0">
+        <button mat-icon-button color="primary">
+          <mat-icon>arrow_downward</mat-icon>Export All Applications
+        </button>
+      </a>
     </div>
 
     <div class="responsive">

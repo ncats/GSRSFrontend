@@ -40,6 +40,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     if (this.bdnum) {
       this.getApplicationCenterByBdnum();
       // this.getSubstanceApplications();
+      this.applicationListExportUrl();
     }
   }
 
@@ -93,9 +94,14 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
       */
   }
 
-
   get updateApplicationUrl(): string {
     return this.applicationService.getUpdateApplicationUrl();
+  }
+
+  applicationListExportUrl() {
+    if (this.bdnum != null) {
+      this.exportUrl = this.applicationService.getApplicationListExportUrl(this.bdnum);
+    }
   }
 
 }

@@ -177,7 +177,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   loadApplication(application?: ApplicationSrs): void {
-    setTimeout(() => {
+   // setTimeout(() => {
       console.log('AAAAA');
       if (application != null) {
         this.application = application;
@@ -191,7 +191,7 @@ export class ApplicationService extends BaseHttpService {
           }]
         };
       }
-    });
+  //  });
   }
 
   getJson() {
@@ -202,6 +202,8 @@ export class ApplicationService extends BaseHttpService {
     return this.baseUrl + 'updateApplication?applicationId=';
   }
 
-
+  getApplicationListExportUrl(bdnum: string): string {
+    return this.baseUrl + 'applicationListExport?bdnum=' + bdnum;
+  }
 
 } // class
