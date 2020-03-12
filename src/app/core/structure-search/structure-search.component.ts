@@ -10,6 +10,7 @@ import { StructureService } from '../structure/structure.service';
 import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 
 @Component({
   selector: 'app-structure-search',
@@ -137,7 +138,28 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
         this.editor.setMolecule(structurePostResponse.structure.molfile);
       }
-    }, () => {});
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+    });
+  }
+
+  openStructureExportDialog(): void {
+    this.gaService.sendEvent('structureSearch', 'button:export', 'export structure');
+    const dialogRef = this.dialog.open(StructureExportComponent, {
+      height: 'auto',
+      width: '650px',
+      data: {
+        molfile: this.editor.getMolfile(),
+        smiles: this.editor.getSmiles()
+      }
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 
   searchCutoffChanged(event): void {

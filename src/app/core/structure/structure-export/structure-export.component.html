@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>
+    Export
+</h2>
+<div mat-dialog-content>
+    <mat-tab-group *ngIf="data" (selectedIndexChange)="selectedIndexChange($event)">
+        <mat-tab label="Molfile">
+            <textarea [value]="data.molfile"></textarea>
+        </mat-tab>
+        <mat-tab label="Smiles">
+            <textarea [value]="data.smiles"></textarea>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+<div class="export-actions" mat-dialog-actions>
+    <span class="middle-fill"></span>
+    <button mat-button (click)="dismissDialog()">
+        Close
+    </button>
+    <button mat-flat-button color="primary" (click)="download()">
+        Download
+    </button>
+</div>

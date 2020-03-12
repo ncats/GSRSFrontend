@@ -6,6 +6,9 @@ import { SubstanceFormService } from '../substance-form.service';
 import { StructureService } from '../../structure/structure.service';
 import { LoadingService } from '../../loading/loading.service';
 import { StructurePostResponse } from '@gsrs-core/structure';
+import { MatDialog } from '@angular/material';
+import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-substance-form-structure',
@@ -18,21 +21,23 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   userMessage: string;
   userMessageTimer: any;
   substanceType: string;
-  anchorElement: HTMLAnchorElement;
   smiles: string;
   mol: string;
   isInitializing = true;
+  private overlayContainer: HTMLElement;
 
   constructor(
     private substanceFormService: SubstanceFormService,
     private structureService: StructureService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer
   ) {
     super();
   }
 
   ngOnInit() {
-    this.anchorElement = document.createElement('a') as HTMLAnchorElement;
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.substanceFormService.definition.subscribe(def => {
       this.substanceType = def.substanceClass;
       if (this.substanceType === 'polymer') {
@@ -153,32 +158,21 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     });
   }
 
-  download(type: 'mol' | 'smiles'): void {
-    if (type === 'mol') {
-      this.downloadMol();
-    } else {
-      this.downloadSmiles();
-    }
-  }
+  openStructureExportDialog(): void {
+    const dialogRef = this.dialog.open(StructureExportComponent, {
+      height: 'auto',
+      width: '650px',
+      data: {
+        molfile: this.mol,
+        smiles: this.smiles
+      }
+    });
+    this.overlayContainer.style.zIndex = '1002';
 
-  private downloadMol(): void {
-    if (this.mol != null) {
-      const file = new Blob([this.mol], { type: 'chemical/x-mdl-molfile' });
-      this.anchorElement.download = 'substance_structure.mol';
-      this.downloadFile(file);
-    }
-  }
-
-  private downloadSmiles(): void {
-    if (this.smiles != null) {
-      const file = new Blob([this.smiles], { type: 'text/plain' });
-      this.anchorElement.download = 'substance_smiles.txt';
-      this.downloadFile(file);
-    }
-  }
-
-  private downloadFile(file: Blob): void {
-    this.anchorElement.href = window.URL.createObjectURL(file);
-    this.anchorElement.click();
+    dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 }
