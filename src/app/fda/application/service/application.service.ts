@@ -5,10 +5,11 @@ import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { ApplicationSrs } from '../model/application.model';
+import { ProductSrs } from '../model/application.model';
 import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
 import { map, switchMap, tap } from 'rxjs/operators';
-import {Facet} from '@gsrs-core/utils';
+import { Facet } from '@gsrs-core/utils';
 
 @Injectable(
   {
@@ -19,6 +20,7 @@ import {Facet} from '@gsrs-core/utils';
 export class ApplicationService extends BaseHttpService {
 
   totalRecords: 0;
+  application: ApplicationSrs;
 
   constructor(
     public http: HttpClient,
@@ -48,11 +50,34 @@ export class ApplicationService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
-
   }
 
-  filterFacets(name: string, category: string ): Observable<any> {
-    const url =  `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
+  exportBrowseApplicationsUrl(
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: SubstanceFacetParam
+  ): string {
+    let params = new SubstanceHttpParams();
+  //  params = params.append('skip', skip.toString());
+  //  params = params.append('top', '1000');
+    params = params.append('page', '1');
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    const url = this.baseUrl + 'exportApplications?' + params;
+    const options = {
+      params: params
+    };
+
+    return url;
+  }
+
+  filterFacets(name: string, category: string): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
     return this.http.get(url);
   }
 
@@ -108,7 +133,7 @@ export class ApplicationService extends BaseHttpService {
   ): Observable<Array<any>> {
 
     const func = this.baseUrl + 'applicationListByBdnum?bdnum=';
-    const url =  func + bdnum + '&center=' + center + '&fromTable=' + fromTable + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    const url = func + bdnum + '&center=' + center + '&fromTable=' + fromTable + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url).pipe(
       map(results => {
@@ -174,11 +199,34 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  loadApplication(application?: ApplicationSrs): void {
+   // setTimeout(() => {
+      console.log('AAAAA');
+      if (application != null) {
+        this.application = application;
+        console.log('AFTER' + JSON.stringify(this.application));
+      } else {
+        this.application = {
+          applicationIndicationList: [],
+          applicationProductList: [{
+            applicationProductNameList: [],
+            applicationIngredientList: [{}]
+          }]
+        };
+      }
+  //  });
+  }
+
+  getJson() {
+    return this.application;
+  }
 
   getUpdateApplicationUrl(): string {
     return this.baseUrl + 'updateApplication?applicationId=';
   }
 
-
+  getApplicationListExportUrl(bdnum: string): string {
+    return this.baseUrl + 'applicationListExport?bdnum=' + bdnum;
+  }
 
 } // class

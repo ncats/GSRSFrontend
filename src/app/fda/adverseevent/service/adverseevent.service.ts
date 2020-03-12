@@ -66,4 +66,17 @@ export class AdverseEventService extends BaseHttpService {
 
   }
 
+  getAdverseEventPtListExportUrl(bdnum: string): string {
+    return this.baseUrl + 'adverseEventPtListExport?bdnum=' + bdnum;
+  }
+
+  getAdverseEventDmeListExportUrl(bdnum: string): string {
+    return this.baseUrl + 'adverseEventDmeListExport?bdnum=' + bdnum;
+  }
+
+  getAdverseEventCvmListExportUrl(bdnum: string): string {
+    return this.baseUrl + 'adverseEventCvmListExport?bdnum=' + bdnum;
+  }
+
+
 } // class

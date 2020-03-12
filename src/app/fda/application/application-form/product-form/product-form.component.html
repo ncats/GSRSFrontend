@@ -1,0 +1,58 @@
+<div class="details-container">
+
+  <div class="details-box">
+    PRODUCT
+
+    <div *ngFor="let product of application.applicationProductList">
+
+      <div class="form-row">
+        <mat-form-field class="">
+          <mat-label>Dosage From</mat-label>
+          <mat-select matNativeControl [(ngModel)]="product.dosageForm" name="dosageForm">
+            <mat-option *ngFor="let dosageForm of dosageFormList" [value]="dosageForm.value">
+              {{dosageForm.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>Route of Administration</mat-label>
+          <mat-select matNativeControl [(ngModel)]="product.routeAdmin" name="routeAdmin">
+            <mat-option *ngFor="let routeAdmin of routeAdminList" [value]="routeAdmin.value">
+              {{routeAdmin.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>Unit Of Presentation</mat-label>
+          <mat-select matNativeControl [(ngModel)]="product.unitPresentation" name="unitPresentation">
+            <mat-option *ngFor="let unitPresentation of unitPresentationList" [value]="unitPresentation.value">
+              {{unitPresentation.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field class="">
+          <input matInput placeholder="Amount" [(ngModel)]="product.amount" name="amount" />
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>Unit</mat-label>
+          <mat-select matNativeControl [(ngModel)]="product.unit" name="unit">
+            <mat-option *ngFor="let unit of unitList" [value]="unit.value">
+              {{unit.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+       <!-- INGREDIENT -->
+        <div class="form-row">
+          <app-ingredient-form [product]="product"></app-ingredient-form>
+        </div>
+ 
+    </div> <!-- Product repeat -->
+
+  </div>
+</div>

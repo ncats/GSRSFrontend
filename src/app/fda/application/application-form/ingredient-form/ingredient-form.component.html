@@ -1,0 +1,62 @@
+<div class="details-container">
+
+  <br><br>
+  <div class="details-box">
+    INGREDIENT
+    <div *ngFor="let ingredient of product.applicationIngredientList">
+
+      <div class="form-row">
+        <mat-form-field class="">
+          <mat-label>Ingredient Type</mat-label>
+          <mat-select matNativeControl [(ngModel)]="ingredient.ingredientType" name="ingredientType">
+            <mat-option *ngFor="let ingredientType of ingredientTypeList" [value]="ingredientType.value">
+              {{ingredientType.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+    <!--
+       <mat-form-field class="">
+          <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
+        </mat-form-field>
+
+       <mat-form-field class="">
+          <input matInput placeholder="Low" [(ngModel)]="ingredient.low" name="low" />
+        </mat-form-field>
+
+       <mat-form-field class="">
+          <input matInput placeholder="High" [(ngModel)]="ingredient.high" name="high" />
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>Unit</mat-label>
+          <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
+            <mat-option *ngFor="let unit of unitList" [value]="routeAunitdmin.value">
+              {{unit.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>Grade</mat-label>
+          <mat-select matNativeControl [(ngModel)]="ingredient.grade" name="grade">
+            <mat-option *ngFor="let grade of gradeList" [value]="grade.value">
+              {{grade.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field class="">
+          <mat-label>Unit</mat-label>
+          <mat-select matNativeControl [(ngModel)]="product.unit" name="unit">
+            <mat-option *ngFor="let unit of unitList" [value]="unit.value">
+              {{unit.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+      -->
+    </div> <!-- Product repeat -->
+
+  </div>
+</div>

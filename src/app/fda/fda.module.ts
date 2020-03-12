@@ -11,20 +11,15 @@ import { MatCardModule } from '@angular/material/card';
 import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
-import { ApplicationsModule} from './applications/applications.module';
+import { ApplicationModule} from './application/application.module';
 import { ProductModule} from './product/product.module';
 import { GeneralService} from './service/general.service';
 import { MatTabsModule } from '@angular/material/tabs';
-
-import { ApplicationsBrowseComponent } from './applications/applications-browse/applications-browse.component';
+import { ApplicationsBrowseComponent } from './application/applications-browse/applications-browse.component';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
 import { SsoRefreshService } from './service/sso-refresh.service';
 
 const fdaRoutes: Routes = [
-  {
-    path: 'browse-applications',
-    component: ApplicationsBrowseComponent
-  },
   {
     path: 'browse-clinical-trial',
     component: ClinicalTrialsBrowseComponent
@@ -47,7 +42,8 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     MatExpansionModule,
     ClinicalTrialsModule.forRoot(),
     MatTabsModule,
-    ApplicationsModule,
+    ClinicalTrialsModule.forRoot(),
+    ApplicationModule,
     ProductModule
   ],
   declarations: [

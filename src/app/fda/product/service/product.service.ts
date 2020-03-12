@@ -58,5 +58,8 @@ export class ProductService extends BaseHttpService {
     );
   }
 
+  getProductListExportUrl(substanceId: string): string {
+    return this.baseUrl + 'productListExport?substanceId=' + substanceId;
+  }
 
 }

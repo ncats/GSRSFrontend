@@ -49,6 +49,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   appNumber: string;
   clinicalTrialApplication: Array<any>;
   environment: Environment;
+  exportUrl: string;
 
   //  public order: string;
   // public sortValues = searchSortValues;
@@ -56,7 +57,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   // public facetBuilder: SubstanceFacetParam;
   searchText: { [faceName: string]: { value: string, isLoading: boolean } } = {};
   // private overlayContainer: HTMLElement;
-  private facetSearchChanged = new Subject<{ index: number, query: any}>();
+  private facetSearchChanged = new Subject<{ index: number, query: any }>();
   private activeSearchedFaced: Facet;
 
   constructor(
@@ -149,8 +150,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
           && this.facetParams[this.activeSearchedFaced.name] != null
           && (this.facetParams[this.activeSearchedFaced.name].params[value.label] === true
             || this.facetParams[this.activeSearchedFaced.name].params[value.label] === false)) {
-              removeFacet = false;
-            }
+          removeFacet = false;
+        }
 
         return !removeFacet;
       });
@@ -229,7 +230,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
         this.facets = [];
-
+        // Export Application Url
+        this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
+          skip,
+          this.pageSize,
+          this._searchTerm,
+          this.privateFacetParams);
         this.getSubstanceDetailsByBdnum();
 
         // this.applicationService.getClinicalTrialApplication(this.applications);
@@ -382,11 +388,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
       if (facet.name === 'ix.Class') {
         include = false;
       } else {
-        this.searchText[facet.name] = { value: '', isLoading: false};
+        this.searchText[facet.name] = { value: '', isLoading: false };
       }
       return include;
     });
-    this.facets =  facets;
+    this.facets = facets;
   }
 
   applyFacetsFilter(facetName: string) {
@@ -408,24 +414,24 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   moreFacets(index: number, facet: Facet) {
-    const subscription = this.applicationService.retrieveNextFacetValues(this.facets[index]).subscribe( resp => {
-        this.facets[index].$next = resp.$next;
-        this.facets[index].values = this.facets[index].values.concat(resp.content);
-        this.facets[index].$fetched = this.facets[index].values;
-        this.facets[index].$total = resp.ftotal;
-        subscription.unsubscribe();
-      }, error => {
-        subscription.unsubscribe();
-      });
+    const subscription = this.applicationService.retrieveNextFacetValues(this.facets[index]).subscribe(resp => {
+      this.facets[index].$next = resp.$next;
+      this.facets[index].values = this.facets[index].values.concat(resp.content);
+      this.facets[index].$fetched = this.facets[index].values;
+      this.facets[index].$total = resp.ftotal;
+      subscription.unsubscribe();
+    }, error => {
+      subscription.unsubscribe();
+    });
   }
 
   lessFacets(index: number) {
-    const subscription = this.applicationService.retrieveFacetValues(this.facets[index]).subscribe( response => {
-       this.facets[index].values = response.content;
-       this.facets[index].$fetched = response.content;
-       this.facets[index].$next = response.$next;
-       subscription.unsubscribe();
-     }, error => {
+    const subscription = this.applicationService.retrieveFacetValues(this.facets[index]).subscribe(response => {
+      this.facets[index].values = response.content;
+      this.facets[index].$fetched = response.content;
+      this.facets[index].$next = response.$next;
+      subscription.unsubscribe();
+    }, error => {
       subscription.unsubscribe();
     });
   }
@@ -433,7 +439,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   filterFacets(index: number, event: any, faceName: string): void {
     this.searchText[faceName].isLoading = true;
     this.activeSearchedFaced = this.facets[index];
-    this.facetSearchChanged.next({index: index, query: event});
+    this.facetSearchChanged.next({ index: index, query: event });
   }
 
   clearFacetSearch(index: number, facetName: string): void {
@@ -503,6 +509,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
 
   }
 
+  exportBrowseApplicationsUrl() {
+   // this.exportUrl = this.applicationService.exportBrowseApplicationsUrl();
+  }
 
   get updateApplicationUrl(): string {
     return this.applicationService.getUpdateApplicationUrl();
