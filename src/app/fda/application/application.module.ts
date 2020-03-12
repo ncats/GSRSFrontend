@@ -4,7 +4,6 @@ import { Router, Routes, RouterModule } from '@angular/router';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {NgxJsonViewerModule} from 'ngx-json-viewer';
-
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
@@ -28,7 +27,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-
 import { ApplicationsBrowseComponent } from './applications-browse/applications-browse.component';
 import { ApplicationDetailsComponent } from './application-details/application-details/application-details.component';
 import { ApplicationDarrtsDetailsComponent } from './application-details/application-darrts-details/application-darrts-details.component';
