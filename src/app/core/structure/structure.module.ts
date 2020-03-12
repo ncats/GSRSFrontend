@@ -6,6 +6,7 @@ import { StructureImportComponent } from './structure-import/structure-import.co
 import { MatIconModule, MatTabsModule, MatProgressBarModule, MatButtonModule } from '@angular/material';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FileSelectModule } from 'file-select';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     MatProgressBarModule,
-    MatButtonModule
+    MatButtonModule,
+    FileSelectModule
   ],
   exports: [
     StructureExportComponent,

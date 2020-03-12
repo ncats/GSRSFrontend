@@ -11,7 +11,7 @@
 <div [ngClass]="['message-container', messageClass]" *ngIf="message">
   {{message}}
 </div>
-<div mat-dialog-actions>
+<div class="import-actions" mat-dialog-actions>
   <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)" (click)="fileBrowse()">Browse</button>
   <span class="middle-fill"></span>
   <button mat-button (click)="dismissDialog()">Close</button>
