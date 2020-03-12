@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 import { ApplicationsBrowseComponent } from './applications/applications-browse/applications-browse.component';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
+import { SsoRefreshService } from './service/sso-refresh.service';
 
 const fdaRoutes: Routes = [
   {
@@ -30,6 +31,12 @@ const fdaRoutes: Routes = [
   }
 ];
 
+export function init_sso_refresh_service(ssoService: SsoRefreshService) {
+  return() => {
+    ssoService.init();
+  };
+}
+
 @NgModule({
   imports: [
     CommonModule,
@@ -40,18 +47,26 @@ const fdaRoutes: Routes = [
     MatExpansionModule,
     ClinicalTrialsModule.forRoot(),
     MatTabsModule,
-    ClinicalTrialsModule.forRoot(),
     ApplicationsModule,
     ProductModule
   ],
   declarations: [
-    SubstanceCountsComponent,
+    SubstanceCountsComponent
     // FacetFilterPipe,
     // FacetDisplayPipe
   ],
   exports: [],
   entryComponents: [
     SubstanceCountsComponent
+  ],
+  providers: [
+    SsoRefreshService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: init_sso_refresh_service,
+      deps: [SsoRefreshService],
+      multi: true
+    }
   ]
 })
 export class FdaModule {
