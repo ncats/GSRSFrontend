@@ -95,7 +95,7 @@ const applicationRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
-    NgxJsonViewerModule
+    NgxJsonViewerModule,
     MatProgressBarModule,
     SubstanceImageModule
   ],

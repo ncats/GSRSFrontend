@@ -10,10 +10,6 @@ environment.navItems = [
     {
         display: 'Browse Clinical Trials',
         path: 'browse-clinical-trials'
-    },
-    {
-        display: 'Register Application',
-        path: 'application/register'
     }
 ];
 environment.appId = 'fda';

@@ -50,7 +50,30 @@ export class ApplicationService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
+  }
 
+  exportBrowseApplicationsUrl(
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: SubstanceFacetParam
+  ): string {
+    let params = new SubstanceHttpParams();
+  //  params = params.append('skip', skip.toString());
+  //  params = params.append('top', '1000');
+    params = params.append('page', '1');
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    const url = this.baseUrl + 'exportApplications?' + params;
+    const options = {
+      params: params
+    };
+
+    return url;
   }
 
   filterFacets(name: string, category: string): Observable<any> {
