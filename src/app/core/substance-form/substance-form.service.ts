@@ -374,14 +374,13 @@ unapproveRecord() {
         observer.next(this.getDefinition());
         // tslint:disable-next-line:no-shadowed-variable
         this.definitionEmitter.subscribe(definition => {
-          observer.next(this.getDefinition());
+          observer.next(definition);
         });
       });
     });
   }
 
   updateDefinition(definition: SubstanceFormDefinition): void {
-    this.substance.definitionType = definition.definitionType;
     this.substance.definitionLevel = definition.definitionLevel;
     this.substance.deprecated = definition.deprecated;
     this.substance.access = definition.access;
@@ -402,6 +401,18 @@ unapproveRecord() {
         references: definition.references
       };
     }
+
+    if (this.substance.definitionType !== definition.definitionType) {
+      if ( definition.definitionType === 'ALTERNATIVE') {
+        this.substance.names = [];
+        this.substance.codes = [];
+        this.substanceNamesEmitter.next(this.substance.names);
+        this.substanceCodesEmitter.next(this.substance.codes);
+
+      }
+    }
+    this.substance.definitionType = definition.definitionType;
+    this.definitionEmitter.next(this.getDefinition());
   }
 
   getJson() {

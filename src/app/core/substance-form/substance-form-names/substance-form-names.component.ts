@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 export class SubstanceFormNamesComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit, AfterViewInit, OnDestroy {
   names: Array<SubstanceName>;
   private subscriptions: Array<Subscription> = [];
+  isAlternative = false;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -29,6 +30,14 @@ export class SubstanceFormNamesComponent extends SubstanceCardBaseFilteredList<S
   }
 
   ngAfterViewInit() {
+    const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
+      if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
+        this.isAlternative = true;
+      } else {
+        this.isAlternative = false;
+      }
+      });
+    this.subscriptions.push(definitionSubscription);
     const namesSubscription = this.substanceFormService.substanceNames.subscribe(names => {
       this.names = names;
       this.filtered = names;
