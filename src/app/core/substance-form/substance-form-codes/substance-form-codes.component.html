@@ -3,7 +3,7 @@
     <input matInput placeholder="Search" [formControl]="searchControl">
   </mat-form-field>
   <span class="middle-fill"></span>
-  <button mat-button (click)="addCode()">
+  <button mat-button (click)="addCode()" [disabled] = "isAlternative">
     Add code <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
 </div>
