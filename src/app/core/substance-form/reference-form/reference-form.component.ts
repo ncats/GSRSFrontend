@@ -15,7 +15,6 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   @Input() reference: SubstanceReference;
   @Output() referenceDeleted = new EventEmitter<SubstanceReference>();
   @Input() hideDelete = false;
-  documentTypes: Array<VocabularyTerm> = [];
   deleteTimer: any;
 
   constructor(
@@ -25,16 +24,9 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    this.getVocabularies();
   }
 
   ngAfterViewInit() {
-  }
-
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
-      this.documentTypes = response['DOCUMENT_TYPE'].list;
-    });
   }
 
   updateAccess(access: Array<string>): void {

@@ -1,0 +1,171 @@
+<div *ngIf="application">
+  <div class="details-container margintop90px">
+    <mat-card class="bordergray">
+      <mat-card-title>
+        Application Details&nbsp;<span class="font10px colorgray">(Darrts)</span>
+      </mat-card-title>
+
+      <mat-card-content>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Product Name:
+            </div>
+            <div class="row-property-value">
+              <span class="colororange font14px fontbold">{{application.productName}}</span>
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Type Number:
+            </div>
+            <div class="row-property-value">
+              <b>{{application.appType}}&nbsp;{{application.appNumber}}</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Sponsor Name:
+            </div>
+            <div class="row-property-value">
+              {{application.sponsorName}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Dosage Form Desc:
+            </div>
+            <div class="row-property-value">
+              {{application.dosageFormDesc}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Status:
+            </div>
+            <div class="row-property-value">
+              {{application.status}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Status Date:
+            </div>
+            <div class="row-property-value">
+              {{application.statusDate}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Division Class Number:
+            </div>
+            <div class="row-property-value">
+              {{application.divisionClass}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Division Class Desc:
+            </div>
+            <div class="row-property-value">
+              {{application.divisionClassDesc}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Sub Type Desc:
+            </div>
+            <div class="row-property-value">
+              {{application.appSubTypeDesc}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+
+            </div>
+            <div class="row-property-value">
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property-2">
+            <div class="row-property-key-2">
+              Indication:
+            </div>
+            <div class="row-property-value-2">
+              <div *ngFor="let ind of application.indicationList; let i = index">
+                &bull;&nbsp;{{ind}} <br>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="details-container">
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        Substances in Application ({{application.ingredientList.length}})
+      </mat-card-title>
+      <mat-card-content>
+        <table class="blueTable">
+          <thead>
+            <tr height="30px">
+              <th>#</th>
+              <th>Product No</th>
+              <th>Part No</th>
+              <th>Substance Name</th>
+              <th>Structure</th>
+              <th>Bdnum</th>
+              <th>Unii</th>
+              <th>Activity</th>
+              <th>Potency</th>
+              <th>Parent Bdnum</th>
+              <th>Parent Substance Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of application.ingredientList; let i = index">
+              <td>{{ i+1 }}</td>
+              <td>{{ x.productNo }}</td>
+              <td>{{ x.partNo }}</td>
+              <td>
+                <div *ngIf="x.substanceId">
+                  <a [routerLink]="['/substances', x.substanceId]" target="_blank">{{x.name}}</a>
+                </div>
+              </td>
+              <td>
+                <div *ngIf="x.substanceId">
+                  <img class="structure-img" appSubstanceImage [entityId]="x.substanceId">
+                </div>
+              </td>
+              <td>{{ x.bdnum }}</td>
+              <td>{{ x.unii }}</td>
+              <td>{{ x.activity }}</td>
+              <td>{{ x.potency }}</td>
+              <td>{{ x.parentBdnum }}</td>
+              <td>{{ x.parentDisplayTerm }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -17,6 +17,8 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   vocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   view = 'details';
   substanceUpdated = new Subject<SubstanceDetail>();
+  cvType = 'AMINO_ACID_RESIDUE';
+
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -32,6 +34,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         && this.substance.protein.subunits.length) {
         this.subunits = this.substance.protein.subunits;
         this.countUpdate.emit(this.subunits.length);
+        this.cvType = 'AMINO_ACID_RESIDUE';
         this.getVocabularies();
       } else if (this.substance != null
         && this.substance.nucleicAcid != null
@@ -39,6 +42,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         && this.substance.nucleicAcid.subunits.length) {
         this.subunits = this.substance.nucleicAcid.subunits;
         this.countUpdate.emit(this.subunits.length);
+        this.cvType = 'NUCLEIC_ACID_BASE';
         this.getVocabularies();
       }
   }
@@ -46,14 +50,18 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   ngAfterViewInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
-      this.subunits = this.substance.protein.subunits;
+      if (this.substance.protein) {
+          this.subunits = this.substance.protein.subunits;
+      } else if (this.substance.nucleicAcid) {
+          this.subunits = this.substance.nucleicAcid.subunits;
+      }
       this.countUpdate.emit(this.subunits.length);
     });
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
-      this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
+    this.cvService.getDomainVocabulary(this.cvType).subscribe(response => {
+      this.vocabulary = response[this.cvType].dictionary;
       this.processSubunits();
     }, error => {
       this.processSubunits();
@@ -110,7 +118,9 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
             unitIndex: index + sectionNumberAddend + 1,
             unitValue: sequenceSectionString[index]
           };
-
+          if (!this.vocabulary[sequenceUnit.unitValue.toUpperCase()]) {
+              sequenceUnit.class = 'error';
+          }
           sequenceSection.sectionUnits.push(sequenceUnit);
           index++;
         } else {
@@ -130,7 +140,13 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   }
 
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
-    return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${this.vocabulary[unitValue.toUpperCase()].display})`;
+    let vocabDisplay = '';
+    if (this.vocabulary[unitValue.toUpperCase()]) {
+      vocabDisplay = this.vocabulary[unitValue.toUpperCase()].display;
+    } else {
+      vocabDisplay = 'UNDEFINED';
+    }
+    return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocabDisplay})`;
   }
 
   updateView(event): void {
@@ -156,4 +172,5 @@ interface SequenceSection {
 interface SequenceUnit {
   unitIndex: number;
   unitValue: string;
+  class?: string;
 }

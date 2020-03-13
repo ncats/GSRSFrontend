@@ -28,7 +28,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   @Input() type?: string;
   @Output() structureImported = new EventEmitter<StructurePostResponse>();
   @Output() nameResolved = new EventEmitter<string>();
-  @Output() download = new EventEmitter<'mol'|'smiles'>();
+  @Output() export = new EventEmitter<void>();
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
@@ -48,6 +48,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
       this.nameResolved.emit(mol);
     });
     this.subscriptions.push(resolver);
+    this.optical = this.privateStructure.opticalActivity;
   }
 
   ngOnDestroy() {
@@ -58,13 +59,20 @@ export class StructureFormComponent implements OnInit, OnDestroy {
 
   @Input()
   set structure(updatedStructure: SubstanceStructure | SubstanceMoiety) {
+
+
     if (updatedStructure != null) {
       this.privateStructure = updatedStructure;
-      this.optical = this.privateStructure.opticalActivity;
+      if (this.privateStructure.opticalActivity === 'NONE' && !this.inCV(this.opticalActivityList, this.privateStructure.opticalActivity)) {
+        this.privateStructure.opticalActivity = 'none';
+      }
     }
   }
 
   get structure(): (SubstanceStructure | SubstanceMoiety) {
+    if (this.privateStructure.opticalActivity === 'NONE' && !this.inCV(this.opticalActivityList, this.privateStructure.opticalActivity)) {
+      this.privateStructure.opticalActivity = 'none';
+    }
     return this.privateStructure;
   }
 
@@ -80,11 +88,15 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     this.privateStructure.access = access;
   }
 
-  updateOptical(select: any): void {
-    this.optical = select.value;
-    this.privateStructure.opticalActivity = this.optical;
-  }
 
+  inCV(vocab: Array<VocabularyTerm>, property: string): boolean {
+    if (vocab) {
+      return vocab.some(r => property === r.value);
+    } else {
+      return true;
+    }
+
+  }
   openStructureImportDialog(): void {
     this.gaService.sendEvent('structureForm', 'button:import', 'import structure');
     const dialogRef = this.dialog.open(StructureImportComponent, {
@@ -139,8 +151,8 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  downloadStructure(type: 'mol'|'smiles'): void {
-    this.download.emit(type);
+  exportStructure(): void {
+    this.export.emit();
   }
 
 }

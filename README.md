@@ -19,24 +19,29 @@ Make sure to have these installed in order to run the application:
   - Hopefully, you've already added this folder to you windows environment path.
   - ... the ng.exe program will be used quite a bit.
 
-
 ## Install Application Packages
 
-After you have cloned the application to your local computer, open your favorite command line, navigate to the root directory (where the package.json is located), and run the following command:
+After you have cloned the application to your local computer, and prepared the dojo dependencies, open your favorite command line, navigate to the root directory (where the `package.json` file is located), 
+and copy the `package.dev.json` file to a new file called `package.json`, then run the command:
+
 
 - `npm install`
+
 
 The first time you do this, it will take a while to download all required packages.
 
 You should repeat this step whenever somebody adds a new package to the application. It's probably not a bad idea to run it whenever you start working on the application
 
-## Perform a One-Time Build
+
+## Perform a One-Time Build of dependencies
 
 You'll have to run the following commands the first time you work on the application to make sure a few libraries are built and ready to be used by the application:
 
 - `ng build --prod file-select`
 - `ng build --prod ketcher-wrapper`
 - `ng build --prod jsdraw-wrapper`
+
+After this is done, the file `package.real.json` should be copied and replace the `package.json` file. 
 
 ## Run Application for Specific Environment
 
@@ -64,3 +69,4 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+

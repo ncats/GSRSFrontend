@@ -33,6 +33,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   substanceUpdated = new Subject<SubstanceDetail>();
   oldUrl: string;
   baseDomain: string;
+  defaultCodeSystem = 'BDNUM';
+  defaultCodes: string;
   constructor(
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -62,6 +64,21 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.getVersion();
     this.getClassFromCv();
     this.oldUrl = this.substanceService.oldSiteRedirect('details', this.substance.uuid);
+    if (this.configService.configData.defaultCodeSystem != null
+      && this.configService.configData.defaultCodeSystem !== '') {
+        this.defaultCodeSystem = this.configService.configData.defaultCodeSystem;
+      }
+
+    if (this.substance.codes != null && this.substance.codes.length > 0) {
+      const defaultCodes = [];
+      this.substance.codes.forEach(code => {
+        if (code.codeSystem === this.defaultCodeSystem) {
+          defaultCodes.push(code.code);
+        }
+      });
+
+      this.defaultCodes = defaultCodes.join(', ');
+    }
   }
 
   ngAfterViewInit() {
@@ -118,10 +135,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     } else {
       this.defIcon = 'drop_up';
     }
-  }
-
-  getSafeStructureImgUrl(structureId: string, size: number = 400): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size);
   }
 
   getClassFromCv(): void {

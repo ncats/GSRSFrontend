@@ -4,6 +4,12 @@
     display: flex;
 }
 
+.type, .qualification, .interaction-type {
+  ::ng-deep mat-form-field {
+    width: 100%;
+  }
+}
+
 .notification-backdrop {
     position: absolute;
     top: 0;

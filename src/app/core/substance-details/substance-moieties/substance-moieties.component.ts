@@ -29,9 +29,4 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
       this.countUpdate.emit(this.moieties.length);
     });
   }
-
-  getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
-    return this.utilService.getSafeStructureImgUrl(structureId, size);
-  }
-
 }

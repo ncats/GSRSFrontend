@@ -5,7 +5,15 @@
 <ncats-jsdraw-wrapper (jsDrawOnLoad)="jsDrawOnLoad($event)" *ngIf="structureEditor == 'jsdraw'"></ncats-jsdraw-wrapper>
 
 <div id ="canvas-container">
-  <div>Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file</div>
+  <div class="below-editor-container">
+    <div class="molvec-message">
+      Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
+    </div>
+    <button mat-button color="primary" (click)="cleanStructure()">
+      <mat-icon svgIcon="brush"></mat-icon>
+      Clean structure
+    </button>
+  </div>
   <div id = "canvas-label canvas" *ngIf = "height > 0">Original Image:
     <a class = "blue-font toggle" (click) = "canvasToggle = !canvasToggle">{{canvasToggle? 'hide': 'show'}}</a>
   </div>

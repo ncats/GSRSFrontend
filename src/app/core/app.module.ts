@@ -30,6 +30,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
@@ -50,7 +51,6 @@ import { TakePipe } from './utils/take.pipe';
 import { FacetDisplayPipe } from './utils/facet-display.pipe';
 import { EnvironmentModule } from '../../environments/environment';
 import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
-import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
@@ -67,6 +67,8 @@ import { HighlightedSearchActionComponent } from './highlighted-search-action/hi
 import { CardDynamicSectionDirective } from './substances-browse/card-dynamic-section/card-dynamic-section.directive';
 import { SubstanceSummaryCardComponent } from './substances-browse/substance-summary-card/substance-summary-card.component';
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
+import { SubstanceImageModule } from './substance/substance-image.module';
+import { StructureModule } from './structure/structure.module';
 
 @NgModule({
   declarations: [
@@ -77,7 +79,6 @@ import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-s
     SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent,
-    StructureImageModalComponent,
     TakePipe,
     FacetDisplayPipe,
     FacetFilterPipe,
@@ -133,7 +134,10 @@ import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-s
     SubstanceFormModule,
     OverlayModule,
     NameResolverModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatProgressBarModule,
+    SubstanceImageModule,
+    StructureModule
   ],
   providers: [
     ConfigService,
@@ -149,7 +153,6 @@ import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-s
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    StructureImageModalComponent,
     HighlightedSearchActionComponent
   ]
 })

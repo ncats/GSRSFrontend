@@ -1,0 +1,28 @@
+TESTING
+<div mat-dialog-title>
+  <h1>JSON Object structure</h1>
+  <div>
+    <button mat-flat-button color="primary" (click)="raw = !raw">{{raw? 'Show Object':'Show Raw'}}</button>&nbsp;
+    <button mat-flat-button *ngIf="!raw" (click)="expand = !expand">{{expand? 'collapse':'expand'}}</button>
+    <span class="middle-fill"></span>
+    <a mat-flat-button color="primary" [href]="downloadJsonHref"
+      download="{{json.appType}}.json">
+      <span>Export JSON</span>
+    </a>
+  </div>
+</div>
+
+<div mat-dialog-content>
+  <div class='formatted' *ngIf="!raw">
+    <ngx-json-viewer [json]="json" [expanded]="expand"></ngx-json-viewer>
+  </div>
+  <div *ngIf="raw" class='raw'>
+    <textarea class='raw-text'>{{json | json}}</textarea>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-flat-button color="primary" matDialogClose>Close</button>
+
+  <span class="middle-fill"></span>
+</div>

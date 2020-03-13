@@ -136,6 +136,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstancePropertiesModule),
   },
   {
+    componentId: 'substance-constituents',
+    path: 'substance-constituents',
+    loadChildren: () => import('./substance-details/substance-constituents/substance-constituents.module')
+      .then(m => m.SubstanceConstituentsModule),
+  },
+  {
     componentId: 'substance-primary-definition',
     path: 'substance-primary-definition',
     loadChildren: () => import('./substance-details/substance-primary-definition/substance-primary-definition.module')

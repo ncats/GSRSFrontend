@@ -5,6 +5,7 @@ import { SubstanceTextSearchModule } from '../substance-text-search/substance-te
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { RouterModule } from '@angular/router';
     SubstanceTextSearchModule,
     MatIconModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
+    SubstanceImageModule
   ],
   declarations: [
     SubstanceSelectorComponent

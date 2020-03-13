@@ -1,8 +1,9 @@
 
 <div class = "flex-row">
 <mat-form-field [ngClass] = "privateMod === 'other'?'risen':''" class = "cv-field">
-  <mat-label>{{title}}</mat-label>
+  <mat-label>{{title}} {{required? ' *':''}}</mat-label>
   <mat-select [(ngModel)]="privateMod" name="term" (ngModelChange)="select($event)">
+    <mat-option [value] = 'null' *ngIf = "privateMod" ><span class = 'deselect' >Clear selection</span></mat-option>
   <mat-option *ngFor="let term of vocabulary" [value]=" term.value">
     {{term.display}}
   </mat-option>
@@ -11,7 +12,7 @@
   <mat-option value = 'other' >Other (New Value)</mat-option>
 </mat-select>
 </mat-form-field>
-  <a class = "add-term" mat-icon-button *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== 'other'"
+  <a class = "add-term" mat-icon-button *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== 'other' && isAdmin"
      matTooltip = "add term to Controlled Vocabulary"(click) = "addToVocab()">
     add
   </a>

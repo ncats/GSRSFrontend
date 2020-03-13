@@ -35,6 +35,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   allSites: Array<DisplaySite> = [];
   features: Array<any> = [];
   sequenceSites: Array<any> = [];
+  editSequence: string;
   sugars: Array<Sugar>;
   links: Array<Linkage>;
   sequenceType = '';
@@ -192,7 +193,9 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.substanceFormService.emitSubunitUpdate();
       this.substanceFormService.recalculateCysteine();
     } else {
-      setTimeout(function () {
+        this.editSequence = this.preformatSeq(this.subunit.sequence);
+
+      setTimeout(() => {
         const textArea = document.getElementsByClassName('sequence-textarea');
         [].forEach.call(textArea, function (area) {
            area.style.height = (area.scrollHeight + 10) + 'px';
@@ -208,6 +211,19 @@ change(event): void {
 
   deleteSubunit(): void {
     this.subunitDeleted.emit(this.subunit);
+  }
+
+  preformatSeq(seq): string {
+    let ret = '';
+    if (seq) {
+      for (let i = 0; i < seq.length; i += 10) {
+        if (i % 60 === 0) {
+          ret += '\n';
+        }
+        ret += seq.substr(i, 10) + '     ';
+      }
+    }
+    return ret.trim();
   }
 
   cleanSequence(): void {

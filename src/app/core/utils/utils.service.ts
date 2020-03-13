@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class UtilsService extends BaseHttpService {
+export class UtilsService {
   private bodyElement: HTMLBodyElement;
   private matSidenavContentElement: HTMLElement;
 
@@ -18,12 +18,11 @@ export class UtilsService extends BaseHttpService {
     public http: HttpClient,
     public configService: ConfigService,
     private sanitizer: DomSanitizer
-  ) {
-    super(configService);
-  }
+  ) {}
 
   getStructureSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
-    return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrl + 'suggest?q=' + searchTerm);
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    return this.http.get<SubstanceSuggestionsGroup>(url + 'suggest?q=' + searchTerm);
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean): SafeUrl {
@@ -32,6 +31,13 @@ export class UtilsService extends BaseHttpService {
     }
     const imgUrl = `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}`;
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
+  }
+
+  getStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean): string {
+    if (!stereo) {
+      stereo = false;
+    }
+    return `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}`;
   }
 
   handleMatSidenavOpen(widthBreakingPoint?: number): void {

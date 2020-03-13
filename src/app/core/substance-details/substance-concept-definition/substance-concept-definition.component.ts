@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
 import {SubstanceDetail, SubstanceRelated, SubstanceRelationship} from '../../substance/substance.model';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {UtilsService} from '../../utils/utils.service';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -16,9 +14,7 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
   substanceUpdated = new Subject<SubstanceDetail>();
 
 
-  constructor(
-    public utilsService: UtilsService
-  ) {
+  constructor() {
     super();
   }
 
@@ -41,9 +37,5 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
       });
       this.countUpdate.emit(this.definitions.length);
     }
-  }
-
-  getSafeStructureImgUrl(substanceId: string, size: number = 150): SafeUrl {
-      return this.utilsService.getSafeStructureImgUrl(substanceId, size);
   }
 }

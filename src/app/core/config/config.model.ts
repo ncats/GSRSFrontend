@@ -7,6 +7,7 @@ export interface Config {
     facets?: { [permission: string]: Array<string> };
     codeSystemOrder?: Array<string>;
     contactEmail?: string;
+    defaultCodeSystem?: string;
 }
 
 export interface SubstanceDetailsCard {

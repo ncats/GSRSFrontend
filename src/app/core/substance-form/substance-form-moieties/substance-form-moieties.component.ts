@@ -34,8 +34,4 @@ export class SubstanceFormMoietiesComponent extends SubstanceFormBase implements
     });
   }
 
-  getSafeStructureImgUrl(structureId: string): SafeUrl {
-    return this.structureService.getSafeStructureImgUrl(structureId);
-  }
-
 }

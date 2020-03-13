@@ -82,6 +82,20 @@
       ]
     },
     {
+      "card": "substance-subunits",
+      "title": "subunits",
+      "filters": [{
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "nucleicAcid"
+      },
+        {
+          "filterName": "exists",
+          "propertyToCheck": "nucleicAcid.subunits"
+        }
+      ]
+    },
+    {
       "card": "substance-glycosylation",
       "title": "glycosylation",
       "filters": [{
@@ -181,6 +195,20 @@
     },
     {
       "card": "substance-relationships",
+      "type": "SUB_CONCEPT->SUBSTANCE",
+      "title": "variant concepts",
+      "filters": [{
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+        {
+          "filterName": "substanceRelationships",
+          "value": "SUB_CONCEPT->SUBSTANCE"
+        }
+      ]
+    },
+    {
+      "card": "substance-relationships",
       "type": "RELATIONSHIPS",
       "title": "relationships",
       "filters": [{
@@ -189,7 +217,7 @@
         },
         {
           "filterName": "substanceRelationships",
-          "value": ["METABOLITE", "IMPURITY", "ACTIVE MOIETY", "CONSTITUENT"]
+          "value": ["METABOLITE", "IMPURITY", "ACTIVE MOIETY", "CONSTITUENT", "SUB_CONCEPT->SUBSTANCE"]
         }
       ]
     },
@@ -284,6 +312,20 @@
         {
           "filterName": "exists",
           "propertyToCheck": "mixture.components"
+        }
+      ]
+    },
+    {
+      "card": "substance-constituents",
+      "title": "specified substance constituents",
+      "filters": [{
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "specifiedSubstanceG1"
+      },
+        {
+          "filterName": "exists",
+          "propertyToCheck": "specifiedSubstance.constituents"
         }
       ]
     },
@@ -401,5 +443,12 @@
       "Family",
       "Parts"
     ]
-  }
+  },
+  "codeSystemOrder": [
+    "BDNUM",
+    "CAS",
+    "WHO-ATC",
+    "EVMPD",
+    "NCI"
+  ]
 }

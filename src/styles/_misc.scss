@@ -26,6 +26,13 @@
 
     .value {
         font-size: 1.1em;
+        display: flex;
+        align-items: center;
+
+        span {
+          display: flex;
+          align-items: center;
+        }
     }
 }
 
@@ -166,6 +173,36 @@
 
 .blink_me {
   animation: blinker 400ms linear;
+}
+
+.search-suggestions-container {
+
+  .match-type {
+    font-weight: bold;
+    padding: 15px 10px;
+  }
+
+  .mat-menu-item {
+    display: flex;
+    word-wrap: normal;
+    white-space: normal;
+    align-items: center;
+    align-content: center;
+    height: auto;
+    min-height: 48px;
+    line-height: 24px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+
+    .suggestion-display {
+      flex-grow: 1;
+      margin-right: 7px;
+    }
+
+    .suggestion-count {
+      font-weight: bold;
+    }
+  }
 }
 
 @keyframes blinker {

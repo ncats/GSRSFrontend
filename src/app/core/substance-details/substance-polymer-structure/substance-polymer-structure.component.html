@@ -1,6 +1,6 @@
 <div class="flex-row center-content" *ngIf="structure">
   <div class="structure-image-container">
-    <img class="structure-img" [src]="getSafeStructureImgUrl(structure.id)">
+    <img class="structure-img" appSubstanceImage [entityId]="structure.id" size="400">
   </div>
 </div>
 
@@ -31,7 +31,7 @@
       <div *ngIf="classification.parentSubstance && classification.parentSubstance.linkingID" class="code">
         {{classification.parentSubstance.linkingID}}</div>
       <img class="image-icon"  *ngIf = "relatedSubstanceUuid && relatedSubstanceUuid !== '' "
-           [src]="getSafeStructureImgUrl(relatedSubstanceUuid)">
+        appSubstanceImage [entityId]="relatedSubstanceUuid" size="400">
       <div>
         <a class="substance-name" [routerLink]="['/substances', relatedSubstanceUuid || '']">
           {{classification.parentSubstance.name}}

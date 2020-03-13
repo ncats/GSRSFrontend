@@ -26,6 +26,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import * as _ from 'lodash';
 import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
+import {Title} from '@angular/platform-browser';
 import {Auth, AuthService} from '@gsrs-core/auth';
 import {take} from 'rxjs/operators';
 
@@ -42,6 +43,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   formSections: Array<SubstanceFormSection> = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
   private subClass: string;
+  private definitionType: string;
   expandedComponents = [
     'substance-form-definition',
     'substance-form-structure',
@@ -74,6 +76,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
     private authService: AuthService
+    private titleService: Title
   ) {
   }
 
@@ -114,6 +117,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       });
     this.subscriptions.push(routeSubscription);
+    this.titleService.setTitle('Register');
     this.approving = false;
     this.substanceFormService.definition.subscribe(response => {
       this.definition = response;
@@ -186,10 +190,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.subscriptions.push(dialogSubscription);
   }
 
-
   getSubstanceDetails(newType?: string): void {
     this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
       if (response) {
+        this.definitionType = response.definitionType;
         if (newType) {
           response = this.substanceFormService.switchType(response, newType);
         }
@@ -236,7 +240,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.formSections = [];
     sectionNames.forEach(sectionName => {
       const formSection = new SubstanceFormSection(sectionName);
-      this.formSections.push(formSection);
+      if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
+        (formSection.dynamicComponentName === 'substance-form-names' || formSection.dynamicComponentName === 'substance-form-codes'))) {
+        this.formSections.push(formSection);
+      }
     });
   }
 

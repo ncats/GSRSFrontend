@@ -5,6 +5,17 @@
   text-align: center;
 }
 
+.below-editor-container {
+  margin-top: 10px;
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.molvec-message {
+  flex-grow: 1;
+}
+
 #canvas-container {
   width:100%;
   text-align:center;

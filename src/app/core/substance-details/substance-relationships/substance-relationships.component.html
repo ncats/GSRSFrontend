@@ -12,7 +12,7 @@
       <td class="text-center" mat-cell *matCellDef="let relationship">
         <div class = "thumb-col">
           <div>{{relationship.relatedSubstance.linkingID}}</div>
-          <img class="structure-image" [src]="getSafeStructureImgUrl(relationship.relatedSubstance.refuuid)">
+          <img class="structure-image" appSubstanceImage [entityId]="relationship.relatedSubstance.refuuid">
           <div>
             <a class="substance-name" [routerLink]="['/substances', relationship.relatedSubstance.refuuid]" >
               {{relationship.relatedSubstance.name}}
@@ -48,7 +48,7 @@
                 <td class = "mat-cell">
                   <div class = "thumb-col" *ngIf = "relationship.mediatorSubstance">
                   <div>{{relationship.mediatorSubstance.linkingID}}</div>
-                  <img class="structure-image" [src]="getSafeStructureImgUrl(relationship.mediatorSubstance.refuuid)">
+                  <img class="structure-image" appSubstanceImage [entityId]="relationship.mediatorSubstance.refuuid">
                   <div>
                     <a class="substance-name" [routerLink]="['/substances', relationship.mediatorSubstance.refuuid]" >
                       {{relationship.mediatorSubstance.name}}

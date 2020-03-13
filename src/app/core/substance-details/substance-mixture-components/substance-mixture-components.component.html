@@ -4,7 +4,7 @@
   <div class="flex-row wrap">
     <div *ngFor="let component of required" class="thumb-col">
       <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
-      <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
+      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
       <div>
         <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
           {{component.substance.name}}
@@ -18,7 +18,7 @@
   <div class="flex-row wrap">
     <div *ngFor="let component of presentInAny" class="thumb-col">
       <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
-      <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
+      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
       <div>
         <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
           {{component.substance.name}}
@@ -33,7 +33,7 @@
   <div class="flex-row">
     <div *ngFor="let component of presentInOne" class="thumb-col">
       <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
-      <img class="image-icon" [src]="getSafeStructureImgUrl(component.substance.refuuid)">
+      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
       <div>
         <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
           {{component.substance.name}}

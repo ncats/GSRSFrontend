@@ -38,10 +38,6 @@ export class StructureImageModalComponent implements OnInit {
     }
   }
 
-  getSafeStructureImgUrl(structureId: string, size: number = 600): SafeUrl {
-    return this.utilsService.getSafeStructureImgUrl(structureId, size, true);
-  }
-
   dismissDialog(): void {
     this.dialogRef.close();
   }

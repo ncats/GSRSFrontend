@@ -74,11 +74,29 @@ export class AmountFormComponent implements OnInit {
     return this.privateSubstanceAmount;
   }
 
+  updateType(event: any) {
+    setTimeout(() => {
+      this.typeControl.setValue(event.value);
+    });
+    this.privateSubstanceAmount.type = event.value;
+  }
+
+  updateUnits(event: any) {
+    setTimeout(() => {
+      this.unitsControl.setValue(event.value);
+    });
+    this.privateSubstanceAmount.units = event.value;
+  }
+
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('AMOUNT_TYPE', 'AMOUNT_UNIT').subscribe(response => {
       this.amountTypeList = response['AMOUNT_TYPE'].list;
       this.amountUnitList = response['AMOUNT_UNIT'].list;
     });
+  }
+
+  inCV(vocab: Array<VocabularyTerm>, property: string) {
+    return vocab.some(r => property === r.value);
   }
 
 }

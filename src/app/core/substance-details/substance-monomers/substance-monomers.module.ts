@@ -6,6 +6,7 @@ import { MatInputModule, MatPaginatorModule, MatTableModule } from '@angular/mat
 import { CdkTableModule } from '@angular/cdk/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { RouterModule } from '@angular/router';
     MatInputModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    SubstanceImageModule
   ],
   declarations: [SubstanceMonomersComponent]
 })

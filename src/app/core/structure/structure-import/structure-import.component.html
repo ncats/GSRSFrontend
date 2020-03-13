@@ -1,6 +1,6 @@
-<h1 mat-dialog-title>
+<h2 mat-dialog-title>
   Import Structure
-</h1>
+</h2>
 <div mat-dialog-content>
   <div class="directions">Enter molfile or smiles:</div>
   <div class="text-area-container">
@@ -11,7 +11,7 @@
 <div [ngClass]="['message-container', messageClass]" *ngIf="message">
   {{message}}
 </div>
-<div mat-dialog-actions>
+<div class="import-actions" mat-dialog-actions>
   <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)" (click)="fileBrowse()">Browse</button>
   <span class="middle-fill"></span>
   <button mat-button (click)="dismissDialog()">Close</button>

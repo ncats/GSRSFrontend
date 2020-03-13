@@ -166,6 +166,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'pageview',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-pageview-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'brush',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-brush-24px.svg'));
   }
 
 }
