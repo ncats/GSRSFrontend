@@ -7,6 +7,7 @@ import { UtilsService } from '@gsrs-core/utils';
 export class SsoRefreshService implements OnDestroy   {
   private iframe: HTMLIFrameElement;
   private refreshInterval: any;
+  private baseHref: string;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -21,6 +22,10 @@ export class SsoRefreshService implements OnDestroy   {
       this.iframe.style.opacity = '0';
       this.iframe.src = `/assets/refresh/refresh.html`;
       document.body.appendChild(this.iframe);
+
+      if (window.location.pathname.indexOf('/ginas/app/beta/') > -1) {
+        this.baseHref = '/ginas/app/beta/';
+      }
     }
   }
 
@@ -29,7 +34,7 @@ export class SsoRefreshService implements OnDestroy   {
       if (auth != null && this.refreshInterval == null) {
         clearInterval(this.refreshInterval);
         this.refreshInterval = setInterval(() => {
-          this.iframe.src = `/assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
+          this.iframe.src = `${this.baseHref || '/'}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
         }, 120000);
       } else {
         clearInterval(this.refreshInterval);
