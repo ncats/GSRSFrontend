@@ -34,6 +34,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   ngOnInit() {
       if (this.bdnum) {
       this.getSubstanceAdverseEventPt();
+      this.adverseEventPtListExportUrl();
     }
   }
 
@@ -54,6 +55,12 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
       });
       this.countUpdate.emit(adverseevents.length);
     });*/
+  }
+
+  adverseEventPtListExportUrl() {
+    if (this.bdnum != null) {
+      this.exportUrl = this.adverseEventService.getAdverseEventPtListExportUrl(this.bdnum);
+    }
   }
 
 }

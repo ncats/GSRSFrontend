@@ -204,4 +204,17 @@ export class ClinicalTrialService extends BaseHttpService {
     );
   }
 
+  getClinicalTrialListExportUrl(bdnum: string): string {
+    return this.baseUrl + 'clinicalTrialListExport?bdnum=' + bdnum;
+  }
+
+  getClinicalTrialEuropeListExportUrl(bdnum: string): string {
+    return this.baseUrl + 'clinicalTrialEuropeListExport?bdnum=' + bdnum;
+  }
+
+  getUpdateApplicationUrl(): string {
+    return this.baseUrl + 'updateApplication?applicationId=';
+  }
+
+
 }

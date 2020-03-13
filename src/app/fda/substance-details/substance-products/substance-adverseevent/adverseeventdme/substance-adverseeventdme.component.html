@@ -1,5 +1,11 @@
 <div class="padtop5px padleft25px font15px colorblue">
   <b>Adverse Event DME</b>
+  &nbsp;&nbsp;&nbsp;
+  <a [href]="exportUrl" target="_blank" matTooltip='Adverse Event DME Records' *ngIf="totalRecords > 0">
+    <button mat-icon-button color="primary">
+      <mat-icon>arrow_downward</mat-icon>Export
+    </button>
+  </a>  
 </div>
 <!--
 <div class="flex-row">

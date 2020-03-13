@@ -9,6 +9,7 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
   totalRecords: 0;
   public results: Array<any> = [];
   isAdmin = false;
+  exportUrl: string;
 
   @Input() bdnum: string;
 

@@ -35,6 +35,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   ngOnInit() {
     if (this.bdnum) {
       this.getSubstanceClinicalTrials();
+      this.clinicalTrialListExportUrl();
     }
   }
 
@@ -56,6 +57,12 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
         this.countUpdate.emit(clinicaltrials.length);
       });
       */
+  }
+
+  clinicalTrialListExportUrl() {
+    if (this.bdnum != null) {
+      this.exportUrl = this.clinicalTrialService.getClinicalTrialListExportUrl(this.bdnum);
+    }
   }
 
 }
