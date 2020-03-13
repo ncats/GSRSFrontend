@@ -115,23 +115,31 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   processStructurePostResponse(structurePostResponse?: StructurePostResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
-      this.smiles = structurePostResponse.structure.smiles;
-      this.mol = structurePostResponse.structure.molfile;
-      Object.keys(structurePostResponse.structure).forEach(key => {
-        this.structure[key] = structurePostResponse.structure[key];
-      });
 
-      this.structure.uuid = '';
-      this.substanceFormService.updateMoieties(structurePostResponse.moieties);
+      //we should only be dealing with this stuff if the total hash changes
+      
+      if(this.structure["hash"] !== structurePostResponse.structure["hash"]){
+      
+         this.smiles = structurePostResponse.structure.smiles;
+         this.mol = structurePostResponse.structure.molfile;
 
-      if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
-        clearTimeout(this.userMessageTimer);
+         //this is sometimes overly ambitious  
+         Object.keys(structurePostResponse.structure).forEach(key => {
+           this.structure[key] = structurePostResponse.structure[key];
+         });
 
-        this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
+         this.structure.uuid = '';
+         this.substanceFormService.updateMoieties(structurePostResponse.moieties);
 
-        this.userMessageTimer = setTimeout(() => {
-          this.userMessage = null;
-        }, 8000);
+         if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
+           clearTimeout(this.userMessageTimer);
+
+           this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
+
+           this.userMessageTimer = setTimeout(() => {
+             this.userMessage = null;
+           }, 20000);
+         }
       }
     }
   }
