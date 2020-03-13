@@ -7,6 +7,8 @@
     </button>
     <span class="middle-fill"></span>
     <button mat-flat-button color="primary" class = "validate-button" (click)="validate()" >Validate and Submit</button>
+    <button mat-flat-button color="primary" class = "validate-button" [disabled] = "!canApprove || approving" *ngIf = "definition && definition.substanceClass!=='concept' && !definition.approvalID" (click)="validate('approval')" >Approve</button>
+
   </div>
   <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
     <div class="submission-message" *ngIf="submissionMessage">
@@ -14,20 +16,22 @@
     </div>
     <div *ngIf="validationMessages">
 <span *ngIf = " validationMessages.length > 0"   >
-   <div class="submission-message" *ngIf = '!serverError'>
+   <div class="submission-message" *ngIf = '!serverError && !approving'>
         Please correct or dismiss the following errors and submit again:
       </div>
       <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
         <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">{{message.messageType}}</div>
         <div class="message">{{message.message}}<span *ngFor = "let link of message.links"><br/><a [href] = "link.href" target = "_blank">{{link.text}}</a></span></div>
-        <button mat-icon-button matTooltip="Dismiss" *ngIf = "message.messageType != 'ERROR'" (click)="dismissValidationMessage(i)">
+        <button mat-icon-button matTooltip="Dismiss" *ngIf = "message.messageType != 'ERROR' && !approving" (click)="dismissValidationMessage(i)">
           <mat-icon svgIcon="cancel"></mat-icon>
         </button>
       </div>
 </span>
       <div class="dismiss-container">
         <span class="middle-fill"></span>
-        <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}} Submit</button>
+        <button mat-flat-button color="primary" *ngIf = "!approving" (click)="submit()" [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}} Submit</button>
+        <button mat-flat-button color="primary" *ngIf = "approving" (click)="approve()" [disabled]="isLoading || !canApprove"> Approve</button>
+
       </div>
     </div>
   </div>
