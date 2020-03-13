@@ -159,11 +159,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   canBeApproved(): boolean {
-
-    console.log(this.user);
-    if(this.definition && this.definition.lastEditedBy && this.user){
-      console.log(this.definition.lastEditedBy);
-
+    if (this.definition && this.definition.lastEditedBy && this.user) {
       const lastEdit = this.definition.lastEditedBy;
       if (!lastEdit) {
         return false;
@@ -258,18 +254,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }, 5000);
   }
 
-  approve(): void {
-    this.substanceFormService.approveSubstance().subscribe(response => {
-      console.log(response);
-    });
-  }
+
 
   startApproval(): void {
 
   }
 
   validate(validationType?: string ): void {
-    console.log(validationType);
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -293,6 +284,39 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.loadingService.setLoading(false);
       this.isLoading = false;
     });
+  }
+
+  approve(): void {
+    this.isLoading = true;
+    this.loadingService.setLoading(true);
+    this.substanceFormService.approveSubstance().subscribe(response => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.validationMessages = null;
+      this.submissionMessage = 'Substance was Approved. Please refresh now or allow the page to refresh before editing.';
+      this.showSubmissionMessages = true;
+      this.validationResult = false;
+      setTimeout(() => {
+        this.showSubmissionMessages = false;
+        this.submissionMessage = '';
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        const id = this.substanceFormService.getUuid();
+          this.router.navigate(['/substances', id, 'edit']);
+      }, 4000);
+    },
+      (error: SubstanceFormResults) => {
+        this.showSubmissionMessages = true;
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+          this.submissionMessage = 'Substance Could not be approved';
+          this.addServerError(error.serverError);
+          setTimeout(() => {
+            this.showSubmissionMessages = false;
+            this.submissionMessage = null;
+          }, 10000);
+        }
+      );
   }
 
   submit(): void {
