@@ -75,7 +75,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
     private titleService: Title
   ) {
   }
