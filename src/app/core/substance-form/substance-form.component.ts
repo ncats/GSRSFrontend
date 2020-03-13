@@ -261,12 +261,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }, 5000);
   }
 
-
-
-  startApproval(): void {
-
-  }
-
   validate(validationType?: string ): void {
     this.isLoading = true;
     this.serverError = false;
