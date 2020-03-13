@@ -71,7 +71,7 @@ import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-s
 import { SubstanceImageModule } from './substance/substance-image.module';
 import { StructureModule } from './structure/structure.module';
 import {MatTreeModule} from '@angular/material/tree';
-import {SubstanceHierarchyComponent} from "@gsrs-core/substance-browse/substance-hierarchy/substance-hierarchy.component";
+import {SubstanceHierarchyComponent} from '@gsrs-core/substances-browse/substance-hierarchy/substance-hierarchy.component';
 
 @NgModule({
   declarations: [
