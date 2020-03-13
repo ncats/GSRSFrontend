@@ -374,14 +374,13 @@ unapproveRecord() {
         observer.next(this.getDefinition());
         // tslint:disable-next-line:no-shadowed-variable
         this.definitionEmitter.subscribe(definition => {
-          observer.next(this.getDefinition());
+          observer.next(definition);
         });
       });
     });
   }
 
   updateDefinition(definition: SubstanceFormDefinition): void {
-    this.substance.definitionType = definition.definitionType;
     this.substance.definitionLevel = definition.definitionLevel;
     this.substance.deprecated = definition.deprecated;
     this.substance.access = definition.access;
@@ -392,6 +391,9 @@ unapproveRecord() {
     if (definition.status) {
       this.substance.status = definition.status;
     }
+    if (definition.approvalID) {
+      this.substance.approvalID = definition.approvalID;
+    }
     if (this.substance[definition.substanceClass]) {
       this.substance[definition.substanceClass].references = definition.references;
     } else {
@@ -399,6 +401,18 @@ unapproveRecord() {
         references: definition.references
       };
     }
+
+    if (this.substance.definitionType !== definition.definitionType) {
+      if ( definition.definitionType === 'ALTERNATIVE') {
+        this.substance.names = [];
+        this.substance.codes = [];
+        this.substanceNamesEmitter.next(this.substance.names);
+        this.substanceCodesEmitter.next(this.substance.codes);
+
+      }
+    }
+    this.substance.definitionType = definition.definitionType;
+    this.definitionEmitter.next(this.getDefinition());
   }
 
   getJson() {
@@ -449,6 +463,9 @@ unapproveRecord() {
     };
     if (this.substance.status) {
       definition.status = this.substance.status;
+    }
+    if (this.substance.approvalID) {
+      definition.approvalID = this.substance.approvalID;
     }
 
     return definition;
@@ -2082,6 +2099,28 @@ unapproveRecord() {
         isDeleted: false
       };
     }
+  }
+
+  approveSubstance(): Observable<any> {
+    return new Observable(observer => {
+      const results: SubstanceFormResults = {
+        isSuccessfull: true
+      };
+      this.substanceService.approveSubstance(this.substance.uuid).subscribe(response => {
+        console.log(response);
+        observer.next(results);
+        observer.complete();
+      }, error => {
+        results.isSuccessfull = false;
+        if (error && error.error && error.error.validationMessages) {
+          results.validationMessages = error.error.validationMessages;
+        } else {
+          results.serverError = error;
+        }
+        observer.error(results);
+        observer.complete();
+      });
+    });
   }
 
   saveSubstance(): Observable<SubstanceFormResults> {

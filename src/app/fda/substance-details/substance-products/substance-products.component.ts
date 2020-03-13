@@ -53,6 +53,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
       // Get Product Data based on substance uuid
       this.getSubstanceProducts();
+      this.productListExportUrl();
     }
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -106,6 +107,12 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       this.setResultData(results);
       this.productCount = this.totalRecords;
     });
+  }
+
+  productListExportUrl() {
+    if (this.substance && this.substance.uuid) {
+      this.exportUrl = this.productService.getProductListExportUrl(this.substance.uuid);
+    }
   }
 
 }

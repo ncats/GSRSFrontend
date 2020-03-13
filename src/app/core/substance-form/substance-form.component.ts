@@ -17,7 +17,7 @@ import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-comp
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { SubstanceFormSection } from './substance-form-section';
 import { SubstanceFormService } from './substance-form.service';
-import { ValidationMessage, SubstanceFormResults } from './substance-form.model';
+import {ValidationMessage, SubstanceFormResults, SubstanceFormDefinition} from './substance-form.model';
 import { Subscription } from 'rxjs';
 import {SubstanceReference} from '@gsrs-core/substance';
 import {RefernceFormDialogComponent} from '@gsrs-core/substance-form/references-dialogs/refernce-form-dialog.component';
@@ -27,6 +27,8 @@ import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-di
 import * as _ from 'lodash';
 import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import {Title} from '@angular/platform-browser';
+import {Auth, AuthService} from '@gsrs-core/auth';
+import {take} from 'rxjs/operators';
 
 
 
@@ -56,6 +58,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   copy: string;
   private overlayContainer: HTMLElement;
   serverError: boolean;
+  canApprove: boolean;
+  approving: boolean;
+  definition: SubstanceFormDefinition;
+  user: string;
 
 
   constructor(
@@ -69,6 +75,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
+    private authService: AuthService,
     private titleService: Title
   ) {
   }
@@ -111,6 +118,20 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
     this.subscriptions.push(routeSubscription);
     this.titleService.setTitle('Register');
+    this.approving = false;
+    this.substanceFormService.definition.subscribe(response => {
+      this.definition = response;
+      setTimeout(() => {
+        this.canApprove = this.canBeApproved();
+      });
+    });
+    this.authService.getAuth().pipe(take(1)).subscribe(auth => {
+      this.user = auth.identifier;
+      setTimeout(() => {
+        this.canApprove = this.canBeApproved();
+      });
+    });
+
   }
 
   ngAfterViewInit(): void {
@@ -139,6 +160,22 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  canBeApproved(): boolean {
+    if (this.definition && this.definition.lastEditedBy && this.user) {
+      const lastEdit = this.definition.lastEditedBy;
+      if (!lastEdit) {
+        return false;
+      }
+      if (this.definition.status === 'approved') {
+        return false;
+      }
+      if (lastEdit === this.user) {
+        return false;
+      }
+    }
+    return true;
   }
 
   showJSON(): void {
@@ -224,7 +261,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }, 5000);
   }
 
-  validate(): void {
+  validate(validationType?: string ): void {
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -239,11 +276,48 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       if (this.validationMessages.length === 0 && results.valid === true) {
         this.submissionMessage = 'Substance is Valid. Would you like to submit?';
       }
+      if (validationType && validationType === 'approval' ) {
+        this.approving = true;
+        this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
+      }
     }, error => {
       this.addServerError(error);
       this.loadingService.setLoading(false);
       this.isLoading = false;
     });
+  }
+
+  approve(): void {
+    this.isLoading = true;
+    this.loadingService.setLoading(true);
+    this.substanceFormService.approveSubstance().subscribe(response => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.validationMessages = null;
+      this.submissionMessage = 'Substance was Approved. Please refresh now or allow the page to refresh before editing.';
+      this.showSubmissionMessages = true;
+      this.validationResult = false;
+      setTimeout(() => {
+        this.showSubmissionMessages = false;
+        this.submissionMessage = '';
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        const id = this.substanceFormService.getUuid();
+          this.router.navigate(['/substances', id, 'edit']);
+      }, 4000);
+    },
+      (error: SubstanceFormResults) => {
+        this.showSubmissionMessages = true;
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+          this.submissionMessage = 'Substance Could not be approved';
+          this.addServerError(error.serverError);
+          setTimeout(() => {
+            this.showSubmissionMessages = false;
+            this.submissionMessage = null;
+          }, 10000);
+        }
+      );
   }
 
   submit(): void {

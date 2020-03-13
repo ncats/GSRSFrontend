@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { ApplicationService } from '../../../applications/service/application.service';
+import { ApplicationService } from '../../../application/service/application.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { PageEvent } from '@angular/material/paginator';
 import { AuthService } from '@gsrs-core/auth';
@@ -40,6 +40,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     if (this.bdnum) {
       this.getApplicationCenterByBdnum();
       // this.getSubstanceApplications();
+      this.applicationListExportUrl();
     }
   }
 
@@ -93,9 +94,14 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
       */
   }
 
-
   get updateApplicationUrl(): string {
     return this.applicationService.getUpdateApplicationUrl();
+  }
+
+  applicationListExportUrl() {
+    if (this.bdnum != null) {
+      this.exportUrl = this.applicationService.getApplicationListExportUrl(this.bdnum);
+    }
   }
 
 }

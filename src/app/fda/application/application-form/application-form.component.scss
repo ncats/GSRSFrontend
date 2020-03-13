@@ -1,0 +1,36 @@
+.details-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*padding: 20px;*/
+}
+
+.details-box {
+  max-width: 1028px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+  
+.margintopneg10px {
+  margin-top: -10px;
+}
+
+.margintop10px {
+  margin-top: 10px;
+}
+
+.margintop90px {
+  margin-top: 90px;
+}
+
+.padtop17px {
+  padding-top: 17px;
+}

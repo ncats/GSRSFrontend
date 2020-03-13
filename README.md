@@ -21,7 +21,7 @@ Make sure to have these installed in order to run the application:
 
 ## Install Application Packages
 
-After you have cloned the application to your local computer, and prepared the dojo dependencies, open your favorite command line, navigate to the root directory (where the package.json is located), 
+After you have cloned the application to your local computer, and prepared the dojo dependencies, open your favorite command line, navigate to the root directory (where the `package.json` file is located), 
 and copy the `package.dev.json` file to a new file called `package.json`, then run the command:
 
 
