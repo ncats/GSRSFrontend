@@ -478,6 +478,11 @@ export class SubstanceService extends BaseHttpService {
     return this.http.post(url, substance);
   }
 
+  getHierarchy(id: string): Observable<Array<any>> {
+    const url = `${this.apiBaseUrl}substances(${id})/@hierarchy`;
+    return this.http.get<any>(url);
+  }
+
   oldSiteRedirect(page: string, uuid: string) {
     let url = this.baseUrl + 'substance/' + uuid;
     if (page === 'edit') {

@@ -51,6 +51,7 @@ import { TakePipe } from './utils/take.pipe';
 import { FacetDisplayPipe } from './utils/facet-display.pipe';
 import { EnvironmentModule } from '../../environments/environment';
 import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
+import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
@@ -69,6 +70,8 @@ import { SubstanceSummaryCardComponent } from './substances-browse/substance-sum
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 import { SubstanceImageModule } from './substance/substance-image.module';
 import { StructureModule } from './structure/structure.module';
+import {MatTreeModule} from '@angular/material/tree';
+import {SubstanceHierarchyComponent} from "@gsrs-core/substance-browse/substance-hierarchy/substance-hierarchy.component";
 
 @NgModule({
   declarations: [
@@ -88,7 +91,8 @@ import { StructureModule } from './structure/structure.module';
     SubstanceFormComponent,
     HighlightedSearchActionComponent,
     CardDynamicSectionDirective,
-    SubstanceSummaryCardComponent
+    SubstanceSummaryCardComponent,
+    SubstanceHierarchyComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -137,7 +141,9 @@ import { StructureModule } from './structure/structure.module';
     MatBottomSheetModule,
     MatProgressBarModule,
     SubstanceImageModule,
-    StructureModule
+    StructureModule,
+    MatTreeModule
+
   ],
   providers: [
     ConfigService,

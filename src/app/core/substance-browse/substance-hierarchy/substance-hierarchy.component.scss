@@ -1,0 +1,97 @@
+.mat-tree-node {
+  min-height:30px !important;
+}
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.spacer {
+  width: 50%;
+}
+.approval {
+  color: maroon;
+  flex: 0 0 100%;
+}
+
+.end {
+  white-space: nowrap;
+  font-style: italic;
+  max-width: 250px;
+  flex: 0 0 100%;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  font-style: italic;
+  text-overflow: ellipsis;
+
+}
+.tree-button {
+  height:30px !important;
+  line-height: 30px !important;
+}
+.right-container {
+  max-width: 250px;
+  flex-wrap: wrap;
+  text-align: right;
+  white-space: nowrap;
+  flex-wrap: wrap;
+  display: flex;
+  padding-right: 10px;
+  margin: 4px;
+
+}
+
+.title {
+  align-items: center;
+  display: flex;
+  max-width: calc(100% - 260px);
+}
+
+.tree-label {
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+.testing {
+  border-top:0px;
+}
+.primary {
+  background-color: #cee8fb !important;
+}
+
+.hierarchy-link {
+  color: #448aff;
+  font-style: unset;
+  max-lines: 2;
+}
+.odd {
+  background-color : rgba(0, 0, 0, .05);
+}
+.node-container {
+  display:flex;
+  width:100%;
+  justify-content: space-between;
+}
+
+
+
+
+.mat-card {
+  max-width: 1228px;
+  margin-bottom: 20px;
+}
+
+.mat-card, .controls-container {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.current-record {
+  font-weight:bold;
+}
