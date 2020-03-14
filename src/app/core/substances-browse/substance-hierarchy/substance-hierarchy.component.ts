@@ -74,6 +74,16 @@ export class SubstanceHierarchyComponent implements OnInit {
       if (subref.refuuid === this.uuid) {
         data[i].self = true;
       }
+
+      if (!subref.approvalID && subref.linkingID && subref.linkingID.length === 10) {
+        data[i].value.approvalID = data[i].value.linkingID;
+      }
+      if (!data[i].value.approvalID) {
+        const matches = data[i].text.match(/\[(.*?)\]/);
+        if (matches) {
+          data[i].value.approvalID = matches[1];
+        }
+      }
       // remove children identical to parent with active moiety relationship, format text
       if ((subref.refuuid === lastID) && (lastProp.includes('HAS ACTIVE MOIETY'))) {
         parentRemap.push([data[i + 1].id, data[i].id]);
