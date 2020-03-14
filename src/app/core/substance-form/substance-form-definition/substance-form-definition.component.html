@@ -1,6 +1,9 @@
 <div *ngIf="definition">
   <div class="substance-form-row form-header">
-    {{uuid ? 'Editing' : 'Registering New'}} {{substanceClass.toUpperCase()}}
+    <div><span class = "sub-header">{{uuid ? 'Editing ' : 'Registering New '}}</span>
+      <span> {{substanceClass | titlecase}}</span>
+    </div>
+    <span class = "approval" *ngIf = "definition.approvalID && definition.approvalID !== ''">{{definition.approvalID}}</span>
   </div>
   <div class="substance-form-row form-name" *ngIf = "definition._name">
     <div>Preferred Term: <span class = "name">{{definition._name}}</span></div>
@@ -46,70 +49,10 @@
       </a>
     </div>
   </div>
-  <div class = "substance-form-row advanced-row" *ngIf = "isAdmin === true">
-    <div class = "admin-functions">
-      <mat-form-field>
-        <mat-label>Advanced Features</mat-label>
-        <mat-select name="Feature" [ngModel]="feature" (selectionChange)="useFeature($event)" >
-          <mat-option value="changeClass" [disabled] = "!uuid">
-            Change Substance Class
-          </mat-option>
-          <mat-option value="setStatus">
-            Change Status to approved / pending
-          </mat-option>
-          <mat-option value="setDef">
-            Set Definition to private / public
-          </mat-option>
-          <mat-option value="unapprove">
-            Un-approve record (Remove approval ID)
-          </mat-option>
-          <mat-option value="concept"  [disabled]="definition.substanceClass != 'concept'" >
-            Set concept status to non-approved
-          </mat-option>
-          <mat-option value="glyco"  [disabled]="definition.substanceClass != 'protein'" >
-            Predict N-Glycosylation Sites
-          </mat-option>
-          <mat-option value="disulfide"  [disabled]="definition.substanceClass != 'protein'" >
-            Predict disulfide links by protein type
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class = "changeClass advanced" *ngIf  = "feature === 'changeClass'">
-      <mat-form-field>
-        <mat-label>New Class</mat-label>
-        <mat-select name="definitionType" (selectionChange)="changeClass($event)" >
-          <mat-option *ngFor="let class of classes" [value]="class" [disabled] = "class === definition.substanceClass">
-            {{class}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class = "set-def advanced" *ngIf  = "feature === 'setDef'">
-      <span> Set Definition to</span>
-      <button mat-flat-button (click) ="setPrivate()">Private</button>
-      <button mat-flat-button (click) ="setPublic()">Public</button>
 
-    </div>
-    <div class = 'set-status advanced' *ngIf  = "feature === 'setStatus'">
-      <label id="status-label">Set Status: </label>
-      <mat-radio-group
-        [ngModel]="status"
-        (change)="changeStatus($event)"
-        aria-labelledby="example-radio-group-label"
-        class="status-group">
-        <mat-radio-button class="status"  value = "approved" [checked] = "status === 'approved'">
-          Approved
-        </mat-radio-button>
-        <mat-radio-button class="status"  value = "pending" [checked] = "status === 'pending'">
-          Pending
-        </mat-radio-button>
-      </mat-radio-group>
-    </div>
-  </div>
   <div class="substance-form-row" *ngIf="definition.substanceClass !== 'concept'">
     <div class="references-container">
-      <app-domain-references [referencesUuids]="definition.references" #references></app-domain-references>
+      <app-domain-references [referencesUuids]="definition.references" card = "definition" #references></app-domain-references>
     </div>
   </div>
 
