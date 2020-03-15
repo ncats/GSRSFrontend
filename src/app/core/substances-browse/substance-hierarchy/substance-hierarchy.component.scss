@@ -23,7 +23,6 @@
 .end {
   white-space: nowrap;
   font-style: italic;
-  max-width: 250px;
   flex: 0 0 100%;
   flex-wrap: nowrap;
   overflow: hidden;
@@ -37,14 +36,17 @@
 }
 .right-container {
   max-width: 250px;
-  flex-wrap: wrap;
   text-align: right;
   white-space: nowrap;
-  flex-wrap: wrap;
-  display: flex;
   padding-right: 10px;
   margin: 4px;
+  justify-content: right;
+}
 
+.right-box {
+  display:flex;
+  flex-direction: column;
+  vertical-align: top;
 }
 
 .title {
@@ -56,6 +58,24 @@
 .tree-label {
   padding-bottom: 10px;
   font-weight: bold;
+}
+
+.filler {
+  flex: 1 1 auto;
+  vertical-align: center;
+  height: 2px;
+  margin-top: auto;
+  margin-bottom:auto;
+  margin-left :50px;
+  padding-left: 20px;
+  background-color: rgba(0,0,0,.05);
+
+}
+
+.filler-line {
+  background-color: rgba(0,0,0,.05);
+  height: 2px;
+  width: 100%;
 }
 
 .testing {
@@ -71,7 +91,7 @@
   max-lines: 2;
 }
 .odd {
-  background-color : rgba(0, 0, 0, .05);
+
 }
 .node-container {
   display:flex;

@@ -16,6 +16,7 @@ export class SubstanceHierarchyComponent implements OnInit {
   treeControl = new NestedTreeControl<any>(node => node.children);
   dataSource = new MatTreeNestedDataSource<any>();
   selfNode: HierarchyNode;
+  activeNode: any;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
   constructor(
     private substanceService: SubstanceService,
@@ -58,6 +59,7 @@ export class SubstanceHierarchyComponent implements OnInit {
     }
     const temp2 = this.list_to_tree(orig);
     this.dataSource.data = temp2;
+    this.activeNode = this.dataSource.data[0];
   }
 
     formatHierarchy(data: any): HierarchyNode {
@@ -88,16 +90,16 @@ export class SubstanceHierarchyComponent implements OnInit {
       if ((subref.refuuid === lastID) && (lastProp.includes('HAS ACTIVE MOIETY'))) {
         parentRemap.push([data[i + 1].id, data[i].id]);
         data.splice(i + 1, 1);
-        data[i].relationship += '{ACTIVE MOIETY}';
+        data[i].relationship += '{ACTIVE MOIETY} ';
       }
       if (data[i].type.includes('HAS ACTIVE MOIETY')) {
-        data[i].relationship += '{ACTIVE FORM}';
+        data[i].relationship += '{ACTIVE FORM} ';
       } else if (data[i].type.includes('IS SALT/SOLVATE OF')) {
-        data[i].relationship += '{SALT/SOLVATE}';
+        data[i].relationship += '{SALT/SOLVATE} ';
       } else if (data[i].type.includes('IS SUBCONCEPT OF')) {
-        data[i].relationship += '{SUBCONCEPT}';
+        data[i].relationship += '{SUBCONCEPT} ';
       } else if (data[i].type.includes('IS G1SS CONSTITUENT OF')) {
-        data[i].relationship += '{G1SS}';
+        data[i].relationship += '{G1SS} ';
       }
 
 
