@@ -519,4 +519,14 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
+  getSequenceByID(substance: string, unit: string, type: string): Observable<any> {
+    console.log(substance + ' ' + unit  + ' ' + type);
+    const url = `${this.apiBaseUrl}substances(${substance})/${type}/subunits(uuid:${unit})`;
+    console.log(url);
+    return this.http.get<any>(url);
+  }
+
+
+
+
 }

@@ -1,5 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
-import { SubstanceDetail, SubstanceName, SubstanceSummary, SubstanceCode, SubstanceRelationship } from '../../substance/substance.model';
+import {
+  SubstanceDetail,
+  SubstanceName,
+  SubstanceSummary,
+  SubstanceCode,
+  SubstanceRelationship,
+  Subunit
+} from '../../substance/substance.model';
 import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
 import { CardDynamicSectionDirective } from '../card-dynamic-section/card-dynamic-section.directive';
 import { UtilsService } from '../../utils/utils.service';
@@ -21,6 +28,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Input() showAudit: boolean;
   isAdmin = false;
+  subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
   @Input() names?: Array<SubstanceName>;
   @Input() codeSystemNames?: Array<string>;
@@ -39,6 +47,12 @@ export class SubstanceSummaryCardComponent implements OnInit {
 
   ngOnInit() {
     this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    if (this.substance.protein) {
+      this.subunits = this.substance.protein.subunits;
+    }
+    if (this.substance.nucleicAcid) {
+      this.subunits = this.substance.nucleicAcid.subunits;
+    }
   }
 
   @Input()

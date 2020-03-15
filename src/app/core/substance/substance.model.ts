@@ -45,6 +45,7 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _relationships?: CountRef;
   _moieties?: CountRef;
   _properties?: CountRef;
+  _matchContext?: any;
 }
 
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {

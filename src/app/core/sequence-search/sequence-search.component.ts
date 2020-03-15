@@ -4,6 +4,7 @@ import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { debounceTime } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import {SubstanceService} from '@gsrs-core/substance';
 
 @Component({
   selector: 'app-sequence-search',
@@ -22,6 +23,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
   constructor(
     public router: Router,
     private activatedRoute: ActivatedRoute,
+    private substanceService: SubstanceService,
     private gaService: GoogleAnalyticsService
   ) {
     this.activatedRoute
@@ -37,8 +39,14 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
           this.sequenceSearchForm.controls.cutoff.setValue(params.get('cutoff'));
         }
         if (params.has('seq_type')) {
+          console.log(params.get('seq_type'));
           this.sequenceSearchForm.controls.sequenceType.setValue(params.get('seq_type'));
+          console.log('setting type');
         }
+        if (params.has('subunit') && params.has('substance') && params.has('seq_type')) {
+          this.getSequence(params.get('substance'), params.get('subunit'), params.get('seq_type'));
+        }
+
       });
   }
 
@@ -78,6 +86,19 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     this.sequenceSearchForm.controls.sequence.setValue(this.filterbychr(this.sequenceSearchForm.controls.sequence.value, mod));
 
 
+  }
+
+  getSequence(substance: string, unit: string, type: string) {
+    console.log(substance);
+    type = type.charAt(0).toLowerCase() + type.slice(1);
+    console.log(type);
+    this.substanceService.getSequenceByID(substance, unit, type).subscribe(response => {
+      console.log(response);
+        if (response && response.length > 0 && response[0].sequence) {
+          console.log(response[0].sequence);
+          this.sequenceSearchForm.controls.sequence.setValue(response[0].sequence);
+        }
+    });
   }
 
   filterbychr(str: string, reg: string[]): string {

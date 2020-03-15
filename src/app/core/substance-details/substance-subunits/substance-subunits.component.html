@@ -10,7 +10,14 @@
 </div>
 <div [ngClass]="view">
   <div class="subunit-sequence" *ngFor="let subunitSequence of subunitSequences">
-    <h4>Subunit {{subunitSequence.subunitIndex}}</h4>
+  <div class = "form-row">
+    <div class = "subunit-label"> Subunit {{subunitSequence.subunitIndex}}</div>
+    <div>
+      <a class = "subunit-title" [routerLink]="['/sequence-search']"
+         [queryParams]="{substance: uuid, subunit: subunitSequence.uuid, seq_type: 'nucleicAcid'}">similarity search</a>
+    </div>
+
+  </div>
     <div class="responsive">
       <div class="sequence-section-group" *ngFor="let sequencesSectionGroup of subunitSequence.sequencesSectionGroups">
         <div class="sequence-section" *ngFor="let sequencesSectionGroup of sequencesSectionGroup.sequenceSections">
