@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {SubstanceName, SubstanceRelated, SubstanceService, SubstanceSummary} from '@gsrs-core/substance';
+import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 
 @Component({
   selector: 'app-substance-hierarchy',
@@ -175,13 +176,4 @@ export class SubstanceHierarchyComponent implements OnInit {
   }
 }
 
-interface HierarchyNode {
-  id: number;
-  parent: any;
-  type: string;
-  self?: boolean;
-  value: SubstanceRelated;
-  expandable: boolean;
-  relationship?: string;
-  children?: Array<HierarchyNode>;
-}
+

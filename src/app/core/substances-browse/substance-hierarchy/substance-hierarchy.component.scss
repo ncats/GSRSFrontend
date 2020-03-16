@@ -1,12 +1,12 @@
 .mat-tree-node {
   min-height:30px !important;
 }
-.example-tree-invisible {
+.hierarchy-tree-invisible {
   display: none;
 }
 
-.example-tree ul,
-.example-tree li {
+.hierarchy-tree ul,
+.hierarchy-tree li {
   margin-top: 0;
   margin-bottom: 0;
   list-style-type: none;
@@ -68,17 +68,15 @@
   margin-bottom:auto;
   margin-left :50px;
   padding-left: 20px;
-  background-color: rgba(0,0,0,.05);
 
 }
 
 .filler-line {
-  background-color: rgba(0,0,0,.05);
   height: 2px;
   width: 100%;
 }
 
-.testing {
+.no-border {
   border-top:0px;
 }
 .primary {
@@ -91,7 +89,7 @@
   max-lines: 2;
 }
 .odd {
-
+  background-color : rgba(0, 0, 0, .05);
 }
 .node-container {
   display:flex;
