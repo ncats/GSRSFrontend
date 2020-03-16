@@ -1,4 +1,4 @@
-<div>{{activeNode? activeNode.id : ''}}
+<div>
   <div class = "label tree-label">Substance Hierarchy</div>
   <mat-tree *ngIf = "dataSource.data && dataSource.data.length > 0" [dataSource]="dataSource" [treeControl]="treeControl" class="hierarchy-tree">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
