@@ -22,7 +22,7 @@
 
 .end {
   white-space: nowrap;
-  font-style: italic;
+  max-width: 250px;
   flex: 0 0 100%;
   flex-wrap: nowrap;
   overflow: hidden;
@@ -30,6 +30,14 @@
   text-overflow: ellipsis;
 
 }
+
+.hierarchy-link {
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .tree-button {
   height:30px !important;
   line-height: 30px !important;
@@ -38,21 +46,18 @@
   max-width: 250px;
   text-align: right;
   white-space: nowrap;
+  flex-wrap: wrap;
+  display: flex;
   padding-right: 10px;
   margin: 4px;
-  justify-content: right;
-}
-
-.right-box {
-  display:flex;
-  flex-direction: column;
   vertical-align: top;
+  justify-content: right;
 }
 
 .title {
   align-items: center;
   display: flex;
-  max-width: calc(100% - 260px);
+  max-width: calc(100% - 300px);
 }
 
 .tree-label {
@@ -93,11 +98,14 @@
 }
 .node-container {
   display:flex;
-  width:100%;
+  width:calc(100% - 35px);
   justify-content: space-between;
 }
 
-
+.hierarchy-edit {
+  height: 20px;
+  margin-left: 15px;
+}
 
 
 .mat-card {
