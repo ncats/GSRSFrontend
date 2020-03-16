@@ -423,6 +423,10 @@ unapproveRecord() {
     return this.substance.uuid;
   }
 
+  getClass(): string {
+    return this.substance.substanceClass;
+  }
+
   changeStatus(status: string): void {
     this.substance.status = status;
     alert('Status changed to ' + status);
@@ -2019,8 +2023,6 @@ unapproveRecord() {
     let substanceCopy: SubstanceDetail = JSON.parse(substanceString);
 
     const response = this.cleanObject(substanceCopy);
-    console.log(substanceCopy);
-    console.log(response);
     const deletedUuids = response.deletedUuids;
     // const deletablekeys = [
     //   'names',
@@ -2107,7 +2109,6 @@ unapproveRecord() {
         isSuccessfull: true
       };
       this.substanceService.approveSubstance(this.substance.uuid).subscribe(response => {
-        console.log(response);
         observer.next(results);
         observer.complete();
       }, error => {

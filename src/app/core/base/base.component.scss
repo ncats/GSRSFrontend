@@ -54,8 +54,10 @@
 .logged-in {
   margin:auto;
   text-align:center;
-  max-width:75px;
+  max-width:90px;
   overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
 
   .mat-icon, user-icon {
