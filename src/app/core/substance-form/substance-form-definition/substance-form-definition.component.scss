@@ -3,8 +3,9 @@
     justify-content: space-between;
 }
 
-.advanced-row{
-  justify-content: right;
+.approval {
+  color: #c7254e;
+  font-size: 24px;
 }
 
 .primary-substance-container {
@@ -22,6 +23,11 @@
   padding-bottom:20px;
   font-weight:500;
   font-size: 28px;
+}
+
+.sub-header {
+  font-weight: 400;
+  padding-right:5px;
 }
 
 .references-container {
@@ -76,13 +82,6 @@
   width: 50%;
 }
 
-.advanced, .admin-functions {
-  width: 33%;
-}
-
-.advanced {
-  padding-top:7px;
-}
 
 .form-name {
   font-size: 22px;

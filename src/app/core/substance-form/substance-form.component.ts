@@ -31,7 +31,6 @@ import {Auth, AuthService} from '@gsrs-core/auth';
 import {take} from 'rxjs/operators';
 
 
-
 @Component({
   selector: 'app-substance-form',
   templateUrl: './substance-form.component.html',
@@ -62,7 +61,19 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   approving: boolean;
   definition: SubstanceFormDefinition;
   user: string;
-
+  feature: string;
+  isAdmin: boolean;
+  messageField: string;
+  uuid: string;
+  substanceClass: string;
+  status: string;
+  classes = ['protein',
+    'chemical',
+    'structurallyDiverse',
+    'polymer',
+    'nucleicAcid',
+    'mixture',
+    'specifiedSubstanceG1'];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -82,6 +93,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnInit() {
     this.loadingService.setLoading(true);
+    this.isAdmin = this.authService.hasRoles('admin');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const routeSubscription = this.activatedRoute
       .params
@@ -155,6 +167,74 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
   }
 
+  openedChange(event: any) {
+    if (event) {
+      this.overlayContainer.style.zIndex = '1002';
+    } else {
+      this.overlayContainer.style.zIndex = '1000';
+
+    }
+
+  }
+
+
+  useFeature(feature: any): void {
+    this.feature = feature.value;
+    if (this.feature === 'glyco') {
+      this.glyco();
+    } else if (this.feature === 'disulfide') {
+      this.disulfide();
+    }if (this.feature === 'concept') {
+      this.concept();
+    } if (this.feature === 'unapprove') {
+      if (confirm('Are you sure you\'d like to remove the approvalID?')) {
+        this.substanceFormService.unapproveRecord();
+      }
+      this.feature = undefined;
+    }
+    if (this.feature === 'setPrivate') {
+      this.substanceFormService.setDefinitionPrivate();
+      this.feature = undefined;
+    }
+    if (this.feature === 'setPublic') {
+      this.substanceFormService.setDefinitionPublic();
+      this.feature = undefined;
+    }
+    if (this.feature === 'approved') {
+      this.substanceFormService.changeStatus('approved');
+      this.feature = undefined;
+    }
+    if (this.feature === 'pending') {
+      this.substanceFormService.changeStatus('pending');
+      this.feature = undefined;
+    }
+  }
+
+  changeClass(type: any): void {
+    this.router.navigate(['/substances', this.id, 'edit'], { queryParams: { switch: type.value } });
+    this.feature = undefined;
+  }
+
+  changeStatus(status: any): void {
+    this.substanceFormService.changeStatus(status);
+    this.feature = undefined;
+  }
+
+  concept(): void {
+    this.substanceFormService.conceptNonApproved();
+    this.feature = undefined;
+  }
+
+  glyco(): void {
+    this.substanceFormService.predictSites();
+    this.feature = undefined;
+  }
+
+  disulfide(): void {
+    this.substanceFormService.disulfideLinks();
+    this.feature = undefined;
+  }
+
   ngOnDestroy(): void {
     this.substanceFormService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
@@ -197,6 +277,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         if (newType) {
           response = this.substanceFormService.switchType(response, newType);
         }
+        this.substanceClass = response.substanceClass;
+        this.status = response.status;
         this.substanceFormService.loadSubstance(response.substanceClass, response);
         this.setFormSections(formSections[response.substanceClass]);
       } else {
@@ -215,6 +297,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   getPartialSubstanceDetails(uuid: string, type: string): void {
     this.substanceService.getSubstanceDetails(uuid).subscribe(response => {
       if (response) {
+        this.substanceClass = response.substanceClass;
+        this.status = response.status;
         delete response.uuid;
         if (response._name) {
           delete response._name;

@@ -4,7 +4,7 @@
       <mat-expansion-panel-header class="domain-reference-header">
         <mat-panel-title [ngClass]="{'block-display': !isExpanded}">
           <h4 class="title" matTooltip="Expand references">
-            References
+            {{card && card === 'definition'? 'Definitional ': ''}}References
             <span [matBadge]="referencesUuids && referencesUuids.length || 0" class = "custom-badge" matBadgeOverlap="false"
               [hidden]="isExpanded"></span>
           </h4>

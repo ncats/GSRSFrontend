@@ -18,6 +18,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
   styleUrls: ['./domain-references.component.scss']
 })
 export class DomainReferencesComponent implements OnInit, OnDestroy {
+  @Input() card?: string;
   private domainReferenceUuids: Array<string>;
   private substanceReferences: Array<SubstanceReference>;
   canReuse = false;

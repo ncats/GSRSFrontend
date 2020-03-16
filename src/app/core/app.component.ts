@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import {Component, OnInit} from '@angular/core';
+import {DomSanitizer, Title} from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { GoogleAnalyticsService } from './google-analytics/google-analytics.service';
+import {Router, NavigationStart} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +12,13 @@ import { GoogleAnalyticsService } from './google-analytics/google-analytics.serv
 export class AppComponent {
   constructor(
     iconRegistry: MatIconRegistry, sanitizer: DomSanitizer,
+    private title: Title,
+    private router: Router,
     private googleAnalyticsService: GoogleAnalyticsService
   ) {
+    router.events.subscribe((event) => {
+      title.setTitle('GSRS');
+    });
     iconRegistry.addSvgIcon(
       'chevron_right',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-chevron_right-24px.svg'));
