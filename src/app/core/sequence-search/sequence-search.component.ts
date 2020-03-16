@@ -39,9 +39,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
           this.sequenceSearchForm.controls.cutoff.setValue(params.get('cutoff'));
         }
         if (params.has('seq_type')) {
-          console.log(params.get('seq_type'));
           this.sequenceSearchForm.controls.sequenceType.setValue(params.get('seq_type'));
-          console.log('setting type');
         }
         if (params.has('subunit') && params.has('substance') && params.has('seq_type')) {
           this.getSequence(params.get('substance'), params.get('subunit'), params.get('seq_type'));
@@ -89,13 +87,9 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
   }
 
   getSequence(substance: string, unit: string, type: string) {
-    console.log(substance);
     type = type.charAt(0).toLowerCase() + type.slice(1);
-    console.log(type);
     this.substanceService.getSequenceByID(substance, unit, type).subscribe(response => {
-      console.log(response);
         if (response && response.length > 0 && response[0].sequence) {
-          console.log(response[0].sequence);
           this.sequenceSearchForm.controls.sequence.setValue(response[0].sequence);
         }
     });

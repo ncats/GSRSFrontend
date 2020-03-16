@@ -243,8 +243,8 @@ change(event): void {
   cleanSequence(): void {
     if (!this.toggle[this.subunit.subunitIndex]) {
 
-      const test = this.subunit.sequence.split('');
-      const cleanedSequence =  test.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      const toArray = this.subunit.sequence.split('');
+      const cleanedSequence =  toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
       if (this.toggle[this.subunit.subunitIndex] === false) {
 
       }
@@ -254,8 +254,8 @@ change(event): void {
         this.substanceFormService.recalculateCysteine();
       }
     } else {
-      const test = this.editSequence.replace(/\s/g, '').split('');
-      const cleanedSequence = test.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      const toArray = this.editSequence.replace(/\s/g, '').split('');
+      const cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
       this.editSequence = this.preformatSeq(cleanedSequence);
     }
   }
