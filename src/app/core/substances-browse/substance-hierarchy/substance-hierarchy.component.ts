@@ -3,6 +3,7 @@ import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {SubstanceName, SubstanceRelated, SubstanceService, SubstanceSummary} from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import {AuthService} from "@gsrs-core/auth";
 
 @Component({
   selector: 'app-substance-hierarchy',
@@ -18,9 +19,11 @@ export class SubstanceHierarchyComponent implements OnInit {
   dataSource = new MatTreeNestedDataSource<any>();
   selfNode: HierarchyNode;
   activeNode: any;
+  isAdmin: boolean;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
   constructor(
     private substanceService: SubstanceService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
@@ -41,6 +44,7 @@ export class SubstanceHierarchyComponent implements OnInit {
       }, error => {
        this.loadHierarchy([this.selfNode]);
       });
+      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
   }
 
   loadHierarchy(orig: any): void {

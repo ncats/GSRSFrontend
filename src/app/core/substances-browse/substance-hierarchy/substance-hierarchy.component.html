@@ -4,7 +4,7 @@
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
       <li class="mat-tree-node" [ngClass] = "{'odd':node.order === 'odd', 'primary': activeNode === node}" (click)="activeNode = node" >
         <button mat-icon-button class = "tree-button" disabled></button>
-        <div class = 'node-container'>
+        <div class = 'node-container nochild'>
           <div class = 'title'>
             <a class="hierarchy-link" matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''" [routerLink]="['/substances', node.value.refuuid || '']">
               {{node.value.refPname}}
@@ -34,16 +34,16 @@
               <a class="hierarchy-link"  matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"  [routerLink]="['/substances', node.value.refuuid || '']">
                 {{node.value.refPname}}
               </a>
+              <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']">
+                <mat-icon *ngIf ="isAdmin" svgIcon="edit"  color = "primary"></mat-icon>
+              </a>
             </div>
-            <span class = "filler"></span>
             <div class = "right-container">
-             <div class = "right-box">
               <span class = 'approval'>{{node.value.approvalID || 'PENDING'}}</span>
                <span class = "end" *ngIf = "node.relationship !== ''"> {{node.relationship}}</span>
              </div>
             </div>
           </div>
-        </div>
         <ul [class.hierarchy-tree-invisible]="!treeControl.isExpanded(node)">
           <ng-container matTreeNodeOutlet></ng-container>
         </ul>
