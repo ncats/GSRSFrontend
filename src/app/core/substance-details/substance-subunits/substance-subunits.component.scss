@@ -72,6 +72,26 @@
     justify-content: flex-end;
 }
 
-.error {
+.subunit-title {
+  color: #1565C0;
+  text-decoration: none;
+}
+
+.subunit-label {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.form-row {
+  display:flex;
+  justify-content: space-between;
+  padding-bottom:5px;
+}
+
+.sequence-container {
+  padding-top: 20px;
+}
+
+error {
   color: red;
 }
