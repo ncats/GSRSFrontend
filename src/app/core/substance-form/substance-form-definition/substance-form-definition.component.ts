@@ -2,14 +2,11 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormBase } from '../substance-form-base';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormDefinition } from '../substance-form.model';
-import {Router} from '@angular/router';
-import {AuthService} from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-form-definition',
@@ -39,7 +36,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   }
 
   ngOnInit() {
-    this.menuLabelUpdate.emit('Definition');
+    this.menuLabelUpdate.emit('Overview');
     this.getVocabularies();
   }
 

@@ -41,6 +41,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   sequenceType = '';
   substanceType: string;
   searchType: string;
+  validArray: Array<string> = [];
 
 
   constructor(
@@ -56,6 +57,9 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
   ngOnInit() {
     this.allSites = [];
+    if (this.subunit.sequence === '') {
+      this.toggle[this.subunit.subunitIndex] = true;
+    }
     const definitionSubscription = this.substanceFormService.definition.subscribe( definition => {
       this.substanceType = definition.substanceClass;
       if (this.substanceType === 'protein') {
@@ -135,14 +139,24 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
         this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
         this.vocabulary.X = nonStandard;
+        // tslint:disable-next-line:forin
+        for (const key in this.vocabulary) {
+          this.validArray.push(this.vocabulary[key].value);
+        }
       }, error => {
       });
     } else {
       this.cvService.getDomainVocabulary('NUCLEIC_ACID_BASE').subscribe(response => {
         this.vocabulary = response['NUCLEIC_ACID_BASE'].dictionary;
         this.vocabulary.X = nonStandard;
+        // tslint:disable-next-line:forin
+        for (const key in this.vocabulary) {
+          this.validArray.push(this.vocabulary[key].value);
+        }
+
       }, error => {
       });
+
     }
 
   }
@@ -227,20 +241,22 @@ change(event): void {
   }
 
   cleanSequence(): void {
-    const valid = [];
-    const test = this.subunit.sequence.split('');
-    // tslint:disable-next-line:forin
-    for (const key in this.vocabulary) {
-      valid.push(this.vocabulary[key].value);
-    }
-    const cleanedSequence =  test.filter(char => valid.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
-    if (this.toggle[this.subunit.subunitIndex] === false) {
+    if (!this.toggle[this.subunit.subunitIndex]) {
 
-    }
-    if (cleanedSequence !== this.subunit.sequence) {
-      this.subunit.sequence = cleanedSequence;
-      this.substanceFormService.emitSubunitUpdate();
-      this.substanceFormService.recalculateCysteine();
+      const toArray = this.subunit.sequence.split('');
+      const cleanedSequence =  toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      if (this.toggle[this.subunit.subunitIndex] === false) {
+
+      }
+      if (cleanedSequence !== this.subunit.sequence) {
+        this.subunit.sequence = cleanedSequence;
+        this.substanceFormService.emitSubunitUpdate();
+        this.substanceFormService.recalculateCysteine();
+      }
+    } else {
+      const toArray = this.editSequence.replace(/\s/g, '').split('');
+      const cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      this.editSequence = this.preformatSeq(cleanedSequence);
     }
   }
 

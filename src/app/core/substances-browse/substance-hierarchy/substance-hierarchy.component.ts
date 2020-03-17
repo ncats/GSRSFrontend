@@ -3,7 +3,7 @@ import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {SubstanceName, SubstanceRelated, SubstanceService, SubstanceSummary} from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
-import {AuthService} from "@gsrs-core/auth";
+import {AuthService} from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-hierarchy',

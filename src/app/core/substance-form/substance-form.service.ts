@@ -229,6 +229,8 @@ export class SubstanceFormService {
 
   unloadSubstance(): void {
     this.substance = null;
+    this.allSitesArr = null;
+    this.displaySequences = null;
   }
 
   ready(): Observable<void> {

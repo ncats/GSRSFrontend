@@ -116,14 +116,12 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   processStructurePostResponse(structurePostResponse?: StructurePostResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
 
-      //we should only be dealing with this stuff if the total hash changes
-      
-      if(this.structure["hash"] !== structurePostResponse.structure["hash"]){
-      
+      // we should only be dealing with this stuff if the total hash changes
+      if (this.structure['hash'] !== structurePostResponse.structure['hash']) {
          this.smiles = structurePostResponse.structure.smiles;
          this.mol = structurePostResponse.structure.molfile;
 
-         //this is sometimes overly ambitious  
+         // this is sometimes overly ambitious
          Object.keys(structurePostResponse.structure).forEach(key => {
            this.structure[key] = structurePostResponse.structure[key];
          });

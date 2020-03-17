@@ -18,6 +18,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   view = 'details';
   substanceUpdated = new Subject<SubstanceDetail>();
   cvType = 'AMINO_ACID_RESIDUE';
+  uuid: string;
 
 
   constructor(
@@ -36,6 +37,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         this.countUpdate.emit(this.subunits.length);
         this.cvType = 'AMINO_ACID_RESIDUE';
         this.getVocabularies();
+        this.uuid = this.substance.uuid;
       } else if (this.substance != null
         && this.substance.nucleicAcid != null
         && this.substance.nucleicAcid.subunits != null
@@ -44,12 +46,14 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         this.countUpdate.emit(this.subunits.length);
         this.cvType = 'NUCLEIC_ACID_BASE';
         this.getVocabularies();
+        this.uuid = this.substance.uuid;
       }
   }
 
   ngAfterViewInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
+      this.uuid = this.substance.uuid;
       if (this.substance.protein) {
           this.subunits = this.substance.protein.subunits;
       } else if (this.substance.nucleicAcid) {
@@ -71,7 +75,9 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
   private processSubunits(): void {
     this.subunits.forEach(subunit => {
       const subunitSequence: SubunitSequence = {
+        fullSequence: subunit.sequence,
         subunitIndex: subunit.subunitIndex,
+        uuid: subunit.uuid,
         sequencesSectionGroups: []
       };
       this.subunitSequences.push(subunitSequence);
@@ -157,6 +163,8 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
 
 interface SubunitSequence {
   subunitIndex: number;
+  fullSequence?: string;
+  uuid?: string;
   sequencesSectionGroups: Array<SequenceSectionGroup>;
 }
 
