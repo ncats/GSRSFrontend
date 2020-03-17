@@ -57,7 +57,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
   ngOnInit() {
     this.allSites = [];
-    if(this.subunit.sequence === ''){
+    if (this.subunit.sequence === '') {
       this.toggle[this.subunit.subunitIndex] = true;
     }
     const definitionSubscription = this.substanceFormService.definition.subscribe( definition => {
