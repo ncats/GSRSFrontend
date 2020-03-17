@@ -109,7 +109,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.subscriptions.push(roleSubscription);
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
-    this.version = this.configService.configData.version;
+    this.version = this.configService.configData.version || '';
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
