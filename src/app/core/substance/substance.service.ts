@@ -12,7 +12,7 @@ import { UtilsService } from '../utils/utils.service';
 import { switchMap } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet} from '@gsrs-core/utils';
-import {HierarchyNode} from "@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model";
+import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 
 @Injectable({
   providedIn: 'root'

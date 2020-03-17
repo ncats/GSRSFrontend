@@ -31,8 +31,11 @@
             <img appSubstanceImage [entityId]="substance.uuid">
           </div>
         </div>
-        <div class = 'definition' *ngIf = "substance.definitionLevel === 'REPRESENTATIVE'">
-          REPRESENTATIVE DEFINITION
+        <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
+          <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
+        </div>
+        <div class = 'definition' *ngIf = "substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
+          {{substance.definitionLevel }} DEFINITION
         </div>
         <button
           *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer"

@@ -85,6 +85,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   private classicLinkQueryParams = {};
   isAdmin = false;
   contactEmail: string;
+  version?: string;
 
   constructor(
     private router: Router,
@@ -108,6 +109,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.subscriptions.push(roleSubscription);
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
+    this.version = this.configService.configData.version;
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
