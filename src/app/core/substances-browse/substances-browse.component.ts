@@ -714,6 +714,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-sequence-search', eventLabel);
 
     this.privateSequenceSearchTerm = '';
+    this.privateSequenceSearchKey = '';
     this.privateSearchType = '';
     this.privateSearchCutoff = 0;
     this.privateSearchSeqType = '';
