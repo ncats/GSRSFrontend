@@ -1,8 +1,8 @@
 <div class="flex-row">
   <span class="middle-fill"></span>
-  <button mat-button (click)="addComponent()">
+  <!-- <button mat-button (click)="addComponent()">
     Add component <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
+  </button> -->
 </div>
 <div class="relationship" *ngFor="let relationship of relationships; last as isLast; index as index" appScrollToTarget
      [id]="'substance-mixture-component-' + index">

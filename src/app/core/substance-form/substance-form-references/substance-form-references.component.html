@@ -3,9 +3,9 @@
     <input matInput placeholder="Search" [formControl]="searchControl">
   </mat-form-field>
   <span class="middle-fill"></span>
-  <button mat-button (click)="addSubstanceReference()">
+  <!-- <button mat-button (click)="addSubstanceReference()">
     Add reference <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
+  </button> -->
 </div>
 <div class="reference" *ngFor="let reference of paged; last as isLast" [id]="reference.uuid" appScrollToTarget>
   <app-reference-form [reference]="reference" (referenceDeleted)="deleteReference($event)"></app-reference-form>

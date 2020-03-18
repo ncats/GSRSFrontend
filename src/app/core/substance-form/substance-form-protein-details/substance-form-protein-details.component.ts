@@ -4,9 +4,9 @@ import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import { IDropdownSettings} from 'ng-multiselect-dropdown';
+import { SubstanceFormBase } from '../substance-form-base';
 
 @Component({
   selector: 'app-substance-form-protein-details',
@@ -14,7 +14,7 @@ import { IDropdownSettings} from 'ng-multiselect-dropdown';
   styleUrls: ['./substance-form-protein-details.component.scss']
 })
 // tslint:disable-next-line:max-line-length
-export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilteredList<Protein> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormProteinDetailsComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
 
   protein: Protein;
   private subscriptions: Array<Subscription> = [];
@@ -24,7 +24,7 @@ export class SubstanceFormProteinDetailsComponent extends SubstanceCardBaseFilte
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService
   ) {
-    super(gaService);
+    super();
     this.analyticsEventCategory = 'substance form Protein Details';
   }
 

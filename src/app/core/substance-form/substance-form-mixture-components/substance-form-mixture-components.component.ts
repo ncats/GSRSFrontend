@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {Mixture, MixtureComponents, SubstanceRelationship} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
@@ -12,7 +12,7 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   styleUrls: ['./substance-form-mixture-components.component.scss']
 })
 export class SubstanceFormMixtureComponentsComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   relationships: Array<MixtureComponents>;
   private subscriptions: Array<Subscription> = [];
   constructor(
@@ -24,6 +24,7 @@ export class SubstanceFormMixtureComponentsComponent extends SubstanceCardBaseFi
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Components');
     this.analyticsEventCategory = 'substance form mixture components';
   }
@@ -36,9 +37,14 @@ export class SubstanceFormMixtureComponentsComponent extends SubstanceCardBaseFi
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  addItem(): void {
+    this.addComponent();
   }
 
   addComponent(): void {

@@ -1,17 +1,17 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {StructurallyDiverse} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
+import { SubstanceFormBase } from '../substance-form-base';
 
 @Component({
   selector: 'app-substance-form-structurally-diverse-source',
   templateUrl: './substance-form-structurally-diverse-source.component.html',
   styleUrls: ['./substance-form-structurally-diverse-source.component.scss']
 })
-export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceCardBaseFilteredList<StructurallyDiverse>
+export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceFormBase
   implements OnInit, AfterViewInit, OnDestroy {
 
   structurallyDiverse: StructurallyDiverse;
@@ -22,7 +22,7 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceC
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService
   ) {
-    super(gaService);
+    super();
     this.analyticsEventCategory = 'substance form Source Material';
   }
 

@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {DisulfideLink, Site, Subunit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
@@ -16,7 +16,7 @@ import {OverlayContainer} from '@angular/cdk/overlay';
   styleUrls: ['./substance-form-disulfide-links.component.scss']
 })
 export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilteredList<DisulfideLink>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   disulfideLinks: Array<DisulfideLink>;
   private subscriptions: Array<Subscription> = [];
   cysteineBonds: number;
@@ -36,6 +36,7 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Disulfide Links');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
@@ -60,6 +61,7 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -101,6 +103,10 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
       }
 
     });
+  }
+
+  addItem(): void {
+    this.addLink();
   }
 
   addLink(): void {

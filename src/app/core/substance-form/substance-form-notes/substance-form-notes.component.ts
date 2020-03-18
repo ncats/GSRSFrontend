@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceNote } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
@@ -11,7 +11,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './substance-form-notes.component.html',
   styleUrls: ['./substance-form-notes.component.scss']
 })
-export class SubstanceFormNotesComponent extends SubstanceCardBaseFilteredList<SubstanceNote> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormNotesComponent extends SubstanceCardBaseFilteredList<SubstanceNote>
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
+
   notes: Array<SubstanceNote>;
   private subscriptions: Array<Subscription> = [];
 
@@ -25,6 +27,7 @@ export class SubstanceFormNotesComponent extends SubstanceCardBaseFilteredList<S
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Notes');
   }
 
@@ -45,9 +48,14 @@ export class SubstanceFormNotesComponent extends SubstanceCardBaseFilteredList<S
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  addItem(): void {
+    this.addNote();
   }
 
   addNote(): void {

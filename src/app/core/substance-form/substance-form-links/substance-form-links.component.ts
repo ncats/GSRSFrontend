@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList,  SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {Link, Linkage, Site, Subunit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
@@ -11,7 +11,9 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   templateUrl: './substance-form-links.component.html',
   styleUrls: ['./substance-form-links.component.scss']
 })
-export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<Linkage> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<Linkage>
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
+
   links: Array<Linkage>;
   subunits: Array<Subunit>;
   remainingSites: Array<Site> = [];
@@ -28,6 +30,7 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Links');
   }
 
@@ -46,7 +49,7 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
   }
 
   ngOnDestroy() {
-
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -73,10 +76,14 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
 
   }
 
+  addItem(): void {
+    this.addOtherLink();
+  }
+
   addOtherLink(): void {
     this.substanceFormService.addSubstanceLink();
     setTimeout(() => {
-      this.scrollToService.scrollToElement(`substance-links-0`, 'center');
+      this.scrollToService.scrollToElement(`substance-other-links-0`, 'center');
     });
   }
 

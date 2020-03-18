@@ -6,6 +6,7 @@ import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import { SubstanceFormBase } from '../substance-form-base';
 
 @Component({
   selector: 'app-substance-form-mixture-details',
@@ -13,7 +14,7 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   styleUrls: ['./substance-form-mixture-details.component.scss']
 })
 // tslint:disable-next-line:max-line-length
-export class SubstanceFormMixtureDetailsComponent  extends SubstanceCardBaseFilteredList<Mixture> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormMixtureDetailsComponent  extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
 
   parent: SubstanceRelated;
   relatedSubstanceUuid: string;
@@ -25,7 +26,7 @@ export class SubstanceFormMixtureDetailsComponent  extends SubstanceCardBaseFilt
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService
   ) {
-    super(gaService);
+    super();
     this.analyticsEventCategory = 'substance form Mixture Details';
   }
 

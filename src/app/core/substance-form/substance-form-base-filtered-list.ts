@@ -76,3 +76,7 @@ export class SubstanceCardBaseFilteredList<T> extends SubstanceFormBase {
         }, 700);
     }
 }
+
+export interface SubstanceCardBaseList {
+    addItem(): void;
+}
