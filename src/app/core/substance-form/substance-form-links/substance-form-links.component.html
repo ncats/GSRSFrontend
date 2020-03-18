@@ -1,8 +1,8 @@
 <div class="responsive">
   <div class = "form-row">
-    <button mat-button (click)="addOtherLink()">
+    <!-- <button mat-button (click)="addOtherLink()">
       Add link <mat-icon svgIcon="add_circle_outline"></mat-icon>
-    </button>
+    </button> -->
   </div>
   <div class = 'form-row' [ngClass] = "invalidSites === 0?'':'too-many'">Remaining Links: {{invalidSites === 0?remainingSites.length : invalidSites}}</div>
   <div class = "alternate-backgrounds" *ngFor = "let links of links; last as isLast; index as index"  appScrollToTarget [id]="'substance-other-links-' + index" >

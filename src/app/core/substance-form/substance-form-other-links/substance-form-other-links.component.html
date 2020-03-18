@@ -1,8 +1,8 @@
 <div class="flex-row">
   <span class="middle-fill"></span>
-  <button mat-button (click)="addOtherLink()">
+  <!-- <button mat-button (click)="addOtherLink()">
     Add link <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
+  </button> -->
 </div>
   <div class = "alternate-backgrounds" *ngFor = "let links of otherLinks; last as isLast; index as index"  appScrollToTarget [id]="'substance-other-links-' + index" >
     <app-other-links-form [link]="links" (linkDeleted)="deleteLink($event)"></app-other-links-form>

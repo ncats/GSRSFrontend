@@ -1,9 +1,9 @@
 
 <div class="flex-row">
   <span class="middle-fill"></span>
-  <button mat-button (click)="addStructuralModification()">
+  <!-- <button mat-button (click)="addStructuralModification()">
     Add Modification <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
+  </button> -->
 </div>
   <div class = 'alternate-backgrounds'   *ngFor="let mod of modifications; last as isLast; index as index"  [id]="'substance-agent-modification-' + index" >
     <app-agent-modification-form [mod]="mod" (modDeleted) = "deleteAgentModification()" ></app-agent-modification-form>

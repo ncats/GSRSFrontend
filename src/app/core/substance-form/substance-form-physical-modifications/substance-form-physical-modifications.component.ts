@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {PhysicalModification} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
@@ -12,7 +12,7 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   styleUrls: ['./substance-form-physical-modifications.component.scss']
 })
 export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBaseFilteredList<PhysicalModification>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   modifications: Array<PhysicalModification>;
   private subscriptions: Array<Subscription> = [];
 
@@ -26,6 +26,7 @@ export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBa
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Physical Modifications');
   }
 
@@ -37,9 +38,14 @@ export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBa
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  addItem(): void {
+    this.addStructuralModification();
   }
 
   addStructuralModification(): void {

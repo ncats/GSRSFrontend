@@ -3,9 +3,9 @@
     <input matInput placeholder="Search" [formControl]="searchControl">
   </mat-form-field>
   <span class="middle-fill"></span>
-  <button mat-button (click)="addProperty()">
+  <!-- <button mat-button (click)="addProperty()">
     Add property <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
+  </button> -->
 </div>
 <div class="property" *ngFor="let property of paged; last as isLast; index as index" appScrollToTarget
   [id]="'substance-property-' + index">

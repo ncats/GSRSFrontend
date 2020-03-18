@@ -4,7 +4,7 @@ import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 
 @Component({
   selector: 'app-substance-form-constituents',
@@ -12,7 +12,7 @@ import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance
   styleUrls: ['./substance-form-constituents.component.scss']
 })
 export class SubstanceFormConstituentsComponent extends SubstanceCardBaseFilteredList<Constituent>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
 
   constituents: Array<Constituent>;
   private subscriptions: Array<Subscription> = [];
@@ -27,6 +27,7 @@ export class SubstanceFormConstituentsComponent extends SubstanceCardBaseFiltere
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Constituents');
   }
 
@@ -38,9 +39,14 @@ export class SubstanceFormConstituentsComponent extends SubstanceCardBaseFiltere
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  addItem(): void {
+    this.addConstituent();
   }
 
   addConstituent(): void {

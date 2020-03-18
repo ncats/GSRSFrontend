@@ -29,6 +29,7 @@ import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.j
 import {Title} from '@angular/platform-browser';
 import {Auth, AuthService} from '@gsrs-core/auth';
 import {take} from 'rxjs/operators';
+import { MatExpansionPanel } from '@angular/material';
 
 
 @Component({
@@ -41,6 +42,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   id?: string;
   formSections: Array<SubstanceFormSection> = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
+  @ViewChildren('expansionPanel', { read: MatExpansionPanel }) matExpansionPanels: QueryList<MatExpansionPanel>;
   private subClass: string;
   private definitionType: string;
   expandedComponents = [
@@ -131,12 +133,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.subscriptions.push(routeSubscription);
     this.titleService.setTitle('Register');
     this.approving = false;
-    this.substanceFormService.definition.subscribe(response => {
+    const definitionSubscription = this.substanceFormService.definition.subscribe(response => {
       this.definition = response;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
       });
     });
+    this.subscriptions.push(definitionSubscription);
     this.authService.getAuth().pipe(take(1)).subscribe(auth => {
       this.user = auth.identifier;
       setTimeout(() => {
@@ -154,11 +157,24 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
               .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
               .subscribe(componentFactory => {
                 this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
-                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.subscribe(label => {
+                this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
+                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
                   this.formSections[index].menuLabel = label;
                 });
-                this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+                this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.pipe(take(1)).subscribe(isHidden => {
                   this.formSections[index].isHidden = isHidden;
+                });
+                this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
+                  this.formSections[index].canAddItem = isList;
+                  if (isList) {
+                    const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
+                      this.formSections[index].matExpansionPanel.open();
+                      this.formSections[index].dynamicComponentRef.instance.addItem();
+                    });
+                    this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
+                      aieSubscription.unsubscribe();
+                    });
+                  }
                 });
                 this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
               });
@@ -264,14 +280,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
       this.overlayContainer.style.zIndex = '1002';
 
-      const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
 
       });
       this.subscriptions.push(dialogSubscription);
   }
 
   getSubstanceDetails(newType?: string): void {
-    this.substanceService.getSubstanceDetails(this.id).subscribe(response => {
+    this.substanceService.getSubstanceDetails(this.id).pipe(take(1)).subscribe(response => {
       if (response) {
         this.definitionType = response.definitionType;
         if (newType) {
@@ -295,7 +311,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   getPartialSubstanceDetails(uuid: string, type: string): void {
-    this.substanceService.getSubstanceDetails(uuid).subscribe(response => {
+    this.substanceService.getSubstanceDetails(uuid).pipe(take(1)).subscribe(response => {
       if (response) {
         this.substanceClass = response.substanceClass;
         this.status = response.status;
@@ -349,7 +365,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
-    this.substanceFormService.validateSubstance().subscribe(results => {
+    this.substanceFormService.validateSubstance().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
@@ -374,7 +390,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   approve(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    this.substanceFormService.approveSubstance().subscribe(response => {
+    this.substanceFormService.approveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
@@ -407,7 +423,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    this.substanceFormService.saveSubstance().subscribe(response => {
+    this.substanceFormService.saveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;

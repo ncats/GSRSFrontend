@@ -1,8 +1,8 @@
 <div class="flex-row">
   <span class="middle-fill"></span>
-  <button mat-button (click)="addCode()">
+  <!-- <button mat-button (click)="addCode()">
     Add Monomer <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
+  </button> -->
 </div>
 <div class="monomer" *ngFor="let monomer of monomers; last as isLast; index as index" appScrollToTarget
   [id]="'substance-monomer-' + index">

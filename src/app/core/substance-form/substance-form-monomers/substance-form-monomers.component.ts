@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
-import { SubstanceCode } from '@gsrs-core/substance/substance.model';
+import { Monomer } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subscription } from 'rxjs';
@@ -11,9 +11,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './substance-form-monomers.component.html',
   styleUrls: ['./substance-form-monomers.component.scss']
 })
-export class SubstanceFormMonomersComponent extends SubstanceCardBaseFilteredList<SubstanceCode>
-  implements OnInit, AfterViewInit, OnDestroy {
-  monomers: Array<SubstanceCode>;
+export class SubstanceFormMonomersComponent extends SubstanceCardBaseFilteredList<Monomer>
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
+  monomers: Array<Monomer>;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -26,6 +26,7 @@ export class SubstanceFormMonomersComponent extends SubstanceCardBaseFilteredLis
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Monomers');
   }
 
@@ -37,20 +38,25 @@ export class SubstanceFormMonomersComponent extends SubstanceCardBaseFilteredLis
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
   }
 
-  addCode(): void {
+  addItem(): void {
+    this.addMonomer();
+  }
+
+  addMonomer(): void {
     this.substanceFormService.addSubstanceMonomer();
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-monomer-0`, 'center');
     });
   }
 
-  deleteCode(code: SubstanceCode): void {
-    this.substanceFormService.deleteSubstanceMonomer(code);
+  deleteMonomer(monomer: Monomer): void {
+    this.substanceFormService.deleteSubstanceMonomer(monomer);
   }
 
 }

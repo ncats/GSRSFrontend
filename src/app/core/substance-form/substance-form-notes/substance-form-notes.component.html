@@ -3,9 +3,9 @@
     <input matInput placeholder="Search" [formControl]="searchControl">
   </mat-form-field>
   <span class="middle-fill"></span>
-  <button mat-button (click)="addNote()">
+  <!-- <button mat-button (click)="addNote()">
     Add note <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
+  </button> -->
 </div>
 <div class="note" *ngFor="let note of paged; last as isLast; index as index" appScrollToTarget
   [id]="'substance-note-' + index">
