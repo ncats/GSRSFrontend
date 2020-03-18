@@ -54,10 +54,11 @@
                     <a class = "blue-font" (click) = "cleanSequence(sequenceSearchForm.controls.sequenceType.value)" ><mat-icon svgIcon="spellcheck"></mat-icon> clean sequence</a>
                   </div>
 
-
                 </div>
             </form>
-
+        <div class = "error-message" *ngIf = "errorMessage && errorMessage !== ''">
+          {{errorMessage}}
+        </div>
         </mat-card-content>
     </mat-card>
 </div>

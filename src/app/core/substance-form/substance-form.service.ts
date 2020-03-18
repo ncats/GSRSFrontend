@@ -784,7 +784,9 @@ unapproveRecord() {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
         if (this.substance.mixture == null) {
-          this.substance.mixture = {};
+          this.substance.mixture = {
+            access: []
+          };
         }
         observer.next(this.substance.mixture);
         this.substanceMixtureEmitter.subscribe(mixture => {

@@ -39,7 +39,8 @@ export class SubstanceService extends BaseHttpService {
     pageSize?: number,
     order?: string,
     facets?: SubstanceFacetParam,
-    skip?: number
+    skip?: number,
+    sequenceSearchKey?: string
   } = {}): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
 
@@ -59,9 +60,11 @@ export class SubstanceService extends BaseHttpService {
         }, () => {
           observer.complete();
         });
-      } else if (args.sequenceSearchTerm != null && args.sequenceSearchTerm !== '') {
+      } else if ((args.sequenceSearchKey != null && args.sequenceSearchTerm !== '') ||
+      (args.sequenceSearchTerm != null && args.sequenceSearchTerm !== '')) {
         this.searchSubstanceSequences(
           args.sequenceSearchTerm,
+          args.sequenceSearchKey,
           args.cutoff,
           args.type,
           args.seqType,
@@ -209,6 +212,7 @@ export class SubstanceService extends BaseHttpService {
 
   searchSubstanceSequences(
     searchTerm?: string,
+    searchKey?: string,
     cutoff: number = 0.5,
     type?: string,
     seqType?: string,
@@ -224,23 +228,27 @@ export class SubstanceService extends BaseHttpService {
       let structureFacetsKey;
 
       structureFacetsKey = this.utilsService.hashCode(searchTerm, cutoff, type, seqType);
-
-      if (!sync && this.searchKeys[structureFacetsKey]) {
-        if (order != null && order !== '') {
-          params = params.append('order', order);
+      if ((searchKey && searchKey.length > 30) || (!sync && this.searchKeys[structureFacetsKey])) {
+        if (!sync && this.searchKeys[structureFacetsKey]) {
+          url += `status(${this.searchKeys[structureFacetsKey]})/results`;
+        } else {
+          url += `status(${searchKey})/results`;
         }
-        url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets);
         params = params.appendDictionary({
           top: pageSize.toString(),
           skip: skip.toString()
         });
+        if (order != null && order !== '') {
+          params = params.append('order', order);
+        }
 
       } else {
         params = params.appendDictionary({
           q: searchTerm,
           type: type,
-          cutoff: cutoff.toString()
+          cutoff: cutoff.toString(),
+          seqType: seqType
         });
 
         if (sync) {
@@ -528,6 +536,25 @@ export class SubstanceService extends BaseHttpService {
   getSequenceByID(substance: string, unit: string, type: string): Observable<any> {
     const url = `${this.apiBaseUrl}substances(${substance})/${type}/subunits(uuid:${unit})`;
     return this.http.get<any>(url);
+  }
+
+  getSubstanceSequenceResults(
+    searchTerm?: string,
+    cutoff: number = 0.5,
+    type?: string,
+    seqType?: string,
+  ): Observable<any> {
+      let params = new SubstanceHttpParams();
+      const url = this.apiBaseUrl + 'substances/sequenceSearch';
+
+        params = params.appendDictionary({
+          q: searchTerm,
+          type: type,
+          cutoff: cutoff.toString(),
+          seqType: seqType
+        });
+
+     return this.http.post(url, params);
   }
 
 

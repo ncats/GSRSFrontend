@@ -39,6 +39,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchType?: string;
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
+  private privateSequenceSearchKey?: string;
   public substances: Array<SubstanceDetail>;
   public exactMatchSubstances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
@@ -109,6 +110,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
+    this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
+
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
     this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
     this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
@@ -268,7 +271,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         order: this.order,
         pageSize: this.pageSize,
         facets: this.privateFacetParams,
-        skip: skip
+        skip: skip,
+        sequenceSearchKey: this.privateSequenceSearchKey
       })
         .subscribe(pagingResponse => {
           this.isError = false;
@@ -710,6 +714,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-sequence-search', eventLabel);
 
     this.privateSequenceSearchTerm = '';
+    this.privateSequenceSearchKey = '';
     this.privateSearchType = '';
     this.privateSearchCutoff = 0;
     this.privateSearchSeqType = '';

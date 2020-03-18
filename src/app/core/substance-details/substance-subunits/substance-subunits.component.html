@@ -14,7 +14,7 @@
     <div class = "subunit-label"> Subunit {{subunitSequence.subunitIndex}}</div>
     <div>
       <a class = "subunit-title" [routerLink]="['/sequence-search']"
-         [queryParams]="{substance: uuid, subunit: subunitSequence.uuid, seq_type: 'nucleicAcid'}">similarity search</a>
+         [queryParams]="{substance: uuid, subunit: subunitSequence.uuid, seq_type: substanceType}">similarity search</a>
     </div>
 
   </div>
