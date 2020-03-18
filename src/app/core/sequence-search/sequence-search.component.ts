@@ -5,6 +5,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { debounceTime } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {SubstanceService} from '@gsrs-core/substance';
+import {LoadingService} from '@gsrs-core/loading';
 
 @Component({
   selector: 'app-sequence-search',
@@ -18,13 +19,16 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     sequenceType: new FormControl('Protein', Validators.required),
     sequence: new FormControl('', Validators.required)
   });
+  errorMessage = '';
 
 
   constructor(
     public router: Router,
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
-    private gaService: GoogleAnalyticsService
+    private gaService: GoogleAnalyticsService,
+    private loadingService: LoadingService,
+
   ) {
     this.activatedRoute
       .queryParamMap
@@ -40,7 +44,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
         }
         if (params.has('seq_type')) {
           const type = params.get('seq_type');
-          if (type.toLowerCase() === 'nucleicacid'){
+          if (type.toLowerCase() === 'nucleicacid') {
             this.sequenceSearchForm.controls.sequenceType.setValue('nucleicAcid');
           } else {
             this.sequenceSearchForm.controls.sequenceType.setValue(params.get('seq_type'));
@@ -112,7 +116,8 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     }
 
   private navigateToBrowseSubstance(): void {
-
+    this.errorMessage = '';
+    this.loadingService.setLoading(true);
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
@@ -122,7 +127,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
         navigationExtras.queryParams['type'] = this.sequenceSearchForm.value.type;
         navigationExtras.queryParams['seq_type'] = this.sequenceSearchForm.value.sequenceType;
         if ( this.sequenceSearchForm.value.sequence.length > 1000) {
-          navigationExtras.queryParams['sequence_search'] = navigationExtras.queryParams['sequence_search'].substring(0,1000);
+          navigationExtras.queryParams['sequence_search'] = this.sequenceSearchForm.value.sequence.substring(0, 1000);
         } else {
           navigationExtras.queryParams['sequence_search'] = this.sequenceSearchForm.value.sequence;
         }
@@ -133,13 +138,21 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
       this.sequenceSearchForm.value.type,
       this.sequenceSearchForm.value.sequenceType
     ).subscribe(response => {
-      console.log(response);
+      this.loadingService.setLoading(false);
       if (response.key) {
         navigationExtras.queryParams['sequence_key'] = response.key;
         this.router.navigate(['/browse-substance'], navigationExtras);
+      } else {
+        this.errorMessage = 'There was a problem processing your sequence search request';
       }
     }, error => {
       console.log(error);
+      if (this.sequenceSearchForm.value.sequence > 50000 ) {
+        this.errorMessage = 'Cannot process searches for sequences with more than 50,000 sites';
+      } else {
+        this.errorMessage = 'There was a problem processing your sequence search request';
+      }
+      this.loadingService.setLoading(false);
     });
   }
 

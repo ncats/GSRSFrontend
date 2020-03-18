@@ -37,7 +37,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         this.subunits = this.substance.protein.subunits;
         this.countUpdate.emit(this.subunits.length);
         this.cvType = 'AMINO_ACID_RESIDUE';
-        this.substanceType = 'nucleicAcid';
+        this.substanceType = 'protein';
         this.getVocabularies();
         this.uuid = this.substance.uuid;
       } else if (this.substance != null
@@ -47,7 +47,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
         this.subunits = this.substance.nucleicAcid.subunits;
         this.countUpdate.emit(this.subunits.length);
         this.cvType = 'NUCLEIC_ACID_BASE';
-        this.substanceType = 'protein';
+        this.substanceType = 'nucleicAcid';
         this.getVocabularies();
         this.uuid = this.substance.uuid;
       }
