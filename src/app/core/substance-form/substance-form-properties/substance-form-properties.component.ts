@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceProperty } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./substance-form-properties.component.scss']
 })
 export class SubstanceFormPropertiesComponent extends SubstanceCardBaseFilteredList<SubstanceProperty>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   properties: Array<SubstanceProperty>;
   private subscriptions: Array<Subscription> = [];
 
@@ -26,6 +26,7 @@ export class SubstanceFormPropertiesComponent extends SubstanceCardBaseFilteredL
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Properties');
   }
 
@@ -46,9 +47,14 @@ export class SubstanceFormPropertiesComponent extends SubstanceCardBaseFilteredL
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  addItem(): void {
+    this.addProperty();
   }
 
   addProperty(): void {

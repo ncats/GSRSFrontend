@@ -1,9 +1,9 @@
 <div class="responsive">
-  <div class = "form-row">
+  <!-- <div class = "form-row">
     <button mat-button (click)="addOtherSugar()">
       Add sugar <mat-icon svgIcon="add_circle_outline"></mat-icon>
     </button>
-  </div>
+  </div> -->
   <div class = 'form-row' [ngClass] = "invalidSites === 0?'':'too-many'">Remaining Sugars: {{invalidSites === 0?remainingSites.length : invalidSites}}</div>
   <div class = "alternate-backgrounds" *ngFor = "let links of sugars; last as isLast; index as index"  appScrollToTarget [id]="'substance-sugars-' + index" >
     <app-sugar-form [sugar]="links" [remaining] = 'remainingSites' (sugarDeleted)="deleteSugar($event)"></app-sugar-form>

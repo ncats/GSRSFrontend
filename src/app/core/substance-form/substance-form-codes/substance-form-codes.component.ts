@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceCode } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
@@ -11,7 +11,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './substance-form-codes.component.html',
   styleUrls: ['./substance-form-codes.component.scss']
 })
-export class SubstanceFormCodesComponent extends SubstanceCardBaseFilteredList<SubstanceCode> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormCodesComponent extends SubstanceCardBaseFilteredList<SubstanceCode>
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
+
   codes: Array<SubstanceCode>;
   private subscriptions: Array<Subscription> = [];
   isAlternative = false;
@@ -33,8 +35,10 @@ export class SubstanceFormCodesComponent extends SubstanceCardBaseFilteredList<S
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
         this.isAlternative = true;
+        this.canAddItemUpdate.emit(false);
       } else {
         this.isAlternative = false;
+        this.canAddItemUpdate.emit(true);
       }
     });
     this.subscriptions.push(definitionSubscription);
@@ -54,9 +58,14 @@ export class SubstanceFormCodesComponent extends SubstanceCardBaseFilteredList<S
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  addItem(): void {
+    this.addCode();
   }
 
   addCode(): void {

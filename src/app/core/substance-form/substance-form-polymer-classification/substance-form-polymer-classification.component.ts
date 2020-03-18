@@ -11,9 +11,9 @@ import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import { IDropdownSettings} from 'ng-multiselect-dropdown';
+import { SubstanceFormBase } from '../substance-form-base';
 
 @Component({
   selector: 'app-substance-form-polymer-classification',
@@ -21,7 +21,8 @@ import { IDropdownSettings} from 'ng-multiselect-dropdown';
   styleUrls: ['./substance-form-polymer-classification.component.scss']
 })
 // tslint:disable-next-line:max-line-length
-export class SubstanceFormPolymerClassificationComponent extends SubstanceCardBaseFilteredList<Polymer> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBase
+  implements OnInit, AfterViewInit, OnDestroy {
 
   classification: PolymerClassification;
   parent: SubstanceRelated;
@@ -33,7 +34,7 @@ export class SubstanceFormPolymerClassificationComponent extends SubstanceCardBa
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService
   ) {
-    super(gaService);
+    super();
     this.analyticsEventCategory = 'substance form Polymer Classification';
   }
 

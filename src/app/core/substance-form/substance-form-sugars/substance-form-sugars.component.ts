@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {Link, Linkage, Site, Subunit, Sugar} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
@@ -11,7 +11,8 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   templateUrl: './substance-form-sugars.component.html',
   styleUrls: ['./substance-form-sugars.component.scss']
 })
-export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<Sugar> implements OnInit, AfterViewInit, OnDestroy  {
+export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<Sugar>
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList  {
 
   sugars: Array<Sugar>;
   subunits: Array<Subunit>;
@@ -29,6 +30,7 @@ export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Sugars');
   }
 
@@ -47,6 +49,7 @@ export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -70,6 +73,10 @@ export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<
       });
     });
     this.invalidSites = subunitArray.length - sugarArray.length;
+  }
+
+  addItem(): void {
+    this.addOtherSugar();
   }
 
   addOtherSugar(): void {

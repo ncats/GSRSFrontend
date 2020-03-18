@@ -75,18 +75,13 @@
   line-height: 26px;
 }
 
-.filters-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
 
 .add-container {
   display:flex;
-  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
 }
 
 .add-button {
-  width:15%;
-  padding-right:25px;
+  margin-right:10px;
 }

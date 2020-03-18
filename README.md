@@ -54,6 +54,7 @@ After this is done, the file `package.real.json` should be copied and replace th
 
 # Development tools
 
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.

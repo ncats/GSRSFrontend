@@ -1,8 +1,9 @@
 <div class="top-fixed">
   <div class="actions-container">
-    <button mat-flat-button color="primary" class = "validate-button" (click)="showJSON()" >Show JSON</button>
-    <button mat-button (click)="toggleValidation()" [disabled]="isLoading" *ngIf="validationMessages && validationMessages.length > 0">
+    <button mat-flat-button color="primary" (click)="showJSON()" >Show JSON</button>
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading" *ngIf="validationMessages && validationMessages.length > 0">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
     <div *ngIf = "isAdmin === true" class = "advanced-features">
       <div class = "admin-functions">
@@ -86,6 +87,7 @@
     <div class="cards-container">
       <mat-accordion multi="true">
         <mat-expansion-panel
+          #expansionPanel
           [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
           *ngFor="let section of formSections; index as index; last as isLast"
           [id]="section.dynamicComponentName"
@@ -93,6 +95,12 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <h2>{{section.menuLabel}}</h2>
+              <div *ngIf="section.canAddItem">
+                <button mat-icon-button 
+                  (click)="section.addItem(); $event.stopPropagation()" matTooltip="Add new">
+                  <mat-icon svgIcon="add_circle_outline"></mat-icon>
+                </button>
+              </div>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div #dynamicComponent></div>
