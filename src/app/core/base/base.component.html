@@ -1,9 +1,13 @@
 <mat-toolbar class="mat-elevation-z3" color="primary">
-  <span class="logo">
+  <div class = "logo-container">
+    <span class="logo">
     <a routerLink="/home">
       <img [src]="logoSrcPath" />
     </a>
-  </span>
+      </span>
+    <span class = "version" *ngIf = "version && version !== ''">Ver. {{version}}</span>
+  </div>
+
   <!-- <span class="nav-big">
     <span class="nav-item" *ngFor="let navItem of navItems">
       <a [routerLink]="['/' + navItem.path]" [ngClass]="{active: mainPathSegment == navItem.path}">

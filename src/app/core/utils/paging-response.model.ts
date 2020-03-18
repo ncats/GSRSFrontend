@@ -33,3 +33,20 @@ export interface NarrowSearchSuggestion {
     luceneField: string;
     luceneQuery: string;
 }
+
+export interface MatchContext {
+  atomMaps?: Array<number>;
+  similarity?: number;
+  alignments?: Array<Alignment>;
+}
+
+export interface Alignment {
+  alignment?: string;
+  global?: number;
+  iden?: number;
+  query?: string;
+  score?: 1;
+  sub?: 1;
+  target?: string;
+  alignments?: Array<Alignment>;
+}

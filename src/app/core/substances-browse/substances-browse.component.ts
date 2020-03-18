@@ -64,7 +64,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   searchText: { [faceName: string]: { value: string, isLoading: boolean } } = {};
   private overlayContainer: HTMLElement;
   toggle: Array<boolean> = [];
-  searchtext2: string;
   private subscriptions: Array<Subscription> = [];
   isAdmin: boolean;
   showExactMatches = false;

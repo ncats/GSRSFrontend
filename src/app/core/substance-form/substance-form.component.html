@@ -1,8 +1,9 @@
 <div class="top-fixed">
   <div class="actions-container">
-    <button mat-flat-button color="primary" class = "validate-button" (click)="showJSON()" >Show JSON</button>
-    <button mat-button (click)="toggleValidation()" [disabled]="isLoading" *ngIf="validationMessages && validationMessages.length > 0">
+    <button mat-flat-button color="primary" (click)="showJSON()" >Show JSON</button>
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading" *ngIf="validationMessages && validationMessages.length > 0">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
     <div *ngIf = "isAdmin === true" class = "advanced-features">
       <div class = "admin-functions">

@@ -27,7 +27,7 @@
 
       .approval {
         font-size: 16px;
-        color: red;
+        color: #c7254e;
       }
 
 }
@@ -134,4 +134,14 @@
 
 .definition {
   padding: 7px 0px;
+}
+
+.similarity {
+  padding-left: 10px;
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+  color: #c7254e;
+}
+
+.similarity-label {
+  font-style: italic;
 }
