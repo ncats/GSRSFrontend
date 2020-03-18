@@ -105,6 +105,8 @@ export class SubstanceHierarchyComponent implements OnInit {
         data[i].relationship += '{SUBCONCEPT} ';
       } else if (data[i].type.includes('IS G1SS CONSTITUENT OF')) {
         data[i].relationship += '{G1SS} ';
+      } else if ((data[i].type.length > 8 ) && (data[i].relationship = '')) {
+        data[i].relationship += ' {' + data[i].type + '} ';
       }
 
 
