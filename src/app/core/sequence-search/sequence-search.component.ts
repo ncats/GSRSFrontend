@@ -39,7 +39,12 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
           this.sequenceSearchForm.controls.cutoff.setValue(params.get('cutoff'));
         }
         if (params.has('seq_type')) {
-          this.sequenceSearchForm.controls.sequenceType.setValue(params.get('seq_type'));
+          const type = params.get('seq_type');
+          if (type.toLowerCase() === 'nucleicacid'){
+            this.sequenceSearchForm.controls.sequenceType.setValue('nucleicAcid');
+          } else {
+            this.sequenceSearchForm.controls.sequenceType.setValue(params.get('seq_type'));
+          }
         }
         if (params.has('subunit') && params.has('substance') && params.has('seq_type')) {
           this.getSequence(params.get('substance'), params.get('subunit'), params.get('seq_type'));
@@ -112,14 +117,30 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
       queryParams: {}
     };
 
-    navigationExtras.queryParams['type'] = 'sequence';
-    navigationExtras.queryParams['sequence_search'] = this.sequenceSearchForm.value.sequence;
-    navigationExtras.queryParams['cutoff'] = this.sequenceSearchForm.value.cutoff;
-    navigationExtras.queryParams['type'] = this.sequenceSearchForm.value.type;
-    navigationExtras.queryParams['seq_type'] = this.sequenceSearchForm.value.sequenceType;
+        navigationExtras.queryParams['type'] = 'sequence';
+        navigationExtras.queryParams['cutoff'] = this.sequenceSearchForm.value.cutoff;
+        navigationExtras.queryParams['type'] = this.sequenceSearchForm.value.type;
+        navigationExtras.queryParams['seq_type'] = this.sequenceSearchForm.value.sequenceType;
+        if ( this.sequenceSearchForm.value.sequence.length > 1000) {
+          navigationExtras.queryParams['sequence_search'] = navigationExtras.queryParams['sequence_search'].substring(0,1000);
+        } else {
+          navigationExtras.queryParams['sequence_search'] = this.sequenceSearchForm.value.sequence;
+        }
 
-
-    this.router.navigate(['/browse-substance'], navigationExtras);
+    this.substanceService.getSubstanceSequenceResults(
+      this.sequenceSearchForm.value.sequence,
+      this.sequenceSearchForm.value.cutoff,
+      this.sequenceSearchForm.value.type,
+      this.sequenceSearchForm.value.sequenceType
+    ).subscribe(response => {
+      console.log(response);
+      if (response.key) {
+        navigationExtras.queryParams['sequence_key'] = response.key;
+        this.router.navigate(['/browse-substance'], navigationExtras);
+      }
+    }, error => {
+      console.log(error);
+    });
   }
 
 }
