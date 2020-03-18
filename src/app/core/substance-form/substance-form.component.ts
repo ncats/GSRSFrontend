@@ -254,8 +254,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       if (lastEdit === this.user) {
         return false;
       }
+      return true;
+
     }
-    return true;
+    return false;
   }
 
   showJSON(): void {
