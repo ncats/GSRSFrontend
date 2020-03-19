@@ -60,8 +60,10 @@ export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<
     const subunitArray = [];
     if (this.subunits && this.sugars) {
       this.subunits.forEach(unit => {
-        for (let i = 1; i <= unit.sequence.length; i++) {
-          subunitArray.push({subunitIndex: unit.subunitIndex, residueIndex: i});
+        if (unit.sequence != null && unit.sequence.length > 0) {
+          for (let i = 1; i <= unit.sequence.length; i++) {
+            subunitArray.push({subunitIndex: unit.subunitIndex, residueIndex: i});
+          }
         }
       });
       this.sugars.forEach(sugar => {

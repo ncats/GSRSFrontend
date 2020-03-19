@@ -9,12 +9,12 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {Linkage, Site, Subunit, Sugar} from '@gsrs-core/substance';
-import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {Subject, Subscription} from 'rxjs';
-import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
-import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import { Linkage, Site, Subunit, Sugar } from '@gsrs-core/substance';
+import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { Subject, Subscription } from 'rxjs';
+import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import * as deepEqual from 'deep-equal';
 
 @Component({
@@ -60,7 +60,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     if (this.subunit.sequence === '') {
       this.toggle[this.subunit.subunitIndex] = true;
     }
-    const definitionSubscription = this.substanceFormService.definition.subscribe( definition => {
+    const definitionSubscription = this.substanceFormService.definition.subscribe(definition => {
       this.substanceType = definition.substanceClass;
       if (this.substanceType === 'protein') {
         this.searchType = 'Protein';
@@ -77,13 +77,13 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       const displaySequenceSubscription = this.substanceFormService.subunitDisplaySequences.subscribe(subunits => {
         const newSubunits = subunits.filter(unit => unit.subunitIndex === this.subunit.subunitIndex)[0];
         if (!this.subunitSequence || !deepEqual(this.subunitSequence, newSubunits)) {
-          if (this.subunitSequence && JSON.stringify(this.subunitSequence) !== JSON.stringify(newSubunits) ) {
+          if (this.subunitSequence && JSON.stringify(this.subunitSequence) !== JSON.stringify(newSubunits)) {
             this.subunitSequence = newSubunits;
             setTimeout(() => {
               if (this.allSites) {
                 this.addStyle();
-                  }
-              });
+              }
+            });
           } else {
             this.subunitSequence = newSubunits;
           }
@@ -93,36 +93,36 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
     });
 
-    const allSitesSubscription = this.substanceFormService.allSites.subscribe( allSites => {
-          const tempSitelist = [];
-          allSites.forEach(site => {
-            if (site.subunit === this.subunit.subunitIndex) {
-              tempSitelist.push(site);
-            }
-          });
-          if (this.allSites && this.allSites !== tempSitelist) {
-            this.allSites = tempSitelist;
-            setTimeout(() => {
-              if (this.subunitSequence) {
-                this.addStyle();
-              }
-            });
-          } else if (!this.allSites) {
-            this.allSites = tempSitelist;
+    const allSitesSubscription = this.substanceFormService.allSites.subscribe(allSites => {
+      const tempSitelist = [];
+      allSites.forEach(site => {
+        if (site.subunit === this.subunit.subunitIndex) {
+          tempSitelist.push(site);
+        }
+      });
+      if (this.allSites && this.allSites !== tempSitelist) {
+        this.allSites = tempSitelist;
+        setTimeout(() => {
+          if (this.subunitSequence) {
+            this.addStyle();
           }
-
+        });
+      } else if (!this.allSites) {
+        this.allSites = tempSitelist;
       }
+
+    }
     );
     this.subscriptions.push(allSitesSubscription);
     setTimeout(() => {
       if (this.subunitSequence) {
-       // this.addStyle('after subs');
+        // this.addStyle('after subs');
       }
     });
   }
 
-    ngOnChanges(changes: SimpleChanges) {
-    }
+  ngOnChanges(changes: SimpleChanges) {
+  }
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
@@ -135,7 +135,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       'value': 'X',
       'display': 'Non-standard Residue'
     };
-    if ( this.substanceType === 'protein') {
+    if (this.substanceType === 'protein') {
       this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
         this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
         this.vocabulary.X = nonStandard;
@@ -176,23 +176,25 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     }
   }
 
- /* getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
-    const vocab = (this.vocabulary[unitValue.toUpperCase()] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue.toUpperCase()].display);
-    return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab})`;
-  }*/
+  /* getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string): string {
+     const vocab = (this.vocabulary[unitValue.toUpperCase()] === undefined ? 'UNDEFINED'
+     : this.vocabulary[unitValue.toUpperCase()].display);
+     return `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab})`;
+   }*/
 
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string, type: string): any {
     const vocab = (this.vocabulary[unitValue] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue].display);
     const arr = [];
-    const formatted = {'modification': 'Structural Modification',
-      'other' : 'Other Link',
+    const formatted = {
+      'modification': 'Structural Modification',
+      'other': 'Other Link',
       'C-Glycosylation': 'C-Glycosylation',
       'N-Glycosylation': 'N-Glycosylation',
       'O-Glycosylation': 'O-Glycosylation',
       'feature': this.substanceType.toUpperCase() + ' Feature',
       'disulfide': 'Disulfide Link'
     };
-    arr.push( `${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab})`);
+    arr.push(`${subunitIndex} - ${unitIndex}: ${unitValue.toUpperCase()} (${vocab})`);
     const splitDisplay = type.split(' ');
     splitDisplay.forEach(type2 => {
       arr.push(formatted[type2] || '');
@@ -207,21 +209,21 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.substanceFormService.emitSubunitUpdate();
       this.substanceFormService.recalculateCysteine();
     } else {
-        this.editSequence = this.preformatSeq(this.subunit.sequence);
+      this.editSequence = this.preformatSeq(this.subunit.sequence);
 
       setTimeout(() => {
         const textArea = document.getElementsByClassName('sequence-textarea');
         [].forEach.call(textArea, function (area) {
-           area.style.height = (area.scrollHeight + 10) + 'px';
-          });
+          area.style.height = (area.scrollHeight + 10) + 'px';
+        });
       });
     }
   }
-change(event): void {
-  if (this.toggle[this.subunit.subunitIndex] === false) {
-    event.target.value = this.subunit.sequence;
+  change(event): void {
+    if (this.toggle[this.subunit.subunitIndex] === false) {
+      event.target.value = this.subunit.sequence;
+    }
   }
-}
 
   deleteSubunit(): void {
     this.subunitDeleted.emit(this.subunit);
@@ -244,7 +246,7 @@ change(event): void {
     if (!this.toggle[this.subunit.subunitIndex]) {
 
       const toArray = this.subunit.sequence.split('');
-      const cleanedSequence =  toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      const cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
       if (this.toggle[this.subunit.subunitIndex] === false) {
 
       }
@@ -263,34 +265,34 @@ change(event): void {
   convertSequence(): void {
     const dashes = true;
     const dict = 'A	Ala;C	Cys;D	Asp;E	Glu;F	Phe;G	Gly;H	His;I	Ile;K	Lys;L	Leu;M	Met;N	Asn;P	Pro;Q	Gln;R	Arg;S	Ser;T	Thr;V	Val;W	Trp;Y	Tyr';
-      let arr = [];
-      const obj = {};
-      let n = '';
-      arr = dict.split(';');
-      for (let i = 0; i < arr.length; i++) {
-        let arr2 = [];
-        arr2 = arr[i].split('\t');
-        obj[arr2[0]] = arr2[1];
-        obj[arr2[1].toUpperCase()] = arr2[0];
+    let arr = [];
+    const obj = {};
+    let n = '';
+    arr = dict.split(';');
+    for (let i = 0; i < arr.length; i++) {
+      let arr2 = [];
+      arr2 = arr[i].split('\t');
+      obj[arr2[0]] = arr2[1];
+      obj[arr2[1].toUpperCase()] = arr2[0];
+    }
+    let seqarr = [];
+
+    seqarr = this.subunit.sequence.replace(/[ ]/g, '-').split('-');
+
+    for (let i = 0; i < seqarr.length; i++) {
+      let trans = obj[seqarr[i].toUpperCase()];
+      if (seqarr[i].length > 3) {
+        n = n + seqarr[i];
+        continue;
       }
-      let seqarr = [];
-
-        seqarr = this.subunit.sequence.replace(/[ ]/g, '-').split('-');
-
-      for (let i = 0; i < seqarr.length; i++) {
-        let trans = obj[seqarr[i].toUpperCase()];
-        if (seqarr[i].length > 3) {
-          n = n + seqarr[i];
-          continue;
-        }
-          if (trans === undefined) {
-            trans = 'X';
-          }
-
-        n = n + trans;
+      if (trans === undefined) {
+        trans = 'X';
       }
 
-      this.subunit.sequence = n;
+      n = n + trans;
+    }
+
+    this.subunit.sequence = n;
     this.substanceFormService.emitSubunitUpdate();
     this.substanceFormService.recalculateCysteine();
   }
@@ -316,20 +318,24 @@ change(event): void {
       sugar.sites = sugar.sites.filter(s => s.subunitIndex !== this.subunit.subunitIndex);
     });
     const subunitArray = [];
-    for (let i = 1; i <= this.subunit.sequence.length; i++) {
-      subunitArray.push({subunitIndex: this.subunit.subunitIndex, residueIndex: i});
+    if (this.subunit != null && this.subunit.sequence != null) {
+      for (let i = 1; i <= this.subunit.sequence.length; i++) {
+        subunitArray.push({ subunitIndex: this.subunit.subunitIndex, residueIndex: i });
+      }
     }
-      const newSugar: Sugar = {sugar: sugarType, sites: subunitArray};
-      this.sugars.push(newSugar);
+    const newSugar: Sugar = { sugar: sugarType, sites: subunitArray };
+    this.sugars.push(newSugar);
     this.links.forEach(link => {
-        link.sites = link.sites.filter(s => s.subunitIndex !== this.subunit.subunitIndex);
-      });
-   const linkageArray = [];
-    for (let i = 2; i <= this.subunit.sequence.length; i++) {
-      linkageArray.push({subunitIndex: this.subunit.subunitIndex, residueIndex: i});
+      link.sites = link.sites.filter(s => s.subunitIndex !== this.subunit.subunitIndex);
+    });
+    const linkageArray = [];
+    if (this.subunit != null && this.subunit.sequence != null) {
+      for (let i = 2; i <= this.subunit.sequence.length; i++) {
+        linkageArray.push({ subunitIndex: this.subunit.subunitIndex, residueIndex: i });
+      }
     }
-      const newLinkage: Linkage = {linkage: 'P', sites: linkageArray};
-      this.links.push(newLinkage);
+    const newLinkage: Linkage = { linkage: 'P', sites: linkageArray };
+    this.links.push(newLinkage);
     this.substanceFormService.emitSugarUpdate();
     this.substanceFormService.emitLinkUpdate();
     linksSubscription.unsubscribe();
