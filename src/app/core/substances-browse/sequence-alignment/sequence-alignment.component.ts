@@ -13,7 +13,7 @@ export class SequenceAlignmentComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    if (this.alignmentArray.alignments && this.alignmentArray.alignments.length) {
+    if (this.alignmentArray && this.alignmentArray.alignments && this.alignmentArray.alignments.length) {
       this.alignment = this.alignmentArray.alignments[0];
       this.text = '';
       if (this.alignment.global) {
