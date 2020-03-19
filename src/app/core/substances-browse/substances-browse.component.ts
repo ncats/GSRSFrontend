@@ -797,11 +797,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.view = event.value;
   }
 
-  getSequenceDisplay(sequence: string): string {
-    if (sequence.length < 16) {
-      return sequence;
+  getSequenceDisplay(sequence?: string): string {
+    if (sequence != null) {
+      if (sequence.length < 16) {
+        return sequence;
+      } else {
+        return `${sequence.substr(0, 15)}...`;
+      }
     } else {
-      return `${sequence.substr(0, 15)}...`;
+      return '';
     }
   }
 
