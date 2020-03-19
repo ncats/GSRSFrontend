@@ -40,6 +40,13 @@ export interface ValidationMessage {
     suggestedChange: boolean;
 }
 
+export interface StructureDuplicationMessage {
+  links?: Array<MessageLink>;
+  message: string;
+  messageType: string;
+}
+
+
 export interface MessageLink {
   href: string;
   text: string;
