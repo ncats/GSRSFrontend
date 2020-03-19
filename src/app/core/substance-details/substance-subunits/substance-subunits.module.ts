@@ -5,6 +5,7 @@ import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dyn
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
     DynamicComponentLoaderModule.forChild(SubstanceSubunitsComponent),
     MatTooltipModule,
     MatButtonToggleModule,
-    MatIconModule
+    MatIconModule,
+    RouterModule
   ],
   declarations: [SubstanceSubunitsComponent]
 })

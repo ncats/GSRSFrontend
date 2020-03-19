@@ -27,7 +27,7 @@ export class StructureExportComponent implements OnInit {
       downloadFile: any): void {
       if (data.smiles != null) {
         const file = new Blob([data.smiles], { type: 'text/plain' });
-        anchorElement.download = 'substance_smiles.txt';
+        anchorElement.download = 'substance_smiles.smi';
         downloadFile(file, anchorElement);
       }
     }

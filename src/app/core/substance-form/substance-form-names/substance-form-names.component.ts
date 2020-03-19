@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../substance-form-base-filtered-list';
 import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
@@ -11,9 +11,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './substance-form-names.component.html',
   styleUrls: ['./substance-form-names.component.scss']
 })
-export class SubstanceFormNamesComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormNamesComponent
+  extends SubstanceCardBaseFilteredList<SubstanceName>
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   names: Array<SubstanceName>;
   private subscriptions: Array<Subscription> = [];
+  isAlternative = false;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -29,6 +32,16 @@ export class SubstanceFormNamesComponent extends SubstanceCardBaseFilteredList<S
   }
 
   ngAfterViewInit() {
+    const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
+      if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
+        this.isAlternative = true;
+        this.canAddItemUpdate.emit(false);
+      } else {
+        this.isAlternative = false;
+        this.canAddItemUpdate.emit(true);
+      }
+      });
+    this.subscriptions.push(definitionSubscription);
     const namesSubscription = this.substanceFormService.substanceNames.subscribe(names => {
       this.names = names;
       this.filtered = names;
@@ -49,9 +62,14 @@ export class SubstanceFormNamesComponent extends SubstanceCardBaseFilteredList<S
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  addItem(): void {
+    this.addName();
   }
 
   addName(): void {

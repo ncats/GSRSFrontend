@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {AgentModification, StructuralModification} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
@@ -12,7 +12,10 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   styleUrls: ['./substance-form-agent-modifications.component.scss']
 })
 // tslint:disable-next-line:max-line-length
-export class SubstanceFormAgentModificationsComponent extends SubstanceCardBaseFilteredList<AgentModification> implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormAgentModificationsComponent
+  extends SubstanceCardBaseFilteredList<AgentModification>
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
+
   modifications: Array<AgentModification>;
   private subscriptions: Array<Subscription> = [];
 
@@ -30,6 +33,7 @@ export class SubstanceFormAgentModificationsComponent extends SubstanceCardBaseF
   }
 
   ngAfterViewInit() {
+    this.canAddItemUpdate.emit(true);
     const agentSubscription = this.substanceFormService.substanceAgentModifications.subscribe(modifications => {
       this.modifications = modifications;
     });
@@ -40,6 +44,11 @@ export class SubstanceFormAgentModificationsComponent extends SubstanceCardBaseF
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+    this.componentDestroyed.emit();
+  }
+
+  addItem() {
+    this.addStructuralModification();
   }
 
   addStructuralModification(): void {

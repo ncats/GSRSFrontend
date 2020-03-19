@@ -30,10 +30,10 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-select placeholder="Sequence Type" formControlName="sequenceType">
-                            <mat-option value="Protein">
+                            <mat-option value="protein">
                                 Protein
                             </mat-option>
-                            <mat-option value="Nucleicacid">
+                            <mat-option value="nucleicAcid">
                                 Nucleic Acid
                             </mat-option>
                         </mat-select>
@@ -54,10 +54,11 @@
                     <a class = "blue-font" (click) = "cleanSequence(sequenceSearchForm.controls.sequenceType.value)" ><mat-icon svgIcon="spellcheck"></mat-icon> clean sequence</a>
                   </div>
 
-
                 </div>
             </form>
-
+        <div class = "error-message" *ngIf = "errorMessage && errorMessage !== ''">
+          {{errorMessage}}
+        </div>
         </mat-card-content>
     </mat-card>
 </div>

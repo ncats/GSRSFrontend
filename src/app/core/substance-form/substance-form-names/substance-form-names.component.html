@@ -5,9 +5,9 @@
   <span class="middle-fill"></span>
   <button *ngIf="names && names.length > 0" class = 'standardize' mat-button (click)="standardize()">Standardize Names</button>
 
-  <button mat-button (click)="addName()">
+  <!-- <button mat-button (click)="addName()" [disabled] = "isAlternative">
     Add name <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
+  </button> -->
 
 </div>
 <div class="name" *ngFor="let name of paged; last as isLast; index as index" appScrollToTarget [id]="'substance-name-' + index">

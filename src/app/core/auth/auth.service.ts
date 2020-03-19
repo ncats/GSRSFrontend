@@ -1,5 +1,4 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
-import { BaseHttpService } from '../base/base-http.service';
 import { ConfigService } from '../config/config.service';
 import { Auth, Role } from './auth.model';
 import { Observable, Subject } from 'rxjs';
@@ -10,7 +9,7 @@ import { isPlatformBrowser } from '@angular/common';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService extends BaseHttpService {
+export class AuthService {
   private _auth: Auth;
   private _authUpdate: Subject<Auth> = new Subject();
   private isLoading: boolean;
@@ -20,11 +19,14 @@ export class AuthService extends BaseHttpService {
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    super(configService);
     this.isLoading = true;
     this.fetchAuth().pipe(take(1)).subscribe(auth => {
-      this._auth = auth;
-      this._authUpdate.next(auth);
+      if (auth && auth.computedToken != null) {
+        this._auth = auth;
+      } else {
+        this._auth = null;
+      }
+      this._authUpdate.next(this._auth);
       this.isLoading = false;
     }, error => {
       this._authUpdate.next(null);
@@ -33,7 +35,8 @@ export class AuthService extends BaseHttpService {
   }
 
   private fetchAuth(): Observable<Auth> {
-    return this.http.get<Auth>(`${this.apiBaseUrl}whoami`);
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    return this.http.get<Auth>(`${url}whoami`);
   }
 
   login(username: string, password: string): Observable<Auth> {
@@ -45,14 +48,20 @@ export class AuthService extends BaseHttpService {
       }
     };
 
-    return this.http.get<Auth>(`${this.apiBaseUrl}whoami`, options).pipe(
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    return this.http.get<Auth>(`${url}whoami`, options).pipe(
       map(auth => {
-        if (isPlatformBrowser(this.platformId) && auth && auth.computedToken) {
-          sessionStorage.setItem('authToken', auth.computedToken);
+        if (auth && auth.computedToken) {
+          this._auth = auth;
+          if (isPlatformBrowser(this.platformId)) {
+            sessionStorage.setItem('authToken', auth.computedToken);
+          }
+        } else {
+          this._auth = null;
         }
-        this._auth = auth;
-        this._authUpdate.next(auth);
-        return auth;
+
+        this._authUpdate.next(this._auth);
+        return this._auth;
       })
     );
   }
@@ -65,8 +74,13 @@ export class AuthService extends BaseHttpService {
       } else if (!this.isLoading) {
         this.isLoading = true;
         this.fetchAuth().pipe(take(1)).subscribe(auth => {
-          this._auth = auth;
+          if (auth && auth.computedToken != null) {
+            this._auth = auth;
+          } else {
+            this._auth = null;
+          }
           observer.next(this._auth);
+          this._authUpdate.next(this._auth);
           this.isLoading = false;
         }, error => {
           this.logout();
@@ -87,19 +101,27 @@ export class AuthService extends BaseHttpService {
   }
 
   logout(): void {
-    if (
-      !this.configService.configData
-      || !this.configService.configData.apiBaseUrl
-      || this.configService.configData.apiBaseUrl.startsWith('/')
-    ) {
-      const url = (this.configService.configData && this.configService.configData.apiBaseUrl || '/') + 'logout';
-      this.http.get(url).pipe(take(1)).subscribe(response => {}, error => {});
-    }
+    // if (
+    //   !this.configService.configData
+    //   || !this.configService.configData.apiBaseUrl
+    //   || this.configService.configData.apiBaseUrl.startsWith('/')
+    // ) {
+    //   const url = (this.configService.configData && this.configService.configData.apiBaseUrl || '/') + 'logout';
+    //   this.http.get(url).pipe(take(1)).subscribe(response => {}, error => {});
+    // }
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.removeItem('authToken');
     }
     this._auth = null;
     this._authUpdate.next(null);
+  }
+
+  public getUser(): string {
+    if (this._auth && this._auth.identifier) {
+      return this._auth.identifier;
+    } else {
+      return '';
+    }
   }
 
   hasRoles(...roles: Array<Role|string>): boolean {

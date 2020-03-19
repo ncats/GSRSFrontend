@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../substance-form-base-filtered-list';
 import { SubstanceReference } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,7 +15,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
   styleUrls: ['./substance-form-references.component.scss']
 })
 export class SubstanceFormReferencesComponent extends SubstanceCardBaseFilteredList<SubstanceReference>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   references: Array<SubstanceReference>;
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
@@ -32,6 +32,7 @@ export class SubstanceFormReferencesComponent extends SubstanceCardBaseFilteredL
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('References');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
@@ -53,6 +54,7 @@ export class SubstanceFormReferencesComponent extends SubstanceCardBaseFilteredL
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -73,6 +75,10 @@ export class SubstanceFormReferencesComponent extends SubstanceCardBaseFilteredL
       }
     });
     this.subscriptions.push(dialogSubscription);
+  }
+
+  addItem(): void {
+    this.addSubstanceReference();
   }
 
   addSubstanceReference(): void {

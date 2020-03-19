@@ -1,4 +1,5 @@
 import { StructuralUnit } from '@gsrs-core/substance/structural-unit.model';
+import {MatchContext} from '@gsrs-core/utils';
 
 export interface SubstanceBase {
   uuid?: string;
@@ -35,8 +36,6 @@ export interface SubstanceBaseExtended {
   protein?: Protein;
 }
 
-
-
 export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _names?: CountRef;
   _modifications?: CountRef;
@@ -45,6 +44,7 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _relationships?: CountRef;
   _moieties?: CountRef;
   _properties?: CountRef;
+  _matchContext?: MatchContext;
 }
 
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
@@ -60,6 +60,7 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
   polymer?: Polymer;
   modifications?: SubstanceModifications;
   specifiedSubstance?: SpecifiedSubstance;
+  _matchContext?: MatchContext;
 }
 
 export interface StructurallyDiverse extends SubstanceBase {

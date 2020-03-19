@@ -1,18 +1,18 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {StructurallyDiverse} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import { SubstanceFormBase } from '../substance-form-base';
 
 @Component({
   selector: 'app-substance-form-structurally-diverse-organism',
   templateUrl: './substance-form-structurally-diverse-organism.component.html',
   styleUrls: ['./substance-form-structurally-diverse-organism.component.scss']
 })
-export class SubstanceFormStructurallyDiverseOrganismComponent extends SubstanceCardBaseFilteredList<StructurallyDiverse>
+export class SubstanceFormStructurallyDiverseOrganismComponent extends SubstanceFormBase
   implements OnInit, AfterViewInit, OnDestroy {
   part: string;
   paternalUuid: string;
@@ -26,7 +26,7 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService
   ) {
-    super(gaService);
+    super();
     this.analyticsEventCategory = 'substance form structural modification structurally diverse organism';
   }
 

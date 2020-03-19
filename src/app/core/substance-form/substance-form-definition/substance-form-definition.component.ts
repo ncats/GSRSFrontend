@@ -2,14 +2,11 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceFormBase } from '../substance-form-base';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormDefinition } from '../substance-form.model';
-import {Router} from '@angular/router';
-import {AuthService} from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-form-definition',
@@ -26,82 +23,21 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   json: any;
   feature: string;
   substanceClass: string;
-  isAdmin: boolean;
   status: string;
-  classes = ['protein',
-  'chemical',
-  'structurallyDiverse',
-  'polymer',
-  'nucleicAcid',
-  'mixture',
-  'specifiedSubstanceG1'];
+
 
   constructor(
     private cvService: ControlledVocabularyService,
     public substanceService: SubstanceService,
     private substanceFormService: SubstanceFormService,
-    private router: Router,
-    private authService: AuthService
 
   ) {
     super();
   }
 
   ngOnInit() {
-    this.menuLabelUpdate.emit('Definition');
+    this.menuLabelUpdate.emit('Overview');
     this.getVocabularies();
-    this.isAdmin = this.authService.hasRoles('admin');
-  }
-
-  useFeature(feature: any): void {
-    this.feature = feature.value;
-    if (this.feature === 'glyco') {
-      this.glyco();
-    } else if (this.feature === 'disulfide') {
-      this.disulfide();
-    }if (this.feature === 'concept') {
-      this.concept();
-    } if (this.feature === 'unapprove') {
-      if (confirm('Are you sure you\'d like to remove the approvalID?')) {
-        this.substanceFormService.unapproveRecord();
-      }
-      this.feature = undefined;
-    }
-  }
-
-  changeClass(type: any): void {
-    this.router.navigate(['/substances', this.uuid, 'edit'], { queryParams: { switch: type.value } });
-    this.feature = undefined;
-  }
-
-  setPrivate(): void {
-    this.substanceFormService.setDefinitionPrivate();
-    this.feature = undefined;
-  }
-
-  setPublic(): void {
-    this.substanceFormService.setDefinitionPublic();
-    this.feature = undefined;
-  }
-
-  changeStatus(status: any): void {
-    this.substanceFormService.changeStatus(status.value);
-    this.feature = undefined;
-  }
-
-  concept(): void {
-    this.substanceFormService.conceptNonApproved();
-    this.feature = undefined;
-  }
-
-  glyco(): void {
-    this.substanceFormService.predictSites();
-    this.feature = undefined;
-  }
-
-  disulfide(): void {
-    this.substanceFormService.disulfideLinks();
-    this.feature = undefined;
   }
 
   ngAfterViewInit() {
@@ -113,6 +49,8 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
         this.substanceClass = 'Nucleic Acid';
       } else if (this.definition.substanceClass === 'structurallyDiverse') {
         this.substanceClass = 'Structurally Diverse';
+      } else if (this.definition.substanceClass.toUpperCase() === 'SPECIFIEDSUBSTANCE') {
+        this.substanceClass = 'Specified Substance Group 1';
       } else {
         this.substanceClass = this.definition.substanceClass;
       }

@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '../substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceRelationship } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./substance-form-relationships.component.scss']
 })
 export class SubstanceFormRelationshipsComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   relationships: Array<SubstanceRelationship>;
   private subscriptions: Array<Subscription> = [];
 
@@ -25,6 +25,7 @@ export class SubstanceFormRelationshipsComponent extends SubstanceCardBaseFilter
   }
 
   ngOnInit() {
+    this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Relationships');
     this.analyticsEventCategory = 'substance form relationships';
   }
@@ -45,9 +46,14 @@ export class SubstanceFormRelationshipsComponent extends SubstanceCardBaseFilter
   }
 
   ngOnDestroy() {
+    this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  addItem(): void {
+    this.addRelationship();
   }
 
   addRelationship(): void {

@@ -33,6 +33,11 @@
     </a>
     </mat-menu>
   </div>
+  <div class = "extra-area" *ngIf = "substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
+    <span class = "definition-level">
+      {{substance.definitionLevel}} DEFINITION
+    </span>
+  </div>
   <div>
     <div class="name-value">
       <div class="name">Substance Class</div>

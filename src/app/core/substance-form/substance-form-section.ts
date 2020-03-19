@@ -1,12 +1,22 @@
-import { ComponentRef } from '@angular/core';
+import { ComponentRef, Output, EventEmitter } from '@angular/core';
+import { SubstanceFormBase } from './substance-form-base';
+import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
+import { MatExpansionPanel } from '@angular/material';
 
 export class SubstanceFormSection {
     dynamicComponentName: string;
-    dynamicComponentRef: ComponentRef<any>;
+    dynamicComponentRef: ComponentRef<SubstanceFormBase | SubstanceCardBaseFilteredList<any> | any>;
+    matExpansionPanel:  MatExpansionPanel;
     menuLabel: string;
     isHidden = false;
+    canAddItem = false;
+    @Output() addItemEmitter = new EventEmitter();
 
     constructor(dynamicComponentName?: string) {
         this.dynamicComponentName = dynamicComponentName;
+    }
+
+    addItem(): void {
+        this.addItemEmitter.emit();
     }
 }

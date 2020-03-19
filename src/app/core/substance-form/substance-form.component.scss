@@ -11,6 +11,40 @@
     z-index: 1001;
 }
 
+.cdk-overlay-pane {
+  z-index: 1005;
+}
+mat-select-panel{
+  z-index: 1005;
+}
+
+.admin-functions, .changeClass {
+  margin-bottom: -15px;
+  margin-left: 30px;
+  margin-right: 5px;
+  margin-top: -10px;
+  color: #4793d1;
+
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 20px !important;
+  }
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 5px;
+}
+.advanced-features {
+  z-index: 2000 !important;
+
+  display:flex;
+  flex-direction: row;
+  padding-left: 10px;
+}
+::ng-deep .cdk-overlay-pane {
+  margin-top: 20px !important;
+}
+
 .form-content-container {
     // position: fixed;
     // top: 121px;
@@ -100,3 +134,13 @@
 .validate-button{
   margin-left:15px;
 }
+
+.mat-expansion-panel-header-title {
+  align-items: center;
+}
+
+.hide-show-messages {
+  margin-left: 10px;
+  border: 1px solid;
+}
+
