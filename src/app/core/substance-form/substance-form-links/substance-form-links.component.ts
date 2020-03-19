@@ -60,8 +60,10 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
     const subunitArray = [];
     if (this.subunits && this.links) {
       this.subunits.forEach(unit => {
-        for (let i = 2; i <= unit.sequence.length; i++) {
-          subunitArray.push({subunitIndex: unit.subunitIndex, residueIndex: i});
+        if (unit.sequence != null && unit.sequence.length > 0) {
+          for (let i = 2; i <= unit.sequence.length; i++) {
+            subunitArray.push({subunitIndex: unit.subunitIndex, residueIndex: i});
+          }
         }
       });
       this.links.forEach(link => {
