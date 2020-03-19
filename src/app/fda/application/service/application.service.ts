@@ -217,6 +217,22 @@ export class ApplicationService extends BaseHttpService {
   //  });
   }
 
+  saveApplication(): Observable<ApplicationSrs> {
+    const url = this.apiBaseUrl + `applicationssrs`;
+    console.log('URL' + url);
+    const params = new HttpParams();
+    const options = {
+      params: params,
+      type: 'JSON',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    };
+    console.log('APP: ' + this.application);
+    const x = this.http.post<ApplicationSrs>(url, this.application, options);
+    return x;
+  }
+
   getJson() {
     return this.application;
   }

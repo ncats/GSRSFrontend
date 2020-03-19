@@ -31,8 +31,14 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   id?: number;
   isLoading = true;
-  private overlayContainer: HTMLElement;
+  showSubmissionMessages = false;
+  submissionMessage: string;
+ // validationMessages: Array<ValidationMessage>;
+  validationResult = false;
   private subscriptions: Array<Subscription> = [];
+  copy: string;
+  private overlayContainer: HTMLElement;
+  serverError: boolean;
 
   constructor(
     private applicationService: ApplicationService,
@@ -109,6 +115,50 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       this.isLoading = false;
       this.handleApplicationRetrivalError();
     });
+  }
+
+  submit(): void {
+    this.isLoading = true;
+    this.loadingService.setLoading(true);
+    this.applicationService.saveApplication().subscribe(response => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+  //    this.validationMessages = null;
+      this.submissionMessage = 'Application was saved successfully!';
+      this.showSubmissionMessages = true;
+      this.validationResult = false;
+      /*
+      setTimeout(() => {
+        this.showSubmissionMessages = false;
+        this.submissionMessage = '';
+        if (!this.id) {
+          this.id = response.uuid;
+          this.router.navigate(['/substances', response.uuid, 'edit']);
+        }
+      }, 4000);
+      */
+    }
+    /*
+    , (error: SubstanceFormResults) => {
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.submissionMessage = null;
+      if (error.validationMessages && error.validationMessages.length) {
+        this.validationResult = error.isSuccessfull;
+        this.validationMessages = error.validationMessages
+          .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+        this.showSubmissionMessages = true;
+      } else {
+        this.submissionMessage = 'There was a problem with your submission';
+        this.addServerError(error.serverError);
+        setTimeout(() => {
+          this.showSubmissionMessages = false;
+          this.submissionMessage = null;
+        }, 8000);
+      }
+    }*/
+    );
   }
 
   private handleApplicationRetrivalError() {

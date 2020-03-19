@@ -116,6 +116,11 @@
         </div>
 
         <button mat-flat-button color="primary" class = "validate-button" (click)="showJSON()" >Show JSON</button>
+
+        <div class="form-actions">
+          <span class="middle-fill"></span>
+          <button mat-flat-button color="primary" (click)="submit()" [disabled]="isLoading">Submit</button>
+        </div>
       </mat-card-content>
 
     </mat-card>
