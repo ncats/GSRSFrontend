@@ -6,8 +6,13 @@
         <button mat-icon-button class = "tree-button" disabled></button>
         <div class = 'node-container nochild'>
           <div class = 'title'>
-            <a class="hierarchy-link" matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''" [routerLink]="['/substances', node.value.refuuid || '']">
+            <a class="hierarchy-link" matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
+               [routerLink]="['/substances', node.value.refuuid || '']">
               {{node.value.refPname}}
+            </a>
+            <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']"
+               target = "_blank"  matTooltip = "edit substance in new tab">
+              <mat-icon *ngIf ="isAdmin" svgIcon="edit"  color = "primary"></mat-icon>
             </a>
           </div>
           <div class = "filler">
@@ -22,7 +27,8 @@
     </mat-tree-node>
     <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" >
       <li class = "no-border">
-        <div class="mat-tree-node" [ngClass] = "{'odd':node.order === 'odd', 'primary': activeNode === node}" (click)="activeNode = node"  (click)="activeNode = node">
+        <div class="mat-tree-node" [ngClass] = "{'odd':node.order === 'odd', 'primary': activeNode === node}"
+             (click)="activeNode = node"  (click)="activeNode = node">
 
 
           <button mat-icon-button matTreeNodeToggle class = "tree-button"
@@ -31,11 +37,12 @@
           </button>
           <div class = 'node-container'>
             <div class = 'title'>
-              <a class="hierarchy-link"  matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"  [routerLink]="['/substances', node.value.refuuid || '']">
+              <a class="hierarchy-link"  matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
+                 [routerLink]="['/substances', node.value.refuuid || '']">
                 {{node.value.refPname}}
               </a>
               <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']">
-                <mat-icon *ngIf ="isAdmin" svgIcon="edit"  color = "primary"></mat-icon>
+                <mat-icon *ngIf ="isAdmin" matTooltip = "edit substance in new tab" svgIcon="edit"  color = "primary"></mat-icon>
               </a>
             </div>
             <div class = "right-container">
