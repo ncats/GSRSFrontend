@@ -24,7 +24,8 @@ export class ProductFormComponent implements OnInit {
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('DOSAGE_FORM', 'PROD_ROUTE_OF_ADMIN','PROD_UNIT_PRESENTATION', 'APPLICATION_UNIT').subscribe(response => {
+    this.cvService.getDomainVocabulary('DOSAGE_FORM', 'PROD_ROUTE_OF_ADMIN',
+    'PROD_UNIT_PRESENTATION', 'APPLICATION_UNIT').subscribe(response => {
       this.dosageFormList = response['DOSAGE_FORM'].list;
       this.routeAdminList = response['PROD_ROUTE_OF_ADMIN'].list;
       this.unitPresentationList = response['PROD_UNIT_PRESENTATION'].list;
