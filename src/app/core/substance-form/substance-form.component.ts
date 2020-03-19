@@ -161,9 +161,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
                   this.formSections[index].menuLabel = label;
                 });
-                this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.pipe(take(1)).subscribe(isHidden => {
+                const hiddenStateSubscription =
+                  this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
                   this.formSections[index].isHidden = isHidden;
                 });
+                this.subscriptions.push(hiddenStateSubscription);
                 this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
                   this.formSections[index].canAddItem = isList;
                   if (isList) {

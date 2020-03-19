@@ -1,10 +1,9 @@
 <div class="example-container mat-elevation-z8 clinical-trial-edit-page">
 	<div  *ngIf="clinicalTrial">
-    <p *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a>
-    &nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span>
-  </p>
-		<p *ngIf="clinicalTrial.sponsorList">{{clinicalTrial.sponsorList.join("; ")}}</p>
-		<p *ngIf="clinicalTrial.lastUpdated" title="Last updated by CT.gov"> Last Updated: {{clinicalTrial.lastUpdated|date : "MM/dd/yyyy"}}</p>
+	<p *ngIf="clinicalTrial.nctNumber">
+	<a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a>
+	&nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span>
+	</p>	
 	</div>
 
 	<div  *ngIf="clinicalTrial">
@@ -105,68 +104,86 @@
 		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
 
+	<div class="trial-detailsheader">
+		<span class="emphasize">Trial Details</span>&nbsp;
+		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a></span>
+	</div>
 
-	<div>
-
+<div class="container">
+	<div class="trial-detailsone">
 	<div *ngIf="clinicalTrial">
-
-	<h3>Trial Details</h3>
-
 	<div>
-		<p *ngIf="clinicalTrial.nctNumber">NCT Number: <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a></p>
-		<p *ngIf="clinicalTrial.title">Title: {{clinicalTrial.title}}</p>
-
+		<p *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</p>
 		<div *ngIf="clinicalTrial.intervention">
-			<p>Intervention:</p>
+			<p><span class="emphasize">Intervention</span>:</p>
 			<div class="indent-list" *ngFor="let content of clinicalTrial.intervention.split('\|')">{{ content }}</div>
 		</div>
-
-    <p *ngIf="clinicalTrial.recruitment">Recruitment: {{clinicalTrial.recruitment}}</p>
-
+	    <p *ngIf="clinicalTrial.recruitment">Recruitment: {{clinicalTrial.recruitment}}</p>
 		<div *ngIf="clinicalTrial.conditions">
-				<p>Conditions:</p>
-        <div class="indent-list" *ngFor="let content of clinicalTrial.conditions.split('\|')">{{ content }}</div>
+			<p>Conditions:</p>
+        	<div class="indent-list" *ngFor="let content of clinicalTrial.conditions.split('\|')">{{ content }}</div>
 		</div>
 		<div *ngIf="clinicalTrial.sponsor">
-				<p>Sponsor:</p>
-				<div class="indent-list" *ngFor="let content of clinicalTrial.sponsor.split('\|')">{{ content }}</div>
+			<p>Sponsors:</p>
+			<div class="indent-list" *ngFor="let content of clinicalTrial.sponsor.split('\|')">{{ content }}</div>
 		</div>
 		<div *ngIf="clinicalTrial.locations">
 			<p>Locations:</p>
 			<div class="indent-list" *ngFor="let content of clinicalTrial.locations.split('\|')">{{ content }}</div>
 		</div>
+		<div *ngIf="clinicalTrial.fundedBys">
+			<p>Sponsor:</p>
+			<div class="indent-list" *ngFor="let content of clinicalTrial.fundedBys.split('\|')">{{ content }}</div>
+		</div>
+
+		<div *ngIf="clinicalTrial.phases">
+			<p>Phases:</p>
+			<div class="indent-list" *ngFor="let content of clinicalTrial.phases.split('\|')">{{ content }}</div>
+		</div>
 		
-		<p *ngIf="clinicalTrial.fundedBys">Funded Bys: {{clinicalTrial.fundedBys}}</p>
-		<p *ngIf="clinicalTrial.phases">Phases: {{clinicalTrial.phases}}</p>
-		<p *ngIf="clinicalTrial.studyTypes">Study Types: {{clinicalTrial.studyTypes}}</p>
-		<p *ngIf="clinicalTrial.ageGroups">Age Groups: {{clinicalTrial.ageGroups}}</p>
+		<div *ngIf="clinicalTrial.studyTypes">
+			<p>Study Types:</p>
+			<div class="indent-list" *ngFor="let content of clinicalTrial.studyTypes.split('\|')">{{ content }}</div>
+		</div>
+
 		<div *ngIf="clinicalTrial.ageGroups">
-				<p>Age Groups:</p>
-				<div class="indent-list" *ngFor="let content of clinicalTrial.ageGroups.split('\|')">{{ content }}</div>
+			<p>Age Groups:</p>
+			<div class="indent-list" *ngFor="let content of clinicalTrial.ageGroups.split('\|')">{{ content }}</div>
 		</div>
 		<p *ngIf="clinicalTrial.gender">Gender: {{clinicalTrial.gender}}</p>
 		<p *ngIf="clinicalTrial.allocation">Allocation: {{clinicalTrial.allocation}}</p>
 		<p *ngIf="clinicalTrial.studyResults">Study Results: {{clinicalTrial.studyResults}}</p>
 		<p *ngIf="clinicalTrial.enrollment">Enrollment: {{clinicalTrial.enrollment}}</p>
-		<p *ngIf="clinicalTrial.otherIds">Other Ids: {{clinicalTrial.otherIds}}</p>
+		<div *ngIf="clinicalTrial.otherIds">
+			<p>Other Ids:</p>
+			<div class="indent-list" *ngFor="let content of clinicalTrial.otherIds.split('\|')">{{ content }}</div>
+		</div>
 		<p *ngIf="clinicalTrial.acronym">Acronym: {{clinicalTrial.acronym}}</p>
-		<p *ngIf="clinicalTrial.startDate">Study Start Date: {{clinicalTrial.startDate|date : "MM/dd/yyyy"}}</p>
-		<p *ngIf="clinicalTrial.lastVerified">Last Verified: {{clinicalTrial.lastVerified}}</p>
-		<p *ngIf="clinicalTrial.completionDate">Study Completion Date: {{clinicalTrial.completionDate|date : "MM/dd/yyyy"}}</p>
-		<p *ngIf="clinicalTrial.primaryCompletionDate">Primary Completion Date: {{clinicalTrial.primaryCompletionDate|date : "MM/dd/yyyy"}}</p>
-		<p *ngIf="clinicalTrial.studyStartDate">Study Start Date: {{clinicalTrial.studyStartDate|date : "MM/dd/yyyy"}}</p>
-		<p *ngIf="clinicalTrial.firstReceived">First Received: {{clinicalTrial.firstReceived|date : "MM/dd/yyyy"}}</p>
-		<p *ngIf="clinicalTrial.lastUpdated">Last Updated: {{clinicalTrial.lastUpdated|date : "MM/dd/yyyy"}}</p>
 		<div *ngIf="clinicalTrial.outcomeMeasures">
-				<p>Outcome Measures:</p>
-				<div class="indent-list" *ngFor="let content of clinicalTrial.outcomeMeasures.split('\|')">{{ content }}</div>
+			<p>Outcome Measures:</p>
+			<div class="indent-list" *ngFor="let content of clinicalTrial.outcomeMeasures.split('\|')">{{ content }}</div>
 		</div>
 		<p *ngIf="clinicalTrial.nctNumber">Url: <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.url}}</a></p>
 
 	</div>
 	</div>
 	</div>
-	
+
+	<div class="trial-detailstwo">
+
+		<div *ngIf="clinicalTrial.lastUpdated || clinicalTrial.lastUpdated">
+			<p>Updated:</p>
+			<div class="indent-list" *ngIf="clinicalTrial.lastUpdated" title="Last updated by CT.gov">{{clinicalTrial.lastUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">ct.gov</span></div>
+			<div class="indent-list" *ngIf="clinicalTrial.gsrsUpdated" title="Last updated on gsrs">{{clinicalTrial.gsrsUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">gsrs</span></div>
+		</div>
+		<p *ngIf="clinicalTrial.firstReceived">First Received: {{clinicalTrial.firstReceived|date : "MM/dd/yyyy" : "UTC"}}</p>
+		<p *ngIf="clinicalTrial.startDate">Study Start Date: {{clinicalTrial.startDate|date : "MM/dd/yyyy" : "UTC"}}</p>
+		<p *ngIf="clinicalTrial.lastVerified">Last Verified: {{clinicalTrial.lastVerified}}</p>
+		<p *ngIf="clinicalTrial.primaryCompletionDate">Primary Completion Date: {{clinicalTrial.primaryCompletionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
+		<p *ngIf="clinicalTrial.completionDate">Study Completion Date: {{clinicalTrial.completionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
+	</div>
+</div>
+
 	<div *ngIf="isTesting">
 		<div class="top-spacer">isAdmin: {{isAdmin}}</div>
 

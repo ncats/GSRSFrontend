@@ -4,7 +4,7 @@ import { StructuralUnit } from '../substance/structural-unit.model';
 /**
  * API response object for structure post call
  */
-export interface StructurePostResponse {
+export interface InterpretStructureResponse {
     structure: SubstanceStructure;
     moieties: Array<SubstanceMoiety>;
     structuralUnits: Array<StructuralUnit>;

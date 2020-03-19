@@ -5,7 +5,7 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../../structure/structure-import/structure-import.component';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
-import { StructurePostResponse } from '../../structure/structure-post-response.model';
+import { InterpretStructureResponse } from '../../structure/structure-post-response.model';
 import { StructureImageModalComponent } from '../../structure/structure-image-modal/structure-image-modal.component';
 import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -28,7 +28,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   @Input() hideAccess = false;
   @Input() showSettings = false;
   @Input() type?: string;
-  @Output() structureImported = new EventEmitter<StructurePostResponse>();
+  @Output() structureImported = new EventEmitter<InterpretStructureResponse>();
   @Output() nameResolved = new EventEmitter<string>();
   @Output() export = new EventEmitter<void>();
   private overlayContainer: HTMLElement;
@@ -119,7 +119,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe((response?: StructurePostResponse) => {
+    dialogRef.afterClosed().subscribe((response?: InterpretStructureResponse) => {
       this.overlayContainer.style.zIndex = null;
       if (response != null) {
         this.structureImported.emit(response);

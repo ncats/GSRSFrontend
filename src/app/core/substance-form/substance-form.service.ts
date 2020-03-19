@@ -204,7 +204,7 @@ export class SubstanceFormService {
       }
 
       if (this.substance.structure != null && this.substance.structure.molfile != null) {
-        this.structureService.postStructure(this.substance.structure.molfile).subscribe(response => {
+        this.structureService.interpretStructure(this.substance.structure.molfile).subscribe(response => {
           this.computedMoieties = response.moieties;
           this.substanceEmitter.next(this.substance);
         });
@@ -215,7 +215,7 @@ export class SubstanceFormService {
       if (this.substance.substanceClass === 'polymer') {
         this.substance.moieties = [];
         if (this.substance.polymer.idealizedStructure != null && this.substance.polymer.idealizedStructure.molfile != null) {
-          this.structureService.postStructure(this.substance.polymer.idealizedStructure.molfile).subscribe(response => {
+          this.structureService.interpretStructure(this.substance.polymer.idealizedStructure.molfile).subscribe(response => {
             this.computedMoieties = response.moieties;
             this.substance.moieties = response.moieties;
             this.substanceEmitter.next(this.substance);

@@ -29,7 +29,7 @@ export class StructureImportComponent implements OnInit {
     this.message = null;
     if (this.importTextControl.value) {
       this.isLoading = true;
-      this.structureService.postStructure(this.importTextControl.value).subscribe(response => {
+      this.structureService.interpretStructure(this.importTextControl.value).subscribe(response => {
         this.isLoading = false;
         if (response && response.structure && response.structure.molfile) {
           this.gaService.sendEvent('structureImport', 'button:import', 'file imported');

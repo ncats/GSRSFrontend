@@ -6,9 +6,10 @@ import { BaseHttpService } from '@gsrs-core/base';
 import { ClinicalTrial } from './clinical-trial.model';
 import { BdnumNameAll } from './clinical-trial.model';
 import { PagingResponse } from '@gsrs-core/utils';
-import { map } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
 import { ClinicalTrialHttpParams } from '../misc/clinical-trial-http-params';
+import {Facet} from '@gsrs-core/utils';
 
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
@@ -22,7 +23,7 @@ export class ClinicalTrialService extends BaseHttpService {
     super(configService);
   }
 
-  getClinicalTrials(
+  getClinicalTrials_old(
     args: {
       searchTerm?: string,
       cutoff?: number,
@@ -65,27 +66,81 @@ export class ClinicalTrialService extends BaseHttpService {
     return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
   }
 
+  getClinicalTrials(args: {
+    searchTerm?: string,
+    cutoff?: number,
+    type?: string,
+    pageSize?: number,
+    order?: string,
+    facets?: ClinicalTrialFacetParam,
+    skip?: number
+  } = {}): Observable<PagingResponse<ClinicalTrial>> {
+    return new Observable(observer => {
+      this.searchClinicalTrials(
+          args.searchTerm,
+          args.pageSize,
+          args.facets,
+          args.order,
+          args.skip,
+          args.type
+        ).subscribe(response => {
+          observer.next(response);
+        }, error => {
+          observer.error(error);
+        }, () => {
+          observer.complete();
+        });
+    });
+  }
 
- // need to resolve
- getClinicalTrials_archana (
-    skip: number = 0,
+  searchClinicalTrials(
+    searchTerm?: string,
     pageSize: number = 10,
-    searchTerm?: string
+    facets?: ClinicalTrialFacetParam,
+    order?: string,
+    skip: number = 0,
+    type?: string
   ): Observable<PagingResponse<ClinicalTrial>> {
-    let params = new HttpParams();
-    params = params.append('skip', skip.toString());
-    params = params.append('top', pageSize.toString());
+
+    let params = new ClinicalTrialHttpParams();
+    let url = this.apiBaseUrl;
+
+    url += 'ctclinicaltrial/search';
+    if (!searchTerm) { searchTerm = ''; }
     if (searchTerm !== null && searchTerm !== '') {
-      params = params.append('q', searchTerm);
+      if (type !== null && type !== '') {
+        if (type === 'nctNumber' ) {
+          // not working yet
+          params = params.append('q', 'root_ctId:\"^' + searchTerm + '$\"');
+        } else if (type === 'substanceUuid' ) {
+          // not working yet
+          params = params.append('q', 'root_clinicalTrialDrug_substanceUuid:\"^' + searchTerm + '$\"');
+        } else if (type === 'title') {
+          params = params.append('q', 'root_title:\"' + searchTerm + '\"');
+        } else {
+          params = params.append('q', searchTerm);
+        }
+      } else {
+        params = params.append('q', searchTerm);
+      }
     }
-    const url = `${this.apiBaseUrl}ctclinicaltrial/search`;
+    params = params.appendFacetParams(facets);
+
+    params = params.appendDictionary({
+      top: pageSize && pageSize.toString(),
+      skip: skip && skip.toString()
+    });
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+    params = params.append('fdim', '10');
+
     const options = {
       params: params
     };
     return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
   }
-
-
 
   deleteClinicalTrial(id: string): Observable<any> {
     const url = `${this.apiBaseUrl}ctclinicaltrial(${id})`;
@@ -204,6 +259,35 @@ export class ClinicalTrialService extends BaseHttpService {
     );
   }
 
+  // see substance.service
+  filterFacets(name: string, category: string ): Observable<any> {
+    console.log('I am in the service, filter facets');
+    const url =  `${this.configService.configData.apiBaseUrl}api/v1/ctclinicaltrial/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
+    return this.http.get(url);
+  }
+// see substance.service
+  retrieveFacetValues(facet: Facet): Observable<any> {
+    const url = facet._self;
+    return this.http.get<any>(url);
+  }
+// see substance.service
+  retrieveNextFacetValues(facet: Facet): Observable<any> {
+    const url = facet._self;
+    if (!facet.$next) {
+      return this.http.get<any>(url).pipe(
+        switchMap(response => {
+          if (response) {
+            const next = response.nextPageUri;
+            return this.http.get<any>(next);
+          } else {
+            return 'nada';
+          }
+        }));
+    } else {
+      return this.http.get<any>(facet.$next);
+    }
+
+  }
   getClinicalTrialListExportUrl(bdnum: string): string {
     return this.baseUrl + 'clinicalTrialListExport?bdnum=' + bdnum;
   }
