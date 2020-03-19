@@ -72,6 +72,7 @@ import { SubstanceImageModule } from './substance/substance-image.module';
 import { StructureModule } from './structure/structure.module';
 import {MatTreeModule} from '@angular/material/tree';
 import {SubstanceHierarchyComponent} from '@gsrs-core/substances-browse/substance-hierarchy/substance-hierarchy.component';
+import {SequenceAlignmentComponent} from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import {SubstanceHierarchyComponent} from '@gsrs-core/substances-browse/substanc
     HighlightedSearchActionComponent,
     CardDynamicSectionDirective,
     SubstanceSummaryCardComponent,
-    SubstanceHierarchyComponent
+    SubstanceHierarchyComponent,
+    SequenceAlignmentComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

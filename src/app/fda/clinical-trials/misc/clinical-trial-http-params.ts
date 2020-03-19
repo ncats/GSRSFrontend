@@ -28,6 +28,7 @@ export class ClinicalTrialHttpParams extends HttpParams {
                 }
             });
         }
+        clone = clone.append('facet', '!Deprecated/Deprecated');
         return clone;
     }
 
