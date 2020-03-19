@@ -16,6 +16,7 @@ import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import {AuthService} from '@gsrs-core/auth/auth.service';
 import { Auth } from '@gsrs-core/auth/auth.model';
 import { Location, LocationStrategy } from '@angular/common';
+import { Subscription, Observable, Subject } from 'rxjs';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 // import { MatCardModule } from '@angular/material/card';
@@ -31,6 +32,7 @@ import { FacetFilterPipe } from '../../utils/facet-filter.pipe';
 })
 
 export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
+  public lodash = _;
   public privateSearchTerm = '';
   private privateSearchType = 'all';
   private privateSearchCutoff?: number;
@@ -60,9 +62,12 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
   searchText: string[] = [];
   private overlayContainer: HTMLElement;
   toggle: Array<boolean> = [];
+  private subscriptions: Array<Subscription> = [];
   dataSource = new MatTableDataSource<ClinicalTrial>([]);
   isAdmin: boolean;
-  jumpToValue: string;
+  showExactMatches = false;
+  private facetSearchChanged = new Subject<{ index: number, query: any}>();
+  private activeSearchedFaced: Facet;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -85,12 +90,15 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
 
 
   ngAfterViewInit() {
-    this.matSideNav.openedStart.subscribe(() => {
+    const openSubscription = this.matSideNav.openedStart.subscribe(() => {
       this.utilsService.handleMatSidenavOpen(1100);
     });
-    this.matSideNav.closedStart.subscribe(() => {
+    this.subscriptions.push(openSubscription);
+    const closeSubscription = this.matSideNav.closedStart.subscribe(() => {
       this.utilsService.handleMatSidenavClose();
     });
+    this.subscriptions.push(closeSubscription);
+    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   // see substances code
@@ -225,6 +233,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
   searchClinicalTrials() {
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
+      this.privateSearchCutoff,
       this.privateSearchType,
       this.pageSize,
       this.order,
@@ -236,8 +245,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
-    this.clinicalTrialService.getClinicalTrials(
-      {
+      const subscription = this.clinicalTrialService.getClinicalTrials({
         searchTerm: this.privateSearchTerm,
         cutoff: this.privateSearchCutoff,
         type: this.privateSearchType,
@@ -246,29 +254,52 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
         facets: this.privateFacetParams,
         skip: skip
       })
-      .subscribe(pagingResponse => {
-        this.isError = false;
-        this.clinicalTrials = pagingResponse.content;
-        this.dataSource.data = this.clinicalTrials;
+        .subscribe(pagingResponse => {
+          this.isError = false;
+/*
+          if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0
+            && pagingResponse.skip === 0
+            && (!pagingResponse.sideway || pagingResponse.sideway.length < 2)
+          ) {
+            this.exactMatchSubstances = pagingResponse.exactMatches;
+            this.showExactMatches = true;
+          }
+*/
+          this.clinicalTrials = pagingResponse.content;
+          this.totalClinicalTrials = pagingResponse.total;
+          this.dataSource.data = this.clinicalTrials;
+          if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+            this.populateFacets(pagingResponse.facets);
+          }
+        }, error => {
+          // this.gaService.sendException('getSubstancesDetails: error from API cal');
+          const notification: AppNotification = {
+            message: 'There was an error trying to retrieve ClinicalTrials. Please refresh and try again.',
+            type: NotificationType.error,
+            milisecondsToShow: 6000
+          };
+          this.isError = true;
+          this.isLoading = false;
+          this.loadingService.setLoading(this.isLoading);
+          this.notificationService.setNotification(notification);
+        }, () => {
+          subscription.unsubscribe();
+          /*
+          if (this.exactMatchSubstances && this.exactMatchSubstances.length > 0) {
+            this.exactMatchSubstances.forEach(substance => {
+              this.setSubstanceNames(substance.uuid);
+              this.setSubstanceCodes(substance.uuid);
+            });
 
-        this.totalClinicalTrials = pagingResponse.total;
-        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-          this.populateFacets(pagingResponse.facets);
-        }
-      }, error => {
-        const notification: AppNotification = {
-          message: 'There was an error trying to retrieve ClinicalTrials. Please refresh and try again.',
-          type: NotificationType.error,
-          milisecondsToShow: 6000
-        };
-        this.isError = true;
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-        this.notificationService.setNotification(notification);
-      }, () => {
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-      });
+          }
+          this.substances.forEach(substance => {
+            this.setSubstanceNames(substance.uuid);
+            this.setSubstanceCodes(substance.uuid);
+          });
+          */
+          this.isLoading = false;
+          this.loadingService.setLoading(this.isLoading);
+        });
     }
   }
 
@@ -314,12 +345,11 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
     this.location.go(urlTree.toString());
   }
 
-
   // see substances code
   private populateFacets(facets: Array<Facet>): void {
     const subscription = this.authService.getAuth().subscribe(auth => {
 
-      let newFacets = [];
+      const newFacets = [];
       this.auth = auth;
       this.showAudit = this.authService.hasRoles('admin');
       if (this.configService.configData.facets != null) {
@@ -346,7 +376,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
                       const facetToAdd = facets.splice(facetIndex, 1);
                       facetIndex--;
                       newFacets.push(facetToAdd[0]);
-                      this.searchText.push(facetToAdd[0].name);
+                      this.searchText[facetToAdd[0].name] = { value: '', isLoading: false};
                     }
                   }
                   break;
@@ -358,11 +388,10 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
         });
 
       }
-      // leaving out for now; produces unexpected results in my case.
-      if (0 && newFacets.length < 15) {
 
+/* Commented out for now, would show extra facets if not enough shown
+      if (newFacets.length < 15) {
         const numFillFacets = 15 - newFacets.length;
-
         let sortedFacets = _.orderBy(facets, facet => {
           let valuesTotal = 0;
           facet.values.forEach(value => {
@@ -374,15 +403,25 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
         newFacets = newFacets.concat(additionalFacets);
         sortedFacets = null;
       }
+*/
 
       if (newFacets.length > 0) {
         this.processResponsiveness();
       } else {
         this.matSideNav.close();
       }
+
+      for (let facetIndex = 0; facetIndex < newFacets.length; facetIndex++) {
+        if (newFacets[facetIndex].name === 'ix.Class') {
+          if (facetIndex !== -1) {
+            newFacets.splice(facetIndex, 1);
+          }
+        }
+      }
       this.facets = newFacets;
       this.cleanFacets();
     });
+    this.subscriptions.push(subscription);
   }
 
   // see substances code
@@ -419,14 +458,14 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
           if (this.privateFacetParams[key].params[sub] !== undefined) {
             const facet = {
               'type': key,
-              'val' : sub,
+              'val': sub,
               'bool': this.privateFacetParams[key].params[sub]
             };
             this.displayFacets.push(facet);
           }
         });
       }
-      });
+    });
   }
 
   // see substances code
@@ -545,6 +584,39 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
   }
 
   // see substances code
+  clearSearch(): void {
+    // const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    // this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
+    this.privateSearchTerm = '';
+    this.pageIndex = 0;
+
+    this.populateUrlQueryParameters();
+    this.searchClinicalTrials();
+  }
+
+  // see substance code
+  clearFilters(): void {
+    this.clearFacetSelection();
+    this.clearSearch();
+  }
+
+  get searchTerm(): string {
+    return this.privateSearchTerm;
+  }
+
+  set searchTerm(s: string) {
+    this.privateSearchTerm = s;
+  }
+
+  get searchType(): string {
+    return this.privateSearchType;
+  }
+
+  set searchType(s: string) {
+    this.privateSearchType = s;
+  }
+
+  // see substances code
   get facetParams(): ClinicalTrialFacetParam | { showAllMatchOption?: boolean } {
     return this.privateFacetParams;
   }
@@ -575,33 +647,43 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit  {
 //    this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
   }
 
-  clearFilters(): void {
-      this.clearSearch();
+  moreFacets(index: number, facet: Facet) {
+    const subscription = this.clinicalTrialService.retrieveNextFacetValues(this.facets[index]).subscribe( resp => {
+      this.facets[index].$next = resp.$next;
+      this.facets[index].values = this.facets[index].values.concat(resp.content);
+      this.facets[index].$fetched = this.facets[index].values;
+      this.facets[index].$total = resp.ftotal;
+      subscription.unsubscribe();
+    }, error => {
+      subscription.unsubscribe();
+    });
   }
 
-  clearSearch(): void {
-    // const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
-    // this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
-    this.privateSearchTerm = '';
-    this.pageIndex = 0;
-    // automatically calls searchSubstances() because of subscription to route changes
-    this.populateUrlQueryParameters();
+  lessFacets(index: number) {
+    const subscription = this.clinicalTrialService.retrieveFacetValues(this.facets[index]).subscribe( response => {
+      this.facets[index].values = response.content;
+      this.facets[index].$fetched = response.content;
+      this.facets[index].$next = response.$next;
+      subscription.unsubscribe();
+    }, error => {
+      subscription.unsubscribe();
+    });
   }
 
-  set searchTerm(s: string) {
-    this.privateSearchTerm = s;
+  filterFacets(index: number, event: any, faceName: string): void {
+    this.searchText[faceName].isLoading = true;
+    this.activeSearchedFaced = this.facets[index];
+    this.facetSearchChanged.next({index: index, query: event});
   }
 
-  get searchTerm(): string {
-    return this.privateSearchTerm;
+  clearFacetSearch(index: number, facetName: string): void {
+    this.searchText[facetName].value = '';
+    this.filterFacets(index, '', facetName);
   }
 
-  set searchType(s: string) {
-    this.privateSearchType = s;
-  }
-
-  get searchType(): string {
-    return this.privateSearchType;
+  showAllRecords(): void {
+    this.showExactMatches = false;
+    this.processResponsiveness();
   }
 
   toggleShowHelp() {

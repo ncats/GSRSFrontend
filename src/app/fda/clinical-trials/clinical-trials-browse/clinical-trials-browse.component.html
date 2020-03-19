@@ -1,5 +1,5 @@
-<mat-sidenav-container [hasBackdrop]="hasBackdrop">
-  <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="true">
+<mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
+  <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
     <mat-accordion multi="true">
       <mat-expansion-panel *ngFor="let facet of facets; index as topIndex" [expanded]="false || facetParams[facet.name] != null">
         <mat-expansion-panel-header>
@@ -7,12 +7,15 @@
             {{facet.name | facetDisplay}}
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-form-field class="">
-          <input matInput class="search" type="text" [ngModel] = "searchText[facet.name]" (ngModelChange) = "filterFacets(topIndex, $event)"
-            placeholder="Search  {{facet.name}}">
-        </mat-form-field>
-        <button mat-icon-button color="black" (click) = "searchText[facet.name] = ''"><mat-icon svgIcon="close"></mat-icon></button>
-          <ng-container  *ngFor="let value of facet.values | facetFilter : searchText[facet.name]; index as index">
+        <div class="facet-search-container">
+          <mat-form-field *ngIf="searchText[facet.name]">
+            <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value" (ngModelChange)="filterFacets(topIndex, $event, facet.name)"
+              placeholder="Search  {{facet.name}}">
+          </mat-form-field>
+          <button mat-icon-button color="black" (click) = "clearFacetSearch(topIndex, facet.name)"><mat-icon svgIcon="close"></mat-icon></button>
+        </div>
+        <mat-progress-bar class="facet-search-loading" mode="indeterminate" *ngIf="searchText[facet.name] && searchText[facet.name].isLoading"></mat-progress-bar>
+          <ng-container  *ngFor="let value of facet.values; index as index">
             <div class="facet-value" >
           <div class="facet-value-checkbox">
             <mat-checkbox class="include" matTooltip="Include"
@@ -21,7 +24,8 @@
             </mat-checkbox>
             <mat-checkbox class="exclude" matTooltip="Exclude"
               (change)="updateFacetSelection($event, facet.name, value.label, false)"
-              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false">
+              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false"
+              *ngIf="facet.$showAdvanced">
             </mat-checkbox>
           </div>
           <div class="facet-value-label">
@@ -46,16 +50,20 @@
             Show {{toggle[topIndex] === true ? 'all': 'less'}}
           </a>-->
           <span  *ngIf = "facet.values && facet.values.length >= 10 && (
-           !searchText[facet.name] || searchText[facet.name] == '')">
+           !searchText[facet.name] || searchText[facet.name].value == '')">
              <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf ="(!facet.$total ||
               facet.$total > facet.values.length)">
-            More...{{searchText[facet.name]}}
+            More...{{searchText[facet.name] && searchText[facet.name].value || ''}}
           </a>
              <a class="show-more" *ngIf = "facet.values.length > 10" (click)="lessFacets(topIndex)">
-            Show Less {{searchText[facet.name]}}
+            Show Less {{searchText[facet.name] &&searchText[facet.name].value || ''}}
           </a>
           </span>
-
+        </div>
+        <div class="facet-advanced-options-link">
+          <a (click)="facet.$showAdvanced = !facet.$showAdvanced">
+            <span *ngIf="facet.$showAdvanced">hide </span>advanced options
+          </a>
         </div>
         <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
           <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
@@ -98,8 +106,8 @@
       <button mat-icon-button aria-label="Show Help" (click)="toggleShowHelp()">?</button>
     </span>
     </form>
-    <mat-card style="float: left; clear: both;" *ngIf="showHelp" class='show-help-box'>
-      <div style="display: flex">
+    <mat-card class='clinical-trials-browse-show-help' *ngIf="showHelp">
+      <div>
       <span class="middle-fill"></span>
       <button class="clinical-trials-browse-filter-form-help-button-close" mat-icon-button (click)="toggleShowHelp()">
         <mat-icon svgIcon="close"></mat-icon>
@@ -130,7 +138,7 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
             <a class="clinical-trials-browse-edit1"  title="Edit in this tab" [routerLink]="['/edit-clinical-trial', element.nctNumber]" [queryParams]="{}" >Edit</a>&nbsp;<a class="clinical-trials-browse-edit2" target="_blank" title="Edit in new tab" [href]="'edit-clinical-trial/' + element.nctNumber">+</a>
-          </td>
+        </td>
       </ng-container>
       
     <!-- nctNumber Column -->
@@ -145,21 +153,37 @@
       <ng-container matColumnDef="title">
         <th mat-header-cell *matHeaderCellDef>title</th>
         <td mat-cell *matCellDef="let element">
-          {{element.title}}
-          <span *ngIf="element.clinicalTrialDrug"> ({{element.clinicalTrialDrug.length}}) </span>                    
-        </td>
+          <mat-expansion-panel [disabled]="true" #mep="matExpansionPanel" class='clinical-trials-browse-peak-substances-expansion-panel'>
+            <mat-expansion-panel-header [collapsedHeight]="''" [expandedHeight]="''"> 
+              <div (click)="mep.expanded = !mep.expanded">{{element.title}} <span *ngIf="element.clinicalTrialDrug"> ({{element.clinicalTrialDrug.length}}) </span></div>
+            </mat-expansion-panel-header>
+<div class="clinical-trials-browse-substance-peak">
+  <div *ngIf="element.clinicalTrialDrug">
+    <div *ngFor="let item of element.clinicalTrialDrug">
+      <a target="_blank" [routerLink]="['/substances', item.substanceUuid]" >{{item.substanceDisplayName}}</a>
+    </div>
+  </div>
+<pre>
+<div *ngIf="element.clinicalTrialDrug"><div *ngFor="let item of element.clinicalTrialDrug">{{item.substanceDisplayName}}&#9;{{item.substanceUuid}}</div></div>
+</pre>
+<pre>
+<div *ngIf="element.clinicalTrialDrug"><span>{{lodash.map(element.clinicalTrialDrug, 'substanceDisplayName').join("; ")}}</span>&#9;<span>{{lodash.map(element.clinicalTrialDrug, 'substanceUuid').join("; ")}}</span></div>
+</pre>
+</div>
+          </mat-expansion-panel>
+      </td>
       </ng-container>
     
       <!-- ID Column -->
       <ng-container matColumnDef="lastUpdated">
         <th mat-header-cell *matHeaderCellDef>lastUpdated</th>
-        <td mat-cell *matCellDef="let element">{{element.lastUpdated|date: 'MM/dd/yyyy'}} </td>
+        <td mat-cell *matCellDef="let element">{{element.lastUpdated | date : 'MM/dd/yyyy':'UTC'}} </td>
       </ng-container>
     
       <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element; let index = index">
-              <button mat-icon-button matSuffix aria-label="Del" (click)="deleteClinicalTrial(index);">Del</button>
+          <td mat-cell class ="clinical-trials-browse-button-cell" *matCellDef="let element; let index = index">
+              <span class="clinical-trials-browse-del" aria-label="Del" (click)="deleteClinicalTrial(index);">Del</span>
             </td>
         </ng-container>
       

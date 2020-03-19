@@ -62,3 +62,37 @@
 .match-complete-checkbox { 
   margin-left: 15px;
 }
+.container { 
+  display: flex;
+}
+.small-text {
+  font-size: 80%;
+}
+.trial-detailsheader {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.trial-detailsone {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 0em 1em 1em .5em;
+  float: left;
+  overflow: auto;
+  max-height: 300px;
+  max-width: 500px;
+  margin-right: 1em;
+}
+
+.trial-detailstwo {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 0em 1em 1em .5em;
+    float: left;
+    overflow: auto;
+    max-height: 300px;
+    max-width: 400px;
+    margin-right: 1em;
+}
+  
+.emphasize { 
+  font-weight: bold;
+}
