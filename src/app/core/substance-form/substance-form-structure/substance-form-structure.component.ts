@@ -5,7 +5,7 @@ import { SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { StructureService } from '../../structure/structure.service';
 import { LoadingService } from '../../loading/loading.service';
-import { StructurePostResponse } from '@gsrs-core/structure';
+import { InterpretStructureResponse } from '@gsrs-core/structure';
 import { MatDialog } from '@angular/material';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -107,13 +107,13 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   updateStructureForm(molfile: string): void {
     if (!this.isInitializing) {
-      this.structureService.postStructure(molfile).subscribe(response => {
+      this.structureService.interpretStructure(molfile).subscribe(response => {
         this.processStructurePostResponse(response);
       });
     }
   }
 
-  processStructurePostResponse(structurePostResponse?: StructurePostResponse): void {
+  processStructurePostResponse(structurePostResponse?: InterpretStructureResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
 
       // we should only be dealing with this stuff if the total hash changes
@@ -144,7 +144,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
 
 
-  structureImported(structurePostResponse?: StructurePostResponse): void {
+  structureImported(structurePostResponse?: InterpretStructureResponse): void {
     if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
       this.structureEditor.setMolecule(structurePostResponse.structure.molfile);
     }
@@ -157,7 +157,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   }
 
   generateSRU(): void {
-    this.structureService.postStructure(this.structure.molfile).subscribe(response => {
+    this.structureService.interpretStructure(this.structure.molfile).subscribe(response => {
       if (response.structuralUnits && response.structuralUnits.length > 0) {
         this.substanceFormService.updateSRUs(response.structuralUnits);
       }

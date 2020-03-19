@@ -206,7 +206,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         };
       } else if (items[i].type === 'text/plain') {
         const text = (e.originalEvent || e).clipboardData.getData('text/plain');
-        this.structureService.postStructure(text).subscribe(response => {
+        this.structureService.interpretStructure(text).subscribe(response => {
           if (response.structure && response.structure.molfile) {
             this.loadedMolfile.emit(text);
           }
@@ -221,7 +221,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   cleanStructure() {
     const smiles = this.editor.getSmiles();
     if (smiles != null && smiles !== '') {
-      this.structureService.postStructure(smiles).pipe(take(1)).subscribe(response => {
+      this.structureService.interpretStructure(smiles).pipe(take(1)).subscribe(response => {
         if (response && response.structure && response.structure.molfile) {
           this.editor.setMolecule(response.structure.molfile);
         }
