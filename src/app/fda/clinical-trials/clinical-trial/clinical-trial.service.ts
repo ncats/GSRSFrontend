@@ -261,7 +261,8 @@ export class ClinicalTrialService extends BaseHttpService {
 
   // see substance.service
   filterFacets(name: string, category: string ): Observable<any> {
-    const url =  `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
+    console.log('I am in the service, filter facets');
+    const url =  `${this.configService.configData.apiBaseUrl}api/v1/ctclinicaltrial/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
     return this.http.get(url);
   }
 // see substance.service

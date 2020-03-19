@@ -1,88 +1,93 @@
-<mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
-  <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
-    <mat-accordion multi="true">
-      <mat-expansion-panel *ngFor="let facet of facets; index as topIndex" [expanded]="false || facetParams[facet.name] != null">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{facet.name | facetDisplay}}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div class="facet-search-container">
-          <mat-form-field *ngIf="searchText[facet.name]">
-            <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value" (ngModelChange)="filterFacets(topIndex, $event, facet.name)"
-              placeholder="Search  {{facet.name}}">
-          </mat-form-field>
-          <button mat-icon-button color="black" (click) = "clearFacetSearch(topIndex, facet.name)"><mat-icon svgIcon="close"></mat-icon></button>
-        </div>
-        <mat-progress-bar class="facet-search-loading" mode="indeterminate" *ngIf="searchText[facet.name] && searchText[facet.name].isLoading"></mat-progress-bar>
-          <ng-container  *ngFor="let value of facet.values; index as index">
-            <div class="facet-value" >
-          <div class="facet-value-checkbox">
-            <mat-checkbox class="include" matTooltip="Include"
-              (change)="updateFacetSelection($event, facet.name, value.label, true)"
-              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
-            </mat-checkbox>
-            <mat-checkbox class="exclude" matTooltip="Exclude"
-              (change)="updateFacetSelection($event, facet.name, value.label, false)"
-              [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false"
-              *ngIf="facet.$showAdvanced">
-            </mat-checkbox>
+  <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
+    <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
+      <mat-accordion multi="true">
+        <mat-expansion-panel *ngFor="let facet of facets; index as topIndex"
+          [expanded]="false || facetParams[facet.name] != null">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{facet.name | facetDisplay}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="facet-search-container">
+            <mat-form-field *ngIf="searchText[facet.name]">
+              <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value"
+                (ngModelChange)="filterFacets(topIndex, $event, facet.name)" placeholder="Search  {{facet.name}}">
+            </mat-form-field>
+            <button mat-icon-button color="black" (click)="clearFacetSearch(topIndex, facet.name)">
+              <mat-icon svgIcon="close"></mat-icon>
+            </button>
           </div>
-          <div class="facet-value-label">
-            <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
-              {{value.label}}
-            </span>
-            <span *ngIf = "facet.name === 'Substance Class'">
-              {{value.label | facetDisplay: 'types'}}
-            </span>
-            <span *ngIf="facet.name === 'Record Status'">
-              {{value.label | facetDisplay: 'status'}}
-            </span>
-          </div>
-          <div class="middle-fill"></div>
-          <div class="facet-value-count">
-            {{value.count}}
-          </div>
+          <mat-progress-bar class="facet-search-loading" mode="indeterminate"
+            *ngIf="searchText[facet.name] && searchText[facet.name].isLoading"></mat-progress-bar>
+            <ng-container  *ngFor="let value of facet.values; index as index">
+              <div class="facet-value" >
+            <div class="facet-value-checkbox">
+              <mat-checkbox class="include" matTooltip="Include"
+                (change)="updateFacetSelection($event, facet.name, value.label, true)"
+                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
+              </mat-checkbox>
+              <mat-checkbox class="exclude" matTooltip="Exclude"
+                (change)="updateFacetSelection($event, facet.name, value.label, false)"
+                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false"
+                *ngIf="facet.$showAdvanced">
+              </mat-checkbox>
             </div>
-        </ng-container>
-        <div>
-         <!--- <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
-            Show {{toggle[topIndex] === true ? 'all': 'less'}}
-          </a>-->
-          <span  *ngIf = "facet.values && facet.values.length >= 10 && (
-           !searchText[facet.name] || searchText[facet.name].value == '')">
-             <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf ="(!facet.$total ||
-              facet.$total > facet.values.length)">
-            More...{{searchText[facet.name] && searchText[facet.name].value || ''}}
-          </a>
-             <a class="show-more" *ngIf = "facet.values.length > 10" (click)="lessFacets(topIndex)">
-            Show Less {{searchText[facet.name] &&searchText[facet.name].value || ''}}
-          </a>
-          </span>
-        </div>
-        <div class="facet-advanced-options-link">
-          <a (click)="facet.$showAdvanced = !facet.$showAdvanced">
-            <span *ngIf="facet.$showAdvanced">hide </span>advanced options
-          </a>
-        </div>
-        <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
-          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
-            [(ngModel)]="facetParams[facet.name].isAllMatch" (click)="sendFacetsEvent($event, facet.name)">
-            All Match
-          </mat-checkbox>
-          <div class="pull-right">
-            <button *ngIf="facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading" (click)="clearFacetSelection(facet.name)">
-              Clear
-            </button>
-            <button *ngIf="facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary" [disabled]="isLoading"
-              (click)="applyFacetsFilter(facet.name)">
-              Apply
-            </button>
+            <div class="facet-value-label">
+              <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
+                {{value.label}}
+              </span>
+              <span *ngIf = "facet.name === 'Substance Class'">
+                {{value.label | facetDisplay: 'types'}}
+              </span>
+              <span *ngIf="facet.name === 'Record Status'">
+                {{value.label | facetDisplay: 'status'}}
+              </span>
+            </div>
+            <div class="middle-fill"></div>
+            <div class="facet-value-count">
+              {{value.count}}
+            </div>
+              </div>
+          </ng-container>
+          <div>
+           <!--- <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
+              Show {{toggle[topIndex] === true ? 'all': 'less'}}
+            </a>-->
+            <span  *ngIf = "facet.values && facet.values.length >= 10 && (
+             !searchText[facet.name] || searchText[facet.name].value == '')">
+               <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf ="(!facet.$total ||
+                facet.$total > facet.values.length)">
+              More...{{searchText[facet.name] && searchText[facet.name].value || ''}}
+            </a>
+               <a class="show-more" *ngIf = "facet.values.length > 10" (click)="lessFacets(topIndex)">
+              Show Less {{searchText[facet.name] &&searchText[facet.name].value || ''}}
+            </a>
+            </span>
           </div>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </mat-sidenav>
+          <div class="facet-advanced-options-link">
+            <a (click)="facet.$showAdvanced = !facet.$showAdvanced">
+              <span *ngIf="facet.$showAdvanced">hide </span>advanced options
+            </a>
+          </div>
+          <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
+            <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
+              [(ngModel)]="facetParams[facet.name].isAllMatch" (click)="sendFacetsEvent($event, facet.name)">
+              All Match
+            </mat-checkbox>
+            <div class="pull-right">
+              <button *ngIf="facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading"
+                (click)="clearFacetSelection(facet.name)">
+                Clear
+              </button>
+              <button *ngIf="facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary"
+                [disabled]="isLoading" (click)="applyFacetsFilter(facet.name)">
+                Apply
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-sidenav>  
 <mat-sidenav-content>
 
 <div class="example-container mat-elevation-z8 clinical-trials-browse-wrapper">
