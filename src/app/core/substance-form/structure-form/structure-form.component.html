@@ -1,4 +1,21 @@
 <form class="structure-form" *ngIf="structure && type === 'structure'" >
+  <div class = "form-row button-row">
+    <button (click) = "duplicateCheck()"  mat-button color="primary">
+      Check for duplicates
+    </button>
+  </div>
+  <div class = "submission-messages" *ngIf = "structureErrorsArray && structureErrorsArray.length > 0">
+        <div class="validation-message" *ngFor="let err of structureErrorsArray; index as i" >
+      <div class="message-type" [ngClass] = "err.messageType">{{err.messageType}}</div>
+      <div class="message">{{err.message}}<span *ngFor = "let link of err.links"><br/>
+        <a [href] = "link.href.replace('ginas/app/substance','substances')" class = "internal-link" target = "_blank">
+          {{link.text}}
+        </a></span></div>
+      <button mat-icon-button matTooltip="Dismiss" (click)="dismissErrorMessage(i)">
+        <mat-icon svgIcon="close"></mat-icon>
+      </button>
+    </div>
+  </div>
   <div class="form-row">
     <mat-form-field class="mol-formula">
       <input matInput placeholder="Molecular Formula" [(ngModel)]="structure.formula" name="formula" required />

@@ -11,6 +11,7 @@ import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resol
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {Subscription} from 'rxjs';
+import {StructureDuplicationMessage} from '@gsrs-core/substance-form/substance-form.model';
 
 @Component({
   selector: 'app-structure-form',
@@ -23,6 +24,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   opticalActivityList: Array<VocabularyTerm> = [];
   atropisomerismList: Array<VocabularyTerm> = [];
   optical: string;
+  structureErrorsArray: Array<StructureDuplicationMessage>;
   @Input() hideAccess = false;
   @Input() showSettings = false;
   @Input() type?: string;
@@ -86,6 +88,17 @@ export class StructureFormComponent implements OnInit, OnDestroy {
 
   updateAccess(access: Array<string>): void {
     this.privateStructure.access = access;
+  }
+
+  duplicateCheck() {
+    this.structureErrorsArray = [];
+    this.substanceFormService.structureDuplicateCheck().subscribe (response => {
+      response.forEach(resp => {
+        if (resp.messageType && resp.messageType !== 'INFO') {
+          this.structureErrorsArray.push(resp);
+        }
+      });
+    });
   }
 
 
@@ -155,4 +168,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     this.export.emit();
   }
 
+  dismissErrorMessage(index: number) {
+    this.structureErrorsArray.splice(index, 1);
+  }
 }

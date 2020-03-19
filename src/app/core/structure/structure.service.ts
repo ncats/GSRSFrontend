@@ -70,4 +70,9 @@ export class StructureService {
     return this.http.post<any>(url, file);
 
   }
+
+  duplicateCheck(sub: SubstanceDetail): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}register/duplicateCheck`;
+    return this.http.post<any>(url, sub);
+  }
 }
