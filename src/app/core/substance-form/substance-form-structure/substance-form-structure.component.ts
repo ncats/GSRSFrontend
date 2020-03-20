@@ -170,7 +170,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
       width: '650px',
       data: {
         molfile: this.mol,
-        smiles: this.smiles
+        smiles: this.smiles,
+        type: this.substanceType
       }
     });
     this.overlayContainer.style.zIndex = '1002';

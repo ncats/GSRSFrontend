@@ -6,7 +6,7 @@
         <mat-tab label="Molfile">
             <textarea [value]="data.molfile"></textarea>
         </mat-tab>
-        <mat-tab label="Smiles">
+        <mat-tab label="Smiles" *ngIf = "!data.type || data.type !== 'polymer'">
             <textarea [value]="data.smiles"></textarea>
         </mat-tab>
     </mat-tab-group>
