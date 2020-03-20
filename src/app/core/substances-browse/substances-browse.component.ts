@@ -740,7 +740,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.clearFacetSelection();
     if (this.privateStructureSearchTerm != null && this.privateStructureSearchTerm !== '') {
       this.clearStructureSearch();
-    } else if (this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') {
+    } else if ((this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') ||
+    (this.privateSequenceSearchKey != null && this.privateSequenceSearchKey !== '')) {
       this.clearSequenceSearch();
     } else {
       this.clearSearch();
