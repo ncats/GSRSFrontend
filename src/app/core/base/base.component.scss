@@ -178,8 +178,8 @@
 //   }
 // }
 
-// @media(min-width: $nav-breaking-point) {
-//   .nav-small {
-//     display: none;
-//   }
-// }
+@media(min-width: $nav-breaking-point) {
+  .top-search {
+    min-width: 500px;
+  }
+}
