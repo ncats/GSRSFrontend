@@ -2,13 +2,9 @@ import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angula
 import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { MatDialog } from '@angular/material';
-import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { InterpretStructureResponse } from '../../structure/structure-post-response.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {Subscription} from 'rxjs';
-import {SubstanceService} from '@gsrs-core/substance';
 
 @Component({
   selector: 'app-structure-form',
@@ -30,8 +26,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private overlayContainerService: OverlayContainer,
-    private substanceService: SubstanceService,
+    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
@@ -84,9 +79,5 @@ export class StructureFormComponent implements OnInit, OnDestroy {
       return true;
     }
 
-  }
-
-  fixLink(link: string) {
-    return this.substanceService.oldLinkFix(link);
   }
 }

@@ -13,6 +13,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { StructureDuplicationMessage } from '../substance-form.model';
 import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
 import { Subscription } from 'rxjs';
+import { SubstanceService } from '@gsrs-core/substance/substance.service';
 
 @Component({
   selector: 'app-substance-form-structure',
@@ -38,7 +39,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     private loadingService: LoadingService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
-    private gaService: GoogleAnalyticsService
+    private gaService: GoogleAnalyticsService,
+    private substanceService: SubstanceService
   ) {
     super();
   }
@@ -258,5 +260,9 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   dismissErrorMessage(index: number) {
     this.structureErrorsArray.splice(index, 1);
+  }
+
+  fixLink(link: string) {
+    return this.substanceService.oldLinkFix(link);
   }
 }
