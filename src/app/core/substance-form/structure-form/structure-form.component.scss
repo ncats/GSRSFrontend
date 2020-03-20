@@ -64,7 +64,6 @@
 
 .dupe-check {
   margin-bottom: 5px;
-  margin-top: -20px;
 
 }
 
@@ -111,3 +110,27 @@
 .internal-link {
   color: #448aff;
 }
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: -10px;
+  margin-bottom: 10px;
+
+
+  .right-buttons {
+    align-content: flex-end;
+    display: flex;
+    margin-right: -8px;
+  }
+
+  .left-buttons {
+
+    align-content: flex-start;
+    display: flex;
+  }
+
+
+}
+

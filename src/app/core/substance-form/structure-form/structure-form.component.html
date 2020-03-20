@@ -1,8 +1,63 @@
+<div class = "form-row" *ngIf= "structure && type === 'polymer'" >
+  <span class = "middle-fill"></span>
+  <form class="structure-form polymer-form" >
+    <span _ngcontent-gsrs-c14="" class="middle-fill"></span>
+    <span class = "right-buttons">
+    <button  mat-button color="primary"  matTooltip = "Import options" [matMenuTriggerFor]="importMenu">
+      <mat-icon svgIcon="cloud_upload"></mat-icon>
+      Import...
+    </button>
+    <button (click) = "exportStructure()"  mat-button color="primary" matTooltip = "export structure">
+      <mat-icon svgIcon="get_app"></mat-icon>
+      Export
+    </button>
+    <button mat-button color="primary" matTooltip = "preview structure stereochemistry" (click)="openStructureImageModal()">
+      <mat-icon svgIcon="zoom_in"></mat-icon> View stereochemistry
+    </button>
+    </span>
+
+    <mat-menu #importMenu ="matMenu">
+      <button mat-menu-item (click)="openStructureImportDialog()">
+        Import Structure
+      </button>
+     <!-- <button mat-menu-item (click)="openNameResolverDialog()">
+        Resolve name
+      </button> -->
+    </mat-menu>
+  </form>
+</div>
+
 <form class="structure-form" *ngIf="structure && type === 'structure'" >
-  <div class = "form-row button-row">
-    <button (click) = "duplicateCheck()"  mat-button color="primary" class = "dupe-check">
+  <div class = "button-row">
+    <span class = "left-buttons">
+    <button (click) = "duplicateCheck()" matTooltip = "check the database for duplicate structures" mat-button color="primary" class = "dupe-check">
+      <mat-icon svgIcon="search"></mat-icon>
       Check for duplicates
     </button>
+    </span>
+    <span _ngcontent-gsrs-c14="" class="middle-fill"></span>
+    <span class = "right-buttons">
+    <button  mat-button color="primary"  matTooltip = "Import options" [matMenuTriggerFor]="importMenu">
+      <mat-icon svgIcon="cloud_upload"></mat-icon>
+      Import...
+    </button>
+    <button (click) = "exportStructure()"  mat-button color="primary" matTooltip = "export structure">
+      <mat-icon svgIcon="get_app"></mat-icon>
+      Export
+    </button>
+    <button mat-button color="primary" matTooltip = "preview structure stereochemistry" (click)="openStructureImageModal()">
+      <mat-icon svgIcon="zoom_in"></mat-icon> View stereochemistry
+    </button>
+    </span>
+
+    <mat-menu #importMenu ="matMenu">
+      <button mat-menu-item (click)="openStructureImportDialog()">
+        Import Structure
+      </button>
+      <button mat-menu-item (click)="openNameResolverDialog()">
+        Resolve name
+      </button>
+    </mat-menu>
   </div>
   <div class = "submission-messages" *ngIf = "structureErrorsArray && structureErrorsArray.length > 0">
         <div class="validation-message" *ngFor="let err of structureErrorsArray; index as i" >
@@ -42,27 +97,6 @@
     <app-cv-input class="atropisomerism" key = 'Structure Has Atropisomerism'  title = "Additional Stereochemistry" [model] = "structure.atropisomerism"
                   (valueChange)= "structure.atropisomerism = $event" name = "opticalActivity">
     </app-cv-input>
-    <div class="settings_container" *ngIf="showSettings">
-      <button mat-icon-button [matMenuTriggerFor]="settingsMenu" matTooltip="Advanced options">
-        <mat-icon svgIcon="settings_applications"></mat-icon>
-      </button>
-      <mat-menu #settingsMenu="matMenu">
-        <button mat-menu-item (click)="openStructureImportDialog()">
-          Import
-        </button>
-        <button mat-menu-item (click)="openNameResolverDialog()">
-          Resolve name
-        </button>
-        <span *ngIf="structure.id">
-          <button mat-menu-item (click)="exportStructure()">
-            Export
-          </button>
-          <button mat-menu-item (click)="openStructureImageModal()">
-            View stereochemistry
-          </button>
-        </span>
-      </mat-menu>
-    </div>
   </div>
   <div class="form-row">
     <div class="key-value-pair">
@@ -109,32 +143,4 @@
     </div>
   </div>
 </form>
-<div class = "form-row" *ngIf= "structure && type === 'polymer'" >
-  <span class = "middle-fill"></span>
-  <form class="structure-form polymer-form" >
-  <div class="settings_container" *ngIf="showSettings">
-    <button mat-icon-button [matMenuTriggerFor]="settingsMenu" matTooltip="Advanced options">
-      <mat-icon svgIcon="settings_applications"></mat-icon>
-    </button>
-    <mat-menu #settingsMenu="matMenu">
-      <button mat-menu-item (click)="openStructureImportDialog()">
-        Import
-      </button>
-      <button mat-menu-item (click)="openNameResolverDialog()">
-        Resolve name
-      </button>
-      <span *ngIf="structure.id">
-        <button mat-menu-item (click)="downloadStructure('mol')">
-          Dowload mol
-        </button>
-        <button mat-menu-item (click)="downloadStructure('smiles')">
-          Download smiles
-        </button>
-        <button mat-menu-item (click)="openStructureImageModal()">
-          View stereochemistry
-        </button>
-      </span>
-    </mat-menu>
-  </div>
-</form>
-</div>
+
