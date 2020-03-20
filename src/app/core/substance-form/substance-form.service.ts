@@ -2388,8 +2388,8 @@ export class SubstanceFormService {
       };
       let index = 0;
       const indexEnd = subunit.sequence && subunit.sequence.length || 0;
-      while (index <= indexEnd) {
-        if (subunit.sequence[index]) {
+      while (index < indexEnd) {
+        if ( subunit.sequence[index]) {
           const sequenceUnit: SequenceUnit = {
             unitIndex: index + 1,
             unitValue: subunit.sequence[index],
