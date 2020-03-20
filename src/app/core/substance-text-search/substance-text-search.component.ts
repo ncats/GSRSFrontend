@@ -128,7 +128,12 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
     const eventCategory = this.eventCategory || 'substanceTextSearch';
     const eventLabel = !environment.isAnalyticsPrivate && event.option.value || 'auto-complete option';
     this.gaService.sendEvent(eventCategory, 'select:auto-complete', eventLabel);
-    this.searchPerformed.emit(event.option.value);
+    let searchTerm = event.option.value;
+
+    if (eventCategory === 'topSearch') {
+      searchTerm = this.topSearchClean(searchTerm);
+    }
+    this.searchPerformed.emit(searchTerm);
   }
 
   highlight(field: string) {
@@ -154,10 +159,14 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   }
 
   processSubstanceSearch() {
-    const searchTerm = this.searchControl.value;
+    let searchTerm = this.searchControl.value;
     const eventCategory = this.eventCategory || 'substanceTextSearch';
     const eventLabel = !environment.isAnalyticsPrivate && searchTerm || 'search term option';
     this.gaService.sendEvent(eventCategory, 'search:submit', eventLabel);
+
+    if (eventCategory === 'topSearch') {
+     searchTerm = this.topSearchClean(searchTerm);
+    }
     this.searchPerformed.emit(searchTerm);
   }
 
@@ -171,5 +180,17 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       this.searchContainerElement.classList.remove('active-search');
       this.searchContainerElement.classList.remove('deactivate-search');
     }, 300);
+  }
+
+  topSearchClean(searchTerm): string {
+    if (searchTerm && searchTerm.length > 0) {
+      searchTerm = searchTerm.trim();
+      if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && searchTerm.indexOf(':') < 0
+        && searchTerm.indexOf(' AND ') < 0 && searchTerm.indexOf(' OR ') < 0) {
+        searchTerm = '"' + searchTerm + '"';
+      }
+      this.searchControl.setValue(searchTerm);
+    }
+    return searchTerm;
   }
 }
