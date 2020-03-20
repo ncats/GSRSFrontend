@@ -19,17 +19,16 @@ import { SubstanceFormSection } from './substance-form-section';
 import { SubstanceFormService } from './substance-form.service';
 import {ValidationMessage, SubstanceFormResults, SubstanceFormDefinition} from './substance-form.model';
 import { Subscription } from 'rxjs';
-import {SubstanceReference} from '@gsrs-core/substance';
-import {RefernceFormDialogComponent} from '@gsrs-core/substance-form/references-dialogs/refernce-form-dialog.component';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import * as _ from 'lodash';
 import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import {Title} from '@angular/platform-browser';
-import {Auth, AuthService} from '@gsrs-core/auth';
+import {AuthService} from '@gsrs-core/auth';
 import {take} from 'rxjs/operators';
 import { MatExpansionPanel } from '@angular/material';
+import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 
 
 @Component({
@@ -431,17 +430,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
-      this.submissionMessage = 'Substance was saved successfully!';
-      this.showSubmissionMessages = true;
-      this.validationResult = false;
-      setTimeout(() => {
-        this.showSubmissionMessages = false;
-        this.submissionMessage = '';
-        if (!this.id) {
-          this.id = response.uuid;
-          this.router.navigate(['/substances', response.uuid, 'edit']);
-        }
-      }, 4000);
+      this.showSubmissionMessages = false;
+      this.submissionMessage = '';
+      if (!this.id) {
+        this.id = response.uuid;
+      }
+      this.openSuccessDialog();
     }, (error: SubstanceFormResults) => {
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
@@ -616,4 +610,30 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     return old;
   }
+
+  openSuccessDialog(): void {
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {});
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue'|'browse'|'view') => {
+
+      if (response === 'continue') {
+        this.router.navigate(['/substances', this.id, 'edit']);
+      } else if (response === 'browse') {
+        this.router.navigate(['/browse-substance']);
+      } else if (response === 'view') {
+        this.router.navigate(['/substances', this.id]);
+      } else {
+        this.submissionMessage = 'Substance was saved successfully!';
+        this.showSubmissionMessages = true;
+        this.validationResult = false;
+        setTimeout(() => {
+          this.showSubmissionMessages = false;
+          this.submissionMessage = '';
+          this.router.navigate(['/substances', this.id, 'edit']);
+        }, 3000);
+      }
+    });
+    this.subscriptions.push(dialogSubscription);
+}
 }
