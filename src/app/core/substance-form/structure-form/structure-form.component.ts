@@ -3,15 +3,11 @@ import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substa
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { MatDialog } from '@angular/material';
-import { StructureImportComponent } from '../../structure/structure-import/structure-import.component';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { InterpretStructureResponse } from '../../structure/structure-post-response.model';
-import { StructureImageModalComponent } from '../../structure/structure-image-modal/structure-image-modal.component';
-import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {Subscription} from 'rxjs';
-import {StructureDuplicationMessage} from '@gsrs-core/substance-form/substance-form.model';
 import {SubstanceService} from '@gsrs-core/substance';
 
 @Component({
@@ -25,33 +21,21 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   opticalActivityList: Array<VocabularyTerm> = [];
   atropisomerismList: Array<VocabularyTerm> = [];
   optical: string;
-  structureErrorsArray: Array<StructureDuplicationMessage>;
   @Input() hideAccess = false;
   @Input() showSettings = false;
   @Input() type?: string;
   @Output() structureImported = new EventEmitter<InterpretStructureResponse>();
-  @Output() nameResolved = new EventEmitter<string>();
-  @Output() export = new EventEmitter<void>();
-  private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private dialog: MatDialog,
-    private gaService: GoogleAnalyticsService,
-    private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
     private substanceService: SubstanceService,
   ) { }
 
   ngOnInit() {
     this.getVocabularies();
-    this.overlayContainer = this.overlayContainerService.getContainerElement();
-    const resolver = this.substanceFormService.resolvedMol.subscribe(mol => {
-      this.nameResolved.emit(mol);
-    });
-    this.subscriptions.push(resolver);
     this.optical = this.privateStructure.opticalActivity;
   }
 
@@ -92,17 +76,6 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     this.privateStructure.access = access;
   }
 
-  duplicateCheck() {
-    this.structureErrorsArray = [];
-    this.substanceFormService.structureDuplicateCheck().subscribe (response => {
-      response.forEach(resp => {
-        if (resp.messageType && resp.messageType !== 'INFO') {
-          this.structureErrorsArray.push(resp);
-        }
-      });
-    });
-  }
-
 
   inCV(vocab: Array<VocabularyTerm>, property: string): boolean {
     if (vocab) {
@@ -111,67 +84,6 @@ export class StructureFormComponent implements OnInit, OnDestroy {
       return true;
     }
 
-  }
-  openStructureImportDialog(): void {
-    this.gaService.sendEvent('structureForm', 'button:import', 'import structure');
-    const dialogRef = this.dialog.open(StructureImportComponent, {
-      height: 'auto',
-      width: '650px',
-      data: {}
-    });
-    this.overlayContainer.style.zIndex = '1002';
-
-    dialogRef.afterClosed().subscribe((response?: InterpretStructureResponse) => {
-      this.overlayContainer.style.zIndex = null;
-      if (response != null) {
-        this.structureImported.emit(response);
-      }
-    }, () => {});
-  }
-
-  openNameResolverDialog(): void {
-    this.gaService.sendEvent('structureForm', 'button:resolveName', 'resolve name');
-    const dialogRef = this.dialog.open(NameResolverDialogComponent, {
-      height: 'auto',
-      width: '800px',
-      data: {}
-    });
-    this.overlayContainer.style.zIndex = '1002';
-
-    dialogRef.afterClosed().subscribe((molfile?: string) => {
-      this.overlayContainer.style.zIndex = null;
-      if (molfile != null && molfile !== '') {
-        this.nameResolved.emit(molfile);
-      }
-    }, () => {});
-  }
-
-  openStructureImageModal(): void {
-
-    const dialogRef = this.dialog.open(StructureImageModalComponent, {
-      height: '90%',
-      width: '650px',
-      panelClass: 'structure-image-panel',
-      data: {
-        structure: this.privateStructure.id
-      }
-    });
-
-    this.overlayContainer.style.zIndex = '1002';
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.overlayContainer.style.zIndex = null;
-    }, () => {
-      this.overlayContainer.style.zIndex = null;
-    });
-  }
-
-  exportStructure(): void {
-    this.export.emit();
-  }
-
-  dismissErrorMessage(index: number) {
-    this.structureErrorsArray.splice(index, 1);
   }
 
   fixLink(link: string) {

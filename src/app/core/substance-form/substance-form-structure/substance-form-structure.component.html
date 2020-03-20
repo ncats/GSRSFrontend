@@ -1,22 +1,79 @@
 <div>
   <div>
     <div>
-      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)"></app-structure-editor>
+      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)">
+      </app-structure-editor>
     </div>
     <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">
       {{userMessage}}
     </div>
   </div>
+  <div class="button-row" *ngIf="structure && substanceType === 'polymer'">
+    <span class="middle-fill"></span>
+    <span class="right-buttons">
+      <button mat-button color="primary" matTooltip="Import options" (click)="openStructureImportDialog()">
+        <mat-icon svgIcon="cloud_upload"></mat-icon>
+        Import
+      </button>
+      <button (click)="openStructureExportDialog()" mat-button color="primary" matTooltip="export structure">
+        <mat-icon svgIcon="get_app"></mat-icon>
+        Export
+      </button>
+      <button mat-button color="primary" matTooltip="preview structure stereochemistry"
+        (click)="openStructureImageModal()">
+        <mat-icon svgIcon="zoom_in"></mat-icon> View stereochemistry
+      </button>
+    </span>
+  </div>
+  <div class="button-row" *ngIf="structure && substanceType === 'structure'">
+    <span class="left-buttons">
+      <button (click)="duplicateCheck()" matTooltip="check the database for duplicate structures" mat-button
+        color="primary" class="dupe-check">
+        <mat-icon svgIcon="search"></mat-icon>
+        Check for duplicates
+      </button>
+    </span>
+    <span class="middle-fill"></span>
+    <span class="right-buttons">
+      <button mat-button color="primary" matTooltip="Import options" [matMenuTriggerFor]="importMenu">
+        <mat-icon svgIcon="cloud_upload"></mat-icon>
+        Import...
+      </button>
+      <button (click)="exportStructure()" mat-button color="primary" matTooltip="export structure">
+        <mat-icon svgIcon="get_app"></mat-icon>
+        Export
+      </button>
+      <button mat-button color="primary" matTooltip="preview structure stereochemistry"
+        (click)="openStructureImageModal()">
+        <mat-icon svgIcon="zoom_in"></mat-icon> View stereochemistry
+      </button>
+    </span>
 
-  <app-structure-form
-    [structure]="structure"
-    showSettings="true"
-    [type]="substanceType"
-    (structureImported)="structureImported($event)"
-    (nameResolved)="nameResolved($event)"
-    (export)="openStructureExportDialog()">
+    <mat-menu #importMenu="matMenu">
+      <button mat-menu-item (click)="openStructureImportDialog()">
+        Import Structure
+      </button>
+      <button mat-menu-item (click)="openNameResolverDialog()">
+        Resolve name
+      </button>
+    </mat-menu>
+  </div>
+  <div class="submission-messages" *ngIf="structureErrorsArray && structureErrorsArray.length > 0">
+    <div class="validation-message" *ngFor="let err of structureErrorsArray; index as i">
+      <div class="message-type" [ngClass]="err.messageType">{{err.messageType}}</div>
+      <div class="message">{{err.message}}<span *ngFor="let link of err.links"><br />
+          <a [href]="fixLink(link.href)" class="internal-link" target="_blank">
+            {{link.text}}
+          </a></span></div>
+      <button mat-icon-button matTooltip="Dismiss" (click)="dismissErrorMessage(i)">
+        <mat-icon svgIcon="close"></mat-icon>
+      </button>
+    </div>
+  </div>
+  <app-structure-form [structure]="structure" showSettings="true" [type]="substanceType">
   </app-structure-form>
-<div class = "button-container" *ngIf = "substanceType === 'polymer'">
-  <button class = "mat-flat-button mat-primary" color = "primary" (click) = "generateSRU()" matTooltip = "generate structural units for this structure">Generate SRUs</button>
-</div>
+  <div class="button-container" *ngIf="substanceType === 'polymer'">
+    <button class="mat-flat-button mat-primary" color="primary" (click)="generateSRU()"
+      matTooltip="generate structural units for this structure">Generate SRUs</button>
+  </div>
 </div>
