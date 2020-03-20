@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
 import { DragDropPasteDirective } from '@gsrs-core/substance-form/substance-form-structure/drag-drop-paste.component';
+import { MatMenuModule, MatIconModule, MatButtonModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -22,7 +23,10 @@ import { DragDropPasteDirective } from '@gsrs-core/substance-form/substance-form
     FormsModule,
     MatSelectModule,
     SubstanceFormModule,
-    NameResolverModule
+    NameResolverModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule
   ],
   declarations: [
     SubstanceFormStructureComponent,

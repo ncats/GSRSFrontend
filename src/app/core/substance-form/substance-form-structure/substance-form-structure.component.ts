@@ -1,21 +1,26 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceFormBase } from '../substance-form-base';
 import { Editor } from '../../structure-editor/structure.editor.model';
 import { SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { StructureService } from '../../structure/structure.service';
 import { LoadingService } from '../../loading/loading.service';
-import { InterpretStructureResponse } from '@gsrs-core/structure';
+import { InterpretStructureResponse, StructureImportComponent, StructureImageModalComponent } from '@gsrs-core/structure';
 import { MatDialog } from '@angular/material';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { StructureDuplicationMessage } from '../substance-form.model';
+import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
+import { Subscription } from 'rxjs';
+import { SubstanceService } from '@gsrs-core/substance/substance.service';
 
 @Component({
   selector: 'app-substance-form-structure',
   templateUrl: './substance-form-structure.component.html',
   styleUrls: ['./substance-form-structure.component.scss']
 })
-export class SubstanceFormStructureComponent extends SubstanceFormBase implements OnInit, AfterViewInit {
+export class SubstanceFormStructureComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
   structureEditor: Editor;
   structure: SubstanceStructure;
   userMessage: string;
@@ -25,13 +30,17 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   mol: string;
   isInitializing = true;
   private overlayContainer: HTMLElement;
+  structureErrorsArray: Array<StructureDuplicationMessage>;
+  subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService,
     private structureService: StructureService,
     private loadingService: LoadingService,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private gaService: GoogleAnalyticsService,
+    private substanceService: SubstanceService
   ) {
     super();
   }
@@ -63,11 +72,22 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
         });
       }
     });
-
+    const resolver = this.substanceFormService.resolvedMol.subscribe(mol => {
+      if (mol != null && mol !== '') {
+        this.updateStructureForm(mol);
+        this.structureEditor.setMolecule(mol);
+      }
+    });
   }
 
   ngAfterViewInit() {
 
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   editorOnLoad(editor: Editor): void {
@@ -142,18 +162,24 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     }
   }
 
+  openStructureImportDialog(): void {
+    this.gaService.sendEvent('structureForm', 'button:import', 'import structure');
+    const dialogRef = this.dialog.open(StructureImportComponent, {
+      height: 'auto',
+      width: '650px',
+      data: {}
+    });
+    this.overlayContainer.style.zIndex = '1002';
 
-
-  structureImported(structurePostResponse?: InterpretStructureResponse): void {
-    if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
-      this.structureEditor.setMolecule(structurePostResponse.structure.molfile);
-    }
-    this.processStructurePostResponse(structurePostResponse);
-  }
-
-  nameResolved(molfile: string): void {
-    this.updateStructureForm(molfile);
-    this.structureEditor.setMolecule(molfile);
+    dialogRef.afterClosed().subscribe((response?: InterpretStructureResponse) => {
+      this.overlayContainer.style.zIndex = null;
+      if (response != null) {
+        if (response && response.structure && response.structure.molfile) {
+          this.structureEditor.setMolecule(response.structure.molfile);
+        }
+        this.processStructurePostResponse(response);
+      }
+    }, () => {});
   }
 
   generateSRU(): void {
@@ -181,5 +207,62 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     }, () => {
       this.overlayContainer.style.zIndex = null;
     });
+  }
+
+  openNameResolverDialog(): void {
+    this.gaService.sendEvent('structureForm', 'button:resolveName', 'resolve name');
+    const dialogRef = this.dialog.open(NameResolverDialogComponent, {
+      height: 'auto',
+      width: '800px',
+      data: {}
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe((molfile?: string) => {
+      this.overlayContainer.style.zIndex = null;
+      if (molfile != null && molfile !== '') {
+        this.updateStructureForm(molfile);
+        this.structureEditor.setMolecule(molfile);
+      }
+    }, () => {});
+  }
+
+  openStructureImageModal(): void {
+
+    const dialogRef = this.dialog.open(StructureImageModalComponent, {
+      height: '90%',
+      width: '650px',
+      panelClass: 'structure-image-panel',
+      data: {
+        structure: this.structure.id
+      }
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+    });
+  }
+
+  duplicateCheck() {
+    this.structureErrorsArray = [];
+    this.substanceFormService.structureDuplicateCheck().subscribe (response => {
+      response.forEach(resp => {
+        if (resp.messageType && resp.messageType !== 'INFO') {
+          this.structureErrorsArray.push(resp);
+        }
+      });
+    });
+  }
+
+  dismissErrorMessage(index: number) {
+    this.structureErrorsArray.splice(index, 1);
+  }
+
+  fixLink(link: string) {
+    return this.substanceService.oldLinkFix(link);
   }
 }
