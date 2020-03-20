@@ -2111,6 +2111,15 @@ export class SubstanceFormService {
     }
   }
 
+  structureDuplicateCheck(): any {
+    return new Observable(observer => {
+      this.structureService.duplicateCheck(this.substance).subscribe(response => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
   approveSubstance(): Observable<any> {
     return new Observable(observer => {
       const results: SubstanceFormResults = {
