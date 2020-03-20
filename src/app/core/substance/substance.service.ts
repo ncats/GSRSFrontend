@@ -557,7 +557,14 @@ export class SubstanceService extends BaseHttpService {
      return this.http.post(url, params);
   }
 
-
+  oldLinkFix(link: string): string {
+    if (link && link.length > 10) {
+      const link3 = this.baseUrl + 'beta/substances/' + link.substr((link.length - 10), link.length);
+      return link3;
+    } else {
+      return link;
+    }
+  }
 
 
 }

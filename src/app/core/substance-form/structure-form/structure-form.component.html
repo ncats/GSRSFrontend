@@ -63,7 +63,7 @@
         <div class="validation-message" *ngFor="let err of structureErrorsArray; index as i" >
       <div class="message-type" [ngClass] = "err.messageType">{{err.messageType}}</div>
       <div class="message">{{err.message}}<span *ngFor = "let link of err.links"><br/>
-        <a [href] = "link.href.replace('ginas/app/substance','substances')" class = "internal-link" target = "_blank">
+        <a [href] = "fixLink(link.href)" class = "internal-link" target = "_blank">
           {{link.text}}
         </a></span></div>
       <button mat-icon-button matTooltip="Dismiss" (click)="dismissErrorMessage(i)">

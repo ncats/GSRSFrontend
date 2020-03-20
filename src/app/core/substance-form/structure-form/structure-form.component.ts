@@ -12,6 +12,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {Subscription} from 'rxjs';
 import {StructureDuplicationMessage} from '@gsrs-core/substance-form/substance-form.model';
+import {SubstanceService} from '@gsrs-core/substance';
 
 @Component({
   selector: 'app-structure-form',
@@ -40,7 +41,8 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private gaService: GoogleAnalyticsService,
     private substanceFormService: SubstanceFormService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private substanceService: SubstanceService,
   ) { }
 
   ngOnInit() {
@@ -170,5 +172,9 @@ export class StructureFormComponent implements OnInit, OnDestroy {
 
   dismissErrorMessage(index: number) {
     this.structureErrorsArray.splice(index, 1);
+  }
+
+  fixLink(link: string) {
+    return this.substanceService.oldLinkFix(link);
   }
 }
