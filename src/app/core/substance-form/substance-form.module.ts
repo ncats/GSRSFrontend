@@ -66,6 +66,7 @@ import {NgxJsonViewerModule} from 'ngx-json-viewer';
 import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
 import { RouterModule } from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 
 @NgModule({
   imports: [
@@ -138,7 +139,8 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     MonomerFormComponent,
     StructuralUnitFormComponent,
     JsonDialogComponent,
-    AuditInfoComponent
+    AuditInfoComponent,
+    SubmitSuccessDialogComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -190,7 +192,8 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     PhysicalParameterFormDialogComponent,
     CvDialogComponent,
     JsonDialogComponent,
-    AuditInfoComponent
+    AuditInfoComponent,
+    SubmitSuccessDialogComponent
   ]
 })
 export class SubstanceFormModule { }
