@@ -187,6 +187,11 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   navigateToSearchResults(searchTerm: string) {
+    if (searchTerm && searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && searchTerm.indexOf(':') < 0
+      && searchTerm.indexOf(' AND ') < 0 && searchTerm.indexOf(' OR ') < 0 && searchTerm.length > 0) {
+      searchTerm = '"' + searchTerm + '"';
+      this.searchValue = '"' + this.searchValue + '"';
+    }
 
     const navigationExtras: NavigationExtras = {
       queryParams: searchTerm ? { 'search': searchTerm } : null
