@@ -449,7 +449,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
                 this.toggle[facetIndex] = true;
                 if (facet === facetsCopy[facetIndex].name) {
-                  console.log('did it');
                   if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
                     let hasValues = false;
                     for (let valueIndex = 0; valueIndex < facetsCopy[facetIndex].values.length; valueIndex++) {
@@ -475,7 +474,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         });
 
       }
-      console.log(newFacets);
 /* Commented out for now, would show extra facets if not enough shown
       if (newFacets.length < 15) {
         const numFillFacets = 15 - newFacets.length;
