@@ -1,9 +1,30 @@
-<div class="details-container">
+<br>
+<hr>
+<br>
+<span matBadge="{{product.applicationIngredientList.length}}" matBadgeColor="warn" matBadgeOverlap="false">
+  <span class="title1">INGREDIENT</span>
+</span>
 
+<span class=""></span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button mat-raised-button color="primary" (click)="addNewIngredient(0)" matTooltip="Add New Ingredient">
+  <mat-icon svgIcon="add_circle_outline"></mat-icon>Add New
+  Ingredient
+</button>
+
+<div class="">
   <br><br>
-  <div class="details-box">
-    INGREDIENT
-    <div *ngFor="let ingredient of product.applicationIngredientList">
+  <div *ngFor="let ingredient of product.applicationIngredientList; let ingredIndex = index">
+
+    <fieldset class="border">
+      <legend class="border">Ingredient Details:&nbsp;<b><span class="font17px">{{ingredIndex + 1}}</span></b></legend>
+
+      <div class="form-row">
+        <mat-form-field class="">
+          <input matInput placeholder="Applicant Ingredient Name" [(ngModel)]="ingredient.applicantIngredName"
+            name="applicantIngredName" />
+        </mat-form-field>
+      </div>
 
       <div class="form-row">
         <mat-form-field class="">
@@ -14,23 +35,23 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-    <!--
-       <mat-form-field class="">
+
+        <mat-form-field class="">
           <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
         </mat-form-field>
 
-       <mat-form-field class="">
+        <mat-form-field class="">
           <input matInput placeholder="Low" [(ngModel)]="ingredient.low" name="low" />
         </mat-form-field>
 
-       <mat-form-field class="">
+        <mat-form-field class="">
           <input matInput placeholder="High" [(ngModel)]="ingredient.high" name="high" />
         </mat-form-field>
 
         <mat-form-field class="">
           <mat-label>Unit</mat-label>
           <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
-            <mat-option *ngFor="let unit of unitList" [value]="routeAunitdmin.value">
+            <mat-option *ngFor="let unit of unitList" [value]="unit.value">
               {{unit.display}}
             </mat-option>
           </mat-select>
@@ -44,19 +65,8 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        
-        <mat-form-field class="">
-          <mat-label>Unit</mat-label>
-          <mat-select matNativeControl [(ngModel)]="product.unit" name="unit">
-            <mat-option *ngFor="let unit of unitList" [value]="unit.value">
-              {{unit.display}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-      </div>
-      -->
-    </div> <!-- Product repeat -->
-
-  </div>
+      </div> <!-- row-->
+    </fieldset>
+    <br>
+  </div> <!-- Ingredient repeat -->
 </div>

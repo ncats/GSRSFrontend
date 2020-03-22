@@ -1,9 +1,43 @@
-<div class="details-container">
+<div class="">
+  <br>
+  <hr>
+  <br>
+  <span class="title1"></span>
+  <span matBadge="{{application.applicationProductList.length}}" matBadgeOverlap="false">
+    <span class="title1">PRODUCT</span>
+  </span>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <button mat-raised-button color="primary" (click)="addNewProduct()" matTooltip="Add New Product">
+    <mat-icon svgIcon="add_circle_outline"></mat-icon>Add New
+    Product
+  </button>
+  <br><br>
 
-  <div class="details-box">
-    PRODUCT
+  <div *ngFor="let product of application.applicationProductList; let prodIndex = index">
 
-    <div *ngFor="let product of application.applicationProductList">
+    <fieldset class="border">
+      <legend class="border">Product Details:&nbsp;<b><span class="colorgreen font17px">{{prodIndex + 1}}</span></b>
+      </legend>
+
+      <!-- PRODUCT NAME LIST -->
+      <div *ngFor="let prodName of product.applicationProductNameList">
+
+        <div class="form-row">
+          <mat-form-field class="">
+            <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName" name="productName" />
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <mat-label>Product Name Type</mat-label>
+            <mat-select matNativeControl [(ngModel)]="prodName.productNameType" name="productNameType">
+              <mat-option *ngFor="let productNameType of productNameTypeList" [value]="productNameType.value">
+                {{productNameType.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      </div> <!-- ngFor product Name List -->
 
       <div class="form-row">
         <mat-form-field class="">
@@ -32,7 +66,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        
+
         <mat-form-field class="">
           <input matInput placeholder="Amount" [(ngModel)]="product.amount" name="amount" />
         </mat-form-field>
@@ -47,12 +81,13 @@
         </mat-form-field>
       </div>
 
-       <!-- INGREDIENT -->
-        <div class="form-row">
-          <app-ingredient-form [product]="product"></app-ingredient-form>
-        </div>
- 
-    </div> <!-- Product repeat -->
+      <!-- INGREDIENT -->
+      <div class="form-row">
+        <app-ingredient-form [product]="product"></app-ingredient-form>
+      </div>
 
-  </div>
+    </fieldset>
+    <br><br><br>
+  </div> <!-- Product repeat -->
+
 </div>

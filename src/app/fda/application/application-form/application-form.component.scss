@@ -1,3 +1,123 @@
+.top-fixed {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 64px;
+  width: 100%;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  box-shadow:     0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  z-index: 1001;
+}
+
+.form-content-container {
+  // position: fixed;
+  // top: 121px;
+  // right: 0;
+  // bottom: 0;
+  // left: 0;
+  overflow: hidden;
+  padding-top: 121px;
+}
+
+.scrollable-container {
+  padding-top: 15px;
+}
+
+.cards-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  flex-direction: column;
+}
+
+.validate-button{
+  margin-left:15px;
+}
+
+.hide-show-messages {
+  margin-left: 10px;
+  border: 1px solid;
+}
+
+.actions-container {
+  max-width: 1028px;
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  display: flex;
+}
+
+.dismiss-container {
+  display: flex;
+}
+
+.middle-fill {
+  flex: 1 1 auto;
+}
+
+.submission-messages {
+  overflow: hidden;
+  height: auto;
+  -webkit-transition: all 500ms ease-out;
+  transition: all 500ms ease-out;
+  max-width: 1028px;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+
+  &.collapsed {
+    max-height: 0;
+  }
+
+  &.expanded {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .submission-message {
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .validation-message {
+    display: flex;
+    padding: 5px 0;
+    align-items: center;
+
+    .message-type {
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-right: 20px;
+      padding:10px;
+      border-radius:3px;
+    }
+  }
+
+  .dismiss-container {
+    display: flex;
+  }
+
+  .warning-message {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+
+  }
+
+
+  .error-message {
+    color: #a94442;
+    background-color: #f2dede;
+  }
+
+}
+
+
 .details-container {
   width: 100%;
   display: flex;
@@ -33,4 +153,8 @@
 
 .padtop17px {
   padding-top: 17px;
+}
+
+.bordergray {
+  border: 1px solid gray;
 }

@@ -9,8 +9,9 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
-import { ApplicationSrs } from '../model/application.model';
+import { ApplicationSrs, ValidationMessage } from '../model/application.model';
 import { Subscription } from 'rxjs';
+import {take} from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JsonDialogFdaComponent } from '../application-form/json-dialog-fda/json-dialog-fda.component';
@@ -33,7 +34,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   isLoading = true;
   showSubmissionMessages = false;
   submissionMessage: string;
- // validationMessages: Array<ValidationMessage>;
+  validationMessages: Array<ValidationMessage>;
   validationResult = false;
   private subscriptions: Array<Subscription> = [];
   copy: string;
@@ -54,13 +55,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    /*
-     this.loadingService.setLoading(true);
-     this.applicationService.loadApplication();
-     this.application = this.applicationService.application;
-     this.getVocabularies();
- */
-
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const routeSubscription = this.activatedRoute
@@ -117,26 +111,80 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
+  validate(validationType?: string ): void {
+    /*
+    this.isLoading = true;
+    this.serverError = false;
+    this.loadingService.setLoading(true);
+    this.applicationService.validateApplication().pipe(take(1)).subscribe(results => {
+      this.submissionMessage = null;
+      this.validationMessages = results.validationMessages.filter(
+        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+      this.validationResult = results.valid;
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      if (this.validationMessages.length === 0 && results.valid === true) {
+        this.submissionMessage = 'Application is Valid. Would you like to submit?';
+      }
+    }, error => {
+      this.addServerError(error);
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    });
+    */
+    this.isLoading = false;
+    this.validationResult = true;
+    this.showSubmissionMessages = true;
+    this.submissionMessage = 'Application is Valid. Would you like to submit?';
+  }
+
+  toggleValidation(): void {
+    this.showSubmissionMessages = !this.showSubmissionMessages;
+  }
+
+  addServerError (error: any): void {
+    this.serverError = true;
+    this.validationResult = false;
+    this.validationMessages = null;
+
+    const message: ValidationMessage = {
+      actionType: 'server failure',
+      links: [],
+      appliedChange: false,
+      suggestedChange: false,
+      messageType : 'ERROR',
+      message : 'Unknown Server Error'
+    };
+    if ( error && error.error && error.error.message ) {
+      message.message =  'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
+    } else if ( error && error.error && (typeof error.error) === 'string') {
+        message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
+    } else if ( error && error.message ) {
+      message.message = 'Server Error ' + (error.status + ': ' || '') + error.message;
+    }
+    this.validationMessages = [message];
+    this.showSubmissionMessages = true;
+  }
+
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.applicationService.saveApplication().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
-  //    this.validationMessages = null;
+      this.validationMessages = null;
       this.submissionMessage = 'Application was saved successfully!';
       this.showSubmissionMessages = true;
       this.validationResult = false;
-      /*
       setTimeout(() => {
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
         if (!this.id) {
-          this.id = response.uuid;
-          this.router.navigate(['/substances', response.uuid, 'edit']);
+          this.id = response.id;
+          this.router.navigate(['/application', response.id, 'edit']);
         }
       }, 4000);
-      */
     }
     /*
     , (error: SubstanceFormResults) => {
