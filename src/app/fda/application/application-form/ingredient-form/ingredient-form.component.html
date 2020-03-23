@@ -16,6 +16,21 @@
   <br><br>
   <div *ngFor="let ingredient of product.applicationIngredientList; let ingredIndex = index">
 
+    <!-- Buttons: delete, review -->
+    <span class="padbottom0px bordergray">
+      <button mat-icon-button (click)="removeRow(i)">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+      &nbsp;&nbsp;
+      <button mat-icon-button (click)="removeRow(i)">
+        <mat-icon>file_copy</mat-icon>
+      </button>
+      &nbsp;&nbsp;
+      <button mat-icon-button (click)="removeRow(i)">
+        <mat-icon>check_circle</mat-icon>
+      </button>
+    </span>
+
     <fieldset class="border">
       <legend class="border">Ingredient Details:&nbsp;<b><span class="font17px">{{ingredIndex + 1}}</span></b></legend>
 
