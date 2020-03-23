@@ -17,6 +17,7 @@ import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { StructureService } from '@gsrs-core/structure';
 import { SubstanceSummaryDynamicContent } from './substance-summary-dynamic-content.component';
 import {Router} from '@angular/router';
+import {Alignment} from '@gsrs-core/utils';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -33,7 +34,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   @Input() names?: Array<SubstanceName>;
   @Input() codeSystemNames?: Array<string>;
   @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
-
+  alignments?: Array<Alignment>;
   constructor(
     public utilsService: UtilsService,
     public gaService: GoogleAnalyticsService,
@@ -49,9 +50,11 @@ export class SubstanceSummaryCardComponent implements OnInit {
     this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     if (this.substance.protein) {
       this.subunits = this.substance.protein.subunits;
+      this.getAlignments();
     }
     if (this.substance.nucleicAcid) {
       this.subunits = this.substance.nucleicAcid.subunits;
+      this.getAlignments();
     }
   }
 
@@ -59,6 +62,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   set substance(substance: SubstanceSummary) {
     if (substance != null) {
       this.privateSubstance = substance;
+
       this.loadDynamicContent();
     }
   }
@@ -106,5 +110,20 @@ export class SubstanceSummaryCardComponent implements OnInit {
       const componentRef = viewContainerRef.createComponent(componentFactory);
       (<SubstanceSummaryDynamicContent>componentRef.instance).substance = this.privateSubstance;
     });
+  }
+
+  getAlignments(): void {
+    if (this.substance._matchContext) {
+      if (this.substance._matchContext.alignments) {
+        this.alignments = this.substance._matchContext.alignments;
+        this.alignments.forEach(alignment => {
+          this.subunits.forEach(subunit => {
+            if (subunit.uuid === alignment.id) {
+              alignment.subunitIndex = subunit.subunitIndex;
+            }
+          });
+        });
+      }
+    }
   }
 }

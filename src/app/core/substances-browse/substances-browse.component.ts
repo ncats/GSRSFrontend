@@ -43,6 +43,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public substances: Array<SubstanceDetail>;
   public exactMatchSubstances: Array<SubstanceDetail>;
   public facets: Array<Facet>;
+  private rawFacets: Array<Facet>;
   public displayFacets: Array<DisplayFacet> = [];
   private privateFacetParams: SubstanceFacetParam;
   pageIndex: number;
@@ -66,7 +67,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private overlayContainer: HTMLElement;
   toggle: Array<boolean> = [];
   private subscriptions: Array<Subscription> = [];
-  isAdmin: boolean;
+  isAdmin = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array<SubstanceName> } = {};
   codes: {
@@ -80,6 +81,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion>} = {};
   matchTypes?: Array<string> = [];
   narrowSearchSuggestionsCount = 0;
+  private facetsAuthSubscription: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -124,7 +126,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.facetsFromParams();
     this.searchSubstances();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    });
+    this.subscriptions.push(authSubscription);
 
     this.facetSearchChanged.pipe(
       debounceTime(500),
@@ -176,7 +181,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   facetsFromParams() {
@@ -288,7 +292,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-            this.populateFacets(pagingResponse.facets);
+            this.rawFacets = pagingResponse.facets;
+            this.populateFacets();
           }
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
@@ -423,9 +428,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.location.go(urlTree.toString());
   }
 
-  private populateFacets(facets: Array<Facet>): void {
-    const subscription = this.authService.getAuth().subscribe(auth => {
-
+  private populateFacets(): void {
+    if (this.facetsAuthSubscription != null) {
+      this.facetsAuthSubscription.unsubscribe();
+      this.facetsAuthSubscription = null;
+    }
+    this.facetsAuthSubscription = this.authService.getAuth().subscribe(auth => {
+      const facetsCopy = this.rawFacets.slice();
       const newFacets = [];
       this.auth = auth;
       this.showAudit = this.authService.hasRoles('admin');
@@ -437,20 +446,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           if (this.configService.configData.facets[facetKey].length
             && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
             this.configService.configData.facets[facetKey].forEach(facet => {
-              for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
+              for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
                 this.toggle[facetIndex] = true;
-                if (facet === facets[facetIndex].name) {
-                  if (facets[facetIndex].values != null && facets[facetIndex].values.length) {
+                if (facet === facetsCopy[facetIndex].name) {
+                  if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
                     let hasValues = false;
-                    for (let valueIndex = 0; valueIndex < facets[facetIndex].values.length; valueIndex++) {
-                      if (facets[facetIndex].values[valueIndex].count) {
+                    for (let valueIndex = 0; valueIndex < facetsCopy[facetIndex].values.length; valueIndex++) {
+                      if (facetsCopy[facetIndex].values[valueIndex].count) {
                         hasValues = true;
                         break;
                       }
                     }
 
                     if (hasValues) {
-                      const facetToAdd = facets.splice(facetIndex, 1);
+                      const facetToAdd = facetsCopy.splice(facetIndex, 1);
                       facetIndex--;
                       newFacets.push(facetToAdd[0]);
                       this.searchText[facetToAdd[0].name] = { value: '', isLoading: false};
@@ -465,7 +474,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         });
 
       }
-
 /* Commented out for now, would show extra facets if not enough shown
       if (newFacets.length < 15) {
         const numFillFacets = 15 - newFacets.length;
@@ -498,7 +506,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.facets = newFacets;
       this.cleanFacets();
     });
-    this.subscriptions.push(subscription);
   }
 
   applyFacetsFilter(facetName: string) {
@@ -740,7 +747,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.clearFacetSelection();
     if (this.privateStructureSearchTerm != null && this.privateStructureSearchTerm !== '') {
       this.clearStructureSearch();
-    } else if (this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') {
+    } else if ((this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') ||
+    (this.privateSequenceSearchKey != null && this.privateSequenceSearchKey !== '')) {
       this.clearSequenceSearch();
     } else {
       this.clearSearch();
@@ -797,11 +805,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.view = event.value;
   }
 
-  getSequenceDisplay(sequence: string): string {
-    if (sequence.length < 16) {
-      return sequence;
+  getSequenceDisplay(sequence?: string): string {
+    if (sequence != null) {
+      if (sequence.length < 16) {
+        return sequence;
+      } else {
+        return `${sequence.substr(0, 15)}...`;
+      }
     } else {
-      return `${sequence.substr(0, 15)}...`;
+      return '';
     }
   }
 

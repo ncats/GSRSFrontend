@@ -25,7 +25,6 @@ export class SubstanceFormMoietiesComponent extends SubstanceFormBase implements
     this.hiddenStateUpdate.emit(true);
     this.substanceFormService.substanceMoieties.subscribe(moieties => {
       this.moieties = moieties;
-    //  console.log(moieties);
       if (moieties && moieties.length > 1) {
         this.hiddenStateUpdate.emit(false);
       } else {

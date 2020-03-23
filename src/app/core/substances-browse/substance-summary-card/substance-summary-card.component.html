@@ -63,7 +63,7 @@
         <mat-menu #sequenceMenu="matMenu">
           <a mat-menu-item *ngFor = "let unit of subunits; index as index" [routerLink]="['/sequence-search']"
              [queryParams]="{substance : substance.uuid, subunit : unit.uuid, seq_type : substance.substanceClass}">
-            subunit {{unit.subunitIndex}} ({{unit.sequence.length}}) similarity search
+            subunit {{unit.subunitIndex}} ({{unit.sequence && unit.sequence.length || 0}}) similarity search
           </a>
         </mat-menu>
 
@@ -204,6 +204,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div *ngIf = "alignments" >
+      <app-sequence-alignment *ngFor = "let alignment of alignments"  [alignmentArray] = "alignment"></app-sequence-alignment>
     </div>
     <div>
       <app-substance-hierarchy [uuid] = "this.substance.uuid" [name] = "this.substance._name" [approvalID] ="this.substance.approvalID" ></app-substance-hierarchy>

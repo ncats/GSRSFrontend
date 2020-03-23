@@ -2,14 +2,8 @@ import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angula
 import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { MatDialog } from '@angular/material';
-import { StructureImportComponent } from '../../structure/structure-import/structure-import.component';
-import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
-import { StructurePostResponse } from '../../structure/structure-post-response.model';
-import { StructureImageModalComponent } from '../../structure/structure-image-modal/structure-image-modal.component';
-import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
+import { InterpretStructureResponse } from '../../structure/structure-post-response.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -26,28 +20,17 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   @Input() hideAccess = false;
   @Input() showSettings = false;
   @Input() type?: string;
-  @Output() structureImported = new EventEmitter<StructurePostResponse>();
-  @Output() nameResolved = new EventEmitter<string>();
-  @Output() export = new EventEmitter<void>();
-  private overlayContainer: HTMLElement;
+  @Output() structureImported = new EventEmitter<InterpretStructureResponse>();
   private subscriptions: Array<Subscription> = [];
 
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private dialog: MatDialog,
-    private gaService: GoogleAnalyticsService,
-    private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnInit() {
     this.getVocabularies();
-    this.overlayContainer = this.overlayContainerService.getContainerElement();
-    const resolver = this.substanceFormService.resolvedMol.subscribe(mol => {
-      this.nameResolved.emit(mol);
-    });
-    this.subscriptions.push(resolver);
     this.optical = this.privateStructure.opticalActivity;
   }
 
@@ -97,62 +80,4 @@ export class StructureFormComponent implements OnInit, OnDestroy {
     }
 
   }
-  openStructureImportDialog(): void {
-    this.gaService.sendEvent('structureForm', 'button:import', 'import structure');
-    const dialogRef = this.dialog.open(StructureImportComponent, {
-      height: 'auto',
-      width: '650px',
-      data: {}
-    });
-    this.overlayContainer.style.zIndex = '1002';
-
-    dialogRef.afterClosed().subscribe((response?: StructurePostResponse) => {
-      this.overlayContainer.style.zIndex = null;
-      if (response != null) {
-        this.structureImported.emit(response);
-      }
-    }, () => {});
-  }
-
-  openNameResolverDialog(): void {
-    this.gaService.sendEvent('structureForm', 'button:resolveName', 'resolve name');
-    const dialogRef = this.dialog.open(NameResolverDialogComponent, {
-      height: 'auto',
-      width: '800px',
-      data: {}
-    });
-    this.overlayContainer.style.zIndex = '1002';
-
-    dialogRef.afterClosed().subscribe((molfile?: string) => {
-      this.overlayContainer.style.zIndex = null;
-      if (molfile != null && molfile !== '') {
-        this.nameResolved.emit(molfile);
-      }
-    }, () => {});
-  }
-
-  openStructureImageModal(): void {
-
-    const dialogRef = this.dialog.open(StructureImageModalComponent, {
-      height: '90%',
-      width: '650px',
-      panelClass: 'structure-image-panel',
-      data: {
-        structure: this.privateStructure.id
-      }
-    });
-
-    this.overlayContainer.style.zIndex = '1002';
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.overlayContainer.style.zIndex = null;
-    }, () => {
-      this.overlayContainer.style.zIndex = null;
-    });
-  }
-
-  exportStructure(): void {
-    this.export.emit();
-  }
-
 }

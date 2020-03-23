@@ -37,7 +37,7 @@ export class UtilsService {
     if (!stereo) {
       stereo = false;
     }
-    return `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}`;
+    return `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}&context=nocache`;
   }
 
   handleMatSidenavOpen(widthBreakingPoint?: number): void {

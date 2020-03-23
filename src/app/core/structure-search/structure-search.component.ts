@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
-import { StructurePostResponse } from '../structure/structure-post-response.model';
+import { InterpretStructureResponse } from '../structure/structure-post-response.model';
 import { MatDialog } from '@angular/material';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { Editor } from '../structure-editor/structure.editor.model';
@@ -83,7 +83,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   search(): void {
     const mol = this.editor.getMolfile();
-    this.structureService.postStructure(mol).subscribe((response: StructurePostResponse) => {
+    this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
       const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
       this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
       this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
@@ -132,7 +132,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe((structurePostResponse?: StructurePostResponse) => {
+    dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
       this.overlayContainer.style.zIndex = null;
 
       if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {

@@ -36,4 +36,8 @@ export interface ClinicalTrial {
   sponsorList: Array<string>;
   clinicalTrialDrug: Array<ClinicalTrialDrug>;
   internalVersion: number;
+
+  firstReceived: string;
+  lastVerified: string;
+  primaryCompletionDate: string;
 }

@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import {SubstanceHttpParams} from '../substance/substance-http-params';
 import { ResolverResponse } from './structure-post-response.model';
-import { StructurePostResponse } from './structure-post-response.model';
+import { InterpretStructureResponse } from './structure-post-response.model';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 
 @Injectable({
@@ -60,14 +60,19 @@ export class StructureService {
     return this.http.get<SubstanceDetail>(url, options);
   }
 
-  postStructure(mol: string): Observable<StructurePostResponse> {
-    const url = `${this.configService.configData.apiBaseUrl}structure`;
-    return this.http.post<StructurePostResponse>(url, mol);
+  interpretStructure(mol: string): Observable<InterpretStructureResponse> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/interpretStructure`;
+    return this.http.post<InterpretStructureResponse>(url, mol);
   }
 
   molvec(file: any): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/foo/ocrStructure`;
     return this.http.post<any>(url, file);
 
+  }
+
+  duplicateCheck(sub: SubstanceDetail): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}register/duplicateCheck`;
+    return this.http.post<any>(url, sub);
   }
 }

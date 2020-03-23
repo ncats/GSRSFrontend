@@ -45,8 +45,10 @@ export interface Alignment {
   global?: number;
   iden?: number;
   query?: string;
-  score?: 1;
-  sub?: 1;
+  score?: number;
+  sub?: number;
   target?: string;
+  id?: string;
+  subunitIndex?: number;
   alignments?: Array<Alignment>;
 }

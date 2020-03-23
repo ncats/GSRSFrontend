@@ -67,7 +67,9 @@
       </div>
       <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
         <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">{{message.messageType}}</div>
-        <div class="message">{{message.message}}<span *ngFor = "let link of message.links"><br/><a [href] = "link.href" target = "_blank">{{link.text}}</a></span></div>
+        <div class="message">{{message.message}}<span *ngFor = "let link of message.links"><br/>
+          <a [href] = "link.href.replace('ginas/app/substance','ginas/app/beta/substances')" class = "internal-link" target = "_blank">{{link.text}}</a></span>
+        </div>
         <button mat-icon-button matTooltip="Dismiss" *ngIf = "message.messageType != 'ERROR' && !approving" (click)="dismissValidationMessage(i)">
           <mat-icon svgIcon="cancel"></mat-icon>
         </button>
@@ -96,7 +98,7 @@
             <mat-panel-title>
               <h2>{{section.menuLabel}}</h2>
               <div *ngIf="section.canAddItem">
-                <button mat-icon-button 
+                <button mat-icon-button
                   (click)="section.addItem(); $event.stopPropagation()" matTooltip="Add new">
                   <mat-icon svgIcon="add_circle_outline"></mat-icon>
                 </button>

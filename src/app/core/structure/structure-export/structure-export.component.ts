@@ -12,7 +12,7 @@ export class StructureExportComponent implements OnInit {
   selectedIndex = 0;
   private downloadFunctions = [
     function downloadMol(
-      data: { molfile: string, smiles: string },
+      data: { molfile: string, smiles: string},
       anchorElement: HTMLAnchorElement,
       downloadFile: any): void {
       if (data.molfile != null) {
@@ -35,7 +35,7 @@ export class StructureExportComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<StructureExportComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { molfile: string, smiles: string }
+    @Inject(MAT_DIALOG_DATA) public data: { molfile: string, smiles: string,  type: string  }
   ) {
     this.anchorElement = document.createElement('a') as HTMLAnchorElement;
   }

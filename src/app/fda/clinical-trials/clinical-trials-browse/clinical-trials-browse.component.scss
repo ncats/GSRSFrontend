@@ -4,10 +4,16 @@
 
 .clinical-trials-browse-edit2 {
   text-decoration: none; 
-  font-size:  1.5em;
-  padding: .5em;
 }
-
+.clinical-trials-browse-edit1,
+.clinical-trials-browse-edit2 {
+  padding-left: .5em;
+  padding-right: .5em;
+}
+.clinical-trials-browse-del {
+  color: red;
+  cursor: pointer;
+}
 
 .clinical-trials-browse-wrapper {
   padding: 10px;
@@ -41,14 +47,61 @@
 }
 
 
-.show-help-box {
+.clinical-trials-browse-show-help {
   max-width: 600px;
-  
+  float: left;
+  clear: both; 
+  display: flex;
 }
 
 
+table td.mat-cell { 
+  vertical-align: top;
+  text-align: left;
+  padding-top: 1em;
+  padding: .5em;
+}
+
+.clinical-trials-browse-button-cell {
+  padding: 0px;
+}
+.clinical-trials-browse-button-cell .mat-icon-button mat-button-base {
+  position: relative;
+  top: 15px;
+}
+.clinical-trials-browse-button-cell .mat-button-wrapper {
+  color: red;
+}
+
+.clinical-trials-browse-wrapper mat-expansion-panel-header {
+ padding:  0 0 0 0;
+ border:  none;
+ overflow: visible;
+ display: block;
+ cursor: pointer;
+}
+.clinical-trials-browse-wrapper .mat-expansion-panel-header[aria-disabled="true"],
+.clinical-trials-browse-wrapper .mat-expansion-panel-header[aria-disabled="false"] {
+  color: black;
+}
+
+.clinical-trials-browse-wrapper  mat-expansion-panel.clinical-trials-browse-peak-substances-expansion-panel {
+  border: none;
+  box-shadow: none;
+}
+
+.clinical-trials-browse-substance-peak {
+  overflow: auto;
+  max-width: 600px;
+  margin-top: 5px;
+  clear: both;
+}
+.clinical-trials-browse-substance-peak pre { 
+  white-space: nowrap;
+}
 
 /* copied from substances  */
+
 ::ng-deep .mat-expansion-panel-content > .mat-expansion-panel-body {
   padding: 0 12px 10px;
 }
@@ -143,10 +196,6 @@
 
 .cards {
 
-  .controls-container {
-     // max-width: 928px;
-  }
-
   .substance-cards {
       display: block;
   }
@@ -196,6 +245,7 @@
   align-items: center;
   white-space: nowrap;
 }
+
 
 .mat-card-title {
   white-space: normal;
@@ -349,6 +399,28 @@ width:150px;
   margin-bottom: 5px;
 }
 
+.exact-matches-container {
+  margin-top: 80px;
+}
+
+.exact-match-control {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+
+  button {
+      margin-top: 15px;
+  }
+}
+
+.facet-advanced-options-link {
+  margin-top: 7px;
+  color: #448aff;
+}
+
 .facet-search-container {
   display: flex;
 
@@ -407,6 +479,10 @@ width:150px;
   .side-nav-content {
       padding: 5px;
   }
+}
+
+.lock-icon {
+  color: #f0ad4e;
 }
 
 @media(max-width: 600px) {
@@ -485,6 +561,12 @@ text-decoration-style: unset;
 margin:auto;
 }
 
+.advanced {
+padding-left:20px;
+color:#448aff;
+
+}
+
 .show-more {
 color:#448aff;
 }
@@ -493,6 +575,19 @@ color:#448aff;
 text-decoration: underline;
 }
 
+.facet-options {
+width: 100%;
+display:flex;
+}
+
+.more-content {
+width:45%;
+}
+
+.advanced-container {
+width:55%;
+content-align:right;
+}
 
 .selected-container {
 font-size:14px;
@@ -523,5 +618,4 @@ height:18px !important;
 width: 18px !important;
 vertical-align: bottom;
 }
-
 

@@ -37,7 +37,7 @@ import { domainKeys, domainDisplayKeys } from './domain-references/domain-keys.c
 import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
 import { DomainsWithReferences } from './domain-references/domain.references.model';
-import {StructuralUnit} from '@gsrs-core/substance';
+import { StructuralUnit } from '@gsrs-core/substance';
 import * as _ from 'lodash';
 @Injectable({
   providedIn: 'root'
@@ -122,7 +122,7 @@ export class SubstanceFormService {
             substanceClass: substanceClass,
             references: [],
             names: [],
-            protein: {proteinType: ''},
+            protein: { proteinType: '' },
             codes: [],
             relationships: [],
           };
@@ -169,19 +169,19 @@ export class SubstanceFormService {
             relationships: []
           };
         } else if (substanceClass === 'polymer') {
-        this.substance = {
-          substanceClass: substanceClass,
-          references: [],
-          names: [],
-          polymer: {
-            idealizedStructure: {},
-            monomers: [],
-          },
-          codes: [],
-          moieties: [],
-          relationships: []
-        };
-      } else {
+          this.substance = {
+            substanceClass: substanceClass,
+            references: [],
+            names: [],
+            polymer: {
+              idealizedStructure: {},
+              monomers: [],
+            },
+            codes: [],
+            moieties: [],
+            relationships: []
+          };
+        } else {
           this.substance = {
             substanceClass: substanceClass,
             references: [],
@@ -204,7 +204,7 @@ export class SubstanceFormService {
       }
 
       if (this.substance.structure != null && this.substance.structure.molfile != null) {
-        this.structureService.postStructure(this.substance.structure.molfile).subscribe(response => {
+        this.structureService.interpretStructure(this.substance.structure.molfile).subscribe(response => {
           this.computedMoieties = response.moieties;
           this.substanceEmitter.next(this.substance);
         });
@@ -215,11 +215,11 @@ export class SubstanceFormService {
       if (this.substance.substanceClass === 'polymer') {
         this.substance.moieties = [];
         if (this.substance.polymer.idealizedStructure != null && this.substance.polymer.idealizedStructure.molfile != null) {
-        this.structureService.postStructure(this.substance.polymer.idealizedStructure.molfile).subscribe(response => {
-          this.computedMoieties = response.moieties;
-          this.substance.moieties = response.moieties;
-          this.substanceEmitter.next(this.substance);
-        });
+          this.structureService.interpretStructure(this.substance.polymer.idealizedStructure.molfile).subscribe(response => {
+            this.computedMoieties = response.moieties;
+            this.substance.moieties = response.moieties;
+            this.substanceEmitter.next(this.substance);
+          });
         }
       }
       const substanceString = JSON.stringify(this.substance);
@@ -255,8 +255,8 @@ export class SubstanceFormService {
       'structurallyDiverse': ['structurallyDiverse', 'modifications', 'properties'],
       'polymer': ['polymer', 'modifications', 'properties'],
       'nucleicAcid': ['nucleicAcid', 'modifications', 'properties'],
-      'mixture' : ['mixture', 'modifications', 'properties'],
-      'specifiedSubstanceG1' : []
+      'mixture': ['mixture', 'modifications', 'properties'],
+      'specifiedSubstanceG1': []
     };
     if (fieldGetter[newClass]) {
       fieldGetter[newClass].forEach(function (x) {
@@ -269,7 +269,7 @@ export class SubstanceFormService {
     if (newClass === 'chemical') {
       substance.structure = {};
     } else if (newClass === 'protein') {
-      substance.protein = {proteinType: ''};
+      substance.protein = { proteinType: '' };
 
     } else if (newClass === 'nucleicAcid') {
       substance.nucleicAcid = {};
@@ -313,10 +313,10 @@ export class SubstanceFormService {
     } else {
     }
   }
-   setPrivate(e) {
-      e.access = ['protected'];
-      alert('Substance definition now set to protected, please submit to save change');
-    }
+  setPrivate(e) {
+    e.access = ['protected'];
+    alert('Substance definition now set to protected, please submit to save change');
+  }
 
 
   setDefinitionPublic() {
@@ -348,13 +348,13 @@ export class SubstanceFormService {
     }
   }
 
-unapproveRecord() {
+  unapproveRecord() {
     const old = this.substance.approvalID;
     this.substance.approvalID = null;
     this.substance.status = null;
     this.substance.approved = null;
     this.substance.approvedBy = null;
-  alert('Removed approvalID \'' + old + '\'. Submit record to save.');
+    alert('Removed approvalID \'' + old + '\'. Submit record to save.');
   }
 
   setPublic(e) {
@@ -405,7 +405,7 @@ unapproveRecord() {
     }
 
     if (this.substance.definitionType !== definition.definitionType) {
-      if ( definition.definitionType === 'ALTERNATIVE') {
+      if (definition.definitionType === 'ALTERNATIVE') {
         this.substance.names = [];
         this.substance.codes = [];
         this.substanceNamesEmitter.next(this.substance.names);
@@ -523,7 +523,7 @@ unapproveRecord() {
           if (link.sites) {
             link.sites.forEach(site => {
               if (site.subunitIndex && site.residueIndex) {
-                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+                const newLink: DisplaySite = { residue: site.residueIndex, subunit: site.subunitIndex, type: 'other' };
                 allSitesArr.push(newLink);
               }
             });
@@ -591,7 +591,7 @@ unapproveRecord() {
             const sites = f.split('-');
             const subunitIndex = Number(sites[0].split('_')[0]);
             for (let i = Number(sites[0].split('_')[1]); i <= Number(sites[1].split('_')[1]); i++) {
-              const newLink: DisplaySite = {residue: Number(i), subunit: subunitIndex, type: 'feature'};
+              const newLink: DisplaySite = { residue: Number(i), subunit: subunitIndex, type: 'feature' };
               allSitesArr.push(newLink);
             }
           });
@@ -625,7 +625,7 @@ unapproveRecord() {
         if (this.substance.polymer.classification == null) {
           this.substance.polymer.classification = {};
         }
-        observer.next(this.substance.polymer.classification );
+        observer.next(this.substance.polymer.classification);
         this.substancePolymerClassificationEmitter.subscribe(poly => {
           observer.next(this.substance.polymer.classification);
         });
@@ -644,7 +644,7 @@ unapproveRecord() {
         } else {
           this.setSRUConnectivityDisplay(this.substance.polymer.structuralUnits);
         }
-        observer.next(this.substance.polymer.structuralUnits );
+        observer.next(this.substance.polymer.structuralUnits);
         this.substanceSRUEmitter.subscribe(poly => {
           observer.next(this.substance.polymer.structuralUnits);
         });
@@ -672,7 +672,7 @@ unapproveRecord() {
         if (this.substance.polymer.displayStructure == null) {
           this.substance.polymer.displayStructure = {};
         }
-        observer.next(this.substance.polymer.displayStructure );
+        observer.next(this.substance.polymer.displayStructure);
         this.substanceIdealizedStructureEmitter.subscribe(poly => {
           observer.next(this.substance.polymer.displayStructure);
         });
@@ -689,7 +689,7 @@ unapproveRecord() {
 
           this.substanceStateHash = this.utilsService.hashCode(substanceString);
         }
-        observer.next(this.substance.polymer.monomers );
+        observer.next(this.substance.polymer.monomers);
         this.substanceMonomerEmitter.subscribe(poly => {
           observer.next(this.substance.polymer.monomers);
         });
@@ -717,7 +717,7 @@ unapproveRecord() {
       this.ready().subscribe(substance => {
         if (this.substance.protein == null) {
           // ### figure out why only proteinType takes forever to load causing a console error
-          this.substance.protein = {proteinType: ''};
+          this.substance.protein = { proteinType: '' };
         }
         observer.next(this.substance.protein);
         this.substanceProteinEmitter.subscribe(protein => {
@@ -747,7 +747,7 @@ unapproveRecord() {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
         if (this.substance.nucleicAcid == null) {
-          this.substance.nucleicAcid = {nucleicAcidType: ''};
+          this.substance.nucleicAcid = { nucleicAcidType: '' };
 
         }
         observer.next(this.substance.nucleicAcid);
@@ -764,7 +764,7 @@ unapproveRecord() {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
         if (this.substance.structurallyDiverse == null) {
-          this.substance.structurallyDiverse = {$$diverseType: 'whole', part: ['WHOLE']};
+          this.substance.structurallyDiverse = { $$diverseType: 'whole', part: ['WHOLE'] };
         }
         observer.next(this.substance.structurallyDiverse);
         this.substanceStructurallyDiverseEmitter.subscribe(mixture => {
@@ -827,7 +827,7 @@ unapproveRecord() {
     }
   }
 
-// Class end
+  // Class end
 
   // References start
 
@@ -1225,7 +1225,7 @@ unapproveRecord() {
       type = 'PROTEIN FEATURE';
     }
     const newProperty: SubstanceProperty = {
-      value: {'nonNumericValue': feature.siteRange, 'type': 'Site Range'},
+      value: { 'nonNumericValue': feature.siteRange, 'type': 'Site Range' },
       propertyType: type,
       name: feature.name,
       references: [],
@@ -1561,12 +1561,12 @@ unapproveRecord() {
 
   addCompleteDisulfideLinks(sites: any): void {
     sites.forEach(link => {
-      const newSites = [{subunitIndex: link[0].subunitIndex, residueIndex: link[0].residueIndex},
-        {subunitIndex: link[1].subunitIndex, residueIndex: link[1].residueIndex},
+      const newSites = [{ subunitIndex: link[0].subunitIndex, residueIndex: link[0].residueIndex },
+      { subunitIndex: link[1].subunitIndex, residueIndex: link[1].residueIndex },
       ];
       const newDisulfideLinks: DisulfideLink = {
         sites:
-        newSites
+          newSites
       };
       this.substance.protein.disulfideLinks.unshift(newDisulfideLinks);
     });
@@ -1658,9 +1658,9 @@ unapproveRecord() {
     }
   }
 
-// modifications end
+  // modifications end
 
-// modifications start
+  // modifications start
 
   get substancePhysicalModifications(): Observable<Array<PhysicalModification>> {
     this.checkModifications();
@@ -1701,7 +1701,7 @@ unapproveRecord() {
     }
   }
 
-// modifications end
+  // modifications end
 
   // modifications start
 
@@ -1731,7 +1731,7 @@ unapproveRecord() {
 
   addSubstanceStructuralModification(): void {
     this.checkModifications();
-    const newStructuralModifications: StructuralModification = {references: [], sites: [], access: []};
+    const newStructuralModifications: StructuralModification = { references: [], sites: [], access: [] };
     this.substance.modifications.structuralModifications.unshift(newStructuralModifications);
     this.substanceStructuralModificationsEmitter.next(this.substance.modifications.structuralModifications);
   }
@@ -1770,7 +1770,7 @@ unapproveRecord() {
     }
   }
 
-// modifications end
+  // modifications end
 
   // Cysteine start
 
@@ -1783,10 +1783,12 @@ unapproveRecord() {
     if (this.substance.substanceClass === 'protein') {
       for (let i = 0; i < this.substance.protein.subunits.length; i++) {
         const sequence = this.substance.protein.subunits[i].sequence;
-        for (let j = 0; j < sequence.length; j++) {
-          const site = sequence[j];
-          if (site.toUpperCase() === 'C') {
-            available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+        if (sequence != null && sequence.length > 0) {
+          for (let j = 0; j < sequence.length; j++) {
+            const site = sequence[j];
+            if (site.toUpperCase() === 'C') {
+              available.push({ 'residueIndex': (j + 1), 'subunitIndex': (i + 1) });
+            }
           }
         }
       }
@@ -1808,10 +1810,12 @@ unapproveRecord() {
         let available = [];
         for (let i = 0; i < this.substance.protein.subunits.length; i++) {
           const sequence = this.substance.protein.subunits[i].sequence;
-          for (let j = 0; j < sequence.length; j++) {
-            const site = sequence[j];
-            if (site.toUpperCase() === 'C') {
-              available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+          if (sequence != null && sequence.length > 0) {
+            for (let j = 0; j < sequence.length; j++) {
+              const site = sequence[j];
+              if (site.toUpperCase() === 'C') {
+                available.push({ 'residueIndex': (j + 1), 'subunitIndex': (i + 1) });
+              }
             }
           }
         }
@@ -2107,6 +2111,15 @@ unapproveRecord() {
     }
   }
 
+  structureDuplicateCheck(): any {
+    return new Observable(observer => {
+      this.structureService.duplicateCheck(this.substance).subscribe(response => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
   approveSubstance(): Observable<any> {
     return new Observable(observer => {
       const results: SubstanceFormResults = {
@@ -2267,7 +2280,7 @@ unapproveRecord() {
         this.substance.protein.glycosylation.OGlycosylationSites.concat(data.links);
       this.emitGlycosylationUpdate();
     } else if (data.siteType === 'disulfide') {
-      const newLink: Link = {sites: data.links};
+      const newLink: Link = { sites: data.links };
       this.substance.protein.disulfideLinks.unshift(newLink);
       this.emitDisulfideLinkUpdate();
 
@@ -2351,18 +2364,20 @@ unapproveRecord() {
     subunits.forEach(subunit => {
       const subsections = [];
       let currentSections = [];
-      for (let count = 0; count < subunit.sequence.length; count = count + 10) {
-        if ((count + 10) >= subunit.sequence.length) {
-          currentSections.push([count, subunit.sequence.length]);
-          if ((count + 10) % 50 !== 0) {
-            subsections.push(currentSections);
+      if (subunit.sequence != null && subunit.sequence.length > 0) {
+        for (let count = 0; count < subunit.sequence.length; count = count + 10) {
+          if ((count + 10) >= subunit.sequence.length) {
+            currentSections.push([count, subunit.sequence.length]);
+            if ((count + 10) % 50 !== 0) {
+              subsections.push(currentSections);
+            }
+          } else {
+            currentSections.push([count, count + 10]);
           }
-        } else {
-          currentSections.push([count, count + 10]);
-        }
-        if ((count + 10) % 50 === 0) {
-          subsections.push(currentSections);
-          currentSections = [];
+          if ((count + 10) % 50 === 0) {
+            subsections.push(currentSections);
+            currentSections = [];
+          }
         }
       }
       const thisTest: TestSequence = {
@@ -2372,9 +2387,9 @@ unapproveRecord() {
         subgroups: currentSections
       };
       let index = 0;
-      const indexEnd = subunit.sequence.length;
-      while (index <= indexEnd) {
-        if (subunit.sequence[index]) {
+      const indexEnd = subunit.sequence && subunit.sequence.length || 0;
+      while (index < indexEnd) {
+        if ( subunit.sequence[index]) {
           const sequenceUnit: SequenceUnit = {
             unitIndex: index + 1,
             unitValue: subunit.sequence[index],
@@ -2490,7 +2505,7 @@ unapproveRecord() {
       }
     }
     if (errors.length > 0) {
-     // map.$errors = errors;
+      // map.$errors = errors;
     }
     return map;
   }
@@ -2583,7 +2598,7 @@ unapproveRecord() {
     if (prot.glycosylation) {
       if (prot.glycosylation.NGlycosylationSites) {
         const s = prot.glycosylation.NGlycosylationSites;
-        ng =  _.chain(s).map(function (s1) {
+        ng = _.chain(s).map(function (s1) {
           return s1.subunitIndex + '_' + s1.residueIndex;
         }).value().join(';');
       }

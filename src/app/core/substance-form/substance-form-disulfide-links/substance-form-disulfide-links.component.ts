@@ -87,10 +87,12 @@ export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilte
     if (this.subunits) {
       for (let i = 0; i < this.subunits.length; i++) {
         const sequence = this.subunits[i].sequence;
-        for (let j = 0; j < sequence.length; j++) {
-          const site = sequence[j];
-          if (site.toUpperCase() === 'C') {
-            available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+        if (sequence != null && sequence.length > 0) {
+          for (let j = 0; j < sequence.length; j++) {
+            const site = sequence[j];
+            if (site.toUpperCase() === 'C') {
+              available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+            }
           }
         }
       }

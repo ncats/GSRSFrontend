@@ -1,14 +1,12 @@
 <div class="name-form-container" *ngIf = "protein">
   <div class="form-row">
-      <app-cv-input key = "Protein Type" (valueChange) = "updateType($event)" [model] = "protein.proteinType"></app-cv-input>
+      <app-cv-input class = "cv-input" key = "Protein Type" (valueChange) = "updateType($event)" [model] = "protein.proteinType"></app-cv-input>
     <div class = "mat-form-field-flex subtype">
       <app-tag-selector placeholder = "protein subType" class="tags" (tagsUpdate)="update($event)" [tags]="pipeToArray(protein.proteinSubType)"
                         cvDomain="PROTEIN_SUBTYPE"></app-tag-selector>
     </div>
-    <div class= "location-container">
-      <app-cv-input domain = "SEQUENCE_ORIGIN" title = "Sequence Origin" (valueChange) = "updateOrigin($event)" [model] = "protein.sequenceOrigin"></app-cv-input>
-    </div>
-    <app-cv-input domain = "SEQUENCE_TYPE" title = "Sequence Type" [model] = "protein.sequenceType" (valueChange)="updateSequenceType($event)"></app-cv-input>
+      <app-cv-input  class = "cv-input"  domain = "SEQUENCE_ORIGIN" title = "Sequence Origin" (valueChange) = "updateOrigin($event)" [model] = "protein.sequenceOrigin"></app-cv-input>
+    <app-cv-input  domain = "SEQUENCE_TYPE" title = "Sequence Type" [model] = "protein.sequenceType" (valueChange)="updateSequenceType($event)"></app-cv-input>
     <div>
       <app-access-manager (accessOut)="updateAccess($event)" [access]="protein.access">
       </app-access-manager>
