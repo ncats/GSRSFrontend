@@ -86,6 +86,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   isAdmin = false;
   contactEmail: string;
   version?: string;
+  appId: string;
 
   constructor(
     private router: Router,
@@ -133,6 +134,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.subscriptions.push(authSubscription);
 
     this.environment = this.configService.environment;
+    this.appId = this.environment.appId;
 
     if (this.environment.navItems && this.environment.navItems.length) {
       this.navItems = this.navItems.concat(this.environment.navItems);

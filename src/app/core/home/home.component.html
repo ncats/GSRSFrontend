@@ -28,7 +28,20 @@
           <mat-icon matListIcon svgIcon="search"></mat-icon>
           Browse All Substances
         </a>
+        <span *ngIf = "appId !== 'fda'">
+                  <mat-divider></mat-divider>
 
+          <a mat-list-item routerLink="/browse-substance">
+          <mat-icon matListIcon svgIcon="search"></mat-icon>
+          Structure Search
+        </a>
+          <mat-divider></mat-divider>
+        <a mat-list-item routerLink="/browse-substance">
+          <mat-icon matListIcon svgIcon="search"></mat-icon>
+          Sequence Search
+        </a>
+        </span>
+        <span *ngIf = "appId === 'fda'">
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/browse-applications">
           <mat-icon matListIcon svgIcon="search"></mat-icon>
@@ -108,7 +121,7 @@
           <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
 
         </a>
-
+      </span>
       </mat-nav-list>
     </mat-card-content>
   </mat-card>
@@ -157,10 +170,20 @@
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
               Mixture
             </a>
+            <span *ngIf = "appId !== 'fda'">
+                          <mat-divider></mat-divider>
+
+            <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+
+              Specified Substance Group 1
+            </a>
+                          </span>
+
           </mat-nav-list>
         </div>
-        <mat-divider [vertical]="true" class = "divider-vertical"></mat-divider>
-        <div  class="register-other">
+        <mat-divider [vertical]="true" class = "divider-vertical" *ngIf = "appId === 'fda'"></mat-divider>
+        <div  class="register-other"  *ngIf = "appId === 'fda'">
           <h3  class = "register-header">
             <img class = "old-icon" [src]="application">
             Other Registration</h3>
@@ -202,6 +225,7 @@
               <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
 
             </a>
+            <span *ngIf = "appId === 'fda'">
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + '/ginas/app/registerProduct'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
@@ -232,6 +256,7 @@
               <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
 
             </a>
+              </span>
           </mat-nav-list>
         </div>
       </div>
