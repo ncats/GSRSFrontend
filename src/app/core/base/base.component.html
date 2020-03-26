@@ -21,7 +21,7 @@
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()">
-      <a mat-menu-item [href]="baseDomain + '/ginas/app/advancedSearch'" target="_blank">
+      <a mat-menu-item [href]="baseDomain + '/ginas/app/advancedSearch'" target="_blank" *ngIf = "appId === 'fda'">
         Advanced Search
       </a>
       <div *ngFor="let navItem of navItems">
