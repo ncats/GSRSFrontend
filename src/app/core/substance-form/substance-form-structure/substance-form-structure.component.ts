@@ -139,7 +139,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
       // we should only be dealing with this stuff if the total hash changes
       // or if the charge changes, or if it's a polymer
       if (this.substanceType === 'polymer' ||
-          this.structure['hash'] !== structurePostResponse.structure['hash'] || 
+          this.structure['hash'] !== structurePostResponse.structure['hash'] ||
           this.structure['charge'] !== structurePostResponse.structure['charge']) {
          this.smiles = structurePostResponse.structure.smiles;
          this.mol = structurePostResponse.structure.molfile;

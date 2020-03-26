@@ -37,7 +37,9 @@ export class UtilsService {
     if (!stereo) {
       stereo = false;
     }
-    return `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}&context=nocache`;
+    const url = this.configService.configData.apiBaseUrl;
+    const randomKey = Math.random().toString(36).replace('0.', '');
+    return `${url}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}&context=${randomKey}`;
   }
 
   handleMatSidenavOpen(widthBreakingPoint?: number): void {
