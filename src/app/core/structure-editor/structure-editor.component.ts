@@ -65,23 +65,25 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.canvasCopy = <HTMLCanvasElement>this.myCanvas.nativeElement;
   }
 
-  private preventDrag = (e: Event) => {
-    e.preventDefault();
+  private preventDrag = (event: DragEvent) => {
+    event.preventDefault();
   }
 
-  private checkPaste = (e: Event) => {
+  checkPaste = (event: ClipboardEvent ) => {
+    event.stopPropagation();
+    event.stopImmediatePropagation();
     if (this.jsdraw && this.jsdraw.activated) {
-      e.preventDefault();
-      this.catchPaste(e);
+      this.catchPaste(event);
     }
   }
 
   ngOnInit() {
-    window.addEventListener('dragover', this.preventDrag);
-    window.addEventListener('drop', this.preventDrag);
-    window.addEventListener('paste', this.checkPaste);
-
     if (isPlatformBrowser(this.platformId)) {
+
+      window.addEventListener('dragover', this.preventDrag);
+      window.addEventListener('drop', this.preventDrag);
+      window.addEventListener('paste', this.checkPaste);
+
       this.ketcherFilePath = `${environment.baseHref || '/'}assets/ketcher/ketcher.html`;
 
       this.structureEditor = environment.structureEditor;
@@ -95,7 +97,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         document.write = (content) => {
           if (content === '<style type="text/css">input._scil_dropdown::-ms-clear {display: none;}</style>') {
             const styleElement = document.createElement('style');
-            // styleElement.type = 'text/css';
             styleElement.innerHTML = 'input._scil_dropdown::-ms-clear {display: none;}';
             document.getElementsByTagName('head')[0].appendChild(styleElement);
           } else {
@@ -108,7 +109,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           node.src = this.jsdrawScriptUrls[i];
           node.type = 'text/javascript';
           node.async = false;
-          // node.charset = 'utf-8';
           document.getElementsByTagName('head')[0].appendChild(node);
         }
       }
@@ -184,14 +184,15 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     };
   }
 
-
-  catchPaste(e): void {
+  catchPaste(event: ClipboardEvent): void {
     const send: any = {};
     let valid = false;
-    const items = e.clipboardData.items;
+    const items = event.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
       const blob = items[i].getAsFile();
       if (items[i].type.indexOf('image') !== -1) {
+        event.preventDefault();
+        event.stopPropagation();
         valid = true;
         send.type = 'image';
         const reader = new FileReader();
@@ -205,13 +206,16 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           });
         };
       } else if (items[i].type === 'text/plain') {
-        const text = (e.originalEvent || e).clipboardData.getData('text/plain');
-        this.structureService.interpretStructure(text).subscribe(response => {
-          if (response.structure && response.structure.molfile) {
-            this.loadedMolfile.emit(text);
-          }
-        });
-
+        const text = event.clipboardData.getData('text/plain');
+        if (text.indexOf('<div') === -1) {
+          event.preventDefault();
+          event.stopPropagation();
+          this.structureService.interpretStructure(text).subscribe(response => {
+            if (response.structure && response.structure.molfile) {
+              this.loadedMolfile.emit(text);
+            }
+          });
+        }
       }
     }
 
