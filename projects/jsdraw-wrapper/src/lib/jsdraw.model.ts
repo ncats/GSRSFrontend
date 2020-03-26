@@ -5,6 +5,7 @@ export interface JSDraw {
     getMolfile(): string;
     getSmiles(): string;
     getXml(): string;
+    setHtml(html: string): string;
 }
 
 export interface JSDrawOptions {
