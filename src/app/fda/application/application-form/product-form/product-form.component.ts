@@ -3,6 +3,8 @@ import { ApplicationSrs } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationService } from '../../service/application.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-product-form',
@@ -17,10 +19,13 @@ export class ProductFormComponent implements OnInit {
   routeAdminList: Array<VocabularyTerm> = [];
   unitPresentationList: Array<VocabularyTerm> = [];
   unitList: Array<VocabularyTerm> = [];
+  reviewProductMessage: Array<any> = [];
+  productMessage = '';
 
   constructor(
     private applicationService: ApplicationService,
-    public cvService: ControlledVocabularyService) { }
+    public cvService: ControlledVocabularyService,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     this.getVocabularies();
@@ -41,4 +46,36 @@ export class ProductFormComponent implements OnInit {
     this.applicationService.addNewProduct();
   }
 
+  addNewProductName(prodIndex: number) {
+    this.applicationService.addNewProductName(prodIndex);
+  }
+
+  confirmDeleteProduct(prodIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Product Details ' + (prodIndex + 1) + ' data?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        console.log(result);
+          this.deleteProduct(prodIndex);
+      }
+    });
+  }
+
+  deleteProduct(prodIndex: number) {
+    this.applicationService.deleteProduct(prodIndex);
+  }
+
+  deleteProductName(prodIndex: number, prodNameIndex: number) {
+    this.applicationService.deleteProductName(prodIndex, prodNameIndex);
+  }
+
+  copyProduct(product: any) {
+    this.applicationService.copyProduct(product);
+  }
+
+  reviewProduct(prodIndex: number) {
+    this.reviewProductMessage[prodIndex] = new Date();
+  }
 }

@@ -39,6 +39,10 @@
   padding: 10px;
 }
 
+.font12px {
+  font-size: 12px;
+}
+
 .font17px {
   font-size: 17px;
 }
@@ -47,10 +51,39 @@
   color: green;
 }
 
+.colorred {
+  color: red;
+}
+
+.colorgray {
+  color: gray;
+}
+
 .title1 {
   color: green;
   font-size: 17px;
   font-weight: 500;
+}
+
+
+.margintop30px {
+  margin-top: 30px;
+}
+
+.margintopminus25 {
+  margin-top: -5px;
+}
+
+.marginbottomminus17px {
+  margin-bottom: -17px;
+}
+
+.padleft250px {
+  padding-left: 250px;
+}
+
+.padbottom0px {
+  padding: 0px;
 }
 
 hr {

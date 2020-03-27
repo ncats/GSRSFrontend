@@ -17,22 +17,22 @@
   <div *ngFor="let ingredient of product.applicationIngredientList; let ingredIndex = index">
 
     <!-- Buttons: delete, review -->
-    <span class="padbottom0px bordergray">
-      <button mat-icon-button (click)="removeRow(i)">
+    <div class="marginbottomminus17px padleft250px">
+      <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="product.applicationIngredientList.length == 1" [ngClass] = "{'backgroundgray': product.applicationIngredientList.length === 1}" (click)="confirmDeleteIngredient(prodIndex, ingredIndex)" matTooltip="Delete Ingredient Details {{ingredIndex + 1}}">
         <mat-icon>delete_forever</mat-icon>
       </button>
       &nbsp;&nbsp;
-      <button mat-icon-button (click)="removeRow(i)">
+      <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyIngredient(ingredient, prodIndex)" matTooltip="Copy Ingredient Details {{ingredIndex + 1}} to New Ingredient">
         <mat-icon>file_copy</mat-icon>
       </button>
       &nbsp;&nbsp;
-      <button mat-icon-button (click)="removeRow(i)">
+      <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="reviewIngredient(ingredIndex)" matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
         <mat-icon>check_circle</mat-icon>
       </button>
-    </span>
+    </div>
 
     <fieldset class="border">
-      <legend class="border">Ingredient Details:&nbsp;<b><span class="font17px">{{ingredIndex + 1}}</span></b></legend>
+      <legend class="border">Ingredient Details&nbsp;<b><span class="font17px">{{ingredIndex + 1}}</span></b></legend>
 
       <div class="form-row">
         <mat-form-field class="">

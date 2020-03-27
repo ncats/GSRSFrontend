@@ -5,7 +5,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { ApplicationSrs, ValidationResults, ApplicationIngredient } from '../model/application.model';
-import { ProductSrs } from '../model/application.model';
+import { ProductSrs, ProductNameSrs } from '../model/application.model';
 import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -261,14 +261,47 @@ export class ApplicationService extends BaseHttpService {
     };
 
     this.application.applicationProductList.unshift(newProduct);
-   // this.substanceNamesEmitter.next(this.substance.names);
+  }
+
+  addNewProductName(prodIndex: number): void {
+    const newProductName: ProductNameSrs = {};
+
+    this.application.applicationProductList[prodIndex].applicationProductNameList.unshift(newProductName);
+  }
+
+  deleteProduct(prodIndex: number): void {
+    this.application.applicationProductList.splice(prodIndex, 1);
+  }
+
+  deleteProductName(prodIndex: number, prodNameIndex: number): void {
+    this.application.applicationProductList[prodIndex].applicationProductNameList.splice(prodNameIndex, 1);
+  }
+
+  copyProduct(product: any): void {
+    const newProduct = JSON.parse(JSON.stringify(product));
+    this.application.applicationProductList.unshift(newProduct);
+  }
+
+  reviewProduct(prodIndex: number): void {
+  //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
   }
 
   addNewIngredient(index: number): void {
     const newIngredient:  ApplicationIngredient = {};
-
     this.application.applicationProductList[index].applicationIngredientList.unshift(newIngredient);
-   // this.substanceNamesEmitter.next(this.substance.names);
+  }
+
+  deleteIngredient(prodIndex: number, ingredIndex: number): void {
+    this.application.applicationProductList[prodIndex].applicationIngredientList.splice(ingredIndex, 1);
+  }
+
+  copyIngredient(ingredient: any, prodIndex: number): void {
+    const newIngredient = JSON.parse(JSON.stringify(ingredient));
+    this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
+  }
+
+  reviewIngredient(prodIndex: number, ingredIndex: number): void {
+  //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
   }
 
   getJson() {

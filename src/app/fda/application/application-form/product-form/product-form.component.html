@@ -15,12 +15,42 @@
 
   <div *ngFor="let product of application.applicationProductList; let prodIndex = index">
 
+    <!-- Buttons: delete, review -->
+    <div class="marginbottomminus17px padleft250px">
+      <button mat-icon-button [ngStyle]="{'color':'green'}" *ngIf="application.applicationProductList.length > 1"
+        (click)="confirmDeleteProduct(prodIndex)" matTooltip="Delete Product Details {{prodIndex + 1}}">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+      &nbsp;&nbsp;
+      <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="copyProduct(product)"
+        matTooltip="Copy Product Details {{prodIndex + 1 }} to a New Product">
+        <mat-icon>file_copy</mat-icon>
+      </button>
+      &nbsp;&nbsp;
+      <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="reviewProduct(prodIndex)"
+        matTooltip="Click to Confirm Product Details {{prodIndex + 1}} has been Reviewed">
+        <mat-icon>check_circle</mat-icon>
+      </button>
+      <span class="font12px" *ngIf="reviewProductMessage">
+        Product Data Reviewed By:
+        <span class="colorred">
+          {{reviewProductMessage[prodIndex]| date: 'MM/dd/yyyy h:mm:ss a'}}
+        </span>
+      </span>
+    </div>
+
     <fieldset class="border">
       <legend class="border">Product Details:&nbsp;<b><span class="colorgreen font17px">{{prodIndex + 1}}</span></b>
       </legend>
 
       <!-- PRODUCT NAME LIST -->
-      <div *ngFor="let prodName of product.applicationProductNameList">
+
+      <button mat-raised-button color="primary" (click)="addNewProductName(prodIndex)"
+        matTooltip="Add New Product Name">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add New Product Name
+      </button>
+
+      <div *ngFor="let prodName of product.applicationProductNameList; let prodNameIndex = index">
 
         <div class="form-row">
           <mat-form-field class="">
@@ -35,6 +65,11 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+
+          <button mat-raised-button color="primary" [disabled]="product.applicationProductNameList.length == 1"
+            (click)="deleteProductName(prodIndex, prodNameIndex)" matTooltip="Delete Product Name">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Delete Product Name
+          </button>
         </div>
 
       </div> <!-- ngFor product Name List -->
@@ -83,7 +118,7 @@
 
       <!-- INGREDIENT -->
       <div class="form-row">
-        <app-ingredient-form [product]="product"></app-ingredient-form>
+        <app-ingredient-form [product]="product" [prodIndex]="prodIndex"></app-ingredient-form>
       </div>
 
     </fieldset>

@@ -1,5 +1,4 @@
 <div class="top-fixed bordergray">
-
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
@@ -11,15 +10,13 @@
     <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
   </div>
 
+  <!-- Validation Message Display -->
   <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
     <div class="submission-message" *ngIf="submissionMessage">
       {{submissionMessage}}
     </div>
-    <!--
+
     <div *ngIf="validationMessages">
-    -->
-    <div>
-      <!--
       <span *ngIf=" validationMessages.length > 0">
         <div class="submission-message" *ngIf='!serverError && !approving'>
           Please correct or dismiss the following errors and submit again:
@@ -35,7 +32,7 @@
           </button>
         </div>
       </span>
-    -->
+
       <div class="dismiss-container">
         <span class="middle-fill"></span>
         <button mat-flat-button color="primary" (click)="submit()"
@@ -47,6 +44,7 @@
 </div>
 
 <!-- Display Form Fields -->
+
 <div class="form-content-container">
   <div class="scrollable-container">
     <div class="cards-container">
@@ -137,8 +135,6 @@
               </mat-form-field>
             </div>
 
-
-
             <div class="form-row">
               <mat-form-field class="">
                 <input matInput placeholder="Title" [(ngModel)]="application.title" name="title" />
@@ -150,16 +146,15 @@
               </mat-form-field>
             </div>
 
-
             <!--
-        <div class="form-row">
-          <div *ngFor="let ind of application.applicationIndicationList">
-            <mat-form-field class="">
-              <input matInput placeholder="Indication" [(ngModel)]="ind.indication" name="indication" />
-            </mat-form-field>
-          </div>
+      <div class="form-row">
+        <div *ngFor="let ind of application.applicationIndicationList">
+          <mat-form-field class="">
+            <input matInput placeholder="Indication" [(ngModel)]="ind.indication" name="indication" />
+          </mat-form-field>
         </div>
-        -->
+      </div>
+      -->
 
             <div class="form-row">
               <app-product-form [application]="application"></app-product-form>
@@ -168,7 +163,7 @@
           </mat-card-content>
         </mat-card>
         <br><br><br><br>
+
       </div>
     </div>
   </div>
-</div>
