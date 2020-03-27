@@ -43,8 +43,7 @@
     <ng-container matColumnDef="Approved ID">
       <th mat-header-cell *matHeaderCellDef> Approved ID </th>
       <td mat-cell *matCellDef="let agent">
-        <span *ngIf="agent.agentSubstance ==  null">{{agent.agentSubstance?.linkingID}}</span>
-        <a *ngIf="agent.agentSubstance !=  null" [routerLink]="['/substances', agent.agentSubstance.refuuid]" target="_blank">{{agent.agentSubstance?.linkingID}}</a>
+        <a *ngIf="agent.agentSubstance && agent.agentSubstance.linkingID" [routerLink]="['/substances', agent.agentSubstance.refuuid]" target="_blank">{{agent.agentSubstance?.linkingID}}</a>
       </td>
     </ng-container>
 
