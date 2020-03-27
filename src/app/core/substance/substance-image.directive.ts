@@ -10,6 +10,7 @@ export class SubstanceImageDirective implements AfterViewInit {
   private privateStereo = false;
   private imageElement: HTMLImageElement;
   private isAfterViewInit = false;
+  private privateAtomMaps?: Array<number>;
 
   constructor(
     private el: ElementRef,
@@ -47,9 +48,18 @@ export class SubstanceImageDirective implements AfterViewInit {
     }
   }
 
+  @Input()
+  set atomMaps(atomMaps: Array<number>) {
+    if (atomMaps !== this.privateAtomMaps) {
+      this.privateAtomMaps = atomMaps;
+      this.setImageSrc();
+    }
+  }
+
   private setImageSrc(): void {
     if (this.isAfterViewInit) {
-      this.imageElement.src = this.utilsService.getStructureImgUrl(this.privateEntityId, this.privateSize, this.privateStereo);
+      const srcUrl = this.utilsService.getStructureImgUrl(this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
+      this.imageElement.src = srcUrl;
     }
   }
 }
