@@ -86,7 +86,6 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
   }
 
   cleanSequence(type): void {
-    console.log(type);
     let mod = ['G', 'T', 'U', 'N', 'A', 'C', 'X'];
 
     if (type.toUpperCase() === 'PROTEIN') {
