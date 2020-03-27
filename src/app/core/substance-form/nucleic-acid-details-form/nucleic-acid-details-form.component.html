@@ -2,7 +2,7 @@
   <div class="form-row">
     <app-cv-input class = "type" domain = "NUCLEIC_ACID_TYPE" title = "Nucleic Acid Type" (valueChange) = "update('nucleicAcidType',$event)" [model] = nucleicAcid.nucleicAcidType></app-cv-input>
     <div class = "mat-form-field-flex subtype">
-      <app-tag-selector placeholder = "protein subType" class="tags" (tagsUpdate)="updateSubtype($event)" [tags]="nucleicAcid.nucleicAcidSubType"
+      <app-tag-selector placeholder = "nucleic acid subtype" class="tags" (tagsUpdate)="updateSubtype($event)" [tags]="nucleicAcid.nucleicAcidSubType"
                         cvDomain="NUCLEIC_ACID_SUBTYPE"></app-tag-selector>
     </div>
     <div class= "location-container origin">
