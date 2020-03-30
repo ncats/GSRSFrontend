@@ -1,0 +1,15 @@
+.param-container {
+  width: 100%;
+  display: flex;
+  flex-direction:column;
+
+  .param-name, .param-amount {
+    padding-bottom: 10px;
+
+  }
+}
+
+
+.empty {
+  font-style: italic;
+}

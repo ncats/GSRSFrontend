@@ -96,4 +96,12 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
     return val;
   }
 
+  displayAmount(amount: string): string {
+    let returned = this.utilsService.displayAmount(amount);
+    if (!returned || returned.trim().length <= 0) {
+      returned = 'empty value';
+    }
+    return returned;
+  }
+
 }
