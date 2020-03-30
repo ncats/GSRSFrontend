@@ -61,41 +61,6 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
     });
   }
 
-  public toString(amount: SubstanceAmount) {
-    let val = '';
-    if (amount) {
-      if ((amount.highLimit)  && (!amount.lowLimit) && (!amount.average) ) {
-        val = '>' + (amount.highLimit);
-      } else if ((!amount.highLimit) && (!amount.lowLimit) && (amount.average) ) {
-        val = (amount.average) + '';
-      } else if ((!amount.highLimit) && (amount.lowLimit)  && (!amount.average) ) {
-        val = '<' + (amount.lowLimit);
-      } else if ((amount.highLimit)  && (amount.lowLimit)  && (amount.average) ) {
-        val = (amount.average) + '[' + (amount.lowLimit) + ' to ' + (amount.highLimit) + ']';
-      } else if ((amount.highLimit)  && (!amount.lowLimit) && (amount.average) ) {
-        val = (amount.average) + '[>' + (amount.highLimit) + ']';
-      } else if ((!amount.highLimit) && (amount.lowLimit)  && (amount.average) ) {
-        val = (amount.average) + '[<' + (amount.lowLimit) + ']';
-      }
-      if (amount.nonNumericValue ) {
-        val += ' { ' + amount.nonNumericValue + ' }';
-        val = val.trim();
-      }
-      if (amount.units != null) {
-        val += ' (' + amount.units + ')';
-        val = val.trim();
-      }
-      if (val.trim().length <= 0) {
-        val = 'empty value';
-      }
-    } else {
-      val = 'empty value';
-    }
-
-
-    return val;
-  }
-
   displayAmount(amount: string): string {
     let returned = this.utilsService.displayAmount(amount);
     if (!returned || returned.trim().length <= 0) {

@@ -28,7 +28,9 @@
     <ng-container matColumnDef="Amount">
       <th mat-header-cell *matHeaderCellDef> Amount </th>
       <td mat-cell *matCellDef="let agent">
-          {{toString(agent.amount)}}
+         <span [ngClass]="{'empty': displayAmount(agent.amount) === 'empty value'}">
+           {{displayAmount(agent.amount)}}
+         </span>
       </td>
     </ng-container>
 
