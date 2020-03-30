@@ -4,7 +4,8 @@
   flex-direction:column;
 
   .param-name, .param-amount {
-    padding-bottom: 10px;
+    padding-bottom: 5px;
+    padding-top: 6px;
 
   }
 }
@@ -12,4 +13,8 @@
 
 .empty {
   font-style: italic;
+}
+
+.bottom-border {
+  border-bottom: 1px solid rgba(0, 0, 0, .05)
 }

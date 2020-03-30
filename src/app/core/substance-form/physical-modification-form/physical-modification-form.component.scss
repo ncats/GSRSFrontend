@@ -209,6 +209,7 @@
 
 .amount {
   display:flex;
+  padding-bottom: 10px;
 }
 
 .amt-label {
@@ -228,7 +229,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding-bottom: 15px;
+  padding-bottom: 7px;
+  padding-top: 7px;
 
   .param-display {
     max-width: 40%;
@@ -237,4 +239,7 @@
   .param-amount {
     max-width: 60%;
   }
+
 }
+
+

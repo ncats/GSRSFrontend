@@ -82,8 +82,8 @@
       <th mat-header-cell *matHeaderCellDef> Amount </th>
       <td mat-cell *matCellDef="let physical">
         <div *ngIf="physical.parameters && physical.parameters.length" class = "param-container">
-        <span *ngFor="let parameter of physical.parameters; last as isLast" class = "param-amount">
-                   <span [ngClass]="displayAmount(parameter.amount) === 'empty value'? 'empty':''">
+        <span *ngFor="let parameter of physical.parameters; last as isLast" class = "param-amount" >
+                   <span [ngClass]="{'empty': displayAmount(parameter.amount) === 'empty value'}">
                      {{displayAmount(parameter.amount)}}
                    </span>
         </span>

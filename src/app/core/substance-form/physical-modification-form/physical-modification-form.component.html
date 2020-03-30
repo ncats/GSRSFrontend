@@ -16,11 +16,11 @@
       <div class = "label amt-label">
         Parameters
       </div>
-      <button mat-icon-button matTooltip="add" (click)="(openParameterDialog())">
+      <button mat-icon-button matTooltip="add / edit parameters" (click)="(openParameterDialog())">
         <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
       <div class = 'param-display'>
-        <div *ngFor = "let param of mod.parameters; index as index" class = "param-container">
+        <div *ngFor = "let param of mod.parameters; index as index" class = "param-container" [ngClass]="{'bottom-border': index < mod.parameters.length}">
          <div class = "param-name" *ngIf = "param.parameterName">{{param.parameterName}}
          </div>
           <div class = "param-amount" *ngIf = "param.amount">{{displayAmount(param.amount)}}</div>
