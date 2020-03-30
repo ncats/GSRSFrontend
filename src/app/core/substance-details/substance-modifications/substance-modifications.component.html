@@ -43,7 +43,7 @@
     <ng-container matColumnDef="Approved ID">
       <th mat-header-cell *matHeaderCellDef> Approved ID </th>
       <td mat-cell *matCellDef="let agent">
-        {{agent.agentSubstance?.linkingID}}
+        <a *ngIf="agent.agentSubstance && agent.agentSubstance.refuuid" [routerLink]="['/substances', agent.agentSubstance.refuuid]" target="_blank">{{agent.agentSubstance.approvalID || agent.agentSubstance.refuuid}}</a>
       </td>
     </ng-container>
 
@@ -70,7 +70,12 @@
     <ng-container matColumnDef="Parameter Name">
       <th mat-header-cell *matHeaderCellDef> Parameter Name </th>
       <td mat-cell *matCellDef="let physical">
-
+        <div *ngIf="physical.parameters && physical.parameters.length">
+          <span *ngFor="let parameter of physical.parameters; last as isLast">
+            {{parameter.parameterName}}
+            <span *ngIf="!isLast">, </span>
+          </span>
+        </div>
       </td>
     </ng-container>
 
@@ -146,7 +151,7 @@
         <th mat-header-cell *matHeaderCellDef> Modification ID </th>
         <td mat-cell *matCellDef="let structural">
           <span *ngIf="structural.molecularFragment">
-            {{structural.molecularFragment.linkingID}}
+            <a [routerLink]="['/substances', structural.molecularFragment.refuuid]" target="_blank">{{structural.molecularFragment.approvalID || structural.molecularFragment.refuuid}}</a>
           </span>
         </td>
       </ng-container>

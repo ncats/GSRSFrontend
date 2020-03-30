@@ -4,13 +4,15 @@ import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dyn
 import { SubstanceModificationsComponent } from './substance-modifications.component';
 import { MatTableModule } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     DynamicComponentLoaderModule.forChild(SubstanceModificationsComponent),
     MatTableModule,
-    CdkTableModule
+    CdkTableModule,
+    RouterModule
   ],
   declarations: [SubstanceModificationsComponent]
 })

@@ -41,7 +41,7 @@ export class UtilsService {
     const randomKey = Math.random().toString(36).replace('0.', '');
     let url = `${apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}&cache-control=${randomKey}`;
     if (atomMaps != null) {
-      url = `${url}&context=${JSON.stringify(atomMaps)}`;
+      url = `${url}&context=${atomMaps.toString()}`;
     }
     return url;
   }
