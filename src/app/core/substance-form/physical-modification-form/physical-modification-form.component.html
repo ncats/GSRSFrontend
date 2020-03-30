@@ -21,7 +21,8 @@
       </button>
       <div class = 'param-display'>
         <div *ngFor = "let param of mod.parameters; index as index" class = "param-container">
-         <div class = "param-name" *ngIf = "param.parameterName">{{param.parameterName}}</div>
+         <div class = "param-name" *ngIf = "param.parameterName">{{param.parameterName}}
+         </div>
           <div class = "param-amount" *ngIf = "param.amount">{{displayAmount(param.amount)}}</div>
         </div>
       </div>
