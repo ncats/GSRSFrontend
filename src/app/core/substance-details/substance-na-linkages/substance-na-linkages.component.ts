@@ -1,20 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Linkage, Site, SubstanceDetail} from '../../substance/substance.model';
 import {SubstanceCardBase} from '../substance-card-base';
-import {Subject} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
+import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
+import {ControlledVocabularyService, VocabularyDictionary, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 
 @Component({
   selector: 'app-substance-na-linkages',
   templateUrl: './substance-na-linkages.component.html',
   styleUrls: ['./substance-na-linkages.component.scss']
 })
-export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements OnInit {
+export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements OnInit, OnDestroy{
   linkages: Array<Linkage>;
   displayedColumns: string[] = ['linkage' , 'Site Range' , 'Site Count' ];
   siteCount: number;
+  vocabulary: any;
   substanceUpdated = new Subject<SubstanceDetail>();
+  subscriptions: Array<Subscription>;
 
-  constructor() {
+
+  constructor(
+    public cvService: ControlledVocabularyService,
+  ) {
     super();
   }
 
@@ -27,8 +34,18 @@ export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements O
         && this.substance.nucleicAcid.linkages.length) {
         this.linkages = this.substance.nucleicAcid.linkages;
         this.countUpdate.emit(this.linkages.length);
+        const cvSubscription =  this.cvService.getDomainVocabulary('NUCLEIC_ACID_LINKAGE').subscribe(response => {
+          this.vocabulary = response['NUCLEIC_ACID_LINKAGE'].dictionary;
+        });
+        this.subscriptions.push(cvSubscription);
         this.getTotalSites();
       }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 
@@ -42,6 +59,14 @@ export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements O
 
   getSiteCount(sites: Array<Site>): string {
     return sites.length + '/' + this.siteCount;
+  }
+
+  getLinkageDisplay(term: string): string {
+    if (this.vocabulary && this.vocabulary[term] && this.vocabulary[term].display) {
+      return this.vocabulary[term].display;
+    } else {
+      return term;
+    }
   }
 
 }

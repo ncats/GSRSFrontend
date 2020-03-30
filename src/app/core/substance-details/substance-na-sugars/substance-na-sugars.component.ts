@@ -1,20 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Sugar, Site, SubstanceDetail} from '../../substance/substance.model';
 import {SubstanceCardBase} from '../substance-card-base';
-import {Subject} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
+import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 
 @Component({
   selector: 'app-substance-na-sugars',
   templateUrl: './substance-na-sugars.component.html',
   styleUrls: ['./substance-na-sugars.component.scss']
 })
-export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnInit {
+export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnInit, OnDestroy {
   sugars: Array<Sugar>;
   displayedColumns: string[] = ['Sugar' , 'Site Range' , 'Site Count' ];
   siteCount: number;
+  vocabulary: any;
   substanceUpdated = new Subject<SubstanceDetail>();
+  subscriptions: Array<Subscription>;
 
-  constructor() {
+  constructor(
+    public cvService: ControlledVocabularyService,
+  ) {
     super();
   }
 
@@ -27,9 +32,19 @@ export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnI
         && this.substance.nucleicAcid.sugars.length) {
         this.sugars = this.substance.nucleicAcid.sugars;
         this.countUpdate.emit(this.sugars.length);
+        const cvSubscription =  this.cvService.getDomainVocabulary('NUCLEIC_ACID_SUGAR').subscribe(response => {
+          this.vocabulary = response['NUCLEIC_ACID_SUGAR'].dictionary;
+        });
+        this.subscriptions.push(cvSubscription);
         this.getTotalSites();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+      });
   }
 
   getTotalSites() {
@@ -42,6 +57,14 @@ export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnI
 
   getSiteCount(sites: Array<Site>): string {
     return sites.length + '/' + this.siteCount;
+  }
+
+  getSugarDisplay(term: string): string {
+    if (this.vocabulary && this.vocabulary[term] && this.vocabulary[term].display) {
+      return this.vocabulary[term].display;
+    } else {
+      return term;
+    }
   }
 
 }
