@@ -15,7 +15,7 @@ export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnI
   siteCount: number;
   vocabulary: any;
   substanceUpdated = new Subject<SubstanceDetail>();
-  subscriptions: Array<Subscription>;
+  subscriptions: Array<Subscription> = [];
 
   constructor(
     public cvService: ControlledVocabularyService,

@@ -16,7 +16,7 @@ export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements O
   siteCount: number;
   vocabulary: any;
   substanceUpdated = new Subject<SubstanceDetail>();
-  subscriptions: Array<Subscription>;
+  subscriptions: Array<Subscription> = [];
 
 
   constructor(
