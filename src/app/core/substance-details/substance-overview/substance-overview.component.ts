@@ -9,10 +9,11 @@ import {SubstanceService} from '@gsrs-core/substance/substance.service';
 import {FormControl, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {formSections} from '@gsrs-core/substance-form/form-sections.constant';
-import {Subject} from 'rxjs';
+import {Subject, of} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
 import {ConfigService} from '@gsrs-core/config';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-substance-overview',
@@ -106,11 +107,15 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   }
 
   getVersion() {
-    this.substanceService.checkVersion(this.substance.uuid).subscribe((result: number) => {
+    this.substanceService.checkVersion(this.substance.uuid).pipe(
+      catchError(error => of(console.log(error)))
+    ).subscribe((result: number) => {
       this.versions = [];
       this.latestVersion = result;
       this.setVersionList();
       this.versionControl.setValue(this.substance.version);
+    }, error => {
+      console.log(error);
     });
   }
 
