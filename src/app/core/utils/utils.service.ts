@@ -33,7 +33,7 @@ export class UtilsService {
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
-  getStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean, atomMaps?: Array<number>): string {
+  getStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean, atomMaps?: Array<number>, version?: number): string {
     if (!stereo) {
       stereo = false;
     }
@@ -42,6 +42,9 @@ export class UtilsService {
     let url = `${apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}&cache-control=${randomKey}`;
     if (atomMaps != null) {
       url = `${url}&context=${atomMaps.toString()}`;
+    }
+    if (version != null) {
+      url = `${url}&version=${version}`;
     }
     return url;
   }

@@ -96,4 +96,5 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     this.showStereo = !this.showStereo;
   }
 
+
 }
