@@ -107,9 +107,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   }
 
   getVersion() {
-    this.substanceService.checkVersion(this.substance.uuid).pipe(
-      catchError(error => of(console.log(error)))
-    ).subscribe((result: number) => {
+    this.substanceService.checkVersion(this.substance.uuid).subscribe((result: number) => {
       this.versions = [];
       this.latestVersion = result;
       this.setVersionList();
