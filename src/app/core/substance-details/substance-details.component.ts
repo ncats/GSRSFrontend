@@ -79,7 +79,11 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
        });
 
-     });
+     }, error => {
+      this.gaService.sendException('checkVersionCall: error from API call');
+      this.loadingService.setLoading(false);
+      this.handleSubstanceRetrivalError();
+    });
 
 
   }
@@ -203,16 +207,16 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   private handleSubstanceRetrivalError() {
     const notification: AppNotification = {
-      message: 'The web address above is incorrect. You\'re being forwarded to Browse Substances',
+      message: 'The web address above is incorrect or the substance you\'re trying to see doesn\'t exist. We\'re forwarding you to Browse Substances',
       type: NotificationType.error,
-      milisecondsToShow: 4000
+      milisecondsToShow: 5000
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       const navigationExtras: NavigationExtras = {
         queryParams: {}
       };
-      navigationExtras.queryParams['search_term'] = this.id || null;
+      navigationExtras.queryParams['search'] = this.id || null;
       this.router.navigate(['/browse-substance'], navigationExtras);
     }, 5000);
   }
