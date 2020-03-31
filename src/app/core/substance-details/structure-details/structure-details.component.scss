@@ -5,7 +5,7 @@
 .structure-image-container {
     padding-left: 20px;
     flex-grow: 1;
-    
+
     .structure-img {
         width: 100%;
         height: auto;
@@ -53,4 +53,9 @@
   width: 34px;
   min-width: 34px;
   margin: 2px;
+}
+
+.indent {
+  padding-left: 15px;
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
 }
