@@ -76,7 +76,7 @@ export class PhysicalModificationFormComponent implements OnInit {
     }
     const dialogRef = this.dialog.open(PhysicalParameterFormDialogComponent, {
       data: this.mod.parameters,
-      width: '990px'
+      width: '1080px'
     });
     this.overlayContainer.style.zIndex = '1002';
 
