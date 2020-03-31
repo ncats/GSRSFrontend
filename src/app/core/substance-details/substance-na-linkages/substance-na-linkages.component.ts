@@ -10,7 +10,7 @@ import {ControlledVocabularyService, VocabularyDictionary, VocabularyTerm} from 
   templateUrl: './substance-na-linkages.component.html',
   styleUrls: ['./substance-na-linkages.component.scss']
 })
-export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements OnInit, OnDestroy{
+export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements OnInit, OnDestroy {
   linkages: Array<Linkage>;
   displayedColumns: string[] = ['linkage' , 'Site Range' , 'Site Count' ];
   siteCount: number;
