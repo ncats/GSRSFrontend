@@ -11,6 +11,7 @@ export class SubstanceImageDirective implements AfterViewInit {
   private imageElement: HTMLImageElement;
   private isAfterViewInit = false;
   private privateAtomMaps?: Array<number>;
+  private privateVersion?: number;
 
   constructor(
     private el: ElementRef,
@@ -22,6 +23,14 @@ export class SubstanceImageDirective implements AfterViewInit {
   ngAfterViewInit() {
     this.isAfterViewInit = true;
     this.setImageSrc();
+  }
+
+  @Input()
+  set version(version: number) {
+    if (version !== this.privateVersion) {
+      this.privateVersion = version;
+      this.setImageSrc();
+    }
   }
 
   @Input()
@@ -58,8 +67,15 @@ export class SubstanceImageDirective implements AfterViewInit {
 
   private setImageSrc(): void {
     if (this.isAfterViewInit) {
-      const srcUrl = this.utilsService.getStructureImgUrl(this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
-      this.imageElement.src = srcUrl;
+      if (this.privateVersion) {
+        const srcUrl = this.utilsService.getStructureImgUrl(
+          this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, this.privateVersion);
+        this.imageElement.src = srcUrl;
+      } else {
+        const srcUrl = this.utilsService.getStructureImgUrl(
+          this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
+        this.imageElement.src = srcUrl;
+      }
     }
   }
 }
