@@ -10,7 +10,7 @@
 </div>
 <div [ngClass]="view">
   <div class="subunit-sequence" *ngFor="let subunitSequence of subunitSequences">
-  <div class = "form-row">
+  <div class = "form-row subunit-row">
     <div class = "subunit-label"> Subunit {{subunitSequence.subunitIndex}}</div>
     <div>
       <a class = "subunit-title" [routerLink]="['/sequence-search']"
@@ -18,17 +18,19 @@
     </div>
 
   </div>
+    <div class = "subunit-sequence">
     <div class="responsive">
-      <div class="sequence-section-group" *ngFor="let sequencesSectionGroup of subunitSequence.sequencesSectionGroups">
-        <div class="sequence-section" *ngFor="let sequencesSectionGroup of sequencesSectionGroup.sequenceSections">
+      <div class="sequence-section-group" *ngFor="let sequencesSectionGroup of subunitSequence.sequencesSectionGroups;last as last1">
+        <div class="sequence-section" *ngFor="let sequencesSectionGroup of sequencesSectionGroup.sequenceSections;last as last2" class= "sequence-section"  [ngClass] = "last1 && last2? 'last-section' : ''" >
           <div class="section-number">{{sequencesSectionGroup.sectionNumber}}</div>
           <div class="section-units-container">
-            <span class="section-unit" [ngClass] = "sectionUnit.class? 'error':''" *ngFor="let sectionUnit of sequencesSectionGroup.sectionUnits" [matTooltip]="getTooltipMessage(subunitSequence.subunitIndex, sectionUnit.unitIndex, sectionUnit.unitValue)">
+            <span class="section-unit  selectedSite siteref" [ngClass] = "sectionUnit.class? 'error':''" *ngFor="let sectionUnit of sequencesSectionGroup.sectionUnits" [matTooltip]="getTooltipMessage(subunitSequence.subunitIndex, sectionUnit.unitIndex, sectionUnit.unitValue)">
               {{sectionUnit.unitValue}}
             </span>
           </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
   <div class="subunit" *ngFor="let subunit of subunits">

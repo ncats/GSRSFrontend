@@ -1,71 +1,4 @@
-.details {
-    .subunit {
-        display: none;
-    }
 
-    .subunit-sequence {
-        display: block;
-    }
-}
-
-.raw {
-    .subunit {
-        display: block;
-    }
-
-    .subunit-sequence {
-        display: none;
-    }
-}
-
-.subunit-sequence {
-    margin-bottom: 30px;
-}
-
-.sequence-section-group {
-    width: 100%;
-    display: flex;
-    margin-bottom: 10px;
-}
-
-.section-number {
-    text-align: right;
-    padding: 0 10px;
-    font-size: .8em;
-}
-
-.sequence-section {
-    flex-grow: 0;
-    padding: 0 10px;
-    flex-basis: 20%;
-    flex-shrink: 0;
-}
-
-.section-units-container {
-    display: flex;
-
-    .section-unit {
-        flex-grow: 1;
-
-        &:hover {
-            cursor: default;
-        }
-    }
-}
-
-.subunit {
-    padding-top: 5px;
-    padding-bottom: 20px;
-
-    &:not(:last-child) {
-        border-bottom: solid 1px rgba(0, 0, 0, 0.12);
-    }
-}
-
-.raw-sequence {
-    word-break: break-all;
-    line-height: 26px;
-}
 
 .filters-container {
     display: flex;
@@ -94,4 +27,106 @@
 
 error {
   color: red;
+}
+
+.subunit-row {
+  padding-top: 10px;
+}
+
+
+.details {
+  & .subunit {
+    display: none;
+  }
+
+  & .subunit-sequence {
+    display: block;
+  }
+}
+
+
+.show {
+  display:block;
+}
+
+.hide{
+  display:none;
+}
+
+.raw {
+  .subunit {
+    display: block;
+  }
+
+  .subunit-sequence {
+    display: none;
+  }
+}
+
+.raw {
+  & .subunit {
+    display: block;
+  }
+
+  & .subunit-sequence {
+    display: none;
+  }
+}
+
+.subunit-sequence {
+  margin-bottom: 30px;
+}
+
+.sequence-section-group {
+  width: 100%;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.section-number {
+  text-align: right;
+  font-size: .8em;
+}
+
+.sequence-section {
+  flex-grow: 0;
+  padding: 0 10px;
+  flex-basis: 20%;
+  flex-shrink: 0;
+}
+
+.section-units-container {
+  display: flex;
+
+  .section-unit {
+    /*flex-grow: 1;*/
+
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.subunit {
+  padding-top: 5px;
+  padding-bottom: 20px;
+
+  &:not(:last-child) {
+    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.raw-sequence {
+  word-break: break-all;
+  line-height: 26px;
+}
+
+.siteref {
+  display:block;
+  width: 15.5px !important;
+  text-align: center;
+}
+
+.last-section {
+  flex-basis: 0!important;
 }
