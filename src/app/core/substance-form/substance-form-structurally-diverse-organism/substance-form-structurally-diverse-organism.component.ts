@@ -6,6 +6,7 @@ import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormBase } from '../substance-form-base';
+import { SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 
 @Component({
   selector: 'app-substance-form-structurally-diverse-organism',
@@ -60,16 +61,37 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
     this.structurallyDiverse.developmentalStage = event;
   }
 
-  paternalUpdated(event): void {
-    this.structurallyDiverse.hybridSpeciesPaternalOrganism = event;
+  paternalUpdated(substance: SubstanceSummary): void {
+    const relatedSubstance: SubstanceRelated = {
+      refPname: substance._name,
+      name: substance._name,
+      refuuid: substance.uuid,
+      substanceClass: 'reference',
+      approvalID: substance.approvalID
+    };
+    this.structurallyDiverse.hybridSpeciesPaternalOrganism = relatedSubstance;
   }
 
-  maternalUpdated(event): void {
-    this.structurallyDiverse.hybridSpeciesMaternalOrganism = event;
+  maternalUpdated(substance: SubstanceSummary): void {
+    const relatedSubstance: SubstanceRelated = {
+      refPname: substance._name,
+      name: substance._name,
+      refuuid: substance.uuid,
+      substanceClass: 'reference',
+      approvalID: substance.approvalID
+    };
+    this.structurallyDiverse.hybridSpeciesMaternalOrganism = relatedSubstance;
   }
 
-  sourceMaterialUpdated(event): void {
-    this.structurallyDiverse.parentSubstance = event;
+  sourceMaterialUpdated(substance: SubstanceSummary): void {
+    const relatedSubstance: SubstanceRelated = {
+      refPname: substance._name,
+      name: substance._name,
+      refuuid: substance.uuid,
+      substanceClass: 'reference',
+      approvalID: substance.approvalID
+    };
+    this.structurallyDiverse.parentSubstance = relatedSubstance;
   }
 
   updateLocation(event): void {
