@@ -6,6 +6,7 @@ import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormBase } from '../substance-form-base';
+import { SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 
 @Component({
   selector: 'app-substance-form-structurally-diverse-organism',
@@ -70,7 +71,7 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
     };
     this.structurallyDiverse.hybridSpeciesPaternalOrganism = relatedSubstance;
   }
-    
+
   maternalUpdated(substance: SubstanceSummary): void {
     const relatedSubstance: SubstanceRelated = {
       refPname: substance._name,
@@ -81,7 +82,7 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
     };
     this.structurallyDiverse.hybridSpeciesMaternalOrganism = relatedSubstance;
   }
-    
+
   sourceMaterialUpdated(substance: SubstanceSummary): void {
     const relatedSubstance: SubstanceRelated = {
       refPname: substance._name,
