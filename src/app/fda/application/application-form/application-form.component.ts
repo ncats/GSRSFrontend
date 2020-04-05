@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ApplicationService } from '../service/application.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -15,12 +15,15 @@ import {take} from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JsonDialogFdaComponent } from '../application-form/json-dialog-fda/json-dialog-fda.component';
+import { ConfirmDialogComponent} from '../application-form/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-application-form',
   templateUrl: './application-form.component.html',
-  styleUrls: ['./application-form.component.scss']
+  styleUrls: ['./application-form.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
+
 export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   application: ApplicationSrs;
@@ -40,6 +43,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   copy: string;
   private overlayContainer: HTMLElement;
   serverError: boolean;
+  isDisableData = false;
 
   constructor(
     private applicationService: ApplicationService,
@@ -97,7 +101,15 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       if (response) {
         this.applicationService.loadApplication(response);
         this.application = this.applicationService.application;
-        console.log(this.application);
+
+        // Check if Data is from external source, and Disable some fields.
+        if (this.application) {
+          if (this.application.provenance) {
+            if (this.application.provenance.toLowerCase() === 'darrts') {
+              this.isDisableData = true;
+            }
+          }
+        }
       } else {
         this.handleApplicationRetrivalError();
       }
@@ -244,6 +256,27 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     });
     this.subscriptions.push(dialogSubscription);
 
+  }
+
+  addNewIndication() {
+    this.applicationService.addNewIndication();
+  }
+
+  confirmDeleteIndication(indIndex: number, indication: string) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Indication (' + (indIndex + 1) + ') ' + indication + '?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        console.log(result);
+          this.deleteIndication(indIndex);
+      }
+    });
+  }
+
+  deleteIndication(indIndex: number) {
+    this.applicationService.deleteIndication(indIndex);
   }
 
 }

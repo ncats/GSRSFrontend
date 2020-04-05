@@ -1,4 +1,4 @@
-<div class="">
+<div class="bordergray">
   <br>
   <hr>
   <br>
@@ -45,15 +45,10 @@
 
       <!-- PRODUCT NAME LIST -->
 
-      <button mat-raised-button color="primary" (click)="addNewProductName(prodIndex)"
-        matTooltip="Add New Product Name">
-        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add New Product Name
-      </button>
-
       <div *ngFor="let prodName of product.applicationProductNameList; let prodNameIndex = index">
 
         <div class="form-row">
-          <mat-form-field class="">
+          <mat-form-field class="formfield2columnwidth">
             <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName" name="productName" />
           </mat-form-field>
 
@@ -66,10 +61,18 @@
             </mat-select>
           </mat-form-field>
 
-          <button mat-raised-button color="primary" [disabled]="product.applicationProductNameList.length == 1"
-            (click)="deleteProductName(prodIndex, prodNameIndex)" matTooltip="Delete Product Name">
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>Delete Product Name
-          </button>
+          <div class="divflexrow">
+            <div class="width50px">
+              <button mat-icon-button color="primary" *ngIf="prodNameIndex == 0" (click)="addNewProductName(prodIndex)"
+                matTooltip="Add New Product Name">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+            </div>
+            <button mat-icon-button color="primary" [disabled]="product.applicationProductNameList.length == 1"
+              (click)="confirmDeleteProductName(prodIndex, prodNameIndex)" matTooltip="Delete Product Name">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </div>
         </div>
 
       </div> <!-- ngFor product Name List -->
@@ -117,12 +120,15 @@
       </div>
 
       <!-- INGREDIENT -->
+      <!--
       <div class="form-row">
-        <app-ingredient-form [product]="product" [prodIndex]="prodIndex"></app-ingredient-form>
+        <app-ingredient-form [applicationIngredientList]="product.applicationIngredientList" [prodIndex]="prodIndex"></app-ingredient-form>
       </div>
-
+    -->
     </fieldset>
     <br><br><br>
+    <hr *ngIf="prodIndex > 0">
+    <br>
   </div> <!-- Product repeat -->
 
 </div>

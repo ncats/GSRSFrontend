@@ -5,7 +5,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { ApplicationSrs, ValidationResults, ApplicationIngredient } from '../model/application.model';
-import { ProductSrs, ProductNameSrs } from '../model/application.model';
+import { ApplicationIndicationSrs, ProductSrs, ProductNameSrs } from '../model/application.model';
 import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -200,13 +200,27 @@ export class ApplicationService extends BaseHttpService {
   }
 
   loadApplication(application?: ApplicationSrs): void {
+    // if Update/Exist Application
     // setTimeout(() => {
     if (application != null) {
       this.application = application;
-    //  console.log('AFTER' + JSON.stringify(this.application));
+
+      // Add a new Indication if there is no indication record.
+      if (this.application.applicationIndicationList.length < 1) {
+        const newIndication: ApplicationIndicationSrs = {};
+        this.application.applicationIndicationList.unshift(newIndication);
+      }
+
+      // Add a new Product Name if there is no Product Name record.
+     /* if (this.application.applicationProductList[0].applicationProductNameList.length < 1) {
+        const newProductNameSrs: ProductNameSrs = {};
+        this.application.applicationProductList[0].applicationProductNameList.unshift(newProductNameSrs);
+      }
+     */
+      //  console.log('AFTER' + JSON.stringify(this.application));
     } else {
       this.application = {
-        applicationIndicationList: [],
+        applicationIndicationList: [{}],
         applicationProductList: [{
           applicationProductNameList: [{}],
           applicationIngredientList: [{}]
@@ -232,7 +246,7 @@ export class ApplicationService extends BaseHttpService {
     if ((this.application != null) && (this.application.id)) {
       return this.http.put<ApplicationSrs>(url, this.application, options);
     } else {
-    // Save New Application
+      // Save New Application
       return this.http.post<ApplicationSrs>(url, this.application, options);
     }
   }
@@ -252,6 +266,15 @@ export class ApplicationService extends BaseHttpService {
   validateApp(): Observable<ValidationResults> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/@validate`;
     return this.http.post(url, this.application);
+  }
+
+  addNewIndication(): void {
+    const newIndication: ApplicationIndicationSrs = {};
+    this.application.applicationIndicationList.unshift(newIndication);
+  }
+
+  deleteIndication(indIndex: number): void {
+    this.application.applicationIndicationList.splice(indIndex, 1);
   }
 
   addNewProduct(): void {
@@ -283,11 +306,11 @@ export class ApplicationService extends BaseHttpService {
   }
 
   reviewProduct(prodIndex: number): void {
-  //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
+    //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
   }
 
   addNewIngredient(index: number): void {
-    const newIngredient:  ApplicationIngredient = {};
+    const newIngredient: ApplicationIngredient = {};
     this.application.applicationProductList[index].applicationIngredientList.unshift(newIngredient);
   }
 
@@ -301,7 +324,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   reviewIngredient(prodIndex: number, ingredIndex: number): void {
-  //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
+    //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
   }
 
   getJson() {

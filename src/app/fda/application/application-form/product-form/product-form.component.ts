@@ -67,6 +67,20 @@ export class ProductFormComponent implements OnInit {
     this.applicationService.deleteProduct(prodIndex);
   }
 
+
+  confirmDeleteProductName(prodIndex: number, prodNameIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        console.log(result);
+          this.deleteProductName(prodIndex, prodNameIndex);
+      }
+    });
+  }
+
   deleteProductName(prodIndex: number, prodNameIndex: number) {
     this.applicationService.deleteProductName(prodIndex, prodNameIndex);
   }

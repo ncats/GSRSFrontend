@@ -1,7 +1,7 @@
 <br>
 <hr>
 <br>
-<span matBadge="{{product.applicationIngredientList.length}}" matBadgeColor="warn" matBadgeOverlap="false">
+<span matBadge="{{applicationIngredientList.length}}" matBadgeColor="warn" matBadgeOverlap="false">
   <span class="title1">INGREDIENT</span>
 </span>
 
@@ -12,76 +12,95 @@
   Ingredient
 </button>
 
-<div class="">
-  <br><br>
-  <div *ngFor="let ingredient of product.applicationIngredientList; let ingredIndex = index">
 
-    <!-- Buttons: delete, review -->
-    <div class="marginbottomminus17px padleft250px">
-      <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="product.applicationIngredientList.length == 1" [ngClass] = "{'backgroundgray': product.applicationIngredientList.length === 1}" (click)="confirmDeleteIngredient(prodIndex, ingredIndex)" matTooltip="Delete Ingredient Details {{ingredIndex + 1}}">
-        <mat-icon>delete_forever</mat-icon>
-      </button>
-      &nbsp;&nbsp;
-      <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyIngredient(ingredient, prodIndex)" matTooltip="Copy Ingredient Details {{ingredIndex + 1}} to New Ingredient">
-        <mat-icon>file_copy</mat-icon>
-      </button>
-      &nbsp;&nbsp;
-      <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="reviewIngredient(ingredIndex)" matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
-        <mat-icon>check_circle</mat-icon>
-      </button>
+<div *ngFor="let ingredient of applicationIngredientList; let ingredIndex = index">
+
+  <!-- Buttons: delete, review -->
+  <div class="marginbottomminus17px padleft250px">
+    <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="applicationIngredientList.length == 1"
+      [ngClass]="{'backgroundgray': applicationIngredientList.length === 1}"
+      (click)="confirmDeleteIngredient(prodIndex, ingredIndex)"
+      matTooltip="Delete Ingredient Details {{ingredIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+    &nbsp;&nbsp;
+    <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyIngredient(ingredient, prodIndex)"
+      matTooltip="Copy Ingredient Details {{ingredIndex + 1}} to New Ingredient">
+      <mat-icon>file_copy</mat-icon>
+    </button>
+    &nbsp;&nbsp;
+    <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="reviewIngredient(ingredIndex)"
+      matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
+      <mat-icon>check_circle</mat-icon>
+    </button>
+  </div>
+
+  <fieldset class="border">
+    <legend class="border">Ingredient Details&nbsp;<b><span class="font17px">{{ingredIndex + 1}}</span></b></legend>
+
+    <div class="form-row">
+      <mat-form-field class="">
+        <input matInput placeholder="Applicant Ingredient Name" [(ngModel)]="ingredient.applicantIngredName"
+          name="applicantIngredName" />
+      </mat-form-field>
+      <!-- Ingredient Name -->
+      <div class="flex-column related-substance">
+        <app-substance-selector (selectionUpdated)="ingredientNameUpdated($event, ingredIndex)"
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Ingredient Name" header="Ingredient Name"
+          [subuuid]="">
+        </app-substance-selector>
+      </div>
+      <!-- Basis of Strength -->
+      <div class="flex-column related-substance">
+        <app-substance-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Basis Of Strength" header="Basis Of Strength"
+          [subuuid]="relatedBasisSubstanceUuid">
+        </app-substance-selector>
+      </div>
     </div>
 
-    <fieldset class="border">
-      <legend class="border">Ingredient Details&nbsp;<b><span class="font17px">{{ingredIndex + 1}}</span></b></legend>
+    <div class="form-row">
+      <mat-form-field class="">
+        <mat-label>Ingredient Type</mat-label>
+        <mat-select matNativeControl [(ngModel)]="ingredient.ingredientType" name="ingredientType">
+          <mat-option *ngFor="let ingredientType of ingredientTypeList" [value]="ingredientType.value">
+            {{ingredientType.display}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-      <div class="form-row">
-        <mat-form-field class="">
-          <input matInput placeholder="Applicant Ingredient Name" [(ngModel)]="ingredient.applicantIngredName"
-            name="applicantIngredName" />
-        </mat-form-field>
-      </div>
 
-      <div class="form-row">
-        <mat-form-field class="">
-          <mat-label>Ingredient Type</mat-label>
-          <mat-select matNativeControl [(ngModel)]="ingredient.ingredientType" name="ingredientType">
-            <mat-option *ngFor="let ingredientType of ingredientTypeList" [value]="ingredientType.value">
-              {{ingredientType.display}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <mat-form-field class="">
+        <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
+      </mat-form-field>
 
-        <mat-form-field class="">
-          <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
-        </mat-form-field>
+      <mat-form-field class="">
+        <input matInput placeholder="Low" [(ngModel)]="ingredient.low" name="low" />
+      </mat-form-field>
 
-        <mat-form-field class="">
-          <input matInput placeholder="Low" [(ngModel)]="ingredient.low" name="low" />
-        </mat-form-field>
+      <mat-form-field class="">
+        <input matInput placeholder="High" [(ngModel)]="ingredient.high" name="high" />
+      </mat-form-field>
 
-        <mat-form-field class="">
-          <input matInput placeholder="High" [(ngModel)]="ingredient.high" name="high" />
-        </mat-form-field>
+      <mat-form-field class="">
+        <mat-label>Unit</mat-label>
+        <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
+          <mat-option *ngFor="let unit of unitList" [value]="unit.value">
+            {{unit.display}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-        <mat-form-field class="">
-          <mat-label>Unit</mat-label>
-          <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
-            <mat-option *ngFor="let unit of unitList" [value]="unit.value">
-              {{unit.display}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <mat-form-field class="">
+        <mat-label>Grade</mat-label>
+        <mat-select matNativeControl [(ngModel)]="ingredient.grade" name="grade">
+          <mat-option *ngFor="let grade of gradeList" [value]="grade.value">
+            {{grade.display}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div> <!-- row-->
+  </fieldset>
+  <br>
 
-        <mat-form-field class="">
-          <mat-label>Grade</mat-label>
-          <mat-select matNativeControl [(ngModel)]="ingredient.grade" name="grade">
-            <mat-option *ngFor="let grade of gradeList" [value]="grade.value">
-              {{grade.display}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div> <!-- row-->
-    </fieldset>
-    <br>
-  </div> <!-- Ingredient repeat -->
-</div>
+</div> <!-- loop ingredient -->

@@ -1,8 +1,10 @@
 .details-container {
   width: 100%;
+  /*
   display: flex;
   align-items: center;
   justify-content: center;
+  */
     /*padding: 20px;*/
   }
   
@@ -15,8 +17,9 @@
   
 .form-row {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  justify-content: flex-start;
+  grid-column-gap: 20px;
+  /* align-items: flex-end; */
 }
 
 .bordergray {
@@ -100,6 +103,7 @@ fieldset.border {
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 8px;
+  min-width: 0;  /* override the default value of min-content */
 }
 
 legend.border {
@@ -112,3 +116,25 @@ legend.border {
   font-weight: bold;
   margin-bottom:0px;
 }
+
+.formfieldwidth {
+  width: 160px !important;
+}
+
+.formfield2columnwidth {
+ /* flex: 1; */
+  width: 370px !important;
+}
+
+.formfield3columnwidth {
+  width: 540px !important;
+}  
+
+.formfieldfullpagewidth {
+  width: 900px;
+}
+
+.width50px {
+  width: 50px;
+}
+

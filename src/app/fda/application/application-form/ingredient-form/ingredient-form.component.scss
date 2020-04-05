@@ -22,8 +22,10 @@
 }
   
 .form-row {
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  /*grid-column-gap: 20px;*/
   align-items: flex-end;
 }
 
@@ -103,3 +105,14 @@ legend.border {
   margin-bottom:0px;
 }
 
+.disabled { cursor: not-allowed; }
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .related-substance img {
+  max-width:200px !important;
+  margin: auto;
+}

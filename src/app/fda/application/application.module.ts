@@ -40,6 +40,7 @@ import { ApplicationService } from './service/application.service';
 import { FacetFilterFdaPipe } from '../utils/facet-filter-fda.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import {SubstanceSelectorModule} from '@gsrs-core/substance-selector/substance-selector.module';
 
 const applicationRoutes: Routes = [
   {
@@ -96,7 +97,8 @@ const applicationRoutes: Routes = [
     OverlayModule,
     NgxJsonViewerModule,
     MatProgressBarModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    SubstanceSelectorModule
   ],
   declarations: [
     ApplicationsBrowseComponent,
