@@ -23,7 +23,7 @@
                 Set Definition to private
               </mat-option>
               <mat-option value="setPublic">
-                Set Definition to private
+                Set Definition to public
               </mat-option>
               <mat-option value="unapprove">
                 Un-approve record (Remove approval ID)
@@ -36,6 +36,9 @@
               </mat-option>
               <mat-option value="disulfide"  [disabled]="substanceClass != 'protein'" >
                 Predict disulfide links by protein type
+              </mat-option>
+              <mat-option value="merge"  >
+                merge subconcept
               </mat-option>
             </mat-select>
           </mat-form-field>

@@ -67,6 +67,8 @@ import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-inf
 import { RouterModule } from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
+import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   imports: [
@@ -98,7 +100,8 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     MatButtonToggleModule,
     NgxJsonViewerModule,
     RouterModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    MatProgressBarModule
   ],
   declarations: [
     AccessManagerComponent,
@@ -140,7 +143,8 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     StructuralUnitFormComponent,
     JsonDialogComponent,
     AuditInfoComponent,
-    SubmitSuccessDialogComponent
+    SubmitSuccessDialogComponent,
+    MergeConceptDialogComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -179,7 +183,8 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     CvDialogComponent,
     StructuralUnitFormComponent,
     JsonDialogComponent,
-    AuditInfoComponent
+    AuditInfoComponent,
+    MergeConceptDialogComponent,
   ],
   entryComponents: [
     RefernceFormDialogComponent,
@@ -193,7 +198,9 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     CvDialogComponent,
     JsonDialogComponent,
     AuditInfoComponent,
-    SubmitSuccessDialogComponent
+    SubmitSuccessDialogComponent,
+    MergeConceptDialogComponent
+
   ]
 })
 export class SubstanceFormModule { }

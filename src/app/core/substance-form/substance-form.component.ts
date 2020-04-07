@@ -29,6 +29,7 @@ import {AuthService} from '@gsrs-core/auth';
 import {take} from 'rxjs/operators';
 import { MatExpansionPanel } from '@angular/material';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
+import {MergeConceptDialogComponent} from "@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component";
 
 
 @Component({
@@ -225,6 +226,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.substanceFormService.changeStatus('pending');
       this.feature = undefined;
     }
+    if (this.feature === 'merge') {
+      this.mergeConcept();
+      this.feature = undefined;
+    }
+
   }
 
   changeClass(type: any): void {
@@ -636,4 +642,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     });
     this.subscriptions.push(dialogSubscription);
 }
+
+
+mergeConcept() {
+  this.feature = undefined;
+  const dialogRef = this.dialog.open(MergeConceptDialogComponent, {
+    width: '900px', data: {uuid: this.id}
+  });
+  this.overlayContainer.style.zIndex = '1002';
+}
+
+
 }

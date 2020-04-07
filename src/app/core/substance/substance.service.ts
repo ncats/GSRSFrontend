@@ -3,7 +3,15 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
-import { SubstanceSummary, SubstanceDetail, SubstanceEdit, SubstanceName, SubstanceCode, SubstanceRelationship } from './substance.model';
+import {
+  SubstanceSummary,
+  SubstanceDetail,
+  SubstanceEdit,
+  SubstanceName,
+  SubstanceCode,
+  SubstanceRelationship,
+  SubstanceRelated
+} from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SubstanceFacetParam } from './substance-facet-param.model';
@@ -13,6 +21,8 @@ import { switchMap } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet} from '@gsrs-core/utils';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import { catchError } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -570,6 +580,14 @@ export class SubstanceService extends BaseHttpService {
     } else {
       return link;
     }
+  }
+
+  getBDNUM(reference: SubstanceRelated ): Observable<string> {
+    const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
+    const refPname = `${this.apiBaseUrl}substances(${ reference.refPname  })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
+        return this.http.get<any>(refuuid).pipe(
+          catchError(error => this.http.get(refPname))
+        );
   }
 
 
