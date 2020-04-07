@@ -8,8 +8,7 @@ import { BdnumNameAll } from './clinical-trial.model';
 import { PagingResponse } from '@gsrs-core/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
-import { ClinicalTrialHttpParams } from '../misc/clinical-trial-http-params';
-import {Facet} from '@gsrs-core/utils';
+import {Facet, FacetSearchResponse, FacetHttpParams} from '@gsrs-core/facets-manager';
 
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
@@ -36,7 +35,7 @@ export class ClinicalTrialService extends BaseHttpService {
     if (!args.searchTerm) {  args.searchTerm = ''; }
     if (!args.pageSize) {  args.pageSize = 10; }
     if (!args.skip) {  args.skip = 0; }
-    let params = new ClinicalTrialHttpParams();
+    let params = new FacetHttpParams();
     params = params.append('skip', args.skip.toString());
     params = params.append('top', args.pageSize.toString());
     if (args.searchTerm !== null && args.searchTerm !== '') {
@@ -102,7 +101,7 @@ export class ClinicalTrialService extends BaseHttpService {
     type?: string
   ): Observable<PagingResponse<ClinicalTrial>> {
 
-    let params = new ClinicalTrialHttpParams();
+    let params = new FacetHttpParams();
     let url = this.apiBaseUrl;
 
     url += 'ctclinicaltrial/search';
@@ -257,6 +256,18 @@ export class ClinicalTrialService extends BaseHttpService {
         return results;
       })
     );
+  }
+
+  getClinicalTrialsFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetSearchResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/ctclinicaltrial/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    return this.http.get<FacetSearchResponse>(url);
   }
 
   // see substance.service

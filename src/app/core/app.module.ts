@@ -48,7 +48,6 @@ import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollToModule } from './scroll-to/scroll-to.module';
 import { TakePipe } from './utils/take.pipe';
-import { FacetDisplayPipe } from './utils/facet-display.pipe';
 import { EnvironmentModule } from '../../environments/environment';
 import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
@@ -62,7 +61,6 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { SubstanceFormComponent } from './substance-form/substance-form.component';
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import { SubstanceFormModule } from './substance-form/substance-form.module';
-import { FacetFilterPipe } from './utils/facet-filter.pipe';
 import { NameResolverModule } from './name-resolver/name-resolver.module';
 import { HighlightedSearchActionComponent } from './highlighted-search-action/highlighted-search-action.component';
 import { CardDynamicSectionDirective } from './substances-browse/card-dynamic-section/card-dynamic-section.directive';
@@ -73,6 +71,7 @@ import { StructureModule } from './structure/structure.module';
 import {MatTreeModule} from '@angular/material/tree';
 import {SubstanceHierarchyComponent} from '@gsrs-core/substances-browse/substance-hierarchy/substance-hierarchy.component';
 import {SequenceAlignmentComponent} from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
+import { FacetsManagerModule } from './facets-manager/facets-manager.module';
 
 @NgModule({
   declarations: [
@@ -84,8 +83,6 @@ import {SequenceAlignmentComponent} from '@gsrs-core/substances-browse/sequence-
     StructureSearchComponent,
     SubstanceDetailsComponent,
     TakePipe,
-    FacetDisplayPipe,
-    FacetFilterPipe,
     SequenceSearchComponent,
     TrackLinkEventDirective,
     SubstanceFormComponent,
@@ -144,8 +141,8 @@ import {SequenceAlignmentComponent} from '@gsrs-core/substances-browse/sequence-
     MatProgressBarModule,
     SubstanceImageModule,
     StructureModule,
-    MatTreeModule
-
+    MatTreeModule,
+    FacetsManagerModule
   ],
   providers: [
     ConfigService,
