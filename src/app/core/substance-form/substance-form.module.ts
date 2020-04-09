@@ -69,6 +69,7 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 
 @NgModule({
   imports: [
@@ -144,7 +145,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     JsonDialogComponent,
     AuditInfoComponent,
     SubmitSuccessDialogComponent,
-    MergeConceptDialogComponent
+    MergeConceptDialogComponent,
+    DefinitionSwitchDialogComponent
   ],
   exports: [
     AccessManagerComponent,
@@ -185,6 +187,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     JsonDialogComponent,
     AuditInfoComponent,
     MergeConceptDialogComponent,
+    DefinitionSwitchDialogComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
@@ -199,7 +202,9 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     JsonDialogComponent,
     AuditInfoComponent,
     SubmitSuccessDialogComponent,
-    MergeConceptDialogComponent
+    MergeConceptDialogComponent,
+    DefinitionSwitchDialogComponent
+
 
   ]
 })

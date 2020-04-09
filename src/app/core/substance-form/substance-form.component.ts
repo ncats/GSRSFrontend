@@ -30,6 +30,7 @@ import {take} from 'rxjs/operators';
 import { MatExpansionPanel } from '@angular/material';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 import {MergeConceptDialogComponent} from "@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component";
+import {DefinitionSwitchDialogComponent} from "@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component";
 
 
 @Component({
@@ -228,6 +229,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     if (this.feature === 'merge') {
       this.mergeConcept();
+      this.feature = undefined;
+    }
+    if (this.feature === 'switch') {
+      this.definitionSwitch();
       this.feature = undefined;
     }
 
@@ -652,5 +657,12 @@ mergeConcept() {
   this.overlayContainer.style.zIndex = '1002';
 }
 
+  definitionSwitch() {
+    this.feature = undefined;
+    const dialogRef = this.dialog.open(DefinitionSwitchDialogComponent, {
+      width: '900px', data: {uuid: this.id}
+    });
+    this.overlayContainer.style.zIndex = '1002';
+  }
 
 }

@@ -1,0 +1,30 @@
+<div class = "dialog">
+
+  <div mat-dialog-title>
+    <h1 >Merge and Deprecate SubConcept</h1>
+  </div>
+  <div mat-dialog-content>
+<div>{{text}}</div>
+    <div >
+      Which record?
+      <div *ngFor = "let c of currentAlts">
+      <button class="merge-selection-item" (click) ="tempPrimeChange(c.refuuid)">
+        <div class = 'text-center thumb-col'>
+          <img class = 'struc-thumb img-responsive subref' />
+          <span> {{c.linkingID}}</span>
+          <br/>
+          <span>
+            {{c.refPname}}
+          </span>
+        </div>
+      </button>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-flat-button color="primary" matDialogClose>Close</button>
+
+    <span class="middle-fill"></span>
+
+  </div>
+</div>

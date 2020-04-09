@@ -10,6 +10,9 @@
           <mat-form-field>
             <mat-label>Advanced Features</mat-label>
             <mat-select name="Feature" [ngModel]="feature"  (openedChange)="openedChange($event)" (selectionChange)="useFeature($event)" disableOptionCentering>
+              <mat-option value="switch"  >
+                merge switch
+              </mat-option>
               <mat-option value="changeClass" [disabled] = "!id">
                 Change Substance Class
               </mat-option>
