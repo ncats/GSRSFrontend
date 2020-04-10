@@ -1,5 +1,5 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
-  <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
+  <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
     <app-facets-manager
       (facetsParamsUpdated)="facetsParamsUpdated($event)"
       (facetsLoaded)="facetsLoaded($event)"
