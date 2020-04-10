@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   contactEmail: string;
   isClosedWelcomeMessage = true;
   imageLoc: any;
+  appId: string;
 
   browseAll: string;
   application: string;
@@ -36,6 +37,7 @@ export class HomeComponent implements OnInit {
     this.application = `${environment.baseHref || '/'}assets/icons/home/icon_application.png`;
     this.browseAll = `${environment.baseHref || '/'}assets/icons/home/icon_browseall.png`;
     this.chemicon = `${environment.baseHref || '/'}assets/icons/home/icon_registersubstance.png`;
+    this.appId = environment.appId;
 
     this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
       this.isAuthenticated = response;

@@ -33,11 +33,20 @@ export class UtilsService {
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
-  getStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean): string {
+  getStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean, atomMaps?: Array<number>, version?: number): string {
     if (!stereo) {
       stereo = false;
     }
-    return `${this.configService.configData.apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}&context=nocache`;
+    const apiBaseUrl = this.configService.configData.apiBaseUrl;
+    const randomKey = Math.random().toString(36).replace('0.', '');
+    let url = `${apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}&cache-control=${randomKey}`;
+    if (atomMaps != null) {
+      url = `${url}&context=${atomMaps.toString()}`;
+    }
+    if (version != null) {
+      url = `${url}&version=${version}`;
+    }
+    return url;
   }
 
   handleMatSidenavOpen(widthBreakingPoint?: number): void {

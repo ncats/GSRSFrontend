@@ -2,8 +2,8 @@
   <table mat-table [dataSource]="linkages">
 
     <ng-container matColumnDef='linkage'>
-      <th mat-header-cell *matHeaderCellDef> linkage </th>
-      <td mat-cell *matCellDef="let linkage"> {{linkage.linkage}} </td>
+      <th mat-header-cell *matHeaderCellDef> Linkage </th>
+      <td mat-cell *matCellDef="let linkage"> {{getLinkageDisplay(linkage.linkage)}} </td>
     </ng-container>
 
     <ng-container matColumnDef='Site Range'>
