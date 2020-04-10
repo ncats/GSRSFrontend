@@ -77,7 +77,7 @@ export class IngredientFormComponent implements OnInit {
     this.applicationService.copyIngredient(ingredient, prodIndex);
   }
 
-  reviewIngredient(ingredient: any, prodIndex, ingredIndex: number) {
+  reviewIngredient(prodIndex: number, ingredIndex: number) {
  //   this.reviewIngredientMessage[prodIndex] = new Date();
     this.applicationService.reviewIngredient(prodIndex, ingredIndex);
     // const dateFormat = require('dateformat');
