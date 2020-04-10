@@ -3,7 +3,7 @@
 
     <ng-container matColumnDef='Sugar'>
       <th mat-header-cell *matHeaderCellDef> Sugar </th>
-      <td mat-cell *matCellDef="let sugar"> {{sugar.sugar}} </td>
+      <td mat-cell *matCellDef="let sugar"> {{getSugarDisplay(sugar.sugar)}} </td>
     </ng-container>
 
     <ng-container matColumnDef='Site Range'>

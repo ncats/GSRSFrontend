@@ -348,6 +348,11 @@ export class SubstanceService extends BaseHttpService {
     let params = new SubstanceHttpParams();
 
     params = params.appendFacetParams(facets);
+
+    // remove this when async backend issue is fixed
+    const random_key = Math.random().toString(36).replace('0.', '');
+    params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } });
+
     params = params.appendDictionary({
       top: pageSize.toString(),
       skip: skip.toString(),
@@ -559,7 +564,8 @@ export class SubstanceService extends BaseHttpService {
 
   oldLinkFix(link: string): string {
     if (link && link.length > 10) {
-      const link3 = this.baseUrl + 'beta/substances/' + link.substr((link.length - 10), link.length);
+      const oid = link.split('/');
+      const link3 = this.baseUrl + 'beta/substances/' + oid[oid.length - 1];
       return link3;
     } else {
       return link;

@@ -47,6 +47,8 @@
   .code-text, .url {
     flex-grow: 1;
   }
+
+
 }
 
 .key-value-pair {
@@ -103,8 +105,15 @@
   width:40%;
 }
 
+.group {
+  width: 75px;
+}
 
-.group, .access {
+.type {
+  max-width: 225px;
+}
+
+.access {
   width: 30%;
 }
 
@@ -147,7 +156,7 @@
     padding-right: 15px;
   }
 
-  .name, .tags, .domains {
+  .name, .tags, .domains, .type, .amount, .param-display {
     flex-grow: 1;
     padding-right: 15px;
   }
@@ -200,6 +209,7 @@
 
 .amount {
   display:flex;
+  padding-bottom: 10px;
 }
 
 .amt-label {
@@ -207,6 +217,29 @@
 }
 
 
-.parm-display {
+.param-display {
   padding-top:10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
+
+.param-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 7px;
+  padding-top: 7px;
+
+  .param-display {
+    max-width: 40%;
+    padding-right:15px;
+  }
+  .param-amount {
+    max-width: 60%;
+  }
+
+}
+
+

@@ -41,6 +41,13 @@ export class StructureService {
     return this.http.get(url, {responseType: 'text'});
   }
 
+
+  getOtherInchi(id: string): Observable<string> {
+  // get the other half of the inchi
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})structure!$inchi()`;
+    return this.http.get(url, {responseType: 'text'});
+  }
+
   resolveName(name: string): Observable<ResolverResponse[]> {
     const url = `${this.configService.configData.apiBaseUrl}resolve/${name}`;
     return this.http.get<ResolverResponse[]>(url);

@@ -20,6 +20,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   defIcon = 'drop_down';
   smilesIcon = 'drop_down';
   inchi: string;
+  otherInchi: string;
   showStereo = false;
   molfileHref: any;
   substanceUpdated = new Subject<SubstanceDetail>();
@@ -54,8 +55,12 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     this.substance = substance;
     this.structure = this.substance.structure;
     if (this.structure.smiles) {
-      this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
-        this.inchi = inchi;
+      console.log('should be getting');
+      const inchiSub = this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
+        this.inchi = inchi.replace(/\"/g, '');
+      });
+      const otherInchiSub = this.structureService.getOtherInchi(this.substance.uuid).subscribe(inchi => {
+        this.otherInchi = inchi.replace(/\"/g, '');
       });
     }
     const theJSON = this.structure.molfile;
@@ -95,5 +100,6 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     this.gaService.sendEvent(this.analyticsEventCategory, 'link-toggle', 'stereo', value);
     this.showStereo = !this.showStereo;
   }
+
 
 }

@@ -91,7 +91,7 @@
           <div class="name">Nucleic Acid Type</div>
           <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidType}}</div>
         </div>
-        <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidSubType">
+        <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidSubType && substance.nucleicAcid.nucleicAcidSubType.length > 0">
           <div class="name">Nucleic Acid Sub-type</div>
           <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.join(', ')}}</div>
         </div>

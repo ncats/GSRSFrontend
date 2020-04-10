@@ -24,11 +24,11 @@
         <div class="image-thumbnail">
           <div *ngIf="substance.structure || substance.polymer">
             <a class="zoom" (click)="openImageModal(substance)">
-              <img appSubstanceImage [entityId]="substance.uuid">
+              <img appSubstanceImage [entityId]="substance.uuid"  [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
             </a>
           </div>
           <div *ngIf="!substance.structure && !substance.polymer">
-            <img appSubstanceImage [entityId]="substance.uuid">
+            <img appSubstanceImage [entityId]="substance.uuid" [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
           </div>
         </div>
         <div *ngIf = "substance._matchContext && substance._matchContext.similarity">

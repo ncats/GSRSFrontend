@@ -16,7 +16,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
   sequenceSearchForm = new FormGroup({
     cutoff: new FormControl(0.9, [Validators.min(0), Validators.max(1), Validators.required]),
     type: new FormControl('GLOBAL', Validators.required),
-    sequenceType: new FormControl('Protein', Validators.required),
+    sequenceType: new FormControl('protein', Validators.required),
     sequence: new FormControl('', Validators.required)
   });
   errorMessage = '';
@@ -87,7 +87,8 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
 
   cleanSequence(type): void {
     let mod = ['G', 'T', 'U', 'N', 'A', 'C', 'X'];
-    if (type === 'Protein') {
+
+    if (type.toUpperCase() === 'PROTEIN') {
       mod = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y'];
     }
     this.sequenceSearchForm.controls.sequence.setValue(this.filterbychr(this.sequenceSearchForm.controls.sequence.value, mod));

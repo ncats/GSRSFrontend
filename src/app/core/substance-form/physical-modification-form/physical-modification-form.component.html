@@ -11,17 +11,19 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <app-cv-input [vocabulary] = "modRoleList" title = "Sequence Type" (valueChange) = "mod.physicalModificationRole = $event" [model] = "mod.physicalModificationRole"></app-cv-input>
+    <app-cv-input [vocabulary] = "modRoleList" class = "type" title = "Modification Role" (valueChange) = "mod.physicalModificationRole = $event" [model] = "mod.physicalModificationRole"></app-cv-input>
     <div class = 'amount'>
       <div class = "label amt-label">
         Parameters
       </div>
-      <button mat-icon-button matTooltip="add" (click)="(openParameterDialog())">
+      <button mat-icon-button matTooltip="add / edit parameters" (click)="(openParameterDialog())">
         <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
       <div class = 'param-display'>
-        <div *ngFor = "let param of mod.parameters; index as index">{{index}}
-          {{param.parameterName}}
+        <div *ngFor = "let param of mod.parameters; index as index" class = "param-container" [ngClass]="{'bottom-border': index < mod.parameters.length}">
+         <div class = "param-name" *ngIf = "param.parameterName">{{param.parameterName}}
+         </div>
+          <div class = "param-amount" *ngIf = "param.amount">{{displayAmount(param.amount)}}</div>
         </div>
       </div>
 

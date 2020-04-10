@@ -52,7 +52,7 @@ export class SubstancePropertiesComponent extends SubstanceCardBase implements O
         val = val.trim();
       }
       if (val.trim().length <= 0) {
-        val = '<i>empty value</i>';
+        val = '(empty value)';
       }
     }
 
