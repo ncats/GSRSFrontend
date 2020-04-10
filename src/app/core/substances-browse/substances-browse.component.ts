@@ -77,6 +77,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   rawFacets: Array<Facet>;
   public displayFacets: Array<DisplayFacet> = [];
   private isFacetsParamsInit = false;
+  private isCollapsed = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -479,6 +480,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     if (window) {
       if (window.innerWidth < 1100) {
         this.matSideNav.close();
+        this.isCollapsed = true;
         this.hasBackdrop = true;
       } else {
         this.matSideNav.open();

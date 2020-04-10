@@ -8,7 +8,7 @@ import { BdnumNameAll } from './clinical-trial.model';
 import { PagingResponse } from '@gsrs-core/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
-import {Facet, FacetSearchResponse, FacetHttpParams} from '@gsrs-core/facets-manager';
+import {Facet, FacetQueryResponse, FacetHttpParams} from '@gsrs-core/facets-manager';
 
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
@@ -258,16 +258,16 @@ export class ClinicalTrialService extends BaseHttpService {
     );
   }
 
-  getClinicalTrialsFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetSearchResponse> {
+  getClinicalTrialsFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/ctclinicaltrial/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
+      url = `${this.configService.configData.apiBaseUrl}api/v1/ctclinicaltrial/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
       url = facet._self;
     }
-    return this.http.get<FacetSearchResponse>(url);
+    return this.http.get<FacetQueryResponse>(url);
   }
 
   // see substance.service

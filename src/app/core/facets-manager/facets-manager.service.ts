@@ -4,13 +4,13 @@ import { BaseHttpService } from '@gsrs-core/base';
 import { ConfigService } from '@gsrs-core/config';
 import { HttpClient } from '@angular/common/http';
 import { UtilsService } from '@gsrs-core/utils';
-import { Facet, FacetSearchResponse } from './facet.model';
+import { Facet, FacetQueryResponse } from './facet.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FacetsManagerService extends BaseHttpService {
-  getFacetsHandler: (facet: Facet, searchTerm?: string, nextUrl?: string) => Observable<FacetSearchResponse>;
+  getFacetsHandler: (facet: Facet, searchTerm?: string, nextUrl?: string) => Observable<FacetQueryResponse>;
   private clearSelectionsSubject = new Subject<void>();
 
   constructor(
@@ -21,7 +21,7 @@ export class FacetsManagerService extends BaseHttpService {
     super(configService);
   }
 
-  registerGetFacetsHandler(handler: (facet: Facet, searchTerm?: string, nextUrl?: string) => Observable<FacetSearchResponse>): void {
+  registerGetFacetsHandler(handler: (facet: Facet, searchTerm?: string, nextUrl?: string) => Observable<FacetQueryResponse>): void {
     this.getFacetsHandler = handler;
   }
 

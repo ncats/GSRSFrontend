@@ -11,7 +11,7 @@ import { FacetHttpParams } from '../facets-manager/facet-http-params';
 import { UtilsService } from '../utils/utils.service';
 import { switchMap } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
-import {Facet, FacetSearchResponse} from '@gsrs-core/facets-manager';
+import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { stringify } from 'querystring';
 
@@ -545,16 +545,16 @@ export class SubstanceService extends BaseHttpService {
     }
   }
 
-  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetSearchResponse> {
+  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
+      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
       url = facet._self;
     }
-    return this.http.get<FacetSearchResponse>(url);
+    return this.http.get<FacetQueryResponse>(url);
   }
 
 }
