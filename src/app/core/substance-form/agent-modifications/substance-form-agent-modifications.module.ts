@@ -10,12 +10,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import {SubstanceFormAgentModificationsComponent} from '@gsrs-core/substance-form/substance-form-agent-modifications/substance-form-agent-modifications.component';
+import {SubstanceFormAgentModificationsCardComponent} from '@gsrs-core/substance-form/agent-modifications/substance-form-agent-modifications-card.component';
+import {AgentModificationFormComponent} from '@gsrs-core/substance-form/agent-modifications/agent-modification-form.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormAgentModificationsComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormAgentModificationsCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -28,7 +29,8 @@ import {SubstanceFormAgentModificationsComponent} from '@gsrs-core/substance-for
     MatInputModule
   ],
   declarations: [
-    SubstanceFormAgentModificationsComponent
+    SubstanceFormAgentModificationsCardComponent,
+    AgentModificationFormComponent
   ]
 })
 export class SubstanceFormAgentModificationsModule { }

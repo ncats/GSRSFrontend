@@ -47,7 +47,6 @@ import {DisulfideLinksFormComponent} from '@gsrs-core/substance-form/disulfide-l
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {StructuralModificationFormComponent} from '@gsrs-core/substance-form/structural-modification-form/structural-modification-form.component';
-import {AgentModificationFormComponent} from '@gsrs-core/substance-form/agent-modification-form/agent-modification-form.component';
 import {PhysicalModificationFormComponent} from '@gsrs-core/substance-form/physical-modification-form/physical-modification-form.component';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/physical-parameter-form-dialog/physical-parameter-form-dialog.component';
@@ -127,7 +126,6 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
     StructuralModificationFormComponent,
-    AgentModificationFormComponent,
     PhysicalModificationFormComponent,
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
@@ -164,7 +162,6 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
     StructuralModificationFormComponent,
-    AgentModificationFormComponent,
     PhysicalModificationFormComponent,
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,

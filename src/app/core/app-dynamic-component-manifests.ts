@@ -250,9 +250,9 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceFormStructuralModificationsModule)
   },
   {
-    componentId: 'substance-form-agent-modifications',
-    path: 'substance-form-agent-modifications',
-    loadChildren: () => import('./substance-form/substance-form-agent-modifications/substance-form-agent-modifications.module')
+    componentId: 'substance-form-agent-modifications-card',
+    path: 'substance-form-agent-modifications-card',
+    loadChildren: () => import('./substance-form/agent-modifications/substance-form-agent-modifications.module')
       .then(m => m.SubstanceFormAgentModificationsModule)
   },
   {

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceFormAgentModificationsComponent } from './substance-form-agent-modifications.component';
+import { SubstanceFormAgentModificationsCardComponent } from './substance-form-agent-modifications-card.component';
 
 describe('SubstanceFormAgentModificationsComponent', () => {
-  let component: SubstanceFormAgentModificationsComponent;
-  let fixture: ComponentFixture<SubstanceFormAgentModificationsComponent>;
+  let component: SubstanceFormAgentModificationsCardComponent;
+  let fixture: ComponentFixture<SubstanceFormAgentModificationsCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceFormAgentModificationsComponent ]
+      declarations: [ SubstanceFormAgentModificationsCardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceFormAgentModificationsComponent);
+    fixture = TestBed.createComponent(SubstanceFormAgentModificationsCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -7,12 +7,12 @@ import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 
 @Component({
-  selector: 'app-substance-form-agent-modifications',
-  templateUrl: './substance-form-agent-modifications.component.html',
-  styleUrls: ['./substance-form-agent-modifications.component.scss']
+  selector: 'app-substance-form-agent-modifications-card',
+  templateUrl: './substance-form-agent-modifications-card.component.html',
+  styleUrls: ['./substance-form-agent-modifications-card.component.scss']
 })
 // tslint:disable-next-line:max-line-length
-export class SubstanceFormAgentModificationsComponent
+export class SubstanceFormAgentModificationsCardComponent
   extends SubstanceCardBaseFilteredList<AgentModification>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
 
