@@ -57,7 +57,6 @@ export class ProductFormComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        console.log(result);
           this.deleteProduct(prodIndex);
       }
     });
@@ -75,7 +74,6 @@ export class ProductFormComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        console.log(result);
           this.deleteProductName(prodIndex, prodNameIndex);
       }
     });
@@ -92,4 +90,9 @@ export class ProductFormComponent implements OnInit {
   reviewProduct(prodIndex: number) {
     this.reviewProductMessage[prodIndex] = new Date();
   }
+
+  addNewIngredient(prodIndex: number) {
+    this.applicationService.addNewIngredient(prodIndex);
+  }
+
 }

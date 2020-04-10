@@ -1,0 +1,44 @@
+.selected-substance-container {
+    max-width: 100%;
+    width: 100%;
+}
+
+.selected-substance {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    position: relative;
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-width: 200px;
+    }
+}
+
+.selected-substance-options {
+    position: absolute;
+    right: 5px;
+    top: 15px;
+    display: flex;
+    flex-direction: column;
+
+    .mat-mini-fab {
+        background-color: rgba(242, 242, 242, .85);
+        color: #404040;
+        width: 35px;
+        height: 35px;
+
+        &:not(:first-child) {
+            margin-top: 3px;
+        }
+
+        ::ng-deep .mat-button-wrapper {
+            padding: 0;
+        }
+    }
+}
+
+.hidden {
+    display: none !important;
+}

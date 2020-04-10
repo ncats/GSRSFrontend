@@ -14,16 +14,23 @@ import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 })
 export class IngredientFormComponent implements OnInit {
 
-  @Input() applicationIngredientList: Array<ApplicationIngredient> = [];
+  @Input() ingredient: ApplicationIngredient;
   @Input() prodIndex: number;
+  @Input() ingredIndex: number;
+  @Input() totalIngredient: number;
+
   ingredientTypeList: Array<VocabularyTerm> = [];
   unitList: Array<VocabularyTerm> = [];
   gradeList: Array<VocabularyTerm> = [];
-  reviewIngredientMessage: Array<any> = [];
-  ingredientMessage = '';
-  parent: SubstanceRelated;
-  relatedSubstanceUuid: string;
-  relatedBasisSubstanceUuid: string;
+  selectedSubstance?: SubstanceSummary = null;
+  ingredientNameSubstanceUuid: string;
+  basisofStrengthSubstanceUuid: string;
+  ingredientName: string;
+  basisOfStrength: string;
+  ingredientNameMessage = '';
+  ingredientNameMessageTwo = '';
+  basisOfStrengthMessage = '';
+  basisOfStrengthMessageTwo = '';
 
   constructor(
     private applicationService: ApplicationService,
@@ -31,24 +38,12 @@ export class IngredientFormComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.getVocabularies();
-    // this.getSubstanceDetails('0007647AA');
-    this.relatedSubstanceUuid = '41ae991d-b3fc-487c-a707-5903d9cb2aef';
-    this.relatedBasisSubstanceUuid = '5ef28fe9-ad6f-4593-a3de-22b0b16ad0e6';
+    setTimeout(() => {
+      this.getVocabularies();
+      this.getSubstanceId(this.ingredient.bdnum, 'ingredientname');
+      this.getSubstanceId(this.ingredient.basisOfStrengthBdnum, 'basisofstrength');
+    }, 600);
   }
-
-  /*
-  @Input()
-  set product(product: ProductSrs) {
-    this.product = product;
-    if (this.product.)
-    this.privateConstituent = constituent;
-    if (this.constituent.substance) {
-      this.relatedSubstanceUuid = this.privateConstituent.substance.refuuid;
-    }
-
-  }
-*/
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('INGREDIENT_TYPE', 'PROD_UNIT', 'PROD_GRADE').subscribe(response => {
@@ -58,36 +53,17 @@ export class IngredientFormComponent implements OnInit {
     });
   }
 
-  getSubstanceDetails(bdnum: string): string {
-    const substanceUuid = '';
-    /*
-    if (bdnum != null) {
-      this.applicationService.getSubstanceDetailsByBdnum(bdnum).subscribe(response => {
-        if (response) {
-          console.log('bdnum: ' + JSON.stringify(response));
-          this.relatedSubstanceUuid = response.substanceId;
-          console.log(response.substanceId);
-          return 'response.substanceId';
-        }
-      });
-    }
-    */
-    return 'ec99c48c-91bf-4699-9ab3-2c5ff7aeb9a6';
-  }
-
-
   addNewIngredient(prodIndex: number) {
     this.applicationService.addNewIngredient(prodIndex);
   }
 
   confirmDeleteIngredient(prodIndex: number, ingredIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Ingredient Details ' + (ingredIndex + 1) + ' data?'
+      data: 'Are you sure you want to delete Ingredient Details ' + (ingredIndex + 1) + '?'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        console.log(result);
         this.deleteIngredient(prodIndex, ingredIndex);
       }
     });
@@ -102,7 +78,7 @@ export class IngredientFormComponent implements OnInit {
   }
 
   reviewIngredient(ingredient: any, prodIndex, ingredIndex: number) {
-    this.reviewIngredientMessage[prodIndex] = new Date();
+ //   this.reviewIngredientMessage[prodIndex] = new Date();
     this.applicationService.reviewIngredient(prodIndex, ingredIndex);
     // const dateFormat = require('dateformat');
     //  const now = new Date();
@@ -110,7 +86,97 @@ export class IngredientFormComponent implements OnInit {
     //  console.log('DATE: ' + now);
   }
 
+  confirmDeleteIngredientName(prodIndex: number, ingredIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Ingredient Name ' + (ingredIndex + 1) + '?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteIngredientName(prodIndex, ingredIndex);
+      }
+    });
+  }
+
+  deleteIngredientName(prodIndex: number, ingredIndex: number) {
+    this.ingredient.bdnum = '';
+    this.ingredientNameSubstanceUuid = null;
+    // Clear the structure
+    this.ingredientNameUpdated(this.selectedSubstance, ingredIndex);
+    this.ingredientNameMessage = 'Click Validate and Submit button to delete';
+  //  this.ingredientNameMessageTwo =
+  }
+
+  confirmDeleteBasisOfStrength(prodIndex: number, ingredIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Basis of Strength ' + (ingredIndex + 1) + '?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteBasisOfStrength(prodIndex, ingredIndex);
+      }
+    });
+  }
+
+  deleteBasisOfStrength(prodIndex: number, ingredIndex: number) {
+     this.ingredient.basisOfStrengthBdnum = '';
+     this.basisofStrengthSubstanceUuid = null;
+     this.basisOfStrengthMessage = 'Click Validate and Submit button to delete';
+  }
+
+  getBdnum(substanceId: string, type: string) {
+    this.applicationService.getSubstanceDetailsBySubstanceId(substanceId).subscribe(response => {
+      if (response) {
+        if (response.bdnum) {
+
+          if (type === 'ingredientname') {
+            this.ingredientNameMessage = '';
+            this.ingredient.bdnum = response.bdnum;
+            this.ingredientNameSubstanceUuid = response.substanceId;
+
+            // If Basis of Strenght is empty/null, copy the Ingredient Name to Basis of Strength
+            if (this.ingredient.basisOfStrengthBdnum == null) {
+              this.basisOfStrengthMessage = '';
+              this.ingredient.basisOfStrengthBdnum = response.bdnum;
+              this.basisofStrengthSubstanceUuid = response.substanceId;
+            }
+            // Basis is strength
+          } else {
+            this.ingredient.basisOfStrengthBdnum = response.bdnum;
+            this.basisofStrengthSubstanceUuid = response.substanceId;
+          }
+
+        }
+      }
+    });
+  }
+
+  getSubstanceId(bdnum: string, type: string) {
+    if (bdnum != null) {
+      this.applicationService.getSubstanceDetailsByBdnum(bdnum).subscribe(response => {
+        if (response) {
+          if (response.substanceId) {
+
+            if (type === 'ingredientname') {
+              this.ingredient.bdnum = response.bdnum;
+              this.ingredientNameSubstanceUuid = response.substanceId;
+              // Basis is strength
+            } else {
+              this.ingredient.basisOfStrengthBdnum = response.bdnum;
+              this.basisofStrengthSubstanceUuid = response.substanceId;
+            }
+          } else {
+            this.basisOfStrengthMessage = 'No Ingredient Name found for this bdnum';
+          }
+        }
+      });
+    }
+  }
+
   ingredientNameUpdated(substance: SubstanceSummary, ingredIndex: number): void {
+  //  console.log('Summary: ' + JSON.stringify(substance));
+
     const relatedSubstance: SubstanceRelated = {
       refPname: substance._name,
       name: substance._name,
@@ -118,9 +184,12 @@ export class IngredientFormComponent implements OnInit {
       substanceClass: 'reference',
       approvalID: substance.approvalID
     };
-    console.log('REL SUB: ' + relatedSubstance.refuuid);
-    // this.component.substance = relatedSubstance;
-    //  this.relatedSubstanceUuid = this.component.substance.refuuid;
+
+    if (relatedSubstance != null) {
+      if (relatedSubstance.refuuid != null) {
+        this.getBdnum(relatedSubstance.refuuid, 'ingredientname');
+      }
+    }
   }
 
   basisOfStrengthUpdated(substance: SubstanceSummary): void {
@@ -131,11 +200,12 @@ export class IngredientFormComponent implements OnInit {
       substanceClass: 'reference',
       approvalID: substance.approvalID
     };
-    console.log('REL SUB Basis: ' + relatedSubstance.refuuid);
 
-    // this.component.substance = relatedSubstance;
-    //  this.relatedSubstanceUuid = this.component.substance.refuuid;
+    if (relatedSubstance != null) {
+      if (relatedSubstance.refuuid != null) {
+        this.getBdnum(relatedSubstance.refuuid, 'basisofstrength');
+      }
+    }
   }
-
 
 }

@@ -17,8 +17,8 @@
   
 .form-row {
   display: flex;
-  justify-content: flex-start;
-  grid-column-gap: 20px;
+  justify-content:space-between; 
+ /* grid-column-gap: 20px; */
   /* align-items: flex-end; */
 }
 
@@ -134,7 +134,19 @@ legend.border {
   width: 900px;
 }
 
-.width50px {
-  width: 50px;
+.width40px {
+  width: 40px;
 }
 
+.disabled { 
+  cursor: not-allowed; 
+} 
+
+.prodNameField {
+  width: calc((100% - 100px) / (5/4));
+  margin-right: 30px;
+}
+
+.displayinlineblock {
+  display: inline-block;
+}

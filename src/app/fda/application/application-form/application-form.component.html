@@ -53,14 +53,19 @@
   <div class="scrollable-container">
     <div class="cards-container">
 
-      <mat-card class="bordergray">
-
-        <mat-card-title>
+      <div class="title_box">
+        <div class="title">
           Register New Application
-        </mat-card-title>
+        </div>
+        <div class="">
+          <span *ngIf="isDisableData" class="font11px colorgray">
+            Provenance: DARRTS (some fields are non-editable)
+          </span>
+        </div>
+      </div>
 
+      <mat-card class="bordergray">
         <mat-card-content>
-          <br>
           <div class="row">
             <mat-form-field class="col-1">
               <mat-label>Center</mat-label>
@@ -86,10 +91,15 @@
             </mat-form-field>
 
             <mat-form-field class="col-1">
-              <mat-label>Application Status</mat-label>
-              <mat-select matNativeControl [disabled]="isDisableData" [(ngModel)]="application.status" name="status">
-                <mat-option *ngFor="let appStatus of appStatusList" [value]="appStatus.value">
-                  {{appStatus.display}}
+              <input matInput placeholder="Non Proprietary Name" [(ngModel)]="application.nonProprietaryName"
+                name="nonProprietaryName" />
+            </mat-form-field>
+
+            <mat-form-field class="col-1">
+              <mat-label>Public Domain</mat-label>
+              <mat-select matNativeControl [(ngModel)]="application.publicDomain" name="publicDomain">
+                <mat-option *ngFor="let publicDomain of publicDomainList" [value]="publicDomain.value">
+                  {{publicDomain.display}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -98,10 +108,6 @@
               <input matInput placeholder="Submit Date" [(ngModel)]="application.submitDate" name="submitDate" />
             </mat-form-field>
 
-            <mat-form-field class="col-1">
-              <input matInput placeholder="Status Date" [disabled]="isDisableData" [(ngModel)]="application.statusDate"
-                name="statusDate" />
-            </mat-form-field>
           </div>
 
 
@@ -109,6 +115,15 @@
             <mat-form-field class="col-2">
               <input matInput placeholder="Sponsor Name" [disabled]="isDisableData"
                 [(ngModel)]="application.sponsorName" name="sponsorName" />
+            </mat-form-field>
+
+            <mat-form-field class="col-1">
+              <mat-label>Application Status</mat-label>
+              <mat-select matNativeControl [disabled]="isDisableData" [(ngModel)]="application.status" name="status">
+                <mat-option *ngFor="let appStatus of appStatusList" [value]="appStatus.value">
+                  {{appStatus.display}}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
 
             <mat-form-field class="col-1">
@@ -127,18 +142,10 @@
             </mat-form-field>
 
             <mat-form-field class="col-1">
-              <mat-label>Public Domain</mat-label>
-              <mat-select matNativeControl [(ngModel)]="application.publicDomain" name="publicDomain">
-                <mat-option *ngFor="let publicDomain of publicDomainList" [value]="publicDomain.value">
-                  {{publicDomain.display}}
-                </mat-option>
-              </mat-select>
+              <input matInput placeholder="Status Date" [disabled]="isDisableData" [(ngModel)]="application.statusDate"
+                name="statusDate" />
             </mat-form-field>
 
-            <mat-form-field class="col-1">
-              <input matInput placeholder="Non Proprietary Name" [(ngModel)]="application.nonProprietaryName"
-                name="nonProprietaryName" />
-            </mat-form-field>
           </div>
 
           <div class="row">
@@ -155,20 +162,22 @@
           <!-- INDICATION Loop -->
           <div *ngFor="let ind of application.applicationIndicationList; let indIndex = index">
             <div class="row">
-              <mat-form-field class="col-5">
+              <mat-form-field class="col-5-more">
                 <input matInput placeholder="Indication" [(ngModel)]="ind.indication" name="indication" />
               </mat-form-field>
 
               <!-- INDICATION Button -->
-              <button mat-icon-button color="primary" *ngIf="indIndex == 0" (click)="addNewIndication()"
-                matTooltip="Add New Indication">
-                <mat-icon svgIcon="add_circle_outline"></mat-icon>
-              </button>
+              <span class="width40px displayinlineblock">
+                <button mat-icon-button color="primary" *ngIf="indIndex == 0" (click)="addNewIndication()"
+                  matTooltip="Add New Indication">
+                  <mat-icon svgIcon="add_circle_outline"></mat-icon>
+                </button>
+              </span>
               <!-- Delete Indication -->
-              <button mat-icon-button [ngStyle]="{'color':'orangered'}"
+              <button mat-icon-button color="primary"
                 [disabled]="application.applicationIndicationList.length == 1"
                 (click)="confirmDeleteIndication(indIndex, ind.indication)" matTooltip="Delete Indication">
-                <mat-icon>delete_forever</mat-icon>
+                <mat-icon [class.disabled]="application.applicationIndicationList.length == 1">delete_forever</mat-icon>
               </button>
               <br>
             </div>

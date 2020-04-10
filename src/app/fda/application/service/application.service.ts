@@ -177,6 +177,17 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  getSubstanceDetailsBySubstanceId(
+    substanceId: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   getApplicationCenterByBdnum(
     bdnum: string
   ): Observable<any> {

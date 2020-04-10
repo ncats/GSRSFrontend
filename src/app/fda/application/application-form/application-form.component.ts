@@ -264,7 +264,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   confirmDeleteIndication(indIndex: number, indication: string) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Indication (' + (indIndex + 1) + ') ' + indication + '?'
+      data: 'Are you sure you want to delete Indication (' + (indIndex + 1) + ')?'
     });
 
     dialogRef.afterClosed().subscribe(result => {

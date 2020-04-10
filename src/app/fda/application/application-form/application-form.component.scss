@@ -27,6 +27,21 @@
   justify-content: center;
 }
 
+.title_box {
+  width: 1140px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.title {
+   font-size: 24px;
+   font-weight: 600px;
+   font-family: Arial, Helvetica, sans-serif;
+  /* padding-left: 70px; */
+}
+
+
 .mat-card {
   max-width: 1140px;
 }
@@ -37,10 +52,7 @@
 
 .col-1 {
   /* width: 159.333px; */
-  width: calc((100% - 30px * 5) / 6); 
-/*width: calc((100% / total_number_of_columns * columns) - the gutter) */
-/* calc(((100% / columns) * cols) - gutter);  */
-/*  width: calc(((100% / 6) * 1) - 30px); */
+  width: calc((100% - 30px * 5) / 6);
   margin-right: 30px;
 }
 
@@ -50,7 +62,6 @@
 
 .col-2 {
   /* width: 348.667px; calc() value*/
-  /* calc((100% - 30px * 2) / 3);  */
   width: calc((100% - 30px * 2) / 3); 
   margin-right: 30px;
 }
@@ -88,6 +99,12 @@
 .col-5:last-child {
   margin-right: 0px;
 }  
+
+.col-5-more {
+  /* width: calc() value*/ 
+  width: calc((100% + 100px) / (6/5));
+  margin-right: 10px;
+}
 
 .col-6 {
   width: 100%;
@@ -196,21 +213,6 @@
   margin-bottom: 20px;
 }
 
-.form-row {
-  /*
-  width: 100%;
-  display: flex;
-  justify-content: space-between; 
-  align-items: flex-end; */
-  /*
-  display: flex;
-  justify-content: space-between;
-  padding: 0 10px;
-  align-items: flex-start;
-  */
-}
-  
-
 .margintopneg10px {
   margin-top: -10px;
 }
@@ -243,13 +245,34 @@
   width: 50px;
 }
 
+.colorgray {
+  color: gray;
+}
+
+.font11px {
+  font-size: 11px;
+}
+
+.displayinlineblock {
+  display: inline-block;
+}
+
 .floatleft {
   float: left;
 }
 
+.disabled { 
+  cursor: not-allowed; 
+} 
+
+.disabledfield { 
+  cursor: not-allowed;
+  color: red; 
+} 
+
 /* OVERWRITE MATERIAL INPUT FIELDS */
 
-.mat-form-field-label{
+.mat-form-field-label {
   color: rgb(127, 127, 133) !important;
 }
 
@@ -267,23 +290,26 @@
   background-color: rgb(70, 116, 106) !important;;
 } 
 
-.formFieldWidth180percent .mat-form-field-infix {
-  width: 180px !important;
+.mat-form-field-disabled .mat-form-field-underline 
+{ 
+  background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 10%, #c2c7cc 0 ) !important; 
+  background-size: 1px 100% !important;
+  background-repeat: repeat-x !important; 
+  cursor: not-allowed;
+} 
+
+.mat-form-field-disabled:hover {
+  cursor: not-allowed;
 }
 
-.formfieldwidth {
-  /*width: 160px !important;*/
+.mat-form-field-label:hover {
+  cursor: not-allowed;
 }
 
-.formfield2columnwidth {
-  width: 360px !important;
+.mat-form-field-underline:hover {
+  cursor: not-allowed;
+} 
+
+.mat-form-field-label:hover {
+  cursor: not-allowed;
 }
-
-.formfield3columnwidth {
- /* width: 540px !important;*/
-}  
-
-.formfieldfullpagewidth {
-  width: 900px;
-}
-
