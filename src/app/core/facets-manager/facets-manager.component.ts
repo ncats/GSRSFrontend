@@ -82,6 +82,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         distinctUntilChanged(),
         switchMap(event => {
           const facet = this.facets[event.index];
+          console.log(event.query);
           return this.facetsService.getFacetsHandler(facet, event.query).pipe(take(1));
         })
       ).subscribe(response => {
@@ -107,6 +108,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           return !removeFacet;
         });
         this.activeSearchedFaced.values = this.activeSearchedFaced.values.concat(response.content);
+        console.log(this.activeSearchedFaced.values);
         this.searchText[this.activeSearchedFaced.name].isLoading = false;
       }, error => {
         this.searchText[this.activeSearchedFaced.name].isLoading = false;
@@ -395,8 +397,12 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   moreFacets(index: number, facet: Facet) {
-    const subscription = this.facetManagerService.getFacetsHandler(this.facets[index]).subscribe(resp => {
-      this.facets[index].$next = resp.$next;
+    if (facet.$next == null) {
+      facet.$next = facet._self.replace('fskip=0', 'fskip=10');
+    }
+    const subscription = this.facetManagerService.getFacetsHandler(this.facets[index], '', facet.$next).subscribe(resp => {
+      this.facets[index].$next = resp.nextPageUri;
+      this.facets[index].$previous = resp.previousPageUri;
       this.facets[index].values = this.facets[index].values.concat(resp.content);
       this.facets[index].$fetched = this.facets[index].values;
       this.facets[index].$total = resp.ftotal;
@@ -408,10 +414,11 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   lessFacets(index: number) {
     const nextUrl = this.facets[index].$next;
-    const subscription = this.facetManagerService.getFacetsHandler(this.facets[index], null, nextUrl).subscribe(response => {
+    const subscription = this.facetManagerService.getFacetsHandler(this.facets[index], null, null).subscribe(response => {
       this.facets[index].values = response.content;
       this.facets[index].$fetched = response.content;
-      this.facets[index].$next = response.$next;
+      this.facets[index].$next = response.nextPageUri;
+      this.facets[index].$previous = response.previousPageUri;
       subscription.unsubscribe();
     }, error => {
       subscription.unsubscribe();

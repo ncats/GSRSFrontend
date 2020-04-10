@@ -16,6 +16,7 @@ export interface Facet {
     $total?: number;
     $fskip?: number;
     $next?: string;
+    $previous?: string;
     $fetched: Array<FacetValue>;
     $showAdvanced?: boolean;
 }
@@ -29,7 +30,7 @@ export interface FacetValue {
     count: number;
 }
 
-export interface FacetSearchResponse {
+export interface FacetQueryResponse {
     ftotal: number;
     fdim: number;
     fskip: number;
@@ -38,7 +39,8 @@ export interface FacetSearchResponse {
     content: Array<FacetValue>;
     uri: string;
     facetName: string;
-    $next: string;
+    nextPageUri: string;
+    previousPageUri: string;
 }
 
 export interface FacetParam {
