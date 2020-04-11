@@ -18,6 +18,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ApplicationsBrowseComponent } from './application/applications-browse/applications-browse.component';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
 import { SsoRefreshService } from './service/sso-refresh.service';
+import { SubstanceSearchSelectorModule } from './substance-search-select/substance-search-selector.module.ts';
 
 const fdaRoutes: Routes = [
   {
@@ -44,7 +45,8 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     MatTabsModule,
     ClinicalTrialsModule.forRoot(),
     ApplicationModule,
-    ProductModule
+    ProductModule,
+    SubstanceSearchSelectorModule
   ],
   declarations: [
     SubstanceCountsComponent
