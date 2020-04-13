@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
 import {AgentModification, StructuralModification} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
+import {SubstanceFormAgentModificationsService} from './substance-form-agent-modifications.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 
@@ -20,7 +20,7 @@ export class SubstanceFormAgentModificationsCardComponent
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService,
+    private substanceFormAgentModificationsService: SubstanceFormAgentModificationsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
   ) {
@@ -34,7 +34,7 @@ export class SubstanceFormAgentModificationsCardComponent
 
   ngAfterViewInit() {
     this.canAddItemUpdate.emit(true);
-    const agentSubscription = this.substanceFormService.substanceAgentModifications.subscribe(modifications => {
+    const agentSubscription = this.substanceFormAgentModificationsService.substanceAgentModifications.subscribe(modifications => {
       this.modifications = modifications;
     });
     this.subscriptions.push(agentSubscription);
@@ -52,13 +52,13 @@ export class SubstanceFormAgentModificationsCardComponent
   }
 
   addStructuralModification(): void {
-    this.substanceFormService.addSubstanceAgentModification();
+    this.substanceFormAgentModificationsService.addSubstanceAgentModification();
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-agent-modification-0`, 'center');
     });
   }
 
   deleteAgentModification(modification: AgentModification): void {
-    this.substanceFormService.deleteSubstanceAgentModification(modification);
+    this.substanceFormAgentModificationsService.deleteSubstanceAgentModification(modification);
   }
 }

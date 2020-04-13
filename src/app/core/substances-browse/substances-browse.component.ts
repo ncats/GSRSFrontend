@@ -77,7 +77,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   rawFacets: Array<Facet>;
   public displayFacets: Array<DisplayFacet> = [];
   private isFacetsParamsInit = false;
-  private isCollapsed = true;
+  isCollapsed = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SubstanceFormCodesCardComponent } from './substance-form-codes-card.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { SubstanceFormModule } from '../substance-form.module';
 import { MatDividerModule } from '@angular/material/divider';
@@ -10,14 +11,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import {SubstanceFormAgentModificationsCardComponent} from '@gsrs-core/substance-form/agent-modifications/substance-form-agent-modifications-card.component';
-import {AgentModificationFormComponent} from '@gsrs-core/substance-form/agent-modifications/agent-modification-form.component';
-import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
+import { CodeFormComponent } from './code-form.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormAgentModificationsCardComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormCodesCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -27,12 +26,11 @@ import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule,
-    SubstanceSelectorModule
+    MatInputModule
   ],
   declarations: [
-    SubstanceFormAgentModificationsCardComponent,
-    AgentModificationFormComponent
+    SubstanceFormCodesCardComponent,
+    CodeFormComponent
   ]
 })
-export class SubstanceFormAgentModificationsModule { }
+export class SubstanceFormCodesModule { }

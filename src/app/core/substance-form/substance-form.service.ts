@@ -5,7 +5,6 @@ import {
   SubstanceName,
   SubstanceStructure,
   SubstanceMoiety,
-  SubstanceCode,
   SubstanceRelationship,
   SubstanceNote,
   SubstanceProperty,
@@ -14,7 +13,6 @@ import {
   DisulfideLink,
   Glycosylation,
   Site,
-  AgentModification,
   PhysicalModification,
   StructuralModification,
   Protein,
@@ -39,9 +37,8 @@ import { StructureService } from '@gsrs-core/structure';
 import { DomainsWithReferences } from './domain-references/domain.references.model';
 import { StructuralUnit } from '@gsrs-core/substance';
 import * as _ from 'lodash';
-import { SubstanceFormModule } from './substance-form.module';
 @Injectable({
-  providedIn: SubstanceFormModule
+  providedIn: 'root'
 })
 export class SubstanceFormService implements OnDestroy {
   private subscriptions: Array<Subscription> = [];
@@ -56,7 +53,6 @@ export class SubstanceFormService implements OnDestroy {
   private computedMoieties: Array<SubstanceMoiety>;
   private deletedMoieties: Array<SubstanceMoiety> = [];
   private substanceMoietiesEmitter = new Subject<Array<SubstanceMoiety>>();
-  private substanceCodesEmitter = new Subject<Array<SubstanceCode>>();
   private substanceRelationshipsEmitter = new Subject<Array<SubstanceRelationship>>();
   private privateDomainsWithReferences: DomainsWithReferences;
   private domainsWithReferencesEmitter = new Subject<DomainsWithReferences>();
@@ -69,7 +65,6 @@ export class SubstanceFormService implements OnDestroy {
   private substanceCysteineEmitter = new Subject<Array<Site>>();
   private substanceLinksEmitter = new Subject<Array<Linkage>>();
   private substanceSugarsEmitter = new Subject<Array<Sugar>>();
-  private substanceAgentModificationsEmitter = new Subject<Array<AgentModification>>();
   private substancePhysicalModificationsEmitter = new Subject<Array<PhysicalModification>>();
   private substanceStructuralModificationsEmitter = new Subject<Array<StructuralModification>>();
   private substanceProteinEmitter = new Subject<Protein>();
@@ -230,18 +225,17 @@ export class SubstanceFormService implements OnDestroy {
           });
         }
       }
-      const substanceString = JSON.stringify(this.privateSubstance);
-      this.substanceStateHash = this.utilsService.hashCode(substanceString);
       this.substanceEmitter.next(this.privateSubstance);
     });
   }
 
   get substance(): Observable<SubstanceDetail> {
-    return new Observable(observer => {
-      this.substanceEmitter.subscribe(substance => {
-        observer.next(substance);
-      });
-    });
+    return this.substanceEmitter.asObservable();
+  }
+
+  resetState(): void {
+    const substanceString = JSON.stringify(this.privateSubstance);
+    this.substanceStateHash = this.utilsService.hashCode(substanceString);
   }
 
   unloadSubstance(): void {
@@ -426,8 +420,6 @@ export class SubstanceFormService implements OnDestroy {
         this.privateSubstance.names = [];
         this.privateSubstance.codes = [];
         this.substanceNamesEmitter.next(this.privateSubstance.names);
-        this.substanceCodesEmitter.next(this.privateSubstance.codes);
-
       }
     }
     this.privateSubstance.definitionType = definition.definitionType;
@@ -1090,44 +1082,6 @@ export class SubstanceFormService implements OnDestroy {
 
   // Structure end
 
-  // Codes start
-
-  get substanceCodes(): Observable<Array<SubstanceCode>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.privateSubstance.codes == null) {
-          this.privateSubstance.codes = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.codes);
-        this.substanceCodesEmitter.subscribe(codes => {
-          observer.next(this.privateSubstance.codes);
-        });
-      });
-    });
-  }
-
-  addSubstanceCode(): void {
-    const newCode: SubstanceCode = {
-      references: [],
-      access: []
-    };
-    this.privateSubstance.codes.unshift(newCode);
-    this.substanceCodesEmitter.next(this.privateSubstance.codes);
-  }
-
-  deleteSubstanceCode(code: SubstanceCode): void {
-    const subCodeIndex = this.privateSubstance.codes.findIndex(subCode => code.$$deletedCode === subCode.$$deletedCode);
-    if (subCodeIndex > -1) {
-      this.privateSubstance.codes.splice(subCodeIndex, 1);
-      this.substanceCodesEmitter.next(this.privateSubstance.codes);
-    }
-  }
-
-  // Codes end
-
   // Relationships start
 
   get substanceRelationships(): Observable<Array<SubstanceRelationship>> {
@@ -1635,49 +1589,6 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   // Glycosylation end
-
-  // modifications start
-
-  get substanceAgentModifications(): Observable<Array<AgentModification>> {
-    this.checkModifications();
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (!this.privateSubstance.modifications) {
-          this.privateSubstance.modifications = {};
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        if (!this.privateSubstance.modifications.agentModifications) {
-          this.privateSubstance.modifications.agentModifications = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.modifications.agentModifications);
-        this.substanceAgentModificationsEmitter.subscribe(agentModifications => {
-          observer.next(this.privateSubstance.modifications.agentModifications);
-        });
-      });
-    });
-  }
-
-  addSubstanceAgentModification(): void {
-    const newAgentModifications: AgentModification = {};
-    this.privateSubstance.modifications.agentModifications.unshift(newAgentModifications);
-    this.substanceAgentModificationsEmitter.next(this.privateSubstance.modifications.agentModifications);
-  }
-
-  deleteSubstanceAgentModification(agentModification: AgentModification): void {
-    const agentModIndex = this.privateSubstance.modifications.agentModifications.findIndex(
-      agentMod => agentModification.$$deletedCode === agentMod.$$deletedCode);
-    if (agentModIndex > -1) {
-      this.privateSubstance.modifications.agentModifications.splice(agentModIndex, 1);
-      this.substanceAgentModificationsEmitter.next(this.privateSubstance.modifications.agentModifications);
-    }
-  }
-
-  // modifications end
 
   // modifications start
 
@@ -2203,12 +2114,10 @@ export class SubstanceFormService implements OnDestroy {
         this.substanceNamesEmitter.next(this.privateSubstance.names);
         this.substanceStructureEmitter.next(this.privateSubstance.structure);
         this.substanceMoietiesEmitter.next(this.privateSubstance.moieties);
-        this.substanceCodesEmitter.next(this.privateSubstance.codes);
         this.substanceRelationshipsEmitter.next(this.privateSubstance.relationships);
         this.substanceNamesEmitter.next(this.privateSubstance.notes);
         this.substancePropertiesEmitter.next(this.privateSubstance.properties);
         if (this.privateSubstance.modifications) {
-          this.substanceAgentModificationsEmitter.next(this.privateSubstance.modifications.agentModifications);
           this.substancePhysicalModificationsEmitter.next(this.privateSubstance.modifications.physicalModifications);
           this.substanceStructuralModificationsEmitter.next(this.privateSubstance.modifications.structuralModifications);
 

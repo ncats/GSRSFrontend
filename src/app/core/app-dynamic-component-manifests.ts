@@ -196,9 +196,9 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceFormMoietiesModule),
   },
   {
-    componentId: 'substance-form-codes',
-    path: 'substance-form-codes',
-    loadChildren: () => import('./substance-form/substance-form-codes/substance-form-codes.module')
+    componentId: 'substance-form-codes-card',
+    path: 'substance-form-codes-card',
+    loadChildren: () => import('./substance-form/codes/substance-form-codes.module')
       .then(m => m.SubstanceFormCodesModule),
   },
   {

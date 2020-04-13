@@ -30,7 +30,6 @@ import { ExpandDetailsModule } from '../expand-details/expand-details.module';
 import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
 import { StructureFormComponent } from './structure-form/structure-form.component';
 import { AmountFormComponent } from './amount-form/amount-form.component';
-import { CodeFormComponent } from './code-form/code-form.component';
 import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
 import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 import { ApplyReferenceComponent } from './apply-reference/apply-reference.component';
@@ -110,7 +109,6 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     NameOrgsComponent,
     StructureFormComponent,
     AmountFormComponent,
-    CodeFormComponent,
     RelationshipFormComponent,
     ApplyReferenceComponent,
     NoteFormComponent,
@@ -149,7 +147,6 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     NameFormComponent,
     StructureFormComponent,
     AmountFormComponent,
-    CodeFormComponent,
     RelationshipFormComponent,
     NoteFormComponent,
     PropertyFormComponent,
