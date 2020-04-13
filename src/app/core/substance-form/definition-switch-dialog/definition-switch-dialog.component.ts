@@ -1,18 +1,19 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {SubstanceDetail, SubstanceService} from '@gsrs-core/substance';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {DomSanitizer} from '@angular/platform-browser';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SubstanceDetail, SubstanceService } from '@gsrs-core/substance';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { DomSanitizer } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import * as defiant from '../../../../../node_modules/defiant.js/dist/defiant.min.js';
+import { LoadingService } from '@gsrs-core/loading/index.js';
 
-@Component({
+@Component( {
   selector: 'app-definition-switch-dialog',
   templateUrl: './definition-switch-dialog.component.html',
   styleUrls: ['./definition-switch-dialog.component.scss']
 })
 export class DefinitionSwitchDialogComponent implements OnInit {
-  public dialogRef: MatDialogRef<DefinitionSwitchDialogComponent>;
+  public dialogRef: MatDialogRef <DefinitionSwitchDialogComponent>;
   primeVersion: string;
   altversion = '';
   full_prom = null;
@@ -24,15 +25,21 @@ export class DefinitionSwitchDialogComponent implements OnInit {
   structureuuid: string;
   structureid: string;
   alt: any = {};
-  currentAlts: Array<any>;
+  currentAlts: Array <any>;
   sub: SubstanceDetail;
   fieldGetter: any;
   text: string;
+  showButtons = true;
+  loading = false;
+  error = '';
+  test1: any;
+  test2: any;
 
   constructor(
     private substanceFormService: SubstanceFormService,
     private substanceService: SubstanceService,
     private sanitizer: DomSanitizer,
+    private loadingService: LoadingService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
   }
@@ -47,6 +54,8 @@ export class DefinitionSwitchDialogComponent implements OnInit {
 
   defSwitch() {
     this.sub = this.substanceFormService.getJson();
+    console.log(defiant.json.search(this.sub, '//*[references]'));
+
     this.fieldGetter = {
       'protein': ['protein', 'modifications', 'properties'],
       'chemical': ['structure', 'moieties', 'modifications', 'properties'],
@@ -71,28 +80,37 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         return r;
       }
     }).map(function (r) {
-      console.log(r);
       return r['relatedSubstance'];
     }).value();
 
     if (this.currentAlts.length > 0) {
-
+      this.text = 'select a substance to switch';
     } else {
-      alert('No alternate definitions were found for this record');
+      this.text = 'No alternate definitions were found for this record';
     }
 
   }
 
+  // set primary substance type to different and != alternative
   tempPrimeChange(uuid) {
-    console.log('temp prime change');
+    if (!confirm("This process involves multiple updates to both records and may take several minutes.\n"+
+    "If the switch fails at any stage, follow the instructions that appear to restore both records. \n\n"+
+    " Click 'OK' to proceed.")) {
+      this.showButtons = true;
+        return;
+    }
+    this.loadingService.setLoading(true);
+    this.loading = true;
+    this.text = 'Starting step 1';
+    this.showButtons = false;
+    console.log('Temporarily changing primary type');
     this.substanceService.getSubstanceDetails(this.sub.uuid).subscribe(c => {
       this.oldPrime = _.cloneDeep(c);
       if (!this.fieldGetter[this.oldPrime.substanceClass]) {
-        alert('This substance is incompatible with the definition switch function');
+        this.text = 'The selected alternative is incompatible with the definition switch function';
         return;
-      } else {
-        alert (this.oldPrime.substanceClass);
       }
+      // delete all old definitional fields
       this.fieldGetter[this.sub.substanceClass].forEach(x => {
         if (this.oldPrime[x]) {
           delete this.oldPrime[x];
@@ -126,7 +144,12 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         this.oldPrime.structure = {
           'opticalActivity': 'none',
           'access': [],
-          'molfile': '\n   JSDraw209061916362D\n\n  6  6  0  0  0  0            999 V2000\n   28.8600   -9.2560    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   30.2110   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   30.2110   -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   28.8600   -6.1360    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090   -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  0  0  0\n  1  5  1  0  0  0  0\n  5  6  1  0  0  0  0\n  4  6  1  0  0  0  0\nM  END',
+          'molfile': '\n   JSDraw209061916362D\n\n  6  6  0  0  0  0            999 V2000\n   28.8600   -9.2560    '+
+          '0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   30.2110   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0'+
+          '  0  0  0\n   30.2110   -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   28.8600   -6.1360    0.0000 He'+
+          '  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090 '+
+          '  -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  0  '+
+          '0  0\n  1  5  1  0  0  0  0\n  5  6  1  0  0  0  0\n  4  6  1  0  0  0  0\nM  END',
           'deprecated': false,
           'digest': '4b4cb19b839f6eb23b836addbaa87729a9632a35',
           'smiles': '[He]1[He][He][He][He][He]1',
@@ -145,13 +168,15 @@ export class DefinitionSwitchDialogComponent implements OnInit {
       }
 
       this.oldPrime.references.push(depRef);
+      this.test1 =  defiant.json.search(this.oldPrime, '//*[references]');
       this.substanceService.getSubstanceDetails(uuid).subscribe(d => {
+        this.test2 =  defiant.json.search(d, '//*[references]');
+
         this.oldAlt = _.cloneDeep(d);
         if (!this.fieldGetter[this.oldAlt.substanceClass]) {
-          alert('The selected alternative is incompatible with the definition switch function');
+         this.text = 'The selected alternative is incompatible with the definition switch function';
           return;
         }
-        console.log(this.oldAlt.substanceClass === this.sub.substanceClass);
         if (this.oldAlt.substanceClass === this.sub.substanceClass) {
           this.updateRecord(this.oldPrime, () => {
             this.AltNewType(this.oldAlt);
@@ -164,9 +189,11 @@ export class DefinitionSwitchDialogComponent implements OnInit {
       });
     });
   }
-
+      // change alt type if it's the same as the primary
       AltNewType(alt) {
+        console.log('newtype');
         this.didStep5 = true;
+        this.text = 'Step 1 complete. Running step 2a...';
         this.substanceService.getSubstanceDetails(this.oldAlt.uuid).subscribe(d => {
             alt = _.cloneDeep(d);
 
@@ -184,8 +211,13 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               altSwitch.structure = {
                 'opticalActivity': 'none',
                 'access': [],
-                'molfile': '\n   JSDraw209051918142D\n\n  6  6  0  0  0  0            999 V2000\n   17.6800   -3.7440    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   16.3290   -2.9640    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   16.3290   -1.4040    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   17.6800   -0.6240    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   19.0310   -1.4040    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   19.0310   -2.9640    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  0  0  0\n  4  5  1  0  0  0  0\n  5  6  1  0  0  0  0\n  6  1  1  0  0  0  0\nM  END',
-                'id': this.structureid,
+                'molfile': '\n   JSDraw209061916362D\n\n  6  6  0  0  0  0            999 V2000\n   28.8600   -9.2560    '+
+                '0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   30.2110   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0'+
+                '  0  0  0\n   30.2110   -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   28.8600   -6.1360    0.0000 He'+
+                '  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090 '+
+                '  -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  '+
+                '0  0  0\n  1  5  1  0  0  0  0\n  5  6  1  0  0  0  0\n  4  6  1  0  0  0  0\nM  END',
+                                'id': this.structureid,
                 'references': [this.structureuuid]
               };
             } else {
@@ -220,12 +252,19 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           });
       }
 
+      // set old primary definition info to alternative
      AltNewDef(alt) {
+        if (this.didStep5 === true) {
+          this.text = 'Step 2a complete. Running step 2b...';
+
+        } else {
+          this.text = 'Step 1 complete. Running step 2...';
+        }
+        console.log('getting 2');
+        // get server version for server-side updates
           this.substanceService.getSubstanceDetails(this.oldAlt.uuid).subscribe(d => {
+
           alt = _.cloneDeep(d);
-          console.log(alt);
-          console.log(this.sub);
-          console.log('deleting ' + alt.substanceClass + ' adding ' + this.sub.substanceClass);
           this.fieldGetter[alt.substanceClass].forEach(x => {
             if (alt[x]) {
               delete alt[x];
@@ -238,18 +277,21 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           });
           alt.substanceClass = this.sub.substanceClass;
           const altReferences = defiant.json.search(alt, '//*[references]');
-          console.log(altReferences);
+          alert(altReferences.length);
+          altReferences.forEach(e => {
+            console.log(e.isObject+ ' - ' + _.isObjectLike(e) +' -- '+  (this._typeof2(e) === 'object') + ' --- ' + e.uuid);
+          });
+        
           const objectsA = altReferences.filter(e => {
-            console.log(e);
-            console.log(this._typeof2(e));
             if (this._typeof2(e) === 'object') {
+    
               return true;
             } else {
+          
               return false;
             }
-            // return h.isObject;
-           // return e.isObject;
           });
+          alert(objectsA.length);
           console.log(objectsA);
           const toPush = [];
 
@@ -259,9 +301,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             for (let k = 0; k < current.length; k++) {
               for (let l = 0; l < this.sub.references.length; l++) {
                 if (this.sub.references[l].uuid === current[k]) {
-                  console.log('pushing ' + current[k]);
                   const replace = this.guid();
-                  console.log('to ' + replace);
                   current[k] = replace;
                   this.sub.references[l].uuid = replace;
                   toPush.push(this.sub.references[l]);
@@ -275,28 +315,33 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           });
 
           if (this.didStep5 === true) {
-            console.log('true');
             alt.references = alt.references.filter(r => {
               if (r.uuid !== this.structureuuid) {
                 return r;
-              } else {console.log('not adding ' + this.structureuuid)}
+              }
             });
           }
           const temp = _.cloneDeep(alt);
-          console.log(temp);
-
+          if (this.didStep5 === true) {
+            this.text = 'Step 2a complete. Sending update for 2b...';
+  
+          } else {
+            this.text = 'Step 1 complete. Sending update for step 2...';
+          }
           this.updateRecord(alt,  () => {
             this.primeNewDef(alt);
           }, 2);
         });
       }
 
-
+      // set primary to alternative definition info
       primeNewDef(alt) {
+        this.text = 'Step 2 complete. Running final step...';
         this.substanceService.getSubstanceDetails(this.sub.uuid).subscribe(e => {
 
           this.substanceService.getSubstanceDetails(this.oldAlt.uuid).subscribe(f => {
             const newSub = _.cloneDeep(e);
+            console.log(newSub);
 
             newSub.substanceClass = this.oldAlt.substanceClass;
             this.fieldGetter[newSub.substanceClass].forEach(x => {
@@ -310,9 +355,11 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               }
             });
             const subReferences = defiant.json.search(newSub, '//*[references]');
+            subReferences.forEach(e => {
+            });
             const objectsA = subReferences.filter(h => {
-              console.log(h);
-              console.log(this._typeof2(h));
+              console.log(h.isObject+ ' - ' + _.isObjectLike(h) +' -- '+  (this._typeof2(h) === 'object'));
+
               if (this._typeof2(h) === 'object') {
                 return true;
               } else {
@@ -345,11 +392,15 @@ export class DefinitionSwitchDialogComponent implements OnInit {
                 return r;
               }
             });
+            console.log('its done');
+            this.text = 'Step 2 complete. Sending update for final step...';
             this.updateRecord(newSub,  () => {
-              location.reload();
+              // location.reload();
             }, 3);
           });
+          console.log('out 1');
         });
+        console.log('out 2');
       }
 
       updateRecord(nsub, cb, step) {
@@ -360,8 +411,18 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             console.log(data);
 
             if (step === 3) {
+              this.text = 'Definitions switched successfully!';
+              this.loadingService.setLoading(false);
+              this.loading = false;
+              console.log(this.test1);
+              console.log('read');
+              console.log(this.test2);
               setTimeout(function () {
-                alert('Record definitions successfully switched. The page will now refresh. \n\n Please review and remove any unnecessary validation Notes created for each substance during the switch');
+                console.log(this.test1);
+                console.log(this.test2);
+                alert('Record definitions successfully switched. The page will now refresh. '+
+                '\n\n Please review and remove any unnecessary validation Notes created for each substance during the switch');
+               
                 cb();
               }, 1000);
             } else {
@@ -369,8 +430,8 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             }
           },
           error => {
-           // $('.loading').finish();
-          //  $('.loading').hide();
+            this.loadingService.setLoading(false);
+            this.loading = false;
             console.log('FAILURE - SERVER RESPONSE');
             console.log(error);
             console.log('SENT SUBSTANCE');
@@ -385,39 +446,34 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             } else if (error && error.message) {
               errorString += error.message;
             }
-            alert(errorString);
+            this.error = errorString;
             this.undo(step);
           });
       }
 
       undo(step) {
-        let text = '';
+        this.text = '';
 
         if (step === 1) {
           this.text = '<h3>There was a problem changing the primary definition.</h3> No changes were made to either record';
         } else if (step === 2 && this.didStep5 === false || step === '2b') {
           this.text = '<h3>There was a problem changing the substance definition.</h3><br/> <b>To Restore the records:</b><br/>' +
-            '<ul><li>  Go to <a target = "_blank" href = "app/substance/' + this.sub.uuid + '/v/1#history" >' +
+            '<ul><li>  Go to <a target = "_blank" href = "substances/' + this.sub.uuid + '/v/1#history" >' +
             'the earliest alternative details history</a> and restore version ' + this.altversion + '</a> and click "restore"<br/>' +
-            'If that version is not available, go to the <a target = "_blank" href = "app/substance/' + this.sub.uuid + '#history" >' +
+            'If that version is not available, go to the <a target = "_blank" href = "substances/' + this.sub.uuid + '#history" >' +
             ' current version substance history card </a> and select a previous version to restore </li></ul>';
         } else {
           this.text = '<h3>There was a problem updating the new definition.</h3><br/>' +
             ' <b>To Restore the records:</b><br/><ul><li> Go to ' +
-            '<a target = "_blank" href = "app/substance/' + this.alt.uuid + '/v/1#history" >' +
+            '<a target = "_blank" href = "substances/' + this.alt.uuid + '/v/1#history" >' +
             'the earliest alternative details history</a> and restore version ' + this.altversion + '<br/>' +
-            'If that version is not available, go to the <a target = "_blank" href = "app/substance/' + this.alt.uuid + '#history" >' +
+            'If that version is not available, go to the <a target = "_blank" href = "substances/' + this.alt.uuid + '#history" >' +
             ' current version substance history card </a> and select a previous version to restore </li>' +
-            '<li> Go to <a target = "_blank" href = "app/substance/' + this.sub.uuid + '/v/1#history" > ' +
+            '<li> Go to <a target = "_blank" href = "substances/' + this.sub.uuid + '/v/1#history" > ' +
             'the earliest primary version and restore version ' + this.primeVersion + ' <br/>' +
-            'If that version is not available, go to the <a target = "_blank" href = "app/substance/' + this.sub.uuid + '#history" >' +
+            'If that version is not available, go to the <a target = "_blank" href = "substances/' + this.sub.uuid + '#history" >' +
             'current version </a> and select a previous version to restore ';
         }
-
-       /* document.body.appendChild($('<div class="classchng-overlay" style="z-index:999999;position:fixed;top:0px;width:100%;height:100%;background: rgba(0, 0, 0, 0.6);">\n               <div style="padding: 100px;content-align:center">\n                <div style=" background-color:white;max-width:600px;padding:20px;margin:auto;line-height: 24px;">\n                \t<div>' + text + '</div>\n                  <br/>\n                  <div style = \'float:right\'><button class="btn btn-danger classchng-cancel">Close</button></div><br/><br/>\n                </div>\n                </div>\n                </div>\n                ')[0]);
-        $('.classchng-cancel').click(function (e) {
-          $('.classchng-overlay').remove();
-        });*/
       }
 
       guid() {
@@ -449,7 +505,9 @@ export class DefinitionSwitchDialogComponent implements OnInit {
       };
     } else {
       this._typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : this._typeof2(obj);
+        return obj && typeof Symbol === 'function' &&
+          obj.constructor === Symbol &&
+          obj !== Symbol.prototype ? 'symbol' : this._typeof2(obj);
       };
     }
 

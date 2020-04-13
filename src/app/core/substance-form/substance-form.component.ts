@@ -660,9 +660,9 @@ mergeConcept() {
   definitionSwitch() {
     this.feature = undefined;
     const dialogRef = this.dialog.open(DefinitionSwitchDialogComponent, {
-      width: '900px', data: {uuid: this.id}
+      width: '900px', data: {uuid: this.id}, autoFocus: false
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = '1000';
   }
 
 }
