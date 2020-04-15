@@ -87,7 +87,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
 
   cleanSequence(type): void {
     let mod = ['G', 'T', 'U', 'N', 'A', 'C', 'X'];
-    if (type === 'Protein') {
+    if (type.toLowerCase() === 'protein') {
       mod = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y'];
     }
     this.sequenceSearchForm.controls.sequence.setValue(this.filterbychr(this.sequenceSearchForm.controls.sequence.value, mod));

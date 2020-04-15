@@ -2,6 +2,7 @@ import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
 environment.production = true;
+environment.apiBaseUrl = '/ginas/app/';
 environment.baseHref = '/ginas/app/beta/';
 environment.appId = 'gsrs';
 environment.googleAnalyticsId = 'UA-136176848-1';
