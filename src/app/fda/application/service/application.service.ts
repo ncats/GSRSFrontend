@@ -251,7 +251,7 @@ export class ApplicationService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    console.log('APP: ' + this.application);
+  //  console.log('APP: ' + this.application);
 
     // Update Application
     if ((this.application != null) && (this.application.id)) {

@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SubstanceService } from '../substance/substance.service';
-import { SubstanceSummary } from '../substance/substance.model';
+import { SubstanceService } from '@gsrs-core/substance/substance.service';
+import { SubstanceSummary } from '@gsrs-core/substance/substance.model';
 
 @Component({
-  selector: 'app-search-substance-selector',
+  selector: 'app-substance-search-selector',
   templateUrl: './substance-search-selector.component.html',
   styleUrls: ['./substance-search-selector.component.scss']
 })
@@ -18,6 +18,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   errorMessage: string;
   showOptions: boolean;
   displayName: string;
+  searchValue: string = null;
 
   constructor(
     public substanceService: SubstanceService,
@@ -40,10 +41,14 @@ export class SubstanceSearchSelectorComponent implements OnInit {
         }
         this.errorMessage = 'Not in database';
       });
+    } else {
+      this.selectedSubstance = null;
+      this.searchValue = '';
     }
   }
 
   processSubstanceSearch(searchValue: string = ''): void {
+    this.searchValue = searchValue;
     const q = searchValue.replace('\"', '');
 
     const searchStr = `root_names_name:\"^${q}$\" OR ` +
@@ -64,6 +69,11 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   editSelectedSubstance(): void {
     this.selectedSubstance = null;
     this.selectionUpdated.emit(this.selectedSubstance);
+  }
+
+  clearSelectedSubstance(): void {
+    this.selectedSubstance = null;
+    this.searchValue = '';
   }
 
 }

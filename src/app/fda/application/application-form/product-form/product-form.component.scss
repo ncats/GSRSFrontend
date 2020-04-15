@@ -62,12 +62,17 @@
   color: gray;
 }
 
-.title1 {
+.titlegreen {
   color: green;
   font-size: 17px;
   font-weight: 500;
 }
 
+.titleorange {
+  color: orangered;
+  font-size: 17px;
+  font-weight: 500;
+}
 
 .margintop30px {
   margin-top: 30px;
@@ -114,7 +119,7 @@ legend.border {
   color: #174793;
   font-family: Verdana;
   font-weight: bold;
-  margin-bottom:0px;
+  margin-bottom: 10px;
 }
 
 .formfieldwidth {

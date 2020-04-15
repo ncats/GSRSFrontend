@@ -1,5 +1,5 @@
 <div class="substance-selector-container">
-    <app-substance-text-search
+    <app-substance-text-search [searchValue]='searchValue'
       [ngClass]="{'hidden': selectedSubstance}"
       (searchPerformed)="processSubstanceSearch($event)" [eventCategory]="eventCategory"
       [placeholder]="placeholder">
@@ -16,7 +16,7 @@
       <div class="section-header">{{header}}</div>
       <img class = "related-image" *ngIf = "selectedSubstance.uuid" appSubstanceImage [entityId]="selectedSubstance.uuid">
       <div>
-        {{selectedSubstance._name}}
+       <!-- {{selectedSubstance._name}} -->
         <span class = 'code' *ngIf = "errorMessage === 'Not in database'"><br/>NOT IN DATABASE</span>
       </div>
     </div>

@@ -124,7 +124,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   validate(validationType?: string ): void {
-    /*
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -144,11 +143,13 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       this.loadingService.setLoading(false);
       this.isLoading = false;
     });
-    */
+
+    /*
     this.isLoading = false;
     this.validationResult = true;
     this.showSubmissionMessages = true;
     this.submissionMessage = 'Application is Valid. Would you like to submit?';
+    */
   }
 
   toggleValidation(): void {

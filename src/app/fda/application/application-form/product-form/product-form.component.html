@@ -2,7 +2,7 @@
   <br>
   <hr>
   <br>
-  <span class="title1"></span>
+  <span class="titlegreen"></span>
   <span matBadge="{{application.applicationProductList.length}}" matBadgeOverlap="false">
     <span class="title1">PRODUCT</span>
   </span>
@@ -48,6 +48,10 @@
 
       <div *ngFor="let prodName of product.applicationProductNameList; let prodNameIndex = index">
 
+        <!--
+        <hr *ngIf="prodIndex > 0">
+        -->
+        
         <div class="form-row">
           <mat-form-field class="prodNameField">
             <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName" name="productName" />
@@ -124,7 +128,7 @@
       <hr>
       <br>
       <span matBadge="{{product.applicationIngredientList.length}}" matBadgeColor="warn" matBadgeOverlap="false">
-        <span class="title1">INGREDIENT</span>
+        <span class="titleorange">INGREDIENT</span>
       </span>
 
       <span class=""></span>
@@ -142,7 +146,6 @@
 
     </fieldset>
     <br><br><br>
-    <hr *ngIf="prodIndex > 0">
     <br>
   </div> <!-- Product repeat -->
 

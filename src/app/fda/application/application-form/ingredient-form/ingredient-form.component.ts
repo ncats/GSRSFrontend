@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ProductSrs, ApplicationIngredient } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
@@ -6,6 +6,7 @@ import { ApplicationService } from '../../service/application.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
+import { SubstanceSearchSelectorComponent } from '../../../substance-search-select/substance-search-selector.component';
 
 @Component({
   selector: 'app-ingredient-form',
@@ -13,7 +14,6 @@ import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
   styleUrls: ['./ingredient-form.component.scss']
 })
 export class IngredientFormComponent implements OnInit {
-
   @Input() ingredient: ApplicationIngredient;
   @Input() prodIndex: number;
   @Input() ingredIndex: number;
@@ -22,15 +22,13 @@ export class IngredientFormComponent implements OnInit {
   ingredientTypeList: Array<VocabularyTerm> = [];
   unitList: Array<VocabularyTerm> = [];
   gradeList: Array<VocabularyTerm> = [];
-  selectedSubstance?: SubstanceSummary = null;
-  ingredientNameSubstanceUuid: string;
-  basisofStrengthSubstanceUuid: string;
+  // selectedSubstance?: SubstanceSummary = null;
   ingredientName: string;
-  basisOfStrength: string;
+  ingredientNameSubstanceUuid: string;
   ingredientNameMessage = '';
-  ingredientNameMessageTwo = '';
+  basisOfStrengthName: string;
+  basisofStrengthSubstanceUuid: string;
   basisOfStrengthMessage = '';
-  basisOfStrengthMessageTwo = '';
 
   constructor(
     private applicationService: ApplicationService,
@@ -99,12 +97,14 @@ export class IngredientFormComponent implements OnInit {
   }
 
   deleteIngredientName(prodIndex: number, ingredIndex: number) {
-    this.ingredient.bdnum = '';
-    this.ingredientNameSubstanceUuid = null;
+ //   this.ingredientNameSubstanceUuid = null;
     // Clear the structure
-    this.ingredientNameUpdated(this.selectedSubstance, ingredIndex);
-    this.ingredientNameMessage = 'Click Validate and Submit button to delete';
-  //  this.ingredientNameMessageTwo =
+ //   this.ingredientNameUpdated(this.selectedSubstance, ingredIndex);
+ //   this.substanceSelectorComp.clearSelectedSubstance();
+    this.ingredientNameMessage = 'Click Validate and Submit button to delete ' + this.ingredientName;
+    this.ingredientNameSubstanceUuid = null;
+    this.ingredientName = null;
+    this.ingredient.bdnum = null;
   }
 
   confirmDeleteBasisOfStrength(prodIndex: number, ingredIndex: number) {
@@ -120,10 +120,11 @@ export class IngredientFormComponent implements OnInit {
   }
 
   deleteBasisOfStrength(prodIndex: number, ingredIndex: number) {
-     this.ingredient.basisOfStrengthBdnum = '';
-     this.basisofStrengthSubstanceUuid = null;
-     this.basisOfStrengthMessage = 'Click Validate and Submit button to delete';
-  }
+    this.basisOfStrengthMessage = 'Click Validate and Submit button to delete ' + this.basisOfStrengthName;
+    this.basisofStrengthSubstanceUuid = null;
+    this.basisOfStrengthName = null;
+    this.ingredient.basisOfStrengthBdnum = null;
+ }
 
   getBdnum(substanceId: string, type: string) {
     this.applicationService.getSubstanceDetailsBySubstanceId(substanceId).subscribe(response => {
@@ -133,17 +134,22 @@ export class IngredientFormComponent implements OnInit {
           if (type === 'ingredientname') {
             this.ingredientNameMessage = '';
             this.ingredient.bdnum = response.bdnum;
+            this.ingredientName = response.name;
             this.ingredientNameSubstanceUuid = response.substanceId;
+         //   this.substanceSelectorComp.editSelectedSubstance();
 
             // If Basis of Strenght is empty/null, copy the Ingredient Name to Basis of Strength
             if (this.ingredient.basisOfStrengthBdnum == null) {
               this.basisOfStrengthMessage = '';
               this.ingredient.basisOfStrengthBdnum = response.bdnum;
+              this.basisOfStrengthName = response.name;
               this.basisofStrengthSubstanceUuid = response.substanceId;
             }
             // Basis is strength
           } else {
+            this.basisOfStrengthMessage = '';
             this.ingredient.basisOfStrengthBdnum = response.bdnum;
+            this.basisOfStrengthName = response.name;
             this.basisofStrengthSubstanceUuid = response.substanceId;
           }
 
@@ -159,14 +165,19 @@ export class IngredientFormComponent implements OnInit {
           if (response.substanceId) {
 
             if (type === 'ingredientname') {
+              this.ingredientNameMessage = '';
               this.ingredient.bdnum = response.bdnum;
+              this.ingredientName = response.name;
               this.ingredientNameSubstanceUuid = response.substanceId;
               // Basis is strength
             } else {
+              this.basisOfStrengthMessage = '';
               this.ingredient.basisOfStrengthBdnum = response.bdnum;
+              this.basisOfStrengthName = response.name;
               this.basisofStrengthSubstanceUuid = response.substanceId;
             }
           } else {
+            this.basisOfStrengthMessage = '';
             this.basisOfStrengthMessage = 'No Ingredient Name found for this bdnum';
           }
         }
@@ -175,8 +186,6 @@ export class IngredientFormComponent implements OnInit {
   }
 
   ingredientNameUpdated(substance: SubstanceSummary, ingredIndex: number): void {
-  //  console.log('Summary: ' + JSON.stringify(substance));
-
     const relatedSubstance: SubstanceRelated = {
       refPname: substance._name,
       name: substance._name,
@@ -189,6 +198,8 @@ export class IngredientFormComponent implements OnInit {
       if (relatedSubstance.refuuid != null) {
         this.getBdnum(relatedSubstance.refuuid, 'ingredientname');
       }
+    } else {
+      this.ingredientNameSubstanceUuid = null;
     }
   }
 

@@ -17,7 +17,6 @@
     </div>
 
     <!-- Validation Message Display and Submit Button -->
-    <!--
     <div *ngIf="validationMessages">
       <span *ngIf=" validationMessages.length > 0">
         <div class="submission-message" *ngIf='!serverError && !approving'>
@@ -34,16 +33,16 @@
           </button>
         </div>
       </span>
-    -->
+    
     <div class="dismiss-container">
       <span class="middle-fill"></span>
       <button mat-flat-button color="primary" (click)="submit()"
         [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
         Submit</button>
     </div>
-    <!--
+    
     </div>
-  -->
+
   </div>
 </div>
 
