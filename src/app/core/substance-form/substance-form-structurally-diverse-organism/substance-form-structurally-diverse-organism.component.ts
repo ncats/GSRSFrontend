@@ -5,7 +5,7 @@ import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import { SubstanceFormBase } from '../substance-form-base';
+import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 
 @Component({

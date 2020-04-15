@@ -13,7 +13,7 @@ import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import { IDropdownSettings} from 'ng-multiselect-dropdown';
-import { SubstanceFormBase } from '../substance-form-base';
+import { SubstanceFormBase } from '../base-classes/substance-form-base';
 
 @Component({
   selector: 'app-substance-form-polymer-classification',

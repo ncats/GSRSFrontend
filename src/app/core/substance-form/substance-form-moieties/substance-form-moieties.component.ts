@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
-import { SubstanceFormBase } from '../substance-form-base';
+import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { StructureService } from '../../structure/structure.service';
 import { SubstanceMoiety } from '@gsrs-core/substance/substance.model';

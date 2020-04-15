@@ -22,7 +22,7 @@ import {
   NucleicAcid,
   MixtureComponents,
   Mixture,
-  StructurallyDiverse, Constituent, DisplayStructure, Monomer, PolymerClassification
+  StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification
 } from '../substance/substance.model';
 import {
   SequenceUnit,
@@ -37,14 +37,16 @@ import { StructureService } from '@gsrs-core/structure';
 import { DomainsWithReferences } from './domain-references/domain.references.model';
 import { StructuralUnit } from '@gsrs-core/substance';
 import * as _ from 'lodash';
-@Injectable({
-  providedIn: 'root'
-})
+import { take } from 'rxjs/operators';
+
+@Injectable()
 export class SubstanceFormService implements OnDestroy {
   private subscriptions: Array<Subscription> = [];
   private privateSubstance: SubstanceDetail;
   private substanceStateHash?: number;
-  private substanceEmitter = new ReplaySubject<SubstanceDetail>();
+  private substanceEmitter: ReplaySubject<SubstanceDetail>;
+  private substanceUnloadedEmitter: Subject<void>;
+
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private substanceReferencesEmitter = new Subject<Array<SubstanceReference>>();
   private substanceNamesEmitter = new Subject<Array<SubstanceName>>();
@@ -72,7 +74,6 @@ export class SubstanceFormService implements OnDestroy {
   private substanceMixtureEmitter = new Subject<Mixture>();
   private substanceStructurallyDiverseEmitter = new Subject<StructurallyDiverse>();
   private substanceMixtureComponentsEmitter = new Subject<Array<MixtureComponents>>();
-  private substanceConstituentsEmitter = new Subject<Array<MixtureComponents>>();
   private substanceIdealizedStructureEmitter = new Subject<DisplayStructure>();
   private substanceMonomerEmitter = new Subject<Array<Monomer>>();
   private substancePolymerClassificationEmitter = new Subject<PolymerClassification>();
@@ -88,18 +89,17 @@ export class SubstanceFormService implements OnDestroy {
   private nameResolver = new Subject<string>();
   resolvedMol = this.nameResolver.asObservable();
 
-
   constructor(
     private substanceService: SubstanceService,
     public utilsService: UtilsService,
     private structureService: StructureService,
   ) {
+    this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
+    this.substanceUnloadedEmitter = new Subject<void>();
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
+    this.unloadSubstance();
   }
 
   loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail): void {
@@ -209,10 +209,7 @@ export class SubstanceFormService implements OnDestroy {
       if (this.privateSubstance.structure != null && this.privateSubstance.structure.molfile != null) {
         this.structureService.interpretStructure(this.privateSubstance.structure.molfile).subscribe(response => {
           this.computedMoieties = response.moieties;
-          this.substanceEmitter.next(this.privateSubstance);
         });
-      } else {
-        this.substanceEmitter.next(this.privateSubstance);
       }
 
       if (this.privateSubstance.substanceClass === 'polymer') {
@@ -221,7 +218,6 @@ export class SubstanceFormService implements OnDestroy {
           this.structureService.interpretStructure(this.privateSubstance.polymer.idealizedStructure.molfile).subscribe(response => {
             this.computedMoieties = response.moieties;
             this.privateSubstance.moieties = response.moieties;
-            this.substanceEmitter.next(this.privateSubstance);
           });
         }
       }
@@ -242,20 +238,26 @@ export class SubstanceFormService implements OnDestroy {
     this.privateSubstance = null;
     this.allSitesArr = null;
     this.displaySequences = null;
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+    this.substanceEmitter.complete();
+    this.substanceUnloadedEmitter.next();
+    this.substanceUnloadedEmitter.complete();
+    this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
+    this.substanceUnloadedEmitter = new Subject<void>();
+  }
+
+  substanceUnloaded(): Observable<void> {
+    return this.substanceUnloadedEmitter.asObservable().pipe(take(1));
   }
 
   ready(): Observable<void> {
     return new Observable(observer => {
-      if (this.privateSubstance != null) {
+      this.substanceEmitter.pipe(take(1)).subscribe(substance => {
         observer.next();
         observer.complete();
-      } else {
-        const subscription = this.substanceEmitter.subscribe(substance => {
-          observer.next();
-          observer.complete();
-          subscription.unsubscribe();
-        });
-      }
+      });
     });
   }
 
@@ -384,7 +386,7 @@ export class SubstanceFormService implements OnDestroy {
     return new Observable(observer => {
       this.ready().subscribe(() => {
         const definition = this.getDefinition();
-        observer.next(this.getDefinition());
+        observer.next(definition);
         // tslint:disable-next-line:no-shadowed-variable
         this.definitionEmitter.subscribe(definition => {
           observer.next(definition);
@@ -1874,46 +1876,6 @@ export class SubstanceFormService implements OnDestroy {
 
   // end sugars
 
-  // start constituents
-
-  get substanceConstituents(): Observable<Array<Constituent>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.privateSubstance.specifiedSubstance.constituents == null) {
-          this.privateSubstance.specifiedSubstance.constituents = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.specifiedSubstance.constituents);
-        this.substanceConstituentsEmitter.subscribe(sugars => {
-          observer.next(this.privateSubstance.specifiedSubstance.constituents);
-        });
-      });
-    });
-  }
-
-  addSubstanceConstituent(): void {
-    const constituent: Constituent = {};
-    this.privateSubstance.specifiedSubstance.constituents.unshift(constituent);
-    this.substanceConstituentsEmitter.next(this.privateSubstance.specifiedSubstance.constituents);
-  }
-
-  deleteSubstanceConstituent(sugar: Sugar): void {
-    const constituentIndex = this.privateSubstance.specifiedSubstance.constituents.findIndex(
-      subCode => sugar.$$deletedCode === subCode.$$deletedCode);
-    if (constituentIndex > -1) {
-      this.privateSubstance.specifiedSubstance.constituents.splice(constituentIndex, 1);
-      this.substanceConstituentsEmitter.next(this.privateSubstance.specifiedSubstance.constituents);
-    }
-  }
-
-  emitConstituentUpdate(): void {
-    this.substanceConstituentsEmitter.next(this.privateSubstance.specifiedSubstance.constituents);
-  }
-
-  // end constituents
-
   // start change reason
 
   get changeReason(): Observable<string> {
@@ -1962,33 +1924,6 @@ export class SubstanceFormService implements OnDestroy {
 
     const response = this.cleanObject(substanceCopy);
     const deletedUuids = response.deletedUuids;
-    // const deletablekeys = [
-    //   'names',
-    //   'codes',
-    //   'relationships',
-    //   'notes',
-    //   'properties',
-    //   'references',
-    //   'polymer.monomers'
-    // ];
-    // const deletedReferenceUuids = [];
-
-    // deletablekeys.forEach(deletableKey => {
-    //   if (substanceCopy[deletableKey] && substanceCopy[deletableKey].length) {
-    //     substanceCopy[deletableKey] = substanceCopy[deletableKey].filter((item: any) => {
-
-    //       const hasDeleletedCode = item.$$deletedCode != null;
-    //       if (!hasDeleletedCode) {
-    //         delete item.$$deletedCode;
-    //       } else if (deletableKey === 'references') {
-    //         deletedReferenceUuids.push(item.uuid);
-    //       }
-    //       return !hasDeleletedCode;
-    //     });
-    //   }
-    // });
-
-
 
     if (deletedUuids.length > 0) {
       substanceString = JSON.stringify(substanceCopy);
@@ -2124,6 +2059,7 @@ export class SubstanceFormService implements OnDestroy {
         }
         this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
         this.substanceStateHash = this.utilsService.hashCode(this.privateSubstance);
+        this.substanceEmitter.next(this.privateSubstance);
         observer.next(results);
         observer.complete();
       }, error => {

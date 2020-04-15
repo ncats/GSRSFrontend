@@ -13,12 +13,13 @@ import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 // tslint:disable-next-line:max-line-length
-import {SubstanceFormDisulfideLinksComponent} from '@gsrs-core/substance-form/substance-form-disulfide-links/substance-form-disulfide-links.component';
+import {SubstanceFormDisulfideLinksCardComponent} from '@gsrs-core/substance-form/disulfide-links/substance-form-disulfide-links-card.component';
+import { DisulfideLinksFormComponent } from './disulfide-links-form.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormDisulfideLinksComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormDisulfideLinksCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -33,9 +34,11 @@ import {SubstanceFormDisulfideLinksComponent} from '@gsrs-core/substance-form/su
     MatInputModule
   ],
   exports: [
+    DisulfideLinksFormComponent
   ],
   declarations: [
-    SubstanceFormDisulfideLinksComponent
+    SubstanceFormDisulfideLinksCardComponent,
+    DisulfideLinksFormComponent
   ]
 })
 export class SubstanceFormDisulfideLinksModule { }

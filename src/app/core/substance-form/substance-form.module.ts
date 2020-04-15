@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccessManagerComponent } from './access-manager/access-manager.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -42,7 +42,6 @@ import { FileSelectModule } from 'file-select';
 import { SubunitFormComponent } from './subunit-form/subunit-form.component';
 import {SubunitDisplayPipe} from '@gsrs-core/utils/subunit-display.pipe';
 import { OtherLinksFormComponent } from './other-links-form/other-links-form.component';
-import {DisulfideLinksFormComponent} from '@gsrs-core/substance-form/disulfide-links-form/disulfide-links-form.component';
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {StructuralModificationFormComponent} from '@gsrs-core/substance-form/structural-modification-form/structural-modification-form.component';
@@ -56,7 +55,6 @@ import {LinkFormComponent} from '@gsrs-core/substance-form/link-form/link-form.c
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {MixtureComponentFormComponent} from '@gsrs-core/substance-form/mixture-component-form/mixture-component-form.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {ConstituentFormComponent} from '@gsrs-core/substance-form/constituent-form/constituent-form.component';
 import {MonomerFormComponent} from '@gsrs-core/substance-form/monomer-form/monomer-form.component';
 import {StructuralUnitFormComponent} from '@gsrs-core/substance-form/structural-unit-form/structural-unit-form.component';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
@@ -65,6 +63,10 @@ import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-inf
 import { RouterModule } from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
+import { SubstanceFormComponent } from './substance-form.component';
+import { CanActivateSubstanceForm } from './can-activate-substance-form';
+import { CanRegisterSubstanceForm } from './can-register-substance-form';
+import { SubstanceFormService } from './substance-form.service';
 
 @NgModule({
   imports: [
@@ -99,6 +101,7 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     SubstanceImageModule
   ],
   declarations: [
+    SubstanceFormComponent,
     AccessManagerComponent,
     TagSelectorComponent,
     DomainReferencesComponent,
@@ -120,7 +123,6 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     OtherLinksFormComponent,
     LinkFormComponent,
     SugarFormComponent,
-    DisulfideLinksFormComponent,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
     StructuralModificationFormComponent,
@@ -129,7 +131,6 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
     MixtureComponentFormComponent,
-    ConstituentFormComponent,
     CvInputComponent,
     CvDialogComponent,
     MonomerFormComponent,
@@ -139,6 +140,7 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     SubmitSuccessDialogComponent
   ],
   exports: [
+    SubstanceFormComponent,
     AccessManagerComponent,
     DomainReferencesComponent,
     ReferenceFormComponent,
@@ -155,7 +157,6 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     SubunitFormComponent,
     SubunitDisplayPipe,
     OtherLinksFormComponent,
-    DisulfideLinksFormComponent,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
     StructuralModificationFormComponent,
@@ -164,7 +165,6 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
     MixtureComponentFormComponent,
-    ConstituentFormComponent,
     TagSelectorComponent,
     LinkFormComponent,
     SugarFormComponent,
@@ -190,4 +190,15 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
     SubmitSuccessDialogComponent
   ]
 })
-export class SubstanceFormModule { }
+export class SubstanceFormModule {
+    static forRoot(): ModuleWithProviders {
+      return {
+        ngModule: SubstanceFormModule,
+        providers: [
+          SubstanceFormService,
+          CanActivateSubstanceForm,
+          CanRegisterSubstanceForm
+        ]
+      };
+    }
+}

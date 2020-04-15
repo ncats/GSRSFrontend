@@ -5,7 +5,6 @@ import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 
 @Component({
@@ -26,8 +25,7 @@ export class ConstituentFormComponent implements OnInit {
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
-    private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private overlayContainerService: OverlayContainer
   ) { }
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();

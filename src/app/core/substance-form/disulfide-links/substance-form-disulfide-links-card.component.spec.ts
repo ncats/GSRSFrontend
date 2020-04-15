@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceFormDisulfideLinksComponent } from './substance-form-disulfide-links.component';
+import { SubstanceFormDisulfideLinksComponent } from './substance-form-disulfide-links-card.component';
 
 describe('SubstanceFormDisulfideLinksComponent', () => {
   let component: SubstanceFormDisulfideLinksComponent;

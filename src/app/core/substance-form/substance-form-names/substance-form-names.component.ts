@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';

@@ -1,24 +1,23 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {AgentModification, Constituent} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import { SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import { SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
+import { SubstanceFormConstituentsService } from './substance-form-constituents.service';
 
 @Component({
-  selector: 'app-substance-form-constituents',
-  templateUrl: './substance-form-constituents.component.html',
-  styleUrls: ['./substance-form-constituents.component.scss']
+  selector: 'app-substance-form-constituents-card',
+  templateUrl: './substance-form-constituents-card.component.html',
+  styleUrls: ['./substance-form-constituents-card.component.scss']
 })
-export class SubstanceFormConstituentsComponent extends SubstanceCardBaseFilteredList<Constituent>
+export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFilteredList<Constituent>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
-
   constituents: Array<Constituent>;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService,
+    private substanceFormConstituentsService: SubstanceFormConstituentsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
   ) {
@@ -32,7 +31,7 @@ export class SubstanceFormConstituentsComponent extends SubstanceCardBaseFiltere
   }
 
   ngAfterViewInit() {
-    const agentSubscription = this.substanceFormService.substanceConstituents.subscribe(constituents => {
+    const agentSubscription = this.substanceFormConstituentsService.substanceConstituents.subscribe(constituents => {
       this.constituents = constituents;
     });
     this.subscriptions.push(agentSubscription);
@@ -50,14 +49,14 @@ export class SubstanceFormConstituentsComponent extends SubstanceCardBaseFiltere
   }
 
   addConstituent(): void {
-    this.substanceFormService.addSubstanceConstituent();
+    this.substanceFormConstituentsService.addSubstanceConstituent();
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-constituent-0`, 'center');
     });
   }
 
   deleteConstituent(constituent: Constituent): void {
-    this.substanceFormService.deleteSubstanceConstituent(constituent);
+    this.substanceFormConstituentsService.deleteSubstanceConstituent(constituent);
   }
 
 }

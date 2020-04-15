@@ -58,14 +58,11 @@ import { SubstanceCardsModule } from './substance-details/substance-cards.module
 import { substanceCardsFilters } from './substance-details/substance-cards-filters.constant';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/auth.interceptor';
-import { SubstanceFormComponent } from './substance-form/substance-form.component';
-import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import { SubstanceFormModule } from './substance-form/substance-form.module';
 import { NameResolverModule } from './name-resolver/name-resolver.module';
 import { HighlightedSearchActionComponent } from './highlighted-search-action/highlighted-search-action.component';
 import { CardDynamicSectionDirective } from './substances-browse/card-dynamic-section/card-dynamic-section.directive';
 import { SubstanceSummaryCardComponent } from './substances-browse/substance-summary-card/substance-summary-card.component';
-import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 import { SubstanceImageModule } from './substance/substance-image.module';
 import { StructureModule } from './structure/structure.module';
 import {MatTreeModule} from '@angular/material/tree';
@@ -85,8 +82,6 @@ import { FacetsManagerModule } from './facets-manager/facets-manager.module';
     TakePipe,
     SequenceSearchComponent,
     TrackLinkEventDirective,
-    SubstanceFormComponent,
-    SubstanceFormComponent,
     HighlightedSearchActionComponent,
     CardDynamicSectionDirective,
     SubstanceSummaryCardComponent,
@@ -134,7 +129,7 @@ import { FacetsManagerModule } from './facets-manager/facets-manager.module';
     SubstanceTextSearchModule,
     SubstanceCardsModule.forRoot(substanceCardsFilters),
     AuthModule,
-    SubstanceFormModule,
+    SubstanceFormModule.forRoot(),
     OverlayModule,
     NameResolverModule,
     MatBottomSheetModule,
@@ -152,9 +147,7 @@ import { FacetsManagerModule } from './facets-manager/facets-manager.module';
         deps: [ConfigService],
         multi: true
     },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    CanActivateSubstanceForm,
-    CanRegisterSubstanceForm
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   entryComponents: [

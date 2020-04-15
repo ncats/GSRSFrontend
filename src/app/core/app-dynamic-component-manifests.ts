@@ -234,7 +234,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-disulfide-links',
     path: 'substance-form-disulfide-links',
-    loadChildren: () => import('./substance-form/substance-form-disulfide-links/substance-form-disulfide-links.module')
+    loadChildren: () => import('./substance-form/disulfide-links/substance-form-disulfide-links.module')
       .then(m => m.SubstanceFormDisulfideLinksModule)
   },
   {
@@ -312,7 +312,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-constituents',
     path: 'substance-form-constituents',
-    loadChildren: () => import('./substance-form/substance-form-constituents/substance-form-constituents.module')
+    loadChildren: () => import('./substance-form/constituents/substance-form-constituents.module')
       .then(m => m.SubstanceFormConstituentsModule)
   },
   {

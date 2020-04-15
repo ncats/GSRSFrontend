@@ -6,17 +6,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SubstanceFormModule } from '../substance-form.module';
-import {SubstanceFormConstituentsComponent} from '@gsrs-core/substance-form/substance-form-constituents/substance-form-constituents.component';
+import {SubstanceFormConstituentsCardComponent} from '@gsrs-core/substance-form/constituents/substance-form-constituents-card.component';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {ScrollToModule} from '@gsrs-core/scroll-to';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { ConstituentFormComponent } from './constituent-form.component';
+import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormConstituentsComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormConstituentsCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -26,10 +28,12 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    SubstanceSelectorModule
   ],
   declarations: [
-    SubstanceFormConstituentsComponent
+    SubstanceFormConstituentsCardComponent,
+    ConstituentFormComponent
   ]
 })
 export class SubstanceFormConstituentsModule { }

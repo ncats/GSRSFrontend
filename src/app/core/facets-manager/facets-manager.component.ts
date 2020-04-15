@@ -108,7 +108,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           return !removeFacet;
         });
         this.activeSearchedFaced.values = this.activeSearchedFaced.values.concat(response.content);
-        console.log(this.activeSearchedFaced.values);
         this.searchText[this.activeSearchedFaced.name].isLoading = false;
       }, error => {
         this.searchText[this.activeSearchedFaced.name].isLoading = false;

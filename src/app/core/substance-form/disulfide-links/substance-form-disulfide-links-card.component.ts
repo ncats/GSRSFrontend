@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {DisulfideLink, Site, Subunit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
-import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
@@ -11,11 +11,11 @@ import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
 
 @Component({
-  selector: 'app-substance-form-disulfide-links',
-  templateUrl: './substance-form-disulfide-links.component.html',
-  styleUrls: ['./substance-form-disulfide-links.component.scss']
+  selector: 'app-substance-form-disulfide-links-card',
+  templateUrl: './substance-form-disulfide-links-card.component.html',
+  styleUrls: ['./substance-form-disulfide-links-card.component.scss']
 })
-export class SubstanceFormDisulfideLinksComponent extends SubstanceCardBaseFilteredList<DisulfideLink>
+export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseFilteredList<DisulfideLink>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   disulfideLinks: Array<DisulfideLink>;
   private subscriptions: Array<Subscription> = [];
