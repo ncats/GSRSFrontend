@@ -47,7 +47,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   totalSubstances: number;
   isLoading = true;
   isError = false;
-  @ViewChild('matSideNavInstance', { static: false }) matSideNav: MatSidenav;
+  @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   view = 'cards';
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes', 'actions'];
@@ -198,7 +198,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   searchSubstances() {
-
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
@@ -477,16 +476,18 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private processResponsiveness = () => {
-    if (window) {
-      if (window.innerWidth < 1100) {
-        this.matSideNav.close();
-        this.isCollapsed = true;
-        this.hasBackdrop = true;
-      } else {
-        this.matSideNav.open();
-        this.hasBackdrop = false;
+    setTimeout(() => {
+      if (window) {
+        if (window.innerWidth < 1100) {
+          this.matSideNav.close();
+          this.isCollapsed = true;
+          this.hasBackdrop = true;
+        } else {
+          this.matSideNav.open();
+          this.hasBackdrop = false;
+        }
       }
-    }
+    });
   }
 
   openSideNav() {

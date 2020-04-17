@@ -3,13 +3,12 @@ import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/base-clas
 import {Glycosylation, Site, SubstanceName} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
-import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
+import { SubstanceFormGlycosylationService } from './substance-form-glycosylation.service';
 @Component({
   selector: 'app-substance-form-glycosylation',
   templateUrl: './substance-form-glycosylation.component.html',
@@ -22,12 +21,11 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
   constructor(
+    private substanceFormGlycosylationService: SubstanceFormGlycosylationService,
     private substanceFormService: SubstanceFormService,
-    private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
-    private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer
 
   ) {
@@ -42,7 +40,7 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
   }
 
   ngAfterViewInit() {
-    const glycosylationSubscription = this.substanceFormService.substanceGlycosylation.subscribe(glycosylation => {
+    const glycosylationSubscription = this.substanceFormGlycosylationService.substanceGlycosylation.subscribe(glycosylation => {
       this.glycosylation = glycosylation;
   });
     this.subscriptions.push(glycosylationSubscription);
@@ -59,7 +57,7 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
     this.glycosylation.NGlycosylationSites = [];
     this.glycosylation.OGlycosylationSites = [];
     this.glycosylation.glycosylationType = null;
-    this.substanceFormService.emitGlycosylationUpdate();
+    this.substanceFormGlycosylationService.emitGlycosylationUpdate();
   }
 
   getVocabularies(): void {
@@ -93,7 +91,7 @@ export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilter
         } else {
           this.glycosylation.OGlycosylationSites = newLinks;
         }
-        this.substanceFormService.emitGlycosylationUpdate();
+        this.substanceFormGlycosylationService.emitGlycosylationUpdate();
       }
     });
     this.subscriptions.push(dialogSubscription);

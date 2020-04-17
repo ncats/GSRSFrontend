@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceFormMixtureComponentsComponent } from './substance-form-mixture-components.component';
+import { SubstanceFormMixtureComponentsCardComponent } from './substance-form-mixture-components-card.component';
 
 describe('SubstanceFormMixtureComponentsComponent', () => {
-  let component: SubstanceFormMixtureComponentsComponent;
-  let fixture: ComponentFixture<SubstanceFormMixtureComponentsComponent>;
+  let component: SubstanceFormMixtureComponentsCardComponent;
+  let fixture: ComponentFixture<SubstanceFormMixtureComponentsCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceFormMixtureComponentsComponent ]
+      declarations: [ SubstanceFormMixtureComponentsCardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceFormMixtureComponentsComponent);
+    fixture = TestBed.createComponent(SubstanceFormMixtureComponentsCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

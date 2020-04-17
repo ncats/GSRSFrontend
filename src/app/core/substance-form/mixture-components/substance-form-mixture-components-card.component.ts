@@ -1,22 +1,22 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
-import {Mixture, MixtureComponents, SubstanceRelationship} from '@gsrs-core/substance';
+import {MixtureComponents, SubstanceRelationship} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
+import {SubstanceFormMixtureComponentsService} from './substance-form-mixture-components.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 
 @Component({
-  selector: 'app-substance-form-mixture-components',
-  templateUrl: './substance-form-mixture-components.component.html',
-  styleUrls: ['./substance-form-mixture-components.component.scss']
+  selector: 'app-substance-form-mixture-components-card',
+  templateUrl: './substance-form-mixture-components-card.component.html',
+  styleUrls: ['./substance-form-mixture-components-card.component.scss']
 })
-export class SubstanceFormMixtureComponentsComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
+export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   relationships: Array<MixtureComponents>;
   private subscriptions: Array<Subscription> = [];
   constructor(
-    private substanceFormService: SubstanceFormService,
+    private substanceFormMixtureComponentsService: SubstanceFormMixtureComponentsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
   ) {
@@ -30,7 +30,7 @@ export class SubstanceFormMixtureComponentsComponent extends SubstanceCardBaseFi
   }
 
   ngAfterViewInit() {
-    const relationshipsSubscription = this.substanceFormService.substanceMixtureComponents.subscribe(components => {
+    const relationshipsSubscription = this.substanceFormMixtureComponentsService.substanceMixtureComponents.subscribe(components => {
       this.relationships = components;
     });
     this.subscriptions.push(relationshipsSubscription);
@@ -48,13 +48,13 @@ export class SubstanceFormMixtureComponentsComponent extends SubstanceCardBaseFi
   }
 
   addComponent(): void {
-    this.substanceFormService.addSubstanceMixtureComponent();
+    this.substanceFormMixtureComponentsService.addSubstanceMixtureComponent();
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-mixture-component-0`, 'center');
     });
   }
 
   deleteComponent(relationship: MixtureComponents): void {
-    this.substanceFormService.deleteSubstanceMixtureComponent(relationship);
+    this.substanceFormMixtureComponentsService.deleteSubstanceMixtureComponent(relationship);
   }
 }

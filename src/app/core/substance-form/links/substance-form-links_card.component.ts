@@ -5,13 +5,14 @@ import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import { SubstanceFormLinksService } from './substance-form-links.service';
 
 @Component({
   selector: 'app-substance-form-links',
-  templateUrl: './substance-form-links.component.html',
-  styleUrls: ['./substance-form-links.component.scss']
+  templateUrl: './substance-form-links_card.component.html',
+  styleUrls: ['./substance-form-links_card.component.scss']
 })
-export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<Linkage>
+export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredList<Linkage>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
 
   links: Array<Linkage>;
@@ -20,6 +21,7 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
   invalidSites = 0 ;
   private subscriptions: Array<Subscription> = [];
   constructor(
+    private substanceFormLinksService: SubstanceFormLinksService,
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
@@ -35,7 +37,7 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
   }
 
   ngAfterViewInit() {
-    const linksSubscription = this.substanceFormService.substanceLinks.subscribe(links => {
+    const linksSubscription = this.substanceFormLinksService.substanceLinks.subscribe(links => {
       this.links = links;
       this.getRemainingSites();
     });
@@ -83,14 +85,14 @@ export class SubstanceFormLinksComponent extends SubstanceCardBaseFilteredList<L
   }
 
   addOtherLink(): void {
-    this.substanceFormService.addSubstanceLink();
+    this.substanceFormLinksService.addSubstanceLink();
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-other-links-0`, 'center');
     });
   }
 
   deleteLink(link: Link): void {
-    this.substanceFormService.deleteSubstanceLink(link);
+    this.substanceFormLinksService.deleteSubstanceLink(link);
   }
 
 }

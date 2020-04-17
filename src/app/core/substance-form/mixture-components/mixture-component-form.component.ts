@@ -1,12 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MixtureComponents, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
-import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
-import {Subscription} from 'rxjs';
-import {MatDialog} from '@angular/material/dialog';
 import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 
 @Component({
   selector: 'app-mixture-component-form',
@@ -18,13 +13,10 @@ export class MixtureComponentFormComponent implements OnInit {
   @Output() componentDeleted = new EventEmitter<MixtureComponents>();
   deleteTimer: any;
   relatedSubstanceUuid: string;
-  private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
   siteDisplay: string;
 
   constructor(
-    private cvService: ControlledVocabularyService,
-    private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer
   ) { }

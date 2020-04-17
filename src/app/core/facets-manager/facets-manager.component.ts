@@ -33,7 +33,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   private subscriptions: Array<Subscription> = [];
   @Output() facetsParamsUpdated = new EventEmitter<FacetUpdateEvent>();
   showAudit: boolean;
-  @Input() configName: string;
   private facetsConfig: { [permission: string]: Array<string> };
   toggle: Array<boolean> = [];
   @Output() facetsLoaded = new EventEmitter<number>();
@@ -75,14 +74,12 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngAfterViewInit() {
-    this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[this.configName] || {};
     if (this.includeFacetSearch) {
       const facetSearchSubscription = this.facetSearchChanged.pipe(
         debounceTime(500),
         distinctUntilChanged(),
         switchMap(event => {
           const facet = this.facets[event.index];
-          console.log(event.query);
           return this.facetsService.getFacetsHandler(facet, event.query).pipe(take(1));
         })
       ).subscribe(response => {
@@ -122,6 +119,12 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.populateFacets();
   }
 
+  @Input()
+  set configName(configName: string) {
+    this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
+    this.populateFacets();
+  }
+
   facetsFromParams() {
     if (this.facetString !== '') {
       const categoryArray = this.facetString.split(',');
@@ -154,53 +157,54 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private populateFacets(): void {
-    if (this.facetsAuthSubscription != null) {
-      this.facetsAuthSubscription.unsubscribe();
-      this.facetsAuthSubscription = null;
-    }
-    this.facetsAuthSubscription = this.authService.getAuth().subscribe(auth => {
-      const facetsCopy = this.privateRawFacets.slice();
-      const newFacets = [];
-      this.showAudit = this.authService.hasRoles('admin');
+    if (this.privateRawFacets && this.facetsConfig) {
+      if (this.facetsAuthSubscription != null) {
+        this.facetsAuthSubscription.unsubscribe();
+        this.facetsAuthSubscription = null;
+      }
+      this.facetsAuthSubscription = this.authService.getAuth().subscribe(auth => {
+        const facetsCopy = this.privateRawFacets.slice();
+        const newFacets = [];
+        this.showAudit = this.authService.hasRoles('admin');
+        const facetKeys = Object.keys(this.facetsConfig) || [];
 
-      const facetKeys = Object.keys(this.facetsConfig) || [];
+        facetKeys.forEach(facetKey => {
+          if (this.facetsConfig[facetKey].length
+            && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
+            this.facetsConfig[facetKey].forEach(facet => {
+              for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
+                this.toggle[facetIndex] = true;
+                if (facet === facetsCopy[facetIndex].name) {
+                  if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
+                    let hasValues = false;
+                    for (let valueIndex = 0; valueIndex < facetsCopy[facetIndex].values.length; valueIndex++) {
+                      if (facetsCopy[facetIndex].values[valueIndex].count) {
+                        hasValues = true;
+                        break;
+                      }
+                    }
 
-      facetKeys.forEach(facetKey => {
-        if (this.facetsConfig[facetKey].length
-          && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
-          this.facetsConfig[facetKey].forEach(facet => {
-            for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
-              this.toggle[facetIndex] = true;
-              if (facet === facetsCopy[facetIndex].name) {
-                if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
-                  let hasValues = false;
-                  for (let valueIndex = 0; valueIndex < facetsCopy[facetIndex].values.length; valueIndex++) {
-                    if (facetsCopy[facetIndex].values[valueIndex].count) {
-                      hasValues = true;
-                      break;
+                    if (hasValues) {
+                      const facetToAdd = facetsCopy.splice(facetIndex, 1);
+                      facetIndex--;
+                      newFacets.push(facetToAdd[0]);
+                      this.searchText[facetToAdd[0].name] = { value: '', isLoading: false };
                     }
                   }
-
-                  if (hasValues) {
-                    const facetToAdd = facetsCopy.splice(facetIndex, 1);
-                    facetIndex--;
-                    newFacets.push(facetToAdd[0]);
-                    this.searchText[facetToAdd[0].name] = { value: '', isLoading: false };
-                  }
+                  break;
                 }
-                break;
               }
-            }
-          });
-        }
+            });
+          }
 
+        });
+
+        this.facets = newFacets;
+        this.facetsLoaded.emit(this.facets.length);
+        this.cleanFacets();
+        this.setDisplayFacets();
       });
-
-      this.facets = newFacets;
-      this.facetsLoaded.emit(this.facets.length);
-      this.cleanFacets();
-      this.setDisplayFacets();
-    });
+    }
   }
 
   cleanFacets(): void {
@@ -224,8 +228,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       Object.keys(this.privateFacetParams).forEach(key => {
         if (this.privateFacetParams[key] && this.privateFacetParams[key].params) {
           Object.keys(this.privateFacetParams[key].params).forEach(sub => {
-            console.log(sub);
-            console.log(this.privateFacetParams[key].params[sub]);
             if (this.privateFacetParams[key].params[sub] !== undefined) {
               const facet = new DisplayFacet(
                 key,

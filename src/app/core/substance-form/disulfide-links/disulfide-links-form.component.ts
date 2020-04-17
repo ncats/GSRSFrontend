@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Link, Site} from '@gsrs-core/substance';
+import { SubstanceFormDisulfideLinksService } from './substance-form-disulfide-links.service';
 import {UtilsService} from '@gsrs-core/utils';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import {MatDialog} from '@angular/material/dialog';
@@ -37,6 +38,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
     private substanceFormService: SubstanceFormService,
+    private substanceFormDisulfideLinksService: SubstanceFormDisulfideLinksService
   ) { }
 
   ngOnInit() {
@@ -80,13 +82,13 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
         this.linkDeleted.emit(this.link);
       }, 1000);
     // }
-    this.substanceFormService.emitDisulfideLinkUpdate();
+    this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
   }
 
   undoDelete(): void {
     clearTimeout(this.deleteTimer);
     delete this.privateLink.$$deletedCode;
-    this.substanceFormService.emitDisulfideLinkUpdate();
+    this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
   }
 
   updateAccess(access: Array<string>): void {
@@ -103,7 +105,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
       }
       this.privateLink.sites[pos] = value;
       this.substanceFormService.emitCysteineUpdate(this.cysteine);
-      this.substanceFormService.emitDisulfideLinkUpdate();
+      this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
     } else {
     }
     this.testForm.controls['site' + pos].setValue(value);
@@ -138,7 +140,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
           this.testForm.controls['site1'].reset();
         }
       }
-      this.substanceFormService.emitDisulfideLinkUpdate();
+      this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
     });
     this.subscriptions.push(dialogSubscription);
   }

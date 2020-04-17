@@ -2,13 +2,12 @@ import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {DisulfideLink, Site, Subunit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
+import { SubstanceFormDisulfideLinksService } from './substance-form-disulfide-links.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
-import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
+import { SubstanceFormService } from '../substance-form.service';
 
 @Component({
   selector: 'app-substance-form-disulfide-links-card',
@@ -24,8 +23,8 @@ export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseF
   subunits: Array<Subunit>;
   private overlayContainer: HTMLElement;
   constructor(
+    private substanceFormDisulfideLinksService: SubstanceFormDisulfideLinksService,
     private substanceFormService: SubstanceFormService,
-    private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer
@@ -42,7 +41,7 @@ export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseF
   }
 
   ngAfterViewInit() {
-    const disulfideLinksSubscription = this.substanceFormService.substanceDisulfideLinks.subscribe(disulfideLinks => {
+    const disulfideLinksSubscription = this.substanceFormDisulfideLinksService.substanceDisulfideLinks.subscribe(disulfideLinks => {
       this.disulfideLinks = disulfideLinks;
       this.countCysteine();
     });
@@ -112,21 +111,20 @@ export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseF
   }
 
   addLink(): void {
-    this.substanceFormService.addSubstanceDisulfideLink();
+    this.substanceFormDisulfideLinksService.addSubstanceDisulfideLink();
     setTimeout(() => {
-    //  this.scrollToService.scrollToElement(`substance-disulfide-links-0`, 'center');
       });
-    this.substanceFormService.emitDisulfideLinkUpdate();
+    this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
   }
 
   deleteDisulfideLink(disulfideLink: DisulfideLink): void {
-    this.substanceFormService.deleteSubstanceDisulfideLink(disulfideLink);
-    this.substanceFormService.emitDisulfideLinkUpdate();
+    this.substanceFormDisulfideLinksService.deleteSubstanceDisulfideLink(disulfideLink);
+    this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
   }
 
   deleteAllDisulfideLinks(): void {
-    this.substanceFormService.deleteAllDisulfideLinks();
-    this.substanceFormService.emitDisulfideLinkUpdate();
+    this.substanceFormDisulfideLinksService.deleteAllDisulfideLinks();
+    this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
   }
 
   openDialog(): void {
@@ -139,7 +137,7 @@ export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseF
     const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
       this.overlayContainer.style.zIndex = null;
       if (newLinks) {
-          this.substanceFormService.addCompleteDisulfideLinks(newLinks);
+          this.substanceFormDisulfideLinksService.addCompleteDisulfideLinks(newLinks);
       }
     });
     this.subscriptions.push(dialogSubscription);

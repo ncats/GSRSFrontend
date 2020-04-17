@@ -12,13 +12,14 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {SubstanceFormLinksComponent} from '@gsrs-core/substance-form/substance-form-links/substance-form-links.component';
+import {SubstanceFormLinksCardComponent} from '@gsrs-core/substance-form/links/substance-form-links_card.component';
 import {MatSelectModule} from '@angular/material/select';
+import { LinkFormComponent } from './link-form.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormLinksComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormLinksCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -36,7 +37,8 @@ import {MatSelectModule} from '@angular/material/select';
   exports: [
   ],
   declarations: [
-    SubstanceFormLinksComponent
+    SubstanceFormLinksCardComponent,
+    LinkFormComponent
   ]
 })
 export class SubstanceFormLinksModule { }

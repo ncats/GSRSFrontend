@@ -10,12 +10,17 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatInputModule} from '@angular/material/input';
-import {SubstanceFormMixtureComponentsComponent} from '@gsrs-core/substance-form/substance-form-mixture-components/substance-form-mixture-components.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {SubstanceFormGlycosylationComponent} from '@gsrs-core/substance-form/glycosylation/substance-form-glycosylation.component';
+import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
+import {MatOptionModule} from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormMixtureComponentsComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormGlycosylationComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -25,10 +30,16 @@ import {SubstanceFormMixtureComponentsComponent} from '@gsrs-core/substance-form
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule
+    MatTooltipModule,
+    MatButtonToggleModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule
+  ],
+  exports: [
   ],
   declarations: [
-    SubstanceFormMixtureComponentsComponent
+    SubstanceFormGlycosylationComponent
   ]
 })
-export class SubstanceFormMixtureComponentsModule { }
+export class SubstanceFormGlycosylationModule { }

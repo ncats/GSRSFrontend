@@ -51,9 +51,7 @@ import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/ph
 import {PhysicalParameterFormComponent} from '@gsrs-core/substance-form/physical-parameter-form/physical-parameter-form.component';
 import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 import {SugarFormComponent} from '@gsrs-core/substance-form/sugar-form/sugar-form.component';
-import {LinkFormComponent} from '@gsrs-core/substance-form/link-form/link-form.component';
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
-import {MixtureComponentFormComponent} from '@gsrs-core/substance-form/mixture-component-form/mixture-component-form.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MonomerFormComponent} from '@gsrs-core/substance-form/monomer-form/monomer-form.component';
 import {StructuralUnitFormComponent} from '@gsrs-core/substance-form/structural-unit-form/structural-unit-form.component';
@@ -121,7 +119,6 @@ import { SubstanceFormService } from './substance-form.service';
     SubunitFormComponent,
     SubunitDisplayPipe,
     OtherLinksFormComponent,
-    LinkFormComponent,
     SugarFormComponent,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
@@ -130,7 +127,6 @@ import { SubstanceFormService } from './substance-form.service';
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
-    MixtureComponentFormComponent,
     CvInputComponent,
     CvDialogComponent,
     MonomerFormComponent,
@@ -164,9 +160,7 @@ import { SubstanceFormService } from './substance-form.service';
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
-    MixtureComponentFormComponent,
     TagSelectorComponent,
-    LinkFormComponent,
     SugarFormComponent,
     CvInputComponent,
     MonomerFormComponent,

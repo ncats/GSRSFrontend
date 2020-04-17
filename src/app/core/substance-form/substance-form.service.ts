@@ -62,10 +62,10 @@ export class SubstanceFormService implements OnDestroy {
   private substancePropertiesEmitter = new Subject<Array<SubstanceProperty>>();
   private substanceSubunitsEmitter = new Subject<Array<Subunit>>();
   private substanceOtherLinksEmitter = new Subject<Array<Link>>();
-  private substanceDisulfideLinksEmitter = new Subject<Array<DisulfideLink>>();
-  private substanceGlycosylationEmitter = new Subject<Glycosylation>();
+  private substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
+  private substanceGlycosylationEmitter = new ReplaySubject<Glycosylation>();
   private substanceCysteineEmitter = new Subject<Array<Site>>();
-  private substanceLinksEmitter = new Subject<Array<Linkage>>();
+  private substanceLinksEmitter = new ReplaySubject<Array<Linkage>>();
   private substanceSugarsEmitter = new Subject<Array<Sugar>>();
   private substancePhysicalModificationsEmitter = new Subject<Array<PhysicalModification>>();
   private substanceStructuralModificationsEmitter = new Subject<Array<StructuralModification>>();
@@ -73,13 +73,10 @@ export class SubstanceFormService implements OnDestroy {
   private substanceNucleicAcidEmitter = new Subject<NucleicAcid>();
   private substanceMixtureEmitter = new Subject<Mixture>();
   private substanceStructurallyDiverseEmitter = new Subject<StructurallyDiverse>();
-  private substanceMixtureComponentsEmitter = new Subject<Array<MixtureComponents>>();
   private substanceIdealizedStructureEmitter = new Subject<DisplayStructure>();
   private substanceMonomerEmitter = new Subject<Array<Monomer>>();
   private substancePolymerClassificationEmitter = new Subject<PolymerClassification>();
   private substanceSRUEmitter = new Subject<Array<StructuralUnit>>();
-  private customFeaturesEmitter = new Subject<Array<Feature>>();
-  private customFeatures: Array<Feature>;
   private cysteine: Array<Site>;
   private allSitesArr: Array<DisplaySite>;
   private allSitesEmitter = new Subject<Array<DisplaySite>>();
@@ -245,6 +242,12 @@ export class SubstanceFormService implements OnDestroy {
     this.substanceUnloadedEmitter.next();
     this.substanceUnloadedEmitter.complete();
     this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
+    this.substanceDisulfideLinksEmitter.complete();
+    this.substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
+    this.substanceGlycosylationEmitter.complete();
+    this.substanceGlycosylationEmitter = new ReplaySubject<Glycosylation>();
+    this.substanceLinksEmitter.complete();
+    this.substanceLinksEmitter = new ReplaySubject<Array<Linkage>>();
     this.substanceUnloadedEmitter = new Subject<void>();
   }
 
@@ -805,37 +808,6 @@ export class SubstanceFormService implements OnDestroy {
         });
       });
     });
-  }
-
-  get substanceMixtureComponents(): Observable<Array<SubstanceName>> {
-    return new Observable(observer => {
-      this.ready().subscribe(substance => {
-        if (this.privateSubstance.mixture.components == null) {
-          this.privateSubstance.mixture.components = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.mixture.components);
-        this.substanceMixtureComponentsEmitter.subscribe(names => {
-          observer.next(this.privateSubstance.mixture.components);
-        });
-      });
-    });
-  }
-
-  addSubstanceMixtureComponent(): void {
-    const newMix: MixtureComponents = {};
-    this.privateSubstance.mixture.components.unshift(newMix);
-    this.substanceMixtureComponentsEmitter.next(this.privateSubstance.mixture.components);
-  }
-
-  deleteSubstanceMixtureComponent(mix: MixtureComponents): void {
-    const subNameIndex = this.privateSubstance.mixture.components.findIndex(subName => mix.$$deletedCode === subName.$$deletedCode);
-    if (subNameIndex > -1) {
-      this.privateSubstance.mixture.components.splice(subNameIndex, 1);
-      this.substanceMixtureComponentsEmitter.next(this.privateSubstance.mixture.components);
-    }
   }
 
   // Class end
@@ -1510,58 +1482,11 @@ export class SubstanceFormService implements OnDestroy {
 
   // disulfide links start
 
-  get substanceDisulfideLinks(): Observable<Array<DisulfideLink>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.privateSubstance.protein.disulfideLinks == null) {
-          this.privateSubstance.protein.disulfideLinks = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.protein.disulfideLinks);
-        this.substanceDisulfideLinksEmitter.subscribe(disulfideLinks => {
-          observer.next(this.privateSubstance.protein.disulfideLinks);
-        });
-      });
-    });
+  disulfideLinksUpdated(): Observable<Array<DisulfideLink>> {
+    return this.substanceDisulfideLinksEmitter.asObservable();
   }
 
-  addSubstanceDisulfideLink(): void {
-    const newDisulfideLinks: DisulfideLink = {};
-    this.privateSubstance.protein.disulfideLinks.unshift(newDisulfideLinks);
-    this.substanceDisulfideLinksEmitter.next(this.privateSubstance.protein.disulfideLinks);
-  }
-
-  addCompleteDisulfideLinks(sites: any): void {
-    sites.forEach(link => {
-      const newSites = [{ subunitIndex: link[0].subunitIndex, residueIndex: link[0].residueIndex },
-      { subunitIndex: link[1].subunitIndex, residueIndex: link[1].residueIndex },
-      ];
-      const newDisulfideLinks: DisulfideLink = {
-        sites:
-          newSites
-      };
-      this.privateSubstance.protein.disulfideLinks.unshift(newDisulfideLinks);
-    });
-    this.emitDisulfideLinkUpdate();
-  }
-
-  deleteSubstanceDisulfideLink(disulfideLink: DisulfideLink): void {
-    const subLinkIndex =
-      this.privateSubstance.protein.disulfideLinks.findIndex(subLink => disulfideLink.$$deletedCode === subLink.$$deletedCode);
-    if (subLinkIndex > -1) {
-      this.privateSubstance.protein.disulfideLinks.splice(subLinkIndex, 1);
-      this.emitDisulfideLinkUpdate();
-    }
-  }
-
-  deleteAllDisulfideLinks(): void {
-    this.privateSubstance.protein.disulfideLinks = [];
-    this.emitDisulfideLinkUpdate();
-  }
-
-  emitDisulfideLinkUpdate(): void {
+  private emitDisulfideLinkUpdate(): void {
     this.recalculateAllSites('disulfide');
     this.substanceDisulfideLinksEmitter.next(this.privateSubstance.protein.disulfideLinks);
     this.recalculateCysteine();
@@ -1571,18 +1496,8 @@ export class SubstanceFormService implements OnDestroy {
 
   // Glycosylation start
 
-  get substanceGlycosylation(): Observable<Glycosylation> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.privateSubstance.protein.glycosylation == null) {
-          this.privateSubstance.protein.glycosylation = {};
-        }
-        observer.next(this.privateSubstance.protein.glycosylation);
-        this.substanceGlycosylationEmitter.subscribe(glycosylation => {
-          observer.next(this.privateSubstance.protein.glycosylation);
-        });
-      });
-    });
+  glycosylationUpdated(): Observable<Glycosylation> {
+    return this.substanceGlycosylationEmitter.asObservable();
   }
 
   emitGlycosylationUpdate(): void {
@@ -1769,64 +1684,12 @@ export class SubstanceFormService implements OnDestroy {
     });
   }
 
-
-  // custom sites for proteins
-
-  emitCustomFeaturesUpdate(): void {
-    this.customFeaturesEmitter.next(this.customFeatures);
-  }
-
-
-  get CustomFeatures(): Observable<Array<Feature>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.customFeatures == null) {
-          this.customFeatures = [];
-        }
-        observer.next(this.customFeatures);
-        this.customFeaturesEmitter.subscribe(disulfideLinks => {
-          observer.next(this.customFeatures);
-        });
-      });
-    });
-  }
-
-
   // ################################ Start Nucleic acid (break into new file, one for each class or on with only class specific?
 
   // begin link
 
-  get substanceLinks(): Observable<Array<Linkage>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.privateSubstance.nucleicAcid.linkages == null) {
-          this.privateSubstance.nucleicAcid.linkages = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.nucleicAcid.linkages);
-        this.substanceLinksEmitter.subscribe(links => {
-          observer.next(this.privateSubstance.nucleicAcid.linkages);
-        });
-      });
-    });
-  }
-
-  addSubstanceLink(): void {
-    const newLinks: Linkage = {
-      sites: []
-    };
-    this.privateSubstance.nucleicAcid.linkages.unshift(newLinks);
-    this.substanceLinksEmitter.next(this.privateSubstance.nucleicAcid.linkages);
-  }
-
-  deleteSubstanceLink(link: Link): void {
-    const subLinkIndex = this.privateSubstance.nucleicAcid.linkages.findIndex(subCode => link.$$deletedCode === subCode.$$deletedCode);
-    if (subLinkIndex > -1) {
-      this.privateSubstance.nucleicAcid.linkages.splice(subLinkIndex, 1);
-      this.substanceLinksEmitter.next(this.privateSubstance.nucleicAcid.linkages);
-    }
+  linksUpdated(): Observable<Array<Linkage>> {
+    return this.substanceLinksEmitter.asObservable();
   }
 
   emitLinkUpdate(): void {
@@ -2031,11 +1894,8 @@ export class SubstanceFormService implements OnDestroy {
         this.definitionEmitter.next(this.getDefinition());
         if (this.privateSubstance.substanceClass === 'protein') {
           this.substanceOtherLinksEmitter.next(this.privateSubstance.protein.otherLinks);
-          this.substanceDisulfideLinksEmitter.next(this.privateSubstance.protein.disulfideLinks);
-          this.substanceGlycosylationEmitter.next(this.privateSubstance.protein.glycosylation);
           this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
         } else if (this.privateSubstance.substanceClass === 'nucleicAcid') {
-          this.substanceLinksEmitter.next(this.privateSubstance.nucleicAcid.linkages);
           this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
           this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
         } else if (this.privateSubstance.substanceClass === 'mixture') {

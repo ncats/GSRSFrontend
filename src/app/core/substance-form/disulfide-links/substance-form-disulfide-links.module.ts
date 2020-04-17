@@ -15,6 +15,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 // tslint:disable-next-line:max-line-length
 import {SubstanceFormDisulfideLinksCardComponent} from '@gsrs-core/substance-form/disulfide-links/substance-form-disulfide-links-card.component';
 import { DisulfideLinksFormComponent } from './disulfide-links-form.component';
+import { MatSelectModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { DisulfideLinksFormComponent } from './disulfide-links-form.component';
     MatPaginatorModule,
     MatTooltipModule,
     MatButtonToggleModule,
-    MatInputModule
+    MatInputModule,
+    MatSelectModule
   ],
   exports: [
     DisulfideLinksFormComponent
