@@ -4,7 +4,8 @@ import { ControlledVocabularyService } from '../../../../core/controlled-vocabul
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationService } from '../../service/application.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { AuthService } from '@gsrs-core/auth/auth.service';
 
 @Component({
   selector: 'app-product-form',
@@ -21,25 +22,28 @@ export class ProductFormComponent implements OnInit {
   unitList: Array<VocabularyTerm> = [];
   reviewProductMessage: Array<any> = [];
   productMessage = '';
+  username = null;
 
   constructor(
     private applicationService: ApplicationService,
     public cvService: ControlledVocabularyService,
+    private authService: AuthService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.username = this.authService.getUser();
     this.getVocabularies();
   }
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('PROD_PRODUCT_NAME_TYPE', 'DOSAGE_FORM', 'PROD_ROUTE_OF_ADMIN',
-    'PROD_UNIT_PRESENTATION', 'APPLICATION_UNIT').subscribe(response => {
-      this.productNameTypeList = response['PROD_PRODUCT_NAME_TYPE'].list;
-      this.dosageFormList = response['DOSAGE_FORM'].list;
-      this.routeAdminList = response['PROD_ROUTE_OF_ADMIN'].list;
-      this.unitPresentationList = response['PROD_UNIT_PRESENTATION'].list;
-      this.unitList = response['APPLICATION_UNIT'].list;
-    });
+      'PROD_UNIT_PRESENTATION', 'APPLICATION_UNIT').subscribe(response => {
+        this.productNameTypeList = response['PROD_PRODUCT_NAME_TYPE'].list;
+        this.dosageFormList = response['DOSAGE_FORM'].list;
+        this.routeAdminList = response['PROD_ROUTE_OF_ADMIN'].list;
+        this.unitPresentationList = response['PROD_UNIT_PRESENTATION'].list;
+        this.unitList = response['APPLICATION_UNIT'].list;
+      });
   }
 
   addNewProduct() {
@@ -57,7 +61,7 @@ export class ProductFormComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-          this.deleteProduct(prodIndex);
+        this.deleteProduct(prodIndex);
       }
     });
   }
@@ -74,7 +78,7 @@ export class ProductFormComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-          this.deleteProductName(prodIndex, prodNameIndex);
+        this.deleteProductName(prodIndex, prodNameIndex);
       }
     });
   }
@@ -87,8 +91,29 @@ export class ProductFormComponent implements OnInit {
     this.applicationService.copyProduct(product);
   }
 
+  confirmReviewProduct(prodIndex: number) {
+    if (this.application.applicationProductList[prodIndex].reviewDate) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: 'Are you sure you want to overwrite Reviewed By and Review Date?'
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result && result === true) {
+          this.reviewProduct(prodIndex);
+        }
+      });
+    } else {
+      this.reviewProduct(prodIndex);
+    }
+  }
+
   reviewProduct(prodIndex: number) {
-    this.reviewProductMessage[prodIndex] = new Date();
+    this.applicationService.getCurrentDate().subscribe(response => {
+      if (response) {
+        this.application.applicationProductList[prodIndex].reviewDate = response.date;
+        this.application.applicationProductList[prodIndex].reviewedBy = this.username;
+      }
+    });
   }
 
   addNewIngredient(prodIndex: number) {

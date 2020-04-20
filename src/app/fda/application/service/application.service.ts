@@ -210,6 +210,18 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  getCurrentDate(
+  ): Observable<any> {
+    const url = this.baseUrl + 'getCurrentDateJson';
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        console.log('DATE: ' + results);
+        return results;
+      //  return results['data'];
+      })
+    );
+  }
+
   loadApplication(application?: ApplicationSrs): void {
     // if Update/Exist Application
     // setTimeout(() => {

@@ -109,6 +109,9 @@ fieldset.border {
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;  /* override the default value of min-content */
+  -webkit-box-shadow: 3px 6px 11px 1px rgba(110,104,110,0.64);
+  -moz-box-shadow: 3px 6px 11px 1px rgba(110,104,110,0.64);
+  box-shadow: 3px 4px 5px 1px rgba(110,104,110,0.64);
 }
 
 legend.border {

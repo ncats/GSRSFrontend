@@ -33,18 +33,19 @@
           </button>
         </div>
       </span>
-    
-    <div class="dismiss-container">
-      <span class="middle-fill"></span>
-      <button mat-flat-button color="primary" (click)="submit()"
-        [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
-        Submit</button>
-    </div>
-    
+
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" (click)="submit()"
+          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
+          Submit</button>
+      </div>
+
     </div>
 
   </div>
 </div>
+
 
 <!-- Display Form Fields -->
 
@@ -54,7 +55,7 @@
 
       <div class="title_box">
         <div class="title">
-          Register New Application
+         {{title}}
         </div>
         <div class="">
           <span *ngIf="isDisableData" class="font11px colorgray">
@@ -63,8 +64,10 @@
         </div>
       </div>
 
-      <mat-card class="bordergray">
+
+      <mat-card class="bordergray" *ngIf="application">
         <mat-card-content>
+
           <div class="row">
             <mat-form-field class="col-1">
               <mat-label>Center</mat-label>
@@ -90,11 +93,6 @@
             </mat-form-field>
 
             <mat-form-field class="col-1">
-              <input matInput placeholder="Non Proprietary Name" [(ngModel)]="application.nonProprietaryName"
-                name="nonProprietaryName" />
-            </mat-form-field>
-
-            <mat-form-field class="col-1">
               <mat-label>Public Domain</mat-label>
               <mat-select matNativeControl [(ngModel)]="application.publicDomain" name="publicDomain">
                 <mat-option *ngFor="let publicDomain of publicDomainList" [value]="publicDomain.value">
@@ -104,18 +102,17 @@
             </mat-form-field>
 
             <mat-form-field class="col-1">
-              <input matInput placeholder="Submit Date" [(ngModel)]="application.submitDate" name="submitDate" />
+              <input matInput placeholder="Non Proprietary Name" [(ngModel)]="application.nonProprietaryName"
+                name="nonProprietaryName" />
             </mat-form-field>
 
+            <mat-form-field class="col-1">
+              <input matInput placeholder="Submit Date" [(ngModel)]="application.submitDate" name="submitDate" />
+            </mat-form-field>
           </div>
 
 
           <div class="row">
-            <mat-form-field class="col-2">
-              <input matInput placeholder="Sponsor Name" [disabled]="isDisableData"
-                [(ngModel)]="application.sponsorName" name="sponsorName" />
-            </mat-form-field>
-
             <mat-form-field class="col-1">
               <mat-label>Application Status</mat-label>
               <mat-select matNativeControl [disabled]="isDisableData" [(ngModel)]="application.status" name="status">
@@ -135,7 +132,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field class="col-1">
+            <mat-form-field class="col-3">
               <input matInput placeholder="Division Class Desc" [disabled]="isDisableData"
                 [(ngModel)]="application.divisionClassDesc" name="divisionClassDesc" />
             </mat-form-field>
@@ -144,17 +141,35 @@
               <input matInput placeholder="Status Date" [disabled]="isDisableData" [(ngModel)]="application.statusDate"
                 name="statusDate" />
             </mat-form-field>
-
           </div>
 
-          <div class="row">
-            <mat-form-field class="col-3">
-              <input matInput placeholder="Title" [(ngModel)]="application.title" name="title" />
-            </mat-form-field>
 
-            <mat-form-field class="col-3">
+          <div class="row">
+            <mat-form-field class="col-6">
+              <input matInput placeholder="Sponsor Name" [disabled]="isDisableData"
+                [(ngModel)]="application.sponsorName" name="sponsorName" />
+            </mat-form-field>
+          </div>
+
+
+          <!--
+          <div class="row">
+            <div class="textarea-label">Title</div>
+            <textarea placeholder="Title" [(ngModel)]="application.title" name="title"></textarea>
+          </div>
+          -->
+
+          <div class="row">
+            <mat-form-field class="col-6">
               <input matInput placeholder="External Title" [disabled]="isDisableData"
                 [(ngModel)]="application.externalTitle" name="externalTitle" />
+            </mat-form-field>
+          </div>
+
+
+          <div class="row">
+            <mat-form-field class="col-6">
+              <input matInput placeholder="Title" [(ngModel)]="application.title" name="title" />
             </mat-form-field>
           </div>
 
@@ -173,8 +188,7 @@
                 </button>
               </span>
               <!-- Delete Indication -->
-              <button mat-icon-button color="primary"
-                [disabled]="application.applicationIndicationList.length == 1"
+              <button mat-icon-button color="primary" [disabled]="application.applicationIndicationList.length == 1"
                 (click)="confirmDeleteIndication(indIndex, ind.indication)" matTooltip="Delete Indication">
                 <mat-icon [class.disabled]="application.applicationIndicationList.length == 1">delete_forever</mat-icon>
               </button>
@@ -185,12 +199,21 @@
           <!-- Product Form -->
           <app-product-form [application]="application"></app-product-form>
 
+          <div class="font11px padtop5px" *ngIf="application.id">
+            <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Create Date:</span>
+            {{application.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modify Date:</span> {{application.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+          </div>
         </mat-card-content>
+        
       </mat-card>
-      <br><br><br>
-
+      <br>
+      <br><br>
+    
     </div>
   </div>
-</div>
 
-<br>
+  <br>
+</div>

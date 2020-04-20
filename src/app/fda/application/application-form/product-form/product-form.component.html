@@ -4,7 +4,7 @@
   <br>
   <span class="titlegreen"></span>
   <span matBadge="{{application.applicationProductList.length}}" matBadgeOverlap="false">
-    <span class="title1">PRODUCT</span>
+    <span class="titlegreen">PRODUCT</span>
   </span>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <button mat-raised-button color="primary" (click)="addNewProduct()" matTooltip="Add New Product">
@@ -26,20 +26,15 @@
         <mat-icon>file_copy</mat-icon>
       </button>
       &nbsp;&nbsp;
-      <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="reviewProduct(prodIndex)"
+      <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="confirmReviewProduct(prodIndex)"
         matTooltip="Click to Confirm Product Details {{prodIndex + 1}} has been Reviewed">
         <mat-icon>check_circle</mat-icon>
       </button>
-      <!--
-      <span class="font12px" *ngIf="reviewProductMessage">
-        Product Data Reviewed By:
-        <span class="colorred">
-          {{reviewProductMessage[prodIndex]| date: 'MM/dd/yyyy h:mm:ss a'}}
-        </span>
-      </span>
-    -->
+      <span class="colorgray">{{product.reviewedBy}}&nbsp;{{product.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}</span>
     </div>
 
+
+    <!-- Display Products -->
     <fieldset class="border">
       <legend class="border">Product Details&nbsp;<b><span class="colorgreen font17px">{{prodIndex + 1}}</span></b>
       </legend>
@@ -51,7 +46,7 @@
         <!--
         <hr *ngIf="prodIndex > 0">
         -->
-        
+
         <div class="form-row">
           <mat-form-field class="prodNameField">
             <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName" name="productName" />

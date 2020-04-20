@@ -101,8 +101,20 @@
   color: red;
 }
 
+.colororange {
+  color: #d35e04;
+}
+
 .colormaroon {
   color: maroon;
+}
+
+.colorgray {
+  color: gray;
+}
+
+.font11px {
+  font-size: 11px;
 }
 
 .font12px {
@@ -120,6 +132,11 @@
 .font17px {
   font-size: 17px;
 }
+
+.fontfamilyhelvetica {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
 
 .bordergray {
   border: 1px solid gray;
@@ -146,7 +163,7 @@
 }
 
 .padall5px {
-  padding-top: 5px;
+  padding: 5px;
 }
 
 .padleft235px {
@@ -206,7 +223,7 @@ legend.border {
 .flex-column {
   display: flex;
   flex-direction: column;
-  margin-right: 15px;
+  margin-right: px;
   text-align: left;
 }
 
@@ -232,7 +249,7 @@ legend.border {
   /*
   -webkit-box-shadow: 3px 6px 11px 1px rgba(110,104,110,0.64);
   -moz-box-shadow: 3px 6px 11px 1px rgba(110,104,110,0.64);
-  box-shadow: 3px 6px 11px 1px rgba(110,104,110,0.64);
+  box-shadow: 3px 4px 5px 1px rgba(110,104,110,0.64);
   */
 }
 /*

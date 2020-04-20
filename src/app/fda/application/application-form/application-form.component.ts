@@ -11,7 +11,7 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationSrs, ValidationMessage } from '../model/application.model';
 import { Subscription } from 'rxjs';
-import {take} from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JsonDialogFdaComponent } from '../application-form/json-dialog-fda/json-dialog-fda.component';
@@ -44,6 +44,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   private overlayContainer: HTMLElement;
   serverError: boolean;
   isDisableData = false;
+  username = null;
+  title = null;
 
   constructor(
     private applicationService: ApplicationService,
@@ -61,11 +63,13 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   ngOnInit() {
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.username = this.authService.getUser();
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
         if (params['id']) {
           const id = params['id'];
+          this.title = 'Update Application';
           if (id !== this.id) {
             this.id = id;
             this.gaService.sendPageView(`Application Edit`);
@@ -73,6 +77,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
             this.getVocabularies();
           }
         } else {
+          this.title = 'Register New Application';
           setTimeout(() => {
             this.gaService.sendPageView(`Application Register`);
             this.applicationService.loadApplication();
@@ -143,13 +148,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       this.loadingService.setLoading(false);
       this.isLoading = false;
     });
-
-    /*
-    this.isLoading = false;
-    this.validationResult = true;
-    this.showSubmissionMessages = true;
-    this.submissionMessage = 'Application is Valid. Would you like to submit?';
-    */
   }
 
   toggleValidation(): void {
@@ -193,11 +191,11 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       setTimeout(() => {
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
-        if (!this.id) {
+        if (response.id) {
           this.id = response.id;
           this.router.navigate(['/application', response.id, 'edit']);
         }
-      }, 4000);
+      });
     }
     /*
     , (error: SubstanceFormResults) => {

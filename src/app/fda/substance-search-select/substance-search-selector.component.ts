@@ -11,6 +11,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
+  @Output() showMessage = new EventEmitter<String>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   @Input() header = 'Substance';
@@ -61,7 +62,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
         this.selectionUpdated.emit(this.selectedSubstance);
         this.errorMessage = '';
       } else {
-        this.errorMessage = 'No substances found';
+        this.showMessage.emit('No substances found');
       }
     });
   }
@@ -69,11 +70,6 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   editSelectedSubstance(): void {
     this.selectedSubstance = null;
     this.selectionUpdated.emit(this.selectedSubstance);
-  }
-
-  clearSelectedSubstance(): void {
-    this.selectedSubstance = null;
-    this.searchValue = '';
   }
 
 }
