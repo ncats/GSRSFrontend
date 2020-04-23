@@ -11,7 +11,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import {SubstanceFormStructuralModificationsComponent} from '@gsrs-core/substance-form/substance-form-structural-modifications/substance-form-structural-modifications.component';
-import {SubstanceFormAgentModificationsComponent} from '@gsrs-core/substance-form/substance-form-agent-modifications/substance-form-agent-modifications.component';
 
 @NgModule({
   imports: [

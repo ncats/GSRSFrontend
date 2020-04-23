@@ -4,7 +4,11 @@ export interface Config {
     googleAnalyticsId?: string;
     version?: string;
     substanceDetailsCards?: Array<SubstanceDetailsCard>;
-    facets?: { [permission: string]: Array<string> };
+    facets?: {
+        [name: string]: {
+            [permission: string]: Array<string>
+        }
+    };
     codeSystemOrder?: Array<string>;
     contactEmail?: string;
     defaultCodeSystem?: string;

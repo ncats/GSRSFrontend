@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { ApplicationSrs } from '../model/application.model';
-import { ProductSrs } from '../model/application.model';
-import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
-import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { Facet } from '@gsrs-core/utils';
+import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
+import { map, switchMap } from 'rxjs/operators';
+import { Facet } from '@gsrs-core/facets-manager';
 
 @Injectable(
   {
@@ -33,9 +31,9 @@ export class ApplicationService extends BaseHttpService {
     skip: number = 0,
     pageSize: number = 10,
     searchTerm?: string,
-    facets?: SubstanceFacetParam
+    facets?: FacetParam
   ): Observable<PagingResponse<ApplicationSrs>> {
-    let params = new SubstanceHttpParams();
+    let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
     if (searchTerm !== null && searchTerm !== '') {
@@ -56,9 +54,9 @@ export class ApplicationService extends BaseHttpService {
     skip: number = 0,
     pageSize: number = 10,
     searchTerm?: string,
-    facets?: SubstanceFacetParam
+    facets?: FacetParam
   ): string {
-    let params = new SubstanceHttpParams();
+    let params = new FacetHttpParams();
   //  params = params.append('skip', skip.toString());
   //  params = params.append('top', '1000');
     params = params.append('page', '1');
@@ -74,6 +72,18 @@ export class ApplicationService extends BaseHttpService {
     };
 
     return url;
+  }
+
+  getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    return this.http.get<FacetQueryResponse>(url);
   }
 
   filterFacets(name: string, category: string): Observable<any> {

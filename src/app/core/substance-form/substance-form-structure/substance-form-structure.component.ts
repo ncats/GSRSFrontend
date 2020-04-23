@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceFormBase } from '../substance-form-base';
+import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { Editor } from '../../structure-editor/structure.editor.model';
 import { SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';

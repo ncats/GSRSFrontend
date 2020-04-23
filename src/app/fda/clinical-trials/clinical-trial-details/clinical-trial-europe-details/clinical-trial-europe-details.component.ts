@@ -6,7 +6,8 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component';
-import {environment} from '../../../../../environments/environment';
+import { Environment } from '@environment';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-clinical-trial-europe-details',
@@ -15,6 +16,7 @@ import {environment} from '../../../../../environments/environment';
 })
 
 export class ClinicalTrialEuropeDetailsComponent extends ClinicalTrialDetailsBaseComponent implements OnInit {
+  environment: Environment;
 
   constructor(
     clinicalTrialService: ClinicalTrialService,
@@ -24,14 +26,16 @@ export class ClinicalTrialEuropeDetailsComponent extends ClinicalTrialDetailsBas
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
+    private configService: ConfigService
   ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
     router, gaService, utilsService);
+    this.environment = configService.environment;
   }
 
   ngOnInit() {
     super.ngOnInit();
 
-    this.flagIconSrcPath = `${environment.baseHref || '/'}assets/icons/fda/european-union.svg`;
+    this.flagIconSrcPath = `${this.environment.baseHref || '/'}assets/icons/fda/european-union.svg`;
 
   }
 

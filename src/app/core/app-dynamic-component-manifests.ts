@@ -196,9 +196,9 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceFormMoietiesModule),
   },
   {
-    componentId: 'substance-form-codes',
-    path: 'substance-form-codes',
-    loadChildren: () => import('./substance-form/substance-form-codes/substance-form-codes.module')
+    componentId: 'substance-form-codes-card',
+    path: 'substance-form-codes-card',
+    loadChildren: () => import('./substance-form/codes/substance-form-codes.module')
       .then(m => m.SubstanceFormCodesModule),
   },
   {
@@ -234,13 +234,13 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-disulfide-links',
     path: 'substance-form-disulfide-links',
-    loadChildren: () => import('./substance-form/substance-form-disulfide-links/substance-form-disulfide-links.module')
+    loadChildren: () => import('./substance-form/disulfide-links/substance-form-disulfide-links.module')
       .then(m => m.SubstanceFormDisulfideLinksModule)
   },
   {
     componentId: 'substance-form-glycosylation',
     path: 'substance-form-glycosylation',
-    loadChildren: () => import('./substance-form/substance-form-glycosylation/substance-form-glycosylation.module')
+    loadChildren: () => import('./substance-form/glycosylation/substance-form-glycosylation.module')
       .then(m => m.SubstanceFormGlycosylationModule)
   },
   {
@@ -250,9 +250,9 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceFormStructuralModificationsModule)
   },
   {
-    componentId: 'substance-form-agent-modifications',
-    path: 'substance-form-agent-modifications',
-    loadChildren: () => import('./substance-form/substance-form-agent-modifications/substance-form-agent-modifications.module')
+    componentId: 'substance-form-agent-modifications-card',
+    path: 'substance-form-agent-modifications-card',
+    loadChildren: () => import('./substance-form/agent-modifications/substance-form-agent-modifications.module')
       .then(m => m.SubstanceFormAgentModificationsModule)
   },
   {
@@ -276,7 +276,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-links',
     path: 'substance-form-links',
-    loadChildren: () => import('./substance-form/substance-form-links/substance-form-links.module')
+    loadChildren: () => import('./substance-form/links/substance-form-links.module')
       .then(m => m.SubstanceFormLinksModule)
   },
   {
@@ -294,7 +294,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-mixture-components',
     path: 'substance-form-mixture-components',
-    loadChildren: () => import('./substance-form/substance-form-mixture-components/substance-form-mixture-components.module')
+    loadChildren: () => import('./substance-form/mixture-components/substance-form-mixture-components.module')
       .then(m => m.SubstanceFormMixtureComponentsModule)
   },
   {
@@ -312,7 +312,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-constituents',
     path: 'substance-form-constituents',
-    loadChildren: () => import('./substance-form/substance-form-constituents/substance-form-constituents.module')
+    loadChildren: () => import('./substance-form/constituents/substance-form-constituents.module')
       .then(m => m.SubstanceFormConstituentsModule)
   },
   {

@@ -1,5 +1,3 @@
-export * from './facet-display.pipe';
-export * from './facet.model';
 export * from './paging-response.model';
 export * from './search-sort-values';
 export * from './substance-suggestion.model';

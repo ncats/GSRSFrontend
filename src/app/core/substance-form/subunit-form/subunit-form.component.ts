@@ -16,6 +16,7 @@ import { Subject, Subscription } from 'rxjs';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import * as deepEqual from 'deep-equal';
+import { SubstanceFormLinksService } from '../links/substance-form-links.service';
 
 @Component({
   selector: 'app-subunit-form',
@@ -46,14 +47,13 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
   constructor(
     private substanceFormService: SubstanceFormService,
+    private substanceFormLinksService: SubstanceFormLinksService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private cvService: ControlledVocabularyService,
   ) {
 
   }
-
-
 
   ngOnInit() {
     this.allSites = [];
@@ -305,7 +305,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.sugars = sug;
     });
 
-    const linksSubscription = this.substanceFormService.substanceLinks.subscribe(l => {
+    const linksSubscription = this.substanceFormLinksService.substanceLinks.subscribe(l => {
       this.links = l;
     });
     let sugarType = '';

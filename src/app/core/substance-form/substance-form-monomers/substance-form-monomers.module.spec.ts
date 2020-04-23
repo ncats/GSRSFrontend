@@ -1,10 +1,10 @@
-import { SubstanceFormCodesModule } from './substance-form-codes.module';
+import { SubstanceFormMonomersModule } from './substance-form-monomers.module';
 
 describe('SubstanceFormCodesModule', () => {
-  let substanceFormCodesModule: SubstanceFormCodesModule;
+  let substanceFormCodesModule: SubstanceFormMonomersModule;
 
   beforeEach(() => {
-    substanceFormCodesModule = new SubstanceFormCodesModule();
+    substanceFormCodesModule = new SubstanceFormMonomersModule();
   });
 
   it('should create an instance', () => {

@@ -344,7 +344,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     sectionNames.forEach(sectionName => {
       const formSection = new SubstanceFormSection(sectionName);
       if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
-        (formSection.dynamicComponentName === 'substance-form-names' || formSection.dynamicComponentName === 'substance-form-codes'))) {
+        (formSection.dynamicComponentName === 'substance-form-names'
+        || formSection.dynamicComponentName === 'substance-form-codes-card'))) {
         this.formSections.push(formSection);
       }
     });

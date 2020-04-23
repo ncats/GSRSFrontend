@@ -4,7 +4,7 @@ import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
-import { SubstanceFormBase } from '../substance-form-base';
+import { SubstanceFormBase } from '../base-classes/substance-form-base';
 
 @Component({
   selector: 'app-substance-form-structurally-diverse-source',
