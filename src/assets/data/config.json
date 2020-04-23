@@ -401,8 +401,6 @@
       "ATC Level 2",
       "ATC Level 3",
       "ATC Level 4",
-      "Application Status",
-      "Application Type",
       "DME Reactions",
       "Moiety Type",
       "Molecular Weight",
@@ -415,10 +413,7 @@
       "Definition Level Access",
       "Protein Type",
       "Protein Subtype",
-      "modified",
-      "Product Ingredient Type",
-      "Product Name Type",
-      "Product Dosage Form"
+      "modified"
     ],
     "admin": [
       "root_lastEditedBy",
