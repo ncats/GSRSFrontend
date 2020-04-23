@@ -438,43 +438,36 @@
     }
   ],
   "facets": {
-    "substances": {
-      "default": [
-        "Deprecated",
-        "Record Status",
-        "Substance Class",
-        "GInAS Tag",
-        "Code System",
-        "ATC Level 1",
-        "ATC Level 2",
-        "ATC Level 3",
-        "ATC Level 4",
-        "Application Status",
-        "Application Type",
-        "DME Reactions",
-        "Moiety Type",
-        "Molecular Weight",
-        "SubstanceStereochemistry",
-        "root_approved",
-        "root_lastEdited",
-        "Relationships",
-        "Record Level Access",
-        "Display Name Level Access",
-        "Definition Level Access",
-        "Protein Type",
-        "Protein Subtype",
-        "modified",
-        "Product Ingredient Type",
-        "Product Name Type",
-        "Product Dosage Form"
-      ],
-      "admin": [
-        "root_lastEditedBy",
-        "Material Type",
-        "Family",
-        "Parts"
-      ]
-    }
+    "default": [
+      "Deprecated",
+      "Record Status",
+      "Substance Class",
+      "GInAS Tag",
+      "Code System",
+      "ATC Level 1",
+      "ATC Level 2",
+      "ATC Level 3",
+      "ATC Level 4",
+      "DME Reactions",
+      "Moiety Type",
+      "Molecular Weight",
+      "SubstanceStereochemistry",
+      "root_approved",
+      "root_lastEdited",
+      "Relationships",
+      "Record Level Access",
+      "Display Name Level Access",
+      "Definition Level Access",
+      "Protein Type",
+      "Protein Subtype",
+      "modified"
+    ],
+    "admin": [
+      "root_lastEditedBy",
+      "Material Type",
+      "Family",
+      "Parts"
+    ]
   },
   "codeSystemOrder": [
     "BDNUM",

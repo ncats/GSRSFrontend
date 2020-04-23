@@ -119,8 +119,14 @@ export class AuthService {
           document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
       }
     }
-    this._auth = null;
-    this._authUpdate.next(null);
+    const url = `${this.configService.configData.apiBaseUrl}logout`;
+    this.http.get(url).subscribe(() => {
+      this._auth = null;
+      this._authUpdate.next(null);
+    }, error => {
+      this._auth = null;
+      this._authUpdate.next(null);
+    });
   }
 
   public getUser(): string {
