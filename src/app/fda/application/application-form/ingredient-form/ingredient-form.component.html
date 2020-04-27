@@ -38,7 +38,19 @@
     matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
     <mat-icon>check_circle</mat-icon>
   </button>
-    <span *ngIf="ingredient.reviewDate" class="colorgray">Reviewed By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}</span>
+  <span *ngIf="ingredient.reviewDate" class="colorgray font12px">Reviewed
+    By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+  </span>
+  
+    <!--
+  &nbsp;&nbsp;&nbsp;
+  <span class="font11px">
+    <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;
+    {{ingredient.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+    <span class="colorgray">Modified By:</span> {{ingredient.modifiedBy}}&nbsp;&nbsp;&nbsp;
+    {{ingredient.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+  </span>
+   -->
 </div>
 
 <!-- Ingredient Details -->
@@ -46,7 +58,7 @@
   <legend class="border">Ingredient Details&nbsp;<b><span class="font17px">{{ingredIndex + 1}}</span></b></legend>
 
   <div class="divflexrow">
-    <mat-form-field class="col-1">
+    <mat-form-field class="col-1 width200px">
       <input matInput placeholder="Applicant Ingredient Name" [(ngModel)]="ingredient.applicantIngredName"
         name="applicantIngredName" />
     </mat-form-field>
@@ -122,10 +134,20 @@
 
       </div>
     </div>
+
+    <mat-form-field class="">
+      <mat-label>Grade</mat-label>
+      <mat-select matNativeControl [(ngModel)]="ingredient.grade" name="grade">
+        <mat-option *ngFor="let grade of gradeList" [value]="grade.value">
+          {{grade.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
+
   <div class="row margintop10px">
-    <mat-form-field class="col-1">
+    <mat-form-field class="col-2">
       <mat-label>Ingredient Type</mat-label>
       <mat-select matNativeControl [(ngModel)]="ingredient.ingredientType" name="ingredientType">
         <mat-option *ngFor="let ingredientType of ingredientTypeList" [value]="ingredientType.value">
@@ -133,7 +155,6 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-
 
     <mat-form-field class="col-1">
       <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
@@ -148,6 +169,14 @@
     </mat-form-field>
 
     <mat-form-field class="col-1">
+      <input matInput placeholder="Low Limit" [(ngModel)]="ingredient.lowLimit" name="lowLimit" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1">
+      <input matInput placeholder="High Limit" [(ngModel)]="ingredient.highLimit" name="highLimit" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1">
       <mat-label>Unit</mat-label>
       <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
         <mat-option *ngFor="let unit of unitList" [value]="unit.value">
@@ -157,12 +186,7 @@
     </mat-form-field>
 
     <mat-form-field class="col-1">
-      <mat-label>Grade</mat-label>
-      <mat-select matNativeControl [(ngModel)]="ingredient.grade" name="grade">
-        <mat-option *ngFor="let grade of gradeList" [value]="grade.value">
-          {{grade.display}}
-        </mat-option>
-      </mat-select>
+      <input matInput placeholder="Non-Numeric Value" [(ngModel)]="ingredient.nonNumericValue" name="nonNumericValue" />
     </mat-form-field>
   </div> <!-- row-->
 </fieldset>

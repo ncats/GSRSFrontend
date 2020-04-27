@@ -13,7 +13,7 @@
 
 .form-content-container {
   overflow: hidden;
-  padding-top: 121px;
+  padding-top: 110px;
 }
 
 .scrollable-container {
@@ -22,9 +22,11 @@
 
 .cards-container {
   width: 100%;
+  /*
   display: flex;
   align-items: center;
   justify-content: center;
+  */
 }
 
 .title_box {
@@ -38,7 +40,7 @@
    font-size: 24px;
    font-weight: 600px;
    font-family: Arial, Helvetica, sans-serif;
-  /* padding-left: 70px; */
+   /*padding-left: 70px; */
 }
 
 
@@ -255,6 +257,10 @@
 
 .font11px {
   font-size: 11px;
+}
+
+.textalignright {
+  text-align: right;
 }
 
 .displayinlineblock {

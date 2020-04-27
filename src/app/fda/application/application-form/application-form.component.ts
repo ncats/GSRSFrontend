@@ -15,7 +15,7 @@ import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JsonDialogFdaComponent } from '../application-form/json-dialog-fda/json-dialog-fda.component';
-import { ConfirmDialogComponent} from '../application-form/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../application-form/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-application-form',
@@ -128,7 +128,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
-  validate(validationType?: string ): void {
+  validate(validationType?: string): void {
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -154,7 +154,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     this.showSubmissionMessages = !this.showSubmissionMessages;
   }
 
-  addServerError (error: any): void {
+  addServerError(error: any): void {
     this.serverError = true;
     this.validationResult = false;
     this.validationMessages = null;
@@ -164,14 +164,14 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       links: [],
       appliedChange: false,
       suggestedChange: false,
-      messageType : 'ERROR',
-      message : 'Unknown Server Error'
+      messageType: 'ERROR',
+      message: 'Unknown Server Error'
     };
-    if ( error && error.error && error.error.message ) {
-      message.message =  'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
-    } else if ( error && error.error && (typeof error.error) === 'string') {
-        message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
-    } else if ( error && error.message ) {
+    if (error && error.error && error.error.message) {
+      message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
+    } else if (error && error.error && (typeof error.error) === 'string') {
+      message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
+    } else if (error && error.message) {
       message.message = 'Server Error ' + (error.status + ': ' || '') + error.message;
     }
     this.validationMessages = [message];
@@ -192,31 +192,33 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
         if (response.id) {
-          this.id = response.id;
-          this.router.navigate(['/application', response.id, 'edit']);
+          const id = response.id;
+          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate(['/application', id, 'edit']);
         }
-      });
+      }, 4000);
     }
-    /*
-    , (error: SubstanceFormResults) => {
-      this.showSubmissionMessages = true;
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.submissionMessage = null;
-      if (error.validationMessages && error.validationMessages.length) {
-        this.validationResult = error.isSuccessfull;
-        this.validationMessages = error.validationMessages
-          .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+      /*
+      , (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;
-      } else {
-        this.submissionMessage = 'There was a problem with your submission';
-        this.addServerError(error.serverError);
-        setTimeout(() => {
-          this.showSubmissionMessages = false;
-          this.submissionMessage = null;
-        }, 8000);
-      }
-    }*/
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+        this.submissionMessage = null;
+        if (error.validationMessages && error.validationMessages.length) {
+          this.validationResult = error.isSuccessfull;
+          this.validationMessages = error.validationMessages
+            .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+          this.showSubmissionMessages = true;
+        } else {
+          this.submissionMessage = 'There was a problem with your submission';
+          this.addServerError(error.serverError);
+          setTimeout(() => {
+            this.showSubmissionMessages = false;
+            this.submissionMessage = null;
+          }, 8000);
+        }
+      }*/
     );
   }
 
@@ -250,7 +252,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       height: '90%'
     });
 
-   // this.overlayContainer.style.zIndex = '1002';
+    // this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
@@ -269,7 +271,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         console.log(result);
-          this.deleteIndication(indIndex);
+        this.deleteIndication(indIndex);
       }
     });
   }

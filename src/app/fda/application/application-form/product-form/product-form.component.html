@@ -30,7 +30,9 @@
         matTooltip="Click to Confirm Product Details {{prodIndex + 1}} has been Reviewed">
         <mat-icon>check_circle</mat-icon>
       </button>
-      <span class="colorgray">{{product.reviewedBy}}&nbsp;{{product.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}</span>
+      <span *ngIf="product.reviewDate" class="colorgray font12px">Reviewed
+        By:{{product.reviewedBy}}&nbsp;{{product.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+      </span>
     </div>
 
 

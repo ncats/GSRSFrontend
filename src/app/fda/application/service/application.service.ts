@@ -215,7 +215,6 @@ export class ApplicationService extends BaseHttpService {
     const url = this.baseUrl + 'getCurrentDateJson';
     return this.http.get<Array<any>>(url).pipe(
       map(results => {
-        console.log('DATE: ' + results);
         return results;
       //  return results['data'];
       })
@@ -325,6 +324,8 @@ export class ApplicationService extends BaseHttpService {
 
   copyProduct(product: any): void {
     const newProduct = JSON.parse(JSON.stringify(product));
+    newProduct.reviewedBy = null;
+    newProduct.reviewDate = null;
     this.application.applicationProductList.unshift(newProduct);
   }
 
@@ -343,6 +344,8 @@ export class ApplicationService extends BaseHttpService {
 
   copyIngredient(ingredient: any, prodIndex: number): void {
     const newIngredient = JSON.parse(JSON.stringify(ingredient));
+    newIngredient.reviewedBy = null;
+    newIngredient.reviewDate = null;
     this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
   }
 

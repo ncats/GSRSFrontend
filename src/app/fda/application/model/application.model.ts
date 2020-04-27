@@ -68,6 +68,9 @@ export interface ApplicationIngredient {
   average?: string;
   low?: string;
   high?: string;
+  lowLimit?: string;
+  highLimit?: string;
+  nonNumericValue?: string;
   ingredientType?: string;
   unit?: string;
   grade?: string;

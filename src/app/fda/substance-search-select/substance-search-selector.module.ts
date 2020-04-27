@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { SubstanceTextSearchModule } from '@gsrs-core/substance-text-search/substance-text-search.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubstanceSearchSelectorComponent } from './substance-search-selector.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { SubstanceSearchSelectorComponent } from './substance-search-selector.co
     MatIconModule,
     MatButtonModule,
     RouterModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     SubstanceSearchSelectorComponent

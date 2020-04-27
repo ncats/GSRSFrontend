@@ -20,6 +20,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   showOptions: boolean;
   displayName: string;
   searchValue: string = null;
+  loadingStructure = false;
 
   constructor(
     public substanceService: SubstanceService,
@@ -49,6 +50,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   }
 
   processSubstanceSearch(searchValue: string = ''): void {
+
     this.searchValue = searchValue;
     const q = searchValue.replace('\"', '');
 
@@ -57,6 +59,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
       `root_codes_BDNUM:\"^${q}$\"`;
 
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
+      this.loadingStructure = true;
       if (response.content && response.content.length) {
         this.selectedSubstance = response.content[0];
         this.selectionUpdated.emit(this.selectedSubstance);
@@ -64,6 +67,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
       } else {
         this.showMessage.emit('No substances found');
       }
+      this.loadingStructure = false;
     });
   }
 
