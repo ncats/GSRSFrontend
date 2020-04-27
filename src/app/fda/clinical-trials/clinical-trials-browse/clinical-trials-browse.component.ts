@@ -4,21 +4,27 @@ import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial } from '../clinical-trial/clinical-trial.model';
 import { ConfigService } from '@gsrs-core/config';
 import * as _ from 'lodash';
-import { Facet, FacetParam, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
-import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
-import { LoadingService } from '@gsrs-core/loading';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { PageEvent } from '@angular/material';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import {AuthService} from '@gsrs-core/auth/auth.service';
-import { Auth } from '@gsrs-core/auth/auth.model';
-import { Location, LocationStrategy } from '@angular/common';
-import { Subscription, Observable, Subject } from 'rxjs';
-import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { UtilsService } from '../../../core/utils/utils.service';
+import { UtilsService } from '@gsrs-core//utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
+import {AuthService} from '@gsrs-core/auth/auth.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { Location } from '@angular/common';
+import { Subscription, Observable, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
+
+import { FacetParam } from '@gsrs-core/facets-manager';
+import { Facet, FacetUpdateEvent } from '@gsrs-core/facets-manager/facet.model';
+import { FacetsManagerService } from '@gsrs-core/facets-manager';
+import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
+
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Auth } from '@gsrs-core/auth/auth.model';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+
 
 @Component({
   selector: 'app-clinical-trials-browse',
@@ -61,12 +67,15 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   // needed for facets
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
+  public displayFacets: Array<DisplayFacet> = [];
   private isFacetsParamsInit = false;
+  public isCollapsed = true;
+
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private clinicalTrialService: ClinicalTrialService,
-    // private sanitizer: DomSanitizer,
     public configService: ConfigService,
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
@@ -74,7 +83,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private router: Router,
     // private dialog: MatDialog,
     private authService: AuthService,
-    // private overlayContainerService: OverlayContainer,
+    private overlayContainerService: OverlayContainer,
     private location: Location,
     private facetManagerService: FacetsManagerService
   ) {}
@@ -89,9 +98,11 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-    this.isAdmin = response;
-      if (this.isAdmin) {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+      // this.showAudit = this.authService.hasRoles('admin');
+       if (this.isAdmin) {
         this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated', 'delete'];
        } else {
          this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated'];
@@ -116,7 +127,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    // this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   ngOnDestroy() {
@@ -161,6 +172,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
+    this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     if (!this.isFacetsParamsInit) {
       this.isFacetsParamsInit = true;
@@ -334,85 +346,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   }
 
   // see substances code
-//   private populateFacets(facets: Array<Facet>): void {
-//     const subscription = this.authService.getAuth().subscribe(auth => {
-
-//       const newFacets = [];
-//       this.auth = auth;
-//       this.showAudit = this.authService.hasRoles('admin');
-//       if (this.configService.configData.facets != null) {
-
-//         const facetKeys = Object.keys(this.configService.configData.facets) || [];
-
-//         facetKeys.forEach(facetKey => {
-//           if (this.configService.configData.facets[facetKey].length
-//             && (facetKey === 'ctclinicaltrial' || this.authService.hasRoles(facetKey))) {
-//             this.configService.configData.facets[facetKey].forEach(facet => {
-//               for (let facetIndex = 0; facetIndex < facets.length; facetIndex++) {
-//                 this.toggle[facetIndex] = true;
-//                 if (facet === facets[facetIndex].name) {
-//                   if (facets[facetIndex].values != null && facets[facetIndex].values.length) {
-//                     let hasValues = false;
-//                     for (let valueIndex = 0; valueIndex < facets[facetIndex].values.length; valueIndex++) {
-//                       if (facets[facetIndex].values[valueIndex].count) {
-//                         hasValues = true;
-//                         break;
-//                       }
-//                     }
-
-//                     if (hasValues) {
-//                       const facetToAdd = facets.splice(facetIndex, 1);
-//                       facetIndex--;
-//                       newFacets.push(facetToAdd[0]);
-//                       // this.searchText[facetToAdd[0].name] = { value: '', isLoading: false};
-//                     }
-//                   }
-//                   break;
-//                 }
-//               }
-//             });
-//           }
-
-//         });
-
-//       }
-
-// /* Commented out for now, would show extra facets if not enough shown
-//       if (newFacets.length < 15) {
-//         const numFillFacets = 15 - newFacets.length;
-//         let sortedFacets = _.orderBy(facets, facet => {
-//           let valuesTotal = 0;
-//           facet.values.forEach(value => {
-//             valuesTotal += value.count;
-//           });
-//           return valuesTotal;
-//         }, 'desc');
-//         const additionalFacets = _.take(sortedFacets, numFillFacets);
-//         newFacets = newFacets.concat(additionalFacets);
-//         sortedFacets = null;
-//       }
-// */
-
-//       if (newFacets.length > 0) {
-//         this.processResponsiveness();
-//       } else {
-//         this.matSideNav.close();
-//       }
-
-//       for (let facetIndex = 0; facetIndex < newFacets.length; facetIndex++) {
-//         if (newFacets[facetIndex].name === 'ix.Class') {
-//           if (facetIndex !== -1) {
-//             newFacets.splice(facetIndex, 1);
-//           }
-//         }
-//       }
-//       this.facets = newFacets;
-//       this.cleanFacets();
-//     });
-//     this.subscriptions.push(subscription);
-//   }
-
-  // see substances code
   clearSearch(): void {
     // const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
     // this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
@@ -450,6 +383,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     if (window) {
       if (window.innerWidth < 1100) {
         this.matSideNav.close();
+        this.isCollapsed = true;
         this.hasBackdrop = true;
       } else {
         this.matSideNav.open();
@@ -469,6 +403,15 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.showExactMatches = false;
     this.processResponsiveness();
   }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
 
   toggleShowHelp() {
     this.showHelp = !this.showHelp;
