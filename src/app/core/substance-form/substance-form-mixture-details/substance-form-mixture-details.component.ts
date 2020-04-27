@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/substance-form-base-filtered-list';
+import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {Mixture, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import { SubstanceFormBase } from '../substance-form-base';
+import { SubstanceFormBase } from '../base-classes/substance-form-base';
 
 @Component({
   selector: 'app-substance-form-mixture-details',

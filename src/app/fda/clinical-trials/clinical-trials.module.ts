@@ -24,10 +24,9 @@ import { ClinicalTrialDetailsBaseComponent } from './clinical-trial-details/clin
 import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details/clinical-trial-details.component';
 // tslint:disable-next-line: max-line-length
 import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/clinical-trial-europe-details/clinical-trial-europe-details.component';
-import { FacetDisplayPipe } from '../utils/facet-display.pipe';
-import { FacetFilterPipe } from '../utils/facet-filter.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 
 const clinicalTrialsRoutes: Routes = [
    {
@@ -72,15 +71,14 @@ const clinicalTrialsRoutes: Routes = [
     CommonModule,
     RouterModule.forChild(clinicalTrialsRoutes),
     MatProgressBarModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    FacetsManagerModule
   ],
   declarations: [
     MiniSearchComponent,
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
     ClinicalTrialAddComponent,
-    FacetFilterPipe,
-    FacetDisplayPipe,
     ClinicalTrialDetailsComponent,
     ClinicalTrialEuropeDetailsComponent,
     ClinicalTrialDetailsBaseComponent

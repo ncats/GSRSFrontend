@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2 } from '@angular/core';
 import { Feature, Glycosylation, Link, Site, SubstanceAmount, Subunit } from '@gsrs-core/substance';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
-import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { Subscription } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { SubstanceFormLinksService } from '../links/substance-form-links.service';
 
 @Component({
   selector: 'app-subunit-selector',
@@ -58,7 +58,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
 
   constructor(
     private substanceFormService: SubstanceFormService,
-    private scrollToService: ScrollToService,
+    private substanceFormLinksService: SubstanceFormLinksService,
     public gaService: GoogleAnalyticsService,
     private cvService: ControlledVocabularyService,
     private render: Renderer2
@@ -134,7 +134,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
       this.subscriptions.push(allSitesSubscription);
 
       if (this.card === 'link') {
-        const linksSubscription = this.substanceFormService.substanceLinks.subscribe(Links => {
+        const linksSubscription = this.substanceFormLinksService.substanceLinks.subscribe(Links => {
           Links.forEach(link => {
             if (link.sites) {
               link.sites.forEach(site => {

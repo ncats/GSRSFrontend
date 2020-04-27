@@ -14,29 +14,6 @@
     }
 }
 
-.include {
-    ::ng-deep .mat-checkbox-frame {
-        border-color: #80CBC4;
-    }
-
-    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
-    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-        background-color: #26A69A;
-    }
-}
-
-.exclude {
-    margin-left: 5px;
-    ::ng-deep .mat-checkbox-frame {
-        border-color: #EF9A9A;
-    }
-
-    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
-    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-        background-color: #EF5350;
-    }
-}
-
 .search-parameters {
     display: flex;
     width: 100%;
@@ -133,7 +110,7 @@
 
 }
 
-.mat-card-title, .facet-value {
+.mat-card-title {
     display: flex;
     box-sizing: border-box;
     width: 100%;
@@ -161,46 +138,6 @@
 
 .tile-title {
   height:19px;
-}
-.facet-value {
-    padding: 6px 0;
-    overflow: hidden;
-
-    .facet-value-checkbox {
-        padding: 0 3px 0 0;
-    }
-
-    .facet-value-label {
-        padding: 0 3px;
-        max-width: 150px;
-        overflow: hidden;
-        color: #404040;
-        white-space: normal;
-    }
-
-    .facet-value-count {
-        padding: 0 0 0 3px;
-        overflow: hidden;
-        font-weight: 500;
-    }
-}
-
-.facet-actions {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-
-    .pull-right {
-        margin-left: auto;
-    }
-
-    .mat-flat-button {
-        min-width: 70px;
-
-        &:not(:first-child) {
-            margin-left: 5px;
-        }
-    }
 }
 
 .mat-card-content {
@@ -309,24 +246,6 @@
     button {
         margin-top: 15px;
     }
-}
-
-.facet-advanced-options-link {
-    margin-top: 7px;
-    color: #448aff;
-}
-
-.facet-search-container {
-    display: flex;
-
-    .mat-form-field {
-        flex-grow: 1;
-    }
-}
-
-.facet-search-loading.mat-progress-bar {
-    margin-top: -18px;
-    margin-bottom: 1.09em;
 }
 
 @media(max-width: 1100px) {
@@ -476,14 +395,6 @@
   padding-left:20px;
   color:#448aff;
 
-}
-
-.show-more {
-  color:#448aff;
-}
-
-.show-more:hover {
-  text-decoration: underline;
 }
 
 .facet-options {

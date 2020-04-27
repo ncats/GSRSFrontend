@@ -47,7 +47,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
           if (type.toLowerCase() === 'nucleicacid') {
             this.sequenceSearchForm.controls.sequenceType.setValue('nucleicAcid');
           } else {
-            this.sequenceSearchForm.controls.sequenceType.setValue(params.get('seq_type'));
+            this.sequenceSearchForm.controls.sequenceType.setValue('protein');
           }
         }
         if (params.has('subunit') && params.has('substance') && params.has('seq_type')) {
