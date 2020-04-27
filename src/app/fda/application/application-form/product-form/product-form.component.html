@@ -1,9 +1,82 @@
-<div class="details-container">
+<div class="">
+  <br>
+  <hr>
+  <br>
+  <span class="titlegreen"></span>
+  <span matBadge="{{application.applicationProductList.length}}" matBadgeOverlap="false">
+    <span class="titlegreen">PRODUCT</span>
+  </span>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <button mat-raised-button color="primary" (click)="addNewProduct()" matTooltip="Add New Product">
+    <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Product
+  </button>
+  <br><br>
 
-  <div class="details-box">
-    PRODUCT
+  <div *ngFor="let product of application.applicationProductList; let prodIndex = index">
 
-    <div *ngFor="let product of application.applicationProductList">
+    <!-- Buttons: delete, review -->
+    <div class="marginbottomminus17px padleft250px">
+      <button mat-icon-button [ngStyle]="{'color':'green'}" [disabled]="application.applicationProductList.length == 1"
+        (click)="confirmDeleteProduct(prodIndex)" matTooltip="Delete Product Details {{prodIndex + 1}}">
+        <mat-icon [class.disabled]="application.applicationProductList.length == 1">delete_forever</mat-icon>
+      </button>
+      &nbsp;&nbsp;
+      <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="copyProduct(product)"
+        matTooltip="Copy Product Details {{prodIndex + 1 }} to a New Product">
+        <mat-icon>file_copy</mat-icon>
+      </button>
+      &nbsp;&nbsp;
+      <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="confirmReviewProduct(prodIndex)"
+        matTooltip="Click to Confirm Product Details {{prodIndex + 1}} has been Reviewed">
+        <mat-icon>check_circle</mat-icon>
+      </button>
+      <span *ngIf="product.reviewDate" class="colorgray font12px">Reviewed
+        By:{{product.reviewedBy}}&nbsp;{{product.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+      </span>
+    </div>
+
+
+    <!-- Display Products -->
+    <fieldset class="border">
+      <legend class="border">Product Details&nbsp;<b><span class="colorgreen font17px">{{prodIndex + 1}}</span></b>
+      </legend>
+
+      <!-- PRODUCT NAME LIST -->
+
+      <div *ngFor="let prodName of product.applicationProductNameList; let prodNameIndex = index">
+
+        <!--
+        <hr *ngIf="prodIndex > 0">
+        -->
+
+        <div class="form-row">
+          <mat-form-field class="prodNameField">
+            <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName" name="productName" />
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <mat-label>Product Name Type</mat-label>
+            <mat-select matNativeControl [(ngModel)]="prodName.productNameType" name="productNameType">
+              <mat-option *ngFor="let productNameType of productNameTypeList" [value]="productNameType.value">
+                {{productNameType.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          &nbsp;&nbsp;
+          <span class="width40px displayinlineblock">
+            <button mat-icon-button color="primary" *ngIf="prodNameIndex == 0" (click)="addNewProductName(prodIndex)"
+              matTooltip="Add New Product Name">
+              <mat-icon>add_circle_outline</mat-icon>
+            </button>
+          </span>
+          <button mat-icon-button color="primary" [disabled]="product.applicationProductNameList.length == 1"
+            (click)="confirmDeleteProductName(prodIndex, prodNameIndex)" matTooltip="Delete Product Name">
+            <mat-icon [class.disabled]="product.applicationProductNameList.length == 1">delete_forever</mat-icon>
+          </button>
+        </div>
+
+      </div> <!-- ngFor product Name List -->
 
       <div class="form-row">
         <mat-form-field class="">
@@ -32,7 +105,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        
+
         <mat-form-field class="">
           <input matInput placeholder="Amount" [(ngModel)]="product.amount" name="amount" />
         </mat-form-field>
@@ -47,12 +120,30 @@
         </mat-form-field>
       </div>
 
-       <!-- INGREDIENT -->
-        <div class="form-row">
-          <app-ingredient-form [product]="product"></app-ingredient-form>
-        </div>
- 
-    </div> <!-- Product repeat -->
+      <!-- INGREDIENT START -->
+      <br>
+      <hr>
+      <br>
+      <span matBadge="{{product.applicationIngredientList.length}}" matBadgeColor="warn" matBadgeOverlap="false">
+        <span class="titleorange">INGREDIENT</span>
+      </span>
 
-  </div>
+      <span class=""></span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button mat-raised-button color="primary" (click)="addNewIngredient(0)" matTooltip="Add New Ingredient">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Ingredient
+      </button>
+
+      <div *ngFor="let ingredient of product.applicationIngredientList; let ingredIndex = index">
+        <app-ingredient-form [ingredient]="ingredient" [prodIndex]="prodIndex" [ingredIndex]="ingredIndex" [totalIngredient]="product.applicationIngredientList.length">
+        </app-ingredient-form>
+      </div>
+      <!-- INGREDIENT END -->
+
+
+    </fieldset>
+    <br><br><br>
+    <br>
+  </div> <!-- Product repeat -->
+
 </div>

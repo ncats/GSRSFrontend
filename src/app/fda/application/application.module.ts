@@ -35,9 +35,11 @@ import { ApplicationFormComponent } from './application-form/application-form.co
 import { ProductFormComponent } from './application-form/product-form/product-form.component';
 import { IngredientFormComponent } from './application-form/ingredient-form/ingredient-form.component';
 import { JsonDialogFdaComponent } from './application-form/json-dialog-fda/json-dialog-fda.component';
+import { ConfirmDialogComponent } from './application-form/confirm-dialog/confirm-dialog.component';
 import { ApplicationService } from './service/application.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 
 const applicationRoutes: Routes = [
@@ -96,6 +98,7 @@ const applicationRoutes: Routes = [
     NgxJsonViewerModule,
     MatProgressBarModule,
     SubstanceImageModule,
+    SubstanceSearchSelectorModule,
     FacetsManagerModule
   ],
   declarations: [
@@ -106,14 +109,17 @@ const applicationRoutes: Routes = [
     ApplicationFormComponent,
     ProductFormComponent,
     IngredientFormComponent,
-    JsonDialogFdaComponent
+    JsonDialogFdaComponent,
+    ConfirmDialogComponent
   ],
   exports: [
     ApplicationsBrowseComponent,
-    JsonDialogFdaComponent
+    JsonDialogFdaComponent,
+    ConfirmDialogComponent
   ],
   entryComponents: [
-    JsonDialogFdaComponent
+    JsonDialogFdaComponent,
+    ConfirmDialogComponent
   ]
 })
 

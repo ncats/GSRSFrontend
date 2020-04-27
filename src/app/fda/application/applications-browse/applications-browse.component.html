@@ -53,12 +53,18 @@
           <a class="substance-name" [routerLink]="['/applicationDetails', application.id]" target="_blank">
             {{application.appType}}&nbsp;{{application.appNumber}}
           </a>
+          &nbsp;&nbsp;&nbsp;
+          <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+            matTooltip='Edit GSRS Application Record'>
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>
+          <!--
           &nbsp;&nbsp;
           <a [href]="updateApplicationUrl + application.id" target="_blank" *ngIf="isAdmin"
             matTooltip='Edit GSRS Application Record'>
             <mat-icon svgIcon="edit"></mat-icon>
           </a>
-
+          -->
           <span class="center">Center:&nbsp;{{application.center}}</span>
           <span class="middle-fill"></span>
           <a class="approval-id" [routerLink]="['/applicationDetails', application.id]" target="_blank">
