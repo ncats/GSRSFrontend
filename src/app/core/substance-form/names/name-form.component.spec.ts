@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceFormCodesComponent } from './substance-form-codes.component';
+import { NameFormComponent } from './name-form.component';
 
-describe('SubstanceFormCodesComponent', () => {
-  let component: SubstanceFormCodesComponent;
-  let fixture: ComponentFixture<SubstanceFormCodesComponent>;
+describe('NameFormComponent', () => {
+  let component: NameFormComponent;
+  let fixture: ComponentFixture<NameFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceFormCodesComponent ]
+      declarations: [ NameFormComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceFormCodesComponent);
+    fixture = TestBed.createComponent(NameFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

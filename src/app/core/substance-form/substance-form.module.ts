@@ -24,10 +24,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
-import { NameFormComponent } from './name-form/name-form.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { ExpandDetailsModule } from '../expand-details/expand-details.module';
-import { NameOrgsComponent } from './name-form/name-orgs/name-orgs.component';
 import { StructureFormComponent } from './structure-form/structure-form.component';
 import { AmountFormComponent } from './amount-form/amount-form.component';
 import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
@@ -53,7 +51,6 @@ import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.comp
 import {SugarFormComponent} from '@gsrs-core/substance-form/sugar-form/sugar-form.component';
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MonomerFormComponent} from '@gsrs-core/substance-form/monomer-form/monomer-form.component';
 import {StructuralUnitFormComponent} from '@gsrs-core/substance-form/structural-unit-form/structural-unit-form.component';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import {NgxJsonViewerModule} from 'ngx-json-viewer';
@@ -106,8 +103,6 @@ import { SubstanceFormService } from './substance-form.service';
     ReferenceFormComponent,
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
-    NameFormComponent,
-    NameOrgsComponent,
     StructureFormComponent,
     AmountFormComponent,
     RelationshipFormComponent,
@@ -129,7 +124,6 @@ import { SubstanceFormService } from './substance-form.service';
     PhysicalParameterFormComponent,
     CvInputComponent,
     CvDialogComponent,
-    MonomerFormComponent,
     StructuralUnitFormComponent,
     JsonDialogComponent,
     AuditInfoComponent,
@@ -142,7 +136,6 @@ import { SubstanceFormService } from './substance-form.service';
     ReferenceFormComponent,
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
-    NameFormComponent,
     StructureFormComponent,
     AmountFormComponent,
     RelationshipFormComponent,
@@ -163,7 +156,6 @@ import { SubstanceFormService } from './substance-form.service';
     TagSelectorComponent,
     SugarFormComponent,
     CvInputComponent,
-    MonomerFormComponent,
     CvDialogComponent,
     StructuralUnitFormComponent,
     JsonDialogComponent,

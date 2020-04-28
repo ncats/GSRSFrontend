@@ -45,11 +45,14 @@ export class SubstanceFormService implements OnDestroy {
   private privateSubstance: SubstanceDetail;
   private substanceStateHash?: number;
   private substanceEmitter: ReplaySubject<SubstanceDetail>;
-  private substanceUnloadedEmitter: Subject<void>;
+  private substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
+  private substanceGlycosylationEmitter = new ReplaySubject<Glycosylation>();
+  private substanceLinksEmitter = new ReplaySubject<Array<Linkage>>();
+  private substanceNamesEmitter = new ReplaySubject<Array<SubstanceName>>();
 
+  private substanceUnloadedEmitter: Subject<void>;
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private substanceReferencesEmitter = new Subject<Array<SubstanceReference>>();
-  private substanceNamesEmitter = new Subject<Array<SubstanceName>>();
   private substanceStructureEmitter = new Subject<SubstanceStructure>();
   private subClass: string;
   private computedMoieties: Array<SubstanceMoiety>;
@@ -62,10 +65,7 @@ export class SubstanceFormService implements OnDestroy {
   private substancePropertiesEmitter = new Subject<Array<SubstanceProperty>>();
   private substanceSubunitsEmitter = new Subject<Array<Subunit>>();
   private substanceOtherLinksEmitter = new Subject<Array<Link>>();
-  private substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
-  private substanceGlycosylationEmitter = new ReplaySubject<Glycosylation>();
   private substanceCysteineEmitter = new Subject<Array<Site>>();
-  private substanceLinksEmitter = new ReplaySubject<Array<Linkage>>();
   private substanceSugarsEmitter = new Subject<Array<Sugar>>();
   private substancePhysicalModificationsEmitter = new Subject<Array<PhysicalModification>>();
   private substanceStructuralModificationsEmitter = new Subject<Array<StructuralModification>>();
@@ -74,7 +74,6 @@ export class SubstanceFormService implements OnDestroy {
   private substanceMixtureEmitter = new Subject<Mixture>();
   private substanceStructurallyDiverseEmitter = new Subject<StructurallyDiverse>();
   private substanceIdealizedStructureEmitter = new Subject<DisplayStructure>();
-  private substanceMonomerEmitter = new Subject<Array<Monomer>>();
   private substancePolymerClassificationEmitter = new Subject<PolymerClassification>();
   private substanceSRUEmitter = new Subject<Array<StructuralUnit>>();
   private cysteine: Array<Site>;
@@ -248,6 +247,8 @@ export class SubstanceFormService implements OnDestroy {
     this.substanceGlycosylationEmitter = new ReplaySubject<Glycosylation>();
     this.substanceLinksEmitter.complete();
     this.substanceLinksEmitter = new ReplaySubject<Array<Linkage>>();
+    this.substanceNamesEmitter.complete();
+    this.substanceLinksEmitter = new ReplaySubject<Array<SubstanceName>>();
     this.substanceUnloadedEmitter = new Subject<void>();
   }
 
@@ -670,7 +671,7 @@ export class SubstanceFormService implements OnDestroy {
     const subNameIndex = this.privateSubstance.polymer.structuralUnits.findIndex(subName => unit.$$deletedCode === subName.$$deletedCode);
     if (subNameIndex > -1) {
       this.privateSubstance.polymer.structuralUnits.splice(subNameIndex, 1);
-      this.substanceMonomerEmitter.next(this.privateSubstance.polymer.structuralUnits);
+      this.substanceSRUEmitter.next(this.privateSubstance.polymer.structuralUnits);
     }
   }
 
@@ -692,37 +693,6 @@ export class SubstanceFormService implements OnDestroy {
         });
       });
     });
-  }
-
-  get substanceMonomers(): Observable<Array<Monomer>> {
-    return new Observable(observer => {
-      this.ready().subscribe(substance => {
-        if (this.privateSubstance.polymer.monomers == null) {
-          this.privateSubstance.polymer.monomers = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.polymer.monomers);
-        this.substanceMonomerEmitter.subscribe(poly => {
-          observer.next(this.privateSubstance.polymer.monomers);
-        });
-      });
-    });
-  }
-
-  addSubstanceMonomer(): void {
-    const newMix: Monomer = {};
-    this.privateSubstance.polymer.monomers.unshift(newMix);
-    this.substanceNamesEmitter.next(this.privateSubstance.polymer.monomers);
-  }
-
-  deleteSubstanceMonomer(mix: Monomer): void {
-    const subNameIndex = this.privateSubstance.polymer.monomers.findIndex(subName => mix.$$deletedCode === subName.$$deletedCode);
-    if (subNameIndex > -1) {
-      this.privateSubstance.polymer.monomers.splice(subNameIndex, 1);
-      this.substanceMonomerEmitter.next(this.privateSubstance.polymer.monomers);
-    }
   }
 
 
@@ -890,38 +860,8 @@ export class SubstanceFormService implements OnDestroy {
 
   // Names start
 
-  get substanceNames(): Observable<Array<SubstanceName>> {
-    return new Observable(observer => {
-      this.ready().subscribe(substance => {
-        if (this.privateSubstance.names == null) {
-          this.privateSubstance.names = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.names);
-        this.substanceNamesEmitter.subscribe(names => {
-          observer.next(this.privateSubstance.names);
-        });
-      });
-    });
-  }
-
-  addSubstanceName(): void {
-    const newName: SubstanceName = {
-      references: [],
-      access: []
-    };
-    this.privateSubstance.names.unshift(newName);
-    this.substanceNamesEmitter.next(this.privateSubstance.names);
-  }
-
-  deleteSubstanceName(name: SubstanceName): void {
-    const subNameIndex = this.privateSubstance.names.findIndex(subName => name.$$deletedCode === subName.$$deletedCode);
-    if (subNameIndex > -1) {
-      this.privateSubstance.names.splice(subNameIndex, 1);
-      this.substanceNamesEmitter.next(this.privateSubstance.names);
-    }
+  namesUpdated(): Observable<Array<SubstanceName>> {
+    return this.substanceNamesEmitter.asObservable();
   }
 
   // Names end
@@ -1906,11 +1846,9 @@ export class SubstanceFormService implements OnDestroy {
         }
         this.substanceReferencesEmitter.next(this.privateSubstance.references);
         this.domainsWithReferencesEmitter.next(this.getDomainReferences());
-        this.substanceNamesEmitter.next(this.privateSubstance.names);
         this.substanceStructureEmitter.next(this.privateSubstance.structure);
         this.substanceMoietiesEmitter.next(this.privateSubstance.moieties);
         this.substanceRelationshipsEmitter.next(this.privateSubstance.relationships);
-        this.substanceNamesEmitter.next(this.privateSubstance.notes);
         this.substancePropertiesEmitter.next(this.privateSubstance.properties);
         if (this.privateSubstance.modifications) {
           this.substancePhysicalModificationsEmitter.next(this.privateSubstance.modifications.physicalModifications);
@@ -2130,44 +2068,6 @@ export class SubstanceFormService implements OnDestroy {
     const t1 = performance.now();
     const totaltime = t1 - t0;
     return subunitSequences;
-  }
-
-  standardizeNames() {
-    const bad = /[^ -~\t\n\r]/g;
-    const rep = '\u2019;\';\u03B1;.ALPHA.;\u03B2;.BETA.;\u03B3;.GAMMA.;\u03B4;.DELTA.;\u03B5;.EPSILON.;\u03B6;.ZETA.;\u03B7;.ETA.;\u03B8;.THETA.;\u03B9;.IOTA.;\u03BA;.KAPPA.;\u03BB;.LAMBDA.;\u03BC;.MU.;\u03BD;.NU.;\u03BE;.XI.;\u03BF;.OMICRON.;\u03C0;.PI.;\u03C1;.RHO.;\u03C2;.SIGMA.;\u03C3;.SIGMA.;\u03C4;.TAU.;\u03C5;.UPSILON.;\u03C6;.PHI.;\u03C7;.CHI.;\u03C8;.PSI.;\u03C9;.OMEGA.;\u0391;.ALPHA.;\u0392;.BETA.;\u0393;.GAMMA.;\u0394;.DELTA.;\u0395;.EPSILON.;\u0396;.ZETA.;\u0397;.ETA.;\u0398;.THETA.;\u0399;.IOTA.;\u039A;.KAPPA.;\u039B;.LAMBDA.;\u039C;.MU.;\u039D;.NU.;\u039E;.XI.;\u039F;.OMICRON.;\u03A0;.PI.;\u03A1;.RHO.;\u03A3;.SIGMA.;\u03A4;.TAU.;\u03A5;.UPSILON.;\u03A6;.PHI.;\u03A7;.CHI.;\u03A8;.PSI.;\u03A9;.OMEGA.;\u2192;->;\xB1;+/-;\u2190;<-;\xB2;2;\xB3;3;\xB9;1;\u2070;0;\u2071;1;\u2072;2;\u2073;3;\u2074;4;\u2075;5;\u2076;6;\u2077;7;\u2078;8;\u2079;9;\u207A;+;\u207B;-;\u2080;0;\u2081;1;\u2082;2;\u2083;3;\u2084;4;\u2085;5;\u2086;6;\u2087;7;\u2088;8;\u2089;9;\u208A;+;\u208B;-'.split(';');
-    const map = {};
-    for (let s = 0; s < rep.length; s++) {
-      if (s % 2 === 0) {
-        const id = rep[s].charCodeAt(0);
-        map[id] = rep[s + 1];
-      }
-    }
-
-    function replacer(match, got) {
-      return map[got.charCodeAt(0)];
-    }
-
-    this.privateSubstance.names.forEach(n => {
-      if (n.name) {
-        let name = n.name;
-        name = name.replace(/([\u0390-\u03C9||\u2192|\u00B1-\u00B9|\u2070-\u208F|\u2190|])/g, replacer).trim();
-        name = name.replace(bad, '');
-        name = name.replace(/[[]([A-Z -.]*)\]$/g, ' !!@!$1_!@!');
-        name = name.replace(/[ \t]+/g, ' ');
-        name = name.replace(/[[]/g, '(');
-        name = name.replace(/[{]/g, '(');
-        name = name.replace(/\]/g, ')');
-        name = name.replace(/\"/g, '\'\'');
-        name = name.replace(/[}]/g, ')');
-        name = name.replace(/\(([0-9]*CI,)*([0-9]*CI)\)$/gm, '');
-        name = name.replace(/[ ]*-[ ]*/g, '-');
-        name = name.trim();
-        name = name.replace('!!@!', '[');
-        name = name.replace('_!@!', ']');
-        n.name = name.toUpperCase();
-      }
-    });
-    this.substanceNamesEmitter.next(this.privateSubstance.names);
   }
 
 

@@ -5,13 +5,14 @@ import { SubstanceFormService } from '../substance-form.service';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subscription } from 'rxjs';
+import { SubstanceFormNamesService } from './substance-form-names.service';
 
 @Component({
-  selector: 'app-substance-form-names',
-  templateUrl: './substance-form-names.component.html',
-  styleUrls: ['./substance-form-names.component.scss']
+  selector: 'app-substance-form-names-card',
+  templateUrl: './substance-form-names-card.component.html',
+  styleUrls: ['./substance-form-names-card.component.scss']
 })
-export class SubstanceFormNamesComponent
+export class SubstanceFormNamesCardComponent
   extends SubstanceCardBaseFilteredList<SubstanceName>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   names: Array<SubstanceName>;
@@ -19,6 +20,7 @@ export class SubstanceFormNamesComponent
   isAlternative = false;
 
   constructor(
+    private substanceFormNamesService: SubstanceFormNamesService,
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
@@ -42,7 +44,7 @@ export class SubstanceFormNamesComponent
       }
       });
     this.subscriptions.push(definitionSubscription);
-    const namesSubscription = this.substanceFormService.substanceNames.subscribe(names => {
+    const namesSubscription = this.substanceFormNamesService.substanceNames.subscribe(names => {
       this.names = names;
       this.filtered = names;
       const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
@@ -58,7 +60,7 @@ export class SubstanceFormNamesComponent
   }
 
   standardize(): void {
-    this.substanceFormService.standardizeNames();
+    this.substanceFormNamesService.standardizeNames();
   }
 
   ngOnDestroy() {
@@ -73,7 +75,7 @@ export class SubstanceFormNamesComponent
   }
 
   addName(): void {
-    this.substanceFormService.addSubstanceName();
+    this.substanceFormNamesService.addSubstanceName();
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-name-0`, 'center');
     });
@@ -88,7 +90,7 @@ export class SubstanceFormNamesComponent
   }
 
   deleteName(name: SubstanceName): void {
-    this.substanceFormService.deleteSubstanceName(name);
+    this.substanceFormNamesService.deleteSubstanceName(name);
   }
 
 }

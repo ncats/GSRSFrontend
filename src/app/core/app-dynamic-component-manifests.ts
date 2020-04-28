@@ -180,7 +180,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-names',
     path: 'substance-form-names',
-    loadChildren: () => import('./substance-form/substance-form-names/substance-form-names.module')
+    loadChildren: () => import('./substance-form/names/substance-form-names.module')
       .then(m => m.SubstanceFormNamesModule),
   },
   {
@@ -324,7 +324,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-monomers',
     path: 'substance-form-monomers',
-    loadChildren: () => import('./substance-form/substance-form-monomers/substance-form-monomers.module')
+    loadChildren: () => import('./substance-form/monomers/substance-form-monomers.module')
       .then(m => m.SubstanceFormMonomersModule)
   },
   {

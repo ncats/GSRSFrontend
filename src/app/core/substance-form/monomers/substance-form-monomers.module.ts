@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubstanceFormMonomersComponent } from './substance-form-monomers.component';
+import { SubstanceFormMonomersCardComponent } from './substance-form-monomers-card.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { SubstanceFormModule } from '../substance-form.module';
 import { MatDividerModule } from '@angular/material/divider';
@@ -11,11 +11,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
+import { MonomerFormComponent } from './monomer-form.component';
+import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
+import { MatCheckboxModule } from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormMonomersComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormMonomersCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -25,10 +28,13 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    SubstanceSelectorModule,
+    MatCheckboxModule
   ],
   declarations: [
-    SubstanceFormMonomersComponent
+    SubstanceFormMonomersCardComponent,
+    MonomerFormComponent
   ]
 })
 export class SubstanceFormMonomersModule { }
