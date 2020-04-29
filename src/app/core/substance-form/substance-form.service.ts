@@ -6,7 +6,6 @@ import {
   SubstanceStructure,
   SubstanceMoiety,
   SubstanceRelationship,
-  SubstanceNote,
   SubstanceProperty,
   Subunit,
   Link,
@@ -16,11 +15,9 @@ import {
   PhysicalModification,
   StructuralModification,
   Protein,
-  Feature,
   Sugar,
   Linkage,
   NucleicAcid,
-  MixtureComponents,
   Mixture,
   StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification
 } from '../substance/substance.model';
@@ -61,7 +58,6 @@ export class SubstanceFormService implements OnDestroy {
   private substanceRelationshipsEmitter = new Subject<Array<SubstanceRelationship>>();
   private privateDomainsWithReferences: DomainsWithReferences;
   private domainsWithReferencesEmitter = new Subject<DomainsWithReferences>();
-  private substanceNotesEmitter = new Subject<Array<SubstanceNote>>();
   private substancePropertiesEmitter = new Subject<Array<SubstanceProperty>>();
   private substanceSubunitsEmitter = new Subject<Array<Subunit>>();
   private substanceOtherLinksEmitter = new Subject<Array<Link>>();
@@ -1036,44 +1032,6 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   // Relationships end
-
-  // Notes start
-
-  get substanceNotes(): Observable<Array<SubstanceNote>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.privateSubstance.notes == null) {
-          this.privateSubstance.notes = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.notes);
-        this.substanceNotesEmitter.subscribe(notes => {
-          observer.next(this.privateSubstance.notes);
-        });
-      });
-    });
-  }
-
-  addSubstanceNote(): void {
-    const newNote: SubstanceNote = {
-      references: [],
-      access: []
-    };
-    this.privateSubstance.notes.unshift(newNote);
-    this.substanceNotesEmitter.next(this.privateSubstance.notes);
-  }
-
-  deleteSubstanceNote(note: SubstanceNote): void {
-    const subNoteIndex = this.privateSubstance.notes.findIndex(subNote => note.$$deletedCode === subNote.$$deletedCode);
-    if (subNoteIndex > -1) {
-      this.privateSubstance.notes.splice(subNoteIndex, 1);
-      this.substanceNotesEmitter.next(this.privateSubstance.notes);
-    }
-  }
-
-  // Notes end
 
   // Properties start
 

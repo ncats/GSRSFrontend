@@ -31,7 +31,6 @@ import { AmountFormComponent } from './amount-form/amount-form.component';
 import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
 import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 import { ApplyReferenceComponent } from './apply-reference/apply-reference.component';
-import { NoteFormComponent } from './note-form/note-form.component';
 import { PropertyFormComponent } from './property-form/property-form.component';
 import { PropertyParameterFormComponent } from './property-parameter-form/property-parameter-form.component';
 import { PropertyParameterDialogComponent } from './property-parameter-dialog/property-parameter-dialog.component';
@@ -107,7 +106,6 @@ import { SubstanceFormService } from './substance-form.service';
     AmountFormComponent,
     RelationshipFormComponent,
     ApplyReferenceComponent,
-    NoteFormComponent,
     PropertyFormComponent,
     PropertyParameterFormComponent,
     PropertyParameterDialogComponent,
@@ -139,7 +137,6 @@ import { SubstanceFormService } from './substance-form.service';
     StructureFormComponent,
     AmountFormComponent,
     RelationshipFormComponent,
-    NoteFormComponent,
     PropertyFormComponent,
     PropertyParameterFormComponent,
     PropertyParameterDialogComponent,

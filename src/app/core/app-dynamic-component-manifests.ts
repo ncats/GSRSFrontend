@@ -210,7 +210,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-notes',
     path: 'substance-form-notes',
-    loadChildren: () => import('./substance-form/substance-form-notes/substance-form-notes.module')
+    loadChildren: () => import('./substance-form/notes/substance-form-notes.module')
       .then(m => m.SubstanceFormNotesModule),
   },
   {
