@@ -228,7 +228,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-other-links',
     path: 'substance-form-other-links',
-    loadChildren: () => import('./substance-form/substance-form-other-links/substance-form-other-links.module')
+    loadChildren: () => import('./substance-form/other-links/substance-form-other-links.module')
       .then(m => m.SubstanceFormOtherLinksModule)
   },
   {

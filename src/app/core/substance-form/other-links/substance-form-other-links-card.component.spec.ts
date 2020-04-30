@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceFormOtherLinksComponent } from './substance-form-other-links.component';
+import { SubstanceFormOtherLinksCardComponent } from './substance-form-other-links-card.component';
 
 describe('SubstanceFormOtherLinksComponent', () => {
-  let component: SubstanceFormOtherLinksComponent;
-  let fixture: ComponentFixture<SubstanceFormOtherLinksComponent>;
+  let component: SubstanceFormOtherLinksCardComponent;
+  let fixture: ComponentFixture<SubstanceFormOtherLinksCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubstanceFormOtherLinksComponent ]
+      declarations: [ SubstanceFormOtherLinksCardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceFormOtherLinksComponent);
+    fixture = TestBed.createComponent(SubstanceFormOtherLinksCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

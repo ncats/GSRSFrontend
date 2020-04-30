@@ -38,7 +38,6 @@ import { MatListModule } from '@angular/material/list';
 import { FileSelectModule } from 'file-select';
 import { SubunitFormComponent } from './subunit-form/subunit-form.component';
 import {SubunitDisplayPipe} from '@gsrs-core/utils/subunit-display.pipe';
-import { OtherLinksFormComponent } from './other-links-form/other-links-form.component';
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {StructuralModificationFormComponent} from '@gsrs-core/substance-form/structural-modification-form/structural-modification-form.component';
@@ -111,7 +110,6 @@ import { SubstanceFormService } from './substance-form.service';
     PropertyParameterDialogComponent,
     SubunitFormComponent,
     SubunitDisplayPipe,
-    OtherLinksFormComponent,
     SugarFormComponent,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
@@ -142,7 +140,6 @@ import { SubstanceFormService } from './substance-form.service';
     PropertyParameterDialogComponent,
     SubunitFormComponent,
     SubunitDisplayPipe,
-    OtherLinksFormComponent,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
     StructuralModificationFormComponent,
