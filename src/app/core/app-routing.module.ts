@@ -12,6 +12,7 @@ import { SubstanceFormComponent } from './substance-form/substance-form.componen
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate-substance-form.guard';
+import { AdminComponent } from '@gsrs-core/admin/admin.component';
 
 const childRoutes: Routes = [
   {
@@ -63,7 +64,11 @@ const childRoutes: Routes = [
     component: SubstanceFormComponent,
     canActivate: [CanActivateSubstanceForm],
     canDeactivate: [CanDeactivateSubstanceFormGuard]
-  }
+  },
+  {
+    path: 'admin',
+    component: AdminComponent
+  },
 ];
 
 const routes: Routes = [

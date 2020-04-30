@@ -1,0 +1,58 @@
+<div mat-dialog-title class = "title">
+                <h1 >
+                 Add Term to CV - {{vocabulary.domain}}    {{loading}}
+                </h1>
+              </div>
+<div mat-dialog-content class = "content-fix">
+    <div *ngFor = "let term of terms; index as index">
+            <div class = "form-row">
+                <button mat-icon-button (click) = "deleteTerm(index)" class = "delete-icon">
+                        <mat-icon svgIcon="delete_forever"></mat-icon>
+                </button>
+                <mat-form-field class="group">
+                        <input matInput placeholder="Display" [(ngModel)]="term.display" required name="display" />
+                </mat-form-field>
+                <mat-form-field class="group">
+                        <input matInput placeholder="Value" [(ngModel)]="term.value" required name="value" />
+                </mat-form-field>
+
+                <mat-form-field class="group">
+                        <input matInput placeholder="Description" [(ngModel)]="term.description"  name="Description" />
+                </mat-form-field>
+
+                <mat-form-field class="group">
+                        <input matInput placeholder="Origin" [(ngModel)]="term.origin"  name="origin" />
+                </mat-form-field>
+                <div class = "checkbox">
+                        <mat-checkbox [(ngModel)]="term.hidden" matTooltip="hidden">
+                                Hidden
+                        </mat-checkbox>
+                </div>
+                <div class = "checkbox">
+                        <mat-checkbox [(ngModel)]="term.selected" matTooltip="selected">
+                                Selected
+                        </mat-checkbox>
+                </div>
+                </div>
+                <div class = "form-row double-row"
+                 *ngIf = "vocabulary.vocabularyTermType === 'ix.ginas.models.v1.CodeSystemControlledVocabulary'">
+                        <mat-form-field class="group">
+                                <input matInput placeholder="Format Regex" [(ngModel)]="term.regex"  name="Regex" />
+                        </mat-form-field>
+        
+                        <mat-form-field class="group">
+                                <input matInput placeholder="System Category" [(ngModel)]="term.systemCategory"  name="systemCategory" />
+                        </mat-form-field>
+                </div>
+        </div>
+</div>
+
+    <div mat-dialog-actions class = "actions">
+                <button mat-button (click) = "addTerm()">Add term</button>
+            <span class="middle-fill"></span>
+            <button mat-button (click)="cancel()">Cancel</button>
+            <button mat-button (click)="submit()">
+                Save
+            </button>
+            </div>
+

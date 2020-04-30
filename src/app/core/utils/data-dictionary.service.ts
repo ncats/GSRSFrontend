@@ -18,4 +18,18 @@ export class DataDictionaryService {
   getDictionaryField(key: string, field: string): string {
     return this.dataDictionary[key][field];
   }
+
+  getRowByProperty(type: string, value: string): any {
+    this.dataDictionary.forEach();
+  }
+
+  getCVDomainRows(): any {
+    const newObj = {};
+    Object.keys(this.dataDictionary).forEach(key => {
+      if (this.dataDictionary[key]['CVDomain'] !== '') {
+        newObj[this.dataDictionary[key]['CVDomain']] = this.dataDictionary[key];
+      }
+    });
+    return newObj;
+  }
 }
