@@ -2,22 +2,22 @@ import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {PhysicalModification} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import { SubstanceFormPhysicalModificationsService } from './substance-form-physical-modifications.service';
 
 @Component({
-  selector: 'app-substance-form-physical-modifications',
-  templateUrl: './substance-form-physical-modifications.component.html',
-  styleUrls: ['./substance-form-physical-modifications.component.scss']
+  selector: 'app-substance-form-physical-modifications-card',
+  templateUrl: './substance-form-physical-modifications-card.component.html',
+  styleUrls: ['./substance-form-physical-modifications-card.component.scss']
 })
-export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBaseFilteredList<PhysicalModification>
+export class SubstanceFormPhysicalModificationsCardComponent extends SubstanceCardBaseFilteredList<PhysicalModification>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   modifications: Array<PhysicalModification>;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService,
+    private substanceFormPhysicalModificationsService: SubstanceFormPhysicalModificationsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
   ) {
@@ -31,7 +31,7 @@ export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBa
   }
 
   ngAfterViewInit() {
-    const physicalSubscription = this.substanceFormService.substancePhysicalModifications.subscribe(modifications => {
+    const physicalSubscription = this.substanceFormPhysicalModificationsService.substancePhysicalModifications.subscribe(modifications => {
       this.modifications = modifications;
     });
     this.subscriptions.push(physicalSubscription);
@@ -49,13 +49,13 @@ export class SubstanceFormPhysicalModificationsComponent extends SubstanceCardBa
   }
 
   addStructuralModification(): void {
-    this.substanceFormService.addSubstancePhysicalModification();
+    this.substanceFormPhysicalModificationsService.addSubstancePhysicalModification();
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-physical-modification-0`, 'center');
     });
   }
 
   deletePhysicalModification(modification: PhysicalModification): void {
-    this.substanceFormService.deleteSubstancePhysicalModification(modification);
+    this.substanceFormPhysicalModificationsService.deleteSubstancePhysicalModification(modification);
   }
 }

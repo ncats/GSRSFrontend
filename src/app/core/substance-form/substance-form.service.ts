@@ -12,7 +12,6 @@ import {
   DisulfideLink,
   Glycosylation,
   Site,
-  PhysicalModification,
   StructuralModification,
   Protein,
   Sugar,
@@ -59,18 +58,15 @@ export class SubstanceFormService implements OnDestroy {
   private substanceRelationshipsEmitter = new Subject<Array<SubstanceRelationship>>();
   private privateDomainsWithReferences: DomainsWithReferences;
   private domainsWithReferencesEmitter = new Subject<DomainsWithReferences>();
-  private substancePropertiesEmitter = new Subject<Array<SubstanceProperty>>();
   private substanceSubunitsEmitter = new Subject<Array<Subunit>>();
   private substanceCysteineEmitter = new Subject<Array<Site>>();
   private substanceSugarsEmitter = new Subject<Array<Sugar>>();
-  private substancePhysicalModificationsEmitter = new Subject<Array<PhysicalModification>>();
   private substanceStructuralModificationsEmitter = new Subject<Array<StructuralModification>>();
   private substanceProteinEmitter = new Subject<Protein>();
   private substanceNucleicAcidEmitter = new Subject<NucleicAcid>();
   private substanceMixtureEmitter = new Subject<Mixture>();
   private substanceStructurallyDiverseEmitter = new Subject<StructurallyDiverse>();
   private substanceIdealizedStructureEmitter = new Subject<DisplayStructure>();
-  private substancePolymerClassificationEmitter = new Subject<PolymerClassification>();
   private substanceSRUEmitter = new Subject<Array<StructuralUnit>>();
   private cysteine: Array<Site>;
   private allSitesArr: Array<DisplaySite>;
@@ -84,7 +80,7 @@ export class SubstanceFormService implements OnDestroy {
   constructor(
     private substanceService: SubstanceService,
     public utilsService: UtilsService,
-    private structureService: StructureService,
+    private structureService: StructureService
   ) {
     this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
     this.substanceUnloadedEmitter = new Subject<void>();
@@ -629,23 +625,6 @@ export class SubstanceFormService implements OnDestroy {
 
   // Class start
 
-
-  // Polymer start
-
-  get substancePolymerClassification(): Observable<PolymerClassification> {
-    return new Observable(observer => {
-      this.ready().subscribe(substance => {
-        if (this.privateSubstance.polymer.classification == null) {
-          this.privateSubstance.polymer.classification = {};
-        }
-        observer.next(this.privateSubstance.polymer.classification);
-        this.substancePolymerClassificationEmitter.subscribe(poly => {
-          observer.next(this.privateSubstance.polymer.classification);
-        });
-      });
-    });
-  }
-
   get substanceSRUs(): Observable<Array<StructuralUnit>> {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
@@ -1035,63 +1014,6 @@ export class SubstanceFormService implements OnDestroy {
 
   // Relationships end
 
-  // Properties start
-
-  get substanceProperties(): Observable<Array<SubstanceProperty>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.privateSubstance.properties == null) {
-          this.privateSubstance.properties = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.properties);
-        this.substancePropertiesEmitter.subscribe(properties => {
-          observer.next(this.privateSubstance.properties);
-        });
-      });
-    });
-  }
-
-  addSubstanceProperty(): void {
-    const newProperty: SubstanceProperty = {
-      value: {},
-      references: [],
-      access: []
-    };
-    this.privateSubstance.properties.unshift(newProperty);
-    this.substancePropertiesEmitter.next(this.privateSubstance.properties);
-  }
-
-  addSubstancePropertyFromFeature(feature: any): void {
-    let type = 'NUCLEIC ACID FEATURE';
-    if (this.privateSubstance.substanceClass === 'protein') {
-      type = 'PROTEIN FEATURE';
-    }
-    const newProperty: SubstanceProperty = {
-      value: { 'nonNumericValue': feature.siteRange, 'type': 'Site Range' },
-      propertyType: type,
-      name: feature.name,
-      references: [],
-      access: []
-    };
-    this.privateSubstance.properties.unshift(newProperty);
-    this.recalculateAllSites('features');
-    this.substancePropertiesEmitter.next(this.privateSubstance.properties);
-  }
-
-  deleteSubstanceProperty(property: SubstanceProperty): void {
-    const subPropertyIndex =
-      this.privateSubstance.properties.findIndex(subProperty => property.$$deletedCode === subProperty.$$deletedCode);
-    if (subPropertyIndex > -1) {
-      this.privateSubstance.properties.splice(subPropertyIndex, 1);
-      this.substancePropertiesEmitter.next(this.privateSubstance.properties);
-    }
-  }
-
-  // Properties end
-
   // Subunits start
 
   get substanceSubunits(): Observable<Array<Subunit>> {
@@ -1379,49 +1301,6 @@ export class SubstanceFormService implements OnDestroy {
 
   // modifications start
 
-  get substancePhysicalModifications(): Observable<Array<PhysicalModification>> {
-    this.checkModifications();
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (!this.privateSubstance.modifications) {
-          this.privateSubstance.modifications = {};
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        if (!this.privateSubstance.modifications.physicalModifications) {
-          this.privateSubstance.modifications.physicalModifications = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.modifications.physicalModifications);
-        this.substancePhysicalModificationsEmitter.subscribe(physicalModifications => {
-          observer.next(this.privateSubstance.modifications.physicalModifications);
-        });
-      });
-    });
-  }
-
-  addSubstancePhysicalModification(): void {
-    const newPhysicalModifications: PhysicalModification = {};
-    this.privateSubstance.modifications.physicalModifications.unshift(newPhysicalModifications);
-    this.substancePhysicalModificationsEmitter.next(this.privateSubstance.modifications.physicalModifications);
-  }
-
-  deleteSubstancePhysicalModification(physicalModification: PhysicalModification): void {
-    const physicalModIndex = this.privateSubstance.modifications.physicalModifications.findIndex(
-      physicalMod => physicalModification.$$deletedCode === physicalMod.$$deletedCode);
-    if (physicalModIndex > -1) {
-      this.privateSubstance.modifications.physicalModifications.splice(physicalModIndex, 1);
-      this.substancePhysicalModificationsEmitter.next(this.privateSubstance.modifications.physicalModifications);
-    }
-  }
-
-  // modifications end
-
-  // modifications start
-
   get substanceStructuralModifications(): Observable<Array<StructuralModification>> {
     this.checkModifications();
     return new Observable(observer => {
@@ -1471,7 +1350,7 @@ export class SubstanceFormService implements OnDestroy {
 
 
 
-
+  // delete this function after no other method uses it
   checkModifications(): void {
     if (this.privateSubstance) {
       if (!this.privateSubstance.modifications || this.privateSubstance.modifications === null) {
@@ -1778,9 +1657,7 @@ export class SubstanceFormService implements OnDestroy {
         this.substanceStructureEmitter.next(this.privateSubstance.structure);
         this.substanceMoietiesEmitter.next(this.privateSubstance.moieties);
         this.substanceRelationshipsEmitter.next(this.privateSubstance.relationships);
-        this.substancePropertiesEmitter.next(this.privateSubstance.properties);
         if (this.privateSubstance.modifications) {
-          this.substancePhysicalModificationsEmitter.next(this.privateSubstance.modifications.physicalModifications);
           this.substanceStructuralModificationsEmitter.next(this.privateSubstance.modifications.structuralModifications);
 
         }
@@ -1854,11 +1731,7 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   addAnySiteType(data: any) {
-    if (data.siteType === 'feature') {
-      this.addSubstancePropertyFromFeature(data.sentFeature);
-    } else if (data.siteType === 'other') {
-
-    } else if (data.siteType === 'CGlycosylation') {
+    if (data.siteType === 'CGlycosylation') {
       this.privateSubstance.protein.glycosylation.CGlycosylationSites =
         this.privateSubstance.protein.glycosylation.CGlycosylationSites.concat(data.links);
       this.emitGlycosylationUpdate();
@@ -1874,8 +1747,6 @@ export class SubstanceFormService implements OnDestroy {
       const newLink: Link = { sites: data.links };
       this.privateSubstance.protein.disulfideLinks.unshift(newLink);
       this.emitDisulfideLinkUpdate();
-
-    } else if (data.siteType === 'modification') {
 
     }
   }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SubstanceFormPropertiesCardComponent } from './substance-form-properties-card.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { SubstanceFormModule } from '../substance-form.module';
 import { MatDividerModule } from '@angular/material/divider';
@@ -10,12 +11,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import {SubstanceFormPhysicalModificationsComponent} from '@gsrs-core/substance-form/substance-form-physical-modifications/substance-form-physical-modifications.component';
+import { PropertyFormComponent } from './property-form.component';
+import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
+import { MatCheckboxModule, MatListModule } from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormPhysicalModificationsComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormPropertiesCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -25,10 +28,14 @@ import {SubstanceFormPhysicalModificationsComponent} from '@gsrs-core/substance-
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    SubstanceSelectorModule,
+    MatCheckboxModule,
+    MatListModule
   ],
   declarations: [
-    SubstanceFormPhysicalModificationsComponent
+    SubstanceFormPropertiesCardComponent,
+    PropertyFormComponent
   ]
 })
-export class SubstanceFormPhysicalModificationsModule { }
+export class SubstanceFormPropertiesModule { }

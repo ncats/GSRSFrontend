@@ -8,12 +8,11 @@ import {
   SubstanceRelated, SubstanceSummary
 } from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import { IDropdownSettings} from 'ng-multiselect-dropdown';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
+import { SubstanceFormPolymerClassificationService } from './substance-form-polymer-classification.service';
 
 @Component({
   selector: 'app-substance-form-polymer-classification',
@@ -30,7 +29,7 @@ export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBa
   private subscriptions: Array<Subscription> = [];
   dropdownSettings: IDropdownSettings = {};
   constructor(
-    private substanceFormService: SubstanceFormService,
+    private substanceFormPolymerClassificationService: SubstanceFormPolymerClassificationService,
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService
   ) {
@@ -40,7 +39,7 @@ export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBa
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Polymer Classification');
-    const proteinSubscription = this.substanceFormService.substancePolymerClassification.subscribe(classification => {
+    const proteinSubscription = this.substanceFormPolymerClassificationService.substancePolymerClassification.subscribe(classification => {
       this.classification = classification;
       this.relatedSubstanceUuid = this.classification.parentSubstance && this.classification.parentSubstance.refuuid || '';
     });

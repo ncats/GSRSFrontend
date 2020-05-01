@@ -216,7 +216,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-properties',
     path: 'substance-form-properties',
-    loadChildren: () => import('./substance-form/substance-form-properties/substance-form-properties.module')
+    loadChildren: () => import('./substance-form/properties/substance-form-properties.module')
       .then(m => m.SubstanceFormPropertiesModule)
   },
   {
@@ -258,7 +258,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-physical-modifications',
     path: 'substance-form-physical-modifications',
-    loadChildren: () => import('./substance-form/substance-form-physical-modifications/substance-form-physical-modifications.module')
+    loadChildren: () => import('./substance-form/physical-modifications/substance-form-physical-modifications.module')
       .then(m => m.SubstanceFormPhysicalModificationsModule)
   },
   {
@@ -318,7 +318,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-polymer-classification',
     path: 'substance-form-polymer-classification',
-    loadChildren: () => import('./substance-form/substance-form-polymer-classification/substance-form-polymer-classification.module')
+    loadChildren: () => import('./substance-form/polymer-classification/substance-form-polymer-classification.module')
       .then(m => m.SubstanceFormPolymerClassificationModule)
   },
   {

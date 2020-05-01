@@ -31,7 +31,6 @@ import { AmountFormComponent } from './amount-form/amount-form.component';
 import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
 import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 import { ApplyReferenceComponent } from './apply-reference/apply-reference.component';
-import { PropertyFormComponent } from './property-form/property-form.component';
 import { PropertyParameterFormComponent } from './property-parameter-form/property-parameter-form.component';
 import { PropertyParameterDialogComponent } from './property-parameter-dialog/property-parameter-dialog.component';
 import { MatListModule } from '@angular/material/list';
@@ -41,7 +40,6 @@ import {SubunitDisplayPipe} from '@gsrs-core/utils/subunit-display.pipe';
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {StructuralModificationFormComponent} from '@gsrs-core/substance-form/structural-modification-form/structural-modification-form.component';
-import {PhysicalModificationFormComponent} from '@gsrs-core/substance-form/physical-modification-form/physical-modification-form.component';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/physical-parameter-form-dialog/physical-parameter-form-dialog.component';
 import {PhysicalParameterFormComponent} from '@gsrs-core/substance-form/physical-parameter-form/physical-parameter-form.component';
@@ -105,7 +103,6 @@ import { SubstanceFormService } from './substance-form.service';
     AmountFormComponent,
     RelationshipFormComponent,
     ApplyReferenceComponent,
-    PropertyFormComponent,
     PropertyParameterFormComponent,
     PropertyParameterDialogComponent,
     SubunitFormComponent,
@@ -114,7 +111,6 @@ import { SubstanceFormService } from './substance-form.service';
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
     StructuralModificationFormComponent,
-    PhysicalModificationFormComponent,
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
@@ -135,7 +131,6 @@ import { SubstanceFormService } from './substance-form.service';
     StructureFormComponent,
     AmountFormComponent,
     RelationshipFormComponent,
-    PropertyFormComponent,
     PropertyParameterFormComponent,
     PropertyParameterDialogComponent,
     SubunitFormComponent,
@@ -143,7 +138,6 @@ import { SubstanceFormService } from './substance-form.service';
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
     StructuralModificationFormComponent,
-    PhysicalModificationFormComponent,
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
