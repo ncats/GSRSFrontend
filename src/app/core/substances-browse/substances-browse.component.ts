@@ -48,8 +48,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateFacetParams: SubstanceFacetParam;
   pageIndex: number;
   pageSize: number;
+  pageCount: number;
+  invalidPage = false;
   totalSubstances: number;
   isLoading = true;
+  lastPage: number;
   isError = false;
   @ViewChild('matSideNavInstance', { static: false }) matSideNav: MatSidenav;
   hasBackdrop = false;
@@ -246,6 +249,25 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
   }
 
+      // check if entered page number is int and exists. Otherwise turn input red until focusout and val reset
+  customPage(event: any) {
+    let newpage = Number(event.target.value) - 1;
+    if(!isNaN(Number(newpage))){
+      newpage = Number(newpage);
+      if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)){
+        this.invalidPage = false;
+        this.pageIndex = newpage;
+       // this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newPage);
+        this.populateUrlQueryParameters();
+        this.searchSubstances();
+      } else {
+        this.invalidPage = true;
+      }
+    } else {
+      this.invalidPage = true;
+    }
+  }
+
   searchSubstances() {
 
     const newArgsHash = this.utilsService.hashCode(
@@ -280,6 +302,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       })
         .subscribe(pagingResponse => {
           this.isError = false;
+          this.totalSubstances = pagingResponse.total;
+          if (pagingResponse.total % this.pageSize === 0){
+            this.lastPage = (pagingResponse.total / this.pageSize);
+          } else {
+            this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
+          }
 
           if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0
             && pagingResponse.skip === 0
