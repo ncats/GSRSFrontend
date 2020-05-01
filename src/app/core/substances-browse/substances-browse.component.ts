@@ -249,24 +249,29 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
   }
 
-      // check if entered page number is int and exists. Otherwise turn input red until focusout and val reset
-  customPage(event: any) {
-    let newpage = Number(event.target.value) - 1;
-    if(!isNaN(Number(newpage))){
-      newpage = Number(newpage);
-      if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)){
-        this.invalidPage = false;
-        this.pageIndex = newpage;
-       // this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newPage);
-        this.populateUrlQueryParameters();
-        this.searchSubstances();
-      } else {
-        this.invalidPage = true;
-      }
-    } else {
-      this.invalidPage = true;
+  customPage(event: any): void {
+    if (this.validatePageInput(event)){
+      this.invalidPage = false;
+      let newpage = Number(event.target.value) - 1;
+      this.pageIndex = newpage;
+     // this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newPage);
+      this.populateUrlQueryParameters();
+      this.searchSubstances();
     }
   }
+
+// check if entered page number is int and exists in possible page range
+validatePageInput(event: any): boolean {
+  if (event && event.target) {
+    const newpage = Number(event.target.value);
+  if (!isNaN(Number(newpage))){
+    if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)){
+      return true;
+    }
+  }
+}
+  return false;
+}
 
   searchSubstances() {
 
