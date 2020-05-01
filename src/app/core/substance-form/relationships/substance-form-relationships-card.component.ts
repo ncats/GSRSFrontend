@@ -1,23 +1,23 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
-import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceRelationship } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subscription } from 'rxjs';
+import { SubstanceFormRelationshipsService } from './substance-form-relationships.service';
 
 @Component({
-  selector: 'app-substance-form-relationships',
-  templateUrl: './substance-form-relationships.component.html',
-  styleUrls: ['./substance-form-relationships.component.scss']
+  selector: 'app-substance-form-relationships-card',
+  templateUrl: './substance-form-relationships-card.component.html',
+  styleUrls: ['./substance-form-relationships-card.component.scss']
 })
-export class SubstanceFormRelationshipsComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
+export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   relationships: Array<SubstanceRelationship>;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService,
+    private substanceFormRelationshipsService: SubstanceFormRelationshipsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
   ) {
@@ -31,7 +31,7 @@ export class SubstanceFormRelationshipsComponent extends SubstanceCardBaseFilter
   }
 
   ngAfterViewInit() {
-    const relationshipsSubscription = this.substanceFormService.substanceRelationships.subscribe(relationships => {
+    const relationshipsSubscription = this.substanceFormRelationshipsService.substanceRelationships.subscribe(relationships => {
       this.relationships = relationships;
       this.filtered = relationships;
       const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
@@ -57,14 +57,14 @@ export class SubstanceFormRelationshipsComponent extends SubstanceCardBaseFilter
   }
 
   addRelationship(): void {
-    this.substanceFormService.addSubstanceRelationship();
+    this.substanceFormRelationshipsService.addSubstanceRelationship();
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-relationship-0`, 'center');
     });
   }
 
   deleteRelationship(relationship: SubstanceRelationship): void {
-    this.substanceFormService.deleteSubstanceRelationship(relationship);
+    this.substanceFormRelationshipsService.deleteSubstanceRelationship(relationship);
   }
 
 }

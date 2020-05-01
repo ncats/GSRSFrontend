@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SubstanceFormRelationshipsCardComponent } from './substance-form-relationships-card.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { SubstanceFormModule } from '../substance-form.module';
 import { MatDividerModule } from '@angular/material/divider';
@@ -10,12 +11,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import {SubstanceFormStructuralModificationsComponent} from '@gsrs-core/substance-form/substance-form-structural-modifications/substance-form-structural-modifications.component';
+import { RelationshipFormComponent } from './relationship-form.component';
+import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormStructuralModificationsComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormRelationshipsCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -25,10 +27,12 @@ import {SubstanceFormStructuralModificationsComponent} from '@gsrs-core/substanc
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    SubstanceSelectorModule
   ],
   declarations: [
-    SubstanceFormStructuralModificationsComponent
+    SubstanceFormRelationshipsCardComponent,
+    RelationshipFormComponent
   ]
 })
-export class SubstanceFormStructuralModificationsModule { }
+export class SubstanceFormRelationshipsModule { }

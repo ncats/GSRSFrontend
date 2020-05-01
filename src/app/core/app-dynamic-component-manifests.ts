@@ -204,7 +204,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-relationships',
     path: 'substance-form-relationships',
-    loadChildren: () => import('./substance-form/substance-form-relationships/substance-form-relationships.module')
+    loadChildren: () => import('./substance-form/relationships/substance-form-relationships.module')
       .then(m => m.SubstanceFormRelationshipsModule),
   },
   {
@@ -246,7 +246,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-structural-modifications',
     path: 'substance-form-structural-modifications',
-    loadChildren: () => import('./substance-form/substance-form-structural-modifications/substance-form-structural-modifications.module')
+    loadChildren: () => import('./substance-form/structural-modifications/substance-form-structural-modifications.module')
       .then(m => m.SubstanceFormStructuralModificationsModule)
   },
   {
@@ -330,7 +330,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-structural-units',
     path: 'substance-form-structural-units',
-    loadChildren: () => import('./substance-form/substance-form-structural-units/substance-form-structural-units.module')
+    loadChildren: () => import('./substance-form/structural-units/substance-form-structural-units.module')
       .then(m => m.SubstanceFormStructuralUnitsModule)
   },
   {

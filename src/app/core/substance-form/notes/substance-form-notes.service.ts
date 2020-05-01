@@ -3,9 +3,10 @@ import { SubstanceFormServiceBase } from '../base-classes/substance-form-service
 import { SubstanceFormService } from '../substance-form.service';
 import { ReplaySubject, Observable } from 'rxjs';
 import { SubstanceNote } from '@gsrs-core/substance/substance.model';
+import { SubstanceFormNotesModule } from './substance-form-notes.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: SubstanceFormNotesModule
 })
 export class SubstanceFormNotesService extends SubstanceFormServiceBase {
 

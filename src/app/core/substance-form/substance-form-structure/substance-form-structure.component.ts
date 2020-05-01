@@ -14,6 +14,7 @@ import { StructureDuplicationMessage } from '../substance-form.model';
 import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resolver-dialog.component';
 import { Subscription } from 'rxjs';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
+import { SubstanceFormStructuralUnitsService } from '../structural-units/substance-form-structural-units.service';
 
 @Component({
   selector: 'app-substance-form-structure',
@@ -40,7 +41,8 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
     private gaService: GoogleAnalyticsService,
-    private substanceService: SubstanceService
+    private substanceService: SubstanceService,
+    private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService
   ) {
     super();
   }
@@ -188,7 +190,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
   generateSRU(): void {
     this.structureService.interpretStructure(this.structure.molfile).subscribe(response => {
       if (response.structuralUnits && response.structuralUnits.length > 0) {
-        this.substanceFormService.updateSRUs(response.structuralUnits);
+        this.substanceFormStructuralUnitsService.updateSRUs(response.structuralUnits);
       }
     });
   }

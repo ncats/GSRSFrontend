@@ -10,12 +10,14 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatInputModule} from '@angular/material/input';
-import {SubstanceFormStructuralUnitsComponent} from '@gsrs-core/substance-form/substance-form-structural-units/substance-form-structural-units.component';
+import {SubstanceFormStructuralUnitsCardComponent} from '@gsrs-core/substance-form/structural-units/substance-form-structural-units-card.component';
+import { StructuralUnitFormComponent } from './structural-unit-form.component';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormStructuralUnitsComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormStructuralUnitsCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -25,10 +27,12 @@ import {SubstanceFormStructuralUnitsComponent} from '@gsrs-core/substance-form/s
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    SubstanceImageModule
   ],
   declarations: [
-    SubstanceFormStructuralUnitsComponent
+    SubstanceFormStructuralUnitsCardComponent,
+    StructuralUnitFormComponent
   ]
 })
 export class SubstanceFormStructuralUnitsModule { }

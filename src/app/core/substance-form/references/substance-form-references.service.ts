@@ -6,9 +6,10 @@ import { ReplaySubject, Observable } from 'rxjs';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { UtilsService } from '@gsrs-core/utils';
+import { SubstanceFormModule } from '../substance-form.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: SubstanceFormModule
 })
 export class SubstanceFormReferencesService extends SubstanceFormServiceBase implements OnDestroy {
   private privateDomainsWithReferences: DomainsWithReferences;

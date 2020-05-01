@@ -3,9 +3,10 @@ import { SubstanceFormServiceBase } from '../base-classes/substance-form-service
 import { SubstanceFormService } from '../substance-form.service';
 import { ReplaySubject, Observable } from 'rxjs';
 import { PolymerClassification } from '@gsrs-core/substance/substance.model';
+import { SubstanceFormPolymerClassificationModule } from './substance-form-polymer-classification.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: SubstanceFormPolymerClassificationModule
 })
 export class SubstanceFormPolymerClassificationService extends SubstanceFormServiceBase {
 

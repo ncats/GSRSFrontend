@@ -5,19 +5,20 @@ import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import { SubstanceFormStructuralModificationsService } from './substance-form-structural-modifications.service';
 
 @Component({
-  selector: 'app-substance-form-structural-modifications',
-  templateUrl: './substance-form-structural-modifications.component.html',
-  styleUrls: ['./substance-form-structural-modifications.component.scss']
+  selector: 'app-substance-form-structural-modifications-card',
+  templateUrl: './substance-form-structural-modifications-card.component.html',
+  styleUrls: ['./substance-form-structural-modifications-card.component.scss']
 })
-export class SubstanceFormStructuralModificationsComponent extends SubstanceCardBaseFilteredList<StructuralModification>
+export class SubstanceFormStructuralModificationsCardComponent extends SubstanceCardBaseFilteredList<StructuralModification>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   modifications: Array<StructuralModification>;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService,
+    private substanceFormStructuralModificationsService: SubstanceFormStructuralModificationsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
   ) {
@@ -31,7 +32,10 @@ export class SubstanceFormStructuralModificationsComponent extends SubstanceCard
   }
 
   ngAfterViewInit() {
-    const structuralSubscription = this.substanceFormService.substanceStructuralModifications.subscribe(modifications => {
+    const structuralSubscription = this.substanceFormStructuralModificationsService
+      .substanceStructuralModifications
+      .subscribe(modifications => {
+
       this.modifications = modifications;
     });
     this.subscriptions.push(structuralSubscription);
@@ -49,14 +53,14 @@ export class SubstanceFormStructuralModificationsComponent extends SubstanceCard
   }
 
   addStructuralModification(): void {
-    this.substanceFormService.addSubstanceStructuralModification();
+    this.substanceFormStructuralModificationsService.addSubstanceStructuralModification();
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-structural-modification-0`, 'center');
     });
   }
 
   deleteStructuralModification(modification: StructuralModification): void {
-    this.substanceFormService.deleteSubstanceStructuralModification(modification);
+    this.substanceFormStructuralModificationsService.deleteSubstanceStructuralModification(modification);
   }
 
 }

@@ -28,7 +28,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { ExpandDetailsModule } from '../expand-details/expand-details.module';
 import { StructureFormComponent } from './structure-form/structure-form.component';
 import { AmountFormComponent } from './amount-form/amount-form.component';
-import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
 import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 import { ApplyReferenceComponent } from './references/apply-reference/apply-reference.component';
 import { PropertyParameterFormComponent } from './property-parameter-form/property-parameter-form.component';
@@ -39,7 +38,6 @@ import { SubunitFormComponent } from './subunit-form/subunit-form.component';
 import {SubunitDisplayPipe} from '@gsrs-core/utils/subunit-display.pipe';
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
-import {StructuralModificationFormComponent} from '@gsrs-core/substance-form/structural-modification-form/structural-modification-form.component';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/physical-parameter-form-dialog/physical-parameter-form-dialog.component';
 import {PhysicalParameterFormComponent} from '@gsrs-core/substance-form/physical-parameter-form/physical-parameter-form.component';
@@ -47,7 +45,6 @@ import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.comp
 import {SugarFormComponent} from '@gsrs-core/substance-form/sugar-form/sugar-form.component';
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {StructuralUnitFormComponent} from '@gsrs-core/substance-form/structural-unit-form/structural-unit-form.component';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import {NgxJsonViewerModule} from 'ngx-json-viewer';
 import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
@@ -101,7 +98,6 @@ import { SubstanceFormService } from './substance-form.service';
     ReuseReferencesDialogComponent,
     StructureFormComponent,
     AmountFormComponent,
-    RelationshipFormComponent,
     ApplyReferenceComponent,
     PropertyParameterFormComponent,
     PropertyParameterDialogComponent,
@@ -110,13 +106,11 @@ import { SubstanceFormService } from './substance-form.service';
     SugarFormComponent,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
-    StructuralModificationFormComponent,
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
     CvInputComponent,
     CvDialogComponent,
-    StructuralUnitFormComponent,
     JsonDialogComponent,
     AuditInfoComponent,
     SubmitSuccessDialogComponent
@@ -130,14 +124,12 @@ import { SubstanceFormService } from './substance-form.service';
     ReuseReferencesDialogComponent,
     StructureFormComponent,
     AmountFormComponent,
-    RelationshipFormComponent,
     PropertyParameterFormComponent,
     PropertyParameterDialogComponent,
     SubunitFormComponent,
     SubunitDisplayPipe,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
-    StructuralModificationFormComponent,
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
@@ -145,7 +137,6 @@ import { SubstanceFormService } from './substance-form.service';
     SugarFormComponent,
     CvInputComponent,
     CvDialogComponent,
-    StructuralUnitFormComponent,
     JsonDialogComponent,
     AuditInfoComponent
   ],

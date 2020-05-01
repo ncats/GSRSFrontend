@@ -3,9 +3,10 @@ import { SubstanceFormServiceBase } from '../base-classes/substance-form-service
 import { SubstanceFormService } from '../substance-form.service';
 import { ReplaySubject, Observable } from 'rxjs';
 import { Link } from '@gsrs-core/substance/substance.model';
+import { SubstanceFormOtherLinksModule } from './substance-form-other-links.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: SubstanceFormOtherLinksModule
 })
 export class SubstanceFormOtherLinksService extends SubstanceFormServiceBase {
 
