@@ -6,18 +6,15 @@ import {
   SubstanceStructure,
   SubstanceMoiety,
   SubstanceRelationship,
-  SubstanceProperty,
   Subunit,
   Link,
   DisulfideLink,
   Glycosylation,
   Site,
   StructuralModification,
-  Protein,
   Sugar,
   Linkage,
   NucleicAcid,
-  Mixture,
   StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification
 } from '../substance/substance.model';
 import {
@@ -27,10 +24,8 @@ import {
 } from './substance-form.model';
 import { Observable, Subject, ReplaySubject, Subscription } from 'rxjs';
 import { SubstanceService } from '../substance/substance.service';
-import { domainKeys, domainDisplayKeys } from './domain-references/domain-keys.constant';
 import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
-import { DomainsWithReferences } from './domain-references/domain.references.model';
 import { StructuralUnit } from '@gsrs-core/substance';
 import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
@@ -49,22 +44,17 @@ export class SubstanceFormService implements OnDestroy {
 
   private substanceUnloadedEmitter: Subject<void>;
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
-  private substanceReferencesEmitter = new Subject<Array<SubstanceReference>>();
   private substanceStructureEmitter = new Subject<SubstanceStructure>();
   private subClass: string;
   private computedMoieties: Array<SubstanceMoiety>;
   private deletedMoieties: Array<SubstanceMoiety> = [];
   private substanceMoietiesEmitter = new Subject<Array<SubstanceMoiety>>();
   private substanceRelationshipsEmitter = new Subject<Array<SubstanceRelationship>>();
-  private privateDomainsWithReferences: DomainsWithReferences;
-  private domainsWithReferencesEmitter = new Subject<DomainsWithReferences>();
   private substanceSubunitsEmitter = new Subject<Array<Subunit>>();
   private substanceCysteineEmitter = new Subject<Array<Site>>();
   private substanceSugarsEmitter = new Subject<Array<Sugar>>();
   private substanceStructuralModificationsEmitter = new Subject<Array<StructuralModification>>();
-  private substanceProteinEmitter = new Subject<Protein>();
   private substanceNucleicAcidEmitter = new Subject<NucleicAcid>();
-  private substanceMixtureEmitter = new Subject<Mixture>();
   private substanceStructurallyDiverseEmitter = new Subject<StructurallyDiverse>();
   private substanceIdealizedStructureEmitter = new Subject<DisplayStructure>();
   private substanceSRUEmitter = new Subject<Array<StructuralUnit>>();
@@ -94,7 +84,6 @@ export class SubstanceFormService implements OnDestroy {
     setTimeout(() => {
       this.computedMoieties = null;
       this.deletedMoieties = [];
-      this.privateDomainsWithReferences = null;
       if (substance != null) {
         this.privateSubstance = substance;
         substanceClass = this.privateSubstance.substanceClass;
@@ -672,31 +661,6 @@ export class SubstanceFormService implements OnDestroy {
     });
   }
 
-
-  get substanceProtein(): Observable<Protein> {
-    return new Observable(observer => {
-      this.ready().subscribe(substance => {
-        if (this.privateSubstance.protein == null) {
-          // ### figure out why only proteinType takes forever to load causing a console error
-          this.privateSubstance.protein = { proteinType: '' };
-        }
-        observer.next(this.privateSubstance.protein);
-        this.substanceProteinEmitter.subscribe(protein => {
-          observer.next(this.privateSubstance.protein);
-        });
-      });
-    });
-  }
-
-
-
-  updateProteinDetails(protein: Protein): void {
-    this.privateSubstance.protein.proteinType = protein.proteinType;
-    this.privateSubstance.protein.proteinSubType = protein.proteinSubType;
-    this.privateSubstance.protein.sequenceOrigin = protein.sequenceOrigin;
-    this.privateSubstance.protein.sequenceType = protein.sequenceType;
-  }
-
   updateNucleicAcidDetails(acid: NucleicAcid): void {
     this.privateSubstance.nucleicAcid.nucleicAcidType = acid.nucleicAcidType;
     this.privateSubstance.nucleicAcid.nucleicAcidSubType = acid.nucleicAcidSubType;
@@ -738,102 +702,6 @@ export class SubstanceFormService implements OnDestroy {
   emitStructurallyDiverseUpdate(): void {
     this.substanceStructurallyDiverseEmitter.next(this.privateSubstance.structurallyDiverse);
   }
-
-  // mixture start
-
-  get substanceMixture(): Observable<Mixture> {
-    return new Observable(observer => {
-      this.ready().subscribe(substance => {
-        if (this.privateSubstance.mixture == null) {
-          this.privateSubstance.mixture = {
-            access: []
-          };
-        }
-        observer.next(this.privateSubstance.mixture);
-        this.substanceMixtureEmitter.subscribe(mixture => {
-          observer.next(this.privateSubstance.mixture);
-        });
-      });
-    });
-  }
-
-  // Class end
-
-  // References start
-
-  get substanceReferences(): Observable<Array<SubstanceReference>> {
-    return new Observable(observer => {
-      this.ready().subscribe(substance => {
-        if (this.privateSubstance.references == null) {
-          this.privateSubstance.references = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.references);
-        this.substanceReferencesEmitter.subscribe(references => {
-          observer.next(this.privateSubstance.references);
-        });
-      });
-    });
-  }
-
-  addSubstanceReference(reference: SubstanceReference): SubstanceReference {
-    reference.uuid = this.utilsService.newUUID();
-    if (this.privateSubstance.references == null) {
-      this.privateSubstance.references = [];
-    }
-    this.privateSubstance.references.unshift(reference);
-    this.substanceReferencesEmitter.next(this.privateSubstance.references);
-    return reference;
-  }
-
-  get domainsWithReferences(): Observable<DomainsWithReferences> {
-    return new Observable(observer => {
-      this.ready().subscribe(substance => {
-        observer.next(this.getDomainReferences());
-        this.domainsWithReferencesEmitter.subscribe(domains => {
-          observer.next(this.getDomainReferences());
-        });
-      });
-    });
-  }
-
-  getDomainReferences(): DomainsWithReferences {
-    if (this.privateDomainsWithReferences == null) {
-      this.privateDomainsWithReferences = {
-        definition: {
-          subClass: this.subClass,
-          domain: this.privateSubstance[this.subClass]
-        }
-      };
-
-      domainKeys.forEach(key => {
-        this.privateDomainsWithReferences[key] = {
-          listDisplay: key,
-          displayKey: domainDisplayKeys[key],
-          domains: this.privateSubstance[key]
-        };
-      });
-
-    }
-
-    return this.privateDomainsWithReferences;
-  }
-
-  deleteSubstanceReference(reference: SubstanceReference): void {
-    const subRefIndex = this.privateSubstance.references.findIndex(subReference => reference.$$deletedCode === subReference.$$deletedCode);
-    if (subRefIndex > -1) {
-      this.privateSubstance.references.splice(subRefIndex, 1);
-      this.substanceReferencesEmitter.next(this.privateSubstance.references);
-    }
-  }
-
-  emitReferencesUpdate(): void {
-    this.substanceReferencesEmitter.next(this.privateSubstance.references);
-  }
-
-  // References end
 
   // Names start
 
@@ -1647,13 +1515,10 @@ export class SubstanceFormService implements OnDestroy {
           this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
           this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
         } else if (this.privateSubstance.substanceClass === 'mixture') {
-          this.substanceMixtureEmitter.next(this.privateSubstance.mixture);
           this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
         } else if (this.privateSubstance.substanceClass === 'structurallyDiverse') {
           this.substanceStructurallyDiverseEmitter.next(this.privateSubstance.structurallyDiverse);
         }
-        this.substanceReferencesEmitter.next(this.privateSubstance.references);
-        this.domainsWithReferencesEmitter.next(this.getDomainReferences());
         this.substanceStructureEmitter.next(this.privateSubstance.structure);
         this.substanceMoietiesEmitter.next(this.privateSubstance.moieties);
         this.substanceRelationshipsEmitter.next(this.privateSubstance.relationships);

@@ -25,10 +25,10 @@ import {
 } from './substance-form.model';
 import {Observable, Subject, observable, Subscription} from 'rxjs';
 import { SubstanceService } from '../substance/substance.service';
-import { domainKeys, domainDisplayKeys } from './domain-references/domain-keys.constant';
+import { domainKeys, domainDisplayKeys } from './references/domain-references/domain-keys.constant';
 import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
-import { DomainsWithReferences } from './domain-references/domain.references.model';
+import { DomainsWithReferences } from './references/domain-references/domain.references.model';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 
 @Injectable({

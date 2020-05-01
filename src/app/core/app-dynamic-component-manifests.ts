@@ -174,7 +174,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-references',
     path: 'substance-form-references',
-    loadChildren: () => import('./substance-form/substance-form-references/substance-form-references.module')
+    loadChildren: () => import('./substance-form/references/substance-form-references.module')
       .then(m => m.SubstanceFormReferencesModule),
   },
   {
@@ -264,7 +264,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-protein-details',
     path: 'substance-form-protein-details',
-    loadChildren: () => import('./substance-form/substance-form-protein-details/substance-form-protein-details.module')
+    loadChildren: () => import('./substance-form/protein-details/substance-form-protein-details.module')
       .then(m => m.SubstanceFormProteinDetailsModule)
   },
   {
@@ -288,7 +288,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-mixture-details',
     path: 'substance-form-mixture-details',
-    loadChildren: () => import('./substance-form/substance-form-mixture-details/substance-form-mixture-details.module')
+    loadChildren: () => import('./substance-form/mixture-details/substance-form-mixture-details.module')
       .then(m => m.SubstanceFormMixtureDetailsModule)
   },
   {
