@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router, Routes, RouterModule } from '@angular/router';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import {NgxJsonViewerModule} from 'ngx-json-viewer';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
@@ -32,15 +31,17 @@ import { ApplicationDetailsComponent } from './application-details/application-d
 import { ApplicationDarrtsDetailsComponent } from './application-details/application-darrts-details/application-darrts-details.component';
 import { ApplicationDetailsBaseComponent } from './application-details/application-details-base.component';
 import { ApplicationFormComponent } from './application-form/application-form.component';
-import { ProductFormComponent } from './application-form/product-form/product-form.component';
+import { ApplicationProductFormComponent } from '../application/application-form/application-product-form/application-product-form.component';
 import { IngredientFormComponent } from './application-form/ingredient-form/ingredient-form.component';
-import { JsonDialogFdaComponent } from './application-form/json-dialog-fda/json-dialog-fda.component';
-import { ConfirmDialogComponent } from './application-form/confirm-dialog/confirm-dialog.component';
+// import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
+// import { ConfirmDialogComponent } from './application-form/confirm-dialog/confirm-dialog.component';
 import { ApplicationService } from './service/application.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { JsonDialogFdaModule } from '../json-dialog-fda/json-dialog-fda.module';
+import { ConfirmDialogModule } from '../confirm-dialog/confirm-dialog.module';
 
 const applicationRoutes: Routes = [
   {
@@ -95,11 +96,12 @@ const applicationRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
-    NgxJsonViewerModule,
     MatProgressBarModule,
     SubstanceImageModule,
     SubstanceSearchSelectorModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    JsonDialogFdaModule,
+    ConfirmDialogModule
   ],
   declarations: [
     ApplicationsBrowseComponent,
@@ -107,19 +109,19 @@ const applicationRoutes: Routes = [
     ApplicationDarrtsDetailsComponent,
     ApplicationDetailsBaseComponent,
     ApplicationFormComponent,
-    ProductFormComponent,
+    ApplicationProductFormComponent,
     IngredientFormComponent,
-    JsonDialogFdaComponent,
-    ConfirmDialogComponent
+//    JsonDialogFdaComponent,
+//    ConfirmDialogComponent
   ],
   exports: [
     ApplicationsBrowseComponent,
-    JsonDialogFdaComponent,
-    ConfirmDialogComponent
+ //   JsonDialogFdaComponent,
+//    ConfirmDialogComponent
   ],
   entryComponents: [
-    JsonDialogFdaComponent,
-    ConfirmDialogComponent
+ //   JsonDialogFdaComponent,
+//    ConfirmDialogComponent
   ]
 })
 

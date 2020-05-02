@@ -4,7 +4,7 @@ import { ControlledVocabularyService } from '../../../../core/controlled-vocabul
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationService } from '../../service/application.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SubstanceSearchSelectorComponent } from '../../../substance-search-select/substance-search-selector.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';

@@ -1,26 +1,3 @@
-<!--
-<br>
-<hr>
-<br>
-<span matBadge="{{applicationIngredientList.length}}" matBadgeColor="warn" matBadgeOverlap="false">
-  <span class="title1">INGREDIENT</span>
-</span>
-
-<span class=""></span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<button mat-raised-button color="primary" (click)="addNewIngredient(0)" matTooltip="Add New Ingredient">
-  <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Ingredient
-</button>
-
-
-<div *ngFor="let ingredient of applicationIngredientList; let ingredIndex = index">
--->
-
-<!--
-</div> 
--->
-<!-- loop ingredient -->
-
 <!-- Buttons: delete, review -->
 <div class="marginbottomminus17px padleft235px">
   <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="totalIngredient == 1"
@@ -41,8 +18,8 @@
   <span *ngIf="ingredient.reviewDate" class="colorgray font12px">Reviewed
     By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
   </span>
-  
-    <!--
+
+  <!--
   &nbsp;&nbsp;&nbsp;
   <span class="font11px">
     <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;

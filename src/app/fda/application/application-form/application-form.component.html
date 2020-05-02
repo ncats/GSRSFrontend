@@ -65,7 +65,6 @@
                 Provenance: DARRTS (some fields are non-editable)
               </span>
             </div>
-            <!--
             <br>
             <div>
               <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
@@ -74,7 +73,6 @@
               <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Modify Date:</span> {{application.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
             </div>
-          -->
           </div>
         </div>
       
@@ -211,7 +209,7 @@
             </div> <!-- Indication Loop-->
 
             <!-- Product Form -->
-            <app-product-form [application]="application"></app-product-form>
+            <app-application-product-form [application]="application"></app-application-product-form>
 
           </mat-card-content>
 

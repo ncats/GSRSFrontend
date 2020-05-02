@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { ApplicationService } from '../service/application.service';
+import { ProductService } from '../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -9,30 +9,38 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
-import { ApplicationSrs, ValidationMessage } from '../model/application.model';
+import { Product, ValidationMessage } from '../model/product.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-import { finalize } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-application-form',
-  templateUrl: './application-form.component.html',
-  styleUrls: ['./application-form.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: 'app-product-form',
+  templateUrl: './product-form.component.html',
+  styleUrls: ['./product-form.component.scss']
 })
 
-export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  application: ApplicationSrs;
-  centerList: Array<VocabularyTerm> = [];
-  appTypeList: Array<VocabularyTerm> = [];
-  appStatusList: Array<VocabularyTerm> = [];
+  product: Product;
+  productNameTypeList: Array<VocabularyTerm> = [];
+  pharmacedicalDosageFormList: Array<VocabularyTerm> = [];
+  releaseCharacteristicList: Array<VocabularyTerm> = [];
+  countryCodeList: Array<VocabularyTerm> = [];
+  languageList: Array<VocabularyTerm> = [];
+  productTypeList: Array<VocabularyTerm> = [];
+  statusList: Array<VocabularyTerm> = [];
   publicDomainList: Array<VocabularyTerm> = [];
-  appSubTypeList: Array<VocabularyTerm> = [];
+  sourceTypeList: Array<VocabularyTerm> = [];
+  unitPresentationList: Array<VocabularyTerm> = [];
+  routeOfAdministrationList: Array<VocabularyTerm> = [];
+  applicationTypeList: Array<VocabularyTerm> = [];
+  productCodeTypeList: Array<VocabularyTerm> = [];
+  productCompanyRoleList: Array<VocabularyTerm> = [];
+  companyCodeTypeList: Array<VocabularyTerm> = [];
 
   id?: number;
   isLoading = true;
@@ -49,7 +57,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   title = null;
 
   constructor(
-    private applicationService: ApplicationService,
+    private productService: ProductService,
     private authService: AuthService,
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
@@ -70,19 +78,19 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       .subscribe(params => {
         if (params['id']) {
           const id = params['id'];
-          this.title = 'Update Application';
+          this.title = 'Update Product';
           if (id !== this.id) {
             this.id = id;
             this.gaService.sendPageView(`Application Edit`);
-            this.getApplicationDetails();
+            this.getProductDetails();
             this.getVocabularies();
           }
         } else {
-          this.title = 'Register New Application';
+          this.title = 'Register New Product';
           setTimeout(() => {
             this.gaService.sendPageView(`Application Register`);
-            this.applicationService.loadApplication();
-            this.application = this.applicationService.application;
+            this.productService.loadProduct();
+            this.product = this.productService.product;
             this.getVocabularies();
             this.loadingService.setLoading(false);
             this.isLoading = false;
@@ -102,38 +110,59 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
-  getApplicationDetails(newType?: string): void {
-    this.applicationService.getApplicationDetails(this.id).subscribe(response => {
-      if (response) {
-        this.applicationService.loadApplication(response);
-        this.application = this.applicationService.application;
-
-        // Check if Data is from external source, and Disable some fields.
-        if (this.application) {
-          if (this.application.provenance) {
-            if (this.application.provenance.toLowerCase() === 'darrts') {
-              this.isDisableData = true;
-            }
-          }
-        }
-      } else {
-        this.handleApplicationRetrivalError();
-      }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    }, error => {
-      this.gaService.sendException('getApplicationDetails: error from API call');
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.handleApplicationRetrivalError();
+  getVocabularies(): void {
+    this.cvService.getDomainVocabulary('PROD_PRODUCT_NAME_TYPE', 'PROD_PHARMACEDICAL_DOSAGE_FORM', 
+    'PROD_RELEASE_CHARACTERISTIC', 'PROD_COUNTRY_CODE', 'LANGUAGE', 'PROD_PRODUCT_TYPE',
+    'PROD_STATUS', 'PUBLIC_DOMAIN').subscribe(response => {
+      this.productNameTypeList = response['PROD_PRODUCT_NAME_TYPE'].list;
+      this.pharmacedicalDosageFormList = response['PROD_PHARMACEDICAL_DOSAGE_FORM'].list;
+      this.releaseCharacteristicList =  response['PROD_RELEASE_CHARACTERISTIC'].list;
+      this.countryCodeList =  response['PROD_COUNTRY_CODE'].list;
+      this.languageList =  response['LANGUAGE'].list;
+      this.productTypeList = response['PROD_PRODUCT_TYPE'].list;
+      this.statusList =  response['PROD_STATUS'].list;
+      this.publicDomainList = response['PUBLIC_DOMAIN'].list;
     });
+
+    this.cvService.getDomainVocabulary('PROD_SOURCE_TYPE', 'PROD_UNIT_PRESENTATION',
+    'PROD_ROUTE_OF_ADMIN', 'APPLICATION_TYPE', 'PROD_PRODUCT_CODE_TYPE',
+    'PROD_COMPANY_ROLE', 'PROD_COMPANY_CODE_TYPE').subscribe(response => {
+      this.sourceTypeList = response['PROD_SOURCE_TYPE'].list;
+      this.unitPresentationList = response['PROD_UNIT_PRESENTATION'].list;
+      this.routeOfAdministrationList = response['PROD_ROUTE_OF_ADMIN'].list;
+      this.applicationTypeList = response['APPLICATION_TYPE'].list;
+      this.productCodeTypeList = response['PROD_PRODUCT_CODE_TYPE'].list;
+      this.productCompanyRoleList = response['PROD_COMPANY_ROLE'].list;
+      this.companyCodeTypeList = response['PROD_COMPANY_CODE_TYPE'].list;
+    });
+  }
+
+  getProductDetails(newType?: string): void {
+    if (this.id != null) {
+      const id = this.id.toString();
+      this.productService.getProduct(id, 'srs').subscribe(response => {
+        if (response) {
+          this.productService.loadProduct(response);
+          this.product = this.productService.product;
+        } else {
+          this.handleProductRetrivalError();
+        }
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+      }, error => {
+        this.gaService.sendException('getApplicationDetails: error from API call');
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+        this.handleProductRetrivalError();
+      });
+    }
   }
 
   validate(validationType?: string): void {
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
-    this.applicationService.validateApplication().pipe(take(1)).subscribe(results => {
+    this.productService.validateProduct().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
@@ -142,7 +171,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       this.loadingService.setLoading(false);
       this.isLoading = false;
       if (this.validationMessages.length === 0 && results.valid === true) {
-        this.submissionMessage = 'Application is Valid. Would you like to submit?';
+        this.submissionMessage = 'Product is Valid. Would you like to submit?';
       }
     }, error => {
       this.addServerError(error);
@@ -182,7 +211,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    this.applicationService.saveApplication().subscribe(response => {
+    this.productService.saveProduct().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
@@ -223,44 +252,114 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     );
   }
 
-  private handleApplicationRetrivalError() {
+  private handleProductRetrivalError() {
     const notification: AppNotification = {
-      message: 'The application you\'re trying to edit doesn\'t exist.',
+      message: 'The product you\'re trying to edit doesn\'t exist.',
       type: NotificationType.error,
       milisecondsToShow: 4000
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/application/register']);
-      this.applicationService.loadApplication();
+      this.router.navigate(['/product/register']);
+      this.productService.loadProduct();
     }, 5000);
-  }
-
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('CENTER', 'APPLICATION_TYPE',
-      'APPLICATION_STATUS', 'PUBLIC_DOMAIN', 'APPLICATION_SUB_TYPE').subscribe(response => {
-        this.centerList = response['CENTER'].list;
-        this.appTypeList = response['APPLICATION_TYPE'].list;
-        this.appStatusList = response['APPLICATION_STATUS'].list;
-        this.publicDomainList = response['PUBLIC_DOMAIN'].list;
-        this.appSubTypeList = response['APPLICATION_SUB_TYPE'].list;
-      });
   }
 
   showJSON(): void {
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.application
+      data: this.product
     });
 
-    //   this.overlayContainer.style.zIndex = '1002';
+    // this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
 
   }
 
+  addNewProductName() {
+    this.productService.addNewProductName();
+  }
+
+  confirmDeleteProductName(prodNameIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductName(prodNameIndex);
+      }
+    });
+  }
+
+  deleteProductName(prodNameIndex: number) {
+    this.productService.deleteProductName(prodNameIndex);
+  }
+
+  addNewTermAndTermPart(prodNameIndex: number) {
+    this.productService.addNewTermAndTermPart(prodNameIndex);
+  }
+
+  confirmDeleteTermAndTermPart(prodNameIndex: number, prodNameTermIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Term and Term Part ' + (prodNameTermIndex + 1) + ' ?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteTermAndTermPart(prodNameIndex, prodNameTermIndex);
+      }
+    });
+  }
+
+  deleteTermAndTermPart(prodNameIndex: number, prodNameTermIndex: number) {
+    this.productService.deleteTermAndTermPart(prodNameIndex, prodNameTermIndex);
+  }
+
+  addNewProductCode() {
+    this.productService.addNewProductCode();
+  }
+
+  confirmDeleteProductCode(prodCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Product Code ' + (prodCodeIndex + 1) + ' ?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCode(prodCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCode(prodCodeIndex: number) {
+    this.productService.deleteProductCode(prodCodeIndex);
+  }
+
+  addNewProductCompany() {
+    this.productService.addNewProductCompany();
+  }
+
+  confirmDeleteProductCompany(prodCompanyIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Product Company ' + (prodCompanyIndex + 1) + ' ?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompany(prodCompanyIndex);
+      }
+    });
+  }
+
+  deleteProductCompany(prodCompanyIndex: number) {
+    this.productService.deleteProductCompany(prodCompanyIndex);
+  }
+
+  /*
   addNewIndication() {
     this.applicationService.addNewIndication();
   }
@@ -272,7 +371,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        //     console.log(result);
+        console.log(result);
         this.deleteIndication(indIndex);
       }
     });
@@ -281,5 +380,5 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   deleteIndication(indIndex: number) {
     this.applicationService.deleteIndication(indIndex);
   }
-
+*/
 }

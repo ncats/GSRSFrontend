@@ -49,13 +49,11 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     MatProgressSpinnerModule
   ],
   declarations: [
-    SubstanceCountsComponent
-    // FacetFilterPipe,
-    // FacetDisplayPipe
+    SubstanceCountsComponent,
   ],
   exports: [],
   entryComponents: [
-    SubstanceCountsComponent
+    SubstanceCountsComponent,
   ],
   providers: [
     SsoRefreshService,

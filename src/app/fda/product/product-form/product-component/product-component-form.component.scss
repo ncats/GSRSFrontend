@@ -1,0 +1,160 @@
+.details-container {
+  width: 100%;
+  /*
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  */
+    /*padding: 20px;*/
+  }
+  
+.details-box {
+  max-width: 1028px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+  
+.form-row {
+  display: flex;
+  justify-content:space-between; 
+ /* grid-column-gap: 20px; */
+  /* align-items: flex-end; */
+}
+
+.bordergray {
+  border: 1px solid gray;
+}
+
+.bordergreen {
+  border: 1px solid green;
+}
+
+.margintop20px {
+  margin-top: 20px;
+}
+
+.margintop30px {
+  margin-top: 30px;
+}
+
+.pad10px {
+  padding: 10px;
+}
+
+.font12px {
+  font-size: 12px;
+}
+
+.font17px {
+  font-size: 17px;
+}
+
+.colorgreen {
+  color: green;
+}
+
+.colorred {
+  color: red;
+}
+
+.colorgray {
+  color: gray;
+}
+
+.titlegreen {
+  color: green;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.titleorange {
+  color: orangered;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.margintop30px {
+  margin-top: 30px;
+}
+
+.margintopminus25 {
+  margin-top: -5px;
+}
+
+.marginbottomminus17px {
+  margin-bottom: -17px;
+}
+
+.padleft250px {
+  padding-left: 250px;
+}
+
+.padbottom0px {
+  padding: 0px;
+}
+
+hr {
+  border: none;
+  border-top: 3px dotted green;
+  color: #333;
+  overflow: visible;
+  text-align: center;
+  height: 5px;
+}
+
+fieldset.border {
+  border: solid 1px green !important;
+  padding: 0 10px 10px 10px;
+  border-bottom: none;
+  border-radius: 8px;
+  min-width: 0;  /* override the default value of min-content */
+  -webkit-box-shadow: 3px 6px 11px 1px rgba(110,104,110,0.64);
+  -moz-box-shadow: 3px 6px 11px 1px rgba(110,104,110,0.64);
+  box-shadow: 3px 4px 5px 1px rgba(110,104,110,0.64);
+}
+
+legend.border {
+  width: auto !important;
+  border: none;
+  border-bottom: none;
+  font-size: 13px;
+  color: #174793;
+  font-family: Verdana;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.formfieldwidth {
+  width: 160px !important;
+}
+
+.formfield2columnwidth {
+ /* flex: 1; */
+  width: 370px !important;
+}
+
+.formfield3columnwidth {
+  width: 540px !important;
+}  
+
+.formfieldfullpagewidth {
+  width: 900px;
+}
+
+.width40px {
+  width: 40px;
+}
+
+.disabled { 
+  cursor: not-allowed; 
+} 
+
+.prodNameField {
+  width: calc((100% - 100px) / (5/4));
+  margin-right: 30px;
+}
+
+.displayinlineblock {
+  display: inline-block;
+}

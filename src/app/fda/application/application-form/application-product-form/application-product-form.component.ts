@@ -4,15 +4,15 @@ import { ControlledVocabularyService } from '../../../../core/controlled-vocabul
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationService } from '../../service/application.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 
 @Component({
-  selector: 'app-product-form',
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss']
+  selector: 'app-application-product-form',
+  templateUrl: './application-product-form.component.html',
+  styleUrls: ['./application-product-form.component.scss']
 })
-export class ProductFormComponent implements OnInit {
+export class ApplicationProductFormComponent implements OnInit {
 
   @Input() application: ApplicationSrs;
   productNameTypeList: Array<VocabularyTerm> = [];

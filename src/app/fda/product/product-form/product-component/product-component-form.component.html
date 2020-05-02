@@ -1,0 +1,80 @@
+<!-- Buttons: delete, review -->
+<!--
+<div class="marginbottomminus17px padleft235px">
+  <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="totalComponent == 1"
+    (click)="confirmDeleteComponent(prodIndex, ingredIndex)"
+    matTooltip="Delete Component Details {{productComponentIndex + 1}}">
+    <mat-icon [class.disabled]="totalComponent == 1">delete_forever</mat-icon>
+  </button>
+  &nbsp;&nbsp;
+  <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyIngredient(ingredient, prodIndex)"
+    matTooltip="Copy Ingredient Details {{ingredIndex + 1}} to New Ingredient">
+    <mat-icon>file_copy</mat-icon>
+  </button>
+  &nbsp;&nbsp;
+  <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
+    matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <span *ngIf="ingredient.reviewDate" class="colorgray font12px">Reviewed
+    By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+  </span>
+</div>
+-->
+
+<!-- Display Component/Manufacture -->
+<fieldset class="border">
+  <legend class="border">Manufacture Item Details&nbsp;<b><span class="colorgreen font17px">{{prodComponentIndex + 1}}</span></b>
+  </legend>
+
+  <div class="row margintop10px">
+    <mat-form-field class="">
+      <mat-label>Dosage Form</mat-label>
+      <mat-select matNativeControl [(ngModel)]="productComponent.dosageForm" name="dosageForm">
+        <mat-option *ngFor="let dosageForm of dosageFormList" [value]="dosageForm.value">
+          {{dosageForm.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="">
+      <mat-label>Color Name</mat-label>
+      <mat-select matNativeControl [(ngModel)]="productComponent.charColor" name="charColor">
+        <mat-option *ngFor="let color of colorList" [value]="color.value">
+          {{color.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="">
+      <mat-label>Flavor Name</mat-label>
+      <mat-select matNativeControl [(ngModel)]="productComponent.charFlavor" name="charFlavor">
+        <mat-option *ngFor="let flavor of flavorList" [value]="flavor.value">
+          {{flavor.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="">
+      <mat-label>Shape Name</mat-label>
+      <mat-select matNativeControl [(ngModel)]="productComponent.charShape" name="charShape">
+        <mat-option *ngFor="let shape of shapeList" [value]="shape.value">
+          {{shape.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="">
+      <mat-label>Scoring</mat-label>
+      <mat-select matNativeControl [(ngModel)]="productComponent.charNumFragments" name="charNumFragments">
+        <mat-option *ngFor="let scoring of scoringList" [value]="scoring.value">
+          {{scoring.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="">
+      <input matInput placeholder="Size" [(ngModel)]="productComponent.charSize"
+        name="charSize" />
+    </mat-form-field>
+    <mat-form-field class="">
+      <input matInput placeholder="Imprint Text" [(ngModel)]="productComponent.charImprintText"
+        name="charImprintText" />
+    </mat-form-field>
+  </div>
+</fieldset>
