@@ -8,13 +8,16 @@ import { SubstanceFormOtherLinksModule } from './substance-form-other-links.modu
 @Injectable({
   providedIn: SubstanceFormOtherLinksModule
 })
-export class SubstanceFormOtherLinksService extends SubstanceFormServiceBase {
+export class SubstanceFormOtherLinksService extends SubstanceFormServiceBase<Array<Link>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<Link>>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.protein) {

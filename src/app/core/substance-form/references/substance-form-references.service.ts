@@ -8,34 +8,37 @@ import { SubstanceFormService } from '../substance-form.service';
 import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceFormModule } from '../substance-form.module';
 
-@Injectable({
-  providedIn: SubstanceFormModule
-})
-export class SubstanceFormReferencesService extends SubstanceFormServiceBase implements OnDestroy {
+@Injectable()
+export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Array<SubstanceReference>> {
   private privateDomainsWithReferences: DomainsWithReferences;
   private domainsWithReferencesEmitter = new ReplaySubject<DomainsWithReferences>();
 
   constructor(
-    private substanceFormService: SubstanceFormService,
+    public substanceFormService: SubstanceFormService,
     private utilsService: UtilsService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<SubstanceReference>>();
-    this.substanceFormService.substance.subscribe(substance => {
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
+    this.domainsWithReferencesEmitter = new ReplaySubject<DomainsWithReferences>();
+    const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.privateDomainsWithReferences = null;
       this.substance = substance;
       if (this.substance.references == null) {
         this.substance.references = [];
       }
-      substanceFormService.resetState();
+      this.substanceFormService.resetState();
       this.propertyEmitter.next(this.substance.references);
       this.domainsWithReferencesEmitter.next(this.getDomainReferences());
     });
+    this.subscriptions.push(subscription);
   }
 
-  ngOnDestroy() {
+  unloadSubstance() {
     this.domainsWithReferencesEmitter.complete();
-    super.ngOnDestroy();
+    super.unloadSubstance();
   }
 
   get substanceReferences(): Observable<Array<SubstanceReference>> {

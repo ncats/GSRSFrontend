@@ -8,13 +8,16 @@ import { StructuralModification } from '@gsrs-core/substance/substance.model';
 @Injectable({
   providedIn: SubstanceFormStructuralModificationsModule
 })
-export class SubstanceFormStructuralModificationsService extends SubstanceFormServiceBase {
+export class SubstanceFormStructuralModificationsService extends SubstanceFormServiceBase<Array<StructuralModification>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<StructuralModification>>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (!this.substance.modifications) {

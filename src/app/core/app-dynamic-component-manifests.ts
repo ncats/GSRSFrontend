@@ -186,13 +186,13 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-structure',
     path: 'substance-form-structure',
-    loadChildren: () => import('./substance-form/substance-form-structure/substance-form-structure.module')
+    loadChildren: () => import('./substance-form/structure/substance-form-structure.module')
       .then(m => m.SubstanceFormStructureModule),
   },
   {
     componentId: 'substance-form-moieties',
     path: 'substance-form-moieties',
-    loadChildren: () => import('./substance-form/substance-form-moieties/substance-form-moieties.module')
+    loadChildren: () => import('./substance-form/moieties/substance-form-moieties.module')
       .then(m => m.SubstanceFormMoietiesModule),
   },
   {
@@ -300,13 +300,13 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-structurally-diverse-source',
     path: 'substance-form-structurally-diverse-source',
-    loadChildren: () => import('./substance-form/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.module')
+    loadChildren: () => import('./substance-form/structurally-diverse/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.module')
       .then(m => m.SubstanceFormStructurallyDiverseSourceModule)
   },
   {
     componentId: 'substance-form-structurally-diverse-organism',
     path: 'substance-form-structurally-diverse-organism',
-    loadChildren: () => import('./substance-form/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.module')
+    loadChildren: () => import('./substance-form/structurally-diverse/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.module')
       .then(m => m.SubstanceFormStructurallyDiverseOrganismModule)
   },
   {

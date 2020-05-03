@@ -9,7 +9,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {SubstanceFormModule} from '@gsrs-core/substance-form/substance-form.module';
 import {NameResolverModule} from '@gsrs-core/name-resolver/name-resolver.module';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
-import {SubstanceFormStructurallyDiverseSourceComponent} from '@gsrs-core/substance-form/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.component';
+import {SubstanceFormStructurallyDiverseSourceComponent} from '@gsrs-core/substance-form/structurally-diverse/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.component';
 import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
@@ -24,7 +24,8 @@ import {MatRadioModule} from '@angular/material/radio';
     SubstanceFormModule,
     NameResolverModule,
     NgMultiSelectDropDownModule,
-    MatRadioModule
+    MatRadioModule,
+    SubstanceFormModule
   ],
   declarations: [
     SubstanceFormStructurallyDiverseSourceComponent

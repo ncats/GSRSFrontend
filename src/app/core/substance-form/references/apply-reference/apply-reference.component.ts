@@ -120,7 +120,7 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
   }
 
   isApplied(domain: any): boolean {
-    return domain.references && domain.references.indexOf(this.privateSubReferenceUuid) > -1;
+    return domain && domain.references && domain.references.indexOf(this.privateSubReferenceUuid) > -1;
   }
 
 }

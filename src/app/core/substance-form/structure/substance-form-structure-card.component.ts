@@ -15,13 +15,14 @@ import { NameResolverDialogComponent } from '@gsrs-core/name-resolver/name-resol
 import { Subscription } from 'rxjs';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceFormStructuralUnitsService } from '../structural-units/substance-form-structural-units.service';
+import { SubstanceFormStructureService } from './substance-form-structure.service';
 
 @Component({
-  selector: 'app-substance-form-structure',
-  templateUrl: './substance-form-structure.component.html',
-  styleUrls: ['./substance-form-structure.component.scss']
+  selector: 'app-substance-form-structure-card',
+  templateUrl: './substance-form-structure-card.component.html',
+  styleUrls: ['./substance-form-structure-card.component.scss']
 })
-export class SubstanceFormStructureComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormStructureCardComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
   structureEditor: Editor;
   structure: SubstanceStructure;
   userMessage: string;
@@ -36,6 +37,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   constructor(
     private substanceFormService: SubstanceFormService,
+    private substanceFormStructureService: SubstanceFormStructureService,
     private structureService: StructureService,
     private loadingService: LoadingService,
     private dialog: MatDialog,
@@ -49,11 +51,12 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.substanceFormService.definition.subscribe(def => {
+    const definitionSubscription = this.substanceFormService.definition.subscribe(def => {
       this.substanceType = def.substanceClass;
       if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
-        this.substanceFormService.substanceIdealizedStructure.subscribe(structure => {
+        const idealStructSubscription = this.substanceFormStructureService.substanceIdealizedStructure.subscribe(structure => {
+          console.log(structure);
           if (structure) {
             this.structure = structure;
           } else {
@@ -66,14 +69,17 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
           }
           this.loadStructure();
         });
+        this.subscriptions.push(idealStructSubscription);
       } else {
         this.menuLabelUpdate.emit('Structure');
-        this.substanceFormService.substanceStructure.subscribe(structure => {
+        const structSubscription = this.substanceFormStructureService.substanceStructure.subscribe(structure => {
           this.structure = structure;
           this.loadStructure();
         });
+        this.subscriptions.push(structSubscription);
       }
     });
+    this.subscriptions.push(definitionSubscription);
     const resolver = this.substanceFormService.resolvedMol.subscribe(mol => {
       if (mol != null && mol !== '') {
         this.updateStructureForm(mol);
@@ -152,7 +158,7 @@ export class SubstanceFormStructureComponent extends SubstanceFormBase implement
          });
 
          this.structure.uuid = '';
-         this.substanceFormService.updateMoieties(structurePostResponse.moieties);
+         this.substanceFormStructureService.updateMoieties(structurePostResponse.moieties);
 
          if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
            clearTimeout(this.userMessageTimer);

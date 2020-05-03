@@ -8,13 +8,16 @@ import { SubstanceName } from '@gsrs-core/substance/substance.model';
 @Injectable({
   providedIn: SubstanceFormNamesModule
 })
-export class SubstanceFormNamesService extends SubstanceFormServiceBase {
+export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<SubstanceName>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<SubstanceName>>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.names == null) {

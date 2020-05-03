@@ -26,7 +26,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatRadioModule } from '@angular/material/radio';
 import { ExpandDetailsModule } from '../expand-details/expand-details.module';
-import { StructureFormComponent } from './structure-form/structure-form.component';
+import { StructureFormComponent } from './structure/structure-form.component';
 import { AmountFormComponent } from './amount-form/amount-form.component';
 import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 import { ApplyReferenceComponent } from './references/apply-reference/apply-reference.component';
@@ -55,6 +55,13 @@ import { SubstanceFormComponent } from './substance-form.component';
 import { CanActivateSubstanceForm } from './can-activate-substance-form';
 import { CanRegisterSubstanceForm } from './can-register-substance-form';
 import { SubstanceFormService } from './substance-form.service';
+import { SubstanceFormStructureService } from './structure/substance-form-structure.service';
+import { SubstanceFormDisulfideLinksService } from './disulfide-links/substance-form-disulfide-links.service';
+import { SubstanceFormGlycosylationService } from './glycosylation/substance-form-glycosylation.service';
+import { SubstanceFormPropertiesService } from './properties/substance-form-properties.service';
+import { SubstanceFormReferencesService } from './references/substance-form-references.service';
+import { SubstanceFormStructuralUnitsService } from './structural-units/substance-form-structural-units.service';
+import { SubstanceFormStructurallyDiverseService } from './structurally-diverse/substance-form-structurally-diverse.service';
 
 @NgModule({
   imports: [
@@ -162,7 +169,14 @@ export class SubstanceFormModule {
         providers: [
           SubstanceFormService,
           CanActivateSubstanceForm,
-          CanRegisterSubstanceForm
+          CanRegisterSubstanceForm,
+          SubstanceFormStructureService,
+          SubstanceFormDisulfideLinksService,
+          SubstanceFormGlycosylationService,
+          SubstanceFormPropertiesService,
+          SubstanceFormReferencesService,
+          SubstanceFormStructuralUnitsService,
+          SubstanceFormStructurallyDiverseService
         ]
       };
     }

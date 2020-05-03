@@ -5,16 +5,17 @@ import { ReplaySubject, Observable } from 'rxjs';
 import { SubstanceProperty } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormModule } from '../substance-form.module';
 
-@Injectable({
-  providedIn: SubstanceFormModule
-})
-export class SubstanceFormPropertiesService extends SubstanceFormServiceBase {
+@Injectable()
+export class SubstanceFormPropertiesService extends SubstanceFormServiceBase<Array<SubstanceProperty>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<SubstanceProperty>>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.properties == null) {

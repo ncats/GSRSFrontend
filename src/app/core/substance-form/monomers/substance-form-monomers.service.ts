@@ -8,16 +8,19 @@ import { SubstanceFormMonomersModule } from './substance-form-monomers.module';
 @Injectable({
   providedIn: SubstanceFormMonomersModule
 })
-export class SubstanceFormMonomersService extends SubstanceFormServiceBase {
+export class SubstanceFormMonomersService extends SubstanceFormServiceBase<Array<Monomer>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<Monomer>>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
-      if (this.substance.nucleicAcid) {
+      if (this.substance.polymer) {
         if (this.substance.polymer.monomers == null) {
           this.substance.polymer.monomers = [];
         }

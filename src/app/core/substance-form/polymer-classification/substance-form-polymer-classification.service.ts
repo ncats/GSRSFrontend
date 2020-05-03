@@ -8,13 +8,16 @@ import { SubstanceFormPolymerClassificationModule } from './substance-form-polym
 @Injectable({
   providedIn: SubstanceFormPolymerClassificationModule
 })
-export class SubstanceFormPolymerClassificationService extends SubstanceFormServiceBase {
+export class SubstanceFormPolymerClassificationService extends SubstanceFormServiceBase<PolymerClassification> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<PolymerClassification>>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.polymer) {

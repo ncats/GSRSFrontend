@@ -5,17 +5,18 @@ import { SubstanceFormModule } from '../substance-form.module';
 import { ReplaySubject, Observable } from 'rxjs';
 import { Glycosylation } from '@gsrs-core/substance/substance.model';
 
-@Injectable({
-  providedIn: SubstanceFormModule
-})
-export class SubstanceFormGlycosylationService extends SubstanceFormServiceBase {
+@Injectable()
+export class SubstanceFormGlycosylationService extends SubstanceFormServiceBase<Glycosylation> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Glycosylation>();
-    const subscription = this.substanceFormService.substance.subscribe(substance => {
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
+    const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.protein) {
         if (this.substance.protein.glycosylation == null) {
@@ -25,7 +26,7 @@ export class SubstanceFormGlycosylationService extends SubstanceFormServiceBase 
         this.propertyEmitter.next(this.substance.protein.glycosylation);
       }
     });
-    this.subscriptions.push(subscription);
+    this.subscriptions.push(substanceSubscription);
     const glycosylationUpdatedSubscription = this.substanceFormService.glycosylationUpdated().subscribe(glycosylation => {
       this.propertyEmitter.next(glycosylation);
     });

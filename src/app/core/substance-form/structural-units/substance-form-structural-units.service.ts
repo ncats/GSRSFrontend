@@ -5,16 +5,17 @@ import { SubstanceFormService } from '../substance-form.service';
 import { StructuralUnit } from '@gsrs-core/substance/structural-unit.model';
 import { Observable, ReplaySubject } from 'rxjs';
 
-@Injectable({
-  providedIn: SubstanceFormModule
-})
-export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBase {
+@Injectable()
+export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBase<Array<StructuralUnit>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<StructuralUnit>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.polymer != null) {
@@ -23,7 +24,7 @@ export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBas
         } else {
           this.setSRUConnectivityDisplay(this.substance.polymer.structuralUnits);
         }
-        substanceFormService.resetState();
+        this.substanceFormService.resetState();
         this.propertyEmitter.next(this.substance.polymer.structuralUnits);
       }
     });

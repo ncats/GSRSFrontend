@@ -3,10 +3,10 @@ import {StructurallyDiverse} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import { SubstanceFormBase } from '../base-classes/substance-form-base';
+import { SubstanceFormBase } from '../../base-classes/substance-form-base';
 import { SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
+import { SubstanceFormStructurallyDiverseService } from '../substance-form-structurally-diverse.service';
 
 @Component({
   selector: 'app-substance-form-structurally-diverse-organism',
@@ -23,7 +23,7 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService,
+    private substanceFormStructurallyDiverseService: SubstanceFormStructurallyDiverseService,
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService
   ) {
@@ -32,7 +32,8 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
   }
 
   ngOnInit() {
-    const structurallyDiverseSubscription = this.substanceFormService.substanceStructurallyDiverse.subscribe(structurallyDiverse => {
+    const structurallyDiverseSubscription = this.substanceFormStructurallyDiverseService
+      .substanceStructurallyDiverse.subscribe(structurallyDiverse => {
       this.structurallyDiverse = structurallyDiverse;
       this.part = this.structurallyDiverse.$$diverseType;
       if (this.part === 'whole') {

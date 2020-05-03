@@ -8,19 +8,22 @@ import { SubstanceFormRelationshipsModule } from './substance-form-relationships
 @Injectable({
   providedIn: SubstanceFormRelationshipsModule
 })
-export class SubstanceFormRelationshipsService extends SubstanceFormServiceBase {
+export class SubstanceFormRelationshipsService extends SubstanceFormServiceBase<Array<SubstanceRelationship>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<SubstanceRelationship>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.relationships == null) {
         this.substance.relationships = [];
       }
-      substanceFormService.resetState();
+      this.substanceFormService.resetState();
       this.propertyEmitter.next(this.substance.relationships);
     });
     this.subscriptions.push(subscription);
