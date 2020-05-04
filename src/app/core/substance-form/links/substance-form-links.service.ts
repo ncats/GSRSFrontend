@@ -8,13 +8,16 @@ import { Linkage, Link } from '@gsrs-core/substance/substance.model';
 @Injectable({
   providedIn: SubstanceFormModule
 })
-export class SubstanceFormLinksService extends SubstanceFormServiceBase {
+export class SubstanceFormLinksService extends SubstanceFormServiceBase<Array<Linkage>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<Linkage>>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.nucleicAcid) {

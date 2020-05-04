@@ -3,23 +3,33 @@ import { Subscription, ReplaySubject } from 'rxjs';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 
-export abstract class SubstanceFormServiceBase implements OnDestroy {
+export abstract class SubstanceFormServiceBase<T> {
     substance: SubstanceDetail;
     subscriptions: Array<Subscription> = [];
-    propertyEmitter: ReplaySubject<any>;
+    propertyEmitter: ReplaySubject<T>;
 
     constructor(
-        substanceFormService: SubstanceFormService
+        public substanceFormService: SubstanceFormService
     ) {
-        substanceFormService.substanceUnloaded().subscribe(() => {
-            this.ngOnDestroy();
+        this.propertyEmitter = new ReplaySubject<T>();
+        this.substanceFormService.substanceFormAction.subscribe(action => {
+            if (action === 'load') {
+                this.initSubtanceForm();
+            } else {
+                this.unloadSubstance();
+            }
         });
     }
 
-    ngOnDestroy() {
+    initSubtanceForm(): void {
+        this.propertyEmitter = new ReplaySubject<T>();
+    }
+
+    unloadSubstance(): void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
         });
+        this.subscriptions = [];
         this.propertyEmitter.complete();
     }
 }

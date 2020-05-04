@@ -10,6 +10,7 @@ import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-
 import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DisplaySite, SubunitSequence} from '@gsrs-core/substance-form/substance-form.model';
+import { SubstanceFormPropertiesService } from '../properties/substance-form-properties.service';
 
 @Component({
   selector: 'app-substance-form-subunits',
@@ -39,7 +40,8 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
     public gaService: GoogleAnalyticsService,
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private substanceFormPropertiesService: SubstanceFormPropertiesService
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form subunits';
@@ -117,7 +119,7 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(newFeature => {
       if (newFeature) {
-        this.substanceFormService.addSubstancePropertyFromFeature(newFeature);
+        this.substanceFormPropertiesService.addSubstancePropertyFromFeature(newFeature);
         setTimeout(() => {
           // this.scrollToService.scrollToElement(`substance-property-0`, 'center');
           alert('Feature added under "Properties"');
@@ -136,7 +138,11 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.substanceFormService.addAnySiteType(response);
+        if (response.siteType === 'feature') {
+          this.substanceFormPropertiesService.addSubstancePropertyFromFeature(response.sentFeature);
+        } else {
+          this.substanceFormService.addAnySiteType(response);
+        }
       }
       }
     );

@@ -8,13 +8,16 @@ import { Observable, ReplaySubject } from 'rxjs';
 @Injectable({
   providedIn: SubstanceFormMixtureComponentsModule
 })
-export class SubstanceFormMixtureComponentsService extends SubstanceFormServiceBase {
+export class SubstanceFormMixtureComponentsService extends SubstanceFormServiceBase<Array<MixtureComponents>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<MixtureComponents>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.mixture.components == null) {
