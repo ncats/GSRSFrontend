@@ -77,15 +77,15 @@
           <mat-card-content>
 
             <!-- PRODUCT NAME LIST -->
-            <div class="bordergray">
-              <div class="boxshadow marginbottom10px"
-                *ngFor="let prodName of product.productNameList; let prodNameIndex = index">
+            <div class="borderlightgray marginleftneg10px marginrightneg10px padleft10px padright10px">
+              <div class="marginbottom10px" *ngFor="let prodName of product.productNameList; let prodNameIndex = index">
+                <hr *ngIf="prodNameIndex > 0">
                 <div class="row">
-                  <mat-form-field class="">
+                  <mat-form-field class="col-2">
                     <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName" name="productName" />
                   </mat-form-field>
 
-                  <mat-form-field class="">
+                  <mat-form-field class="col-1">
                     <mat-label>Product Name Type</mat-label>
                     <mat-select matNativeControl [(ngModel)]="prodName.productNameType" name="productNameType">
                       <mat-option *ngFor="let productNameType of productNameTypeList" [value]="productNameType.value">
@@ -94,9 +94,8 @@
                     </mat-select>
                   </mat-form-field>
 
-                  &nbsp;&nbsp;
                   <!-- Add and Delete Buttons -->
-                  <span class="width40px displayinlineblock">
+                  <span class="width40px displayinlineblock marginleftneg5px">
                     <button mat-icon-button color="primary" *ngIf="prodNameIndex == 0" (click)="addNewProductName()"
                       matTooltip="Add New Product Name">
                       <mat-icon>add_circle_outline</mat-icon>
@@ -108,28 +107,49 @@
                   </button>
 
                   <!-- TERM AND TERM PART Add Button -->
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                  <button (click)="addNewTermAndTermPart(prodNameIndex)">Add Term and Term Part</button>
+
+                  <!--
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <span class="width40px displayinlineblock">
                     <button mat-raised-button color="primary" (click)="addNewTermAndTermPart(prodNameIndex)"
                       matTooltip="Add Term and Term Part">
                       <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Term and Term Part
                     </button>
                   </span>
+                -->
                 </div>
 
                 <!-- Name PART and TERM PART List -->
-                <div *ngFor="let prodNameTerm of prodName.productTermAndTermPartList; let prodNameTermIndex = index">
+                <div class="bkcolorlightblue"
+                  *ngFor="let prodNameTerm of prodName.productTermAndTermPartList; let prodNameTermIndex = index">
                   <div class="row">
-                    <mat-form-field class="">
+                    <mat-form-field class="col-2">
                       <input matInput placeholder="Term" [(ngModel)]="prodNameTerm.productTerm" name="productTerm" />
+                    </mat-form-field>
+                    <mat-form-field class="col-1">
+                      <mat-label>Product Term Part</mat-label>
+                      <mat-select matNativeControl [(ngModel)]="prodNameTerm.productTermPart" name="productTermPart">
+                        <mat-option *ngFor="let productTermPart of productTermPartList" [value]="productTermPart.value">
+                          {{productTermPart.display}}
+                        </mat-option>
+                      </mat-select>
                     </mat-form-field>
 
                     <!-- Delete Button -->
+                    <!--
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    -->
+                    <span class="width40px displayinlineblock marginleftneg5px">
+                      &nbsp;
+                    </span>
                     <button mat-icon-button color="primary"
                       (click)="confirmDeleteTermAndTermPart(prodNameIndex, prodNameTermIndex)"
                       matTooltip="Delete Product Term and Term Part">
                       <mat-icon>delete_forever</mat-icon>
                     </button>
+
                   </div>
                 </div> <!-- ngFor product Name PART and TERM PART List END -->
 
@@ -141,26 +161,22 @@
             <br>
             <div>
               <div class="row">
-                <mat-form-field class="">
+                <mat-form-field class="col-2">
                   <input matInput placeholder="Non Proprietary Name/INN/USAN Name/Generic Name"
                     [(ngModel)]="product.nonProprietaryName" name="nonProprietaryName" />
                 </mat-form-field>
-                <mat-form-field class="">
+                <mat-form-field class="col-1">
                   <input matInput placeholder="Proprietary Name/Invented Name" [(ngModel)]="product.proprietaryName"
                     name="proprietaryName" />
                 </mat-form-field>
-                <mat-form-field class="">
+                <mat-form-field class="col-1">
                   <input matInput placeholder="Compose Product Name" [(ngModel)]="product.composeProductName"
                     name="composeProductName" />
-                </mat-form-field>
-                <mat-form-field class="">
-                  <input matInput placeholder="Strength Characteristic" [(ngModel)]="product.strengthCharacteristic"
-                    name="strengthCharacteristic" />
                 </mat-form-field>
               </div>
 
               <div class="row">
-                <mat-form-field class="col-1">
+                <mat-form-field class="col-2">
                   <mat-label>Dosage Form/Pharmacedical Dosage Form</mat-label>
                   <mat-select matNativeControl [(ngModel)]="product.pharmacedicalDosageForm"
                     name="pharmacedicalDosageForm" required>
@@ -177,6 +193,83 @@
                     <mat-option *ngFor="let releaseCharacteristic of releaseCharacteristicList"
                       [value]="releaseCharacteristic.value">
                       {{releaseCharacteristic.display}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-1">
+                  <input matInput placeholder="Strength Characteristic" [(ngModel)]="product.strengthCharacteristic"
+                    name="strengthCharacteristic" />
+                </mat-form-field>
+              </div>
+
+              <div class="row">
+                <mat-form-field class="col-1">
+                  <mat-label>Status</mat-label>
+                  <mat-select matNativeControl [(ngModel)]="product.status" name="status" required>
+                    <mat-option *ngFor="let status of statusList" [value]="status.value">
+                      {{status.display}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-1">
+                  <mat-label>Route of Administration</mat-label>
+                  <mat-select matNativeControl [(ngModel)]="product.routeAdmin" name="routeAdmin" required>
+                    <mat-option *ngFor="let routeOfAdministration of routeOfAdministrationList"
+                      [value]="routeOfAdministration.value">
+                      {{routeOfAdministration.display}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-1">
+                  <mat-label>Unit of Presentation</mat-label>
+                  <mat-select matNativeControl [(ngModel)]="product.unitPresentation" name="unitPresentation" required>
+                    <mat-option *ngFor="let unitPresentation of unitPresentationList" [value]="unitPresentation.value">
+                      {{unitPresentation.display}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-1">
+                  <mat-label>Public Domain</mat-label>
+                  <mat-select matNativeControl [(ngModel)]="product.publicDomain" name="publicDomain" required>
+                    <mat-option *ngFor="let publicDomain of publicDomainList" [value]="publicDomain.value">
+                      {{publicDomain.display}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="row">
+                <mat-form-field class="col-1">
+                  <input matInput placeholder="Application Number" [(ngModel)]="product.applicationNumber"
+                    name="source" />
+                </mat-form-field>
+                <mat-form-field class="col-1">
+                  <mat-label>Application Type</mat-label>
+                  <mat-select matNativeControl [(ngModel)]="product.applicationType" name="applicationType" required>
+                    <mat-option *ngFor="let applicationType of applicationTypeList" [value]="applicationType.value">
+                      {{applicationType.display}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-1">
+                  <input matInput placeholder="Source" [(ngModel)]="product.source" name="source" />
+                </mat-form-field>
+                <mat-form-field class="col-1">
+                  <mat-label>Source Type</mat-label>
+                  <mat-select matNativeControl [(ngModel)]="product.sourceType" name="sourceType" required>
+                    <mat-option *ngFor="let sourceType of sourceTypeList" [value]="sourceType.value">
+                      {{sourceType.display}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="row">
+                <mat-form-field class="col-2">
+                  <mat-label>Product Type</mat-label>
+                  <mat-select matNativeControl [(ngModel)]="product.productType" name="productType" required>
+                    <mat-option *ngFor="let productType of productTypeList" [value]="productType.value">
+                      {{productType.display}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -198,83 +291,8 @@
                 </mat-form-field>
               </div>
 
-              <div class="row">
-                <mat-form-field class="col-1">
-                  <mat-label>Product Type</mat-label>
-                  <mat-select matNativeControl [(ngModel)]="product.productType" name="productType" required>
-                    <mat-option *ngFor="let productType of productTypeList" [value]="productType.value">
-                      {{productType.display}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field class="col-1">
-                  <mat-label>Status</mat-label>
-                  <mat-select matNativeControl [(ngModel)]="product.status" name="status" required>
-                    <mat-option *ngFor="let status of statusList" [value]="status.value">
-                      {{status.display}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field class="col-1">
-                  <mat-label>Public Domain</mat-label>
-                  <mat-select matNativeControl [(ngModel)]="product.publicDomain" name="publicDomain" required>
-                    <mat-option *ngFor="let publicDomain of publicDomainList" [value]="publicDomain.value">
-                      {{publicDomain.display}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field class="">
-                  <input matInput placeholder="Source" [(ngModel)]="product.source" name="source" />
-                </mat-form-field>
-              </div>
-
-              <div class="row">
-                <mat-form-field class="col-1">
-                  <mat-label>Unit of Presentation</mat-label>
-                  <mat-select matNativeControl [(ngModel)]="product.unitPresentation" name="unitPresentation" required>
-                    <mat-option *ngFor="let unitPresentation of unitPresentationList" [value]="unitPresentation.value">
-                      {{unitPresentation.display}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field class="col-1">
-                  <mat-label>Source Type</mat-label>
-                  <mat-select matNativeControl [(ngModel)]="product.sourceType" name="sourceType" required>
-                    <mat-option *ngFor="let sourceType of sourceTypeList" [value]="sourceType.value">
-                      {{sourceType.display}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field class="col-1">
-                  <mat-label>Route of Administration</mat-label>
-                  <mat-select matNativeControl [(ngModel)]="product.routeAdmin" name="routeAdmin" required>
-                    <mat-option *ngFor="let routeOfAdministration of routeOfAdministrationList"
-                      [value]="routeOfAdministration.value">
-                      {{routeOfAdministration.display}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field class="">
-                  <input matInput placeholder="Application Number" [(ngModel)]="product.applicationNumber"
-                    name="source" />
-                </mat-form-field>
-              </div>
-
-              <div class="row">
-                <mat-form-field class="col-1">
-                  <mat-label>Application Type</mat-label>
-                  <mat-select matNativeControl [(ngModel)]="product.applicationType" name="applicationType" required>
-                    <mat-option *ngFor="let applicationType of applicationTypeList" [value]="applicationType.value">
-                      {{applicationType.display}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-
-
               <!-- PRODUCT CODE LIST -->
-              <div class="boxshadow marginbottom10px"
-                *ngFor="let prodCode of product.productCodeList; let prodCodeIndex = index">
+              <div class="marginbottom10px" *ngFor="let prodCode of product.productCodeList; let prodCodeIndex = index">
                 <div class="row">
                   <mat-form-field class="">
                     <input matInput placeholder="Product Code" [(ngModel)]="prodCode.productCode" name="productCode" />
@@ -307,9 +325,8 @@
               <!-- ngFor product Code List END -->
 
 
-
               <!-- PRODUCT COMPANY LIST -->
-              <div class="boxshadow marginbottom10px"
+              <div class="marginbottom10px"
                 *ngFor="let prodCompany of product.productCompanyList; let prodCompanyIndex = index">
                 <div class="row">
                   <mat-form-field class="">
@@ -368,14 +385,17 @@
                   <span class="titlegreen">MANUFACTURE ITEM </span>
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button mat-raised-button color="primary" (click)="addNewProductManufacture()" matTooltip="Add New Manufacture">
+                <button mat-raised-button color="primary" (click)="addNewProductComponent()"
+                  matTooltip="Add New Manufacture">
                   <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Manufacture Item
                 </button>
                 <br><br>
 
-                <div class="boxshadow marginbottom10px bordergray"
+                <div class="boxshadow marginbottom10px"
                   *ngFor="let productComponent of product.productComponentList; let prodComponentIndex = index">
-                  <app-product-component-form [productComponent]="productComponent" [prodComponentIndex]="prodComponentIndex"></app-product-component-form>
+                  <app-product-component-form [productComponent]="productComponent"
+                    [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex">
+                  </app-product-component-form>
                 </div>
               </div>
               <!-- PRODUCT COMPONENT/MANUFACTURE LIST END -->

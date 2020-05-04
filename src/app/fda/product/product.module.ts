@@ -36,6 +36,7 @@ import { ProductComponentFormComponent } from './product-form/product-component/
 import { ProductLotFormComponent } from './product-form/product-lot-form/product-lot-form.component';
 import { ProductIngredientFormComponent } from './product-form/product-ingredient-form/product-ingredient-form.component';
 import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
+import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 
 const productRoutes: Routes = [
     {
@@ -90,7 +91,8 @@ const productRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    SubstanceSearchSelectorModule
   ],
   declarations: [
     ProductDetailsBaseComponent,

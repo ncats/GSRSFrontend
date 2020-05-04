@@ -5,7 +5,7 @@ import { BaseHttpService } from '@gsrs-core/base';
 import { Observable, } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Product, ProductName, ProductTermAndPart, ProductCode } from '../model/product.model';
-import { ProductCompany, ProductComponent } from '../model/product.model';
+import { ProductCompany, ProductComponent, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
 
 @Injectable()
@@ -104,7 +104,7 @@ export class ProductService extends BaseHttpService {
   }
 
   saveProduct(): Observable<Product> {
-    const url = this.apiBaseUrl + `applicationssrs`;
+    const url = this.apiBaseUrl + `product`;
     const params = new HttpParams();
     const options = {
       params: params,
@@ -137,12 +137,45 @@ export class ProductService extends BaseHttpService {
   }
 
   validateProd(): Observable<ValidationResults> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/@validate`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/product/@validate`;
     return this.http.post(url, this.product);
   }
 
+  getSubstanceDetailsByBdnum(
+    bdnum: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'getSubstanceDetailsByBdnum?bdnum=' + bdnum;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getSubstanceDetailsBySubstanceId(
+    substanceId: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getSubstanceRelationship(
+    substanceId: string
+  ): Observable<Array<any>> {
+    const url = this.baseUrl + 'getRelationshipBySubstanceId?substanceId=' + substanceId;
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        return results['data'];
+      })
+    );
+  }
+
   addNewProductName(): void {
-    const newProductName: ProductName = {productTermAndTermPartList: [] };
+    const newProductName: ProductName = { productTermAndTermPartList: [] };
     this.product.productNameList.unshift(newProductName);
   }
 
@@ -177,33 +210,38 @@ export class ProductService extends BaseHttpService {
     this.product.productCompanyList.splice(prodCompanyIndex, 1);
   }
 
-  /*
-  deleteIndication(indIndex: number): void {
-    this.application.applicationIndicationList.splice(indIndex, 1);
-  }
-
-  addNewProduct(): void {
-    const newProduct: ProductSrs = {
-      applicationProductNameList: [{}],
-      applicationIngredientList: [{}]
+  addNewProductComponent(): void {
+    const newProductComponent: ProductComponent = {
+      productLotList: [{
+        productIngredientList: [{}]
+      }]
     };
-
-    this.application.applicationProductList.unshift(newProduct);
+    this.product.productComponentList.unshift(newProductComponent);
   }
 
-  addNewProductName(prodIndex: number): void {
-    const newProductName: ProductNameSrs = {};
-
-    this.application.applicationProductList[prodIndex].applicationProductNameList.unshift(newProductName);
+  deleteProductComponent(prodComponentIndex: number): void {
+    this.product.productComponentList.splice(prodComponentIndex, 1);
   }
 
-  deleteProduct(prodIndex: number): void {
-    this.application.applicationProductList.splice(prodIndex, 1);
+  addNewProductLot(prodComponentIndex: number): void {
+    const newProductLot: ProductLot = {productIngredientList: [{}]};
+    this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProductLot);
   }
 
-  deleteProductName(prodIndex: number, prodNameIndex: number): void {
-    this.application.applicationProductList[prodIndex].applicationProductNameList.splice(prodNameIndex, 1);
+  deleteProductLot(prodComponentIndex: number, prodLotIndex: number): void {
+    this.product.productComponentList[prodComponentIndex].productLotList.splice(prodLotIndex, 1);
   }
+
+  addNewProductIngredient(prodComponentIndex: number, prodLotIndex: number): void {
+    const newProductIngredient: ProductIngredient = {};
+    this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProductIngredient);
+  }
+
+  deleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number): void {
+    this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.splice(prodIngredientIndex, 1);
+  }
+
+  /*
 
   copyProduct(product: any): void {
     const newProduct = JSON.parse(JSON.stringify(product));

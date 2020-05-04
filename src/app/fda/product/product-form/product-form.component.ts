@@ -20,13 +20,15 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss']
+  styleUrls: ['./product-form.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   product: Product;
   productNameTypeList: Array<VocabularyTerm> = [];
+  productTermPartList: Array<VocabularyTerm> = [];
   pharmacedicalDosageFormList: Array<VocabularyTerm> = [];
   releaseCharacteristicList: Array<VocabularyTerm> = [];
   countryCodeList: Array<VocabularyTerm> = [];
@@ -111,10 +113,11 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('PROD_PRODUCT_NAME_TYPE', 'PROD_PHARMACEDICAL_DOSAGE_FORM', 
+    this.cvService.getDomainVocabulary('PROD_PRODUCT_NAME_TYPE', 'PROD_PHARMACEDICAL_DOSAGE_FORM',
     'PROD_RELEASE_CHARACTERISTIC', 'PROD_COUNTRY_CODE', 'LANGUAGE', 'PROD_PRODUCT_TYPE',
     'PROD_STATUS', 'PUBLIC_DOMAIN').subscribe(response => {
       this.productNameTypeList = response['PROD_PRODUCT_NAME_TYPE'].list;
+  //    this.productTermPartList = response['PROD_TERM_PART'].list;
       this.pharmacedicalDosageFormList = response['PROD_PHARMACEDICAL_DOSAGE_FORM'].list;
       this.releaseCharacteristicList =  response['PROD_RELEASE_CHARACTERISTIC'].list;
       this.countryCodeList =  response['PROD_COUNTRY_CODE'].list;
@@ -134,6 +137,10 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.productCodeTypeList = response['PROD_PRODUCT_CODE_TYPE'].list;
       this.productCompanyRoleList = response['PROD_COMPANY_ROLE'].list;
       this.companyCodeTypeList = response['PROD_COMPANY_CODE_TYPE'].list;
+    });
+
+    this.cvService.getDomainVocabulary('PROD_TERM_PART').subscribe(response => {
+      this.productTermPartList = response['PROD_TERM_PART'].list;
     });
   }
 
@@ -225,7 +232,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           const id = response.id;
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
-          this.router.navigate(['/application', id, 'edit']);
+          this.router.navigate(['/product', id, 'edit']);
         }
       }, 4000);
     }
@@ -357,6 +364,10 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteProductCompany(prodCompanyIndex: number) {
     this.productService.deleteProductCompany(prodCompanyIndex);
+  }
+
+  addNewProductComponent() {
+    this.productService.addNewProductComponent();
   }
 
   /*

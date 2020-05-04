@@ -25,7 +25,9 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 export class ProductComponentFormComponent implements OnInit {
 
   @Input() productComponent: ProductComponent;
+  @Input() totalComponent: number;
   @Input() prodComponentIndex: number;
+
   dosageFormList: Array<VocabularyTerm> = [];
   colorList: Array<VocabularyTerm> = [];
   flavorList: Array<VocabularyTerm> = [];
@@ -57,15 +59,27 @@ export class ProductComponentFormComponent implements OnInit {
       });
   }
 
+  confirmDeleteComponent(prodComponentIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Product Component Details ' + (prodComponentIndex + 1) + ' data?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductComponent(prodComponentIndex);
+      }
+    });
+  }
+
+  deleteProductComponent(prodComponentIndex: number) {
+    this.productService.deleteProductComponent(prodComponentIndex);
+  }
+
+  addNewProductLot(prodComponentIndex: number) {
+    this.productService.addNewProductLot(prodComponentIndex);
+  }
+
   /*
-  addNewProduct() {
-    this.applicationService.addNewProduct();
-  }
-
-  addNewProductName(prodIndex: number) {
-    this.applicationService.addNewProductName(prodIndex);
-  }
-
   confirmDeleteProduct(prodIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: 'Are you sure you want to delete Product Details ' + (prodIndex + 1) + ' data?'

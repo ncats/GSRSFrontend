@@ -1,12 +1,13 @@
 <!-- Buttons: delete, review -->
-<!--
+
 <div class="marginbottomminus17px padleft235px">
   <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="totalComponent == 1"
-    (click)="confirmDeleteComponent(prodIndex, ingredIndex)"
-    matTooltip="Delete Component Details {{productComponentIndex + 1}}">
+    (click)="confirmDeleteComponent(prodComponentIndex)"
+    matTooltip="Delete Component Details {{prodComponentIndex + 1}}">
     <mat-icon [class.disabled]="totalComponent == 1">delete_forever</mat-icon>
   </button>
   &nbsp;&nbsp;
+  <!--
   <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyIngredient(ingredient, prodIndex)"
     matTooltip="Copy Ingredient Details {{ingredIndex + 1}} to New Ingredient">
     <mat-icon>file_copy</mat-icon>
@@ -19,12 +20,14 @@
   <span *ngIf="ingredient.reviewDate" class="colorgray font12px">Reviewed
     By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
   </span>
-</div>
 -->
+</div>
+
 
 <!-- Display Component/Manufacture -->
 <fieldset class="border">
-  <legend class="border">Manufacture Item Details&nbsp;<b><span class="colorgreen font17px">{{prodComponentIndex + 1}}</span></b>
+  <legend class="border">Manufacture Item Details&nbsp;<b><span
+        class="colorgreen font17px">{{prodComponentIndex + 1}}</span></b>
   </legend>
 
   <div class="row margintop10px">
@@ -69,12 +72,35 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="">
-      <input matInput placeholder="Size" [(ngModel)]="productComponent.charSize"
-        name="charSize" />
+      <input matInput placeholder="Size" [(ngModel)]="productComponent.charSize" name="charSize" />
     </mat-form-field>
     <mat-form-field class="">
       <input matInput placeholder="Imprint Text" [(ngModel)]="productComponent.charImprintText"
         name="charImprintText" />
     </mat-form-field>
   </div>
+
+  <!-- PRODUCT LOT LIST BEGIN -->
+  <div class="">
+    <br>
+    <hr>
+    <br>
+    <span class="titlegreen"></span>
+    <span matBadge="{{productComponent.productLotList.length}}" matBadgeOverlap="false">
+      <span class="titlegreen">LOT </span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="primary" (click)="addNewProductLot(prodComponentIndex)" matTooltip="Add New Lot">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Lot
+    </button>
+    <br><br>
+
+    <div class="boxshadow marginbottom10px bordergray" *ngFor="let productLot of productComponent.productLotList; let prodLotIndex = index">
+      <app-product-lot-form [productLot]="productLot" [totalLot]="productComponent.productLotList.length" [prodLotIndex]="prodLotIndex" [prodComponentIndex]="prodComponentIndex">
+      </app-product-lot-form>
+    </div>
+  </div>
+  <!-- PRODUCT LOT LIST END -->
+
+
 </fieldset>
