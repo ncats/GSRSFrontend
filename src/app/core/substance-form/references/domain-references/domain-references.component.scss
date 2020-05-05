@@ -40,3 +40,19 @@
   background-color: white !important;
   color: rgb(71, 147, 209) !important;
 }
+
+.title-actions {
+    display: inline-flex;
+    align-items: flex-end;
+    padding-bottom: 5px;
+
+    .mat-flat-button {
+        min-width: 0;
+        padding: 0px 10px;
+        line-height: 30px;
+
+        &:not(:last-child) {
+            margin-right: 10px;
+        }
+    }
+}

@@ -2,19 +2,22 @@
   <mat-accordion>
     <mat-expansion-panel (closed)="panelClosed()" (opened)="panelOpened()">
       <mat-expansion-panel-header class="domain-reference-header">
-        <mat-panel-title [ngClass]="{'block-display': !isExpanded}">
+        <mat-panel-title>
           <h4 class="title" matTooltip="Expand references">
             {{card && card === 'definition'? 'Definitional ': ''}}References
-            <span [matBadge]="referencesUuids && referencesUuids.length || 0" class = "custom-badge" matBadgeOverlap="false"
-              [hidden]="isExpanded"></span>
+            <span [matBadge]="referencesUuids && referencesUuids.length || 0" class = "custom-badge" matBadgeOverlap="false">
+            </span>
           </h4>
-          <div *ngIf="isExpanded">
-            <button mat-icon-button matTooltip="Create new reference"
+          <div class="middle-fill"></div>
+          <div class="title-actions">
+            <button mat-flat-button color="primary" matTooltip="Create new reference"
               (click)="addNewReference(); $event.stopPropagation()">
+              Create new
               <mat-icon svgIcon="add_circle_outline"></mat-icon>
             </button>
-            <button mat-icon-button matTooltip="Reuse existing reference"
+            <button mat-flat-button color="primary" matTooltip="Reuse existing reference"
               (click)="reuseExistingReference(); $event.stopPropagation()" *ngIf="canReuse">
+              Reuse
               <mat-icon svgIcon="move_to_inbox"></mat-icon>
             </button>
           </div>

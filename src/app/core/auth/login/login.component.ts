@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -52,6 +52,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  @HostListener('keyup', ['$event'])
+  onKeyup(event: KeyboardEvent) {
+    if (event.keyCode === 13) {
+      this.login();
+    }
   }
 
   login() {
