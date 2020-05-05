@@ -44,8 +44,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public exactMatchSubstances: Array<SubstanceDetail>;
   pageIndex: number;
   pageSize: number;
+  pageCount: number;
+  invalidPage = false;
   totalSubstances: number;
   isLoading = true;
+  lastPage: number;
   isError = false;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
@@ -60,11 +63,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private subscriptions: Array<Subscription> = [];
   isAdmin = false;
   showExactMatches = false;
-  names: { [substanceId: string]: Array<SubstanceName> } = {};
+  names: { [substanceId: string]: Array< SubstanceName > } = {};
   codes: {
     [substanceId: string]: {
-      codeSystemNames?: Array<string>
-      codeSystems?: { [codeSystem: string]: Array<SubstanceCode> }
+      codeSystemNames?: Array< string >
+      codeSystems?: { [codeSystem: string]: Array< SubstanceCode > }
     }
   } = {};
   narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion>} = {};
@@ -175,6 +178,27 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
   }
 
+  customPage(event: any): void {
+    if (this.validatePageInput(event)){
+      this.invalidPage = false;
+      let newpage = Number(event.target.value) - 1;
+      this.pageIndex = newpage;
+     // this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newPage);
+      this.populateUrlQueryParameters();
+  }
+}
+
+validatePageInput(event: any): boolean {
+  if (event && event.target) {
+    const newpage = Number(event.target.value);
+  if (!isNaN(Number(newpage))){
+    if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)){
+      return true;
+    }
+  }
+}
+  return false;
+}
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
@@ -230,6 +254,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       })
         .subscribe(pagingResponse => {
           this.isError = false;
+          this.totalSubstances = pagingResponse.total;
+          if (pagingResponse.total % this.pageSize === 0){
+            this.lastPage = (pagingResponse.total / this.pageSize);
+          } else {
+            this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
+          }
 
           if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0
             && pagingResponse.skip === 0

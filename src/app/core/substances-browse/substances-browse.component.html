@@ -113,10 +113,10 @@
             <mat-icon svgIcon="list"></mat-icon>
           </mat-button-toggle>
           <mat-button-toggle value="cards" matTooltip="full view">
-            <mat-icon svgIcon="view_stream" matTooltip="Tile view"></mat-icon>
+            <mat-icon svgIcon="view_stream" ></mat-icon>
           </mat-button-toggle>
           <mat-button-toggle value="tiles">
-            <mat-icon svgIcon="view_module"></mat-icon>
+            <mat-icon svgIcon="view_module" matTooltip="Tile view"></mat-icon>
           </mat-button-toggle>
         </mat-button-toggle-group>
 
@@ -128,10 +128,23 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-
-        <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
-          [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
-        </mat-paginator>
+<div class = "break"></div>
+        <div class = "full-paginator">
+          <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+          </mat-paginator>
+          
+          <div class = "page-selector">
+            <span class = "page-label">Page: </span>
+            <mat-form-field class = "page-input" [ngClass] = "{'bad-page':invalidPage}">
+              <input matInput matTooltip = "Type a page and press enter"  [ngClass] = "{'bad-page':invalidPage}"  [value] = "pageIndex + 1"
+              #pagenum (keydown.enter)="customPage($event)"
+              (input) = "validatePageInput($event)? invalidPage = false: invalidPage = true"
+              (focusout) = "pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class = "page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
       </div>
       <div [ngClass]="view">
         <div class="substance-cards">
