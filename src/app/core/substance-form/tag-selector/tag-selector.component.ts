@@ -41,11 +41,11 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
             inCV = true;
           }
         });
-        if (inCV === false){
-          const other= {
-            display: "Other",
-            value: "Other",
-            filter: " = ",
+        if (inCV === false) {
+          const other = {
+            display: 'Other',
+            value: 'Other',
+            filter: ' = ',
             selected: false
          };
          this.allOptions.push(other);

@@ -59,6 +59,7 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
       this.substanceType = definition.substanceClass;
     });
     definitionSubscription.unsubscribe();
+    this.canAddItemUpdate.emit(true);
     const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
       this.subunits = subunits;
       this.filtered = subunits;
@@ -85,6 +86,10 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
   updateView(event): void {
     this.gaService.sendEvent(this.analyticsEventCategory, 'button:view-update', event.value);
     this.view = event.value;
+  }
+
+  addItem(): void {
+    this.addSubunit();
   }
 
   addSubunit(): void {

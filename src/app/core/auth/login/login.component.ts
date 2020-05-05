@@ -56,7 +56,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   @HostListener('keyup', ['$event'])
   onKeyup(event: KeyboardEvent) {
-    if (event.keyCode === 13) {
+    console.log(event);
+    if (event.code && event.code.toLowerCase() === 'enter') {
       this.login();
     }
   }

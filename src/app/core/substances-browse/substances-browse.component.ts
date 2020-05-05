@@ -179,9 +179,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   customPage(event: any): void {
-    if (this.validatePageInput(event)){
+    if (this.validatePageInput(event)) {
       this.invalidPage = false;
-      let newpage = Number(event.target.value) - 1;
+      const newpage = Number(event.target.value) - 1;
       this.pageIndex = newpage;
      // this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newPage);
       this.populateUrlQueryParameters();
@@ -191,8 +191,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 validatePageInput(event: any): boolean {
   if (event && event.target) {
     const newpage = Number(event.target.value);
-  if (!isNaN(Number(newpage))){
-    if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)){
+  if (!isNaN(Number(newpage))) {
+    if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)) {
       return true;
     }
   }
@@ -255,7 +255,7 @@ validatePageInput(event: any): boolean {
         .subscribe(pagingResponse => {
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
-          if (pagingResponse.total % this.pageSize === 0){
+          if (pagingResponse.total % this.pageSize === 0) {
             this.lastPage = (pagingResponse.total / this.pageSize);
           } else {
             this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
