@@ -1,4 +1,4 @@
-import { Facet } from './facet.model';
+import { Facet } from '../facets-manager/facet.model';
 
 /**
  * API response object for list calls that have paging

@@ -65,29 +65,28 @@ export interface ApplicationIngredient {
   applicantIngredName?: string;
   bdnum?: string;
   basisOfStrengthBdnum?: string;
+  average?: string;
+  low?: string;
+  high?: string;
+  lowLimit?: string;
+  highLimit?: string;
+  nonNumericValue?: string;
+  ingredientType?: string;
+  unit?: string;
+  grade?: string;
+  reviewedBy?: string;
+  reviewDate?: number;
   internalVersion?: number;
-  substanceId?: string;
-  ingredientName?: string;
-  activeMoietyUnii?: string;
-  activeMoietyName?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
-  average?: string;
-  low?: string;
-  high?: string;
-  ingredientType?: string;
-  unit?: string;
   farmSubstanceId?: number;
   farmSubstance?: string;
-  reviewedBy?: string;
-  reviewDate?: number;
-  grade?: string;
-  basisOfStrengthName?: string;
-  ingBasisMessage?: string;
-  ingNameMessage?: string;
-  basisOfStrengthSubstanceId?: string;
+  ingredientName?: string;
+  substanceId?: string;
+  activeMoietyName?: string;
+  activeMoietyUnii?: string;
   subRelationshipList?: Array<SubRelationship>;
 }
 
@@ -146,3 +145,21 @@ export interface ClinicalTrial {
   nctNumber?: String;
 }
 
+export interface ValidationResults {
+  valid?: boolean;
+  validationMessages?: Array<ValidationMessage>;
+}
+
+export interface ValidationMessage {
+  actionType: string;
+  appliedChange: boolean;
+  links: Array<MessageLink>;
+  message: string;
+  messageType: string;
+  suggestedChange: boolean;
+}
+
+export interface MessageLink {
+  href: string;
+  text: string;
+}

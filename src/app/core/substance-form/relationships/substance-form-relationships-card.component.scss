@@ -1,0 +1,41 @@
+.mat-divider.mat-divider-inset {
+    margin-left: 0;
+}
+
+.mat-divider {
+    border-top-color: rgba(0, 0, 0, .5);
+}
+
+.relationship {
+
+    &:nth-child(odd) {
+        background-color: rgba(68, 138, 255, .07);
+
+        ::ng-deep {
+
+            .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+                background-color: rgba(68, 138, 255, .15);
+            }
+        }
+    }
+
+    &:nth-child(even) {
+        ::ng-deep {
+
+            .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+                background-color: rgba(128, 128, 128, .15);
+            }
+        }
+    }
+
+    ::ng-deep {
+        .mat-expansion-panel, .mat-table, textarea {
+            background-color: transparent;
+        }
+    }
+}
+
+.search {
+    width: 400px;
+    max-width: 100%;
+}
