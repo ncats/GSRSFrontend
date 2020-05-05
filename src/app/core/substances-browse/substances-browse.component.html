@@ -217,7 +217,7 @@
           <div class = "page-selector">
             <span class = "page-label">Page: </span>
             <mat-form-field class = "page-input" [ngClass] = "{'bad-page':invalidPage}">
-              <input matInput matTooltip = "Type a page and press enter"  [ngClass] = "{'bad-page':badPage}"  [value] = "pageIndex + 1"
+              <input matInput matTooltip = "Type a page and press enter"  [ngClass] = "{'bad-page':invalidPage}"  [value] = "pageIndex + 1"
               #pagenum (keydown.enter)="customPage($event)"
               (input) = "validatePageInput($event)? invalidPage = false: invalidPage = true"
               (focusout) = "pagenum.value = pageIndex + 1; invalidPage = false">

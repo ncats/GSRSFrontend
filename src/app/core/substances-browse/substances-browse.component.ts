@@ -40,11 +40,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   private privateSequenceSearchKey?: string;
-  public substances: Array<SubstanceDetail>;
-  public exactMatchSubstances: Array<SubstanceDetail>;
-  public facets: Array<Facet>;
-  private rawFacets: Array<Facet>;
-  public displayFacets: Array<DisplayFacet> = [];
+  public substances: Array< SubstanceDetail >;
+  public exactMatchSubstances: Array< SubstanceDetail >;
+  public facets: Array< Facet >;
+  private rawFacets: Array< Facet >;
+  public displayFacets: Array< DisplayFacet > = [];
   private privateFacetParams: SubstanceFacetParam;
   pageIndex: number;
   pageSize: number;
@@ -68,21 +68,21 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public facetBuilder: SubstanceFacetParam;
   searchText: { [faceName: string]: { value: string, isLoading: boolean } } = {};
   private overlayContainer: HTMLElement;
-  toggle: Array<boolean> = [];
-  private subscriptions: Array<Subscription> = [];
+  toggle: Array< boolean > = [];
+  private subscriptions: Array< Subscription > = [];
   isAdmin = false;
   showExactMatches = false;
-  names: { [substanceId: string]: Array<SubstanceName> } = {};
+  names: { [substanceId: string]: Array< SubstanceName > } = {};
   codes: {
     [substanceId: string]: {
-      codeSystemNames?: Array<string>
-      codeSystems?: { [codeSystem: string]: Array<SubstanceCode> }
+      codeSystemNames?: Array< string >
+      codeSystems?: { [codeSystem: string]: Array< SubstanceCode > }
     }
   } = {};
-  private facetSearchChanged = new Subject<{ index: number, query: any}>();
+  private facetSearchChanged = new Subject< { index: number, query: any} >();
   private activeSearchedFaced: Facet;
-  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion>} = {};
-  matchTypes?: Array<string> = [];
+  narrowSearchSuggestions?: { [matchType: string]: Array< NarrowSearchSuggestion >} = {};
+  matchTypes?: Array< string > = [];
   narrowSearchSuggestionsCount = 0;
   private facetsAuthSubscription: Subscription;
 
