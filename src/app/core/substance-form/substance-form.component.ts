@@ -623,6 +623,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
 
+      this.substanceFormService.bypassUpdateCheck();
       if (response === 'continue') {
         this.router.navigate(['/substances', this.id, 'edit']);
       } else if (response === 'browse') {

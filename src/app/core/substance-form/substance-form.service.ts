@@ -54,6 +54,7 @@ export class SubstanceFormService implements OnDestroy {
   private substanceChangeReasonEmitter = new Subject<string>();
   private nameResolver = new Subject<string>();
   resolvedMol = this.nameResolver.asObservable();
+  private _bypassUpdateCheck = false;
 
   constructor(
     private substanceService: SubstanceService,
@@ -337,7 +338,16 @@ export class SubstanceFormService implements OnDestroy {
 
   get isSubstanceUpdated(): boolean {
     const substanceString = JSON.stringify(this.privateSubstance);
-    return this.substanceStateHash !== this.utilsService.hashCode(substanceString);
+    if (this._bypassUpdateCheck) {
+      this._bypassUpdateCheck = false;
+      return false;
+    } else {
+      return this.substanceStateHash !== this.utilsService.hashCode(substanceString);
+    }
+  }
+
+  bypassUpdateCheck(): void {
+    this._bypassUpdateCheck = true;
   }
 
   // Definition Start

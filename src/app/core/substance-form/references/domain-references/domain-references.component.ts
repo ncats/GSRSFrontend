@@ -37,7 +37,8 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private element: ElementRef,
     private utilsService: UtilsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private substanceFormService: SubstanceFormService
   ) { }
 
   ngOnInit() {
@@ -217,4 +218,8 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
     this.element.nativeElement.dispatchEvent(event);
   }
 
+  downloadDocument(url: string): void {
+    this.substanceFormService.bypassUpdateCheck();
+    window.open(url);
+  }
 }

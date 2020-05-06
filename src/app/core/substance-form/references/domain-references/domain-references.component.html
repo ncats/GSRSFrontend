@@ -83,7 +83,7 @@
             <th mat-header-cell *matHeaderCellDef> </th>
             <td mat-cell *matCellDef="let reference">
               <div *ngIf="reference.uploadedFile">
-                <a mat-icon-button matTooltip="Download document" [href]="reference.uploadedFile">
+                <a mat-icon-button matTooltip="Download document" (click)="downloadDocument(reference.uploadedFile)">
                   <mat-icon svgIcon="cloud_download"></mat-icon>
                 </a>
               </div>
