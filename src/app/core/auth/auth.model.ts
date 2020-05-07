@@ -38,7 +38,6 @@ export interface User {
     namespace?: string;
     _namespace?: string;
     _matchContext?: string;
-
 }
 
 export interface UserGroup {

@@ -5,7 +5,7 @@
                 <ng-template mat-tab-label>
                     User Management
                 </ng-template>
-                <h1 class = "tab-label">Edit Users</h1>
+                <h1 class = "tab-label">User Management</h1>
                   <mat-card class = "app-container">
                         <app-user-management class =  "full-width"></app-user-management>
                   </mat-card>
@@ -24,11 +24,6 @@
                         <app-cv-management class =  "full-width"></app-cv-management>
                     </mat-card>
                 </mat-tab>
-                <mat-tab disabled = "true">
-                    <ng-template mat-tab-label>
-                       Rebuild Index
-                    </ng-template>
-                </mat-tab>
                 <mat-tab>
                   <ng-template mat-tab-label>
                     Scheduled Jobs
@@ -40,15 +35,14 @@
                     </div>
                 </ng-template>
                 </mat-tab>
-                <mat-tab disabled = "true">
-                    <ng-template mat-tab-label>
-                        All Files
-                    </ng-template>
-                </mat-tab>
-                <mat-tab disabled = "true">
+                <mat-tab>
                     <ng-template mat-tab-label>
                         Cache Summary
                     </ng-template>
+                    <h1 class = "tab-label">Cache Summary</h1>
+                  <div class = "app-container">
+                        <app-cache-summary class =  "full-width"></app-cache-summary>
+                  </div>
                 </mat-tab>
                         
               </mat-tab-group>

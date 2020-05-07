@@ -106,6 +106,8 @@ export class CvManagementComponent implements OnInit {
       const isAsc = sort.direction === 'asc';
       return this.utilsService.compare(a[sort.active], b[sort.active], isAsc);
     });
+    console.log(sort);
+    console.log(this.filtered);
   }
 
   download(){

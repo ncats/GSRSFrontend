@@ -10,6 +10,7 @@ import { ScheduledJobComponent } from '@gsrs-core/admin/scheduled-jobs/scheduled
 import { MomentModule } from 'ngx-moment';
 import { UserManagementComponent } from '@gsrs-core/admin/user-management/user-management.component';
 import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-edit-dialog/user-edit-dialog.component';
+import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summary.component';
 
 
 
@@ -39,7 +40,8 @@ import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-e
     CvTermDialogComponent,
     ScheduledJobComponent,
     UserManagementComponent,
-    UserEditDialogComponent
+    UserEditDialogComponent,
+    CacheSummaryComponent
   ],
   exports: [
     CvManagementComponent,
@@ -48,7 +50,8 @@ import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-e
     AdminComponent,
     CvTermDialogComponent,
     UserEditDialogComponent,
-    UserManagementComponent
+    UserManagementComponent,
+    CacheSummaryComponent
   ],
   entryComponents: [
     CvTermDialogComponent,

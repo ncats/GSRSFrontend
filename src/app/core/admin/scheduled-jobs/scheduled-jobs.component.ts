@@ -20,8 +20,6 @@ export class ScheduledJobsComponent implements OnInit {
     setTimeout(()=>{
       this.adminService.fetchJobs().subscribe( resp =>{
         this.loading = false;
-        console.log(resp);
-        console.log('picked up change');
         this.jobs = resp.content;
       });
     }, 1000);

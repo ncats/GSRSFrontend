@@ -27,10 +27,11 @@ export class ScheduledJobComponent implements OnInit {
   refresh(spawn?: boolean) {
     this.adminService.fetchJob(this.job.id).subscribe( response =>{
       this.job = response;
+      this.job =this.set(this.job);
       this.quickLoad = false;
       if ((this.monitor && spawn)|| this.job.id === 1) {
         this.mess = "Polling ... " + response.status;
-        if(this.job.running){
+        if (this.job.running){
           setTimeout(()=>{
             this.refresh(true);
           }, Math.min(this.untilNextRun(), 100));
@@ -50,18 +51,18 @@ export class ScheduledJobComponent implements OnInit {
 
   untilNextRun(){
     const date = new Date();
-    return this.job.nextRun-( date.getTime() -0);
+    return this.job.nextRun-( date.getTime() - 0);
   };
 
   set(n:any){
     this.job = n;
     if (n.cronSchedule){
       var t=n.cronSchedule.split(" ");
-      t[0]=""; //quartz fix
+      t[0]=""; // quartz fix
       var mod=t.join(" ").trim();
       // n.cronScheduleHuman = prettyCron.toString(mod);
       n.cronScheduleHuman = "";
-      if(n.cronSchedule.indexOf("#")>0){
+      if (n.cronSchedule.indexOf("#")>0){
         var nth = n.cronSchedule.split("#")[1].split(" ")[0];
         switch(nth){
           case "1":
@@ -90,10 +91,9 @@ export class ScheduledJobComponent implements OnInit {
             break;
         }
       }
-    
     }
     if (!n.running && n.lastFinished){
-       n.lastDurationHuman=(n.lastFinished-n.lastStarted, { round: true });
+       n.lastDurationHuman=(n.lastFinished-n.lastStarted);
     }
     return n;
   }
@@ -110,25 +110,19 @@ disable (job: any) {
 }
 
 enable(job: any) {
-  console.log(job);
       this.adminService.runJob(job["@enable"]).subscribe( response =>{
-        this.refresh();
       });
 }
 
 execute(job: any) {
   this.quickLoad = true;
-  console.log(job);
   this.adminService.runJob(job["@execute"]).subscribe( response =>{
-    console.log(response);
-    this.refresh();
-  },error => {
-    console.log(error);
+    this.refresh(true);
+  }, error => {
     setTimeout(()=>{this.refresh()});
   });
 }
 cancel(job: any) {
-  console.log(job);
   this.adminService.runJob(job["@cancel"]).subscribe( response =>{
     this.refresh();
   });

@@ -1,8 +1,35 @@
-<div class = "responsive">
-<table mat-table [dataSource] = "test" matSort>
+
+<div class = "user-container">
+<div class = "flex-row">
+    <button mat-button (click) = "showAllUsers()">Show All users</button>
+    <span class="middle-fill"></span>
+
+    <mat-form-field>
+       <mat-label>Edit user by UserName</mat-label>
+      <input matInput [(ngModel)] = 'userID' name ='id' (keydown.enter) = "editUserByName(userID)" />
+      <span class = "user-alert">{{alert}}</span>
+    </mat-form-field>
+</div>
+<div class = "responsive" *ngIf = "loading === true">
+    <div class = "loading-container" >
+        <mat-progress-spinner
+          class="spinner"
+          [color]="primary"
+          mode = "indeterminate">
+      </mat-progress-spinner>
+      </div>
+</div>
+
+
+<div class = "responsive" *ngIf = "loading === false && showAll === true">
+<table mat-table [dataSource] = "users" matSort>
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> User Name</th>
-        <td mat-cell *matCellDef="let user"><a matTooltip = "select to edit">{{user.user.username}} </a></td>
+        <td mat-cell *matCellDef="let user">
+          <a class = "mat-button" matTooltip = "select to edit" (click) = "editUser(user.user.username)">
+            {{user.user.username}}
+          </a>
+        </td>
       </ng-container>
       <ng-container matColumnDef="active">
         <th mat-header-cell *matHeaderCellDef> Active</th>
@@ -23,5 +50,6 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+</div>
 
-
+</div>

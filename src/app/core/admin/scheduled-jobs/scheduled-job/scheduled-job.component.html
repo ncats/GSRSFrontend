@@ -13,7 +13,7 @@
                 </div>
                 <div *ngIf="!job.running && !quickLoad">
                     <div *ngIf="job.enabled">
-                        <mat-icon svgIcon = "menu" class = "spinner">
+                        <mat-icon svgIcon = "alarm-on" class = "spinner">
                             </mat-icon>
                         <div><div class = "label">Next Run Time</div>
                         <i>{{job.nextRun}}</i></div>

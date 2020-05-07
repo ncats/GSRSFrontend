@@ -1,1 +1,96 @@
-<p>user-edit-dialog works!</p>
+<div mat-dialog-title class = "title">
+        <h1 >
+         Edit User
+        </h1>
+</div>
+<div mat-dialog-content>
+<div *ngIf = "loading === false">
+    <div class = "form-row">
+        <div class="username">
+        <mat-form-field class = "user-field">
+            <mat-label>User Name</mat-label>
+                <input matInput placeholder="user name" [(ngModel)]="user.user.username" required name="name" />
+        </mat-form-field>
+        </div>
+        <div class="email">
+            <mat-form-field class = "user-field">
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="email" [(ngModel)]="user.user.email"  name="Email" />
+            </mat-form-field>
+            </div>
+            <div class = "active">
+                    <mat-checkbox [checked] = 'user.active'  >
+                            active
+                    </mat-checkbox>
+            </div>
+        </div>
+    <div class = "form-row">
+
+        <div class = "password-column">
+              <div>
+            <button (click) = "changePassword = !changePassword" mat-button class = "mat-primary mat-flat-button">
+                   {{!changePassword?"Change Password":"Hide fields"}} 
+                </button>
+            </div>
+                    <span *ngIf = "changePassword === true" >
+                            <div>
+                                    <mat-form-field>
+                                        <input matInput type = "password" [(ngModel)] = "oldPassword" placeholder="old password" required name="Password" />
+                                    </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type = "password" [(ngModel)] = "newPassword" placeholder="new password" required name="Password" />
+                                 </mat-form-field> 
+                            </div>
+                                <div>
+                                    <mat-form-field>
+                                        <input matInput type = "password" [(ngModel)] = "newPasswordConfirm" placeholder="confirm new password" required name="Password" />
+                                     </mat-form-field>
+                                </div>
+                           
+                           
+                                <div>
+                            <button mat-button class = "mat-flat-button" click = "validatePassword()">Submit Change</button>
+                            </div>
+                    </span>
+        </div>
+    </div>
+    
+    
+<div class = "form-row">
+<div class = "field-group">Groups
+            <div *ngFor = "let group of user.groups">
+                <mat-checkbox checked>
+                {{group.name}}
+                </mat-checkbox>
+            </div>
+</div>
+<div class = "field-group">Roles
+        <div *ngFor = "let role of roles">
+                <mat-checkbox [checked] = 'role.hasRole' >
+                 {{role.name}}
+                </mat-checkbox>
+        </div>
+</div>
+</div>
+    
+</div>
+    <div class = "form-row">
+<div class = "loading-container" *ngIf = "loading === true">
+        <mat-progress-spinner
+          class="spinner"
+          [color]="primary"
+          mode = "indeterminate">
+      </mat-progress-spinner>
+</div>
+</div>
+</div>
+
+<div mat-dialog-actions>
+        <button mat-flat-button color="primary" matDialogClose>Close</button>
+      
+        <span class="middle-fill"></span>
+
+      <button mat-flat-button color="primary" matDialogClose>Save</button>
+      </div>

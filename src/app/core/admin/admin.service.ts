@@ -41,6 +41,27 @@ export class AdminService extends BaseHttpService {
       }
 
 
+    public getEnvironmentHealth(): Observable<any> {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.get<any>(`${url}health/info`);
+
+    }
+
+    public getUserByID(id:number): Observable<any> {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.get<any>(`${url}users/${id}`);
+    }
+    public getUserByName(name:string): Observable<any> {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.get<any>(`${url}users/${name}`);
+    }
+
+    public getAllUsers(): Observable<any> {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.get<any>(`${url}users`);
+    }
+
+
 
 
 }
