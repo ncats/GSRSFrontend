@@ -2,8 +2,9 @@ export interface Environment {
     apiBaseUrl: string;
     configFileLocation?: string;
     baseHref: string;
+    clasicBaseHref: string;
     production: boolean;
-    appId: 'fda' | 'gsrs';
+    appId: 'fda' | 'gsrs' | 'cbg';
     structureEditor: 'ketcher' | 'jsdraw';
     navItems: Array<NavItem>;
     googleAnalyticsId: string;
@@ -15,4 +16,5 @@ export interface Environment {
 export interface NavItem {
     display: string;
     path: string;
+    order?: number;
 }

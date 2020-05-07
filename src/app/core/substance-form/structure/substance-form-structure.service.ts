@@ -15,7 +15,7 @@ export class SubstanceFormStructureService extends SubstanceFormServiceBase<Subs
 
   constructor(
     public substanceFormService: SubstanceFormService,
-    private structureService: StructureService
+    public structureService: StructureService
   ) {
     super(substanceFormService);
   }
@@ -52,7 +52,7 @@ export class SubstanceFormStructureService extends SubstanceFormServiceBase<Subs
     this.subscriptions.push(substanceSubscription);
   }
 
-  private setMoities(): void {
+  setMoities(): void {
     if (this.substance.structure != null && this.substance.structure.molfile != null) {
       this.structureService.interpretStructure(this.substance.structure.molfile).pipe(take(1)).subscribe(response => {
         this.computedMoieties = response.moieties;

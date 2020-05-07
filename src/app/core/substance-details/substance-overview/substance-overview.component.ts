@@ -36,6 +36,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   baseDomain: string;
   defaultCodeSystem = 'BDNUM';
   defaultCodes: string;
+  clasicBaseHref: string;
   constructor(
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -48,6 +49,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   ) {
     super();
     this.baseDomain = this.configService.configData.apiUrlDomain;
+    this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
   ngOnInit() {

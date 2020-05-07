@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   browseAll: string;
   application: string;
   chemicon: string;
+  clasicBaseHref: string;
 
   constructor(
     private gaService: GoogleAnalyticsService,
@@ -31,6 +32,7 @@ export class HomeComponent implements OnInit {
     private router: Router
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
+    this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
   ngOnInit() {

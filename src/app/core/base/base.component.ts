@@ -87,6 +87,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   contactEmail: string;
   version?: string;
   appId: string;
+  clasicBaseHref: string;
 
   constructor(
     private router: Router,
@@ -97,9 +98,10 @@ export class BaseComponent implements OnInit, OnDestroy {
     private loadingService: LoadingService,
     private bottomSheet: MatBottomSheet
   ) {
-    this.classicLinkPath = '/ginas/app/';
+    this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.classicLinkQueryParamsString = '';
     this.contactEmail = this.configService.configData.contactEmail;
+    this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
   ngOnInit() {
@@ -307,7 +309,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   setClassicLinkPath(path: string): void {
-    const basePath = '/ginas/app/';
+    const basePath = this.clasicBaseHref;
 
     const pathDictionary = {
       '/home': '',

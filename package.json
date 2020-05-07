@@ -25,6 +25,7 @@
     "build:fda:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=fda.prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
     "build:gsrs:pre-prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=gsrs.pre-prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
     "build:gsrs:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=gsrs.prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
+    "build:cbg:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/gsrs/app/beta/ --aot=true --configuration=cbg.prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
     "test": "ng test",
     "lint": "ng lint",
     "tslint": "tslint",

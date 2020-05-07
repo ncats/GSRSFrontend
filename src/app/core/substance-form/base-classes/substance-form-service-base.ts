@@ -13,11 +13,13 @@ export abstract class SubstanceFormServiceBase<T> {
     ) {
         this.propertyEmitter = new ReplaySubject<T>();
         this.substanceFormService.substanceFormAction.subscribe(action => {
-            if (action === 'load') {
-                this.initSubtanceForm();
-            } else {
-                this.unloadSubstance();
-            }
+            setTimeout(() => {
+                if (action === 'load') {
+                    this.initSubtanceForm();
+                } else {
+                    this.unloadSubstance();
+                }
+            });
         });
     }
 

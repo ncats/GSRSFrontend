@@ -2,6 +2,8 @@ import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
 environment.appId = 'fda';
+environment.baseHref = '/ginas/app/beta/';
+environment.clasicBaseHref = '/ginas/app/';
 environment.navItems = [
     {
         display: 'Browse Application',

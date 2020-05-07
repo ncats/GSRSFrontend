@@ -21,7 +21,7 @@
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()">
-      <a mat-menu-item [href]="baseDomain + '/ginas/app/advancedSearch'" target="_blank" *ngIf = "appId === 'fda'">
+      <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf = "appId === 'fda'">
         Advanced Search
       </a>
       <div *ngFor="let navItem of navItems">
@@ -42,7 +42,7 @@
           </mat-menu>
         </ng-container>
       </div>
-      <a mat-menu-item *ngIf="isAdmin" [href]="baseDomain + '/ginas/app/admin'" target="_blank">
+      <a mat-menu-item *ngIf="isAdmin" [href]="baseDomain + clasicBaseHref + 'admin'" target="_blank">
         Admin
       </a>
       <a mat-menu-item [href]="'mailto:' + contactEmail">
@@ -67,7 +67,7 @@
       <span class="user" *ngIf="auth && auth.identifier">{{auth.identifier}}</span>
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
-      <a mat-menu-item [href]="baseDomain + '/ginas/app/profile'" target="_blank">
+      <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'profile'" target="_blank">
         <span>Profile</span>
       </a>
       <button mat-menu-item (click)="authService.logout()">
