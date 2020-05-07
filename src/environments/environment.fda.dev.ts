@@ -11,6 +11,10 @@ environment.navItems = [
     {
         display: 'Browse Clinical Trials',
         path: 'browse-clinical-trials'
+    },
+    {
+        display: 'Register Application',
+        path: 'application/register'
     }
 ];
 environment.googleAnalyticsId = 'UA-136176848-3';
