@@ -71,3 +71,12 @@
     width: 100%;
     flex-grow: 1;
 }
+
+.time-field {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+}
+
+.time-field, .time-label {
+    width: 100%;
+}

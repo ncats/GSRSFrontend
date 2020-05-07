@@ -82,10 +82,12 @@
 <div class = "end-bar">
     <div class = "job-dates">
         <div *ngIf="job.lastStarted" class = "table-row">
-                Last started: <h6 matTooltip="{{formatDate(job.lastStarted)}}">{{job.lastStarted | amTimeAgo}}</h6>
+               <span class = "time-label">Last started: </span> 
+                <span class = "time-field" matTooltip="{{formatDate(job.lastStarted)}}">{{job.lastStarted | amTimeAgo}}</span>
         </div>
         <div *ngIf="job.lastFinished" class = "table-row">
-                Last ended: <h6 matTooltip="{{formatDate(job.lastFinished)}}">{{job.lastFinished | amTimeAgo}}</h6>
+            <span class = "time-label">Last ended: </span> 
+                <span class = "time-field" matTooltip="{{formatDate(job.lastFinished)}}">{{job.lastFinished | amTimeAgo}}</span>
         </div>
     </div>  
     <div *ngIf="!job.enabled" class = "bottom-button">
