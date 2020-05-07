@@ -54,7 +54,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
 
   defSwitch() {
     this.sub = this.substanceFormService.getJson();
-    console.log(defiant.json.search(this.sub, '//*[references]'));
 
     this.fieldGetter = {
       'protein': ['protein', 'modifications', 'properties'],
@@ -191,7 +190,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
   }
       // change alt type if it's the same as the primary
       AltNewType(alt) {
-        console.log('newtype');
         this.didStep5 = true;
         this.text = 'Step 1 complete. Running step 2a...';
         this.substanceService.getSubstanceDetails(this.oldAlt.uuid).subscribe(d => {
@@ -260,7 +258,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         } else {
           this.text = 'Step 1 complete. Running step 2...';
         }
-        console.log('getting 2');
         // get server version for server-side updates
           this.substanceService.getSubstanceDetails(this.oldAlt.uuid).subscribe(d => {
 
@@ -279,7 +276,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           const altReferences = defiant.json.search(alt, '//*[references]');
           alert(altReferences.length);
           altReferences.forEach(e => {
-            console.log(e.isObject+ ' - ' + _.isObjectLike(e) +' -- '+  (this._typeof2(e) === 'object') + ' --- ' + e.uuid);
           });
         
           const objectsA = altReferences.filter(e => {
@@ -292,7 +288,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             }
           });
           alert(objectsA.length);
-          console.log(objectsA);
           const toPush = [];
 
           for (let i = 0; i < objectsA.length; i++) {
@@ -341,7 +336,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
 
           this.substanceService.getSubstanceDetails(this.oldAlt.uuid).subscribe(f => {
             const newSub = _.cloneDeep(e);
-            console.log(newSub);
 
             newSub.substanceClass = this.oldAlt.substanceClass;
             this.fieldGetter[newSub.substanceClass].forEach(x => {
@@ -358,7 +352,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             subReferences.forEach(e => {
             });
             const objectsA = subReferences.filter(h => {
-              console.log(h.isObject+ ' - ' + _.isObjectLike(h) +' -- '+  (this._typeof2(h) === 'object'));
 
               if (this._typeof2(h) === 'object') {
                 return true;
@@ -392,15 +385,12 @@ export class DefinitionSwitchDialogComponent implements OnInit {
                 return r;
               }
             });
-            console.log('its done');
             this.text = 'Step 2 complete. Sending update for final step...';
             this.updateRecord(newSub,  () => {
-              // location.reload();
+               location.reload();
             }, 3);
           });
-          console.log('out 1');
         });
-        console.log('out 2');
       }
 
       updateRecord(nsub, cb, step) {
@@ -414,12 +404,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               this.text = 'Definitions switched successfully!';
               this.loadingService.setLoading(false);
               this.loading = false;
-              console.log(this.test1);
-              console.log('read');
-              console.log(this.test2);
               setTimeout(function () {
-                console.log(this.test1);
-                console.log(this.test2);
                 alert('Record definitions successfully switched. The page will now refresh. '+
                 '\n\n Please review and remove any unnecessary validation Notes created for each substance during the switch');
                
