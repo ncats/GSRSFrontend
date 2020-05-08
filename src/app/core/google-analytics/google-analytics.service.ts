@@ -2,7 +2,7 @@ import { Injectable, PLATFORM_ID, Inject, HostListener } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ConfigService } from '../config/config.service';
 import { SendFields } from './google-analytics.model';
-import { Environment } from '../../../environments/environment.model';
+import { Environment } from '../environments/environment.model';
 
 @Injectable({
   providedIn: 'root'

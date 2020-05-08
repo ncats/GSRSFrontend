@@ -8,4 +8,4 @@ environment.clasicBaseHref = '/gsrs/app/';
 environment.appId = 'cbg';
 environment.googleAnalyticsId = 'UA-136176848-1';
 
-export { GsrsModule as EnvironmentModule } from '../app/core/gsrs.module';
+export { GsrsModule as EnvironmentModule } from '../gsrs.module';

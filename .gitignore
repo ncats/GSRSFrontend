@@ -42,4 +42,8 @@ Thumbs.db
 /src/assets/dojox
 /src/assets/dijit
 
+/**/dojo
+/**/dojox
+/**/dijit
+
 /lib/dojo-custom-jsdraw/**/*

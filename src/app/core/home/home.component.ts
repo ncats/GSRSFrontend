@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { ConfigService } from '@gsrs-core/config';
-import { Environment } from '@environment';
+import { Environment } from '@gsrs-core/environments/environment.model';
 import { AuthService } from '@gsrs-core/auth';
 import { Router } from '@angular/router';
-import {environment} from '../../../environments/environment';
+import {environment} from '../environments/environment';
 
 @Component({
   selector: 'app-home',

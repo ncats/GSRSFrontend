@@ -3,7 +3,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { debounceTime } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import { environment } from '../environments/environment';
 import {SubstanceService} from '@gsrs-core/substance';
 import {LoadingService} from '@gsrs-core/loading';
 

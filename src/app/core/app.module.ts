@@ -48,7 +48,7 @@ import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
 import { ScrollToModule } from './scroll-to/scroll-to.module';
 import { TakePipe } from './utils/take.pipe';
-import { EnvironmentModule } from '../../environments/environment';
+import { EnvironmentModule } from './environments/environment';
 import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material';

@@ -1,10 +1,9 @@
-import { baseEnvironment } from './_base-environment';
+import { baseEnvironment } from '@gsrs-core/environments';
 
 export const environment = baseEnvironment;
 environment.appId = 'fda';
 environment.baseHref = '/ginas/app/beta/';
 environment.clasicBaseHref = '/ginas/app/';
-// __alex__ should make change here.
 environment.navItems = [
     {
         display: 'Browse Application',
@@ -19,10 +18,8 @@ environment.navItems = [
         path: 'application/register'
     }
 ];
-environment.appId = 'fda';
-environment.isAnalyticsPrivate = true;
+environment.googleAnalyticsId = 'UA-136176848-3';
 environment.configFileLocation = '/assets/data/config-fda.json';
+environment.isAnalyticsPrivate = true;
 
-environment.apiBaseUrl = 'http://localhost:9000/ginas/app/';
-
-export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';
+export { FdaModule as EnvironmentModule } from '../fda.module';

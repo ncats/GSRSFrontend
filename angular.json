@@ -36,8 +36,8 @@
             "gsrs.prod": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.gsrs.prod.ts"
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/core/environments/environment.gsrs.prod.ts"
                 }
               ],
               "optimization": true,
@@ -53,8 +53,8 @@
             "gsrs.pre-prod": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.gsrs.pre-prod.ts"
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/core/environments/environment.gsrs.pre-prod.ts"
                 }
               ],
               "optimization": true,
@@ -70,24 +70,24 @@
             "gsrs.dev": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.gsrs.dev.ts"
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/core/environments/environment.gsrs.dev.ts"
                 }
               ]
             },
             "gsrs.local": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.gsrs.local.ts"
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/core/environments/environment.gsrs.local.ts"
                 }
               ]
             },
             "fda.prod": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.fda.prod.ts"
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/fda/environments/environment.fda.prod.ts"
                 }
               ],
               "optimization": true,
@@ -103,8 +103,8 @@
             "fda.pre-prod": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.fda.pre-prod.ts"
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/fda/environments/environment.fda.pre-prod.ts"
                 }
               ],
               "optimization": true,
@@ -120,24 +120,24 @@
             "fda.dev": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.fda.dev.ts"
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/fda/environments/environment.fda.dev.ts"
                 }
               ]
             },
             "fda.local": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.fda.local.ts"
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/core/environments/environment.fda.local.ts"
                 }
               ]
             },
             "cbg.prod": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.cbg.prod.ts"
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/core/environments/environment.cbg.prod.ts"
                 }
               ],
               "optimization": true,

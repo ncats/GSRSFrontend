@@ -21,7 +21,7 @@ import { SubstanceCardsService } from './substance-cards.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { UtilsService } from '../utils/utils.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { environment } from '../../../environments/environment';
+import { environment } from '../environments/environment';
 import {Subject, Subscription} from 'rxjs';
 import {Title} from '@angular/platform-browser';
 

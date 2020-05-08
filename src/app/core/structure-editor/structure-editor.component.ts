@@ -14,7 +14,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Ketcher } from 'ketcher-wrapper';
 import { EditorImplementation } from './structure-editor-implementation.model';
 import { JSDraw } from 'jsdraw-wrapper';
-import { environment } from '../../../environments/environment';
+import { environment } from '../environments/environment';
 import { StructureService } from '@gsrs-core/structure';
 import { LoadingService } from '@gsrs-core/loading';
 import { take } from 'rxjs/operators';

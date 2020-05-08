@@ -7,7 +7,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ProductDetailsBaseComponent} from '../product-details-base.component';
-import {environment} from '../../../../../environments/environment';
+import {environment} from '../../../../core/environments/environment';
 
 @Component({
   selector: 'app-product-elist-details',
