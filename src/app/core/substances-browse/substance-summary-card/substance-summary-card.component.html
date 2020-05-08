@@ -47,7 +47,7 @@
           <mat-icon svgIcon="search"></mat-icon>
         </button>
 
-        <a class = "mat-icon-button" matTooltip = "edit substance" *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
+        <a class = "mat-icon-button" matTooltip = "edit substance" aria-label = "edit substance" *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
           <mat-icon svgIcon="edit"></mat-icon>
         </a>
 
@@ -127,8 +127,8 @@
                 <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast">
                   <span *ngIf="codeObject.url">
                     <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
-                      evCategory="substancesContent" evAction="link:code">
-                      {{codeObject.code.trim()}}
+                      evCategory="substancesContent" evAction="link:code" aria-label ="view site in new tab">
+                      <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
                       <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
                     </a>
                   </span>
