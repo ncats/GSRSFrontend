@@ -7,13 +7,13 @@
   </button>
   &nbsp;&nbsp;
   <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyProductIngredient()"
-    matTooltip="Copy Ingredient Details {{ingredIndex + 1}} to New Ingredient">
+    matTooltip="Copy Ingredient Details {{prodIngredientIndex + 1}} to New Ingredient">
     <mat-icon>file_copy</mat-icon>
   </button>
   <!--
     &nbsp;&nbsp;
     <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
-      matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
+      matTooltip="Click to Confirm Ingredient Details {{prodIngredientIndex + 1}} data has been Reviewed">
       <mat-icon>check_circle</mat-icon>
     </button>
     <span *ngIf="ingredient.reviewDate" class="colorgray font12px">Reviewed
@@ -55,8 +55,8 @@
           <div *ngIf="ingredient.bdnum">
             <span class="colororange">{{ingredient.bdnum}}</span><span class="colorgray font11px"> (Bdnum)</span>
             <br>
-            <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName(ingredIndex)"
-              matTooltip="Delete Ingredient Name {{ingredIndex + 1}}">
+            <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName(prodIngredientIndex)"
+              matTooltip="Delete Ingredient Name {{prodIngredientIndex + 1}}">
               <mat-icon>delete_forever</mat-icon>
             </button>
           </div>
@@ -91,8 +91,8 @@
             <span class="colororange">{{ingredient.basisOfStrengthBdnum}}</span><span class="colorgray font11px">
               (Bdnum)</span>
             <br>
-            <button mat-icon-button color="primary" (click)="confirmDeleteBasisOfStrength(ingredIndex)"
-              matTooltip="Delete Basis of Strength {{ingredIndex + 1}}">
+            <button mat-icon-button color="primary" (click)="confirmDeleteBasisOfStrength(prodIngredientIndex)"
+              matTooltip="Delete Basis of Strength {{prodIngredientIndex + 1}}">
               <mat-icon>delete_forever</mat-icon>
             </button>
           </div>
@@ -160,7 +160,7 @@
     </mat-form-field>
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.Manufacturer" name="Manufacturer" />
+      <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.manufacturer" name="manufacturer" />
     </mat-form-field>
 
     <mat-form-field class="col-1-4">

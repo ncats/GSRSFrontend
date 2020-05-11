@@ -8,6 +8,7 @@
       <div *ngIf="appCountConcat">
         <a [routerLink]="['/substances', substanceId]" target="_blank">
           <div innerHTML="{{searchCount.appCountConcat}}"></div>
+          (opens in new window)
         </a>
       </div>
       <span *ngIf="searchCount.appCountConcat != '0'; else noRecordApp">
