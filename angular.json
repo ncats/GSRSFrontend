@@ -23,7 +23,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
-              "src/assets"
+              { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
+              { "glob": "config.json", "input": "src/app/core/config/", "output": "/assets/data/" }
             ],
             "styles": [
               {
@@ -42,7 +43,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -59,7 +60,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -84,6 +85,11 @@
               ]
             },
             "fda.prod": {
+              "assets": [
+                { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
+                { "glob": "config.json", "input": "src/app/fda/config/", "output": "/assets/data/" },
+                { "glob": "**/*", "input": "src/app/fda/assets", "output": "/assets/" }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -92,7 +98,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -101,6 +107,11 @@
               "buildOptimizer": true
             },
             "fda.pre-prod": {
+              "assets": [
+                { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
+                { "glob": "config.json", "input": "src/app/fda/config/", "output": "/assets/data/" },
+                { "glob": "**/*", "input": "src/app/fda/assets", "output": "/assets/" }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -109,7 +120,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -118,6 +129,11 @@
               "buildOptimizer": true
             },
             "fda.dev": {
+              "assets": [
+                { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
+                { "glob": "config.json", "input": "src/app/fda/config/", "output": "/assets/data/" },
+                { "glob": "**/*", "input": "src/app/fda/assets", "output": "/assets/" }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -126,12 +142,34 @@
               ]
             },
             "fda.local": {
+              "assets": [
+                { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
+                { "glob": "config.json", "input": "src/app/fda/config/", "output": "/assets/data/" },
+                { "glob": "**/*", "input": "src/app/fda/assets", "output": "/assets/" }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.fda.local.ts"
                 }
               ]
+            },
+            "cbg.prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.cbg.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
             }
           }
         },
@@ -164,6 +202,9 @@
             },
             "gsrs.prod": {
               "browserTarget": "gsrs-client:build:gsrs.prod"
+            },
+            "cbg.prod": {
+              "browserTarget": "gsrs-client:build:cbg.prod"
             }
           }
         },
@@ -189,7 +230,7 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/app/core/assets"
             ]
           }
         },

@@ -9,6 +9,7 @@ import { LoadingService } from '../loading/loading.service';
 import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
+import { navItems } from './nav-items.constant';
 
 @Component({
   selector: 'app-base',
@@ -18,57 +19,6 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class BaseComponent implements OnInit, OnDestroy {
   mainPathSegment = '';
-  navItems = [
-    {
-      display: 'Browse Substances',
-      path: 'browse-substance'
-    },
-    {
-      display: 'Structure Search',
-      path: 'structure-search'
-    },
-    {
-      display: 'Sequence Search',
-      path: 'sequence-search'
-    },
-    {
-      display: 'Register',
-      children: [
-        {
-          display: 'Chemical',
-          path: 'substances/register/chemical',
-        },
-        {
-          display: 'Protein',
-          path: 'substances/register/protein',
-        },
-        {
-          display: 'Polymer',
-          path: 'substances/register/polymer',
-        },
-        {
-          display: 'Nucleic Acid',
-          path: 'substances/register/nucleicAcid',
-        },
-        {
-          display: 'Mixture',
-          path: 'substances/register/mixture',
-        },
-        {
-          display: 'Structurally Diverse',
-          path: 'substances/register/structurallyDiverse',
-        },
-        {
-          display: 'Concept',
-          path: 'substances/register/concept',
-        },
-        {
-          display: 'G1 Specified Substance',
-          path: 'substances/register/specifiedSubstanceG1',
-        }
-      ]
-    }
-  ];
   logoSrcPath: string;
   auth?: Auth;
   environment: Environment;
@@ -87,6 +37,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   contactEmail: string;
   version?: string;
   appId: string;
+  clasicBaseHref: string;
+  navItems = navItems;
 
   constructor(
     private router: Router,
@@ -97,9 +49,10 @@ export class BaseComponent implements OnInit, OnDestroy {
     private loadingService: LoadingService,
     private bottomSheet: MatBottomSheet
   ) {
-    this.classicLinkPath = '/ginas/app/';
+    this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.classicLinkQueryParamsString = '';
     this.contactEmail = this.configService.configData.contactEmail;
+    this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
   ngOnInit() {
@@ -136,8 +89,31 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.environment = this.configService.environment;
     this.appId = this.environment.appId;
 
-    if (this.environment.navItems && this.environment.navItems.length) {
-      this.navItems = this.navItems.concat(this.environment.navItems);
+    if (this.configService.configData.navItems && this.configService.configData.navItems.length) {
+
+      const filteredNavItems = this.configService.configData.navItems.filter(navItem => {
+        if (navItem.children != null && navItem.children.length > 0) {
+          let isNotExisting = true;
+          for (let i = 0; i < this.navItems.length; i++) {
+            if (this.navItems[i].display === navItem.display && this.navItems[i].children != null) {
+              this.navItems[i].children = this.navItems[i].children.concat(navItem.children);
+              this.navItems[i].children.sort((a, b) => {
+                return a.order - b.order;
+              });
+              isNotExisting = false;
+              break;
+            }
+          }
+          return isNotExisting;
+        } else {
+          return true;
+        }
+      });
+
+      this.navItems = this.navItems.concat(filteredNavItems);
+      this.navItems.sort((a, b) => {
+        return a.order - b.order;
+      });
     }
 
     this.logoSrcPath = `${this.environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
@@ -307,7 +283,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   setClassicLinkPath(path: string): void {
-    const basePath = '/ginas/app/';
+    const basePath = this.clasicBaseHref;
 
     const pathDictionary = {
       '/home': '',

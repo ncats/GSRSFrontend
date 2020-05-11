@@ -8,13 +8,16 @@ import { SubstanceFormServiceBase } from '../base-classes/substance-form-service
 @Injectable({
   providedIn: SubstanceFormConstituentsModule
 })
-export class SubstanceFormConstituentsService extends SubstanceFormServiceBase {
+export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<Array<Constituent>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<Constituent>>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.specifiedSubstance.constituents == null) {

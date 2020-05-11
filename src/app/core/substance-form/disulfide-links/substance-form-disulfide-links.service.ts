@@ -5,16 +5,17 @@ import { DisulfideLink, Site } from '@gsrs-core/substance/substance.model';
 import { ReplaySubject, Observable } from 'rxjs';
 import { SubstanceFormModule } from '../substance-form.module';
 
-@Injectable({
-  providedIn: SubstanceFormModule
-})
-export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase {
+@Injectable()
+export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase<Array<DisulfideLink>> {
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    this.propertyEmitter = new ReplaySubject<Array<DisulfideLink>>();
+  }
+
+  initSubtanceForm(): void {
+    super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.protein) {
@@ -24,12 +25,12 @@ export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase
         this.substanceFormService.resetState();
         this.propertyEmitter.next(this.substance.protein.disulfideLinks);
       }
+      const linksUpdatedSubscription = this.substanceFormService.disulfideLinksUpdated().subscribe(disulfideLinks => {
+        this.propertyEmitter.next(disulfideLinks);
+      });
+      this.subscriptions.push(linksUpdatedSubscription);
     });
     this.subscriptions.push(subscription);
-    const linksUpdatedSubscription = this.substanceFormService.disulfideLinksUpdated().subscribe(disulfideLinks => {
-      this.propertyEmitter.next(disulfideLinks);
-    });
-    this.subscriptions.push(linksUpdatedSubscription);
   }
 
   get substanceDisulfideLinks(): Observable<Array<DisulfideLink>> {
