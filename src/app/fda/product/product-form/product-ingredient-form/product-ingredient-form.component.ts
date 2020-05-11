@@ -32,12 +32,10 @@ export class ProductIngredientFormComponent implements OnInit {
   @Input() prodComponentIndex: number;
   @Input() prodLotIndex: number;
 
-  dosageFormList: Array<VocabularyTerm> = [];
-  colorList: Array<VocabularyTerm> = [];
-  flavorList: Array<VocabularyTerm> = [];
-  shapeList: Array<VocabularyTerm> = [];
-  scoringList: Array<VocabularyTerm> = [];
-  reviewProductMessage: Array<any> = [];
+  ingredientTypeList: Array<VocabularyTerm> = [];
+  unitList: Array<VocabularyTerm> = [];
+  gradeList: Array<VocabularyTerm> = [];
+  releaseCharacteristicList: Array<VocabularyTerm> = [];
   productMessage = '';
   username = null;
   ingredientName: string;
@@ -64,14 +62,12 @@ export class ProductIngredientFormComponent implements OnInit {
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('DOSAGE_FORM', 'PROD_CHARACTER_COLOR', 'PROD_CHARACTER_FLAVOR',
-      'PROD_CHARACTER_SHAPE', 'PROD_CHARACTER_FRAGMENTS').subscribe(response => {
-        this.dosageFormList = response['DOSAGE_FORM'].list;
-        this.colorList = response['PROD_CHARACTER_COLOR'].list;
-        this.flavorList = response['PROD_CHARACTER_FLAVOR'].list;
-        this.shapeList = response['PROD_CHARACTER_SHAPE'].list;
-        this.scoringList = response['PROD_CHARACTER_FRAGMENTS'].list;
-      });
+    this.cvService.getDomainVocabulary('INGREDIENT_TYPE', 'PROD_UNIT', 'PROD_GRADE').subscribe(response => {
+      this.ingredientTypeList = response['INGREDIENT_TYPE'].list;
+      this.unitList = response['PROD_UNIT'].list;
+      this.gradeList = response['PROD_GRADE'].list;
+      this.releaseCharacteristicList = response['PROD_RELEASE_CHARACTERISTIC'].list;
+    });
   }
 
   confirmDeleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number) {
@@ -236,4 +232,7 @@ export class ProductIngredientFormComponent implements OnInit {
     this.basisOfStrengthMessage = message;
   }
 
+  copyProductIngredient() {
+    this.productService.copyProductIngredient(this.ingredient, this.prodComponentIndex, this.prodLotIndex);
+  }
 }

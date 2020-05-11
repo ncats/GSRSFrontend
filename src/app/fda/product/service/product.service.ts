@@ -241,14 +241,21 @@ export class ProductService extends BaseHttpService {
     this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.splice(prodIngredientIndex, 1);
   }
 
-  /*
-
-  copyProduct(product: any): void {
-    const newProduct = JSON.parse(JSON.stringify(product));
-    newProduct.reviewedBy = null;
-    newProduct.reviewDate = null;
-    this.application.applicationProductList.unshift(newProduct);
+  copyProductComponent(productComp: any): void {
+    const newProduct = JSON.parse(JSON.stringify(productComp));
+    this.product.productComponentList.unshift(newProduct);
   }
+
+  copyProductLot(productLot: any, prodComponentIndex: number): void {
+    const newProduct = JSON.parse(JSON.stringify(productLot));
+    this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProduct);
+  }
+
+  copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
+    const newProduct = JSON.parse(JSON.stringify(productIngredient));
+    this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProduct);
+  }
+   /*
 
   reviewProduct(prodIndex: number): void {
     //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);

@@ -63,10 +63,10 @@
             <!--
             <br>
             <div>
-              <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Create Date:</span>
               {{application.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Modify Date:</span> {{application.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
             </div>
           -->
@@ -293,21 +293,23 @@
 
               <!-- PRODUCT CODE LIST -->
               <div class="marginbottom10px" *ngFor="let prodCode of product.productCodeList; let prodCodeIndex = index">
-                <div class="row">
-                  <mat-form-field class="">
-                    <input matInput placeholder="Product Code" [(ngModel)]="prodCode.productCode" name="productCode" />
-                  </mat-form-field>
+                <div class="divflexrow">
+                  <div class="row">
+                    <mat-form-field class="col-4-5">
+                      <input matInput placeholder="Product Code" [(ngModel)]="prodCode.productCode"
+                        name="productCode" />
+                    </mat-form-field>
 
-                  <mat-form-field class="">
-                    <mat-label>Product Code Type</mat-label>
-                    <mat-select matNativeControl [(ngModel)]="prodCode.productCodeType" name="productCodeType">
-                      <mat-option *ngFor="let productCodeType of productCodeTypeList" [value]="productCodeType.value">
-                        {{productCodeType.display}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                    <mat-form-field class="col-1-5">
+                      <mat-label>Product Code Type</mat-label>
+                      <mat-select matNativeControl [(ngModel)]="prodCode.productCodeType" name="productCodeType">
+                        <mat-option *ngFor="let productCodeType of productCodeTypeList" [value]="productCodeType.value">
+                          {{productCodeType.display}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
 
-                  &nbsp;&nbsp;
                   <!-- Add and Delete Product Code Button -->
                   <span class="width40px displayinlineblock">
                     <button mat-icon-button color="primary" *ngIf="prodCodeIndex == 0" (click)="addNewProductCode()"
@@ -326,50 +328,57 @@
 
 
               <!-- PRODUCT COMPANY LIST -->
-              <div class="marginbottom10px"
-                *ngFor="let prodCompany of product.productCompanyList; let prodCompanyIndex = index">
-                <div class="row">
-                  <mat-form-field class="">
-                    <input matInput placeholder="Company Name" [(ngModel)]="prodCompany.companyName"
-                      name="companyName" />
-                  </mat-form-field>
-                  <mat-form-field class="">
-                    <input matInput placeholder="Company Address" [(ngModel)]="prodCompany.companyAddress"
-                      name="companyAddress" />
-                  </mat-form-field>
-                  <mat-form-field class="">
-                    <mat-label>Company Role</mat-label>
-                    <mat-select matNativeControl [(ngModel)]="prodCompany.productCompanyRole" name="productCompanyRole">
-                      <mat-option *ngFor="let productCompanyRole of productCompanyRoleList"
-                        [value]="productCompanyRole.value">
-                        {{productCompanyRole.display}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                  <mat-form-field class="">
-                    <input matInput placeholder="Company Code" [(ngModel)]="prodCompany.companyCode"
-                      name="companyCode" />
-                  </mat-form-field>
-                  <mat-form-field class="">
-                    <mat-label>Company Code Type</mat-label>
-                    <mat-select matNativeControl [(ngModel)]="prodCompany.companyCodeType" name="companyCodeType">
-                      <mat-option *ngFor="let companyCodeType of companyCodeTypeList" [value]="companyCodeType.value">
-                        {{companyCodeType.display}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                  &nbsp;&nbsp;
-                  <!-- Add and Delete Product Code Button -->
-                  <span class="width40px displayinlineblock">
-                    <button mat-icon-button color="primary" *ngIf="prodCompanyIndex == 0"
-                      (click)="addNewProductCompany()" matTooltip="Add New Company">
-                      <mat-icon>add_circle_outline</mat-icon>
+              <div class="">
+                <div class="marginbottom10px"
+                  *ngFor="let prodCompany of product.productCompanyList; let prodCompanyIndex = index">
+                  <div class="divflexrow">
+                    <div class="row">
+                      <mat-form-field class="col-1-5">
+                        <input matInput placeholder="Company Name" [(ngModel)]="prodCompany.companyName"
+                          name="companyName" />
+                      </mat-form-field>
+                      <mat-form-field class="col-1-5">
+                        <input matInput placeholder="Company Address" [(ngModel)]="prodCompany.companyAddress"
+                          name="companyAddress" />
+                      </mat-form-field>
+                      <mat-form-field class="col-1-5">
+                        <mat-label>Company Role</mat-label>
+                        <mat-select matNativeControl [(ngModel)]="prodCompany.productCompanyRole"
+                          name="productCompanyRole">
+                          <mat-option *ngFor="let productCompanyRole of productCompanyRoleList"
+                            [value]="productCompanyRole.value">
+                            {{productCompanyRole.display}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field class="col-1-5">
+                        <input matInput placeholder="Company Code" [(ngModel)]="prodCompany.companyCode"
+                          name="companyCode" />
+                      </mat-form-field>
+                      <mat-form-field class="col-1-5">
+                        <mat-label>Company Code Type</mat-label>
+                        <mat-select matNativeControl [(ngModel)]="prodCompany.companyCodeType" name="companyCodeType">
+                          <mat-option *ngFor="let companyCodeType of companyCodeTypeList"
+                            [value]="companyCodeType.value">
+                            {{companyCodeType.display}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+
+                    <!-- Add and Delete Product Code Button -->
+                    <span class="width40px displayinlineblock">
+                      <button mat-icon-button color="primary" *ngIf="prodCompanyIndex == 0"
+                        (click)="addNewProductCompany()" matTooltip="Add New Company">
+                        <mat-icon>add_circle_outline</mat-icon>
+                      </button>
+                    </span>
+                    <button mat-icon-button color="primary" [disabled]="product.productCompanyList.length == 1"
+                      (click)="confirmDeleteProductCompany(prodCompanyIndex)" matTooltip="Delete Product Company">
+                      <mat-icon [class.disabled]="product.productCompanyList.length == 1">delete_forever</mat-icon>
                     </button>
-                  </span>
-                  <button mat-icon-button color="primary" [disabled]="product.productCompanyList.length == 1"
-                    (click)="confirmDeleteProductCompany(prodCompanyIndex)" matTooltip="Delete Product Company">
-                    <mat-icon [class.disabled]="product.productCompanyList.length == 1">delete_forever</mat-icon>
-                  </button>
+                  </div>
                 </div>
               </div>
               <!-- ngFor product Company List END -->
@@ -380,7 +389,6 @@
                 <br>
                 <hr>
                 <br>
-                <span class="titlegreen"></span>
                 <span matBadge="{{product.productComponentList.length}}" matBadgeOverlap="false">
                   <span class="titlegreen">MANUFACTURE ITEM </span>
                 </span>
@@ -391,7 +399,7 @@
                 </button>
                 <br><br>
 
-                <div class="boxshadow marginbottom10px"
+                <div class="marginbottom10px"
                   *ngFor="let productComponent of product.productComponentList; let prodComponentIndex = index">
                   <app-product-component-form [productComponent]="productComponent"
                     [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex">

@@ -14,7 +14,7 @@
 
   <div *ngFor="let product of application.applicationProductList; let prodIndex = index">
 
-    <!-- Buttons: delete, review -->
+    <!-- Buttons: delete, copy, review -->
     <div class="marginbottomminus17px padleft250px">
       <button mat-icon-button [ngStyle]="{'color':'green'}" [disabled]="application.applicationProductList.length == 1"
         (click)="confirmDeleteProduct(prodIndex)" matTooltip="Delete Product Details {{prodIndex + 1}}">

@@ -80,4 +80,8 @@ export class ProductLotFormComponent implements OnInit {
     this.productService.addNewProductIngredient(prodComponentIndex, prodLotIndex);
   }
 
+  copyProductLot() {
+    this.productService.copyProductLot(this.productLot, this.prodComponentIndex);
+  }
+
 }

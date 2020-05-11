@@ -91,6 +91,16 @@
   width: 100%;
 }
 
+.col-1-4 {
+  /* width: 159.333px; */
+  width: calc((100% - 20px * 3) / 4);
+  margin-right: 20px;
+}
+
+.col-1-4:last-child {
+  margin-right: 0px;
+}  
+
 .backgroundgray {
   background-color: gray;
 }
@@ -175,7 +185,13 @@
   width: 200px;
 }
 
-.title1 {
+.titlegreen {
+  color: green;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.titleorange {
   color: orangered;
   font-size: 17px;
   font-weight: 500;
@@ -191,7 +207,7 @@ hr {
 }
 
 fieldset.border {
-  border: solid 1px rgb(245, 173, 40) !important;
+  border: solid 1px #5f391c !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   min-width: 0;  /* override the default value of min-content */

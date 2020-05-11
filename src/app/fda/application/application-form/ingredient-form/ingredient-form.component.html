@@ -19,15 +19,16 @@
     By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
   </span>
 
-  <!--
+
   &nbsp;&nbsp;&nbsp;
-  <span class="font11px">
-    <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;
-    {{ingredient.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-    <span class="colorgray">Modified By:</span> {{ingredient.modifiedBy}}&nbsp;&nbsp;&nbsp;
-    {{ingredient.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+  <span class="font11px" *ngIf="ingredient">
+    <span *ngIf="ingredient.id">
+      <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;
+      {{ingredient.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+      <span class="colorgray">Modified By:</span> {{ingredient.modifiedBy}}&nbsp;&nbsp;&nbsp;
+      {{ingredient.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+    </span>
   </span>
-   -->
 </div>
 
 <!-- Ingredient Details -->
@@ -166,6 +167,6 @@
       <input matInput placeholder="Non-Numeric Value" [(ngModel)]="ingredient.nonNumericValue" name="nonNumericValue" />
     </mat-form-field>
   </div> <!-- row-->
-  
+
 </fieldset>
 <br>

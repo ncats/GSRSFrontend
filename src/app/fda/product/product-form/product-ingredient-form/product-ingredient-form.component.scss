@@ -22,6 +22,50 @@
   /* align-items: flex-end; */
 }
 
+.row {
+  width: 100%;
+}
+
+.col-1-4 {
+  /* width: 159.333px; */
+  width: calc((100% - 20px * 3) / 4);
+  margin-right: 20px;
+}
+
+.col-1-4:last-child {
+  margin-right: 0px;
+}  
+
+.col-half-4 {
+  /* width: 159.333px; */
+  width: calc((100% - 20px * 7) / 8);
+  margin-right: 20px;
+}
+
+.col-half-4:last-child {
+  margin-right: 0px;
+}  
+
+.col-2-4 {
+  /* width: 159.333px; */
+  width: calc((100% - 20px * 1) / 2);
+  margin-right: 20px;
+}
+
+.col-2-4:last-child {
+  margin-right: 0px;
+}  
+
+.col-1-5 {
+  /* width: 159.333px; */
+  width: calc((100% - 20px * 4) / 5);
+  margin-right: 20px;
+}
+
+.col-1-5:last-child {
+  margin-right: 0px;
+}  
+
 .bordergray {
   border: 1px solid gray;
 }
@@ -86,8 +130,8 @@
   margin-bottom: -17px;
 }
 
-.padleft250px {
-  padding-left: 250px;
+.padleft220px {
+  padding-left: 220px;
 }
 
 .padbottom0px {
@@ -104,7 +148,7 @@ hr {
 }
 
 fieldset.border {
-  border: solid 1px green !important;
+  border: solid 1px rgb(230, 115, 22) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 8px;
@@ -130,6 +174,31 @@ legend.border {
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+  text-align: left;
+}
+
+.related-substance {
+  max-width: 25%;
+  width: 25%;
+}
+
+::ng-deep .selected-substance {
+  display: flex;
+  flex-direction: column;
+  text-align: left !important;
+  position: relative;
+  img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-width: 200px;
+  }
 }
 
 .formfieldwidth {

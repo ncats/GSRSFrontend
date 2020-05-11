@@ -1,15 +1,16 @@
 <!-- Buttons: delete, review -->
-<div class="marginbottomminus17px padleft235px">
+<div class="marginbottomminus17px padleft220px">
   <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="totalIngredient == 1"
-    (click)="confirmDeleteProductIngredient(prodComponentIndex, prodLotIndex, prodIngredientIndex)" matTooltip="Delete Ingredient Details {{prodIngredientIndex + 1}}">
+    (click)="confirmDeleteProductIngredient(prodComponentIndex, prodLotIndex, prodIngredientIndex)"
+    matTooltip="Delete Ingredient Details {{prodIngredientIndex + 1}}">
     <mat-icon [class.disabled]="totalIngredient == 1">delete_forever</mat-icon>
   </button>
   &nbsp;&nbsp;
+  <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyProductIngredient()"
+    matTooltip="Copy Ingredient Details {{ingredIndex + 1}} to New Ingredient">
+    <mat-icon>file_copy</mat-icon>
+  </button>
   <!--
-    <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyIngredient(ingredient, prodIndex)"
-      matTooltip="Copy Ingredient Details {{ingredIndex + 1}} to New Ingredient">
-      <mat-icon>file_copy</mat-icon>
-    </button>
     &nbsp;&nbsp;
     <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
       matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
@@ -22,146 +23,153 @@
 </div>
 
 
-  <!-- Display Ingredient -->
-  <fieldset class="border">
-    <legend class="border">Ingredient Details&nbsp;<b><span
-          class="colorgreen font17px">{{prodIngredientIndex + 1}}</span></b>
-    </legend>
-  
-    <div class="divflexrow">
-      <mat-form-field class="col-1 width200px">
-        <input matInput placeholder="Applicant Ingredient Name" [(ngModel)]="ingredient.applicantIngredName"
-          name="applicantIngredName" />
-      </mat-form-field>
-  
-      <!-- Ingredient Name -->
-      <div class="flex-column related-substance">
-        <div class="related-substance-border">
-          <app-substance-search-selector (selectionUpdated)="ingredientNameUpdated($event)"
-            (showMessage)="showMessageIngredientName($event)" eventCategory="ingredName" placeholder="Ingredient Name"
-            header="Ingredient Name" [subuuid]="ingredientNameSubstanceUuid">
-          </app-substance-search-selector>
-  
-          <div *ngIf="ingredientNameMessage" class="colorred font12px">
-            {{ingredientNameMessage}}
-          </div>
-  
-          <!-- Display Ingredient Name -->
-          <div class="padall5px fontfamilyhelvetica">
-            <div *ngIf="ingredientName">
-              <span class="colormaroon"><b>{{ingredientName}}</b></span>
-              <br>
-              <!-- Display Active Moiety -->
-              <div *ngFor="let active of ingredientNameActiveMoiety; let activeIndex = index">
-                {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
-              </div>
-            </div>
-            <div *ngIf="ingredient.bdnum">
-              <span class="colororange">{{ingredient.bdnum}}</span><span class="colorgray font11px"> (Bdnum)</span>
-              <br>
-              <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName(ingredIndex)"
-                matTooltip="Delete Ingredient Name {{ingredIndex + 1}}">
-                <mat-icon>delete_forever</mat-icon>
-              </button>
+<!-- Display Ingredient -->
+<fieldset class="border">
+  <legend class="border">Ingredient Details&nbsp;<b><span
+        class="colorgreen font17px">{{prodIngredientIndex + 1}}</span></b>
+  </legend>
+
+  <div class="divflexrow">
+    <!-- Ingredient Name -->
+    <div class="col-1-4 flex-column related-substance">
+      <div class="related-substance-border">
+        <app-substance-search-selector (selectionUpdated)="ingredientNameUpdated($event)"
+          (showMessage)="showMessageIngredientName($event)" eventCategory="ingredName" placeholder="Ingredient Name"
+          header="Ingredient Name" [subuuid]="ingredientNameSubstanceUuid">
+        </app-substance-search-selector>
+
+        <div *ngIf="ingredientNameMessage" class="colorred font12px">
+          {{ingredientNameMessage}}
+        </div>
+
+        <!-- Display Ingredient Name Details -->
+        <div class="padall5px fontfamilyhelvetica">
+          <div *ngIf="ingredientName">
+            <span class="colormaroon"><b>{{ingredientName}}</b></span>
+            <br>
+            <!-- Display Active Moiety -->
+            <div *ngFor="let active of ingredientNameActiveMoiety; let activeIndex = index">
+              {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
           </div>
-  
+          <div *ngIf="ingredient.bdnum">
+            <span class="colororange">{{ingredient.bdnum}}</span><span class="colorgray font11px"> (Bdnum)</span>
+            <br>
+            <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName(ingredIndex)"
+              matTooltip="Delete Ingredient Name {{ingredIndex + 1}}">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
-  
-      <!-- Basis of Strength -->
-      <div class="flex-column related-substance">
-        <div class="related-substance-border">
-          <app-substance-search-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
-            (showMessage)="showMessageBasisOfStrength($event)" eventCategory="substanceRelationshipRelatedSub"
-            placeholder="Basis Of Strength" header="Basis Of Strength" [subuuid]="basisofStrengthSubstanceUuid">
-          </app-substance-search-selector>
-  
-          <div *ngIf="basisOfStrengthMessage" class="colorred font12px">
-            {{basisOfStrengthMessage}}
-          </div>
-  
-          <div class="padall5px fontfamilyhelvetica">
-            <div *ngIf="basisOfStrengthName">
-              <span class="colormaroon"><b>{{basisOfStrengthName}}</b></span>
-              <br>
-              <!-- Display Active Moiety -->
-              <div *ngFor="let active of basisOfStrengthActiveMoiety; let activeIndex = index">
-                {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
-              </div>
-            </div>
-  
-            <div *ngIf="ingredient.basisOfStrengthBdnum">
-              <span class="colororange">{{ingredient.basisOfStrengthBdnum}}</span><span class="colorgray font11px">
-                (Bdnum)</span>
-              <br>
-              <button mat-icon-button color="primary" (click)="confirmDeleteBasisOfStrength(ingredIndex)"
-                matTooltip="Delete Basis of Strength {{ingredIndex + 1}}">
-                <mat-icon>delete_forever</mat-icon>
-              </button>
+    </div>
+
+    <!-- Basis of Strength -->
+    <div class="col-1-4 flex-column related-substance">
+      <div class="related-substance-border">
+        <app-substance-search-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
+          (showMessage)="showMessageBasisOfStrength($event)" eventCategory="substanceRelationshipRelatedSub"
+          placeholder="Basis Of Strength" header="Basis Of Strength" [subuuid]="basisofStrengthSubstanceUuid">
+        </app-substance-search-selector>
+
+        <div *ngIf="basisOfStrengthMessage" class="colorred font12px">
+          {{basisOfStrengthMessage}}
+        </div>
+
+        <!-- Display Basis of Strength Details -->
+        <div class="padall5px fontfamilyhelvetica">
+          <div *ngIf="basisOfStrengthName">
+            <span class="colormaroon"><b>{{basisOfStrengthName}}</b></span>
+            <br>
+            <!-- Display Active Moiety -->
+            <div *ngFor="let active of basisOfStrengthActiveMoiety; let activeIndex = index">
+              {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
           </div>
-  
+
+          <div *ngIf="ingredient.basisOfStrengthBdnum">
+            <span class="colororange">{{ingredient.basisOfStrengthBdnum}}</span><span class="colorgray font11px">
+              (Bdnum)</span>
+            <br>
+            <button mat-icon-button color="primary" (click)="confirmDeleteBasisOfStrength(ingredIndex)"
+              matTooltip="Delete Basis of Strength {{ingredIndex + 1}}">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
-  
-      <mat-form-field class="">
-        <mat-label>Grade</mat-label>
-        <mat-select matNativeControl [(ngModel)]="ingredient.grade" name="grade">
-          <mat-option *ngFor="let grade of gradeList" [value]="grade.value">
-            {{grade.display}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div> <!-- row-->
-  
+    </div>
 
-    <div class="row margintop10px">
-      <mat-form-field class="col-2">
-        <mat-label>Ingredient Type</mat-label>
-        <mat-select matNativeControl [(ngModel)]="ingredient.ingredientType" name="ingredientType">
-          <mat-option *ngFor="let ingredientType of ingredientTypeList" [value]="ingredientType.value">
-            {{ingredientType.display}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-  
-      <mat-form-field class="col-1">
-        <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
-      </mat-form-field>
-  
-      <mat-form-field class="col-1">
-        <input matInput placeholder="Low" [(ngModel)]="ingredient.low" name="low" />
-      </mat-form-field>
-  
-      <mat-form-field class="col-1">
-        <input matInput placeholder="High" [(ngModel)]="ingredient.high" name="high" />
-      </mat-form-field>
-  
-      <mat-form-field class="col-1">
-        <input matInput placeholder="Low Limit" [(ngModel)]="ingredient.lowLimit" name="lowLimit" />
-      </mat-form-field>
-  
-      <mat-form-field class="col-1">
-        <input matInput placeholder="High Limit" [(ngModel)]="ingredient.highLimit" name="highLimit" />
-      </mat-form-field>
+    <mat-form-field class="col-1-4">
+      <mat-label>Grade</mat-label>
+      <mat-select matNativeControl [(ngModel)]="ingredient.grade" name="grade">
+        <mat-option *ngFor="let grade of gradeList" [value]="grade.value">
+          {{grade.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-      <mat-form-field class="col-1">
-        <input matInput placeholder="Ingredient Location" [(ngModel)]="ingredient.ingredientLocation" name="ingredientLocation" />
-      </mat-form-field>
-  
-      <mat-form-field class="col-1">
-        <mat-label>Unit</mat-label>
-        <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
-          <mat-option *ngFor="let unit of unitList" [value]="unit.value">
-            {{unit.display}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-  
-      <mat-form-field class="col-1">
-        <input matInput placeholder="Non-Numeric Value" [(ngModel)]="ingredient.nonNumericValue" name="nonNumericValue" />
-      </mat-form-field>
-    </div> <!-- row-->
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Ingredient Location" [(ngModel)]="ingredient.ingredientLocation"
+        name="ingredientLocation" />
+    </mat-form-field>
 
-  </fieldset>
+  </div> <!-- row-->
+
+  <div class="row margintop10px">
+    <mat-form-field class="col-1-4">
+      <mat-label>Ingredient Type</mat-label>
+      <mat-select matNativeControl [(ngModel)]="ingredient.ingredientType" name="ingredientType">
+        <mat-option *ngFor="let ingredientType of ingredientTypeList" [value]="ingredientType.value">
+          {{ingredientType.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
+    </mat-form-field>
+
+    <mat-form-field class="col-half-4">
+      <input matInput placeholder="Low" [(ngModel)]="ingredient.low" name="low" />
+    </mat-form-field>
+
+    <mat-form-field class="col-half-4">
+      <input matInput placeholder="High" [(ngModel)]="ingredient.high" name="high" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <mat-label>Unit</mat-label>
+      <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
+        <mat-option *ngFor="let unit of unitList" [value]="unit.value">
+          {{unit.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field class="col-1-4">
+      <mat-label>Release Characteristics</mat-label>
+      <mat-select matNativeControl [(ngModel)]="ingredient.releaseCharacteristic" name="releaseCharacteristic">
+        <mat-option *ngFor="let releaseCharacteristic of releaseCharacteristicList"
+          [value]="releaseCharacteristic.value">
+          {{releaseCharacteristic.display}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.Manufacturer" name="Manufacturer" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Lot No" [(ngModel)]="ingredient.ingredLotNo" name="ingredLotNo" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Notes" [(ngModel)]="ingredient.notes" name="notes " />
+    </mat-form-field>
+  </div> <!-- row-->
+
+</fieldset>

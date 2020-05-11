@@ -43,6 +43,17 @@
    /*padding-left: 70px; */
 }
 
+.titlegreen {
+  color: green;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.titleorange {
+  color: orangered;
+  font-size: 17px;
+  font-weight: 500;
+}
 
 .mat-card {
   max-width: 1140px;
@@ -72,45 +83,25 @@
   margin-right: 0px;
 }  
 
-.col-3 {
-  /* width: 538px; calc() value*/ 
-  width: calc((100% - 30px * 1) / 2);
-  margin-right: 30px;
-}
-
-.col-3:last-child {
-  margin-right: 0px;
-}  
-
-.col-4 {
-  /* width: 724px; calc() value*/ 
-  width: calc((100% - 20px) / (6/4));
+.col-1-5 {
+  /* width: 159.333px; */
+  width: calc((100% - 20px * 4) / 5);
   margin-right: 20px;
 }
 
-.col-4:last-child {
+.col-1-5:last-child {
   margin-right: 0px;
 }  
 
-.col-5 {
-  /* width: 913.333px; calc() value*/ 
-  width: calc((100% - 10px) / (6/5));
-  margin-right: 10px;
+.col-4-5 {
+  /* width: 159.333px; */
+  width: calc((100% - 5px) / (5/4));
+  margin-right: 20px;
 }
 
-.col-5:last-child {
+.col-4-5:last-child {
   margin-right: 0px;
 }  
-
-.col-5-more {
-  /* width: calc() value*/ 
-  width: calc((100% + 100px) / (6/5));
-  margin-right: 10px;
-}
-
-.col-6 {
-  width: 100%;
-}
 
 .validate-button{
   margin-left:15px;
@@ -289,6 +280,10 @@
 
 .colorgray {
   color: gray;
+}
+
+.width95percent {
+  width: 95%;
 }
 
 .width40px {

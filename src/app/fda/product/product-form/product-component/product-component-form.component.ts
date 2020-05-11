@@ -61,7 +61,7 @@ export class ProductComponentFormComponent implements OnInit {
 
   confirmDeleteComponent(prodComponentIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Product Component Details ' + (prodComponentIndex + 1) + ' data?'
+      data: 'Are you sure you want to delete Manufacture Item Details ' + (prodComponentIndex + 1) + ' data?'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -77,6 +77,10 @@ export class ProductComponentFormComponent implements OnInit {
 
   addNewProductLot(prodComponentIndex: number) {
     this.productService.addNewProductLot(prodComponentIndex);
+  }
+
+  copyProductComponent() {
+    this.productService.copyProductComponent(this.productComponent);
   }
 
   /*
