@@ -40,6 +40,9 @@
       ],
       "@gsrs-core/*": [
         "src/app/core/*"
+      ],
+      "@environment/*": [
+        "src/environments/*"
       ]
     }
   },

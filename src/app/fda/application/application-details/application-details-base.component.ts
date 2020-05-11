@@ -7,7 +7,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { SafeUrl } from '@angular/platform-browser';
-import { environment } from '../../../core/environments/environment';
+import { environment } from '../../../../environments/environment';
 // import { AuthService } from '@gsrs-core/auth/auth.service';
 
 @Component({

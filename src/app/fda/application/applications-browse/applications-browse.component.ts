@@ -15,7 +15,7 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
-import { Environment } from '@gsrs-core/environments/environment.model';
+import { Environment } from 'src/environments/environment.model';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';

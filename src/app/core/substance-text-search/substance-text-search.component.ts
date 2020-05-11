@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { environment } from '../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-substance-text-search',

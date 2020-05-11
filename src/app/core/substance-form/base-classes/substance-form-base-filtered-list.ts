@@ -2,7 +2,7 @@ import { SubstanceFormBase } from './substance-form-base';
 import { PageEvent } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 export class SubstanceCardBaseFilteredList<T> extends SubstanceFormBase {
     filtered: Array<T>;

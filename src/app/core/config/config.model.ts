@@ -12,6 +12,7 @@ export interface Config {
     codeSystemOrder?: Array<string>;
     contactEmail?: string;
     defaultCodeSystem?: string;
+    navItems?: Array<NavItem>;
 }
 
 export interface SubstanceDetailsCard {
@@ -28,4 +29,11 @@ export interface SubstanceCardFilterParameters {
     value?: any;
     propertyInArray?: string;
     order?: number;
+}
+
+export interface NavItem {
+    display: string;
+    path?: string;
+    order?: number;
+    children?: Array<NavItem>;
 }

@@ -1,5 +1,5 @@
 import { Directive, HostListener, Input } from '@angular/core';
-import { Environment } from '../../environments/environment.model';
+import { Environment } from '../../../../environments/environment.model';
 import { GoogleAnalyticsService } from '../google-analytics.service';
 import { ConfigService } from '../../config/config.service';
 

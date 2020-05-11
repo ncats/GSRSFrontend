@@ -12,7 +12,7 @@ import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { StructureImageModalComponent } from '../structure/structure-image-modal/structure-image-modal.component';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { environment } from '../environments/environment';
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { searchSortValues } from '../utils/search-sort-values';
 import { OverlayContainer } from '@angular/cdk/overlay';

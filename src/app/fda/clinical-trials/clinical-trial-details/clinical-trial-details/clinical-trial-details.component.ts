@@ -6,7 +6,7 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component';
-import {environment} from '../../../../core/environments/environment';
+import {environment} from '../../../../../environments/environment';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 
 @Component({

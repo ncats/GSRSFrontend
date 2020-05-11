@@ -9,7 +9,7 @@ import { FacetsManagerService } from './facets-manager.service';
 import { AuthService } from '@gsrs-core/auth';
 import { ConfigService } from '@gsrs-core/config';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { Environment } from '@gsrs-core/environments/environment.model';
+import { Environment } from 'src/environments/environment.model';
 import { Location } from '@angular/common';
 import { DisplayFacet } from './display-facet';
 import { MatCheckboxChange } from '@angular/material/checkbox';
