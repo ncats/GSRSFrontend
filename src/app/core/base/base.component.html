@@ -43,7 +43,7 @@
         </ng-container>
       </div>
       <a mat-menu-item *ngIf="isAdmin" [href]="baseDomain + '/ginas/app/admin'" target="_blank">
-        Admin
+        Admin Panel
       </a>
       <a mat-menu-item [href]="'mailto:' + contactEmail">
         Contact Us
@@ -69,6 +69,9 @@
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
       <a mat-menu-item [href]="baseDomain + '/ginas/app/profile'" target="_blank">
         <span>Profile</span>
+      </a>
+      <a routerLink = "/admin" mat-menu-item *ngIf = "isAdmin">
+        <span>Admin Panel</span>
       </a>
       <button mat-menu-item (click)="authService.logout()">
         <span>Logout</span>

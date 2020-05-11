@@ -5,6 +5,7 @@ import { Observable, Subject, forkJoin, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { PagingResponse } from '../utils/paging-response.model';
 import { map, catchError, retry } from 'rxjs/operators';
+import { SubstanceHttpParams } from '@gsrs-core/substance';
 
 
 @Injectable({
@@ -53,13 +54,38 @@ export class AdminService extends BaseHttpService {
     }
     public getUserByName(name:string): Observable<any> {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get<any>(`${url}users/${name}`);
+      return this.http.get<any>(`${url}users/${encodeURIComponent(name)}`);
     }
 
     public getAllUsers(): Observable<any> {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
       return this.http.get<any>(`${url}users`);
     }
+
+    public editUser(user: any, name: any): Observable<any> {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.put<any>(`${url}users/${name}`, user);
+    }
+    public addUser(user: any): Observable<any> {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.post<any>(`${url}users/`, user);
+    }
+
+    public getGroups(): Observable<any> {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.get<any>(`${url}groups`);
+    }
+
+
+    public changePassword(oldpass: string, newpass: string, id:number): Observable<any> {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      let params = new SubstanceHttpParams();
+        params = params.appendDictionary({
+          oldPassword: oldpass,
+          newPassword: newpass,
+        });
+      return this.http.post<any>(`${url}users/${id}/password`, params);
+      }
 
 
 

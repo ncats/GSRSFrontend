@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -6,10 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
-
-  constructor() { }
+  activeTab: number;
+  constructor(
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    const tab = this.activatedRoute.snapshot.queryParams['function'] || 'cv';
+    console.log(tab);
+    switch (tab) {
+      case 'user': this.activeTab = 0; break;
+      case 'cv': this.activeTab = 2; console.log('2'); break;
+      case 'jobs': this.activeTab = 3; break;
+      case 'cache': this.activeTab = 4; break;
+      default: this.activeTab = 0; break;
   }
+  console.log(this.activeTab);
+}
 
 }
