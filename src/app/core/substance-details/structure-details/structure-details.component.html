@@ -29,6 +29,14 @@
       <div class="name">Charge</div>
       <div class="value gray-pill">{{structure.charge}}</div>
     </div>
+    <div class="name-value" *ngIf = "structure.atropisomerism" >
+      <div class="name">Additional stereochemistry</div>
+      <div class="value gray-pill">{{structure.atropisomerism}}</div>
+    </div>
+    <div class="name-value" *ngIf = "structure.stereoComments" >
+      <div class="name">Stereo Comments</div>
+      <div class="value stereo-comments">{{structure.stereoComments}}</div>
+    </div>
       <div class="name-value" *ngIf="structure.references?.length > 0" >
         <div class="name">
           <a (click)="toggleReferences()" class='blue-font references-link'>
