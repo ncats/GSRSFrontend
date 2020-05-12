@@ -56,7 +56,6 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
         const idealStructSubscription = this.substanceFormStructureService.substanceIdealizedStructure.subscribe(structure => {
-          console.log(structure);
           if (structure) {
             this.structure = structure;
           } else {
@@ -135,6 +134,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
   updateStructureForm(molfile: string): void {
     if (!this.isInitializing) {
+      this.structure.molfile = molfile;
       this.structureService.interpretStructure(molfile).subscribe(response => {
         this.processStructurePostResponse(response);
       });
@@ -154,7 +154,10 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
          // this is sometimes overly ambitious
          Object.keys(structurePostResponse.structure).forEach(key => {
-           this.structure[key] = structurePostResponse.structure[key];
+           //we don't want to do this with molfile, we want to trust the editor
+           if(key!=="molfile"){
+              this.structure[key] = structurePostResponse.structure[key];
+           }
          });
 
          this.structure.uuid = '';
