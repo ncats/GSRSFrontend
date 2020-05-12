@@ -681,7 +681,7 @@ export class SubstanceFormService implements OnDestroy {
         sequence: '',
         subunitIndex: index
       };
-      this.privateSubstance.protein.subunits.unshift(newSubunit);
+      this.privateSubstance.protein.subunits.push(newSubunit);
       this.displaySequencesEmitter.next(this.createSubunitDisplay());
       this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
     } else {
@@ -693,7 +693,7 @@ export class SubstanceFormService implements OnDestroy {
         sequence: '',
         subunitIndex: index
       };
-      this.privateSubstance.nucleicAcid.subunits.unshift(newSubunit);
+      this.privateSubstance.nucleicAcid.subunits.push(newSubunit);
       this.displaySequencesEmitter.next(this.createSubunitDisplay());
       this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
       this.emitSugarUpdate();
