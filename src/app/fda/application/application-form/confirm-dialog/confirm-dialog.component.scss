@@ -1,0 +1,28 @@
+.raw{
+  width:100%;
+  min-height:200px;
+}
+
+.formatted {
+  width:100%;
+}
+
+.raw-text {
+  min-height:400px;
+}
+
+.actions {
+  padding-bottom: 10px;
+}
+
+.actions-container {
+  max-width: 1028px;
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  display: flex;
+}
+
+.bordergray {
+  border: 1px solid gray;
+}

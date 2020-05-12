@@ -21,10 +21,16 @@
             <span *ngIf="application.fromTable === 'SRS'">
               <a [routerLink]="['/applicationDetails', application.id]" target="_blank">{{application.appType}}</a>
               &nbsp;&nbsp;
+              <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                matTooltip='Edit GSRS Application Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+              <!--
               <a [href]="updateApplicationUrl + application.id" target="_blank" *ngIf="isAdmin"
                 matTooltip='Edit GSRS Application Record'>
                 <mat-icon svgIcon="edit"></mat-icon>
               </a>
+            -->
             </span>
             <span *ngIf="application.fromTable != 'SRS'">
               <a [routerLink]="['/applicationDarrtsDetails', application.appType, application.appNumber]"

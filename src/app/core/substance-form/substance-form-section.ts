@@ -1,5 +1,5 @@
 import { ComponentRef, Output, EventEmitter } from '@angular/core';
-import { SubstanceFormBase } from './substance-form-base';
+import { SubstanceFormBase } from './base-classes/substance-form-base';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { MatExpansionPanel } from '@angular/material';
 

@@ -4,12 +4,13 @@ import { Observable, throwError, of } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
-import { ApplicationSrs } from '../model/application.model';
-import { ProductSrs } from '../model/application.model';
-import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
-import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { Facet } from '@gsrs-core/utils';
+import { ApplicationSrs, ValidationResults, ApplicationIngredient } from '../model/application.model';
+import { ApplicationIndicationSrs, ProductSrs, ProductNameSrs } from '../model/application.model';
+// import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
+// import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
+import { map, switchMap } from 'rxjs/operators';
+import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
+import { Facet } from '@gsrs-core/facets-manager';
 
 @Injectable(
   {
@@ -33,9 +34,9 @@ export class ApplicationService extends BaseHttpService {
     skip: number = 0,
     pageSize: number = 10,
     searchTerm?: string,
-    facets?: SubstanceFacetParam
+    facets?: FacetParam
   ): Observable<PagingResponse<ApplicationSrs>> {
-    let params = new SubstanceHttpParams();
+    let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
     if (searchTerm !== null && searchTerm !== '') {
@@ -56,9 +57,9 @@ export class ApplicationService extends BaseHttpService {
     skip: number = 0,
     pageSize: number = 10,
     searchTerm?: string,
-    facets?: SubstanceFacetParam
+    facets?: FacetParam
   ): string {
-    let params = new SubstanceHttpParams();
+    let params = new FacetHttpParams();
   //  params = params.append('skip', skip.toString());
   //  params = params.append('top', '1000');
     params = params.append('page', '1');
@@ -74,6 +75,18 @@ export class ApplicationService extends BaseHttpService {
     };
 
     return url;
+  }
+
+  getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    return this.http.get<FacetQueryResponse>(url);
   }
 
   filterFacets(name: string, category: string): Observable<any> {
@@ -177,6 +190,17 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  getSubstanceDetailsBySubstanceId(
+    substanceId: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   getApplicationCenterByBdnum(
     bdnum: string
   ): Observable<any> {
@@ -199,22 +223,147 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  getCurrentDate(
+  ): Observable<any> {
+    const url = this.baseUrl + 'getCurrentDateJson';
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        return results;
+      //  return results['data'];
+      })
+    );
+  }
+
   loadApplication(application?: ApplicationSrs): void {
-   // setTimeout(() => {
-      console.log('AAAAA');
-      if (application != null) {
-        this.application = application;
-        console.log('AFTER' + JSON.stringify(this.application));
-      } else {
-        this.application = {
-          applicationIndicationList: [],
-          applicationProductList: [{
-            applicationProductNameList: [],
-            applicationIngredientList: [{}]
-          }]
-        };
+    // if Update/Exist Application
+    // setTimeout(() => {
+    if (application != null) {
+      this.application = application;
+
+      // Add a new Indication if there is no indication record.
+      if (this.application.applicationIndicationList.length < 1) {
+        const newIndication: ApplicationIndicationSrs = {};
+        this.application.applicationIndicationList.unshift(newIndication);
       }
-  //  });
+
+      // Add a new Product Name if there is no Product Name record.
+     /* if (this.application.applicationProductList[0].applicationProductNameList.length < 1) {
+        const newProductNameSrs: ProductNameSrs = {};
+        this.application.applicationProductList[0].applicationProductNameList.unshift(newProductNameSrs);
+      }
+     */
+      //  console.log('AFTER' + JSON.stringify(this.application));
+    } else {
+      this.application = {
+        applicationIndicationList: [{}],
+        applicationProductList: [{
+          applicationProductNameList: [{}],
+          applicationIngredientList: [{}]
+        }]
+      };
+    }
+    //  });
+  }
+
+  saveApplication(): Observable<ApplicationSrs> {
+    const url = this.apiBaseUrl + `applicationssrs`;
+    const params = new HttpParams();
+    const options = {
+      params: params,
+      type: 'JSON',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    };
+  //  console.log('APP: ' + this.application);
+
+    // Update Application
+    if ((this.application != null) && (this.application.id)) {
+      return this.http.put<ApplicationSrs>(url, this.application, options);
+    } else {
+      // Save New Application
+      return this.http.post<ApplicationSrs>(url, this.application, options);
+    }
+  }
+
+  validateApplication(): Observable<ValidationResults> {
+    return new Observable(observer => {
+      this.validateApp().subscribe(results => {
+        observer.next(results);
+        observer.complete();
+      }, error => {
+        observer.error();
+        observer.complete();
+      });
+    });
+  }
+
+  validateApp(): Observable<ValidationResults> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/@validate`;
+    return this.http.post(url, this.application);
+  }
+
+  addNewIndication(): void {
+    const newIndication: ApplicationIndicationSrs = {};
+    this.application.applicationIndicationList.unshift(newIndication);
+  }
+
+  deleteIndication(indIndex: number): void {
+    this.application.applicationIndicationList.splice(indIndex, 1);
+  }
+
+  addNewProduct(): void {
+    const newProduct: ProductSrs = {
+      applicationProductNameList: [{}],
+      applicationIngredientList: [{}]
+    };
+
+    this.application.applicationProductList.unshift(newProduct);
+  }
+
+  addNewProductName(prodIndex: number): void {
+    const newProductName: ProductNameSrs = {};
+
+    this.application.applicationProductList[prodIndex].applicationProductNameList.unshift(newProductName);
+  }
+
+  deleteProduct(prodIndex: number): void {
+    this.application.applicationProductList.splice(prodIndex, 1);
+  }
+
+  deleteProductName(prodIndex: number, prodNameIndex: number): void {
+    this.application.applicationProductList[prodIndex].applicationProductNameList.splice(prodNameIndex, 1);
+  }
+
+  copyProduct(product: any): void {
+    const newProduct = JSON.parse(JSON.stringify(product));
+    newProduct.reviewedBy = null;
+    newProduct.reviewDate = null;
+    this.application.applicationProductList.unshift(newProduct);
+  }
+
+  reviewProduct(prodIndex: number): void {
+    //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
+  }
+
+  addNewIngredient(index: number): void {
+    const newIngredient: ApplicationIngredient = {};
+    this.application.applicationProductList[index].applicationIngredientList.unshift(newIngredient);
+  }
+
+  deleteIngredient(prodIndex: number, ingredIndex: number): void {
+    this.application.applicationProductList[prodIndex].applicationIngredientList.splice(ingredIndex, 1);
+  }
+
+  copyIngredient(ingredient: any, prodIndex: number): void {
+    const newIngredient = JSON.parse(JSON.stringify(ingredient));
+    newIngredient.reviewedBy = null;
+    newIngredient.reviewDate = null;
+    this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
+  }
+
+  reviewIngredient(prodIndex: number, ingredIndex: number): void {
+    //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
   }
 
   getJson() {

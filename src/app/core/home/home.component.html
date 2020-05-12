@@ -31,12 +31,12 @@
         <span *ngIf = "appId !== 'fda'">
                   <mat-divider></mat-divider>
 
-          <a mat-list-item routerLink="/browse-substance">
+          <a mat-list-item routerLink="/structure-search">
           <mat-icon matListIcon svgIcon="search"></mat-icon>
           Structure Search
         </a>
           <mat-divider></mat-divider>
-        <a mat-list-item routerLink="/browse-substance">
+        <a mat-list-item routerLink="/sequence-search">
           <mat-icon matListIcon svgIcon="search"></mat-icon>
           Sequence Search
         </a>
@@ -55,14 +55,14 @@
         </a>
         <mat-divider></mat-divider>
 
-        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=substance'">
+        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=substance'">
           <mat-icon matListIcon svgIcon="pageview"></mat-icon>
           Substance
           <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
         </a>
 
         <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=prod'">
+        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=prod'">
           <mat-icon matListIcon svgIcon="local-pharmacy"></mat-icon>
           Product
           <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
@@ -70,7 +70,7 @@
         </a>
 
         <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=app'">
+        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=app'">
           <mat-icon matListIcon svgIcon="find-in-page"></mat-icon>
           Application
           <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
@@ -78,7 +78,7 @@
         </a>
 
         <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=clinical'">
+        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=clinical'">
           <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
 
           Clinical Trial
@@ -87,7 +87,7 @@
         </a>
 
         <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=biomarker'">
+        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=biomarker'">
           <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
 
           Biomarker
@@ -96,7 +96,7 @@
         </a>
 
         <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=indication'">
+        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=indication'">
           <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
 
           Indication/Sponsor
@@ -105,7 +105,7 @@
         </a>
 
         <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch?t=adverse'">
+        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=adverse'">
           <mat-icon matListIcon svgIcon="note"></mat-icon>
 
 
@@ -114,7 +114,7 @@
         </a>
 
         <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + '/ginas/app/advancedSearch'">
+        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'">
           <mat-icon matListIcon svgIcon="youtube"></mat-icon>
 
           Advanced Search
@@ -194,7 +194,7 @@
               Specified Substance Group 1
             </a>
             <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG2'">
+            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG2'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Specified Substance Group 2
@@ -202,7 +202,7 @@
 
             </a>
             <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG3'">
+            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG3'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Specified Substance Group 3
@@ -210,7 +210,7 @@
 
             </a>
             <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG4'">
+            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Specified Substance Group 4
@@ -218,7 +218,7 @@
 
             </a>
             <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + '/ginas/app/wizard?kind=specifiedSubstanceG4Manufacturing'">
+            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4Manufacturing'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Specified Substance Group 4 Manufacturing
@@ -227,7 +227,7 @@
             </a>
             <span *ngIf = "appId === 'fda'">
             <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + '/ginas/app/registerProduct'">
+            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerProduct'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Product
@@ -235,21 +235,21 @@
 
             </a>
             <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + '/ginas/app/registerApplication'">
+            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerApplication'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Application
               <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
             </a>
             <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + '/ginas/app/registerBiomarker'">
+            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerBiomarker'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Biomarker
               <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
             </a>
             <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + '/ginas/app/registerIndication'">
+            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerIndication'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Indication

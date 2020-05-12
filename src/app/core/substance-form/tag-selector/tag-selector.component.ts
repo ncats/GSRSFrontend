@@ -35,6 +35,21 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.cvService.getDomainVocabulary(this.cvDomain).subscribe(response => {
         this.allOptions = response[this.cvDomain].list;
+        let inCV = false;
+        this.allOptions.forEach(option => {
+          if (option.display.toLowerCase() === 'other') {
+            inCV = true;
+          }
+        });
+        if (inCV === false) {
+          const other = {
+            display: 'Other',
+            value: 'Other',
+            filter: ' = ',
+            selected: false
+         };
+         this.allOptions.push(other);
+        }
         this.optionsDictionary = response[this.cvDomain].dictionary;
 
         this.filteredOptions = this.tagControl.valueChanges.pipe(

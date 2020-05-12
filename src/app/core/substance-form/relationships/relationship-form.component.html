@@ -1,0 +1,65 @@
+<div class="relationship-form-container">
+  <div *ngIf="relationship.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="flex-column related-substance">
+    <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+      eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" header="Related Substance"
+      [subuuid]="relatedSubstanceUuid">
+    </app-substance-selector>
+  </div>
+  <div class="flex-column form-content">
+    <div class="form-row">
+      <div class="delete-container">
+        <button mat-icon-button matTooltip="Delete relationship" (click)="deleteRelationship()">
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
+      <app-cv-input class = "type" required = 'true' domain = "RELATIONSHIP_TYPE"  title = "Type" name = "type"
+                    [model] = "relationship.type" (valueChange)= "relationship.type = $event">
+      </app-cv-input>
+
+      <div>
+        <app-access-manager (accessOut)="updateAccess($event)" [access]="relationship.access">
+        </app-access-manager>
+      </div>
+    </div>
+    <div class="form-row">
+      <app-cv-input class = "qualification" key = "Relationship Qualification"  title = "Qualification" name = "Qualification"
+                    [model] = "relationship.qualification" (valueChange)= "relationship.qualification = $event">
+      </app-cv-input>
+
+      <app-cv-input class = "interaction-type" key = "Relationship Interaction Type"  title = "Interaction Type" name = "Interaction Type"
+                    [model] = "relationship.interactionType" (valueChange)= "relationship.interactionType = $event">
+      </app-cv-input>
+
+    </div>
+    <div class="form-row">
+      <div class="comments">
+        <div class="textarea-label">Comments</div>
+        <textarea placeholder="Enter text here" [(ngModel)]="relationship.comments" name="comments">
+        </textarea>
+      </div>
+    </div>
+  </div>
+  <div class="flex-column mediator-substance">
+    <app-substance-selector (selectionUpdated)="mediatorSubstanceUpdated($event)"
+      eventCategory="substanceFormDefinitionType" placeholder="Mediator Substance" header="Mediator Substance"
+      [subuuid]="mediatorSubstanceUuid">
+    </app-substance-selector>
+  </div>
+</div>
+<div *ngIf="!relationship.$$deletedCode">
+  <div class="amount-form-container">
+    <div class="amount-title">Amount</div>
+    <app-amount-form [substanceAmount]="relationship.amount"></app-amount-form>
+  </div>
+  <div class="form-row">
+    <div class="references-container">
+      <app-domain-references [referencesUuids]="relationship.references" #references></app-domain-references>
+    </div>
+  </div>
+</div>

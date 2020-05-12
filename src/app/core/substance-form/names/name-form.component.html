@@ -1,0 +1,62 @@
+<div class="name-form-container">
+  <div *ngIf="name.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete name" (click)="deleteName()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+    <div class="radio-container column-radio">
+      <mat-radio-button name="priorityName" value="true" [checked]="name.displayName" (change)="priorityUpdated($event)"
+        matTooltip="Priority Name">
+        PN
+      </mat-radio-button>
+    </div>
+    <div class="checkbox-container column-checkbox">
+      <mat-checkbox [(ngModel)]="name.preferred" matTooltip="Additional Listing Name">
+        AL
+      </mat-checkbox>
+    </div>
+
+    <mat-form-field class="name">
+      <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" />
+    </mat-form-field>
+    <a class = "resolve" *ngIf = "name.name && name.name.length > 0 && substanceType === 'structure'" (click) = "resolve()" >resolve</a>
+
+    <app-cv-input required = 'true' class="name-type" key = "Name Type Code"  title = "Type" [model] = "name.type"
+                  (valueChange)= "name.type = $event">
+    </app-cv-input>
+    <div>
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="name.access">
+      </app-access-manager>
+    </div>
+  </div>
+  <div *ngIf="!name.$$deletedCode">
+    <div class="form-row">
+      <app-tag-selector class="tags" (tagsUpdate)="updateLanguages($event)" [tags]="name.languages" cvDomain="LANGUAGE"
+        placeholder="Languages">
+      </app-tag-selector>
+      <app-tag-selector class="domains" (tagsUpdate)="updateDomains($event)" [tags]="name.domains"
+        cvDomain="NAME_DOMAIN" placeholder="Domains">
+      </app-tag-selector>
+      <app-tag-selector class="jurisdiction" (tagsUpdate)="updateJurisdiction($event)" [tags]="name.nameJurisdiction"
+        cvDomain="JURISDICTION" placeholder="Jurisdiction">
+      </app-tag-selector>
+    </div>
+    <div class="form-row">
+      <div class="references-container">
+        <app-domain-references [referencesUuids]="name.references" #references></app-domain-references>
+      </div>
+    </div>
+    <div class="form-row" *ngIf="name.type == 'of'">
+      <div class="nameorgs-container">
+        <app-name-orgs [nameOrgs]="getNameOrgs(name)" #nameOrgs></app-name-orgs>
+      </div>
+    </div>
+  </div>
+</div>
