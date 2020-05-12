@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
-import { SubstanceFormModule } from '../substance-form.module';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
-import { ReplaySubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Linkage, Link } from '@gsrs-core/substance/substance.model';
 
-@Injectable({
-  providedIn: SubstanceFormModule
-})
+@Injectable()
 export class SubstanceFormLinksService extends SubstanceFormServiceBase<Array<Linkage>> {
 
   constructor(

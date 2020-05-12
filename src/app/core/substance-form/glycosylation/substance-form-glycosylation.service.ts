@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../substance-form.service';
-import { SubstanceFormModule } from '../substance-form.module';
-import { ReplaySubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Glycosylation } from '@gsrs-core/substance/substance.model';
 
 @Injectable()

@@ -31,9 +31,6 @@ export class SubstanceFormNamesCardComponent
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Names');
-  }
-
-  ngAfterViewInit() {
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
         this.isAlternative = true;
@@ -45,6 +42,7 @@ export class SubstanceFormNamesCardComponent
       });
     this.subscriptions.push(definitionSubscription);
     const namesSubscription = this.substanceFormNamesService.substanceNames.subscribe(names => {
+      console.log(names);
       this.names = names;
       this.filtered = names;
       const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
@@ -57,6 +55,9 @@ export class SubstanceFormNamesCardComponent
       this.pageChange();
     });
     this.subscriptions.push(namesSubscription);
+  }
+
+  ngAfterViewInit() {
   }
 
   standardize(): void {

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { SubstanceFormModule } from '../substance-form.module';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { StructuralUnit } from '@gsrs-core/substance/structural-unit.model';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBase<Array<StructuralUnit>> {
