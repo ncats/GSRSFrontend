@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
-import { SubstanceFormStructuralModificationsModule } from './substance-form-structural-modifications.module';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../substance-form.service';
-import { ReplaySubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { StructuralModification } from '@gsrs-core/substance/substance.model';
 
-@Injectable({
-  providedIn: SubstanceFormStructuralModificationsModule
-})
+@Injectable()
 export class SubstanceFormStructuralModificationsService extends SubstanceFormServiceBase<Array<StructuralModification>> {
 
   constructor(

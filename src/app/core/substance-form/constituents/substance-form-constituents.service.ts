@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { SubstanceFormConstituentsModule } from './substance-form-constituents.module';
 import { SubstanceFormService } from '../substance-form.service';
-import { ReplaySubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Constituent } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 
-@Injectable({
-  providedIn: SubstanceFormConstituentsModule
-})
+@Injectable()
 export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<Array<Constituent>> {
 
   constructor(

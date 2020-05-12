@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../substance-form.service';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Monomer } from '@gsrs-core/substance/substance.model';
-import { SubstanceFormMonomersModule } from './substance-form-monomers.module';
 
-@Injectable({
-  providedIn: SubstanceFormMonomersModule
-})
+@Injectable()
 export class SubstanceFormMonomersService extends SubstanceFormServiceBase<Array<Monomer>> {
 
   constructor(

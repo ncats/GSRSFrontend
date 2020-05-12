@@ -52,11 +52,10 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
   }
     ngAfterViewInit() {
       setTimeout(() => {
-        const cysteineSubscription = this.substanceFormService.substanceCysteineSites.subscribe(cysteine => {
+        const cysteineSubscription = this.substanceFormDisulfideLinksService.substanceCysteineSites.subscribe(cysteine => {
           this.cysteine = cysteine;
         });
         this.subscriptions.push(cysteineSubscription);
-
       });
   }
 
@@ -104,8 +103,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
         this.cysteine.push(this.privateLink.sites[pos]);
       }
       this.privateLink.sites[pos] = value;
-      this.substanceFormService.emitCysteineUpdate(this.cysteine);
-      this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
+      this.substanceFormDisulfideLinksService.updateCysteine(this.cysteine);
     } else {
     }
     this.testForm.controls['site' + pos].setValue(value);

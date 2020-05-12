@@ -1,29 +1,33 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { SubstanceFormNamesModule } from './substance-form-names.module';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { ReplaySubject, Observable } from 'rxjs';
 import { SubstanceName } from '@gsrs-core/substance/substance.model';
 
-@Injectable({
-  providedIn: SubstanceFormNamesModule
-})
-export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<SubstanceName>> {
+@Injectable()
+export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<SubstanceName>> implements OnDestroy {
 
   constructor(
     public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
+    console.log('here');
   }
+
+  ngOnDestroy() {
+}
 
   initSubtanceForm(): void {
     super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
+
       this.substance = substance;
       if (this.substance.names == null) {
         this.substance.names = [];
       }
       this.substanceFormService.resetState();
+      console.log(this.substance.names);
       this.propertyEmitter.next(this.substance.names);
     });
     this.subscriptions.push(subscription);
@@ -31,6 +35,7 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
       this.propertyEmitter.next(names);
     });
     this.subscriptions.push(namesUpdatedSubscription);
+    return;
   }
 
   get substanceNames(): Observable<Array<SubstanceName>> {

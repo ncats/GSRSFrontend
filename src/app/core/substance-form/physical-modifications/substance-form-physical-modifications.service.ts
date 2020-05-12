@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
-import { SubstanceFormPhysicalModificationsModule } from './substance-form-physical-modifications.module';
 import { SubstanceFormService } from '../substance-form.service';
-import { ReplaySubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PhysicalModification } from '@gsrs-core/substance/substance.model';
 
-@Injectable({
-  providedIn: SubstanceFormPhysicalModificationsModule
-})
+@Injectable()
 export class SubstanceFormPhysicalModificationsService extends SubstanceFormServiceBase<Array<PhysicalModification>> {
 
   constructor(

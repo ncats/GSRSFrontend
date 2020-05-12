@@ -62,6 +62,19 @@ import { SubstanceFormPropertiesService } from './properties/substance-form-prop
 import { SubstanceFormReferencesService } from './references/substance-form-references.service';
 import { SubstanceFormStructuralUnitsService } from './structural-units/substance-form-structural-units.service';
 import { SubstanceFormStructurallyDiverseService } from './structurally-diverse/substance-form-structurally-diverse.service';
+import { SubstanceFormNamesService } from './names/substance-form-names.service';
+import { SubstanceFormLinksService } from './links/substance-form-links.service';
+import { SubstanceFormCodesService } from './codes/substance-form-codes.service';
+import { SubstanceFormAgentModificationsService } from './agent-modifications/substance-form-agent-modifications.service';
+import { SubstanceFormConstituentsService } from './constituents/substance-form-constituents.service';
+import { SubstanceFormMixtureComponentsService } from './mixture-components/substance-form-mixture-components.service';
+import { SubstanceFormMonomersService } from './monomers/substance-form-monomers.service';
+import { SubstanceFormNotesService } from './notes/substance-form-notes.service';
+import { SubstanceFormOtherLinksService } from './other-links/substance-form-other-links.service';
+import { SubstanceFormPhysicalModificationsService } from './physical-modifications/substance-form-physical-modifications.service';
+import { SubstanceFormPolymerClassificationService } from './polymer-classification/substance-form-polymer-classification.service';
+import { SubstanceFormRelationshipsService } from './relationships/substance-form-relationships.service';
+import { SubstanceFormStructuralModificationsService } from './structural-modifications/substance-form-structural-modifications.service';
 
 @NgModule({
   imports: [
@@ -176,7 +189,20 @@ export class SubstanceFormModule {
           SubstanceFormPropertiesService,
           SubstanceFormReferencesService,
           SubstanceFormStructuralUnitsService,
-          SubstanceFormStructurallyDiverseService
+          SubstanceFormStructurallyDiverseService,
+          SubstanceFormNamesService,
+          SubstanceFormLinksService,
+          SubstanceFormCodesService,
+          SubstanceFormAgentModificationsService,
+          SubstanceFormConstituentsService,
+          SubstanceFormMixtureComponentsService,
+          SubstanceFormMonomersService,
+          SubstanceFormNotesService,
+          SubstanceFormOtherLinksService,
+          SubstanceFormPhysicalModificationsService,
+          SubstanceFormPolymerClassificationService,
+          SubstanceFormRelationshipsService,
+          SubstanceFormStructuralModificationsService
         ]
       };
     }
