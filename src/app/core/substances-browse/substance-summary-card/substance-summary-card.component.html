@@ -169,8 +169,15 @@
             </span>
           </div>
         </div>
-      </div>
-      <div *ngIf="showAudit" class="right-aligned">
+      </div>{{inxightLink}} {{inxightUrl}}
+      
+      <div class="right-aligned">
+      <div *ngIf = "inxightLink" class = "inxight-container">
+          <a class = "ext-link" [href] = "inxightUrl" target ="_blank">
+            Inxight Drugs <mat-icon class = "icon small-icon" svgIcon="open_in_new"></mat-icon>
+          </a>
+        </div>
+        <div *ngIf="showAudit">
         <div class="substance-data">
           <div class="label">Created: </div>
           <div>
@@ -203,6 +210,7 @@
             </span>
           </div>
         </div>
+      </div>
       </div>
     </div>
     <div *ngIf = "alignments" >

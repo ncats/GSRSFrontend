@@ -17,7 +17,6 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
 
   codes: Array<SubstanceCode>;
   private subscriptions: Array<Subscription> = [];
-  isAlternative = false;
 
   constructor(
     private substanceFormCodesService: SubstanceFormCodesService,
@@ -36,11 +35,11 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
   ngAfterViewInit() {
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
-        this.isAlternative = true;
         this.canAddItemUpdate.emit(false);
+        this.hiddenStateUpdate.emit(true);
       } else {
-        this.isAlternative = false;
         this.canAddItemUpdate.emit(true);
+        this.hiddenStateUpdate.emit(false);
       }
     });
     this.subscriptions.push(definitionSubscription);
