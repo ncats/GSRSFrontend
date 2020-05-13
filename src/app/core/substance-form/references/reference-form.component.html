@@ -56,16 +56,15 @@
           <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Replace</button>
           <button mat-menu-item (click)="reference.uploadedFile = null">Delete</button>
         </mat-menu>
-      </div>{{reference.uuid}}
+      </div>
       <div *ngIf="!reference.uuid">
           <button mat-button  (click)="showPrev = !showPrev" matTooltip = "use a previously submitted reference">
-            <span>{{showPrev? 'Hide':'Use'}} Previous Reference</span>&nbsp;
+            <span>{{showPrev? 'Hide':'Use'}} Previous Substance Reference</span>&nbsp;
           </button>
         </div>
-        {{previousDialog}}
-        <div *ngIf="reference.uuid && previousDialog === true">
+        <div *ngIf="reference.uuid && !reference.docType && !reference.citation">
             <button mat-button  (click)="openPreviousDialog()" matTooltip = "use a previously submitted reference">
-              <span>{{showPrev? 'Hide':'Use'}} Previous Reference</span>&nbsp;
+              <span>{{showPrev? 'Hide':'Use'}} Previous Substance Reference</span>&nbsp;
             </button>
           </div>
       <span class="middle-fill"></span>

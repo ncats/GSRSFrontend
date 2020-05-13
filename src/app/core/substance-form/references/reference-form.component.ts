@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -9,21 +9,21 @@ import { SubstanceFormReferencesService } from './substance-form-references.serv
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-reference-form',
   templateUrl: './reference-form.component.html',
   styleUrls: ['./reference-form.component.scss']
 })
-export class ReferenceFormComponent implements OnInit, AfterViewInit {
+export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() reference: SubstanceReference;
   @Output() referenceDeleted = new EventEmitter<SubstanceReference>();
   @Input() hideDelete = false;
-  @Input() previousDialog?: boolean;
   private overlayContainer: HTMLElement;
   deleteTimer: any;
   showPrev: boolean = false;
-
+  private subscriptions: Array<Subscription> = [];
   constructor(
     private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
@@ -38,6 +38,12 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   updateAccess(access: Array<string>): void {
@@ -86,23 +92,21 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   }
 
   openPreviousDialog(): void {
-    console.log('opening dialog');
       const dialogRef = this.dialog.open(PreviousReferencesDialogComponent, {
         data: {},
         width: '990px'
       });
       this.overlayContainer.style.zIndex = '1002';
       const dialogSubscription = dialogRef.afterClosed().subscribe(ref => {
-        console.log(ref);
         this.overlayContainer.style.zIndex = null;
        if (ref) {
         this.fillReference(ref);
        }
       });
+      this.subscriptions.push(dialogSubscription);
     }
 
     fillReference(ref: SubstanceReference) {
-      console.log(ref);
       this.showPrev = false;
       this.reference.access = ref.access;
       this.reference.citation = ref.citation;
@@ -111,7 +115,6 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
       this.reference.publicDomain = ref.publicDomain;
       this.reference.tags = ref.tags;
       this.reference.uploadedFile = ref.uploadedFile;
-      this.substanceFormReferencesService.emitReferencesUpdate();
     }
 
 }
