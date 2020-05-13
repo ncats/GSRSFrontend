@@ -94,9 +94,8 @@ export class MergeConceptDialogComponent implements OnInit {
       const oldBdnum = BDNUM_MAPPER(oldSub);
       this.mapName = newBdnum + ' MAPS TO ' + oldBdnum + ' ' + oldSub._name;
       this.loading = false;
-      if (!confirm('Going to merge names, codes, notes, relationships and references from:' + newBdnum + ' with this record.')) {
-        return;
-      }
+      this.text = "merging names, codes, notes, relationships and references from:' + newBdnum + ' with this record.'"
+    
 
       function addAll(l1, l2) {
         l2.map(function (o) {
@@ -205,10 +204,10 @@ export class MergeConceptDialogComponent implements OnInit {
   concept.access.push('protected');
   concept.changeReason = 'Migrated data into:' + this.oldBdnum;
     this.loading = false;
-    this.text = 'Old record deprecated, please save this record to complete merge.';
+    this.text = 'Deprecating...';
   this.substanceService.saveSubstance(concept).subscribe(response => {
     this.loading = false;
-    this.text = 'Old record deprecated, please save this record to complete merge.';
+    this.text = 'Old record deprecated, please save this record to complete the merge.';
     this.subconcepts = undefined;
     this.addmergebutton = false;
   }, error => {
