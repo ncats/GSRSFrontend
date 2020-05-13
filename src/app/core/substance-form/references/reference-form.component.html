@@ -56,11 +56,25 @@
           <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Replace</button>
           <button mat-menu-item (click)="reference.uploadedFile = null">Delete</button>
         </mat-menu>
-      </div>
+      </div>{{reference.uuid}}
+      <div *ngIf="!reference.uuid">
+          <button mat-button  (click)="showPrev = !showPrev" matTooltip = "use a previously submitted reference">
+            <span>{{showPrev? 'Hide':'Use'}} Previous Reference</span>&nbsp;
+          </button>
+        </div>
+        {{previousDialog}}
+        <div *ngIf="reference.uuid && previousDialog === true">
+            <button mat-button  (click)="openPreviousDialog()" matTooltip = "use a previously submitted reference">
+              <span>{{showPrev? 'Hide':'Use'}} Previous Reference</span>&nbsp;
+            </button>
+          </div>
       <span class="middle-fill"></span>
       <div *ngIf="reference.uuid">
         <app-apply-reference [subReferenceUuid]="reference.uuid"></app-apply-reference>
       </div>
     </div>
+  </div>
+  <div class = "form-row " *ngIf = "showPrev" >
+    <app-previous-references class = "previous-ref" (selectedReference) = "fillReference($event)" ></app-previous-references>
   </div>
 </div>

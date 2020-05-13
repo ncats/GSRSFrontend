@@ -75,6 +75,9 @@ import { SubstanceFormPhysicalModificationsService } from './physical-modificati
 import { SubstanceFormPolymerClassificationService } from './polymer-classification/substance-form-polymer-classification.service';
 import { SubstanceFormRelationshipsService } from './relationships/substance-form-relationships.service';
 import { SubstanceFormStructuralModificationsService } from './structural-modifications/substance-form-structural-modifications.service';
+import { PreviousReferencesComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references.component';
+import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -106,7 +109,8 @@ import { SubstanceFormStructuralModificationsService } from './structural-modifi
     MatButtonToggleModule,
     NgxJsonViewerModule,
     RouterModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     SubstanceFormComponent,
@@ -115,6 +119,7 @@ import { SubstanceFormStructuralModificationsService } from './structural-modifi
     DomainReferencesComponent,
     ReferenceFormComponent,
     RefernceFormDialogComponent,
+    PreviousReferencesComponent,
     ReuseReferencesDialogComponent,
     StructureFormComponent,
     AmountFormComponent,
@@ -133,13 +138,15 @@ import { SubstanceFormStructuralModificationsService } from './structural-modifi
     CvDialogComponent,
     JsonDialogComponent,
     AuditInfoComponent,
-    SubmitSuccessDialogComponent
+    SubmitSuccessDialogComponent,
+    PreviousReferencesDialogComponent
   ],
   exports: [
     SubstanceFormComponent,
     AccessManagerComponent,
     DomainReferencesComponent,
     ReferenceFormComponent,
+    PreviousReferencesComponent,
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
     StructureFormComponent,
@@ -158,12 +165,14 @@ import { SubstanceFormStructuralModificationsService } from './structural-modifi
     CvInputComponent,
     CvDialogComponent,
     JsonDialogComponent,
-    AuditInfoComponent
+    AuditInfoComponent,
+    PreviousReferencesDialogComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
     ApplyReferenceComponent,
+    PreviousReferencesComponent,
     PropertyParameterDialogComponent,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
@@ -172,7 +181,8 @@ import { SubstanceFormStructuralModificationsService } from './structural-modifi
     CvDialogComponent,
     JsonDialogComponent,
     AuditInfoComponent,
-    SubmitSuccessDialogComponent
+    SubmitSuccessDialogComponent,
+    PreviousReferencesDialogComponent
   ]
 })
 export class SubstanceFormModule {

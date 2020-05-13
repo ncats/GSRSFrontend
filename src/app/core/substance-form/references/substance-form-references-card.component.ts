@@ -71,7 +71,7 @@ export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilte
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(newReference => {
       this.overlayContainer.style.zIndex = null;
-      if (newReference != null) {
+      if (newReference != null && newReference.doctype && newReference.citation) {
         this.substanceFormReferencesService.addSubstanceReference(newReference);
       }
     });
