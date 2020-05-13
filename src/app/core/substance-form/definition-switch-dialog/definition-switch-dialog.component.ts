@@ -274,7 +274,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           });
           alt.substanceClass = this.sub.substanceClass;
           const altReferences = defiant.json.search(alt, '//*[references]');
-          alert(altReferences.length);
           altReferences.forEach(e => {
           });
         
@@ -287,7 +286,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               return false;
             }
           });
-          alert(objectsA.length);
           const toPush = [];
 
           for (let i = 0; i < objectsA.length; i++) {

@@ -5,7 +5,7 @@
   </div>
   <div mat-dialog-content class = 'dialog-content'>
 <div [innerHTML] = "text" class = "message"></div>
-    <div class = "dialog-body">{{showButtons}}
+    <div class = "dialog-body">
         <div class = "code" *ngIf = 'error !== ""'>{{error}}</div>
       <div *ngIf = "currentAlts && currentAlts.length > 0 && showButtons" class = "substances-container">
         <div *ngFor = "let c of currentAlts" class = "button-content">
