@@ -21,7 +21,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
   constructor(
     private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
-    private substanceFormReferencesService: SubstanceFormReferencesService
+    private substanceFormReferencesService: SubstanceFormReferencesService,
+    private substanceFormService: SubstanceFormService
   ) { }
 
   ngOnInit() {
@@ -73,6 +74,11 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
         this.reference.uploadedFile = response;
       });
     }
+  }
+
+  downloadDocument(url: string): void {
+    this.substanceFormService.bypassUpdateCheck();
+    window.open(url);
   }
 
 }
