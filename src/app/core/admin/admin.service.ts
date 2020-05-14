@@ -5,7 +5,6 @@ import { Observable, Subject, forkJoin, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { PagingResponse } from '../utils/paging-response.model';
 import { map, catchError, retry } from 'rxjs/operators';
-import { SubstanceHttpParams } from '@gsrs-core/substance';
 
 
 @Injectable({
@@ -79,11 +78,13 @@ export class AdminService extends BaseHttpService {
 
     public changePassword(oldpass: string, newpass: string, id:number): Observable<any> {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      let params = new SubstanceHttpParams();
-        params = params.appendDictionary({
-          oldPassword: oldpass,
-          newPassword: newpass,
-        });
+      let params = new HttpParams();
+        params = params.append(
+          'oldPassword', oldpass
+        );
+        params = params.append(
+          'newPassword', newpass
+        );
       return this.http.post<any>(`${url}users/${id}/password`, params);
       }
 
