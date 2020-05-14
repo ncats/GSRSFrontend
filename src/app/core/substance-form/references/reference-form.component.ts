@@ -22,14 +22,14 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   @Input() hideDelete = false;
   private overlayContainer: HTMLElement;
   deleteTimer: any;
-  showPrev: boolean = false;
+  showPrev: false;
   private subscriptions: Array<Subscription> = [];
   constructor(
     private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
     private substanceFormService: SubstanceFormService
   ) { }
 
