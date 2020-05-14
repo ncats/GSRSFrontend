@@ -73,7 +73,7 @@ export class AdminService extends BaseHttpService {
 
     public getGroups(): Observable<any> {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get<any>(`${url}groups`);
+      return this.http.get<any>(`${url}admin/groups/@names`);
     }
 
 

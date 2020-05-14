@@ -38,43 +38,61 @@ export class UserEditDialogComponent implements OnInit {
     this.userID = data.userID;
     }
 
-  ngOnInit() {
-    console.log(this.userID);
-    if (this.user) {
-      this.checkRoles();
-      this.originalName = this.user.username;
-      this.loading = false;
-      this.newUser = false;
-      this.adminService.getGroups().subscribe( response => {
-        this.groups = response;
-        this.checkGroups();
-
-      });
-    } else if (this.userID){
-        this.adminService.getUserByName(this.userID).subscribe( resp =>{
-          this.user = resp;
-          this.checkRoles();
-          this.originalName = resp.user.username;
-          this.loading = false;
-          this.newUser = false;
+    ngOnInit() {
+      if (this.user) {
+        this.checkRoles();
+        this.originalName = this.user.username;
+        this.loading = false;
+        this.newUser = false;
           this.adminService.getGroups().subscribe( response => {
-            this.groups = response;
-            this.checkGroups();
-  
+            this.groups = [];
+            response.forEach( grp => {
+              const temp = {name: grp, hasGroup: false};
+              this.user.groups.forEach(element => {
+                if (element.name === grp) {
+                    temp.hasGroup = true;
+                  }
+              });
+              this.groups.push(temp);
+            });
+            console.log(this.groups);
           });
+      } else if (this.userID){
+          this.adminService.getUserByName(this.userID).subscribe( resp =>{
+            this.user = resp;
+            this.checkRoles();
+            this.originalName = resp.user.username;
+            this.loading = false;
+            this.newUser = false;
+            this.adminService.getGroups().subscribe( response => {
+              this.groups = [];
+              response.forEach( grp => {
+                const temp = {name: grp, hasGroup: false};
+                this.user.groups.forEach(element => {
+                  if (element.name === grp) {
+                      temp.hasGroup = true;
+                    }
+                });
+                this.groups.push(temp);
+              });
+              console.log(this.groups);
+            });
+          });
+         
+      } else {
+        this.newUser = true;
+        this.user = {groups:[], roles:[],  user:{}};
+        this.loading = false;
+        this.adminService.getGroups().subscribe( response => {
+          this.groups = [];
+          response.forEach( grp => {
+            const temp = {name: grp, hasGroup: false};
+            this.groups.push(temp);
+          });
+          console.log(this.groups);
         });
-       
-    } else {
-      this.newUser = true;
-      this.user = {groups:[], roles:[],  user:{}};
-      this.loading = false;
-      this.adminService.getGroups().subscribe( response => {
-        this.groups = response;
-        this.checkGroups();
-
-      });
+      }
     }
-  }
 
   checkRoles() {
     this.roles.forEach(role =>{
