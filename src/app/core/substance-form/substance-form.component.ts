@@ -339,13 +339,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           delete response._name;
         }
         this.scrub(response, type);
-        this.substanceFormService.loadSubstance(response.substanceClass, response);
-        this.setFormSections(formSections[response.substanceClass]);
+        this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+          this.setFormSections(formSections[response.substanceClass]);
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+        });
       } else {
         this.handleSubstanceRetrivalError();
       }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
     }, error => {
       this.gaService.sendException('getSubstanceDetails: error from API call');
       this.loadingService.setLoading(false);
@@ -376,8 +377,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       this.router.navigate(['/substances/register']);
-      this.substanceFormService.loadSubstance(this.subClass);
-      this.setFormSections(formSections.chemical);
+      this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+        this.setFormSections(formSections.chemical);
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+      });
     }, 5000);
   }
 

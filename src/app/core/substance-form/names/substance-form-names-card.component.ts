@@ -17,7 +17,6 @@ export class SubstanceFormNamesCardComponent
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   names: Array<SubstanceName>;
   private subscriptions: Array<Subscription> = [];
-  isAlternative = false;
 
   constructor(
     private substanceFormNamesService: SubstanceFormNamesService,
@@ -33,11 +32,11 @@ export class SubstanceFormNamesCardComponent
     this.menuLabelUpdate.emit('Names');
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
-        this.isAlternative = true;
         this.canAddItemUpdate.emit(false);
+        this.hiddenStateUpdate.emit(true);
       } else {
-        this.isAlternative = false;
         this.canAddItemUpdate.emit(true);
+        this.hiddenStateUpdate.emit(false);
       }
       });
     this.subscriptions.push(definitionSubscription);

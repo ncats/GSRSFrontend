@@ -183,8 +183,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.invalidPage = false;
       const newpage = Number(event.target.value) - 1;
       this.pageIndex = newpage;
-     // this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newPage);
+     this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newpage);
       this.populateUrlQueryParameters();
+      this.searchSubstances();
   }
 }
 
