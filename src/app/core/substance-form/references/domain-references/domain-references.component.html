@@ -3,7 +3,7 @@
     <mat-expansion-panel (closed)="panelClosed()" (opened)="panelOpened()">
       <mat-expansion-panel-header class="domain-reference-header">
         <mat-panel-title>
-          <h4 class="title" matTooltip="Expand references">
+          <h4 class="title ref-title" matTooltip="Expand references">
             {{card && card === 'definition'? 'Definitional ': ''}}References
             <span [matBadge]="referencesUuids && referencesUuids.length || 0" class = "custom-badge" matBadgeOverlap="false">
             </span>

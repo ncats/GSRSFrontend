@@ -1,0 +1,39 @@
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  align-items: center;
+
+  .text {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    align-content: center;
+    padding:10px;
+  }
+
+}
+
+.dialog {
+  min-height: 300px;
+}
+
+.spinner-container {
+  height:20px;
+  width:100%;
+  align-content: center;
+}
+.form-column {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 0 10px;
+  align-items: center;
+
+
+}
+
+.mat-button {
+  margin: 10px;
+}

@@ -12,7 +12,6 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
     public substanceFormService: SubstanceFormService
   ) {
     super(substanceFormService);
-    console.log('here');
   }
 
   ngOnDestroy() {
@@ -27,7 +26,6 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
         this.substance.names = [];
       }
       this.substanceFormService.resetState();
-      console.log(this.substance.names);
       this.propertyEmitter.next(this.substance.names);
     });
     this.subscriptions.push(subscription);

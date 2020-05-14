@@ -55,7 +55,6 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     this.substance = substance;
     this.structure = this.substance.structure;
     if (this.structure.smiles) {
-      console.log('should be getting');
       const inchiSub = this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
         this.inchi = inchi.replace(/\"/g, '');
       });

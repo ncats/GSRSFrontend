@@ -29,6 +29,8 @@ import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { MatExpansionPanel } from '@angular/material';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
+import {MergeConceptDialogComponent} from "@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component";
+import {DefinitionSwitchDialogComponent} from "@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component";
 
 
 @Component({
@@ -229,6 +231,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.substanceFormService.changeStatus('pending');
       this.feature = undefined;
     }
+    if (this.feature === 'merge') {
+      this.mergeConcept();
+      this.feature = undefined;
+    }
+    if (this.feature === 'switch') {
+      this.definitionSwitch();
+      this.feature = undefined;
+    }
+
   }
 
   changeClass(type: any): void {
@@ -328,13 +339,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           delete response._name;
         }
         this.scrub(response, type);
-        this.substanceFormService.loadSubstance(response.substanceClass, response);
-        this.setFormSections(formSections[response.substanceClass]);
+        this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+          this.setFormSections(formSections[response.substanceClass]);
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+        });
       } else {
         this.handleSubstanceRetrivalError();
       }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
     }, error => {
       this.gaService.sendException('getSubstanceDetails: error from API call');
       this.loadingService.setLoading(false);
@@ -365,8 +377,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       this.router.navigate(['/substances/register']);
-      this.substanceFormService.loadSubstance(this.subClass);
-      this.setFormSections(formSections.chemical);
+      this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+        this.setFormSections(formSections.chemical);
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+      });
     }, 5000);
   }
 
@@ -642,5 +657,24 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     });
     this.subscriptions.push(dialogSubscription);
+
+}
+
+
+mergeConcept() {
+  this.feature = undefined;
+  const dialogRef = this.dialog.open(MergeConceptDialogComponent, {
+    width: '900px', data: {uuid: this.id}
+  });
+  this.overlayContainer.style.zIndex = '1002';
+}
+
+  definitionSwitch() {
+    this.feature = undefined;
+    const dialogRef = this.dialog.open(DefinitionSwitchDialogComponent, {
+      width: '900px', data: {uuid: this.id}, autoFocus: false
+    });
+    this.overlayContainer.style.zIndex = '1000';
   }
+
 }

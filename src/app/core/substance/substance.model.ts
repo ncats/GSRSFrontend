@@ -180,6 +180,7 @@ export interface SubstanceRelated extends SubstanceBase {
   linkingID?: string;
   name?: string;
   references?: Array<string>;
+  $$bdnum?: string;
 }
 
 export interface CountRef {
