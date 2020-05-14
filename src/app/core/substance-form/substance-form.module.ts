@@ -51,6 +51,9 @@ import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-inf
 import { RouterModule } from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
+import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 import { SubstanceFormComponent } from './substance-form.component';
 import { CanActivateSubstanceForm } from './can-activate-substance-form';
 import { CanRegisterSubstanceForm } from './can-register-substance-form';
@@ -110,6 +113,7 @@ import { MatProgressSpinnerModule } from '@angular/material';
     NgxJsonViewerModule,
     RouterModule,
     SubstanceImageModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule
   ],
   declarations: [
@@ -139,6 +143,8 @@ import { MatProgressSpinnerModule } from '@angular/material';
     JsonDialogComponent,
     AuditInfoComponent,
     SubmitSuccessDialogComponent,
+    MergeConceptDialogComponent,
+    DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent
   ],
   exports: [
@@ -166,6 +172,8 @@ import { MatProgressSpinnerModule } from '@angular/material';
     CvDialogComponent,
     JsonDialogComponent,
     AuditInfoComponent,
+    MergeConceptDialogComponent,
+    DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent
   ],
   entryComponents: [
@@ -182,6 +190,8 @@ import { MatProgressSpinnerModule } from '@angular/material';
     JsonDialogComponent,
     AuditInfoComponent,
     SubmitSuccessDialogComponent,
+    MergeConceptDialogComponent,
+    DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent
   ]
 })

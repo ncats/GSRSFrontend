@@ -1,0 +1,37 @@
+<div class = "dialog">
+
+<div mat-dialog-title>
+  <h1 >Merge and Deprecate SubConcept</h1>
+</div>
+<div mat-dialog-content>
+
+    <div class = "form-row text">{{text}}</div>
+
+  <div class = "spinner-container">
+    <mat-progress-bar *ngIf = "loading === true"
+                      class = "top-bar"
+                      color="primary"
+                      mode="indeterminate"
+    >
+    </mat-progress-bar>
+  </div>
+
+  <div *ngIf="subconcepts && !addmergebutton"  class = "form-column">
+    <div *ngFor = "let concept of subconcepts">
+      <button class = "mat-button mat-flat-button mat-primary" (click) ="mergeTheRecord(concept.refuuid)" >
+        [{{concept.$$bdnum}}]{{concept.refPname}}
+      </button>
+    </div>
+  </div>
+  <div *ngIf="addmergebutton" class = "form-column">
+    <button class = "mat-button mat-flat-button mat-primary" (click) = "mergeConcept()"> Confirm Deprecate old record</button>
+  </div>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button color="primary" matDialogClose>Close</button>
+
+  <span class="middle-fill"></span>
+
+</div>
+</div>

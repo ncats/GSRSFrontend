@@ -3,7 +3,16 @@ import { HttpClient, HttpParams, HttpClientJsonpModule } from '@angular/common/h
 import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
-import { SubstanceSummary, SubstanceDetail, SubstanceEdit, SubstanceName, SubstanceCode, SubstanceRelationship, SubstanceReference } from './substance.model';
+import {
+  SubstanceSummary,
+  SubstanceDetail,
+  SubstanceEdit,
+  SubstanceName,
+  SubstanceCode,
+  SubstanceRelationship,
+  SubstanceRelated,
+  SubstanceReference
+} from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FacetParam } from '../facets-manager/facet.model';
@@ -13,6 +22,7 @@ import { switchMap } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import { catchError } from 'rxjs/operators';
 import { stringify } from 'querystring';
 
 @Injectable({
@@ -543,6 +553,14 @@ export class SubstanceService extends BaseHttpService {
     } else {
       return link;
     }
+  }
+
+  getBDNUM(reference: SubstanceRelated ): Observable<string> {
+    const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
+    const refPname = `${this.apiBaseUrl}substances(${ reference.refPname  })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
+        return this.http.get<any>(refuuid).pipe(
+          catchError(error => this.http.get(refPname))
+        );
   }
 
   getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
