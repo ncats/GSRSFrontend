@@ -30,6 +30,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer
+    private substanceFormService: SubstanceFormService
   ) { }
 
   ngOnInit() {
@@ -116,5 +117,10 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.reference.tags = ref.tags;
       this.reference.uploadedFile = ref.uploadedFile;
     }
+
+  downloadDocument(url: string): void {
+    this.substanceFormService.bypassUpdateCheck();
+    window.open(url);
+  }
 
 }

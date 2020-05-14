@@ -154,8 +154,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
          // this is sometimes overly ambitious
          Object.keys(structurePostResponse.structure).forEach(key => {
-           //we don't want to do this with molfile, we want to trust the editor
-           if(key!=="molfile"){
+           // we don't want to do this with molfile, we want to trust the editor
+           if ( key !== 'molfile') {
               this.structure[key] = structurePostResponse.structure[key];
            }
          });

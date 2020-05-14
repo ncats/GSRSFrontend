@@ -76,7 +76,7 @@ export class SubstanceImageDirective implements AfterViewInit {
           this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
         this.imageElement.src = srcUrl;
       }
-      this.imageElement.alt = "structure image";
+      this.imageElement.alt = 'structure image';
     }
   }
 }
