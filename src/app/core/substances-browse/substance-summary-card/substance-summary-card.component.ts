@@ -35,6 +35,8 @@ export class SubstanceSummaryCardComponent implements OnInit {
   @Input() codeSystemNames?: Array<string>;
   @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   alignments?: Array<Alignment>;
+  inxightLink: boolean = false;
+  inxightUrl: string;
   constructor(
     public utilsService: UtilsService,
     public gaService: GoogleAnalyticsService,
@@ -55,6 +57,15 @@ export class SubstanceSummaryCardComponent implements OnInit {
     if (this.substance.nucleicAcid) {
       this.subunits = this.substance.nucleicAcid.subunits;
       this.getAlignments();
+    }
+    if (this.substance.approvalID) {
+      this.substanceService.hasInxightLink(this.substance.approvalID).subscribe(response => {
+        console.log(response);
+        if (response.total && response.total > 0) {
+          this.inxightLink = true;
+          this.inxightUrl = "https://drugs.ncats.io/drug/" + this.substance.approvalID;
+        }
+      }, error => {});
     }
   }
 
