@@ -1057,14 +1057,14 @@ export class SubstanceFormService implements OnDestroy {
     if (this.privateSubstance.nucleicAcid) {
       if (this.privateSubstance.nucleicAcid.sugars) {
         this.privateSubstance.nucleicAcid.sugars.forEach((sugar, index) => {
-          if (sugar.sites.length === 0){
+          if (sugar.sites.length === 0) {
             this.privateSubstance.nucleicAcid.sugars.splice(index, 1);
           }
         });
       }
       if (this.privateSubstance.nucleicAcid.linkages) {
         this.privateSubstance.nucleicAcid.linkages.forEach((linkage, index) => {
-          if (linkage.sites.length === 0){
+          if (linkage.sites.length === 0) {
             this.privateSubstance.nucleicAcid.linkages.splice(index, 1);
           }
         });
