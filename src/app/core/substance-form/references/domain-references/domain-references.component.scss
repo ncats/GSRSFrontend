@@ -1,0 +1,62 @@
+.domain-reference {
+    display: block;
+    padding: 5px 0 10px 0;
+    color: #448aff;
+}
+
+.mat-expansion-panel:not([class*="mat-elevation-z"]), .mat-expansion-panel {
+    box-shadow: none;
+}
+
+.domain-reference-header {
+    ::ng-deep .mat-expansion-indicator::after {
+        margin-right: 7px;
+    }
+}
+
+.mat-expansion-panel-header {
+    padding: 0;
+}
+
+.domain-references-content {
+
+    .title {
+        margin-bottom: 5px;
+        padding: 0 7px;
+    }
+
+    ::ng-deep .mat-expansion-panel-body {
+        padding: 0;
+    }
+}
+
+.mat-expansion-panel-header-title {
+    &.block-display {
+        display: block;
+    }
+}
+
+.custom-badge > .mat-badge-content {
+  background-color: white !important;
+  color: rgb(71, 147, 209) !important;
+}
+
+.title-actions {
+    display: inline-flex;
+    align-items: flex-end;
+    padding-bottom: 5px;
+
+    .mat-flat-button {
+        min-width: 0;
+        padding: 0px 10px;
+        line-height: 30px;
+
+        &:not(:last-child) {
+            margin-right: 10px;
+        }
+    }
+}
+
+.ref-title {
+    min-width: 200px;
+}

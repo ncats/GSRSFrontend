@@ -1,92 +1,12 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
-  <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
-    <mat-accordion multi="true">
-      <mat-expansion-panel *ngFor="let facet of facets; index as topIndex"
-        [expanded]="false || facetParams[facet.name] != null">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{facet.name | facetDisplay}}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div class="facet-search-container">
-          <mat-form-field *ngIf="searchText[facet.name]">
-            <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value"
-              (ngModelChange)="filterFacets(topIndex, $event, facet.name)" placeholder="Search  {{facet.name}}">
-          </mat-form-field>
-          <button mat-icon-button color="black" (click)="clearFacetSearch(topIndex, facet.name)">
-            <mat-icon svgIcon="close"></mat-icon>
-          </button>
-        </div>
-        <mat-progress-bar class="facet-search-loading" mode="indeterminate"
-          *ngIf="searchText[facet.name] && searchText[facet.name].isLoading"></mat-progress-bar>
-        <ng-container *ngFor="let value of facet.values; index as index">
-          <div class="facet-value">
-            <div class="facet-value-checkbox">
-              <mat-checkbox class="include" matTooltip="Include"
-                (change)="updateFacetSelection($event, facet.name, value.label, true)"
-                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == true">
-              </mat-checkbox>
-              <mat-checkbox class="exclude" matTooltip="Exclude"
-                (change)="updateFacetSelection($event, facet.name, value.label, false)"
-                [checked]="facetParams[facet.name] != null && facetParams[facet.name].params[value.label] == false"
-                *ngIf="facet.$showAdvanced">
-              </mat-checkbox>
-            </div>
-            <div class="facet-value-label">
-              <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
-                {{value.label}}
-              </span>
-              <span *ngIf="facet.name === 'Substance Class'">
-                {{value.label | facetDisplay: 'types'}}
-              </span>
-              <span *ngIf="facet.name === 'Record Status'">
-                {{value.label | facetDisplay: 'status'}}
-              </span>
-            </div>
-            <div class="middle-fill"></div>
-            <div class="facet-value-count">
-              {{value.count}}
-            </div>
-          </div>
-        </ng-container>
-        <div>
-          <!--- <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
-            Show {{toggle[topIndex] === true ? 'all': 'less'}}
-          </a>-->
-          <span *ngIf="facet.values && facet.values.length >= 10 && (
-           !searchText[facet.name] || searchText[facet.name].value == '')">
-            <a class="show-more" (click)="moreFacets(topIndex, facet)" *ngIf="(!facet.$total ||
-              facet.$total > facet.values.length)">
-              More...{{searchText[facet.name] && searchText[facet.name].value || ''}}
-            </a>
-            <a class="show-more" *ngIf="facet.values.length > 10" (click)="lessFacets(topIndex)">
-              Show Less {{searchText[facet.name] &&searchText[facet.name].value || ''}}
-            </a>
-          </span>
-        </div>
-        <div class="facet-advanced-options-link">
-          <a (click)="facet.$showAdvanced = !facet.$showAdvanced">
-            <span *ngIf="facet.$showAdvanced">hide </span>advanced options
-          </a>
-        </div>
-        <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
-          <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
-            [(ngModel)]="facetParams[facet.name].isAllMatch" (click)="sendFacetsEvent($event, facet.name)">
-            All Match
-          </mat-checkbox>
-          <div class="pull-right">
-            <button *ngIf="facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading"
-              (click)="clearFacetSelection(facet.name)">
-              Clear
-            </button>
-            <button *ngIf="facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary"
-              [disabled]="isLoading" (click)="applyFacetsFilter(facet.name)">
-              Apply
-            </button>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
+  <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
+    <app-facets-manager
+      (facetsParamsUpdated)="facetsParamsUpdated($event)"
+      (facetsLoaded)="facetsLoaded($event)"
+      [rawFacets]="rawFacets"
+      configName="substances"
+      includeFacetSearch="true">
+    </app-facets-manager>
   </mat-sidenav>
   <mat-sidenav-content>
     <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
@@ -143,7 +63,7 @@
               </span>
             </div>
             <div class="actions-container">
-              <button mat-icon-button class="display-button" color="primary" (click)="removeFacet(facet)">
+              <button mat-icon-button class="display-button" color="primary" (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
                 <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
               </button>
             </div>
@@ -193,10 +113,10 @@
             <mat-icon svgIcon="list"></mat-icon>
           </mat-button-toggle>
           <mat-button-toggle value="cards" matTooltip="full view">
-            <mat-icon svgIcon="view_stream" matTooltip="Tile view"></mat-icon>
+            <mat-icon svgIcon="view_stream" ></mat-icon>
           </mat-button-toggle>
           <mat-button-toggle value="tiles">
-            <mat-icon svgIcon="view_module"></mat-icon>
+            <mat-icon svgIcon="view_module" matTooltip="Tile view"></mat-icon>
           </mat-button-toggle>
         </mat-button-toggle-group>
 
@@ -208,10 +128,23 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-
-        <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
-          [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
-        </mat-paginator>
+<div class = "break"></div>
+        <div class = "full-paginator">
+          <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+          </mat-paginator>
+          
+          <div class = "page-selector">
+            <span class = "page-label">Page: </span>
+            <mat-form-field class = "page-input" [ngClass] = "{'bad-page':invalidPage}">
+              <input matInput matTooltip = "Type a page and press enter"  [ngClass] = "{'bad-page':invalidPage}"  [value] = "pageIndex + 1"
+              #pagenum (keydown.enter)="customPage($event)"
+              (input) = "validatePageInput($event)? invalidPage = false: invalidPage = true"
+              (focusout) = "pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class = "page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
       </div>
       <div [ngClass]="view">
         <div class="substance-cards">
@@ -450,8 +383,10 @@
     </button>
   </div>
   <div class="substance-cards">
-    <app-substance-summary-card *ngFor="let substance of exactMatchSubstances" [substance]="substance"
-      (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]">
-    </app-substance-summary-card>
+    <app-substance-summary-card *ngFor="let substance of substances" [substance]="substance"
+            (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
+            [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
+            [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems">
+          </app-substance-summary-card>
   </div>
 </div>

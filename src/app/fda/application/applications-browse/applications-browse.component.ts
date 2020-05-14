@@ -1,11 +1,11 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { ApplicationService } from '../service/application.service';
 import { ApplicationSrs } from '../model/application.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
 import * as _ from 'lodash';
-import { Facet } from '@gsrs-core/utils';
+import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -14,10 +14,11 @@ import { PageEvent } from '@angular/material';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
-import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
-import { Environment } from '@environment';
+import { FacetParam } from '@gsrs-core/facets-manager';
+import { Environment } from 'src/environments/environment.model';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 
 
 @Component({
@@ -25,16 +26,12 @@ import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operat
   templateUrl: './applications-browse.component.html',
   styleUrls: ['./applications-browse.component.scss']
 })
-export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
+export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;
   public _searchTerm?: string;
   public applications: Array<ApplicationSrs>;
-  public facets: Array<Facet> = [];
-  private privateFacetParams: SubstanceFacetParam;
-  private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
   // view = 'cards';
   hasBackdrop = false;
-  facetString: string;
   pageIndex: number;
   pageSize: number;
   jumpToValue: string;
@@ -44,21 +41,17 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   isAdmin: boolean;
   displayedColumns: string[];
   dataSource = [];
-  public facetBuilder: SubstanceFacetParam;
   appType: string;
   appNumber: string;
   clinicalTrialApplication: Array<any>;
   environment: Environment;
   exportUrl: string;
+  private isComponentInit = false;
 
-  //  public order: string;
-  // public sortValues = searchSortValues;
-  // showAudit: boolean;
-  // public facetBuilder: SubstanceFacetParam;
-  searchText: { [faceName: string]: { value: string, isLoading: boolean } } = {};
-  // private overlayContainer: HTMLElement;
-  private facetSearchChanged = new Subject<{ index: number, query: any }>();
-  private activeSearchedFaced: Facet;
+  // needed for facets
+  private privateFacetParams: FacetParam;
+  rawFacets: Array<Facet>;
+  private isFacetsParamsInit = false;
 
   constructor(
     public applicationService: ApplicationService,
@@ -73,18 +66,16 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     private notificationService: MainNotificationService,
     private authService: AuthService,
     // private overlayContainerService: OverlayContainer,
-  ) {
-    this.privateFacetParams = {};
-    this.facetBuilder = {};
-  }
+    private facetManagerService: FacetsManagerService
+  ) {}
 
   ngOnInit() {
+    this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.environment = this.configService.environment;
     this.gaService.sendPageView('Browse Applications');
     this.pageSize = 10;
     this.pageIndex = 0;
     this._searchTerm = '';
-    /*this.facets = [];*/
 
     const navigationExtras: NavigationExtras = {
       queryParams: {}
@@ -94,7 +85,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
     navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
     navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
-    navigationExtras.queryParams['facets'] = this.activatedRoute.snapshot.queryParams['facets'] || '';
     navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
     this.location.replaceState(
       this.router.createUrlTree(
@@ -113,84 +103,25 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
       if (params.get('pageIndex')) {
         this.pageIndex = parseInt(params.get('pageIndex'), null);
       }
-      this.facetString = params.get('facets') || '';
-      this.facetsFromParams();
 
-      this.searchApplications();
+      this.isComponentInit = true;
+      this.loadComponent();
     });
 
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
-
-    this.facetSearchChanged.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      switchMap(event => {
-        const facet = this.facets[event.index];
-        if (event.query.length > 0) {
-          const processed = facet.name.replace(' ', '+');
-          return this.applicationService.filterFacets(event.query, processed).pipe(take(1));
-        } else {
-          return this.applicationService.retrieveFacetValues(facet).pipe(take(1));
-        }
-      })
-    ).subscribe(response => {
-      this.activeSearchedFaced.values = this.activeSearchedFaced.values.filter(value => {
-        let removeFacet = true;
-
-        let isInSearhResults = false;
-
-        for (let i = 0; i < response.content.length; i++) {
-          if (response.content[i].label === value.label) {
-            isInSearhResults = true;
-            break;
-          }
-        }
-
-        if (!isInSearhResults
-          && this.facetParams[this.activeSearchedFaced.name] != null
-          && (this.facetParams[this.activeSearchedFaced.name].params[value.label] === true
-            || this.facetParams[this.activeSearchedFaced.name].params[value.label] === false)) {
-          removeFacet = false;
-        }
-
-        return !removeFacet;
-      });
-      this.activeSearchedFaced.values = this.activeSearchedFaced.values.concat(response.content);
-      this.searchText[this.activeSearchedFaced.name].isLoading = false;
-    }, error => {
-      this.searchText[this.activeSearchedFaced.name].isLoading = false;
-    });
   }
 
   ngAfterViewInit() {
   }
 
-  facetsFromParams() {
-    if (this.facetString !== '') {
-      const categoryArray = this.facetString.split(',');
-      for (let i = 0; i < (categoryArray.length); i++) {
-        const categorySplit = categoryArray[i].split('*');
-        const category = categorySplit[0];
-        const fieldsArr = categorySplit[1].split('+');
-        const params: { [facetValueLabel: string]: boolean } = {};
-        let hasSelections = false;
-        for (let j = 0; j < fieldsArr.length; j++) {
-          const field = fieldsArr[j].split('.');
-          if (field[1] === 'true') {
-            params[field[0]] = true;
-            hasSelections = true;
-          } else if (field[1] === 'false') {
-            params[field[0]] = false;
-            hasSelections = true;
-          }
-        }
-        if (hasSelections === true) {
-          this.facetBuilder[category] = { 'params': params, hasSelections: true, isAllMatch: false };
-        }
-      }
-      this.privateFacetParams = this.facetBuilder;
-    }
+  ngOnDestroy() {
+    this.facetManagerService.unregisterFacetSearchHandler();
+  }
 
+  private loadComponent(): void {
+    if (this.isFacetsParamsInit && this.isComponentInit) {
+      this.searchApplications();
+    }
   }
 
   changePage(pageEvent: PageEvent) {
@@ -213,6 +144,22 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     this.populateUrlQueryParameters();
   }
 
+  // for facets
+  facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
+    this.pageIndex = 0;
+    this.privateFacetParams = facetsUpdateEvent.facetParam;
+    if (!this.isFacetsParamsInit) {
+      this.isFacetsParamsInit = true;
+      this.loadComponent();
+    } else {
+      this.searchApplications();
+    }
+  }
+
+  // for facets
+  facetsLoaded(numFacetsLoaded: number) {
+  }
+
   searchApplications() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
@@ -229,7 +176,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
         // below export statement
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
-        this.facets = [];
         // Export Application Url
         this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
           skip,
@@ -240,7 +186,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
 
         // this.applicationService.getClinicalTrialApplication(this.applications);
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-          this.populateFacets(pagingResponse.facets);
+          this.rawFacets = pagingResponse.facets;
         }
       }, error => {
         console.log('error');
@@ -268,183 +214,19 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
     this.searchApplications();
   }
 
-  updateFacetSelection(
-    event: MatCheckboxChange,
-    facetName: string,
-    facetValueLabel: string,
-    include: boolean
-  ): void {
-
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName} > ${facetValueLabel}`;
-    const eventValue = event.checked ? 1 : 0;
-    const eventAction = include ? 'include' : 'exclude';
-    this.gaService.sendEvent('substancesFiltering', `check:facet-${eventAction}`, eventLabel, eventValue);
-
-    if (this.privateFacetParams[facetName] == null) {
-      this.privateFacetParams[facetName] = {
-        params: {},
-        isAllMatch: false
-      };
-    }
-
-    if (include) {
-      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked || null;
-    } else {
-      this.privateFacetParams[facetName].params[facetValueLabel] = event.checked === true ? false : null;
-    }
-
-    let hasSelections = false;
-    let hasExcludeOption = false;
-    let includeOptionsLength = 0;
-
-    const facetValueKeys = Object.keys(this.privateFacetParams[facetName].params);
-    for (let i = 0; i < facetValueKeys.length; i++) {
-      if (this.privateFacetParams[facetName].params[facetValueKeys[i]] != null) {
-        hasSelections = true;
-        if (this.privateFacetParams[facetName].params[facetValueKeys[i]] === false) {
-          hasExcludeOption = true;
-        } else {
-          includeOptionsLength++;
-        }
-      }
-    }
-
-    this.privateFacetParams[facetName].hasSelections = hasSelections;
-
-    if (!hasExcludeOption && includeOptionsLength > 1) {
-      this.privateFacetParams[facetName].showAllMatchOption = true;
-    } else {
-      this.privateFacetParams[facetName].showAllMatchOption = false;
-      this.privateFacetParams[facetName].isAllMatch = false;
-    }
-
-    this.pageIndex = 0;
-  }
-
-
-  clearFacetSelection(
-    facetName?: string
-  ) {
-
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `facet: ${facetName}`;
-    let eventValue = 0;
-
-    const facetKeys = facetName != null ? [facetName] : Object.keys(this.privateFacetParams);
-
-    if (facetKeys != null && facetKeys.length) {
-      facetKeys.forEach(facetKey => {
-        if (this.privateFacetParams[facetKey] != null && this.privateFacetParams[facetKey].params != null) {
-          const facetValueKeys = Object.keys(this.privateFacetParams[facetKey].params);
-          facetValueKeys.forEach(facetParam => {
-            eventValue++;
-            this.privateFacetParams[facetKey].params[facetParam] = null;
-          });
-
-          this.privateFacetParams[facetKey].isAllMatch = false;
-          this.privateFacetParams[facetKey].showAllMatchOption = false;
-          this.privateFacetParams[facetKey].hasSelections = false;
-        }
-      });
-    }
-
-    this.gaService.sendEvent('substancesFiltering2', 'button:clear-facet', eventLabel, eventValue);
-  }
-
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
-
-    const catArr = [];
-    let facetString = '';
-    for (const key of Object.keys(this.privateFacetParams)) {
-      if (this.privateFacetParams[key].hasSelections === true) {
-        const cat = this.privateFacetParams[key];
-        const valArr = [];
-        for (const subkey of Object.keys(cat.params)) {
-          if (typeof cat.params[subkey] === 'boolean') {
-            valArr.push(subkey + '.' + cat.params[subkey]);
-          }
-        }
-        catArr.push(key + '*' + valArr.join('+'));
-      }
-    }
-    facetString = catArr.join(',');
     navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
-    navigationExtras.queryParams['facets'] = facetString;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
 
     this.router.navigate(
       [],
       navigationExtras
     );
-  }
-
-  private populateFacets(facets: Array<Facet>): void {
-    facets = facets.filter(facet => {
-      let include = true;
-      if (facet.name === 'ix.Class') {
-        include = false;
-      } else {
-        this.searchText[facet.name] = { value: '', isLoading: false };
-      }
-      return include;
-    });
-    this.facets = facets;
-  }
-
-  applyFacetsFilter(facetName: string) {
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
-    let eventValue = 0;
-    Object.keys(this.privateFacetParams).forEach(key => {
-      if (this.privateFacetParams[key].params) {
-        eventValue = eventValue + Object.keys(this.privateFacetParams[key].params).length || 0;
-      }
-    });
-    this.gaService.sendEvent('substancesFiltering', 'button:apply-facet', eventLabel, eventValue);
-    this.populateUrlQueryParameters();
-  }
-
-  sendFacetsEvent(event: MatCheckboxChange, facetName: string): void {
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
-    const eventValue = event.checked ? 1 : 0;
-    this.gaService.sendEvent('substancesFiltering', 'check:match-all', eventLabel, eventValue);
-  }
-
-  moreFacets(index: number, facet: Facet) {
-    const subscription = this.applicationService.retrieveNextFacetValues(this.facets[index]).subscribe(resp => {
-      this.facets[index].$next = resp.$next;
-      this.facets[index].values = this.facets[index].values.concat(resp.content);
-      this.facets[index].$fetched = this.facets[index].values;
-      this.facets[index].$total = resp.ftotal;
-      subscription.unsubscribe();
-    }, error => {
-      subscription.unsubscribe();
-    });
-  }
-
-  lessFacets(index: number) {
-    const subscription = this.applicationService.retrieveFacetValues(this.facets[index]).subscribe(response => {
-      this.facets[index].values = response.content;
-      this.facets[index].$fetched = response.content;
-      this.facets[index].$next = response.$next;
-      subscription.unsubscribe();
-    }, error => {
-      subscription.unsubscribe();
-    });
-  }
-
-  filterFacets(index: number, event: any, faceName: string): void {
-    this.searchText[faceName].isLoading = true;
-    this.activeSearchedFaced = this.facets[index];
-    this.facetSearchChanged.next({ index: index, query: event });
-  }
-
-  clearFacetSearch(index: number, facetName: string): void {
-    this.searchText[facetName].value = '';
-    this.filterFacets(index, '', facetName);
   }
 
   get searchTerm(): string {
@@ -455,7 +237,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   //   return this._facetParams;
   //  }
 
-  get facetParams(): SubstanceFacetParam | { showAllMatchOption?: boolean } {
+  get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
     return this.privateFacetParams;
   }
 
@@ -510,7 +292,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit {
   }
 
   exportBrowseApplicationsUrl() {
-   // this.exportUrl = this.applicationService.exportBrowseApplicationsUrl();
+    // this.exportUrl = this.applicationService.exportBrowseApplicationsUrl();
   }
 
   get updateApplicationUrl(): string {

@@ -1,18 +1,29 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpClientJsonpModule } from '@angular/common/http';
 import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
-import { SubstanceSummary, SubstanceDetail, SubstanceEdit, SubstanceName, SubstanceCode, SubstanceRelationship } from './substance.model';
+import {
+  SubstanceSummary,
+  SubstanceDetail,
+  SubstanceEdit,
+  SubstanceName,
+  SubstanceCode,
+  SubstanceRelationship,
+  SubstanceRelated,
+  SubstanceReference
+} from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { SubstanceFacetParam } from './substance-facet-param.model';
-import { SubstanceHttpParams } from './substance-http-params';
+import { FacetParam } from '../facets-manager/facet.model';
+import { FacetHttpParams } from '../facets-manager/facet-http-params';
 import { UtilsService } from '../utils/utils.service';
 import { switchMap } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
-import {Facet} from '@gsrs-core/utils';
+import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import { catchError } from 'rxjs/operators';
+import { stringify } from 'querystring';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +35,7 @@ export class SubstanceService extends BaseHttpService {
     public http: HttpClient,
     public configService: ConfigService,
     private sanitizer: DomSanitizer,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
   ) {
     super(configService);
   }
@@ -38,7 +49,7 @@ export class SubstanceService extends BaseHttpService {
     seqType?: string,
     pageSize?: number,
     order?: string,
-    facets?: SubstanceFacetParam,
+    facets?: FacetParam,
     skip?: number,
     sequenceSearchKey?: string
   } = {}): Observable<PagingResponse<SubstanceSummary>> {
@@ -103,12 +114,12 @@ export class SubstanceService extends BaseHttpService {
   searchSubstances(
     searchTerm?: string,
     pageSize: number = 10,
-    facets?: SubstanceFacetParam,
+    facets?: FacetParam,
     order?: string,
     skip: number = 0
   ): Observable<PagingResponse<SubstanceSummary>> {
 
-    let params = new SubstanceHttpParams();
+    let params = new FacetHttpParams();
     let url = this.apiBaseUrl;
 
     url += 'substances/search';
@@ -139,13 +150,13 @@ export class SubstanceService extends BaseHttpService {
     cutoff?: number,
     type: string = 'substructure',
     pageSize: number = 10,
-    facets?: SubstanceFacetParam,
+    facets?: FacetParam,
     order?: string,
     skip: number = 0,
     sync: boolean = false
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
-      let params = new SubstanceHttpParams();
+      let params = new FacetHttpParams();
       let url = this.apiBaseUrl;
       let structureFacetsKey: number;
 
@@ -217,13 +228,13 @@ export class SubstanceService extends BaseHttpService {
     type?: string,
     seqType?: string,
     pageSize: number = 10,
-    facets?: SubstanceFacetParam,
+    facets?: FacetParam,
     order?: string,
     skip: number = 0,
     sync: boolean = false
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
-      let params = new SubstanceHttpParams();
+      let params = new FacetHttpParams();
       let url = this.apiBaseUrl;
       let structureFacetsKey;
 
@@ -295,7 +306,7 @@ export class SubstanceService extends BaseHttpService {
     searchKey: string,
     httpCallOptions: any,
     pageSize?: number,
-    facets?: SubstanceFacetParam,
+    facets?: FacetParam,
     skip?: number,
     view?: string
   ): void {
@@ -340,12 +351,12 @@ export class SubstanceService extends BaseHttpService {
   private getAsyncSearchResults(
     structureSearchKey: string,
     pageSize?: number,
-    facets?: SubstanceFacetParam,
+    facets?: FacetParam,
     skip?: number,
     view?: string
   ): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
-    let params = new SubstanceHttpParams();
+    let params = new FacetHttpParams();
 
     params = params.appendFacetParams(facets);
 
@@ -369,10 +380,10 @@ export class SubstanceService extends BaseHttpService {
   getQuickSubstancesSummaries(
     searchTerm?: string,
     getFacets?: boolean,
-    facets?: SubstanceFacetParam
+    facets?: FacetParam
   ): Observable<PagingResponse<SubstanceSummary>> {
 
-    let params = new SubstanceHttpParams();
+    let params = new FacetHttpParams();
 
     let url = this.apiBaseUrl + 'substances/';
 
@@ -510,34 +521,6 @@ export class SubstanceService extends BaseHttpService {
   return url;
   }
 
-  filterFacets(name: string, category: string ): Observable<any> {
-    const url =  `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
-    return this.http.get(url);
-  }
-
-  retrieveFacetValues(facet: Facet): Observable<any> {
-    const url = facet._self;
-    return this.http.get<any>(url);
-  }
-
-  retrieveNextFacetValues(facet: Facet): Observable<any> {
-    const url = facet._self;
-    if (!facet.$next) {
-      return this.http.get<any>(url).pipe(
-        switchMap(response => {
-          if (response) {
-            const next = response.nextPageUri;
-            return this.http.get<any>(next);
-          } else {
-            return 'nada';
-          }
-        }));
-    } else {
-      return this.http.get<any>(facet.$next);
-    }
-
-  }
-
   getSequenceByID(substance: string, unit: string, type: string): Observable<any> {
     const url = `${this.apiBaseUrl}substances(${substance})/${type}/subunits(uuid:${unit})`;
     return this.http.get<any>(url);
@@ -549,7 +532,7 @@ export class SubstanceService extends BaseHttpService {
     type?: string,
     seqType?: string,
   ): Observable<any> {
-      let params = new SubstanceHttpParams();
+      let params = new FacetHttpParams();
       const url = this.apiBaseUrl + 'substances/sequenceSearch';
 
         params = params.appendDictionary({
@@ -572,5 +555,42 @@ export class SubstanceService extends BaseHttpService {
     }
   }
 
+  getBDNUM(reference: SubstanceRelated ): Observable<string> {
+    const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
+    const refPname = `${this.apiBaseUrl}substances(${ reference.refPname  })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
+        return this.http.get<any>(refuuid).pipe(
+          catchError(error => this.http.get(refPname))
+        );
+  }
 
+  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    return this.http.get<FacetQueryResponse>(url);
+  }
+
+
+  getSubstanceReferences(top?: number, skip?: number): Observable<any> {
+    if (!top) {
+      const top = 10;
+    }
+    if (!skip) {
+      const skip = 0;
+    }
+  let url = `${this.configService.configData.apiBaseUrl}api/v1/references?top=${top}&skip=${skip}`;
+    return this.http.get< any>(url);
+  }
+
+  hasInxightLink(ID: string): Observable<any> {
+    const url = `https://drugs.ncats.io/api/v1/substances/search?q=root_approvalID:${ID}&fdim=1`;
+    return this.http.jsonp(url, 'callback' )
+
+  }
 }
+

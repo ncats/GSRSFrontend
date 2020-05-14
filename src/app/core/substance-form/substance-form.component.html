@@ -23,7 +23,7 @@
                 Set Definition to private
               </mat-option>
               <mat-option value="setPublic">
-                Set Definition to private
+                Set Definition to public
               </mat-option>
               <mat-option value="unapprove">
                 Un-approve record (Remove approval ID)
@@ -36,6 +36,12 @@
               </mat-option>
               <mat-option value="disulfide"  [disabled]="substanceClass != 'protein'" >
                 Predict disulfide links by protein type
+              </mat-option>
+              <mat-option value="merge"  >
+                Merge subconcept
+              </mat-option>
+              <mat-option value="switch"  >
+                Switch primary and alt definitions
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -97,9 +103,11 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <h2>{{section.menuLabel}}</h2>
+              <div class="middle-fill"></div>
               <div *ngIf="section.canAddItem">
-                <button mat-icon-button
+                <button mat-flat-button color="primary"
                   (click)="section.addItem(); $event.stopPropagation()" matTooltip="Add new">
+                  Add {{section.menuLabel}}
                   <mat-icon svgIcon="add_circle_outline"></mat-icon>
                 </button>
               </div>

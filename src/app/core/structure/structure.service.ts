@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
-import {SubstanceHttpParams} from '../substance/substance-http-params';
 import { ResolverResponse } from './structure-post-response.model';
 import { InterpretStructureResponse } from './structure-post-response.model';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
@@ -54,7 +53,7 @@ export class StructureService {
   }
 
   getName(name: string): Observable<SubstanceDetail> {
-    let params = new SubstanceHttpParams();
+    let params = new HttpParams();
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search`;
     const n = name.replace('"', '');
     // Needs sanitation

@@ -1,8 +1,8 @@
 <mat-toolbar class="mat-elevation-z3" color="primary">
   <div class = "logo-container">
     <span class="logo">
-    <a routerLink="/home">
-      <img [src]="logoSrcPath" />
+    <a routerLink="/home" aria-label="home" >
+      <img [src]="logoSrcPath" alt = "gsrs-logo" />
     </a>
       </span>
     <span class = "version" *ngIf = "version && version !== ''">Ver. {{version}}</span>
@@ -17,11 +17,11 @@
   </span> -->
   <!-- <span class="middle-fill"></span> -->
   <span class="nav-small">
-    <button mat-icon-button [matMenuTriggerFor]="nav" (click)="increaseMenuZindex()">
+    <button mat-icon-button [matMenuTriggerFor]="nav" (click)="increaseMenuZindex()" aria-label ="main menu">
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()">
-      <a mat-menu-item [href]="baseDomain + '/ginas/app/advancedSearch'" target="_blank" *ngIf = "appId === 'fda'">
+      <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf = "appId === 'fda'">
         Advanced Search
       </a>
       <div *ngFor="let navItem of navItems">
@@ -67,7 +67,7 @@
       <span class="user" *ngIf="auth && auth.identifier">{{auth.identifier}}</span>
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
-      <a mat-menu-item [href]="baseDomain + '/ginas/app/profile'" target="_blank">
+      <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'profile'" target="_blank">
         <span>Profile</span>
       </a>
       <a routerLink = "/admin" mat-menu-item *ngIf = "isAdmin">
@@ -80,6 +80,7 @@
   </div>
   <div class="classic-view-container">
     <a mat-raised-button [href]="baseDomain + classicLinkPath + classicLinkQueryParamsString" target="_blank">
+      <div hidden>open classic site in new window</div>
       Classic Site
       <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
     </a>

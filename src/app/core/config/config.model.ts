@@ -4,10 +4,15 @@ export interface Config {
     googleAnalyticsId?: string;
     version?: string;
     substanceDetailsCards?: Array<SubstanceDetailsCard>;
-    facets?: { [permission: string]: Array<string> };
+    facets?: {
+        [name: string]: {
+            [permission: string]: Array<string>
+        }
+    };
     codeSystemOrder?: Array<string>;
     contactEmail?: string;
     defaultCodeSystem?: string;
+    navItems?: Array<NavItem>;
 }
 
 export interface SubstanceDetailsCard {
@@ -24,4 +29,11 @@ export interface SubstanceCardFilterParameters {
     value?: any;
     propertyInArray?: string;
     order?: number;
+}
+
+export interface NavItem {
+    display: string;
+    path?: string;
+    order?: number;
+    children?: Array<NavItem>;
 }

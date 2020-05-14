@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { StructureEditorComponent } from './structure-editor.component';
-import {DragDropPasteDirective} from '@gsrs-core/substance-form/substance-form-structure/drag-drop-paste.component';
+import {DragDropPasteDirective} from '@gsrs-core/substance-form/structure/drag-drop-paste.component';
 import { StructureModule } from '@gsrs-core/structure/structure.module';
 
 @NgModule({

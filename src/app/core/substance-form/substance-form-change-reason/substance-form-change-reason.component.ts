@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SubstanceFormBase } from '../substance-form-base';
+import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { FormControl } from '@angular/forms';

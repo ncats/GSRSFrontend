@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { ConfigService } from '@gsrs-core/config';
-import { Environment } from '@environment';
+import { Environment } from 'src/environments/environment.model';
 import { AuthService } from '@gsrs-core/auth';
 import { Router } from '@angular/router';
 import {environment} from '../../../environments/environment';
@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   browseAll: string;
   application: string;
   chemicon: string;
+  clasicBaseHref: string;
 
   constructor(
     private gaService: GoogleAnalyticsService,
@@ -31,6 +32,7 @@ export class HomeComponent implements OnInit {
     private router: Router
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
+    this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
   ngOnInit() {
