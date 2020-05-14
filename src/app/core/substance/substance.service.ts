@@ -3,7 +3,7 @@ import { HttpClient, HttpParams, HttpClientJsonpModule } from '@angular/common/h
 import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
-import { SubstanceSummary, SubstanceDetail, SubstanceEdit, SubstanceName, SubstanceCode, SubstanceRelationship } from './substance.model';
+import { SubstanceSummary, SubstanceDetail, SubstanceEdit, SubstanceName, SubstanceCode, SubstanceRelationship, SubstanceReference } from './substance.model';
 import { PagingResponse } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FacetParam } from '../facets-manager/facet.model';
@@ -557,11 +557,22 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<FacetQueryResponse>(url);
   }
 
+
+  getSubstanceReferences(top?: number, skip?: number): Observable<any> {
+    if (!top) {
+      const top = 10;
+    }
+    if (!skip) {
+      const skip = 0;
+    }
+  let url = `${this.configService.configData.apiBaseUrl}api/v1/references?top=${top}&skip=${skip}`;
+    return this.http.get< any>(url);
+  }
+
   hasInxightLink(ID: string): Observable<any> {
     const url = `https://drugs.ncats.io/api/v1/substances/search?q=root_approvalID:${ID}&fdim=1`;
     return this.http.jsonp(url, 'callback' )
 
   }
-
 }
 

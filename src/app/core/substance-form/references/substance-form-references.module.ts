@@ -28,7 +28,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule
   ],
   declarations: [
-    SubstanceFormReferencesCardComponent
+    SubstanceFormReferencesCardComponent,
   ]
 })
 export class SubstanceFormReferencesModule { }
