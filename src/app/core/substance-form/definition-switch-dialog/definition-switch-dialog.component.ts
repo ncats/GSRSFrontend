@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import * as defiant from '../../../../../node_modules/defiant.js/dist/defiant.min.js';
 import { LoadingService } from '@gsrs-core/loading/index.js';
+import { UtilsService } from '@gsrs-core/utils/index.js';
 
 @Component( {
   selector: 'app-definition-switch-dialog',
@@ -40,9 +41,9 @@ export class DefinitionSwitchDialogComponent implements OnInit {
     private substanceService: SubstanceService,
     private sanitizer: DomSanitizer,
     private loadingService: LoadingService,
+    private utilsService: UtilsService,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.defSwitch();
@@ -68,10 +69,10 @@ export class DefinitionSwitchDialogComponent implements OnInit {
     this.full_prom = null;
     this.oldAlt = {};
     this.oldPrime = this.sub;
-    this.uuidNew = this.guid();
-    this.newstructureid = this.guid();
-    this.structureuuid = this.guid();
-    this.structureid = this.guid();
+    this.uuidNew = this.utilsService.newUUID();
+    this.newstructureid = this.utilsService.newUUID();
+    this.structureuuid = this.utilsService.newUUID();
+    this.structureid = this.utilsService.newUUID();
     this.alt = {};
 
     this.currentAlts = _.chain(this.sub.relationships).filter(function (r) {
@@ -83,7 +84,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
     }).value();
 
     if (this.currentAlts.length > 0) {
-      this.text = 'select a substance to switch';
+      this.text = 'Select a substance to switch';
     } else {
       this.text = 'No alternate definitions were found for this record';
     }
@@ -128,7 +129,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
       if (this.oldPrime.substanceClass !== 'structurallyDiverse') {
         this.oldPrime.substanceClass = 'structurallyDiverse';
         this.oldPrime.structurallyDiverse = {
-          'uuid': this.guid(),
+          'uuid': this.utilsService.newUUID(),
           'created': 1567806115158,
           'createdBy': 'definitionSwitcher',
           'lastEdited': 1567806115158,
@@ -222,7 +223,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               console.log('deleting ' + altSwitch.substanceClass + ' adding temporary structurallyDiverse');
               altSwitch.substanceClass = 'structurallyDiverse';
               altSwitch.structurallyDiverse = {
-                'uuid': this.guid(),
+                'uuid': this.utilsService.newUUID(),
                 'created': 1567806115158,
                 'createdBy': 'definitionSwitcher',
                 'lastEdited': 1567806115158,
@@ -294,7 +295,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             for (let k = 0; k < current.length; k++) {
               for (let l = 0; l < this.sub.references.length; l++) {
                 if (this.sub.references[l].uuid === current[k]) {
-                  const replace = this.guid();
+                  const replace = this.utilsService.newUUID();
                   current[k] = replace;
                   this.sub.references[l].uuid = replace;
                   toPush.push(this.sub.references[l]);
@@ -366,7 +367,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               for (let k = 0; k < current.length; k++) {
                 for (let l = 0; l < this.oldAlt.references.length; l++) {
                   if (this.oldAlt.references[l].uuid === current[k]) {
-                    const replace = this.guid();
+                    const replace = this.utilsService.newUUID();
                     current[k] = replace;
                     this.oldAlt.references[l].uuid = replace;
                     toPush.push(this.oldAlt.references[l]);
@@ -459,13 +460,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         }
       }
 
-      guid() {
-        function s4() {
-          return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-        }
-
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-      }
 
       getJson() {
         return this.substanceFormService.getJson();
