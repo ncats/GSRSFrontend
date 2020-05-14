@@ -29,7 +29,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private utilsService: UtilsService,
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
     private substanceFormService: SubstanceFormService
   ) { }
 
