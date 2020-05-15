@@ -1,4 +1,4 @@
-export const dataDictionary: any = {"Record Uuid": {fieldName: "Version",
+export const DataDictionary: any = {"Record Uuid": {fieldName: "Version",
     fieldPath: "/version",
     lucenePath: "root_version",
     CVDomain: "", displayName: "Record Version",
