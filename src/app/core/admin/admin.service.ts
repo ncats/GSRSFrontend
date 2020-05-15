@@ -65,9 +65,15 @@ export class AdminService extends BaseHttpService {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
       return this.http.put<any>(`${url}users/${name}`, user);
     }
+
     public addUser(user: any): Observable<any> {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
       return this.http.post<any>(`${url}users/`, user);
+    }
+
+    public deleteUser(user: any): Observable<any> {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.delete<any>(`${url}users/${user}`);
     }
 
     public getGroups(): Observable<any> {
@@ -85,6 +91,7 @@ export class AdminService extends BaseHttpService {
         params = params.append(
           'newPassword', newpass
         );
+        let headers =  {  'Access-Control-Allow-Origin': 'http://localhost:4200' }
       return this.http.post<any>(`${url}users/${id}/password`, params);
       }
 

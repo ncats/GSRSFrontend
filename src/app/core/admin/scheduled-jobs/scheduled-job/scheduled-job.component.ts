@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
+import * as moment from 'moment';
+import cronstrue from 'cronstrue';
 
 @Component({
   selector: 'app-scheduled-job',
@@ -14,7 +16,7 @@ export class ScheduledJobComponent implements OnInit {
     quickLoad = false;
     mess: any;
   constructor(
-    private adminService: AdminService
+    private adminService: AdminService,
   ) { }
 
   ngOnInit() {
@@ -22,6 +24,14 @@ export class ScheduledJobComponent implements OnInit {
      this.refresh(true);
     console.log('loaded');
 
+  }
+
+  momentTime(time: any) {
+    return moment(time).fromNow();
+  }
+
+  cronTime(time: any) {
+    return cronstrue.toString(time);
   }
 
   refresh(spawn?: boolean) {

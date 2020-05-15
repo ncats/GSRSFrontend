@@ -16,7 +16,7 @@
                         <mat-icon svgIcon = "alarm-on" class = "spinner">
                             </mat-icon>
                         <div><div class = "label">Next Run Time</div>
-                        <i>{{job.nextRun}}</i></div>
+                        <i>{{momentTime(job.nextRun)}}</i></div>
                     </div>
                     <div *ngIf="!job.enabled">
                             <mat-icon svgIcon = "cancel" class = "spinner">
@@ -59,17 +59,17 @@
                     </div>
                     <div>
                         <i>
-                        ({{job.cronScheduleHuman}})
+                        ({{cronTime(job.cronSchedule)}})
                         </i>
                     </div>
                 </div>
             </div>
-            <div  class = "table-row" *ngIf="job.numberOfRuns">
+            <div  class = "table-row time-row" *ngIf="job.numberOfRuns">
                 <div class = "label table-label">Number of times run:</div>
                 <div class = "table-value">{{job.numberOfRuns}}</div>
             </div>
             
-            <div  class = "table-row" *ngIf="job.lastDurationHuman">
+            <div  class = "table-row time-row" *ngIf="job.lastDurationHuman">
                 <div class = "label table-label">Last Execution Duration</div>
                 <div class = "table-value">{{job.lastDurationHuman}}</div>
             </div>

@@ -31,8 +31,8 @@
 
         <div class = "password-column" *ngIf = "!newUser">
               <div>
-            <button (click) = "changePassword = !changePassword" mat-button class = "mat-primary mat-flat-button">
-                   {{!changePassword?"Change Password":"Hide fields"}} 
+            <button (click) = "changePassword = !changePassword" mat-button class = " mat-flat-button">
+                   {{!changePassword?"Change Password":"Cancel"}} 
                 </button>
             </div>
                     <span *ngIf = "changePassword === true" >
@@ -54,7 +54,7 @@
                            
                            
                                 <div>
-                            <button mat-button class = "mat-flat-button" (click) = "validatePassword()">Submit Change</button>
+                            <button mat-button class = " mat-primary mat-flat-button" (click) = "validatePassword()">Submit Change</button>
                             </div>
                     </span>
         </div>

@@ -115,6 +115,9 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   saveChanges() {
+    if (this.changePassword && this.newPassword !=="" ){
+      this.message = "Cancel or submit new password to save other changes";
+    } else {
     let rolesArr = [];
     this.roles.forEach(role =>{
       if (role.hasRole) {
@@ -123,7 +126,7 @@ export class UserEditDialogComponent implements OnInit {
     });
     let groups = [];
     this.groups.forEach(group => {
-      if(group.hasGroup ) {
+      if (group.hasGroup ) {
         groups.push(group.name);
 
       }
@@ -152,8 +155,10 @@ export class UserEditDialogComponent implements OnInit {
       }
     });
   }
+  }
 
   addUser() {
+    console.log(this.newPassword+ ' - '+this.oldPassword);
     if(this.newPassword === this.newPasswordConfirm){
       let rolesArr = [];
       this.roles.forEach(role =>{
@@ -179,6 +184,7 @@ export class UserEditDialogComponent implements OnInit {
       }
   
       this.adminService.addUser(userEditObj).subscribe(response =>{
+        console.log(response);
         if(response && response.user){
           this.dialogRef.close(response);
         }
@@ -200,6 +206,7 @@ export class UserEditDialogComponent implements OnInit {
       alert('passwords do not match');
       this.newPassword = "";
       this.newPasswordConfirm = "";
+      this.message = "Passwords do not match";
     } else {
       this.adminService.changePassword(this.oldPassword, this.newPassword, this.user.id).subscribe(response => {
         console.log(response);
@@ -208,7 +215,11 @@ export class UserEditDialogComponent implements OnInit {
         if (error.error && isString(error.error) ) {
           this.message = error;
         } else {
-    
+          this.newPassword = "";
+          this.newPasswordConfirm = "";
+          this.oldPassword = "";
+          this.changePassword = !this.changePassword;
+          this.message = "Password updated successfully";
         }
       })
     }
