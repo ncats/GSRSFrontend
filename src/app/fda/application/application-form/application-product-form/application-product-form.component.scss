@@ -14,12 +14,32 @@
   box-sizing: border-box;
   margin-bottom: 20px;
 }
-  
+
 .form-row {
+  display: flex;
+  width: 100%;
+
+  .col-1 {
+    width: calc((100% - 30px * 4) / 5);
+    margin-right: 30px;
+  }
+
+  .col-1-nomargin {
+    width: calc((100% - 30px * 4) / 5);
+    margin-right: 0px;
+  }
+}
+
+.form-row-prodname {
   display: flex;
   justify-content:space-between; 
  /* grid-column-gap: 20px; */
   /* align-items: flex-end; */
+}
+
+.prodNameField {
+  width: calc((100% - 100px) / (5/4));
+  margin-right: 30px;
 }
 
 .bordergray {
@@ -149,11 +169,6 @@ legend.border {
 .disabled { 
   cursor: not-allowed; 
 } 
-
-.prodNameField {
-  width: calc((100% - 100px) / (5/4));
-  margin-right: 30px;
-}
 
 .displayinlineblock {
   display: inline-block;

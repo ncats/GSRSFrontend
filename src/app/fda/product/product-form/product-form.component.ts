@@ -83,14 +83,14 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           this.title = 'Update Product';
           if (id !== this.id) {
             this.id = id;
-            this.gaService.sendPageView(`Application Edit`);
+            this.gaService.sendPageView(`Product Edit`);
             this.getProductDetails();
             this.getVocabularies();
           }
         } else {
           this.title = 'Register New Product';
           setTimeout(() => {
-            this.gaService.sendPageView(`Application Register`);
+            this.gaService.sendPageView(`Product Register`);
             this.productService.loadProduct();
             this.product = this.productService.product;
             this.getVocabularies();
@@ -157,7 +157,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadingService.setLoading(false);
         this.isLoading = false;
       }, error => {
-        this.gaService.sendException('getApplicationDetails: error from API call');
+        this.gaService.sendException('getProductDetails: error from API call');
         this.loadingService.setLoading(false);
         this.isLoading = false;
         this.handleProductRetrivalError();
@@ -222,7 +222,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
-      this.submissionMessage = 'Application was saved successfully!';
+      this.submissionMessage = 'Product was saved successfully!';
       this.showSubmissionMessages = true;
       this.validationResult = false;
       setTimeout(() => {

@@ -26,6 +26,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ApplicationsBrowseComponent } from './applications-browse/applications-browse.component';
 import { ApplicationDetailsComponent } from './application-details/application-details/application-details.component';
 import { ApplicationDarrtsDetailsComponent } from './application-details/application-darrts-details/application-darrts-details.component';
@@ -42,6 +44,21 @@ import { SubstanceSearchSelectorModule } from '../substance-search-select/substa
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { JsonDialogFdaModule } from '../json-dialog-fda/json-dialog-fda.module';
 import { ConfirmDialogModule } from '../confirm-dialog/confirm-dialog.module';
+// import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+// import { AppDateAdapter } from '../format-datepicker/format-datepicker';
+// MAT_NATIVE_DATE_FORMATS 
+
+const APP_DATE_FORMATS = {
+  parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
+  display: {
+      dateInput: 'input',
+      monthYearLabel: {year: 'numeric', month: 'short'},
+      dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric'},
+      monthYearA11yLabel: {year: 'numeric', month: 'long'}
+  }
+};
 
 const applicationRoutes: Routes = [
   {
@@ -93,6 +110,8 @@ const applicationRoutes: Routes = [
     MatTooltipModule,
     MatTabsModule,
     MatBottomSheetModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
@@ -101,7 +120,8 @@ const applicationRoutes: Routes = [
     SubstanceSearchSelectorModule,
     FacetsManagerModule,
     JsonDialogFdaModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    SubstanceFormModule
   ],
   declarations: [
     ApplicationsBrowseComponent,
@@ -111,11 +131,13 @@ const applicationRoutes: Routes = [
     ApplicationFormComponent,
     ApplicationProductFormComponent,
     IngredientFormComponent,
+ //   CvInputComponent,
 //    JsonDialogFdaComponent,
 //    ConfirmDialogComponent
   ],
   exports: [
     ApplicationsBrowseComponent,
+ //   CvInputComponent,
  //   JsonDialogFdaComponent,
 //    ConfirmDialogComponent
   ],
@@ -123,6 +145,11 @@ const applicationRoutes: Routes = [
  //   JsonDialogFdaComponent,
 //    ConfirmDialogComponent
   ]
+ // ,
+ // providers: [
+ //   {provide: DateAdapter, useClass: AppDateAdapter},
+ //   {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+// ]
 })
 
 export class ApplicationModule {

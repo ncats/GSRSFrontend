@@ -20,9 +20,6 @@ export class IngredientFormComponent implements OnInit {
   @Input() ingredIndex: number;
   @Input() totalIngredient: number;
 
-  ingredientTypeList: Array<VocabularyTerm> = [];
-  unitList: Array<VocabularyTerm> = [];
-  gradeList: Array<VocabularyTerm> = [];
   ingredientName: string;
   ingredientNameSubstanceUuid: string;
   ingredientNameBdnumOld: string;
@@ -45,20 +42,11 @@ export class IngredientFormComponent implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       this.username = this.authService.getUser();
-      this.getVocabularies();
       this.ingredientNameBdnumOld = this.ingredient.bdnum;
       this.basisofStrengthBdnumOld = this.ingredient.basisOfStrengthBdnum;
       this.getSubstanceId(this.ingredient.bdnum, 'ingredientname');
       this.getSubstanceId(this.ingredient.basisOfStrengthBdnum, 'basisofstrength');
     }, 600);
-  }
-
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('INGREDIENT_TYPE', 'PROD_UNIT', 'PROD_GRADE').subscribe(response => {
-      this.ingredientTypeList = response['INGREDIENT_TYPE'].list;
-      this.unitList = response['PROD_UNIT'].list;
-      this.gradeList = response['PROD_GRADE'].list;
-    });
   }
 
   addNewIngredient(prodIndex: number) {

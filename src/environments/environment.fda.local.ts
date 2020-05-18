@@ -2,7 +2,7 @@ import { baseEnvironment } from 'src/environments';
 
 export const environment = baseEnvironment;
 environment.appId = 'fda';
-environment.baseHref = '/ginas/app/beta/';
+// environment.baseHref = '/ginas/app/beta/';
 environment.clasicBaseHref = '/ginas/app/';
 // __alex__ should make change here.
 environment.appId = 'fda';

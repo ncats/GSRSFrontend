@@ -14,7 +14,19 @@
   box-sizing: border-box;
   margin-bottom: 20px;
 }
-  
+
+.titlegreen {
+  color: green;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.titleorange {
+  color: orangered;
+  font-size: 17px;
+  font-weight: 500;
+}
+
 .form-row {
   display: flex;
   justify-content:space-between; 
@@ -86,6 +98,10 @@
   padding: 10px;
 }
 
+.font11px {
+  font-size: 11px;
+}
+
 .font12px {
   font-size: 12px;
 }
@@ -102,20 +118,20 @@
   color: red;
 }
 
+.colororange {
+  color: #d35e04;
+}
+
+.colormaroon {
+  color: maroon;
+}
+
 .colorgray {
   color: gray;
 }
 
-.titlegreen {
-  color: green;
-  font-size: 17px;
-  font-weight: 500;
-}
-
-.titleorange {
-  color: orangered;
-  font-size: 17px;
-  font-weight: 500;
+.fontfamilyhelvetica {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 .margintop30px {
@@ -136,6 +152,10 @@
 
 .padbottom0px {
   padding: 0px;
+}
+
+.textalignright {
+  text-align: right;
 }
 
 hr {

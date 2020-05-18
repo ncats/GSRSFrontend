@@ -59,17 +59,14 @@
           </div>
 
           <div class="font11px" *ngIf="product.id">
-
-            <!--
             <br>
-            <div>
+            <div class="font11px">
               <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Create Date:</span>
-              {{application.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+              {{product.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modify Date:</span> {{application.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+              <span class="colorgray">Modify Date:</span> {{product.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
             </div>
-          -->
           </div>
         </div>
 

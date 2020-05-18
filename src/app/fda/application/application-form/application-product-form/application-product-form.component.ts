@@ -15,11 +15,6 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 export class ApplicationProductFormComponent implements OnInit {
 
   @Input() application: ApplicationSrs;
-  productNameTypeList: Array<VocabularyTerm> = [];
-  dosageFormList: Array<VocabularyTerm> = [];
-  routeAdminList: Array<VocabularyTerm> = [];
-  unitPresentationList: Array<VocabularyTerm> = [];
-  unitList: Array<VocabularyTerm> = [];
   reviewProductMessage: Array<any> = [];
   productMessage = '';
   username = null;
@@ -32,18 +27,6 @@ export class ApplicationProductFormComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.authService.getUser();
-    this.getVocabularies();
-  }
-
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('PROD_PRODUCT_NAME_TYPE', 'DOSAGE_FORM', 'PROD_ROUTE_OF_ADMIN',
-      'PROD_UNIT_PRESENTATION', 'APPLICATION_UNIT').subscribe(response => {
-        this.productNameTypeList = response['PROD_PRODUCT_NAME_TYPE'].list;
-        this.dosageFormList = response['DOSAGE_FORM'].list;
-        this.routeAdminList = response['PROD_ROUTE_OF_ADMIN'].list;
-        this.unitPresentationList = response['PROD_UNIT_PRESENTATION'].list;
-        this.unitList = response['APPLICATION_UNIT'].list;
-      });
   }
 
   addNewProduct() {
@@ -69,7 +52,6 @@ export class ApplicationProductFormComponent implements OnInit {
   deleteProduct(prodIndex: number) {
     this.applicationService.deleteProduct(prodIndex);
   }
-
 
   confirmDeleteProductName(prodIndex: number, prodNameIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

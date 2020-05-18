@@ -57,8 +57,14 @@ export class ProductIngredientFormComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.username = this.authService.getUser();
-    this.getVocabularies();
+    setTimeout(() => {
+      this.username = this.authService.getUser();
+      this.getVocabularies();
+      this.ingredientNameBdnumOld = this.ingredient.bdnum;
+      this.basisofStrengthBdnumOld = this.ingredient.basisOfStrengthBdnum;
+      this.getSubstanceId(this.ingredient.bdnum, 'ingredientname');
+      this.getSubstanceId(this.ingredient.basisOfStrengthBdnum, 'basisofstrength');
+    }, 600);
   }
 
   getVocabularies(): void {
@@ -235,4 +241,55 @@ export class ProductIngredientFormComponent implements OnInit {
   copyProductIngredient() {
     this.productService.copyProductIngredient(this.ingredient, this.prodComponentIndex, this.prodLotIndex);
   }
+
+  confirmDeleteIngredientName() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Ingredient Name ' + (this.prodIngredientIndex + 1) + '?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteIngredientName();
+      }
+    });
+  }
+
+  deleteIngredientName() {
+    this.ingredientNameMessage = '';
+    if (this.ingredient.id != null) {
+      // Display this message if deleting existing Ingredient Name which is in database.
+      if (this.ingredientNameBdnumOld != null) {
+        this.ingredientNameMessage = 'Click Validate and Submit button to delete ' + this.ingredientName;
+      }
+    }
+    this.ingredientNameSubstanceUuid = null;
+    this.ingredientName = null;
+    this.ingredient.bdnum = null;
+  }
+
+  confirmDeleteBasisOfStrength() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Are you sure you want to delete Basis of Strength ' + (this.prodIngredientIndex + 1) + '?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteBasisOfStrength();
+      }
+    });
+  }
+
+  deleteBasisOfStrength() {
+    this.basisOfStrengthMessage = '';
+    if (this.ingredient.id != null) {
+      // Display this message if deleting existing Basis of Strength which is in database.
+      if (this.basisofStrengthBdnumOld != null) {
+        this.basisOfStrengthMessage = 'Click Validate and Submit button to delete ' + this.basisOfStrengthName;
+      }
+    }
+    this.basisofStrengthSubstanceUuid = null;
+    this.basisOfStrengthName = null;
+    this.ingredient.basisOfStrengthBdnum = null;
+  }
+
 }
