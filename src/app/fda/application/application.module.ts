@@ -48,7 +48,6 @@ import { ConfirmDialogModule } from '../confirm-dialog/confirm-dialog.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
 // import { AppDateAdapter } from '../format-datepicker/format-datepicker';
-// MAT_NATIVE_DATE_FORMATS 
 
 const APP_DATE_FORMATS = {
   parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
