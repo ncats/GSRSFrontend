@@ -5,6 +5,7 @@ import { Observable, Subject, forkJoin, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { PagingResponse } from '../utils/paging-response.model';
 import { map, catchError, retry } from 'rxjs/operators';
+import { FacetHttpParams } from '@gsrs-core/facets-manager';
 
 
 @Injectable({
@@ -91,11 +92,27 @@ export class AdminService extends BaseHttpService {
         params = params.append(
           'newPassword', newpass
         );
-        let headers =  {  'Access-Control-Allow-Origin': 'http://localhost:4200' }
-      return this.http.post<any>(`${url}users/${id}/password`, params);
+        console.log(oldpass);
+        console.log(newpass);
+        let params2 = new  FacetHttpParams();
+        params2.appendDictionary({
+          oldPassword: oldpass,
+          newPassword: newpass
+        });
+        let body = {
+          oldPassword: "test1",
+          newPassword: "test2"
+        }
+        
+
+        let body2 = {
+          'oldPassword': oldpass,
+          'newPassword': newpass
+        }
+        let body3 = {}
+        body3['oldPassword'] = oldpass;
+        body3['newPassword'] = newpass;
+      return this.http.post<any>(`${url}users/${id}/password`, body3);
       }
-
-
-
 
 }

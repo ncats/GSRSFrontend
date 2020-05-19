@@ -159,8 +159,9 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
       if (response ) {
-
-       this.filtered.data.push(response);
+        const backup = this.filtered.data;
+        backup.push(response);
+       this.filtered.data = backup;
         this.users.push(response);
       }
     });

@@ -31,7 +31,7 @@
 
   <div class = "form-row">
       <div class = "top-button">
-          <button mat-button (click) = "showInactiveUsers()">{{showInactive? 'Hide':'Show'}} Inactive Users</button>
+          <button mat-button (click) = "showInactiveUsers()">{{showInactive? 'Show':'Hide'}} Inactive Users</button>
         </div>
   </div>
 <table mat-table [dataSource] = "filtered"  matSort (matSortChange)="sortData($event)">

@@ -17,6 +17,7 @@
     display:flex;
     width: 100%;
     flex-direction: row;
+    margin-bottom: 15px;
 
     .username {
         width: 35%;
@@ -39,4 +40,17 @@
 
 ::ng-deep .mat-dialog-content {
     padding: 10px 24px !important;
+}
+
+.message {
+    margin: auto;
+}
+
+.box-label {
+    padding-bottom: 10px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: unset !important;
+    max-height: 90%;
 }

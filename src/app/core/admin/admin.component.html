@@ -1,12 +1,11 @@
 <div class = "admin-container">
-    <h3>Administrative Functions</h3>
     <div class = "page-container">
         <mat-tab-group [selectedIndex] = "activeTab" class = "tab-group">
                 <mat-tab>
                 <ng-template mat-tab-label>
                     User Management
                 </ng-template>
-                <h1 class = "tab-label">User Management</h1>
+                <h2 class = "tab-label">User Management</h2>
                   <mat-card class = "app-container">
                         <app-user-management class =  "full-width"></app-user-management>
                   </mat-card>
@@ -20,7 +19,7 @@
                   <ng-template mat-tab-label>
                     CV Management
                   </ng-template>
-                  <h1 class = "tab-label">Edit CV</h1>
+                  <h2 class = "tab-label">Edit Controlled Vocabulary</h2>
                   <mat-card class = "app-container">
                         <app-cv-management class =  "full-width"></app-cv-management>
                     </mat-card>
@@ -30,7 +29,7 @@
                     Scheduled Jobs
                   </ng-template>
                   <ng-template matTabContent>
-                  <h1 class = "tab-label">Scheduled Jobs</h1>
+                  <h2 class = "tab-label">Scheduled Jobs</h2>
                   <div class = "app-container">
                         <app-scheduled-jobs></app-scheduled-jobs>
                     </div>
@@ -40,7 +39,7 @@
                     <ng-template mat-tab-label>
                         Cache Summary
                     </ng-template>
-                    <h1 class = "tab-label">Cache Summary</h1>
+                    <h2 class = "tab-label">Cache Summary</h2>
                   <div class = "app-container">
                         <app-cache-summary class =  "full-width"></app-cache-summary>
                   </div>

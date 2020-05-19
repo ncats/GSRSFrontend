@@ -74,11 +74,13 @@
                 <div>
             </div>
       </div>
+      <div class = "message">{{message}}</div>
+
     </div>
     
     
 <div class = "form-row">
-<div class = "field-group">Groups
+<div class = "field-group"><span class = "mat-header-cell box-label">Groups</span>
             <div *ngFor = "let group of groups">
                 <mat-checkbox [(ngModel)] = 'group.hasGroup'>
                 {{group.name}}
@@ -88,7 +90,7 @@
                     <input matInput [(ngModel)] = "newGroup" placeholder = "new group" />
                     </mat-form-field>
 </div>
-<div class = "field-group">Roles
+<div class = "field-group box-label"><span class = "mat-header-cell">Roles</span>
         <div *ngFor = "let role of roles">
                 <mat-checkbox [(ngModel)] = 'role.hasRole' >
                  {{role.name}}
@@ -107,9 +109,7 @@
       </mat-progress-spinner>
 </div>
 </div>
-<div class = "form-row">
-    <div>{{message}}</div>
-</div>
+
 </div>
 
 <div mat-dialog-actions>

@@ -121,6 +121,7 @@ disable (job: any) {
 
 enable(job: any) {
       this.adminService.runJob(job["@enable"]).subscribe( response =>{
+        this.refresh();
       });
 }
 

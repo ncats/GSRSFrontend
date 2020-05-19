@@ -75,7 +75,6 @@ export class UserEditDialogComponent implements OnInit {
                 });
                 this.groups.push(temp);
               });
-              console.log(this.groups);
             });
           });
          
@@ -191,9 +190,8 @@ export class UserEditDialogComponent implements OnInit {
       }, error => {
         console.log(error);
         if (error.error && isString(error.error) ) {
-          this.message = error;
+          this.message = error.error;
         }
-
       });
     } else {
       this.message = "passwords do not match";
@@ -203,25 +201,27 @@ export class UserEditDialogComponent implements OnInit {
   validatePassword(){
     console.log(this.newPassword === this.newPasswordConfirm);
     if (this.newPassword !== this.newPasswordConfirm) {
-      alert('passwords do not match');
+      this.message = 'Error: passwords do not match';
       this.newPassword = "";
       this.newPasswordConfirm = "";
-      this.message = "Passwords do not match";
+    } else if (this.newPassword === this.oldPassword) {
+      this.message = 'Error: no change in password detected';
     } else {
       this.adminService.changePassword(this.oldPassword, this.newPassword, this.user.id).subscribe(response => {
         console.log(response);
+        this.changePassword = !this.changePassword;
+        this.message = "Password updated successfully";
       }, error => {
         console.log(error);
         if (error.error && isString(error.error) ) {
-          this.message = error;
+          this.message = "Error - " + error.error;
         } else {
           this.newPassword = "";
           this.newPasswordConfirm = "";
-          this.oldPassword = "";
           this.changePassword = !this.changePassword;
-          this.message = "Password updated successfully";
+          this.message = "Error: updated successfully";
         }
-      })
+      });
     }
   }
 

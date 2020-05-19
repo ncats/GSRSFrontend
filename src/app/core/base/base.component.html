@@ -67,7 +67,7 @@
       <span class="user" *ngIf="auth && auth.identifier">{{auth.identifier}}</span>
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
-      <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'profile'" target="_blank">
+      <a mat-menu-item  [routerLink] = "['/profile']">
         <span>Profile</span>
       </a>
       <a routerLink = "/admin" mat-menu-item *ngIf = "isAdmin">
