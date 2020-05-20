@@ -19,10 +19,6 @@ export class DataDictionaryService {
     return this.dataDictionary[key][field];
   }
 
-  getRowByProperty(type: string, value: string): any {
-    this.dataDictionary.forEach();
-  }
-
   getCVDomainRows(): any {
     const newObj = {};
     Object.keys(this.dataDictionary).forEach(key => {

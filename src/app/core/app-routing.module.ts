@@ -13,7 +13,6 @@ import { CanActivateSubstanceForm } from './substance-form/can-activate-substanc
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate-substance-form.guard';
 import { AdminComponent } from '@gsrs-core/admin/admin.component';
-import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 
 const childRoutes: Routes = [
   {
@@ -69,11 +68,7 @@ const childRoutes: Routes = [
   {
     path: 'admin',
     component: AdminComponent
-  },
-  {
-    path: 'profile',
-    component: UserProfileComponent
-  },
+  }
 ];
 
 const routes: Routes = [
