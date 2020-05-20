@@ -68,7 +68,6 @@ export class AuthService {
 
   getAuth(): Observable<Auth> {
     return new Observable(observer => {
-      console.log(this._auth);
 
       if (this._auth != null) {
         observer.next(this._auth);
@@ -80,7 +79,6 @@ export class AuthService {
           } else {
             this._auth = null;
           }
-          console.log(this._auth);
 
           observer.next(this._auth);
           this._authUpdate.next(this._auth);
@@ -92,7 +90,6 @@ export class AuthService {
       }
 
       this._authUpdate.subscribe(auth => {
-        console.log(this._auth);
 
         observer.next(auth);
       }, error => {
