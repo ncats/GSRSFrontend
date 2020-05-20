@@ -20,11 +20,17 @@ export class DataDictionaryService {
   }
 
   getCVDomainRows(): any {
-    const newObj = {};
+    const newObj = [];
     Object.keys(this.dataDictionary).forEach(key => {
-      if (this.dataDictionary[key]['CVDomain'] !== '') {
-        newObj[this.dataDictionary[key]['CVDomain']] = this.dataDictionary[key];
+      const cv = this.dataDictionary[key]['CVDomain'];
+      if (cv !== '') {
+        if (newObj[cv] && newObj[cv].length > 0) {
+          newObj[cv].push(key);
+      } else {
+        newObj[cv] = [key];
+
       }
+    }
     });
     return newObj;
   }

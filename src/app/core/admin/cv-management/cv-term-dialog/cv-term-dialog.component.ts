@@ -21,8 +21,6 @@ export class CvTermDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.vocabulary = data.vocabulary;
-    console.log(this.vocabulary);
-    console.log(data.vocabulary);
     this.terms = data.vocabulary.terms;
     }
 
@@ -33,11 +31,9 @@ export class CvTermDialogComponent implements OnInit {
   }
 
   submit(): void {
-    console.log(this.vocabulary);
     this.vocabulary.terms = this.terms;
     this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
       this.loading = false;
-      console.log(response);
       if (response.terms && response.terms.length === this.vocabulary.terms.length) {
         alert('vocabulary updated');
         setTimeout(() => {this.dialogRef.close(response); }, 200);

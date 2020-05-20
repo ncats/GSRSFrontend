@@ -14,7 +14,7 @@ export class ScheduledJobComponent implements OnInit {
 
     @Input() job: ScheduledJob;
     @Input() pollIn: any;
-    monitor: any;
+    monitor: boolean;
     quickLoad = false;
     mess: any;
   constructor(

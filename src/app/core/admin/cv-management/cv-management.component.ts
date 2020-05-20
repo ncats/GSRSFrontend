@@ -22,8 +22,9 @@ export class CvManagementComponent implements OnInit {
   downloadHref: SafeUrl;
   searchControl = new FormControl();
   private searchTimer: any;
-  dictionary: any;
+  dictionary: Array< any >;
   loading:boolean;
+  toggle: Array< boolean > = [];
 
 
 
@@ -42,7 +43,6 @@ export class CvManagementComponent implements OnInit {
       this.loading = true;
       this.cvService.getVocabularies(null, 1000).subscribe(response => {
         this.loading = false;
-        console.log(response);
         this.dictionary =  this.dictionaryService.getCVDomainRows();
         this.vocabularies = response.content;
         this.filtered = this.vocabularies;
@@ -53,7 +53,6 @@ export class CvManagementComponent implements OnInit {
           this.searchControl.valueChanges.subscribe(value => {
             this.filterList(value, this.vocabularies);
           }, error => {
-            console.log(error);
           });
         });
         this.downloadHref = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' +
@@ -75,7 +74,7 @@ export class CvManagementComponent implements OnInit {
 
   getPath(val: string): string {
     if (this.dictionary[val]) {
-      return this.dictionary[val]['fieldPath'];
+      return this.dictionary[val];
     } else {
       return '';
     }
@@ -106,8 +105,6 @@ export class CvManagementComponent implements OnInit {
       const isAsc = sort.direction === 'asc';
       return this.utilsService.compare(a[sort.active], b[sort.active], isAsc);
     });
-    console.log(sort);
-    console.log(this.filtered);
   }
 
   download(){
@@ -115,8 +112,7 @@ export class CvManagementComponent implements OnInit {
   }
 
   filterList(searchInput: string, listToFilter: Array<any>): void {
-    console.log(searchInput);
-    console.log(listToFilter.length)
+
     if (this.searchTimer != null) {
         clearTimeout(this.searchTimer);
     }
