@@ -1,0 +1,95 @@
+.form-row {
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+    .side-bar {
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+    }
+    .end-bar {
+        width: 20%;
+        display:flex;
+        flex-direction:column;
+    }
+    .main-bar {
+        width: 50%;
+    }
+}
+
+
+.job-container {
+    padding:10px;
+    margin: 10px;
+  
+}
+
+.job-dates {
+    width: 100%;
+    flex-grow: 1;
+    min-height: 70px;
+}
+
+.spinner {
+    height: 100px;
+    width: 100px;
+    margin: auto;
+}
+
+.label {
+    font-weight: bold
+}
+
+.table-label {
+    min-width: 110px;
+    max-width: 150px;
+    margin-right:20px;
+}
+
+.table-value {
+    width: calc(100% - 170px);
+}
+
+.main-container {
+
+}
+
+.table-row {
+    margin-bottom:15px;
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    align-content: initial;
+
+}
+
+.bottom-button {
+    margin: auto;
+}
+
+.job-settings {
+    width: 100%;
+    flex-grow: 1;
+}
+
+.time-field {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    padding-left: 29px;
+    padding-top: 5px;
+}
+
+.time-field, .time-label {
+    width: 100%;
+}
+
+.time-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.download-link {
+    display:flex;
+    flex-direction: column;
+    margin: auto;
+}

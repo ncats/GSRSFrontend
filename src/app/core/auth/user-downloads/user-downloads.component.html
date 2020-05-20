@@ -1,0 +1,16 @@
+<div class = "download-container" *ngIf ="id">
+        <app-download-monitor [id] = "id"></app-download-monitor>
+        
+</div>
+
+<div class = "download-container" *ngIf ="downloads" >
+    <mat-card *ngFor = "let download of downloads" class = "form-row">
+            <app-download-monitor [id] = "download.id"></app-download-monitor>
+
+        </mat-card>
+        <mat-card *ngIf="!downloads.length" class ="no-jobs">
+            <h3>No downloads found</h3>
+        </mat-card>
+</div>
+
+

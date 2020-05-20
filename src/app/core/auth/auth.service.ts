@@ -5,6 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
+import { UserDownload, AllUserDownloads } from '@gsrs-core/auth/user-downloads/download.model';
 
 @Injectable({
   providedIn: 'root'
@@ -202,4 +203,31 @@ export class AuthService {
       }
     });
   }
+
+  startUserDownload(fullUrl: string): Observable< any > {
+    console.log(`${fullUrl}?publicOnly=false`);
+    return this.http.get< any >(`${fullUrl}`);
+  }
+
+  getUpdateStatus(id: string): Observable< UserDownload > {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    return this.http.get< any >(`${url}profile/downloads/${id}`);
+  }
+
+  changeDownload(url: string): Observable< UserDownload > {
+    console.log(url);
+    return this.http.get< any >(url);
+  }
+
+  deleteDownload(url: string): Observable< UserDownload > {
+    return this.http.delete< any >(url);
+  }
+
+  getAllDownloads(): Observable< AllUserDownloads > {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    return this.http.get< any >(`${url}profile/downloads`);
+
+  }
 }
+
+ 

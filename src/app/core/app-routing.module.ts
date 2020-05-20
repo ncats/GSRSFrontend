@@ -14,6 +14,8 @@ import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-s
 import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate-substance-form.guard';
 import { AdminComponent } from '@gsrs-core/admin/admin.component';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
+import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-downloads.component';
+
 
 const childRoutes: Routes = [
   {
@@ -74,6 +76,14 @@ const childRoutes: Routes = [
     path: 'profile',
     component: UserProfileComponent
   },
+  {
+    path: 'user-downloads',
+    component: UserDownloadsComponent
+  },
+  {
+    path: 'user-downloads/:id',
+    component: UserDownloadsComponent
+  }
 ];
 
 const routes: Routes = [

@@ -128,6 +128,19 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <mat-menu #exportMenu="matMenu">
+            <a mat-menu-item *ngFor = "let option of exportOptions"  (click) = "export(option.link.url)">
+              {{option.displayname}}
+            </a>
+          </mat-menu>
+  
+  
+          <button *ngIf="exportOptions && exportOptions.length > 0" mat-icon-button [matMenuTriggerFor]="exportMenu">
+              <mat-icon svgIcon="file_copy"></mat-icon>
+            </button>
+  
+
+       
 <div class = "break"></div>
         <div class = "full-paginator">
           <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"

@@ -592,5 +592,11 @@ export class SubstanceService extends BaseHttpService {
     return this.http.jsonp(url, 'callback' )
 
   }
+
+  getExportOptions(etag: string): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/${etag}?publicOnly=false`;
+    console.log(url);
+    return this.http.get< any>(url);
+  }
 }
 

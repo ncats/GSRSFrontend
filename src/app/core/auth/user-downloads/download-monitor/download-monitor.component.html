@@ -1,0 +1,81 @@
+
+<div class="panel panel-default sub-list" class = "form-row job-container" *ngIf = "download">
+        <div class = "side-bar text-center">
+            <div class = "job-settings">
+                <div *ngIf="download.status === 'RUNNING'">
+                        <mat-progress-spinner
+                            class="spinner"
+                            color="primary"
+                            mode="indeterminate"
+                        >
+                        </mat-progress-spinner>
+                        <div>Running task ... </div>
+                </div>
+                <div *ngIf="download.complete" class = "download-column">
+                    <a *ngIf="download.complete" color = "primary"  class = "download-link" [href] = "this.download.downloadUrl.url" target = "_blank">
+                            <mat-icon svgIcon = "get_app" class = "spinner">
+                                </mat-icon>
+                       <div> Download</div>
+                    </a>
+
+
+                    this.download.removeUrl.url
+                    <div *ngIf="download.status === 'CANCELLED'">
+                            <mat-icon svgIcon = "cancel" class = "spinner">
+                            </mat-icon>
+                        <div>
+                        <div class = "label"><i>Download Cancelled</i></div>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "bottom-button">
+                
+                <button *ngIf="download.status === 'RUNNING'" mat-button  class = "mat-flat-button mat-primary" color = "primary" (click)="cancel()">
+                        (click to cancel)
+                    </button>
+            </div>
+           
+        </div>
+        <div class = "main-bar">
+
+        <div class="main-container">          
+            <div class = "table-row" >
+                <div class = "label table-label">Number of records:</div>
+                <div class = "table-value">{{download.numRecords}}</div>
+            </div>
+            <div class = "table-row" *ngIf = "download.status">
+                <div class = "label table-label">Status:</div>
+                <div class = "table-value">{{download.status}}</div>
+            </div>
+            <div class = "table-row" *ngIf = "download.originalQuery">
+                <div class = "label table-label">Original Query:</div>
+                <div class = "table-value">{{download.originalQuery}}</div>
+            </div>
+            <div class = "table-row" *ngIf = "download.size" >
+                <div class = "label table-label">Size:</div>
+                <div class = "table-value">{{download.size / 1000}} Kb</div>
+            </div>
+            
+            </div>
+        </div>
+<div class = "end-bar">
+    <div class = "job-dates">
+        <div *ngIf="download.started" class = "table-row time-row">
+               <span class = "time-label">Date started: </span> 
+                <span class = "time-field">{{download.started | date:'medium'}}</span>
+        </div>
+        <div *ngIf="download.finished" class = "table-row time-row">
+            <span class = "time-label">Date ended: </span> 
+                <span class = "time-field">{{download.finished | date:'medium'}}</span>
+        </div>
+    </div>  
+    <div *ngIf="!download.enabled" class = "bottom-button">
+                    <button mat-button class = "mat-flat-button mat-primary" color = "primary"  (click)="delete()">
+                        (click to delete t)
+                    </button>
+    </div>
+
+</div>
+</div>

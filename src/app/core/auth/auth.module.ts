@@ -8,6 +8,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
+import { DownloadMonitorComponent } from '@gsrs-core/auth/user-downloads/download-monitor/download-monitor.component';
+import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-downloads.component';
+import { MatProgressSpinnerModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -18,15 +21,20 @@ import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     LoginComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    UserDownloadsComponent,
+    DownloadMonitorComponent
   ],
   exports: [
     LoginComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    DownloadMonitorComponent,
+    UserDownloadsComponent
   ]
 })
 export class AuthModule { }
