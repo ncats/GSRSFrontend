@@ -24,7 +24,7 @@ export class UserEditDialogComponent implements OnInit {
   loading: boolean = true;
   message: string;
   newGroup: string;
-  groups: Array<any>;
+  groups: Array< any >;
   roles = [{name:'Updater', hasRole: false},
     {name:'Admin', hasRole: false},
     {name: 'Query', hasRole: false},
@@ -95,7 +95,7 @@ export class UserEditDialogComponent implements OnInit {
       }
     }
 
-  checkRoles() {
+  checkRoles(): void {
     this.roles.forEach(role =>{
       this.user.roles.forEach(element => {
         if (element === role.name) {
@@ -105,7 +105,7 @@ export class UserEditDialogComponent implements OnInit {
   });
   }
 
-  checkGroups() {
+  checkGroups(): void {
     this.groups.forEach(group =>{
       this.user.groups.forEach(element => {
         if (element.name === group.name) {
@@ -115,7 +115,7 @@ export class UserEditDialogComponent implements OnInit {
   });
   }
 
-  saveChanges() {
+  saveChanges(): void {
     if (this.changePassword && this.newPassword !=="" ){
       this.message = "Cancel or submit new password to save other changes";
     } else {
@@ -157,7 +157,7 @@ export class UserEditDialogComponent implements OnInit {
   }
   }
 
-  addUser() {
+  addUser(): void {
     if (this.newPassword === this.newPasswordConfirm){
       let rolesArr = [];
       this.roles.forEach(role =>{
@@ -195,7 +195,7 @@ export class UserEditDialogComponent implements OnInit {
     }
   }
 
-  validatePassword(){
+  validatePassword(): void{
     if (this.newPassword !== this.newPasswordConfirm) {
       this.message = 'Error: passwords do not match';
       this.newPassword = "";

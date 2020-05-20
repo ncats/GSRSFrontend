@@ -9,6 +9,9 @@ export interface ScheduledJob {
     numberOfRuns?: number
     description?: string;
     cronSchedule?: string;
+    lastDurationHuman?: number;
+    lastFinished?: number;
+    lastStarted?: number;
     '@execute'?: string;
     '@enable'?: string;
     '@cancel'?: string;

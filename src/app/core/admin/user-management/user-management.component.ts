@@ -27,9 +27,9 @@ export class UserManagementComponent implements OnInit {
   page = 0;
   pageSize = 10;
   paged: Array< any >;
-users: Array< any > = [];
-private searchTimer: any;
-@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  users: Array< any > = [];
+  private searchTimer: any;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
 constructor(
     private dialog: MatDialog,
