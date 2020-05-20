@@ -3,6 +3,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { isString } from 'util';
 import { IfStmt } from '@angular/compiler';
+import { AuthService } from '@gsrs-core/auth';
+import { take } from 'rxjs/operators';
+import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 
 @Component({
   selector: 'app-user-edit-dialog',
@@ -32,6 +35,7 @@ export class UserEditDialogComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     public dialogRef: MatDialogRef<UserEditDialogComponent>,
+    private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.user = data.user;
@@ -44,7 +48,7 @@ export class UserEditDialogComponent implements OnInit {
         this.originalName = this.user.username;
         this.loading = false;
         this.newUser = false;
-          this.adminService.getGroups().subscribe( response => {
+          this.adminService.getGroups().pipe(take(1)).subscribe( response => {
             this.groups = [];
             response.forEach( grp => {
               const temp = {name: grp, hasGroup: false};
@@ -55,16 +59,15 @@ export class UserEditDialogComponent implements OnInit {
               });
               this.groups.push(temp);
             });
-            console.log(this.groups);
           });
       } else if (this.userID){
-          this.adminService.getUserByName(this.userID).subscribe( resp =>{
+          this.adminService.getUserByName(this.userID).pipe(take(1)).subscribe( resp =>{
             this.user = resp;
             this.checkRoles();
             this.originalName = resp.user.username;
             this.loading = false;
             this.newUser = false;
-            this.adminService.getGroups().subscribe( response => {
+            this.adminService.getGroups().pipe(take(1)).subscribe( response => {
               this.groups = [];
               response.forEach( grp => {
                 const temp = {name: grp, hasGroup: false};
@@ -77,12 +80,11 @@ export class UserEditDialogComponent implements OnInit {
               });
             });
           });
-         
       } else {
         this.newUser = true;
         this.user = {groups:[], roles:[],  user:{}};
         this.loading = false;
-        this.adminService.getGroups().subscribe( response => {
+        this.adminService.getGroups().pipe(take(1)).subscribe( response => {
           this.groups = [];
           response.forEach( grp => {
             const temp = {name: grp, hasGroup: false};
@@ -130,7 +132,7 @@ export class UserEditDialogComponent implements OnInit {
 
       }
     });
-    const userEditObj = {
+    const userEditObj: UserEditObject = {
       'username': this.user.user.username,
       'isAdmin': this.user.user.admin,
         'isActive':this.user.active,
@@ -139,8 +141,7 @@ export class UserEditDialogComponent implements OnInit {
         'groups' : groups,
     }
 
-    this.adminService.editUser(userEditObj, this.originalName).subscribe(response =>{
-      console.log(response);
+    this.adminService.editUser(userEditObj, this.originalName).pipe(take(1)).subscribe(response =>{
       if (response && response.user){
         this.dialogRef.close(response);
       } else {
@@ -157,8 +158,7 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   addUser() {
-    console.log(this.newPassword+ ' - '+this.oldPassword);
-    if(this.newPassword === this.newPasswordConfirm){
+    if (this.newPassword === this.newPasswordConfirm){
       let rolesArr = [];
       this.roles.forEach(role =>{
         if (role.hasRole) {
@@ -167,9 +167,8 @@ export class UserEditDialogComponent implements OnInit {
       });
       let groups = [];
       this.groups.forEach(group => {
-        if(group.hasGroup ) {
+        if (group.hasGroup ) {
           groups.push(group.name);
-  
         }
       });
       const userEditObj = {
@@ -181,14 +180,12 @@ export class UserEditDialogComponent implements OnInit {
         'groups' : ['testGroup'],
         'password': this.newPassword
       }
-  
-      this.adminService.addUser(userEditObj).subscribe(response =>{
-        console.log(response);
-        if(response && response.user){
+
+      this.adminService.addUser(userEditObj).pipe(take(1)).subscribe(response =>{
+        if (response && response.user){
           this.dialogRef.close(response);
         }
       }, error => {
-        console.log(error);
         if (error.error && isString(error.error) ) {
           this.message = error.error;
         }
@@ -199,7 +196,6 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   validatePassword(){
-    console.log(this.newPassword === this.newPasswordConfirm);
     if (this.newPassword !== this.newPasswordConfirm) {
       this.message = 'Error: passwords do not match';
       this.newPassword = "";
@@ -207,21 +203,35 @@ export class UserEditDialogComponent implements OnInit {
     } else if (this.newPassword === this.oldPassword) {
       this.message = 'Error: no change in password detected';
     } else {
-      this.adminService.changePassword(this.oldPassword, this.newPassword, this.user.id).subscribe(response => {
-        console.log(response);
-        this.changePassword = !this.changePassword;
-        this.message = "Password updated successfully";
-      }, error => {
-        console.log(error);
-        if (error.error && isString(error.error) ) {
-          this.message = "Error - " + error.error;
-        } else {
-          this.newPassword = "";
-          this.newPasswordConfirm = "";
+      if ( this.authService.getUser === this.user.identifier ) {
+        this.adminService.changeMyPassword(this.oldPassword, this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
           this.changePassword = !this.changePassword;
-          this.message = "Error: updated successfully";
-        }
-      });
+          this.message = "Password updated successfully";
+        }, error => {
+          if (error.error && isString(error.error) ) {
+            this.message = "Error - " + error.error;
+          } else {
+            this.newPassword = "";
+            this.newPasswordConfirm = "";
+            this.changePassword = !this.changePassword;
+            this.message = "Error: updated successfully";
+          }
+        });
+      } else {
+        this.adminService.changePassword(this.oldPassword, this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+          this.changePassword = !this.changePassword;
+          this.message = "Password updated successfully";
+        }, error => {
+          if (error.error && isString(error.error) ) {
+            this.message = "Error - " + error.error;
+          } else {
+            this.newPassword = "";
+            this.newPasswordConfirm = "";
+            this.changePassword = !this.changePassword;
+            this.message = "Error: updated successfully";
+          }
+        });
+      }  
     }
   }
 

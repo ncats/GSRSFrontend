@@ -6,6 +6,9 @@ import { ConfigService } from '../config/config.service';
 import { PagingResponse } from '../utils/paging-response.model';
 import { map, catchError, retry } from 'rxjs/operators';
 import { FacetHttpParams } from '@gsrs-core/facets-manager';
+import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
+import { Auth } from '@gsrs-core/auth';
+import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 
 
 @Injectable({
@@ -20,99 +23,78 @@ export class AdminService extends BaseHttpService {
     super(configService);
   }
 
-  public fetchJobs(): Observable<any> {
+  public fetchJobs():Observable< any > {
     console.log('getting all');
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    return this.http.get<any>(`${url}scheduledjobs`);
+    return this.http.get< any >(`${url}scheduledjobs`);
   }
 
-  public fetchJob(id: string): Observable<any> {
+  public fetchJob(id: number): Observable< ScheduledJob > {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    // console.log(`${url}scheduledjobs(${id})`);
-    return this.http.get<any>(`${url}scheduledjobs(${id})`);
+    return this.http.get< any >(`${url}scheduledjobs(${id})`);
 
   }
 
-  public runJob(job: string): Observable<any> {
-    console.log(job);
-    if(!job){
-      job = "http://localhost:9000/ginas/app/api/v1/scheduledjobs(1)/$@cancel"
-    }
-    return this.http.get<any>(job).pipe(retry(2), catchError(err => {console.log(err); return throwError(err)}));
+  public runJob(job: string): Observable< ScheduledJob > {
+    return this.http.get< ScheduledJob >(job).pipe(retry(2), catchError(err => {return throwError(err)}));
       }
 
 
-    public getEnvironmentHealth(): Observable<any> {
+    public getEnvironmentHealth(): Observable< any > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get<any>(`${url}health/info`);
+      return this.http.get< any >(`${url}health/info`);
 
     }
 
-    public getUserByID(id:number): Observable<any> {
+    public getUserByID(id:number): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get<any>(`${url}users/${id}`);
+      return this.http.get< Auth >(`${url}users/${id}`);
     }
-    public getUserByName(name:string): Observable<any> {
+    public getUserByName(name:string): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get<any>(`${url}users/${encodeURIComponent(name)}`);
-    }
-
-    public getAllUsers(): Observable<any> {
-      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get<any>(`${url}users`);
+      return this.http.get< Auth >(`${url}users/${encodeURIComponent(name)}`);
     }
 
-    public editUser(user: any, name: any): Observable<any> {
+    public getAllUsers(): Observable< any > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.put<any>(`${url}users/${name}`, user);
+      return this.http.get< any >(`${url}users`);
     }
 
-    public addUser(user: any): Observable<any> {
+    public editUser(user: UserEditObject, name: string): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.post<any>(`${url}users/`, user);
+      return this.http.put< Auth >(`${url}users/${name}`, user);
     }
 
-    public deleteUser(user: any): Observable<any> {
+    public addUser(user: UserEditObject): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.delete<any>(`${url}users/${user}`);
+      return this.http.post< Auth >(`${url}users/`, user);
     }
 
-    public getGroups(): Observable<any> {
+    public deleteUser(user: string): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get<any>(`${url}admin/groups/@names`);
+      return this.http.delete< Auth >(`${url}users/${user}`);
+    }
+
+    public getGroups(): Observable< any > {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.get< any >(`${url}admin/groups/@names`);
     }
 
 
-    public changePassword(oldpass: string, newpass: string, id:number): Observable<any> {
+    public changePassword(oldpass: string, newpass: string, id:number): Observable< any > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      let params = new HttpParams();
-        params = params.append(
-          'oldPassword', oldpass
-        );
-        params = params.append(
-          'newPassword', newpass
-        );
-        console.log(oldpass);
-        console.log(newpass);
-        let params2 = new  FacetHttpParams();
-        params2.appendDictionary({
-          oldPassword: oldpass,
-          newPassword: newpass
-        });
-        let body = {
-          oldPassword: "test1",
-          newPassword: "test2"
-        }
-        
-
-        let body2 = {
-          'oldPassword': oldpass,
-          'newPassword': newpass
-        }
         let body3 = {}
         body3['oldPassword'] = oldpass;
         body3['newPassword'] = newpass;
-      return this.http.post<any>(`${url}users/${id}/password`, body3);
+      return this.http.post< any >(`${url}users/${id}/password`, body3);
       }
+
+      public changeMyPassword(oldpass: string, newpass: string, id:number): Observable< any > {
+        const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+          let body3 = {}
+          body3['oldPassword'] = oldpass;
+          body3['newPassword'] = newpass;
+        return this.http.post< any >(`${url}users/${id}/password`, body3);
+        }
 
 }

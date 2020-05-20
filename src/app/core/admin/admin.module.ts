@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CvManagementComponent } from '@gsrs-core/admin/cv-management/cv-management.component';
-import { MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, MatTableDataSource, MatTableModule, MatSortModule, MatTooltipModule, MatProgressSpinnerModule, MatTabsModule, MatDialogModule } from '@angular/material';
+import { MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, MatTableDataSource, MatTableModule, MatSortModule, MatTooltipModule, MatProgressSpinnerModule, MatTabsModule, MatDialogModule, MatPaginatorModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminComponent } from '@gsrs-core/admin/admin.component';
 import { CvTermDialogComponent } from '@gsrs-core/admin/cv-management/cv-term-dialog/cv-term-dialog.component';
@@ -32,6 +32,7 @@ import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summ
     MatProgressSpinnerModule,
     MatDialogModule,
     MomentModule,
+    MatPaginatorModule,
   MatIconModule],
   declarations: [
     CvManagementComponent,

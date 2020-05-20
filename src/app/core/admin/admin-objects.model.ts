@@ -27,3 +27,12 @@ export interface DatabaseInfo {
         connected: boolean;
         latency: number;
 }
+
+export interface UserEditObject {
+        username: string;
+        isAdmin: boolean;
+        isActive: boolean;
+        email: string;
+        roles: Array< any >;
+        groups : Array< any >;
+}

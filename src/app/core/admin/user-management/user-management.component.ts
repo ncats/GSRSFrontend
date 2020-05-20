@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { User, Auth } from '@gsrs-core/auth';
-import { MatDialog, Sort, MatTableDataSource } from '@angular/material';
+import { Component, OnInit,  ViewChild } from '@angular/core';
+import { User, Auth, AuthService } from '@gsrs-core/auth';
+import { MatDialog, Sort, MatTableDataSource, PageEvent } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-edit-dialog/user-edit-dialog.component';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { UtilsService } from '@gsrs-core/utils';
 import { DataSource } from '@angular/cdk/table';
+import { FormControl } from '@angular/forms';
+import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-management',
@@ -16,25 +18,40 @@ export class UserManagementComponent implements OnInit {
   userID: number;
   alert: string;
   filtered = new MatTableDataSource();
+  searchControl = new FormControl();
   loading: boolean = false;
   showAll: boolean = false;
   showInactive: boolean = false;
   private overlayContainer: HTMLElement;
-  displayedColumns: string[] = ["name", 'active', 'email', 'created', 'modified', 'delete'];
-users: Array<any> = [];
-  constructor(
+  displayedColumns: string[] = ["name", 'email', 'created', 'modified', 'delete'];
+  page = 0;
+  pageSize = 10;
+  paged: Array< any >;
+users: Array< any > = [];
+private searchTimer: any;
+@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
+constructor(
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
     private adminService: AdminService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private authService: AuthService
 
   ) { }
 
   ngOnInit() {
+    this.filtered.paginator = this.paginator;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.pageChange();
+        this.searchControl.valueChanges.subscribe(value => {
+          this.filterList(value, this.filtered.data);
+        }, error => {
+          console.log(error);
+        });
 }
 
-showAllUsers() {
+showAllUsers(): void {
   this.loading = true;
   this.showAll = true;
   this.adminService.getAllUsers().subscribe(response => {
@@ -45,10 +62,10 @@ showAllUsers() {
 
 
   });
-
+  this.pageChange();
 }
 
-showInactiveUsers() {
+showInactiveUsers(): void {
   this.showInactive = !this.showInactive;
   if (this.showInactive) {
     const backup = [];
@@ -58,14 +75,13 @@ showInactiveUsers() {
       }
     });
     this.filtered.data = backup;
-
   } else {
     this.filtered.data = this.users;
   }
+  this.pageChange();
 }
 
-editUserByName(name: any) {
-  console.log(name);
+editUserByName(name: any): void {
   this.loading = true;
   this.alert = "";
   this.adminService.getUserByName(name).subscribe(response => {
@@ -85,7 +101,6 @@ editUserByName(name: any) {
               usr = response;
             }
           });
-
         }
       });
     }
@@ -111,6 +126,7 @@ editUserByName(name: any) {
          const backup = this.filtered.data;
         backup[index] = response;
         this.filtered.data = backup;
+        this.pageChange();
       }
     });
   }
@@ -128,21 +144,19 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         }
       }
     });
-    if(index){
+    if (index){
       const backup = this.filtered.data;
       backup[index] = response;
       this.filtered.data = backup;
     }
+    this.pageChange();
 }
 
 
   deleteUser(username: string, index: number): void {
-    console.log(index);
     this.adminService.deleteUser(username).subscribe( response => {
-      console.log(response);
       if (response) {
         this.updateLocalData(response, index, null, username);
-        console.log(this.filtered.data);
           const backup = this.filtered.data;
         backup[index] = response;
         this.filtered.data = backup;
@@ -150,7 +164,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
     })
   }
 
-  addUser() {
+  addUser(): void {
     const dialogRef = this.dialog.open(UserEditDialogComponent, {
       data: {'type': 'add'},
       width: '800px'
@@ -167,8 +181,16 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
     });
   }
 
-  sortData(sort: Sort) {
-    const data = this.users.slice();
+  sortData(sort: Sort): void {
+    let data = this.users.slice();
+    if (this.showInactive) {
+      data = [];
+    this.users.forEach(user => {
+      if (user.active) {
+        data.push(user);
+      }
+    });
+    }
     if (!sort.active || sort.direction === '') {
       this.filtered.data = data;
       return;
@@ -183,6 +205,40 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         case 'created' :return this.utilsService.compare(a.created, b.created, isAsc);
       }
     });
+    this.pageChange();
   }
+
+  filterList(searchInput: string, listToFilter: Array<any>): void {
+    if (this.searchTimer != null) {
+        clearTimeout(this.searchTimer);
+    }
+    this.searchTimer = setTimeout(() => {
+        this.filtered.data = [];
+        listToFilter.forEach(item => {
+          const itemString = item.user.username;
+            if (itemString.indexOf(searchInput.toUpperCase()) > -1) {
+                this.filtered.data.push(item);
+            }
+        });
+        clearTimeout(this.searchTimer);
+        this.searchTimer = null;
+    }, 700);
+  }
+
+  pageChange(pageEvent?: PageEvent): void {
+    if (pageEvent != null) {
+        this.page = pageEvent.pageIndex;
+        this.pageSize = pageEvent.pageSize;
+    }
+    this.paged = [];
+    const startIndex = this.page * this.pageSize;
+    for (let i = startIndex; i < (startIndex + this.pageSize); i++) {
+        if (this.filtered.data[i] != null) {
+            this.paged.push(this.filtered.data[i]);
+        } else {
+            break;
+        }
+    }
+}
 
 }

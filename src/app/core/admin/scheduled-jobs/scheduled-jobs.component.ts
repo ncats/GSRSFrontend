@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-scheduled-jobs',
@@ -18,7 +19,7 @@ export class ScheduledJobsComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     setTimeout(()=>{
-      this.adminService.fetchJobs().subscribe( resp =>{
+      this.adminService.fetchJobs().pipe(take(1)).subscribe( resp =>{
         this.loading = false;
         this.jobs = resp.content;
       });

@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import * as moment from 'moment';
 import cronstrue from 'cronstrue';
+import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-scheduled-job',
@@ -10,7 +12,7 @@ import cronstrue from 'cronstrue';
 })
 export class ScheduledJobComponent implements OnInit {
 
-    @Input() job: any;
+    @Input() job: ScheduledJob;
     @Input() pollIn: any;
     monitor: any;
     quickLoad = false;
@@ -22,7 +24,6 @@ export class ScheduledJobComponent implements OnInit {
   ngOnInit() {
     this.monitor= this.pollIn;
      this.refresh(true);
-    console.log('loaded');
 
   }
 
@@ -35,7 +36,7 @@ export class ScheduledJobComponent implements OnInit {
   }
 
   refresh(spawn?: boolean) {
-    this.adminService.fetchJob(this.job.id).subscribe( response =>{
+    this.adminService.fetchJob(this.job.id).pipe(take(1)).subscribe( response =>{
       this.job = response;
       this.job =this.set(this.job);
       this.quickLoad = false;
@@ -44,11 +45,11 @@ export class ScheduledJobComponent implements OnInit {
         if (this.job.running){
           setTimeout(()=>{
             this.refresh(true);
-          }, Math.min(this.untilNextRun(), 100));
+          }, Math.min(this.untilNextRun(), 200));
         }else{
           setTimeout(()=>{
             this.refresh(true);
-          }, Math.min(this.untilNextRun(), 5000));
+          }, Math.min(this.untilNextRun(), 10000));
         }
     }
     }, error => {
@@ -114,27 +115,27 @@ export class ScheduledJobComponent implements OnInit {
 }
 
 disable (job: any) {
-  this.adminService.runJob(job["@disable"]).subscribe( response =>{
+  this.adminService.runJob(job["@disable"]).pipe(take(1)).subscribe( response =>{
     this.refresh();
   });
 }
 
 enable(job: any) {
-      this.adminService.runJob(job["@enable"]).subscribe( response =>{
+      this.adminService.runJob(job["@enable"]).pipe(take(1)).subscribe( response =>{
         this.refresh();
       });
 }
 
 execute(job: any) {
   this.quickLoad = true;
-  this.adminService.runJob(job["@execute"]).subscribe( response =>{
+  this.adminService.runJob(job["@execute"]).pipe(take(1)).subscribe( response =>{
     this.refresh(true);
   }, error => {
     setTimeout(()=>{this.refresh()});
   });
 }
 cancel(job: any) {
-  this.adminService.runJob(job["@cancel"]).subscribe( response =>{
+  this.adminService.runJob(job["@cancel"]).pipe(take(1)).subscribe( response =>{
     this.refresh();
   });
 }
