@@ -279,7 +279,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           });
         
           const objectsA = altReferences.filter(e => {
-            if (this._typeof2(e) === 'object') {
+            if (this.typeofFix2(e) === 'object') {
     
               return true;
             } else {
@@ -352,7 +352,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             });
             const objectsA = subReferences.filter(h => {
 
-              if (this._typeof2(h) === 'object') {
+              if (this.typeofFix2(h) === 'object') {
                 return true;
               } else {
                 return false;
@@ -465,30 +465,30 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         return this.substanceFormService.getJson();
       }
 
-  _typeof2(obj) {
+  typeofFix2(obj) {
     if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      this. _typeof2 = function _typeof2(obj) { return typeof obj; };
+      this. typeofFix2 = function typeofFix2(obj) { return typeof obj; };
     } else {
-      this._typeof2 = function _typeof2(obj) {
+      this.typeofFix2 = function typeofFix2(obj) {
         return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj; };
     }
-    return this._typeof2(obj);
+    return this.typeofFix2(obj);
   }
 
-  _typeof(obj) {
-    if (typeof Symbol === 'function' && this._typeof2(Symbol.iterator) === 'symbol') {
-      this._typeof = function _typeof(obj) {
-        return this._typeof2(obj);
+  typeofFix(obj) {
+    if (typeof Symbol === 'function' && this.typeofFix2(Symbol.iterator) === 'symbol') {
+      this.typeofFix = function typeofFix(obj) {
+        return this.typeofFix2(obj);
       };
     } else {
-      this._typeof = function _typeof(obj) {
+      this.typeofFix = function typeofFix(obj) {
         return obj && typeof Symbol === 'function' &&
           obj.constructor === Symbol &&
-          obj !== Symbol.prototype ? 'symbol' : this._typeof2(obj);
+          obj !== Symbol.prototype ? 'symbol' : this.typeofFix2(obj);
       };
     }
 
-    return this._typeof(obj);
+    return this.typeofFix(obj);
   }
 
 
