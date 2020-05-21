@@ -18,6 +18,9 @@ export interface Auth {
     tokenTimeToExpireMS: number;
     roleQueryOnly: boolean;
     permissions: Array<any>;
+    _namespace?: string;
+    _matchContext?: string;
+
 }
 
 export interface User {
@@ -32,12 +35,17 @@ export interface User {
     admin: boolean;
     uri?: string;
     selfie?: string;
+    namespace?: string;
+    _namespace?: string;
+    _matchContext?: string;
 }
 
 export interface UserGroup {
     name: string;
     id: number;
     members: Array<User>;
+    _namespace?: string;
+    _matchContext?: string;
 }
 
 export type Role = 'Updater'|'Admin'|'Query'|'SuperUpdate'|'DataEntry'|'SuperDataEntry'|'Approver';

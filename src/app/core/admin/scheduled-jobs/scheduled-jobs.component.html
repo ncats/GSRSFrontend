@@ -1,0 +1,19 @@
+<div *ngIf = "loading === false">
+    
+    <mat-card *ngFor = "let job of jobs" class = "form-row">
+        <app-scheduled-job [job] = "job" pollIn = "true" ></app-scheduled-job>
+        </mat-card>
+    <mat-card *ngIf="!jobs.length" class ="no-jobs">
+            <h3>No scheduled tasks</h3>
+        </mat-card>
+</div>
+       
+
+<div class = "loading-container" *ngIf = "loading === true">
+    <mat-progress-spinner
+      class="progress-spinner"
+      [color]="primary"
+      mode = "indeterminate">
+  </mat-progress-spinner>
+  </div>
+    

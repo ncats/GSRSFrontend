@@ -1,0 +1,112 @@
+<div class = "cache-container" *ngIf = "health">
+    <div  class = "data-column">
+    <mat-card>
+            <mat-card-title> Runtime Environment</mat-card-title>
+        <div class="cache-data">
+            <div class="name">Epoch</div>
+            <div class="value">{{health.epoch | date: 'medium'}}</div>
+        </div>
+        
+        <div class="cache-data">
+            <div class="name">Uptime</div>
+            <div class="value">{{health.uptime[0]}}</div>
+        </div>
+
+        <div class="cache-data">
+            <div class="name">Server</div>
+            <div class="value">{{health.hostname}}</div>
+        </div>  
+        <div class="cache-data">
+            <div class="name">Available Processors</div>
+            <div class="value">{{health.runtime.availableProcessors}}</div>
+        </div>
+        <div class="cache-data">
+            <div class="name">Free Memory</div>
+            <div class="value">{{health.runtime.freeMemory/(1024*1024) | number : '1.1-1'}} Mb</div>
+        </div>
+
+        <div class="cache-data">
+            <div class="name">Total Memory</div>
+            <div class="value">{{health.runtime.totalMemory/(1024*1024) | number : '1.1-1'}} Mb</div>
+        </div>
+
+        <div class="cache-data">
+            <div class="name">Max Memory</div>
+            <div class="value">{{health.runtime.maxMemory/(1024*1024) | number : '1.1-1'}} Mb</div>
+        </div>
+
+        <div class="cache-data">
+            <div class="name">JRE Version</div>
+            <div class="value">{{health.javaVersion}}</div>
+        </div>
+
+        <div class="cache-data">
+            <div class="name">Number of Threads</div>
+            <div class="value">{{health.threads}}</div>
+        </div>
+
+        <div class="cache-data">
+            <div class="name">Number of Running Threads</div>
+            <div class="value">{{health.runningThreads}}</div>
+        </div>
+
+        <div class="cache-data">
+            <div class="name"></div>
+            <div class="value"></div>
+        </div>
+    </mat-card>
+</div>
+
+<div class = "data-column">
+    <mat-card >
+            <mat-card-title> Cache Configuration</mat-card-title>
+        <div class="cache-data">
+            <div class="name">Max Cache Elements</div>
+            <div class="value">{{health.cacheInfo.maxCacheElements}}</div>
+        </div>
+        <div class="cache-data">
+                <div class="name">Max Evictable Cache Elements</div>
+                <div class="value">{{health.cacheInfo.maxNotEvictableCacheElements}}</div>
+        </div>
+        <div class="cache-data">
+                <div class="name">Time to Live (seconds)</div>
+                <div class="value">{{health.cacheInfo.timeToLive}}</div>
+        </div>
+        <div class="cache-data">
+                <div class="name">Time to Idle (seconds)</div>
+                <div class="value">{{health.cacheInfo.timeToIdle}}</div>
+        </div>
+    </mat-card>
+</div>
+<div  class = "database-table-container">
+<mat-card>
+        <mat-card-title>Database Information</mat-card-title>
+    <div class = "database-table">
+        <table mat-table [dataSource]="health.databaseInformation">
+            <ng-container matColumnDef="database">
+                <th mat-header-cell *matHeaderCellDef> Database </th>
+                <td mat-cell *matCellDef="let db"> {{db.database}} </td>
+            </ng-container>
+            <ng-container matColumnDef="driver">
+                <th mat-header-cell *matHeaderCellDef> Driver </th>
+                <td mat-cell *matCellDef="let db"> {{db.driver}} </td>
+            </ng-container>
+            <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef> Product </th>
+                <td mat-cell *matCellDef="let db"> {{db.product}} </td>
+            </ng-container>
+            <ng-container matColumnDef="latency">
+                <th mat-header-cell *matHeaderCellDef> Latency </th>
+                <td mat-cell *matCellDef="let db"> {{db.latency}} ms</td>
+            </ng-container>
+            <ng-container matColumnDef="connected">
+                <th mat-header-cell *matHeaderCellDef> Connected </th>
+                <td mat-cell *matCellDef="let db"> {{db.connected}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</mat-card>
+</div>
+</div>
