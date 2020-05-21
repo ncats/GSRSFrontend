@@ -1,0 +1,63 @@
+.vocab-row {
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    align-content: space-around;
+
+    .domain, .count, .editable, .edit {
+        width:20%;
+    }
+
+    padding:10px;
+}
+
+
+.search {
+    width: 400px;
+    max-width: 100%;
+    margin-right:20px;
+}
+
+.icon-align{
+  margin-top: -10px;
+  vertical-align: bottom;
+}
+
+.management-container {
+    min-width: 900px;
+    max-width:1500px;
+}
+
+.button-fix {
+    height:46px;
+    line-height: 46px;
+}
+
+::ng-deep .cdk-overlay-pane {
+    max-height: 90%;
+}
+
+::ng-deep .mat-dialog-container {
+    height: unset !important;
+    max-height: 90%;
+}
+
+.mat-dialog-content { max-height: 95%; }
+
+
+.loading-container {
+    height: 90%;
+    width: 100%;
+    align-content: center;
+    padding:50px;
+}
+
+.spinner {
+    margin: auto;
+}
+
+.show-button {
+    padding-left: 10px;
+    color: #1565c0;
+    font-size:14px;
+}

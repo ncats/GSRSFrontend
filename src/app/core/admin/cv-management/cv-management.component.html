@@ -1,0 +1,68 @@
+<div class = "management-container" *ngIf = "loading === false">
+    <div class="flex-row" >
+        <a [href] = "downloadHref" class = "mat-button mat-primary mat-flat-button button-fix">
+            Download CV as JSON</a>
+    <span class="middle-fill"></span>
+    <mat-form-field [floatLabel]="'never'" class="search">
+      <input matInput placeholder="Search" [formControl]="searchControl">
+    </mat-form-field>
+  </div>
+  <div class = "responsive" *ngIf = "loading === false">
+    <table mat-table [dataSource]="filtered" matSort (matSortChange)="sortData($event)">
+            <ng-container matColumnDef="domain">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header start = "asc"> Domain </th>
+                    <td mat-cell *matCellDef="let vocab">{{vocab.domain}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="path">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Substance Fields </th>
+                    <td mat-cell *matCellDef="let vocab; index as index" >
+                      <span class = "inline">
+                          <span >
+                              <span *ngFor = "let field of dictionary[vocab.domain]; index as i; last as last">
+                                  {{toggle[index] || i < 2? field+' ':''}}
+                                  {{(toggle[index] || i < 1) && !last? ', ':''}}
+                                  {{!toggle[index] && i === 1 && !last? '...':''}}
+                                  </span>
+                          </span>
+                          <span class = "show-button"
+                            *ngIf = "dictionary[vocab.domain] && dictionary[vocab.domain].length > 2">
+                            <a (click) = "toggle[index] = !toggle[index]">{{toggle[index]? 'hide': 'show all'}} </a>
+                          </span>
+                      </span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Vocabulary Term Type </th>
+                        <td mat-cell *matCellDef="let vocab">{{getVocabType(vocab.vocabularyTermType)}} </td>
+                      </ng-container>
+              
+                  <ng-container matColumnDef="terms">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Count </th>
+                    <td mat-cell *matCellDef="let vocab">{{vocab.terms.length}} </td>
+                  </ng-container>
+
+
+                      <ng-container matColumnDef="edit">
+                            <th mat-header-cell *matHeaderCellDef> Edit </th>
+                            <td mat-cell *matCellDef="let vocab">
+                                    <div class = "edit">
+                                            <button class = "mat-button mat-flat-button" (click) = "editTerms(vocab, index)" >edit</button>
+                                        </div>    
+                            </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+
+
+  </div>
+</div>
+  <div class = "loading-container" *ngIf = "loading === true">
+    <mat-progress-spinner
+      class="spinner"
+      [color]="primary"
+      mode = "indeterminate">
+  </mat-progress-spinner>
+  </div>

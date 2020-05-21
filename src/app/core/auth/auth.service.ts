@@ -79,6 +79,7 @@ export class AuthService {
           } else {
             this._auth = null;
           }
+
           observer.next(this._auth);
           this._authUpdate.next(this._auth);
           this.isLoading = false;
@@ -89,6 +90,7 @@ export class AuthService {
       }
 
       this._authUpdate.subscribe(auth => {
+
         observer.next(auth);
       }, error => {
         observer.next(null);
