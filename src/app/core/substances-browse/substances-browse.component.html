@@ -120,6 +120,8 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
 
+  
+
         <mat-form-field class="sort">
           <mat-label>Sort By</mat-label>
           <mat-select (selectionChange)="searchSubstances()" [(ngModel)]="order">
@@ -134,10 +136,12 @@
             </a>
           </mat-menu>
   
-  
-          <button *ngIf="exportOptions && exportOptions.length > 0" mat-icon-button [matMenuTriggerFor]="exportMenu">
-              <mat-icon svgIcon="file_copy"></mat-icon> Export
-            </button>
+          <div class = "export">
+              <button *ngIf="exportOptions && exportOptions.length > 0 && isLoggedIn"
+                  matTooltip = "Export Search Results" mat-icon-button [matMenuTriggerFor]="exportMenu">
+                    <mat-icon svgIcon="get_app"></mat-icon> Export
+                  </button>
+          </div>
   
 
        

@@ -272,7 +272,7 @@
     width:0px;
   }
 
-@media(max-width: 1350px) {
+@media(max-width: 1390px) {
 
     .full-paginator {
         width: 100%;
@@ -536,4 +536,9 @@ margin-left: 20px;
 .full-paginator {
     display: flex;
     min-width: 660px;
+}
+
+.export {
+    width: 80px;
+    margin-right:5px;
 }

@@ -11,7 +11,7 @@ import { Auth } from '@gsrs-core/auth';
 import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 
 
-@Injectable({
+ @Injectable({
   providedIn: 'root'
 })
 export class AdminService extends BaseHttpService {
@@ -23,8 +23,7 @@ export class AdminService extends BaseHttpService {
     super(configService);
   }
 
-  public fetchJobs():Observable< any > {
-    console.log('getting all');
+  public fetchJobs(): Observable< any > {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
     return this.http.get< any >(`${url}scheduledjobs`);
   }
@@ -36,7 +35,7 @@ export class AdminService extends BaseHttpService {
   }
 
   public runJob(job: string): Observable< ScheduledJob > {
-    return this.http.get< ScheduledJob >(job).pipe(retry(2), catchError(err => {return throwError(err)}));
+    return this.http.get< ScheduledJob >(job).pipe(retry(2), catchError(err => throwError(err)));
       }
 
 
@@ -46,11 +45,11 @@ export class AdminService extends BaseHttpService {
 
     }
 
-    public getUserByID(id:number): Observable< Auth > {
+    public getUserByID(id: number): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
       return this.http.get< Auth >(`${url}users/${id}`);
     }
-    public getUserByName(name:string): Observable< Auth > {
+    public getUserByName(name: string): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
       return this.http.get< Auth >(`${url}users/${encodeURIComponent(name)}`);
     }
@@ -81,20 +80,19 @@ export class AdminService extends BaseHttpService {
     }
 
 
-    public changePassword(oldpass: string, newpass: string, id:number): Observable< any > {
+    public changePassword(oldpass: string, newpass: string, id: number): Observable< any > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-        let body3 = {}
+      const body3 = {};
         body3['oldPassword'] = oldpass;
         body3['newPassword'] = newpass;
       return this.http.post< any >(`${url}users/${id}/password`, body3);
       }
 
-      public changeMyPassword(oldpass: string, newpass: string, id:number): Observable< any > {
+      public changeMyPassword(oldpass: string, newpass: string, id: number): Observable< any > {
         const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-          let body3 = {}
+        const body3 = {};
           body3['oldPassword'] = oldpass;
           body3['newPassword'] = newpass;
-        return this.http.post< any >(`${url}users/${id}/password`, body3);
+        return this.http.post< any >(`${url}profile/password `, body3);
         }
-
 }

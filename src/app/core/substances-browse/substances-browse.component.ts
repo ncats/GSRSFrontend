@@ -63,6 +63,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   isAdmin = false;
+  isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array< SubstanceName > } = {};
   codes: {
@@ -122,6 +123,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
+      console.log(auth);
+      if (auth) {
+        this.isLoggedIn = true;
+      }
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
       this.showAudit = this.authService.hasRoles('admin');
     });
@@ -256,6 +261,7 @@ validatePageInput(event: any): boolean {
         sequenceSearchKey: this.privateSequenceSearchKey
       })
         .subscribe(pagingResponse => {
+          console.log(pagingResponse);
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.total % this.pageSize === 0) {
