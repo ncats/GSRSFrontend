@@ -29,8 +29,8 @@ import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { MatExpansionPanel } from '@angular/material';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
-import {MergeConceptDialogComponent} from "@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component";
-import {DefinitionSwitchDialogComponent} from "@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component";
+import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
+import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 
 
 @Component({
@@ -41,7 +41,7 @@ import {DefinitionSwitchDialogComponent} from "@gsrs-core/substance-form/definit
 export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   id?: string;
-  formSections: Array<SubstanceFormSection> = [];
+  formSections: Array< SubstanceFormSection > = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
   @ViewChildren('expansionPanel', { read: MatExpansionPanel }) matExpansionPanels: QueryList<MatExpansionPanel>;
   private subClass: string;
@@ -54,9 +54,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ];
   showSubmissionMessages = false;
   submissionMessage: string;
-  validationMessages: Array<ValidationMessage>;
+  validationMessages: Array< ValidationMessage >;
   validationResult = false;
-  private subscriptions: Array<Subscription> = [];
+  private subscriptions: Array< Subscription > = [];
   copy: string;
   private overlayContainer: HTMLElement;
   serverError: boolean;
