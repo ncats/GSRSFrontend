@@ -1,0 +1,8 @@
+name: Lint Code
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    - name: TSLint checks
+      uses: mooyoul/tslint-actions@v1.1.1
