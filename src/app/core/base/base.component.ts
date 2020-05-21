@@ -7,9 +7,10 @@ import { ConfigService } from '../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { LoadingService } from '../loading/loading.service';
 import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
-import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
+import { MatBottomSheet, MatBottomSheetRef, MatDialog } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
 import { navItems } from './nav-items.constant';
+import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 
 @Component({
   selector: 'app-base',
@@ -47,7 +48,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private overlayContainerService: OverlayContainer,
     private loadingService: LoadingService,
-    private bottomSheet: MatBottomSheet
+    private bottomSheet: MatBottomSheet,
+    private dialog: MatDialog
   ) {
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.classicLinkQueryParamsString = '';
@@ -347,6 +349,19 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
 
     this.classicLinkQueryParamsString = queryParamsString;
+  }
+
+  openProfile(): void {
+    const dialogRef = this.dialog.open(UserProfileComponent, {
+      data: {},
+      width: '800px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+      if (response ) {
+      }
+    });
   }
 
 }

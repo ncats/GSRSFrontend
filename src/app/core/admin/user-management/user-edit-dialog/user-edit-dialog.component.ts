@@ -149,7 +149,6 @@ export class UserEditDialogComponent implements OnInit {
       }
     }, error => {
       this.message = 'Unable to edit user';
-      console.log(error);
       if (error.error && isString(error.error) ) {
         this.message = error;
       }
@@ -217,22 +216,7 @@ export class UserEditDialogComponent implements OnInit {
             this.message = "Error: updated successfully";
           }
         });
-      } else {
-        this.adminService.changePassword(this.oldPassword, this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
-          this.changePassword = !this.changePassword;
-          this.message = "Password updated successfully";
-        }, error => {
-          if (error.error && isString(error.error) ) {
-            this.message = "Error - " + error.error;
-          } else {
-            this.newPassword = "";
-            this.newPasswordConfirm = "";
-            this.changePassword = !this.changePassword;
-            this.message = "Error: updated successfully";
-          }
-        });
-      }  
+      }
     }
   }
-
 }

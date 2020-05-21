@@ -1,4 +1,3 @@
-<p>user-profile works!</p>
 
 <div *ngIf = "user" class = "user-container">
     <mat-card>
@@ -12,9 +11,39 @@
                 </span>
         </div>
         <div>
-            Change Password:
-
+            <button mat-button (click) = "viewDownloads()">
+                    View Downloads
+            </button>
         </div>
+        <div class = "password-column" *ngIf = "!newUser">
+                <div>
+              <button (click) = "changePassword = !changePassword" mat-button class = " mat-flat-button">
+                     {{!changePassword?"Change Password":"Cancel"}} 
+                  </button>
+              </div>
+                <span *ngIf = "changePassword === true" >
+                    <div>
+                            <mat-form-field>
+                                <input matInput type = "password" [(ngModel)] = "oldPassword" placeholder="old password" required name="Password" />
+                            </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput type = "password" [(ngModel)] = "newPassword" placeholder="new password" required name="Password" />
+                        </mat-form-field> 
+                    </div>
+                        <div>
+                            <mat-form-field>
+                                <input matInput type = "password" [(ngModel)] = "newPasswordConfirm" placeholder="confirm new password" required name="Password" />
+                            </mat-form-field>
+                        </div>
+                    
+                    
+                        <div>
+                    <button mat-button class = " mat-primary mat-flat-button" (click) = "validatePassword()">Submit Change</button>
+                    </div>
+                </span>
+          </div>
            
 
     </mat-card>
