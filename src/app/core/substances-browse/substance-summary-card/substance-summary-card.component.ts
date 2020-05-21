@@ -35,7 +35,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   @Input() codeSystemNames?: Array<string>;
   @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   alignments?: Array<Alignment>;
-  inxightLink: boolean = false;
+  inxightLink = false;
   inxightUrl: string;
   constructor(
     public utilsService: UtilsService,
@@ -63,7 +63,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
         console.log(response);
         if (response.total && response.total > 0) {
           this.inxightLink = true;
-          this.inxightUrl = "https://drugs.ncats.io/drug/" + this.substance.approvalID;
+          this.inxightUrl = 'https://drugs.ncats.io/drug/' + this.substance.approvalID;
         }
       }, error => {});
     }

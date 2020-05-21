@@ -1,1 +1,22 @@
-<p>guided-search works!</p>
+<div class="content-container">
+    <mat-card>
+        <mat-card-title>
+            Guided Search
+        </mat-card-title>
+        <mat-card-content>
+            <h3>
+                Builder
+            </h3>
+            <div class="builder-container">
+                <div class="builder-row" *ngFor="let queryStatement of queryStatements; index as index">
+                    <app-query-statement
+                        [index]="index"
+                        [queryableDictionary]="queryableSubstanceDictionary"
+                        [queryableOptions]="displayProperties">
+                    </app-query-statement>
+                    <div></div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

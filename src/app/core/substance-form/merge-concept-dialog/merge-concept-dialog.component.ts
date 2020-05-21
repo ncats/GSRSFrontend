@@ -94,8 +94,7 @@ export class MergeConceptDialogComponent implements OnInit {
       const oldBdnum = BDNUM_MAPPER(oldSub);
       this.mapName = newBdnum + ' MAPS TO ' + oldBdnum + ' ' + oldSub._name;
       this.loading = false;
-      this.text = "merging names, codes, notes, relationships and references from:' + newBdnum + ' with this record.'"
-    
+      this.text = 'merging names, codes, notes, relationships and references from:' + newBdnum + ' with this record.';
 
       function addAll(l1, l2) {
         l2.map(function (o) {

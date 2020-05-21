@@ -1,0 +1,28 @@
+.content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 65px 5px 0 5px;
+}
+
+.mat-card {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.builder-container {
+    display: flex;
+}
+
+.builder-row {
+    display: flex;
+}
+
+// .empty-cell {
+
+// }

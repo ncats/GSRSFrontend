@@ -29,8 +29,8 @@ import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { MatExpansionPanel } from '@angular/material';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
-import {MergeConceptDialogComponent} from "@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component";
-import {DefinitionSwitchDialogComponent} from "@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component";
+import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
+import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 
 
 @Component({

@@ -12,7 +12,7 @@ import { Content } from '@angular/compiler/src/render3/r3_ast';
 })
 export class RefernceFormDialogComponent implements OnInit {
 user: string;
-showPrev: boolean = false;
+showPrev = false;
 
   constructor(
     public dialogRef: MatDialogRef<RefernceFormDialogComponent>,
@@ -22,7 +22,7 @@ showPrev: boolean = false;
   ) {}
 
   ngOnInit() {
-    this.dialogRef.beforeClose().subscribe(() => this.dialogRef.close(this.reference));
+    this.dialogRef.beforeClosed().subscribe(() => this.dialogRef.close(this.reference));
   }
 
   save(): void {

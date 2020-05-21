@@ -69,6 +69,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {SubstanceHierarchyComponent} from '@gsrs-core/substances-browse/substance-hierarchy/substance-hierarchy.component';
 import {SequenceAlignmentComponent} from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
 import { FacetsManagerModule } from './facets-manager/facets-manager.module';
+import { GuidedSearchModule } from './guided-search/guided-search.module';
 
 @NgModule({
   declarations: [
@@ -137,7 +138,8 @@ import { FacetsManagerModule } from './facets-manager/facets-manager.module';
     SubstanceImageModule,
     StructureModule,
     MatTreeModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    GuidedSearchModule
   ],
   providers: [
     ConfigService,

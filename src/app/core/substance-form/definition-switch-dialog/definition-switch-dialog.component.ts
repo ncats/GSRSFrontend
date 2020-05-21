@@ -93,9 +93,9 @@ export class DefinitionSwitchDialogComponent implements OnInit {
 
   // set primary substance type to different and != alternative
   tempPrimeChange(uuid) {
-    if (!confirm("This process involves multiple updates to both records and may take several minutes.\n"+
-    "If the switch fails at any stage, follow the instructions that appear to restore both records. \n\n"+
-    " Click 'OK' to proceed.")) {
+    if (!confirm('This process involves multiple updates to both records and may take several minutes.\n' +
+    'If the switch fails at any stage, follow the instructions that appear to restore both records. \n\n' +
+    ' Click "OK" to proceed.')) {
       this.showButtons = true;
         return;
     }
@@ -144,11 +144,11 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         this.oldPrime.structure = {
           'opticalActivity': 'none',
           'access': [],
-          'molfile': '\n   JSDraw209061916362D\n\n  6  6  0  0  0  0            999 V2000\n   28.8600   -9.2560    '+
-          '0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   30.2110   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0'+
-          '  0  0  0\n   30.2110   -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   28.8600   -6.1360    0.0000 He'+
-          '  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090 '+
-          '  -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  0  '+
+          'molfile': '\n   JSDraw209061916362D\n\n  6  6  0  0  0  0            999 V2000\n   28.8600   -9.2560    ' +
+          '0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   30.2110   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0' +
+          '  0  0  0\n   30.2110   -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   28.8600   -6.1360    0.0000 He' +
+          '  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090 ' +
+          '  -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  0  ' +
           '0  0\n  1  5  1  0  0  0  0\n  5  6  1  0  0  0  0\n  4  6  1  0  0  0  0\nM  END',
           'deprecated': false,
           'digest': '4b4cb19b839f6eb23b836addbaa87729a9632a35',
@@ -210,11 +210,11 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               altSwitch.structure = {
                 'opticalActivity': 'none',
                 'access': [],
-                'molfile': '\n   JSDraw209061916362D\n\n  6  6  0  0  0  0            999 V2000\n   28.8600   -9.2560    '+
-                '0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   30.2110   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0'+
-                '  0  0  0\n   30.2110   -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   28.8600   -6.1360    0.0000 He'+
-                '  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090 '+
-                '  -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  '+
+                'molfile': '\n   JSDraw209061916362D\n\n  6  6  0  0  0  0            999 V2000\n   28.8600   -9.2560    ' +
+                '0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   30.2110   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0' +
+                '  0  0  0\n   30.2110   -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   28.8600   -6.1360    0.0000 He' +
+                '  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090   -8.4760    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n   27.5090 ' +
+                '  -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  ' +
                 '0  0  0\n  1  5  1  0  0  0  0\n  5  6  1  0  0  0  0\n  4  6  1  0  0  0  0\nM  END',
                                 'id': this.structureid,
                 'references': [this.structureuuid]
@@ -277,13 +277,13 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           const altReferences = defiant.json.search(alt, '//*[references]');
           altReferences.forEach(e => {
           });
-        
+
           const objectsA = altReferences.filter(e => {
             if (this._typeof2(e) === 'object') {
-    
+
               return true;
             } else {
-          
+
               return false;
             }
           });
@@ -318,7 +318,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           const temp = _.cloneDeep(alt);
           if (this.didStep5 === true) {
             this.text = 'Step 2a complete. Sending update for 2b...';
-  
+
           } else {
             this.text = 'Step 1 complete. Sending update for step 2...';
           }
@@ -348,8 +348,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               }
             });
             const subReferences = defiant.json.search(newSub, '//*[references]');
-            subReferences.forEach(e => {
-            });
+
             const objectsA = subReferences.filter(h => {
 
               if (this._typeof2(h) === 'object') {
@@ -404,9 +403,9 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               this.loadingService.setLoading(false);
               this.loading = false;
               setTimeout(function () {
-                alert('Record definitions successfully switched. The page will now refresh. '+
+                alert('Record definitions successfully switched. The page will now refresh. ' +
                 '\n\n Please review and remove any unnecessary validation Notes created for each substance during the switch');
-               
+
                 cb();
               }, 1000);
             } else {
@@ -467,24 +466,24 @@ export class DefinitionSwitchDialogComponent implements OnInit {
 
   _typeof2(obj) {
     if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      this. _typeof2 = function _typeof2(obj) { return typeof obj; };
+      this. _typeof2 = function _typeof2(_obj) { return typeof _obj; };
     } else {
-      this._typeof2 = function _typeof2(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj; };
+      this._typeof2 = function _typeof2(_obj) {
+        return _obj && typeof Symbol === 'function' && _obj.constructor === Symbol && _obj !== Symbol.prototype ? 'symbol' : typeof _obj; };
     }
     return this._typeof2(obj);
   }
 
   _typeof(obj) {
     if (typeof Symbol === 'function' && this._typeof2(Symbol.iterator) === 'symbol') {
-      this._typeof = function _typeof(obj) {
-        return this._typeof2(obj);
+      this._typeof = function _typeof(_obj) {
+        return this._typeof2(_obj);
       };
     } else {
-      this._typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' &&
-          obj.constructor === Symbol &&
-          obj !== Symbol.prototype ? 'symbol' : this._typeof2(obj);
+      this._typeof = function _typeof(_obj) {
+        return _obj && typeof Symbol === 'function' &&
+          _obj.constructor === Symbol &&
+          _obj !== Symbol.prototype ? 'symbol' : this._typeof2(_obj);
       };
     }
 

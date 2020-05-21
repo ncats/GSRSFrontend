@@ -1,0 +1,24 @@
+<div class="query-statement-container">
+    <div class="condition-column">
+        <mat-form-field>
+            <mat-select>
+                <mat-option *ngFor="let option of conditionOptions" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="queryable-property-column">
+        <mat-form-field>
+            <input type="text" matInput [formControl]="queryablePropertiesControl"
+                [matAutocomplete]="queryablePropertyOptions">
+        </mat-form-field>
+        <mat-autocomplete 
+            #queryablePropertyOptions="matAutocomplete"
+            (optionSelected)="queryablePropertySelected($event)">
+            <mat-option *ngFor="let option of options" [value]="option" [matTooltip]="option">
+                {{option}}
+            </mat-option>
+        </mat-autocomplete>
+    </div>
+</div>
