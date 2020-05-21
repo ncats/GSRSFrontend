@@ -309,7 +309,6 @@ export class ApplicationService extends BaseHttpService {
     const options = {
       params: params
     };
-    console.log('app: ' + url);
     const x = this.http.delete<ApplicationSrs>(url, options);
     return x;
   }

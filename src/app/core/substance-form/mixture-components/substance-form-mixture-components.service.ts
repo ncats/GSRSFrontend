@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../substance-form.service';
-import { SubstanceFormMixtureComponentsModule } from './substance-form-mixture-components.module';
 import { MixtureComponents } from '@gsrs-core/substance/substance.model';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: SubstanceFormMixtureComponentsModule
-})
+@Injectable()
 export class SubstanceFormMixtureComponentsService extends SubstanceFormServiceBase<Array<MixtureComponents>> {
 
   constructor(
@@ -20,11 +17,13 @@ export class SubstanceFormMixtureComponentsService extends SubstanceFormServiceB
     super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
-      if (this.substance.mixture.components == null) {
-        this.substance.mixture.components = [];
+      if (this.substance.mixture != null) {
+        if (this.substance.mixture.components == null) {
+          this.substance.mixture.components = [];
+        }
+        this.substanceFormService.resetState();
+        this.propertyEmitter.next(this.substance.mixture.components);
       }
-      this.substanceFormService.resetState();
-      this.propertyEmitter.next(this.substance.mixture.components);
     });
     this.subscriptions.push(subscription);
   }

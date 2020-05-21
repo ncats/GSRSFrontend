@@ -59,6 +59,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   submitDateMessage = '';
   statusDateMessage = '';
   appForm: FormGroup;
+  isAdmin = false;
 
   constructor(
     private applicationService: ApplicationService,
@@ -78,7 +79,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnInit() {
     // this.generateFormContorls();
-
+    this.isAdmin = this.authService.hasRoles('admin');
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
@@ -172,16 +173,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   // Check Dates
   validateAdditionalFields(): void {
-    /*
-    const newValidation: ValidationMessage = {
-      actionType: null,
-      appliedChange: null,
-      links: null,
-      message: null,
-      messageType: 'ERROR',
-      suggestedChange: null
-    };
-    */
     if ((this.submitDateMessage !== null) && (this.submitDateMessage.length > 0)) {
       const submitValidate: ValidationMessage = {};
       submitValidate.message = this.submitDateMessage;
@@ -297,7 +288,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   confirmDeleteApplication() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete this Application?'
+      data: { message: 'Are you sure you want to delete this Application?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -310,7 +301,21 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   deleteApplication(): void {
     this.applicationService.deleteApplication().subscribe(response => {
       if (response) {
+        this.displayMessageAfterDeleteApp();
       }
+    });
+  }
+
+  displayMessageAfterDeleteApp() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: 'The application has been deleted',
+        type: 'home'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(['/home']);
     });
   }
 
@@ -334,12 +339,11 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   confirmDeleteIndication(indIndex: number, indication: string) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Indication (' + (indIndex + 1) + ')?'
+      data: { message: 'Are you sure you want to delete Indication (' + (indIndex + 1) + ')?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        //     console.log(result);
         this.deleteIndication(indIndex);
       }
     });
@@ -400,15 +404,34 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     let isValid = true;
     if ((dateinput !== null) && (dateinput.length > 0)) {
       if ((dateinput.length < 8) || (dateinput.length > 10)) {
-        isValid = false;
+        return false;
       }
       const split = dateinput.split('/');
       if (split.length !== 3 || (split[0].length < 1 || split[0].length > 2) ||
         (split[1].length < 1 || split[1].length > 2) || split[2].length !== 4) {
-        isValid = false;
+        return false;
+      }
+      if (split.length === 3) {
+        const comstring = split[0] + split[1] + split[2];
+        for (let i = 0; i < split.length; i++) {
+          const valid = this.isNumber(split[i]);
+          if (valid === false) {
+            isValid = false;
+            break;
+          }
+        }
       }
     }
     return isValid;
+  }
+
+  isNumber(str: string): boolean {
+    if ((str !== null) && (str !== '')) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
   }
 
   convertDateFormat(formDate: any): any {
@@ -425,12 +448,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       const formattedDate = datepipe.transform(date, 'MM/dd/yyyy');
       return formattedDate;
     }
-  }
-
-  closeWindow() {
-    alert('AAAa');
-  //  window.open('', '_parent', '');
-    window.close();
   }
 
 }

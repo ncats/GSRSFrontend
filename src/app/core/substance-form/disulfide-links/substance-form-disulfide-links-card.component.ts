@@ -52,7 +52,7 @@ export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseF
       this.countCysteine();
     });
     this.subscriptions.push(subunitsSubscription);
-    const cysteineSubscription = this.substanceFormService.substanceCysteineSites.subscribe(cysteine => {
+    const cysteineSubscription = this.substanceFormDisulfideLinksService.substanceCysteineSites.subscribe(cysteine => {
       this.cysteine = cysteine;
       this.countCysteine();
     });
@@ -67,18 +67,20 @@ export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseF
   }
 
   countCysteine(): void {
-    this.cysteineBonds = 0;
-    if (this.subunits) {
-      this.subunits.forEach(subunit => {
-        this.cysteineBonds += (subunit.sequence.toUpperCase().split('C').length - 1);
-      });
+    if (this.disulfideLinks != null && this.subunits != null && this.cysteine != null) {
+      this.cysteineBonds = 0;
+      if (this.subunits) {
+        this.subunits.forEach(subunit => {
+          this.cysteineBonds += (subunit.sequence.toUpperCase().split('C').length - 1);
+        });
+      }
+      if (this.cysteine && this.cysteine.length) {
+        this.cysteineBonds = this.cysteine.length;
+      } else {
+        this.cysteineBonds -= (this.disulfideLinks.length * 2);
+      }
+      this.getSuggestions();
     }
-    if (this.cysteine && this.cysteine.length) {
-      this.cysteineBonds = this.cysteine.length;
-    } else {
-      this.cysteineBonds -= (this.disulfideLinks.length * 2);
-    }
-    this.getSuggestions();
   }
 
   getSuggestions(): void {

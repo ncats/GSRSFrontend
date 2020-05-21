@@ -29,9 +29,37 @@
 
 .form-row {
   display: flex;
-  justify-content:space-between; 
- /* grid-column-gap: 20px; */
-  /* align-items: flex-end; */
+  width: 100%;
+
+  .col-1-4 {
+    /* width: 159.333px; */
+    width: calc((100% - 20px * 3) / 4);
+    margin-right: 20px;
+  }
+  
+  .col-1-4:last-child {
+    margin-right: 0px;
+  }  
+  
+  .col-half-4 {
+    /* width: 159.333px; */
+    width: calc((100% - 20px * 7) / 8);
+    margin-right: 20px;
+  }
+  
+  .col-half-4:last-child {
+    margin-right: 0px;
+  }  
+  
+  .col-2-4 {
+    /* width: 159.333px; */
+    width: calc((100% - 20px * 1) / 2);
+    margin-right: 20px;
+  }
+  
+  .col-2-4:last-child {
+    margin-right: 0px;
+  }
 }
 
 .row {

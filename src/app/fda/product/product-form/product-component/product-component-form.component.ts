@@ -28,12 +28,14 @@ export class ProductComponentFormComponent implements OnInit {
   @Input() totalComponent: number;
   @Input() prodComponentIndex: number;
 
+  /*
   dosageFormList: Array<VocabularyTerm> = [];
   colorList: Array<VocabularyTerm> = [];
   flavorList: Array<VocabularyTerm> = [];
   shapeList: Array<VocabularyTerm> = [];
   scoringList: Array<VocabularyTerm> = [];
   reviewProductMessage: Array<any> = [];
+  */
   productMessage = '';
   username = null;
 
@@ -45,9 +47,10 @@ export class ProductComponentFormComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.authService.getUser();
-    this.getVocabularies();
+ //   this.getVocabularies();
   }
 
+  /*
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('DOSAGE_FORM', 'PROD_CHARACTER_COLOR', 'PROD_CHARACTER_FLAVOR',
       'PROD_CHARACTER_SHAPE', 'PROD_CHARACTER_FRAGMENTS').subscribe(response => {
@@ -58,10 +61,11 @@ export class ProductComponentFormComponent implements OnInit {
         this.scoringList = response['PROD_CHARACTER_FRAGMENTS'].list;
       });
   }
+*/
 
   confirmDeleteComponent(prodComponentIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Manufacture Item Details ' + (prodComponentIndex + 1) + ' data?'
+      data: {message: 'Are you sure you want to delete Manufacture Item Details ' + (prodComponentIndex + 1) + ' data?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {

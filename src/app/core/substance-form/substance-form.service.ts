@@ -38,15 +38,14 @@ export class SubstanceFormService implements OnDestroy {
   private substanceNamesEmitter = new ReplaySubject<Array<SubstanceName>>();
   private substanceOtherLinksEmitter = new ReplaySubject<Array<Link>>();
   private substanceStructuralModificationsEmitter = new ReplaySubject<Array<StructuralModification>>();
+  private substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
   private substanceFormActionEmitter = new ReplaySubject<'load'|'unload'>();
 
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private subClass: string;
   private substanceSubunitsEmitter = new Subject<Array<Subunit>>();
-  private substanceCysteineEmitter = new Subject<Array<Site>>();
   private substanceSugarsEmitter = new Subject<Array<Sugar>>();
   private substanceNucleicAcidEmitter = new Subject<NucleicAcid>();
-  private cysteine: Array<Site>;
   private allSitesArr: Array<DisplaySite>;
   private allSitesEmitter = new Subject<Array<DisplaySite>>();
   private displaySequences: Array<SubunitSequence>;
@@ -180,13 +179,6 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   initForm(): void {
-    this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
-    this.substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
-    this.substanceGlycosylationEmitter = new ReplaySubject<Glycosylation>();
-    this.substanceLinksEmitter = new ReplaySubject<Array<Linkage>>();
-    this.substanceLinksEmitter = new ReplaySubject<Array<SubstanceName>>();
-    this.substanceOtherLinksEmitter = new ReplaySubject<Array<Link>>();
-    this.substanceStructuralModificationsEmitter = new ReplaySubject<Array<StructuralModification>>();
     this.substanceFormActionEmitter.next('load');
   }
 
@@ -210,6 +202,15 @@ export class SubstanceFormService implements OnDestroy {
     this.substanceNamesEmitter.complete();
     this.substanceOtherLinksEmitter.complete();
     this.substanceStructuralModificationsEmitter.complete();
+    this.substanceCysteineEmitter.complete();
+    this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
+    this.substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
+    this.substanceGlycosylationEmitter = new ReplaySubject<Glycosylation>();
+    this.substanceLinksEmitter = new ReplaySubject<Array<Linkage>>();
+    this.substanceLinksEmitter = new ReplaySubject<Array<SubstanceName>>();
+    this.substanceOtherLinksEmitter = new ReplaySubject<Array<Link>>();
+    this.substanceStructuralModificationsEmitter = new ReplaySubject<Array<StructuralModification>>();
+    this.substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
     this.substanceFormActionEmitter.next('unload');
   }
 
@@ -680,7 +681,7 @@ export class SubstanceFormService implements OnDestroy {
         sequence: '',
         subunitIndex: index
       };
-      this.privateSubstance.protein.subunits.unshift(newSubunit);
+      this.privateSubstance.protein.subunits.push(newSubunit);
       this.displaySequencesEmitter.next(this.createSubunitDisplay());
       this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
     } else {
@@ -692,7 +693,7 @@ export class SubstanceFormService implements OnDestroy {
         sequence: '',
         subunitIndex: index
       };
-      this.privateSubstance.nucleicAcid.subunits.unshift(newSubunit);
+      this.privateSubstance.nucleicAcid.subunits.push(newSubunit);
       this.displaySequencesEmitter.next(this.createSubunitDisplay());
       this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
       this.emitSugarUpdate();
@@ -925,10 +926,8 @@ export class SubstanceFormService implements OnDestroy {
 
   // modifications end
 
-  // Cysteine start
-
-  emitCysteineUpdate(cysteine: Array<Site>): void {
-    this.substanceCysteineEmitter.next(cysteine);
+  cysteineUpdated(): Observable<Array<Site>> {
+    return this.substanceCysteineEmitter.asObservable();
   }
 
   recalculateCysteine(): void {
@@ -955,39 +954,6 @@ export class SubstanceFormService implements OnDestroy {
       });
     }
     this.substanceCysteineEmitter.next(available);
-  }
-
-  get substanceCysteineSites(): Observable<Array<Site>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        let available = [];
-        for (let i = 0; i < this.privateSubstance.protein.subunits.length; i++) {
-          const sequence = this.privateSubstance.protein.subunits[i].sequence;
-          if (sequence != null && sequence.length > 0) {
-            for (let j = 0; j < sequence.length; j++) {
-              const site = sequence[j];
-              if (site.toUpperCase() === 'C') {
-                available.push({ 'residueIndex': (j + 1), 'subunitIndex': (i + 1) });
-              }
-            }
-          }
-        }
-
-        this.privateSubstance.protein.disulfideLinks.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              available = available.filter(r => (r.residueIndex !== site.residueIndex) || (r.subunitIndex !== site.subunitIndex));
-            });
-          }
-        });
-        this.cysteine = available;
-        observer.next(available);
-        this.substanceCysteineEmitter.subscribe(disulfideLinks => {
-          this.cysteine = disulfideLinks;
-          observer.next(disulfideLinks);
-        });
-      });
-    });
   }
 
   // ################################ Start Nucleic acid (break into new file, one for each class or on with only class specific?
@@ -1085,6 +1051,23 @@ export class SubstanceFormService implements OnDestroy {
       }
       if (this.privateSubstance.structurallyDiverse.$$storedPart) {
         delete this.privateSubstance.structurallyDiverse.$$storedPart;
+      }
+    }
+
+    if (this.privateSubstance.nucleicAcid) {
+      if (this.privateSubstance.nucleicAcid.sugars) {
+        this.privateSubstance.nucleicAcid.sugars.forEach((sugar, index) => {
+          if (sugar.sites.length === 0) {
+            this.privateSubstance.nucleicAcid.sugars.splice(index, 1);
+          }
+        });
+      }
+      if (this.privateSubstance.nucleicAcid.linkages) {
+        this.privateSubstance.nucleicAcid.linkages.forEach((linkage, index) => {
+          if (linkage.sites.length === 0) {
+            this.privateSubstance.nucleicAcid.linkages.splice(index, 1);
+          }
+        });
       }
     }
 
@@ -1517,9 +1500,6 @@ export class SubstanceFormService implements OnDestroy {
     this.privateSubstance.protein.disulfideLinks = newDS;
     this.emitDisulfideLinkUpdate();
     alert('Found and added ' + newDS.length + 'sites');
-
-
-
   }
 
 

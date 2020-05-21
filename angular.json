@@ -35,6 +35,10 @@
           },
           "configurations": {
             "gsrs.prod": {
+              "assets": [
+                { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
+                { "glob": "config.json", "input": "src/app/core/config/", "output": "/assets/data/" }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -52,6 +56,10 @@
               "buildOptimizer": true
             },
             "gsrs.pre-prod": {
+              "assets": [
+                { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
+                { "glob": "config.json", "input": "src/app/core/config/", "output": "/assets/data/" }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -69,6 +77,10 @@
               "buildOptimizer": true
             },
             "gsrs.dev": {
+              "assets": [
+                { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
+                { "glob": "config.json", "input": "src/app/core/config/", "output": "/assets/data/" }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

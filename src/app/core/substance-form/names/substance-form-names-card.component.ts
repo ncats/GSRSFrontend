@@ -17,7 +17,6 @@ export class SubstanceFormNamesCardComponent
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   names: Array<SubstanceName>;
   private subscriptions: Array<Subscription> = [];
-  isAlternative = false;
 
   constructor(
     private substanceFormNamesService: SubstanceFormNamesService,
@@ -31,20 +30,18 @@ export class SubstanceFormNamesCardComponent
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Names');
-  }
-
-  ngAfterViewInit() {
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
-        this.isAlternative = true;
         this.canAddItemUpdate.emit(false);
+        this.hiddenStateUpdate.emit(true);
       } else {
-        this.isAlternative = false;
         this.canAddItemUpdate.emit(true);
+        this.hiddenStateUpdate.emit(false);
       }
       });
     this.subscriptions.push(definitionSubscription);
     const namesSubscription = this.substanceFormNamesService.substanceNames.subscribe(names => {
+      console.log(names);
       this.names = names;
       this.filtered = names;
       const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
@@ -57,6 +54,9 @@ export class SubstanceFormNamesCardComponent
       this.pageChange();
     });
     this.subscriptions.push(namesSubscription);
+  }
+
+  ngAfterViewInit() {
   }
 
   standardize(): void {

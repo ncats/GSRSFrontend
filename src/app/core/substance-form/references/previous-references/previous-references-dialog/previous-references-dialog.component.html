@@ -1,0 +1,10 @@
+<div mat-dialog-title>
+        <h1>Select Previously Used Reference</h1>
+</div>
+<div mat-dialog-content>
+  <app-previous-references (selectedReference) = "fillReference($event)" ></app-previous-references>
+</div>
+<div mat-dialog-actions>
+        <span class="middle-fill"></span>
+    <button mat-button (click)="cancel()">Cancel</button>
+</div>

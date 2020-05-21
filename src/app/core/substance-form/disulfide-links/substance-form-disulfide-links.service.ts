@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { DisulfideLink, Site } from '@gsrs-core/substance/substance.model';
-import { ReplaySubject, Observable } from 'rxjs';
-import { SubstanceFormModule } from '../substance-form.module';
+import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable()
 export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase<Array<DisulfideLink>> {
+  private substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
 
   constructor(
     public substanceFormService: SubstanceFormService
@@ -24,6 +24,31 @@ export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase
         }
         this.substanceFormService.resetState();
         this.propertyEmitter.next(this.substance.protein.disulfideLinks);
+        let available = [];
+        for (let i = 0; i < this.substance.protein.subunits.length; i++) {
+          const sequence = this.substance.protein.subunits[i].sequence;
+          if (sequence != null && sequence.length > 0) {
+            for (let j = 0; j < sequence.length; j++) {
+              const site = sequence[j];
+              if (site.toUpperCase() === 'C') {
+                available.push({ 'residueIndex': (j + 1), 'subunitIndex': (i + 1) });
+              }
+            }
+          }
+        }
+
+        this.substance.protein.disulfideLinks.forEach(link => {
+          if (link.sites) {
+            link.sites.forEach(site => {
+              available = available.filter(r => (r.residueIndex !== site.residueIndex) || (r.subunitIndex !== site.subunitIndex));
+            });
+          }
+        });
+        this.substanceCysteineEmitter.next(available);
+        const cysteineUpdatedSubscription = this.substanceFormService.cysteineUpdated().subscribe(cysteine => {
+          this.substanceCysteineEmitter.next(cysteine);
+        });
+        this.subscriptions.push(cysteineUpdatedSubscription);
       }
       const linksUpdatedSubscription = this.substanceFormService.disulfideLinksUpdated().subscribe(disulfideLinks => {
         this.propertyEmitter.next(disulfideLinks);
@@ -31,6 +56,12 @@ export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase
       this.subscriptions.push(linksUpdatedSubscription);
     });
     this.subscriptions.push(subscription);
+  }
+
+  unloadSubstance(): void {
+    this.substanceCysteineEmitter.complete();
+    this.substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
+    super.unloadSubstance();
   }
 
   get substanceDisulfideLinks(): Observable<Array<DisulfideLink>> {
@@ -75,5 +106,13 @@ export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase
     this.substanceFormService.recalculateAllSites('disulfide');
     this.propertyEmitter.next(this.substance.protein.disulfideLinks);
     this.substanceFormService.recalculateCysteine();
+  }
+
+  get substanceCysteineSites(): Observable<Array<Site>> {
+    return this.substanceCysteineEmitter.asObservable();
+  }
+
+  updateCysteine(cysteine: Array<Site>): void {
+    this.emitDisulfideLinkUpdate();
   }
 }

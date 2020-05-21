@@ -89,7 +89,7 @@ export class ProductService extends BaseHttpService {
     } else {
       this.product = {
         productNameList: [{
-          productTermAndTermPartList: []
+          productTermAndTermPartList: [{}]
         }],
         productCodeList: [{}],
         productCompanyList: [{}],
@@ -139,6 +139,16 @@ export class ProductService extends BaseHttpService {
   validateProd(): Observable<ValidationResults> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/product/@validate`;
     return this.http.post(url, this.product);
+  }
+
+  deleteProduct(): Observable<any> {
+    const url = this.apiBaseUrl + 'product(' + this.product.id + ')';
+    const params = new HttpParams();
+    const options = {
+      params: params
+    };
+    const x = this.http.delete<Product>(url, options);
+    return x;
   }
 
   getSubstanceDetailsByBdnum(

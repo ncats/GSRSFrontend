@@ -20,7 +20,17 @@
         class="colorgreen font17px">{{prodComponentIndex + 1}}</span></b>
   </legend>
 
-  <div class="row margintop10px">
+  <div class="form-row margintop10px">
+    <app-cv-input class="col-2-4" domain="DOSAGE_FORM" title="Dosage Form" name="dosageForm"
+      [model]="productComponent.dosageForm" (valueChange)="productComponent.dosageForm = $event">
+    </app-cv-input>
+    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_COLOR" title="Color Name" name="charColor"
+      [model]="productComponent.charColor" (valueChange)="productComponent.charColor = $event">
+    </app-cv-input>
+    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_FLAVOR" title="Flavor Name" name="charFlavor"
+      [model]="productComponent.charFlavor" (valueChange)="productComponent.charFlavor = $event">
+    </app-cv-input>
+    <!--
     <mat-form-field class="col-2-4">
       <mat-label>Dosage Form</mat-label>
       <mat-select matNativeControl [(ngModel)]="productComponent.dosageForm" name="dosageForm">
@@ -29,24 +39,32 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="col-1-4">
-      <mat-label>Color Name</mat-label>
-      <mat-select matNativeControl [(ngModel)]="productComponent.charColor" name="charColor">
-        <mat-option *ngFor="let color of colorList" [value]="color.value">
-          {{color.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="col-1-4">
-      <mat-label>Flavor Name</mat-label>
-      <mat-select matNativeControl [(ngModel)]="productComponent.charFlavor" name="charFlavor">
-        <mat-option *ngFor="let flavor of flavorList" [value]="flavor.value">
-          {{flavor.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field class="col-1-4">
+        <mat-label>Color Name</mat-label>
+        <mat-select matNativeControl [(ngModel)]="productComponent.charColor" name="charColor">
+          <mat-option *ngFor="let color of colorList" [value]="color.value">
+            {{color.display}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-1-4">
+        <mat-label>Flavor Name</mat-label>
+        <mat-select matNativeControl [(ngModel)]="productComponent.charFlavor" name="charFlavor">
+          <mat-option *ngFor="let flavor of flavorList" [value]="flavor.value">
+            {{flavor.display}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+       -->
   </div>
-  <div class="row">
+  <div class="form-row">
+    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_SHAPE" title="Shape Name" name="charShape"
+      [model]="productComponent.charShape" (valueChange)="productComponent.charShape = $event">
+    </app-cv-input>
+    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_FRAGMENTS" title="Scoring" name="charNumFragments"
+      [model]="productComponent.charNumFragments" (valueChange)="productComponent.charNumFragments = $event">
+    </app-cv-input>
+    <!--
     <mat-form-field class="col-1-4">
       <mat-label>Shape Name</mat-label>
       <mat-select matNativeControl [(ngModel)]="productComponent.charShape" name="charShape">
@@ -63,6 +81,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+     -->
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Size" [(ngModel)]="productComponent.charSize" name="charSize" />
     </mat-form-field>

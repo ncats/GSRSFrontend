@@ -2,7 +2,7 @@
 <div class = "flex-row">
 <mat-form-field [ngClass] = "privateMod === 'other'?'risen':''" class = "cv-field">
   <mat-label>{{title}} {{required? ' *':''}}</mat-label>
-  <mat-select [(ngModel)]="privateMod" [disabled] = "disable" name="term" (ngModelChange)="select($event)">
+  <mat-select [(ngModel)]="privateMod" name="term" (ngModelChange)="select($event)" [disabled] = "disable">
     <mat-option [value] = 'null' *ngIf = "privateMod" ><span class = 'deselect' >Clear selection</span></mat-option>
   <mat-option *ngFor="let term of vocabulary" [value]=" term.value">
     {{term.display}}

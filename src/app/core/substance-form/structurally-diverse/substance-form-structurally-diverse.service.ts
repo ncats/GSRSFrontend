@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { StructurallyDiverse } from '@gsrs-core/substance/substance.model';
-import { ReplaySubject, Observable } from 'rxjs';
-import { SubstanceFormModule } from '../substance-form.module';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class SubstanceFormStructurallyDiverseService extends SubstanceFormServiceBase<StructurallyDiverse> {

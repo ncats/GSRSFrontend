@@ -109,6 +109,7 @@
       </div>
     </div>
 
+    <!--
     <mat-form-field class="col-1-4">
       <mat-label>Grade</mat-label>
       <mat-select matNativeControl [(ngModel)]="ingredient.grade" name="grade">
@@ -117,15 +118,33 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    -->
+    <app-cv-input class="col-1-4" domain="PROD_GRADE" title="Grade" name="grade" [model]="ingredient.grade"
+      (valueChange)="ingredient.grade = $event">
+    </app-cv-input>
 
+    <!--
+    <mat-form-field class="col-1-4">
+      <div *ngFor="let data of locationOptions; let i=index">
+        <mat-checkbox [(ngModel)]="checked" name="data.name">
+          {{ data.name }}
+        </mat-checkbox>
+      </div>
+    </mat-form-field>
+    -->
+    
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Ingredient Location" [(ngModel)]="ingredient.ingredientLocation"
         name="ingredientLocation" />
     </mat-form-field>
-
+    
   </div> <!-- row-->
 
-  <div class="row margintop10px">
+  <div class="form-row margintop10px">
+    <app-cv-input class="col-1-4" domain="INGREDIENT_TYPE" title="Ingredient Type" name="ingredientType"
+      [model]="ingredient.ingredientType" (valueChange)="ingredient.ingredientType = $event">
+    </app-cv-input>
+    <!--
     <mat-form-field class="col-1-4">
       <mat-label>Ingredient Type</mat-label>
       <mat-select matNativeControl [(ngModel)]="ingredient.ingredientType" name="ingredientType">
@@ -134,6 +153,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    -->
 
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
@@ -147,6 +167,11 @@
       <input matInput placeholder="High" [(ngModel)]="ingredient.high" name="high" />
     </mat-form-field>
 
+    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Unit" name="unit" [model]="ingredient.unit"
+      (valueChange)="ingredient.unit = $event">
+    </app-cv-input>
+
+    <!--
     <mat-form-field class="col-1-4">
       <mat-label>Unit</mat-label>
       <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
@@ -155,9 +180,15 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+     -->
   </div>
 
-  <div class="row">
+  <div class="form-row">
+    <app-cv-input class="col-1-4" domain="PROD_RELEASE_CHARACTERISTIC" title="Release Characteristics"
+      name="releaseCharacteristic" [model]="ingredient.releaseCharacteristic"
+      (valueChange)="ingredient.releaseCharacteristic = $event">
+    </app-cv-input>
+    <!--
     <mat-form-field class="col-1-4">
       <mat-label>Release Characteristics</mat-label>
       <mat-select matNativeControl [(ngModel)]="ingredient.releaseCharacteristic" name="releaseCharacteristic">
@@ -167,6 +198,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    -->
 
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.manufacturer" name="manufacturer" />

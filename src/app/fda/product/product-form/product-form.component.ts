@@ -27,23 +27,23 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   product: Product;
-  productNameTypeList: Array<VocabularyTerm> = [];
-  productTermPartList: Array<VocabularyTerm> = [];
-  pharmacedicalDosageFormList: Array<VocabularyTerm> = [];
-  releaseCharacteristicList: Array<VocabularyTerm> = [];
-  countryCodeList: Array<VocabularyTerm> = [];
-  languageList: Array<VocabularyTerm> = [];
-  productTypeList: Array<VocabularyTerm> = [];
-  statusList: Array<VocabularyTerm> = [];
-  publicDomainList: Array<VocabularyTerm> = [];
-  sourceTypeList: Array<VocabularyTerm> = [];
-  unitPresentationList: Array<VocabularyTerm> = [];
-  routeOfAdministrationList: Array<VocabularyTerm> = [];
-  applicationTypeList: Array<VocabularyTerm> = [];
-  productCodeTypeList: Array<VocabularyTerm> = [];
-  productCompanyRoleList: Array<VocabularyTerm> = [];
-  companyCodeTypeList: Array<VocabularyTerm> = [];
-
+  /* productNameTypeList: Array<VocabularyTerm> = [];
+   productTermPartList: Array<VocabularyTerm> = [];
+   pharmacedicalDosageFormList: Array<VocabularyTerm> = [];
+   releaseCharacteristicList: Array<VocabularyTerm> = [];
+   countryCodeList: Array<VocabularyTerm> = [];
+   languageList: Array<VocabularyTerm> = [];
+   productTypeList: Array<VocabularyTerm> = [];
+   statusList: Array<VocabularyTerm> = [];
+   publicDomainList: Array<VocabularyTerm> = [];
+   sourceTypeList: Array<VocabularyTerm> = [];
+   unitPresentationList: Array<VocabularyTerm> = [];
+   routeOfAdministrationList: Array<VocabularyTerm> = [];
+   applicationTypeList: Array<VocabularyTerm> = [];
+   productCodeTypeList: Array<VocabularyTerm> = [];
+   productCompanyRoleList: Array<VocabularyTerm> = [];
+   companyCodeTypeList: Array<VocabularyTerm> = [];
+ */
   id?: number;
   isLoading = true;
   showSubmissionMessages = false;
@@ -57,6 +57,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   isDisableData = false;
   username = null;
   title = null;
+  isAdmin = false;
 
   constructor(
     private productService: ProductService,
@@ -72,6 +73,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.isAdmin = this.authService.hasRoles('admin');
+    this.isAdmin = true;
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
@@ -85,7 +88,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.id = id;
             this.gaService.sendPageView(`Product Edit`);
             this.getProductDetails();
-            this.getVocabularies();
+            //   this.getVocabularies();
           }
         } else {
           this.title = 'Register New Product';
@@ -93,7 +96,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.gaService.sendPageView(`Product Register`);
             this.productService.loadProduct();
             this.product = this.productService.product;
-            this.getVocabularies();
+            //   this.getVocabularies();
             this.loadingService.setLoading(false);
             this.isLoading = false;
           });
@@ -112,6 +115,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  /*
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('PROD_PRODUCT_NAME_TYPE', 'PROD_PHARMACEDICAL_DOSAGE_FORM',
     'PROD_RELEASE_CHARACTERISTIC', 'PROD_COUNTRY_CODE', 'LANGUAGE', 'PROD_PRODUCT_TYPE',
@@ -143,6 +147,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.productTermPartList = response['PROD_TERM_PART'].list;
     });
   }
+  */
 
   getProductDetails(newType?: string): void {
     if (this.id != null) {
@@ -175,6 +180,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
       this.validationResult = results.valid;
       this.showSubmissionMessages = true;
+      // Perform Additional Validation
+   //   this.validateAdditionalFields();
       this.loadingService.setLoading(false);
       this.isLoading = false;
       if (this.validationMessages.length === 0 && results.valid === true) {
@@ -185,6 +192,32 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loadingService.setLoading(false);
       this.isLoading = false;
     });
+  }
+
+  // Check Dates
+  validateAdditionalFields(): void {
+    /*
+    this.product.productComponentList.forEach((elementProd, indexProd) => {
+      elementProd.productLotList.forEach((elementLot, indexLot) => {
+      //  if ((elementLot.manufactureDate !== null) && (elementLot.manufactureDate.length > 0)) {
+      //  if ((this.submitDateMessage !== null) && (this.submitDateMessage.length > 0)) {
+          const submitValidate: ValidationMessage = {};
+          submitValidate.message = elementLot.submitDateMessage;
+          submitValidate.messageType = 'ERROR';
+          this.validationResult = false;
+          this.validationMessages.push(submitValidate);
+    //    }
+    //    if ((this.statusDateMessage !== null) && (this.statusDateMessage.length > 0)) {
+          const statusValidate: ValidationMessage = {};
+          statusValidate.message = elementLot.statusDateMessage;
+          statusValidate.messageType = 'ERROR';
+          this.validationResult = false;
+          this.validationMessages.push(statusValidate);
+    //    }
+      }
+    }
+    */
+
   }
 
   toggleValidation(): void {
@@ -286,13 +319,46 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  confirmDeleteProduct() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete this Product?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProduct();
+      }
+    });
+  }
+
+  deleteProduct(): void {
+    this.productService.deleteProduct().subscribe(response => {
+      if (response) {
+        this.displayMessageAfterDeleteProd();
+      }
+    });
+  }
+
+  displayMessageAfterDeleteProd() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: 'The product has been deleted',
+        type: 'home'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(['/home']);
+    });
+  }
+
   addNewProductName() {
     this.productService.addNewProductName();
   }
 
   confirmDeleteProductName(prodNameIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?'
+      data: { message: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -312,7 +378,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   confirmDeleteTermAndTermPart(prodNameIndex: number, prodNameTermIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Term and Term Part ' + (prodNameTermIndex + 1) + ' ?'
+      data: { message: 'Are you sure you want to delete Term and Term Part ' + (prodNameTermIndex + 1) + ' ?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -332,7 +398,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   confirmDeleteProductCode(prodCodeIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Product Code ' + (prodCodeIndex + 1) + ' ?'
+      data: { message: 'Are you sure you want to delete Product Code ' + (prodCodeIndex + 1) + ' ?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -352,7 +418,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   confirmDeleteProductCompany(prodCompanyIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Product Company ' + (prodCompanyIndex + 1) + ' ?'
+      data: { message: 'Are you sure you want to delete Product Company ' + (prodCompanyIndex + 1) + ' ?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -370,26 +436,4 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.addNewProductComponent();
   }
 
-  /*
-  addNewIndication() {
-    this.applicationService.addNewIndication();
-  }
-
-  confirmDeleteIndication(indIndex: number, indication: string) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Indication (' + (indIndex + 1) + ')?'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        console.log(result);
-        this.deleteIndication(indIndex);
-      }
-    });
-  }
-
-  deleteIndication(indIndex: number) {
-    this.applicationService.deleteIndication(indIndex);
-  }
-*/
 }

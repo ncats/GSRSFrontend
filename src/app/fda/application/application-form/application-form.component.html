@@ -12,8 +12,7 @@
       <span *ngIf="application.id">
         <button mat-flat-button color="primary" [routerLink]="['/browse-applications']" matTooltip='Browse Application'>
           Browse Application
-        </button>
-        &nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;
         <button mat-flat-button color="primary" [routerLink]="['/application/register']"
           matTooltip='Register a New Application'>
           Register
@@ -21,13 +20,18 @@
         <button mat-flat-button color="primary" [routerLink]="['/applicationDetails', application.id]"
           matTooltip='View this Application Record'>View
         </button>&nbsp;&nbsp;&nbsp;
-        <button mat-flat-button color="primary" (click)="confirmDeleteApplication()">Delete</button>
-        &nbsp;
+        <span *ngIf="isAdmin">
+          <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
+            matTooltip='Delete this Application'>
+            Delete
+          </button>&nbsp;&nbsp;&nbsp;
+        </span>
       </span>
     </span>
 
     <!-- Validate and Submit Button -->
-    <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
+    &nbsp;
+    <button mat-flat-button color="primary" (click)="validate()">Validate and Submit</button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
   </div>
@@ -57,6 +61,7 @@
       </span>
 
       <div class="dismiss-container">
+        <span class="middle-fill"></span>
         <button mat-flat-button color="primary" (click)="submit()"
           [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
           Submit</button>

@@ -55,7 +55,7 @@ export class IngredientFormComponent implements OnInit {
 
   confirmDeleteIngredient(prodIndex: number, ingredIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Ingredient Details ' + (ingredIndex + 1) + '?'
+      data: {message: 'Are you sure you want to delete Ingredient Details ' + (ingredIndex + 1) + '?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -76,7 +76,7 @@ export class IngredientFormComponent implements OnInit {
   confirmReviewIngredient() {
     if (this.ingredient.reviewDate) {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        data: 'Are you sure you want to overwrite Reviewed By and Review Date?'
+        data: {message: 'Are you sure you want to overwrite Reviewed By and Review Date?'}
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -100,7 +100,7 @@ export class IngredientFormComponent implements OnInit {
 
   confirmDeleteIngredientName(ingredIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Ingredient Name ' + (ingredIndex + 1) + '?'
+      data: {message: 'Are you sure you want to delete Ingredient Name ' + (ingredIndex + 1) + '?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -125,7 +125,7 @@ export class IngredientFormComponent implements OnInit {
 
   confirmDeleteBasisOfStrength(ingredIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Basis of Strength ' + (ingredIndex + 1) + '?'
+      data: {message: 'Are you sure you want to delete Basis of Strength ' + (ingredIndex + 1) + '?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {

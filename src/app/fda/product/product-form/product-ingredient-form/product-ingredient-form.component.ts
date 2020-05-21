@@ -32,10 +32,12 @@ export class ProductIngredientFormComponent implements OnInit {
   @Input() prodComponentIndex: number;
   @Input() prodLotIndex: number;
 
+  /*
   ingredientTypeList: Array<VocabularyTerm> = [];
   unitList: Array<VocabularyTerm> = [];
   gradeList: Array<VocabularyTerm> = [];
   releaseCharacteristicList: Array<VocabularyTerm> = [];
+  */
   productMessage = '';
   username = null;
   ingredientName: string;
@@ -49,7 +51,16 @@ export class ProductIngredientFormComponent implements OnInit {
   relationship: any;
   ingredientNameActiveMoiety: any;
   basisOfStrengthActiveMoiety: any;
-
+ // location: [];
+ // locationOptions = new Array<any>();
+ /*
+  locationList: Array<any> = [
+    { name: 'Whole', value: 'Whole' },
+    { name: 'Core', value: 'Core' },
+    { name: 'Coating', value: 'Coating' },
+    { name: 'Other', value: 'Other' }
+  ];
+*/
   constructor(
     private productService: ProductService,
     public cvService: ControlledVocabularyService,
@@ -58,8 +69,9 @@ export class ProductIngredientFormComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
+   //   this.locationOptions = this.locationList;
       this.username = this.authService.getUser();
-      this.getVocabularies();
+   //   this.getVocabularies();
       this.ingredientNameBdnumOld = this.ingredient.bdnum;
       this.basisofStrengthBdnumOld = this.ingredient.basisOfStrengthBdnum;
       this.getSubstanceId(this.ingredient.bdnum, 'ingredientname');
@@ -67,6 +79,7 @@ export class ProductIngredientFormComponent implements OnInit {
     }, 600);
   }
 
+  /*
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('INGREDIENT_TYPE', 'PROD_UNIT', 'PROD_GRADE').subscribe(response => {
       this.ingredientTypeList = response['INGREDIENT_TYPE'].list;
@@ -75,10 +88,10 @@ export class ProductIngredientFormComponent implements OnInit {
       this.releaseCharacteristicList = response['PROD_RELEASE_CHARACTERISTIC'].list;
     });
   }
-
+*/
   confirmDeleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Product Ingredient Details ' + (prodIngredientIndex + 1) + ' data?'
+      data: {message: 'Are you sure you want to delete Product Ingredient Details ' + (prodIngredientIndex + 1) + ' data?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -244,7 +257,7 @@ export class ProductIngredientFormComponent implements OnInit {
 
   confirmDeleteIngredientName() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Ingredient Name ' + (this.prodIngredientIndex + 1) + '?'
+      data: {message: 'Are you sure you want to delete Ingredient Name ' + (this.prodIngredientIndex + 1) + '?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -269,7 +282,7 @@ export class ProductIngredientFormComponent implements OnInit {
 
   confirmDeleteBasisOfStrength() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Basis of Strength ' + (this.prodIngredientIndex + 1) + '?'
+      data: {message: 'Are you sure you want to delete Basis of Strength ' + (this.prodIngredientIndex + 1) + '?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -291,5 +304,23 @@ export class ProductIngredientFormComponent implements OnInit {
     this.basisOfStrengthName = null;
     this.ingredient.basisOfStrengthBdnum = null;
   }
+
+  /*
+  onCheckboxChange(e) {
+    const checkArray: FormArray = this.form.get('checkArray') as FormArray;
+    if (e.target.checked) {
+      checkArray.push(new FormControl(e.target.value));
+    } else {
+      let i: number = 0;
+      checkArray.controls.forEach((item: FormControl) => {
+        if (item.value == e.target.value) {
+          checkArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
+  }
+  */
 
 }

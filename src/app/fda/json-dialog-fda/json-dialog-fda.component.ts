@@ -32,7 +32,6 @@ export class JsonDialogFdaComponent implements OnInit {
   }
 
   close() {
-    alert('AAAAAAa');
     this.dialogRef.close();
   }
 

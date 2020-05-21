@@ -19,7 +19,7 @@
   </div>
   <div [hidden]="!canvasToggle">
     <div class = "canvas-message canvas" *ngIf = "canvasMessage !== ''">{{canvasMessage}}</div>
-    <canvas #structure_canvas id = "structure_canvas" [height] = 'height' [width] = "width" >
+    <canvas #structure_canvas id = "structure_canvas" name = "structure_canvas" [height] = 'height' [width] = "width" >
     </canvas>
   </div>
 </div>

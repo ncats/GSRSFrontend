@@ -24,7 +24,6 @@ export abstract class SubstanceFormServiceBase<T> {
     }
 
     initSubtanceForm(): void {
-        this.propertyEmitter = new ReplaySubject<T>();
     }
 
     unloadSubstance(): void {
@@ -33,5 +32,6 @@ export abstract class SubstanceFormServiceBase<T> {
         });
         this.subscriptions = [];
         this.propertyEmitter.complete();
+        this.propertyEmitter = new ReplaySubject<T>();
     }
 }

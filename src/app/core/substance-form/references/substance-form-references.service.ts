@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { domainKeys, domainDisplayKeys } from './domain-references/domain-keys.constant';
 import { DomainsWithReferences } from './domain-references/domain.references.model';
 import { SubstanceReference } from '@gsrs-core/substance/substance.model';
@@ -6,7 +6,6 @@ import { ReplaySubject, Observable } from 'rxjs';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { UtilsService } from '@gsrs-core/utils';
-import { SubstanceFormModule } from '../substance-form.module';
 
 @Injectable()
 export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Array<SubstanceReference>> {
@@ -22,7 +21,6 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
 
   initSubtanceForm(): void {
     super.initSubtanceForm();
-    this.domainsWithReferencesEmitter = new ReplaySubject<DomainsWithReferences>();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.privateDomainsWithReferences = null;
       this.substance = substance;
@@ -37,8 +35,9 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
   }
 
   unloadSubstance() {
-    this.domainsWithReferencesEmitter.complete();
     super.unloadSubstance();
+    this.domainsWithReferencesEmitter.complete();
+    this.domainsWithReferencesEmitter = new ReplaySubject<DomainsWithReferences>();
   }
 
   get substanceReferences(): Observable<Array<SubstanceReference>> {

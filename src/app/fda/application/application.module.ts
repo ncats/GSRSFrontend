@@ -49,16 +49,6 @@ import { SubstanceFormModule } from '../../core/substance-form/substance-form.mo
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
 // import { AppDateAdapter } from '../format-datepicker/format-datepicker';
 
-const APP_DATE_FORMATS = {
-  parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
-  display: {
-      dateInput: 'input',
-      monthYearLabel: {year: 'numeric', month: 'short'},
-      dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric'},
-      monthYearA11yLabel: {year: 'numeric', month: 'long'}
-  }
-};
-
 const applicationRoutes: Routes = [
   {
     path: 'browse-applications',

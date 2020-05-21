@@ -59,6 +59,51 @@
   max-width: 1140px;
 }
 
+.form-row {
+  display: flex;
+  width: 100%;
+
+  .col-1 {
+    /* width: 159.333px; */
+    width: calc((100% - 30px * 3) / 4);
+    margin-right: 30px;
+  }
+  
+  .col-1:last-child {
+    margin-right: 0px;
+  }  
+  
+  .col-2 {
+    /* width: 348.667px; calc() value*/
+    width: calc((100% - 30px * 1) / 2); 
+    margin-right: 30px;
+  }
+  
+  .col-2:last-child {
+    margin-right: 0px;
+  }  
+  
+  .col-1-5 {
+    /* width: 159.333px; */
+    width: calc((100% - 20px * 4) / 5);
+    margin-right: 20px;
+  }
+  
+  .col-1-5:last-child {
+    margin-right: 0px;
+  }  
+  
+  .col-4-5 {
+    /* width: 159.333px; */
+    width: calc((100% - 5px) / (5/4));
+    margin-right: 20px;
+  }
+  
+  .col-4-5:last-child {
+    margin-right: 0px;
+  }
+}
+
 .row {
   width: 100%;
 }
@@ -185,6 +230,11 @@
 
 }
 
+.buttontermpart {
+  height: 35px !important;
+  margin-top: 10px;
+}
+
 .divflexrow {
   display: flex;
   flex-direction: row;
@@ -218,6 +268,10 @@
   margin-top: 90px;
 }
 
+.marginright5px {
+  margin-right: 5px;
+}
+
 .marginright10px {
   margin-right: 10px;
 }
@@ -232,6 +286,10 @@
 
 .marginright35px {
   margin-right: 35px;
+}
+
+.marginright60px {
+  margin-right: 60px;
 }
 
 .marginbottom10px {

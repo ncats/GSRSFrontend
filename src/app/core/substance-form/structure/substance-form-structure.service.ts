@@ -22,8 +22,6 @@ export class SubstanceFormStructureService extends SubstanceFormServiceBase<Subs
 
   initSubtanceForm(): void {
     super.initSubtanceForm();
-    this.substanceIdealizedStructureEmitter = new ReplaySubject<SubstanceStructure>();
-    this.substanceMoietiesEmitter = new ReplaySubject<Array<SubstanceMoiety>>();
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       if (this.substance.polymer != null || this.substance.structure != null) {
@@ -74,7 +72,9 @@ export class SubstanceFormStructureService extends SubstanceFormServiceBase<Subs
 
   unloadSubstance() {
     this.substanceIdealizedStructureEmitter.complete();
+    this.substanceIdealizedStructureEmitter = new ReplaySubject<SubstanceStructure>();
     this.substanceMoietiesEmitter.complete();
+    this.substanceMoietiesEmitter = new ReplaySubject<Array<SubstanceMoiety>>();
     super.unloadSubstance();
   }
 

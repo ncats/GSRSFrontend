@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -6,28 +6,45 @@ import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from '../../utils/utils.service';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormReferencesService } from './substance-form-references.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatDialog } from '@angular/material';
+import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-reference-form',
   templateUrl: './reference-form.component.html',
   styleUrls: ['./reference-form.component.scss']
 })
-export class ReferenceFormComponent implements OnInit, AfterViewInit {
+export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() reference: SubstanceReference;
   @Output() referenceDeleted = new EventEmitter<SubstanceReference>();
   @Input() hideDelete = false;
+  private overlayContainer: HTMLElement;
   deleteTimer: any;
-
+  showPrev: false;
+  private subscriptions: Array<Subscription> = [];
   constructor(
     private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
-    private substanceFormReferencesService: SubstanceFormReferencesService
+    private substanceFormReferencesService: SubstanceFormReferencesService,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer,
+    private substanceFormService: SubstanceFormService
   ) { }
 
   ngOnInit() {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
   }
 
   ngAfterViewInit() {
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   updateAccess(access: Array<string>): void {
@@ -73,6 +90,37 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit {
         this.reference.uploadedFile = response;
       });
     }
+  }
+
+  openPreviousDialog(): void {
+      const dialogRef = this.dialog.open(PreviousReferencesDialogComponent, {
+        data: {},
+        width: '990px'
+      });
+      this.overlayContainer.style.zIndex = '1002';
+      const dialogSubscription = dialogRef.afterClosed().subscribe(ref => {
+        this.overlayContainer.style.zIndex = null;
+       if (ref) {
+        this.fillReference(ref);
+       }
+      });
+      this.subscriptions.push(dialogSubscription);
+    }
+
+    fillReference(ref: SubstanceReference) {
+      this.showPrev = false;
+      this.reference.access = ref.access;
+      this.reference.citation = ref.citation;
+      this.reference.deprecated = ref.deprecated;
+      this.reference.docType = ref.docType;
+      this.reference.publicDomain = ref.publicDomain;
+      this.reference.tags = ref.tags;
+      this.reference.uploadedFile = ref.uploadedFile;
+    }
+
+  downloadDocument(url: string): void {
+    this.substanceFormService.bypassUpdateCheck();
+    window.open(url);
   }
 
 }
