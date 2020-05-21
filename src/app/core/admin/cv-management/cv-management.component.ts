@@ -57,14 +57,14 @@ export class CvManagementComponent implements OnInit {
         });
         this.downloadHref = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' +
          encodeURIComponent(JSON.stringify(this.vocabularies)));
-         this.sortData({active: "domain", direction: "asc"});
+         this.sortData({active: 'domain', direction: 'asc'});
       });
       this.overlayContainer = this.overlayContainerService.getContainerElement();
 
   }
 
   getVocabType(type: string): string {
-    this.vocabType.forEach( term =>{
+    this.vocabType.forEach( term => {
       if (term.value === type) {
         type = term.display;
       }
@@ -105,10 +105,6 @@ export class CvManagementComponent implements OnInit {
       const isAsc = sort.direction === 'asc';
       return this.utilsService.compare(a[sort.active], b[sort.active], isAsc);
     });
-  }
-
-  download(){
-
   }
 
   filterList(searchInput: string, listToFilter: Array<any>): void {
