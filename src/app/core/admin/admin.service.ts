@@ -11,7 +11,7 @@ import { Auth } from '@gsrs-core/auth';
 import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 
 
-@Injectable({
+ @Injectable({
   providedIn: 'root'
 })
 export class AdminService extends BaseHttpService {
@@ -24,7 +24,6 @@ export class AdminService extends BaseHttpService {
   }
 
   public fetchJobs():Observable< any > {
-    console.log('getting all');
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
     return this.http.get< any >(`${url}scheduledjobs`);
   }

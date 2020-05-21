@@ -13,13 +13,13 @@ export class AdminComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const tab = this.activatedRoute.snapshot.queryParams['function'] || 'cvp';
+    const tab = this.activatedRoute.snapshot.queryParams['function'] || 'cv';
     switch (tab) {
       case 'user': this.activeTab = 0; break;
       case 'cv': this.activeTab = 2; break;
       case 'jobs': this.activeTab = 3; break;
       case 'cache': this.activeTab = 4; break;
-      default: this.activeTab = 0; break;
+      default: this.activeTab = 2; break;
   }
 }
 

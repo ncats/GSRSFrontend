@@ -35,4 +35,6 @@ export interface UserEditObject {
         email: string;
         roles: Array< any >;
         groups : Array< any >;
+        password?: string;
+        index?: any
 }
