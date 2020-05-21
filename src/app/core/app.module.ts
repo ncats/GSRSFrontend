@@ -70,6 +70,7 @@ import {SubstanceHierarchyComponent} from '@gsrs-core/substances-browse/substanc
 import {SequenceAlignmentComponent} from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
 import { AdminModule } from '@gsrs-core/admin/admin.module';
 import { FacetsManagerModule } from './facets-manager/facets-manager.module';
+import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
 
 @NgModule({
   declarations: [
@@ -142,6 +143,7 @@ import { FacetsManagerModule } from './facets-manager/facets-manager.module';
     FacetsManagerModule
   ],
   providers: [
+    CanActivateAdminPage,
     ConfigService,
     {
         provide: APP_INITIALIZER,

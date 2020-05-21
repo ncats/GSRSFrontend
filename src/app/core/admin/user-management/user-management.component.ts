@@ -19,11 +19,11 @@ export class UserManagementComponent implements OnInit {
   alert: string;
   filtered = new MatTableDataSource();
   searchControl = new FormControl();
-  loading: boolean = false;
-  showAll: boolean = false;
-  showInactive: boolean = false;
+  loading = false;
+  showAll = false;
+  showInactive = false;
   private overlayContainer: HTMLElement;
-  displayedColumns: string[] = ["name", 'email', 'created', 'modified', 'delete'];
+  displayedColumns: string[] = ['name', 'email', 'created', 'modified', 'delete'];
   page = 0;
   pageSize = 10;
   paged: Array< any >;
@@ -83,7 +83,7 @@ showInactiveUsers(): void {
 
 editUserByName(name: any): void {
   this.loading = true;
-  this.alert = "";
+  this.alert = '';
   this.adminService.getUserByName(name).subscribe(response => {
     this.loading = false;
     if (response && response.user) {
@@ -92,23 +92,22 @@ editUserByName(name: any): void {
         width: '800px'
       });
       this.overlayContainer.style.zIndex = '1002';
-      const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      const dialogSubscription = dialogRef.afterClosed().subscribe(resp => {
         this.overlayContainer.style.zIndex = null;
-        if (response && this.showAll === true ) {
-          this.updateLocalData(response, null, null, name);
+        if (resp && this.showAll === true ) {
+          this.updateLocalData(resp, null, null, name);
           this.filtered.data.forEach( usr => {
-            if (usr['user'] && usr['user'].username === response.user.username){
-              usr = response;
+            if (usr['user'] && usr['user'].username === resp.user.username) {
+              usr = resp;
             }
           });
         }
       });
+    } else {
+      this.alert = 'User Not found';
     }
-    else {
-      this.alert = "User Not found";
-    }
-  }, error=>{
-    this.alert = "User Not found";
+  }, error => {
+    this.alert = 'User Not found';
     this.loading = false;
   });
 }
@@ -134,7 +133,7 @@ editUserByName(name: any): void {
   // change both dataSource and original source to avoid making an API call after every edit
 updateLocalData(response: any, index?: number, id?: number, username?: string, ) {
     this.users.forEach( current => {
-      if (index){
+      if (index) {
         if (current.index = response.index) {
           current = response;
         }
@@ -144,7 +143,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         }
       }
     });
-    if (index){
+    if (index) {
       const backup = this.filtered.data;
       backup[index] = response;
       this.filtered.data = backup;
@@ -161,7 +160,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         backup[index] = response;
         this.filtered.data = backup;
       }
-    })
+    });
   }
 
   addUser(): void {
@@ -200,9 +199,9 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
       switch (sort.active) {
         case 'name' : return this.utilsService.compare(a.user.username.toUpperCase(), b.user.username.toUpperCase(), isAsc);
         case 'active' : return this.utilsService.compare(a.active, b.user.active, isAsc);
-        case 'email' :return this.utilsService.compare(a.user.email || '', b.user.email || '', isAsc);
-        case 'modified' :return this.utilsService.compare(a.modified, b.modified, isAsc);
-        case 'created' :return this.utilsService.compare(a.created, b.created, isAsc);
+        case 'email' : return this.utilsService.compare(a.user.email || '', b.user.email || '', isAsc);
+        case 'modified' : return this.utilsService.compare(a.modified, b.modified, isAsc);
+        case 'created' : return this.utilsService.compare(a.created, b.created, isAsc);
       }
     });
     this.pageChange();
