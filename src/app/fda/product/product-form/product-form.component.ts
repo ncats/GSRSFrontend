@@ -76,7 +76,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
-    this.isAdmin = true;
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
