@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
+import { ViewEncapsulation, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -26,6 +27,7 @@ import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 })
 export class ProductIngredientFormComponent implements OnInit {
 
+  @ViewChildren ('checkBox') checkBox: QueryList<any>;
   @Input() ingredient: ProductIngredient;
   @Input() totalIngredient: number;
   @Input() prodIngredientIndex: number;
@@ -51,16 +53,15 @@ export class ProductIngredientFormComponent implements OnInit {
   relationship: any;
   ingredientNameActiveMoiety: any;
   basisOfStrengthActiveMoiety: any;
- // location: [];
- // locationOptions = new Array<any>();
- /*
+  selectedIngredientLocation = new Array<any>();
+
   locationList: Array<any> = [
-    { name: 'Whole', value: 'Whole' },
-    { name: 'Core', value: 'Core' },
-    { name: 'Coating', value: 'Coating' },
-    { name: 'Other', value: 'Other' }
+    { value: 'Whole', checked: false },
+    { value: 'Core', checked: false },
+    { value: 'Coating', checked: false },
+    { value: 'Other', checked: false }
   ];
-*/
+
   constructor(
     private productService: ProductService,
     public cvService: ControlledVocabularyService,
@@ -69,9 +70,8 @@ export class ProductIngredientFormComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-   //   this.locationOptions = this.locationList;
+      this.loadIngredientLocation();
       this.username = this.authService.getUser();
-   //   this.getVocabularies();
       this.ingredientNameBdnumOld = this.ingredient.bdnum;
       this.basisofStrengthBdnumOld = this.ingredient.basisOfStrengthBdnum;
       this.getSubstanceId(this.ingredient.bdnum, 'ingredientname');
@@ -79,19 +79,35 @@ export class ProductIngredientFormComponent implements OnInit {
     }, 600);
   }
 
-  /*
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('INGREDIENT_TYPE', 'PROD_UNIT', 'PROD_GRADE').subscribe(response => {
-      this.ingredientTypeList = response['INGREDIENT_TYPE'].list;
-      this.unitList = response['PROD_UNIT'].list;
-      this.gradeList = response['PROD_GRADE'].list;
-      this.releaseCharacteristicList = response['PROD_RELEASE_CHARACTERISTIC'].list;
-    });
+  loadIngredientLocation() {
+    if ((this.ingredient.ingredientLocation !== null) && (this.ingredient.ingredientLocation.length > 0)) {
+      const arrLoc = this.ingredient.ingredientLocation.split(',');
+      for (let i = 0; i < this.locationList.length; i++) {
+        for (let j = 0; j < arrLoc.length; j++) {
+          if (this.locationList[i].value === arrLoc[j]) {
+            this.locationList[i].checked = true;
+          }
+        }
+      }
+    }
   }
-*/
+
+  setSelectedIngredientLocation(data: any, checkbox) {
+    let selStr = '';
+    const selected = [];
+    const checked = this.checkBox.filter(checkbox1 => checkbox1.checked);
+    checked.forEach(data1 => {
+      selected.push(data1.value);
+    });
+    if (selected.length > 0) {
+      selStr = selected.join(',');
+      this.ingredient.ingredientLocation = selStr;
+    }
+  }
+
   confirmDeleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Product Ingredient Details ' + (prodIngredientIndex + 1) + ' data?'}
+      data: { message: 'Are you sure you want to delete Product Ingredient Details ' + (prodIngredientIndex + 1) + ' data?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -257,7 +273,7 @@ export class ProductIngredientFormComponent implements OnInit {
 
   confirmDeleteIngredientName() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Ingredient Name ' + (this.prodIngredientIndex + 1) + '?'}
+      data: { message: 'Are you sure you want to delete Ingredient Name ' + (this.prodIngredientIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -282,7 +298,7 @@ export class ProductIngredientFormComponent implements OnInit {
 
   confirmDeleteBasisOfStrength() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Basis of Strength ' + (this.prodIngredientIndex + 1) + '?'}
+      data: { message: 'Are you sure you want to delete Basis of Strength ' + (this.prodIngredientIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -304,23 +320,5 @@ export class ProductIngredientFormComponent implements OnInit {
     this.basisOfStrengthName = null;
     this.ingredient.basisOfStrengthBdnum = null;
   }
-
-  /*
-  onCheckboxChange(e) {
-    const checkArray: FormArray = this.form.get('checkArray') as FormArray;
-    if (e.target.checked) {
-      checkArray.push(new FormControl(e.target.value));
-    } else {
-      let i: number = 0;
-      checkArray.controls.forEach((item: FormControl) => {
-        if (item.value == e.target.value) {
-          checkArray.removeAt(i);
-          return;
-        }
-        i++;
-      });
-    }
-  }
-  */
 
 }

@@ -106,7 +106,8 @@
     <br>
     <div class="marginbottom10px" *ngFor="let productLot of productComponent.productLotList; let prodLotIndex = index">
       <app-product-lot-form [productLot]="productLot" [totalLot]="productComponent.productLotList.length"
-        [prodLotIndex]="prodLotIndex" [prodComponentIndex]="prodComponentIndex">
+        [prodLotIndex]="prodLotIndex" [prodComponentIndex]="prodComponentIndex" (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
+        (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)">
       </app-product-lot-form>
     </div>
   </div>

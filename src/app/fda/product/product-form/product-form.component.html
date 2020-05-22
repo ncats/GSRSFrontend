@@ -393,8 +393,8 @@
                     </mat-form-field>
 
                     <app-cv-input class="col-1-5" domain="PROD_PRODUCT_CODE_TYPE" title="Product Code Type"
-                      name="productCodeType" [model]="product.productCodeType"
-                      (valueChange)="product.productCodeType = $event">
+                      name="productCodeType" [model]="prodCode.productCodeType"
+                      (valueChange)="prodCode.productCodeType = $event">
                     </app-cv-input>
 
                     <!--
@@ -441,8 +441,8 @@
                           name="companyAddress" />
                       </mat-form-field>
                       <app-cv-input class="col-1-5" domain="PROD_COMPANY_ROLE" title="Company Role"
-                        name="productCompanyRole" [model]="product.productCompanyRole"
-                        (valueChange)="product.productCompanyRole = $event">
+                        name="companyRole" [model]="prodCompany.companyRole"
+                        (valueChange)="prodCompany.companyRole = $event">
                       </app-cv-input>
                       <!--
                       <mat-form-field class="col-1-5">
@@ -472,8 +472,8 @@
                       </mat-form-field>
                        -->
                       <app-cv-input class="col-1-5" domain="PROD_COMPANY_CODE_TYPE" title="Company Code Type"
-                        name="companyCodeType" [model]="product.companyCodeType"
-                        (valueChange)="product.companyCodeType = $event">
+                        name="companyCodeType" [model]="prodCompany.companyCodeType"
+                        (valueChange)="prodCompany.companyCodeType = $event">
                       </app-cv-input>
                     </div>
 
@@ -513,7 +513,8 @@
                 <div class="marginbottom10px"
                   *ngFor="let productComponent of product.productComponentList; let prodComponentIndex = index">
                   <app-product-component-form [productComponent]="productComponent"
-                    [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex">
+                    [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex" (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
+                    (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)">
                   </app-product-component-form>
                 </div>
               </div>

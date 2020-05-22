@@ -28,7 +28,8 @@ export class ProductLotFormComponent implements OnInit {
   @Input() totalLot: number;
   @Input() prodLotIndex: number;
   @Input() prodComponentIndex: number;
-//  @Output() expiryDateMessageOut: EventEmitter<any> = new EventEmitter<any>();
+  @Output() expiryDateMessageOut = new EventEmitter<string>();
+  @Output() manufactureDateMessageOut = new EventEmitter<string>();
 
   dosageFormList: Array<VocabularyTerm> = [];
   colorList: Array<VocabularyTerm> = [];
@@ -94,7 +95,7 @@ export class ProductLotFormComponent implements OnInit {
     if (isValid === false) {
       this.expiryDateMessage = 'Expiry Date is invalid';
     }
-  //  this.expiryDateMessage.emit(this.expiryDateMessage);
+    this.expiryDateMessageOut.emit(this.expiryDateMessage);
   }
 
   validateManufactureDate() {
@@ -103,6 +104,7 @@ export class ProductLotFormComponent implements OnInit {
     if (isValid === false) {
       this.manufactureDateMessage = 'Manufacture Date is invalid';
     }
+    this.manufactureDateMessageOut.emit(this.manufactureDateMessage);
   }
 
   validateDate(dateinput: any): boolean {

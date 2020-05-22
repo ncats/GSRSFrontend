@@ -93,8 +93,8 @@ export interface ProductLot {
   id?: number;
   lotNo?: string;
   lotSize?: string;
-  expiryDate?: number;
-  manufactureDate?: number;
+  expiryDate?: Date;
+  manufactureDate?: Date;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

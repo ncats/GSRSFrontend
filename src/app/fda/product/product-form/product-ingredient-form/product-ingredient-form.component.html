@@ -123,21 +123,32 @@
       (valueChange)="ingredient.grade = $event">
     </app-cv-input>
 
+    <div>
+      <label>Ingredient Location</label><br>
+      <span *ngFor="let data of locationList; let i=index">
+        <mat-checkbox class="font11px" #checkBox [value]="data.value" [(ngModel)]="data.checked" name="data.value" (change)="setSelectedIngredientLocation(data, checkBox)">
+          {{data.value}}
+        </mat-checkbox>
+        &nbsp;
+      </span>
+    </div>
+
     <!--
     <mat-form-field class="col-1-4">
-      <div *ngFor="let data of locationOptions; let i=index">
+      <div *ngFor="let data of locationList; let i=index">
         <mat-checkbox [(ngModel)]="checked" name="data.name">
           {{ data.name }}
         </mat-checkbox>
       </div>
     </mat-form-field>
     -->
-    
+    <!--
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Ingredient Location" [(ngModel)]="ingredient.ingredientLocation"
         name="ingredientLocation" />
     </mat-form-field>
-    
+  -->
+
   </div> <!-- row-->
 
   <div class="form-row margintop10px">

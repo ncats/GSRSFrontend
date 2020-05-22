@@ -58,6 +58,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   username = null;
   title = null;
   isAdmin = false;
+  expiryDateMessage = '';
+  manufactureDateMessage = '';
 
   constructor(
     private productService: ProductService,
@@ -171,53 +173,53 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   validate(validationType?: string): void {
-    this.isLoading = true;
-    this.serverError = false;
-    this.loadingService.setLoading(true);
-    this.productService.validateProduct().pipe(take(1)).subscribe(results => {
-      this.submissionMessage = null;
-      this.validationMessages = results.validationMessages.filter(
-        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-      this.validationResult = results.valid;
-      this.showSubmissionMessages = true;
-      // Perform Additional Validation
-   //   this.validateAdditionalFields();
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      if (this.validationMessages.length === 0 && results.valid === true) {
-        this.submissionMessage = 'Product is Valid. Would you like to submit?';
-      }
-    }, error => {
-      this.addServerError(error);
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    });
+    // Perform Additional Validation
+    this.validateAdditionalFields();
+    if (this.validationMessages.length === 0) {
+      this.isLoading = true;
+      this.serverError = false;
+      this.loadingService.setLoading(true);
+      this.showSubmissionMessages = false;
+      this.productService.validateProduct().pipe(take(1)).subscribe(results => {
+        this.submissionMessage = null;
+        this.validationMessages = results.validationMessages.filter(
+          message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+        this.validationResult = results.valid;
+        this.showSubmissionMessages = true;
+
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+        if (this.validationMessages.length === 0 && results.valid === true) {
+          this.submissionMessage = 'Product is Valid. Would you like to submit?';
+        }
+      }, error => {
+        this.addServerError(error);
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+      });
+    }
   }
 
   // Check Dates
   validateAdditionalFields(): void {
-    /*
-    this.product.productComponentList.forEach((elementProd, indexProd) => {
-      elementProd.productLotList.forEach((elementLot, indexLot) => {
-      //  if ((elementLot.manufactureDate !== null) && (elementLot.manufactureDate.length > 0)) {
-      //  if ((this.submitDateMessage !== null) && (this.submitDateMessage.length > 0)) {
-          const submitValidate: ValidationMessage = {};
-          submitValidate.message = elementLot.submitDateMessage;
-          submitValidate.messageType = 'ERROR';
-          this.validationResult = false;
-          this.validationMessages.push(submitValidate);
-    //    }
-    //    if ((this.statusDateMessage !== null) && (this.statusDateMessage.length > 0)) {
-          const statusValidate: ValidationMessage = {};
-          statusValidate.message = elementLot.statusDateMessage;
-          statusValidate.messageType = 'ERROR';
-          this.validationResult = false;
-          this.validationMessages.push(statusValidate);
-    //    }
-      }
+    this.validationMessages = [];
+    if ((this.expiryDateMessage !== null) && (this.expiryDateMessage.length > 0)) {
+      const expiryValidate: ValidationMessage = {};
+      expiryValidate.message = this.expiryDateMessage;
+      expiryValidate.messageType = 'ERROR';
+      this.validationResult = false;
+      this.validationMessages.push(expiryValidate);
+      this.showSubmissionMessages = true;
     }
-    */
 
+    if ((this.manufactureDateMessage !== null) && (this.manufactureDateMessage.length > 0)) {
+      const manufactureValidate: ValidationMessage = {};
+      manufactureValidate.message = this.manufactureDateMessage;
+      manufactureValidate.messageType = 'ERROR';
+      this.validationResult = false;
+      this.validationMessages.push(manufactureValidate);
+      this.showSubmissionMessages = true;
+    }
   }
 
   toggleValidation(): void {
@@ -434,6 +436,14 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addNewProductComponent() {
     this.productService.addNewProductComponent();
+  }
+
+  expiryDateMessageOutChange($event) {
+    this.expiryDateMessage = $event;
+  }
+
+  manufactureDateMessageOutChange($event) {
+    this.manufactureDateMessage = $event;
   }
 
 }

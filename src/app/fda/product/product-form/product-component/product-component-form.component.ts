@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -27,6 +27,8 @@ export class ProductComponentFormComponent implements OnInit {
   @Input() productComponent: ProductComponent;
   @Input() totalComponent: number;
   @Input() prodComponentIndex: number;
+  @Output() expiryDateMessageOut = new EventEmitter<string>();
+  @Output() manufactureDateMessageOut = new EventEmitter<string>();
 
   /*
   dosageFormList: Array<VocabularyTerm> = [];
@@ -38,6 +40,8 @@ export class ProductComponentFormComponent implements OnInit {
   */
   productMessage = '';
   username = null;
+  expiryDateMessage = '';
+  manufactureDateMessage = '';
 
   constructor(
     private productService: ProductService,
@@ -154,5 +158,15 @@ export class ProductComponentFormComponent implements OnInit {
     this.applicationService.addNewIngredient(prodIndex);
   }
 */
+
+expiryDateMessageOutChange($event) {
+  this.expiryDateMessage = $event;
+  this.expiryDateMessageOut.emit(this.expiryDateMessage);
+}
+
+manufactureDateMessageOutChange($event) {
+  this.manufactureDateMessage = $event;
+  this.manufactureDateMessageOut.emit(this.manufactureDateMessage);
+}
 
 }
