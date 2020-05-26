@@ -14,8 +14,7 @@ export class UserDownloadsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private authService: AuthService
-  )
-    {}
+  ){}
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
   ngOnInit() {
@@ -23,8 +22,11 @@ export class UserDownloadsComponent implements OnInit {
     if (!this.id) {
       this.authService.getAllDownloads().subscribe(response => {
         this.downloads = response.downloads;
-      })
+      });
     }
+  }
+
+  deleteDownload() {
   }
 
 }

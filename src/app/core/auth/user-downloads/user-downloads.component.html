@@ -1,10 +1,15 @@
-<h2>User Downloads</h2>
 <div class = "download-container" *ngIf ="id">
-        <app-download-monitor [id] = "id"></app-download-monitor>
-        
+     <mat-card  class = "form-row">
+        <app-download-monitor [id] = "id" fromRoute = "true"></app-download-monitor>
+    </mat-card>
+<div class = "all-button">
+    <a class = "a-link" href = "/user-downloads">Show All Downloads</a>
+</div>
 </div>
 
 <div class = "download-container" *ngIf ="downloads" >
+        <h2 class = "download-header">User Downloads</h2>
+
     <mat-card *ngFor = "let download of downloads" class = "form-row">
             <app-download-monitor [id] = "download.id"></app-download-monitor>
 

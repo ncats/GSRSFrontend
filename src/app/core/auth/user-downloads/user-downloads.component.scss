@@ -1,12 +1,15 @@
 .download-container {
-    margin-top: 100px;
-    padding-top: 70px;
+    margin-top: 80px;
 }
 
 .form-row {
     width: 100%;
     margin-top:20px;
 
+}
+
+.download-header {
+    margin-left: 100px;
 }
 
 
@@ -32,3 +35,19 @@
 .progress-spinner {
     margin: auto;
 }
+
+.deleted {
+    margin: auto;
+    padding: 5px;
+}
+
+.all-button {
+    max-width: 1228px;
+    margin: auto;
+    padding-top: 20px;
+}
+
+.a-link {
+    text-decoration:none;
+    color: #1565C0;
+  }

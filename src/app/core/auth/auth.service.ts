@@ -2,7 +2,7 @@ import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { Auth, Role } from './auth.model';
 import { Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, take, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { UserDownload, AllUserDownloads } from '@gsrs-core/auth/user-downloads/download.model';
@@ -67,9 +67,8 @@ export class AuthService {
     );
   }
 
-  getAuth(): Observable<Auth> {
+  getAuth(): Observable< Auth > {
     return new Observable(observer => {
-      console.log(this._auth);
 
       if (this._auth != null) {
         observer.next(this._auth);
@@ -81,7 +80,6 @@ export class AuthService {
           } else {
             this._auth = null;
           }
-          console.log(this._auth);
 
           observer.next(this._auth);
           this._authUpdate.next(this._auth);
@@ -93,7 +91,6 @@ export class AuthService {
       }
 
       this._authUpdate.subscribe(auth => {
-        console.log(this._auth);
 
         observer.next(auth);
       }, error => {
@@ -160,7 +157,7 @@ export class AuthService {
     return true;
   }
 
-  hasRolesAsync(...roles: Array<Role|string>): Observable<boolean> {
+  hasRolesAsync(...roles: Array<Role|string>): Observable< boolean > {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasRoles(...roles));
@@ -190,7 +187,7 @@ export class AuthService {
     return false;
   }
 
-  hasAnyRolesAsync(...roles: Array<Role|string>): Observable<boolean> {
+  hasAnyRolesAsync(...roles: Array<Role|string>): Observable< boolean > {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasAnyRoles(...roles));
@@ -204,8 +201,11 @@ export class AuthService {
     });
   }
 
-  startUserDownload(fullUrl: string): Observable< any > {
-    console.log(`${fullUrl}?publicOnly=false`);
+  startUserDownload(fullUrl: string, privateExport: boolean): Observable< any > {
+    if (privateExport) {
+      fullUrl = fullUrl + '?publicOnly=false';
+    }
+    console.log(privateExport + ' - ' +fullUrl);
     return this.http.get< any >(`${fullUrl}`);
   }
 
@@ -219,8 +219,9 @@ export class AuthService {
     return this.http.get< any >(url);
   }
 
-  deleteDownload(url: string): Observable< UserDownload > {
-    return this.http.delete< any >(url);
+  deleteDownload(url: string): any {
+    console.log(url);
+    return this.http.delete< any >(url, {observe: 'response'});
   }
 
   getAllDownloads(): Observable< AllUserDownloads > {
@@ -229,5 +230,3 @@ export class AuthService {
 
   }
 }
-
- 

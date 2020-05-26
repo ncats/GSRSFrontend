@@ -51,6 +51,7 @@
 
 .table-value {
     width: calc(100% - 170px);
+    word-wrap: break-word;
 }
 
 .main-container {
@@ -68,6 +69,9 @@
 
 .bottom-button {
     margin: auto;
+    padding-top: 10px;
+    margin-bottom: -10px;
+
 }
 
 .job-settings {
@@ -93,6 +97,50 @@
     margin: auto;
 }
 
+.deleted {
+    margin: auto;
+    padding: 10px;
+}
+
 .time-label {
     font-weight: 500;
+}
+
+.download-label {
+    font-weight: 500;
+}
+
+.large-val {
+    font-size: 19px;
+}
+
+.download-header {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    margin-bottom: 30px;
+
+    .download-name {
+        width: 80%;
+        font-weight: 500;
+        font-size: 19px;
+    }
+
+    .status {
+        width: 20%;
+    }
+}
+
+@media(max-width: 970px) {
+    .form-row {
+    flex-direction: column;
+    }
+
+    .bottom-button {
+        margin-bottom: 0px;
+    }
+
+    .end-bar {
+        width: 50%;
+    }
 }

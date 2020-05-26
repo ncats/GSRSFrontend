@@ -50,6 +50,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   isLoading = true;
   lastPage: number;
   etag: string;
+  privateExport = false;
   isError = false;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
@@ -303,7 +304,7 @@ validatePageInput(event: any): boolean {
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response;
             console.log(response);
-          })
+          });
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
@@ -340,13 +341,14 @@ validatePageInput(event: any): boolean {
     this.searchSubstances();
   }
 
-  export(url: string){
-    console.log(url)
-   this.authService.startUserDownload(url).subscribe(response => {
+  export(url: string) {
+    console.log(url);
+    console.log(this.privateExport);
+   this.authService.startUserDownload(url, this.privateExport).subscribe(response => {
     const params = {'total': this.totalSubstances};
     this.router.navigate(['/user-downloads/', response.id]);
 
-   })
+   });
   }
 
   setSubstanceNames(substanceId: string): void {
@@ -661,5 +663,6 @@ validatePageInput(event: any): boolean {
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
   }
+  
 
 }

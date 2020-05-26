@@ -8,7 +8,7 @@ import { map, catchError, retry } from 'rxjs/operators';
 import { FacetHttpParams } from '@gsrs-core/facets-manager';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
 import { Auth } from '@gsrs-core/auth';
-import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
+import { UserEditObject, UploadObject } from '@gsrs-core/admin/admin-objects.model';
 
 
  @Injectable({
@@ -94,5 +94,17 @@ export class AdminService extends BaseHttpService {
           body3['oldPassword'] = oldpass;
           body3['newPassword'] = newpass;
         return this.http.post< any >(`${url}profile/password `, body3);
+        }
+
+        public loadData(form: any) {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/load`;
+          console.log(url);
+          console.log(form);
+          return this.http.post< any >(url, form);
+        }
+
+        public queryLoad(id: string): Observable< UploadObject > {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/jobs`;
+          return this.http.get< any >(`${url}/${id}/`);
         }
 }

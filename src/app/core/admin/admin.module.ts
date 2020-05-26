@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CvManagementComponent } from '@gsrs-core/admin/cv-management/cv-management.component';
-import { MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, MatTableDataSource, MatTableModule, MatSortModule, MatTooltipModule, MatProgressSpinnerModule, MatTabsModule, MatDialogModule, MatPaginatorModule } from '@angular/material';
+import { MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, MatTableDataSource, MatTableModule, MatSortModule, MatTooltipModule, MatProgressSpinnerModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatSelectModule, MatProgressBarModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminComponent } from '@gsrs-core/admin/admin.component';
 import { CvTermDialogComponent } from '@gsrs-core/admin/cv-management/cv-term-dialog/cv-term-dialog.component';
@@ -11,6 +11,7 @@ import { MomentModule } from 'ngx-moment';
 import { UserManagementComponent } from '@gsrs-core/admin/user-management/user-management.component';
 import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-edit-dialog/user-edit-dialog.component';
 import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summary.component';
+import { DataManagementComponent } from '@gsrs-core/admin/data-management/data-management.component';
 
 
 
@@ -25,8 +26,10 @@ import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summ
   MatInputModule,
   MatTabsModule,
   MatProgressSpinnerModule,
+  MatProgressBarModule,
   MatButtonModule,
   MatCheckboxModule,
+  MatSelectModule,
     MatSortModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
@@ -42,7 +45,8 @@ import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summ
     ScheduledJobComponent,
     UserManagementComponent,
     UserEditDialogComponent,
-    CacheSummaryComponent
+    CacheSummaryComponent,
+    DataManagementComponent
   ],
   exports: [
     CvManagementComponent,
@@ -52,7 +56,8 @@ import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summ
     CvTermDialogComponent,
     UserEditDialogComponent,
     UserManagementComponent,
-    CacheSummaryComponent
+    CacheSummaryComponent,
+    DataManagementComponent
   ],
   entryComponents: [
     CvTermDialogComponent,

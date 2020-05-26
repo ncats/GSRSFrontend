@@ -1,5 +1,14 @@
 
-<div class="panel panel-default sub-list" class = "form-row job-container" *ngIf = "download">
+<div class="panel panel-default sub-list" class = " job-container" *ngIf = "download && !deleted">
+         <div class = "download-header">
+               <div class = "download-name">{{download.filename}}</div>
+               <div class = "status">
+                    <span class = "time-label">Status: </span> 
+                    <span class = "time-field large-val">{{download.status}}</span>
+               </div>
+         </div>       
+
+      <div  class = "form-row ">
         <div class = "side-bar text-center">
             <div class = "job-settings">
                 <div *ngIf="download.status === 'RUNNING'">
@@ -28,15 +37,14 @@
                         </div>
                     </div>
 
-                <div *ngIf="download.complete" class = "">
-                    <a mat-button  *ngIf="download.complete" class = "mat-flat-button mat-primary" color = "primary"  [href] = "this.download.downloadUrl.url" target = "_blank">
+                
+            </div>
+                   
+            <div class = "bottom-button">
+                 <a mat-button  *ngIf="download.complete" class = "mat-flat-button mat-primary" color = "primary"  [href] = "this.download.downloadUrl.url" target = "_blank">
                             <mat-icon svgIcon="get_app"></mat-icon>
                             Download
                     </a>
-                </div>
-            </div>
-            <div class = "bottom-button">
-                
                 <button *ngIf="download.status === 'RUNNING'" mat-button  class = "mat-flat-button mat-primary" color = "primary" (click)="cancel()">
                         (click to cancel)
                     </button>
@@ -50,10 +58,6 @@
                 <div class = "label table-label">Number of records:</div>
                 <div class = "table-value">{{download.numRecords}}</div>
             </div>
-            <div class = "table-row" *ngIf = "download.status">
-                <div class = "label table-label">Status:</div>
-                <div class = "table-value">{{download.status}}</div>
-            </div>
             <div class = "table-row" *ngIf = "download.originalQuery">
                 <div class = "label table-label">Original Query:</div>
                 <div class = "table-value">{{download.originalQuery}}</div>
@@ -62,6 +66,10 @@
                 <div class = "label table-label">Size:</div>
                 <div class = "table-value">{{download.size / 1000}} Kb</div>
             </div>
+            <div class = "table-row" *ngIf = "download.sha1" >
+                    <div class = "label table-label">SHA-1:</div>
+                    <div class = "table-value">{{download.sha1}}</div>
+                </div>
             
             </div>
         </div>
@@ -69,15 +77,15 @@
     <div class = "job-dates">
         <div *ngIf="download.started" class = "table-row">
                <span class = "time-label">Started: </span> 
-                <span class = "time-field">{{download.started | date:'short'}}</span>
+                <span class = "time-field">{{download.startedHuman}}</span>
         </div>
         <div *ngIf="download.finished" class = "table-row">
             <span class = "time-label">Ended: </span> 
-                <span class = "time-field">{{download.finished | date:'short'}}</span>
+                <span class = "time-field">{{download.finishedHuman}}</span>
         </div>
     </div>  
     <div *ngIf="!download.enabled" class = "bottom-button">
-        <button mat-button class = "mat-flat-button mat-primary" color = "primary"  (click)="delete()">
+        <button mat-button class = "mat-flat-button mat-primary" color = "primary"  (click)="deleteDownload()">
             <mat-icon svgIcon="delete_forever"></mat-icon>
             Delete
         </button>
@@ -85,3 +93,14 @@
 
 </div>
 </div>
+</div>
+<div *ngIf = "deleted" class = "form-row">
+        <div class = "deleted">
+            Deleted Download
+        </div>
+    </div>
+    <div *ngIf = "!exists" class = "form-row">
+            <div class = "deleted">
+                Download not found
+            </div>
+        </div>    
