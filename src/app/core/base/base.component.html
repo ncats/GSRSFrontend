@@ -61,10 +61,10 @@
     </button>
     <div class="logged-in" *ngIf="auth">
       <button class="user-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()">
-        <mat-icon class="user-icon" svgIcon="account_circle"></mat-icon>
+        <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
       </button>
       <br />
-      <span class="user" *ngIf="auth && auth.identifier">{{auth.identifier}}</span>
+      <span class="user" *ngIf="auth && auth.identifier" matTooltip = "{{auth.identifier}}">{{auth.identifier}}</span>
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
       <a mat-menu-item  (click) = "openProfile()">
