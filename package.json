@@ -61,6 +61,7 @@
     "ketcher-wrapper": "file:dist/ketcher-wrapper/ketcher-wrapper-0.0.1.tgz",
     "lodash": "^4.17.15",
     "lucene-query-parser": "1.2.0",
+    "moment": "2.26.0",
     "ng-multiselect-dropdown": "0.2.10",
     "ngx-json-viewer": "2.4.0",
     "reflect-metadata": "0.1.13",

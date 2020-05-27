@@ -51,7 +51,7 @@ import { TakePipe } from './utils/take.pipe';
 import { EnvironmentModule } from '../../environments/environment';
 import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
-import { MatTabsModule } from '@angular/material';
+import { MatTabsModule, MatNativeDateModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
 import { SubstanceCardsModule } from './substance-details/substance-cards.module';
@@ -139,7 +139,8 @@ import { GuidedSearchModule } from './guided-search/guided-search.module';
     StructureModule,
     MatTreeModule,
     FacetsManagerModule,
-    GuidedSearchModule
+    GuidedSearchModule,
+    MatNativeDateModule
   ],
   providers: [
     ConfigService,

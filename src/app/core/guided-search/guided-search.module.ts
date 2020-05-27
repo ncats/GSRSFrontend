@@ -1,9 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GuidedSearchComponent } from './guided-search.component';
-import { MatCardModule, MatInputModule, MatAutocompleteModule, MatSelectModule, MatTooltipModule } from '@angular/material';
+import {
+  MatCardModule,
+  MatInputModule,
+  MatAutocompleteModule,
+  MatSelectModule,
+  MatTooltipModule,
+  MatButtonModule,
+  MatIconModule
+} from '@angular/material';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { QueryStatementComponent } from './query-statement/query-statement.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -18,7 +28,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDatepickerModule,
+    RouterModule
   ],
   exports: [
     GuidedSearchComponent

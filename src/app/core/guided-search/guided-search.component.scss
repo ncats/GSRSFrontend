@@ -17,12 +17,64 @@
 
 .builder-container {
     display: flex;
+    flex-direction: column;
+}
+
+.header-row {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 10px;
+    font-size: 20px;
+    font-weight: 400;
+
+    .condition-column {
+        width: 100px;
+    }
+
+    .queryable-property-column {
+        width: 400px;
+    }
+
+    .command-column {
+        width: 190px
+    }
+
+    .query-column {
+        flex-grow: 1;
+        padding-left: 10px;
+    }
 }
 
 .builder-row {
     display: flex;
+    width: 100%;
 }
 
-// .empty-cell {
+.query-statement-container {
+    flex-grow: 1;
+}
 
-// }
+.query-container {
+    padding: 15px;
+}
+
+.query-value {
+    padding: 10px 15px;
+    background-color: #ECECEC;
+    border: solid 1px #DBDBDB;
+    border-radius: 2px;
+    min-height: 69px;
+}
+
+.actions-container {
+    width: 80px;
+    display: flex;
+
+    .button-container {
+        width: 40px;
+    }
+}
+
+.mat-card-actions {
+    padding-top: 10px 10px 0 10px;
+}

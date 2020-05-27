@@ -4,19 +4,56 @@
             Guided Search
         </mat-card-title>
         <mat-card-content>
-            <h3>
-                Builder
-            </h3>
-            <div class="builder-container">
-                <div class="builder-row" *ngFor="let queryStatement of queryStatements; index as index">
-                    <app-query-statement
-                        [index]="index"
-                        [queryableDictionary]="queryableSubstanceDictionary"
-                        [queryableOptions]="displayProperties">
-                    </app-query-statement>
-                    <div></div>
+            <h2>
+                Query
+            </h2>
+            <div class="query-container">
+                <div class="query-value">
+                    {{query}}
                 </div>
             </div>
+            <h2>
+                Builder
+            </h2>
+            <div class="builder-container">
+                <div class="header-row">
+                    <div class="condition-column"></div>
+                    <div class="queryable-property-column">
+                        Search In
+                    </div>
+                    <div class="command-column">
+                        For
+                    </div>
+                    <div class="query-column">
+                        Query
+                    </div>
+                </div>
+                <div class="builder-row" *ngFor="let queryStatement of queryStatements; index as index, first as isFirst, last as isLast">
+                    <div class="query-statement-container">
+                        <app-query-statement
+                            [index]="index"
+                            [queryableDictionary]="queryableSubstanceDictionary"
+                            [queryableOptions]="displayProperties"
+                            (queryUpdated)="queryUpdated($event, index)">
+                        </app-query-statement>
+                    </div>
+                    <div class="actions-container">
+                        <div class="button-container">
+                            <button *ngIf="!isFirst || queryStatements.length > 1" mat-icon-button aria-label="remove query statement" (click)="removeQueryStatement(index)">
+                                <mat-icon svgIcon="remove_circle_outline"></mat-icon>
+                            </button>
+                        </div>
+                        <div class="button-container">
+                            <button *ngIf="isLast" mat-icon-button aria-label="add query statement" (click)="addQueryStatement()">
+                                <mat-icon svgIcon="add_circle_outline"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <mat-card-actions>
+                <button mat-flat-button color="primary" (click)="processSearch()" [disabled]="!query">Search</button>
+            </mat-card-actions>
         </mat-card-content>
     </mat-card>
 </div>

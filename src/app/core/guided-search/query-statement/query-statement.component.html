@@ -1,7 +1,7 @@
 <div class="query-statement-container">
     <div class="condition-column">
-        <mat-form-field>
-            <mat-select>
+        <mat-form-field *ngIf="index > 0">
+            <mat-select [formControl]="conditionControl">
                 <mat-option *ngFor="let option of conditionOptions" [value]="option">
                     {{option}}
                 </mat-option>
@@ -20,5 +20,35 @@
                 {{option}}
             </mat-option>
         </mat-autocomplete>
+    </div>
+    <div class="command-column">
+        <mat-form-field>
+            <mat-select [formControl]="commandControl">
+                <mat-option *ngFor="let option of commandOptions" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="query-column">
+        <div class="query-input" *ngFor="let commandInput of commandInputs">
+            <div *ngIf="commandInput.type != 'datetime'">
+                <mat-form-field>
+                    <input [type]="commandInput.type" matInput [(ngModel)]="commandInput.value" (keyup)="commandInput.constructQuery($event.target.value)">
+                </mat-form-field>
+            </div>
+            <div *ngIf="commandInput.type == 'datetime'">
+                <mat-form-field >
+                    <input
+                        matInput
+                        [(ngModel)]="commandInput.value"
+                        (dateChange)="commandInput.constructQuery($event)"
+                        (dateInput)="commandInput.constructQuery($event)"
+                        [matDatepicker]="queryDatepicker">
+                    <mat-datepicker-toggle matSuffix [for]="queryDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #queryDatepicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
     </div>
 </div>

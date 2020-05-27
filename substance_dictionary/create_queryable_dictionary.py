@@ -9,7 +9,7 @@ dictionary_df = dictionary_df[
         | (dictionary_df['Data Type'] == 'array <string>'))
 ]
 
-dictionary_df = dictionary_df.loc[:, ['Lucene Path', 'Display Name', 'Description', 'Data Type']]
+dictionary_df = dictionary_df.loc[:, ['Lucene Path', 'Display Name', 'Description', 'Data Type', 'CV DOMAIN']]
 
 def set_type(df_properties):
     if 'timestamp' in df_properties['Description'].lower():
@@ -22,7 +22,7 @@ def set_type(df_properties):
 
 dictionary_df['type'] = dictionary_df.loc[:, ['Lucene Path', 'Data Type', 'Description']].apply(set_type, axis=1)
 
-dictionary_df.rename(columns={"Lucene Path": "lucenePath", "Description": "description", "Display Name": "displayName"}, inplace=True)
+dictionary_df.rename(columns={"Lucene Path": "lucenePath", "Description": "description", "Display Name": "displayName", "CV DOMAIN": "cvDomain"}, inplace=True)
 dictionary_df.drop(columns=['Data Type'], inplace=True)
 dictionary_df.set_index('displayName', inplace=True)
 dictionary_df.to_json('../src/app/core/assets/data/substance_dictionary.json', orient='index')
