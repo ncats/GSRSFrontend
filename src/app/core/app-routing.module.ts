@@ -12,6 +12,7 @@ import { SubstanceFormComponent } from './substance-form/substance-form.componen
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate-substance-form.guard';
+import { GuidedSearchComponent } from './guided-search/guided-search.component';
 import { AdminComponent } from '@gsrs-core/admin/admin.component';
 import { CanActivateAdminPage } from './admin/can-activate-admin-page';
 
@@ -51,6 +52,10 @@ const childRoutes: Routes = [
   {
     path: 'structure-search',
     component: StructureSearchComponent
+  },
+  {
+    path: 'guided-search',
+    component: GuidedSearchComponent
   },
   {
     path: 'sequence-search',

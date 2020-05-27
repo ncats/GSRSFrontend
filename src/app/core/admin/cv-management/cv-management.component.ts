@@ -23,7 +23,7 @@ export class CvManagementComponent implements OnInit {
   searchControl = new FormControl();
   private searchTimer: any;
   dictionary: Array< any >;
-  loading:boolean;
+  loading: boolean;
   toggle: Array< boolean > = [];
 
 

@@ -21,6 +21,9 @@
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()">
+      <a mat-menu-item [routerLink]="['/guided-search']">
+        Guided Search
+      </a>
       <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf = "appId === 'fda'">
         Advanced Search
       </a>

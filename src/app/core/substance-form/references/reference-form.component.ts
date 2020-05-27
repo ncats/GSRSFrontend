@@ -22,7 +22,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   @Input() hideDelete = false;
   private overlayContainer: HTMLElement;
   deleteTimer: any;
-  showPrev: false;
+  showPrev = false;
   private subscriptions: Array<Subscription> = [];
   constructor(
     private cvService: ControlledVocabularyService,

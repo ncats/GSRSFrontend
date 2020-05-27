@@ -22,7 +22,7 @@ showPrev = false;
   ) {}
 
   ngOnInit() {
-    this.dialogRef.beforeClose().subscribe(() => this.dialogRef.close(this.reference));
+    this.dialogRef.beforeClosed().subscribe(() => this.dialogRef.close(this.reference));
   }
 
   save(): void {
