@@ -22,12 +22,15 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.monitor= this.pollIn;
+    this.monitor = this.pollIn;
      this.refresh(true);
 
   }
 
   ngOnDestroy() {
+    console.log('destroyed');
+    this.monitor = false;
+    this.refresh(false);
     this.stopMonitor();
   }
 
@@ -40,6 +43,8 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
   }
 
   refresh(spawn?: boolean) {
+    console.log('calling refresh');
+    console.log(spawn + " - " + this.monitor);
     this.adminService.fetchJob(this.job.id).pipe(take(1)).subscribe( response =>{
       this.job = response;
       if (this.job.cronSchedule){
@@ -48,7 +53,8 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
         }
       }
       this.quickLoad = false;
-      if ((this.monitor && spawn)|| this.job.id === 1) {
+      if (this.monitor && spawn) {
+        console.log('both are true?');
         this.mess = "Polling ... " + response.status;
         if (this.job.running){
           setTimeout(()=>{

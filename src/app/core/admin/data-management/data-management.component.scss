@@ -270,6 +270,9 @@ margin-bottom: auto;
 
   .file-row {
       width: 75%;
+      height: 40px;
+        display: flex;
+        flex-direction: row;
   }
 
   .options-row {
