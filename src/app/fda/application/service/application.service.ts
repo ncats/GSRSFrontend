@@ -303,6 +303,16 @@ export class ApplicationService extends BaseHttpService {
     return this.http.post(url, this.application);
   }
 
+  deleteApplication(): Observable<any> {
+    const url = this.apiBaseUrl + 'applicationssrs(' + this.application.id + ')';
+    const params = new HttpParams();
+    const options = {
+      params: params
+    };
+    const x = this.http.delete<ApplicationSrs>(url, options);
+    return x;
+  }
+
   addNewIndication(): void {
     const newIndication: ApplicationIndicationSrs = {};
     this.application.applicationIndicationList.unshift(newIndication);

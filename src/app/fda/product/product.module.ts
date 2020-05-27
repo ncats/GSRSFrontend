@@ -31,6 +31,13 @@ import { ProductDetailsBaseComponent } from './product-details/product-details-b
 import { ProductDetailsComponent } from './product-details/product-details/product-details.component';
 import { ProductElistDetailsComponent } from './product-details/product-elist-details/product-elist-details.component';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { ProductFormComponent } from './product-form/product-form.component';
+import { ProductComponentFormComponent } from './product-form/product-component/product-component-form.component';
+import { ProductLotFormComponent } from './product-form/product-lot-form/product-lot-form.component';
+import { ProductIngredientFormComponent } from './product-form/product-ingredient-form/product-ingredient-form.component';
+import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
+import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
+import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 
 const productRoutes: Routes = [
     {
@@ -44,6 +51,14 @@ const productRoutes: Routes = [
   {
     path: 'productDetails/:id/:src',
     component: ProductDetailsComponent
+  },
+  {
+    path: 'product/register',
+    component: ProductFormComponent
+  },
+  {
+    path: 'product/:id/edit',
+    component: ProductFormComponent
   }
 ];
 
@@ -77,17 +92,25 @@ const productRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    SubstanceSearchSelectorModule,
+    SubstanceFormModule
   ],
   declarations: [
     ProductDetailsBaseComponent,
     ProductDetailsComponent,
-    ProductElistDetailsComponent
+    ProductElistDetailsComponent,
+    ProductFormComponent,
+    ProductComponentFormComponent,
+    ProductLotFormComponent,
+    ProductIngredientFormComponent,
+ //   JsonDialogFdaComponent
   ],
   exports: [
     ProductDetailsBaseComponent,
     ProductDetailsComponent,
-    ProductElistDetailsComponent
+    ProductElistDetailsComponent,
+ //   JsonDialogFdaComponent
   ]
 })
 

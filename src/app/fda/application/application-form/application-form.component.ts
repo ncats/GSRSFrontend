@@ -14,8 +14,16 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { JsonDialogFdaComponent } from '../application-form/json-dialog-fda/json-dialog-fda.component';
-import { ConfirmDialogComponent } from '../application-form/confirm-dialog/confirm-dialog.component';
+import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
+import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { finalize } from 'rxjs/operators';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { anyExistsFilter } from '@gsrs-core/substance-details';
+import { DatePipe } from '@angular/common';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { FormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NativeDateAdapter, DateAdapter, MAT_NATIVE_DATE_FORMATS } from '@angular/material';
 
 @Component({
   selector: 'app-application-form',
@@ -27,11 +35,13 @@ import { ConfirmDialogComponent } from '../application-form/confirm-dialog/confi
 export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   application: ApplicationSrs;
+  /*
   centerList: Array<VocabularyTerm> = [];
   appTypeList: Array<VocabularyTerm> = [];
   appStatusList: Array<VocabularyTerm> = [];
   publicDomainList: Array<VocabularyTerm> = [];
   appSubTypeList: Array<VocabularyTerm> = [];
+*/
 
   id?: number;
   isLoading = true;
@@ -46,6 +56,10 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   isDisableData = false;
   username = null;
   title = null;
+  submitDateMessage = '';
+  statusDateMessage = '';
+  appForm: FormGroup;
+  isAdmin = false;
 
   constructor(
     private applicationService: ApplicationService,
@@ -58,9 +72,14 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private overlayContainerService: OverlayContainer,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private fb: FormBuilder) { }
+
+  // get submitDateControl() { return this.appForm.get('submitDateControl'); }
 
   ngOnInit() {
+    // this.generateFormContorls();
+    this.isAdmin = this.authService.hasRoles('admin');
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
@@ -74,7 +93,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
             this.id = id;
             this.gaService.sendPageView(`Application Edit`);
             this.getApplicationDetails();
-            this.getVocabularies();
+            //   this.getVocabularies();
           }
         } else {
           this.title = 'Register New Application';
@@ -82,7 +101,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
             this.gaService.sendPageView(`Application Register`);
             this.applicationService.loadApplication();
             this.application = this.applicationService.application;
-            this.getVocabularies();
+            //  this.getVocabularies();
             this.loadingService.setLoading(false);
             this.isLoading = false;
           });
@@ -138,9 +157,11 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
       this.validationResult = results.valid;
       this.showSubmissionMessages = true;
+      // Perform Additional Validation
+      this.validateAdditionalFields();
       this.loadingService.setLoading(false);
       this.isLoading = false;
-      if (this.validationMessages.length === 0 && results.valid === true) {
+      if (this.validationMessages.length === 0 && this.validationResult === true) {
         this.submissionMessage = 'Application is Valid. Would you like to submit?';
       }
     }, error => {
@@ -148,6 +169,24 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       this.loadingService.setLoading(false);
       this.isLoading = false;
     });
+  }
+
+  // Check Dates
+  validateAdditionalFields(): void {
+    if ((this.submitDateMessage !== null) && (this.submitDateMessage.length > 0)) {
+      const submitValidate: ValidationMessage = {};
+      submitValidate.message = this.submitDateMessage;
+      submitValidate.messageType = 'ERROR';
+      this.validationResult = false;
+      this.validationMessages.push(submitValidate);
+    }
+    if ((this.statusDateMessage !== null) && (this.statusDateMessage.length > 0)) {
+      const statusValidate: ValidationMessage = {};
+      statusValidate.message = this.statusDateMessage;
+      statusValidate.messageType = 'ERROR';
+      this.validationResult = false;
+      this.validationMessages.push(statusValidate);
+    }
   }
 
   toggleValidation(): void {
@@ -236,23 +275,58 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   getVocabularies(): void {
-    this.cvService.getDomainVocabulary('CENTER', 'APPLICATION_TYPE',
-      'APPLICATION_STATUS', 'PUBLIC_DOMAIN', 'APPLICATION_SUB_TYPE').subscribe(response => {
-        this.centerList = response['CENTER'].list;
-        this.appTypeList = response['APPLICATION_TYPE'].list;
-        this.appStatusList = response['APPLICATION_STATUS'].list;
-        this.publicDomainList = response['PUBLIC_DOMAIN'].list;
-        this.appSubTypeList = response['APPLICATION_SUB_TYPE'].list;
-      });
+    /*  this.cvService.getDomainVocabulary('CENTER', 'APPLICATION_TYPE',
+        'APPLICATION_STATUS', 'PUBLIC_DOMAIN', 'APPLICATION_SUB_TYPE').subscribe(response => {
+          this.centerList = response['CENTER'].list;
+          this.appTypeList = response['APPLICATION_TYPE'].list;
+          this.appStatusList = response['APPLICATION_STATUS'].list;
+          this.publicDomainList = response['PUBLIC_DOMAIN'].list;
+          this.appSubTypeList = response['APPLICATION_SUB_TYPE'].list;
+        });
+        */
+  }
+
+  confirmDeleteApplication() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete this Application?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteApplication();
+      }
+    });
+  }
+
+  deleteApplication(): void {
+    this.applicationService.deleteApplication().subscribe(response => {
+      if (response) {
+        this.displayMessageAfterDeleteApp();
+      }
+    });
+  }
+
+  displayMessageAfterDeleteApp() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: 'The application has been deleted',
+        type: 'home'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(['/home']);
+    });
   }
 
   showJSON(): void {
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
-      height: '90%'
+      height: '90%',
+      data: this.application
     });
 
-    // this.overlayContainer.style.zIndex = '1002';
+    //   this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
@@ -265,12 +339,11 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   confirmDeleteIndication(indIndex: number, indication: string) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Indication (' + (indIndex + 1) + ')?'
+      data: { message: 'Are you sure you want to delete Indication (' + (indIndex + 1) + ')?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        console.log(result);
         this.deleteIndication(indIndex);
       }
     });
@@ -278,6 +351,103 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   deleteIndication(indIndex: number) {
     this.applicationService.deleteIndication(indIndex);
+  }
+
+  public generateFormContorls() {
+    /*
+    this.appForm = this.fb.group({
+      submitDateControl: ['', [Validators.minLength(8), Validators.maxLength(10)]]
+        // , Validators.minLength(6), Validators.maxLength(15), Validators.pattern('^.*(?=.{4,10})(?=.*\\d)(?=.*[a-zA-Z]).*$')])
+    });
+    */
+  }
+  /*
+    dateInputEventSubmitDate(event: MatDatepickerInputEvent<Date>) {
+      this.validateSumitDate(event);
+    }
+    dateChangeEventSubmitDate(event: MatDatepickerInputEvent<Date>) {
+      this.validateSumitDate(event);
+    }
+  */
+
+  validateSubmitDate() {
+    this.submitDateMessage = '';
+    const isValid = this.validateDate(this.application.submitDate);
+    if (isValid === false) {
+      this.submitDateMessage = 'Submit Date is invalid';
+    }
+    /*
+ //   const targetInput = event.targetElement as HTMLInputElement;
+ //   console.log('target value: ' + targetInput.value);
+    const submitDateValue = targetInput.value;
+    this.submitDateMessage = '';
+    if (submitDateValue !== null) {
+      if ((submitDateValue.length < 8) || (submitDateValue.length > 10)) {
+        this.submitDateMessage = 'Invalid Submit Date';
+      }
+      if (this.application.submitDate !== null) {
+        this.convertDateFormat(this.application.submitDate);
+      }
+    }
+    */
+  }
+
+  validateStatusDate() {
+    this.statusDateMessage = '';
+    const isValid = this.validateDate(this.application.statusDate);
+    if (isValid === false) {
+      this.statusDateMessage = 'Status Date is invalid';
+    }
+  }
+
+  validateDate(dateinput: any): boolean {
+    let isValid = true;
+    if ((dateinput !== null) && (dateinput.length > 0)) {
+      if ((dateinput.length < 8) || (dateinput.length > 10)) {
+        return false;
+      }
+      const split = dateinput.split('/');
+      if (split.length !== 3 || (split[0].length < 1 || split[0].length > 2) ||
+        (split[1].length < 1 || split[1].length > 2) || split[2].length !== 4) {
+        return false;
+      }
+      if (split.length === 3) {
+        const comstring = split[0] + split[1] + split[2];
+        for (let i = 0; i < split.length; i++) {
+          const valid = this.isNumber(split[i]);
+          if (valid === false) {
+            isValid = false;
+            break;
+          }
+        }
+      }
+    }
+    return isValid;
+  }
+
+  isNumber(str: string): boolean {
+    if ((str !== null) && (str !== '')) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
+  }
+
+  convertDateFormat(formDate: any): any {
+    // alert(this.application.submitDate);
+    /*
+    var convertDate = new Date(e.target.value).toISOString().substring(0, 10);
+    this.myForm.get('dob').setValue(convertDate, {
+      onlyself: true
+    })
+    */
+    if (formDate !== null) {
+      const datepipe = new DatePipe('en-US');
+      const date = new Date(formDate);
+      const formattedDate = datepipe.transform(date, 'MM/dd/yyyy');
+      return formattedDate;
+    }
   }
 
 }

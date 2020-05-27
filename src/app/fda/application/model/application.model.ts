@@ -151,12 +151,12 @@ export interface ValidationResults {
 }
 
 export interface ValidationMessage {
-  actionType: string;
-  appliedChange: boolean;
-  links: Array<MessageLink>;
-  message: string;
-  messageType: string;
-  suggestedChange: boolean;
+  actionType?: string;
+  appliedChange?: boolean;
+  links?: Array<MessageLink>;
+  message?: string;
+  messageType?: string;
+  suggestedChange?: boolean;
 }
 
 export interface MessageLink {

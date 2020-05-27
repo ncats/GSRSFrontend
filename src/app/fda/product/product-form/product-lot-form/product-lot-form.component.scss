@@ -20,34 +20,17 @@
   box-sizing: border-box;
   margin-bottom: 20px;
 }
+  
+.form-row {
+  width: 100%;
+  display: flex;
+  /* justify-content: space-between; */
+  grid-column-gap: 20px;
+  /*align-items: flex-end; */
+}
 
 .row {
   width: 100%;
-}
-
-.form-row {
-  display: flex;
-  width: 100%;
-
-  .col-1 {
-    width: calc((100% - 13px * 8) / 9);
-    margin-right: 13px;
-  }
-
-  .col-2 {
-    width: calc((100% - 13px * 3) / 5); 
-    margin-right: 13px;
-  }
-  
-  .col-2:last-child {
-    margin-right: 0px;
-  }
-
-  .col-2-nomargin {
-    width: calc((100% + 70px) / 5); 
-    margin-right: 0px;
-  }
-  
 }
 
 .col-1 {
@@ -68,11 +51,6 @@
   margin-right: 0px;
 }  
 
-.col-2-nomargin {
-  width: calc((100% + 70px) / 5); 
-  margin-right: 0px;
-}
- 
 .col-3 {
   /* width: 538px; calc() value*/ 
   width: calc((100% - 30px * 1) / 2);
@@ -112,6 +90,16 @@
 .col-6 {
   width: 100%;
 }
+
+.col-1-4 {
+  /* width: 159.333px; */
+  width: calc((100% - 20px * 3) / 4);
+  margin-right: 20px;
+}
+
+.col-1-4:last-child {
+  margin-right: 0px;
+}  
 
 .backgroundgray {
   background-color: gray;
@@ -157,6 +145,10 @@
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.bordergray {
+  border: 1px solid gray;
+}
+
 .margintop10px {
   margin-top: 10px;
 }
@@ -193,7 +185,13 @@
   width: 200px;
 }
 
-.title1 {
+.titlegreen {
+  color: green;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.titleorange {
   color: orangered;
   font-size: 17px;
   font-weight: 500;
@@ -209,7 +207,7 @@ hr {
 }
 
 fieldset.border {
-  border: solid 1px rgb(230, 115, 22) !important;
+  border: solid 1px #5f391c !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   min-width: 0;  /* override the default value of min-content */
@@ -229,7 +227,6 @@ legend.border {
 .disabled { cursor: not-allowed; }
 
 .divflexrow {
-  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -248,8 +245,8 @@ legend.border {
 }
 
 .related-substance {
-  max-width: 27%;
-  width: 27%;
+  max-width: 20%;
+  width: 20%;
 }
 
 ::ng-deep .selected-substance {
@@ -261,6 +258,10 @@ legend.border {
       width: 100%;
       height: auto;
       display: block;
-      max-width: 220px;
+      max-width: 200px;
   }
+}
+
+mat-hint {
+  color: red !important;
 }
