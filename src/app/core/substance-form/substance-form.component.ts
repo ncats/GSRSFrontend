@@ -41,7 +41,7 @@ import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definit
 export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   id?: string;
-  formSections: Array<SubstanceFormSection> = [];
+  formSections: Array< SubstanceFormSection > = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
   @ViewChildren('expansionPanel', { read: MatExpansionPanel }) matExpansionPanels: QueryList<MatExpansionPanel>;
   private subClass: string;
@@ -54,9 +54,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ];
   showSubmissionMessages = false;
   submissionMessage: string;
-  validationMessages: Array<ValidationMessage>;
+  validationMessages: Array< ValidationMessage >;
   validationResult = false;
-  private subscriptions: Array<Subscription> = [];
+  private subscriptions: Array< Subscription > = [];
   copy: string;
   private overlayContainer: HTMLElement;
   serverError: boolean;
@@ -543,6 +543,20 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         s4() + '-' + s4() + s4() + s4();
     }
     const old = oldraw;
+
+    const idHolders = defiant.json.search(old, '//*[id]');
+    const idMap = {};
+    for (let i = 0; i < idHolders.length; i++) {
+      const oid = idHolders[i].id;
+      if (idMap[oid]) {
+        idHolders[i].id = idMap[oid];
+      } else {
+        const nid = guid();
+        idHolders[i].id = nid;
+        idMap[oid] = nid;
+      }
+    }
+
     const uuidHolders = defiant.json.search(old, '//*[uuid]');
     const map = {};
     for (let i = 0; i < uuidHolders.length; i++) {

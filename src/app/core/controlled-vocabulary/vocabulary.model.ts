@@ -25,6 +25,7 @@ export interface VocabularyTerm {
     fragmentStructure?: string;
     simplifiedStructure?: string;
     systemCategory?: string;
+    regex?: string;
 }
 
 export interface VocabularyDictionary {

@@ -1,0 +1,53 @@
+<div class = "admin-container">
+    <div class = "page-container">
+        <mat-tab-group [selectedIndex] = "activeTab" class = "tab-group">
+                <mat-tab disabled = "true">
+                <ng-template mat-tab-label>
+                    User Management
+                </ng-template>
+                <h2 class = "tab-label">User Management</h2>
+                  <mat-card class = "app-container">
+                        <app-user-management class =  "full-width"></app-user-management>
+                  </mat-card>
+                </mat-tab>
+                <mat-tab  disabled = "true">
+                    <ng-template mat-tab-label>
+                       Data Management
+                    </ng-template>
+                </mat-tab>
+                <mat-tab>
+                  <ng-template mat-tab-label>
+                    CV Management
+                  </ng-template>
+                  <h2 class = "tab-label">Controlled Vocabulary Edit</h2>
+                  <mat-card class = "app-container">
+                        <app-cv-management class =  "full-width"></app-cv-management>
+                    </mat-card>
+                </mat-tab>
+                <mat-tab>
+                  <ng-template mat-tab-label>
+                    Scheduled Jobs
+                  </ng-template>
+                  <ng-template matTabContent>
+                  <h2 class = "tab-label">Scheduled Jobs</h2>
+                  <div class = "app-container">
+                        <app-scheduled-jobs></app-scheduled-jobs>
+                    </div>
+                </ng-template>
+                </mat-tab>
+                <mat-tab disabled = "true">
+                    <ng-template mat-tab-label>
+                        Server Status
+                    </ng-template>
+                    <h2 class = "tab-label">Server Status</h2>
+                  <div class = "app-container">
+                        <app-cache-summary class =  "full-width"></app-cache-summary>
+                  </div>
+                </mat-tab>
+                        
+              </mat-tab-group>
+              
+            </div>
+    
+    
+</div>

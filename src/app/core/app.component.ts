@@ -178,6 +178,9 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'brush',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/outline-brush-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'alarm-on',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-alarm_on-24px.svg'));
   }
 
 }

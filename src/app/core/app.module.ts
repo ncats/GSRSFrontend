@@ -68,8 +68,10 @@ import { StructureModule } from './structure/structure.module';
 import {MatTreeModule} from '@angular/material/tree';
 import {SubstanceHierarchyComponent} from '@gsrs-core/substances-browse/substance-hierarchy/substance-hierarchy.component';
 import {SequenceAlignmentComponent} from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
+import { AdminModule } from '@gsrs-core/admin/admin.module';
 import { FacetsManagerModule } from './facets-manager/facets-manager.module';
 import { GuidedSearchModule } from './guided-search/guided-search.module';
+import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
 
 @NgModule({
   declarations: [
@@ -140,9 +142,12 @@ import { GuidedSearchModule } from './guided-search/guided-search.module';
     MatTreeModule,
     FacetsManagerModule,
     GuidedSearchModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    AdminModule,
+    FacetsManagerModule
   ],
   providers: [
+    CanActivateAdminPage,
     ConfigService,
     {
         provide: APP_INITIALIZER,

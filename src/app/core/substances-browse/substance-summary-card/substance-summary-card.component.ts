@@ -60,7 +60,6 @@ export class SubstanceSummaryCardComponent implements OnInit {
     }
     if (this.substance.approvalID) {
       this.substanceService.hasInxightLink(this.substance.approvalID).subscribe(response => {
-        console.log(response);
         if (response.total && response.total > 0) {
           this.inxightLink = true;
           this.inxightUrl = 'https://drugs.ncats.io/drug/' + this.substance.approvalID;

@@ -18,4 +18,20 @@ export class DataDictionaryService {
   getDictionaryField(key: string, field: string): string {
     return this.dataDictionary[key][field];
   }
+
+  getCVDomainRows(): any {
+    const newObj = [];
+    Object.keys(this.dataDictionary).forEach(key => {
+      const cv = this.dataDictionary[key]['CVDomain'];
+      if (cv !== '') {
+        if (newObj[cv] && newObj[cv].length > 0) {
+          newObj[cv].push(key);
+      } else {
+        newObj[cv] = [key];
+
+      }
+    }
+    });
+    return newObj;
+  }
 }

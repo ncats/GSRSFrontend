@@ -1,0 +1,56 @@
+.user-container {
+    display:flex;
+    flex-direction: row;
+}
+
+.password-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.loading-container {
+    height:200px;
+    margin: auto;
+}
+
+.form-row {
+    display:flex;
+    width: 100%;
+    flex-direction: row;
+    margin-bottom: 15px;
+
+    .username {
+        width: 35%;
+    }
+    .email {
+        width: 45%;
+    }
+    .active {
+        width: 20%;
+    }
+}
+
+.user-field {
+    width: 90%;
+}
+
+.field-group {
+    width: 50%;
+}
+
+::ng-deep .mat-dialog-content {
+    padding: 10px 24px !important;
+}
+
+.message {
+    margin: auto;
+}
+
+.box-label {
+    padding-bottom: 10px;
+}
+
+::ng-deep .mat-dialog-container {
+    height: unset !important;
+    max-height: 90%;
+}

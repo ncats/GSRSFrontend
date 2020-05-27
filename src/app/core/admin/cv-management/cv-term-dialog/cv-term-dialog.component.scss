@@ -1,0 +1,43 @@
+
+.form-row {
+    width:100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.double-row {
+    justify-content: space-evenly;
+
+}
+
+.content-fix {
+    min-height: 250px;
+    padding: 15px 20px;
+
+}
+
+.actions {
+    height: 75px;
+}
+
+.title {
+    height: 42px;
+}
+
+.loading-container {
+    max-height: calc(100% - 150px);
+    min-height: 250px;
+    width: 100%;
+    align-content: center;
+}
+
+::ng-deep .mat-dialog-container {
+    height: unset !important;
+    max-height: 90%;
+}
+
+.delete-icon {
+    margin-bottom: 20px;
+
+}

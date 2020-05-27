@@ -14,7 +14,7 @@ import { UtilsService } from '@gsrs-core/utils/index.js';
   styleUrls: ['./definition-switch-dialog.component.scss']
 })
 export class DefinitionSwitchDialogComponent implements OnInit {
-  public dialogRef: MatDialogRef <DefinitionSwitchDialogComponent>;
+  public dialogRef: MatDialogRef < DefinitionSwitchDialogComponent >;
   primeVersion: string;
   altversion = '';
   full_prom = null;
@@ -26,7 +26,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
   structureuuid: string;
   structureid: string;
   alt: any = {};
-  currentAlts: Array <any>;
+  currentAlts: Array < any >;
   sub: SubstanceDetail;
   fieldGetter: any;
   text: string;
@@ -95,7 +95,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
   tempPrimeChange(uuid) {
     if (!confirm('This process involves multiple updates to both records and may take several minutes.\n' +
     'If the switch fails at any stage, follow the instructions that appear to restore both records. \n\n' +
-    ' Click "OK" to proceed.')) {
+    ' Click \'OK\' to proceed.')) {
       this.showButtons = true;
         return;
     }
@@ -277,13 +277,10 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           const altReferences = defiant.json.search(alt, '//*[references]');
           altReferences.forEach(e => {
           });
-
           const objectsA = altReferences.filter(e => {
-            if (this._typeof2(e) === 'object') {
-
+            if (this.isObject(e)) {
               return true;
             } else {
-
               return false;
             }
           });
@@ -318,7 +315,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           const temp = _.cloneDeep(alt);
           if (this.didStep5 === true) {
             this.text = 'Step 2a complete. Sending update for 2b...';
-
           } else {
             this.text = 'Step 1 complete. Sending update for step 2...';
           }
@@ -348,10 +344,9 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               }
             });
             const subReferences = defiant.json.search(newSub, '//*[references]');
-
             const objectsA = subReferences.filter(h => {
 
-              if (this._typeof2(h) === 'object') {
+              if (this.isObject(h)) {
                 return true;
               } else {
                 return false;
@@ -405,7 +400,6 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               setTimeout(function () {
                 alert('Record definitions successfully switched. The page will now refresh. ' +
                 '\n\n Please review and remove any unnecessary validation Notes created for each substance during the switch');
-
                 cb();
               }, 1000);
             } else {
@@ -486,9 +480,10 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           _obj !== Symbol.prototype ? 'symbol' : this._typeof2(_obj);
       };
     }
-
-    return this._typeof(obj);
   }
 
+  isObject(a) {
+    return (!!a) && (a.constructor === Object);
+  }
 
 }

@@ -19,6 +19,7 @@ export interface Facet {
     $previous?: string;
     $fetched: Array<FacetValue>;
     $showAdvanced?: boolean;
+    $isLoading?: boolean;
 }
 
 /**

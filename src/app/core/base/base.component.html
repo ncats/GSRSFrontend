@@ -45,8 +45,8 @@
           </mat-menu>
         </ng-container>
       </div>
-      <a mat-menu-item *ngIf="isAdmin" [href]="baseDomain + clasicBaseHref + 'admin'" target="_blank">
-        Admin
+      <a mat-menu-item *ngIf="isAdmin" routerLink = "/admin">
+        Admin Panel
       </a>
       <a mat-menu-item [href]="'mailto:' + contactEmail">
         Contact Us
@@ -72,6 +72,9 @@
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
       <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'profile'" target="_blank">
         <span>Profile</span>
+      </a>
+      <a routerLink = "/admin" mat-menu-item *ngIf = "isAdmin">
+        <span>Admin Panel</span>
       </a>
       <button mat-menu-item (click)="authService.logout()">
         <span>Logout</span>
