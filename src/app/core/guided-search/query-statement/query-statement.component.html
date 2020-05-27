@@ -2,7 +2,9 @@
     <div class="condition-column">
         <mat-form-field *ngIf="index > 0">
             <mat-select [formControl]="conditionControl">
-                <mat-option *ngFor="let option of conditionOptions" [value]="option">
+                <mat-option 
+                    *ngFor="let option of conditionOptions"
+                    [value]="option">
                     {{option}}
                 </mat-option>
             </mat-select>
@@ -24,7 +26,7 @@
     <div class="command-column">
         <mat-form-field>
             <mat-select [formControl]="commandControl">
-                <mat-option *ngFor="let option of commandOptions" [value]="option">
+                <mat-option *ngFor="let option of commandOptions" [value]="option" [matTooltip]="option">
                     {{option}}
                 </mat-option>
             </mat-select>

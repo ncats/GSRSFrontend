@@ -29,13 +29,14 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
   private selectedLucenePath: string;
   private selectedQueryablePropertyType: string;
   commandOptions: Array<string>;
+  selectedCommandOption: string;
   commandInputs: Array<any>;
   private query: string;
   private queryParts: Array<string> = [];
 
   private typeCommandOptions = {
     string: {
-      'any of these words': {
+      'for ANY of the following words in any order or position': {
         commandInputs: [
           {
             type: 'text',
@@ -260,7 +261,7 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
     this.queryablePropertiesControl.setValue('All');
     this.selectedLucenePath = '';
     this.commandOptions = Object.keys(this.typeCommandOptions.string);
-    this.commandControl.setValue('any');
+    this.commandControl.setValue(Object.keys(this.typeCommandOptions.string)[0]);
     const subscription = this.queryablePropertiesControl.valueChanges.subscribe(value => {
       this.options = this.allOptions.filter(option => {
         return option.toLowerCase().indexOf(value.toLowerCase()) > -1;
@@ -269,8 +270,9 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
     this.subscriptions.push(subscription);
     this.commandControl.setValue(this.commandOptions[0]);
     this.selectedQueryablePropertyType = 'string';
-    this.commandInputs = this.typeCommandOptions['string']['any of these words'].commandInputs;
+    this.commandInputs = this.typeCommandOptions['string'][Object.keys(this.typeCommandOptions.string)[0]].commandInputs;
     const commandSubscription = this.commandControl.valueChanges.subscribe((command: string) => {
+      this.selectedCommandOption = command;
       if (this.typeCommandOptions[this.selectedQueryablePropertyType][command].commandInputs) {
         this.commandInputs = this.typeCommandOptions[this.selectedQueryablePropertyType][command].commandInputs;
         this.refreshQuery();
