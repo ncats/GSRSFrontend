@@ -15,6 +15,7 @@ import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate
 import { AdminComponent } from '@gsrs-core/admin/admin.component';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-downloads.component';
+import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 
 
 const childRoutes: Routes = [
@@ -71,6 +72,10 @@ const childRoutes: Routes = [
   {
     path: 'admin',
     component: AdminComponent
+  },
+  {
+    path: 'monitor/:id',
+    component: MonitorComponent
   },
   {
     path: 'profile',

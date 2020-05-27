@@ -54,13 +54,15 @@ export interface UploadObject {
 }
 
 export interface UploadStatistics {
-
-averageTimeToPersist?: number;
-estimatedTimeLeft?: number;
-recordsExtractedFailed?: number;
-recordsExtractedSuccess?: number;
-recordsPersistedFailed?: number;
-recordsPersistedSuccess?: number;
-recordsProcessedFailed?: number;
-recordsProcessedSuccess?: number;
+    totalRecords: {
+        count: number;
+    };
+    averageTimeToPersist?: number;
+    estimatedTimeLeft?: number;
+    recordsExtractedFailed?: number;
+    recordsExtractedSuccess?: number;
+    recordsPersistedFailed?: number;
+    recordsPersistedSuccess?: number;
+    recordsProcessedFailed?: number;
+    recordsProcessedSuccess?: number;
 }

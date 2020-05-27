@@ -12,6 +12,7 @@ import { UserManagementComponent } from '@gsrs-core/admin/user-management/user-m
 import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-edit-dialog/user-edit-dialog.component';
 import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summary.component';
 import { DataManagementComponent } from '@gsrs-core/admin/data-management/data-management.component';
+import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 
 
 
@@ -46,7 +47,8 @@ import { DataManagementComponent } from '@gsrs-core/admin/data-management/data-m
     UserManagementComponent,
     UserEditDialogComponent,
     CacheSummaryComponent,
-    DataManagementComponent
+    DataManagementComponent,
+    MonitorComponent
   ],
   exports: [
     CvManagementComponent,
@@ -57,7 +59,8 @@ import { DataManagementComponent } from '@gsrs-core/admin/data-management/data-m
     UserEditDialogComponent,
     UserManagementComponent,
     CacheSummaryComponent,
-    DataManagementComponent
+    DataManagementComponent,
+    MonitorComponent
   ],
   entryComponents: [
     CvTermDialogComponent,

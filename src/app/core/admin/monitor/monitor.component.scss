@@ -19,8 +19,12 @@
     padding: 10px;
 }
 
-.spinner {
-   
+.monitor-container {
+    margin-top: 90px;
+}
+
+.job-title {
+    font-size: 20px;
 }
 
 .load-progress {
@@ -57,9 +61,7 @@
 
 .loading-spinner {
     width: 70px;
-    mat-progress-spinner {
-        margin: auto;
-    }
+    margin: auto;
 }
 .load-fail-old {
      transform: rotate(180deg);
