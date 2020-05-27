@@ -14,7 +14,7 @@
 
   <div *ngFor="let product of application.applicationProductList; let prodIndex = index">
 
-    <!-- Buttons: delete, review -->
+    <!-- Buttons: delete, copy, review -->
     <div class="marginbottomminus17px padleft250px">
       <button mat-icon-button [ngStyle]="{'color':'green'}" [disabled]="application.applicationProductList.length == 1"
         (click)="confirmDeleteProduct(prodIndex)" matTooltip="Delete Product Details {{prodIndex + 1}}">
@@ -44,24 +44,15 @@
       <!-- PRODUCT NAME LIST -->
 
       <div *ngFor="let prodName of product.applicationProductNameList; let prodNameIndex = index">
-
-        <!--
-        <hr *ngIf="prodIndex > 0">
-        -->
-
-        <div class="form-row">
+      
+        <div class="form-row-prodname">
           <mat-form-field class="prodNameField">
             <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName" name="productName" />
           </mat-form-field>
 
-          <mat-form-field class="">
-            <mat-label>Product Name Type</mat-label>
-            <mat-select matNativeControl [(ngModel)]="prodName.productNameType" name="productNameType">
-              <mat-option *ngFor="let productNameType of productNameTypeList" [value]="productNameType.value">
-                {{productNameType.display}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <app-cv-input class="col-1-nomargin" domain="PROD_PRODUCT_NAME_TYPE" title="Product Name Type" name="productNameType"
+            [model]="application.productNameType" (valueChange)="application.productNameType = $event">
+          </app-cv-input>
 
           &nbsp;&nbsp;
           <span class="width40px displayinlineblock">
@@ -79,45 +70,26 @@
       </div> <!-- ngFor product Name List -->
 
       <div class="form-row">
-        <mat-form-field class="">
-          <mat-label>Dosage From</mat-label>
-          <mat-select matNativeControl [(ngModel)]="product.dosageForm" name="dosageForm">
-            <mat-option *ngFor="let dosageForm of dosageFormList" [value]="dosageForm.value">
-              {{dosageForm.display}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <app-cv-input class="col-1" domain="DOSAGE_FORM" title="Dosage Form" name="dosageForm"
+          [model]="product.dosageForm" (valueChange)="product.dosageForm = $event">
+        </app-cv-input>
 
-        <mat-form-field class="">
-          <mat-label>Route of Administration</mat-label>
-          <mat-select matNativeControl [(ngModel)]="product.routeAdmin" name="routeAdmin">
-            <mat-option *ngFor="let routeAdmin of routeAdminList" [value]="routeAdmin.value">
-              {{routeAdmin.display}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <app-cv-input class="col-1" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration"
+          name="routeAdmin" [model]="product.routeAdmin" (valueChange)="product.routeAdmin = $event">
+        </app-cv-input>
 
-        <mat-form-field class="">
-          <mat-label>Unit Of Presentation</mat-label>
-          <mat-select matNativeControl [(ngModel)]="product.unitPresentation" name="unitPresentation">
-            <mat-option *ngFor="let unitPresentation of unitPresentationList" [value]="unitPresentation.value">
-              {{unitPresentation.display}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <app-cv-input class="col-1" domain="PROD_UNIT_PRESENTATION" title="Unit Of Presentation"
+          name="unitPresentation" [model]="product.unitPresentation"
+          (valueChange)="product.unitPresentation = $event">
+        </app-cv-input>
 
-        <mat-form-field class="">
+        <mat-form-field class="col-1">
           <input matInput placeholder="Amount" [(ngModel)]="product.amount" name="amount" />
         </mat-form-field>
 
-        <mat-form-field class="">
-          <mat-label>Unit</mat-label>
-          <mat-select matNativeControl [(ngModel)]="product.unit" name="unit">
-            <mat-option *ngFor="let unit of unitList" [value]="unit.value">
-              {{unit.display}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <app-cv-input class="col-1" domain="APPLICATION_UNIT" title="Unit" name="unit"
+          [model]="product.unit" (valueChange)="product.unit = $event">
+        </app-cv-input>
       </div>
 
       <!-- INGREDIENT START -->
@@ -135,7 +107,8 @@
       </button>
 
       <div *ngFor="let ingredient of product.applicationIngredientList; let ingredIndex = index">
-        <app-ingredient-form [ingredient]="ingredient" [prodIndex]="prodIndex" [ingredIndex]="ingredIndex" [totalIngredient]="product.applicationIngredientList.length">
+        <app-ingredient-form [ingredient]="ingredient" [prodIndex]="prodIndex" [ingredIndex]="ingredIndex"
+          [totalIngredient]="product.applicationIngredientList.length">
         </app-ingredient-form>
       </div>
       <!-- INGREDIENT END -->
@@ -143,7 +116,6 @@
 
     </fieldset>
     <br><br><br>
-    <br>
   </div> <!-- Product repeat -->
 
 </div>

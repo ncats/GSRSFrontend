@@ -1,25 +1,47 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { ProductSrs, ApplicationIngredient } from '../../model/application.model';
-import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
-import { ApplicationService } from '../../service/application.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
-import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
-import { SubstanceSearchSelectorComponent } from '../../../substance-search-select/substance-search-selector.component';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
+import { ViewEncapsulation, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
+import { ProductService } from '../../service/product.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoadingService } from '@gsrs-core/loading';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
+import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
+import { ProductIngredient, ValidationMessage } from '../../model/product.model';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { JsonDialogFdaComponent } from '../../../json-dialog-fda/json-dialog-fda.component';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+import { SubstanceSearchSelectorComponent } from '../../../substance-search-select/substance-search-selector.component';
+import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 
 @Component({
-  selector: 'app-ingredient-form',
-  templateUrl: './ingredient-form.component.html',
-  styleUrls: ['./ingredient-form.component.scss']
+  selector: 'app-product-ingredient-form',
+  templateUrl: './product-ingredient-form.component.html',
+  styleUrls: ['./product-ingredient-form.component.scss']
 })
-export class IngredientFormComponent implements OnInit {
-  @Input() ingredient: ApplicationIngredient;
-  @Input() prodIndex: number;
-  @Input() ingredIndex: number;
-  @Input() totalIngredient: number;
+export class ProductIngredientFormComponent implements OnInit {
 
+  @ViewChildren ('checkBox') checkBox: QueryList<any>;
+  @Input() ingredient: ProductIngredient;
+  @Input() totalIngredient: number;
+  @Input() prodIngredientIndex: number;
+  @Input() prodComponentIndex: number;
+  @Input() prodLotIndex: number;
+
+  /*
+  ingredientTypeList: Array<VocabularyTerm> = [];
+  unitList: Array<VocabularyTerm> = [];
+  gradeList: Array<VocabularyTerm> = [];
+  releaseCharacteristicList: Array<VocabularyTerm> = [];
+  */
+  productMessage = '';
+  username = null;
   ingredientName: string;
   ingredientNameSubstanceUuid: string;
   ingredientNameBdnumOld: string;
@@ -31,16 +53,24 @@ export class IngredientFormComponent implements OnInit {
   relationship: any;
   ingredientNameActiveMoiety: any;
   basisOfStrengthActiveMoiety: any;
-  username = null;
+  selectedIngredientLocation = new Array<any>();
+
+  locationList: Array<any> = [
+    { value: 'Whole', checked: false },
+    { value: 'Core', checked: false },
+    { value: 'Coating', checked: false },
+    { value: 'Other', checked: false }
+  ];
 
   constructor(
-    private applicationService: ApplicationService,
+    private productService: ProductService,
     public cvService: ControlledVocabularyService,
     private authService: AuthService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
     setTimeout(() => {
+      this.loadIngredientLocation();
       this.username = this.authService.getUser();
       this.ingredientNameBdnumOld = this.ingredient.bdnum;
       this.basisofStrengthBdnumOld = this.ingredient.basisOfStrengthBdnum;
@@ -49,107 +79,50 @@ export class IngredientFormComponent implements OnInit {
     }, 600);
   }
 
-  addNewIngredient(prodIndex: number) {
-    this.applicationService.addNewIngredient(prodIndex);
-  }
-
-  confirmDeleteIngredient(prodIndex: number, ingredIndex: number) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Ingredient Details ' + (ingredIndex + 1) + '?'}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteIngredient(prodIndex, ingredIndex);
-      }
-    });
-  }
-
-  deleteIngredient(prodIndex: number, ingredIndex: number) {
-    this.applicationService.deleteIngredient(prodIndex, ingredIndex);
-  }
-
-  copyIngredient(ingredient: any, prodIndex) {
-    this.applicationService.copyIngredient(ingredient, prodIndex);
-  }
-
-  confirmReviewIngredient() {
-    if (this.ingredient.reviewDate) {
-      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        data: {message: 'Are you sure you want to overwrite Reviewed By and Review Date?'}
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result && result === true) {
-          this.reviewIngredient();
+  loadIngredientLocation() {
+    if ((this.ingredient.ingredientLocation !== null) && (this.ingredient.ingredientLocation.length > 0)) {
+      const arrLoc = this.ingredient.ingredientLocation.split(',');
+      for (let i = 0; i < this.locationList.length; i++) {
+        for (let j = 0; j < arrLoc.length; j++) {
+          if (this.locationList[i].value === arrLoc[j]) {
+            this.locationList[i].checked = true;
+          }
         }
-      });
-    } else {
-      this.reviewIngredient();
+      }
     }
   }
 
-  reviewIngredient() {
-    this.applicationService.getCurrentDate().subscribe(response => {
-      if (response) {
-        this.ingredient.reviewDate = response.date;
-        this.ingredient.reviewedBy = this.username;
-      }
+  setSelectedIngredientLocation(data: any, checkbox) {
+    let selStr = '';
+    const selected = [];
+    const checked = this.checkBox.filter(checkbox1 => checkbox1.checked);
+    checked.forEach(data1 => {
+      selected.push(data1.value);
     });
+    if (selected.length > 0) {
+      selStr = selected.join(',');
+      this.ingredient.ingredientLocation = selStr;
+    }
   }
 
-  confirmDeleteIngredientName(ingredIndex: number) {
+  confirmDeleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Ingredient Name ' + (ingredIndex + 1) + '?'}
+      data: { message: 'Are you sure you want to delete Product Ingredient Details ' + (prodIngredientIndex + 1) + ' data?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        this.deleteIngredientName();
+        this.deleteProductIngredient(prodComponentIndex, prodLotIndex, prodIngredientIndex);
       }
     });
   }
 
-  deleteIngredientName() {
-    this.ingredientNameMessage = '';
-    if (this.ingredient.id != null) {
-      // Display this message if deleting existing Ingredient Name which is in database.
-      if (this.ingredientNameBdnumOld != null) {
-        this.ingredientNameMessage = 'Click Validate and Submit button to delete ' + this.ingredientName;
-      }
-    }
-    this.ingredientNameSubstanceUuid = null;
-    this.ingredientName = null;
-    this.ingredient.bdnum = null;
-  }
-
-  confirmDeleteBasisOfStrength(ingredIndex: number) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Basis of Strength ' + (ingredIndex + 1) + '?'}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteBasisOfStrength();
-      }
-    });
-  }
-
-  deleteBasisOfStrength() {
-    this.basisOfStrengthMessage = '';
-    if (this.ingredient.id != null) {
-      // Display this message if deleting existing Basis of Strength which is in database.
-      if (this.basisofStrengthBdnumOld != null) {
-        this.basisOfStrengthMessage = 'Click Validate and Submit button to delete ' + this.basisOfStrengthName;
-      }
-    }
-    this.basisofStrengthSubstanceUuid = null;
-    this.basisOfStrengthName = null;
-    this.ingredient.basisOfStrengthBdnum = null;
+  deleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number) {
+    this.productService.deleteProductIngredient(prodComponentIndex, prodLotIndex, prodIngredientIndex);
   }
 
   getBdnum(substanceId: string, type: string) {
-    this.applicationService.getSubstanceDetailsBySubstanceId(substanceId).subscribe(response => {
+    this.productService.getSubstanceDetailsBySubstanceId(substanceId).subscribe(response => {
       if (response) {
         if (response.bdnum) {
 
@@ -196,7 +169,7 @@ export class IngredientFormComponent implements OnInit {
 
   getSubstanceId(bdnum: string, type: string) {
     if (bdnum != null) {
-      this.applicationService.getSubstanceDetailsByBdnum(bdnum).subscribe(response => {
+      this.productService.getSubstanceDetailsByBdnum(bdnum).subscribe(response => {
         if (response) {
           if (response.substanceId) {
             if (type === 'ingredientname') {
@@ -235,7 +208,7 @@ export class IngredientFormComponent implements OnInit {
   getActiveMoiety(substanceId: string, type: string) {
     if (substanceId != null) {
       // Get Active Moiety - Relationship
-      this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
+      this.productService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
         if ((type != null) && (type === 'ingredientname')) {
           this.ingredientNameActiveMoiety = responseRel;
         } else {
@@ -292,6 +265,60 @@ export class IngredientFormComponent implements OnInit {
 
   showMessageBasisOfStrength(message: string): void {
     this.basisOfStrengthMessage = message;
+  }
+
+  copyProductIngredient() {
+    this.productService.copyProductIngredient(this.ingredient, this.prodComponentIndex, this.prodLotIndex);
+  }
+
+  confirmDeleteIngredientName() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Ingredient Name ' + (this.prodIngredientIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteIngredientName();
+      }
+    });
+  }
+
+  deleteIngredientName() {
+    this.ingredientNameMessage = '';
+    if (this.ingredient.id != null) {
+      // Display this message if deleting existing Ingredient Name which is in database.
+      if (this.ingredientNameBdnumOld != null) {
+        this.ingredientNameMessage = 'Click Validate and Submit button to delete ' + this.ingredientName;
+      }
+    }
+    this.ingredientNameSubstanceUuid = null;
+    this.ingredientName = null;
+    this.ingredient.bdnum = null;
+  }
+
+  confirmDeleteBasisOfStrength() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Basis of Strength ' + (this.prodIngredientIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteBasisOfStrength();
+      }
+    });
+  }
+
+  deleteBasisOfStrength() {
+    this.basisOfStrengthMessage = '';
+    if (this.ingredient.id != null) {
+      // Display this message if deleting existing Basis of Strength which is in database.
+      if (this.basisofStrengthBdnumOld != null) {
+        this.basisOfStrengthMessage = 'Click Validate and Submit button to delete ' + this.basisOfStrengthName;
+      }
+    }
+    this.basisofStrengthSubstanceUuid = null;
+    this.basisOfStrengthName = null;
+    this.ingredient.basisOfStrengthBdnum = null;
   }
 
 }
