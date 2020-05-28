@@ -119,7 +119,6 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('yo destroy');
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
