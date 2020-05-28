@@ -13,6 +13,8 @@ import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-e
 import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summary.component';
 import { DataManagementComponent } from '@gsrs-core/admin/data-management/data-management.component';
 import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
+import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -26,6 +28,8 @@ import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
   MatFormFieldModule,
   MatInputModule,
   MatTabsModule,
+  MatTooltipModule,
+  BrowserAnimationsModule,
   MatProgressSpinnerModule,
   MatProgressBarModule,
   MatButtonModule,
@@ -65,6 +69,9 @@ import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
   entryComponents: [
     CvTermDialogComponent,
     UserEditDialogComponent
+  ],
+  providers: [
+    CanActivateAdmin
   ]
 })
 export class AdminModule { }

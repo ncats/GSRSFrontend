@@ -1,4 +1,6 @@
-<mat-card class = "monitor-container">
+<div  class = "monitor-container">
+<h2 class = monitor-header>Upload Monitor</h2>
+<mat-card>
 
 <div *ngIf = "loadJob">
     <div class = "full-row">
@@ -16,70 +18,72 @@
     </mat-progress-bar>
     <div class = "label-row">
         <div [style.width.%] = "(dynamic / max)*(100)"  class = "count-cont">
-                <span class = "count-row-label">{{dynamic}}</span>
+                <span class = "count-row-label">{{dynamic}} / {{max}}</span>
         </div>
         </div>
 </div>
            
 </div>
+<button mat-button (click) = "hide = !hide" class = 'hide-button'>{{hide? 'show':'hide'}} details</button>
+<div *ngIf = "!hide">
 <div class = "progress-container"  *ngIf = "(stats.extractPass && stats.extractPass >= 0) || stats.extractFail && stats.extractFail >= 0">
 <div class = "bar-label">Extracted Records</div>  
     <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
-    [value] = "(stats.extractPass / max)*(100)"
+    [value] = "stats.extractPass"
     >
     </mat-progress-bar>
 
     <mat-progress-bar class = "load-progress load-fail" [color]="primary"  mode="determinate" 
-    [value] = "(stats.extractFail / max)*(100)"
+    [value] = "stats.extractFail"
      >
     </mat-progress-bar>
     <div class = "label-row">
-        <div [style.width.%] = "(stats.extractPass / max)*(100)"  class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedPassed > 0">
-                <span class = "count-row-label">{{stats.extractPass}}</span>
+        <div [style.width.%] = "stats.extractPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedSuccess > 0">
+                <span class = "count-row-label">{{loadJob.statistics.recordsExtractedSuccess}}</span>
         </div>
-        <div [style.width.%] = "((stats.extractFail  - stats.extractPass) / max)*(100)" class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedFailed > 0">
-            <span  class = "count-row-label">{{stats.extractFail - stats.extractPass}}</span>
+        <div [style.width.%] = "stats.extractFail  - stats.extractPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedFailed > 0">
+            <span  class = "count-row-label">{{loadJob.statistics.recordsExtractedFailed}}</span>
         </div>
     </div>
 </div>
 <div class = "progress-container" *ngIf = "(stats.processedFail && stats.processedFail >=  0) || (stats.processedPass && stats.processedPass >=  0)">
     <div class = "bar-label">Processed Records</div>    
     <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
-    [value] = "(stats.processedPass  / max)*(100)" 
+    [value] = "stats.processedPass" 
      >
 
     </mat-progress-bar>
 
     <mat-progress-bar class = "load-progress load-fail"  mode="determinate" 
-    [value] = "(stats.processedFail / max)*(100)"
+    [value] = "stats.processedFail"
      >
     </mat-progress-bar>
     <div class = "label-row">
-        <div [style.width.%] = "(stats.processedPass / max)*(100)"  class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedPassed > 0">
-                <span class = "count-row-label">{{stats.processedPass}}</span>
+        <div [style.width.%] = "(stats.processedPass)"  class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedSuccess > 0">
+                <span class = "count-row-label">{{loadJob.statistics.recordsProcessedSuccess}}</span>
         </div>
-        <div [style.width.%] = "((stats.processedFail - stats.processedPass) / max)*(100)" class = "count-cont" *ngIf = "loadJob.statistics.recordsProccessedFailed > 0">
-            <span  class = "count-row-label">{{stats.processedFail - stats.processedPass}}</span>
+        <div [style.width.%] = "stats.processedFail - stats.processedPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedFailed > 0">
+            <span  class = "count-row-label">{{loadJob.statistics.recordsProcessedFailed }}</span>
         </div>
     </div>
 </div>
 <div class = "progress-container"*ngIf = "(stats.persistPass && stats.persistPass >=  0) || stats.persistFail && stats.persistFail >=  0" >
     <div class = "bar-label">Persisted Records</div>    
     <mat-progress-bar class = "load-progress load-success"  [color]="accent" mode="determinate" 
-    [value] = "(stats.persistPass / max)*(100)" 
+    [value] = "stats.persistPass" 
     >
     </mat-progress-bar>
 
     <mat-progress-bar class = "load-progress load-fail" mode="determinate" 
-    [value] = "(stats.persistFail / max)*(100)"
+    [value] = "stats.persistFail"
     >
     </mat-progress-bar>
     <div class = "label-row">
-        <div [style.width.%] = "(stats.persistPass / max)*(100)"  class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedPassed > 0">
-                <span class = "count-row-label">{{stats.persistPass}}</span>
+        <div [style.width.%] = "stats.persistPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedPassed > 0">
+                <span class = "count-row-label">{{loadJob.statistics.recordsPersistedPassed}}</span>
         </div>
-        <div [style.width.%] = "((stats.persistFail - stats.persistPass) / max)*(100)" class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedFailed > 0">
-            <span  class = "count-row-label">{{stats.persistFail - stats.persistPass}}</span>
+        <div [style.width.%] = "stats.persistFail" class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedFailed > 0">
+            <span  class = "count-row-label">{{loadJob.statistics.recordsPersistedFailed}}</span>
         </div>
     </div>
 </div> 
@@ -200,19 +204,20 @@
         
        </div> 
 </div>
+</div>
 
 </div>
 <div class = "stat-container">
 <div *ngIf="loadJob.start"  class = "label-value">
         <div class = "label">
        Time started: </div>
-       <div class = "value" matTooltip = "{{loadJob.start | date: 'medium'}}"><span>{{startedHuman}}</span>
+       <div class = "value" matTooltip = "{{loadJob.start | date: 'medium'}}"><code> {{startedHuman}}</code>
     </div>
     </div>
  <div *ngIf="loadJob.stop"  class = "label-value" >
         <div class = "label">
     Time Finished:</div>
-    <div class = "value" matTooltip = "{{loadJob.stop | date: 'medium'}}"><span> {{finishedHuman}}</span>
+    <div class = "value" matTooltip = "{{loadJob.stop | date: 'medium'}}"><code> {{finishedHuman}}</code>
  </div>
  </div>
 <div class = "label-value">
@@ -234,13 +239,16 @@
             </div>
 </div>
 </div>
-<div class = "full-row">
-    <button mat-button (click) = "clearJob()">New Data Entry</button>
+<div class = "full-row" >
+    <button mat-button (click) = "clearJob()">New Data Upload</button>
     <span class = "middle-fill"></span>
-    <button mat-button *ngIf = "!monitor" [disabled] = "loadJob.stop" (click) = "refresh()">Update</button>
+    <span matTooltip = "{{loadJob.stop? 'The upload is no longer in progress': ''}}">
+    <button mat-button *ngIf = "!monitor" [disabled] = "loadJob.stop" (click) = "refresh()" >Update</button>
+    </span>
     <button mat-button *ngIf = "monitor" (click) = "monitor = false">Stop Updating</button>
-
+    <button mat-button *ngIf = "!monitor && !loadJob.stop" (click) = "monitor = true; refresh()">Resume Auto Updates</button>
 </div>
 
 </div>
 </mat-card>
+</div>

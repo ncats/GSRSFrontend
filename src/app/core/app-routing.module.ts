@@ -16,6 +16,7 @@ import { AdminComponent } from '@gsrs-core/admin/admin.component';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-downloads.component';
 import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
+import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 
 
 const childRoutes: Routes = [
@@ -71,11 +72,14 @@ const childRoutes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminComponent
+    component: AdminComponent,
+    canActivate: [CanActivateAdmin]
+
   },
   {
     path: 'monitor/:id',
-    component: MonitorComponent
+    component: MonitorComponent,
+    canActivate: [CanActivateAdmin]
   },
   {
     path: 'profile',

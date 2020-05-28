@@ -25,6 +25,7 @@ export class MonitorComponent implements OnInit {
   message: string;
   monitor = true;
   stats: any = {};
+  hide = false;
   test = {t: 0, f: 0, f2: 0, t2: 0, t3: 0, t1: 0, f1: 0};
   constructor(
     private activeRoute: ActivatedRoute,
@@ -93,6 +94,8 @@ export class MonitorComponent implements OnInit {
               this.refresh();
             }
           });
+        } else {
+          this.monitor = false;
         }
       }, error => {
         this.message = 'invalid Job ID';
@@ -130,13 +133,15 @@ export class MonitorComponent implements OnInit {
   }
 
   mixResultDisplay(job): void  {
-    this.stats.extractFail = job.statistics.recordsExtractedFailed + job.statistics.recordsExtractedSuccess;
-    this.stats.extractPass = job.statistics.recordsExtractedSuccess;
-    this.stats.persistFail = job.statistics.recordsPersistedFailed + job.statistics.recordsPersistedSuccess;
-    this.stats.persistPass = job.statistics.recordsPersistedSuccess;
-    this.stats.processedFail = job.statistics.recordsProcessedFailed + job.statistics.recordsProcessedSuccess;
-    this.stats.processedPass = job.statistics.recordsProcessedSuccess;
+    this.stats.extractFail = (job.statistics.recordsExtractedFailed + job.statistics.recordsExtractedSuccess) / this.max * 100;
+    this.stats.extractPass = (job.statistics.recordsExtractedSuccess);
+    this.stats.persistFail = (job.statistics.recordsPersistedFailed + job.statistics.recordsPersistedSuccess) / this.max * 100;
+    this.stats.persistPass = (job.statistics.recordsPersistedSuccess);
+    this.stats.processedFail = (job.statistics.recordsProcessedFailed + job.statistics.recordsProcessedSuccess) / this.max * 100;
+    this.stats.processedPass = (job.statistics.recordsProcessedSuccess);
     this.test.t3 = this.test.t1 + this.test.f1;
+
+    console.log(this.stats);
   }
 
   toFullHumanTime(sent): string {

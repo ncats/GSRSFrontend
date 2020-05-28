@@ -263,11 +263,15 @@ margin-bottom: auto;
       }
   }
 
+  .hide-button {
+      margin: 10px;
+  }
+
   .count-cont {
       text-align: center;
       color: white;
       margin-top: -22px;
-      font-weight: bold;
+      font-weight: 500;
       z-index: 5;
       font-size: 15px;
   }
@@ -287,4 +291,8 @@ margin-bottom: auto;
 
   .bottom {
       padding-top: 50px;
+  }
+
+  .monitor-header {
+      margin-left: 100px;
   }
