@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Config } from './config.model';
 import { Environment } from '../../../environments/environment.model';
+import { navItems } from './nav-items.constant';
 
 @Injectable({
     providedIn: 'root'
@@ -43,6 +44,32 @@ export class ConfigService {
                 if (config.contactEmail == null && environment.contactEmail != null) {
                     config.contactEmail = environment.contactEmail;
                 }
+                let navItemsCopy = navItems.slice();
+                if (config.navItems && config.navItems.length) {
+                    const filteredNavItems = config.navItems.filter(navItem => {
+                        if (navItem.children != null && navItem.children.length > 0) {
+                            let isNotExisting = true;
+                            for (let i = 0; i < navItemsCopy.length; i++) {
+                                if (navItemsCopy[i].display === navItem.display && navItemsCopy[i].children != null) {
+                                    navItemsCopy[i].children = navItemsCopy[i].children.concat(navItem.children);
+                                    navItemsCopy[i].children.sort((a, b) => {
+                                        return a.order - b.order;
+                                    });
+                                    isNotExisting = false;
+                                    break;
+                                }
+                            }
+                            return isNotExisting;
+                        } else {
+                            return true;
+                        }
+                    });
+                    navItemsCopy = navItemsCopy.concat(filteredNavItems);
+                    navItemsCopy.sort((a, b) => {
+                        return a.order - b.order;
+                    });
+                }
+                config.navItems = navItemsCopy;
                 this._configData = config;
             })
             .catch((err: any) => Promise.resolve());

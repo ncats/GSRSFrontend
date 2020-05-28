@@ -24,9 +24,9 @@
         </mat-autocomplete>
     </div>
     <div class="command-column">
-        <mat-form-field>
+        <mat-form-field [matTooltip]="selectedCommandOption">
             <mat-select [formControl]="commandControl">
-                <mat-option *ngFor="let option of commandOptions" [value]="option" [matTooltip]="option">
+                <mat-option *ngFor="let option of commandOptions" [value]="option">
                     {{option}}
                 </mat-option>
             </mat-select>

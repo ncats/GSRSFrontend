@@ -26,6 +26,7 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { Facet, FacetUpdateEvent } from '../facets-manager/facet.model';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
+import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 
 @Component({
   selector: 'app-substances-browse',
@@ -96,7 +97,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private structureService: StructureService,
     private overlayContainerService: OverlayContainer,
     private location: Location,
-    private facetManagerService: FacetsManagerService
+    private facetManagerService: FacetsManagerService,
+    private substanceTextSearchService: SubstanceTextSearchService
   ) {}
 
   ngOnInit() {
@@ -466,6 +468,7 @@ validatePageInput(event: any): boolean {
     this.pageIndex = 0;
 
     this.populateUrlQueryParameters();
+    this.substanceTextSearchService.clearSearch('main-substance-search');
     this.searchSubstances();
   }
 
