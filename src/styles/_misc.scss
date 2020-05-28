@@ -301,3 +301,19 @@ textarea {
   color: #595959 !important;
   text-decoration: none;
 }
+
+.mat-select-panel {
+
+  mat-option.mat-option {
+    display: flex;
+    word-wrap: normal;
+    white-space: normal;
+    align-items: center;
+    align-content: center;
+    height: auto;
+    min-height: 48px;
+    line-height: 24px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}

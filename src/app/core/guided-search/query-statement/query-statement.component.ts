@@ -11,7 +11,7 @@ import * as moment from 'moment';
   styleUrls: ['./query-statement.component.scss']
 })
 export class QueryStatementComponent implements OnInit, OnDestroy {
-  @Input() index = 0;
+  private _index = 0;
   @Input() queryableDictionary: QueryableSubstanceDictionary;
   @Output() queryUpdated = new EventEmitter<string>();
   private allOptions: Array<string>;
@@ -29,13 +29,14 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
   private selectedLucenePath: string;
   private selectedQueryablePropertyType: string;
   commandOptions: Array<string>;
+  selectedCommandOption: string;
   commandInputs: Array<any>;
   private query: string;
   private queryParts: Array<string> = [];
 
   private typeCommandOptions = {
     string: {
-      'any of these words': {
+      'ANY of the following words in any order or position': {
         commandInputs: [
           {
             type: 'text',
@@ -54,7 +55,7 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
           }
         ]
       },
-      'exact phrase': {
+      'the following exact phrase, which must match completely (no partial words)': {
         commandInputs: [
           {
             type: 'text',
@@ -66,7 +67,7 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
           }
         ]
       },
-      'terms that contain': {
+      'the following contained phrase, which must be found as written (no partial words)': {
         commandInputs: [
           {
             type: 'text',
@@ -78,24 +79,79 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
           }
         ]
       },
-      'terms that begin with': {
+      'ALL of the following words in any order or position': {
         commandInputs: [
           {
             type: 'text',
             constructQuery: (queryValue: string) => {
-              this.query = `${this.selectedCondition}${this.selectedLucenePath}"^${queryValue}*"`;
+              const parts = queryValue.split(' ');
+              let query = parts.map(word => {
+                return this.selectedLucenePath + word;
+              }).join(' AND ');
+              if (parts.length > 1) {
+                query = `(${query})`;
+              }
+              this.query = `${this.selectedCondition}${query}`;
               this.queryUpdated.emit(this.query);
             },
             value: ''
           }
         ]
       },
-      'terms that end with': {
+      'for a WORD that contains': {
+        commandInputs: [
+          {
+            type: 'text',
+            constructQuery: (queryValue: string) => {
+              this.query = `${this.selectedCondition}${this.selectedLucenePath}"*${queryValue}*"`;
+              this.queryUpdated.emit(this.query);
+            },
+            value: ''
+          }
+        ]
+      },
+      'a WORD that starts with': {
+        commandInputs: [
+          {
+            type: 'text',
+            constructQuery: (queryValue: string) => {
+              this.query = `${this.selectedCondition}${this.selectedLucenePath}"${queryValue}*"`;
+              this.queryUpdated.emit(this.query);
+            },
+            value: ''
+          }
+        ]
+      },
+      'for a value that starts with with the word(s)': {
+        commandInputs: [
+          {
+            type: 'text',
+            constructQuery: (queryValue: string) => {
+              this.query = `${this.selectedCondition}${this.selectedLucenePath}"^${queryValue}"`;
+              this.queryUpdated.emit(this.query);
+            },
+            value: ''
+          }
+        ]
+      },
+      'for a WORD that ends with': {
         commandInputs: [
           {
             type: 'text',
             constructQuery: (queryValue: string) => {
               this.query = `${this.selectedCondition}${this.selectedLucenePath}"*${queryValue}"`;
+              this.queryUpdated.emit(this.query);
+            },
+            value: ''
+          }
+        ]
+      },
+      'for a value that ends with the word(s)': {
+        commandInputs: [
+          {
+            type: 'text',
+            constructQuery: (queryValue: string) => {
+              this.query = `${this.selectedCondition}${this.selectedLucenePath}"${queryValue}$"`;
               this.queryUpdated.emit(this.query);
             },
             value: ''
@@ -260,7 +316,7 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
     this.queryablePropertiesControl.setValue('All');
     this.selectedLucenePath = '';
     this.commandOptions = Object.keys(this.typeCommandOptions.string);
-    this.commandControl.setValue('any');
+    this.commandControl.setValue(Object.keys(this.typeCommandOptions.string)[0]);
     const subscription = this.queryablePropertiesControl.valueChanges.subscribe(value => {
       this.options = this.allOptions.filter(option => {
         return option.toLowerCase().indexOf(value.toLowerCase()) > -1;
@@ -268,9 +324,11 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(subscription);
     this.commandControl.setValue(this.commandOptions[0]);
+    this.selectedCommandOption = this.commandOptions[0];
     this.selectedQueryablePropertyType = 'string';
-    this.commandInputs = this.typeCommandOptions['string']['any of these words'].commandInputs;
+    this.commandInputs = this.typeCommandOptions['string'][Object.keys(this.typeCommandOptions.string)[0]].commandInputs;
     const commandSubscription = this.commandControl.valueChanges.subscribe((command: string) => {
+      this.selectedCommandOption = command;
       if (this.typeCommandOptions[this.selectedQueryablePropertyType][command].commandInputs) {
         this.commandInputs = this.typeCommandOptions[this.selectedQueryablePropertyType][command].commandInputs;
         this.refreshQuery();
@@ -280,7 +338,7 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(commandSubscription);
-    if (this.index > 0) {
+    if (this._index > 0) {
       this.conditionControl.setValue('AND');
       this.selectedCondition = 'AND ';
       const conditionSubscription = this.conditionControl.valueChanges.subscribe((condition: string) => {
@@ -294,6 +352,17 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  @Input()
+  set index(index: number) {
+    if (index != null) {
+      this._index = index;
+      if (this._index === 0 && this.commandInputs) {
+        this.selectedCondition = '';
+        this.refreshQuery();
+      }
+    }
   }
 
   @Input()
