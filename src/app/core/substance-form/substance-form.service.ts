@@ -1029,10 +1029,6 @@ export class SubstanceFormService implements OnDestroy {
     this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
   }
 
-  validateReferences(substance): any {
-    
-  }
-
   // end change reason
 
   validateSubstance(): Observable<ValidationResults> {
