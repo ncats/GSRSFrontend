@@ -22,7 +22,9 @@ showPrev = false;
   ) {}
 
   ngOnInit() {
-    this.dialogRef.beforeClosed().subscribe(() => this.dialogRef.close(this.reference));
+    this.dialogRef.beforeClosed().subscribe(() => this.dialogRef.close(
+      ((this.reference.docType && this.reference.docType !== '') &&
+      (this.reference.citation && this.reference.citation !== '')) ? this.reference : null));
   }
 
   save(): void {
@@ -40,7 +42,9 @@ showPrev = false;
     delete ref.created;
     delete ref.createdBy;
     delete ref._self;
-    this.reference = ref;
+    if ((ref.docType && ref.docType !== '') && (ref.citation && ref.citation !== '')) {
+      this.reference = ref;
+    }
     this.showPrev = false;
   }
 
