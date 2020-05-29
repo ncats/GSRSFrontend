@@ -365,6 +365,10 @@ export class QueryStatementComponent implements OnInit, OnDestroy {
     }
   }
 
+  get index(): number {
+    return this._index;
+  }
+
   @Input()
   set queryableOptions(options: Array<string>) {
     this.allOptions = options;

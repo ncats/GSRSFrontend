@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { QueryableSubstanceDictionary } from './queryable-substance-dictionary.model';
 import { NavigationExtras, Router } from '@angular/router';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-guided-search',
@@ -16,11 +17,13 @@ export class GuidedSearchComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService
   ) { }
 
   ngOnInit() {
-    this.http.get('/assets/data/substance_dictionary.json').subscribe((response: QueryableSubstanceDictionary) => {
+    this.http.get(`${this.configService.environment.baseHref}assets/data/substance_dictionary.json`)
+      .subscribe((response: QueryableSubstanceDictionary) => {
       this.queryableSubstanceDictionary = response;
       this.queryableSubstanceDictionary['All'] = {
         lucenePath: '',
