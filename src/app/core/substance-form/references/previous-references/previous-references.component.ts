@@ -42,8 +42,12 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
         for (let i = (response.content.length - 1); i >= 0; i--) {
 
           if (this.user === response.content[i]['lastEditedBy']
+              && response.content[i]['docType']
+              && response.content[i]['citation']
               && response.content[i]['docType'] !==  'VALIDATION_MESSAGE'
-              && response.content[i]['docType'] !==  'SYSTEM' ) {
+              && response.content[i]['docType'] !==  'SYSTEM'
+              && response.content[i]['docType'] !==  'BATCH_IMPORT'
+              && response.content[i]['docType'] !==  'VALIDATION_MESSAGE' ) {
             this.oldReferences.push(response.content[i]);
             if (this.oldReferences.length >= 10) {
               break;
@@ -51,7 +55,6 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
           }
         }
         this.loading = false;
-        console.log(this.oldReferences);
       }
     });
   }

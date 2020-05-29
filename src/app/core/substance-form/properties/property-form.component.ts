@@ -57,6 +57,10 @@ export class PropertyFormComponent implements OnInit {
     }
   }
 
+  deleteParameter(id: number): void {
+    this.property.parameters.splice(id, 1);
+  }
+
   undoDelete(): void {
     clearTimeout(this.deleteTimer);
     delete this.privateProperty.$$deletedCode;
