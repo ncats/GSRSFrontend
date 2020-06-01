@@ -598,7 +598,6 @@ export class SubstanceService extends BaseHttpService {
       search = 'substances';
     }
     const url = `${this.configService.configData.apiBaseUrl}api/v1/${search}/export/${etag}`;
-    console.log(url);
     return this.http.get< any>(url);
   }
 }

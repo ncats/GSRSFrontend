@@ -26,67 +26,69 @@
 </div>
 <button mat-button (click) = "hide = !hide" class = 'hide-button'>{{hide? 'show':'hide'}} details</button>
 <div *ngIf = "!hide">
-    <div class = "progress-container"  *ngIf = "(stats.extractPass && stats.extractPass >= 0) || stats.extractFail && stats.extractFail >= 0">
-        <div class = "bar-label">Extracted Records</div>  
-        <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
-        [value] = "stats.extractPass"
-        >
-        </mat-progress-bar>
+<div class = "progress-container"  *ngIf = "(stats.extractPass && stats.extractPass >= 0) || stats.extractFail && stats.extractFail >= 0">
+<div class = "bar-label">Extracted Records</div>  
+    <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
+    [value] = "stats.extractPass"
+    >
+    </mat-progress-bar>
 
-        <mat-progress-bar class = "load-progress load-fail" [color]="primary"  mode="determinate" 
-        [value] = "stats.extractFail"
-        >
-        </mat-progress-bar>
-        <div class = "label-row">
-            <div [style.width.%] = "stats.extractPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedSuccess > 0">
-                    <span class = "count-row-label">{{loadJob.statistics.recordsExtractedSuccess}}</span>
-            </div>
-            <div [style.width.%] = "stats.extractFail  - stats.extractPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedFailed > 0">
-                <span  class = "count-row-label">{{loadJob.statistics.recordsExtractedFailed}}</span>
-            </div>
+    <mat-progress-bar class = "load-progress load-fail" [color]="primary"  mode="determinate" 
+    [value] = "stats.extractFail"
+     >
+    </mat-progress-bar>
+    <div class = "label-row">
+        <div [style.width.%] = "stats.extractPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedSuccess > 0">
+                <span class = "count-row-label">{{loadJob.statistics.recordsExtractedSuccess}}</span>
+        </div>
+        <div [style.width.%] = "stats.extractFail  - stats.extractPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedFailed > 0">
+            <span  class = "count-row-label">{{loadJob.statistics.recordsExtractedFailed}}</span>
         </div>
     </div>
-    <div class = "progress-container" *ngIf = "(stats.processedFail && stats.processedFail >=  0) || (stats.processedPass && stats.processedPass >=  0)">
-        <div class = "bar-label">Processed Records</div>    
-        <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
-        [value] = "stats.processedPass" 
-        >
+</div>
+<div class = "progress-container" *ngIf = "(stats.processedFail && stats.processedFail >=  0) || (stats.processedPass && stats.processedPass >=  0)">
+    <div class = "bar-label">Processed Records</div>    
+    <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
+    [value] = "stats.processedPass" 
+     >
 
-        </mat-progress-bar>
+    </mat-progress-bar>
 
-        <mat-progress-bar class = "load-progress load-fail"  mode="determinate" 
-        [value] = "stats.processedFail"
-        >
-        </mat-progress-bar>
-        <div class = "label-row">
-            <div [style.width.%] = "(stats.processedPass)"  class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedSuccess > 0">
-                    <span class = "count-row-label">{{loadJob.statistics.recordsProcessedSuccess}}</span>
-            </div>
-            <div [style.width.%] = "stats.processedFail - stats.processedPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedFailed > 0">
-                <span  class = "count-row-label">{{loadJob.statistics.recordsProcessedFailed }}</span>
-            </div>
+    <mat-progress-bar class = "load-progress load-fail"  mode="determinate" 
+    [value] = "stats.processedFail"
+     >
+    </mat-progress-bar>
+    <div class = "label-row">
+        <div [style.width.%] = "(stats.processedPass)"  class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedSuccess > 0">
+                <span class = "count-row-label">{{loadJob.statistics.recordsProcessedSuccess}}</span>
+        </div>
+        <div [style.width.%] = "stats.processedFail - stats.processedPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedFailed > 0">
+            <span  class = "count-row-label">{{loadJob.statistics.recordsProcessedFailed }}</span>
         </div>
     </div>
-    <div class = "progress-container"*ngIf = "(stats.persistPass && stats.persistPass >=  0) || stats.persistFail && stats.persistFail >=  0" >
-        <div class = "bar-label">Persisted Records</div>    
-        <mat-progress-bar class = "load-progress load-success"  [color]="accent" mode="determinate" 
-        [value] = "stats.persistPass" 
-        >
-        </mat-progress-bar>
+</div>
+<div class = "progress-container"*ngIf = "(stats.persistPass && stats.persistPass >=  0) || stats.persistFail && stats.persistFail >=  0" >
+    <div class = "bar-label">Persisted Records</div>    
+    <mat-progress-bar class = "load-progress load-success"  [color]="accent" mode="determinate" 
+    [value] = "stats.persistPass" 
+    >
+    </mat-progress-bar>
 
-        <mat-progress-bar class = "load-progress load-fail" mode="determinate" 
-        [value] = "stats.persistFail"
-        >
-        </mat-progress-bar>
-        <div class = "label-row">
-            <div [style.width.%] = "stats.persistPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedPassed > 0">
-                    <span class = "count-row-label">{{loadJob.statistics.recordsPersistedPassed}}</span>
-            </div>
-            <div [style.width.%] = "stats.persistFail" class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedFailed > 0">
-                <span  class = "count-row-label">{{loadJob.statistics.recordsPersistedFailed}}</span>
-            </div>
+    <mat-progress-bar class = "load-progress load-fail" mode="determinate" 
+    [value] = "stats.persistFail"
+    >
+    </mat-progress-bar>
+    <div class = "label-row">
+        <div [style.width.%] = "stats.persistPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedPassed > 0">
+                <span class = "count-row-label">{{loadJob.statistics.recordsPersistedPassed}}</span>
         </div>
-    </div> 
+        <div [style.width.%] = "stats.persistFail" class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedFailed > 0">
+            <span  class = "count-row-label">{{loadJob.statistics.recordsPersistedFailed}}</span>
+        </div>
+    </div>
+</div> 
+
+
 </div>
 
 </div>
@@ -123,7 +125,7 @@
 </div>
 </div>
 <div class = "full-row" >
-    <button mat-button (click) = "clearJob()">New Data Upload</button>
+    <button mat-button (click) = "clearJob()">New Data Import</button>
     <span class = "middle-fill"></span>
     <span matTooltip = "{{loadJob.stop? 'The upload is no longer in progress': ''}}">
     <button mat-button *ngIf = "!monitor" [disabled] = "loadJob.stop" (click) = "refresh()" >Update</button>
