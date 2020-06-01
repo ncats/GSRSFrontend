@@ -60,8 +60,6 @@ export class MonitorComponent implements OnInit {
     this.stats.persistPass = (job.statistics.recordsPersistedSuccess) / this.max * 100;
     this.stats.processedFail = (job.statistics.recordsProcessedFailed + job.statistics.recordsProcessedSuccess) / this.max * 100;
     this.stats.processedPass = (job.statistics.recordsProcessedSuccess) / this.max * 100;
-    console.log(job.statistics);
-    console.log(this.stats);
   }
 
   clearJob(): void {
