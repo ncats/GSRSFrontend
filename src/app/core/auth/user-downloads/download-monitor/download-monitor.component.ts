@@ -19,7 +19,6 @@ export class DownloadMonitorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.id);
     this.refresh();
   }
 
@@ -33,7 +32,6 @@ export class DownloadMonitorComponent implements OnInit {
       if (this.download.finished) {
         this.download.finishedHuman = moment(this.download.finished).fromNow();
       }
-      console.log(response);
         if (this.download.status === 'RUNNING') {
           setTimeout(() => {
             this.refresh(true);
@@ -46,23 +44,18 @@ export class DownloadMonitorComponent implements OnInit {
 
   cancel() {
     this.authService.changeDownload(this.download.cancelUrl.url).subscribe(response => {
-      console.log(response);
       this.refresh();
     });
   }
 
   downloadExport() {
-    console.log('calling');
     this.authService.changeDownload(this.download.downloadUrl).subscribe(response => {
-      console.log(response);
       this.refresh();
     });
   }
 
   deleteDownload() {
-    console.log(this.download);
     this.authService.deleteDownload(this.download.removeUrl.url).subscribe(response => {
-      console.log(response);
      this.deleted = true;
     });
   }

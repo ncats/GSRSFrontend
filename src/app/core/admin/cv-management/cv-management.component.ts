@@ -22,9 +22,9 @@ export class CvManagementComponent implements OnInit {
   downloadHref: SafeUrl;
   searchControl = new FormControl();
   private searchTimer: any;
-  dictionary: any;
-  loading :boolean;
-
+  dictionary: Array< any >;
+  loading: boolean;
+  toggle: Array< boolean > = [];
 
 
   constructor(public cvService: ControlledVocabularyService,
@@ -52,7 +52,6 @@ export class CvManagementComponent implements OnInit {
           this.searchControl.valueChanges.subscribe(value => {
             this.filterList(value, this.vocabularies);
           }, error => {
-            console.log(error);
           });
         });
         this.downloadHref = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' +
@@ -74,7 +73,7 @@ export class CvManagementComponent implements OnInit {
 
   getPath(val: string): string {
     if (this.dictionary[val]) {
-      return this.dictionary[val]['fieldPath'];
+      return this.dictionary[val];
     } else {
       return '';
     }

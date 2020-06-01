@@ -14,7 +14,7 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
 
     @Input() job: ScheduledJob;
     @Input() pollIn: any;
-    monitor: any;
+    monitor: boolean;
     quickLoad = false;
     mess: any;
   constructor(
@@ -28,7 +28,6 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('destroyed');
     this.monitor = false;
     this.refresh(false);
     this.stopMonitor();
@@ -43,25 +42,20 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
   }
 
   refresh(spawn?: boolean) {
-    console.log('calling refresh');
-    console.log(spawn + " - " + this.monitor);
-    this.adminService.fetchJob(this.job.id).pipe(take(1)).subscribe( response =>{
+    this.adminService.fetchJob(this.job.id).pipe(take(1)).subscribe( response => {
       this.job = response;
-      if (this.job.cronSchedule){
-        if (!this.job.running && this.job.lastFinished){
-          this.job.lastDurationHuman=(this.job.lastFinished-this.job.lastStarted);
-        }
-      }
+      if (!this.job.running && this.job.lastFinished) {
+        this.job.lastDurationHuman = (this.job.lastFinished - this.job.lastStarted);
+     }
       this.quickLoad = false;
       if (this.monitor && spawn) {
-        console.log('both are true?');
-        this.mess = "Polling ... " + response.status;
-        if (this.job.running){
-          setTimeout(()=>{
+        this.mess = 'Polling ... ' + response.status;
+        if (this.job.running) {
+          setTimeout(() => {
             this.refresh(true);
           }, Math.min(this.untilNextRun(), 200));
-        }else{
-          setTimeout(()=>{
+        } else {
+          setTimeout(() => {
             this.refresh(true);
           }, Math.min(this.untilNextRun(), 10000));
         }
@@ -84,33 +78,33 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
 }
 
 disable (job: any) {
-  this.adminService.runJob(job["@disable"]).pipe(take(1)).subscribe( response =>{
+  this.adminService.runJob(job['@disable']).pipe(take(1)).subscribe( response => {
     this.refresh();
   });
 }
 
 enable(job: any) {
-      this.adminService.runJob(job["@enable"]).pipe(take(1)).subscribe( response =>{
+      this.adminService.runJob(job['@enable']).pipe(take(1)).subscribe( response => {
         this.refresh();
       });
 }
 
 execute(job: any) {
   this.quickLoad = true;
-  this.adminService.runJob(job["@execute"]).pipe(take(1)).subscribe( response =>{
+  this.adminService.runJob(job['@execute']).pipe(take(1)).subscribe( response => {
     this.refresh(true);
   }, error => {
-    setTimeout(()=>{this.refresh()});
+    setTimeout(() => {this.refresh(); } );
   });
 }
 cancel(job: any) {
-  this.adminService.runJob(job["@cancel"]).pipe(take(1)).subscribe( response =>{
+  this.adminService.runJob(job['@cancel']).pipe(take(1)).subscribe( response => {
     this.refresh();
   });
 }
 
-formatDate(ts){
-  return new Date(ts)+"";
+formatDate(ts) {
+  return new Date(ts) + '';
 }
 
 }

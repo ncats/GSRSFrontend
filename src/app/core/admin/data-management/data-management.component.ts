@@ -44,9 +44,7 @@ export class DataManagementComponent implements OnInit {
     formData.append('preserve-audit', this.audit.toString());
     formData.append('file-name', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
-     formData.forEach((value, key) => {
-      console.log(key + ' ' + value + '');
-    });
+
     this.adminService.loadData(formData).pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
 
@@ -58,13 +56,10 @@ export class DataManagementComponent implements OnInit {
 }
 
   onFileSelect(event): void {
-    console.log(event);
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.filename = file.name;
       this.uploadForm.get('file').setValue(file);
-      console.log(file);
-      console.log(file.name);
     }
   }
 

@@ -559,3 +559,7 @@ margin-left: 20px;
     min-width: 660px;
 }
 
+.disable-export {
+    pointer-events:none;
+  opacity:.5;
+}

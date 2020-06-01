@@ -51,6 +51,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   lastPage: number;
   etag: string;
   privateExport = false;
+  disableExport = false;
   isError = false;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
@@ -124,7 +125,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
-      console.log(auth);
       if (auth) {
         this.isLoggedIn = true;
       }
@@ -231,6 +231,12 @@ validatePageInput(event: any): boolean {
   }
 
   searchSubstances() {
+    if ((this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '') ||
+        (this.privateSequenceSearchTerm && this.privateSequenceSearchTerm !== '')) {
+          this.disableExport = true;
+        } else {
+          this.disableExport = false;
+        }
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
@@ -262,7 +268,6 @@ validatePageInput(event: any): boolean {
         sequenceSearchKey: this.privateSequenceSearchKey
       })
         .subscribe(pagingResponse => {
-          console.log(pagingResponse);
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.total % this.pageSize === 0) {
@@ -303,7 +308,6 @@ validatePageInput(event: any): boolean {
           }
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response;
-            console.log(response);
           });
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API cal');
@@ -342,8 +346,6 @@ validatePageInput(event: any): boolean {
   }
 
   export(url: string) {
-    console.log(url);
-    console.log(this.privateExport);
    this.authService.startUserDownload(url, this.privateExport).subscribe(response => {
     const params = {'total': this.totalSubstances};
     this.router.navigate(['/user-downloads/', response.id]);
@@ -663,6 +665,6 @@ validatePageInput(event: any): boolean {
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
   }
-  
+
 
 }

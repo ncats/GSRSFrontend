@@ -18,8 +18,8 @@ export class ScheduledJobsComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    setTimeout(()=>{
-      this.adminService.fetchJobs().pipe(take(1)).subscribe( resp =>{
+    setTimeout(() => {
+      this.adminService.fetchJobs().pipe(take(1)).subscribe( resp => {
         this.loading = false;
         this.jobs = resp.content;
       });

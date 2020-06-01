@@ -15,8 +15,22 @@
                   </ng-container>
 
                   <ng-container matColumnDef="path">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Path </th>
-                    <td mat-cell *matCellDef="let vocab">{{getPath(vocab.domain)}} </td>
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Substance Fields </th>
+                    <td mat-cell *matCellDef="let vocab; index as index" >
+                      <span class = "inline">
+                          <span >
+                              <span *ngFor = "let field of dictionary[vocab.domain]; index as i; last as last">
+                                  {{toggle[index] || i < 2? field+' ':''}}
+                                  {{(toggle[index] || i < 1) && !last? ', ':''}}
+                                  {{!toggle[index] && i === 1 && !last? '...':''}}
+                                  </span>
+                          </span>
+                          <span class = "show-button"
+                            *ngIf = "dictionary[vocab.domain] && dictionary[vocab.domain].length > 2">
+                            <a (click) = "toggle[index] = !toggle[index]">{{toggle[index]? 'hide': 'show all'}} </a>
+                          </span>
+                      </span>
+                    </td>
                   </ng-container>
 
                   <ng-container matColumnDef="type">

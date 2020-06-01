@@ -27,6 +27,7 @@ export class MonitorComponent implements OnInit {
   stats: any = {};
   hide = false;
   test = {t: 0, f: 0, f2: 0, t2: 0, t3: 0, t1: 0, f1: 0};
+  ellipses = '.';
   constructor(
     private activeRoute: ActivatedRoute,
     public adminService: AdminService,
@@ -46,6 +47,7 @@ export class MonitorComponent implements OnInit {
       this.stats.processedFail = 0;
       this.stats.processedPass = 0;
       this.humanizeFields(response);
+      this.changeEllipses();
       this.refresh(true);
       });
     });
@@ -86,7 +88,6 @@ export class MonitorComponent implements OnInit {
         }
       }
         this.loadJob = response;
-        console.log(response);
         this.humanizeFields(response);
         if (response.status !== 'COMPLETE') {
           setTimeout(() => {
@@ -104,15 +105,16 @@ export class MonitorComponent implements OnInit {
   }
 
   humanizeFields(job: UploadObject): void {
-    this.mixResultDisplay(job);
     this.dynamic = job.statistics.recordsPersistedSuccess +
     job.statistics.recordsPersistedFailed +
     job.statistics.recordsProcessedFailed +
     job.statistics.recordsExtractedFailed;
-    const end = job.stop || null;
-    this.humanTimeLeft = moment.duration(job.statistics.estimatedTimeLeft , 'milliseconds').humanize();
+    let end = job.stop || null;
+    const time = moment.duration(job.statistics.estimatedTimeLeft , 'milliseconds');
+    this.humanTimeLeft = time.humanize();
       if (!end) {
         this.averagePersistRate = 1000.0 / job.statistics.averageTimeToPersist;
+        end = new Date().getTime();
       } else {
         this.averagePersistRate = job.statistics.recordsPersistedSuccess * 1000 / (end - job.start);
       }
@@ -120,7 +122,6 @@ export class MonitorComponent implements OnInit {
       this.humanTimeTotal = moment.duration(end - job.start, 'milliseconds').humanize();
       // this.humanTimeTotal.full = this.toFullHumanTime(dur);
      // dur = moment.duration((end - job.start) + job.statistics.estimatedTimeLeft, 'milliseconds');
-     ///  console.log(dur);
 
       this.humanTimeEstimate = moment.duration((end - job.start) + job.statistics.estimatedTimeLeft, 'milliseconds').humanize();
       if (job.start) {
@@ -130,18 +131,6 @@ export class MonitorComponent implements OnInit {
         this.finishedHuman = moment(job.stop).fromNow();
       }
      //  this.humanTimeEstimate.full = this.toFullHumanTime(dur);
-  }
-
-  mixResultDisplay(job): void  {
-    this.stats.extractFail = (job.statistics.recordsExtractedFailed + job.statistics.recordsExtractedSuccess) / this.max * 100;
-    this.stats.extractPass = (job.statistics.recordsExtractedSuccess);
-    this.stats.persistFail = (job.statistics.recordsPersistedFailed + job.statistics.recordsPersistedSuccess) / this.max * 100;
-    this.stats.persistPass = (job.statistics.recordsPersistedSuccess);
-    this.stats.processedFail = (job.statistics.recordsProcessedFailed + job.statistics.recordsProcessedSuccess) / this.max * 100;
-    this.stats.processedPass = (job.statistics.recordsProcessedSuccess);
-    this.test.t3 = this.test.t1 + this.test.f1;
-
-    console.log(this.stats);
   }
 
   toFullHumanTime(sent): string {
@@ -165,6 +154,20 @@ export class MonitorComponent implements OnInit {
       result += sent.seconds() + ' seconds';
     }
     return result;
+  }
+
+  changeEllipses() {
+    if (this.loadJob && this.loadJob.status === 'RUNNING') {
+      switch (this.ellipses) {
+        case '.': this.ellipses = '..'; break;
+        case '..': this.ellipses = '...'; break;
+        case '...': this.ellipses = '.'; break;
+        default: this.ellipses = '.'; break;
+      }
+      setTimeout(() => {this.changeEllipses(); }, 1000);
+    } else {
+      this.ellipses = '';
+    }
   }
 
 }

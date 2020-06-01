@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./cache-summary.component.scss']
 })
 export class CacheSummaryComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ["database", "driver", "product", "latency", "connected"];
+  displayedColumns: string[] = ['database', 'driver', 'product', 'latency', 'connected'];
   health: HealthInfo;
   sub: Subscription;
   constructor(

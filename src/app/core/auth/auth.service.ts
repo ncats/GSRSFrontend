@@ -205,7 +205,6 @@ export class AuthService {
     if (privateExport) {
       fullUrl = fullUrl + '?publicOnly=false';
     }
-    console.log(privateExport + ' - ' +fullUrl);
     return this.http.get< any >(`${fullUrl}`);
   }
 
@@ -215,12 +214,10 @@ export class AuthService {
   }
 
   changeDownload(url: string): Observable< UserDownload > {
-    console.log(url);
     return this.http.get< any >(url);
   }
 
   deleteDownload(url: string): any {
-    console.log(url);
     return this.http.delete< any >(url, {observe: 'response'});
   }
 

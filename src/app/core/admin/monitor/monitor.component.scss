@@ -235,6 +235,15 @@ margin-bottom: auto;
     }
 }
 
+.large-val {
+    font-size: 19px;
+}
+
+.ellipses {
+    width: 20px;
+    min-width: 200px;
+}
+
 
   .overlap {
     ::ng-deep .mat-progress-bar-fill::after {
@@ -260,6 +269,7 @@ margin-bottom: auto;
       .count-row-label {
           margin-left: auto;
           margin-right: auto;
+          text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
       }
   }
 

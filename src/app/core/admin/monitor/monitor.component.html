@@ -6,7 +6,7 @@
     <div class = "full-row">
         <div class ="job-title">Importing {{loadJob.name}}</div>
         <span class = "middle-fill"></span>
-        <div>Status: {{loadJob.status}}</div>
+        <div class = "large-val">Status: {{loadJob.status}}<span class = "ellipses" *ngIf = "loadJob.status === 'RUNNING'">{{ellipses}}</span></div>
     </div>
 <div class = "lower-body">
 <div class = "loader-container">
@@ -26,184 +26,67 @@
 </div>
 <button mat-button (click) = "hide = !hide" class = 'hide-button'>{{hide? 'show':'hide'}} details</button>
 <div *ngIf = "!hide">
-<div class = "progress-container"  *ngIf = "(stats.extractPass && stats.extractPass >= 0) || stats.extractFail && stats.extractFail >= 0">
-<div class = "bar-label">Extracted Records</div>  
-    <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
-    [value] = "stats.extractPass"
-    >
-    </mat-progress-bar>
+    <div class = "progress-container"  *ngIf = "(stats.extractPass && stats.extractPass >= 0) || stats.extractFail && stats.extractFail >= 0">
+        <div class = "bar-label">Extracted Records</div>  
+        <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
+        [value] = "stats.extractPass"
+        >
+        </mat-progress-bar>
 
-    <mat-progress-bar class = "load-progress load-fail" [color]="primary"  mode="determinate" 
-    [value] = "stats.extractFail"
-     >
-    </mat-progress-bar>
-    <div class = "label-row">
-        <div [style.width.%] = "stats.extractPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedSuccess > 0">
-                <span class = "count-row-label">{{loadJob.statistics.recordsExtractedSuccess}}</span>
-        </div>
-        <div [style.width.%] = "stats.extractFail  - stats.extractPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedFailed > 0">
-            <span  class = "count-row-label">{{loadJob.statistics.recordsExtractedFailed}}</span>
-        </div>
-    </div>
-</div>
-<div class = "progress-container" *ngIf = "(stats.processedFail && stats.processedFail >=  0) || (stats.processedPass && stats.processedPass >=  0)">
-    <div class = "bar-label">Processed Records</div>    
-    <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
-    [value] = "stats.processedPass" 
-     >
-
-    </mat-progress-bar>
-
-    <mat-progress-bar class = "load-progress load-fail"  mode="determinate" 
-    [value] = "stats.processedFail"
-     >
-    </mat-progress-bar>
-    <div class = "label-row">
-        <div [style.width.%] = "(stats.processedPass)"  class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedSuccess > 0">
-                <span class = "count-row-label">{{loadJob.statistics.recordsProcessedSuccess}}</span>
-        </div>
-        <div [style.width.%] = "stats.processedFail - stats.processedPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedFailed > 0">
-            <span  class = "count-row-label">{{loadJob.statistics.recordsProcessedFailed }}</span>
-        </div>
-    </div>
-</div>
-<div class = "progress-container"*ngIf = "(stats.persistPass && stats.persistPass >=  0) || stats.persistFail && stats.persistFail >=  0" >
-    <div class = "bar-label">Persisted Records</div>    
-    <mat-progress-bar class = "load-progress load-success"  [color]="accent" mode="determinate" 
-    [value] = "stats.persistPass" 
-    >
-    </mat-progress-bar>
-
-    <mat-progress-bar class = "load-progress load-fail" mode="determinate" 
-    [value] = "stats.persistFail"
-    >
-    </mat-progress-bar>
-    <div class = "label-row">
-        <div [style.width.%] = "stats.persistPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedPassed > 0">
-                <span class = "count-row-label">{{loadJob.statistics.recordsPersistedPassed}}</span>
-        </div>
-        <div [style.width.%] = "stats.persistFail" class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedFailed > 0">
-            <span  class = "count-row-label">{{loadJob.statistics.recordsPersistedFailed}}</span>
-        </div>
-    </div>
-</div> 
-
-<div class = "progress-container" >
-    <div class = "bar-label">TEST</div>    
-    <mat-progress-bar class = "load-progress load-success"  [color]="accent" mode="determinate" 
-    [value] = "test.t1"
-    >
-    </mat-progress-bar>
-
-    <mat-progress-bar class = "load-progress load-fail" mode="determinate" 
-   [value] = "test.t3"
-    >
-    </mat-progress-bar>
-    <div class = "label-row">
-        <div [style.width.%] = "test.t1"  class = "count-cont">
-                <span class = "count-row-label">{{test.t1}}</span>
-        </div>
-        <div [style.width.%] = "test.f1" class = "count-cont" >
-            <span  class = "count-row-label">{{test.f1}}</span>
-        </div>
-    </div>
-</div> 
-
-<div class = "progress-container" >
-    <div class = "bar-label">TEST</div>    
-    <mat-progress-bar class = "load-progress load-success-old"  [color]="accent" mode="determinate" 
-    [value] = "test.t1"
-    >
-    </mat-progress-bar>
-
-    <mat-progress-bar class = "load-progress load-fail-old" mode="determinate" 
-   [value] = "test.f1"
-    >
-    </mat-progress-bar>
-   
-</div> 
-
-
-
-<div class = "progress-container" >
-<div class = "bar-label">TEST</div>    
-<mat-progress-bar class = "load-progress load-success-old"  [color]="accent" mode="determinate" 
-[value] = "test.t1"
->
-</mat-progress-bar>
-
-<mat-progress-bar class = "load-progress load-fail-old" mode="determinate" 
-[value] = "test.f1"
->
-</mat-progress-bar>
-</div> 
-<div>testing</div>
-
-<div>
-    <div class = "spinner-container" >
-
-            <div class = "spinner-row">
-                    <div class = "bar-label">Persisted</div>    
-                    <mat-progress-spinner class = "load-progress load-success"  [color]="accent" mode="determinate" 
-                    [value] = "(stats.persistPass / max)*(100)" >
-                    </mat-progress-spinner>
-              
-                    <mat-progress-spinner class = "load-progress mirror" mode="determinate" 
-                    [value] = "(stats.persistFail / max)*(100)">
-                    
-                    </mat-progress-spinner>
+        <mat-progress-bar class = "load-progress load-fail" [color]="primary"  mode="determinate" 
+        [value] = "stats.extractFail"
+        >
+        </mat-progress-bar>
+        <div class = "label-row">
+            <div [style.width.%] = "stats.extractPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedSuccess > 0">
+                    <span class = "count-row-label">{{loadJob.statistics.recordsExtractedSuccess}}</span>
             </div>
-
-            <div class = "spinner-row">
-                    <div class = "bar-label">Extracted</div>    
-                    <mat-progress-spinner class = "load-progress load-success"  [color]="accent" mode="determinate" 
-                    [value] = "(loadJob.statistics.recordsExtractedSuccess / max)*(100)" >
-                    </mat-progress-spinner>
-              
-                    <mat-progress-spinner class = "load-progress mirror" mode="determinate" 
-                    [value] = "(loadJob.statistics.recordsExtractedFailed / max)*(100)" >
-                    
-                    </mat-progress-spinner>
+            <div [style.width.%] = "stats.extractFail  - stats.extractPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsExtractedFailed > 0">
+                <span  class = "count-row-label">{{loadJob.statistics.recordsExtractedFailed}}</span>
             </div>
-
-            <div class = "spinner-row">
-                    <div class = "bar-label">Processed</div>    
-                    <mat-progress-spinner class = "load-progress load-success"  [color]="accent" mode="determinate" 
-                    [value] = "(stats.processedPass / max)*(100)" >
-                    </mat-progress-spinner>
-              
-                    <mat-progress-spinner class = "load-progress mirror" mode="determinate" 
-                    [value] = "(stats.processedFail / max)*(100)" >
-                    
-                    </mat-progress-spinner>
-                    
-            </div>
-
-
-        <div class = "spinner-row">
-                <div class = "bar-label">test</div>
-                <div class = "spinner-labels">
-                    <div *ngIf = "test.t1 > 0" class = "count-label">
-                            {{test.t1}}
-                    </div>
-                <mat-progress-spinner class = "load-progress load-success spinner"  [color]="accent" mode="determinate" diameter = "125"
-                [value] = "test.t1" >
-                </mat-progress-spinner>
-          
-                <mat-progress-spinner class = "load-progress mirror-test spinner" mode="determinate"  diameter = "125"
-                [value] = "test.f1">
-                </mat-progress-spinner>
-                <div *ngIf = "test.f1 > 0" class = "count-label">
-                        {{test.f1}} failed
-                </div>
-            </div>    
-
         </div>
+    </div>
+    <div class = "progress-container" *ngIf = "(stats.processedFail && stats.processedFail >=  0) || (stats.processedPass && stats.processedPass >=  0)">
+        <div class = "bar-label">Processed Records</div>    
+        <mat-progress-bar class = "load-progress load-success" [color]="accent" mode="determinate" 
+        [value] = "stats.processedPass" 
+        >
 
-        
-        
-       </div> 
-</div>
+        </mat-progress-bar>
+
+        <mat-progress-bar class = "load-progress load-fail"  mode="determinate" 
+        [value] = "stats.processedFail"
+        >
+        </mat-progress-bar>
+        <div class = "label-row">
+            <div [style.width.%] = "(stats.processedPass)"  class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedSuccess > 0">
+                    <span class = "count-row-label">{{loadJob.statistics.recordsProcessedSuccess}}</span>
+            </div>
+            <div [style.width.%] = "stats.processedFail - stats.processedPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsProcessedFailed > 0">
+                <span  class = "count-row-label">{{loadJob.statistics.recordsProcessedFailed }}</span>
+            </div>
+        </div>
+    </div>
+    <div class = "progress-container"*ngIf = "(stats.persistPass && stats.persistPass >=  0) || stats.persistFail && stats.persistFail >=  0" >
+        <div class = "bar-label">Persisted Records</div>    
+        <mat-progress-bar class = "load-progress load-success"  [color]="accent" mode="determinate" 
+        [value] = "stats.persistPass" 
+        >
+        </mat-progress-bar>
+
+        <mat-progress-bar class = "load-progress load-fail" mode="determinate" 
+        [value] = "stats.persistFail"
+        >
+        </mat-progress-bar>
+        <div class = "label-row">
+            <div [style.width.%] = "stats.persistPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedPassed > 0">
+                    <span class = "count-row-label">{{loadJob.statistics.recordsPersistedPassed}}</span>
+            </div>
+            <div [style.width.%] = "stats.persistFail" class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedFailed > 0">
+                <span  class = "count-row-label">{{loadJob.statistics.recordsPersistedFailed}}</span>
+            </div>
+        </div>
+    </div> 
 </div>
 
 </div>
