@@ -15,6 +15,8 @@ import { ApplicationModule} from './application/application.module';
 import { ProductModule} from './product/product.module';
 import { GeneralService} from './service/general.service';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApplicationsBrowseComponent } from './application/applications-browse/applications-browse.component';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
 import { SsoRefreshService } from './service/sso-refresh.service';
@@ -39,19 +41,18 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     RouterModule.forChild(fdaRoutes),
     DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
-    MatCardModule,
-    MatExpansionModule,
-    ClinicalTrialsModule.forRoot(),
-    MatTabsModule,
     ClinicalTrialsModule.forRoot(),
     ApplicationModule,
     ProductModule,
+    MatCardModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatTabsModule,
+    MatExpansionModule,
     MatProgressSpinnerModule
   ],
   declarations: [
     SubstanceCountsComponent
-    // FacetFilterPipe,
-    // FacetDisplayPipe
   ],
   exports: [],
   entryComponents: [

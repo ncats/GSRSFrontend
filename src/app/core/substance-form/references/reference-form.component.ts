@@ -22,7 +22,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   @Input() hideDelete = false;
   private overlayContainer: HTMLElement;
   deleteTimer: any;
-  showPrev: boolean = false;
+  showPrev = false;
   private subscriptions: Array<Subscription> = [];
   constructor(
     private cvService: ControlledVocabularyService,
@@ -101,7 +101,9 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       const dialogSubscription = dialogRef.afterClosed().subscribe(ref => {
         this.overlayContainer.style.zIndex = null;
        if (ref) {
-        this.fillReference(ref);
+         if (ref.citation && ref.citation !== '' && ref.docType && ref.docType !== '') {
+          this.fillReference(ref);
+        }
        }
       });
       this.subscriptions.push(dialogSubscription);
@@ -116,6 +118,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.reference.publicDomain = ref.publicDomain;
       this.reference.tags = ref.tags;
       this.reference.uploadedFile = ref.uploadedFile;
+      this.reference.url = ref.url || null;
+      this.reference.id = ref.id || null;
     }
 
   downloadDocument(url: string): void {

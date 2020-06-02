@@ -37,7 +37,7 @@ export class PropertyParameterFormComponent implements OnInit {
   }
 
   get isValid(): boolean {
-    return (this.privateParameter.name != null || this.privateParameter.name !== '')
-      && (this.privateParameter.type != null || this.privateParameter.type !== '');
+    return (this.privateParameter.name != null && this.privateParameter.name !== '')
+      && (this.privateParameter.type != null && this.privateParameter.type !== '');
   }
 }

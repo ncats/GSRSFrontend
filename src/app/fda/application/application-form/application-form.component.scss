@@ -52,6 +52,16 @@
   width: 100%;
 }
 
+.form-row {
+  display: flex;
+  width: 100%;
+
+  .col-1 {
+    width: calc((100% - 30px * 5) / 6);
+    margin-right: 30px;
+  }
+}
+
 .col-1 {
   /* width: 159.333px; */
   width: calc((100% - 30px * 5) / 6);
@@ -110,10 +120,6 @@
 
 .col-6 {
   width: 100%;
-}
-
-.validate-button{
-  margin-left:15px;
 }
 
 .hide-show-messages {
@@ -280,6 +286,17 @@
   color: red; 
 } 
 
+/* CV INPUT OVERWRITE WIDTH */
+.cvwidth {
+  .mat-form-field {
+    width: 20%;
+  }
+}
+
+.cvwidth2 {
+  width: 300px;
+}
+
 /* OVERWRITE MATERIAL INPUT FIELDS */
 .mat-form-field-infix {
   color: blue;
@@ -328,3 +345,12 @@
   cursor: not-allowed;
 } 
 */
+
+mat-hint {
+  color: red !important;
+}
+
+.errortext {
+  color: red;
+  font-size: 11px;
+}

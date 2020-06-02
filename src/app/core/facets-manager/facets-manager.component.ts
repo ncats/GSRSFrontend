@@ -398,31 +398,33 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   moreFacets(index: number, facet: Facet) {
+    this.facets[index].$isLoading = true;
     if (facet.$next == null) {
       facet.$next = facet._self.replace('fskip=0', 'fskip=10');
     }
-    const subscription = this.facetManagerService.getFacetsHandler(this.facets[index], '', facet.$next).subscribe(resp => {
+    this.facetManagerService.getFacetsHandler(this.facets[index], '', facet.$next).pipe(take(1)).subscribe(resp => {
       this.facets[index].$next = resp.nextPageUri;
       this.facets[index].$previous = resp.previousPageUri;
       this.facets[index].values = this.facets[index].values.concat(resp.content);
       this.facets[index].$fetched = this.facets[index].values;
       this.facets[index].$total = resp.ftotal;
-      subscription.unsubscribe();
+      this.facets[index].$isLoading = false;
     }, error => {
-      subscription.unsubscribe();
+      this.facets[index].$isLoading = false;
     });
   }
 
   lessFacets(index: number) {
+    this.facets[index].$isLoading = true;
     const nextUrl = this.facets[index].$next;
-    const subscription = this.facetManagerService.getFacetsHandler(this.facets[index], null, null).subscribe(response => {
+    this.facetManagerService.getFacetsHandler(this.facets[index], null, null).pipe(take(1)).subscribe(response => {
       this.facets[index].values = response.content;
       this.facets[index].$fetched = response.content;
       this.facets[index].$next = response.nextPageUri;
       this.facets[index].$previous = response.previousPageUri;
-      subscription.unsubscribe();
+      this.facets[index].$isLoading = false;
     }, error => {
-      subscription.unsubscribe();
+      this.facets[index].$isLoading = false;
     });
   }
 

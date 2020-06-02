@@ -1,6 +1,6 @@
 {
   "version": "2.5.1",
-  "contactEmail": "GSRSSupport@fda.hhs.gov", 
+  "contactEmail": "GSRSSupport@fda.hhs.gov",
   "substanceDetailsCards": [
     {
       "card": "substance-overview",
@@ -18,9 +18,9 @@
       "title": "primary definition",
       "filters": [
         {
-        "filterName": "equals",
-        "propertyToCheck": "definitionType",
-        "value": "ALTERNATIVE"
+          "filterName": "equals",
+          "propertyToCheck": "definitionType",
+          "value": "ALTERNATIVE"
         }
       ]
     },
@@ -44,8 +44,8 @@
       "title": "names",
       "filters": [
         {
-        "filterName": "exists",
-        "propertyToCheck": "names"
+          "filterName": "exists",
+          "propertyToCheck": "names"
         }
       ]
     },
@@ -97,10 +97,10 @@
       "title": "subunits",
       "filters": [
         {
-        "filterName": "equals",
-        "propertyToCheck": "substanceClass",
-        "value": "nucleicAcid"
-      },
+          "filterName": "equals",
+          "propertyToCheck": "substanceClass",
+          "value": "nucleicAcid"
+        },
         {
           "filterName": "exists",
           "propertyToCheck": "nucleicAcid.subunits"
@@ -218,9 +218,9 @@
       "title": "variant concepts",
       "filters": [
         {
-        "filterName": "exists",
-        "propertyToCheck": "relationships"
-      },
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        },
         {
           "filterName": "substanceRelationships",
           "value": "SUB_CONCEPT->SUBSTANCE"
@@ -253,8 +253,8 @@
       "title": "notes",
       "filters": [
         {
-        "filterName": "exists",
-        "propertyToCheck": "notes"
+          "filterName": "exists",
+          "propertyToCheck": "notes"
         }
       ]
     },
@@ -267,8 +267,8 @@
       "title": "references",
       "filters": [
         {
-        "filterName": "exists",
-        "propertyToCheck": "references"
+          "filterName": "exists",
+          "propertyToCheck": "references"
         }
       ]
     },
@@ -292,9 +292,9 @@
       "title": "concept definition",
       "filters": [
         {
-        "filterName": "equals",
-        "propertyToCheck": "substanceClass",
-        "value": "concept"
+          "filterName": "equals",
+          "propertyToCheck": "substanceClass",
+          "value": "concept"
         }
       ]
     },
@@ -303,9 +303,9 @@
       "title": "display structure",
       "filters": [
         {
-        "filterName": "equals",
-        "propertyToCheck": "substanceClass",
-        "value": "polymer"
+          "filterName": "equals",
+          "propertyToCheck": "substanceClass",
+          "value": "polymer"
         }
       ]
     },
@@ -329,10 +329,10 @@
       "title": "Structural Units",
       "filters": [
         {
-        "filterName": "equals",
-        "propertyToCheck": "substanceClass",
-        "value": "polymer"
-      },
+          "filterName": "equals",
+          "propertyToCheck": "substanceClass",
+          "value": "polymer"
+        },
         {
           "filterName": "exists",
           "propertyToCheck": "polymer.structuralUnits"
@@ -359,10 +359,10 @@
       "title": "specified substance constituents",
       "filters": [
         {
-        "filterName": "equals",
-        "propertyToCheck": "substanceClass",
-        "value": "specifiedSubstanceG1"
-      },
+          "filterName": "equals",
+          "propertyToCheck": "substanceClass",
+          "value": "specifiedSubstanceG1"
+        },
         {
           "filterName": "exists",
           "propertyToCheck": "specifiedSubstance.constituents"
@@ -389,8 +389,8 @@
       "title": "substance modifications",
       "filters": [
         {
-        "filterName": "anyExists",
-        "propertyToCheck": "modifications.structuralModifications|modifications.physicalModifications|modifications.agentModifications"
+          "filterName": "anyExists",
+          "propertyToCheck": "modifications.structuralModifications|modifications.physicalModifications|modifications.agentModifications"
         }
       ]
     },
@@ -429,8 +429,8 @@
       "title": "characteristic attributes",
       "filters": [
         {
-        "filterName": "exists",
-        "propertyToCheck": "properties"
+          "filterName": "exists",
+          "propertyToCheck": "properties"
         }
       ]
     },
@@ -444,44 +444,44 @@
         }
       ]
     }
-  ], 
+  ],
   "facets": {
     "substances": {
       "default": [
-          "Deprecated",
-          "Record Status",
-          "Substance Class",
-          "GInAS Tag",
-          "Relationships",
-          "Code System",
-          "ATC Level 1",
-          "ATC Level 2",
-          "ATC Level 3",
-          "ATC Level 4",
-          "WHO-SDG Level 1",
-          "WHO-SDG Level 2",
-          "Application Status",
-          "Application Type",
-          "DME Reactions",
-          "Material Type",
-          "Family",
-          "Parts",
-          "Moiety Type",
-          "Molecular Weight",
-          "SubstanceStereochemistry",
-          "root_approved",
-          "root_lastEdited",
-          "Approved By", 
-          "root_lastEditedBy",
-          "Record Level Access",
-          "Display Name Level Access",
-          "Definition Level Access",
-          "Protein Type",
-          "modified",
-          "Product Ingredient Type",
-          "Product Name Type",
-          "Product Dosage Form",
-          "Definition Level"
+        "Deprecated",
+        "Record Status",
+        "Substance Class",
+        "GInAS Tag",
+        "Relationships",
+        "Code System",
+        "ATC Level 1",
+        "ATC Level 2",
+        "ATC Level 3",
+        "ATC Level 4",
+        "WHO-SDG Level 1",
+        "WHO-SDG Level 2",
+        "Application Status",
+        "Application Type",
+        "DME Reactions",
+        "Material Type",
+        "Family",
+        "Parts",
+        "Moiety Type",
+        "Molecular Weight",
+        "SubstanceStereochemistry",
+        "root_approved",
+        "root_lastEdited",
+        "Approved By",
+        "root_lastEditedBy",
+        "Record Level Access",
+        "Display Name Level Access",
+        "Definition Level Access",
+        "Protein Type",
+        "modified",
+        "Product Ingredient Type",
+        "Product Name Type",
+        "Product Dosage Form",
+        "Definition Level"
       ]
     },
     "applications": {
@@ -549,6 +549,11 @@
           "display": "Register Application",
           "path": "application/register",
           "order": 41
+        },
+        {
+          "display": "Register Product",
+          "path": "product/register",
+          "order": 42
         }
       ]
     }

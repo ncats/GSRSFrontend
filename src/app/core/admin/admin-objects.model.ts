@@ -7,9 +7,9 @@ export interface HealthInfo {
     hostname: string;
     runtime: {
         availableProcessors: number;
-        freeMemory:number;
-        totalMemory:number;
-        maxMemory:number;
+        freeMemory: number;
+        totalMemory: number;
+        maxMemory: number;
     };
     databaseInformation: Array< DatabaseInfo >;
     cacheInfo: {
@@ -34,7 +34,9 @@ export interface UserEditObject {
         isActive: boolean;
         email: string;
         roles: Array< any >;
-        groups : Array< any >;
+        groups: Array< any >;
+        password?: string;
+        index?: any;
 }
 
 export interface UploadObject {

@@ -18,8 +18,7 @@ export class PreviousReferencesDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  fillReference(ref:SubstanceReference) {
+  fillReference(ref: SubstanceReference) {
     this.dialogRef.close(ref);
-    console.log('test');
   }
 }

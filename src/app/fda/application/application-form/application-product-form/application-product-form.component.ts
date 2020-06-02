@@ -4,22 +4,17 @@ import { ControlledVocabularyService } from '../../../../core/controlled-vocabul
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationService } from '../../service/application.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 
 @Component({
-  selector: 'app-product-form',
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss']
+  selector: 'app-application-product-form',
+  templateUrl: './application-product-form.component.html',
+  styleUrls: ['./application-product-form.component.scss']
 })
-export class ProductFormComponent implements OnInit {
+export class ApplicationProductFormComponent implements OnInit {
 
   @Input() application: ApplicationSrs;
-  productNameTypeList: Array<VocabularyTerm> = [];
-  dosageFormList: Array<VocabularyTerm> = [];
-  routeAdminList: Array<VocabularyTerm> = [];
-  unitPresentationList: Array<VocabularyTerm> = [];
-  unitList: Array<VocabularyTerm> = [];
   reviewProductMessage: Array<any> = [];
   productMessage = '';
   username = null;
@@ -32,18 +27,6 @@ export class ProductFormComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.authService.getUser();
-    this.getVocabularies();
-  }
-
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('PROD_PRODUCT_NAME_TYPE', 'DOSAGE_FORM', 'PROD_ROUTE_OF_ADMIN',
-      'PROD_UNIT_PRESENTATION', 'APPLICATION_UNIT').subscribe(response => {
-        this.productNameTypeList = response['PROD_PRODUCT_NAME_TYPE'].list;
-        this.dosageFormList = response['DOSAGE_FORM'].list;
-        this.routeAdminList = response['PROD_ROUTE_OF_ADMIN'].list;
-        this.unitPresentationList = response['PROD_UNIT_PRESENTATION'].list;
-        this.unitList = response['APPLICATION_UNIT'].list;
-      });
   }
 
   addNewProduct() {
@@ -56,7 +39,7 @@ export class ProductFormComponent implements OnInit {
 
   confirmDeleteProduct(prodIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Product Details ' + (prodIndex + 1) + ' data?'
+      data: {message: 'Are you sure you want to delete Product Details ' + (prodIndex + 1) + ' data?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -70,10 +53,9 @@ export class ProductFormComponent implements OnInit {
     this.applicationService.deleteProduct(prodIndex);
   }
 
-
   confirmDeleteProductName(prodIndex: number, prodNameIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?'
+      data: {message: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -94,7 +76,7 @@ export class ProductFormComponent implements OnInit {
   confirmReviewProduct(prodIndex: number) {
     if (this.application.applicationProductList[prodIndex].reviewDate) {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        data: 'Are you sure you want to overwrite Reviewed By and Review Date?'
+        data: {message: 'Are you sure you want to overwrite Reviewed By and Review Date?'}
       });
 
       dialogRef.afterClosed().subscribe(result => {

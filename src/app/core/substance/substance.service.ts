@@ -576,20 +576,14 @@ export class SubstanceService extends BaseHttpService {
   }
 
 
-  getSubstanceReferences(top?: number, skip?: number): Observable<any> {
-    if (!top) {
-      const top = 10;
-    }
-    if (!skip) {
-      const skip = 0;
-    }
-  let url = `${this.configService.configData.apiBaseUrl}api/v1/references?top=${top}&skip=${skip}`;
+  getSubstanceReferences(top: number = 10, skip: number = 0): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/references?top=${top}&skip=${skip}&order=lastEdited`;
     return this.http.get< any>(url);
   }
 
   hasInxightLink(ID: string): Observable<any> {
     const url = `https://drugs.ncats.io/api/v1/substances/search?q=root_approvalID:${ID}&fdim=1`;
-    return this.http.jsonp(url, 'callback' )
+    return this.http.jsonp(url, 'callback' );
 
   }
 

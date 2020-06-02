@@ -5,6 +5,13 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
+  <div class = "flex-column">
+      <div class="delete-container">
+          <button mat-icon-button matTooltip="Delete property" (click)="deleteProperty()">
+            <mat-icon svgIcon="delete_forever"></mat-icon>
+          </button>
+        </div>
+  </div>
   <div class="flex-column referenced-substance"  *ngIf = "property.propertyType !== 'PROTEIN FEATURE' && property.propertyType !== 'NUCLEIC ACID FEATURE'">
     <app-substance-selector (selectionUpdated)="referencedSubstanceUpdated($event)"
       eventCategory="substancePropertyReferencedSub" placeholder="Referenced Substance" header="Referenced Substance"
@@ -13,11 +20,6 @@
   </div>
   <div class="flex-column form-content">
     <div class="form-row">
-      <div class="delete-container">
-        <button mat-icon-button matTooltip="Delete property" (click)="deleteProperty()">
-          <mat-icon svgIcon="delete_forever"></mat-icon>
-        </button>
-      </div>
       <app-cv-input required = 'true' class="name property-name" key = "Property Name"  title = "Name" [model] = "property.name"
                     (valueChange)= "property.name = $event">
       </app-cv-input>
@@ -53,7 +55,11 @@
           </button>
         </h4>
         <mat-list *ngIf="property.parameters">
-          <a mat-list-item (click)="openPropertyParameter(parameter)" *ngFor="let parameter of property.parameters">
+            <div  mat-list-item *ngFor="let parameter of property.parameters; index as index" >
+               <button mat-icon-button (click) = "deleteParameter(index)"  class = "parameter-delete-icon">
+                 <mat-icon svgIcon="delete_forever"></mat-icon>
+                </button>
+
             <span>{{parameter.name}}</span>
             <span *ngIf="parameter.value != null">
               <span>
@@ -132,7 +138,10 @@
                 {{parameter.value.nonNumericValue}}
               </span>
             </span>
-          </a>
+            <button mat-icon-button (click)="openPropertyParameter(parameter)"   class = "parameter-icon">
+                <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+        </div>
         </mat-list>
       </div>
     </div>

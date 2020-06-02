@@ -7,7 +7,33 @@
       <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
     <span class="middle-fill"></span>
-    <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
+    <!-- Register and View Application buttons -->
+    <span *ngIf="application">
+      <span *ngIf="application.id">
+        <button mat-flat-button color="primary" [routerLink]="['/browse-applications']" matTooltip='Browse Application'>
+          Browse Application
+        </button>&nbsp;&nbsp;&nbsp;
+        <button mat-flat-button color="primary" [routerLink]="['/application/register']"
+          matTooltip='Register a New Application'>
+          Register
+        </button>&nbsp;&nbsp;&nbsp;
+        <button mat-flat-button color="primary" [routerLink]="['/applicationDetails', application.id]"
+          matTooltip='View this Application Record'>View
+        </button>&nbsp;&nbsp;&nbsp;
+        <span *ngIf="isAdmin">
+          <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
+            matTooltip='Delete this Application'>
+            Delete
+          </button>&nbsp;&nbsp;&nbsp;
+        </span>
+      </span>
+    </span>
+
+    <!-- Validate and Submit Button -->
+    &nbsp;
+    <button mat-flat-button color="primary" (click)="validate()">Validate and Submit</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
   </div>
 
   <!-- Validation Message Display -->
@@ -46,14 +72,13 @@
   </div>
 </div>
 
-
 <!-- Display Form Fields -->
 
 <div class="form-content-container">
   <div class="scrollable-container">
     <div class="cards-container">
-    
-      <div class="" *ngIf="application">    
+
+      <div class="" *ngIf="application">
         <div class="title_box">
           <div class="title">
             {{title}}
@@ -65,7 +90,6 @@
                 Provenance: DARRTS (some fields are non-editable)
               </span>
             </div>
-            <!--
             <br>
             <div>
               <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
@@ -74,14 +98,18 @@
               <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Modify Date:</span> {{application.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
             </div>
-          -->
           </div>
         </div>
-      
+
         <mat-card class="bordergray" *ngIf="application">
           <mat-card-content>
 
-            <div class="row">
+            <div class="form-row">
+              <app-cv-input class="col-1" [disable]="isDisableData" required='true' domain="CENTER" title="Center"
+                name="center" [model]="application.center" (valueChange)="application.center = $event">
+              </app-cv-input>
+
+              <!--
               <mat-form-field class="col-1">
                 <mat-label>Center</mat-label>
                 <mat-select matNativeControl [(ngModel)]="application.center" name="center" required>
@@ -90,51 +118,69 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
+            -->
+              <app-cv-input class="col-1" [disable]="isDisableData" required='true' domain="APPLICATION_TYPE"
+                title="appType" name="appType" [model]="application.appType"
+                (valueChange)="application.appType = $event">
+              </app-cv-input>
 
               <mat-form-field class="col-1">
-                <mat-label>Application Type</mat-label>
-                <mat-select matNativeControl [(ngModel)]="application.appType" name="appType" required>
-                  <mat-option *ngFor="let appType of appTypeList" [value]="appType.value">
-                    {{appType.display}}
-                  </mat-option>
-                </mat-select>
+                <input matInput [disabled]="isDisableData" placeholder="Application Number"
+                  [(ngModel)]="application.appNumber" name="appNumber" required />
               </mat-form-field>
 
-              <mat-form-field class="col-1">
-                <input matInput placeholder="Application Number" [(ngModel)]="application.appNumber" name="appNumber"
-                  required />
-              </mat-form-field>
+              <app-cv-input class="col-1" [disable]="isDisableData" domain="APPLICATION_STATUS"
+                title="Application Status" name="status" [model]="application.status"
+                (valueChange)="application.status = $event">
+              </app-cv-input>
 
               <mat-form-field class="col-1">
-                <mat-label>Public Domain</mat-label>
-                <mat-select matNativeControl [(ngModel)]="application.publicDomain" name="publicDomain">
-                  <mat-option *ngFor="let publicDomain of publicDomainList" [value]="publicDomain.value">
-                    {{publicDomain.display}}
-                  </mat-option>
-                </mat-select>
+                <input matInput [disabled]="isDisableData" placeholder="Submit Date (mm/dd/yyyy)"
+                  [(ngModel)]="application.submitDate" name="submitDate" (change)="validateSubmitDate()" />
+                <mat-hint *ngIf="submitDateMessage">{{submitDateMessage}}</mat-hint>
               </mat-form-field>
 
+              <!--
               <mat-form-field class="col-1">
-                <input matInput placeholder="Non Proprietary Name" [(ngModel)]="application.nonProprietaryName"
-                  name="nonProprietaryName" />
+                <input matInput name="submitDateName" [matDatepicker]="pickerSubmit" [disabled]="isDisableData"
+                   placeholder="Submit Date (mm/dd/yyyy)" format="MM/dd/yyyy"
+                  [(ngModel)]="application.submitDate" (dateChange)="dateChangeEventSubmitDate($event)"
+                  (dateInput)="dateInputEventSubmitDate($event)">
+                <mat-datepicker-toggle matSuffix [for]="pickerSubmit"></mat-datepicker-toggle>
+                <mat-datepicker #pickerSubmit></mat-datepicker>
+                
+                <mat-error *ngIf="appForm.get('submitDateControl').hasError('minlength')">Min 8 characters
+                </mat-error>
+            
+              <mat-hint *ngIf="submitDateMessage">{{submitDateMessage}}</mat-hint>
               </mat-form-field>
+            -->
+
+              <!--
+              <mat-form-field class="col-1">
+                <input matInput [matDatepicker]="pickerStatus" placeholder="Status Date (mm/dd/yyyy)"
+                  [(ngModel)]="application.statusDate">
+                <mat-datepicker-toggle matSuffix [for]="pickerStatus"></mat-datepicker-toggle>
+                <mat-datepicker #pickerStatus></mat-datepicker>
+              </mat-form-field>
+            -->
 
               <mat-form-field class="col-1">
-                <input matInput placeholder="Submit Date" [(ngModel)]="application.submitDate" name="submitDate" />
+                <input matInput [disabled]="isDisableData" placeholder="Status Date (mm/dd/yyyy)"
+                  [(ngModel)]="application.statusDate" name="statusDate" (change)="validateStatusDate()" />
+                <mat-hint *ngIf="statusDateMessage">{{statusDateMessage}}</mat-hint>
               </mat-form-field>
             </div>
 
 
-            <div class="row">
-              <mat-form-field class="col-1">
-                <mat-label>Application Status</mat-label>
-                <mat-select matNativeControl [disabled]="isDisableData" [(ngModel)]="application.status" name="status">
-                  <mat-option *ngFor="let appStatus of appStatusList" [value]="appStatus.value">
-                    {{appStatus.display}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+            <div class="form-row">
 
+              <app-cv-input class="col-1" [disable]="isDisableData" domain="APPLICATION_SUB_TYPE"
+                title="Application Sub Type" name="appSubType" [model]="application.appSubType"
+                (valueChange)="application.appSubType = $event">
+              </app-cv-input>
+
+              <!--
               <mat-form-field class="col-1">
                 <mat-label>Application Sub Type</mat-label>
                 <mat-select matNativeControl [disabled]="isDisableData" [(ngModel)]="application.appSubType"
@@ -144,16 +190,21 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-
+            -->
               <mat-form-field class="col-3">
-                <input matInput placeholder="Division Class Desc" [disabled]="isDisableData"
+                <input matInput [disabled]="isDisableData" placeholder="Division Class Desc"
                   [(ngModel)]="application.divisionClassDesc" name="divisionClassDesc" />
               </mat-form-field>
 
+              <app-cv-input class="col-1" domain="PUBLIC_DOMAIN" title="Public Domain" name="publicDomain"
+                [model]="application.publicDomain" (valueChange)="application.publicDomain = $event">
+              </app-cv-input>
+
               <mat-form-field class="col-1">
-                <input matInput placeholder="Status Date" [disabled]="isDisableData"
-                  [(ngModel)]="application.statusDate" name="statusDate" />
+                <input matInput placeholder="Non Proprietary Name" [(ngModel)]="application.nonProprietaryName"
+                  name="nonProprietaryName" />
               </mat-form-field>
+
             </div>
 
 
@@ -211,13 +262,13 @@
             </div> <!-- Indication Loop-->
 
             <!-- Product Form -->
-            <app-product-form [application]="application"></app-product-form>
+            <app-application-product-form [application]="application"></app-application-product-form>
 
           </mat-card-content>
 
         </mat-card>
         <br>
-        <br><br>
+        <br>
       </div>
     </div>
   </div>

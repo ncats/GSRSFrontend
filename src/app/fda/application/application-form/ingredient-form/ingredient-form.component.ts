@@ -4,7 +4,7 @@ import { ControlledVocabularyService } from '../../../../core/controlled-vocabul
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationService } from '../../service/application.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SubstanceSearchSelectorComponent } from '../../../substance-search-select/substance-search-selector.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -20,9 +20,6 @@ export class IngredientFormComponent implements OnInit {
   @Input() ingredIndex: number;
   @Input() totalIngredient: number;
 
-  ingredientTypeList: Array<VocabularyTerm> = [];
-  unitList: Array<VocabularyTerm> = [];
-  gradeList: Array<VocabularyTerm> = [];
   ingredientName: string;
   ingredientNameSubstanceUuid: string;
   ingredientNameBdnumOld: string;
@@ -45,20 +42,11 @@ export class IngredientFormComponent implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       this.username = this.authService.getUser();
-      this.getVocabularies();
       this.ingredientNameBdnumOld = this.ingredient.bdnum;
       this.basisofStrengthBdnumOld = this.ingredient.basisOfStrengthBdnum;
       this.getSubstanceId(this.ingredient.bdnum, 'ingredientname');
       this.getSubstanceId(this.ingredient.basisOfStrengthBdnum, 'basisofstrength');
     }, 600);
-  }
-
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('INGREDIENT_TYPE', 'PROD_UNIT', 'PROD_GRADE').subscribe(response => {
-      this.ingredientTypeList = response['INGREDIENT_TYPE'].list;
-      this.unitList = response['PROD_UNIT'].list;
-      this.gradeList = response['PROD_GRADE'].list;
-    });
   }
 
   addNewIngredient(prodIndex: number) {
@@ -67,7 +55,7 @@ export class IngredientFormComponent implements OnInit {
 
   confirmDeleteIngredient(prodIndex: number, ingredIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Ingredient Details ' + (ingredIndex + 1) + '?'
+      data: {message: 'Are you sure you want to delete Ingredient Details ' + (ingredIndex + 1) + '?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -88,7 +76,7 @@ export class IngredientFormComponent implements OnInit {
   confirmReviewIngredient() {
     if (this.ingredient.reviewDate) {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        data: 'Are you sure you want to overwrite Reviewed By and Review Date?'
+        data: {message: 'Are you sure you want to overwrite Reviewed By and Review Date?'}
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -112,7 +100,7 @@ export class IngredientFormComponent implements OnInit {
 
   confirmDeleteIngredientName(ingredIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Ingredient Name ' + (ingredIndex + 1) + '?'
+      data: {message: 'Are you sure you want to delete Ingredient Name ' + (ingredIndex + 1) + '?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -137,7 +125,7 @@ export class IngredientFormComponent implements OnInit {
 
   confirmDeleteBasisOfStrength(ingredIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: 'Are you sure you want to delete Basis of Strength ' + (ingredIndex + 1) + '?'
+      data: {message: 'Are you sure you want to delete Basis of Strength ' + (ingredIndex + 1) + '?'}
     });
 
     dialogRef.afterClosed().subscribe(result => {

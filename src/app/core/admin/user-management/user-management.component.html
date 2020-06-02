@@ -1,25 +1,23 @@
 
 <div class = "user-container">
 <div class = "flex-row spaced">
-
-    <div class = "top-button">
-        <mat-form-field>
-            <mat-label>Edit user by UserName</mat-label>
-           <input matInput [(ngModel)] = 'userID' name ='id' (keydown.enter) = "editUserByName(userID)" />
-           <span class = "user-alert">{{alert}}</span>
-         </mat-form-field>
-    </div>
-    <div class = "top-button" *ngIf = "!showAll">
-        <button mat-button (click) = "showAllUsers()">Show All users</button>
-      </div>
-
     <div class = "top-button">
         <button mat-button (click) = "addUser()">Add User</button>
     </div>
    
-    
-    
+    <div class = "top-button" *ngIf = "!showAll">
+        <button mat-button (click) = "showAllUsers()">Show All users</button>
+      </div>
+
+      <div class = "top-button">
+          <mat-form-field>
+              <mat-label>Edit user by UserName</mat-label>
+             <input matInput [(ngModel)] = 'userID' name ='id' (keydown.enter) = "editUserByName(userID)" />
+             <span class = "user-alert">{{alert}}</span>
+           </mat-form-field>
+      </div>
 </div>
+
 <div class = "responsive" *ngIf = "loading === true">
     <div class = "loading-container" >
         <mat-progress-spinner
@@ -30,7 +28,6 @@
       </div>
 </div>
 
-
 <div class = "responsive" *ngIf = "loading === false && showAll === true">
 
   <div class = "form-row">
@@ -40,7 +37,7 @@
       <span class="middle-fill"></span>
 
   <mat-form-field [floatLabel]="'never'" class="search">
-    <input matInput placeholder="Search" [formControl]="searchControl">
+    <input matInput placeholder="Search Users" [formControl]="searchControl">
   </mat-form-field>
 </div>
 <table mat-table [dataSource] = "paged"  matSort (matSortChange)="sortData($event)">
