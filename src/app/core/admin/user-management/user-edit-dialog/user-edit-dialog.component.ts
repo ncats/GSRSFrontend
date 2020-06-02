@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { isString } from 'util';
 import { IfStmt } from '@angular/compiler';
-import { AuthService } from '@gsrs-core/auth';
+import { AuthService, Auth } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 
@@ -14,7 +14,7 @@ import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 })
 export class UserEditDialogComponent implements OnInit {
   user: any;
-  userID: any;
+  userID: string;
   oldPassword: string;
   originalName: string;
   newPassword: string;
@@ -118,7 +118,7 @@ export class UserEditDialogComponent implements OnInit {
     if (this.changePassword && this.newPassword !== '' ) {
       this.message = 'Cancel or submit new password to save other changes';
     } else {
-      const rolesArr = [];
+    const rolesArr = [];
     this.roles.forEach(role => {
       if (role.hasRole) {
         rolesArr.push(role.name);
@@ -169,7 +169,7 @@ export class UserEditDialogComponent implements OnInit {
           groups.push(group.name);
         }
       });
-      const userEditObj = {
+      const userEditObj: UserEditObject = {
         'username': this.user.user.username,
         'isAdmin': this.user.user.admin,
         'isActive': this.user.active,

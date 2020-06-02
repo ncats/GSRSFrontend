@@ -9,8 +9,9 @@ import { LoadingService } from '../loading/loading.service';
 import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
 import { MatBottomSheet, MatBottomSheetRef, MatDialog } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
-import { navItems } from './nav-items.constant';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
+import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
+import { NavItem } from '../config/config.model';
 
 @Component({
   selector: 'app-base',
@@ -39,7 +40,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   version?: string;
   appId: string;
   clasicBaseHref: string;
-  navItems = navItems;
+  navItems: Array<NavItem>;
 
   constructor(
     private router: Router,
@@ -49,12 +50,14 @@ export class BaseComponent implements OnInit, OnDestroy {
     private overlayContainerService: OverlayContainer,
     private loadingService: LoadingService,
     private bottomSheet: MatBottomSheet,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private substanceTextSearchService: SubstanceTextSearchService
   ) {
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.classicLinkQueryParamsString = '';
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
+    this.navItems = this.configService.configData.navItems;
   }
 
   ngOnInit() {
@@ -91,33 +94,6 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.environment = this.configService.environment;
     this.appId = this.environment.appId;
 
-    if (this.configService.configData.navItems && this.configService.configData.navItems.length) {
-
-      const filteredNavItems = this.configService.configData.navItems.filter(navItem => {
-        if (navItem.children != null && navItem.children.length > 0) {
-          let isNotExisting = true;
-          for (let i = 0; i < this.navItems.length; i++) {
-            if (this.navItems[i].display === navItem.display && this.navItems[i].children != null) {
-              this.navItems[i].children = this.navItems[i].children.concat(navItem.children);
-              this.navItems[i].children.sort((a, b) => {
-                return a.order - b.order;
-              });
-              isNotExisting = false;
-              break;
-            }
-          }
-          return isNotExisting;
-        } else {
-          return true;
-        }
-      });
-
-      this.navItems = this.navItems.concat(filteredNavItems);
-      this.navItems.sort((a, b) => {
-        return a.order - b.order;
-      });
-    }
-
     this.logoSrcPath = `${this.environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
 
     const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
@@ -136,6 +112,12 @@ export class BaseComponent implements OnInit, OnDestroy {
 
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
+
+    this.substanceTextSearchService.registerSearchComponent('main-substance-search');
+    const cleanSearchSubscription = this.substanceTextSearchService.cleanSearchComponentEvent('main-substance-search').subscribe(() => {
+      this.searchValue = '';
+    });
+    this.subscriptions.push(cleanSearchSubscription);
   }
 
   ngOnDestroy() {
@@ -359,8 +341,6 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
-      if (response ) {
-      }
     });
   }
 

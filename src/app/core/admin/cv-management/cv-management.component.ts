@@ -26,7 +26,6 @@ export class CvManagementComponent implements OnInit {
   loading: boolean;
   toggle: Array< boolean > = [];
 
-
   constructor(public cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,

@@ -55,6 +55,7 @@ export class UserProfileComponent implements OnInit {
           this.newPassword = '';
           this.newPasswordConfirm = '';
           this.oldPassword = '';
+          this.changePassword = false;
         }, error => {
           this.loading = false;
           if (error.error && isString(error.error) ) {
@@ -63,7 +64,7 @@ export class UserProfileComponent implements OnInit {
             this.newPassword = '';
             this.newPasswordConfirm = '';
             this.changePassword = !this.changePassword;
-            this.message = 'Error: updated successfully';
+            this.message = 'Error: unknown error';
           }
         });
   }
