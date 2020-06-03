@@ -38,3 +38,33 @@ export interface UserEditObject {
         password?: string;
         index?: any;
 }
+
+export interface UploadObject {
+    statistics?: UploadStatistics;
+    keys?: Array< any >;
+    id: any;
+    message?: string;
+    start?: number;
+    stop?: number;
+    name?: string;
+    status: string;
+    version?: number;
+    _self?: {
+        type: string,
+        url: string
+        };
+}
+
+export interface UploadStatistics {
+    totalRecords: {
+        count: number;
+    };
+    averageTimeToPersist?: number;
+    estimatedTimeLeft?: number;
+    recordsExtractedFailed?: number;
+    recordsExtractedSuccess?: number;
+    recordsPersistedFailed?: number;
+    recordsPersistedSuccess?: number;
+    recordsProcessedFailed?: number;
+    recordsProcessedSuccess?: number;
+}

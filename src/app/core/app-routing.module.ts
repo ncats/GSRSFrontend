@@ -14,6 +14,10 @@ import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-s
 import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate-substance-form.guard';
 import { GuidedSearchComponent } from './guided-search/guided-search.component';
 import { AdminComponent } from '@gsrs-core/admin/admin.component';
+import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
+import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-downloads.component';
+import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
+import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { CanActivateAdminPage } from './admin/can-activate-admin-page';
 
 const childRoutes: Routes = [
@@ -74,7 +78,26 @@ const childRoutes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate: [CanActivateAdminPage]
+    canActivate: [CanActivateAdmin]
+
+  },
+  {
+    path: 'monitor/:id',
+    component: MonitorComponent,
+    canActivate: [CanActivateAdmin]
+  },
+  {
+    path: 'profile',
+    component: UserProfileComponent
+  },
+  {
+    path: 'user-downloads',
+    component: UserDownloadsComponent
+  },
+  {
+    path: 'user-downloads/:id',
+    component: UserDownloadsComponent
+
   }
 ];
 

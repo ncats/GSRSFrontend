@@ -586,5 +586,13 @@ export class SubstanceService extends BaseHttpService {
     return this.http.jsonp(url, 'callback' );
 
   }
+
+  getExportOptions(etag: string, search?: string): Observable<any> {
+    if (!search) {
+      search = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${search}/export/${etag}`;
+    return this.http.get< any>(url);
+  }
 }
 

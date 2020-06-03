@@ -232,5 +232,4 @@ export class UserEditDialogComponent implements OnInit {
       }
     }
   }
-
 }

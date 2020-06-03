@@ -50,6 +50,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   totalSubstances: number;
   isLoading = true;
   lastPage: number;
+  etag: string;
+  privateExport = false;
+  disableExport = false;
   isError = false;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
@@ -63,6 +66,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   isAdmin = false;
+  isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array< SubstanceName > } = {};
   codes: {
@@ -82,6 +86,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public displayFacets: Array<DisplayFacet> = [];
   private isFacetsParamsInit = false;
   isCollapsed = true;
+  exportOptions: Array<any>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -122,6 +127,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
+      if (auth) {
+        this.isLoggedIn = true;
+      }
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
       this.showAudit = this.authService.hasRoles('admin');
     });
@@ -225,6 +233,12 @@ validatePageInput(event: any): boolean {
   }
 
   searchSubstances() {
+    if ((this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '') ||
+        (this.privateSequenceSearchTerm && this.privateSequenceSearchTerm !== '')) {
+          this.disableExport = true;
+        } else {
+          this.disableExport = false;
+        }
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
@@ -294,6 +308,9 @@ validatePageInput(event: any): boolean {
               this.narrowSearchSuggestionsCount++;
             });
           }
+          this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
+            this.exportOptions = response;
+          });
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
@@ -328,6 +345,14 @@ validatePageInput(event: any): boolean {
   restricSearh(searchTerm: string): void {
     this.privateSearchTerm = searchTerm;
     this.searchSubstances();
+  }
+
+  export(url: string) {
+   this.authService.startUserDownload(url, this.privateExport).subscribe(response => {
+    const params = {'total': this.totalSubstances};
+    this.router.navigate(['/user-downloads/', response.id]);
+
+   });
   }
 
   setSubstanceNames(substanceId: string): void {
@@ -643,5 +668,6 @@ validatePageInput(event: any): boolean {
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
   }
+
 
 }

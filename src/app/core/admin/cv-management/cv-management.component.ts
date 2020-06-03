@@ -26,8 +26,6 @@ export class CvManagementComponent implements OnInit {
   loading: boolean;
   toggle: Array< boolean > = [];
 
-
-
   constructor(public cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
@@ -107,8 +105,15 @@ export class CvManagementComponent implements OnInit {
     });
   }
 
-  filterList(searchInput: string, listToFilter: Array<any>): void {
+  download() {
 
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(
+      JSON.stringify(this.vocabularies)
+    ));
+    this.downloadHref = uri;
+  }
+
+  filterList(searchInput: string, listToFilter: Array<any>): void {
     if (this.searchTimer != null) {
         clearTimeout(this.searchTimer);
     }
@@ -117,7 +122,6 @@ export class CvManagementComponent implements OnInit {
 
         this.filtered = [];
         listToFilter.forEach(item => {
-
           const itemString = item.domain;
             if (itemString.indexOf(searchInput.toUpperCase()) > -1) {
                 this.filtered.push(item);

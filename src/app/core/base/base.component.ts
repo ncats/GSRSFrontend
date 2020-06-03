@@ -7,8 +7,9 @@ import { ConfigService } from '../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { LoadingService } from '../loading/loading.service';
 import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
-import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
+import { MatBottomSheet, MatBottomSheetRef, MatDialog } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
+import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { NavItem } from '../config/config.model';
 
@@ -49,6 +50,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     private overlayContainerService: OverlayContainer,
     private loadingService: LoadingService,
     private bottomSheet: MatBottomSheet,
+    private dialog: MatDialog,
     private substanceTextSearchService: SubstanceTextSearchService
   ) {
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
@@ -329,6 +331,17 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
 
     this.classicLinkQueryParamsString = queryParamsString;
+  }
+
+  openProfile(): void {
+    const dialogRef = this.dialog.open(UserProfileComponent, {
+      data: {},
+      width: '800px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 
 }
