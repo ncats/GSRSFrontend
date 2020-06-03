@@ -91,7 +91,7 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'for a WORD that contains': {
+        'a WORD that contains': {
             commandInputs: [
                 {
                     type: 'text',
@@ -123,7 +123,7 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'for a value that starts with with the word(s)': {
+        'a value that starts with with the word(s)': {
             commandInputs: [
                 {
                     type: 'text',
@@ -139,7 +139,7 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'for a WORD that ends with': {
+        'a WORD that ends with': {
             commandInputs: [
                 {
                     type: 'text',
@@ -155,7 +155,7 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'for a value that ends with the word(s)': {
+        'a value that ends with the word(s)': {
             commandInputs: [
                 {
                     type: 'text',

@@ -118,12 +118,6 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
     this.options = options;
   }
 
-  private setQueryablePropertyType(type: 'string' | 'timestamp' | 'boolean' | 'number'): void {
-    this.selectedQueryablePropertyType = type;
-    this.commandOptions = Object.keys(this.typeCommandOptions[type]);
-    this.commandControl.setValue(this.commandOptions[0]);
-  }
-
   private setCommand(command: string): void {
     this.selectedCommandOption = command;
     const commandObj = this.typeCommandOptions[this.selectedQueryablePropertyType][command] as any;
@@ -155,6 +149,14 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
       this.typeCommandOptions[this._queryableDictionary[queryableProperty].type]
     ).filter(option => {
       return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values';
+    }).sort((a, b) => {
+      if (a.toLowerCase() < b.toLowerCase()) {
+        return -1;
+      }
+      if (a.toLowerCase() > b.toLowerCase()) {
+        return 1;
+      }
+      return 0;
     });
     this.commandControl.setValue(this.commandOptions[0]);
   }
