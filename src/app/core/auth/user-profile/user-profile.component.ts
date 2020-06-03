@@ -28,7 +28,7 @@ export class UserProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.authService.getAuth().subscribe( response => {
+    this.authService.getAuth().pipe(take(1)).subscribe( response => {
       this.user = response;
     });
   }

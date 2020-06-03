@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import * as moment from 'moment';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-download-monitor',
@@ -23,7 +24,7 @@ export class DownloadMonitorComponent implements OnInit {
   }
 
   refresh(spawn?: boolean) {
-    this.authService.getUpdateStatus(this.id).subscribe( response => {
+    this.authService.getUpdateStatus(this.id).pipe(take(1)).subscribe( response => {
       this.download = response;
       this.exists = true;
       if (this.download.started) {
@@ -43,19 +44,19 @@ export class DownloadMonitorComponent implements OnInit {
   }
 
   cancel() {
-    this.authService.changeDownload(this.download.cancelUrl.url).subscribe(response => {
+    this.authService.changeDownload(this.download.cancelUrl.url).pipe(take(1)).subscribe(response => {
       this.refresh();
     });
   }
 
   downloadExport() {
-    this.authService.changeDownload(this.download.downloadUrl).subscribe(response => {
+    this.authService.changeDownload(this.download.downloadUrl).pipe(take(1)).subscribe(response => {
       this.refresh();
     });
   }
 
   deleteDownload() {
-    this.authService.deleteDownload(this.download.removeUrl.url).subscribe(response => {
+    this.authService.deleteDownload(this.download.removeUrl.url).pipe(take(1)).subscribe(response => {
      this.deleted = true;
     });
   }

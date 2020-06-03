@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UserDownload } from '@gsrs-core/auth/user-downloads/download.model';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-downloads',
@@ -20,7 +21,7 @@ export class UserDownloadsComponent implements OnInit {
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.params['id'] || null;
     if (!this.id) {
-      this.authService.getAllDownloads().subscribe(response => {
+      this.authService.getAllDownloads().pipe(take(1)).subscribe(response => {
         this.downloads = response.downloads;
       });
     }
