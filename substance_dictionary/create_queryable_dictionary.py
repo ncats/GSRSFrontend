@@ -24,6 +24,7 @@ dictionary_df['type'] = dictionary_df.loc[:, ['Lucene Path', 'Data Type', 'Descr
 
 dictionary_df.rename(columns={"Lucene Path": "lucenePath", "Description": "description", "Display Name": "displayName", "CV DOMAIN": "cvDomain"}, inplace=True)
 dictionary_df.drop(columns=['Data Type'], inplace=True)
+dictionary_df.sort_values('displayName', inplace=True)
 dictionary_df.set_index('displayName', inplace=True)
 dictionary_df.to_json('../src/app/core/assets/data/substance_dictionary.json', orient='index')
 
