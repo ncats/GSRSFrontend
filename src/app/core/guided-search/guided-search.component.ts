@@ -25,12 +25,14 @@ export class GuidedSearchComponent implements OnInit {
     this.http.get(`${this.configService.environment.baseHref}assets/data/substance_dictionary.json`)
       .subscribe((response: QueryableSubstanceDictionary) => {
       this.queryableSubstanceDictionary = response;
+      this.displayProperties = Object.keys(this.queryableSubstanceDictionary);
       this.queryableSubstanceDictionary['All'] = {
         lucenePath: '',
         description: 'All substance fields',
-        type: 'string'
+        type: 'string',
+        cvDomain: ''
       };
-      this.displayProperties = Object.keys(this.queryableSubstanceDictionary);
+      this.displayProperties.unshift('All');
       this.queryStatements.push({});
     });
   }

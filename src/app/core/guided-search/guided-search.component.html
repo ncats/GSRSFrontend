@@ -5,21 +5,13 @@
         </mat-card-title>
         <mat-card-content>
             <h2>
-                Query
-            </h2>
-            <div class="query-container">
-                <div class="query-value">
-                    {{query}}
-                </div>
-            </div>
-            <h2>
                 Builder
             </h2>
             <div class="builder-container">
                 <div class="header-row">
                     <div class="condition-column"></div>
                     <div class="queryable-property-column">
-                        Search In
+                        Search In Fields
                     </div>
                     <div class="command-column">
                         For
@@ -51,9 +43,17 @@
                     </div>
                 </div>
             </div>
-            <mat-card-actions>
+            <div class="query-builder-actions">
                 <button mat-flat-button color="primary" (click)="processSearch()" [disabled]="!query">Search</button>
-            </mat-card-actions>
+            </div>
+            <h2>
+                Query
+            </h2>
+            <div class="query-container">
+                <div class="query-value">
+                    {{query}}
+                </div>
+            </div>
         </mat-card-content>
     </mat-card>
 </div>
