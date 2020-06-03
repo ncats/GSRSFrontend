@@ -14,6 +14,8 @@ export class FacetDisplayPipe implements PipeTransform {
           return 'Nucleic Acid';
         } else if (name === 'specifiedSubstanceG1') {
           return 'G1 Specified Substance';
+        } else if (name === 'specifiedsubstanceG3') {
+          return 'Group 3 Specified Substance';
         } else {
           return name.charAt(0).toUpperCase() + name.slice(1);
         }

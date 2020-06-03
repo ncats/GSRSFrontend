@@ -548,12 +548,12 @@
         {
           "display": "Register Application",
           "path": "application/register",
-          "order": 41
+          "order": 200
         },
         {
           "display": "Register Product",
           "path": "product/register",
-          "order": 42
+          "order": 210
         }
       ]
     }

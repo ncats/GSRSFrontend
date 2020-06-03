@@ -338,5 +338,11 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'substance-form-change-reason',
     loadChildren: () => import('./substance-form/substance-form-change-reason/substance-form-change-reason.module')
       .then(m => m.SubstanceFormChangeReasonModule),
+  },
+  {
+    componentId: 'substance-form-ssg-grade',
+    path: 'ssg-grade-form',
+    loadChildren: () => import('./substance-form/ssg-grade-form/ssg-grade-form.module')
+      .then(m => m.SsgGradeFormModule)
   }
 ];

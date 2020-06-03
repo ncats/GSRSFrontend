@@ -133,6 +133,16 @@ export class SubstanceFormService implements OnDestroy {
             codes: [],
             relationships: []
           };
+        } else if (substanceClass === 'specifiedSubstanceG3') {
+          this.privateSubstance = {
+            substanceClass: substanceClass,
+            references: [],
+            names: [],
+            specifiedSubstanceG3: {
+              grade: {}
+            },
+            codes: []
+          };
         } else if (substanceClass === 'polymer') {
           this.privateSubstance = {
             substanceClass: substanceClass,
@@ -151,8 +161,7 @@ export class SubstanceFormService implements OnDestroy {
             substanceClass: substanceClass,
             references: [],
             names: [],
-            codes: [],
-            relationships: []
+            codes: []
           };
         }
       }

@@ -60,6 +60,7 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
   polymer?: Polymer;
   modifications?: SubstanceModifications;
   specifiedSubstance?: SpecifiedSubstance;
+  specifiedSubstanceG3?: SpecifiedSubstanceG3;
   _matchContext?: MatchContext;
 }
 
@@ -422,4 +423,15 @@ export interface Feature {
   sites?: Array<Site>;
   siteRange?: string;
   name?: string;
+}
+
+export interface SpecifiedSubstanceG3 extends SubstanceBase {
+  references?: Array<string>;
+  grade?: Grade;
+}
+
+export interface Grade extends SubstanceBase {
+  name?: string;
+  type?: string;
+  references?: Array<string>;
 }

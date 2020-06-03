@@ -76,7 +76,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     'polymer',
     'nucleicAcid',
     'mixture',
-    'specifiedSubstanceG1'];
+    'specifiedSubstanceG1',
+    'specifiedSubstanceG2',
+    'specifiedSubstanceG3',
+    'specifiedSubstanceG4'];
 
   constructor(
     private activatedRoute: ActivatedRoute,
