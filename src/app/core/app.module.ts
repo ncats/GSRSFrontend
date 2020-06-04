@@ -51,7 +51,7 @@ import { TakePipe } from './utils/take.pipe';
 import { EnvironmentModule } from '../../environments/environment';
 import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
-import { MatTabsModule } from '@angular/material';
+import { MatTabsModule, MatNativeDateModule } from '@angular/material';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
 import { SubstanceCardsModule } from './substance-details/substance-cards.module';
@@ -70,6 +70,7 @@ import {SubstanceHierarchyComponent} from '@gsrs-core/substances-browse/substanc
 import {SequenceAlignmentComponent} from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
 import { AdminModule } from '@gsrs-core/admin/admin.module';
 import { FacetsManagerModule } from './facets-manager/facets-manager.module';
+import { GuidedSearchModule } from './guided-search/guided-search.module';
 import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
 
 @NgModule({
@@ -139,6 +140,9 @@ import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
     SubstanceImageModule,
     StructureModule,
     MatTreeModule,
+    FacetsManagerModule,
+    GuidedSearchModule,
+    MatNativeDateModule,
     AdminModule,
     FacetsManagerModule
   ],

@@ -1,0 +1,47 @@
+.user-container {
+    display: flex;
+}
+
+mat-card {
+    margin: auto;
+}
+
+.username {
+    font-size: 20px;
+    margin: 5px;
+    font-weight: 500;
+}
+
+.left-side {
+    width:70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.label-value {
+    display: flex;
+    flex-direction: row;
+    margin: 7px;
+
+
+    .label {
+        min-width: 100px;
+        font-weight: 500;
+    }
+}
+
+.message {
+    text-align: center;
+}
+
+
+
+.password-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: space-between;
+}

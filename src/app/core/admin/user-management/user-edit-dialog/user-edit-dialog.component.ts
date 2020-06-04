@@ -18,20 +18,20 @@ export class UserEditDialogComponent implements OnInit {
   oldPassword: string;
   originalName: string;
   newPassword: string;
-  newUser: boolean = false;
+  newUser = false;
   newPasswordConfirm: string;
-  changePassword: boolean = false;
-  loading: boolean = true;
+  changePassword = false;
+  loading = true;
   message: string;
   newGroup: string;
   groups: Array< any >;
-  roles = [{name:'Updater', hasRole: false},
-    {name:'Admin', hasRole: false},
+  roles = [{name: 'Updater', hasRole: false},
+    {name: 'Admin', hasRole: false},
     {name: 'Query', hasRole: false},
-    {name:'SuperUpdate', hasRole: false},
-    {name:'DataEntry', hasRole: false},
-    {name:'SuperDataEntry', hasRole: false},
-    {name:'Approver', hasRole: false}];
+    {name: 'SuperUpdate', hasRole: false},
+    {name: 'DataEntry', hasRole: false},
+    {name: 'SuperDataEntry', hasRole: false},
+    {name: 'Approver', hasRole: false}];
   constructor(
     private adminService: AdminService,
     public dialogRef: MatDialogRef<UserEditDialogComponent>,
@@ -61,7 +61,7 @@ export class UserEditDialogComponent implements OnInit {
             });
           });
       } else if (this.userID) {
-          this.adminService.getUserByName(this.userID).pipe(take(1)).subscribe( resp =>{
+          this.adminService.getUserByName(this.userID).pipe(take(1)).subscribe( resp => {
             this.user = resp;
             this.checkRoles();
             this.originalName = resp.user.username;
@@ -131,6 +131,10 @@ export class UserEditDialogComponent implements OnInit {
 
       }
     });
+
+    if (this.newGroup && this.newGroup !== '') {
+      groups.push(this.newGroup);
+    }
     const userEditObj: UserEditObject = {
       'username': this.user.user.username,
       'isAdmin': this.user.user.admin,
@@ -232,5 +236,4 @@ export class UserEditDialogComponent implements OnInit {
       }
     }
   }
-
 }

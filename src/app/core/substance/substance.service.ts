@@ -577,8 +577,7 @@ export class SubstanceService extends BaseHttpService {
 
 
   getSubstanceReferences(top: number = 10, skip: number = 0): Observable<any> {
-
-  const url = `${this.configService.configData.apiBaseUrl}api/v1/references?top=${top}&skip=${skip}&order=lastEdited`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/references?top=${top}&skip=${skip}&order=lastEdited`;
     return this.http.get< any>(url);
   }
 
@@ -586,6 +585,14 @@ export class SubstanceService extends BaseHttpService {
     const url = `https://drugs.ncats.io/api/v1/substances/search?q=root_approvalID:${ID}&fdim=1`;
     return this.http.jsonp(url, 'callback' );
 
+  }
+
+  getExportOptions(etag: string, search?: string): Observable<any> {
+    if (!search) {
+      search = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${search}/export/${etag}`;
+    return this.http.get< any>(url);
   }
 }
 

@@ -1,0 +1,90 @@
+<div mat-dialog-title>
+<h2 >User Profile</h2>
+<div class = "username">
+        {{ user.user.username}}
+        </div>
+    </div>
+<mat-dialog-content *ngIf = "user" >
+    <div class = "user-container">
+    
+   
+    <div class = "left-side">
+    <div *ngIf = "user.user.email && user.user.email !== ''" class = "label-value">
+        <div class = "label">Email: </div>
+        <div class = "value">{{user.user.email}}</div>
+    </div>
+        <div class = "label-value">
+                <div class = "label">
+                        Roles:
+                </div>
+                <div class = "value">
+                        <span *ngFor = "let role of user.roles; last as islast">
+                                {{role}}{{!islast? ', ':''}}
+                            </span>
+                </div>
+            </div>
+            <div class = "label-value">
+                <div class = "label">
+                        Groups:
+                </div>
+                <div class = "value">
+                        <span *ngFor = "let group of user.groups; last as islast">
+                                {{group.name}}{{!islast? ', ':''}}
+                            </span>
+                </div>
+            </div>
+                
+        
+        
+    </div>
+        
+        <div class = "password-column" *ngIf = "!newUser ">
+                <div class = "spinner-container">
+              <button (click) = "changePassword = !changePassword" mat-button class = " mat-flat-button" [disabled] = "loading">
+                     {{!changePassword?"Change Password":"Cancel"}} 
+                  </button>
+                  <div *ngIf = "loading" class = "password-column">
+                    <mat-progress-spinner
+                                    class="spinner"
+                                    color="primary"
+                                    mode="indeterminate"
+                                    diameter = "30"
+                                >
+                                </mat-progress-spinner>
+                </div>
+              </div>
+                <span *ngIf = "changePassword === true" >
+                    <div>
+                            <mat-form-field>
+                                <input [disabled] = "loading" matInput type = "password" [(ngModel)] = "oldPassword" placeholder="old password" required name="Password" />
+                            </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input  [disabled] = "loading" matInput type = "password" [(ngModel)] = "newPassword" placeholder="new password" required name="Password" />
+                        </mat-form-field> 
+                    </div>
+                        <div>
+                            <mat-form-field>
+                                <input [disabled] = "loading" matInput type = "password" [(ngModel)] = "newPasswordConfirm" placeholder="confirm new password" required name="Password" />
+                            </mat-form-field>
+                        </div>
+                    
+                    
+                        <div>
+                    <button [disabled] = "loading" mat-button class = " mat-primary mat-flat-button" (click) = "validatePassword()">Submit Change</button>
+                    </div>
+                </span>
+          </div>
+        </div>
+        <div class = "message" *ngIf = "changePassword">
+            {{this.message}}
+        </div>             
+</mat-dialog-content>
+<mat-dialog-actions>
+        <button mat-button (click) = "viewDownloads()" [disabled] = "loading">
+                View Downloads
+        </button>
+        <span class = "middle-fill"></span>
+  <button mat-button mat-dialog-close [disabled] = "loading">Close</button>
+</mat-dialog-actions>

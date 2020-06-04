@@ -1,0 +1,104 @@
+<div class="query-statement-container">
+    <div class="condition-column">
+        <mat-form-field *ngIf="index > 0">
+            <mat-select [formControl]="conditionControl">
+                <mat-option 
+                    *ngFor="let option of conditionOptions"
+                    [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="queryable-property-column">
+        <mat-form-field>
+            <mat-select [formControl]="queryablePropertiesControl">
+                <mat-option 
+                    *ngFor="let option of options"
+                    [value]="option"
+                    [matTooltip]="option">
+                    {{option}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- <mat-form-field>
+            <input type="text" matInput [formControl]="queryablePropertiesControl"
+                [matAutocomplete]="queryablePropertyOptions">
+        </mat-form-field>
+        <mat-autocomplete 
+            #queryablePropertyOptions="matAutocomplete"
+            (optionSelected)="queryablePropertySelected($event)">
+            <mat-option *ngFor="let option of options" [value]="option" [matTooltip]="option">
+                {{option}}
+            </mat-option>
+        </mat-autocomplete> -->
+    </div>
+    <div class="command-column">
+        <mat-form-field [matTooltip]="selectedCommandOption">
+            <mat-select [formControl]="commandControl">
+                <mat-option *ngFor="let option of commandOptions" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="query-column">
+        <div class="query-input" *ngFor="let commandInput of commandInputs; index as index">
+            <div *ngIf="commandInput.type == 'text' || commandInput.type == 'boolean' || commandInput.type == 'number'">
+                <mat-form-field>
+                    <input [type]="commandInput.type" matInput [(ngModel)]="commandInputDict[commandInput.type][index]" (keyup)="commandInput.constructQuery(
+                        $event.target.value,
+                        selectedCondition,
+                        selectedLucenePath,
+                        queryUpdated,
+                        queryParts
+                    )">
+                </mat-form-field>
+            </div>
+            <div *ngIf="commandInput.type == 'datetime'">
+                <mat-form-field >
+                    <input
+                        matInput
+                        [(ngModel)]="commandInputDict[commandInput.type][index]"
+                        (dateChange)="commandInput.constructQuery(
+                            $event,
+                            selectedCondition,
+                            selectedLucenePath,
+                            queryUpdated,
+                            queryParts
+                        )"
+                        (dateInput)="commandInput.constructQuery(
+                            $event,
+                            selectedCondition,
+                            selectedLucenePath,
+                            queryUpdated,
+                            queryParts
+                        )"
+                        [matDatepicker]="queryDatepicker">
+                    <mat-datepicker-toggle matSuffix [for]="queryDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #queryDatepicker (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div *ngIf="commandInput.type == 'select'">
+                <mat-form-field floatLabel="never">
+                    <mat-select [(ngModel)]="commandInputDict[commandInput.type][index]"
+                        placeholder="Select default option"
+                        (selectionChange)="commandInput.constructQuery(
+                        $event.value,
+                        selectedCondition,
+                        selectedLucenePath,
+                        queryUpdated,
+                        queryParts
+                    )">
+                        <mat-option 
+                            *ngFor="let option of cvOptions"
+                            [value]="option.value"
+                            [matTooltip]="option.display">
+                            {{option.display}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>

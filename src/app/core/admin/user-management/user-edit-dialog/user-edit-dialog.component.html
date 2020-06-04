@@ -81,9 +81,11 @@
     
 <div class = "form-row">
 <div class = "field-group"><span class = "mat-header-cell box-label">Groups</span>
-            <div *ngFor = "let group of groups">
+            <div *ngFor = "let group of groups" class = "group-checkbox">
                 <mat-checkbox [(ngModel)] = 'group.hasGroup'>
+               <div class = "group-name">
                 {{group.name}}
+               </div>
                 </mat-checkbox>
             </div>
             <mat-form-field>

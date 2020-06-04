@@ -458,9 +458,32 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         return this.substanceFormService.getJson();
       }
 
-      isObject(a) {
-        return (!!a) && (a.constructor === Object);
+  _typeof2(obj) {
+    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
+      this. _typeof2 = function _typeof2(_obj) { return typeof _obj; };
+    } else {
+      this._typeof2 = function _typeof2(_obj) {
+        return _obj && typeof Symbol === 'function' && _obj.constructor === Symbol && _obj !== Symbol.prototype ? 'symbol' : typeof _obj; };
     }
+    return this._typeof2(obj);
+  }
 
+  _typeof(obj) {
+    if (typeof Symbol === 'function' && this._typeof2(Symbol.iterator) === 'symbol') {
+      this._typeof = function _typeof(_obj) {
+        return this._typeof2(_obj);
+      };
+    } else {
+      this._typeof = function _typeof(_obj) {
+        return _obj && typeof Symbol === 'function' &&
+          _obj.constructor === Symbol &&
+          _obj !== Symbol.prototype ? 'symbol' : this._typeof2(_obj);
+      };
+    }
+  }
+
+  isObject(a) {
+    return (!!a) && (a.constructor === Object);
+  }
 
 }

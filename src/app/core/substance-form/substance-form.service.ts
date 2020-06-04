@@ -18,7 +18,7 @@ import {
 import {
   SequenceUnit,
   SubstanceFormDefinition,
-  SubstanceFormResults, SubunitSequence, ValidationResults
+  SubstanceFormResults, SubunitSequence, ValidationResults, ValidationMessage
 } from './substance-form.model';
 import { Observable, Subject, ReplaySubject, Subscription } from 'rxjs';
 import { SubstanceService } from '../substance/substance.service';
@@ -1045,6 +1045,24 @@ export class SubstanceFormService implements OnDestroy {
     return new Observable(observer => {
       const substanceCopy = this.cleanSubstance();
       this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
+        // check for missing required reference fields and append a validationMessage
+        if (results.validationMessages) {
+          for (let i = 0; i < substanceCopy.references.length; i++) {
+            const ref = substanceCopy.references[i];
+            if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
+              const invalidReferenceMessage: ValidationMessage = {
+                actionType: 'frontEnd',
+                appliedChange: false,
+                links: [],
+                message: 'All references require a non-empty source type and text/citation value',
+                messageType: 'ERROR',
+                suggestedChange: true
+              };
+              results.validationMessages.push(invalidReferenceMessage);
+              break;
+            }
+          }
+        }
         observer.next(results);
         observer.complete();
       }, error => {
@@ -1411,7 +1429,9 @@ export class SubstanceFormService implements OnDestroy {
   disulfideLinks() {
 
     const KNOWN_DISULFIDE_PATTERNS = {};
-    ('IGG4	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' + 'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' + 'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
+    ('IGG4	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' +
+    'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' +
+    'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
       const tup = s.split('\t');
 
       const list = _.chain(tup[1].split(',')).map(function (t) {

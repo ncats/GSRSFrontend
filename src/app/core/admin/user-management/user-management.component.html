@@ -37,7 +37,7 @@
       <span class="middle-fill"></span>
 
   <mat-form-field [floatLabel]="'never'" class="search">
-    <input matInput placeholder="Search Users" [formControl]="searchControl">
+    <input matInput placeholder="Search User Names" [formControl]="searchControl">
   </mat-form-field>
 </div>
 <table mat-table [dataSource] = "paged"  matSort (matSortChange)="sortData($event)">
@@ -61,7 +61,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Modified</th>
         <td mat-cell *matCellDef="let user"> {{user.user.modified | date:'medium'}} </td>
       </ng-container>
-      <ng-container matColumnDef="delete">
+      <ng-container matColumnDef="active">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Set Inactive</th>
         <td mat-cell *matCellDef="let user; index as index"> 
            {{user.active? 'active': 'inactive'}} <a matTooltip = "set user to inactive" class = "mat-button"  *ngIf ="user.active" (click)="deleteUser(user.user.username, index)" >

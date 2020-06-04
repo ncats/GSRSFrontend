@@ -2,9 +2,10 @@ import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { Auth, Role } from './auth.model';
 import { Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, take, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
+import { UserDownload, AllUserDownloads } from '@gsrs-core/auth/user-downloads/download.model';
 
 @Injectable({
   providedIn: 'root'
@@ -66,7 +67,7 @@ export class AuthService {
     );
   }
 
-  getAuth(): Observable<Auth> {
+  getAuth(): Observable< Auth > {
     return new Observable(observer => {
 
       if (this._auth != null) {
@@ -156,7 +157,7 @@ export class AuthService {
     return true;
   }
 
-  hasRolesAsync(...roles: Array<Role|string>): Observable<boolean> {
+  hasRolesAsync(...roles: Array<Role|string>): Observable< boolean > {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasRoles(...roles));
@@ -186,7 +187,7 @@ export class AuthService {
     return false;
   }
 
-  hasAnyRolesAsync(...roles: Array<Role|string>): Observable<boolean> {
+  hasAnyRolesAsync(...roles: Array<Role|string>): Observable< boolean > {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasAnyRoles(...roles));
@@ -198,5 +199,31 @@ export class AuthService {
         });
       }
     });
+  }
+
+  startUserDownload(fullUrl: string, privateExport: boolean): Observable< any > {
+    if (privateExport) {
+      fullUrl = fullUrl + '?publicOnly=false';
+    }
+    return this.http.get< any >(`${fullUrl}`);
+  }
+
+  getUpdateStatus(id: string): Observable< UserDownload > {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    return this.http.get< any >(`${url}profile/downloads/${id}`);
+  }
+
+  changeDownload(url: string): Observable< UserDownload > {
+    return this.http.get< any >(url);
+  }
+
+  deleteDownload(url: string): any {
+    return this.http.delete< any >(url, {observe: 'response'});
+  }
+
+  getAllDownloads(): Observable< AllUserDownloads > {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    return this.http.get< any >(`${url}profile/downloads`);
+
   }
 }

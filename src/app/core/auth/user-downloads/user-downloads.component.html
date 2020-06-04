@@ -1,0 +1,22 @@
+<div class = "download-container" *ngIf ="id">
+     <mat-card  class = "form-row">
+        <app-download-monitor [id] = "id" fromRoute = "true"></app-download-monitor>
+    </mat-card>
+<div class = "all-button">
+    <button mat-button class = "a-link" (click) = "allDownloads()">Show All Downloads</button>
+</div>
+</div>
+
+<div class = "download-container" *ngIf ="downloads" >
+        <h2 class = "download-header">User Downloads</h2>
+
+    <mat-card *ngFor = "let download of downloads" class = "form-row">
+            <app-download-monitor [id] = "download.id"></app-download-monitor>
+
+        </mat-card>
+        <mat-card *ngIf="!downloads.length" class ="no-jobs">
+            <h3>No downloads found</h3>
+        </mat-card>
+</div>
+
+

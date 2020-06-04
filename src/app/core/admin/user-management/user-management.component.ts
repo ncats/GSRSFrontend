@@ -23,13 +23,13 @@ export class UserManagementComponent implements OnInit {
   showAll = false;
   showInactive = false;
   private overlayContainer: HTMLElement;
-  displayedColumns: string[] = ['name', 'email', 'created', 'modified', 'delete'];
+  displayedColumns: string[] = ['name', 'email', 'created', 'modified', 'active'];
   page = 0;
   pageSize = 10;
   paged: Array< any >;
-users: Array< any > = [];
-private searchTimer: any;
-@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  users: Array< any > = [];
+  private searchTimer: any;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
 constructor(
     private dialog: MatDialog,
@@ -45,7 +45,7 @@ constructor(
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.pageChange();
         this.searchControl.valueChanges.subscribe(value => {
-          this.filterList(value, this.filtered.data);
+          this.filterList(value, this.users);
         }, error => {
           console.log(error);
         });
@@ -198,7 +198,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
         case 'name' : return this.utilsService.compare(a.user.username.toUpperCase(), b.user.username.toUpperCase(), isAsc);
-        case 'active' : return this.utilsService.compare(a.active, b.user.active, isAsc);
+        case 'active' : return this.utilsService.compare(a.active, b.active, isAsc);
         case 'email' : return this.utilsService.compare(a.user.email || '', b.user.email || '', isAsc);
         case 'modified' : return this.utilsService.compare(a.modified, b.modified, isAsc);
         case 'created' : return this.utilsService.compare(a.created, b.created, isAsc);
@@ -212,14 +212,24 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         clearTimeout(this.searchTimer);
     }
     this.searchTimer = setTimeout(() => {
+      const backup = [];
+      if (this.showInactive) {
+        this.users.forEach(user => {
+          if (user.active) {
+            backup.push(user);
+          }
+        });
+      }
+
         this.filtered.data = [];
-        listToFilter.forEach(item => {
-          const itemString = item.user.username;
+        backup.forEach(item => {
+          const itemString = item.user.username.toUpperCase();
             if (itemString.indexOf(searchInput.toUpperCase()) > -1) {
                 this.filtered.data.push(item);
             }
         });
         clearTimeout(this.searchTimer);
+        this.pageChange();
         this.searchTimer = null;
     }, 700);
   }

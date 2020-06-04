@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import * as moment from 'moment';
 import cronstrue from 'cronstrue';
@@ -10,7 +10,7 @@ import { take } from 'rxjs/operators';
   templateUrl: './scheduled-job.component.html',
   styleUrls: ['./scheduled-job.component.scss']
 })
-export class ScheduledJobComponent implements OnInit {
+export class ScheduledJobComponent implements OnInit, OnDestroy {
 
     @Input() job: ScheduledJob;
     @Input() pollIn: any;
@@ -25,6 +25,12 @@ export class ScheduledJobComponent implements OnInit {
     this.monitor = this.pollIn;
      this.refresh(true);
 
+  }
+
+  ngOnDestroy() {
+    this.monitor = false;
+    this.refresh(false);
+    this.stopMonitor();
   }
 
   momentTime(time: any) {
@@ -42,7 +48,7 @@ export class ScheduledJobComponent implements OnInit {
         this.job.lastDurationHuman = (this.job.lastFinished - this.job.lastStarted);
      }
       this.quickLoad = false;
-      if ((this.monitor && spawn) || this.job.id === 1) {
+      if (this.monitor && spawn) {
         this.mess = 'Polling ... ' + response.status;
         if (this.job.running) {
           setTimeout(() => {
@@ -69,7 +75,6 @@ export class ScheduledJobComponent implements OnInit {
 
   stopMonitor() {
     this.monitor = false;
-    this.mess = '';
 }
 
 disable (job: any) {

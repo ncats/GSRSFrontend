@@ -1,0 +1,146 @@
+.form-row {
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+    .side-bar {
+        width: 20%;
+        min-width:125px;
+        display: flex;
+        flex-direction: column;
+    }
+    .end-bar {
+        width: 20%;
+        min-width:125px;
+
+        display:flex;
+        flex-direction:column;
+    }
+    .main-bar {
+        width: 60%;
+    }
+}
+
+
+.job-container {
+    padding:10px;
+    margin: 10px;
+  
+}
+
+.job-dates {
+    width: 100%;
+    flex-grow: 1;
+    min-height: 70px;
+}
+
+.spinner {
+    height: 50px;
+    width: 50px;
+    margin: auto;
+}
+
+.label {
+    font-weight: bold
+}
+
+.table-label {
+    min-width: 110px;
+    max-width: 150px;
+    margin-right:20px;
+}
+
+.table-value {
+    width: calc(100% - 170px);
+    word-wrap: break-word;
+}
+
+.main-container {
+
+}
+
+.table-row {
+    margin-bottom:15px;
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    align-content: initial;
+
+}
+
+.bottom-button {
+    margin: auto;
+    padding-top: 10px;
+    margin-bottom: -10px;
+
+}
+
+.job-settings {
+    width: 100%;
+    flex-grow: 1;
+}
+
+.time-field {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    padding-left: 29px;
+    padding-top: 5px;
+}
+
+.time-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.download-link {
+    display:flex;
+    flex-direction: column;
+    margin: auto;
+}
+
+.deleted {
+    margin: auto;
+    padding: 10px;
+}
+
+.time-label {
+    font-weight: 500;
+}
+
+.download-label {
+    font-weight: 500;
+}
+
+.large-val {
+    font-size: 19px;
+}
+
+.download-header {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    margin-bottom: 30px;
+
+    .download-name {
+        width: 80%;
+        font-weight: 500;
+        font-size: 19px;
+    }
+
+    .status {
+        width: 20%;
+    }
+}
+
+@media(max-width: 970px) {
+    .form-row {
+    flex-direction: column;
+    }
+
+    .bottom-button {
+        margin-bottom: 0px;
+    }
+
+    .end-bar {
+        width: 50%;
+    }
+}
