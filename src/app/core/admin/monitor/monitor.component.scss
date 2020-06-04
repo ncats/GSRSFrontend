@@ -239,11 +239,12 @@ margin-bottom: auto;
 
 .large-val {
     font-size: 19px;
+    display: flex;
+    flex-direction: row;
 }
 
 .ellipses {
     width: 20px;
-    min-width: 200px;
 }
 
 
@@ -272,6 +273,7 @@ margin-bottom: auto;
           margin-left: auto;
           margin-right: auto;
           text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+          white-space: nowrap;
       }
   }
 
@@ -286,6 +288,7 @@ margin-bottom: auto;
       font-weight: 500;
       z-index: 5;
       font-size: 15px;
+      white-space: nowrap;
   }
 
   .file-row {
