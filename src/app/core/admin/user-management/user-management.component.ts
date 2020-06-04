@@ -208,12 +208,10 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
   }
 
   filterList(searchInput: string, listToFilter: Array<any>): void {
-    console.log('calling filter');
     if (this.searchTimer != null) {
         clearTimeout(this.searchTimer);
     }
     this.searchTimer = setTimeout(() => {
-      console.log(this.filtered.data);
       const backup = [];
       if (this.showInactive) {
         this.users.forEach(user => {
@@ -230,7 +228,6 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
                 this.filtered.data.push(item);
             }
         });
-        console.log(this.filtered.data);
         clearTimeout(this.searchTimer);
         this.pageChange();
         this.searchTimer = null;
