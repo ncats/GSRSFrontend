@@ -1,0 +1,26 @@
+<div *ngIf="substance.specifiedSubstanceG3.definition">
+  <div class="name-value">
+    <div class="name">Definition</div>
+    <div class="value">{{substance.specifiedSubstanceG3.definition.definition}}</div>
+  </div>
+
+  <div class="name-value">
+    <div class="name">References</div>
+    <div class="value">
+      <button class="mat-raised-button mat-primary dialog-close" (click)="openModal(refTemplate)"
+        [disabled]="substance.specifiedSubstanceG3.definition.references.length <= 0">View</button>
+
+      <ng-template #refTemplate>
+        <h2 mat-dialog-title>References</h2>
+        <div mat-dialog-content>
+          <app-references-manager [substance]="substance"
+            [references]="substance.specifiedSubstanceG3.definition.references"></app-references-manager>
+        </div>
+        <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

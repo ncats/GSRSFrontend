@@ -117,8 +117,10 @@ export const formSections: { [substanceType: string]: Array<string> } = {
   specifiedSubstanceG3: [
     'substance-form-definition',
     'substance-form-names',
-    'substance-form-codes-card',
+    'substance-form-ssg-parent-substance',
+    'substance-form-ssg-definition',
     'substance-form-ssg-grade',
+    'substance-form-codes-card',
     'substance-form-references'
   ]
 };

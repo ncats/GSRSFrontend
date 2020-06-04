@@ -435,6 +435,36 @@
           "propertyToCheck": "admin"
         }
       ]
+    },
+    {
+      "card": "substance-ssg-definition",
+      "title": "definition",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "specifiedSubstanceG3.definition"
+        }
+      ]
+    },
+    {
+      "card": "substance-ssg-parent-substance",
+      "title": "parent substance",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "specifiedSubstanceG3.parentSubstance"
+        }
+      ]
+    },
+    {
+      "card": "substance-ssg-grade",
+      "title": "grade",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "specifiedSubstanceG3.grade"
+        }
+      ]
     }
   ],
   "facets": {

@@ -1,0 +1,10 @@
+<div class="name-form-container" *ngIf="parentSubstance">
+  <div class="form-row">
+    <div class="related-substance">
+      <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Parent Substance" header="Parent Substance"
+        [subuuid]="relatedSubstanceUuid">
+      </app-substance-selector>
+    </div>
+  </div>
+</div>

@@ -139,6 +139,7 @@ export class SubstanceFormService implements OnDestroy {
             references: [],
             names: [],
             specifiedSubstanceG3: {
+              definition: {},
               grade: {}
             },
             codes: []

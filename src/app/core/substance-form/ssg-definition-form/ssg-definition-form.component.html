@@ -1,0 +1,16 @@
+<div class="name-form-container" *ngIf="definition">
+  <div class="form-row">
+    <mat-form-field class="name">
+      <input matInput placeholder="Definition" [(ngModel)]="definition.definition" name="definition" />
+    </mat-form-field>
+    <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access">
+    </app-access-manager>
+  </div>
+
+  <div class="form-row">
+    <div class="references-container">
+      <app-domain-references [referencesUuids]="definition.references" #references></app-domain-references>
+    </div>
+  </div>
+
+</div>
