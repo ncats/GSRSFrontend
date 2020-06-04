@@ -54,3 +54,12 @@
     height: unset !important;
     max-height: 90%;
 }
+
+::ng-deep .mat-checkbox-label {
+    word-break: break-word !important;
+    white-space: initial !important;
+}
+
+.group-checkbox {
+    padding-bottom: 4px;
+}

@@ -131,6 +131,10 @@ export class UserEditDialogComponent implements OnInit {
 
       }
     });
+
+    if (this.newGroup && this.newGroup !== '') {
+      groups.push(this.newGroup);
+    }
     const userEditObj: UserEditObject = {
       'username': this.user.user.username,
       'isAdmin': this.user.user.admin,

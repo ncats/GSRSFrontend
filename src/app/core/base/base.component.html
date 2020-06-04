@@ -63,7 +63,7 @@
       Login
     </button>
     <div class="logged-in" *ngIf="auth">
-      <button class="user-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()">
+      <button class="user-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip = "user menu">
         <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
       </button>
       <br />
@@ -72,6 +72,9 @@
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
       <a mat-menu-item  (click) = "openProfile()">
         <span>Profile</span>
+      </a>
+      <a mat-menu-item  routerLink = "/user-downloads">
+        <span>User Downloads</span>
       </a>
       <a routerLink = "/admin" mat-menu-item *ngIf = "isAdmin">
         <span>Admin Panel</span>

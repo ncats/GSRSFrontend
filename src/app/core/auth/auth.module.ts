@@ -11,6 +11,7 @@ import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.
 import { DownloadMonitorComponent } from '@gsrs-core/auth/user-downloads/download-monitor/download-monitor.component';
 import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-downloads.component';
 import { MatProgressSpinnerModule, MatDialogModule } from '@angular/material';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { MatProgressSpinnerModule, MatDialogModule } from '@angular/material';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    RouterModule,
     MatProgressSpinnerModule
   ],
   declarations: [
