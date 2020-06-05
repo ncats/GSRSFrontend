@@ -44,9 +44,12 @@
           <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
             <div>
               <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-              <span class="no-break">{{this.searchTerm}}</span>
+              <span>{{this.searchTerm}}</span>
             </div>
             <div class="actions-container">
+              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
               <button mat-icon-button color="primary" (click)="clearSearch()">
                 <mat-icon svgIcon="delete_forever"></mat-icon>
               </button>
@@ -344,9 +347,12 @@
         <div class="mat-elevation-z2" *ngIf="searchTerm">
           <div>
             <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-            <span class="no-break">{{this.searchTerm}}</span>
+            <span>{{this.searchTerm}}</span>
           </div>
           <div class="actions-container">
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
             <button mat-icon-button color="primary" (click)="clearSearch()">
               <mat-icon svgIcon="delete_forever"></mat-icon>
             </button>

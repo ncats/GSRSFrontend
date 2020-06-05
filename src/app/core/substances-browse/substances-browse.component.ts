@@ -87,6 +87,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private isFacetsParamsInit = false;
   isCollapsed = true;
   exportOptions: Array<any>;
+  private searchTermHash: number;
+  isSearchEditable = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -113,6 +115,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = 0;
 
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
+
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
@@ -124,6 +132,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
+    if (this.pageSize > 500) {
+      this.pageSize = 500;
+    }
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
@@ -406,6 +417,7 @@ validatePageInput(event: any): boolean {
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
     navigationExtras.queryParams['view'] = this.view;
+    // navigationExtras.queryParams['g-search-hash'] = this.searchTermHash;
 
     const urlTree = this.router.createUrlTree([], {
       queryParams: navigationExtras.queryParams,
@@ -413,6 +425,20 @@ validatePageInput(event: any): boolean {
       preserveFragment: true
     });
     this.location.go(urlTree.toString());
+  }
+
+  editGuidedSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'guided search term' :
+      `${this.privateSearchTerm}`;
+    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-guided-search', eventLabel);
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        'g-search-hash': this.searchTermHash
+      }
+    };
+
+    this.router.navigate(['/guided-search'], navigationExtras);
   }
 
   editStructureSearch(): void {
@@ -490,6 +516,7 @@ validatePageInput(event: any): boolean {
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
 
     this.privateSearchTerm = '';
+    this.searchTermHash = null;
     this.pageIndex = 0;
 
     this.populateUrlQueryParameters();
