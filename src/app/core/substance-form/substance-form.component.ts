@@ -386,6 +386,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   validate(validationType?: string): void {
+    if (validationType && validationType === 'approval') {
+      this.approving = true;
+    } else {
+      this.approving = false;
+    }
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -401,7 +406,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.submissionMessage = 'Substance is Valid. Would you like to submit?';
       }
       if (validationType && validationType === 'approval') {
-        this.approving = true;
         this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
       }
     }, error => {
@@ -446,6 +450,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   submit(): void {
     this.isLoading = true;
+    this.approving = false;
     this.loadingService.setLoading(true);
     this.substanceFormService.saveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
