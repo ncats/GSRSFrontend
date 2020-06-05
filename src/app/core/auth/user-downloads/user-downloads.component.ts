@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UserDownload } from '@gsrs-core/auth/user-downloads/download.model';
 import { take } from 'rxjs/operators';
@@ -14,8 +14,9 @@ export class UserDownloadsComponent implements OnInit {
   downloads?: Array< UserDownload >;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
   ngOnInit() {
@@ -27,7 +28,8 @@ export class UserDownloadsComponent implements OnInit {
     }
   }
 
-  deleteDownload() {
+  allDownloads() {
+    this.router.navigate(['/user-downloads'], {queryParams: {}});
   }
 
 }
