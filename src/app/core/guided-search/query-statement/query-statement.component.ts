@@ -88,7 +88,6 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     if (queryStatement != null) {
-      console.log(queryStatement.queryableProperty);
       const queryablePropertyType = this._queryableDictionary[queryStatement.queryableProperty].type;
       let inputType: string;
       const commandObject = typeCommandOptions[queryablePropertyType][queryStatement.command] as Command;

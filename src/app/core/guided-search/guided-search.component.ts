@@ -86,7 +86,6 @@ export class GuidedSearchComponent implements OnInit {
     const queryStatementHashes = [];
 
     this.queryStatements.forEach(queryStatement => {
-      console.log(queryStatement);
       const queryStatementString = JSON.stringify(queryStatement);
       const hash = this.utilitiesService.hashCode(queryStatementString);
       localStorage.setItem(hash.toString(), queryStatementString);
