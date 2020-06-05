@@ -484,7 +484,7 @@
 
 .advanced-container {
   width:55%;
-  content-align:right;
+  align-content:right;
 }
 
 .selected-container {
@@ -496,7 +496,9 @@
 }
 
 .selected-parameter {
-  height:36px;
+  height:auto;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .selected-container {

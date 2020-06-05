@@ -46,9 +46,10 @@
         <div class="query-input" *ngFor="let commandInput of commandInputs; index as index">
             <div *ngIf="commandInput.type == 'text' || commandInput.type == 'boolean' || commandInput.type == 'number'">
                 <mat-form-field>
-                    <input [type]="commandInput.type" matInput [(ngModel)]="commandInputDict[commandInput.type][index]" (keyup)="commandInput.constructQuery(
+                    <input [type]="commandInput.type" matInput [(ngModel)]="commandInputValueDict[commandInput.type][index]" (keyup)="commandInput.constructQuery(
                         $event.target.value,
                         selectedCondition,
+                        selectedQueryableProperty,
                         selectedLucenePath,
                         queryUpdated,
                         queryParts
@@ -59,17 +60,19 @@
                 <mat-form-field >
                     <input
                         matInput
-                        [(ngModel)]="commandInputDict[commandInput.type][index]"
+                        [(ngModel)]="commandInputValueDict[commandInput.type][index]"
                         (dateChange)="commandInput.constructQuery(
-                            $event,
+                            $event.value,
                             selectedCondition,
+                            selectedQueryableProperty,
                             selectedLucenePath,
                             queryUpdated,
                             queryParts
                         )"
                         (dateInput)="commandInput.constructQuery(
-                            $event,
+                            $event.value,
                             selectedCondition,
+                            selectedQueryableProperty,
                             selectedLucenePath,
                             queryUpdated,
                             queryParts
@@ -81,11 +84,12 @@
             </div>
             <div *ngIf="commandInput.type == 'select'">
                 <mat-form-field floatLabel="never">
-                    <mat-select [(ngModel)]="commandInputDict[commandInput.type][index]"
+                    <mat-select [(ngModel)]="commandInputValueDict[commandInput.type][index]"
                         placeholder="Select default option"
                         (selectionChange)="commandInput.constructQuery(
                         $event.value,
                         selectedCondition,
+                        selectedQueryableProperty,
                         selectedLucenePath,
                         queryUpdated,
                         queryParts

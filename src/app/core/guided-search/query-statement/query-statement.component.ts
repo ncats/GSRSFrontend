@@ -1,12 +1,11 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, AfterViewInit } from '@angular/core';
-import { QueryableSubstanceDictionary, CommandInput } from '../queryable-substance-dictionary.model';
+import { QueryableSubstanceDictionary, CommandInput, Command } from '../queryable-substance-dictionary.model';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { MatAutocompleteSelectedEvent, MatDatepickerInputEvent } from '@angular/material';
-import * as moment from 'moment';
-import { typeCommandOptions, inputTypes } from '../type-command-options.constant';
+import { typeCommandOptions, inputTypes } from './type-command-options.constant';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
+import { QueryStatement } from './query-statement.model';
 
 @Component({
   selector: 'app-query-statement',
@@ -14,9 +13,10 @@ import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controll
   styleUrls: ['./query-statement.component.scss']
 })
 export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() queryStatementHash?: number;
   private _index = 0;
   private _queryableDictionary: QueryableSubstanceDictionary;
-  @Output() queryUpdated = new EventEmitter<string>();
+  @Output() queryUpdated = new EventEmitter<QueryStatement>();
   private allOptions: Array<string>;
   options: Array<string>;
   queryablePropertiesControl = new FormControl();
@@ -29,14 +29,15 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
   ];
   conditionControl = new FormControl();
   selectedCondition = '';
+  selectedQueryableProperty: string;
+  selectedQueryablePropertyType: string;
   selectedLucenePath: string;
-  private selectedQueryablePropertyType: string;
   commandOptions: Array<string>;
   selectedCommandOption: string;
   commandInputs: Array<CommandInput>;
   queryParts: Array<string> = [];
   private typeCommandOptions = typeCommandOptions;
-  commandInputDict: {[queryablePropertyType: string]: Array<string | MatDatepickerInputEvent<Date> | number> } = {};
+  commandInputValueDict: {[queryablePropertyType: string]: Array<string | Date | number> } = {};
   private overlayContainer: HTMLElement;
   cvOptions: Array<VocabularyTerm>;
 
@@ -46,11 +47,10 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
   ) {}
 
   ngOnInit() {
-
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     inputTypes.forEach(key => {
-      this.commandInputDict[key] = [];
+      this.commandInputValueDict[key] = [];
     });
 
     const subscription = this.queryablePropertiesControl.valueChanges.subscribe(value => {
@@ -78,7 +78,33 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
       this.subscriptions.push(conditionSubscription);
     }
 
-    this.queryablePropertiesControl.setValue('All');
+    let queryStatement: QueryStatement;
+
+    if (this.queryStatementHash) {
+      const queryStatementString = localStorage.getItem(this.queryStatementHash.toString());
+      if (queryStatementString) {
+        queryStatement = JSON.parse(queryStatementString);
+      }
+    }
+
+    if (queryStatement != null) {
+      console.log(queryStatement.queryableProperty);
+      const queryablePropertyType = this._queryableDictionary[queryStatement.queryableProperty].type;
+      let inputType: string;
+      const commandObject = typeCommandOptions[queryablePropertyType][queryStatement.command] as Command;
+      if (commandObject.commandInputs) {
+        inputType = commandObject.commandInputs[0].type;
+        this.commandInputValueDict[inputType] = queryStatement.commandInputValues;
+      }
+      this.queryParts = queryStatement.queryParts;
+      this.conditionControl.setValue(queryStatement.condition.trim(), { emitEvent: false });
+      this.selectedCondition = queryStatement.condition;
+      this.queryablePropertiesControl.setValue(queryStatement.queryableProperty, { emitEvent: false });
+      this.processQueriablePropertyChange(queryStatement.queryableProperty);
+      this.commandControl.setValue(queryStatement.command);
+    } else {
+      this.queryablePropertiesControl.setValue('All');
+    }
   }
 
   ngAfterViewInit() {
@@ -129,6 +155,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
       commandObj.constructQuery(
         command,
         this.selectedCondition,
+        this.selectedQueryableProperty,
         this.selectedLucenePath,
         this.queryUpdated,
         this.queryParts
@@ -136,7 +163,14 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  queryablePropertySelected(queryableProperty: string) {
+  queryablePropertySelected(queryableProperty: string): void {
+    this.processQueriablePropertyChange(queryableProperty);
+    this.commandControl.setValue(this.commandOptions[0]);
+  }
+
+  private processQueriablePropertyChange(queryableProperty: string): void {
+    this.selectedQueryableProperty = queryableProperty;
+
     if (this._queryableDictionary[queryableProperty].cvDomain) {
       this.setCvOptions(this._queryableDictionary[queryableProperty].cvDomain);
     }
@@ -158,7 +192,6 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
       }
       return 0;
     });
-    this.commandControl.setValue(this.commandOptions[0]);
   }
 
   setCvOptions(cvDomain: string): void {
@@ -170,10 +203,11 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
   refreshQuery(): void {
     this.queryParts = [];
     this.commandInputs.forEach((commandInput, index) => {
-      if (this.commandInputDict[commandInput.type] && this.commandInputDict[commandInput.type][index] != null) {
+      if (this.commandInputValueDict[commandInput.type] && this.commandInputValueDict[commandInput.type][index] != null) {
         commandInput.constructQuery(
-          this.commandInputDict[commandInput.type][index],
+          this.commandInputValueDict[commandInput.type][index],
           this.selectedCondition,
+          this.selectedQueryableProperty,
           this.selectedLucenePath,
           this.queryUpdated,
           this.queryParts
