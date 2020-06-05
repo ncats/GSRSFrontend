@@ -8,7 +8,7 @@ import { map, catchError, retry } from 'rxjs/operators';
 import { FacetHttpParams } from '@gsrs-core/facets-manager';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
 import { Auth } from '@gsrs-core/auth';
-import { UserEditObject, UploadObject } from '@gsrs-core/admin/admin-objects.model';
+import { UserEditObject, UploadObject, DirectoryFile } from '@gsrs-core/admin/admin-objects.model';
 
 
  @Injectable({
@@ -104,5 +104,19 @@ export class AdminService extends BaseHttpService {
         public queryLoad(id: string): Observable< UploadObject > {
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/jobs`;
           return this.http.get< any >(`${url}/${id}/`);
+        }
+
+        public getFiles(): Observable < Array< DirectoryFile >> {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/files`;
+          return this.http.get< any >(`${url}`);
+        }
+
+        public getLogs(): Observable< Array< DirectoryFile >> {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/logs`;
+          return this.http.get< any >(`${url}`);
+        }
+
+        public getDownloadLink(name: string): string {
+            return `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/logs/${name}`;
         }
 }

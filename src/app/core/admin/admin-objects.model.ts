@@ -68,3 +68,14 @@ export interface UploadStatistics {
     recordsProcessedFailed?: number;
     recordsProcessedSuccess?: number;
 }
+
+
+export interface DirectoryFile {
+    id: string;
+    parent: string;
+    text: string;
+    isDir: boolean;
+    hasLink?: string;
+    order?: string;
+    children?: Array< DirectoryFile >;
+}

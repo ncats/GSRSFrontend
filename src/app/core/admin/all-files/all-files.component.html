@@ -1,0 +1,27 @@
+<div class = "description">Click the chevrons to expand / collapse a folder. Click on a log file to download</div>
+
+
+<mat-tree [dataSource]="dataSource" *ngIf = "dataSource" [treeControl]="treeControl">
+    <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <!-- use a disabled button to provide padding for tree leaf -->
+      <button mat-icon-button disabled></button>
+      <a *ngIf = "node.hasLink" class = "log-link" target = "_blank" [href] = "node.hasLink" matTooltip = "click to download">
+        {{node.text}}  
+      </a>
+      <span *ngIf = "!node.hasLink">
+        {{node.text}} nolink
+      </span>
+    </mat-tree-node>
+    <!-- This is the tree node template for expandable nodes -->
+    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+      <button mat-icon-button matTreeNodeToggle
+              [attr.aria-label]="'toggle ' + node.name">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      {{node.name}}
+    </mat-tree-node>
+  </mat-tree>
+

@@ -1,0 +1,25 @@
+.example-tree-invisible {
+    display: none;
+  }
+  
+  .example-tree ul,
+  .example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+  }
+
+  
+  .mat-tree-node {
+      height: 30px !important;
+      min-height: 30px !important;
+  }
+
+  .log-link {
+    color: #1565C0;
+    text-decoration: none;
+  }
+
+  .description {
+      margin-bottom: 20px;
+  }

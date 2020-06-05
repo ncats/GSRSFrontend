@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CvManagementComponent } from '@gsrs-core/admin/cv-management/cv-management.component';
 // tslint:disable-next-line:max-line-length
-import { MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, MatTableDataSource, MatTableModule, MatSortModule, MatTooltipModule, MatProgressSpinnerModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatSelectModule, MatProgressBarModule } from '@angular/material';
+import { MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, MatTableDataSource, MatTableModule, MatSortModule, MatTooltipModule, MatProgressSpinnerModule, MatTabsModule, MatDialogModule, MatPaginatorModule, MatSelectModule, MatProgressBarModule, MatTreeModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminComponent } from '@gsrs-core/admin/admin.component';
 import { CvTermDialogComponent } from '@gsrs-core/admin/cv-management/cv-term-dialog/cv-term-dialog.component';
@@ -16,6 +16,7 @@ import { DataManagementComponent } from '@gsrs-core/admin/data-management/data-m
 import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AllFilesComponent } from '@gsrs-core/admin/all-files/all-files.component';
 
 
 
@@ -31,6 +32,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   MatTabsModule,
   MatTooltipModule,
   BrowserAnimationsModule,
+  MatTreeModule,
   MatProgressSpinnerModule,
   MatProgressBarModule,
   MatButtonModule,
@@ -53,7 +55,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     UserEditDialogComponent,
     CacheSummaryComponent,
     DataManagementComponent,
-    MonitorComponent
+    MonitorComponent,
+    AllFilesComponent
   ],
   exports: [
     CvManagementComponent,
@@ -65,7 +68,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     UserManagementComponent,
     CacheSummaryComponent,
     DataManagementComponent,
-    MonitorComponent
+    MonitorComponent,
+    AllFilesComponent
   ],
   entryComponents: [
     CvTermDialogComponent,
