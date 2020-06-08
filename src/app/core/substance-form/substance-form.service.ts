@@ -1055,7 +1055,7 @@ export class SubstanceFormService implements OnDestroy {
           if (substanceCopy.properties) {
             for (let i = 0; i < substanceCopy.properties.length; i++) {
               const prop = substanceCopy.properties[i];
-              if ((!prop.propertyType || ! prop.name) {
+              if (!prop.propertyType || ! prop.name) {
                 const invalidPropertyMessage: ValidationMessage = {
                   actionType: 'frontEnd',
                   appliedChange: false,
