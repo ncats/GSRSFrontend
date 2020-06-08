@@ -37,7 +37,6 @@ export class MonitorComponent implements OnInit {
     this.activeRoute.params.subscribe(routeParams => {
       this.jobId = routeParams.id;
       this.adminService.queryLoad(this.jobId).pipe(take(1)).subscribe(response => {
-        console.log(response);
         if (response.statistics && response.statistics.totalRecords && response.statistics.totalRecords.count) {
           this.max = response.statistics.totalRecords.count;
         }
