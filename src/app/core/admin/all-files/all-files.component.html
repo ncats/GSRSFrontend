@@ -2,9 +2,7 @@
 
 
 <mat-tree [dataSource]="dataSource" *ngIf = "dataSource" [treeControl]="treeControl">
-    <!-- This is the tree node template for leaf nodes -->
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-      <!-- use a disabled button to provide padding for tree leaf -->
       <button mat-icon-button disabled></button>
       <a *ngIf = "node.hasLink" class = "log-link" target = "_blank" [href] = "node.hasLink" matTooltip = "click to download">
         {{node.text}}  
@@ -13,7 +11,6 @@
         {{node.text}}
       </span>
     </mat-tree-node>
-    <!-- This is the tree node template for expandable nodes -->
     <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
       <button mat-icon-button matTreeNodeToggle
               [attr.aria-label]="'toggle ' + node.name">
