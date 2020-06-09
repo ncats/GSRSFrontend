@@ -4,17 +4,9 @@
     <div class = "top-button">
         <button mat-button (click) = "addUser()">Add User</button>
     </div>
-   
-    <div class = "top-button" *ngIf = "!showAll">
-        <button mat-button (click) = "showAllUsers()">Show All users</button>
-      </div>
 
       <div class = "top-button">
-          <mat-form-field>
-              <mat-label>Edit user by UserName</mat-label>
-             <input matInput [(ngModel)] = 'userID' name ='id' (keydown.enter) = "editUserByName(userID)" />
-             <span class = "user-alert">{{alert}}</span>
-           </mat-form-field>
+          <button mat-button (click) = "showInactiveUsers()">{{showInactive? 'Show':'Hide'}} Inactive Users</button>
       </div>
 </div>
 
@@ -32,7 +24,7 @@
 
   <div class = "form-row">
       <div class = "top-button">
-          <button mat-button (click) = "showInactiveUsers()">{{showInactive? 'Show':'Hide'}} Inactive Users</button>
+         
         </div>
       <span class="middle-fill"></span>
 

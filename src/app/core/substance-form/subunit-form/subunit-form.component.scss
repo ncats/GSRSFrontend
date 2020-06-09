@@ -141,15 +141,9 @@
 .action-button {
   margin: 5px;
 }
-
-.glycosylation{
-  color:white;
-  background-color:darkgreen;
-}
-
 .disulfide{
   color:white;
-  background-color:teal;
+  background-color: #cca300;
 }
 
 .other{
@@ -159,22 +153,23 @@
 
 .glycosylation{
   color:white;
-  background-color:darkgreen;
+  background-color:#608000;
 }
 
 .N-Glycosylation{
   color:white;
-  background-color:coral;
+  background-color:#0066cc;
 }
 
 .C-Glycosylation{
   color:white;
-  background-color:darkorange;
+  background-color:GRAY;
 }
 
 .O-Glycosylation{
   color:white;
-  background-color:darkgoldenrod;
+  //background-color:darkgoldenrod;
+  background-color:#ff6666;
 }
 
 .feature{

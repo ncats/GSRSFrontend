@@ -348,11 +348,13 @@ validatePageInput(event: any): boolean {
   }
 
   export(url: string) {
+    this.loadingService.setLoading(true);
    this.authService.startUserDownload(url, this.privateExport).subscribe(response => {
+    this.loadingService.setLoading(false);
     const params = {'total': this.totalSubstances};
     this.router.navigate(['/user-downloads/', response.id]);
 
-   });
+   }, error =>     this.loadingService.setLoading(false)  );
   }
 
   setSubstanceNames(substanceId: string): void {

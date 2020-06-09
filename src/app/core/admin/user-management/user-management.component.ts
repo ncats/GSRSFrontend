@@ -43,6 +43,7 @@ constructor(
   ngOnInit() {
     this.filtered.paginator = this.paginator;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.showAllUsers();
     this.pageChange();
         this.searchControl.valueChanges.subscribe(value => {
           this.filterList(value, this.users);
@@ -213,18 +214,22 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
     }
     this.searchTimer = setTimeout(() => {
       const backup = [];
-      if (this.showInactive) {
         this.users.forEach(user => {
-          if (user.active) {
+          if (this.showInactive) {
+            if (user.active) {
+              backup.push(user);
+            }
+          } else {
             backup.push(user);
           }
         });
-      }
 
         this.filtered.data = [];
         backup.forEach(item => {
           const itemString = item.user.username.toUpperCase();
-            if (itemString.indexOf(searchInput.toUpperCase()) > -1) {
+          const emailString = item.user.email.toUpperCase();
+            if ((itemString.indexOf(searchInput.toUpperCase()) > -1) ||
+            (item.user.email && emailString.indexOf(searchInput.toUpperCase()) > -1)) {
                 this.filtered.data.push(item);
             }
         });
