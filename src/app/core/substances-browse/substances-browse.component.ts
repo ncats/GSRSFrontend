@@ -692,9 +692,4 @@ validatePageInput(event: any): boolean {
     this.overlayContainer.style.zIndex = null;
   }
 
-  setExportName(): void {
-   
-  }
-
-
 }
