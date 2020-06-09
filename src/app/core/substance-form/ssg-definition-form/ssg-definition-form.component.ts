@@ -33,6 +33,7 @@ export class SsgDefinitionFormComponent extends SubstanceFormBase implements OnI
       }
       this.substanceFormService.resetState();
       this.definition = substance.specifiedSubstanceG3.definition;
+    //  this.definition.references = [];
     });
     this.subscriptions.push(substanceSubscription);
   }

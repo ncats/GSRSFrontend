@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
+import { SubstanceRelated, SubstanceSummary, SpecifiedSubstanceG3 } from '@gsrs-core/substance';
 import { Subscription } from 'rxjs';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
@@ -35,6 +35,11 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
       }
       this.substanceFormService.resetState();
       this.parentSubstance = substance.specifiedSubstanceG3.parentSubstance;
+
+      if (substance.specifiedSubstanceG3.parentSubstance != null) {
+        this.relatedSubstanceUuid = substance.specifiedSubstanceG3.parentSubstance.refuuid;
+      }
+
     });
     this.subscriptions.push(substanceSubscription);
   }
@@ -49,19 +54,15 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.parentSubstance = relatedSubstance;
-    this.relatedSubstanceUuid = this.parentSubstance.refuuid;
-  }
+    if (substance != null) {
+      this.parentSubstance.refPname = substance._name;
+      this.parentSubstance.name = substance._name;
+      this.parentSubstance.refuuid = substance.uuid;
+      this.parentSubstance.substanceClass = 'reference';
+      this.parentSubstance.approvalID = substance.approvalID;
 
-  updateAccess(access: Array<string>): void {
-    this.parentSubstance.access = access;
+      this.relatedSubstanceUuid = this.parentSubstance.refuuid;
+    }
   }
 
 }

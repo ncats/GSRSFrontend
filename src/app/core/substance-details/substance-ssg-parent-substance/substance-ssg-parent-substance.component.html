@@ -1,6 +1,12 @@
 <div *ngIf="substance.specifiedSubstanceG3.parentSubstance">
-  <div class="name-value">
-    <div class="name">Parent Substance</div>
-    <div class="value">{{substance.specifiedSubstanceG3.parentSubstance.refPname}}</div>
+  <div class = "thumb-col">
+    <div>{{substance.specifiedSubstanceG3.parentSubstance.linkingID}}</div>
+    <img class="structure-image" appSubstanceImage [entityId]="substance.specifiedSubstanceG3.parentSubstance.refuuid">
+    <div>
+      <a class="substance-name" [routerLink]="['/substances', substance.specifiedSubstanceG3.parentSubstance.refuuid]" >
+        {{substance.specifiedSubstanceG3.parentSubstance.name}}
+      </a>
+    </div>
   </div>
+
 </div>

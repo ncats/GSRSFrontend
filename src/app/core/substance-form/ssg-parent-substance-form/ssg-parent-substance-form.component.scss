@@ -7,5 +7,19 @@
 }
 
 .related-substance {
-  width: 400px;
+  width: 350px;
+  max-width: 350px;
+}
+
+::ng-deep .selected-substance {
+  display: flex;
+  flex-direction: column;
+  text-align: left !important;
+  position: relative;
+  img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-width: 220px;
+  }
 }

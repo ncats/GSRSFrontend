@@ -4,13 +4,17 @@ import { SubstanceSsgParentSubstanceComponent } from './substance-ssg-parent-sub
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
 import { MatDialogModule } from '@angular/material';
+import { RouterModule } from '@angular/router';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
     CommonModule,
     DynamicComponentLoaderModule.forChild(SubstanceSsgParentSubstanceComponent),
     ReferencesManagerModule,
-    MatDialogModule
+    MatDialogModule,
+    RouterModule,
+    SubstanceImageModule
   ],
   declarations: [
     SubstanceSsgParentSubstanceComponent

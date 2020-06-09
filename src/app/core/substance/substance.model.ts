@@ -427,18 +427,18 @@ export interface Feature {
 
 export interface SpecifiedSubstanceG3 extends SubstanceBase {
   references?: Array<string>;
-  parentSubstance?: SubstanceReference;
+  parentSubstance?: SubstanceRelated;
   grade?: Grade;
   definition?: Definition;
 }
 
 export interface Grade extends SubstanceBase {
+  references?: Array<string>;
   name?: string;
   type?: string;
-  references?: Array<string>;
 }
 
 export interface Definition extends SubstanceBase {
-  definition?: string;
   references?: Array<string>;
+  definition?: string;
 }
