@@ -12,6 +12,7 @@ import { take } from 'rxjs/operators';
 export class UserDownloadsComponent implements OnInit {
   id?: string;
   downloads?: Array< UserDownload >;
+  totalSubs?: string;
   constructor(
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,

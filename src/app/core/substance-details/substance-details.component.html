@@ -17,7 +17,9 @@
     <div class="side-nav-content">
       <div class="substance-details" *ngIf="substance">
         <div class="title-container">
-          <h1>{{substance._name}}</h1>
+          <h1 class = "substance-title">{{substance._name}}</h1>
+          <span class = "middle-fill"></span>
+          <div *ngIf = "substance.approvalID" class = "approvalID">{{substance.approvalID}}</div>
         </div>
         <mat-accordion multi="true">
           <mat-expansion-panel expanded="true" *ngFor="let property of substanceDetailsProperties" [id]="property.dynamicComponentId + (property.type ? property.type : '')" appScrollToTarget>

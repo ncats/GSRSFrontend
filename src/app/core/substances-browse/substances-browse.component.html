@@ -131,7 +131,7 @@
           </mat-select>
         </mat-form-field>
         <mat-menu #exportMenu="matMenu" >
-            <a mat-menu-item *ngFor = "let option of exportOptions"  (click) = "export(option.link.url)">
+            <a mat-menu-item *ngFor = "let option of exportOptions"  (click) = "export(option.link.url, option.extension)">
               {{option.displayname}}
             </a>
             <mat-checkbox class = "menu-checkbox mat-menu-item"  (click)="privateExport = !privateExport; $event.stopPropagation()">
@@ -410,3 +410,4 @@
           </app-substance-summary-card>
   </div>
 </div>
+

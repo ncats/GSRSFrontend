@@ -25,7 +25,7 @@ export class UserManagementComponent implements OnInit {
   private overlayContainer: HTMLElement;
   displayedColumns: string[] = ['name', 'email', 'created', 'modified', 'active'];
   page = 0;
-  pageSize = 10;
+  pageSize = 250;
   paged: Array< any >;
   users: Array< any > = [];
   private searchTimer: any;

@@ -1,0 +1,15 @@
+
+        <h2 matDialogTitle>Enter a Filename</h2>
+        <div class = "dialog-row">
+            <div>
+                <mat-form-field class = "name-form">
+                    <input matInput class = "name-field" type="text" placeholder="Filename" [(ngModel)] = "name">
+                </mat-form-field>  
+            </div>
+            <div class = "format">.{{extension}}</div>
+        </div>
+        <mat-dialog-actions align="end">
+            <button mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
+            <span class="middle-fill"></span>
+            <button mat-flat-button color="primary" (click) = "save()">Save</button>
+        </mat-dialog-actions>
