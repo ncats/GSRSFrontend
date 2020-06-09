@@ -37,7 +37,9 @@ export class MonitorComponent implements OnInit {
     this.activeRoute.params.subscribe(routeParams => {
       this.jobId = routeParams.id;
       this.adminService.queryLoad(this.jobId).pipe(take(1)).subscribe(response => {
-      this.max = response.statistics.totalRecords.count;
+        if (response.statistics && response.statistics.totalRecords && response.statistics.totalRecords.count) {
+          this.max = response.statistics.totalRecords.count;
+        }
       this.loadJob = response;
       this.stats.extractFail = 0;
       this.stats.extractPass = 0;
@@ -72,6 +74,7 @@ export class MonitorComponent implements OnInit {
   refresh(bool?: boolean): void {
     this.adminService.queryLoad(this.loadJob.id).pipe(take(1)).subscribe(response => {
         this.loadJob = response;
+        this.max = response.statistics.totalRecords.count;
         this.humanizeFields(response);
         this.mixResultDisplay(response);
         if (response.status !== 'COMPLETE') {

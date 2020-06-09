@@ -6,7 +6,7 @@
     <div class = "full-row">
         <div class ="job-title">Importing {{loadJob.name}}</div>
         <span class = "middle-fill"></span>
-        <div class = "large-val">Status: {{loadJob.status}}<span class = "ellipses" *ngIf = "loadJob.status === 'RUNNING'">{{ellipses}}</span></div>
+        <div class = "large-val">Status: {{loadJob.status}}<div class = "ellipses" *ngIf = "loadJob.status === 'RUNNING'">{{ellipses}}</div></div>
     </div>
 <div class = "lower-body">
 <div class = "loader-container">
@@ -79,10 +79,10 @@
     >
     </mat-progress-bar>
     <div class = "label-row">
-        <div [style.width.%] = "stats.persistPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedPassed > 0">
-                <span class = "count-row-label">{{loadJob.statistics.recordsPersistedPassed}}</span>
+        <div [style.width.%] = "stats.persistPass"  class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedSuccess > 0">
+                <span class = "count-row-label">{{loadJob.statistics.recordsPersistedSuccess}}</span>
         </div>
-        <div [style.width.%] = "stats.persistFail" class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedFailed > 0">
+        <div [style.width.%] = "stats.persistFail - stats.persistPass" class = "count-cont" *ngIf = "loadJob.statistics.recordsPersistedFailed > 0">
             <span  class = "count-row-label">{{loadJob.statistics.recordsPersistedFailed}}</span>
         </div>
     </div>

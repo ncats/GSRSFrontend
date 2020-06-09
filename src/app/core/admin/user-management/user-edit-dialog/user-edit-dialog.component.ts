@@ -23,7 +23,7 @@ export class UserEditDialogComponent implements OnInit {
   changePassword = false;
   loading = true;
   message: string;
-  newGroup: string;
+  newGroup = '';
   groups: Array< any >;
   roles = [{name: 'Updater', hasRole: false},
     {name: 'Admin', hasRole: false},
@@ -173,13 +173,16 @@ export class UserEditDialogComponent implements OnInit {
           groups.push(group.name);
         }
       });
+      if (this.newGroup && this.newGroup !== '') {
+        groups.push(this.newGroup);
+      }
       const userEditObj: UserEditObject = {
         'username': this.user.user.username,
         'isAdmin': this.user.user.admin,
         'isActive': this.user.active,
         'email': this.user.user.email || null,
         'roles': rolesArr,
-        'groups' : ['testGroup'],
+        'groups' : groups,
         'password': this.newPassword
       };
 

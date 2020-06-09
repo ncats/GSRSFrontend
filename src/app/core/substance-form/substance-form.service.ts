@@ -1052,6 +1052,23 @@ export class SubstanceFormService implements OnDestroy {
               break;
             }
           }
+          if (substanceCopy.properties) {
+            for (let i = 0; i < substanceCopy.properties.length; i++) {
+              const prop = substanceCopy.properties[i];
+              if (!prop.propertyType || ! prop.name) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'All properties require a non-empty name and type',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                break;
+              }
+            }
+          }
         }
         observer.next(results);
         observer.complete();
