@@ -226,12 +226,14 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
 
         this.filtered.data = [];
         backup.forEach(item => {
-          const itemString = item.user.username.toUpperCase();
-          const emailString = item.user.email.toUpperCase();
+          if (item.user) {
+          const itemString = item.user.username ? item.user.username.toUpperCase() : null;
+          const emailString = item.user.email ? item.user.email.toUpperCase() : null;
             if ((itemString.indexOf(searchInput.toUpperCase()) > -1) ||
             (item.user.email && emailString.indexOf(searchInput.toUpperCase()) > -1)) {
                 this.filtered.data.push(item);
             }
+          }
         });
         clearTimeout(this.searchTimer);
         this.pageChange();
