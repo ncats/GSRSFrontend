@@ -84,7 +84,7 @@
       <div class="dismiss-container">
         <span class="middle-fill"></span>
         <button mat-flat-button color="primary" *ngIf = "!approving" (click)="submit()" [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}} Submit</button>
-        <button mat-flat-button color="primary" *ngIf = "approving" (click)="approve()" [disabled]="isLoading || !canApprove"> Approve</button>
+        <button mat-flat-button color="primary" *ngIf = "approving" (click)="approve()" [disabled]="isLoading || !canApprove"> Confirm Approval</button>
 
       </div>
     </div>

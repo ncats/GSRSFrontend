@@ -44,9 +44,12 @@
           <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
             <div>
               <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-              <span class="no-break">{{this.searchTerm}}</span>
+              <span>{{this.searchTerm}}</span>
             </div>
             <div class="actions-container">
+              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
               <button mat-icon-button color="primary" (click)="clearSearch()">
                 <mat-icon svgIcon="delete_forever"></mat-icon>
               </button>
@@ -141,7 +144,7 @@
   
           <div class = "export ">
               <button *ngIf="exportOptions && exportOptions.length > 0 && isLoggedIn" [disabled] = "disableExport"
-                  matTooltip = "Export Search Results" mat-button class = "mat-button export-button" [matMenuTriggerFor]="exportMenu">
+                  matTooltip = "Export Search Results" mat-button class = "mat-button export-button mat-raised-button" [matMenuTriggerFor]="exportMenu">
                     <mat-icon svgIcon="get_app"></mat-icon> Export
                   </button>
           </div>
@@ -344,9 +347,12 @@
         <div class="mat-elevation-z2" *ngIf="searchTerm">
           <div>
             <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-            <span class="no-break">{{this.searchTerm}}</span>
+            <span>{{this.searchTerm}}</span>
           </div>
           <div class="actions-container">
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
             <button mat-icon-button color="primary" (click)="clearSearch()">
               <mat-icon svgIcon="delete_forever"></mat-icon>
             </button>
@@ -403,7 +409,7 @@
     </button>
   </div>
   <div class="substance-cards">
-    <app-substance-summary-card *ngFor="let substance of substances" [substance]="substance"
+    <app-substance-summary-card *ngFor="let substance of exactMatchSubstances" [substance]="substance"
             (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
             [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
             [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems">

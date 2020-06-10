@@ -1,5 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { MatDatepickerInputEvent } from '@angular/material';
+import { QueryStatement } from './query-statement/query-statement.model';
 
 export interface QueryableSubstanceDictionary {
     [displayName: string]: {
@@ -25,10 +26,11 @@ export interface Command {
 export interface CommandInput {
     type?: string;
     constructQuery?: (
-        queryValue: string | MatDatepickerInputEvent<Date> | number,
+        queryValue: string | Date | number,
         condition: string,
+        queryableProperty: string,
         lucenePath: string,
-        eventEmitter: EventEmitter<string>,
+        eventEmitter: EventEmitter<QueryStatement>,
         queryParts?: Array<string>
     ) => void;
 }

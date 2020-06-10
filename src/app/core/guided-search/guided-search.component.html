@@ -23,6 +23,7 @@
                 <div class="builder-row" *ngFor="let queryStatement of queryStatements; index as index, first as isFirst, last as isLast">
                     <div class="query-statement-container">
                         <app-query-statement
+                            [queryStatementHash]="queryStatement.queryHash"
                             [index]="index"
                             [queryableDictionary]="queryableSubstanceDictionary"
                             [queryableOptions]="displayProperties"

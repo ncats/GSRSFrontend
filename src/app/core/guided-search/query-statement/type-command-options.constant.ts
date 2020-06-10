@@ -1,7 +1,7 @@
-import { CommandTypesDict, CommandDict } from './queryable-substance-dictionary.model';
+import { CommandTypesDict, CommandDict } from '../queryable-substance-dictionary.model';
 import { EventEmitter } from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material';
 import * as moment from 'moment';
+import { QueryStatement } from './query-statement.model';
 
 
 export const inputTypes = [
@@ -20,8 +20,9 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const parts = queryValue.split(' ');
                         let query = parts.map(word => {
@@ -31,7 +32,13 @@ export const typeCommandOptions: CommandTypesDict = {
                             query = `(${query})`;
                         }
                         query = `${condition}${query}`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'ANY of the following words in any order or position',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -43,11 +50,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}"^${queryValue}$"`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'the following exact phrase, which must match completely (no partial words)',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -59,11 +73,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}"${queryValue}"`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'the following contained phrase, which must be found as written (no partial words)',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -75,8 +96,9 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const parts = queryValue.split(' ');
                         let query = parts.map(word => {
@@ -86,7 +108,13 @@ export const typeCommandOptions: CommandTypesDict = {
                             query = `(${query})`;
                         }
                         query = `${condition}${query}`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'ALL of the following words in any order or position',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -98,11 +126,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}"*${queryValue}*"`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'a WORD that contains',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -114,11 +149,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}"${queryValue}*"`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'a WORD that contains',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -130,11 +172,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}"^${queryValue}"`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'a value that starts with with the word(s)',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -146,11 +195,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}"*${queryValue}"`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'a WORD that ends with',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -162,11 +218,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}"${queryValue}$"`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'a value that ends with the word(s)',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -175,11 +238,18 @@ export const typeCommandOptions: CommandTypesDict = {
             constructQuery: (
                 queryValue: string,
                 condition: string,
+                queryableProperty: string,
                 lucenePath: string,
-                eventEmitter: EventEmitter<string>
+                eventEmitter: EventEmitter<QueryStatement>
             ) => {
                 const query = `${condition}${lucenePath}*`;
-                eventEmitter.emit(query);
+                eventEmitter.emit({
+                    condition: condition,
+                    queryableProperty: queryableProperty,
+                    command: 'values that are not empty',
+                    commandInputValues: [queryValue],
+                    query: query
+                });
             }
         },
         'the following exact default values': {
@@ -189,11 +259,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: string,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}"^${queryValue}$"`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'the following exact default values',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -205,17 +282,24 @@ export const typeCommandOptions: CommandTypesDict = {
                 {
                     type: 'datetime',
                     constructQuery: (
-                        datepickerEvent: MatDatepickerInputEvent<Date>,
+                        date: Date,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
-                        const timestampStart = moment(datepickerEvent.value)
+                        const timestampStart = moment(date)
                             .set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).utc().valueOf();
-                        const timestampEnd = moment(datepickerEvent.value)
+                        const timestampEnd = moment(date)
                             .set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).utc().valueOf();
                         const query = `${condition}${lucenePath}[${timestampStart} TO ${timestampEnd}]`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'on',
+                            commandInputValues: [date],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -225,15 +309,22 @@ export const typeCommandOptions: CommandTypesDict = {
                 {
                     type: 'datetime',
                     constructQuery: (
-                        datepickerEvent: MatDatepickerInputEvent<Date>,
+                        date: Date,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
-                        const timestampEnd = moment(datepickerEvent.value)
+                        const timestampEnd = moment(date)
                             .set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).utc().valueOf();
                         const query = `${condition}${lucenePath}[-10E50 TO ${timestampEnd}]`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'before',
+                            commandInputValues: [date],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -243,15 +334,22 @@ export const typeCommandOptions: CommandTypesDict = {
                 {
                     type: 'datetime',
                     constructQuery: (
-                        datepickerEvent: MatDatepickerInputEvent<Date>,
+                        date: Date,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
-                        const timestampStart = moment(datepickerEvent.value)
+                        const timestampStart = moment(date)
                             .set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).utc().valueOf();
                         const query = `${condition}${lucenePath}[${timestampStart} TO 10E50]`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'after',
+                            commandInputValues: [date],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -261,34 +359,50 @@ export const typeCommandOptions: CommandTypesDict = {
                 {
                     type: 'datetime',
                     constructQuery: (
-                        datepickerEvent: MatDatepickerInputEvent<Date>,
+                        date: Date,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>,
+                        eventEmitter: EventEmitter<QueryStatement>,
                         queryParts?: Array<string>
                     ) => {
-                        const timestampStart = moment(datepickerEvent.value)
+                        const timestampStart = moment(date)
                             .set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).utc().valueOf();
 
                         queryParts[0] = `${condition}${lucenePath}[${timestampStart} TO `;
                         const query = queryParts.join('');
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'between',
+                            commandInputValues: [date],
+                            query: query,
+                            queryParts: queryParts
+                        });
                     }
                 },
                 {
                     type: 'datetime',
                     constructQuery: (
-                        datepickerEvent: MatDatepickerInputEvent<Date>,
+                        date: Date,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>,
+                        eventEmitter: EventEmitter<QueryStatement>,
                         queryParts?: Array<string>
                     ) => {
-                        const timestampEnd = moment(datepickerEvent.value)
+                        const timestampEnd = moment(date)
                             .set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).utc().valueOf();
                         queryParts[1] = `${timestampEnd}]`;
                         const query = queryParts.join('');
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'between',
+                            commandInputValues: [date],
+                            query: query,
+                            queryParts: queryParts
+                        });
                     }
                 }
             ]
@@ -299,22 +413,34 @@ export const typeCommandOptions: CommandTypesDict = {
             constructQuery: (
                 commandValue: string,
                 condition: string,
+                queryableProperty: string,
                 lucenePath: string,
-                eventEmitter: EventEmitter<string>
+                eventEmitter: EventEmitter<QueryStatement>
             ) => {
                 const query = `${condition}${lucenePath}"^${commandValue}$"`;
-                eventEmitter.emit(query);
+                eventEmitter.emit({
+                    condition: condition,
+                    queryableProperty: queryableProperty,
+                    command: 'true',
+                    query: query
+                });
             }
         },
         'false': {
             constructQuery: (
                 commandValue: string,
                 condition: string,
+                queryableProperty: string,
                 lucenePath: string,
-                eventEmitter: EventEmitter<string>
+                eventEmitter: EventEmitter<QueryStatement>
             ) => {
                 const query = `${condition}${lucenePath}"^${commandValue}$"`;
-                eventEmitter.emit(query);
+                eventEmitter.emit({
+                    condition: condition,
+                    queryableProperty: queryableProperty,
+                    command: 'false',
+                    query: query
+                });
             }
         }
     },
@@ -326,11 +452,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: number,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}${queryValue}`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'exact number',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -342,11 +475,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: number,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}[${queryValue} TO 10E50]`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'number that begins with',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -358,11 +498,18 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: number,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>
+                        eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         const query = `${condition}${lucenePath}[-10E50 TO ${queryValue}]`;
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'number that ends with',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
                     }
                 }
             ]
@@ -374,13 +521,21 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: number,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>,
+                        eventEmitter: EventEmitter<QueryStatement>,
                         queryParts?: Array<string>
                     ) => {
                         queryParts[0] = `${condition}${lucenePath}[${queryValue} TO `;
                         const query = queryParts.join('');
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'between',
+                            commandInputValues: [queryValue],
+                            query: query,
+                            queryParts: queryParts
+                        });
                     }
                 },
                 {
@@ -388,13 +543,21 @@ export const typeCommandOptions: CommandTypesDict = {
                     constructQuery: (
                         queryValue: number,
                         condition: string,
+                        queryableProperty: string,
                         lucenePath: string,
-                        eventEmitter: EventEmitter<string>,
+                        eventEmitter: EventEmitter<QueryStatement>,
                         queryParts?: Array<string>
                     ) => {
                         queryParts[1] = `${queryValue}]`;
                         const query = queryParts.join('');
-                        eventEmitter.emit(query);
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'between',
+                            commandInputValues: [queryValue],
+                            query: query,
+                            queryParts: queryParts
+                        });
                     }
                 }
             ]
@@ -403,11 +566,18 @@ export const typeCommandOptions: CommandTypesDict = {
             constructQuery: (
                 queryValue: string,
                 condition: string,
+                queryableProperty: string,
                 lucenePath: string,
-                eventEmitter: EventEmitter<string>
+                eventEmitter: EventEmitter<QueryStatement>
             ) => {
                 const query = `${condition}${lucenePath}*`;
-                eventEmitter.emit(query);
+                eventEmitter.emit({
+                    condition: condition,
+                    queryableProperty: queryableProperty,
+                    command: 'values that are not empty',
+                    commandInputValues: [queryValue],
+                    query: query
+                });
             }
         }
     }

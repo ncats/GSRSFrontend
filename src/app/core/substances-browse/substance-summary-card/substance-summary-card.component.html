@@ -21,6 +21,13 @@
             </mat-chip-list>
           </div>
         </div>
+        <div *ngIf="!substance.structure">
+          <div class="mat-chip-list-container">
+            <mat-chip-list selectable="false" multiple="false">
+              <mat-chip color="primary" selected>{{substance.substanceClass | facetDisplay: 'types' | uppercase}}</mat-chip>
+            </mat-chip-list>
+          </div>
+        </div>
         <div class="image-thumbnail">
           <div *ngIf="substance.structure || substance.polymer">
             <a class="zoom" (click)="openImageModal(substance)">
@@ -203,6 +210,14 @@
             <div>
               <span class="value">
                 {{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}
+              </span>
+            </div>
+          </div>
+          <div class="substance-data" *ngIf = "substance.approved">
+            <div class="label">Approved Date: </div>
+            <div>
+              <span class="value">
+                {{substance.approved| date : 'short'}}
               </span>
             </div>
           </div>
