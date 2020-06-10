@@ -29,7 +29,7 @@
       <span class="middle-fill"></span>
 
   <mat-form-field [floatLabel]="'never'" class="search">
-    <input matInput placeholder="Search User Names" [formControl]="searchControl">
+    <input matInput placeholder="Search User Names / Emails" [formControl]="searchControl">
   </mat-form-field>
 </div>
 <table mat-table [dataSource] = "paged"  matSort (matSortChange)="sortData($event)">
@@ -37,7 +37,7 @@
         <th mat-header-cell *matHeaderCellDef  mat-sort-header> User Name</th>
         <td mat-cell *matCellDef="let user; index as index">
           <a class = "mat-button" matTooltip = "select to edit" (click) = "editUser(user.user.username, index)">
-            {{user.user.username}}
+              <mat-icon svgIcon="edit" class = "small-icon clear-button"></mat-icon> {{user.user.username}}
           </a>
         </td>
       </ng-container>
