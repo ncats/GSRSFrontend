@@ -142,6 +142,14 @@
           <div class="name">Organism Species</div>
           <div class="value blue-font">{{substance.structurallyDiverse.organismSpecies}}</div>
         </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.infraSpecificType">
+          <div class="name">Organism Infraspecific Type</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificType}}</div>
+        </div>
+        <div class="name-value" *ngIf="substance.structurallyDiverse.infraSpecificName">
+          <div class="name">Organism Intraspecific Name</div>
+          <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificName}}</div>
+        </div>
         <div class="name-value" *ngIf="substance.structurallyDiverse.organismAuthor">
           <div class="name">Organism Author</div>
           <div class="value blue-font">{{substance.structurallyDiverse.organismAuthor}}</div>

@@ -25,7 +25,7 @@ export class UserManagementComponent implements OnInit {
   private overlayContainer: HTMLElement;
   displayedColumns: string[] = ['name', 'email', 'created', 'modified', 'active'];
   page = 0;
-  pageSize = 10;
+  pageSize = 250;
   paged: Array< any >;
   users: Array< any > = [];
   private searchTimer: any;
@@ -43,6 +43,7 @@ constructor(
   ngOnInit() {
     this.filtered.paginator = this.paginator;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.showAllUsers();
     this.pageChange();
         this.searchControl.valueChanges.subscribe(value => {
           this.filterList(value, this.users);
@@ -213,20 +214,26 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
     }
     this.searchTimer = setTimeout(() => {
       const backup = [];
-      if (this.showInactive) {
         this.users.forEach(user => {
-          if (user.active) {
+          if (this.showInactive) {
+            if (user.active) {
+              backup.push(user);
+            }
+          } else {
             backup.push(user);
           }
         });
-      }
 
         this.filtered.data = [];
         backup.forEach(item => {
-          const itemString = item.user.username.toUpperCase();
-            if (itemString.indexOf(searchInput.toUpperCase()) > -1) {
+          if (item.user) {
+          const itemString = item.user.username ? item.user.username.toUpperCase() : null;
+          const emailString = item.user.email ? item.user.email.toUpperCase() : null;
+            if ((itemString.indexOf(searchInput.toUpperCase()) > -1) ||
+            (item.user.email && emailString.indexOf(searchInput.toUpperCase()) > -1)) {
                 this.filtered.data.push(item);
             }
+          }
         });
         clearTimeout(this.searchTimer);
         this.pageChange();

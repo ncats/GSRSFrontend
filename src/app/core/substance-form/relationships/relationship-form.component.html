@@ -5,6 +5,13 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
+  <div class="flex-column">
+      <div class="delete-container">
+          <button mat-icon-button matTooltip="Delete relationship" (click)="deleteRelationship()">
+            <mat-icon svgIcon="delete_forever"></mat-icon>
+          </button>
+        </div>
+  </div>
   <div class="flex-column related-substance">
     <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
       eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" header="Related Substance"
@@ -13,11 +20,7 @@
   </div>
   <div class="flex-column form-content">
     <div class="form-row">
-      <div class="delete-container">
-        <button mat-icon-button matTooltip="Delete relationship" (click)="deleteRelationship()">
-          <mat-icon svgIcon="delete_forever"></mat-icon>
-        </button>
-      </div>
+      
       <app-cv-input class = "type" required = 'true' domain = "RELATIONSHIP_TYPE"  title = "Type" name = "type"
                     [model] = "relationship.type" (valueChange)= "relationship.type = $event">
       </app-cv-input>

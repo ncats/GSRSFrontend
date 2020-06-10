@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceName, SubstanceCode } from '../substance/substance.model';
@@ -27,6 +27,7 @@ import { Facet, FacetUpdateEvent } from '../facets-manager/facet.model';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 
 @Component({
   selector: 'app-substances-browse',
@@ -105,7 +106,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private overlayContainerService: OverlayContainer,
     private location: Location,
     private facetManagerService: FacetsManagerService,
-    private substanceTextSearchService: SubstanceTextSearchService
+    private substanceTextSearchService: SubstanceTextSearchService,
   ) {}
 
   ngOnInit() {
@@ -358,12 +359,34 @@ validatePageInput(event: any): boolean {
     this.searchSubstances();
   }
 
-  export(url: string) {
-   this.authService.startUserDownload(url, this.privateExport).subscribe(response => {
-    const params = {'total': this.totalSubstances};
-    this.router.navigate(['/user-downloads/', response.id]);
+  export(url: string, extension: string) {
+    const dialogReference = this.dialog.open(ExportDialogComponent, {
+      height: '215x',
+      width: '550px',
+      data: {'extension' : extension}
+    });
 
-   });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const exportSub = dialogReference.afterClosed().subscribe(name => {
+      this.overlayContainer.style.zIndex = null;
+      if (name && name !== '') {
+        this.loadingService.setLoading(true);
+        const fullname = name + '.' + extension;
+        this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+          this.loadingService.setLoading(false);
+          this.loadingService.setLoading(false);
+          const navigationExtras: NavigationExtras = {
+            queryParams: {
+              totalSub: this.totalSubstances
+            }
+          };
+          const params = {'total': this.totalSubstances};
+          this.router.navigate(['/user-downloads/', response.id], navigationExtras);
+        }, error =>     this.loadingService.setLoading(false)  );
+      }
+      });
+
   }
 
   setSubstanceNames(substanceId: string): void {
@@ -695,6 +718,5 @@ validatePageInput(event: any): boolean {
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
   }
-
 
 }

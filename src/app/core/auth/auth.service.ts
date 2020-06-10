@@ -3,7 +3,7 @@ import { ConfigService } from '../config/config.service';
 import { Auth, Role } from './auth.model';
 import { Observable, Subject } from 'rxjs';
 import { map, take, catchError } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { UserDownload, AllUserDownloads } from '@gsrs-core/auth/user-downloads/download.model';
 
@@ -201,11 +201,18 @@ export class AuthService {
     });
   }
 
-  startUserDownload(fullUrl: string, privateExport: boolean): Observable< any > {
+  startUserDownload(fullUrl: string, privateExport: boolean, filename?: string): Observable< any > {
+    let params = new HttpParams();
     if (privateExport) {
-      fullUrl = fullUrl + '?publicOnly=false';
+      params = params.append('publicOnly', 'false');
     }
-    return this.http.get< any >(`${fullUrl}`);
+    if (filename && filename !== '') {
+      params = params.append('filename', filename);
+    }
+    const options = {
+      params: params
+    };
+    return this.http.get< any >(fullUrl, options);
   }
 
   getUpdateStatus(id: string): Observable< UserDownload > {

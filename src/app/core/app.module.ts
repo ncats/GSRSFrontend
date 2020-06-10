@@ -72,6 +72,7 @@ import { AdminModule } from '@gsrs-core/admin/admin.module';
 import { FacetsManagerModule } from './facets-manager/facets-manager.module';
 import { GuidedSearchModule } from './guided-search/guided-search.module';
 import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
     CardDynamicSectionDirective,
     SubstanceSummaryCardComponent,
     SubstanceHierarchyComponent,
-    SequenceAlignmentComponent
+    SequenceAlignmentComponent,
+    ExportDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -159,7 +161,8 @@ import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    HighlightedSearchActionComponent
+    HighlightedSearchActionComponent,
+    ExportDialogComponent
   ]
 })
 export class AppModule {}
