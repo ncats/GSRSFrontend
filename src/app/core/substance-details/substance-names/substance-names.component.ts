@@ -22,6 +22,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   substanceUpdated = new Subject<SubstanceDetail>();
   private overlayContainer: HTMLElement;
+  hideOrgs = true;
 
   constructor(
     private dialog: MatDialog,
@@ -38,6 +39,12 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       this.substance = substance;
       if (this.substance != null && this.substance.names != null) {
         this.names = this.substance.names;
+        this.names.forEach(name => {
+          if (name.nameOrgs && name.nameOrgs.length > 0) {
+            this.displayedColumns = ['name', 'type', 'language', 'naming-orgs', 'references'];
+            this.hideOrgs = false;
+          }
+        });
         this.filtered = this.substance.names;
         this.countUpdate.emit(this.names.length);
         this.searchControl.valueChanges.subscribe(value => {

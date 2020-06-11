@@ -26,6 +26,11 @@
       <td mat-cell *matCellDef="let name"> {{getLanguages(name)}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="naming-orgs" *ngIf = "!hideOrgs">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Naming Orgs </th>
+        <td mat-cell *matCellDef="let name"> <span *ngFor = "let org of name.nameOrgs; last as last">{{org.nameOrg}}{{!last? ', ':''}}</span> </td>
+      </ng-container>
+
     <ng-container matColumnDef="references">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> References </th>
       <td mat-cell *matCellDef="let name">

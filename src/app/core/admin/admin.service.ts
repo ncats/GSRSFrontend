@@ -117,6 +117,6 @@ export class AdminService extends BaseHttpService {
         }
 
         public getDownloadLink(name: string): string {
-            return `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/logs/${name}`;
+            return `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/files/${name}`;
         }
 }
