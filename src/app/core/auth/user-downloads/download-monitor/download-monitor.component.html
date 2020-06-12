@@ -54,7 +54,7 @@
    <div class = "main-bar">
 
    <div class="main-container">          
-       <div class = "table-row" *ngIf = "download.numRecords !== null && (download.status === 'RUNNING' || download.status === 'PREPARING')" >
+       <div class = "table-row" *ngIf = "download.numRecords !== null && (download.status === 'RUNNING')" >
            <div class = "label table-label">Records Processed So Far:</div>
            <div class = "table-value">{{download.numRecords}}</div>
        </div>
@@ -63,16 +63,36 @@
            <div class = "table-value">{{download.numRecords}}</div>
        </div>
        <div class = "table-row" *ngIf = "browseLink">
-           <div class = "label table-label">Original Query:</div>
-           <div class = "table-value"><a class = "query-link" [href] = "browseLink" target = "_blank">{{browseLink}}
-            <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
-           </a>
+           <div class = "label table-label">
+                <a class = "query-link" [routerLink] = "['/browse-substance']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
+                    Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
+                </a>
+            </div>
+           <div class = "table-value facet-container">
+               <div class = "query-row" *ngIf = "parameters.search">
+                   <div class = "query-label">Search: </div>
+                   <div class = "query-value">{{parameters.search}}</div>
+               </div>
+               <span *ngFor = "let facet of facetArray">
+                    <span *ngFor = "let value of facet.values">
+                            <div class = "query-row" >
+                                    <div class = "query-label">{{facet.facet}}: </div>
+                                    <div class = "query-value">{{value | decodeUri}}</div>
+                                </div>
+                    </span>
+               </span>
+               
+            <div class = "query-row" *ngIf = "parameters.order">
+                    <div class = "query-label">Sort By: </div>
+                    <div class = "query-value">{{displayOrder}}</div>
+                </div>
+           
             
         </div>
        </div>
        <div class = "table-row" *ngIf = "download.size" >
            <div class = "label table-label">Size:</div>
-           <div class = "table-value">{{download.size / 1000}} Kb</div>
+           <div class = "table-value">{{download.size | fileSize}}</div>
        </div>
        <div class = "table-row" *ngIf = "download.sha1" >
                <div class = "label table-label">SHA-1:</div>
@@ -83,16 +103,16 @@
    </div>
 <div class = "end-bar">
 <div class = "job-dates">
-   <div *ngIf="download.started" class = "table-row">
+   <div *ngIf="download.started" class = "table-row" matTooltip = "{{download.started | date: 'long'}}">
           <span class = "time-label">Started: </span> 
            <span class = "time-field">{{download.startedHuman}}</span>
    </div>
-   <div *ngIf="download.finished" class = "table-row">
+   <div *ngIf="download.finished" class = "table-row"  matTooltip = "{{download.finished | date: 'long'}}">
        <span class = "time-label">Ended: </span> 
            <span class = "time-field">{{download.finishedHuman}}</span>
    </div>
 </div>  
-<div *ngIf="!download.enabled" class = "bottom-button">
+<div *ngIf="!download.enabled" class = "bottom-button" >
    <button mat-button class = "mat-flat-button mat-primary" color = "primary"  (click)="deleteDownload()">
        <mat-icon svgIcon="delete_forever"></mat-icon>
        Delete

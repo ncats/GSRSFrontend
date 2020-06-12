@@ -3,6 +3,7 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import * as moment from 'moment';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
+import { NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-download-monitor',
@@ -16,7 +17,10 @@ export class DownloadMonitorComponent implements OnInit {
   download: any;
   deleted = false;
   exists: boolean;
-  browseLink: string;
+  browseLink = false;
+  parameters: NavigationExtras = {};
+  facetArray = [];
+  displayOrder: string;
   constructor(
     private authService: AuthService
   ) { }
@@ -68,12 +72,12 @@ export class DownloadMonitorComponent implements OnInit {
   }
 
   processQuery(url: string) {
-    if (url.indexOf('status(') < 0){
-      url = '?' + url.split('?')[1];
+    if (url.indexOf('status(') < 0) {
+      this.browseLink = true;
+      url = url.split('?')[1];
 
     const urlParams = new URLSearchParams(url);
-    let string = '/browse-substance?';
-    const paramArr = [];
+    this.facetArray = [];
     const facets = urlParams.getAll('facet');
     facets.forEach(str => {
         const facet = str.split('/');
@@ -83,38 +87,52 @@ export class DownloadMonitorComponent implements OnInit {
           facet[0] = facet[0].slice(1, facet[0].length);
         }
          let exists = false;
+         facet[1] = encodeURIComponent(facet[1]);
          const value = facet[1] + '.' + bool;
-          paramArr.forEach(entry => {
+         this.facetArray.forEach(entry => {
             if (entry.facet === facet[0]) {
-              entry.values = entry.values + '%2B' + value;
+              // build valuestring for queryParams and values for template display
+              entry.valueString = entry.valueString + '+' + value;
+              entry.values.push(bool === 'false' ? 'NOT ' + facet[1] : facet[1]);
               exists = true;
             }
           });
           if (exists === false) {
-            paramArr.push(
-              {'facet': facet[0], 'values': value}
+            this.facetArray.push(
+              {'facet': facet[0], 'valueString': value, 'values': [bool === 'false' ? 'NOT ' + facet[1] : facet[1] ]}
             );
           }
     });
       if (urlParams.has('q')) {
-        string += 'search=' + urlParams.get('q') + '&';
+        this.parameters['search'] = urlParams.get('q');
       }
 
       if (urlParams.has('order')) {
-        string += 'order=' + urlParams.get('order') + '&';
+        this.parameters['order'] =  urlParams.get('order');
+        let order = urlParams.get('order');
+        if ( order.charAt(0) === '$') {
+          order = order.slice(1, order.length);
+          order = order.replace('root_', '') + ' - descending';
+
+        }
+        if ( order.charAt(0) === '^') {
+          order = order.slice(1, order.length);
+          order = order.replace('root_', '') + ' - ascending';
+        }
+        this.displayOrder = order;
       }
 
-      if (paramArr.length > 0) {
-        string += 'facets=';
-        for (let i = 0; i < paramArr.length; i ++) {
-          const object = paramArr[i];
-          string += object.facet + '*' + object.values;
-          if (i < (paramArr.length - 1)) {
-            string += ',';
+      if (this.facetArray.length > 0) {
+        let facetVal = '';
+        for (let i = 0; i < this.facetArray.length; i ++) {
+          const object = this.facetArray[i];
+          facetVal += object.facet + '*' + object.valueString;
+          if (i < (this.facetArray.length - 1)) {
+            facetVal += ',';
           }
         }
+        this.parameters['facets'] = facetVal;
       }
-      this.browseLink = string;
   }
 }
 
