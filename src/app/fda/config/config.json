@@ -576,12 +576,12 @@
       "display": "Register",
       "children": [
         {
-          "display": "Register Application",
+          "display": "Application",
           "path": "application/register",
           "order": 200
         },
         {
-          "display": "Register Product",
+          "display": "Product",
           "path": "product/register",
           "order": 210
         }

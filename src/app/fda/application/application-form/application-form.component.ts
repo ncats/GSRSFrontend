@@ -225,7 +225,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
             }
           }
 
-          // Validate Product Average, Low, High, LowLimit, HighLimit should be integer/number
+          // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
           elementProd.applicationIngredientList.forEach(elementIngred => {
             if (elementIngred != null) {
               if (elementIngred.average) {

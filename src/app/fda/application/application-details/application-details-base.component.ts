@@ -25,6 +25,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   flagIconSrcPath: string;
   isAdmin = false;
   updateApplicationUrl: string;
+  message = '';
 
   constructor(
     public applicationService: ApplicationService,
@@ -38,28 +39,74 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
-    // this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-
     this.loadingService.setLoading(true);
-    // this.id = this.activatedRoute.snapshot.params['id'];
-    // this.src = this.activatedRoute.snapshot.params['src'];
-
-    if (this.id > 0) {
-      this.getApplicationDetails();
+    if (this.id) {
+      if (this.isNumber(this.id) === true) {
+        this.getApplicationDetails();
+      } else {
+        this.message = 'The application Id in url should be a number';
+        this.loadingService.setLoading(false);
+      }
     } else {
       this.handleSubstanceRetrivalError();
     }
-
   }
 
   getApplicationDetails(): void {
     this.applicationService.getApplicationDetails(this.id).subscribe(response => {
       this.application = response;
+      if (Object.keys(this.application).length > 0) {
+        this.getSubstanceDetails();
+      }
       this.loadingService.setLoading(false);
     }, error => {
       this.handleSubstanceRetrivalError();
     });
+  }
+
+  getSubstanceDetails() {
+    if (this.application != null) {
+      this.application.applicationProductList.forEach(elementProd => {
+        if (elementProd != null) {
+          elementProd.applicationIngredientList.forEach(elementIngred => {
+            if (elementIngred != null) {
+              // Get Ingredient Name
+              if (elementIngred.bdnum) {
+                this.applicationService.getSubstanceDetailsByBdnum(elementIngred.bdnum).subscribe(response => {
+                  if (response) {
+                    if (response.substanceId) {
+                      elementIngred.substanceId = response.substanceId;
+                      elementIngred.ingredientName = response.name;
+                    }
+                  }
+                });
+              }
+
+              // Get Basis of Strength
+              if (elementIngred.basisOfStrengthBdnum) {
+                this.applicationService.getSubstanceDetailsByBdnum(elementIngred.basisOfStrengthBdnum).subscribe(response => {
+                  if (response) {
+                    if (response.substanceId) {
+                      elementIngred.basisOfStrengthSubstanceId = response.substanceId;
+                      elementIngred.basisOfStrengthIngredientName = response.name;
+                    }
+                  }
+                });
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
   }
 
   public handleSubstanceRetrivalError() {
@@ -79,5 +126,4 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size, true);
   }
-
 }
