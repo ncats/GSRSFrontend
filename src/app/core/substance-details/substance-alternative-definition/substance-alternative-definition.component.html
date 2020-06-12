@@ -1,1 +1,12 @@
-<p>substance-alternative-definition works!</p>
+<div class = "form-row" *ngIf="alternatives">
+
+<div class="thumb-col" *ngFor = "let alternative of alternatives">
+    <img class="image-thumb" appSubstanceImage [entityId]="alternative.refuuid" size="400">
+    <div>
+      <a class="substance-name" [routerLink]="['/substances', alternative.refuuid]" >
+        {{alternative.approvalID? alternative.approvalID : alternative.refuuid}}
+      </a>
+    </div>
+  </div>
+</div>
+  
