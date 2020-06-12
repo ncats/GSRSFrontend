@@ -123,6 +123,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             setTimeout(() => {
               this.gaService.sendPageView(`Substance Register`);
               this.subClass = this.activatedRoute.snapshot.params['type'] || 'chemical';
+              this.substanceClass = this.subClass;
               this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
                 this.setFormSections(formSections[this.subClass]);
                 this.loadingService.setLoading(false);

@@ -245,12 +245,7 @@ validatePageInput(event: any): boolean {
   }
 
   searchSubstances() {
-    if ((this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '') ||
-        (this.privateSequenceSearchTerm && this.privateSequenceSearchTerm !== '')) {
-          this.disableExport = true;
-        } else {
-          this.disableExport = false;
-        }
+   this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
@@ -360,32 +355,36 @@ validatePageInput(event: any): boolean {
   }
 
   export(url: string, extension: string) {
-    const dialogReference = this.dialog.open(ExportDialogComponent, {
-      height: '215x',
-      width: '550px',
-      data: {'extension' : extension}
-    });
-
-    this.overlayContainer.style.zIndex = '1002';
-
-    const exportSub = dialogReference.afterClosed().subscribe(name => {
-      this.overlayContainer.style.zIndex = null;
-      if (name && name !== '') {
-        this.loadingService.setLoading(true);
-        const fullname = name + '.' + extension;
-        this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
-          this.loadingService.setLoading(false);
-          this.loadingService.setLoading(false);
-          const navigationExtras: NavigationExtras = {
-            queryParams: {
-              totalSub: this.totalSubstances
-            }
-          };
-          const params = {'total': this.totalSubstances};
-          this.router.navigate(['/user-downloads/', response.id], navigationExtras);
-        }, error =>     this.loadingService.setLoading(false)  );
-      }
+    if (this.authService.getUser() !== '' ) {
+      const dialogReference = this.dialog.open(ExportDialogComponent, {
+        height: '215x',
+        width: '550px',
+        data: {'extension' : extension}
       });
+
+      this.overlayContainer.style.zIndex = '1002';
+
+      const exportSub = dialogReference.afterClosed().subscribe(name => {
+        this.overlayContainer.style.zIndex = null;
+        if (name && name !== '') {
+          this.loadingService.setLoading(true);
+          const fullname = name + '.' + extension;
+          this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.loadingService.setLoading(false);
+            this.loadingService.setLoading(false);
+            const navigationExtras: NavigationExtras = {
+              queryParams: {
+                totalSub: this.totalSubstances
+              }
+            };
+            const params = {'total': this.totalSubstances};
+            this.router.navigate(['/user-downloads/', response.id]);
+          }, error =>     this.loadingService.setLoading(false)  );
+        }
+        });
+    } else {
+      this.disableExport = true;
+    }
 
   }
 

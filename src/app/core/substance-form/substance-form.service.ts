@@ -1060,12 +1060,12 @@ export class SubstanceFormService implements OnDestroy {
                   actionType: 'frontEnd',
                   appliedChange: false,
                   links: [],
-                  message: 'All properties require a non-empty name and type',
+                  message: 'Property #' + (i + 1) + ' requires a non-empty name and type',
                   messageType: 'ERROR',
                   suggestedChange: true
                 };
                 results.validationMessages.push(invalidPropertyMessage);
-                break;
+                results.valid = false;
               }
             }
           }
@@ -1077,12 +1077,12 @@ export class SubstanceFormService implements OnDestroy {
                   actionType: 'frontEnd',
                   appliedChange: false,
                   links: [],
-                  message: 'All relationships require a non-empty related substance and type',
+                  message: 'Relationship  #' + (i + 1) + ' requires a non-empty related substance and type',
                   messageType: 'ERROR',
                   suggestedChange: true
                 };
                 results.validationMessages.push(invalidRelationshipMessage);
-                break;
+                results.valid = false;
               }
             }
           }
