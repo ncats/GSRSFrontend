@@ -134,7 +134,7 @@
           </mat-select>
         </mat-form-field>
         <mat-menu #exportMenu="matMenu" >
-            <a mat-menu-item *ngFor = "let option of exportOptions"  (click) = "export(option.link.url)">
+            <a mat-menu-item *ngFor = "let option of exportOptions"  (click) = "export(option.link.url, option.extension)">
               {{option.displayname}}
             </a>
             <mat-checkbox class = "menu-checkbox mat-menu-item"  (click)="privateExport = !privateExport; $event.stopPropagation()">
@@ -143,7 +143,7 @@
           </mat-menu>
   
           <div class = "export ">
-              <button *ngIf="exportOptions && exportOptions.length > 0 && isLoggedIn" [disabled] = "disableExport"
+              <button *ngIf="exportOptions && exportOptions.length > 0 && isLoggedIn"
                   matTooltip = "Export Search Results" mat-button class = "mat-button export-button mat-raised-button" [matMenuTriggerFor]="exportMenu">
                     <mat-icon svgIcon="get_app"></mat-icon> Export
                   </button>
@@ -416,3 +416,4 @@
           </app-substance-summary-card>
   </div>
 </div>
+

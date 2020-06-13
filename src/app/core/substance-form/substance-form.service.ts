@@ -1072,12 +1072,29 @@ export class SubstanceFormService implements OnDestroy {
                   actionType: 'frontEnd',
                   appliedChange: false,
                   links: [],
-                  message: 'All properties require a non-empty name and type',
+                  message: 'Property #' + (i + 1) + ' requires a non-empty name and type',
                   messageType: 'ERROR',
                   suggestedChange: true
                 };
                 results.validationMessages.push(invalidPropertyMessage);
-                break;
+                results.valid = false;
+              }
+            }
+          }
+          if (substanceCopy.relationships) {
+            for (let i = 0; i < substanceCopy.relationships.length; i++) {
+              const relationship = substanceCopy.relationships[i];
+              if (!relationship.relatedSubstance || !relationship.type || relationship.type === '') {
+                const invalidRelationshipMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Relationship  #' + (i + 1) + ' requires a non-empty related substance and type',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidRelationshipMessage);
+                results.valid = false;
               }
             }
           }

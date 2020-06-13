@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
   templateUrl: './monitor.component.html',
   styleUrls: ['./monitor.component.scss']
 })
-export class MonitorComponent implements OnInit {
+export class MonitorComponent implements OnInit, OnDestroy {
   jobId: any;
   loadJob: UploadObject;
   dynamic = 0;
@@ -55,6 +55,10 @@ export class MonitorComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.refresh(false);
+  }
+
   mixResultDisplay(job): void  {
     this.stats.extractFail = (job.statistics.recordsExtractedFailed + job.statistics.recordsExtractedSuccess) / this.max * 100;
     this.stats.extractPass = (job.statistics.recordsExtractedSuccess) / this.max * 100;
@@ -71,21 +75,21 @@ export class MonitorComponent implements OnInit {
     this.router.navigate(['/admin'], navigationExtras);
   }
 
-  refresh(bool?: boolean): void {
+  refresh(bool: boolean = true): void {
     this.adminService.queryLoad(this.loadJob.id).pipe(take(1)).subscribe(response => {
         this.loadJob = response;
         this.max = response.statistics.totalRecords.count;
         this.humanizeFields(response);
         this.mixResultDisplay(response);
-        if (response.status !== 'COMPLETE') {
-          setTimeout(() => {
-            if (this.monitor) {
-              this.refresh();
-            }
-          });
-        } else {
-          this.monitor = false;
-        }
+          if (response.status !== 'COMPLETE' && bool) {
+            setTimeout(() => {
+              if (this.monitor) {
+                this.refresh();
+              }
+            });
+          } else {
+            this.monitor = false;
+          }
       }, error => {
         this.message = 'invalid Job ID';
         this.jobId = null;

@@ -136,6 +136,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         let hasSelections = false;
         for (let j = 0; j < fieldsArr.length; j++) {
           const field = fieldsArr[j].split('.');
+          field[0] = decodeURIComponent(field[0]);
           if (field[1] === 'true') {
             params[field[0]] = true;
             hasSelections = true;

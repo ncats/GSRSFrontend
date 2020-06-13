@@ -13,7 +13,7 @@ export class AdminComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const tab = this.activatedRoute.snapshot.queryParams['function'] || 'user';
+    const tab = this.activatedRoute.snapshot.queryParams['function'] || 'cache';
     switch (tab) {
       case 'user': this.activeTab = 0; break;
       case 'data': this.activeTab = 1; break;

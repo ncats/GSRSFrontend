@@ -31,7 +31,7 @@
               <mat-option value="concept"  [disabled]="substanceClass != 'concept'" >
                 Set concept status to non-approved
               </mat-option>
-              <mat-option value="glyco"  [disabled]="substanceClass != 'protein'" >
+              <mat-option value="glyco"  [disabled]="substanceClass !== 'protein'" >
                 Predict N-Glycosylation Sites
               </mat-option>
               <mat-option value="disulfide"  [disabled]="substanceClass != 'protein'" >

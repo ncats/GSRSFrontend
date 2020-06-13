@@ -10,8 +10,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 import { DownloadMonitorComponent } from '@gsrs-core/auth/user-downloads/download-monitor/download-monitor.component';
 import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-downloads.component';
-import { MatProgressSpinnerModule, MatDialogModule } from '@angular/material';
+import { MatProgressSpinnerModule, MatDialogModule, MatTooltipModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
+import { DecodeUriPipe } from '@gsrs-core/auth/user-downloads/download-monitor/decodeURI.pipe';
+import { FileSizePipe } from '@gsrs-core/auth/user-downloads/download-monitor/fileSize.pipe';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -22,6 +25,8 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatTooltipModule,
+    BrowserAnimationsModule,
     MatIconModule,
     MatDialogModule,
     RouterModule,
@@ -31,7 +36,9 @@ import { RouterModule } from '@angular/router';
     LoginComponent,
     UserProfileComponent,
     UserDownloadsComponent,
-    DownloadMonitorComponent
+    DownloadMonitorComponent,
+    DecodeUriPipe,
+    FileSizePipe
   ],
   exports: [
     LoginComponent,

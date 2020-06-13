@@ -42,22 +42,16 @@ export class AllFilesComponent implements OnInit {
   ngOnInit() {
     this.loadingService.setLoading(true);
     this.adminService.getFiles().pipe(take(1)).subscribe( result => {
-      this.adminService.getLogs().pipe(take(1)).subscribe( logs => {
-        this.logFiles = logs;
+      console.log(result);
         for (let i = 0; i < result.length; i += 1) {
-          if (result[i].isDir === false && result[i].id.indexOf('logs/') === 0) {
-            this.logFiles.forEach( file => {
-                if ( result[i].id === ('logs/' + file.id)) {
-                  result[i].hasLink = this.adminService.getDownloadLink(file.id);
-                }
-            });
+          if (result[i].isDir === false) {
+            result[i].hasLink = this.adminService.getDownloadLink(result[i].id);
           }
         }
           const temp = this.list_to_tree(result);
          this.dataSource.data = temp;
          this.loadingService.setLoading(false);
 
-        }, error => this.loadingService.setLoading(false));
     }, error => this.loadingService.setLoading(false));
 
   }
