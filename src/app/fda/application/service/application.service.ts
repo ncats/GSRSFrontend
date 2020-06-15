@@ -60,8 +60,8 @@ export class ApplicationService extends BaseHttpService {
     facets?: FacetParam
   ): string {
     let params = new FacetHttpParams();
-  //  params = params.append('skip', skip.toString());
-  //  params = params.append('top', '1000');
+    //  params = params.append('skip', skip.toString());
+    //  params = params.append('top', '1000');
     params = params.append('page', '1');
     if (searchTerm !== null && searchTerm !== '') {
       params = params.append('q', searchTerm);
@@ -74,6 +74,19 @@ export class ApplicationService extends BaseHttpService {
       params: params
     };
 
+    return url;
+  }
+
+  getExportOptions(etag: string, search?: string): Observable<any> {
+    if (!search) {
+      search = 'applicationssrs';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${search}/export/${etag}`;
+    return this.http.get<any>(url);
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/export/${etag}/${extension}`;
     return url;
   }
 
@@ -229,7 +242,7 @@ export class ApplicationService extends BaseHttpService {
     return this.http.get<Array<any>>(url).pipe(
       map(results => {
         return results;
-      //  return results['data'];
+        //  return results['data'];
       })
     );
   }
@@ -247,11 +260,11 @@ export class ApplicationService extends BaseHttpService {
       }
 
       // Add a new Product Name if there is no Product Name record.
-     /* if (this.application.applicationProductList[0].applicationProductNameList.length < 1) {
-        const newProductNameSrs: ProductNameSrs = {};
-        this.application.applicationProductList[0].applicationProductNameList.unshift(newProductNameSrs);
-      }
-     */
+      /* if (this.application.applicationProductList[0].applicationProductNameList.length < 1) {
+         const newProductNameSrs: ProductNameSrs = {};
+         this.application.applicationProductList[0].applicationProductNameList.unshift(newProductNameSrs);
+       }
+      */
       //  console.log('AFTER' + JSON.stringify(this.application));
     } else {
       this.application = {
@@ -275,7 +288,7 @@ export class ApplicationService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-  //  console.log('APP: ' + this.application);
+    //  console.log('APP: ' + this.application);
 
     // Update Application
     if ((this.application != null) && (this.application.id)) {

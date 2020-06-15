@@ -3,12 +3,8 @@
 <mat-sidenav-container>
 
   <mat-sidenav mode="side" opened>
-    <app-facets-manager
-      (facetsParamsUpdated)="facetsParamsUpdated($event)"
-      (facetsLoaded)="facetsLoaded($event)"
-      [rawFacets]="rawFacets"
-      configName="applications"
-      includeFacetSearch="true">
+    <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
+      [rawFacets]="rawFacets" configName="applications" includeFacetSearch="true">
     </app-facets-manager>
 
   </mat-sidenav>
@@ -43,6 +39,12 @@
         </button>
       </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span class="colorgray font9px">(Download up to 1000 records)</span>
+    </div>
+
+    <div class="export ">
+      <button matTooltip="Export Search Results" mat-button (click)="export()" class="mat-button export-button mat-raised-button">
+        <mat-icon svgIcon="get_app"></mat-icon> Export
+      </button>
     </div>
 
     <!-- Display Content Details -->
