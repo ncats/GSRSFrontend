@@ -21,7 +21,7 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
 
   ngOnInit() {
     this.user =  this.authService.getUser();
-    this.substanceService.getSubstanceReferences(1, 1).subscribe( response => {
+    this.substanceService.getSubstanceReferences(1, this.user).subscribe( response => {
       if (response.total) {
         this.refCount = response.total;
       } else {
