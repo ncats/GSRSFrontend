@@ -61,7 +61,7 @@ export class AllFilesComponent implements OnInit {
 
   list_to_tree(list) {
     const map = {}, roots = [];
-    let node, i;
+    let node;
     for (let i = 0; i < list.length; i += 1) {
       map[list[i].id] = i;
       list[i].children = [];
@@ -74,7 +74,7 @@ export class AllFilesComponent implements OnInit {
         list[i].order = 'odd';
       }
     }
-    for (i = 0; i < list.length; i += 1) {
+    for (let i = 0; i < list.length; i += 1) {
       node = list[i];
       if (node.parent !== '#') {
         list[map[node.parent]].children.push(node);
