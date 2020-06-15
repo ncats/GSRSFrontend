@@ -13,8 +13,9 @@ import { UtilsService } from '@gsrs-core/utils';
   styleUrls: ['./guided-search.component.scss']
 })
 export class GuidedSearchComponent implements OnInit {
-  queryableSubstanceDictionary: QueryableSubstanceDictionary;
+  queryableSubstanceDict: QueryableSubstanceDictionary;
   displayProperties: Array<string>;
+  displayPropertiesCommon: Array<string>;
   queryStatements: Array<QueryStatement> = [];
   query = '';
 
@@ -38,23 +39,32 @@ export class GuidedSearchComponent implements OnInit {
 
     this.http.get(`${this.configService.environment.baseHref}assets/data/substance_dictionary.json`)
       .subscribe((response: QueryableSubstanceDictionary) => {
-      this.queryableSubstanceDictionary = response;
-      this.displayProperties = Object.keys(this.queryableSubstanceDictionary);
-      this.queryableSubstanceDictionary['All'] = {
-        lucenePath: '',
-        description: 'All substance fields',
-        type: 'string',
-        cvDomain: ''
-      };
-      this.displayProperties.unshift('All');
 
-      if (queryStatementHashes != null) {
-        queryStatementHashes.forEach(queryStatementHash => {
-          this.queryStatements.push({queryHash: queryStatementHash});
+        response['All'] = {
+          lucenePath: '',
+          description: 'All substance fields',
+          type: 'string',
+          cvDomain: ''
+        };
+        this.queryableSubstanceDict = response;
+        const displayProperties = ['All'];
+        const displayPropertiesCommon = ['All'];
+        Object.keys(this.queryableSubstanceDict).forEach(key => {
+          displayProperties.push(key);
+          if (this.queryableSubstanceDict[key].priority != null) {
+            displayPropertiesCommon.push(key);
+          }
         });
-      } else {
-        this.queryStatements.push({});
-      }
+        this.displayProperties = displayProperties;
+        this.displayPropertiesCommon = displayPropertiesCommon;
+
+        if (queryStatementHashes != null) {
+          queryStatementHashes.forEach(queryStatementHash => {
+            this.queryStatements.push({queryHash: queryStatementHash});
+          });
+        } else {
+          this.queryStatements.push({});
+        }
     });
   }
 
