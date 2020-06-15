@@ -29,7 +29,9 @@ export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
         } else {
           this.invalidFeatureConfirm();
         }
-      } else {
+      } else if (this.data.card === 'multi-disulfide') {
+        this.dialogRef.close(this.disulfides);
+       } else {
         this.dialogRef.close(this.data.links);
       }
     });

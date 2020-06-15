@@ -49,7 +49,13 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
 
         // move display name to top
         this.filtered = this.names.slice().sort((a, b) => {
-          return (b.displayName === true ? 1 : -1);
+          let returned = -1;
+          if ( b.displayName === true) {
+            returned = 1;
+          } else if (b.preferred === true && a.displayName !== true) {
+            returned = 1;
+          }
+          return returned;
         });
       }
 

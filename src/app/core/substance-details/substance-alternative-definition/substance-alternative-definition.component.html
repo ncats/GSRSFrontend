@@ -1,10 +1,12 @@
 <div class = "form-row" *ngIf="alternatives">
 
 <div class="thumb-col" *ngFor = "let alternative of alternatives">
+  <div>        {{alternative.approvalID? alternative.approvalID : alternative.refuuid}}
+    </div>
     <img class="image-thumb" appSubstanceImage [entityId]="alternative.refuuid" size="400">
     <div>
       <a class="substance-name" [routerLink]="['/substances', alternative.refuuid]" >
-        {{alternative.approvalID? alternative.approvalID : alternative.refuuid}}
+        {{alternative.name}}
       </a>
     </div>
   </div>

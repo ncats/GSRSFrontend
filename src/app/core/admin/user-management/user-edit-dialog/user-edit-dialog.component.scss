@@ -34,8 +34,17 @@
     width: 90%;
 }
 
-.field-group {
-    width: 50%;
+.groups-group {
+    width: 70%;
+}
+
+.roles-group {
+    width: 30%;
+}
+
+.group-field {
+    width: 90%;
+    margin-top: 5px;
 }
 
 ::ng-deep .mat-dialog-content {
