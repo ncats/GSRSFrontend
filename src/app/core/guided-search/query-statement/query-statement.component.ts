@@ -14,12 +14,14 @@ import { QueryStatement } from './query-statement.model';
 })
 export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() queryStatementHash?: number;
+  @Input() queryableOptionsCommon: Array<string>;
   private _index = 0;
   private _queryableDictionary: QueryableSubstanceDictionary;
   @Output() queryUpdated = new EventEmitter<QueryStatement>();
   private allOptions: Array<string>;
-  options: Array<string>;
+  queryableOptionsAll: Array<string>;
   queryablePropertiesControl = new FormControl();
+  queryablePropertiesAutocompleteControl = new FormControl();
   commandControl = new FormControl();
   private subscriptions: Array<Subscription> = [];
   conditionOptions = [
@@ -40,6 +42,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
   commandInputValueDict: {[queryablePropertyType: string]: Array<string | Date | number> } = {};
   private overlayContainer: HTMLElement;
   cvOptions: Array<VocabularyTerm>;
+  isShowCommonFields = true;
 
   constructor(
     private overlayContainerService: OverlayContainer,
@@ -55,19 +58,20 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
 
     const subscription = this.queryablePropertiesControl.valueChanges.subscribe(value => {
       this.queryablePropertySelected(value);
-      // this.options = this.allOptions.filter(option => {
-      //   return option.toLowerCase().indexOf(value.toLowerCase()) > -1;
-      // });
     });
     this.subscriptions.push(subscription);
+
+    const allQueriablePropertiesSubscription = this.queryablePropertiesAutocompleteControl.valueChanges.subscribe(value => {
+      this.queryableOptionsAll = this.allOptions.filter(option => {
+        return option.toLowerCase().indexOf(value.toLowerCase()) > -1;
+      });
+    });
+    this.subscriptions.push(allQueriablePropertiesSubscription);
 
     const commandSubscription = this.commandControl.valueChanges.subscribe((command: string) => {
       this.setCommand(command);
     });
     this.subscriptions.push(commandSubscription);
-
-    // const types = Object.keys(this.typeCommandOptions);
-    // this.setQueryablePropertyType(types[0] as any);
 
     if (this._index > 0) {
       this.conditionControl.setValue('AND');
@@ -98,7 +102,14 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
       this.queryParts = queryStatement.queryParts;
       this.conditionControl.setValue(queryStatement.condition.trim(), { emitEvent: false });
       this.selectedCondition = queryStatement.condition;
-      this.queryablePropertiesControl.setValue(queryStatement.queryableProperty, { emitEvent: false });
+      this.isShowCommonFields = this.queryableOptionsCommon.indexOf(queryStatement.queryableProperty) > -1;
+      if (this.queryableOptionsCommon.indexOf(queryStatement.queryableProperty) > -1) {
+        this.isShowCommonFields = true;
+        this.queryablePropertiesControl.setValue(queryStatement.queryableProperty, { emitEvent: false });
+      } else {
+        this.isShowCommonFields = false;
+        this.queryablePropertiesAutocompleteControl.setValue(queryStatement.queryableProperty, { emitEvent: false });
+      }
       this.processQueriablePropertyChange(queryStatement.queryableProperty);
       this.commandControl.setValue(queryStatement.command);
     } else {
@@ -140,7 +151,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
   @Input()
   set queryableOptions(options: Array<string>) {
     this.allOptions = options;
-    this.options = options;
+    this.queryableOptionsAll = options;
   }
 
   private setCommand(command: string): void {
@@ -183,6 +194,12 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
     ).filter(option => {
       return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values';
     }).sort((a, b) => {
+      if (a === 'the following exact default values') {
+        return -1;
+      }
+      if (b === 'the following exact default values') {
+        return 1;
+      }
       if (a.toLowerCase() < b.toLowerCase()) {
         return -1;
       }
@@ -211,8 +228,56 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
           this.queryUpdated,
           this.queryParts
         );
+      } else {
+        this.queryUpdated.emit({
+          condition: this.selectedCondition,
+          queryableProperty: this.selectedQueryableProperty,
+          command: this.selectedCommandOption,
+          commandInputValues: [],
+          query: ''
+      });
       }
     });
+  }
+
+  queryablePropertiesAutocompleteClosed(): void {
+    const inputValue = this.queryablePropertiesAutocompleteControl.value;
+
+    if (inputValue) {
+      for (let i = 0; i < this.allOptions.length; i++) {
+        if (this.allOptions[i].toLowerCase() === inputValue.toLowerCase()) {
+          this.queryablePropertySelected(this.allOptions[i]);
+          this.queryablePropertiesAutocompleteControl.setValue(this.allOptions[i]);
+          break;
+        }
+      }
+    }
+
+  }
+
+  queryablePropertiesAutocompleteBlurred(): void {
+    if (this.queryableOptionsAll.length === 0) {
+      this.queryablePropertiesAutocompleteControl.setValue('All');
+      this.queryablePropertySelected('All');
+    }
+  }
+
+  clearSelectedQueryableProperty(): void {
+    this.queryablePropertiesAutocompleteControl.setValue('');
+  }
+
+  showAllFields(): void {
+    this.isShowCommonFields = false;
+    this.queryablePropertiesAutocompleteControl.setValue(this.selectedQueryableProperty || '');
+  }
+
+  showCommonFields(): void {
+    this.isShowCommonFields = true;
+    if (this.queryableOptionsCommon.indexOf(this.selectedQueryableProperty) > -1) {
+      this.queryablePropertiesControl.setValue(this.selectedQueryableProperty);
+    } else {
+      this.queryablePropertiesControl.setValue('All');
+    }
   }
 
   increaseOverlayZindex(): void {
