@@ -103,7 +103,8 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
 
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'other', 'link': this.mod.sites},
-      width: '1040px'
+      width: '1040px',
+      panelClass: 'subunit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
 

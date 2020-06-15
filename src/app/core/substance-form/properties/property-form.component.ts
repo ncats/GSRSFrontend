@@ -117,7 +117,8 @@ export class PropertyFormComponent implements OnInit {
     const feature = {'name': this.property.name, 'siteRange': this.property.value.nonNumericValue};
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'feature', 'link': [], 'feature': feature},
-      width: '1048px'
+      width: '1048px',
+      panelClass: 'subunit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
 

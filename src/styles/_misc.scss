@@ -317,3 +317,9 @@ textarea {
     padding-bottom: 12px;
   }
 }
+
+::ng-deep .subunit-dialog > .mat-dialog-container {
+  height: unset !important;
+  max-height: 95%;
+}
+

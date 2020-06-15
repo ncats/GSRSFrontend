@@ -79,7 +79,8 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
 
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'other', 'link': this.privateLink.sites},
-      width: '1040px'
+      width: '1040px',
+      panelClass: 'subunit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
 
