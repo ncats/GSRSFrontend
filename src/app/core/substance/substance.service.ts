@@ -576,8 +576,8 @@ export class SubstanceService extends BaseHttpService {
   }
 
 
-  getSubstanceReferences(top: number = 10, skip: number = 0): Observable<any> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/references?top=${top}&skip=${skip}&order=lastEdited`;
+  getSubstanceReferences(top: number = 10, user: string): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/references/search?top=${top}&order=$lastEdited&q=root_lastEditedBy="${user}"`;
     return this.http.get< any>(url);
   }
 
