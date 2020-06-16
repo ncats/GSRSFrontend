@@ -32,6 +32,8 @@
         <mat-icon svgIcon="chevron_right"></mat-icon>
       </button>
     -->
+
+    <!--
     <div class="padleft10px" *ngIf="totalApplications > 0">
       <a [href]="exportUrl" target="_blank" matTooltip='Export Application Records'>
         <button mat-icon-button color="primary">
@@ -40,12 +42,14 @@
       </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span class="colorgray font9px">(Download up to 1000 records)</span>
     </div>
+    -->
 
-    <div class="export ">
-      <button matTooltip="Export Search Results" mat-button (click)="export()" class="mat-button export-button mat-raised-button">
+    <div class="padleft10px" *ngIf="totalApplications > 0">
+      <button matTooltip="Export Search Results" mat-button (click)="export()" *ngIf="isLoggedIn" class="mat-button export-button mat-raised-button">
         <mat-icon svgIcon="get_app"></mat-icon> Export
       </button>
     </div>
+    <br>
 
     <!-- Display Content Details -->
     <div class="substance-cards">

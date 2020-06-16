@@ -117,7 +117,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.loadComponent();
     });
 
-    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      if (auth) {
+        this.isLoggedIn = true;
+      }
+      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    });
   }
 
   ngAfterViewInit() {
@@ -193,8 +198,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
           this._searchTerm,
           this.privateFacetParams);
         this.getSubstanceDetailsByBdnum();
-
-        console.log('ETAG' + pagingResponse.etag);
 
         // this.applicationService.getClinicalTrialApplication(this.applications);
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
@@ -303,28 +306,22 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   }
 
-  // export(url: string, extension: string) {
   export() {
-   // alert(this.etag);
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-    //  alert('AAAAAA: ' + url);
       let username = this.authService.getUser();
       username = 'admin';
-      alert(username);
-     // if (this.authService.getUser() !== '') {
+      // if (this.authService.getUser() !== '') {
       if (username) {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
           data: { 'extension': extension }
         });
-
-        this.overlayContainer.style.zIndex = '1002';
-
+        // this.overlayContainer.style.zIndex = '1002';
         const exportSub = dialogReference.afterClosed().subscribe(name => {
-          this.overlayContainer.style.zIndex = null;
+          // this.overlayContainer.style.zIndex = null;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
