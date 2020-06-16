@@ -39,7 +39,7 @@ export class SubstanceFormService implements OnDestroy {
   private substanceOtherLinksEmitter = new ReplaySubject<Array<Link>>();
   private substanceStructuralModificationsEmitter = new ReplaySubject<Array<StructuralModification>>();
   private substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
-  private substanceFormActionEmitter = new ReplaySubject<'load'|'unload'>();
+  private substanceFormActionEmitter = new ReplaySubject<'load' | 'unload'>();
 
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private subClass: string;
@@ -133,6 +133,18 @@ export class SubstanceFormService implements OnDestroy {
             codes: [],
             relationships: []
           };
+        } else if (substanceClass === 'specifiedSubstanceG3') {
+          this.privateSubstance = {
+            substanceClass: substanceClass,
+            references: [],
+            names: [],
+            specifiedSubstanceG3: {
+              parentSubstance: {},
+              definition: {references: []},
+              grade: {references: []}
+            },
+            codes: []
+          };
         } else if (substanceClass === 'polymer') {
           this.privateSubstance = {
             substanceClass: substanceClass,
@@ -151,11 +163,11 @@ export class SubstanceFormService implements OnDestroy {
             substanceClass: substanceClass,
             references: [],
             names: [],
-            codes: [],
-            relationships: []
+            codes: []
           };
         }
       }
+
       this.subClass = this.privateSubstance.substanceClass;
 
       if (this.subClass === 'chemical') {
@@ -174,7 +186,7 @@ export class SubstanceFormService implements OnDestroy {
     });
   }
 
-  get substanceFormAction(): Observable<'load'|'unload'> {
+  get substanceFormAction(): Observable<'load' | 'unload'> {
     return this.substanceFormActionEmitter.asObservable();
   }
 
@@ -1432,7 +1444,7 @@ export class SubstanceFormService implements OnDestroy {
       let index = 0;
       const indexEnd = subunit.sequence && subunit.sequence.length || 0;
       while (index < indexEnd) {
-        if ( subunit.sequence[index]) {
+        if (subunit.sequence[index]) {
           const sequenceUnit: SequenceUnit = {
             unitIndex: index + 1,
             unitValue: subunit.sequence[index],
@@ -1455,18 +1467,18 @@ export class SubstanceFormService implements OnDestroy {
 
     const KNOWN_DISULFIDE_PATTERNS = {};
     ('IGG4	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' +
-    'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' +
-    'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
-      const tup = s.split('\t');
+      'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' +
+      'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
+        const tup = s.split('\t');
 
-      const list = _.chain(tup[1].split(',')).map(function (t) {
-        return _.map(t.split('-'), function (temp) {
-          return +temp - 0;
-        });
-      }).value();
+        const list = _.chain(tup[1].split(',')).map(function (t) {
+          return _.map(t.split('-'), function (temp) {
+            return +temp - 0;
+          });
+        }).value();
 
-      KNOWN_DISULFIDE_PATTERNS[tup[0]] = list;
-    });
+        KNOWN_DISULFIDE_PATTERNS[tup[0]] = list;
+      });
     const proteinSubstance = this.privateSubstance;
     const prot = proteinSubstance.protein;
     const pattern = KNOWN_DISULFIDE_PATTERNS[prot.proteinSubType];

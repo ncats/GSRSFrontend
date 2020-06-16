@@ -22,6 +22,8 @@ export class SubstanceClassPipe implements PipeTransform {
       return 'Polymer';
     } else if (tempName === 'concept') {
       return 'Concept';
+    } else if (tempName === 'specifiedsubstanceg3') {
+      return 'Group 3 Specified Substance';
     } else {
       return name;
     }

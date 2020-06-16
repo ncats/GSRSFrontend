@@ -51,6 +51,8 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
         this.substanceClass = 'Structurally Diverse';
       } else if (this.definition.substanceClass.toUpperCase() === 'SPECIFIEDSUBSTANCE') {
         this.substanceClass = 'Specified Substance Group 1';
+      } else if (this.definition.substanceClass.toUpperCase() === 'SPECIFIEDSUBSTANCEG3') {
+        this.substanceClass = 'Specified Substance Group 3';
       } else {
         this.substanceClass = this.definition.substanceClass;
       }

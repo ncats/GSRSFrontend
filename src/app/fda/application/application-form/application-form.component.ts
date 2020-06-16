@@ -24,6 +24,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { FormBuilder } from '@angular/forms';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NativeDateAdapter, DateAdapter, MAT_NATIVE_DATE_FORMATS } from '@angular/material';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-application-form',
@@ -47,7 +48,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   isLoading = true;
   showSubmissionMessages = false;
   submissionMessage: string;
-  validationMessages: Array<ValidationMessage>;
+  validationMessages: Array<ValidationMessage> = [];
   validationResult = false;
   private subscriptions: Array<Subscription> = [];
   copy: string;
@@ -151,42 +152,120 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
-    this.applicationService.validateApplication().pipe(take(1)).subscribe(results => {
-      this.submissionMessage = null;
-      this.validationMessages = results.validationMessages.filter(
-        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-      this.validationResult = results.valid;
-      this.showSubmissionMessages = true;
-      // Perform Additional Validation
-      this.validateAdditionalFields();
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      if (this.validationMessages.length === 0 && this.validationResult === true) {
-        this.submissionMessage = 'Application is Valid. Would you like to submit?';
-      }
-    }, error => {
-      this.addServerError(error);
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    });
+
+    this.validateClient();
+    // If there is no error on client side, check validation on server side
+    if (this.validationMessages.length === 0) {
+      this.applicationService.validateApplication().pipe(take(1)).subscribe(results => {
+        this.submissionMessage = null;
+        this.validationMessages = results.validationMessages.filter(
+          message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+        this.validationResult = results.valid;
+        this.showSubmissionMessages = true;
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+        if (this.validationMessages.length === 0 && this.validationResult === true) {
+          this.submissionMessage = 'Application is Valid. Would you like to submit?';
+        }
+      }, error => {
+        this.addServerError(error);
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+      });
+
+    }
+
   }
 
-  // Check Dates
-  validateAdditionalFields(): void {
+  setValidationMessage(message: string) {
+    const validate: ValidationMessage = {};
+    validate.message = message;
+    validate.messageType = 'ERROR';
+    this.validationMessages.push(validate);
+    this.validationResult = false;
+  }
+
+  // Validate data in client side first
+  validateClient(): void {
+    this.validationMessages = [];
+    this.validationResult = true;
+
+    // Validate Center in application
+    if ((this.application.center == null) || (this.application.center != null && this.application.center.length < 1)) {
+      this.setValidationMessage('Center is required');
+    }
+
+    // Validate Application Type in application
+    if ((this.application.appType == null) || (this.application.appType != null && this.application.appType.length < 1)) {
+      this.setValidationMessage('Application Type is required');
+    }
+
+    // Validate Application Number in application
+    if ((this.application.appNumber == null) || (this.application.appNumber != null && this.application.appNumber.length < 1)) {
+      this.setValidationMessage('Application Number is required');
+    }
+
+    // Validate Submit Date in application
     if ((this.submitDateMessage !== null) && (this.submitDateMessage.length > 0)) {
-      const submitValidate: ValidationMessage = {};
-      submitValidate.message = this.submitDateMessage;
-      submitValidate.messageType = 'ERROR';
-      this.validationResult = false;
-      this.validationMessages.push(submitValidate);
+      this.setValidationMessage(this.submitDateMessage);
     }
+
+    // Validate Status Date in application
     if ((this.statusDateMessage !== null) && (this.statusDateMessage.length > 0)) {
-      const statusValidate: ValidationMessage = {};
-      statusValidate.message = this.statusDateMessage;
-      statusValidate.messageType = 'ERROR';
-      this.validationResult = false;
-      this.validationMessages.push(statusValidate);
+      this.setValidationMessage(this.statusDateMessage);
     }
+
+    // Validate Product Amount, which should be integer/number
+    if (this.application != null) {
+      this.application.applicationProductList.forEach(elementProd => {
+        if (elementProd != null) {
+          if (elementProd.amount) {
+            if (this.isNumber(elementProd.amount) === false) {
+              this.setValidationMessage('Amount must be a number');
+            }
+          }
+
+          // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
+          elementProd.applicationIngredientList.forEach(elementIngred => {
+            if (elementIngred != null) {
+              if (elementIngred.average) {
+                if (this.isNumber(elementIngred.average) === false) {
+                  this.setValidationMessage('Average must be a number');
+                }
+              }
+              if (elementIngred.low) {
+                if (this.isNumber(elementIngred.low) === false) {
+                  this.setValidationMessage('Low must be a number');
+                }
+              }
+              if (elementIngred.high) {
+                if (this.isNumber(elementIngred.high) === false) {
+                  this.setValidationMessage('High must be a number');
+                }
+              }
+              if (elementIngred.lowLimit) {
+                if (this.isNumber(elementIngred.lowLimit) === false) {
+                  this.setValidationMessage('Low Limit must be a number');
+                }
+              }
+              if (elementIngred.highLimit) {
+                if (this.isNumber(elementIngred.highLimit) === false) {
+                  this.setValidationMessage('High Limit must be a number');
+                }
+              }
+            }
+          });
+
+        }
+      });
+    }
+
+    if (this.validationMessages.length > 0) {
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }
+
   }
 
   toggleValidation(): void {
@@ -425,8 +504,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     return isValid;
   }
 
-  isNumber(str: string): boolean {
-    if ((str !== null) && (str !== '')) {
+  isNumber(str: any): boolean {
+    if (str) {
       const num = Number(str);
       const nan = isNaN(num);
       return !nan;

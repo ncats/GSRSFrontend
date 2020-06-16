@@ -40,7 +40,6 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
     } else {
       this.handleSubstanceRetrivalError();
     }
-    // super.ngOnInit();
   }
 
   getApplicationDarrtsDetails(): void {

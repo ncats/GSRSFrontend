@@ -7,7 +7,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { ApplicationDetailsBaseComponent} from '../application-details-base.component';
+import { ApplicationDetailsBaseComponent } from '../application-details-base.component';
 
 @Component({
   selector: 'app-application-details',

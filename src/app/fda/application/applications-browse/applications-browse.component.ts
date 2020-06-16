@@ -4,6 +4,7 @@ import { ApplicationService } from '../service/application.service';
 import { ApplicationSrs } from '../model/application.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
+import { MatDialog } from '@angular/material';
 import * as _ from 'lodash';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
@@ -16,6 +17,8 @@ import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Environment } from 'src/environments/environment.model';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
@@ -47,6 +50,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   environment: Environment;
   exportUrl: string;
   private isComponentInit = false;
+  privateExport = false;
+  disableExport = false;
+  private overlayContainer: HTMLElement;
+  isLoggedIn = false;
+  etag = '';
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -65,9 +73,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
     private authService: AuthService,
-    // private overlayContainerService: OverlayContainer,
-    private facetManagerService: FacetsManagerService
-  ) {}
+    private overlayContainerService: OverlayContainer,
+    private facetManagerService: FacetsManagerService,
+    private dialog: MatDialog,
+  ) { }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
@@ -108,7 +117,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.loadComponent();
     });
 
-    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      if (auth) {
+        this.isLoggedIn = true;
+      }
+      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    });
   }
 
   ngAfterViewInit() {
@@ -176,6 +190,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         // below export statement
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
+        this.etag = pagingResponse.etag;
         // Export Application Url
         this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
           skip,
@@ -289,6 +304,48 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     });
 
+  }
+
+  export() {
+    if (this.etag) {
+      const extension = 'xlsx';
+      const url = this.getApiExportUrl(this.etag, extension);
+      let username = this.authService.getUser();
+      username = 'admin';
+      // if (this.authService.getUser() !== '') {
+      if (username) {
+        const dialogReference = this.dialog.open(ExportDialogComponent, {
+          height: '215x',
+          width: '550px',
+          data: { 'extension': extension }
+        });
+        // this.overlayContainer.style.zIndex = '1002';
+        const exportSub = dialogReference.afterClosed().subscribe(name => {
+          // this.overlayContainer.style.zIndex = null;
+          if (name && name !== '') {
+            this.loadingService.setLoading(true);
+            const fullname = name + '.' + extension;
+            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              this.loadingService.setLoading(false);
+              this.loadingService.setLoading(false);
+              const navigationExtras: NavigationExtras = {
+                queryParams: {
+                  totalSub: this.totalApplications
+                }
+              };
+              const params = { 'total': this.totalApplications };
+              this.router.navigate(['/user-downloads/', response.id]);
+            }, error => this.loadingService.setLoading(false));
+          }
+        });
+      } else {
+        this.disableExport = true;
+      }
+    }
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    return this.applicationService.getApiExportUrl(etag, extension);
   }
 
   exportBrowseApplicationsUrl() {

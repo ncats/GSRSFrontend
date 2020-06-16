@@ -27,28 +27,11 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   product: Product;
-  /* productNameTypeList: Array<VocabularyTerm> = [];
-   productTermPartList: Array<VocabularyTerm> = [];
-   pharmacedicalDosageFormList: Array<VocabularyTerm> = [];
-   releaseCharacteristicList: Array<VocabularyTerm> = [];
-   countryCodeList: Array<VocabularyTerm> = [];
-   languageList: Array<VocabularyTerm> = [];
-   productTypeList: Array<VocabularyTerm> = [];
-   statusList: Array<VocabularyTerm> = [];
-   publicDomainList: Array<VocabularyTerm> = [];
-   sourceTypeList: Array<VocabularyTerm> = [];
-   unitPresentationList: Array<VocabularyTerm> = [];
-   routeOfAdministrationList: Array<VocabularyTerm> = [];
-   applicationTypeList: Array<VocabularyTerm> = [];
-   productCodeTypeList: Array<VocabularyTerm> = [];
-   productCompanyRoleList: Array<VocabularyTerm> = [];
-   companyCodeTypeList: Array<VocabularyTerm> = [];
- */
   id?: number;
   isLoading = true;
   showSubmissionMessages = false;
   submissionMessage: string;
-  validationMessages: Array<ValidationMessage>;
+  validationMessages: Array<ValidationMessage> = [];
   validationResult = false;
   private subscriptions: Array<Subscription> = [];
   copy: string;
@@ -117,40 +100,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  /*
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('PROD_PRODUCT_NAME_TYPE', 'PROD_PHARMACEDICAL_DOSAGE_FORM',
-    'PROD_RELEASE_CHARACTERISTIC', 'PROD_COUNTRY_CODE', 'LANGUAGE', 'PROD_PRODUCT_TYPE',
-    'PROD_STATUS', 'PUBLIC_DOMAIN').subscribe(response => {
-      this.productNameTypeList = response['PROD_PRODUCT_NAME_TYPE'].list;
-  //    this.productTermPartList = response['PROD_TERM_PART'].list;
-      this.pharmacedicalDosageFormList = response['PROD_PHARMACEDICAL_DOSAGE_FORM'].list;
-      this.releaseCharacteristicList =  response['PROD_RELEASE_CHARACTERISTIC'].list;
-      this.countryCodeList =  response['PROD_COUNTRY_CODE'].list;
-      this.languageList =  response['LANGUAGE'].list;
-      this.productTypeList = response['PROD_PRODUCT_TYPE'].list;
-      this.statusList =  response['PROD_STATUS'].list;
-      this.publicDomainList = response['PUBLIC_DOMAIN'].list;
-    });
-
-    this.cvService.getDomainVocabulary('PROD_SOURCE_TYPE', 'PROD_UNIT_PRESENTATION',
-    'PROD_ROUTE_OF_ADMIN', 'APPLICATION_TYPE', 'PROD_PRODUCT_CODE_TYPE',
-    'PROD_COMPANY_ROLE', 'PROD_COMPANY_CODE_TYPE').subscribe(response => {
-      this.sourceTypeList = response['PROD_SOURCE_TYPE'].list;
-      this.unitPresentationList = response['PROD_UNIT_PRESENTATION'].list;
-      this.routeOfAdministrationList = response['PROD_ROUTE_OF_ADMIN'].list;
-      this.applicationTypeList = response['APPLICATION_TYPE'].list;
-      this.productCodeTypeList = response['PROD_PRODUCT_CODE_TYPE'].list;
-      this.productCompanyRoleList = response['PROD_COMPANY_ROLE'].list;
-      this.companyCodeTypeList = response['PROD_COMPANY_CODE_TYPE'].list;
-    });
-
-    this.cvService.getDomainVocabulary('PROD_TERM_PART').subscribe(response => {
-      this.productTermPartList = response['PROD_TERM_PART'].list;
-    });
-  }
-  */
-
   getProductDetails(newType?: string): void {
     if (this.id != null) {
       const id = this.id.toString();
@@ -173,12 +122,13 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   validate(validationType?: string): void {
-    // Perform Additional Validation
-    this.validateAdditionalFields();
+    this.isLoading = true;
+    this.serverError = false;
+    this.loadingService.setLoading(true);
+
+    this.validateClient();
+    // If there is no error on client side, check validation on server side
     if (this.validationMessages.length === 0) {
-      this.isLoading = true;
-      this.serverError = false;
-      this.loadingService.setLoading(true);
       this.showSubmissionMessages = false;
       this.productService.validateProduct().pipe(take(1)).subscribe(results => {
         this.submissionMessage = null;
@@ -186,7 +136,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
         this.validationResult = results.valid;
         this.showSubmissionMessages = true;
-
         this.loadingService.setLoading(false);
         this.isLoading = false;
         if (this.validationMessages.length === 0 && results.valid === true) {
@@ -200,26 +149,68 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Check Dates
-  validateAdditionalFields(): void {
+  setValidationMessage(message: string) {
+    const validate: ValidationMessage = {};
+    validate.message = message;
+    validate.messageType = 'ERROR';
+    this.validationMessages.push(validate);
+    this.validationResult = false;
+  }
+
+  // Validate data in client side first
+  validateClient(): void {
     this.validationMessages = [];
+    this.validationResult = true;
+
+    // Validate Expiry Date in Lot
     if ((this.expiryDateMessage !== null) && (this.expiryDateMessage.length > 0)) {
-      const expiryValidate: ValidationMessage = {};
-      expiryValidate.message = this.expiryDateMessage;
-      expiryValidate.messageType = 'ERROR';
-      this.validationResult = false;
-      this.validationMessages.push(expiryValidate);
-      this.showSubmissionMessages = true;
+      this.setValidationMessage(this.expiryDateMessage);
     }
 
+    // Validate Manufacture Date in Lot
     if ((this.manufactureDateMessage !== null) && (this.manufactureDateMessage.length > 0)) {
-      const manufactureValidate: ValidationMessage = {};
-      manufactureValidate.message = this.manufactureDateMessage;
-      manufactureValidate.messageType = 'ERROR';
-      this.validationResult = false;
-      this.validationMessages.push(manufactureValidate);
-      this.showSubmissionMessages = true;
+      this.setValidationMessage(this.manufactureDateMessage);
     }
+
+    // Validate Ingredient Average, which should be integer/number
+    if (this.product != null) {
+      this.product.productComponentList.forEach(elementComp => {
+        if (elementComp != null) {
+          elementComp.productLotList.forEach(elementLot => {
+            if (elementLot != null) {
+
+              // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
+              elementLot.productIngredientList.forEach(elementIngred => {
+                if (elementIngred != null) {
+                  if (elementIngred.average) {
+                    if (this.isNumber(elementIngred.average) === false) {
+                      this.setValidationMessage('Average must be a number');
+                    }
+                  }
+                  if (elementIngred.low) {
+                    if (this.isNumber(elementIngred.low) === false) {
+                      this.setValidationMessage('Low must be a number');
+                    }
+                  }
+                  if (elementIngred.high) {
+                    if (this.isNumber(elementIngred.high) === false) {
+                      this.setValidationMessage('High must be a number');
+                    }
+                  }
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+
+    if (this.validationMessages.length > 0) {
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }
+
   }
 
   toggleValidation(): void {
@@ -446,4 +437,12 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.manufactureDateMessage = $event;
   }
 
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
+  }
 }

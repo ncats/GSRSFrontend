@@ -172,6 +172,24 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceHistoryModule),
   },
   {
+    componentId: 'substance-ssg-parent-substance',
+    path: 'substance-ssg-parent-substance',
+    loadChildren: () => import('./substance-details/substance-ssg-parent-substance/substance-ssg-parent-substance.module')
+      .then(m => m.SubstanceSsgParentSubstanceModule),
+  },
+  {
+    componentId: 'substance-ssg-grade',
+    path: 'substance-ssg-grade',
+    loadChildren: () => import('./substance-details/substance-ssg-grade/substance-ssg-grade.module')
+      .then(m => m.SubstanceSsgGradeModule),
+  },
+  {
+    componentId: 'substance-ssg-definition',
+    path: 'substance-ssg-definition',
+    loadChildren: () => import('./substance-details/substance-ssg-definition/substance-ssg-definition.module')
+      .then(m => m.SubstanceSsgDefinitionModule),
+  },
+  {
     componentId: 'substance-form-definition',
     path: 'substance-form-definition',
     loadChildren: () => import('./substance-form/substance-form-definition/substance-form-definition.module')
@@ -344,5 +362,23 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'substance-form-change-reason',
     loadChildren: () => import('./substance-form/substance-form-change-reason/substance-form-change-reason.module')
       .then(m => m.SubstanceFormChangeReasonModule),
+  },
+  {
+    componentId: 'substance-form-ssg-parent-substance',
+    path: 'ssg-parent-substance-form',
+    loadChildren: () => import('./substance-form/ssg-parent-substance-form/ssg-parent-substance-form.module')
+      .then(m => m.SsgParentSubstanceFormModule)
+  },
+  {
+    componentId: 'substance-form-ssg-grade',
+    path: 'ssg-grade-form',
+    loadChildren: () => import('./substance-form/ssg-grade-form/ssg-grade-form.module')
+      .then(m => m.SsgGradeFormModule)
+  },
+  {
+    componentId: 'substance-form-ssg-definition',
+    path: 'ssg-definition-form',
+    loadChildren: () => import('./substance-form/ssg-definition-form/ssg-definition-form.module')
+      .then(m => m.SsgDefinitionFormModule)
   }
 ];

@@ -1,0 +1,19 @@
+<div class="name-form-container" *ngIf="grade">
+	<div class="form-row">
+		<app-cv-input domain="SSG_GRADE_NAME" title="Grade Name" [model]="grade.name"
+			(valueChange)="updateGradeName($event)"></app-cv-input>
+
+		<app-cv-input domain="SSG_GRADE_TYPE" title="Grade Type" [model]="grade.type"
+			(valueChange)="updateGradeType($event)"></app-cv-input>
+
+		<app-access-manager (accessOut)="updateAccess($event)" [access]="grade.access">
+		</app-access-manager>
+	</div>
+
+	<div class="form-row">
+		<div class="references-container">
+			<app-domain-references [referencesUuids]="grade.references" #references></app-domain-references>
+		</div>
+	</div>
+	
+</div>

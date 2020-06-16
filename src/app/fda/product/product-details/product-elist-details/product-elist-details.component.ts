@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -15,7 +15,7 @@ import {environment} from '../../../../../environments/environment';
   styleUrls: ['./product-elist-details.component.scss']
 })
 
-export class ProductElistDetailsComponent extends ProductDetailsBaseComponent implements OnInit {
+export class ProductElistDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit {
 
   constructor(
     producService: ProductService,
@@ -33,7 +33,8 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
     super.ngOnInit();
 
     this.iconSrcPath = `${environment.baseHref || '/'}assets/icons/fda/icon_dailymed.png`;
-
   }
+
+  ngAfterViewInit() {}
 
 }

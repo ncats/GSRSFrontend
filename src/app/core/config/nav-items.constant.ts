@@ -59,6 +59,11 @@ export const navItems: Array<NavItem> = [
                 display: 'G1 Specified Substance',
                 path: 'substances/register/specifiedSubstanceG1',
                 order: 80
+            },
+            {
+                display: 'G3 Specified Substance',
+                path: 'substances/register/specifiedSubstanceG3',
+                order: 90
             }
         ]
     }

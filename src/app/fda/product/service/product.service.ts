@@ -88,9 +88,7 @@ export class ProductService extends BaseHttpService {
       //  console.log('AFTER' + JSON.stringify(this.product));
     } else {
       this.product = {
-        productNameList: [{
-          productTermAndTermPartList: [{}]
-        }],
+        productNameList: [{}],
         productCodeList: [{}],
         productCompanyList: [{}],
         productComponentList: [{
@@ -194,6 +192,9 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewTermAndTermPart(prodNameIndex: number): void {
+    if (this.product.productNameList[prodNameIndex].productTermAndTermPartList == null) {
+      this.product.productNameList[prodNameIndex].productTermAndTermPartList = [];
+    }
     const newProductPartTerm: ProductTermAndPart = {};
     this.product.productNameList[prodNameIndex].productTermAndTermPartList.unshift(newProductPartTerm);
   }
