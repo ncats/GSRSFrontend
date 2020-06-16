@@ -125,4 +125,10 @@ export class NameFormComponent implements OnInit, OnDestroy {
     }
     return name.nameOrgs as Array<SubstanceNameOrg>;
   }
+
+  preventNewLine(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  }
 }

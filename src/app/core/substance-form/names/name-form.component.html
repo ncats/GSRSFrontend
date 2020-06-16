@@ -24,12 +24,14 @@
     </div>
 
     <mat-form-field class="name">
-      <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" />
+      <textarea matInput placeholder="Name" [(ngModel)]="name.name" required name="name" (keypress)="preventNewLine($event)"></textarea>
+      <!-- <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" /> -->
     </mat-form-field>
-    <a class = "resolve" *ngIf = "name.name && name.name.length > 0 && substanceType === 'structure'" (click) = "resolve()" >resolve</a>
+    <a class="resolve" *ngIf="name.name && name.name.length > 0 && substanceType === 'structure'"
+      (click)="resolve()">resolve</a>
 
-    <app-cv-input required = 'true' class="name-type" key = "Name Type Code"  title = "Type" [model] = "name.type"
-                  (valueChange)= "name.type = $event">
+    <app-cv-input required='true' class="name-type" key="Name Type Code" title="Type" [model]="name.type"
+      (valueChange)="name.type = $event">
     </app-cv-input>
     <div>
       <app-access-manager (accessOut)="updateAccess($event)" [access]="name.access">

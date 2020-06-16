@@ -49,3 +49,11 @@ a:hover, button:hover {
 .mat-button {
   color: #1565c0;
 }
+
+.mat-form-field-type-mat-input.mat-focused {
+
+  .mat-form-field-infix {
+    padding-top: 5px;
+    border: 1px solid #4793d1
+  }
+}

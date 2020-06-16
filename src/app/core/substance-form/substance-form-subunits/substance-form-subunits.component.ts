@@ -119,7 +119,8 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
   openDialog(): void {
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'feature', 'link': []},
-      width: '1040px'
+      width: '1040px',
+      panelClass: 'subunit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(newFeature => {
@@ -138,7 +139,8 @@ export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredLis
   openAnyDialog(): void {
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'any', 'link': []},
-      width: '1040px'
+      width: '1040px',
+      panelClass: 'subunit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {

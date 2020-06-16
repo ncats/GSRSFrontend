@@ -1117,7 +1117,7 @@ export class SubstanceFormService implements OnDestroy {
         delete this.privateSubstance.structurallyDiverse.$$storedPart;
       }
     }
-
+    /*
     if (this.privateSubstance.nucleicAcid) {
       if (this.privateSubstance.nucleicAcid.sugars) {
         this.privateSubstance.nucleicAcid.sugars.forEach((sugar, index) => {
@@ -1134,6 +1134,7 @@ export class SubstanceFormService implements OnDestroy {
         });
       }
     }
+    */
 
     let substanceString = JSON.stringify(this.privateSubstance);
     let substanceCopy: SubstanceDetail = JSON.parse(substanceString);

@@ -21,7 +21,7 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
 
   ngOnInit() {
     this.user =  this.authService.getUser();
-    this.substanceService.getSubstanceReferences(1, 1).subscribe( response => {
+    this.substanceService.getSubstanceReferences(1, this.user).subscribe( response => {
       if (response.total) {
         this.refCount = response.total;
       } else {
@@ -37,7 +37,7 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
     if (this.refCount < 100) {
       skip = 0;
     }
-    this.substanceService.getSubstanceReferences(100, skip).subscribe( response => {
+    this.substanceService.getSubstanceReferences(12, this.user).subscribe( response => {
       if (response.count && response.content) {
         for (let i = (response.content.length - 1); i >= 0; i--) {
 
@@ -49,11 +49,13 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
               && response.content[i]['docType'] !==  'BATCH_IMPORT'
               && response.content[i]['docType'] !==  'VALIDATION_MESSAGE' ) {
             this.oldReferences.push(response.content[i]);
-            if (this.oldReferences.length >= 10) {
+            if (this.oldReferences.length >= 12) {
               break;
             }
           }
         }
+        this.loading = false;
+      } else {
         this.loading = false;
       }
     });

@@ -148,6 +148,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstancePrimaryDefinitionModule),
   },
   {
+    componentId: 'substance-alternative-definition',
+    path: 'substance-alternative-definition',
+    loadChildren: () => import('./substance-details/substance-alternative-definition/substance-alternative-definition.module')
+      .then(m => m.SubstanceAlternativeDefinitionModule),
+  },
+  {
     componentId: 'substance-variant-concepts',
     path: 'substance-variant-concepts',
     loadChildren: () => import('./substance-details/substance-variant-concepts/substance-variant-concepts.module')

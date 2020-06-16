@@ -25,6 +25,21 @@
       ]
     },
     {
+      "card": "substance-alternative-definition",
+      "type": "SUBSTANCE->SUB_ALTERNATE",
+      "title": "alternative definitions",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        },
+        {
+          "filterName": "substanceRelationships",
+          "value": "SUBSTANCE->SUB_ALTERNATE"
+        }
+      ]
+    },
+    {
       "card": "structure-details",
       "title": "structure",
       "filters": [

@@ -116,7 +116,8 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
     }
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'disulfide', 'link': sentSites},
-      width: '1040px'
+      width: '1040px',
+      panelClass: 'subunit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
 

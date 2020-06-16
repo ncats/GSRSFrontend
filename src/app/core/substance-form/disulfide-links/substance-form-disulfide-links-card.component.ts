@@ -132,7 +132,8 @@ export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseF
   openDialog(): void {
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
       data: {'card': 'multi-disulfide', 'link': []},
-      width: '1040px'
+      width: '1040px',
+      panelClass: 'subunit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
 
