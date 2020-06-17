@@ -310,10 +310,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-      let username = this.authService.getUser();
-      username = 'admin';
-      // if (this.authService.getUser() !== '') {
-      if (username) {
+      if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
@@ -361,25 +358,25 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   getClinicalTrialApplication() {
     let clinicalTrial: Array<any> = [];
     let app: any;
-
+ 
     console.log('clinical');
     this.applications.forEach((element, index) => {
       //app = element;
       this.applicationService.getClinicalTrialApplication(element.appType, element.appNumber).subscribe(response => {
         clinicalTrial = response;
         //element.clinicalTrialList = response;
-
+ 
         clinicalTrial.forEach(element1 => {
           if (element1.nctn != null) {
             element.clinicalTrialList[0].nctNumber = element1.nctn;
           }
-
+ 
           console.log("NCT length: " + clinicalTrial.length);
         });
-
-
+ 
+ 
         });
-
+ 
       });
     }
 */

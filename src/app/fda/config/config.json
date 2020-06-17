@@ -551,7 +551,8 @@
         "Application Sub Type",
         "Indication",
         "Dosage Form",
-        "Source"
+        "Source",
+        "Product Name Deprecated"
       ]
     },
     "ctclinicaltrial": {

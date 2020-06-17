@@ -53,6 +53,8 @@ export interface ProductNameSrs {
   id?: number;
   productName?: string;
   productNameType?: string;
+  provenance?: string;
+  deprecated?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
