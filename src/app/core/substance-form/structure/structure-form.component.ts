@@ -32,7 +32,6 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getVocabularies();
     this.optical = this.privateStructure.opticalActivity;
-    console.log(this.privateStructure.opticalActivity);
   }
 
   ngOnDestroy() {

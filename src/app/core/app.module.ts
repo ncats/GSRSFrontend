@@ -73,6 +73,7 @@ import { FacetsManagerModule } from './facets-manager/facets-manager.module';
 import { GuidedSearchModule } from './guided-search/guided-search.module';
 import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { NamesDisplayPipe } from '@gsrs-core/utils/names-display-order.pipe';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
     SubstanceSummaryCardComponent,
     SubstanceHierarchyComponent,
     SequenceAlignmentComponent,
-    ExportDialogComponent
+    ExportDialogComponent,
+    NamesDisplayPipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

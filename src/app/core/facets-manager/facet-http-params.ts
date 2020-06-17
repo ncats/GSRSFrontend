@@ -9,6 +9,7 @@ export class FacetHttpParams extends HttpParams {
 
     appendFacetParams(facets: FacetParam): FacetHttpParams {
         let clone = new FacetHttpParams({ fromString: super.toString() });
+        let hasDeprecated = false;
         if (facets != null) {
             const facetsKeys = Object.keys(facets);
             facetsKeys.forEach(facetKey => {
@@ -16,6 +17,9 @@ export class FacetHttpParams extends HttpParams {
                     const facetValueKeys = Object.keys(facets[facetKey].params);
                     facetValueKeys.forEach((facetValueKey) => {
                         if (facets[facetKey].params[facetValueKey] != null) {
+                            if (facetValueKey === 'Deprecated') {
+                                hasDeprecated = true;
+                            }
 
                             const paramPrefix = !facets[facetKey].params[facetValueKey] ? '!' :
                                 facets[facetKey].isAllMatch ? '^' : '';
@@ -28,7 +32,9 @@ export class FacetHttpParams extends HttpParams {
                 }
             });
         }
-        clone = clone.append('facet', '!Deprecated/Deprecated');
+        if ( !hasDeprecated) {
+            clone = clone.append('facet', '!Deprecated/Deprecated');
+        }
         return clone;
     }
 
