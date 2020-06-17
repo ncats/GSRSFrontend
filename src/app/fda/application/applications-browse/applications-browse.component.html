@@ -45,7 +45,8 @@
     -->
 
     <div class="padleft10px" *ngIf="totalApplications > 0">
-      <button matTooltip="Export Search Results" mat-button (click)="export()" *ngIf="isLoggedIn" class="mat-button export-button mat-raised-button">
+      <button matTooltip="Export Search Results" mat-button (click)="export()" *ngIf="isLoggedIn"
+        class="mat-button export-button mat-raised-button">
         <mat-icon svgIcon="get_app"></mat-icon> Export
       </button>
     </div>
@@ -91,18 +92,27 @@
                 <div class="row-property-value-2">
                   <div *ngIf="prod.applicationProductNameList.length > 0; else noProdNameList">
                     <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
-
                       <div *ngIf="prodName.productName; else noProd">
-                        &#9642;&nbsp;{{ prodName.productName }}
+                        <div *ngIf="prodName.deprecated && prodName.deprecated == 'Y'; else noDeprecated">
+                        &#9642;
+                        <span class="colorgray">
+                          {{ prodName.productName }}
+                        </span>
+                        <span class="font10px">
+                          (Deprecated)
+                        </span>
+                        </div>
+                        <ng-template #noDeprecated>
+                          &#9642;{{ prodName.productName }}
+                        </ng-template>
                       </div>
                       <ng-template #noProd>
-                        (No Product)
+                        (No Product Name)
                       </ng-template>
-
                     </div> <!-- repeat Product Name -->
                   </div>
                   <ng-template #noProdNameList>
-                    (No Product)
+                    (No Product Name)
                   </ng-template>
                 </div>
               </div>
@@ -151,7 +161,7 @@
 
                     </div>
                     <ng-template #noIngred>
-                      (No Ingredient)
+                      (No Ingredient Name)
                     </ng-template>
                   </div>
 

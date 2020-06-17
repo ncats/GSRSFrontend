@@ -437,7 +437,9 @@
                             target="_blank">{{ingred.ingredientName}}</a>
                         </div>
                         <br>
-                        ({{ ingred.bdnum }})
+                        <span *ngIf="ingred.bdnum">
+                          ({{ ingred.bdnum }})
+                        </span>
                       </td>
 
                       <td>
@@ -446,7 +448,9 @@
                             target="_blank">{{ingred.basisOfStrengthIngredientName}}</a>
                         </div>
                         <br>
-                        ({{ ingred.basisOfStrengthBdnum }})
+                        <span *ngIf="ingred.basisOfStrengthBdnum">
+                          ({{ ingred.basisOfStrengthBdnum }})
+                        </span>
                       </td>
                       <td>{{ ingred.ingredientType }}</td>
                       <td>{{ ingred.average }}</td>
