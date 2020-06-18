@@ -301,7 +301,7 @@
   width: 300px;
 }
 
-.mat-form-field-style {
+.mat-form-field-style > {
 
   /* OVERWRITE MATERIAL INPUT FIELDS */
   .mat-form-field-infix {
@@ -345,7 +345,7 @@
   mat-hint {
     color: red !important;
   }
-
+  
 }
 
 .errortext {

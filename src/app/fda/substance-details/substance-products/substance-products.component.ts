@@ -11,8 +11,7 @@ import { ConfigService } from '@gsrs-core/config';
 @Component({
   selector: 'app-substance-products',
   templateUrl: './substance-products.component.html',
-  styleUrls: ['./substance-products.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./substance-products.component.scss']
 })
 
 export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, AfterViewInit {
