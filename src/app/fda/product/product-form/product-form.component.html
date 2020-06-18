@@ -13,10 +13,10 @@
       <span *ngIf="product.id">
         <button mat-flat-button color="primary" [routerLink]="['/product/register']"
           matTooltip='Register a New Product'>
-          Register
+          Register New Product
         </button>&nbsp;&nbsp;&nbsp;
         <button mat-flat-button color="primary" [routerLink]="['/productDetails', product.id, 'srs']"
-          matTooltip='View this Product Record'>View
+          matTooltip='View this Product Record'>View Product
         </button>&nbsp;&nbsp;&nbsp;
         <span *ngIf="isAdmin">
           <button mat-flat-button color="primary" (click)="confirmDeleteProduct()"
@@ -29,7 +29,7 @@
 
     <!-- Validate and Submit Button -->
     &nbsp;
-    <button mat-flat-button color="primary" (click)="validate()">Validate and Submit</button>
+    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
   </div>

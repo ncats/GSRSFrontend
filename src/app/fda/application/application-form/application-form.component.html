@@ -15,10 +15,10 @@
         </button>&nbsp;&nbsp;&nbsp;
         <button mat-flat-button color="primary" [routerLink]="['/application/register']"
           matTooltip='Register a New Application'>
-          Register
+          Register New Application
         </button>&nbsp;&nbsp;&nbsp;
         <button mat-flat-button color="primary" [routerLink]="['/applicationDetails', application.id]"
-          matTooltip='View this Application Record'>View
+          matTooltip='View this Application Record'>View Application
         </button>&nbsp;&nbsp;&nbsp;
         <span *ngIf="isAdmin">
           <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
@@ -31,7 +31,7 @@
 
     <!-- Validate and Submit Button -->
     &nbsp;
-    <button mat-flat-button color="primary" (click)="validate()">Validate and Submit</button>
+    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
   </div>
@@ -86,7 +86,7 @@
 
           <div class="font11px" *ngIf="application.id">
             <div class="textalignright">
-              <span *ngIf="isDisableData" class="font11px colorgray">
+              <span *ngIf="isDisableData" class="font11px colorred">
                 Provenance: DARRTS (some fields are non-editable)
               </span>
             </div>
