@@ -1,3 +1,10 @@
+.mat-table-style {
+  td.mat-cell {
+    vertical-align: top;
+    font-size: 12px;
+  }
+}
+
 .font10px {
 	font-size: 10px;
 }
@@ -20,8 +27,4 @@
 
 .colorblue {
   color: #4b4572;
-}
-
-.mat-cell {
-  font-size: 12px;
 }

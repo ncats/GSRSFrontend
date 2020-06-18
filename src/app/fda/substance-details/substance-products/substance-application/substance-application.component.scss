@@ -1,3 +1,10 @@
+.mat-table-style {
+  td.mat-cell {
+    vertical-align: top;
+    font-size: 12px;
+  }
+}
+
 .font9px {
   font: size 10px;
 }
@@ -34,17 +41,4 @@
   color: red;
 }
 
-.mat-cell {
-  font-size: 12px;
-}
-
-/*
-.mat-row:nth-child(even){
-  background-color:FFFFFF;
-}
-
-.mat-row:nth-child(odd){
-  background-color: #e4f0ec;
-}
-*/
 

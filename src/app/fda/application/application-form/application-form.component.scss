@@ -297,57 +297,51 @@
   width: 300px;
 }
 
-/* OVERWRITE MATERIAL INPUT FIELDS */
-.mat-form-field-infix {
-  color: blue;
-}
+.mat-form-field-style {
 
-.mat-select-value {
-  color: blue;
-}  
+  /* OVERWRITE MATERIAL INPUT FIELDS */
+  .mat-form-field-infix {
+    color: blue;
+  }
 
-.mat-form-field-label {
-  color: rgb(127, 127, 133) !important;
-}
+  .mat-select-value {
+    color: blue;
+  }  
 
-.mat-form-field-underline {
-  background-color: rgb(68, 68, 218) !important;
-} 
+  .mat-form-field-label {
+    color: rgb(127, 127, 133) !important;
+  }
 
- /*Focused: change color of label*/
-.mat-focused .mat-form-field-label {
-  color: rgb(70, 116, 106) !important;
-}
+  .mat-form-field-underline {
+    background-color: rgb(68, 68, 218) !important;
+  } 
 
-/*Focused: change color of underline*/
-.mat-form-field-ripple {
-  background-color: rgb(70, 116, 106) !important;;
-} 
+  /*Focused: change color of label*/
+  .mat-focused .mat-form-field-label {
+    color: rgb(70, 116, 106) !important;
+  }
 
-.mat-form-field-disabled .mat-form-field-underline 
-{ 
-  background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 10%, #c2c7cc 0 ) !important; 
-  background-size: 1px 100% !important;
-  background-repeat: repeat-x !important; 
-  cursor: not-allowed;
-} 
+  /*Focused: change color of underline*/
+  .mat-form-field-ripple {
+    background-color: rgb(70, 116, 106) !important;;
+  } 
 
-.mat-form-field-disabled:hover {
-  cursor: not-allowed;
-}
+  .mat-form-field-disabled .mat-form-field-underline 
+  { 
+    background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 10%, #c2c7cc 0 ) !important; 
+    background-size: 1px 100% !important;
+    background-repeat: repeat-x !important; 
+    cursor: not-allowed;
+  } 
 
-/*
-.mat-form-field-label:hover {
-  cursor: not-allowed;
-}
+  .mat-form-field-disabled:hover {
+    cursor: not-allowed;
+  }
 
-.mat-form-field-underline:hover {
-  cursor: not-allowed;
-} 
-*/
+  mat-hint {
+    color: red !important;
+  }
 
-mat-hint {
-  color: red !important;
 }
 
 .errortext {

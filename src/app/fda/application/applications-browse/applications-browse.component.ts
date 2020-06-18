@@ -265,6 +265,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
       element.applicationProductList.forEach((elementProd, indexProd) => {
 
+        // Sort Product Name by create date descending
+        elementProd.applicationProductNameList.sort((a, b) => {
+          return <any>new Date(b.createDate) - <any>new Date(a.createDate);
+        });
+
         elementProd.applicationIngredientList.forEach((elementIngred, indexIngred) => {
 
           // Get Substance Details such as Name, Substance Id, unii
