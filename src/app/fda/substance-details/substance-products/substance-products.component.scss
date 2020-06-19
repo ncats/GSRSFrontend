@@ -1,5 +1,16 @@
-td.mat-cell {
+.mat-table-style {
+  td.mat-cell {
     vertical-align: top;
+    font-size: 12px;
+  }
+
+}
+
+.mat-tab-style {
+  .mat-tab-labels, .mat-tab-label, .mat-tab-link {
+     color: blue;
+  }
+
 }
 
 .bordergray {
@@ -28,21 +39,6 @@ td.mat-cell {
 
 .colorblue {
   color: #4b4572;
-}
-
-.tabhide .mat-tab-list .mat-tab-labels {
-  display: none;
-}
-
-.mat-tab-labels, .mat-tab-label, .mat-tab-link {
-  // color: red;
-   color: blue;
-  // font-size: 14px;
-  // background-color: gray;
-}
-
-.mat-cell {
-  font-size: 12px;
 }
 
 .info-container {

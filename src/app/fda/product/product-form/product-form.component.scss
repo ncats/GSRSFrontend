@@ -406,7 +406,9 @@ hr {
   height: 5px;
 }
 
-/* OVERWRITE MATERIAL INPUT FIELDS */
+.mat-form-field-style {
+
+  /* OVERWRITE MATERIAL INPUT FIELDS */
 .mat-form-field-infix {
   color: blue;
 }
@@ -444,6 +446,8 @@ hr {
 
 .mat-form-field-disabled:hover {
   cursor: not-allowed;
+}
+
 }
 
 .boxshadow {

@@ -26,7 +26,7 @@ export class SsgDefinitionFormComponent extends SubstanceFormBase implements OnI
   }
 
   ngOnInit() {
-    this.menuLabelUpdate.emit('definition');
+    this.menuLabelUpdate.emit('Definition');
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
       if (substance.specifiedSubstanceG3.definition == null) {
         substance.specifiedSubstanceG3.definition = {};

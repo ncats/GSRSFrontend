@@ -4,13 +4,15 @@
       <mat-icon svgIcon="close"></mat-icon>
     </button>
   </div>
-  Welcome to the new user interface for GSRS 2.5! Please be aware that you can return to the classic view by clicking the white button on the top right. Please send any feedback to <a [href]="'mailto:' + contactEmail">{{contactEmail}}</a>.
+  Welcome to the new user interface for GSRS 2.5! Please be aware that you can return to the classic view by clicking
+  the white button on the top right. Please send any feedback to <a
+    [href]="'mailto:' + contactEmail">{{contactEmail}}</a>.
 </mat-card>
-<div *ngIf="isClosedWelcomeMessage" class = "closed-welcome-padding">
+<div *ngIf="isClosedWelcomeMessage" class="closed-welcome-padding">
 </div>
 
-<div class = "button-container">
-  <a mat-raised-button class = "big-button" routerLink="/browse-substance">Enter Browse Substances</a>
+<div class="button-container">
+  <a mat-raised-button class="big-button" routerLink="/browse-substance">Enter Browse Substances</a>
 </div>
 <div class="middle-content-container">
 
@@ -19,109 +21,109 @@
       Search
     </mat-card-title>
 
-    <mat-card-content class = "left-search">
+    <mat-card-content class="left-search">
       <mat-nav-list>
-        <h3  class = "register-header">
-          <img class = "old-icon" [src]="browseAll">
+        <h3 class="register-header">
+          <img class="old-icon" [src]="browseAll">
           Search GSRS</h3>
         <a mat-list-item routerLink="/browse-substance">
           <mat-icon matListIcon svgIcon="search"></mat-icon>
           Browse All Substances
         </a>
-        <span *ngIf = "appId !== 'fda'">
-                  <mat-divider></mat-divider>
+        <span *ngIf="appId !== 'fda'">
+          <mat-divider></mat-divider>
 
           <a mat-list-item routerLink="/structure-search">
-          <mat-icon matListIcon svgIcon="search"></mat-icon>
-          Structure Search
-        </a>
+            <mat-icon matListIcon svgIcon="search"></mat-icon>
+            Structure Search
+          </a>
           <mat-divider></mat-divider>
-        <a mat-list-item routerLink="/sequence-search">
-          <mat-icon matListIcon svgIcon="search"></mat-icon>
-          Sequence Search
-        </a>
+          <a mat-list-item routerLink="/sequence-search">
+            <mat-icon matListIcon svgIcon="search"></mat-icon>
+            Sequence Search
+          </a>
         </span>
-        <span *ngIf = "appId === 'fda'">
-        <mat-divider></mat-divider>
-        <a mat-list-item routerLink="/browse-applications">
-          <mat-icon matListIcon svgIcon="search"></mat-icon>
-          Browse All Applications
-        </a>
-        <mat-divider></mat-divider>
+        <span *ngIf="appId === 'fda'">
+          <mat-divider></mat-divider>
+          <a mat-list-item routerLink="/browse-applications">
+            <mat-icon matListIcon svgIcon="search"></mat-icon>
+            Browse All Applications
+          </a>
+          <mat-divider></mat-divider>
 
-        <a mat-list-item routerLink="/browse-clinical-trials">
-          <mat-icon matListIcon svgIcon="search"></mat-icon>
-          Browse All Clinical Trials
-        </a>
-        <mat-divider></mat-divider>
+          <a mat-list-item routerLink="/browse-clinical-trials">
+            <mat-icon matListIcon svgIcon="search"></mat-icon>
+            Browse All Clinical Trials
+          </a>
+          <mat-divider></mat-divider>
 
-        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=substance'">
-          <mat-icon matListIcon svgIcon="pageview"></mat-icon>
-          Substance
-          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
-        </a>
+          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=substance'">
+            <mat-icon matListIcon svgIcon="pageview"></mat-icon>
+            Substance
+            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+          </a>
 
-        <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=prod'">
-          <mat-icon matListIcon svgIcon="local-pharmacy"></mat-icon>
-          Product
-          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+          <mat-divider></mat-divider>
+          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=prod'">
+            <mat-icon matListIcon svgIcon="local-pharmacy"></mat-icon>
+            Product
+            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
-        </a>
+          </a>
 
-        <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=app'">
-          <mat-icon matListIcon svgIcon="find-in-page"></mat-icon>
-          Application
-          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+          <mat-divider></mat-divider>
+          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=app'">
+            <mat-icon matListIcon svgIcon="find-in-page"></mat-icon>
+            Application
+            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
-        </a>
+          </a>
 
-        <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=clinical'">
-          <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
+          <mat-divider></mat-divider>
+          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=clinical'">
+            <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
 
-          Clinical Trial
-          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+            Clinical Trial
+            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
-        </a>
+          </a>
 
-        <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=biomarker'">
-          <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
+          <mat-divider></mat-divider>
+          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=biomarker'">
+            <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
 
-          Biomarker
-          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+            Biomarker
+            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
-        </a>
+          </a>
 
-        <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=indication'">
-          <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
+          <mat-divider></mat-divider>
+          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=indication'">
+            <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
 
-          Indication/Sponsor
-          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+            Indication/Sponsor
+            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
-        </a>
+          </a>
 
-        <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=adverse'">
-          <mat-icon matListIcon svgIcon="note"></mat-icon>
+          <mat-divider></mat-divider>
+          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=adverse'">
+            <mat-icon matListIcon svgIcon="note"></mat-icon>
 
 
-          Adverse Event <mat-icon class = "shrunken-icon" svgIcon="open_in_new"></mat-icon>
+            Adverse Event <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
-        </a>
+          </a>
 
-        <mat-divider></mat-divider>
-        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'">
-          <mat-icon matListIcon svgIcon="youtube"></mat-icon>
+          <mat-divider></mat-divider>
+          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'">
+            <mat-icon matListIcon svgIcon="youtube"></mat-icon>
 
-          Advanced Search
-          <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+            Advanced Search
+            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
-        </a>
-      </span>
+          </a>
+        </span>
       </mat-nav-list>
     </mat-card-content>
   </mat-card>
@@ -132,9 +134,9 @@
     <mat-card-content>
       <div class="register-card-content">
         <div class="register-main">
-          <mat-nav-list class = "main-list">
-            <h3 class = "register-header">
-              <img class = "old-icon" [src]="chemicon">
+          <mat-nav-list class="main-list">
+            <h3 class="register-header">
+              <img class="old-icon" [src]="chemicon">
               Register a Substance</h3>
             <a mat-list-item routerLink="/substances/register/chemical">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
@@ -170,24 +172,29 @@
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
               Mixture
             </a>
-            <span *ngIf = "appId !== 'fda'">
-                          <mat-divider></mat-divider>
+            <span *ngIf="appId !== 'fda'">
+              <mat-divider></mat-divider>
 
-            <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
-              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
+                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
-              Specified Substance Group 1
-            </a>
-                          </span>
+                Specified Substance Group 1
+              </a>
+              <mat-divider></mat-divider>
+              <a mat-list-item routerLink="/substances/register/specifiedSubstanceG3">
+                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                Specified Substance Group 3
+              </a>
+            </span>
 
           </mat-nav-list>
         </div>
-        <mat-divider [vertical]="true" class = "divider-vertical" *ngIf = "appId === 'fda'"></mat-divider>
-        <div  class="register-other"  *ngIf = "appId === 'fda'">
-          <h3  class = "register-header">
-            <img class = "old-icon" [src]="application">
+        <mat-divider [vertical]="true" class="divider-vertical" *ngIf="appId === 'fda'"></mat-divider>
+        <div class="register-other" *ngIf="appId === 'fda'">
+          <h3 class="register-header">
+            <img class="old-icon" [src]="application">
             Other Registration</h3>
-          <mat-nav-list class = "other-list">
+          <mat-nav-list class="other-list">
             <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
@@ -198,23 +205,27 @@
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Specified Substance Group 2
-              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+              <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
             </a>
             <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/substances/register/specifiedSubstanceG3">
+              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+              Specified Substance Group 3
+            </a>
+            <!--
             <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG3'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-
               Specified Substance Group 3
               <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
-
             </a>
+            -->
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Specified Substance Group 4
-              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+              <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
             </a>
             <mat-divider></mat-divider>
@@ -222,45 +233,53 @@
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
               Specified Substance Group 4 Manufacturing
-              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+              <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
             </a>
-            <span *ngIf = "appId === 'fda'">
-            <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerProduct'">
-              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+            <span *ngIf="appId === 'fda'">
+              <mat-divider></mat-divider>
+              <a mat-list-item routerLink="/product/register">
+                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                Product
+              </a>
+              <!--
+              <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerProduct'">
+                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                Product
+                <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+              </a>
+              -->
+              <mat-divider></mat-divider>
+              <a mat-list-item routerLink="/application/register">
+                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                Application
+              </a>
+              <!--
+              <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerApplication'">
+                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                Application
+                <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+              </a>
+              -->
+              <mat-divider></mat-divider>
+              <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerBiomarker'">
+                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
-              Product
-              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+                Biomarker
+                <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+              </a>
+              <mat-divider></mat-divider>
+              <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerIndication'">
+                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
-            </a>
-            <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerApplication'">
-              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                Indication
+                <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
 
-              Application
-              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
-            </a>
-            <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerBiomarker'">
-              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-
-              Biomarker
-              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
-            </a>
-            <mat-divider></mat-divider>
-            <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerIndication'">
-              <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-
-              Indication
-              <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
-
-            </a>
-              </span>
+              </a>
+            </span>
           </mat-nav-list>
         </div>
       </div>
     </mat-card-content>
   </mat-card>
 </div>
-

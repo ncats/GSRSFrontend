@@ -13,7 +13,7 @@
       </a>
     </div>
 
-    <div class="responsive">
+    <div class="responsive mat-table-style">
       <table mat-table [dataSource]="paged" class="font12px">
         <ng-container matColumnDef="appType">
           <th mat-header-cell *matHeaderCellDef> Application Type </th>
@@ -25,12 +25,6 @@
                 matTooltip='Edit GSRS Application Record'>
                 <mat-icon svgIcon="edit"></mat-icon>
               </a>
-              <!--
-              <a [href]="updateApplicationUrl + application.id" target="_blank" *ngIf="isAdmin"
-                matTooltip='Edit GSRS Application Record'>
-                <mat-icon svgIcon="edit"></mat-icon>
-              </a>
-            -->
             </span>
             <span *ngIf="application.fromTable != 'SRS'">
               <a [routerLink]="['/applicationDarrtsDetails', application.appType, application.appNumber]"
@@ -74,61 +68,3 @@
     </mat-paginator>
   </mat-tab>
 </mat-tab-group>
-
-
-<!--
-<div class="responsive">
-  <table mat-table [dataSource]="paged">
-
-    <ng-container matColumnDef="appType">
-      <th mat-header-cell *matHeaderCellDef> Application Type </th>
-      <td mat-cell *matCellDef="let application">
-        <span *ngIf="application.fromTable === 'SRS'">
-          <a [routerLink]="['/applicationDetails', application.id]" target="_blank">{{application.appType}}</a>
-        </span>
-        <span *ngIf="application.fromTable != 'SRS'">
-          <a [routerLink]="['/applicationDarrtsDetails', application.appType, application.appNumber]"
-            target="_blank">{{application.appType}}</a>
-          <br><span class="font10px colorgray">(Darrts)</span>
-        </span>
-        &nbsp;&nbsp;
-        <a [href]="updateApplicationUrl + application.id" target="_blank" *ngIf="isAdmin"
-          matTooltip='Edit GSRS Application Record'>
-          <mat-icon svgIcon="edit"></mat-icon>
-        </a>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="appNumber">
-      <th mat-header-cell *matHeaderCellDef> Application Number </th>
-      <td mat-cell *matCellDef="let application"> {{application.appNumber}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="center">
-      <th mat-header-cell *matHeaderCellDef> Center </th>
-      <td mat-cell *matCellDef="let application"> {{application.center}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="sponsorName">
-      <th mat-header-cell *matHeaderCellDef> Sponsor Name </th>
-      <td mat-cell *matCellDef="let application"> {{application.sponsorName}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="applicationStatus">
-      <th mat-header-cell *matHeaderCellDef> Application Status </th>
-      <td mat-cell *matCellDef="let application"> {{application.applicationStatus}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="applicationSubType">
-      <th mat-header-cell *matHeaderCellDef> Application Sub Type </th>
-      <td mat-cell *matCellDef="let application"> {{application.applicationSubType}} </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
-<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
-  (page)="getSubstanceApplications($event)" [pageSizeOptions]="[5, 10, 25, 100]">
-</mat-paginator>
--->

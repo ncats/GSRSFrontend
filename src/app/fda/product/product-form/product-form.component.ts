@@ -20,8 +20,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./product-form.component.scss']
 })
 
 export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {

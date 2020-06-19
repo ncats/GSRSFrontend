@@ -263,6 +263,16 @@
     border-radius: 5px;
   }
   
+  .small-icon {
+    width: 15px;
+    height: 15px;
+    padding-left: 0px;
+  }
+
+  .margintopneg10 {
+    margin-top: -10px;
+  }
+
   @media(max-width: 700px) {
     .mat-card-title {
       flex-direction: column;
