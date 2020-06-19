@@ -49,7 +49,24 @@
       </a>
     </div>
   </div>
-
+  <div class="substance-form-row">
+    <mat-form-field class="tag-list">
+      <mat-chip-list #tagList aria-label="Tags edit" selectable="false">
+        <mat-chip
+          *ngFor="let tag of definition.tags"
+          removable="true"
+          (removed)="removeTag(tag)">
+            {{tag}}
+          <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+        </mat-chip>
+        <input placeholder="Substance tags"
+               [matChipInputFor]="tagList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               matChipInputAddOnBlur="true"
+               (matChipInputTokenEnd)="addTag($event)">
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
   <div class="substance-form-row" *ngIf="definition.substanceClass !== 'concept'">
     <div class="references-container">
       <app-domain-references [referencesUuids]="definition.references" card = "definition" #references></app-domain-references>
