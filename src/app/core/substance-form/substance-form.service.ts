@@ -444,6 +444,11 @@ export class SubstanceFormService implements OnDestroy {
       this.substanceStateHash = this.utilsService.hashCode(substanceString);
     }
 
+    if (!this.privateSubstance.tags) {
+      this.privateSubstance.tags = [];
+      const substanceString = JSON.stringify(this.privateSubstance);
+      this.substanceStateHash = this.utilsService.hashCode(substanceString);
+    }
 
 
     const definition: SubstanceFormDefinition = {
@@ -459,7 +464,8 @@ export class SubstanceFormService implements OnDestroy {
       createdBy: this.privateSubstance.createdBy,
       lastEdited: this.privateSubstance.lastEdited,
       lastEditedBy: this.privateSubstance.lastEditedBy,
-      _name: this.privateSubstance._name
+      _name: this.privateSubstance._name,
+      tags: this.privateSubstance.tags
     };
     if (this.privateSubstance.status) {
       definition.status = this.privateSubstance.status;

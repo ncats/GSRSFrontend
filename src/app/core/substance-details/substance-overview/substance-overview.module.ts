@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { SubstanceOverviewComponent } from './substance-overview.component';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
-import {MatExpansionModule, MatIconModule} from '@angular/material';
+import {MatExpansionModule, MatIconModule, MatChipsModule} from '@angular/material';
 import {RouterModule} from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -27,7 +27,8 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     ReactiveFormsModule,
     MatMenuModule,
     MatButtonModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    MatChipsModule
   ],
   declarations: [SubstanceOverviewComponent, SubstanceClassPipe]
 })

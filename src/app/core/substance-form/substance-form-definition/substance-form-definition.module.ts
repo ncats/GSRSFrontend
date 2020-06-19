@@ -15,6 +15,7 @@ import { SubstanceSelectorModule } from '../../substance-selector/substance-sele
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
     imports: [
@@ -33,7 +34,8 @@ import {MatRadioModule} from '@angular/material/radio';
         SubstanceSelectorModule,
         MatTooltipModule,
         RouterModule,
-        MatRadioModule
+        MatRadioModule,
+        MatChipsModule
     ],
   declarations: [
     SubstanceFormDefinitionComponent

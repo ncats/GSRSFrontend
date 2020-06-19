@@ -7,6 +7,8 @@ import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormDefinition } from '../substance-form.model';
+import { MatChipInputEvent } from '@angular/material';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-substance-form-definition',
@@ -24,7 +26,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   feature: string;
   substanceClass: string;
   status: string;
-
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -171,5 +173,22 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
     this.substanceFormService.updateDefinition(this.definition);
   }
 
+  addTag(event: MatChipInputEvent): void {
+    if ((event.value || '').trim()) {
+      this.definition.tags.push(event.value.trim());
+      this.updateDefinition();
+    }
+    if (event.input) {
+      event.input.value = '';
+    }
+  }
 
+  removeTag(tag: string): void {
+    const tagIndex = this.definition.tags.indexOf(tag);
+
+    if (tagIndex > -1) {
+      this.definition.tags.splice(tagIndex, 1);
+      this.updateDefinition();
+    }
+  }
 }
