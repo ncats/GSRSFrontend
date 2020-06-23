@@ -23,8 +23,8 @@ import { DatePipe } from '@angular/common';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { FormBuilder } from '@angular/forms';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NativeDateAdapter, DateAdapter, MAT_NATIVE_DATE_FORMATS } from '@angular/material';
-import { element } from 'protractor';
+import { MAT_NATIVE_DATE_FORMATS } from '@angular/material/core';
+import { NativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-application-form',

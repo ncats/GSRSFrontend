@@ -12,7 +12,7 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {AuthService} from '@gsrs-core/auth/auth.service';
 

@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { PageEvent } from '@angular/material';
+import { PageEvent } from '@angular/material/paginator';
 import { UtilsService } from '@gsrs-core//utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import {AuthService} from '@gsrs-core/auth/auth.service';
@@ -23,7 +23,7 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Auth } from '@gsrs-core/auth/auth.model';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import {  MatTableDataSource } from '@angular/material/table';
 
 
 @Component({
