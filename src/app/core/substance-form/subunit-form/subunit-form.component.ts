@@ -70,6 +70,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.getVocabularies();
     });
     definitionSubscription.unsubscribe();
+    console.log('testing');
   }
 
   ngAfterViewInit() {

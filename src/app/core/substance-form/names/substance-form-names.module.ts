@@ -13,7 +13,12 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { NameFormComponent } from './name-form.component';
 import { NameOrgsComponent } from './name-orgs.component';
-import { MatRadioModule, MatCheckboxModule, MatBadgeModule, MatExpansionModule, MatTableModule, MatSelectModule } from '@angular/material';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   imports: [

@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import {SubstanceCode, SubstanceDetail} from '../../substance/substance.model';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
-import {Sort} from '@angular/material';
+import { Sort } from '@angular/material/sort';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {UtilsService} from '@gsrs-core/utils';
 

@@ -27,7 +27,7 @@ import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.j
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
-import { MatExpansionPanel } from '@angular/material';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
 import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';

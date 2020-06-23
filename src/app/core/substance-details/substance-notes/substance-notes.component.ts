@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail, SubstanceNote} from '../../substance/substance.model';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { ReadMoreComponent } from '@gsrs-core/substance-details/substance-notes/read-more/read-more.component';
 import {Subject} from 'rxjs';
