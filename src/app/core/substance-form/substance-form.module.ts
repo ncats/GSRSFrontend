@@ -196,7 +196,7 @@ import { MatProgressSpinnerModule } from '@angular/material';
   ]
 })
 export class SubstanceFormModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<SubstanceFormModule> {
       return {
         ngModule: SubstanceFormModule,
         providers: [

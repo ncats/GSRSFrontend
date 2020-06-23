@@ -10,13 +10,14 @@
       "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
-          "styleext": "scss"
+          "style": "scss"
         }
       },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -39,6 +40,12 @@
                 { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
                 { "glob": "config.json", "input": "src/app/core/config/", "output": "/assets/data/" }
               ],
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -59,6 +66,12 @@
               "assets": [
                 { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
                 { "glob": "config.json", "input": "src/app/core/config/", "output": "/assets/data/" }
+              ],
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
               ],
               "fileReplacements": [
                 {
@@ -81,6 +94,12 @@
                 { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
                 { "glob": "config.json", "input": "src/app/core/config/", "output": "/assets/data/" }
               ],
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -89,6 +108,12 @@
               ]
             },
             "gsrs.local": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -101,6 +126,12 @@
                 { "glob": "**/*", "input": "src/app/core/assets/", "output": "/assets/" },
                 { "glob": "config.json", "input": "src/app/fda/config/", "output": "/assets/data/" },
                 { "glob": "**/*", "input": "src/app/fda/assets", "output": "/assets/" }
+              ],
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
               ],
               "fileReplacements": [
                 {
@@ -124,6 +155,12 @@
                 { "glob": "config.json", "input": "src/app/fda/config/", "output": "/assets/data/" },
                 { "glob": "**/*", "input": "src/app/fda/assets", "output": "/assets/" }
               ],
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -146,6 +183,12 @@
                 { "glob": "config.json", "input": "src/app/fda/config/", "output": "/assets/data/" },
                 { "glob": "**/*", "input": "src/app/fda/assets", "output": "/assets/" }
               ],
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -159,6 +202,12 @@
                 { "glob": "config.json", "input": "src/app/fda/config/", "output": "/assets/data/" },
                 { "glob": "**/*", "input": "src/app/fda/assets", "output": "/assets/" }
               ],
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -167,6 +216,12 @@
               ]
             },
             "cbg.prod": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -310,7 +365,8 @@
           "configurations": {
             "production": {
               "project": "projects/jsdraw-wrapper/ng-package.prod.json"
-            }
+            ,              "tsConfig": "projects/jsdraw-wrapper/tsconfig.lib.prod.json"
+}
           }
         },
         "test": {
@@ -350,7 +406,8 @@
           "configurations": {
             "production": {
               "project": "projects/ketcher-wrapper/ng-package.prod.json"
-            }
+            ,              "tsConfig": "projects/ketcher-wrapper/tsconfig.lib.prod.json"
+}
           }
         },
         "test": {
@@ -390,7 +447,8 @@
           "configurations": {
             "production": {
               "project": "projects/file-select/ng-package.prod.json"
-            }
+            ,              "tsConfig": "projects/file-select/tsconfig.lib.prod.json"
+}
           }
         },
         "test": {

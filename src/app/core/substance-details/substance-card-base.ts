@@ -1,6 +1,7 @@
 import { SubstanceDetail } from '../substance/substance.model';
-import { Output, EventEmitter } from '@angular/core';
+import { Output, EventEmitter, Directive } from '@angular/core';
 
+@Directive()
 export abstract class SubstanceCardBase {
     substance: SubstanceDetail;
     title: string;
