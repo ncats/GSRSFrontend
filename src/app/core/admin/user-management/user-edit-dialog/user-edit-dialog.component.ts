@@ -117,45 +117,45 @@ export class UserEditDialogComponent implements OnInit {
     if (this.changePassword && this.newPassword !== '' ) {
       this.message = 'Cancel or submit new password to save other changes';
     } else {
-    const rolesArr = [];
-    this.roles.forEach(role => {
-      if (role.hasRole) {
-        rolesArr.push(role.name);
+      const rolesArr = [];
+      this.roles.forEach(role => {
+        if (role.hasRole) {
+          rolesArr.push(role.name);
+        }
+      });
+      const groups = [];
+      this.groups.forEach(group => {
+        if (group.hasGroup ) {
+          groups.push(group.name);
+
+        }
+      });
+
+      if (this.newGroup && this.newGroup !== '') {
+        groups.push(this.newGroup);
       }
-    });
-    const groups = [];
-    this.groups.forEach(group => {
-      if (group.hasGroup ) {
-        groups.push(group.name);
+      const userEditObj: UserEditObject = {
+        'username': this.user.user.username,
+        'isAdmin': this.user.user.admin,
+          'isActive': this.user.active,
+          'email': this.user.user.email || null,
+          'roles': rolesArr,
+          'groups' : groups,
+      };
 
-      }
-    });
-
-    if (this.newGroup && this.newGroup !== '') {
-      groups.push(this.newGroup);
-    }
-    const userEditObj: UserEditObject = {
-      'username': this.user.user.username,
-      'isAdmin': this.user.user.admin,
-        'isActive': this.user.active,
-        'email': this.user.user.email || null,
-        'roles': rolesArr,
-        'groups' : groups,
-    };
-
-    this.adminService.editUser(userEditObj, this.originalName).pipe(take(1)).subscribe(response => {
-      if (response && response.user) {
-        this.dialogRef.close(response);
-      } else {
+      this.adminService.editUser(userEditObj, this.originalName).pipe(take(1)).subscribe(response => {
+        if (response && response.user) {
+          this.dialogRef.close(response);
+        } else {
+          this.message = 'Unable to edit user';
+        }
+      }, error => {
         this.message = 'Unable to edit user';
-      }
-    }, error => {
-      this.message = 'Unable to edit user';
-      if (error.error && isString(error.error) ) {
-        this.message = error;
-      }
-    });
-  }
+        if (error.error && isString(error.error) ) {
+          this.message = error;
+        }
+      });
+    }
   }
 
   addUser(): void {
@@ -216,7 +216,7 @@ export class UserEditDialogComponent implements OnInit {
             this.newPassword = '';
             this.newPasswordConfirm = '';
             this.changePassword = !this.changePassword;
-            this.message = 'Error: updated successfully';
+            this.message = 'Error:unknown server error';
           }
         });
       } else {
@@ -225,12 +225,12 @@ export class UserEditDialogComponent implements OnInit {
           this.message = 'Password updated successfully';
         }, error => {
           if (error.error && isString(error.error) ) {
-            this.message = 'Error - ' + error.error;
+            this.message = 'Error: ' + error.error;
           } else {
             this.newPassword = '';
             this.newPasswordConfirm = '';
             this.changePassword = !this.changePassword;
-            this.message = 'Error: updated successfully';
+            this.message = 'Error: unknown server error';
           }
         });
       }

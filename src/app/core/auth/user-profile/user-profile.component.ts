@@ -41,7 +41,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   validatePassword(): void {
-    console.log('validating2');
     if (this.newPassword !== this.newPasswordConfirm) {
       this.message = 'Error: passwords do not match';
       this.newPassword = '';

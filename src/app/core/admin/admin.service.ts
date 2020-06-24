@@ -82,9 +82,9 @@ export class AdminService extends BaseHttpService {
 
     public changePassword( newpass: string, id: number): Observable< any > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      const body3 = {};
-        body3['newPassword'] = newpass;
-      return this.http.post< any >(`${url}users/${id}/password`, body3);
+      const body = {};
+        body['newPassword'] = newpass;
+      return this.http.post< any >(`${url}users/${id}/password`, body);
       }
 
       public changeMyPassword(oldpass: string, newpass: string, id: number): Observable< any > {
