@@ -27,8 +27,12 @@
         </mat-form-field>
         <div *ngIf="!isShowCommonFields">
             <mat-form-field floatLabel="never">
-                <input type="text" matInput [formControl]="queryablePropertiesAutocompleteControl"
-                    [matAutocomplete]="queryablePropertyOptions" placeholder="Search for desired field" (blur)="queryablePropertiesAutocompleteBlurred()">
+                <input type="text"
+                    matInput
+                    [formControl]="queryablePropertiesAutocompleteControl"
+                    [matAutocomplete]="queryablePropertyOptions"
+                    placeholder="Search for desired field"
+                    (blur)="queryablePropertiesAutocompleteBlurred()">
                 <a matSuffix (click)="clearSelectedQueryableProperty()" matTooltip="Clear input and show all options">
                     <mat-icon svgIcon="clear"></mat-icon>
                 </a>
@@ -38,7 +42,8 @@
             </mat-form-field>
             <mat-autocomplete 
                 #queryablePropertyOptions="matAutocomplete"
-                (optionSelected)="queryablePropertySelected($event.option.value)" (closed)=queryablePropertiesAutocompleteClosed()>
+                (optionSelected)="queryablePropertySelected($event.option.value)"
+                (closed)=queryablePropertiesAutocompleteClosed()>
                 <mat-option *ngFor="let option of queryableOptionsAll" [value]="option" [matTooltip]="option">
                     {{option}}
                 </mat-option>

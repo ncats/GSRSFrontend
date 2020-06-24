@@ -16,6 +16,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatChipsModule} from '@angular/material/chips';
+import { MatAutocompleteModule, MatProgressBarModule } from '@angular/material';
 
 @NgModule({
     imports: [
@@ -35,7 +36,9 @@ import {MatChipsModule} from '@angular/material/chips';
         MatTooltipModule,
         RouterModule,
         MatRadioModule,
-        MatChipsModule
+        MatChipsModule,
+        MatAutocompleteModule,
+        MatProgressBarModule
     ],
   declarations: [
     SubstanceFormDefinitionComponent
