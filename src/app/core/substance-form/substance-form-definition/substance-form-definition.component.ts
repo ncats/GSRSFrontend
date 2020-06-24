@@ -116,7 +116,9 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   }
 
   ngOnDestroy() {
-
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   getRedirect() {
