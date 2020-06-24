@@ -15,7 +15,6 @@ import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 export class UserEditDialogComponent implements OnInit {
   user: any;
   userID: string;
-  oldPassword: string;
   originalName: string;
   newPassword: string;
   newUser = false;
@@ -205,11 +204,9 @@ export class UserEditDialogComponent implements OnInit {
       this.message = 'Error: passwords do not match';
       this.newPassword = '';
       this.newPasswordConfirm = '';
-    } else if (this.newPassword === this.oldPassword) {
-      this.message = 'Error: no change in password detected';
     } else {
       if ( this.authService.getUser === this.user.identifier ) {
-        this.adminService.changeMyPassword(this.oldPassword, this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+        this.adminService.changeMyPassword('', this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
           this.changePassword = !this.changePassword;
           this.message = 'Password updated successfully';
         }, error => {
@@ -223,7 +220,7 @@ export class UserEditDialogComponent implements OnInit {
           }
         });
       } else {
-        this.adminService.changePassword(this.oldPassword, this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+        this.adminService.changePassword( this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
           this.changePassword = !this.changePassword;
           this.message = 'Password updated successfully';
         }, error => {
