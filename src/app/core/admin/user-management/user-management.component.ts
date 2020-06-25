@@ -63,6 +63,7 @@ showAllUsers(): void {
 
 
   });
+
   this.pageChange();
 }
 
@@ -78,6 +79,9 @@ showInactiveUsers(): void {
     this.filtered.data = backup;
   } else {
     this.filtered.data = this.users;
+  }
+  if (this.searchControl.value && this.searchControl.value !== '') {
+    this.searchFields(this.searchControl.value);
   }
   this.pageChange();
 }
@@ -213,32 +217,36 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         clearTimeout(this.searchTimer);
     }
     this.searchTimer = setTimeout(() => {
-      const backup = [];
-        this.users.forEach(user => {
-          if (this.showInactive) {
-            if (user.active) {
-              backup.push(user);
-            }
-          } else {
-            backup.push(user);
-          }
-        });
-
-        this.filtered.data = [];
-        backup.forEach(item => {
-          if (item.user) {
-          const itemString = item.user.username ? item.user.username.toUpperCase() : null;
-          const emailString = item.user.email ? item.user.email.toUpperCase() : null;
-            if ((itemString.indexOf(searchInput.toUpperCase()) > -1) ||
-            (item.user.email && emailString.indexOf(searchInput.toUpperCase()) > -1)) {
-                this.filtered.data.push(item);
-            }
-          }
-        });
+        this.searchFields(searchInput);
         clearTimeout(this.searchTimer);
         this.pageChange();
         this.searchTimer = null;
     }, 700);
+  }
+
+  searchFields(searchInput: string) {
+    const backup = [];
+    this.users.forEach(user => {
+      if (this.showInactive) {
+        if (user.active) {
+          backup.push(user);
+        }
+      } else {
+        backup.push(user);
+      }
+    });
+
+    this.filtered.data = [];
+    backup.forEach(item => {
+      if (item.user) {
+      const itemString = item.user.username ? item.user.username.toUpperCase() : null;
+      const emailString = item.user.email ? item.user.email.toUpperCase() : null;
+        if ((itemString !== null && itemString.indexOf(searchInput.toUpperCase()) > -1) ||
+        (emailString !== null && emailString.indexOf(searchInput.toUpperCase()) > -1)) {
+            this.filtered.data.push(item);
+        }
+      }
+    });
   }
 
   pageChange(pageEvent?: PageEvent): void {
