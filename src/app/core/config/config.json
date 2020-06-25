@@ -522,5 +522,10 @@
     "WHO-ATC",
     "EVMPD",
     "NCI"
+  ],
+  "substanceSelectorProperties": [
+    "root_names_name",
+    "root_approvalID",
+    "root_codes_BDNUM"
   ]
 }

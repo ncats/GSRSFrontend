@@ -155,7 +155,6 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
         return '<strong>' + match + '</strong>';
       });
     }
-
   }
 
   processSubstanceSearch() {
