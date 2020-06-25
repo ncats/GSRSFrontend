@@ -63,6 +63,7 @@ showAllUsers(): void {
 
 
   });
+
   this.pageChange();
 }
 
@@ -78,6 +79,9 @@ showInactiveUsers(): void {
     this.filtered.data = backup;
   } else {
     this.filtered.data = this.users;
+  }
+  if (this.searchControl.value && this.searchControl.value !== '') {
+    this.searchFields(this.searchControl.value);
   }
   this.pageChange();
 }
@@ -198,7 +202,8 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
     this.filtered.data = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'name' : return this.utilsService.compare(a.user.username.toUpperCase(), b.user.username.toUpperCase(), isAsc);
+        case 'name' : return this.utilsService.compare(a.user.username ? a.user.username.toUpperCase() : '',
+        b.user.username ? b.user.username.toUpperCase() : '', isAsc);
         case 'active' : return this.utilsService.compare(a.active, b.active, !isAsc);
         case 'email' : return this.utilsService.compare(a.user.email || '', b.user.email || '', isAsc);
         case 'modified' : return this.utilsService.compare(a.modified, b.modified, isAsc);
@@ -213,32 +218,36 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         clearTimeout(this.searchTimer);
     }
     this.searchTimer = setTimeout(() => {
-      const backup = [];
-        this.users.forEach(user => {
-          if (this.showInactive) {
-            if (user.active) {
-              backup.push(user);
-            }
-          } else {
-            backup.push(user);
-          }
-        });
-
-        this.filtered.data = [];
-        backup.forEach(item => {
-          if (item.user) {
-          const itemString = item.user.username ? item.user.username.toUpperCase() : null;
-          const emailString = item.user.email ? item.user.email.toUpperCase() : null;
-            if ((itemString.indexOf(searchInput.toUpperCase()) > -1) ||
-            (item.user.email && emailString.indexOf(searchInput.toUpperCase()) > -1)) {
-                this.filtered.data.push(item);
-            }
-          }
-        });
+        this.searchFields(searchInput);
         clearTimeout(this.searchTimer);
         this.pageChange();
         this.searchTimer = null;
     }, 700);
+  }
+
+  searchFields(searchInput: string) {
+    const backup = [];
+    this.users.forEach(user => {
+      if (this.showInactive) {
+        if (user.active) {
+          backup.push(user);
+        }
+      } else {
+        backup.push(user);
+      }
+    });
+
+    this.filtered.data = [];
+    backup.forEach(item => {
+      if (item.user) {
+      const itemString = item.user.username ? item.user.username.toUpperCase() : null;
+      const emailString = item.user.email ? item.user.email.toUpperCase() : null;
+        if ((itemString !== null && itemString.indexOf(searchInput.toUpperCase()) > -1) ||
+        (emailString !== null && emailString.indexOf(searchInput.toUpperCase()) > -1)) {
+            this.filtered.data.push(item);
+        }
+      }
+    });
   }
 
   pageChange(pageEvent?: PageEvent): void {

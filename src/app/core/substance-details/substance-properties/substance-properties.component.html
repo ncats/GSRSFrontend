@@ -43,7 +43,7 @@
     <ng-container matColumnDef="parameters">
       <th mat-header-cell *matHeaderCellDef> Parameters </th>
       <td mat-cell *matCellDef="let property">
-          <div *ngFor = "let parameter of property.parameters">{{parameter.name}}<br>{{parameter.type}}<br/>{{toString(property.amount)}}</div>
+          <div *ngFor = "let parameter of property.parameters">{{parameter.name}}<br>{{parameter.type}}<br/>{{toString(parameter.value)}}</div>
       </td>
     </ng-container>
 

@@ -4,7 +4,6 @@ import { ConfigService } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
 import { AuthService } from '@gsrs-core/auth';
 import { Router } from '@angular/router';
-import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -36,16 +35,16 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.application = `${environment.baseHref || '/'}assets/icons/home/icon_application.png`;
-    this.browseAll = `${environment.baseHref || '/'}assets/icons/home/icon_browseall.png`;
-    this.chemicon = `${environment.baseHref || '/'}assets/icons/home/icon_registersubstance.png`;
-    this.appId = environment.appId;
+    this.environment = this.configService.environment;
+    this.application = `${this.environment.baseHref || '/'}assets/icons/home/icon_application.png`;
+    this.browseAll = `${this.environment.baseHref || '/'}assets/icons/home/icon_browseall.png`;
+    this.chemicon = `${this.environment.baseHref || '/'}assets/icons/home/icon_registersubstance.png`;
+    this.appId = this.environment.appId;
 
     this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
       this.isAuthenticated = response;
     });
     this.gaService.sendPageView(`Home`);
-    this.environment = this.configService.environment;
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';
   }
