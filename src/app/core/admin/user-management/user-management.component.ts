@@ -202,7 +202,8 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
     this.filtered.data = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'name' : return this.utilsService.compare(a.user.username.toUpperCase(), b.user.username.toUpperCase(), isAsc);
+        case 'name' : return this.utilsService.compare(a.user.username ? a.user.username.toUpperCase() : '',
+        b.user.username ? b.user.username.toUpperCase() : '', isAsc);
         case 'active' : return this.utilsService.compare(a.active, b.active, !isAsc);
         case 'email' : return this.utilsService.compare(a.user.email || '', b.user.email || '', isAsc);
         case 'modified' : return this.utilsService.compare(a.modified, b.modified, isAsc);
