@@ -1,4 +1,4 @@
-<div mat-dialog-title class = "title">
+<div mat-dialog-title class = "title" *ngIf = "!submitted">
         <h1 *ngIf = "newUser">
          Add User
         </h1>
@@ -6,7 +6,7 @@
         Edit User
         </h1>
 </div>
-<div mat-dialog-content *ngIf = "user && user.user">
+<div mat-dialog-content *ngIf = "user && user.user && !submitted">
 <div *ngIf = "loading === false">
     <div class = "form-row">
         <div class="username">
@@ -108,9 +108,12 @@
 </div>
 
 </div>
+<div *ngIf = "submitted" class = "submitted-container">
+<div class = "submit-message"> User successfully {{newUser? 'added': 'edited'}}!</div>
+</div>
 
-<div mat-dialog-actions>
-        <button mat-flat-button color="primary" matDialogClose>Close</button>
+<div mat-dialog-actions *ngIf = "!submitted">
+        <button mat-flat-button color="primary" matDialogClose>Cancel</button>
       
         <span class="middle-fill"></span>
 
@@ -119,5 +122,14 @@
       <button mat-flat-button color="primary" *ngIf = "newUser" [disabled] = "!user || !user.user || !user.user.username || user.user.username === ''" 
       (click) = "addUser()">Add</button>
 
+      
+      </div>
+
+      <div mat-dialog-actions *ngIf = "submitted">
+      
+        <span class="middle-fill"></span>
+
+        <button mat-flat-button color="primary" (click) = "succesClose()">Close</button>
+     
       
       </div>
