@@ -3,6 +3,7 @@
 # with the installation process 
 rm -rf package-lock.json
 rm -rf node_modules
+rm -rf package.json
 cp package.dev.json package.json
 npm install
 npm run build-file-select
