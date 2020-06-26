@@ -24,13 +24,16 @@ export class UserEditDialogComponent implements OnInit {
   message: string;
   newGroup = '';
   groups: Array< any >;
-  roles = [{name: 'Updater', hasRole: false},
-    {name: 'Admin', hasRole: false},
+  submitted = false;
+  response: any;
+  roles = [
     {name: 'Query', hasRole: false},
-    {name: 'SuperUpdate', hasRole: false},
     {name: 'DataEntry', hasRole: false},
     {name: 'SuperDataEntry', hasRole: false},
-    {name: 'Approver', hasRole: false}];
+    {name: 'Updater', hasRole: false},
+    {name: 'SuperUpdate', hasRole: false},
+    {name: 'Approver', hasRole: false},
+    {name: 'Admin', hasRole: false}];
   constructor(
     private adminService: AdminService,
     public dialogRef: MatDialogRef<UserEditDialogComponent>,
@@ -60,7 +63,7 @@ export class UserEditDialogComponent implements OnInit {
             });
           });
       } else if (this.userID) {
-          this.adminService.getUserByName(this.userID).pipe(take(1)).subscribe( resp => {
+          this.adminService.getUserByID(this.userID).pipe(take(1)).subscribe( resp => {
             this.user = resp;
             this.checkRoles();
             this.originalName = resp.user.username;
@@ -143,9 +146,9 @@ export class UserEditDialogComponent implements OnInit {
           'groups' : groups,
       };
 
-      this.adminService.editUser(userEditObj, this.originalName).pipe(take(1)).subscribe(response => {
+      this.adminService.editUser(userEditObj, this.userID).pipe(take(1)).subscribe(response => {
         if (response && response.user) {
-          this.dialogRef.close(response);
+          this.successfulChange(response);
         } else {
           this.message = 'Unable to edit user';
         }
@@ -187,7 +190,7 @@ export class UserEditDialogComponent implements OnInit {
 
       this.adminService.addUser(userEditObj).pipe(take(1)).subscribe(response => {
         if (response && response.user) {
-          this.dialogRef.close(response);
+          this.successfulChange(response);
         }
       }, error => {
         if (error.error && isString(error.error) ) {
@@ -197,6 +200,18 @@ export class UserEditDialogComponent implements OnInit {
     } else {
       this.message = 'passwords do not match';
     }
+  }
+
+  successfulChange(response) {
+    this.response = response;
+    this.submitted = true;
+    setTimeout(() => {
+      this.dialogRef.close(this.response);
+    }, 300000);
+  }
+
+  succesClose() {
+    this.dialogRef.close(this.response);
   }
 
   validatePassword(): void {
