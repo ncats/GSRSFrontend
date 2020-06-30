@@ -4,14 +4,13 @@ import { ApplicationService } from '../service/application.service';
 import { ApplicationSrs } from '../model/application.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import * as _ from 'lodash';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { PageEvent } from '@angular/material';
+import { PageEvent } from '@angular/material/paginator';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
@@ -19,9 +18,6 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { Environment } from 'src/environments/environment.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-import { Subscription, Observable, Subject } from 'rxjs';
-import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 
 
 @Component({

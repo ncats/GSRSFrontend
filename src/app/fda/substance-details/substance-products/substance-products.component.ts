@@ -1,11 +1,8 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ProductService } from '../../product/service/product.service';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table-display';
-import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({

@@ -3,17 +3,14 @@ import { ActivatedRoute, Router} from '@angular/router';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial, BdnumNameAll } from '../clinical-trial/clinical-trial.model';
 import { ClinicalTrialDrug } from '../clinical-trial/clinical-trial.model';
-import { MiniSearchComponent } from '../mini-search/mini-search.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
 import * as _ from 'lodash';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { MatTableModule } from '@angular/material/table';
-import { FormsModule } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+
+import { MatTableDataSource } from '@angular/material/table'
 import {AuthService} from '@gsrs-core/auth/auth.service';
 
 // import { Auth } from '../../../core/auth/auth.model';

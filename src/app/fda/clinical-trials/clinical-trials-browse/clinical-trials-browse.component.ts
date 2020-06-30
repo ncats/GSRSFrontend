@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { PageEvent } from '@angular/material';
+import { PageEvent } from '@angular/material/paginator';
 import { UtilsService } from '@gsrs-core//utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import {AuthService} from '@gsrs-core/auth/auth.service';
