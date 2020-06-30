@@ -90,6 +90,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   exportOptions: Array<any>;
   private searchTermHash: number;
   isSearchEditable = false;
+  showDeprecated = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -132,6 +133,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
+    if (this.activatedRoute.snapshot.queryParams['showDeprecated'] &&
+     this.activatedRoute.snapshot.queryParams['showDeprecated'] === 'true') {
+        this.showDeprecated = true;
+     }
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     if (this.pageSize > 500) {
       this.pageSize = 500;
@@ -177,6 +182,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     if (this.isFacetsParamsInit && this.isComponentInit) {
       this.searchSubstances();
     }
+  }
+
+  toggleDeprecated(): void {
+    this.showDeprecated = !this.showDeprecated;
+    this.searchSubstances();
   }
 
   changePage(pageEvent: PageEvent) {
@@ -257,6 +267,7 @@ validatePageInput(event: any): boolean {
       this.order,
       this.privateFacetParams,
       (this.pageIndex * this.pageSize),
+      this.showDeprecated
     );
     if (this.argsHash == null || this.argsHash !== newArgsHash) {
       this.isLoading = true;
@@ -274,7 +285,8 @@ validatePageInput(event: any): boolean {
         pageSize: this.pageSize,
         facets: this.privateFacetParams,
         skip: skip,
-        sequenceSearchKey: this.privateSequenceSearchKey
+        sequenceSearchKey: this.privateSequenceSearchKey,
+        showDeprecated: this.showDeprecated
       })
         .subscribe(pagingResponse => {
           this.isError = false;

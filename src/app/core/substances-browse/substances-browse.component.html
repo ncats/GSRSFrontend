@@ -1,5 +1,8 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
   <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
+    <div class = "deprecated">
+        <mat-checkbox class ="deprecated" *ngIf = "isLoggedIn" [ngModel] = "showDeprecated" (change) = "toggleDeprecated()">Show Deprecated Records</mat-checkbox>
+    </div>
     <app-facets-manager
       (facetsParamsUpdated)="facetsParamsUpdated($event)"
       (facetsLoaded)="facetsLoaded($event)"
