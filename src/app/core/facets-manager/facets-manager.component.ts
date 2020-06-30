@@ -38,7 +38,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   @Output() facetsLoaded = new EventEmitter<number>();
   private environment: Environment;
   @Input() includeFacetSearch = false;
-  showDeprecated = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -158,15 +157,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   }
 
-  toggleDeprecated(): void {
-    this.showDeprecated = !this.showDeprecated;
-    
-  }
-
   private populateFacets(): void {
     if (this.privateRawFacets && this.facetsConfig) {
-      console.log(this.privateRawFacets);
-      console.log(this.facetsConfig);
       if (this.facetsAuthSubscription != null) {
         this.facetsAuthSubscription.unsubscribe();
         this.facetsAuthSubscription = null;
@@ -176,14 +168,11 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const newFacets = [];
         this.showAudit = this.authService.hasRoles('admin');
         const facetKeys = Object.keys(this.facetsConfig) || [];
-        console.log(facetKeys);
-        console.log(facetsCopy);
 
         facetKeys.forEach(facetKey => {
           if (this.facetsConfig[facetKey].length
             && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
             this.facetsConfig[facetKey].forEach(facet => {
-              console.log(facet);
               for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
                 this.toggle[facetIndex] = true;
                 if (facet === facetsCopy[facetIndex].name) {
@@ -237,7 +226,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   setDisplayFacets() {
     if (this.privateFacetParams != null) {
       this.displayFacets = [];
-      console.log(this.privateFacetParams);
       Object.keys(this.privateFacetParams).forEach(key => {
         if (this.privateFacetParams[key] && this.privateFacetParams[key].params) {
           Object.keys(this.privateFacetParams[key].params).forEach(sub => {
