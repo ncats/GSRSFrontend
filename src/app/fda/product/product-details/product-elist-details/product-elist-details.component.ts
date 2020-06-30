@@ -7,7 +7,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ProductDetailsBaseComponent} from '../product-details-base.component';
-import {environment} from '../../../../../environments/environment';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-product-elist-details',
@@ -25,12 +25,14 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
+    configService: ConfigService
   ) { super(producService, activatedRoute, loadingService, mainNotificationService,
-    router, gaService, utilsService);
+    router, gaService, utilsService, configService);
   }
 
   ngOnInit() {
     super.ngOnInit();
+    const environment = this.configService.environment;
 
     this.iconSrcPath = `${environment.baseHref || '/'}assets/icons/fda/icon_dailymed.png`;
   }

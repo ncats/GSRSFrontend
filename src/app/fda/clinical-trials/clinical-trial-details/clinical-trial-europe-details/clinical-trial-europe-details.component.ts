@@ -26,9 +26,9 @@ export class ClinicalTrialEuropeDetailsComponent extends ClinicalTrialDetailsBas
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-    private configService: ConfigService
+    configService: ConfigService
   ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
-    router, gaService, utilsService);
+    router, gaService, utilsService, configService);
     this.environment = configService.environment;
   }
 

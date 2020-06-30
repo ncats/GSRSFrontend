@@ -8,6 +8,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { ClinicalTrial } from '../../application/model/application.model';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-clinical-trial-details-base',
@@ -30,6 +31,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
+    public configService: ConfigService
   ) { }
 
   ngOnInit() {

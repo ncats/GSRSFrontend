@@ -21,9 +21,9 @@ import { SubstanceCardsService } from './substance-cards.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { UtilsService } from '../utils/utils.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { environment } from '../../../environments/environment';
 import {Subject, Subscription} from 'rxjs';
 import {Title} from '@angular/platform-browser';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-details',
@@ -41,6 +41,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   substanceUpdated = new Subject<SubstanceDetail>();
+  environment: any;
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
@@ -53,11 +54,13 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private utilsService: UtilsService,
     private gaService: GoogleAnalyticsService,
     private activeRoute: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    private configService: ConfigService
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
   ngOnInit() {
+    this.environment = this.configService.environment;
     this.gaService.sendPageView(`Substance Details`);
     this.id = this.activatedRoute.snapshot.params['id'];
     this.version = this.activatedRoute.snapshot.params['version'];
@@ -110,7 +113,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
                 ref.instance.substance = this.substance;
                 ref.instance.substanceUpdated = this.substanceUpdated.asObservable();
                 ref.instance.title = substanceProperty.title;
-                ref.instance.analyticsEventCategory = !environment.isAnalyticsPrivate
+                ref.instance.analyticsEventCategory = !this.environment.isAnalyticsPrivate
                   && this.utilsService.toCamelCase(`substance ${substanceProperty.title}`)
                   || 'substanceCard';
                 if (substanceProperty.type != null) {
@@ -240,7 +243,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   handleSidenavClick(substancePropertyTitle: string): void {
 
-    const eventLabel = environment.isAnalyticsPrivate ? 'substance card' : substancePropertyTitle;
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'substance card' : substancePropertyTitle;
 
     this.gaService.sendEvent('substanceNav', 'link:nav-to', eventLabel);
 

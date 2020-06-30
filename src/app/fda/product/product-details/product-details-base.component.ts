@@ -7,6 +7,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { SafeUrl } from '@angular/platform-browser';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-product-details-base',
@@ -28,6 +29,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
+    public configService: ConfigService
   ) { }
 
   ngOnInit() {
