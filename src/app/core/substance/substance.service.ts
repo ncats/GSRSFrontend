@@ -242,6 +242,7 @@ export class SubstanceService extends BaseHttpService {
       let params = new FacetHttpParams();
       let url = this.apiBaseUrl;
       let structureFacetsKey;
+      console.log(searchKey);
 
       structureFacetsKey = this.utilsService.hashCode(searchTerm, cutoff, type, seqType);
       if ((searchKey && searchKey.length > 30) || (!sync && this.searchKeys[structureFacetsKey])) {
@@ -272,6 +273,7 @@ export class SubstanceService extends BaseHttpService {
         }
         url += 'substances/sequenceSearch';
       }
+      console.log(url);
 
       const options = {
         params: params
@@ -279,6 +281,7 @@ export class SubstanceService extends BaseHttpService {
       this.http.get<any>(url, options).subscribe(
         response => {
           // call async
+          console.log(response);
           if (response.results) {
             const resultKey = response.key;
             this.searchKeys[structureFacetsKey] = resultKey;
@@ -401,7 +404,7 @@ export class SubstanceService extends BaseHttpService {
     }
 
     if (facets != null) {
-      params = params.appendFacetParams(facets, this.showdeprecated);
+      params = params.appendFacetParams(facets, this.showDeprecated);
     }
 
     const options = {
