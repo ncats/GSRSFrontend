@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UtilsService } from '../../utils/utils.service';
-import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SafeUrl } from '@angular/platform-browser';
 import { StructureService } from '../structure.service';
 

@@ -1,7 +1,7 @@
 import { ComponentRef, Output, EventEmitter, Directive } from '@angular/core';
 import { SubstanceFormBase } from './base-classes/substance-form-base';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
-import { MatExpansionPanel } from '@angular/material';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Directive()
 export class SubstanceFormSection {

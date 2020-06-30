@@ -7,7 +7,7 @@ import { UtilsService } from '../../utils/utils.service';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormReferencesService } from './substance-form-references.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
 import { Subscription } from 'rxjs';
 

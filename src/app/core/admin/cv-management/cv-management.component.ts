@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ControlledVocabularyService, Vocabulary, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
-import { MatDialog, Sort } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { Sort } from '@angular/material/sort';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CvTermDialogComponent } from '@gsrs-core/admin/cv-management/cv-term-dialog/cv-term-dialog.component';
 import { UtilsService } from '@gsrs-core/utils';
