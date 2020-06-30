@@ -7,7 +7,7 @@ import { SubstanceCardsService } from './substance-cards.service';
 
 @NgModule()
 export class SubstanceCardsModule {
-  static forRoot(filters: Array<SubstanceCardFilter>): ModuleWithProviders {
+  static forRoot(filters: Array<SubstanceCardFilter>): ModuleWithProviders<SubstanceCardsModule> {
     return {
       ngModule: SubstanceCardsModule,
       providers: [

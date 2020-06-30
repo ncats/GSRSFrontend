@@ -36,7 +36,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   private usedSuggestedTags: Array<string> = [];
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  @ViewChild('tagsInput', { read: ElementRef, static: false }) tagsInput: ElementRef<HTMLInputElement>;
+  @ViewChild('tagsInput', { read: ElementRef }) tagsInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private cvService: ControlledVocabularyService,
