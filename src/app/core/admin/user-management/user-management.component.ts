@@ -25,10 +25,11 @@ export class UserManagementComponent implements OnInit {
   private overlayContainer: HTMLElement;
   displayedColumns: string[] = ['name', 'email', 'created', 'modified', 'active'];
   page = 0;
-  pageSize = 250;
+  pageSize = 10000;
   paged: Array< any >;
   users: Array< any > = [];
   private searchTimer: any;
+  lastSort: Sort;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
 constructor(
@@ -48,7 +49,6 @@ constructor(
         this.searchControl.valueChanges.subscribe(value => {
           this.filterList(value, this.users);
         }, error => {
-          console.log(error);
         });
 }
 
@@ -63,6 +63,7 @@ showAllUsers(): void {
 
 
   });
+
   this.pageChange();
 }
 
@@ -79,26 +80,32 @@ showInactiveUsers(): void {
   } else {
     this.filtered.data = this.users;
   }
+  if (this.searchControl.value && this.searchControl.value !== '') {
+    this.searchFields(this.searchControl.value);
+  }
   this.pageChange();
 }
 
-editUserByName(name: any): void {
+/* editUserByName(name: any): void {
   this.loading = true;
   this.alert = '';
-  this.adminService.getUserByName(name).subscribe(response => {
+  this.adminService.getUserByID(name).subscribe(response => {
     this.loading = false;
     if (response && response.user) {
       const dialogRef = this.dialog.open(UserEditDialogComponent, {
         data: {'user': response},
-        width: '800px'
+        width: '800px',
+        autoFocus: false,
+      disableClose: true
       });
       this.overlayContainer.style.zIndex = '1002';
       const dialogSubscription = dialogRef.afterClosed().subscribe(resp => {
         this.overlayContainer.style.zIndex = null;
         if (resp && this.showAll === true ) {
-          this.updateLocalData(resp, null, null, name);
+          this.updateLocalData(resp, null, null, resp.user.username);
           this.filtered.data.forEach( usr => {
             if (usr['user'] && usr['user'].username === resp.user.username) {
+              console.log('setting');
               usr = resp;
             }
           });
@@ -111,12 +118,14 @@ editUserByName(name: any): void {
     this.alert = 'User Not found';
     this.loading = false;
   });
-}
+} */
 
   editUser(userID: any, index: number): void {
     const dialogRef = this.dialog.open(UserEditDialogComponent, {
       data: {'userID': userID},
-      width: '800px'
+      width: '800px',
+      autoFocus: false,
+      disableClose: true
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
@@ -135,11 +144,11 @@ editUserByName(name: any): void {
 updateLocalData(response: any, index?: number, id?: number, username?: string, ) {
     this.users.forEach( current => {
       if (index) {
-        if (current.index = response.index) {
+        if (current.index === response.index) {
           current = response;
         }
       } else {
-        if (current.username = response.username) {
+        if (current.id === response.id) {
           current = response;
         }
       }
@@ -167,21 +176,23 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
   addUser(): void {
     const dialogRef = this.dialog.open(UserEditDialogComponent, {
       data: {'type': 'add'},
-      width: '800px'
+      width: '800px',
+      autoFocus: false,
+      disableClose: true
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
       if (response ) {
-        const backup = this.filtered.data;
-        backup.push(response);
-       this.filtered.data = backup;
         this.users.push(response);
+        this.sortData(this.lastSort);
+        this.searchControl.setValue('');
       }
     });
   }
 
-  sortData(sort: Sort): void {
+  sortData(sort: any): void {
+    this.lastSort = sort;
     let data = this.users.slice();
     if (this.showInactive) {
       data = [];
@@ -193,12 +204,14 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
     }
     if (!sort.active || sort.direction === '') {
       this.filtered.data = data;
+      this.pageChange();
       return;
     }
     this.filtered.data = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'name' : return this.utilsService.compare(a.user.username.toUpperCase(), b.user.username.toUpperCase(), isAsc);
+        case 'name' : return this.utilsService.compare(a.user.username ? a.user.username.toUpperCase() : '',
+        b.user.username ? b.user.username.toUpperCase() : '', isAsc);
         case 'active' : return this.utilsService.compare(a.active, b.active, !isAsc);
         case 'email' : return this.utilsService.compare(a.user.email || '', b.user.email || '', isAsc);
         case 'modified' : return this.utilsService.compare(a.modified, b.modified, isAsc);
@@ -213,32 +226,36 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         clearTimeout(this.searchTimer);
     }
     this.searchTimer = setTimeout(() => {
-      const backup = [];
-        this.users.forEach(user => {
-          if (this.showInactive) {
-            if (user.active) {
-              backup.push(user);
-            }
-          } else {
-            backup.push(user);
-          }
-        });
-
-        this.filtered.data = [];
-        backup.forEach(item => {
-          if (item.user) {
-          const itemString = item.user.username ? item.user.username.toUpperCase() : null;
-          const emailString = item.user.email ? item.user.email.toUpperCase() : null;
-            if ((itemString.indexOf(searchInput.toUpperCase()) > -1) ||
-            (item.user.email && emailString.indexOf(searchInput.toUpperCase()) > -1)) {
-                this.filtered.data.push(item);
-            }
-          }
-        });
+        this.searchFields(searchInput);
         clearTimeout(this.searchTimer);
         this.pageChange();
         this.searchTimer = null;
     }, 700);
+  }
+
+  searchFields(searchInput: string) {
+    const backup = [];
+    this.users.forEach(user => {
+      if (this.showInactive) {
+        if (user.active) {
+          backup.push(user);
+        }
+      } else {
+        backup.push(user);
+      }
+    });
+
+    this.filtered.data = [];
+    backup.forEach(item => {
+      if (item.user) {
+      const itemString = item.user.username ? item.user.username.toUpperCase() : null;
+      const emailString = item.user.email ? item.user.email.toUpperCase() : null;
+        if ((itemString !== null && itemString.indexOf(searchInput.toUpperCase()) > -1) ||
+        (emailString !== null && emailString.indexOf(searchInput.toUpperCase()) > -1)) {
+            this.filtered.data.push(item);
+        }
+      }
+    });
   }
 
   pageChange(pageEvent?: PageEvent): void {

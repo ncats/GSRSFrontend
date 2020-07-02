@@ -37,6 +37,7 @@ export interface UserEditObject {
         groups: Array< any >;
         password?: string;
         index?: any;
+        id?: any;
 }
 
 export interface UploadObject {

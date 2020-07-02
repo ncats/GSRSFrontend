@@ -1057,6 +1057,7 @@ export class SubstanceFormService implements OnDestroy {
         if (results.validationMessages) {
           for (let i = 0; i < substanceCopy.references.length; i++) {
             const ref = substanceCopy.references[i];
+            if (ref.citation !== 'SYSTEM') {
             if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
               const invalidReferenceMessage: ValidationMessage = {
                 actionType: 'frontEnd',
@@ -1069,6 +1070,7 @@ export class SubstanceFormService implements OnDestroy {
               results.validationMessages.push(invalidReferenceMessage);
               break;
             }
+          }
           }
           if (substanceCopy.properties) {
             for (let i = 0; i < substanceCopy.properties.length; i++) {

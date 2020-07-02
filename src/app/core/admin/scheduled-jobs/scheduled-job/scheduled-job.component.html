@@ -71,7 +71,7 @@
             
             <div  class = "table-row" *ngIf="job.lastDurationHuman">
                 <div class = "label table-label">Last Execution Duration:</div>
-                <div class = "table-value">{{job.lastDurationHuman/10 | number:'1.0-0'}} seconds</div>
+                <div class = "table-value">{{job.lastDurationHuman/1000 | number:'1.0-0'}} seconds</div>
             </div>
             <div  class = "table-row" *ngIf="job.taskDetails">
                 <div class = "label table-label">Message:</div>
