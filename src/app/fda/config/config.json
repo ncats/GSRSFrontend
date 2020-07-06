@@ -517,6 +517,8 @@
         "root_approved",
         "root_lastEdited",
         "Approved By",
+        "Record Created By",
+        "Last Edited By",
         "root_lastEditedBy",
         "Record Level Access",
         "Display Name Level Access",

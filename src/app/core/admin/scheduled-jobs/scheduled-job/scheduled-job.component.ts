@@ -45,7 +45,25 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
     this.adminService.fetchJob(this.job.id).pipe(take(1)).subscribe( response => {
       this.job = response;
       if (!this.job.running && this.job.lastFinished) {
-        this.job.lastDurationHuman = (this.job.lastFinished - this.job.lastStarted);
+        const duration = moment.duration((this.job.lastFinished - this.job.lastStarted));
+        let timestring = '';
+        if ( duration.days() !== 0) {
+          timestring += duration.days() + (duration.days() > 1 ? ' days, ' : ' day, ');
+        }
+        if ( duration.hours() !== 0) {
+          timestring += duration.hours() + (duration.hours() > 1 ? ' hrs, ' : ' hr, ');
+        }
+        if ( duration.minutes() !== 0) {
+          timestring += duration.minutes() + (duration.minutes() > 1 ? ' min, ' : ' min, ');
+        }
+        if ( duration.seconds() !== 0) {
+          timestring += duration.seconds() + (duration.seconds() > 1 ? ' sec' : ' sec');
+        } else if (timestring === '') {
+          timestring = (this.job.lastFinished - this.job.lastStarted) + ' ms';
+        }
+        this.job.lastDurationHuman = timestring;
+
+
      }
       this.quickLoad = false;
       if (this.monitor && spawn) {

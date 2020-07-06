@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Input, Inject, ViewChild, ElementRef } from '@angular/core';
 import { VocabularyTerm, Vocabulary, ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 
 @Component({
   selector: 'app-cv-term-dialog',
@@ -18,11 +19,14 @@ export class CvTermDialogComponent implements OnInit {
   constructor(
     public cvService: ControlledVocabularyService,
     public dialogRef: MatDialogRef<CvTermDialogComponent>,
+    public scrollToService: ScrollToService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.vocabulary = data.vocabulary;
     this.terms = data.vocabulary.terms;
     }
+    @ViewChild('scroller', {static: false}) private myScrollContainer: ElementRef;
+
 
 
   ngOnInit() {
@@ -50,8 +54,13 @@ export class CvTermDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  addTerm(): void {
+  addTerm(element: HTMLElement): void {
     this.terms.push({});
+    setTimeout(() => {
+      try {
+        this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch(err) { }
+    }, 100);
   }
 
   deleteTerm(index: number): void {

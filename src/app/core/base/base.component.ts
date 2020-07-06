@@ -274,7 +274,8 @@ export class BaseComponent implements OnInit, OnDestroy {
       '/browse-substance': 'substances',
       '/structure-search': 'structure',
       '/sequence-search': 'sequence',
-      '/substances/register': 'wizard'
+      '/substances/register': 'wizard',
+      '/admin': 'admin'
     };
 
     const pathParts = path.split('/');

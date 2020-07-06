@@ -499,6 +499,8 @@
         "Molecular Weight",
         "SubstanceStereochemistry",
         "root_approved",
+        "Last Edited By",
+        "Record Created By",
         "root_lastEdited",
         "Relationships",
         "Record Level Access",

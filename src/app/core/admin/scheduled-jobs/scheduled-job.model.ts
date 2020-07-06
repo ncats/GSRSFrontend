@@ -9,7 +9,7 @@ export interface ScheduledJob {
     numberOfRuns?: number;
     description?: string;
     cronSchedule?: string;
-    lastDurationHuman?: number;
+    lastDurationHuman?: any;
     lastFinished?: number;
     lastStarted?: number;
     '@execute'?: string;

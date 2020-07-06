@@ -199,8 +199,10 @@
       <button *ngIf="substance.version != versionControl.value" mat-button
         class="mat-raised-button mat-primary view-version" (click)='changeVersion()'>View</button>
     </div>
-    <div *ngIf="versionControl.value != latestVersion" class="indent">
-      This is an older version of this substance
+    <div *ngIf="substance.version != latestVersion" class="indent">
+      This is an older version of this substance - Ver. {{this.substance.version}}
+      <button *ngIf="isAdmin" mat-button
+        class="mat-raised-button mat-primary view-version" (click)='restoreVersion()'>Restore this version</button>
     </div>
     <div class="name-value">
       <div class="name">Tags</div>
