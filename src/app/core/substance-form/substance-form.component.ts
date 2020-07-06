@@ -158,7 +158,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.canApprove = this.canBeApproved();
       });
     });
-
   }
 
   ngAfterViewInit(): void {
