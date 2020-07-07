@@ -1,5 +1,7 @@
+
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
   <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
+
     <app-facets-manager
       (facetsParamsUpdated)="facetsParamsUpdated($event)"
       (facetsLoaded)="facetsLoaded($event)"
@@ -111,6 +113,8 @@
         </div>
       </ng-template>
       <div class="controls-container">
+         
+
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
           <mat-button-toggle value="table" matTooltip="Table view">
             <mat-icon svgIcon="list"></mat-icon>
@@ -169,7 +173,11 @@
           </div>
         </div>
       </div>
+      <ng-template appBrowseHeaderDynamicSection></ng-template>
+      <div class = "dynamic container">
+       </div>
       <div [ngClass]="view">
+
         <div class="substance-cards">
           <app-substance-summary-card *ngFor="let substance of substances" [substance]="substance"
             (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
@@ -416,4 +424,5 @@
           </app-substance-summary-card>
   </div>
 </div>
+
 

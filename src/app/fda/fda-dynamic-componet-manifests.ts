@@ -3,6 +3,7 @@ import {
     DynamicComponentManifest
 } from '@gsrs-core/dynamic-component-loader';
 import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
+import { ShowApplicationToggleComponent } from './substance-browse/show-application-toggle/show-application-toggle.component';
 
 export const fdaLazyLoadedComponentManifests: Array<LazyLoadedComponentManifest> = [
     {
@@ -12,8 +13,19 @@ export const fdaLazyLoadedComponentManifests: Array<LazyLoadedComponentManifest>
     }
 ];
 
-export const fdaDynamicSubSummaryComponentManifests: Array<DynamicComponentManifest<SubstanceCountsComponent>> = [
+export const fdaDynamicBrowseComponentManifests: Array<DynamicComponentManifest<ShowApplicationToggleComponent>> = [
     {
-        component: SubstanceCountsComponent
+        component: ShowApplicationToggleComponent,
+        componentType: 'browseHeader'
     }
 ];
+
+export const fdaDynamicSubSummaryComponentManifests: Array<DynamicComponentManifest<SubstanceCountsComponent>> = [
+    {
+        component: SubstanceCountsComponent,
+        componentType: 'summary'
+
+    }
+];
+
+

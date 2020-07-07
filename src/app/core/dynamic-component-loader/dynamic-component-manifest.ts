@@ -22,4 +22,5 @@ export interface LazyLoadedComponentManifest {
 
 export interface DynamicComponentManifest<T> {
   component: Type<T>;
+  componentType: string;
 }

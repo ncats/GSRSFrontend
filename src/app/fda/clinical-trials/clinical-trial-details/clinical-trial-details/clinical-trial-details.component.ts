@@ -6,8 +6,8 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component';
-import {environment} from '../../../../../environments/environment';
 import { AuthService } from '@gsrs-core/auth/auth.service';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-clinical-trial-details',
@@ -27,7 +27,8 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-    public authService: AuthService
+    public authService: AuthService,
+    public configService: ConfigService
   ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
     router, gaService, utilsService);
   }
@@ -37,7 +38,7 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
 
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
 
-    this.flagIconSrcPath = `${environment.baseHref || '/'}assets/icons/fda/united-states.svg`;
+    this.flagIconSrcPath = `${this.configService.environment.baseHref || '/'}assets/icons/fda/united-states.svg`;
 
   }
 

@@ -16,12 +16,8 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
-import { Environment } from 'src/environments/environment.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-import { Subscription, Observable, Subject } from 'rxjs';
-import { take, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 
 
 @Component({
@@ -47,7 +43,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   appType: string;
   appNumber: string;
   clinicalTrialApplication: Array<any>;
-  environment: Environment;
   exportUrl: string;
   private isComponentInit = false;
   privateExport = false;
@@ -55,6 +50,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   private overlayContainer: HTMLElement;
   isLoggedIn = false;
   etag = '';
+  environment: any;
 
   // needed for facets
   private privateFacetParams: FacetParam;
