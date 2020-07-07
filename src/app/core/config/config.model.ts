@@ -13,6 +13,7 @@ export interface Config {
     contactEmail?: string;
     defaultCodeSystem?: string;
     navItems?: Array<NavItem>;
+    substanceSelectorProperties?: Array<string>;
     displayMatchApplication?: string;
 }
 

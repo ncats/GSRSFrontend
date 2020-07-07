@@ -444,6 +444,11 @@ export class SubstanceFormService implements OnDestroy {
       this.substanceStateHash = this.utilsService.hashCode(substanceString);
     }
 
+    if (!this.privateSubstance.tags) {
+      this.privateSubstance.tags = [];
+      const substanceString = JSON.stringify(this.privateSubstance);
+      this.substanceStateHash = this.utilsService.hashCode(substanceString);
+    }
 
 
     const definition: SubstanceFormDefinition = {
@@ -459,7 +464,8 @@ export class SubstanceFormService implements OnDestroy {
       createdBy: this.privateSubstance.createdBy,
       lastEdited: this.privateSubstance.lastEdited,
       lastEditedBy: this.privateSubstance.lastEditedBy,
-      _name: this.privateSubstance._name
+      _name: this.privateSubstance._name,
+      tags: this.privateSubstance.tags
     };
     if (this.privateSubstance.status) {
       definition.status = this.privateSubstance.status;
@@ -1051,6 +1057,7 @@ export class SubstanceFormService implements OnDestroy {
         if (results.validationMessages) {
           for (let i = 0; i < substanceCopy.references.length; i++) {
             const ref = substanceCopy.references[i];
+            if (ref.citation !== 'SYSTEM') {
             if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
               const invalidReferenceMessage: ValidationMessage = {
                 actionType: 'frontEnd',
@@ -1063,6 +1070,7 @@ export class SubstanceFormService implements OnDestroy {
               results.validationMessages.push(invalidReferenceMessage);
               break;
             }
+          }
           }
           if (substanceCopy.properties) {
             for (let i = 0; i < substanceCopy.properties.length; i++) {

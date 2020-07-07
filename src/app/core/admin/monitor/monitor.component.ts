@@ -78,7 +78,9 @@ export class MonitorComponent implements OnInit, OnDestroy {
   refresh(bool: boolean = true): void {
     this.adminService.queryLoad(this.loadJob.id).pipe(take(1)).subscribe(response => {
         this.loadJob = response;
-        this.max = response.statistics.totalRecords.count;
+        if (response.statistics.totalRecords && response.statistics.totalRecords.count) {
+          this.max = response.statistics.totalRecords.count;
+        }
         this.humanizeFields(response);
         this.mixResultDisplay(response);
           if (response.status !== 'COMPLETE' && bool) {
@@ -89,6 +91,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
             });
           } else {
             this.monitor = false;
+            console.log('no monitor');
           }
       }, error => {
         this.message = 'invalid Job ID';

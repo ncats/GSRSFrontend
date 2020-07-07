@@ -37,9 +37,11 @@ You should repeat this step whenever somebody adds a new package to the applicat
 
 You'll have to run the following commands the first time you work on the application to make sure a few libraries are built and ready to be used by the application:
 
-- `ng build --prod file-select`
-- `ng build --prod ketcher-wrapper`
-- `ng build --prod jsdraw-wrapper`
+```
+npm run build-file-select
+npm run build-jsdraw-wrapper
+npm run build-ketcher-wrapper
+```
 
 After this is done, the file `package.real.json` should be copied and replace the `package.json` file. 
 

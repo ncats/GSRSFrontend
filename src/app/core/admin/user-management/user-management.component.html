@@ -36,7 +36,7 @@
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef  mat-sort-header> User Name</th>
         <td mat-cell *matCellDef="let user; index as index">
-          <a class = "mat-button" matTooltip = "select to edit" (click) = "editUser(user.user.username, index)">
+          <a class = "mat-button" matTooltip = "select to edit" (click) = "editUser(user.id, index)">
               <mat-icon svgIcon="edit" class = "small-icon clear-button"></mat-icon> {{user.user.username}}
           </a>
         </td>
@@ -65,8 +65,8 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <div>
-<mat-paginator [length]="filtered.data && filtered.data.length || 0" [pageSize]="250" showFirstLastButtons="true" (page)="pageChange($event)"
-               [pageSizeOptions]="[5, 10, 25, 100, 250, 1000, 2500]">
+<mat-paginator [length]="filtered.data && filtered.data.length || 0" [pageSize]="10000" showFirstLastButtons="true" (page)="pageChange($event)"
+               [pageSizeOptions]="[5, 10, 25, 100, 250, 1000, 10000]">
 </mat-paginator>
 </div>
 

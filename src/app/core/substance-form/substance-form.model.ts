@@ -16,6 +16,7 @@ export interface SubstanceFormDefinition {
     approvalID?: string;
     _name?: string;
     relationships?: Array<SubstanceRelationship>;
+    tags?: Array<string>;
 }
 
 export interface SubstanceFormResults {

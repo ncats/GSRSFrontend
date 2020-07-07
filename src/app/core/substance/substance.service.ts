@@ -18,11 +18,10 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FacetParam } from '../facets-manager/facet.model';
 import { FacetHttpParams } from '../facets-manager/facet-http-params';
 import { UtilsService } from '../utils/utils.service';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map, catchError } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
-import { catchError } from 'rxjs/operators';
 import { stringify } from 'querystring';
 
 @Injectable({
@@ -593,6 +592,15 @@ export class SubstanceService extends BaseHttpService {
     }
     const url = `${this.configService.configData.apiBaseUrl}api/v1/${search}/export/${etag}`;
     return this.http.get< any>(url);
+  }
+
+  getTags(): Observable<Array<string>> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?kind=ix.ginas.models.v1.Substance&fdim=999999&sideway=true&field=GInAS+Tag`;
+    return this.http.get<any>(url).pipe(
+      map(response => {
+        return response.content.map(item => item.label).sort();
+      })
+    );
   }
 }
 

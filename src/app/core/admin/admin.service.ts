@@ -45,13 +45,13 @@ export class AdminService extends BaseHttpService {
 
     }
 
-    public getUserByID(id: number): Observable< Auth > {
+    public getUserByID(id: any): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get< Auth >(`${url}users/${id}`);
+      return this.http.get< Auth >(`${url}users(${id})`);
     }
     public getUserByName(name: string): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get< Auth >(`${url}users/${encodeURIComponent(name)}`);
+      return this.http.get< Auth >(`${url}users(${name})`);
     }
 
     public getAllUsers(): Observable< any > {
@@ -61,7 +61,7 @@ export class AdminService extends BaseHttpService {
 
     public editUser(user: UserEditObject, name: string): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.put< Auth >(`${url}users/${name}`, user);
+      return this.http.put< Auth >(`${url}users(${name})`, user);
     }
 
     public addUser(user: UserEditObject): Observable< Auth > {
@@ -80,12 +80,11 @@ export class AdminService extends BaseHttpService {
     }
 
 
-    public changePassword(oldpass: string, newpass: string, id: number): Observable< any > {
+    public changePassword( newpass: string, id: number): Observable< any > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      const body3 = {};
-        body3['oldPassword'] = oldpass;
-        body3['newPassword'] = newpass;
-      return this.http.post< any >(`${url}users/${id}/password`, body3);
+      const body = {};
+        body['newPassword'] = newpass;
+      return this.http.post< any >(`${url}users/${id}/password`, body);
       }
 
       public changeMyPassword(oldpass: string, newpass: string, id: number): Observable< any > {

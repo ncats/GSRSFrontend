@@ -14,6 +14,7 @@ import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
 import {ConfigService} from '@gsrs-core/config';
 import { catchError } from 'rxjs/operators';
+import { LoadingService } from '@gsrs-core/loading';
 
 @Component({
   selector: 'app-substance-overview',
@@ -45,7 +46,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     private router: Router,
     private authService: AuthService,
     private cvService: ControlledVocabularyService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    public loadingService: LoadingService
   ) {
     super();
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -153,6 +155,31 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     });
   }
 
+  restoreVersion() {
+
+    if (confirm('Are you sure you\'d like to restore version ' + this.substance.version + '?')) {
+      this.loadingService.setLoading(true);
+    this.substance.changeReason = 'reverted to version ' + this.substance.version;
+    this.substance.version = this.latestVersion.toString();
+    this.substanceService.saveSubstance(this.substance).subscribe( response => {
+      this.substance = response;
+      this.loadingService.setLoading(true);
+      alert('record restored successfully');
+      this.router.navigate(['/substances/' + this.substance.uuid + '/']);
+    }, error => {
+      this.loadingService.setLoading(false);
+      console.log(error);
+      const results = {'serverError': null, 'validationMessages': null};
+      if (error && error.error && error.error.validationMessages) {
+        results.validationMessages = error.error.validationMessages;
+      } else {
+        results.serverError = error;
+      }
+
+    });
+  }
+
+  }
 
 
 

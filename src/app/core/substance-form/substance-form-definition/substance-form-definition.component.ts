@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -7,13 +7,18 @@ import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormDefinition } from '../substance-form.model';
+import { MatChipInputEvent, MatAutocompleteSelectedEvent } from '@angular/material';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { FormControl } from '@angular/forms';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-form-definition',
   templateUrl: './substance-form-definition.component.html',
   styleUrls: ['./substance-form-definition.component.scss']
 })
-export class SubstanceFormDefinitionComponent extends SubstanceFormBase implements OnInit, AfterViewInit {
+export class SubstanceFormDefinitionComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
   definitionTypes: Array<VocabularyTerm>;
   definitionLevels: Array<VocabularyTerm>;
   primarySubstance?: SubstanceSummary;
@@ -24,25 +29,44 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   feature: string;
   substanceClass: string;
   status: string;
-
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  tagsCtrl = new FormControl({value: '', disabled: true});
+  private suggestedTags: Array<string>;
+  filteredSuggestedTags: Array<string>;
+  private usedSuggestedTags: Array<string> = [];
+  private overlayContainer: HTMLElement;
+  private subscriptions: Array<Subscription> = [];
+  @ViewChild('tagsInput', { read: ElementRef, static: false }) tagsInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private cvService: ControlledVocabularyService,
     public substanceService: SubstanceService,
     private substanceFormService: SubstanceFormService,
-
+    private overlayContainerService: OverlayContainer
   ) {
     super();
   }
 
   ngOnInit() {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.menuLabelUpdate.emit('Overview');
     this.getVocabularies();
+    this.substanceService.getTags().subscribe(tags => {
+      this.suggestedTags = tags;
+      this.filteredSuggestedTags = tags;
+      this.crossCheckTags();
+      this.tagsCtrl.enable();
+    });
+    const tagsSubscription = this.tagsCtrl.valueChanges.subscribe(value => {
+      this.filteredSuggestedTags = this.suggestedTags.filter(tag => tag.toLowerCase().indexOf((value || '').toLowerCase()) > -1);
+    });
+    this.subscriptions.push(tagsSubscription);
   }
 
   ngAfterViewInit() {
     this.substanceFormService.definition.subscribe(definition => {
       this.definition = definition || {};
+      this.crossCheckTags();
       if (this.definition.substanceClass === 'structure') {
         this.substanceClass = 'chemical';
       } else if (this.definition.substanceClass === 'nucleicAcid') {
@@ -91,6 +115,11 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
 
   getRedirect() {
     if (this.uuid) {
@@ -171,5 +200,106 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
     this.substanceFormService.updateDefinition(this.definition);
   }
 
+  private crossCheckTags(): void {
+    if (
+      this.definition != null
+      && this.definition.tags != null
+      && this.definition.tags.length > 0
+      && this.suggestedTags != null) {
+        const tags = this.definition.tags.sort();
+        let i = 0;
+        this.definition.tags.forEach(tag => {
+          for (i = i; i < this.suggestedTags.length; i++) {
+            if (tag.toLowerCase() === this.suggestedTags[i].toLowerCase()) {
+              this.suggestedTags.splice(i, 1);
+              break;
+            }
+          }
+        });
+    }
+  }
 
+  tagAdded(event: MatChipInputEvent): void {
+    if ((event.value || '').trim()) {
+      const addedTag = event.value.trim();
+      this.addTag(addedTag);
+    }
+    if (event.input) {
+      event.input.value = '';
+    }
+  }
+
+  private addTag(addedTag: string): void {
+    this.definition.tags.push(addedTag);
+    this.updateDefinition();
+    for (let i = 0; i < this.suggestedTags.length; i++) {
+      if (addedTag.toLowerCase() === this.suggestedTags[i].toLowerCase()) {
+        this.suggestedTags.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  removeTag(tag: string): void {
+    const tagIndex = this.definition.tags.indexOf(tag);
+
+    if (tagIndex > -1) {
+      this.definition.tags.splice(tagIndex, 1);
+      this.updateDefinition();
+
+      if (this.usedSuggestedTags.length > 0) {
+        for (let i = 0; i < this.usedSuggestedTags.length; i++) {
+          if (tag.toLowerCase() === this.usedSuggestedTags[i].toLowerCase()) {
+            const availableTag = this.usedSuggestedTags.splice(i, 1)[0];
+            this.suggestedTags.push(availableTag);
+            this.suggestedTags.sort();
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  selectedTag(event: MatAutocompleteSelectedEvent): void {
+    this.definition.tags.push(event.option.value);
+    this.updateDefinition();
+    this.tagsCtrl.setValue(null);
+    this.tagsInput.nativeElement.value = '';
+    this.usedSuggestedTags.push(event.option.value);
+    const tagIndex = this.suggestedTags.indexOf(event.option.value);
+    if (tagIndex > -1) {
+      this.suggestedTags.splice(tagIndex, 1);
+    }
+  }
+
+  tagsAutocompleteClosed(): void {
+    this.decreaseOverlayZindex();
+    let autocompleteInputValue = this.tagsCtrl.value;
+    if (autocompleteInputValue != null && autocompleteInputValue !== '') {
+      autocompleteInputValue = autocompleteInputValue.trim();
+      this.addTag(autocompleteInputValue);
+      this.tagsCtrl.setValue(null);
+      this.tagsInput.nativeElement.value = '';
+    }
+  }
+
+  tagsBlurred(): void {
+    if (this.filteredSuggestedTags.length === 0) {
+      let autocompleteInputValue = this.tagsCtrl.value;
+      if (autocompleteInputValue != null && autocompleteInputValue !== '') {
+        autocompleteInputValue = autocompleteInputValue.trim();
+        this.addTag(autocompleteInputValue);
+        this.tagsCtrl.setValue(null);
+        this.tagsInput.nativeElement.value = '';
+      }
+    }
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
 }

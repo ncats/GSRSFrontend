@@ -1,5 +1,5 @@
 {
-  "version": "2.5.1",
+  "version": "2.6 RC1",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "substanceDetailsCards": [
@@ -518,6 +518,8 @@
         "root_approved",
         "root_lastEdited",
         "Approved By",
+        "Record Created By",
+        "Last Edited By",
         "root_lastEditedBy",
         "Record Level Access",
         "Display Name Level Access",

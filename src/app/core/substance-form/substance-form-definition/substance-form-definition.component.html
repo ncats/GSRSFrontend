@@ -49,7 +49,38 @@
       </a>
     </div>
   </div>
-
+  <div class="substance-form-row">
+    <mat-form-field class="tag-list">
+      <mat-chip-list #tagList aria-label="Tags edit" selectable="false">
+        <mat-chip
+          *ngFor="let tag of definition.tags"
+          removable="true"
+          (removed)="removeTag(tag)">
+            {{tag}}
+          <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Substance tags"
+          #tagsInput
+          [formControl]="tagsCtrl"
+          [matAutocomplete]="tagsAuto"
+          [matChipInputFor]="tagList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="tagAdded($event)"
+          (blur)="tagsBlurred()">
+      </mat-chip-list>
+      <mat-autocomplete
+        #tagsAuto="matAutocomplete"
+        (opened)="increaseOverlayZindex()"
+        (closed)="tagsAutocompleteClosed()"
+        (optionSelected)="selectedTag($event)">
+        <mat-option *ngFor="let tag of filteredSuggestedTags" [value]="tag">
+          {{tag}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-hint>Enter new tags (and press Enter after each entry) or select from suggested tags below</mat-hint>
+    </mat-form-field>
+  </div>
   <div class="substance-form-row" *ngIf="definition.substanceClass !== 'concept'">
     <div class="references-container">
       <app-domain-references [referencesUuids]="definition.references" card = "definition" #references></app-domain-references>

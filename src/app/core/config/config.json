@@ -499,6 +499,8 @@
         "Molecular Weight",
         "SubstanceStereochemistry",
         "root_approved",
+        "Last Edited By",
+        "Record Created By",
         "root_lastEdited",
         "Relationships",
         "Record Level Access",
@@ -522,5 +524,10 @@
     "WHO-ATC",
     "EVMPD",
     "NCI"
+  ],
+  "substanceSelectorProperties": [
+    "root_names_name",
+    "root_approvalID",
+    "root_codes_BDNUM"
   ]
 }

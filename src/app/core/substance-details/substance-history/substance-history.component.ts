@@ -26,21 +26,25 @@ import {Subject, Subscription} from 'rxjs';
 })
 export class SubstanceHistoryComponent extends SubstanceCardBase implements OnInit , AfterViewInit {
   versions: Array<SubstanceEdit>;
-  displayedColumns: string[] = ['view', 'version', 'versionComments', 'editor', 'changeDate'];
+  displayedColumns: string[] = ['view', 'version', 'versionComments', 'editor', 'changeDate', 'restore'];
   substanceUpdated = new Subject<SubstanceDetail>();
+  latest: any;
 
 
   constructor(
     private substanceService: SubstanceService,
-    private router: Router
+    private router: Router,
+    public loadingService: LoadingService
   ) {
     super();
   }
   ngOnInit() {
    this.substanceService.getEdits(this.substance.uuid).subscribe( response => {
      this.versions = response;
-   } );
-
+   }, error => {} );
+   this.substanceService.checkVersion(this.substance.uuid).subscribe((result: number) => {
+    this.latest = result;
+  });
   }
 
   ngAfterViewInit() {
@@ -51,6 +55,35 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
 
   switchVersion(version): void {
     this.router.navigate(['/substances/' + this.substance.uuid + '/v/' + version]);
+  }
+
+  restoreVersion(version: any) {
+    if (confirm('Are you sure you\'d like to restore version ' + this.substance.version + '?')) {
+      this.loadingService.setLoading(true);
+      this.substanceService.getSubstanceDetails(this.substance.uuid, version).subscribe( sub => {
+        this.substance.changeReason = 'reverted to version ' + version;
+        this.substance.version = this.latest;
+        this.substanceService.saveSubstance(this.substance).subscribe( response => {
+          this.substance = response;
+          alert('record restored successfully');
+          this.router.navigate(['/substances/' + this.substance.uuid + '/']);
+        }, error => {
+          this.loadingService.setLoading(false);
+          alert('There was a problem restoring version');
+          const results = {'serverError': null, 'validationMessages': null};
+          if (error && error.error && error.error.validationMessages) {
+            results.validationMessages = error.error.validationMessages;
+          } else {
+            results.serverError = error;
+          }
+
+        });
+      }, error => {
+        this.loadingService.setLoading(false);
+        alert('There was a problem fetching this substance version');
+      });
+    }
+
   }
 
 

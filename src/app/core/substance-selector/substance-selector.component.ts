@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceSummary } from '../substance/substance.model';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-selector',
@@ -18,12 +19,21 @@ export class SubstanceSelectorComponent implements OnInit {
   errorMessage: string;
   showOptions: boolean;
   displayName: string;
+  private substanceSelectorProperties: Array<string> = [
+    'root_names_name',
+    'root_approvalID',
+    'root_codes_BDNUM'
+  ];
 
   constructor(
     public substanceService: SubstanceService,
+    public configService: ConfigService
   ) { }
 
   ngOnInit() {
+    if (this.configService.configData.substanceSelectorProperties != null) {
+      this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
+    }
   }
 
   @Input()
@@ -46,9 +56,11 @@ export class SubstanceSelectorComponent implements OnInit {
   processSubstanceSearch(searchValue: string = ''): void {
     const q = searchValue.replace('\"', '');
 
-    const searchStr = `root_names_name:\"^${q}$\" OR ` +
-      `root_approvalID:\"^${q}$\" OR ` +
-      `root_codes_BDNUM:\"^${q}$\"`;
+    const searchStr = this.substanceSelectorProperties.map(property => `${property}\"^${q}$\"`).join(' OR ');
+
+    // const searchStr = `root_names_name:\"^${q}$\" OR ` +
+    //   `root_approvalID:\"^${q}$\" OR ` +
+    //   `root_codes_BDNUM:\"^${q}$\"`;
 
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       if (response.content && response.content.length) {

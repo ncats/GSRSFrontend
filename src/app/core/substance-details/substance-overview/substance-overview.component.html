@@ -1,40 +1,48 @@
 <div *ngIf="substance">
   <div class='options-area'>
-    <a mat-icon-button [href]="oldUrl" target = "_blank" matTooltip = "view in old application"><span hidden>open in old application in new tab</span>
+    <a mat-icon-button [href]="oldUrl" target="_blank" matTooltip="view in old application"><span hidden>open in old
+        application in new tab</span>
       <mat-icon svgIcon="open_in_new"></mat-icon>
     </a>
     <span *ngIf="canEdit">
-      <button mat-icon-button [matMenuTriggerFor]="editMenu" name ="edit_substance" matTooltip="edit form options" *ngIf = "isEditable; else editClassic">
+      <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="edit form options"
+        *ngIf="isEditable; else editClassic">
         <mat-icon svgIcon="edit"></mat-icon>
       </button>
       <ng-template #editClassic>
-        <a mat-icon-button [href]="baseDomain + clasicBaseHref + 'substance/' + substance.uuid + '/edit'" name = "edit" target="_blank">
+        <a mat-icon-button [href]="baseDomain + clasicBaseHref + 'substance/' + substance.uuid + '/edit'" name="edit"
+          target="_blank">
           <mat-icon svgIcon="edit"></mat-icon>
         </a>
       </ng-template>
     </span>
-    <button mat-icon-button [matMenuTriggerFor]="downloadMenu" matTooltip="download options" name = "download">
+    <button mat-icon-button [matMenuTriggerFor]="downloadMenu" matTooltip="download options" name="download">
       <mat-icon svgIcon="get_app"></mat-icon>
     </button>
     <mat-menu #downloadMenu="matMenu" xPosition="before">
-      <a *ngIf = "substance.uuid" name = "download_json" mat-menu-item [href]="downloadJsonHref" download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
+      <a *ngIf="substance.uuid" name="download_json" mat-menu-item [href]="downloadJsonHref"
+        download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
         <span>Download JSON</span>
       </a>
     </mat-menu>
     <mat-menu #editMenu="matMenu" xPosition="before">
-    <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip = 'edit record' name = "edit_record">
-      <mat-icon svgIcon="edit"></mat-icon>
-    </a>
-    <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" matTooltip = 'copy substance to new registration form'>
-      <mat-icon svgIcon="file_copy"></mat-icon>
-    </a>
-    <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" matTooltip = 'copy definition to new registration form'>
-      <mat-icon svgIcon="outline-file_copy"></mat-icon>
-    </a>
+      <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
+        name="edit_record">
+        <mat-icon svgIcon="edit"></mat-icon>
+      </a>
+      <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
+        [queryParams]="{copy:substance.uuid}" matTooltip='copy substance to new registration form'>
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </a>
+      <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
+        [queryParams]="{copy:substance.uuid,copyType:'definition'}"
+        matTooltip='copy definition to new registration form'>
+        <mat-icon svgIcon="outline-file_copy"></mat-icon>
+      </a>
     </mat-menu>
   </div>
-  <div class = "extra-area" *ngIf = "substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
-    <span class = "definition-level">
+  <div class="extra-area" *ngIf="substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
+    <span class="definition-level">
       {{substance.definitionLevel}} DEFINITION
     </span>
   </div>
@@ -83,119 +91,136 @@
       </div>
       <div class="name-value" *ngIf="substance.protein.sequenceOrigin">
         <div class="name">Sequence Origin</div>
-      <div class="value blue-font">{{substance.protein.sequenceOrigin}}</div>
+        <div class="value blue-font">{{substance.protein.sequenceOrigin}}</div>
       </div>
     </div>
-      <div *ngIf="substance.nucleicAcid" class="diverseWrapper">
-        <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidType">
-          <div class="name">Nucleic Acid Type</div>
-          <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidType}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidSubType && substance.nucleicAcid.nucleicAcidSubType.length > 0">
-          <div class="name">Nucleic Acid Sub-type</div>
-          <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.join(', ')}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.nucleicAcid.sequenceType">
-          <div class="name">Sequence Type</div>
-          <div class="value blue-font">{{substance.nucleicAcid.sequenceType}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.nucleicAcid.sequenceOrigin">
-          <div class="name">Sequence Origin</div>
-          <div class="value blue-font">{{substance.nucleicAcid.sequenceOrigin}}</div>
-        </div>
+    <div *ngIf="substance.nucleicAcid" class="diverseWrapper">
+      <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidType">
+        <div class="name">Nucleic Acid Type</div>
+        <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidType}}</div>
       </div>
-      <div *ngIf="substance.structurallyDiverse" class="diverseWrapper">
-        <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialClass">
-          <div class="name">Source Materials Class</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialClass}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialType">
-          <div class="name">Source Materials Type</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialType}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialState">
-          <div class="name">Source Materials State</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialState}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.parentSubstance">
-          <div class="name">Source Materials Parent</div>
-          <div class="thumb-col">
-            <img class="image-thumb"
-              appSubstanceImage [entityId]="substance.structurallyDiverse.parentSubstance.refuuid" size="400">
-            <div>
-              <a class="substance-name"
-                 [routerLink]="['/substances', substance.structurallyDiverse.parentSubstance.refuuid]">
-                {{substance.structurallyDiverse.parentSubstance.refPname}}
-              </a>
-            </div>
+      <div class="name-value"
+        *ngIf="substance.nucleicAcid.nucleicAcidSubType && substance.nucleicAcid.nucleicAcidSubType.length > 0">
+        <div class="name">Nucleic Acid Sub-type</div>
+        <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.join(', ')}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.nucleicAcid.sequenceType">
+        <div class="name">Sequence Type</div>
+        <div class="value blue-font">{{substance.nucleicAcid.sequenceType}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.nucleicAcid.sequenceOrigin">
+        <div class="name">Sequence Origin</div>
+        <div class="value blue-font">{{substance.nucleicAcid.sequenceOrigin}}</div>
+      </div>
+    </div>
+    <div *ngIf="substance.structurallyDiverse" class="diverseWrapper">
+      <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialClass">
+        <div class="name">Source Materials Class</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialClass}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialType">
+        <div class="name">Source Materials Type</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialType}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialState">
+        <div class="name">Source Materials State</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialState}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.parentSubstance">
+        <div class="name">Source Materials Parent</div>
+        <div class="thumb-col">
+          <img class="image-thumb" appSubstanceImage [entityId]="substance.structurallyDiverse.parentSubstance.refuuid"
+            size="400">
+          <div>
+            <a class="substance-name"
+              [routerLink]="['/substances', substance.structurallyDiverse.parentSubstance.refuuid]">
+              {{substance.structurallyDiverse.parentSubstance.refPname}}
+            </a>
           </div>
         </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.organismFamily">
-          <div class="name">Organism Family</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.organismFamily}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.organismGenus">
-          <div class="name">Organism Genus</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.organismGenus}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.organismSpecies">
-          <div class="name">Organism Species</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.organismSpecies}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.infraSpecificType">
-          <div class="name">Organism Infraspecific Type</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificType}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.infraSpecificName">
-          <div class="name">Organism Intraspecific Name</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificName}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.organismAuthor">
-          <div class="name">Organism Author</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.organismAuthor}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.developmentalStage">
-          <div class="name">Developmental Stage</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.developmentalStage}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.part?.length > 0">
-          <div class="name">Part</div>
-          <div class="value blue-font">
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.organismFamily">
+        <div class="name">Organism Family</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.organismFamily}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.organismGenus">
+        <div class="name">Organism Genus</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.organismGenus}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.organismSpecies">
+        <div class="name">Organism Species</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.organismSpecies}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.infraSpecificType">
+        <div class="name">Organism Infraspecific Type</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificType}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.infraSpecificName">
+        <div class="name">Organism Intraspecific Name</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificName}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.organismAuthor">
+        <div class="name">Organism Author</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.organismAuthor}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.developmentalStage">
+        <div class="name">Developmental Stage</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.developmentalStage}}</div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.part?.length > 0">
+        <div class="name">Part</div>
+        <div class="value blue-font">
           <span *ngFor="let part of substance.structurallyDiverse.part; last as isLast">
             {{part}}<span *ngIf="!isLast">, </span>
           </span></div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.fractionMaterialType">
-          <div class="name">Fraction Materials Type</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.fractionMaterialType}}</div>
-        </div>
-        <div class="name-value" *ngIf="substance.structurallyDiverse.fractionName">
-          <div class="name">Fraction Name</div>
-          <div class="value blue-font">{{substance.structurallyDiverse.fractionName}}</div>
-        </div>
       </div>
-    <div *ngIf = "!isAdmin" class="name-value">
-        <div class="name">Record Version</div>
-        <div class="value blue-font">{{substance.version}}</div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse.fractionMaterialType">
+        <div class="name">Fraction Materials Type</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.fractionMaterialType}}</div>
       </div>
-  <div *ngIf = "isAdmin" class="name-value">
+      <div class="name-value" *ngIf="substance.structurallyDiverse.fractionName">
+        <div class="name">Fraction Name</div>
+        <div class="value blue-font">{{substance.structurallyDiverse.fractionName}}</div>
+      </div>
+    </div>
+    <div *ngIf="!isAdmin" class="name-value">
       <div class="name">Record Version</div>
-      <mat-form-field class = "version-dropdown">
-        <mat-select [formControl]="versionControl" class = "version-select" >
-          <mat-option *ngFor = "let version of versions" [value]="version" class = "version-option" >
+      <div class="value blue-font">{{substance.version}}</div>
+    </div>
+    <div *ngIf="isAdmin" class="name-value">
+      <div class="name">Record Version</div>
+      <mat-form-field class="version-dropdown">
+        <mat-select [formControl]="versionControl" class="version-select">
+          <mat-option *ngFor="let version of versions" [value]="version" class="version-option">
             {{version}}
           </mat-option>
         </mat-select>
       </mat-form-field>
-    <button *ngIf = "substance.version != versionControl.value" mat-button class = "mat-raised-button mat-primary view-version" (click) = 'changeVersion()'>View</button>
-</div>
-    <div *ngIf = "versionControl.value != latestVersion" class = "indent" >
-      This is an older version of this substance
+      <button *ngIf="substance.version != versionControl.value" mat-button
+        class="mat-raised-button mat-primary view-version" (click)='changeVersion()'>View</button>
     </div>
-    <div class = "name-value" *ngIf = "references?.length > 0">
-      <div class = "name">
-        <a (click) = "toggleReferences()" class = 'blue-font references-link'>
-          <span>{{showDef === false ? 'Show' : 'Hide'}} Definitional References</span><mat-icon svgIcon="{{defIcon}}"></mat-icon>
+    <div *ngIf="substance.version != latestVersion" class="indent">
+      This is an older version of this substance - Ver. {{this.substance.version}}
+      <button *ngIf="isAdmin" mat-button
+        class="mat-raised-button mat-primary view-version" (click)='restoreVersion()'>Restore this version</button>
+    </div>
+    <div class="name-value">
+      <div class="name">Tags</div>
+      <div class="value">
+        <mat-chip-list #tagList aria-label="Tags" selectable="false">
+          <mat-chip
+            *ngFor="let tag of substance.tags"
+            removable="false">
+              {{tag}}
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div class="name-value" *ngIf="references?.length > 0">
+      <div class="name">
+        <a (click)="toggleReferences()" class='blue-font references-link'>
+          <span>{{showDef === false ? 'Show' : 'Hide'}} Definitional References</span>
+          <mat-icon svgIcon="{{defIcon}}"></mat-icon>
         </a>
       </div>
     </div>
@@ -203,9 +228,4 @@
       <app-references-manager [substance]="substance" [references]="references"></app-references-manager>
     </div>
   </div>
-
-
-
-
-
 </div>
