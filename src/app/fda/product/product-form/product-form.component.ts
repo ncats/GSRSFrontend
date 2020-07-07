@@ -58,7 +58,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
-    this.isAdmin = true;
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
@@ -72,7 +71,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.id = id;
             this.gaService.sendPageView(`Product Edit`);
             this.getProductDetails();
-            //   this.getVocabularies();
           }
         } else {
           this.title = 'Register New Product';
@@ -80,7 +78,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.gaService.sendPageView(`Product Register`);
             this.productService.loadProduct();
             this.product = this.productService.product;
-            //   this.getVocabularies();
             this.loadingService.setLoading(false);
             this.isLoading = false;
           });

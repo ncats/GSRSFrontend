@@ -1,6 +1,7 @@
 {
   "version": "2.5.1",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
+  "displayMatchApplication": "true",
   "substanceDetailsCards": [
     {
       "card": "substance-overview",

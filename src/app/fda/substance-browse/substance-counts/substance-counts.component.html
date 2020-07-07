@@ -1,3 +1,18 @@
+<!--
+<button class="warn" (click)="getApplicationIngredientMatchList(substanceId)">
+  Matching Application Names&nbsp;<span class="">{{appMatchListCount}}</span>
+</button>
+-->
+
+<mat-checkbox [checked] = "displayMatchApplicationBool" (change) = "updateCheckBox()">
+  Display Match Application Names
+</mat-checkbox>
+<br><br>
+<a class="colorred padtop10" [routerLink]="['/sub-app-match-list', substanceId]" target="_blank">
+  Matching Application Names&nbsp;
+  <span matBadge="{{appMatchListCount}}" matBadgeOverlap="false" MatBadgeSize="large" MatBadgePosition="below after"></span>
+</a>
+<br>
 <div class="counts-container" *ngIf="searchCount">
 
   <div class="counts-column">
