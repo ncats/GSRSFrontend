@@ -10,5 +10,6 @@ export interface Environment {
     version: string;
     isAnalyticsPrivate: boolean;
     contactEmail: string;
+    buildDateTime?: string;
 }
 

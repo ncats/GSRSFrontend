@@ -1,4 +1,5 @@
 import { Environment } from './environment.model';
+import * as moment from 'moment';
 
 export const baseEnvironment: Environment = {
     apiBaseUrl: 'https://ginas.ncats.nih.gov/ginas/app/',
@@ -10,7 +11,8 @@ export const baseEnvironment: Environment = {
     googleAnalyticsId: '',
     version: '2.3.4',
     isAnalyticsPrivate: false,
-    contactEmail: 'ginas@mail.nih.gov'
+    contactEmail: 'ginas@mail.nih.gov',
+    buildDateTime: moment().utc().format('ddd MMM D YYYY HH:mm:SS z')
 };
 
 
