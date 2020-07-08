@@ -16,8 +16,9 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
   appMatchListCount: any;
   appMatchList: any;
   substanceId: string;
-  displayMatchApplicationConfig = 'false';
+  displayMatchApplicationConfig = false;
   displayMatchApplicationBool: false;
+  displayMatchApplicationSession: false;
 
   constructor(
     private generalService: GeneralService,
@@ -26,11 +27,14 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
     private configService: ConfigService, ) { }
 
   ngOnInit() {
+    /*
     this.displayMatchApplicationConfig = this.configService.configData && this.configService.configData.displayMatchApplication;
     if (this.displayMatchApplicationConfig) {
       this.displayMatchApplicationBool = JSON.parse(this.displayMatchApplicationConfig);
     }
+    */
     this.substanceId = this.substance.uuid;
+    this.isDisplayAppToMatchConfig();
     this.getSearchCount();
     this.getAppIngredtMatchListCount();
   }
@@ -38,6 +42,14 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
   getSearchCount(): void {
     this.generalService.getSearchCount(this.substance.uuid).subscribe(searchCount => {
       this.searchCount = searchCount;
+    });
+  }
+
+  // Application Match Lists functions
+  isDisplayAppToMatchConfig(): void {
+    this.generalService.isDisplayAppToMatchConfig().subscribe(result => {
+      alert(result.isDisplay);
+      this.displayMatchApplicationConfig = result.isDisplay;
     });
   }
 

@@ -3,107 +3,115 @@
   Matching Application Names&nbsp;<span class="">{{appMatchListCount}}</span>
 </button>
 -->
+{{displayMatchApplicationConfig}}
+<div *ngIf="displayMatchApplicationConfig === 'true'">
+  <mat-checkbox [checked]="displayMatchApplicationSession" (change)="updateCheckBox()">
+    Display Match Application Names
+  </mat-checkbox>
+</div>
 
-<mat-checkbox [checked] = "displayMatchApplicationBool" (change) = "updateCheckBox()">
-  Display Match Application Names
-</mat-checkbox>
 <br><br>
-<a class="colorred padtop10" [routerLink]="['/sub-app-match-list', substanceId]" target="_blank">
-  Matching Application Names&nbsp;
-  <span matBadge="{{appMatchListCount}}" matBadgeOverlap="false" MatBadgeSize="large" MatBadgePosition="below after"></span>
-</a>
-<br>
-<div class="counts-container" *ngIf="searchCount">
+{{appMatchListCount}}
+<div *ngIf="1 === 1">
+  <a class="colorred padtop10" [routerLink]="['/sub-app-match-list', substanceId]" target="_blank">
+    Matching Application Names&nbsp;
+    <span matBadge="{{appMatchListCount}}" matBadgeOverlap="false" MatBadgeSize="large"
+      MatBadgePosition="below after"></span>
+  </a>
+  <br>
+  <div class="counts-container" *ngIf="searchCount">
 
-  <div class="counts-column">
-    <div>
-      Application Count:
-    </div>
-    <div>
-      <span *ngIf="searchCount.appCountConcat != '0'; else noRecordApp">
-        <div class="divflex">
-          <div>
-            <a [routerLink]="['/substances', substanceId]" target="_blank"
-              title="View Application Records (opens in new window)">
-              <div innerHTML="{{searchCount.appCountConcat}}"></div>
-            </a>
+    <div class="counts-column">
+      <div>
+        Application Count:
+      </div>
+      <div>
+        <span *ngIf="searchCount.appCountConcat != '0'; else noRecordApp">
+          <div class="divflex">
+            <div>
+              <a [routerLink]="['/substances', substanceId]" target="_blank"
+                title="View Application Records (opens in new window)">
+                <div innerHTML="{{searchCount.appCountConcat}}"></div>
+              </a>
+            </div>
+            <div>
+              <mat-icon class="small-icon margintopneg10" svgIcon="open_in_new" matTooltip="opens in new window">
+              </mat-icon>
+            </div>
           </div>
-          <div>
-            <mat-icon class="small-icon margintopneg10" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-          </div>
-        </div>
-      </span>
-      <ng-template #noRecordApp>
-        {{searchCount.appCountConcat}}
-      </ng-template>
+        </span>
+        <ng-template #noRecordApp>
+          {{searchCount.appCountConcat}}
+        </ng-template>
+      </div>
     </div>
-  </div>
 
-  <div class="counts-column">
-    <div>
-      Product Count:
+    <div class="counts-column">
+      <div>
+        Product Count:
+      </div>
+      <div>
+        <span>Active: </span>
+        <span *ngIf="searchCount.prodActiveCount > 0; else noRecordProdActive">
+          <a [routerLink]="['/substances', substanceId]" target="_blank"
+            title="View Active Product Records (opens in new window)">
+            <span>{{searchCount.prodActiveCount}}</span>
+          </a>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+        </span>
+        <ng-template #noRecordProdActive>
+          {{searchCount.prodActiveCount}}
+        </ng-template>
+      </div>
+      <div>
+        <span>Inactive: </span>
+        <span *ngIf="searchCount.prodInactiveCount > 0; else noRecordProdInactive">
+          <a [routerLink]="['/substances', substanceId]" target="_blank"
+            title="View Inactive Product Records (opens in new window)">
+            <span>{{searchCount.prodInactiveCount}}</span>
+          </a>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+        </span>
+        <ng-template #noRecordProdInactive>
+          {{searchCount.prodInactiveCount}}
+        </ng-template>
+      </div>
     </div>
-    <div>
-      <span>Active: </span>
-      <span *ngIf="searchCount.prodActiveCount > 0; else noRecordProdActive">
-        <a [routerLink]="['/substances', substanceId]" target="_blank"
-          title="View Active Product Records (opens in new window)">
-          <span>{{searchCount.prodActiveCount}}</span>
-        </a>
-        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-      </span>
-      <ng-template #noRecordProdActive>
-        {{searchCount.prodActiveCount}}
-      </ng-template>
-    </div>
-    <div>
-      <span>Inactive: </span>
-      <span *ngIf="searchCount.prodInactiveCount > 0; else noRecordProdInactive">
-        <a [routerLink]="['/substances', substanceId]" target="_blank"
-          title="View Inactive Product Records (opens in new window)">
-          <span>{{searchCount.prodInactiveCount}}</span>
-        </a>
-        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-      </span>
-      <ng-template #noRecordProdInactive>
-        {{searchCount.prodInactiveCount}}
-      </ng-template>
-    </div>
-  </div>
 
-  <div class="counts-column">
-    <div>
-      Clinical Trial Count:
+    <div class="counts-column">
+      <div>
+        Clinical Trial Count:
+      </div>
+      <div>
+        <span *ngIf="searchCount.clinicalCount > 0; else noRecordClinical">
+          <a [routerLink]="['/substances', substanceId]" target="_blank"
+            title="View Clinical Trial Records (opens in new window)">
+            <span>{{searchCount.clinicalCount}}</span>
+          </a>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+        </span>
+        <ng-template #noRecordClinical>
+          {{searchCount.clinicalCount}}
+        </ng-template>
+      </div>
     </div>
-    <div>
-      <span *ngIf="searchCount.clinicalCount > 0; else noRecordClinical">
-        <a [routerLink]="['/substances', substanceId]" target="_blank"
-          title="View Clinical Trial Records (opens in new window)">
-          <span>{{searchCount.clinicalCount}}</span>
-        </a>
-        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-      </span>
-      <ng-template #noRecordClinical>
-        {{searchCount.clinicalCount}}
-      </ng-template>
-    </div>
-  </div>
 
-  <div class="counts-column">
-    <div>
-      Adverse Event Count:
-    </div>
-    <div>
-      <span *ngIf="searchCount.adverseEventCount > 0; else noRecordAdverse">
-        <a [routerLink]="['/substances', substanceId]" target="_blank"
-          title="View Adverse Event Records (opens in new window)">
-          <span>{{searchCount.adverseEventCount}}</span>
-        </a>
-        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-      </span>
-      <ng-template #noRecordAdverse>
-        {{searchCount.adverseEventCount}}
-      </ng-template>
+    <div class="counts-column">
+      <div>
+        Adverse Event Count:
+      </div>
+      <div>
+        <span *ngIf="searchCount.adverseEventCount > 0; else noRecordAdverse">
+          <a [routerLink]="['/substances', substanceId]" target="_blank"
+            title="View Adverse Event Records (opens in new window)">
+            <span>{{searchCount.adverseEventCount}}</span>
+          </a>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+        </span>
+        <ng-template #noRecordAdverse>
+          {{searchCount.adverseEventCount}}
+        </ng-template>
+      </div>
     </div>
   </div>
 </div>

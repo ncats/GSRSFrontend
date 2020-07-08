@@ -60,6 +60,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
   private isFacetsParamsInit = false;
+  public displayFacets: Array<DisplayFacet> = [];
 
   constructor(
     public applicationService: ApplicationService,
@@ -162,6 +163,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
     this.privateFacetParams = facetsUpdateEvent.facetParam;
+    this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
       this.isFacetsParamsInit = true;
       this.loadComponent();

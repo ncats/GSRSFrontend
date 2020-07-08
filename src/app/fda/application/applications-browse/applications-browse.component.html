@@ -45,6 +45,29 @@
     -->
 
     <div class="padleft10px" *ngIf="totalApplications > 0">
+
+      <!-- Display Facets selection -->
+      <div class="search-parameters">
+        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+          <div class='selected-container'>
+            <span class="capitalized font-medium-bold selected-label">
+              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+              {{facet.type}}:
+            </span>
+            <span class="no-break selected-value">
+              {{facet.val}}
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button class="display-button" color="primary"
+              (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+              <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Application Button -->
       <button matTooltip="Export Search Results" mat-button (click)="export()" *ngIf="isLoggedIn"
         class="mat-button export-button mat-raised-button">
         <mat-icon svgIcon="get_app"></mat-icon> Export
@@ -94,13 +117,13 @@
                     <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
                       <div *ngIf="prodName.productName; else noProd">
                         <div *ngIf="prodName.deprecated && prodName.deprecated == 'Y'; else noDeprecated">
-                        &#9642;
-                        <span class="colorgray">
-                          {{ prodName.productName }}
-                        </span>
-                        <span class="font10px">
-                          (Deprecated)
-                        </span>
+                          &#9642;
+                          <span class="colorgray">
+                            {{ prodName.productName }}
+                          </span>
+                          <span class="font10px">
+                            (Deprecated)
+                          </span>
                         </div>
                         <ng-template #noDeprecated>
                           &#9642;{{ prodName.productName }}

@@ -54,12 +54,12 @@ export class CvTermDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  addTerm(element: HTMLElement): void {
+  addTerm(): void {
     this.terms.push({});
     setTimeout(() => {
       try {
         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-    } catch(err) { }
+    } catch (err) { }
     }, 100);
   }
 

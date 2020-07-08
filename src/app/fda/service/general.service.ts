@@ -25,6 +25,16 @@ export class GeneralService extends BaseHttpService {
       );
   }
 
+  isDisplayAppToMatchConfig(): Observable<any> {
+    const url = this.baseUrl + 'isDisplayAppToMatchConfig2';
+    return this.http.get<any>(url)
+      .pipe(
+        map(res => {
+          return res;
+        })
+      );
+  }
+
   getAppIngredtMatchListCount(substanceUuid: string): Observable<any> {
     const url = this.baseUrl + 'getAppIngredtMatchListCountJson?substanceId=' + substanceUuid + '&citation=';
     return this.http.get<any>(url)
