@@ -1,6 +1,15 @@
 <div class = "admin-container">
     <div class = "page-container">
         <mat-tab-group [selectedIndex] = "activeTab" class = "tab-group">
+              <mat-tab>
+                  <ng-template mat-tab-label>
+                      Server Status
+                  </ng-template>
+                  <h2 class = "tab-label">Server Status</h2>
+                <div class = "app-container">
+                      <app-cache-summary class =  "full-width"></app-cache-summary>
+                </div>
+              </mat-tab>
                 <mat-tab >
                 <ng-template mat-tab-label>
                     User Management
@@ -40,15 +49,6 @@
                         <app-scheduled-jobs></app-scheduled-jobs>
                     </div>
                 </ng-template>
-                </mat-tab>
-                <mat-tab>
-                    <ng-template mat-tab-label>
-                        Server Status
-                    </ng-template>
-                    <h2 class = "tab-label">Server Status</h2>
-                  <div class = "app-container">
-                        <app-cache-summary class =  "full-width"></app-cache-summary>
-                  </div>
                 </mat-tab>
                 <mat-tab>
                   <ng-template mat-tab-label>
