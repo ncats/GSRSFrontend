@@ -12,6 +12,9 @@ import { Observable, Subscription } from 'rxjs';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { NavItem } from '../config/config.model';
+import { UtilsService } from '@gsrs-core/utils';
+import { take } from 'rxjs/operators';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-base',
@@ -52,7 +55,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     private loadingService: LoadingService,
     private bottomSheet: MatBottomSheet,
     private dialog: MatDialog,
-    private substanceTextSearchService: SubstanceTextSearchService
+    private substanceTextSearchService: SubstanceTextSearchService,
+    private utilsService: UtilsService
   ) {
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.classicLinkQueryParamsString = '';
@@ -69,13 +73,12 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.subscriptions.push(roleSubscription);
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
-    this.version = this.configService.configData.version || '';
 
-    this.versionTooltipMessage = `V${this.version}`;
-
-    if (this.configService.configData.buildDateTime) {
-      this.versionTooltipMessage += ` built on ${this.configService.configData.buildDateTime}`;
-    }
+    this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
+      this.version = this.configService.configData.version || buildInfo.version;
+      this.versionTooltipMessage = `V${this.version}`;
+      this.versionTooltipMessage += ` built on ${moment(buildInfo.buildDate).utc().format('ddd MMM D YYYY')}`;
+    });
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 

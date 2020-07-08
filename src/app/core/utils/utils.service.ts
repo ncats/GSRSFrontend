@@ -6,6 +6,7 @@ import { ConfigService } from '../config/config.service';
 import { SubstanceSuggestionsGroup } from './substance-suggestions-group.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
+import { BuildInfo } from './build-info.model';
 
 @Injectable({
   providedIn: 'root'
@@ -263,5 +264,10 @@ export class UtilsService {
 
   compare(a: number | string, b: number | string, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  getBuildInfo(): Observable<BuildInfo> {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/buildInfo`;
+    return this.http.get<BuildInfo>(url);
   }
 }
