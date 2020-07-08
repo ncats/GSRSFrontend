@@ -1,4 +1,16 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy, TemplateRef, Inject, ComponentFactoryResolver, ViewChildren, QueryList } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  HostListener,
+  OnDestroy,
+  TemplateRef,
+  Inject,
+  ComponentFactoryResolver,
+  ViewChildren,
+  QueryList
+} from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceName, SubstanceCode } from '../substance/substance.model';

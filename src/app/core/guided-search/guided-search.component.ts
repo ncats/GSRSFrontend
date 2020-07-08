@@ -74,7 +74,7 @@ export class GuidedSearchComponent implements OnInit {
         this.queryStatements[index][key] = queryStatement[key];
       });
       this.query = '';
-      this.query = this.queryStatements.map(statement => statement.query).join(' ');
+      this.query = this.queryStatements.map(statement => statement.query).join(' ').trim();
     });
   }
 

@@ -59,7 +59,7 @@ export class CvTermDialogComponent implements OnInit {
     setTimeout(() => {
       try {
         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-    } catch(err) { }
+    } catch (err) { }
     }, 100);
   }
 
