@@ -64,7 +64,7 @@
         </a>
       </span>
     </div>
-    <div class="facet-advanced-options-link">
+    <div class="facet-advanced-options-link" *ngIf ="facet.enhanced">
       <a (click)="facet.$showAdvanced = !facet.$showAdvanced">
         <span *ngIf="facet.$showAdvanced">hide </span>advanced options
       </a>

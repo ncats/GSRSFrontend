@@ -498,10 +498,6 @@
         "Moiety Type",
         "Molecular Weight",
         "SubstanceStereochemistry",
-        "root_approved",
-        "Last Edited By",
-        "Record Created By",
-        "root_lastEdited",
         "Relationships",
         "Record Level Access",
         "Display Name Level Access",
@@ -511,6 +507,8 @@
         "modified"
       ],
       "admin": [
+        "Record Created By",
+        "root_lastEdited",
         "root_lastEditedBy",
         "Material Type",
         "Family",
