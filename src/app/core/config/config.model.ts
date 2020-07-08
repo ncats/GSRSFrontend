@@ -3,6 +3,7 @@ export interface Config {
     apiUrlDomain?: string;
     googleAnalyticsId?: string;
     version?: string;
+    buildDateTime?: string;
     substanceDetailsCards?: Array<SubstanceDetailsCard>;
     facets?: {
         [name: string]: {

@@ -44,6 +44,7 @@ export class ConfigService {
                 if (config.contactEmail == null && environment.contactEmail != null) {
                     config.contactEmail = environment.contactEmail;
                 }
+
                 let navItemsCopy = navItems.slice();
                 if (config.navItems && config.navItems.length) {
                     const filteredNavItems = config.navItems.filter(navItem => {

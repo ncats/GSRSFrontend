@@ -26,7 +26,7 @@ JSDraw2.password = { encrypt: true, key: null, iv: null };
 // Licensed to: FDA
 // Product: JSDraw
 // Expiration Date: 2020-Jul-01
-JSDraw2.licensecode='405565435916781761723242424242424131213141512181';
+JSDraw2.licensecode='405565434916781761723242424242424131213141512181';
 
 
 

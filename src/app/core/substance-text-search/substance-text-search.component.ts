@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { environment } from '../../../environments/environment';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-text-search',
@@ -32,7 +32,8 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   constructor(
     private utilsService: UtilsService,
     private element: ElementRef,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    public configService: ConfigService
   ) { }
 
   ngOnInit() {
@@ -43,7 +44,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       switchMap(searchValue => {
         this.query = searchValue;
         const eventCategory = this.eventCategory || 'substanceTextSearch';
-        const eventLabel = !environment.isAnalyticsPrivate && searchValue || 'search term';
+        const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
         this.gaService.sendEvent(eventCategory, 'search:enter-term', eventLabel);
         return this.utilsService.getStructureSearchSuggestions(searchValue);
       })
@@ -126,7 +127,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
 
   substanceSearchOptionSelected(event?: MatAutocompleteSelectedEvent) {
     const eventCategory = this.eventCategory || 'substanceTextSearch';
-    const eventLabel = !environment.isAnalyticsPrivate && event.option.value || 'auto-complete option';
+    const eventLabel = !this.configService.environment.isAnalyticsPrivate && event.option.value || 'auto-complete option';
     this.gaService.sendEvent(eventCategory, 'select:auto-complete', eventLabel);
     let searchTerm = event.option.value;
 
@@ -160,7 +161,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   processSubstanceSearch() {
     let searchTerm = this.searchControl.value;
     const eventCategory = this.eventCategory || 'substanceTextSearch';
-    const eventLabel = !environment.isAnalyticsPrivate && searchTerm || 'search term option';
+    const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchTerm || 'search term option';
     this.gaService.sendEvent(eventCategory, 'search:submit', eventLabel);
 
     if (eventCategory === 'topSearch') {

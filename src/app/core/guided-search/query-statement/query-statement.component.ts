@@ -78,6 +78,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
       this.selectedCondition = 'AND ';
       const conditionSubscription = this.conditionControl.valueChanges.subscribe((condition: string) => {
         this.selectedCondition = `${condition} `;
+        this.refreshQuery();
       });
       this.subscriptions.push(conditionSubscription);
     }

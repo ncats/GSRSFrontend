@@ -12,7 +12,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DynamicComponentLoaderModule } from '@gsrs-core/dynamic-component-loader';
-import { fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests } from './fda-dynamic-componet-manifests';
+// tslint:disable-next-line:max-line-length
+import { fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests, fdaDynamicBrowseComponentManifests } from './fda-dynamic-componet-manifests';
 import { SubstanceCardsModule } from '@gsrs-core/substance-details';
 import { ApplicationModule} from './application/application.module';
 import { SubstanceApplicationMatchListModule } from './substance-browse/substance-application-match-list/substance-application-match-list.module';
@@ -26,6 +27,7 @@ import { fdaSubstanceCardsFilters } from './substance-details/fda-substance-card
 import { SsoRefreshService } from './service/sso-refresh.service';
 import { ProductService } from './product/service/product.service';
 import { GeneralService} from './service/general.service';
+import { ShowApplicationToggleComponent } from './substance-browse/show-application-toggle/show-application-toggle.component';
 
 const fdaRoutes: Routes = [
   {
@@ -48,7 +50,8 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
   imports: [
     CommonModule,
     RouterModule.forChild(fdaRoutes),
-    DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
+   DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
+    DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicBrowseComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
     ClinicalTrialsModule.forRoot(),
     ApplicationModule,
@@ -65,11 +68,14 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     MatCheckboxModule
   ],
   declarations: [
-    SubstanceCountsComponent
+    SubstanceCountsComponent,
+    ShowApplicationToggleComponent
   ],
   exports: [],
   entryComponents: [
-    SubstanceCountsComponent
+    SubstanceCountsComponent,
+    ShowApplicationToggleComponent
+
   ],
   providers: [
     SsoRefreshService,

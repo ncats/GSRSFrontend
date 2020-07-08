@@ -509,18 +509,9 @@
         "Application Status",
         "Application Type",
         "DME Reactions",
-        "Material Type",
-        "Family",
-        "Parts",
         "Moiety Type",
         "Molecular Weight",
         "SubstanceStereochemistry",
-        "root_approved",
-        "root_lastEdited",
-        "Approved By",
-        "Record Created By",
-        "Last Edited By",
-        "root_lastEditedBy",
         "Record Level Access",
         "Display Name Level Access",
         "Definition Level Access",
@@ -530,6 +521,16 @@
         "Product Name Type",
         "Product Dosage Form",
         "Definition Level"
+      ],
+      "admin": [
+        "Record Created By",
+        "root_lastEdited",
+        "root_lastEditedBy",
+        "root_approved",
+        "Approved By",
+        "Material Type",
+        "Family",
+        "Parts"
       ]
     },
     "applications": {

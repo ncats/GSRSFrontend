@@ -60,10 +60,16 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
 
   getDomainReferences(): DomainsWithReferences {
     if (this.privateDomainsWithReferences == null) {
+      let subClass = this.substance.substanceClass;
+      if (this.substance.substanceClass === 'chemical') {
+        subClass = 'structure';
+      } else if (this.substance.substanceClass === 'specifiedSubstanceG1') {
+        subClass = 'specifiedSubstance';
+      }
       this.privateDomainsWithReferences = {
         definition: {
           subClass: this.substance.substanceClass,
-          domain: this.substance[this.substance.substanceClass]
+          domain: this.substance[subClass]
         }
       };
 

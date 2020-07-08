@@ -1,4 +1,16 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy, TemplateRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  HostListener,
+  OnDestroy,
+  TemplateRef,
+  Inject,
+  ComponentFactoryResolver,
+  ViewChildren,
+  QueryList
+} from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceName, SubstanceCode } from '../substance/substance.model';
@@ -28,6 +40,10 @@ import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
+import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
+import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 
 @Component({
   selector: 'app-substances-browse',
@@ -46,6 +62,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public exactMatchSubstances: Array<SubstanceDetail>;
   pageIndex: number;
   pageSize: number;
+  test: any;
   pageCount: number;
   invalidPage = false;
   totalSubstances: number;
@@ -55,6 +72,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   privateExport = false;
   disableExport = false;
   isError = false;
+  @ViewChildren(BrowseHeaderDynamicSectionDirective) dynamicContentContainer: QueryList<BrowseHeaderDynamicSectionDirective>;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   view = 'cards';
@@ -106,7 +124,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private overlayContainerService: OverlayContainer,
     private location: Location,
     private facetManagerService: FacetsManagerService,
+    private componentFactoryResolver: ComponentFactoryResolver,
     private substanceTextSearchService: SubstanceTextSearchService,
+    @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) {}
 
   ngOnInit() {
@@ -159,6 +179,22 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
+    const dynamicSubscription = this.dynamicContentContainer.changes.subscribe((comps: QueryList<any>) => {
+      const container = this.dynamicContentContainer.toArray();
+      const dynamicContentItemsFlat =  this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
+      .filter(item => item.componentType === 'browseHeader');
+    const viewContainerRef = container[0].viewContainerRef;
+    viewContainerRef.clear();
+    dynamicContentItemsFlat.forEach(dynamicContentItem => {
+      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
+      const componentRef = viewContainerRef.createComponent(componentFactory);
+      (<SubstanceBrowseHeaderDynamicContent>componentRef.instance).test = 'testing';
+    });
+
+    });
+    this.subscriptions.push(dynamicSubscription);
+
+
   }
 
   ngOnDestroy() {
@@ -607,6 +643,7 @@ validatePageInput(event: any): boolean {
     this.gaService.sendEvent('substancesContent', 'button:view-update', event.value);
     this.view = event.value;
   }
+
 
   getSequenceDisplay(sequence?: string): string {
     if (sequence != null) {

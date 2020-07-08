@@ -45,7 +45,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     `${environment.baseHref || '/'}assets/dojo/dojo.js`,
     `${environment.baseHref || '/'}assets/jsdraw/Scilligence.JSDraw2.Pro.js`,
     `${environment.baseHref || '/'}assets/jsdraw/Scilligence.JSDraw2.Resources.js`,
-    `${environment.baseHref || '/'}assets/jsdraw/JSDraw2.extensions.js`
+    `${environment.baseHref || '/'}assets/jsdraw/JSDraw.extensions.js`
 
   ];
   ketcherFilePath: string;

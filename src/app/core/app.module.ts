@@ -74,6 +74,8 @@ import { GuidedSearchModule } from './guided-search/guided-search.module';
 import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { NamesDisplayPipe } from '@gsrs-core/utils/names-display-order.pipe';
+// tslint:disable-next-line:max-line-length
+import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
 
 @NgModule({
   declarations: [
@@ -89,6 +91,7 @@ import { NamesDisplayPipe } from '@gsrs-core/utils/names-display-order.pipe';
     TrackLinkEventDirective,
     HighlightedSearchActionComponent,
     CardDynamicSectionDirective,
+    BrowseHeaderDynamicSectionDirective,
     SubstanceSummaryCardComponent,
     SubstanceHierarchyComponent,
     SequenceAlignmentComponent,
