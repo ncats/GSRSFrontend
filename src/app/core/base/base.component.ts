@@ -38,6 +38,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   isAdmin = false;
   contactEmail: string;
   version?: string;
+  versionTooltipMessage = '';
   appId: string;
   clasicBaseHref: string;
   navItems: Array<NavItem>;
@@ -69,6 +70,12 @@ export class BaseComponent implements OnInit, OnDestroy {
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.version = this.configService.configData.version || '';
+
+    this.versionTooltipMessage = `V${this.version}`;
+
+    if (this.configService.configData.buildDateTime) {
+      this.versionTooltipMessage += ` built on ${this.configService.configData.buildDateTime}`;
+    }
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 

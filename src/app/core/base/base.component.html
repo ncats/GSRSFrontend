@@ -5,7 +5,7 @@
       <img [src]="logoSrcPath" alt = "gsrs-logo" />
     </a>
       </span>
-    <span class = "version" *ngIf = "version && version !== ''">Ver. {{version}}</span>
+    <span class = "version" *ngIf = "version && version !== ''" [matTooltip]="versionTooltipMessage" matTooltipPosition="below">Ver. {{version}}</span>
   </div>
 
   <!-- <span class="nav-big">
