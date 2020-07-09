@@ -91,7 +91,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
         queryStatement = JSON.parse(queryStatementString);
       }
     }
-
+    console.log(queryStatement);
     if (queryStatement != null) {
       const queryablePropertyType = this._queryableDictionary[queryStatement.queryableProperty].type;
       let inputType: string;

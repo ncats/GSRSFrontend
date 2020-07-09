@@ -76,7 +76,8 @@
                             selectedQueryableProperty,
                             selectedLucenePath,
                             queryUpdated,
-                            queryParts
+                            queryParts,
+                            commandInputValueDict[commandInput.type]
                         )">
                     <mat-error *ngIf="!commandInputValueDict[commandInput.type][index]">Required</mat-error>
                 </mat-form-field>
@@ -94,7 +95,8 @@
                             selectedQueryableProperty,
                             selectedLucenePath,
                             queryUpdated,
-                            queryParts
+                            queryParts,
+                            commandInputValueDict[commandInput.type]
                         )"
                         (dateInput)="commandInput.constructQuery(
                             $event.value,
@@ -102,7 +104,8 @@
                             selectedQueryableProperty,
                             selectedLucenePath,
                             queryUpdated,
-                            queryParts
+                            queryParts,
+                            commandInputValueDict[commandInput.type]
                         )"
                         [matDatepicker]="queryDatepicker">
                     <mat-error *ngIf="!commandInputValueDict[commandInput.type][index]">Required</mat-error>
@@ -121,7 +124,8 @@
                         selectedQueryableProperty,
                         selectedLucenePath,
                         queryUpdated,
-                        queryParts
+                        queryParts,
+                        commandInputValueDict[commandInput.type]
                     )">
                         <mat-option 
                             *ngFor="let option of cvOptions"

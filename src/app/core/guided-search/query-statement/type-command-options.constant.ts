@@ -374,7 +374,8 @@ export const typeCommandOptions: CommandTypesDict = {
                         queryableProperty: string,
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>,
-                        queryParts?: Array<string>
+                        queryParts?: Array<string>,
+                        commandInputValues?: Array<string | Date | number>
                     ) => {
                         let query = '';
                         if (date != null) {
@@ -388,7 +389,7 @@ export const typeCommandOptions: CommandTypesDict = {
                             condition: condition,
                             queryableProperty: queryableProperty,
                             command: 'between',
-                            commandInputValues: [date],
+                            commandInputValues: [date, (commandInputValues && commandInputValues[1] || null)],
                             query: query,
                             queryParts: queryParts
                         });
@@ -402,7 +403,8 @@ export const typeCommandOptions: CommandTypesDict = {
                         queryableProperty: string,
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>,
-                        queryParts?: Array<string>
+                        queryParts?: Array<string>,
+                        commandInputValues?: Array<string | Date | number>
                     ) => {
                         let query = '';
                         if (date != null) {
@@ -415,7 +417,7 @@ export const typeCommandOptions: CommandTypesDict = {
                             condition: condition,
                             queryableProperty: queryableProperty,
                             command: 'between',
-                            commandInputValues: [date],
+                            commandInputValues: [(commandInputValues && commandInputValues[0] || null), date],
                             query: query,
                             queryParts: queryParts
                         });
@@ -540,7 +542,8 @@ export const typeCommandOptions: CommandTypesDict = {
                         queryableProperty: string,
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>,
-                        queryParts?: Array<string>
+                        queryParts?: Array<string>,
+                        commandInputValues?: Array<string | Date | number>
                     ) => {
                         queryParts[0] = queryValue != null && queryValue !== '' && `${condition}${lucenePath}[${queryValue} TO ` || '';
                         const query = queryParts[0] && queryParts[1] && queryParts.join('') || '';
@@ -548,7 +551,7 @@ export const typeCommandOptions: CommandTypesDict = {
                             condition: condition,
                             queryableProperty: queryableProperty,
                             command: 'between',
-                            commandInputValues: [queryValue],
+                            commandInputValues: [queryValue, (commandInputValues && commandInputValues[1] || null)],
                             query: query,
                             queryParts: queryParts
                         });
@@ -562,7 +565,8 @@ export const typeCommandOptions: CommandTypesDict = {
                         queryableProperty: string,
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>,
-                        queryParts?: Array<string>
+                        queryParts?: Array<string>,
+                        commandInputValues?: Array<string | Date | number>
                     ) => {
                         queryParts[1] = queryValue != null && queryValue !== '' && `${queryValue}]` || '';
                         const query = queryParts[0] && queryParts[1] && queryParts.join('') || '';
@@ -570,7 +574,7 @@ export const typeCommandOptions: CommandTypesDict = {
                             condition: condition,
                             queryableProperty: queryableProperty,
                             command: 'between',
-                            commandInputValues: [queryValue],
+                            commandInputValues: [(commandInputValues && commandInputValues[0] || null), queryValue],
                             query: query,
                             queryParts: queryParts
                         });
