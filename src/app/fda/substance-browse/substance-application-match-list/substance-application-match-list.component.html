@@ -6,9 +6,11 @@
 
       <h3>Substance Ingredient Names:</h3>
 
+      <ol>
       <div *ngFor="let names of substanceNames; let namesIndex = index">
-        {{(namesIndex + 1)}}.&nbsp;&nbsp;{{names.name}}
+        <li>{{names.name}}</li>
       </div>
+      </ol>
 
       <br><br>
       <div class="colorgreen font18px"><b>Applications Lists that contain Substance Ingredient Names in Product Names or
@@ -33,6 +35,11 @@
               matTooltip='Edit GSRS Application Record'>
               Update Application
             </a>
+            <br>
+            <div *ngIf="element.exactMatchName.length > 0">
+              &bull;&nbsp;
+              <button (click)="autoUpdateApp(applicationId, element.ExactMatchBdnum)">Auto Update</button>
+             </div>
           </mat-cell>
         </ng-container>
 

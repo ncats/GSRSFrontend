@@ -18,7 +18,7 @@ import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/go
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-
+import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 
 @Component({
   selector: 'app-applications-browse',

@@ -13,30 +13,21 @@ import { ConfigService } from '../../../core/config/config.service';
 export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamicContent {
   substance: SubstanceDetail;
   searchCount: any;
-  appMatchListCount: any;
+  appMatchListCount: 0;
   appMatchList: any;
   substanceId: string;
   displayMatchApplicationConfig = false;
-  displayMatchApplicationBool: false;
-  displayMatchApplicationSession: false;
 
   constructor(
     private generalService: GeneralService,
     public activatedRoute: ActivatedRoute,
     private router: Router,
-    private configService: ConfigService, ) { }
+    private configService: ConfigService) { }
 
   ngOnInit() {
-    /*
-    this.displayMatchApplicationConfig = this.configService.configData && this.configService.configData.displayMatchApplication;
-    if (this.displayMatchApplicationConfig) {
-      this.displayMatchApplicationBool = JSON.parse(this.displayMatchApplicationConfig);
-    }
-    */
     this.substanceId = this.substance.uuid;
-    this.isDisplayAppToMatchConfig();
     this.getSearchCount();
-    this.getAppIngredtMatchListCount();
+    this.getAppIngredMatchListCount();
   }
 
   getSearchCount(): void {
@@ -46,26 +37,13 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
   }
 
   // Application Match Lists functions
-  isDisplayAppToMatchConfig(): void {
-    this.generalService.isDisplayAppToMatchConfig().subscribe(result => {
-      alert(result.isDisplay);
-      this.displayMatchApplicationConfig = result.isDisplay;
-    });
-  }
-
-  getAppIngredtMatchListCount(): void {
-    this.generalService.getAppIngredtMatchListCount(this.substance.uuid).subscribe(appMatchCount => {
-      this.appMatchListCount = appMatchCount.total;
-    });
-  }
-
-  getApplicationIngredientMatchList(substanceId: string): void {
-    if (substanceId) {
-      this.router.navigate(['/sub-app-match-list', substanceId]);
+  getAppIngredMatchListCount(): void {
+    const data = sessionStorage.getItem('matchAppCheckBoxValueSess');
+    if ((data !== null) && (data === 'true')) {
+      this.generalService.getAppIngredtMatchListCount(this.substance.uuid).subscribe(appMatchCount => {
+        this.appMatchListCount = appMatchCount.total;
+      });
     }
   }
 
-  updateCheckBox(): void {
-    alert('CHECK');
-  }
 }

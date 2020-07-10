@@ -25,6 +25,7 @@ export class GeneralService extends BaseHttpService {
       );
   }
 
+  /*
   isDisplayAppToMatchConfig(): Observable<any> {
     const url = this.baseUrl + 'isDisplayAppToMatchConfig2';
     return this.http.get<any>(url)
@@ -34,6 +35,27 @@ export class GeneralService extends BaseHttpService {
         })
       );
   }
+
+  setDisplayAppToMatchSession(checkBoxValue: boolean): Observable<any> {
+    const url = this.baseUrl + 'setDisplayAppToMatchSession' + '';
+    return this.http.get<any>(url)
+      .pipe(
+        map(res => {
+          return res;
+        })
+      );
+  }
+
+  getDisplayAppToMatchSession(): Observable<any> {
+    const url = this.baseUrl + 'getDisplayAppToMatchSession2';
+    return this.http.get<any>(url)
+      .pipe(
+        map(res => {
+          return res;
+        })
+      );
+  }
+  */
 
   getAppIngredtMatchListCount(substanceUuid: string): Observable<any> {
     const url = this.baseUrl + 'getAppIngredtMatchListCountJson?substanceId=' + substanceUuid + '&citation=';
@@ -61,7 +83,7 @@ export class GeneralService extends BaseHttpService {
   }
 
   appIngredMatchListAutoUpdateSave(applicationId: string, bdnum: string): Observable<Array<any>> {
-    const url = this.baseUrl + 'appIngredMatchListAutoUpdateSave?applicationId==' + applicationId + '&bdnum=' + bdnum;
+    const url = this.baseUrl + 'appIngredMatchListAutoUpdateSave?applicationId=' + applicationId + '&bdnum=' + bdnum;
     return this.http.get<any>(url)
       .pipe(
         map(res => {

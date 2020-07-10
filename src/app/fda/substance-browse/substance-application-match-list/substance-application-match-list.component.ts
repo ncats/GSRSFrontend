@@ -37,7 +37,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit {
 
   ngOnInit() {
     this.loadingService.setLoading(true);
-    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+    this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
 
     this.isAdmin = true;
     alert(this.isAdmin);
@@ -62,9 +62,11 @@ export class SubstanceApplicationMatchListComponent implements OnInit {
   getSubstanceNames(substanceId: string): void {
     this.generalService.getSubstanceNames(substanceId).subscribe(substanceNames => {
       this.substanceNames = substanceNames;
-      if (this.substanceNames) {
-        console.log('LIST : ' + JSON.stringify(this.substanceNames));
-      }
+    });
+  }
+
+  autoUpdateApp(applicationId: string, bdnum: string): void {
+    this.generalService.appIngredMatchListAutoUpdateSave(applicationId, bdnum).subscribe(update => {
     });
   }
 
