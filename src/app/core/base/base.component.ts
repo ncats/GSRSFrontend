@@ -77,7 +77,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
       this.version = this.configService.configData.version || buildInfo.version;
       this.versionTooltipMessage = `V${this.version}`;
-      this.versionTooltipMessage += ` built on ${moment(buildInfo.buildDate).utc().format('ddd MMM D YYYY')}`;
+      this.versionTooltipMessage += ` built on ${moment(buildInfo.buildTime).utc().format('ddd MMM D YYYY HH:mm:SS z')}`;
     });
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();

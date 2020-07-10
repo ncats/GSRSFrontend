@@ -32,6 +32,7 @@ export interface CommandInput {
         queryableProperty: string,
         lucenePath: string,
         eventEmitter: EventEmitter<QueryStatement>,
-        queryParts?: Array<string>
+        queryParts?: Array<string>,
+        commandInputValues?: Array<string | Date | number>
     ) => void;
 }
