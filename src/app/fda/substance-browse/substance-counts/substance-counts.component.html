@@ -1,5 +1,15 @@
-<div class="counts-container" *ngIf="searchCount">
+<!-- Application Matching List -->
+<div *ngIf="appMatchListCount > 0">
+  <br>
+  <a class="colorred padtop10" [routerLink]="['/sub-app-match-list', substanceId]" target="_blank">
+    Matching Application Names&nbsp;
+    <span matBadge="{{appMatchListCount}}" matBadgeOverlap="false" MatBadgeSize="large"
+      MatBadgePosition="below after"></span>
+  </a>
+  <br>
+</div>
 
+<div class="counts-container" *ngIf="searchCount">
   <div class="counts-column">
     <div>
       Application Count:
@@ -14,7 +24,8 @@
             </a>
           </div>
           <div>
-            <mat-icon class="small-icon margintopneg10" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+            <mat-icon class="small-icon margintopneg10" svgIcon="open_in_new" matTooltip="opens in new window">
+            </mat-icon>
           </div>
         </div>
       </span>

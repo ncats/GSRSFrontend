@@ -15,6 +15,7 @@ export interface Config {
     defaultCodeSystem?: string;
     navItems?: Array<NavItem>;
     substanceSelectorProperties?: Array<string>;
+    displayMatchApplication?: string;
 }
 
 export interface SubstanceDetailsCard {

@@ -18,7 +18,7 @@ import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/go
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-
+import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 
 @Component({
   selector: 'app-applications-browse',
@@ -56,6 +56,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
   private isFacetsParamsInit = false;
+  public displayFacets: Array<DisplayFacet> = [];
 
   constructor(
     public applicationService: ApplicationService,
@@ -158,6 +159,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
     this.privateFacetParams = facetsUpdateEvent.facetParam;
+    this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
       this.isFacetsParamsInit = true;
       this.loadComponent();

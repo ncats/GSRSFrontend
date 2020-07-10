@@ -29,7 +29,8 @@ import { element } from 'protractor';
 @Component({
   selector: 'app-application-form',
   templateUrl: './application-form.component.html',
-  styleUrls: ['./application-form.component.scss']
+  styleUrls: ['./application-form.component.scss'],
+ // encapsulation: ViewEncapsulation.None
 })
 
 export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {

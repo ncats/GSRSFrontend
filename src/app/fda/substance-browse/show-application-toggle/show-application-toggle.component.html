@@ -1,0 +1,7 @@
+<!-- If in ginas.conf file (play framework), ix.gsrs.fda.applications.display.appToMatch = true,
+     display checkbox in the top of Browse Substance page-->
+<div *ngIf="displayMatchApplicationConfig === true">
+  <mat-checkbox [checked]="displayMatchAppCheckBoxValue" (change)="setDisplayAppToMatchSession($event.checked)">
+    <span class="font14px"><b>Display Match Application Names</b></span>
+  </mat-checkbox>
+</div>
