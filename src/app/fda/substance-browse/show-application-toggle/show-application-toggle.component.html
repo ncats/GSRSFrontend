@@ -2,6 +2,6 @@
      display checkbox in the top of Browse Substance page-->
 <div *ngIf="displayMatchApplicationConfig === true">
   <mat-checkbox [checked]="displayMatchAppCheckBoxValue" (change)="setDisplayAppToMatchSession($event.checked)">
-    <span class="colororange">Display Match Application Names</span>
+    <span class="font14px"><b>Display Match Application Names</b></span>
   </mat-checkbox>
 </div>

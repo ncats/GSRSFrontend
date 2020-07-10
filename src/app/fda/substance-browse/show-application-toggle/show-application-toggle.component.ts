@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 import { GeneralService } from '../../service/general.service';
 import { ConfigService } from '../../../core/config/config.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { take } from 'rxjs/operators';
+import { LoadingService } from '@gsrs-core/loading';
 
 @Component({
   selector: 'app-show-application-toggle',
   templateUrl: './show-application-toggle.component.html',
   styleUrls: ['./show-application-toggle.component.scss']
 })
-export class ShowApplicationToggleComponent implements OnInit, SubstanceBrowseHeaderDynamicContent {
+export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, SubstanceBrowseHeaderDynamicContent {
   test: any;
   isAdmin = false;
   displayMatchApplicationConfig = false;
@@ -22,14 +23,19 @@ export class ShowApplicationToggleComponent implements OnInit, SubstanceBrowseHe
     private configService: ConfigService,
     private authService: AuthService,
     private router: Router,
-    public activatedRoute: ActivatedRoute) { }
+    public activatedRoute: ActivatedRoute,
+    public loadingService: LoadingService) { }
 
   ngOnInit() {
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
-  //  this.isAdmin = true;
+   // this.isAdmin = true;
     if (this.isAdmin === true) {
       this.isDisplayAppToMatchConfig();
     }
+  }
+
+  ngAfterViewInit() {
+    // put something;
   }
 
   isDisplayAppToMatchConfig(): void {
@@ -39,13 +45,13 @@ export class ShowApplicationToggleComponent implements OnInit, SubstanceBrowseHe
       // If the key 'displayMatchApplication' is set to true in conf.json file,
       // display the checkbox.
       if (this.displayMatchApplicationConfig === true) {
-        const data = sessionStorage.getItem('matchAppCheckBoxValueSess');
-        if (data === null) {
-          sessionStorage.setItem('matchAppCheckBoxValueSess', 'false');
-          this.displayMatchAppCheckBoxValue = false;
-        } else {
-          this.displayMatchAppCheckBoxValue = JSON.parse(data);
-        }
+          const data = sessionStorage.getItem('matchAppCheckBoxValueSess');
+          if (data === null) {
+            sessionStorage.setItem('matchAppCheckBoxValueSess', 'false');
+            //   this.displayMatchAppCheckBoxValue = false;
+          } else {
+            this.displayMatchAppCheckBoxValue = JSON.parse(data);
+          }
       }
     }
   }

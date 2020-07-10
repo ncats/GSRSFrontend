@@ -82,8 +82,8 @@ export class GeneralService extends BaseHttpService {
     return this.http.get<Array<any>>(url);
   }
 
-  appIngredMatchListAutoUpdateSave(applicationId: string, bdnum: string): Observable<Array<any>> {
-    const url = this.baseUrl + 'appIngredMatchListAutoUpdateSave?applicationId=' + applicationId + '&bdnum=' + bdnum;
+  appIngredMatchListAutoUpdateSave(applicationId: number, bdnum: string): Observable<any> {
+    const url = this.baseUrl + 'appIngredMatchListAutoUpdateSaveJson?applicationId=' + applicationId + '&bdnum=' + bdnum;
     return this.http.get<any>(url)
       .pipe(
         map(res => {

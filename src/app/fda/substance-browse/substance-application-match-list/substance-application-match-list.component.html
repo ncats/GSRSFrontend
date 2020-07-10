@@ -7,9 +7,9 @@
       <h3>Substance Ingredient Names:</h3>
 
       <ol>
-      <div *ngFor="let names of substanceNames; let namesIndex = index">
-        <li>{{names.name}}</li>
-      </div>
+        <div *ngFor="let names of substanceNames; let namesIndex = index">
+          <li>{{names.name}}</li>
+        </div>
       </ol>
 
       <br><br>
@@ -30,16 +30,14 @@
         <ng-container matColumnDef="Action">
           <mat-header-cell *matHeaderCellDef [ngClass]="'headerstyle'"> Action </mat-header-cell>
           <mat-cell *matCellDef="let element; let i = index">
-            {{i + 1}}&nbsp;&nbsp;&nbsp;
             <a [routerLink]="['/application', element.id, 'edit']" target="_blank" *ngIf="isAdmin"
               matTooltip='Edit GSRS Application Record'>
               Update Application
             </a>
             <br>
-            <div *ngIf="element.exactMatchName.length > 0">
-              &bull;&nbsp;
-              <button (click)="autoUpdateApp(applicationId, element.ExactMatchBdnum)">Auto Update</button>
-             </div>
+            <span *ngIf="element.exactMatchName.length > 0">
+              <button mat-button (click)="autoUpdateApp(element.id, element.exactMatchBdnum)">Auto Update</button>
+            </span>
           </mat-cell>
         </ng-container>
 

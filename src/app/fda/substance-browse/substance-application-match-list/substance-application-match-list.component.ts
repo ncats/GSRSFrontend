@@ -24,6 +24,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit {
   substanceNames: any;
   displayedColumns: string[] = ['Action', 'Application Type', 'Application Number', 'Status', 'Application Sub Type', 'Product Name', 'Bdnum', 'Exact Match'];
   dataSource = null;
+  updated = 'false';
 
   constructor(
     public generalService: GeneralService,
@@ -38,7 +39,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit {
   ngOnInit() {
     this.loadingService.setLoading(true);
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
-    // this.isAdmin = true;
+   // this.isAdmin = true;
     if (this.isAdmin === true) {
       this.id = this.activatedRoute.snapshot.params['id'];
       if (this.id) {
@@ -62,8 +63,14 @@ export class SubstanceApplicationMatchListComponent implements OnInit {
     });
   }
 
-  autoUpdateApp(applicationId: string, bdnum: string): void {
+  autoUpdateApp(applicationId: number, bdnum: string): void {
     this.generalService.appIngredMatchListAutoUpdateSave(applicationId, bdnum).subscribe(update => {
+    if (update) {
+      this.updated = update.appSaved;
+      if (this.updated === 'true') {
+        alert('The Auto Update saved the application record');
+      }
+    }
     });
   }
 
