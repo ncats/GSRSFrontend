@@ -95,15 +95,20 @@ export class AgentModificationFormComponent implements OnInit {
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.mod.agentSubstance = relatedSubstance;
-    this.relatedSubstanceUuid = this.mod.agentSubstance.refuuid;
+    if ( substance !== null) {
+      const relatedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+      this.mod.agentSubstance = relatedSubstance;
+      this.relatedSubstanceUuid = this.mod.agentSubstance.refuuid;
+    } else {
+      this.mod.agentSubstance = {};
+      this.relatedSubstanceUuid = '';
+    }
   }
 
   displayAmount(amt: SubstanceAmount): string {

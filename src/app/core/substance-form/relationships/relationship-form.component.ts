@@ -61,14 +61,18 @@ export class RelationshipFormComponent implements OnInit {
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.relationship.relatedSubstance = relatedSubstance;
+    if ( substance !== null) {
+      const relatedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+      this.relationship.relatedSubstance = relatedSubstance;
+    } else {
+      this.relationship.relatedSubstance = {};
+    }
   }
 
   mediatorSubstanceUpdated(substance: SubstanceSummary): void {
