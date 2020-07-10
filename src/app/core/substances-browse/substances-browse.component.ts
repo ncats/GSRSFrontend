@@ -584,6 +584,9 @@ validatePageInput(event: any): boolean {
 
   clearFilters(): void {
     // for facets
+    this.displayFacets.forEach(displayFacet => {
+      displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
+    });
     this.facetManagerService.clearSelections();
     if (this.privateStructureSearchTerm != null && this.privateStructureSearchTerm !== '') {
       this.clearStructureSearch();

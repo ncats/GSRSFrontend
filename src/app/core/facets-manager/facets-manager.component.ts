@@ -387,10 +387,12 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           this.privateFacetParams[facetKey].showAllMatchOption = false;
           this.privateFacetParams[facetKey].hasSelections = false;
 
-          const paramsString = JSON.stringify(this.privateFacetParams[facetName].params);
-          const isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
-          const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
-          this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
+          if (facetName != null) {
+            const paramsString = JSON.stringify(this.privateFacetParams[facetName].params);
+            const isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
+            const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
+            this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
+          }
         }
       });
     }

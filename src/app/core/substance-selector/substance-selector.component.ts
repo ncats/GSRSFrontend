@@ -22,7 +22,8 @@ export class SubstanceSelectorComponent implements OnInit {
   private substanceSelectorProperties: Array<string> = [
     'root_names_name',
     'root_approvalID',
-    'root_codes_BDNUM'
+    'CAS',
+    'ECHA\ \(EC\/EINECS\)'
   ];
 
   constructor(
@@ -56,7 +57,7 @@ export class SubstanceSelectorComponent implements OnInit {
   processSubstanceSearch(searchValue: string = ''): void {
     const q = searchValue.replace('\"', '');
 
-    const searchStr = this.substanceSelectorProperties.map(property => `${property}\"^${q}$\"`).join(' OR ');
+    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
 
     // const searchStr = `root_names_name:\"^${q}$\" OR ` +
     //   `root_approvalID:\"^${q}$\" OR ` +
