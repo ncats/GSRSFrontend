@@ -38,6 +38,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   @Output() facetsLoaded = new EventEmitter<number>();
   private environment: Environment;
   @Input() includeFacetSearch = false;
+  showDeprecated = false;
+  loggedIn = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -58,13 +60,25 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   ngOnInit() {
     this.facetString = this.activatedRoute.snapshot.queryParams['facets'] || '';
+    const show = this.activatedRoute.snapshot.queryParams['showDeprecated'] || 'false';
+    if ( show === 'true') {
+      this.showDeprecated = true;
+    }
     this.facetsFromParams();
     this.setDisplayFacets();
-    this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams, displayFacets: this.displayFacets });
+    this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams,
+      displayFacets: this.displayFacets,
+      deprecated: this.showDeprecated });
     const deleteEventSubscription = this.facetManagerService.clearSelectionsEvent.subscribe(() => {
       this.clearFacetSelection();
     });
     this.subscriptions.push(deleteEventSubscription);
+
+    this.authService.getAuth().pipe(take(1)).subscribe(auth => {
+      if (auth) {
+        this.loggedIn = true;
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -148,13 +162,24 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         if (hasSelections === true) {
           this.facetBuilder[category] = { params: params, hasSelections: true, isAllMatch: false };
           const paramsString = JSON.stringify(params);
-          const newHash = this.utilsService.hashCode(paramsString, this.facetBuilder[category].isAllMatch.toString());
+          const newHash = this.utilsService.hashCode(paramsString,
+            this.facetBuilder[category].isAllMatch.toString(),
+            this.showDeprecated.toString());
           this.facetBuilder[category].currentStateHash = newHash;
         }
       }
       this.privateFacetParams = this.facetBuilder;
     }
+  }
 
+  toggleDeprecated(): void {
+    this.showDeprecated = !this.showDeprecated;
+    setTimeout(() => {
+      this.populateUrlQueryParameters(this.showDeprecated);
+          this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams, displayFacets: this.displayFacets,
+            deprecated: this.showDeprecated });
+
+    });
   }
 
   private populateFacets(): void {
@@ -246,7 +271,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  populateUrlQueryParameters(): void {
+  populateUrlQueryParameters(deprecated?: boolean): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
@@ -254,7 +279,11 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     const catArr = [];
     let facetString = '';
     for (const key of Object.keys(this.privateFacetParams)) {
-      if (this.privateFacetParams[key] !== undefined && this.privateFacetParams[key].hasSelections === true) {
+      if (this.privateFacetParams[key] !== undefined &&
+        this.privateFacetParams[key].hasSelections === true &&
+        !(this.showDeprecated && key === 'Deprecated' && this.privateFacetParams[key] !== undefined &&
+            this.privateFacetParams[key].params &&
+            this.privateFacetParams[key].params['Deprecated'] === true)) {
         const cat = this.privateFacetParams[key];
         const valArr = [];
         for (const subkey of Object.keys(cat.params)) {
@@ -267,10 +296,17 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const newHash = this.utilsService.hashCode(paramsString, this.privateFacetParams[key].isAllMatch.toString());
         this.privateFacetParams[key].currentStateHash = newHash;
         this.privateFacetParams[key].isUpdated = false;
-      }
     }
+  }
     facetString = catArr.join(',');
-    navigationExtras.queryParams['facets'] = facetString;
+    if (facetString !== '') {
+      navigationExtras.queryParams['facets'] = facetString;
+    }
+     if (this.showDeprecated) {
+      navigationExtras.queryParams['showDeprecated'] = 'true';
+    } else {
+      navigationExtras.queryParams['showDeprecated'] = null;
+    }
 
     const urlTree = this.router.createUrlTree([], {
       queryParams: navigationExtras.queryParams,
@@ -291,7 +327,9 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.gaService.sendEvent('substancesFiltering', 'button:apply-facet', eventLabel, eventValue);
     this.populateUrlQueryParameters();
     this.setDisplayFacets();
-    this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams, displayFacets: this.displayFacets });
+    this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams,
+       displayFacets: this.displayFacets,
+        deprecated: this.showDeprecated});
   }
 
   removeFacet(type: string, bool: boolean, val: string): void {

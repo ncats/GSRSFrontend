@@ -93,3 +93,21 @@
         }
     }
 }
+
+.deprecated {
+    font-size: 14px;
+    margin-left: 25px;
+    color: rgba(0, 0, 0, .70);
+    margin-bottom: 15px;
+
+::ng-deep .mat-checkbox-inner-container {
+        height: 14px;
+        width: 14px;
+    }
+
+    ::ng-deep  .mat-checkbox-layout {
+        margin-bottom: 10px;
+    }
+}
+
+
