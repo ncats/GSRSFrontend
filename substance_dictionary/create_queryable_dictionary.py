@@ -7,7 +7,7 @@ import requests
 # data = r.content
 # dictionary_df = pd.read_csv(BytesIO(data))
 
-dictionary_df = pd.read_excel('substance_dictionary_lnc.xlsx')
+dictionary_df = pd.read_excel('dictionary_current.xlsx')
 
 print(dictionary_df.head())
 
