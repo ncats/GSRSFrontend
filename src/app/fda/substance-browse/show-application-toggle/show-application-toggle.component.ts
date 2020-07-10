@@ -28,7 +28,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, Su
 
   ngOnInit() {
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
-   // this.isAdmin = true;
+    this.isAdmin = true;
     if (this.isAdmin === true) {
       this.isDisplayAppToMatchConfig();
     }
