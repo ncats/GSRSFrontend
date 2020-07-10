@@ -123,7 +123,7 @@ export class SubstanceService extends BaseHttpService {
 
     url += 'substances/search';
     if (searchTerm != null && searchTerm !== '') {
-      params = params.append('q', searchTerm);
+      params = params.append('q', encodeURIComponent(searchTerm));
     }
 
     params = params.appendFacetParams(facets);
@@ -174,7 +174,7 @@ export class SubstanceService extends BaseHttpService {
         }
 
       } else {
-        params = params.append('q', searchTerm);
+        params = params.append('q', encodeURIComponent(searchTerm));
         if (type) {
           params = params.append('type', type);
           if (type === 'similarity') {
@@ -387,7 +387,7 @@ export class SubstanceService extends BaseHttpService {
     let url = this.apiBaseUrl + 'substances/';
 
     if (searchTerm) {
-      params = params.append('q', searchTerm);
+      params = params.append('q', encodeURIComponent(searchTerm));
     }
 
     if (searchTerm != null || getFacets === true) {

@@ -88,16 +88,24 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.mod.molecularFragment = relatedSubstance;
-    this.relatedSubstanceUuid = this.mod.molecularFragment.refuuid;
+    if (substance !== null) {
+      const relatedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+      this.mod.molecularFragment = relatedSubstance;
+      this.relatedSubstanceUuid = this.mod.molecularFragment.refuuid;
+    } else {
+      this.mod.molecularFragment = {};
+      this.relatedSubstanceUuid = '';
+    }
+    
   }
+
+
 
   openDialog(): void {
 
