@@ -65,4 +65,5 @@ export interface FacetNameParam {
 export interface FacetUpdateEvent {
     facetParam: FacetParam;
     displayFacets: Array<DisplayFacet>;
+    deprecated?: boolean;
 }

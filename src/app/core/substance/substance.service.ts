@@ -29,6 +29,7 @@ import { stringify } from 'querystring';
 })
 export class SubstanceService extends BaseHttpService {
   private searchKeys: { [structureSearchTerm: string]: string } = {};
+  public showDeprecated = false;
 
   constructor(
     public http: HttpClient,
@@ -50,8 +51,14 @@ export class SubstanceService extends BaseHttpService {
     order?: string,
     facets?: FacetParam,
     skip?: number,
-    sequenceSearchKey?: string
+    sequenceSearchKey?: string,
+    deprecated?: boolean
   } = {}): Observable<PagingResponse<SubstanceSummary>> {
+    if (args.deprecated) {
+      this.showDeprecated = true;
+    } else {
+      this.showDeprecated = false;
+    }
     return new Observable(observer => {
 
       if (args.structureSearchTerm != null && args.structureSearchTerm !== '') {
@@ -123,10 +130,10 @@ export class SubstanceService extends BaseHttpService {
 
     url += 'substances/search';
     if (searchTerm != null && searchTerm !== '') {
-      params = params.append('q', encodeURIComponent(searchTerm));
+      params = params.append('q', searchTerm);
     }
 
-    params = params.appendFacetParams(facets);
+    params = params.appendFacetParams(facets, this.showDeprecated);
 
     params = params.appendDictionary({
       top: pageSize && pageSize.toString(),
@@ -164,7 +171,7 @@ export class SubstanceService extends BaseHttpService {
       if (!sync && this.searchKeys[structureFacetsKey]) {
 
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
-        params = params.appendFacetParams(facets);
+        params = params.appendFacetParams(facets, this.showDeprecated);
         params = params.appendDictionary({
           top: pageSize.toString(),
           skip: skip.toString()
@@ -174,7 +181,7 @@ export class SubstanceService extends BaseHttpService {
         }
 
       } else {
-        params = params.append('q', encodeURIComponent(searchTerm));
+        params = params.append('q', searchTerm);
         if (type) {
           params = params.append('type', type);
           if (type === 'similarity') {
@@ -244,7 +251,7 @@ export class SubstanceService extends BaseHttpService {
         } else {
           url += `status(${searchKey})/results`;
         }
-        params = params.appendFacetParams(facets);
+        params = params.appendFacetParams(facets, this.showDeprecated);
         params = params.appendDictionary({
           top: pageSize.toString(),
           skip: skip.toString()
@@ -357,11 +364,11 @@ export class SubstanceService extends BaseHttpService {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
     let params = new FacetHttpParams();
 
-    params = params.appendFacetParams(facets);
+    params = params.appendFacetParams(facets, this.showDeprecated);
 
     // remove this when async backend issue is fixed
     const random_key = Math.random().toString(36).replace('0.', '');
-    params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } });
+    params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } }, this.showDeprecated);
 
     params = params.appendDictionary({
       top: pageSize.toString(),
@@ -387,7 +394,7 @@ export class SubstanceService extends BaseHttpService {
     let url = this.apiBaseUrl + 'substances/';
 
     if (searchTerm) {
-      params = params.append('q', encodeURIComponent(searchTerm));
+      params = params.append('q', searchTerm);
     }
 
     if (searchTerm != null || getFacets === true) {
@@ -395,7 +402,7 @@ export class SubstanceService extends BaseHttpService {
     }
 
     if (facets != null) {
-      params = params.appendFacetParams(facets);
+      params = params.appendFacetParams(facets, this.showDeprecated);
     }
 
     const options = {

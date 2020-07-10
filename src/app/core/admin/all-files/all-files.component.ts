@@ -42,7 +42,6 @@ export class AllFilesComponent implements OnInit {
   ngOnInit() {
     this.loadingService.setLoading(true);
     this.adminService.getFiles().pipe(take(1)).subscribe( result => {
-      console.log(result);
         for (let i = 0; i < result.length; i += 1) {
           if (result[i].isDir === false) {
             result[i].hasLink = this.adminService.getDownloadLink(result[i].id);

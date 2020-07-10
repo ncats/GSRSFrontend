@@ -108,6 +108,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   exportOptions: Array<any>;
   private searchTermHash: number;
   isSearchEditable = false;
+  showDeprecated = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -153,6 +154,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
+    const deprecated = this.activatedRoute.snapshot.queryParams['showDeprecated'];
     if (this.pageSize > 500) {
       this.pageSize = 500;
     }
@@ -161,10 +163,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
+      } else {
+        this.showDeprecated = false;
       }
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');
     });
+    this.showAudit = this.authService.hasRoles('admin');
+    if (deprecated && deprecated === 'true' && this.showAudit) {
+      this.showDeprecated = true;
+    }
+
     this.subscriptions.push(authSubscription);
     this.isComponentInit = true;
     this.loadComponent();
@@ -261,8 +269,13 @@ validatePageInput(event: any): boolean {
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
+    if (facetsUpdateEvent.deprecated && facetsUpdateEvent.deprecated === true) {
+        this.showDeprecated = true;
+    } else {
+      this.showDeprecated = false;
+    }
     this.privateFacetParams = facetsUpdateEvent.facetParam;
-    this.displayFacets = facetsUpdateEvent.displayFacets;
+    this.displayFacets = facetsUpdateEvent.displayFacets.filter(facet => !(facet.type === 'Deprecated' && facet.bool === false));
     if (!this.isFacetsParamsInit) {
       this.isFacetsParamsInit = true;
       this.loadComponent();
@@ -293,6 +306,7 @@ validatePageInput(event: any): boolean {
       this.order,
       this.privateFacetParams,
       (this.pageIndex * this.pageSize),
+      this.showDeprecated
     );
     if (this.argsHash == null || this.argsHash !== newArgsHash) {
       this.isLoading = true;
@@ -310,7 +324,8 @@ validatePageInput(event: any): boolean {
         pageSize: this.pageSize,
         facets: this.privateFacetParams,
         skip: skip,
-        sequenceSearchKey: this.privateSequenceSearchKey
+        sequenceSearchKey: this.privateSequenceSearchKey,
+        deprecated: this.showDeprecated
       })
         .subscribe(pagingResponse => {
           this.isError = false;
