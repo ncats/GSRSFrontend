@@ -520,7 +520,8 @@
         "Product Ingredient Type",
         "Product Name Type",
         "Product Dosage Form",
-        "Definition Level"
+        "Definition Level",
+        "Clinical Trial Count"
       ],
       "admin": [
         "Record Created By",
