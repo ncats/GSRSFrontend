@@ -47,6 +47,12 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
       if (!this.job.running && this.job.lastFinished) {
         const duration = moment.duration((this.job.lastFinished - this.job.lastStarted));
         let timestring = '';
+        if ( duration.years() !== 0) {
+          timestring += duration.years() + (duration.years() > 1 ? ' years, ' : ' year, ');
+        }
+        if ( duration.months() !== 0) {
+          timestring += duration.months() + (duration.months() > 1 ? ' months, ' : ' month, ');
+        }
         if ( duration.days() !== 0) {
           timestring += duration.days() + (duration.days() > 1 ? ' days, ' : ' day, ');
         }
