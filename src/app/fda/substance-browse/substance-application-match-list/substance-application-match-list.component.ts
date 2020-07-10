@@ -38,10 +38,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit {
   ngOnInit() {
     this.loadingService.setLoading(true);
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
-
-    this.isAdmin = true;
-    alert(this.isAdmin);
-
+    // this.isAdmin = true;
     if (this.isAdmin === true) {
       this.id = this.activatedRoute.snapshot.params['id'];
       if (this.id) {

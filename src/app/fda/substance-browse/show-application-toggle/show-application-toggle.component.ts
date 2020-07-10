@@ -26,7 +26,7 @@ export class ShowApplicationToggleComponent implements OnInit, SubstanceBrowseHe
 
   ngOnInit() {
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
-    this.isAdmin = true;
+  //  this.isAdmin = true;
     if (this.isAdmin === true) {
       this.isDisplayAppToMatchConfig();
     }
