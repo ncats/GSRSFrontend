@@ -1,7 +1,7 @@
 <div class="query-statement-container">
     <div class="condition-column">
         <mat-form-field *ngIf="index > 0">
-            <mat-select [formControl]="conditionControl">
+            <mat-select [formControl]="conditionControl" (openedChange)="openedChange($event)">
                 <mat-option 
                     *ngFor="let option of conditionOptions"
                     [value]="option">
@@ -12,7 +12,7 @@
     </div>
     <div class="queryable-property-column">
         <mat-form-field *ngIf="isShowCommonFields">
-            <mat-select [formControl]="queryablePropertiesControl">
+            <mat-select [formControl]="queryablePropertiesControl" (openedChange)="openedChange($event)">
                 <mat-option 
                     *ngFor="let option of queryableOptionsCommon"
                     [value]="option"
@@ -43,6 +43,7 @@
             <mat-autocomplete 
                 #queryablePropertyOptions="matAutocomplete"
                 (optionSelected)="queryablePropertySelected($event.option.value)"
+                (opened)="increaseOverlayZindex()"
                 (closed)=queryablePropertiesAutocompleteClosed()>
                 <mat-option *ngFor="let option of queryableOptionsAll" [value]="option" [matTooltip]="option">
                     {{option}}
@@ -52,7 +53,7 @@
     </div>
     <div class="command-column">
         <mat-form-field [matTooltip]="selectedCommandOption">
-            <mat-select [formControl]="commandControl">
+            <mat-select [formControl]="commandControl" (openedChange)="openedChange($event)">
                 <mat-option *ngFor="let option of commandOptions" [value]="option">
                     {{option}}
                 </mat-option>
@@ -118,6 +119,7 @@
                     <mat-select [(ngModel)]="commandInputValueDict[commandInput.type][index]"
                         required
                         placeholder="Select default option"
+                        (openedChange)="openedChange($event)"
                         (selectionChange)="commandInput.constructQuery(
                         $event.value,
                         selectedCondition,

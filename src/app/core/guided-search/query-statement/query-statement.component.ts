@@ -242,6 +242,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   queryablePropertiesAutocompleteClosed(): void {
+    this.decreaseOverlayZindex();
     const inputValue = this.queryablePropertiesAutocompleteControl.value;
 
     if (inputValue) {
@@ -278,6 +279,14 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
       this.queryablePropertiesControl.setValue(this.selectedQueryableProperty);
     } else {
       this.queryablePropertiesControl.setValue('All');
+    }
+  }
+
+  openedChange(opened: boolean): void {
+    if (opened) {
+      this.increaseOverlayZindex();
+    } else {
+      this.decreaseOverlayZindex();
     }
   }
 
