@@ -341,8 +341,69 @@
                     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
                     </mat-icon>
                   </div>
+                  <div class = "tile-button-container">
+                      <button
+                      *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer"
+                      mat-icon-button [matMenuTriggerFor]="downloadMenu">
+                      <mat-icon svgIcon="get_app"></mat-icon>
+                    </button>
+  
+                    <button *ngIf="substance.structure || substance.polymer" mat-icon-button
+                      [matMenuTriggerFor]="searchMenu">
+                      <mat-icon class = "button-link-img" svgIcon="search"></mat-icon>
+                    </button>
+  
+                    <a  class = "mat-icon-button" aria-label = "edit substance"  mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin"
+                      matTooltip='edit record'>
+                      <mat-icon svgIcon="edit"></mat-icon>
+                    </a>
+  
+                    <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                      <mat-icon svgIcon="file_copy"></mat-icon>
+                    </button>
+                  </div>
 
                 </div>
+                
+
+                  <mat-menu #downloadMenu="matMenu">
+                      <a mat-menu-item *ngIf="substance.structure"
+                        (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+                        <span>Download Molfile</span>
+                      </a>
+                      <a mat-menu-item *ngIf="substance.polymer"
+                        (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+                        <span>Download Molfile</span>
+                      </a>
+                      <a mat-menu-item *ngIf="(substance.protein || substance.nucleicAcid) && !showAudit"
+                        (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')">
+                        <span>Download Fasta</span>
+                      </a>
+                    </mat-menu>
+  
+                    <mat-menu #searchMenu="matMenu">
+                      <a mat-menu-item *ngIf="substance.structure" [routerLink]="['/structure-search']"
+                        [queryParams]="{structure : substance.structure.id}">
+                        <span>Search Structure</span>
+                      </a>
+                      <a mat-menu-item *ngIf="substance.polymer" [routerLink]="['/structure-search']"
+                        [queryParams]="{structure : substance.polymer.displayStructure.id}">
+                        <span>Search Structure</span>
+                      </a>
+                    </mat-menu>
+  
+                    <mat-menu #editMenu="matMenu">
+                      <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
+                        [queryParams]="{copy:substance.uuid}" *ngIf="isAdmin"
+                        matTooltip='copy substance to new registration form'>
+                        <span>Copy Substance to New Form</span>
+                      </a>
+                      <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
+                        [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin"
+                        matTooltip='copy definition to new registration form'>
+                        <span>Copy Definition to New Form</span>
+                      </a>
+                    </mat-menu>
               </div>
             </mat-card-content>
           </mat-card>

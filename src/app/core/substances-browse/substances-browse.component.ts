@@ -187,7 +187,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
-    const dynamicSubscription = this.dynamicContentContainer.changes.subscribe((comps: QueryList<any>) => {
+    const dynamicSubscription = this.dynamicContentContainer.changes.pipe(take(1)).subscribe((comps: QueryList<any>) => {
       const container = this.dynamicContentContainer.toArray();
       const dynamicContentItemsFlat =  this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
       .filter(item => item.componentType === 'browseHeader');

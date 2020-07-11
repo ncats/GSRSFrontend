@@ -27,7 +27,7 @@ export class CacheSummaryComponent implements OnInit, OnDestroy {
   }
 
   setStart() {
-    if (!this.health.epoch) {
+    if (this.health.epoch) {
       const date = new Date();
       const duration = moment.duration((( date.getTime() - 0) - this.health.epoch));
       let timestring = '';
