@@ -45,6 +45,7 @@
         </span>
         <span *ngIf="appId === 'fda'">
           <mat-divider></mat-divider>
+         
           <a mat-list-item routerLink="/browse-applications">
             <mat-icon matListIcon svgIcon="search"></mat-icon>
             Browse All Applications
@@ -56,12 +57,23 @@
             Browse All Clinical Trials
           </a>
           <mat-divider></mat-divider>
-
-          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=substance'">
-            <mat-icon matListIcon svgIcon="pageview"></mat-icon>
-            Substance
-            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+          <a mat-list-item routerLink="/structure-search">
+            <mat-icon matListIcon svgIcon="search"></mat-icon>
+            Structure Search
           </a>
+          <mat-divider></mat-divider>
+          <a mat-list-item routerLink="/sequence-search">
+            <mat-icon matListIcon svgIcon="search"></mat-icon>
+            Sequence Search
+          </a>
+        <mat-divider></mat-divider>
+          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=substance'">
+              <mat-icon matListIcon svgIcon="youtube"></mat-icon>
+  
+              Advanced Search
+              <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+  
+            </a>
 
           <mat-divider></mat-divider>
           <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=prod'">
@@ -115,14 +127,6 @@
 
           </a>
 
-          <mat-divider></mat-divider>
-          <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'">
-            <mat-icon matListIcon svgIcon="youtube"></mat-icon>
-
-            Advanced Search
-            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-
-          </a>
         </span>
       </mat-nav-list>
     </mat-card-content>

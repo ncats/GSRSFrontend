@@ -335,7 +335,7 @@
                     </div>
                   </div>
                   <div class="tile-name">
-                    <a class="substance-name table-view-name" [routerLink]="['/substances', substance.uuid]">
+                    <a class="substance-name table-view-name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
                       {{substance._name}}
                     </a>
                     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">

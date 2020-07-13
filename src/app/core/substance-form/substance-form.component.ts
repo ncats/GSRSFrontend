@@ -425,17 +425,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
-      this.submissionMessage = 'Substance was Approved. Please refresh now or allow the page to refresh before editing.';
+      this.openSuccessDialog('approve');
+      this.submissionMessage = 'Substance was approved successfully';
       this.showSubmissionMessages = true;
       this.validationResult = false;
-      setTimeout(() => {
-        this.showSubmissionMessages = false;
-        this.submissionMessage = '';
-        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-        this.router.onSameUrlNavigation = 'reload';
-        const id = this.substanceFormService.getUuid();
-        this.router.navigate(['/substances', id, 'edit']);
-      }, 4000);
     },
       (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;
@@ -654,7 +647,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     return old;
   }
 
-  openSuccessDialog(): void {
+  openSuccessDialog(type?: string): void {
     const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {});
     this.overlayContainer.style.zIndex = '1002';
 
@@ -669,6 +662,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.router.navigate(['/substances', this.id]);
       } else {
         this.submissionMessage = 'Substance was saved successfully!';
+        if (type && type === 'approve') {
+          this.submissionMessage = 'Substance was approved successfully';
+        }
         this.showSubmissionMessages = true;
         this.validationResult = false;
         setTimeout(() => {
