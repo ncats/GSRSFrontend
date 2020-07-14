@@ -8,7 +8,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
-import {MatDialogModule, MatIconModule} from '@angular/material';
+import {MatDialogModule, MatIconModule, MatDialog} from '@angular/material';
 import {SubstanceCardBase} from '@gsrs-core/substance-details/substance-card-base';
 import {SubstanceDetail, SubstanceEdit, SubstanceName} from '@gsrs-core/substance/substance.model';
 import {SubstanceService} from '@gsrs-core/substance/substance.service';
@@ -18,6 +18,8 @@ import {Router} from '@angular/router';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics/google-analytics.service';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-details/substance-card-base-filtered-list';
 import {Subject, Subscription} from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 
 @Component({
   selector: 'app-substance-history',
@@ -29,12 +31,17 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
   displayedColumns: string[] = ['view', 'version', 'versionComments', 'editor', 'changeDate', 'restore'];
   substanceUpdated = new Subject<SubstanceDetail>();
   latest: any;
+  private overlayContainer: HTMLElement;
+
 
 
   constructor(
     private substanceService: SubstanceService,
     private router: Router,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    private overlayContainerService: OverlayContainer,
+    private dialog: MatDialog
+
   ) {
     super();
   }
@@ -45,6 +52,7 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
    this.substanceService.checkVersion(this.substance.uuid).subscribe((result: number) => {
     this.latest = result;
   });
+  this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit() {
@@ -58,31 +66,21 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
   }
 
   restoreVersion(version: any) {
-    if (confirm('Are you sure you\'d like to restore version ' + this.substance.version + '?')) {
-      this.loadingService.setLoading(true);
-      this.substanceService.getSubstanceDetails(this.substance.uuid, version).subscribe( sub => {
-        this.substance.changeReason = 'reverted to version ' + version;
-        this.substance.version = this.latest;
-        this.substanceService.saveSubstance(this.substance).subscribe( response => {
-          this.substance = response;
-          alert('record restored successfully');
-          this.router.navigate(['/substances/' + this.substance.uuid + '/']);
-        }, error => {
-          this.loadingService.setLoading(false);
-          alert('There was a problem restoring version');
-          const results = {'serverError': null, 'validationMessages': null};
-          if (error && error.error && error.error.validationMessages) {
-            results.validationMessages = error.error.validationMessages;
-          } else {
-            results.serverError = error;
-          }
-
-        });
-      }, error => {
-        this.loadingService.setLoading(false);
-        alert('There was a problem fetching this substance version');
+      const dialogRef = this.dialog.open(SubstanceHistoryDialogComponent, {
+        data: {'substance': this.substance, 'version': version, 'latest': this.latest},
+        width: '650px',
+        autoFocus: false,
+        disableClose: true
       });
-    }
+       this.overlayContainer.style.zIndex = '1002';
+      const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+        this.overlayContainer.style.zIndex = null;
+
+        if (response && response === 'success' ) {
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate(['/substances/' + this.substance.uuid + '/']);
+        }
+      });
 
   }
 

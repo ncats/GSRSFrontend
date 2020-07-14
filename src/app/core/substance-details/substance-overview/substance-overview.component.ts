@@ -1,3 +1,4 @@
+
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail} from '../../substance/substance.model';
@@ -15,6 +16,9 @@ import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
 import {ConfigService} from '@gsrs-core/config';
 import { catchError } from 'rxjs/operators';
 import { LoadingService } from '@gsrs-core/loading';
+import { MatDialog } from '@angular/material';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 
 @Component({
   selector: 'app-substance-overview',
@@ -38,6 +42,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   defaultCodeSystem = 'BDNUM';
   defaultCodes: string;
   clasicBaseHref: string;
+  private overlayContainer: HTMLElement;
+
   constructor(
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -47,7 +53,9 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     private authService: AuthService,
     private cvService: ControlledVocabularyService,
     private configService: ConfigService,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    private overlayContainerService: OverlayContainer,
+    private dialog: MatDialog
   ) {
     super();
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -84,6 +92,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
       this.defaultCodes = defaultCodes.join(', ');
     }
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit() {
@@ -156,30 +165,23 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   }
 
   restoreVersion() {
-
-    if (confirm('Are you sure you\'d like to restore version ' + this.substance.version + '?')) {
-      this.loadingService.setLoading(true);
-    this.substance.changeReason = 'reverted to version ' + this.substance.version;
-    this.substance.version = this.latestVersion.toString();
-    this.substanceService.saveSubstance(this.substance).subscribe( response => {
-      this.substance = response;
-      this.loadingService.setLoading(true);
-      alert('record restored successfully');
-      this.router.navigate(['/substances/' + this.substance.uuid + '/']);
-    }, error => {
-      this.loadingService.setLoading(false);
-      console.log(error);
-      const results = {'serverError': null, 'validationMessages': null};
-      if (error && error.error && error.error.validationMessages) {
-        results.validationMessages = error.error.validationMessages;
-      } else {
-        results.serverError = error;
-      }
-
+    const dialogRef = this.dialog.open(SubstanceHistoryDialogComponent, {
+      data: {'substance': this.substance, 'version': this.substance.version, 'latest': this.latestVersion.toString()},
+      width: '650px',
+      autoFocus: false,
+      disableClose: true
     });
-  }
+     this.overlayContainer.style.zIndex = '1002';
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
 
-  }
+      if (response && response === 'success' ) {
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate(['/substances/' + this.substance.uuid + '/']);
+      }
+    });
+
+}
 
 
 

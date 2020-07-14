@@ -76,6 +76,7 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { NamesDisplayPipe } from '@gsrs-core/utils/names-display-order.pipe';
 // tslint:disable-next-line:max-line-length
 import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
+import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-brows
     SubstanceHierarchyComponent,
     SequenceAlignmentComponent,
     ExportDialogComponent,
+    SubstanceHistoryDialogComponent,
     NamesDisplayPipe
   ],
   imports: [
@@ -167,7 +169,8 @@ import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-brows
   bootstrap: [AppComponent],
   entryComponents: [
     HighlightedSearchActionComponent,
-    ExportDialogComponent
+    ExportDialogComponent,
+    SubstanceHistoryDialogComponent
   ]
 })
 export class AppModule {}

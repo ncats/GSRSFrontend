@@ -1,0 +1,55 @@
+<div mat-dialog-title>
+        <h3 >Version Control</h3>
+        </div>
+      <div mat-dialog-content>
+          <div class = "main-text">
+
+      
+      <div *ngIf = "status === 'start'">
+            Are you sure you'd like to restore version {{version}}?
+            </div>
+        <div *ngIf = "status === 'running'">
+            Restoring...
+        </div>
+        <div *ngIf = "status === 'complete'">
+            Record restored successfullly. Close this dialog to redirect to the new version.
+        </div>
+        <div *ngIf = "status === 'failed'">
+              <div> There was a problem restoring this version. </div>
+              <div>Would you like to see the error details?</div>
+              <a class = "primary-color" (click) = "status = 'error'">Show errors</a>
+
+        </div>
+    </div>
+
+    <div class = "errors" *ngIf = "status === 'error'">
+        <div class = "error-title">
+                Error restoring record. Here is some information on the error to share with a system admin / developers.
+
+        </div>
+        <div *ngIf="validationMessages">
+                <span *ngIf = " validationMessages.length > 0"   >
+                    <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
+                            {{message.message}}
+                    </div>
+                </span>
+        </div>
+
+        <div *ngIf = "serverError">
+                {{this.serverError}}
+            </div>
+            <div *ngIf = "!validationMessages && !serverError">
+                <i>No error information returned from the server</i>
+            </div>
+        </div>
+
+        </div>
+      <div mat-dialog-actions>
+        <button mat-flat-button color="primary" *ngIf = "status !== 'complete'" matDialogClose>Cancel</button>
+
+      
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary"  *ngIf = "status === 'start'" (click) ="accept()">Accept</button>
+        <button mat-flat-button color="primary" *ngIf = "status === 'complete'" (click) = "close()">Close</button>
+
+      </div>
