@@ -14,7 +14,7 @@
           <mat-icon svgIcon="subdirectory_arrow_right" *ngIf="i > 0"></mat-icon>
           <a
             routerLink="/browse-substance"
-            [queryParams]="{ search_term: 'comments:' + node }">
+            [queryParams]="{ search: 'comments:' + node }">
             {{node}}
           </a>
         </div>
