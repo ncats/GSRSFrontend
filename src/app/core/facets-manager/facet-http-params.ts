@@ -1,4 +1,4 @@
-import { HttpParams } from '@angular/common/http';
+import { HttpParams, HttpParameterCodec } from '@angular/common/http';
 import { FacetParam } from '@gsrs-core/facets-manager';
 
 export class FacetHttpParams extends HttpParams {
@@ -8,7 +8,7 @@ export class FacetHttpParams extends HttpParams {
     }
 
     appendFacetParams(facets: FacetParam, deprecated?: boolean): FacetHttpParams {
-        let clone = new FacetHttpParams({ fromString: super.toString() });
+        let clone = new FacetHttpParams({ fromString: super.toString() , encoder: new CustomEncoder()});
         let hasDeprecated = false;
         if (facets != null) {
             const facetsKeys = Object.keys(facets);
@@ -41,14 +41,14 @@ export class FacetHttpParams extends HttpParams {
 
     append(param: string, value: string): FacetHttpParams {
         const httpParamsClone = super.append(param, value);
-        const clone = new FacetHttpParams({ fromString: httpParamsClone.toString() });
+        const clone = new FacetHttpParams({ fromString: httpParamsClone.toString() , encoder: new CustomEncoder()});
         return clone;
     }
 
     appendDictionary(params: {
         [name: string]: string
     }): FacetHttpParams {
-        let clone = new FacetHttpParams({ fromString: super.toString() });
+        let clone = new FacetHttpParams({ fromString: super.toString() , encoder: new CustomEncoder()});
         if (params != null) {
             const keys = Object.keys(params);
 
@@ -63,3 +63,22 @@ export class FacetHttpParams extends HttpParams {
         return clone;
     }
 }
+
+
+class CustomEncoder implements HttpParameterCodec {
+    encodeKey(key: string): string {
+      return encodeURIComponent(key);
+    }
+
+    encodeValue(value: string): string {
+      return encodeURIComponent(value);
+    }
+
+    decodeKey(key: string): string {
+      return decodeURIComponent(key);
+    }
+
+    decodeValue(value: string): string {
+      return decodeURIComponent(value);
+    }
+  }

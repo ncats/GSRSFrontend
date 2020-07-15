@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpClientJsonpModule } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
 import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
@@ -23,7 +23,23 @@ import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { stringify } from 'querystring';
+class CustomEncoder implements HttpParameterCodec {
+  encodeKey(key: string): string {
+    return encodeURIComponent(key);
+  }
 
+  encodeValue(value: string): string {
+    return encodeURIComponent(value);
+  }
+
+  decodeKey(key: string): string {
+    return decodeURIComponent(key);
+  }
+
+  decodeValue(value: string): string {
+    return decodeURIComponent(value);
+  }
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -125,12 +141,12 @@ export class SubstanceService extends BaseHttpService {
     skip: number = 0
   ): Observable<PagingResponse<SubstanceSummary>> {
 
-    let params = new FacetHttpParams();
+    let params = new FacetHttpParams({encoder: new CustomEncoder()});
     let url = this.apiBaseUrl;
 
     url += 'substances/search';
     if (searchTerm != null && searchTerm !== '') {
-      params = params.append('q', encodeURIComponent(searchTerm));
+      params = params.append('q', searchTerm);
     }
 
     params = params.appendFacetParams(facets, this.showDeprecated);
@@ -162,7 +178,7 @@ export class SubstanceService extends BaseHttpService {
     sync: boolean = false
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
-      let params = new FacetHttpParams();
+      let params = new FacetHttpParams({encoder: new CustomEncoder()});
       let url = this.apiBaseUrl;
       let structureFacetsKey: number;
 
@@ -181,7 +197,8 @@ export class SubstanceService extends BaseHttpService {
         }
 
       } else {
-        params = params.append('q', encodeURIComponent(searchTerm));
+
+        params = params.append('q', (searchTerm));
         if (type) {
           params = params.append('type', type);
           if (type === 'similarity') {
@@ -240,7 +257,7 @@ export class SubstanceService extends BaseHttpService {
     sync: boolean = false
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
-      let params = new FacetHttpParams();
+      let params = new FacetHttpParams({encoder: new CustomEncoder()});
       let url = this.apiBaseUrl;
       let structureFacetsKey;
 
@@ -362,7 +379,7 @@ export class SubstanceService extends BaseHttpService {
     view?: string
   ): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
-    let params = new FacetHttpParams();
+    let params = new FacetHttpParams({encoder: new CustomEncoder()});
 
     params = params.appendFacetParams(facets, this.showDeprecated);
 
@@ -389,12 +406,12 @@ export class SubstanceService extends BaseHttpService {
     facets?: FacetParam
   ): Observable<PagingResponse<SubstanceSummary>> {
 
-    let params = new FacetHttpParams();
+    let params = new FacetHttpParams({encoder: new CustomEncoder()});
 
     let url = this.apiBaseUrl + 'substances/';
 
     if (searchTerm) {
-      params = params.append('q', encodeURIComponent(searchTerm));
+      params = params.append('q', searchTerm);
     }
 
     if (searchTerm != null || getFacets === true) {
