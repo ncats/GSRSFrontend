@@ -24,6 +24,9 @@
           <button mat-flat-button color="primary" (click)="clearFilters()">
             <span>RESET</span>
           </button>
+          <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
           <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
             <div *ngFor="let matchType of matchTypes">
               <div class="match-type">

@@ -124,8 +124,9 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
 
     this.substanceTextSearchService.registerSearchComponent('main-substance-search');
-    const cleanSearchSubscription = this.substanceTextSearchService.cleanSearchComponentEvent('main-substance-search').subscribe(() => {
-      this.searchValue = '';
+    const cleanSearchSubscription = this.substanceTextSearchService.setSearchComponentValueEvent('main-substance-search')
+    .subscribe(value => {
+      this.searchValue = value;
     });
     this.subscriptions.push(cleanSearchSubscription);
   }

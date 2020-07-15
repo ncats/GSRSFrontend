@@ -6,15 +6,15 @@ import { Observable, Subject } from 'rxjs';
   providedIn: SubstanceTextSearchModule
 })
 export class SubstanceTextSearchService {
-  private registeredSearchComponents: { [id: string]: Subject<void> } = {};
+  private registeredSearchComponents: { [id: string]: Subject<string> } = {};
 
   constructor() { }
 
   registerSearchComponent(id: string): void {
-    this.registeredSearchComponents[id] = new Subject<void>();
+    this.registeredSearchComponents[id] = new Subject<string>();
   }
 
-  cleanSearchComponentEvent(id: string): Observable<void> {
+  setSearchComponentValueEvent(id: string): Observable<string> {
     return this.registeredSearchComponents[id].asObservable();
   }
 
@@ -23,9 +23,9 @@ export class SubstanceTextSearchService {
     this.registeredSearchComponents[id] = null;
   }
 
-  clearSearch(id: string): void {
+  setSearchValue(id: string, value: string = ''): void {
     if (this.registeredSearchComponents[id]) {
-      this.registeredSearchComponents[id].next();
+      this.registeredSearchComponents[id].next(value);
     }
   }
 }

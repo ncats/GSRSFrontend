@@ -402,7 +402,11 @@ validatePageInput(event: any): boolean {
 
   restricSearh(searchTerm: string): void {
     this.privateSearchTerm = searchTerm;
+    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    this.populateUrlQueryParameters();
     this.searchSubstances();
+    this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
   }
 
   export(url: string, extension: string) {
@@ -593,7 +597,7 @@ validatePageInput(event: any): boolean {
     this.pageIndex = 0;
 
     this.populateUrlQueryParameters();
-    this.substanceTextSearchService.clearSearch('main-substance-search');
+    this.substanceTextSearchService.setSearchValue('main-substance-search');
     this.searchSubstances();
   }
 
