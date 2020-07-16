@@ -1057,14 +1057,14 @@ export class SubstanceFormService implements OnDestroy {
         if (results.validationMessages) {
           for (let i = 0; i < substanceCopy.references.length; i++) {
             const ref = substanceCopy.references[i];
-            if (ref.citation !== 'SYSTEM') {
+            if (ref.docType !== 'SYSTEM') {
             if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
               const invalidReferenceMessage: ValidationMessage = {
                 actionType: 'frontEnd',
                 appliedChange: false,
                 links: [],
                 message: 'All references require a non-empty source type and text/citation value',
-                messageType: 'ERROR',
+                messageType: 'WARNING',
                 suggestedChange: true
               };
               results.validationMessages.push(invalidReferenceMessage);

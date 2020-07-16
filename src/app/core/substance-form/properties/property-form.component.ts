@@ -39,6 +39,9 @@ export class PropertyFormComponent implements OnInit {
   set property(property: SubstanceProperty) {
     this.privateProperty = property;
     this.referencedSubstanceUuid = this.privateProperty.referencedSubstance && this.privateProperty.referencedSubstance.refuuid || '';
+    if ( !this.privateProperty.value) {
+      this.privateProperty.value = {};
+    }
   }
 
   get property(): SubstanceProperty {
