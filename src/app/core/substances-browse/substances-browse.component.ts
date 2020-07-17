@@ -87,14 +87,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   isAdmin = false;
   isLoggedIn = false;
   showExactMatches = false;
-  names: { [substanceId: string]: Array< SubstanceName > } = {};
+  names: { [substanceId: string]: Array<SubstanceName> } = {};
   codes: {
     [substanceId: string]: {
-      codeSystemNames?: Array< string >
-      codeSystems?: { [codeSystem: string]: Array< SubstanceCode > }
+      codeSystemNames?: Array<string>
+      codeSystems?: { [codeSystem: string]: Array<SubstanceCode> }
     }
   } = {};
-  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion>} = {};
+  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
   matchTypes?: Array<string> = [];
   narrowSearchSuggestionsCount = 0;
   private isComponentInit = false;
@@ -128,7 +128,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private componentFactoryResolver: ComponentFactoryResolver,
     private substanceTextSearchService: SubstanceTextSearchService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);
@@ -189,16 +189,18 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.subscriptions.push(closeSubscription);
     const dynamicSubscription = this.dynamicContentContainer.changes.pipe(take(1)).subscribe((comps: QueryList<any>) => {
       const container = this.dynamicContentContainer.toArray();
-      const dynamicContentItemsFlat =  this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
-      .filter(item => item.componentType === 'browseHeader');
-    const viewContainerRef = container[0].viewContainerRef;
-    viewContainerRef.clear();
-    dynamicContentItemsFlat.forEach(dynamicContentItem => {
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
-      const componentRef = viewContainerRef.createComponent(componentFactory);
-      (<SubstanceBrowseHeaderDynamicContent>componentRef.instance).test = 'testing';
-    });
+      const dynamicContentItemsFlat = this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
+        .filter(item => item.componentType === 'browseHeader');
+      if (container[0] != null) {
+        const viewContainerRef = container[0].viewContainerRef;
+        viewContainerRef.clear();
 
+        dynamicContentItemsFlat.forEach(dynamicContentItem => {
+          const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
+          const componentRef = viewContainerRef.createComponent(componentFactory);
+          (<SubstanceBrowseHeaderDynamicContent>componentRef.instance).test = 'testing';
+        });
+      }
     });
     this.subscriptions.push(dynamicSubscription);
 
@@ -249,28 +251,28 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.invalidPage = false;
       const newpage = Number(event.target.value) - 1;
       this.pageIndex = newpage;
-     this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newpage);
+      this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newpage);
       this.populateUrlQueryParameters();
       this.searchSubstances();
-  }
-}
-
-validatePageInput(event: any): boolean {
-  if (event && event.target) {
-    const newpage = Number(event.target.value);
-  if (!isNaN(Number(newpage))) {
-    if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)) {
-      return true;
     }
   }
-}
-  return false;
-}
+
+  validatePageInput(event: any): boolean {
+    if (event && event.target) {
+      const newpage = Number(event.target.value);
+      if (!isNaN(Number(newpage))) {
+        if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
     if (facetsUpdateEvent.deprecated && facetsUpdateEvent.deprecated === true) {
-        this.showDeprecated = true;
+      this.showDeprecated = true;
     } else {
       this.showDeprecated = false;
     }
@@ -294,7 +296,7 @@ validatePageInput(event: any): boolean {
   }
 
   searchSubstances() {
-   this.disableExport = false;
+    this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
@@ -410,11 +412,11 @@ validatePageInput(event: any): boolean {
   }
 
   export(url: string, extension: string) {
-    if (this.authService.getUser() !== '' ) {
+    if (this.authService.getUser() !== '') {
       const dialogReference = this.dialog.open(ExportDialogComponent, {
         height: '215x',
         width: '550px',
-        data: {'extension' : extension}
+        data: { 'extension': extension }
       });
 
       this.overlayContainer.style.zIndex = '1002';
@@ -432,11 +434,11 @@ validatePageInput(event: any): boolean {
                 totalSub: this.totalSubstances
               }
             };
-            const params = {'total': this.totalSubstances};
+            const params = { 'total': this.totalSubstances };
             this.router.navigate(['/user-downloads/', response.id]);
-          }, error =>     this.loadingService.setLoading(false)  );
+          }, error => this.loadingService.setLoading(false));
         }
-        });
+      });
     } else {
       this.disableExport = true;
     }
@@ -606,15 +608,15 @@ validatePageInput(event: any): boolean {
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });
-    this.facetManagerService.clearSelections();
     if (this.privateStructureSearchTerm != null && this.privateStructureSearchTerm !== '') {
       this.clearStructureSearch();
     } else if ((this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') ||
-    (this.privateSequenceSearchKey != null && this.privateSequenceSearchKey !== '')) {
+      (this.privateSequenceSearchKey != null && this.privateSequenceSearchKey !== '')) {
       this.clearSequenceSearch();
     } else {
       this.clearSearch();
     }
+    this.facetManagerService.clearSelections();
   }
 
   get searchTerm(): string {

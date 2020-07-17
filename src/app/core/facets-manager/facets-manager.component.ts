@@ -148,19 +148,31 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const fieldsArr = categorySplit[1].split('+');
         const params: { [facetValueLabel: string]: boolean } = {};
         let hasSelections = false;
+        let isAllMatch = false;
+        let hasExcludeOption = false;
+        let includeOptionsLength = 0;
         for (let j = 0; j < fieldsArr.length; j++) {
           const field = fieldsArr[j].split('.');
           field[0] = decodeURIComponent(field[0]);
-          if (field[1] === 'true') {
-            params[field[0]] = true;
-            hasSelections = true;
-          } else if (field[1] === 'false') {
-            params[field[0]] = false;
-            hasSelections = true;
+          if (field[0] === 'is_all_match') {
+            isAllMatch = true;
+          } else {
+            if (field[1] === 'true') {
+              params[field[0]] = true;
+              hasSelections = true;
+              includeOptionsLength++;
+            } else if (field[1] === 'false') {
+              params[field[0]] = false;
+              hasSelections = true;
+              hasExcludeOption = true;
+            }
           }
         }
         if (hasSelections === true) {
-          this.facetBuilder[category] = { params: params, hasSelections: true, isAllMatch: false };
+          this.facetBuilder[category] = { params: params, hasSelections: true, isAllMatch: isAllMatch };
+          if (!hasExcludeOption && includeOptionsLength > 1) {
+            this.facetBuilder[category].showAllMatchOption = true;
+          }
           const paramsString = JSON.stringify(params);
           const newHash = this.utilsService.hashCode(paramsString,
             this.facetBuilder[category].isAllMatch.toString(),
@@ -168,6 +180,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           this.facetBuilder[category].currentStateHash = newHash;
         }
       }
+      console.log(this.facetBuilder);
       this.privateFacetParams = this.facetBuilder;
     }
   }
@@ -291,6 +304,9 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
             valArr.push(subkey + '.' + cat.params[subkey]);
           }
         }
+        if (cat.isAllMatch) {
+          valArr.push('is_all_match.true');
+        }
         catArr.push(key + '*' + valArr.join('+'));
         const paramsString = JSON.stringify(this.privateFacetParams[key].params);
         const newHash = this.utilsService.hashCode(paramsString, this.privateFacetParams[key].isAllMatch.toString());
@@ -403,6 +419,18 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
   }
 
+  updateAllMatch(facetName: string): void {
+
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
+    const eventValue = this.privateFacetParams[facetName].isAllMatch ? 1 : 0;
+    this.gaService.sendEvent('substancesFiltering', `check:facet-all_match`, eventLabel, eventValue);
+
+    const paramsString = JSON.stringify(this.privateFacetParams[facetName].params);
+    const isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
+    const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
+    this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
+  }
+
   clearFacetSelection(
     facetName?: string
   ) {
@@ -434,6 +462,21 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       });
     }
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        facets: ''
+      }
+    };
+
+    setTimeout(() => {
+      const urlTree = this.router.createUrlTree([], {
+        queryParams: navigationExtras.queryParams,
+        queryParamsHandling: 'merge',
+        preserveFragment: true
+      });
+      this.location.go(urlTree.toString());
+    });
 
     this.gaService.sendEvent('substancesFiltering', 'button:clear-facet', eventLabel, eventValue);
   }

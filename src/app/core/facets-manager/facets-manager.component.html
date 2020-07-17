@@ -72,7 +72,7 @@
     </div>
     <div class="facet-actions" *ngIf="facetParams[facet.name] != null">
       <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
-        [(ngModel)]="facetParams[facet.name].isAllMatch" (click)="sendFacetsEvent($event, facet.name)">
+        [(ngModel)]="facetParams[facet.name].isAllMatch" (change)="updateAllMatch(facet.name)">
         All Match
       </mat-checkbox>
       <div class="pull-right">
