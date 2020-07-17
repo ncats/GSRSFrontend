@@ -91,7 +91,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
         queryStatement = JSON.parse(queryStatementString);
       }
     }
-    console.log(queryStatement);
+
     if (queryStatement != null) {
       const queryablePropertyType = this._queryableDictionary[queryStatement.queryableProperty].type;
       let inputType: string;
@@ -176,7 +176,11 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
 
   queryablePropertySelected(queryableProperty: string): void {
     this.processQueriablePropertyChange(queryableProperty);
-    this.commandControl.setValue(this.commandOptions[0]);
+    if (!this._queryableDictionary[queryableProperty].cvDomain && this._queryableDictionary[queryableProperty].type === 'string') {
+      this.commandControl.setValue('a WORD that contains');
+    } else {
+      this.commandControl.setValue(this.commandOptions[0]);
+    }
   }
 
   private processQueriablePropertyChange(queryableProperty: string): void {
