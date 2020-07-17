@@ -78,7 +78,9 @@ export class SubstanceFormService implements OnDestroy {
             substanceClass: substanceClass,
             references: [],
             names: [],
-            structure: {},
+            structure: {
+              molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
+            },
             codes: [],
             relationships: [],
           };
