@@ -102,9 +102,9 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     this.structureEditor = editor;
     this.loadStructure();
     this.structureEditor.structureUpdated().subscribe(molfile => {
-      this.smiles = null;
-      this.mol = null;
       this.updateStructureForm(molfile);
+      this.smiles = this.structure && this.structure.smiles || null;
+      this.mol = this.structure && this.structure.molfile || null;
     });
     this.isInitializing = false;
   }
@@ -147,31 +147,31 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       // we should only be dealing with this stuff if the total hash changes
       // or if the charge changes, or if it's a polymer
       if (this.substanceType === 'polymer' ||
-          this.structure['hash'] !== structurePostResponse.structure['hash'] ||
-          this.structure['charge'] !== structurePostResponse.structure['charge']) {
-         this.smiles = structurePostResponse.structure.smiles;
-         this.mol = structurePostResponse.structure.molfile;
+        this.structure['hash'] !== structurePostResponse.structure['hash'] ||
+        this.structure['charge'] !== structurePostResponse.structure['charge']) {
 
-         // this is sometimes overly ambitious
-         Object.keys(structurePostResponse.structure).forEach(key => {
-           // we don't want to do this with molfile, we want to trust the editor
-           if ( key !== 'molfile') {
-              this.structure[key] = structurePostResponse.structure[key];
-           }
-         });
+        this.smiles = structurePostResponse.structure.smiles;
+        this.mol = structurePostResponse.structure.molfile;
+        // this is sometimes overly ambitious
+        Object.keys(structurePostResponse.structure).forEach(key => {
+          // we don't want to do this with molfile, we want to trust the editor
+          if (key !== 'molfile') {
+            this.structure[key] = structurePostResponse.structure[key];
+          }
+        });
 
-         this.structure.uuid = '';
-         this.substanceFormStructureService.updateMoieties(structurePostResponse.moieties);
+        this.structure.uuid = '';
+        this.substanceFormStructureService.updateMoieties(structurePostResponse.moieties);
 
-         if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
-           clearTimeout(this.userMessageTimer);
+        if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
+          clearTimeout(this.userMessageTimer);
 
-           this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
+          this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
 
-           this.userMessageTimer = setTimeout(() => {
-             this.userMessage = null;
-           }, 20000);
-         }
+          this.userMessageTimer = setTimeout(() => {
+            this.userMessage = null;
+          }, 20000);
+        }
       }
     }
   }
@@ -193,7 +193,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
         }
         this.processStructurePostResponse(response);
       }
-    }, () => {});
+    }, () => { });
   }
 
   generateSRU(): void {
@@ -238,7 +238,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
         this.updateStructureForm(molfile);
         this.structureEditor.setMolecule(molfile);
       }
-    }, () => {});
+    }, () => { });
   }
 
   openStructureImageModal(): void {
@@ -263,7 +263,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
   duplicateCheck() {
     this.structureErrorsArray = [];
-    this.substanceFormService.structureDuplicateCheck().subscribe (response => {
+    this.substanceFormService.structureDuplicateCheck().subscribe(response => {
       response.forEach(resp => {
         if (resp.messageType && resp.messageType !== 'INFO') {
           this.structureErrorsArray.push(resp);

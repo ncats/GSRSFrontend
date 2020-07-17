@@ -37,6 +37,7 @@ export class StructureExportComponent implements OnInit {
     public dialogRef: MatDialogRef<StructureExportComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { molfile: string, smiles: string,  type: string  }
   ) {
+    console.log(data);
     this.anchorElement = document.createElement('a') as HTMLAnchorElement;
   }
 

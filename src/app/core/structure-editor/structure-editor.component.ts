@@ -214,7 +214,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           event.stopPropagation();
           this.structureService.interpretStructure(text).subscribe(response => {
             if (response.structure && response.structure.molfile) {
-              this.loadedMolfile.emit(text);
+              this.loadedMolfile.emit(response.structure.molfile);
             }
           });
         }
