@@ -79,3 +79,32 @@
     padding: 0 7px;
   }
 
+
+  @media(max-width: 990px) {
+      .form-content {
+        width: 100%;
+      }
+
+      .mediator-substance {
+        order: -1;
+        width: 40%;
+        max-width: 40%;
+      }
+
+      .related-substance {
+        order: -2;
+        width: 40%;
+        max-width: 40%;
+      }
+
+      .delete-column {
+        order: -3;
+
+        width: 5%;
+
+      }
+      .relationship-form-container {
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+  }

@@ -18,7 +18,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { SubstanceFormSection } from './substance-form-section';
 import { SubstanceFormService } from './substance-form.service';
 import { ValidationMessage, SubstanceFormResults, SubstanceFormDefinition } from './substance-form.model';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
@@ -26,7 +26,7 @@ import * as _ from 'lodash';
 import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '@gsrs-core/auth';
-import { take } from 'rxjs/operators';
+import { take, map } from 'rxjs/operators';
 import { MatExpansionPanel } from '@angular/material';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
@@ -80,6 +80,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     'specifiedSubstanceG2',
     'specifiedSubstanceG3',
     'specifiedSubstanceG4'];
+    state$?: Observable<any>;
+    forceChange = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -117,6 +119,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             }
           }
         } else {
+          const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+          if (action && action === 'import' && window.history.state) {
+            const record = window.history.state;
+            this.getDetailsFromImport(record.record);
+            this.gaService.sendPageView(`Substance Register`);
+
+          } else {
           this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
           if (this.copy) {
             const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
@@ -134,6 +143,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
               });
             });
           }
+        }
         }
       });
     this.subscriptions.push(routeSubscription);
@@ -163,6 +173,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
+        if (!this.forceChange) {
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
             .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
@@ -192,6 +203,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
               this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
             });
         });
+      }
         subscription.unsubscribe();
       });
   }
@@ -330,6 +342,71 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.isLoading = false;
       this.handleSubstanceRetrivalError();
     });
+  }
+
+  jsonValid(file: any): boolean {
+    try {
+      JSON.parse(file);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  getDetailsFromImport(state: any) {
+    if (state && this.jsonValid(state)) {
+      const response = JSON.parse(state);
+      this.definitionType = response.definitionType;
+      this.substanceClass = response.substanceClass;
+      this.status = response.status;
+      this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+        this.setFormSections(formSections[response.substanceClass]);
+        setTimeout(() => {
+          this.forceChange = true;
+          this.dynamicComponents.forEach((cRef, index) => {
+            this.dynamicComponentLoader
+              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
+              .subscribe(componentFactory => {
+                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
+                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
+                  this.formSections[index].menuLabel = label;
+                });
+                const hiddenStateSubscription =
+                  this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+                    this.formSections[index].isHidden = isHidden;
+                  });
+                this.subscriptions.push(hiddenStateSubscription);
+                this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
+                  this.formSections[index].canAddItem = isList;
+                  if (isList) {
+                    const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
+                      this.formSections[index].matExpansionPanel.open();
+                      this.formSections[index].dynamicComponentRef.instance.addItem();
+                    });
+                    this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
+                      aieSubscription.unsubscribe();
+                    });
+                  }
+                });
+                this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
+              });
+          });
+
+          this.canApprove = false;
+        });
+      }, error => {
+        this.loadingService.setLoading(false);
+      });
+    } else {
+      this.handleSubstanceRetrivalError();
+      console.log('error');
+      this.loadingService.setLoading(false);
+
+    }
+    this.loadingService.setLoading(false);
+    this.isLoading = false;
+    
   }
 
   getPartialSubstanceDetails(uuid: string, type: string): void {

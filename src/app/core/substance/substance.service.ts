@@ -512,9 +512,12 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
-  saveSubstance(substance: SubstanceDetail): Observable<SubstanceDetail> {
+  saveSubstance(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances`;
-    const method = substance.uuid ? 'PUT' : 'POST';
+    let method = substance.uuid ? 'PUT' : 'POST';
+    if (type && type !== '') {
+      method = type;
+    }
     const options = {
       body: substance
     };

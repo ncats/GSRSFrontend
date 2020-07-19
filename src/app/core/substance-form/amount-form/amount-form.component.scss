@@ -1,5 +1,6 @@
 .form-row {
     display: flex;
+    flex-grow: 1;
     justify-content: space-between;
     align-items: flex-end;
 
@@ -9,17 +10,21 @@
         padding-right: 15px;
     }
 
-    .amount-type, .amount-units {
+    .amount-type {
         width: 125px;
+    }
+
+    .amount-units {
+        width: 110px;
     }
 
     .amount-average, .low, .high,
     .low-limit, .high-limit {
-        width: 75px;
+        width: 70px;
     }
 
     .non-numeric-value {
-        width: 100px;
+        width: 90px;
     }
 
     .jurisdiction {
@@ -40,3 +45,9 @@
   border-bottom: 1px solid rgba(0, 0, 0, .35);
 
 }
+.amount-form {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+

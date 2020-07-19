@@ -15,6 +15,7 @@ import { NavItem } from '../config/config.model';
 import { UtilsService } from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import * as moment from 'moment';
+import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 
 @Component({
   selector: 'app-base',
@@ -56,7 +57,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     private bottomSheet: MatBottomSheet,
     private dialog: MatDialog,
     private substanceTextSearchService: SubstanceTextSearchService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
   ) {
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.classicLinkQueryParamsString = '';
@@ -351,9 +352,27 @@ export class BaseComponent implements OnInit, OnDestroy {
       width: '800px'
     });
     this.overlayContainer.style.zIndex = '1002';
-    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
       this.overlayContainer.style.zIndex = null;
     });
+  }
+
+  importDialog(): void {
+    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
+      width: '650px',
+      autoFocus: false
+
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.overlayContainer.style.zIndex = null;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+      }
+    });
+ 
   }
 
 }

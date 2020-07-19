@@ -54,6 +54,7 @@ export class SubstanceFormService implements OnDestroy {
   private nameResolver = new Subject<string>();
   resolvedMol = this.nameResolver.asObservable();
   private _bypassUpdateCheck = false;
+  private method?: string;
 
   constructor(
     private substanceService: SubstanceService,
@@ -67,7 +68,10 @@ export class SubstanceFormService implements OnDestroy {
     this.unloadSubstance();
   }
 
-  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail): Observable<void> {
+  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string): Observable<void> {
+    if (method) {
+      this.method = method;
+    }
     return new Observable(observer => {
       if (substance != null) {
         this.privateSubstance = substance;
@@ -1252,7 +1256,7 @@ export class SubstanceFormService implements OnDestroy {
       }
 
       const substanceCopy = this.cleanSubstance();
-      this.substanceService.saveSubstance(substanceCopy).subscribe(substance => {
+      this.substanceService.saveSubstance(substanceCopy, this.method).subscribe(substance => {
         this.privateSubstance = substance;
         results.uuid = substance.uuid;
         this.definitionEmitter.next(this.getDefinition());

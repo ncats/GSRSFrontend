@@ -1,6 +1,6 @@
 <div class="search-container">
   <form>
-    <mat-form-field [floatLabel]="'never'" class="search-form-field space-right-small">
+    <mat-form-field [floatLabel]="'never'" class="search-form-field space-right-small" [ngClass] = "source">
       <input class="search" type="text" [placeholder]="placeholder" aria-label="Search substances" matInput
         [formControl]="searchControl" [matAutocomplete]="substanceSearchAuto" (focus)="focused()">
       <mat-hint *ngIf="hintMessage">{{hintMessage}}</mat-hint>

@@ -28,6 +28,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   private privateErrorMessage = '';
   @Output() opened = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
+  @Input() source?: string;
 
   constructor(
     private utilsService: UtilsService,
@@ -171,14 +172,24 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   }
 
   activateSearch(): void {
-    this.searchContainerElement.classList.add('active-search');
+    if (this.source) {
+      this.searchContainerElement.classList.add('active-' + this.source);
+    } else {
+      this.searchContainerElement.classList.add('active-search');
+    }
   }
 
   deactivateSearch(): void {
     this.searchContainerElement.classList.add('deactivate-search');
     setTimeout(() => {
+      if (this.source) {
+
+        this.searchContainerElement.classList.remove('active-' + this.source);
+        this.searchContainerElement.classList.remove('deactivate-search');
+      } else {
       this.searchContainerElement.classList.remove('active-search');
       this.searchContainerElement.classList.remove('deactivate-search');
+      }
     }, 300);
   }
 

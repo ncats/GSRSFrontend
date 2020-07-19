@@ -1,0 +1,22 @@
+<div mat-dialog-title class = "mat-dialog-title class">
+    <h3>Substance Import</h3>
+</div>
+<div mat-dialog-content class = "mat-dialog-content">
+    <div class = "info">
+        Select a .json file to import into a new edit form.
+    </div>
+    <div class = "full-row">
+            <div><button mat-raised-button (click)="openInput()">Select File to Import</button></div>
+            <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
+            <input id="fileInput" hidden type="file" (change)="uploadFile($event)" name="file1" accept=".json">
+    </div>
+    <div class = "message">
+        {{message}}
+    </div>
+
+</div>
+<div mat-dialog-actions class = "mat-dialog-actions" >
+        <button mat-flat-button color="primary" matDialogClose>Cancel</button>
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary"  *ngIf = "loaded" (click) ="useFile()">Import</button>
+</div>
