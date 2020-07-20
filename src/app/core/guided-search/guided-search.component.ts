@@ -41,7 +41,7 @@ export class GuidedSearchComponent implements OnInit {
       .subscribe((response: QueryableSubstanceDictionary) => {
 
         response['All'] = {
-          lucenePath: '',
+          lucenePath: 'text',
           description: 'All substance fields',
           type: 'string',
           cvDomain: ''

@@ -430,7 +430,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     this.loadingService.setLoading(false);
     this.isLoading = false;
-    
   }
 
   getPartialSubstanceDetails(uuid: string, type: string): void {
@@ -660,18 +659,18 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     const uuidHolders = defiant.json.search(old, '//*[uuid]');
-    const map = {};
+    const _map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
-      if (map[ouuid]) {
-        uuidHolders[i].uuid = map[ouuid];
+      if (_map[ouuid]) {
+        uuidHolders[i].uuid = _map[ouuid];
         if (uuidHolders[i].id) {
-          uuidHolders[i].id = map[ouuid];
+          uuidHolders[i].id = _map[ouuid];
         }
       } else {
         const nid = guid();
         uuidHolders[i].uuid = nid;
-        map[ouuid] = nid;
+        _map[ouuid] = nid;
         if (uuidHolders[i].id) {
           uuidHolders[i].id = nid;
         }
@@ -683,7 +682,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       for (let j = 0; j < refs.length; j++) {
         const or = refs[j];
         if (typeof or === 'object') { continue; }
-        refs[j] = map[or];
+        refs[j] = _map[or];
       }
     }
     defiant.json.search(old, '//*[uuid]');
