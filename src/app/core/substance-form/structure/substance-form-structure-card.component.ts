@@ -205,6 +205,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   openStructureExportDialog(): void {
+
     const dialogRef = this.dialog.open(StructureExportComponent, {
       height: 'auto',
       width: '650px',

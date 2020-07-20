@@ -372,7 +372,7 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
       }
     });
- 
+
   }
 
 }
