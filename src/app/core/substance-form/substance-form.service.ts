@@ -71,6 +71,8 @@ export class SubstanceFormService implements OnDestroy {
   loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string): Observable<void> {
     if (method) {
       this.method = method;
+    } else {
+      this.method = null;
     }
     return new Observable(observer => {
       if (substance != null) {
@@ -1205,6 +1207,10 @@ export class SubstanceFormService implements OnDestroy {
         isDeleted: false
       };
     }
+  }
+
+  getMethod(): string {
+    return this.method;
   }
 
   structureDuplicateCheck(): any {

@@ -74,7 +74,9 @@
     </div>
     <div class="name-value">
       <div class="name">Record Status</div>
-      <div class="value blue-font">{{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}</div>
+      <div class="value blue-font">{{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}
+        <span class = "deprecated" *ngIf ="substance.deprecated">RECORD IS DEPRECATED</span>
+      </div>
     </div>
     <div *ngIf="substance.protein" class="diverseWrapper">
       <div class="name-value" *ngIf="substance.protein.proteinType">

@@ -31,6 +31,7 @@ import { MatExpansionPanel } from '@angular/material';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
 import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
+import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 
 
 @Component({
@@ -97,6 +98,24 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private authService: AuthService,
     private titleService: Title
   ) {
+  }
+
+  importDialog(): void {
+    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
+      width: '650px',
+      autoFocus: false
+
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.overlayContainer.style.zIndex = null;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+      }
+    });
+ 
   }
 
   ngOnInit() {
@@ -166,6 +185,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
+       
       });
     });
   }
@@ -290,6 +310,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   canBeApproved(): boolean {
+    const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+    if (action && action === 'import') {
+      return false;
+    }
     if (this.definition && this.definition.lastEditedBy && this.user) {
       const lastEdit = this.definition.lastEditedBy;
       if (!lastEdit) {
@@ -359,7 +383,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.definitionType = response.definitionType;
       this.substanceClass = response.substanceClass;
       this.status = response.status;
-      this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+      this.substanceFormService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
         this.setFormSections(formSections[response.substanceClass]);
         setTimeout(() => {
           this.forceChange = true;
