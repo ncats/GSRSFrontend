@@ -1,4 +1,5 @@
-<mat-checkbox [ngModel] = "showDeprecated" *ngIf ="loggedIn" class = "deprecated" (change) = "toggleDeprecated()">Show Deprecated Records</mat-checkbox>
+<mat-checkbox [ngModel] = "showDeprecated" *ngIf ="loggedIn && !hideDeprecatedCheckbox
+" class = "deprecated" (change) = "toggleDeprecated()">Show Deprecated Records</mat-checkbox>
 <mat-accordion multi="true">
   <mat-expansion-panel *ngFor="let facet of facets; index as topIndex"
     [expanded]="false || facetParams[facet.name] != null">
