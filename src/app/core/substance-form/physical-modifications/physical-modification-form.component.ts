@@ -7,7 +7,6 @@ import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
-import {PropertyParameterDialogComponent} from '@gsrs-core/substance-form/property-parameter-dialog/property-parameter-dialog.component';
 import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/physical-parameter-form-dialog/physical-parameter-form-dialog.component';
 
 @Component({
@@ -87,6 +86,43 @@ export class PhysicalModificationFormComponent implements OnInit {
       }
     });
     this.subscriptions.push(dialogSubscription);
+  }
+
+  openPropertyParameter(parameter?: any): void {
+
+    let isNew: boolean;
+    if (parameter == null) {
+      isNew = true;
+      parameter = { amount: {} };
+    }
+    const parameterCopyString = JSON.stringify(parameter);
+
+
+    const dialogRef = this.dialog.open(PhysicalParameterFormDialogComponent, {
+      data: JSON.parse(parameterCopyString),
+      width: '1200px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(newParameter => {
+      this.overlayContainer.style.zIndex = null;
+      if (newParameter != null) {
+        if (this.mod.parameters == null) {
+          this.mod.parameters = [];
+        }
+        if (isNew) {
+          this.mod.parameters.unshift(newParameter);
+        } else {
+          Object.keys(newParameter).forEach(key => {
+            parameter[key] = newParameter[key];
+          });
+        }
+      }
+    });
+  }
+
+  deleteParameter(id: number): void {
+    this.mod.parameters.splice(id, 1);
   }
 
   displayAmount(amt: SubstanceAmount): string {

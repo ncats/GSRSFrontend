@@ -81,8 +81,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     'specifiedSubstanceG2',
     'specifiedSubstanceG3',
     'specifiedSubstanceG4'];
-    state$?: Observable<any>;
+    imported = false;
     forceChange = false;
+    sameSubstance = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -110,9 +111,23 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
       if (response) {
+        this.loadingService.setLoading(true);
         this.overlayContainer.style.zIndex = null;
-        this.router.onSameUrlNavigation = 'reload';
-        this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+        const read = JSON.parse(response);
+        if ( read.substanceClass === this.substanceClass && !this.id) {
+          this.imported = true;
+          this.substanceFormService.importSubstance(read);
+          this.submissionMessage = null;
+          this.validationMessages = [];
+          this.showSubmissionMessages = false;
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+        } else {
+          this.router.onSameUrlNavigation = 'reload';
+          this.loadingService.setLoading(false);
+          this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+
+        }
       }
     });
  
@@ -122,6 +137,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.loadingService.setLoading(true);
     this.isAdmin = this.authService.hasRoles('admin');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.imported = false;
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -141,6 +157,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           const action = this.activatedRoute.snapshot.queryParams['action'] || null;
           if (action && action === 'import' && window.history.state) {
             const record = window.history.state;
+            this.imported = true;
             this.getDetailsFromImport(record.record);
             this.gaService.sendPageView(`Substance Register`);
 
@@ -377,7 +394,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     return true;
   }
 
-  getDetailsFromImport(state: any) {
+  getDetailsFromImport(state: any, same?: boolean) {
     if (state && this.jsonValid(state)) {
       const response = JSON.parse(state);
       this.definitionType = response.definitionType;
@@ -385,6 +402,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.status = response.status;
       this.substanceFormService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
         this.setFormSections(formSections[response.substanceClass]);
+        if (!same) {
         setTimeout(() => {
           this.forceChange = true;
           this.dynamicComponents.forEach((cRef, index) => {
@@ -419,12 +437,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
           this.canApprove = false;
         });
+      }
       }, error => {
         this.loadingService.setLoading(false);
       });
     } else {
       this.handleSubstanceRetrivalError();
-      console.log('error');
       this.loadingService.setLoading(false);
 
     }

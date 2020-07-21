@@ -1305,6 +1305,23 @@ export class SubstanceFormService implements OnDestroy {
     };
   }
 
+  importSubstance(substance) {
+    this.privateSubstance = substance;
+    this.method = 'import';
+        this.definitionEmitter.next(this.getDefinition());
+        if (this.privateSubstance.substanceClass === 'protein') {
+          this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
+        } else if (this.privateSubstance.substanceClass === 'nucleicAcid') {
+          this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
+          this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
+        } else if (this.privateSubstance.substanceClass === 'mixture') {
+          this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
+        }
+        this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
+        this.resetState();
+        this.substanceEmitter.next(this.privateSubstance);
+  }
+
   stringToSites(slist: string): Array<Site> {
     slist = slist.replace(/ /g, '');
     if (!slist) {

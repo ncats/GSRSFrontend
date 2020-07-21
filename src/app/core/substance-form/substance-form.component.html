@@ -60,7 +60,7 @@
     </div>
     <span class="middle-fill"></span>
     <button mat-flat-button color="primary" class = "validate-button" (click)="validate()" >Validate and Submit</button>
-    <button mat-flat-button color="primary" class = "validate-button" [disabled] = "!canApprove || approving" *ngIf = "definition && definition.substanceClass!=='concept' && !definition.approvalID" (click)="validate('approval')" >Approve</button>
+    <button mat-flat-button color="primary" class = "validate-button" [disabled] = "!canApprove || approving" *ngIf = "definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported" (click)="validate('approval')" >Approve</button>
 
   </div>
   <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
