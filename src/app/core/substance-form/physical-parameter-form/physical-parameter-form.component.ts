@@ -16,14 +16,14 @@ export class PhysicalParameterFormComponent implements OnInit {
   }
 
   @Input()
-  set parameter(parameter: SubstanceParameter) {
+  set parameter(parameter: PhysicalModificationParameter) {
     this.privateParameter = parameter;
     if ( !this.privateParameter.amount) {
       this.privateParameter.amount = {};
     }
   }
 
-  get parameter(): SubstanceParameter {
+  get parameter(): PhysicalModificationParameter {
     return this.privateParameter;
   }
 
