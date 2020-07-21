@@ -23,6 +23,7 @@ export class SubstanceMixtureComponentsComponent extends SubstanceCardBase imple
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       if ((this.substance != null) && (this.substance.mixture.components.length > 0)) {
+        this.countUpdate.emit(this.substance.mixture.components.length);
         this.components = this.substance.mixture.components;
         this.required = this.components.filter(
           component => component.type === 'MUST_BE_PRESENT');

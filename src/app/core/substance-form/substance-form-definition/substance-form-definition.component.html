@@ -1,6 +1,6 @@
 <div *ngIf="definition">
   <div class="substance-form-row form-header">
-    <div><span class = "sub-header">{{uuid ? 'Editing ' : 'Registering New '}}</span>
+    <div><span class = "sub-header">{{(uuid && !imported) ? 'Editing ' : 'Registering New '}}</span>
       <span> {{substanceClass | titlecase}}</span>
     </div>
     <span class = "approval" *ngIf = "definition.approvalID && definition.approvalID !== ''">{{definition.approvalID}}</span>

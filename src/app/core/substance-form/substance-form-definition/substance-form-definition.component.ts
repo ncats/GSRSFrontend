@@ -37,6 +37,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   @ViewChild('tagsInput', { read: ElementRef, static: false }) tagsInput: ElementRef<HTMLInputElement>;
+  imported = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -110,6 +111,12 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
         });
       }
       this.uuid = this.substanceFormService.getUuid();
+      const imported = this.substanceFormService.getMethod();
+      if (imported && imported === 'import') {
+        this.imported = true;
+      } else {
+        this.imported = false;
+      }
 
     });
 

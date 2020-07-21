@@ -177,7 +177,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
   queryablePropertySelected(queryableProperty: string): void {
     this.processQueriablePropertyChange(queryableProperty);
     if (!this._queryableDictionary[queryableProperty].cvDomain && this._queryableDictionary[queryableProperty].type === 'string') {
-      this.commandControl.setValue('a WORD that contains');
+      this.commandControl.setValue('ALL of the following words in any order or position');
     } else {
       this.commandControl.setValue(this.commandOptions[0]);
     }

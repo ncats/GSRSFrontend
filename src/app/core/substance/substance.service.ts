@@ -515,8 +515,8 @@ export class SubstanceService extends BaseHttpService {
   saveSubstance(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances`;
     let method = substance.uuid ? 'PUT' : 'POST';
-    if (type && type !== '') {
-      method = type;
+    if (type && type === 'import') {
+      method = 'POST';
     }
     const options = {
       body: substance
