@@ -186,7 +186,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           this.facetBuilder[category].currentStateHash = newHash;
         }
       }
-      console.log(this.facetBuilder);
       this.privateFacetParams = this.facetBuilder;
     }
   }
