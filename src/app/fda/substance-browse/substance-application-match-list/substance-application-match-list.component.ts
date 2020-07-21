@@ -19,7 +19,7 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 export class SubstanceApplicationMatchListComponent implements OnInit {
 
   id: string;
-  isAdmin: boolean;
+  isAdmin = false;
   appMatchList: any;
   substanceNames: any;
   displayedColumns: string[] = ['Action', 'Application Type', 'Application Number', 'Status', 'Application Sub Type', 'Product Name', 'Bdnum', 'Exact Match'];
@@ -39,14 +39,14 @@ export class SubstanceApplicationMatchListComponent implements OnInit {
   ngOnInit() {
     this.loadingService.setLoading(true);
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
-   // this.isAdmin = true;
-    if (this.isAdmin === true) {
-      this.id = this.activatedRoute.snapshot.params['id'];
-      if (this.id) {
-        this.getApplicationIngredientMatchList(this.id);
-        this.getSubstanceNames(this.id);
-      }
+    //  this.isAdmin = true;
+    //  if (this.isAdmin === true) {
+    this.id = this.activatedRoute.snapshot.params['id'];
+    if (this.id) {
+      this.getApplicationIngredientMatchList(this.id);
+      this.getSubstanceNames(this.id);
     }
+    //  }
     this.loadingService.setLoading(false);
 
   }
@@ -65,12 +65,12 @@ export class SubstanceApplicationMatchListComponent implements OnInit {
 
   autoUpdateApp(applicationId: number, bdnum: string): void {
     this.generalService.appIngredMatchListAutoUpdateSave(applicationId, bdnum).subscribe(update => {
-    if (update) {
-      this.updated = update.appSaved;
-      if (this.updated === 'true') {
-        alert('The Auto Update saved the application record');
+      if (update) {
+        this.updated = update.appSaved;
+        if (this.updated === 'true') {
+          alert('The Auto Update saved the application record');
+        }
       }
-    }
     });
   }
 
