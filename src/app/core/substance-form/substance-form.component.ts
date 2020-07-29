@@ -114,6 +114,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.loadingService.setLoading(true);
         this.overlayContainer.style.zIndex = null;
         const read = JSON.parse(response);
+        if (this.id && read.uuid && this.id === read.uuid) {
+          this.substanceFormService.importSubstance(read, 'update');
+          this.submissionMessage = null;
+          this.validationMessages = [];
+          this.showSubmissionMessages = false;
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+        } else {
         if ( read.substanceClass === this.substanceClass && !this.id) {
           this.imported = true;
           this.substanceFormService.importSubstance(read);
@@ -128,6 +136,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
 
         }
+      }
       }
     });
  
@@ -397,6 +406,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   getDetailsFromImport(state: any, same?: boolean) {
     if (state && this.jsonValid(state)) {
       const response = JSON.parse(state);
+      
       this.definitionType = response.definitionType;
       this.substanceClass = response.substanceClass;
       this.status = response.status;

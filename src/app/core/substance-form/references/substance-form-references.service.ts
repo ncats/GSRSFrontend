@@ -80,6 +80,14 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
           domains: this.substance[key]
         };
       });
+      if (subClass = 'specifiedSubstance') {
+        const key = 'specifiedSubstance.constituents';
+        this.privateDomainsWithReferences[key] = {
+          listDisplay: key,
+          displayKey: domainDisplayKeys[key],
+          domains: this.substance[key]
+        };
+      }
 
     }
 

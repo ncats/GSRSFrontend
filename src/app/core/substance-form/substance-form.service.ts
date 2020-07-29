@@ -134,9 +134,9 @@ export class SubstanceFormService implements OnDestroy {
             substanceClass: substanceClass,
             references: [],
             names: [],
-            structurallyDiverse: {
-              part: ['whole'],
-              $$diverseType: 'whole'
+            specifiedSubstance: {
+              constituents: [],
+              references: []
             },
             codes: [],
             relationships: []
@@ -1305,9 +1305,13 @@ export class SubstanceFormService implements OnDestroy {
     };
   }
 
-  importSubstance(substance) {
+  importSubstance(substance, method?: string) {
     this.privateSubstance = substance;
-    this.method = 'import';
+    if (!method || method !== 'update') {
+      this.method = 'import';
+    } else {
+      this.method = null;
+    }
         this.definitionEmitter.next(this.getDefinition());
         if (this.privateSubstance.substanceClass === 'protein') {
           this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
