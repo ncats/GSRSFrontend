@@ -36,14 +36,19 @@ export class StructureService {
   }
 
   getInchi(id: string): Observable<string> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})structure!$inchikey()`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/structure!$inchikey()`;
+    return this.http.get(url, {responseType: 'text'});
+  }
+
+  getSDFile(id: string): Observable<string> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/export/${id}.SDFile`;
     return this.http.get(url, {responseType: 'text'});
   }
 
 
   getOtherInchi(id: string): Observable<string> {
   // get the other half of the inchi
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})structure!$inchi()`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/structure!$inchi()`;
     return this.http.get(url, {responseType: 'text'});
   }
 
