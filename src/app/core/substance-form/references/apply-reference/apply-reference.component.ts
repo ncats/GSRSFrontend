@@ -5,6 +5,7 @@ import { SubstanceFormService } from '../../substance-form.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Subscription } from 'rxjs';
 import { SubstanceFormReferencesService } from '../substance-form-references.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-apply-reference',
@@ -16,14 +17,15 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
   domainsWithReferences: DomainsWithReferences;
   private privateSubReferenceUuid: string;
   private subscriptions: Array<Subscription> = [];
+  open = false;
 
   constructor(
     private substanceFormReferencesService: SubstanceFormReferencesService
   ) { }
 
   ngOnInit() {
-    const subscription = this.substanceFormReferencesService.domainsWithReferences.subscribe(domainsWithReferences => {
-      this.domainsWithReferences = domainsWithReferences;
+    const subscription = this.substanceFormReferencesService.domainsWithReferences.pipe(take(1)).subscribe(domainsWithReferences => {
+      this.domainsWithReferences = {};
     });
     this.subscriptions.push(subscription);
   }
@@ -32,6 +34,15 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  setOpen() {
+    this.open = true;
+    const subscription = this.substanceFormReferencesService.domainsWithReferences.pipe(take(1)).subscribe(domainsWithReferences => {
+      this.domainsWithReferences = domainsWithReferences;
+      this.domainsWithReferences = domainsWithReferences;
+    });
+    this.subscriptions.push(subscription);
   }
 
   @Input()
@@ -47,6 +58,9 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
       });
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
+    this.close();
+
+
   }
 
   applyToAllWithoutRef(): void {
@@ -65,6 +79,8 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
       }
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
+    this.close();
+
   }
 
   applyToAllDomain(domainKey: string): void {
@@ -72,6 +88,15 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
       this.applyReference(domain);
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
+    this.close();
+  }
+
+  close() {
+    this.domainsWithReferences = null;
+    this.open = false;
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   applyToAllDomainWithoutRef(domainKey: string): void {
@@ -84,6 +109,7 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
         });
     }
     this.substanceFormReferencesService.emitReferencesUpdate();
+    this.close();
   }
 
   updateAppliedOtion(event: MatCheckboxChange, domain: any): void {

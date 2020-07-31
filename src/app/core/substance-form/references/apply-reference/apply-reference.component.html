@@ -1,8 +1,8 @@
-<button mat-button [matMenuTriggerFor]="appliedOptionsMenu">
+<button mat-button [matMenuTriggerFor]="appliedOptionsMenu" (menuOpened) = "setOpen()" (menuClosed) ="close()">
   <span>Apply to</span>&nbsp;
   <mat-icon svgIcon="menu"></mat-icon>
 </button>
-<mat-menu class="applied-menu-container" #appliedOptionsMenu="matMenu" xPosition="before">
+<mat-menu class="applied-menu-container" #appliedOptionsMenu="matMenu" xPosition="before" >
   <button mat-menu-item (click)="applyToAll()">
     <span>All</span>
   </button>
