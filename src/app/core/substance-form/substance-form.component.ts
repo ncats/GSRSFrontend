@@ -122,7 +122,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           this.loadingService.setLoading(false);
           this.isLoading = false;
         } else {
-        if ( read.substanceClass === this.substanceClass && !this.id) {
+        if ( read.substanceClass === this.substanceClass) {
           this.imported = true;
           this.substanceFormService.importSubstance(read);
           this.submissionMessage = null;
@@ -131,15 +131,22 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           this.loadingService.setLoading(false);
           this.isLoading = false;
         } else {
-          this.router.onSameUrlNavigation = 'reload';
-          this.loadingService.setLoading(false);
-          this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
-
+          setTimeout(() => {
+            this.router.onSameUrlNavigation = 'reload';
+            this.loadingService.setLoading(false);
+            this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+  
+          }, 1000);
         }
-      }
+        } 
       }
     });
  
+  }
+
+  test() {
+    this.router.navigated = false;
+        this.router.navigate([this.router.url]);
   }
 
   ngOnInit() {

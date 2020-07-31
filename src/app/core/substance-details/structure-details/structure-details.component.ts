@@ -44,8 +44,11 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
         this.getSysNames();
         this.structure = this.substance.structure;
         if (this.structure.smiles) {
-          this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
+          this.structureService.getInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
             this.inchi = inchi;
+          });
+          const otherInchiSub = this.structureService.getOtherInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
+            this.otherInchi = inchi.replace(/\"/g, '');
           });
         }
         const theJSON = this.structure.molfile;
@@ -59,12 +62,9 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
 
   getSysNames() {
     if ( this.substance && this.substance.names) {
-      console.log(this.substance.names);
       this.systematic = [];
       this.substance.names.forEach (name => {
-        console.log(name.type);
         if (name.type === 'sys') {
-          console.log('!!!!!!!');
           this.systematic.push(name.name);
         }
       });
@@ -74,7 +74,6 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   ngAfterViewInit() {
   this.substanceUpdated.subscribe(substance => {
     this.substance = substance;
-    console.log(this.substance);
     if ( !this.structure || this.structure.id !== this.substance.structure.id ||
       this.structure.molfile !== this.substance.structure.molfile) {
         this.getSysNames();
