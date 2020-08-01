@@ -66,31 +66,99 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
       } else if (this.substance.substanceClass === 'specifiedSubstanceG1') {
         subClass = 'specifiedSubstance';
       }
+
+      const trimmedDomain = {
+        uuid: this.substance[subClass]['uuid'],
+        references: this.substance[subClass]['references'],
+      };
       this.privateDomainsWithReferences = {
         definition: {
           subClass: this.substance.substanceClass,
-          domain: this.substance[subClass]
+          domain: trimmedDomain
         }
       };
+      if (subClass === 'specifiedSubstance') {
+        this.privateDomainsWithReferences = {
+          definition: {
+            subClass: this.substance.substanceClass,
+            domain: trimmedDomain
+          }
+        };
+      }
 
-      domainKeys.forEach(key => {
-        this.privateDomainsWithReferences[key] = {
+   /* Old method of generating list, sends unnecessary information, but is known to work
+   this.privateDomainsWithReferences = {
+          definition: {
+            subClass: this.substance.substanceClass,
+            domain: this.substance[subClass]
+          }
+        };
+    domainKeys.forEach(key => {
+        this.privateDomainsWithReferences2[key] = {
           listDisplay: key,
           displayKey: domainDisplayKeys[key],
           domains: this.substance[key]
         };
       });
-      if (subClass = 'specifiedSubstance') {
+      if (subClass === 'specifiedSubstance') {
         const key = 'specifiedSubstance.constituents';
-        this.privateDomainsWithReferences[key] = {
+        this.privateDomainsWithReferences2[key] = {
           listDisplay: key,
           displayKey: domainDisplayKeys[key],
           domains: this.substance[key]
         };
       }
+      */
+      domainKeys.forEach(key => {
+        const temp = [];
+        let keyFix = key;
+        if (key === 'constituents' && subClass === 'specifiedSubstance') {
+          keyFix = 'specifiedSubstance["constituents"]';
+          if (this.substance.specifiedSubstance && this.substance.specifiedSubstance.constituents) {
+            this.substance.specifiedSubstance.constituents.forEach( object => {
+              let toAdd = {
+                uuid: object.uuid,
+                display: '',
+                references: object.references
+              };
+              if (object && object.substance) {
+                  toAdd.display =  object.substance.name;
+              temp.push(toAdd);
+              }
+        });
+      }
+    } else {
+        if (this.substance[keyFix]) {
+        this.substance[keyFix].forEach( object => {
+          let toAdd = {
+            uuid: object.uuid,
+            display: '',
+            references: object.references
+          };
+          if (object) {
+            if (domainDisplayKeys[key].indexOf('.') > 0) {
+              const split = domainDisplayKeys[key].split('.');
 
-    }
+              toAdd[domainDisplayKeys[key]] = object[split[0]][split[1]];
+              toAdd.display =  object[split[0]][split[1]];
 
+            } else {
+              toAdd[domainDisplayKeys[key]] = object[domainDisplayKeys[key]];
+              toAdd.display = object[domainDisplayKeys[key]];
+            }
+          temp.push(toAdd);
+          }
+        });
+        }
+      }
+      this.privateDomainsWithReferences[key] = {
+        listDisplay: key,
+        displayKey: domainDisplayKeys[key],
+        domains: temp
+      };
+        });
+    console.log(this.privateDomainsWithReferences);
+      }
     return this.privateDomainsWithReferences;
   }
 

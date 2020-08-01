@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import {SubstanceDetail, SubstanceReference} from '../substance/substance.model';
 import {SubstanceService} from '../substance/substance.service';
 import {DatePipe} from '@angular/common';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-references-manager',
@@ -23,7 +24,7 @@ export class ReferencesManagerComponent implements OnInit {
     if (this.substance) {
       this.subRef = this.substance.references;
     } else if (this.subUUID) {
-      const subscription = this.substanceService.getSubstanceDetails(this.subUUID).subscribe(response => {
+      const subscription = this.substanceService.getSubstanceDetails(this.subUUID).pipe(take(1)).subscribe(response => {
         if (response) {
           this.substance = response;
           this.subRef = this.substance.references;

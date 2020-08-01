@@ -4,6 +4,7 @@ export const domainKeys = [
     'relationships',
     'notes',
     'properties',
+    'constituents'
 ];
 
 export const domainDisplayKeys = {
@@ -11,5 +12,6 @@ export const domainDisplayKeys = {
     codes: 'code',
     relationships: 'relatedSubstance.name',
     notes: 'note',
-    properties: 'name'
+    properties: 'name',
+    constituents: 'substance.refPname'
 };
