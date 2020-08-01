@@ -24,10 +24,6 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    const subscription = this.substanceFormReferencesService.domainsWithReferences.pipe(take(1)).subscribe(domainsWithReferences => {
-      this.domainsWithReferences = {};
-    });
-    this.subscriptions.push(subscription);
   }
 
   ngOnDestroy() {
@@ -39,7 +35,6 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
   setOpen() {
     this.open = true;
     const subscription = this.substanceFormReferencesService.domainsWithReferences.pipe(take(1)).subscribe(domainsWithReferences => {
-      this.domainsWithReferences = domainsWithReferences;
       this.domainsWithReferences = domainsWithReferences;
     });
     this.subscriptions.push(subscription);
@@ -58,7 +53,6 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
       });
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
-    this.close();
 
 
   }
@@ -79,7 +73,6 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
       }
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
-    this.close();
 
   }
 
@@ -88,7 +81,6 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
       this.applyReference(domain);
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
-    this.close();
   }
 
   close() {
@@ -109,7 +101,6 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
         });
     }
     this.substanceFormReferencesService.emitReferencesUpdate();
-    this.close();
   }
 
   updateAppliedOtion(event: MatCheckboxChange, domain: any): void {
