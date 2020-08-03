@@ -53,9 +53,10 @@
       </div>
       <div class="name-value" *ngIf="systematic" >
         <div class="name">
-          <a (click)="toggleNames()" class='blue-font references-link'>
-              <span>{{showNames === false ? 'Show' : 'Hide'}} Systematic Names</span><mat-icon svgIcon="{{smilesIcon}}"></mat-icon>
+          <a (click)="toggleNames()" class='blue-font references-link'  *ngIf = "systematic.length > 0">
+            <span>{{showNames === false ? 'Show' : 'Hide'}} Systematic Names</span><mat-icon svgIcon="{{smilesIcon}}"></mat-icon>
           </a>
+          <span *ngIf = "systematic.length < 1" class = "disabled">No Systematic Names</span> 
         </div>
       </div>
   </div>
