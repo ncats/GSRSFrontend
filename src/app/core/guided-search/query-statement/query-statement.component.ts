@@ -164,7 +164,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
     } else if (commandObj.constructQuery) {
       this.commandInputs = [];
       commandObj.constructQuery(
-        command,
+        command.trim(),
         this.selectedCondition,
         this.selectedQueryableProperty,
         this.selectedLucenePath,
