@@ -65,6 +65,7 @@ export class EditorImplementation implements Editor {
             let tset = {};
             Array.from(lines)
                  .filter(l=>l.indexOf('M  SMT')>=0)
+                 .map(l=>l.substring(0,10))
                  .map(l=>{
                     if(tset[l]){
                        dupCount++;
