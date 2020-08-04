@@ -157,7 +157,6 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
         domains: temp
       };
         });
-    console.log(this.privateDomainsWithReferences);
       }
     return this.privateDomainsWithReferences;
   }

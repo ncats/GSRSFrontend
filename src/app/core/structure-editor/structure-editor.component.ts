@@ -38,6 +38,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   width = 0;
   canvasToggle = true;
   canvasMessage = '';
+  tempClass = "";
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
   public context: CanvasRenderingContext2D;
   public canvasCopy: HTMLCanvasElement;
@@ -53,18 +54,25 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private structureService: StructureService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private elementRef: ElementRef
   ) { }
 
   ngOnDestroy(): void {
     window.removeEventListener('drop', this.preventDrag);
     window.removeEventListener('dragover', this.preventDrag);
     window.removeEventListener('paste', this.checkPaste);
+    (<HTMLCanvasElement>this.myCanvas.nativeElement).removeEventListener('click', this.click);
+
   }
 
   ngAfterViewInit(): void {
     this.context = (<HTMLCanvasElement>this.myCanvas.nativeElement).getContext('2d');
     this.canvasCopy = <HTMLCanvasElement>this.myCanvas.nativeElement;
+    const test = (<HTMLCanvasElement>this.myCanvas.nativeElement);
+    if (test) {
+      test.addEventListener('click', this.click);
+    }
   }
 
   private preventDrag = (event: DragEvent) => {
@@ -77,6 +85,16 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     if (this.jsdraw && this.jsdraw.activated) {
       this.catchPaste(event);
     }
+  }
+
+
+// when a dialog is opened / z-index changes occur, the editor loses it's reference this resets it when it's focused
+// there is probably a better way of doing this by applying something to all dialog close events. you must first set it to 0 to take
+  click = (event: Event ) => {
+    this.tempClass = 'high';
+    setTimeout(() => {
+      this.tempClass = 'higher';
+    }, 10);
   }
 
   ngOnInit() {

@@ -7,11 +7,14 @@
     Add note <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button> -->
 </div>
+<mat-paginator *ngIf="notes && notes.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true"
+    (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
 <div class="note" *ngFor="let note of paged; last as isLast; index as index" appScrollToTarget
   [id]="'substance-note-' + index">
   <app-note-form [note]="note" (noteDeleted)="deleteNote($event)"></app-note-form>
   <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
 </div>
 <mat-paginator *ngIf="notes && notes.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true"
-  (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 15]">
+  (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
