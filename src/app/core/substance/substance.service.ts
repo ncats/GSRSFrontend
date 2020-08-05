@@ -534,7 +534,7 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<any>(url);
   }
 
-  approveSubstance(keyid: string): Observable<ValidationResults> {
+  approveSubstance(keyid: string): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${keyid})/@approve`;
     return this.http.get(url);
   }
