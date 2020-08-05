@@ -32,6 +32,23 @@
       <th mat-header-cell *matHeaderCellDef> Amount </th>
       <td mat-cell *matCellDef="let con"> {{toString(con.amount)}} </td>
     </ng-container>
+    <ng-container matColumnDef="References">
+        <th mat-header-cell *matHeaderCellDef> References </th>
+        <td mat-cell *matCellDef="let con">
+          <button class = "mat-raised-button mat-primary dialog-close" (click)="openModal(refTemplate)"  [disabled]="!con.references || con.references.length <= 0">View</button>
+  
+          <ng-template #refTemplate>
+            <h2 mat-dialog-title>References</h2>
+            <div mat-dialog-content>
+              <app-references-manager [substance] = "substance" [references] = "con.references"></app-references-manager>
+            </div>
+              <div mat-dialog-actions>
+                <span class="middle-fill"></span>
+                <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+              </div>
+          </ng-template>
+        </td>
+      </ng-container>
 
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
