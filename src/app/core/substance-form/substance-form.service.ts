@@ -1227,7 +1227,21 @@ export class SubstanceFormService implements OnDestroy {
       const results: SubstanceFormResults = {
         isSuccessfull: true
       };
-      this.substanceService.approveSubstance(this.privateSubstance.uuid).subscribe(response => {
+      this.substanceService.approveSubstance(this.privateSubstance.uuid).subscribe(substance => {
+        this.privateSubstance = substance;
+        results.uuid = substance.uuid;
+        this.definitionEmitter.next(this.getDefinition());
+        if (this.privateSubstance.substanceClass === 'protein') {
+          this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
+        } else if (this.privateSubstance.substanceClass === 'nucleicAcid') {
+          this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
+          this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
+        } else if (this.privateSubstance.substanceClass === 'mixture') {
+          this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
+        }
+        this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
+        this.resetState();
+        this.substanceEmitter.next(this.privateSubstance);
         observer.next(results);
         observer.complete();
       }, error => {
