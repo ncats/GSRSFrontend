@@ -17,6 +17,7 @@ export class SubstanceFormNamesCardComponent
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   names: Array<SubstanceName>;
   private subscriptions: Array<Subscription> = [];
+  pageSize = 10;
 
   constructor(
     private substanceFormNamesService: SubstanceFormNamesService,

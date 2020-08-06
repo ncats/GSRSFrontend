@@ -17,6 +17,7 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
 
   codes: Array<SubstanceCode>;
   private subscriptions: Array<Subscription> = [];
+  pageSize = 10;
 
   constructor(
     private substanceFormCodesService: SubstanceFormCodesService,
