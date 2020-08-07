@@ -18,6 +18,7 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
   codes: Array<SubstanceCode>;
   private subscriptions: Array<Subscription> = [];
   pageSize = 10;
+  expanded = true;
 
   constructor(
     private substanceFormCodesService: SubstanceFormCodesService,
@@ -31,6 +32,10 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Codes');
+  }
+
+  collapse() {
+    this.expanded = !this.expanded;
   }
 
   ngAfterViewInit() {

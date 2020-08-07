@@ -18,6 +18,7 @@ export class SubstanceFormNamesCardComponent
   names: Array<SubstanceName>;
   private subscriptions: Array<Subscription> = [];
   pageSize = 10;
+  expanded = true;
 
   constructor(
     private substanceFormNamesService: SubstanceFormNamesService,
@@ -57,6 +58,10 @@ export class SubstanceFormNamesCardComponent
   }
 
   ngAfterViewInit() {
+  }
+
+  collapse() {
+    this.expanded = !this.expanded;
   }
 
   standardize(): void {

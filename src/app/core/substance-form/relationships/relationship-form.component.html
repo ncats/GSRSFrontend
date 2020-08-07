@@ -14,7 +14,7 @@
   </div>
   <div class="flex-column related-substance">
     <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-      eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" header="Related Substance"
+      eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage] = "!viewFull" header="Related Substance"
       [subuuid]="relatedSubstanceUuid">
     </app-substance-selector>
   </div>
@@ -30,7 +30,7 @@
         </app-access-manager>
       </div>
     </div>
-    <div class="form-row">
+    <div class="form-row "  *ngIf = "viewFull">
       <app-cv-input class = "qualification" key = "Relationship Qualification"  title = "Qualification" name = "Qualification"
                     [model] = "relationship.qualification" (valueChange)= "relationship.qualification = $event">
       </app-cv-input>
@@ -40,7 +40,7 @@
       </app-cv-input>
 
     </div>
-    <div class="form-row">
+    <div class="form-row"  *ngIf = "viewFull">
       <div class="comments">
         <div class="textarea-label">Comments</div>
         <textarea placeholder="Enter text here" [(ngModel)]="relationship.comments" name="comments">
@@ -48,19 +48,25 @@
       </div>
     </div>
   </div>
-  <div class="flex-column mediator-substance">
-    <app-substance-selector (selectionUpdated)="mediatorSubstanceUpdated($event)"
-      eventCategory="substanceFormDefinitionType" placeholder="Mediator Substance" header="Mediator Substance"
+  <div class="flex-column mediator-substance" >
+      <app-substance-selector (selectionUpdated)="mediatorSubstanceUpdated($event)"
+      eventCategory="substanceFormDefinitionType" placeholder="Mediator Substance" [hideImage] = "!viewFull" header="Mediator Substance"
       [subuuid]="mediatorSubstanceUuid">
     </app-substance-selector>
+    </div>
+     
+  <div class = "chevron" matTooltip = "Expand / collapse rows"><button mat-icon-button (click) = "viewFull = !viewFull" class = "chevron-button" >
+    <mat-icon *ngIf = "viewFull"svgIcon="chevron_up" ></mat-icon>
+    <mat-icon *ngIf = "!viewFull"svgIcon="chevron_down"></mat-icon>
+  </button>
   </div>
 </div>
-<div *ngIf="!relationship.$$deletedCode">
+<div *ngIf="!relationship.$$deletedCode && viewFull">
   <div class="amount-form-container">
     <div class="amount-title">Amount</div>
     <app-amount-form [substanceAmount]="relationship.amount"></app-amount-form>
   </div>
-  <div class="form-row">
+  <div class="form-row"  *ngIf = "viewFull">
     <div class="references-container">
       <app-domain-references [referencesUuids]="relationship.references" #references></app-domain-references>
     </div>

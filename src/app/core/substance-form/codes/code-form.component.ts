@@ -18,6 +18,7 @@ export class CodeFormComponent implements OnInit {
   codeSystemType: string;
   codeTypeList: Array<VocabularyTerm> = [];
   deleteTimer: any;
+  viewFull = true;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -35,6 +36,17 @@ export class CodeFormComponent implements OnInit {
 
   get code(): SubstanceCode {
     return this.privateCode;
+  }
+
+  @Input()
+  set show(val: boolean) {
+    if (val != null) {
+     this.viewFull = val;
+    }
+  }
+
+  get show(): boolean {
+    return this.viewFull || null;
   }
 
   getVocabularies(): void {

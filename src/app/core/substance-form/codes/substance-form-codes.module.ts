@@ -12,6 +12,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { CodeFormComponent } from './code-form.component';
+import { MatTooltipModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { CodeFormComponent } from './code-form.component';
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    MatTooltipModule
   ],
   declarations: [
     SubstanceFormCodesCardComponent,

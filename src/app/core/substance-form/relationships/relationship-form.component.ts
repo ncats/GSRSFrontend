@@ -16,6 +16,7 @@ export class RelationshipFormComponent implements OnInit {
   mediatorSubstanceUuid: string;
   @Output() relationshipDeleted = new EventEmitter<SubstanceRelationship>();
   deleteTimer: any;
+  viewFull = true;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -23,8 +24,19 @@ export class RelationshipFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
   }
 
+  @Input()
+  set show(val: boolean) {
+    if (val != null) {
+     this.viewFull = val;
+    }
+  }
+
+  get show(): boolean {
+    return this.viewFull || null;
+  }
   @Input()
   set relationship(relationship: SubstanceRelationship) {
     this.privateRelationship = relationship;

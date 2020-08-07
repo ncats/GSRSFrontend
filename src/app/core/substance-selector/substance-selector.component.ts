@@ -16,6 +16,7 @@ export class SubstanceSelectorComponent implements OnInit {
   @Input() hintMessage = '';
   @Input() header = 'Substance';
   @Input() name?: string;
+  @Input() hideImage?: boolean;
   errorMessage: string;
   showOptions: boolean;
   displayName: string;
@@ -32,6 +33,9 @@ export class SubstanceSelectorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (!this.hideImage) {
+      this.hideImage = false;
+    }
     if (this.configService.configData.substanceSelectorProperties != null) {
       this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
     }

@@ -26,6 +26,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
   overlayContainer: HTMLElement;
   substanceType = '';
+  viewFull = true;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -47,6 +48,17 @@ export class NameFormComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  @Input()
+  set show(val: boolean) {
+    if (val != null) {
+     this.viewFull = val;
+    }
+  }
+
+  get show(): boolean {
+    return this.viewFull || null;
   }
 
   @Input()

@@ -10,6 +10,19 @@
   }
 }
 
+.collapse {
+  padding: 20px 10px 12px 10px;
+  position: relative;
+}
+
+.chevron {
+  width: 20px;
+  line-height: 67px;
+  color: rgba(0,0,0,.6);
+}
+.chevron-button {
+  width: 20px;
+}
   .notification-backdrop {
     position: absolute;
     top: 0;
