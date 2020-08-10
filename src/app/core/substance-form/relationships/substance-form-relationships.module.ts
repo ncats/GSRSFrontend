@@ -13,6 +13,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { RelationshipFormComponent } from './relationship-form.component';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
+import { MatTooltipModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance
     FormsModule,
     MatPaginatorModule,
     MatInputModule,
-    SubstanceSelectorModule
+    SubstanceSelectorModule,
+    MatTooltipModule
   ],
   declarations: [
     SubstanceFormRelationshipsCardComponent,

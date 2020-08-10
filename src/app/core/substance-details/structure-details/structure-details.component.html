@@ -51,6 +51,14 @@
           </a>
         </div>
       </div>
+      <div class="name-value" *ngIf="systematic" >
+        <div class="name">
+          <a (click)="toggleNames()" class='blue-font references-link'  *ngIf = "systematic.length > 0">
+            <span>{{showNames === false ? 'Show' : 'Hide'}} Systematic Names</span><mat-icon svgIcon="{{smilesIcon}}"></mat-icon>
+          </a>
+          <span *ngIf = "systematic.length < 1" class = "disabled">No Systematic Names</span> 
+        </div>
+      </div>
   </div>
 
   <div class="structure-image-container text-center">
@@ -79,9 +87,17 @@
   <div [hidden]="!showSmiles" style="width:100%">
     <h3>SMILES:</h3>
     <p class = "indent">{{structure.smiles}}</p>
-    <h3>InChi</h3>
+    <h3>InChiKey:</h3>
     <p class = "indent">{{inchi}}</p>
+    <h3>InChi:</h3>
     <p class = "indent">{{otherInchi}}</p>
   </div>
-
+  
+  <div [hidden]="!showNames" style="width:100%">
+      <h3>Systematic Names:</h3>
+  <mat-list >
+      <mat-list-item *ngFor = "let name of systematic">
+        {{name}}
+      </mat-list-item>
+  </mat-list>
 </div>

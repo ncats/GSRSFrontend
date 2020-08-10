@@ -1,4 +1,4 @@
-<div appDragDropPaste (dropHandler)="onDropHandler($event)">
+<div appDragDropPaste (dropHandler)="onDropHandler($event)" class="z-index"  [ngClass]="tempClass">
 
 <ncats-ketcher-wrapper [ketcherFilePath]="ketcherFilePath" (ketcherOnLoad)="ketcherOnLoad($event)" *ngIf="structureEditor == 'ketcher'">
 </ncats-ketcher-wrapper>
@@ -22,5 +22,5 @@
     <canvas #structure_canvas id = "structure_canvas" name = "structure_canvas" [height] = 'height' [width] = "width" >
     </canvas>
   </div>
-</div>
+</div> 
 </div>

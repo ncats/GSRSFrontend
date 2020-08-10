@@ -7,6 +7,7 @@ import { SubstanceCardBase } from '../substance-card-base';
 import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-structure-details',
@@ -19,11 +20,14 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   showSmiles = false;
   defIcon = 'drop_down';
   smilesIcon = 'drop_down';
+  nameIcon = 'drop_down';
   inchi: string;
   otherInchi: string;
   showStereo = false;
   molfileHref: any;
+  systematic: Array<string>;
   substanceUpdated = new Subject<SubstanceDetail>();
+  showNames = false;
 
   constructor(
     private utilService: UtilsService,
@@ -37,10 +41,14 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   ngOnInit() {
 
       if (this.substance != null) {
+        this.getSysNames();
         this.structure = this.substance.structure;
         if (this.structure.smiles) {
-          this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
-            this.inchi = inchi;
+          this.structureService.getInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
+            this.inchi = inchi.replace(/\"/g, '');
+          });
+          const otherInchiSub = this.structureService.getOtherInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
+            this.otherInchi = inchi.replace(/\"/g, '');
           });
         }
         const theJSON = this.structure.molfile;
@@ -50,21 +58,39 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
 
   }
 
+
+
+  getSysNames() {
+    if ( this.substance && this.substance.names) {
+      this.systematic = [];
+      this.substance.names.forEach (name => {
+        if (name.type === 'sys') {
+          this.systematic.push(name.name);
+        }
+      });
+    }
+  }
+
   ngAfterViewInit() {
   this.substanceUpdated.subscribe(substance => {
     this.substance = substance;
-    this.structure = this.substance.structure;
-    if (this.structure.smiles) {
-      const inchiSub = this.structureService.getInchi(this.substance.uuid).subscribe(inchi => {
-        this.inchi = inchi.replace(/\"/g, '');
-      });
-      const otherInchiSub = this.structureService.getOtherInchi(this.substance.uuid).subscribe(inchi => {
-        this.otherInchi = inchi.replace(/\"/g, '');
-      });
-    }
+    if ( !this.structure || this.structure.id !== this.substance.structure.id ||
+      this.structure.molfile !== this.substance.structure.molfile) {
+        this.getSysNames();
+        if (this.structure.smiles) {
+          const inchiSub = this.structureService.getInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
+            this.inchi = inchi.replace(/\"/g, '');
+          });
+          const otherInchiSub = this.structureService.getOtherInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
+            this.otherInchi = inchi.replace(/\"/g, '');
+          });
+        }
+        this.structure = this.substance.structure;
     const theJSON = this.structure.molfile;
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.molfileHref = uri;
+    }
+
   });
   }
 
@@ -80,6 +106,19 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
       this.defIcon = 'drop_up';
     }
   }
+
+
+  toggleNames() {
+    const value = this.showNames ? 0 : 1;
+
+    this.showNames = !this.showNames;
+    if (!this.showNames) {
+      this.nameIcon = 'drop_down';
+    } else {
+      this.nameIcon = 'drop_up';
+    }
+  }
+
 
   toggleSmiles() {
 

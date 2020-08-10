@@ -15,6 +15,7 @@ export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFi
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   relationships: Array<SubstanceRelationship>;
   private subscriptions: Array<Subscription> = [];
+  expanded = true;
 
   constructor(
     private substanceFormRelationshipsService: SubstanceFormRelationshipsService,
@@ -50,6 +51,10 @@ export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFi
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  collapse() {
+    this.expanded = !this.expanded;
   }
 
   addItem(): void {

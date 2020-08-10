@@ -5,6 +5,8 @@ import {Constituent, SubstanceAmount, SubstanceDetail} from '@gsrs-core/substanc
 import {Subject} from 'rxjs';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-substance-constituents',
@@ -14,11 +16,14 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 export class SubstanceConstituentsComponent extends SubstanceCardBaseFilteredList<Constituent> implements OnInit {
   constituents: Array<Constituent>;
   substanceUpdated = new Subject<SubstanceDetail>();
-  displayedColumns: string[] = ['Substance', 'Role', 'Amount'];
+  displayedColumns: string[] = ['Substance', 'Role', 'Amount', 'References'];
+  private overlayContainer: HTMLElement;
 
   constructor(
     private utilsService: UtilsService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer,
 
   ) { super(gaService); }
 
@@ -37,9 +42,25 @@ export class SubstanceConstituentsComponent extends SubstanceCardBaseFilteredLis
       }
       this.countUpdate.emit(this.constituents.length);
     });
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   public toString(amount: SubstanceAmount): string {
     return this.utilsService.displayAmount(amount);
+  }
+
+  openModal(templateRef) {
+
+    this.gaService.sendEvent(this.analyticsEventCategory, 'button', 'references view');
+
+    const dialogRef = this.dialog.open(templateRef, {
+      minWidth: '40%',
+      maxWidth: '90%'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 }

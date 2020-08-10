@@ -54,6 +54,34 @@ export class EditorImplementation implements Editor {
             .replace(/\n/g, '|_|')
             .replace(/[@][|][_][|]/g, '')
             .replace(/[|][_][|]/g, '\n');
+      
+        // This corrects a rather silly bug
+        // where JSDraw repeats SMT groups for polymers,
+        // causing a lot of unforunate side effects
+
+        if (molfile.indexOf('M  STY') >= 0) {
+            const lines = molfile.split('\n');
+            let dupCount = 0;
+            let tset = {};
+            Array.from(lines)
+                 .filter(l=>l.indexOf('M  SMT')>=0)
+                 .map(l=>l.substring(0,10))
+                 .map(l=>{
+                    if(tset[l]){
+                       dupCount++;
+                    }
+                    tset[l]=1;
+                 });
+           if(dupCount>0){
+               // This just replaces each SMT line with the STY group number defined before it
+               // The '!#!' and '@' symbols are used as temporary "protecting groups"
+               molfile = molfile.replace(/@/g,'!#!')
+                            .replace(/STY/g,'@')
+                            .replace(/(M[ ][ ]@[ ][ ]1)([ ]*[0-9]*)([^@]*)SMT([ ]*[0-9]*)/g,'$1$2$3SMT$2')
+                            .replace(/@/g,'STY')
+                            .replace(/!#!/g,'@');
+           }
+        }
         return molfile;
     }
 

@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { domainKeys } from '../domain-references/domain-keys.constant';
 import { DomainsWithReferences } from '../domain-references/domain.references.model';
-import { SubstanceFormService } from '../../substance-form.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Subscription } from 'rxjs';
 import { SubstanceFormReferencesService } from '../substance-form-references.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-apply-reference',
@@ -15,23 +15,29 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
   domainKeys = domainKeys;
   domainsWithReferences: DomainsWithReferences;
   private privateSubReferenceUuid: string;
-  private subscriptions: Array<Subscription> = [];
+  private subscriptions: Array< Subscription > = [];
+  open = false;
 
   constructor(
     private substanceFormReferencesService: SubstanceFormReferencesService
   ) { }
 
   ngOnInit() {
-    const subscription = this.substanceFormReferencesService.domainsWithReferences.subscribe(domainsWithReferences => {
-      this.domainsWithReferences = domainsWithReferences;
-    });
-    this.subscriptions.push(subscription);
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  setOpen() {
+    this.open = true;
+    const subscription = this.substanceFormReferencesService.domainsWithReferences.pipe(take(1)).subscribe(domainsWithReferences => {
+      this.domainsWithReferences = domainsWithReferences;
+      this.setChecked();
+    });
+    this.subscriptions.push(subscription);
   }
 
   @Input()
@@ -47,6 +53,8 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
       });
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
+
+
   }
 
   applyToAllWithoutRef(): void {
@@ -65,14 +73,39 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
       }
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
+
   }
 
   applyToAllDomain(domainKey: string): void {
+
     this.domainsWithReferences[domainKey].domains.forEach(domain => {
       this.applyReference(domain);
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
   }
+
+  close() {
+    this.domainsWithReferences = null;
+    this.open = false;
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
+  setChecked() {
+    if(this.domainsWithReferences.definition && this.domainsWithReferences.definition.domain) {
+      this.domainsWithReferences.definition.domain.checked = this.domainsWithReferences.definition.domain.references &&
+      this.domainsWithReferences.definition.domain.references.indexOf(this.privateSubReferenceUuid) > -1;
+    }
+    this.domainKeys.forEach(domain => {
+      if (this.domainsWithReferences[domain]) {
+        this.domainsWithReferences[domain].domains.forEach(element => {
+          element.checked = element.references && element.references.indexOf(this.privateSubReferenceUuid) > -1;
+        });
+      }
+    });
+
+    }
 
   applyToAllDomainWithoutRef(domainKey: string): void {
     if (this.domainsWithReferences[domainKey] && this.domainsWithReferences[domainKey].domains

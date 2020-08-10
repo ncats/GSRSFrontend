@@ -72,7 +72,7 @@
                         required
                         placeholder="Enter search value"
                         (keyup)="commandInput.constructQuery(
-                            $event.target.value,
+                            $event.target.value.trim(),
                             selectedCondition,
                             selectedQueryableProperty,
                             selectedLucenePath,

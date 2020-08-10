@@ -1,7 +1,7 @@
 <div>
   <div>
     <div>
-      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)">
+      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)"   style="z-index: 9999">
       </app-structure-editor>
     </div>
     <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">

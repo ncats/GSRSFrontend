@@ -18,16 +18,16 @@ export class PhysicalParameterFormComponent implements OnInit {
   @Input()
   set parameter(parameter: PhysicalModificationParameter) {
     this.privateParameter = parameter;
+    if ( !this.privateParameter.amount) {
+      this.privateParameter.amount = {};
+    }
   }
 
   get parameter(): PhysicalModificationParameter {
     return this.privateParameter;
   }
-  get isValid(): boolean {
-    return (this.privateParameter.parameterName != null || this.privateParameter.parameterName !== '');
-  }
 
-  displayAmount(amt: SubstanceAmount): string {
-    return this.utilsService.displayAmount(amt);
+  get isValid(): boolean {
+    return (this.privateParameter.parameterName != null && this.privateParameter.parameterName !== '');
   }
 }

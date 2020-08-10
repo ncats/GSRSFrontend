@@ -65,6 +65,18 @@ export class SubstanceSummaryCardComponent implements OnInit {
           this.inxightUrl = 'https://drugs.ncats.io/drug/' + this.substance.approvalID;
         }
       }, error => {});
+    } else {
+      this.getApprovalID();
+    }
+  }
+
+  getApprovalID() {
+    if (!this.substance.approvalID) {
+      if (this.substance._approvalIDDisplay &&
+         this.substance._approvalIDDisplay.length === 10 &&
+        this.substance._approvalIDDisplay.indexOf(' ') < 0) {
+          this.substance.approvalID = this.substance._approvalIDDisplay;
+      }
     }
   }
 

@@ -34,3 +34,19 @@
   margin-left:10px;
   font-weight:bold;
 }
+
+
+.z-index {
+  z-index: 9999 !important;
+}
+
+
+.high {
+  z-index: 0 !important;
+
+}
+
+.higher {
+  z-index: 9988 !important;
+
+}

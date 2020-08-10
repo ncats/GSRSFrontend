@@ -1,4 +1,4 @@
-<div class="code-form-container">
+<div class="code-form-container" [ngClass] = "!viewFull? 'collapse':'code-form-container'">
   <div *ngIf="code.$$deletedCode" class="notification-backdrop">
       Deleted&nbsp;
       <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
@@ -32,8 +32,13 @@
       <app-access-manager (accessOut)="updateAccess($event)" [access]="code.access">
       </app-access-manager>
     </div>
+    <div class = "chevron"><button mat-icon-button (click) = "viewFull = !viewFull" class = "chevron-button" matTooltip = "Expand / collapse rows">
+      <mat-icon *ngIf = "viewFull"svgIcon="chevron_up"></mat-icon>
+      <mat-icon *ngIf = "!viewFull"svgIcon="chevron_down"></mat-icon>
+
+  </button></div>
   </div>
-  <div *ngIf="!code.$$deletedCode">
+  <div *ngIf="!code.$$deletedCode && viewFull">
     <div class="form-row">
       <mat-form-field class="url">
         <input matInput placeholder="Url" [(ngModel)]="code.url" name="url" />
@@ -51,5 +56,5 @@
       </div>
     </div>
   </div>
-  <app-audit-info [source] = "code"></app-audit-info>
+  <app-audit-info [source] = "code" *ngIf="viewFull"></app-audit-info>
 </div>

@@ -1,5 +1,5 @@
 
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
@@ -10,7 +10,7 @@ import {SubstanceService} from '@gsrs-core/substance/substance.service';
 import {FormControl, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {formSections} from '@gsrs-core/substance-form/form-sections.constant';
-import {Subject, of} from 'rxjs';
+import {Subject, of, Subscription} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
 import {ConfigService} from '@gsrs-core/config';
@@ -25,7 +25,7 @@ import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-di
   templateUrl: './substance-overview.component.html',
   styleUrls: ['./substance-overview.component.scss']
 })
-export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit, AfterViewInit {
+export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit, AfterViewInit, OnDestroy {
   references: string[] = [];
   showDef = false;
   downloadJsonHref: any;
@@ -43,6 +43,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   defaultCodes: string;
   clasicBaseHref: string;
   private overlayContainer: HTMLElement;
+  private subscriptions: Array<Subscription> = [];
+
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -64,12 +66,14 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
-    this.authService.hasAnyRolesAsync('updater', 'superUpdater').subscribe(canEdit => {
+   const rolesSubscription =  this.authService.hasAnyRolesAsync('updater', 'superUpdater').subscribe(canEdit => {
       this.canEdit = canEdit;
       this.isEditable = canEdit
         && this.substance.substanceClass != null
         && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
     });
+    this.subscriptions.push(rolesSubscription);
+
     this.getSubtypeRefs(this.substance);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
@@ -95,11 +99,19 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
+    ngOnDestroy() {
+      this.subscriptions.forEach(subscription => {
+        subscription.unsubscribe();
+      });
+  }
+
   ngAfterViewInit() {
-    this.substanceUpdated.subscribe(substance => {
+    const subSubscription =  this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       this.getVersion();
     });
+    this.subscriptions.push(subSubscription);
+
   }
 
   getSubtypeRefs(substance: SubstanceDetail): void  {
@@ -115,6 +127,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.references = substance.structure.references;
     } else if (substance.structurallyDiverse) {
       this.references = substance.structurallyDiverse.references;
+    } else if (substance.specifiedSubstance) {
+      this.references = substance.specifiedSubstance.references;
     }
 
   }

@@ -23,7 +23,11 @@ export class CvTermDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.vocabulary = data.vocabulary;
-    this.terms = data.vocabulary.terms;
+    this.terms = data.vocabulary.terms.sort(function(a, b) {
+      const textA = a.value.toUpperCase();
+      const textB = b.value.toUpperCase();
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    });
     }
     @ViewChild('scroller', {static: false}) private myScrollContainer: ElementRef;
 

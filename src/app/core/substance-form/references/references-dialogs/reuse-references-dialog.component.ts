@@ -28,7 +28,10 @@ export class ReuseReferencesDialogComponent implements OnInit {
 
   ngOnInit() {
     this.getVocabularies();
+    this.dialogRef.beforeClosed().subscribe(() => this.dialogRef.close(
+      (this.domainReferenceUuids && this.domainReferenceUuids.length > 0) ? this.domainReferenceUuids : null));
   }
+  
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {

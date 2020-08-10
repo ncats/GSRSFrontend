@@ -1,8 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {PhysicalModificationParameter, SubstanceParameter} from '@gsrs-core/substance';
-import {PropertyParameterDialogComponent} from '@gsrs-core/substance-form/property-parameter-dialog/property-parameter-dialog.component';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 
 @Component({
   selector: 'app-physical-parameter-form-dialog',
@@ -10,25 +8,20 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
   styleUrls: ['./physical-parameter-form-dialog.component.scss']
 })
 export class PhysicalParameterFormDialogComponent implements OnInit {
-  isNew: Boolean;
+  isNew: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<PhysicalParameterFormDialogComponent>,
-    public substanceFormService: SubstanceFormService,
-    @Inject(MAT_DIALOG_DATA) public parameters: Array<PhysicalModificationParameter>
+    @Inject(MAT_DIALOG_DATA) public subsParameter: PhysicalModificationParameter
   ) {
-    this.isNew = Object.keys(parameters).length < 2;
+    this.isNew = Object.keys(subsParameter).length < 1;
   }
 
   ngOnInit() {
   }
 
-  addStructuralModificationParameter(): void {
-    this.parameters.unshift({'amount': {}});
-  }
-
   save(): void {
-    this.dialogRef.close(this.parameters);
+    this.dialogRef.close(this.subsParameter);
   }
 
   cancel(): void {

@@ -12,6 +12,7 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-substance-form-definition',
@@ -65,7 +66,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   }
 
   ngAfterViewInit() {
-    this.substanceFormService.definition.subscribe(definition => {
+  const subscription =  this.substanceFormService.definition.subscribe(definition => {
       this.definition = definition || {};
       this.crossCheckTags();
       if (this.definition.substanceClass === 'structure') {
@@ -93,7 +94,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
         this.status = this.definition.status;
       }
       if (this.definition.definitionType === 'ALTERNATIVE') {
-        this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').subscribe(vocabularyResponse => {
+        this.cvService.getDomainVocabulary('RELATIONSHIP_TYPE').pipe(take(1)).subscribe(vocabularyResponse => {
           const type = vocabularyResponse['RELATIONSHIP_TYPE']
             && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE']
             && vocabularyResponse['RELATIONSHIP_TYPE'].dictionary['SUB_ALTERNATE->SUBSTANCE'].value
@@ -119,6 +120,8 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       }
 
     });
+
+    this.subscriptions.push(subscription);
 
   }
 

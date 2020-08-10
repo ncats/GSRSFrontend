@@ -1,6 +1,8 @@
 <div class="moiety" *ngFor="let moiety of moieties">
   <div class="moiety-image">
-    <img class="structure-image" appSubstanceImage [entityId]="moiety.uuid">
+      <a class="zoom" (click)="openImageModal(moiety)">
+    <img class="structure-image" appSubstanceImage [entityId]="moiety.uuid" stereo = "true">
+    </a>
   </div>
   <div class="moiety-details-container">
     <div class="moiety-details">

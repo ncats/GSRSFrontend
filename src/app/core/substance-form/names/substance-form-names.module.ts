@@ -13,7 +13,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { NameFormComponent } from './name-form.component';
 import { NameOrgsComponent } from './name-orgs.component';
-import { MatRadioModule, MatCheckboxModule, MatBadgeModule, MatExpansionModule, MatTableModule, MatSelectModule } from '@angular/material';
+
+import { MatRadioModule, MatCheckboxModule, MatBadgeModule, MatExpansionModule, MatTableModule, MatSelectModule, MatTooltipModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { MatRadioModule, MatCheckboxModule, MatBadgeModule, MatExpansionModule, 
     MatExpansionModule,
     MatTableModule,
     MatBadgeModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTooltipModule
   ],
   declarations: [
     SubstanceFormNamesCardComponent,
