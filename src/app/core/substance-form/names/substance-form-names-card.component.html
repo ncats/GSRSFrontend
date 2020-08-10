@@ -4,7 +4,7 @@
   </mat-form-field>
   <span class="middle-fill"></span>
   <button *ngIf="names && names.length > 0" class = 'standardize' mat-button (click)="standardize()">Standardize Names</button>
-  <button *ngIf="names && names.length > 0" class = 'standardize' mat-button (click)="collapse()">{{expanded? 'Collapse':'Expand'}} All</button>
+  <button *ngIf="names && names.length > 0" class = 'standardize' matTooltip = "show / hide  additional rows" mat-button (click)="collapse()">{{expanded? 'Collapse':'Expand'}} All</button>
 
   <!-- <button mat-button (click)="addName()" [disabled] = "isAlternative">
     Add name <mat-icon svgIcon="add_circle_outline"></mat-icon>
