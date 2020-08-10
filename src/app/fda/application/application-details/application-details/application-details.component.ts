@@ -32,9 +32,11 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
   }
 
   ngOnInit() {
-    this.id = this.activatedRoute.snapshot.params['id'];
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+      this.isAdmin = response;
+    });
 
-    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+    this.id = this.activatedRoute.snapshot.params['id'];
 
     super.ngOnInit();
   }

@@ -92,12 +92,15 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
     navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
     navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
+
+    /*
     this.location.replaceState(
       this.router.createUrlTree(
         [this.locationStrategy.path().split('?')[0].replace(this.environment.baseHref, '')],
         navigationExtras
       ).toString()
     );
+    */
 
     this.activatedRoute.queryParamMap.subscribe(params => {
 
@@ -153,6 +156,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
     this.populateUrlQueryParameters();
+    this.searchApplications();
   }
 
   // for facets
@@ -216,7 +220,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
-    this.populateUrlQueryParameters();
+   // this.populateUrlQueryParameters();
   }
 
 
@@ -236,10 +240,20 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
 
+    /*
     this.router.navigate(
       [],
       navigationExtras
     );
+    */
+
+    const urlTree = this.router.createUrlTree([], {
+      queryParams: navigationExtras.queryParams,
+      queryParamsHandling: 'merge',
+      preserveFragment: true
+    });
+    this.location.go(urlTree.toString());
+
   }
 
   get searchTerm(): string {
