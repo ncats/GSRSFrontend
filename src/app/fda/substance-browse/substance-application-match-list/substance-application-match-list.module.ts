@@ -4,6 +4,9 @@ import { Router, Routes, RouterModule } from '@angular/router';
 import { SubstanceApplicationMatchListComponent } from './substance-application-match-list.component';
 import { MatTableModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material';
+import { MatIconModule } from '@angular/material';
+import { MatTooltipModule } from '@angular/material';
 
 @NgModule({
   declarations: [SubstanceApplicationMatchListComponent],
@@ -11,7 +14,10 @@ import { MatCardModule } from '@angular/material/card';
     CommonModule,
     RouterModule,
     MatTableModule,
-    MatCardModule
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
   ]
 })
 export class SubstanceApplicationMatchListModule { }

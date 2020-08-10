@@ -1,8 +1,8 @@
 <br><br><br><br><br>
-<mat-card class="bordergray width1140px" *ngIf="isAdmin">
+<mat-card class="bordergray width1140px">
   <mat-card-title>Substance Application Matching Lists</mat-card-title>
   <mat-card-content>
-    
+
     <div class="padtop20px">
 
       <h3>Substance Ingredient Names:</h3>
@@ -19,67 +19,92 @@
 
       <br><br>
       <mat-table [dataSource]="dataSource" class="font12px bordergray">
-        <!--
+
         <ng-container matColumnDef="Num">
-          <mat-header-cell *matHeaderCellDef> Num </mat-header-cell>
-          <mat-cell *matCellDef="let element">
+          <th mat-header-cell *matHeaderCellDef class="headerstyle"> Num </th>
+          <td mat-cell *matCellDef="let element; let i = index" class="cellstyle">
             {{i + 1}}
-          </mat-cell>
+          </td>
         </ng-container>
-        -->
 
         <ng-container matColumnDef="Action">
-          <mat-header-cell *matHeaderCellDef [ngClass]="'headerstyle'"> Action </mat-header-cell>
-          <mat-cell *matCellDef="let element; let i = index">
-            <a [routerLink]="['/application', element.id, 'edit']" target="_blank" *ngIf="isAdmin"
-              matTooltip='Edit GSRS Application Record'>
-              Update Application
-            </a>
-            <br>
-            <span *ngIf="element.exactMatchName.length > 0">
-              <button mat-button (click)="autoUpdateApp(element.id, element.exactMatchBdnum)">Auto Update</button>
-            </span>
-          </mat-cell>
+          <th mat-header-cell *matHeaderCellDef class="headerstyle"> Action </th>
+          <td mat-cell *matCellDef="let element; let i = index" class="cellstyle">
+            <!-- Update and View Application Button -->
+            <div class="divflex padtop5px">
+              <div class="padleft15px">
+                <a [routerLink]="['/application', element.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                  matTooltip='Edit Application Record'>
+                  <mat-icon svgIcon="edit"></mat-icon>
+                </a>
+              </div>
+              <div class="padleft10px">
+                <a [routerLink]="['/applicationDetails', element.id]" target="_blank"
+                  matTooltip="View Application Record">
+                  <mat-icon>article</mat-icon>
+                </a>
+              </div>
+            </div>
+            <!-- Auto Update Application Button -->
+            <div class="padbottom7px" *ngIf="exactMatchName">
+              <span *ngIf="element.bdnum === '(No Bdnum)'">
+                <br>
+                <button mat-flat-button color="primary" [disabled]="element.isDisableButton" *ngIf="isAdmin"
+                  (click)="autoUpdateApp(i, element.id, element.exactMatchBdnum)">Auto
+                  Update
+                </button>
+                <div *ngIf="element.autoUpdateMessage"><span class="colorred">{{element.autoUpdateMessage}}</span></div>
+              </span>
+            </div>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="Application Type">
-          <mat-header-cell *matHeaderCellDef [ngClass]="'headerstyle'"> Application Type </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.appType}} </mat-cell>
+          <th mat-header-cell *matHeaderCellDef class="headerstyle"> Application Type </th>
+          <td mat-cell *matCellDef="let element" class="cellstyle"> {{element.appType}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Application Number">
-          <mat-header-cell *matHeaderCellDef [ngClass]="'headerstyle'"> Application Number </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.appNumber}} </mat-cell>
+          <th mat-header-cell *matHeaderCellDef class="headerstyle"> Application Number </th>
+          <td mat-cell *matCellDef="let element" class="cellstyle"> {{element.appNumber}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Status">
-          <mat-header-cell *matHeaderCellDef [ngClass]="'headerstyle'"> Application Status </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+          <th mat-header-cell *matHeaderCellDef class="headerstyle"> Application Status </th>
+          <td mat-cell *matCellDef="let element" class="cellstyle"> {{element.status}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Application Sub Type">
-          <mat-header-cell *matHeaderCellDef [ngClass]="'headerstyle'"> Application Sub Type </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.appSubType}} </mat-cell>
+          <th mat-header-cell *matHeaderCellDef class="headerstyle"> Application Sub Type </th>
+          <td mat-cell *matCellDef="let element" class="cellstyle"> {{element.appSubType}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Product Name">
-          <mat-header-cell *matHeaderCellDef [ngClass]="'headerstyle'"> Product Name </mat-header-cell>
-          <mat-cell *matCellDef="let element" [ngClass]="'font12px'"> {{element.productName}} </mat-cell>
+          <th mat-header-cell *matHeaderCellDef class="headerstyle"> Product Name </th>
+          <td mat-cell *matCellDef="let element" class="cellstyle"> {{element.productName}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="Bdnum">
-          <mat-header-cell *matHeaderCellDef [ngClass]="'headerstyle'"> Bdnum </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.bdnum}} </mat-cell>
+        <ng-container matColumnDef="Application Bdnum">
+          <th mat-header-cell *matHeaderCellDef class="headerstyle"> Application Bdnum </th>
+          <td mat-cell *matCellDef="let element" class="cellstyle backgroundyellow">
+            <span *ngIf="element.bdnum !== '(No Bdnum)'" class="colorpurple">
+              <b>{{element.bdnum}}</b>
+            </span>
+            <span *ngIf="element.bdnum === '(No Bdnum)'">
+              {{element.bdnum}}
+            </span>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="Exact Match">
-          <mat-header-cell *matHeaderCellDef [ngClass]="'headerstyle'"> Substance Ingredient Names - Exact Match
-          </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.exactMatchName}} </mat-cell>
+          <th mat-header-cell *matHeaderCellDef class="headerstyle"> Substance Ingredient Names and Product Name - Exact
+            Match </th>
+          <td mat-cell *matCellDef="let element" class="cellstyle"> {{element.exactMatchName}} </td>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
       </mat-table>
     </div>
 

@@ -1,14 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { GeneralService } from '../../service/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
-import { SafeUrl } from '@angular/platform-browser';
-import { environment } from '../../../../environments/environment';
 import { AuthService } from '@gsrs-core/auth/auth.service';
+import { ApplicationService } from '../../application/service/application.service';
+import { Subscription } from 'rxjs';
+import { ApplicationSrs, ApplicationIngredient } from '../../application/model/application.model';
 
 @Component({
   selector: 'app-substance-application-match-list',
@@ -16,39 +14,45 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
   styleUrls: ['./substance-application-match-list.component.scss']
 })
 
-export class SubstanceApplicationMatchListComponent implements OnInit {
+export class SubstanceApplicationMatchListComponent implements OnInit, AfterViewInit {
 
   id: string;
   isAdmin = false;
   appMatchList: any;
   substanceNames: any;
-  displayedColumns: string[] = ['Action', 'Application Type', 'Application Number', 'Status', 'Application Sub Type', 'Product Name', 'Bdnum', 'Exact Match'];
+  displayedColumns: string[] = ['Num', 'Action', 'Application Type', 'Application Number', 'Status', 'Application Sub Type', 'Product Name', 'Application Bdnum', 'Exact Match'];
   dataSource = null;
   updated = 'false';
+  autoUpdateSavedSuccess = false;
+  private subscriptions: Array<Subscription> = [];
+  application: ApplicationSrs;
+  preferredTerm = '';
 
   constructor(
     public generalService: GeneralService,
+    private applicationService: ApplicationService,
     public activatedRoute: ActivatedRoute,
     private router: Router,
     public loadingService: LoadingService,
-    private mainNotificationService: MainNotificationService,
-    private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
     private authService: AuthService) { }
 
   ngOnInit() {
     this.loadingService.setLoading(true);
-    this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
-    //  this.isAdmin = true;
-    //  if (this.isAdmin === true) {
+    this.authService.hasRolesAsync('Admin').subscribe(response => {
+      this.isAdmin = response;
+    });
+
     this.id = this.activatedRoute.snapshot.params['id'];
+
     if (this.id) {
       this.getApplicationIngredientMatchList(this.id);
       this.getSubstanceNames(this.id);
     }
-    //  }
     this.loadingService.setLoading(false);
+  }
 
+  ngAfterViewInit() {
   }
 
   getApplicationIngredientMatchList(substanceId: string): void {
@@ -60,18 +64,50 @@ export class SubstanceApplicationMatchListComponent implements OnInit {
   getSubstanceNames(substanceId: string): void {
     this.generalService.getSubstanceNames(substanceId).subscribe(substanceNames => {
       this.substanceNames = substanceNames;
+
+      // Get Preferred Term or DisplayName == true
+      this.substanceNames.forEach((names) => {
+        if (names.displayName === true) {
+          this.preferredTerm = names.name;
+        }
+      });
     });
   }
 
-  autoUpdateApp(applicationId: number, bdnum: string): void {
-    this.generalService.appIngredMatchListAutoUpdateSave(applicationId, bdnum).subscribe(update => {
-      if (update) {
-        this.updated = update.appSaved;
-        if (this.updated === 'true') {
-          alert('The Auto Update saved the application record');
+  autoUpdateApp(index: number, applicationId: number, bdnum: string): void {
+    this.loadingService.setLoading(true);
+    this.dataSource[index].autoUpdateMessage = 'Saving....Please wait.';
+    this.dataSource[index].isDisableButton = true;
+    this.applicationService.getApplicationDetails(applicationId).subscribe(response => {
+      if (response) {
+        this.application = response;
+
+        if (this.application) {
+          this.application.applicationProductList.forEach((elementProd, indexProd) => {
+
+            elementProd.applicationIngredientList.forEach((elementIngred, indexIngred) => {
+              if (elementIngred.bdnum === null) {
+                elementIngred.bdnum = bdnum;
+                elementIngred.basisOfStrengthBdnum = bdnum;
+                elementIngred.ingredientType = 'Active Ingredient';
+                elementIngred.applicantIngredName = this.preferredTerm;
+
+                this.applicationService.application = this.application;
+                this.applicationService.saveApplication().subscribe(responseSaved => {
+                  const savedApp = responseSaved;
+                  alert('The Auto Update saved the application record successfully');
+                  this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+                  this.router.onSameUrlNavigation = 'reload';
+                  this.router.navigate(['/sub-app-match-list', this.id]);
+
+                });
+              }
+            });
+          });
         }
       }
     });
+    this.loadingService.setLoading(false);
   }
 
 }

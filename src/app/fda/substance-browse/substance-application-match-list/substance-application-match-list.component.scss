@@ -19,8 +19,16 @@
   font-size: 18px;
 }
 
+.colorred {
+	color: red;
+}
+
 .colorgreen {
 	color: green;
+}
+
+.colorpurple {
+	color: purple;
 }
 
 .bordergray {
@@ -31,8 +39,28 @@
 	padding-top: 20px;
 }
 
+.padleft5px {
+  padding-left: 5px;
+}
+
+.padleft10px {
+  padding-left: 10px;
+}
+
+.padleft15px {
+  padding-left: 15px;
+}
+
 .padleft30px {
   padding-left: 20px;
+}
+
+.padtop5px {
+	padding-top: 5px;
+}
+
+.padbottom7px {
+	padding-bottom: 7px;
 }
 
 .headerstyle {
@@ -48,5 +76,15 @@
 .cellstyle {
 	vertical-align: top;
 	text-align: top;
-/*	border-right: 1px solid gray; */
+  padding-left: 3px;
+  padding-top: 3px;
+	border-right: 1px solid gray;
+}
+
+.backgroundyellow {
+  background-color: rgba(255, 255, 158, 0.705);
+}
+
+.divflex {
+	display: flex;
 }
