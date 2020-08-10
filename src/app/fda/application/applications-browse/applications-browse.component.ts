@@ -19,6 +19,7 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-applications-browse',
@@ -57,6 +58,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   rawFacets: Array<Facet>;
   private isFacetsParamsInit = false;
   public displayFacets: Array<DisplayFacet> = [];
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     public applicationService: ApplicationService,
@@ -102,7 +104,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     );
     */
 
-    this.activatedRoute.queryParamMap.subscribe(params => {
+    const paramSub = this.activatedRoute.queryParamMap.subscribe(params => {
 
       this.privateSearchTerm = params.get('search') || '';
 
@@ -116,11 +118,13 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isComponentInit = true;
       this.loadComponent();
     });
+    this.subscriptions.push(paramSub);
 
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
       }
+      this.subscriptions.push(authSubscription);
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     });
   }
@@ -130,6 +134,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   ngOnDestroy() {
     this.facetManagerService.unregisterFacetSearchHandler();
+
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   private loadComponent(): void {
@@ -220,7 +228,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
-   // this.populateUrlQueryParameters();
+    // this.populateUrlQueryParameters();
   }
 
 
@@ -352,6 +360,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
             }, error => this.loadingService.setLoading(false));
           }
         });
+        this.subscriptions.push(exportSub);
       } else {
         this.disableExport = true;
       }
