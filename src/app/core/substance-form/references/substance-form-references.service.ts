@@ -96,19 +96,19 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
         this.privateDomainsWithReferences[key] = {
           listDisplay: key,
           displayKey: domainDisplayKeys[key],
-          domains: this.substance[key] || null
+          domains: this.substance[key] || []
         };
       } else {
+        let dom = [];
         if (subClass === 'specifiedSubstance' && this.substance.specifiedSubstance &&
         this.substance.specifiedSubstance.constituents) {
+         dom = this.substance.specifiedSubstance.constituents;
+        }
         this.privateDomainsWithReferences[key] = {
           listDisplay: 'constituents',
           displayKey: 'constituent',
-          domains: this.substance.specifiedSubstance.constituents || null
+          domains: dom
         };
-        console.log(key);
-        console.log(domainDisplayKeys[key]);
-      }
       }
       });
 

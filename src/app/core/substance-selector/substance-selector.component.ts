@@ -47,7 +47,6 @@ export class SubstanceSelectorComponent implements OnInit {
       this.substanceService.getSubstanceSummary(uuid).subscribe(response => {
         this.selectedSubstance = response;
       }, error => {
-        console.log(error);
         if (this.name && this.name !== '') {
           this.selectedSubstance = {_name: this.name};
         } else {
