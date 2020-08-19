@@ -99,9 +99,11 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
     }
     this.domainKeys.forEach(domain => {
       if (this.domainsWithReferences[domain]) {
-        this.domainsWithReferences[domain].domains.forEach(element => {
-          element.checked = element.references && element.references.indexOf(this.privateSubReferenceUuid) > -1;
-        });
+        if(this.domainsWithReferences[domain].domains) {
+          this.domainsWithReferences[domain].domains.forEach(element => {
+            element.checked = element.references && element.references.indexOf(this.privateSubReferenceUuid) > -1;
+          });
+        }
       }
     });
 

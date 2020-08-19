@@ -13,5 +13,5 @@ export const domainDisplayKeys = {
     relationships: 'relatedSubstance.name',
     notes: 'note',
     properties: 'name',
-    constituents: 'substance.refPname'
+    constituents: 'substance.name'
 };

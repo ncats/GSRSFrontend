@@ -42,6 +42,11 @@
             <mat-icon matListIcon svgIcon="search"></mat-icon>
             Sequence Search
           </a>
+          <mat-divider></mat-divider>
+          <a mat-list-item routerLink="/guided-search">
+            <mat-icon matListIcon svgIcon="youtube"></mat-icon>
+            Guided Search
+          </a>
         </span>
         <span *ngIf="appId === 'fda'">
           <mat-divider></mat-divider>
@@ -183,11 +188,6 @@
                 <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
                 Specified Substance Group 1
-              </a>
-              <mat-divider></mat-divider>
-              <a mat-list-item routerLink="/substances/register/specifiedSubstanceG3">
-                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-                Specified Substance Group 3
               </a>
             </span>
 

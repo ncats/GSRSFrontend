@@ -59,7 +59,6 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
   }
 
   getDomainReferences(): DomainsWithReferences {
-    if (this.privateDomainsWithReferences == null) {
       let subClass = this.substance.substanceClass;
       if (this.substance.substanceClass === 'chemical') {
         subClass = 'structure';
@@ -86,7 +85,6 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
         };
       }
 
-   /* Old method of generating list, sends unnecessary information, but is known to work
    this.privateDomainsWithReferences = {
           definition: {
             subClass: this.substance.substanceClass,
@@ -94,22 +92,27 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
           }
         };
     domainKeys.forEach(key => {
-        this.privateDomainsWithReferences2[key] = {
+      if (key !== 'constituents') {
+        this.privateDomainsWithReferences[key] = {
           listDisplay: key,
           displayKey: domainDisplayKeys[key],
-          domains: this.substance[key]
+          domains: this.substance[key] || null
         };
-      });
-      if (subClass === 'specifiedSubstance') {
-        const key = 'specifiedSubstance.constituents';
-        this.privateDomainsWithReferences2[key] = {
-          listDisplay: key,
-          displayKey: domainDisplayKeys[key],
-          domains: this.substance[key]
+      } else {
+        if (subClass === 'specifiedSubstance' && this.substance.specifiedSubstance &&
+        this.substance.specifiedSubstance.constituents) {
+        this.privateDomainsWithReferences[key] = {
+          listDisplay: 'constituents',
+          displayKey: 'constituent',
+          domains: this.substance.specifiedSubstance.constituents || null
         };
+        console.log(key);
+        console.log(domainDisplayKeys[key]);
       }
-      */
-      domainKeys.forEach(key => {
+      }
+      });
+
+   /*   domainKeys.forEach(key => {
         const temp = [];
         let keyFix = key;
         if (key === 'constituents' && subClass === 'specifiedSubstance') {
@@ -156,10 +159,10 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
         displayKey: domainDisplayKeys[key],
         domains: temp
       };
-        });
-      }
+        }); */
     return this.privateDomainsWithReferences;
   }
+
 
   deleteSubstanceReference(reference: SubstanceReference): void {
     const subRefIndex = this.substance.references.findIndex(subReference => reference.$$deletedCode === subReference.$$deletedCode);
