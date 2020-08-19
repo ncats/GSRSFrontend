@@ -50,7 +50,7 @@ After this is done, the file `package.real.json` should be copied and replace th
 - Go the the package.json file and look at the scripts property to see what availabe commands exist
 - The commands to run during development begin with "start"
 - Identify the environment you want to run, open your favorite command line tool and run the script starting with "npm run"
- - So to run the fda local environment, you would run `npm run start:fda:local`
+ - So to run the public local environment, you would run `npm run start:gsrs:local`
 - After a few seconds of compiling the application, you're ready to view your application
 - Open your browser and navigate to http://localhost:4200
 
