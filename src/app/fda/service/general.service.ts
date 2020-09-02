@@ -25,38 +25,6 @@ export class GeneralService extends BaseHttpService {
       );
   }
 
-  /*
-  isDisplayAppToMatchConfig(): Observable<any> {
-    const url = this.baseUrl + 'isDisplayAppToMatchConfig2';
-    return this.http.get<any>(url)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  setDisplayAppToMatchSession(checkBoxValue: boolean): Observable<any> {
-    const url = this.baseUrl + 'setDisplayAppToMatchSession' + '';
-    return this.http.get<any>(url)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  getDisplayAppToMatchSession(): Observable<any> {
-    const url = this.baseUrl + 'getDisplayAppToMatchSession2';
-    return this.http.get<any>(url)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-  */
-
   getAppIngredtMatchListCount(substanceUuid: string): Observable<any> {
     const url = this.baseUrl + 'getAppIngredtMatchListCountJson?substanceId=' + substanceUuid + '&citation=';
     return this.http.get<any>(url)
@@ -90,6 +58,12 @@ export class GeneralService extends BaseHttpService {
           return res;
         })
       );
+  }
+
+  getManualFile(): Observable<any> {
+    const url = this.baseUrl + 'manual';
+    console.log('MANUAL LINK: ' + url);
+    return this.http.get<any>(url);
   }
 
 }
