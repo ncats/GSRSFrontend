@@ -13,7 +13,7 @@ import {
   SubstanceRelated,
   SubstanceReference
 } from './substance.model';
-import { PagingResponse } from '../utils/paging-response.model';
+import { PagingResponse, ShortResult } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FacetParam } from '../facets-manager/facet.model';
 import { FacetHttpParams } from '../facets-manager/facet-http-params';
@@ -57,7 +57,7 @@ export class SubstanceService extends BaseHttpService {
     super(configService);
   }
 
-  get searchResults(): Observable<any> {
+  get searchResults(): Observable<ShortResult> {
     return new Observable(observer => {
       if (!this.searchResult) {
         this.searchResult = { etag: '', uuids: []};
@@ -69,7 +69,7 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
-  setResult(result: any, content: Array<any>) {
+  setResult(result: string, content: Array<any>) {
     const uuid = [];
     if (content && content.length > 0) {
       content.forEach(substance => {
