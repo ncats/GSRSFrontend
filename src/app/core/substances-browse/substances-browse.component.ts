@@ -372,6 +372,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response;
           });
+          this.substanceService.setResult(pagingResponse.etag, pagingResponse.content);
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
