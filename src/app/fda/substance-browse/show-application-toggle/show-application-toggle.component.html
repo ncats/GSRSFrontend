@@ -1,7 +1,26 @@
+<div class="divflex">
+  <!-- If in ginas.conf file (play framework), ix.gsrs.fda.applications.display.appToMatch = true,
+     display checkbox in the top of Browse Substance page-->
+  <div *ngIf="displayMatchApplicationConfig === true">
+    <mat-checkbox [checked]="displayMatchAppCheckBoxValue" (change)="setDisplayAppToMatchSession($event.checked)">
+      <span class="font14px"><b>Display Match Application Names</b></span>
+    </mat-checkbox>
+  </div>
+  <div class="padleft10px">
+    <button matTooltip="Export Search Results" mat-button (click)="export()"
+      class="mat-button export-button mat-raised-button">
+      <mat-icon svgIcon="get_app"></mat-icon> Export Applications
+    </button>
+  </div>
+</div>
+
 <!-- If in ginas.conf file (play framework), ix.gsrs.fda.applications.display.appToMatch = true,
      display checkbox in the top of Browse Substance page-->
+
+<!--
 <div *ngIf="displayMatchApplicationConfig === true">
   <mat-checkbox [checked]="displayMatchAppCheckBoxValue" (change)="setDisplayAppToMatchSession($event.checked)">
     <span class="font14px"><b>Display Match Application Names</b></span>
   </mat-checkbox>
 </div>
+-->

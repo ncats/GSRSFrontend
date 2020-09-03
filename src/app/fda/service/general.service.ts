@@ -60,6 +60,11 @@ export class GeneralService extends BaseHttpService {
       );
   }
 
+  getApiExportUrl(etag: string, extension: string): string {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/export/${etag}/${extension}`;
+    return url;
+  }
+
   getManualFile(): Observable<any> {
     const url = this.baseUrl + 'manual';
     console.log('MANUAL LINK: ' + url);
