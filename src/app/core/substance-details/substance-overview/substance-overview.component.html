@@ -5,9 +5,15 @@
       <mat-icon svgIcon="open_in_new"></mat-icon>
     </a>
     <span *ngIf="canEdit">
-      <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="edit form options"
-        *ngIf="isEditable; else editClassic">
+        <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
+        name="edit_record">
         <mat-icon svgIcon="edit"></mat-icon>
+      </a>
+</span>
+    <span *ngIf="canEdit">
+      <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="copy to edit form options"
+        *ngIf="isEditable; else editClassic">
+        <mat-icon svgIcon="file_copy"></mat-icon>
       </button>
       <ng-template #editClassic>
         <a mat-icon-button [href]="baseDomain + clasicBaseHref + 'substance/' + substance.uuid + '/edit'" name="edit"
@@ -26,10 +32,6 @@
       </a>
     </mat-menu>
     <mat-menu #editMenu="matMenu" xPosition="before">
-      <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
-        name="edit_record">
-        <mat-icon svgIcon="edit"></mat-icon>
-      </a>
       <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
         [queryParams]="{copy:substance.uuid}" matTooltip='copy substance to new registration form'>
         <mat-icon svgIcon="file_copy"></mat-icon>
