@@ -1,4 +1,4 @@
-<div class = 'audit-container'>
+<div class = 'audit-container' *ngIf = "source">
   <div class = "name" *ngIf = 'source.createdBy'><b class = 'static'>Created By:</b> {{ source.createdBy}} </div>
   <div class = "date" *ngIf = 'source.created'><b class = 'static'>on</b> {{ source.created | date:'medium'}}</div>
   <div class = "spacer" *ngIf = 'source.created && source.lastEdited'> <b>-</b> </div>

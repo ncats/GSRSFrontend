@@ -125,8 +125,10 @@ export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseF
   }
 
   deleteAllDisulfideLinks(): void {
+    if (confirm('Are you sure you want to delete all links?')) {
     this.substanceFormDisulfideLinksService.deleteAllDisulfideLinks();
     this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
+    }
   }
 
   openDialog(): void {

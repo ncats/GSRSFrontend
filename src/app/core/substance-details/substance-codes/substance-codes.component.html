@@ -14,7 +14,7 @@
           <mat-icon svgIcon="subdirectory_arrow_right" *ngIf="i > 0"></mat-icon>
           <a
             routerLink="/browse-substance"
-            [queryParams]="{ search: 'comments:' + node }">
+            [queryParams]='{ search: "root_codes_comments:\"" + node + "\""}'>
             {{node}}
           </a>
         </div>
@@ -29,7 +29,7 @@
     <ng-container matColumnDef="code">
       <th mat-header-cell *matHeaderCellDef  mat-sort-header> Code </th>
       <td mat-cell *matCellDef="let code">
-        <a  class = 'a-link' *ngIf = "code.url" [href] = "code.url" >{{code.code}}</a>
+        <a  class = 'a-link' *ngIf = "code.url" [href] = "code.url" target = "_blank">{{code.code}}</a>
         <span *ngIf = "!code.url"> {{code.code}}</span>
       </td>
     </ng-container>
