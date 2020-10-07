@@ -2,6 +2,10 @@
   display: flex;
 }
 
+.divheight {
+  height: 50px;
+}
+
 .colororange {
   color: orange;
 }
@@ -12,5 +16,19 @@
 
 .padleft10px {
   padding-left: 10px;
+}
+
+.padtop10px {
+   padding-top: -10px;
+}
+
+.export-button {
+  border-radius: 4px;
+}
+
+.outer-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 

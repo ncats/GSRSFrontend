@@ -5,6 +5,7 @@ import { SubstanceProductsComponent } from './substance-products.component';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +25,7 @@ import { SubstanceClinicalTrialsEuropeComponent } from './substance-clinical-tri
     MatTableModule,
     CdkTableModule,
     MatPaginatorModule,
+    MatSortModule,
     MatInputModule,
     MatTabsModule,
     MatButtonModule,

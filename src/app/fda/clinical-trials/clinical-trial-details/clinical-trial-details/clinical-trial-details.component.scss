@@ -53,32 +53,37 @@
 }
 
 .row-property-key {
-	min-width: 50%;
-	max-width: 50%;
+	min-width: 35%;
+	max-width: 35%;
 	padding: 7px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
 	/*background-color: #edeff2;*/
 }
 
 .row-property-value {
-	min-width: 50%;
-	max-width: 50%;
+	min-width: 65%;
+	max-width: 65%;
 	padding: 7px;
 	font-size: 12px;
 }
 
+.row-property-2 {
+  display: flex;
+  width: 100%;
+}
+
 .row-property-key-2 {
-	min-width: 13%;
-	max-width: 13%;
-	padding: 6px;
+  min-width: 17.5%;
+  max-width: 17.5%;
+  padding: 6px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .row-property-value-2 {
-	min-width: 87%;
-	max-width: 87%;
+	min-width: 82.5%;
+	max-width: 82.5%;
 	padding: 6px;
 	font-size: 12px;
 }
@@ -105,8 +110,16 @@
   padding-top: 17px;
 }
 
+.padtop50px {
+  padding-top: 50px;
+}
+
 .padleft20px {
   padding-left: 20px;
+}
+
+.padleft50px {
+  padding-left: 50px;
 }
 
 .padleft200px {

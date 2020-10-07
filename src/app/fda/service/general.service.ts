@@ -67,8 +67,30 @@ export class GeneralService extends BaseHttpService {
 
   getManualFile(): Observable<any> {
     const url = this.baseUrl + 'manual';
-    console.log('MANUAL LINK: ' + url);
-    return this.http.get<any>(url);
+    return this.http.get<any>(url, { headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }, responseType: 'blob' as 'json', observe: 'response' })
+    .pipe(
+      map(res => {
+        return res;
+      })
+    );
+  }
+
+  getManualUrl(): string {
+    const url = this.baseUrl + 'manual';
+    return url;
+  }
+
+  getEtagDetails(etag: string, fullname: string, source: string): Observable<any> {
+    const url = this.baseUrl + 'getEtagDetails?etagId=' + etag + '&filename=' + fullname + '&source=' + source;
+    return this.http.get<any>(url)
+      .pipe(
+        map(res => {
+          return res;
+        })
+      );
   }
 
 }

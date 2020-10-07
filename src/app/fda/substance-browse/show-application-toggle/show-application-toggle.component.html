@@ -6,21 +6,34 @@
       <span class="font14px"><b>Display Match Application Names</b></span>
     </mat-checkbox>
   </div>
-  <div class="padleft10px">
-    <button matTooltip="Export Search Results" mat-button (click)="export()"
+
+  <!-- Export Buttons -->
+  <div class="padleft10px divheight" *ngIf="totalSubstance <= 500">
+    <button matTooltip="Export All Applications for Substance Search Results" (click)="export('app')" mat-button
       class="mat-button export-button mat-raised-button">
-      <mat-icon svgIcon="get_app"></mat-icon> Export Applications
+      <mat-icon svgIcon="get_app"></mat-icon> Applications
     </button>
   </div>
-</div>
 
-<!-- If in ginas.conf file (play framework), ix.gsrs.fda.applications.display.appToMatch = true,
-     display checkbox in the top of Browse Substance page-->
+  <div class="padleft10px" *ngIf="totalSubstance <= 500">
+    <button matTooltip="Export All Products for Substance Search Results" mat-button (click)="export('prod')"
+      class="mat-button export-button mat-raised-button">
+      <mat-icon svgIcon="get_app"></mat-icon> Products
+    </button>
+  </div>
 
-<!--
-<div *ngIf="displayMatchApplicationConfig === true">
-  <mat-checkbox [checked]="displayMatchAppCheckBoxValue" (change)="setDisplayAppToMatchSession($event.checked)">
-    <span class="font14px"><b>Display Match Application Names</b></span>
-  </mat-checkbox>
+  <div class="padleft10px" *ngIf="totalSubstance <= 500">
+    <button matTooltip="Export All Clinical Trials US for Substance Search Results" mat-button
+      (click)="export('clinicalus')" class="mat-button export-button mat-raised-button">
+      <mat-icon svgIcon="get_app"></mat-icon> Clinical Trials US
+    </button>
+  </div>
+
+  <div class="padleft10px" *ngIf="totalSubstance <= 500">
+    <button matTooltip="Export All Clinical Trials Europe for Substance Search Results" mat-button
+      (click)="export('clinicaleurope')" class="mat-button export-button mat-raised-button">
+      <mat-icon svgIcon="get_app"></mat-icon> Clinical Trials Europe
+    </button>
+  </div>
+
 </div>
--->
