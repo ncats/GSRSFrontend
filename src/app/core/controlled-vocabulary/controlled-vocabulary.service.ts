@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BaseHttpService } from '../base/base-http.service';
+import { BaseHttpService } from '@gsrs-core/base/base-http.service';
 import { Observable, Subject, forkJoin } from 'rxjs';
-import { Vocabulary, VocabularyTerm, VocabularyDictionary } from './vocabulary.model';
-import { ConfigService } from '../config/config.service';
-import { PagingResponse } from '../utils/paging-response.model';
+import { Vocabulary, VocabularyTerm, VocabularyDictionary } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
+import { ConfigService } from '@gsrs-core/config/config.service';
+import { PagingResponse } from '@gsrs-core/utils/paging-response.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -203,6 +203,20 @@ export class ControlledVocabularyService extends BaseHttpService {
       })
     );
   }
+
+  getStructure(structure: string) {
+    const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
+    return this.http.get(url);
+  }
+  getStructureUrl(structure: string) {
+    structure = structure.replace(/[;]/g, '%3B')
+    .replace(/[#]/g, '%23')
+    .replace(/[+]/g, '%2B')
+    .replace(/[|]/g, '%7C');
+    const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
+    return url;
+  }
+    
 
   search(domain: string, query: string): Observable<Array<VocabularyTerm>> {
     return new Observable(observer => {

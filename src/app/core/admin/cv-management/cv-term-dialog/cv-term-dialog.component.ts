@@ -8,7 +8,7 @@ import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
   templateUrl: './cv-term-dialog.component.html',
   styleUrls: ['./cv-term-dialog.component.scss']
 })
-export class CvTermDialogComponent implements OnInit {
+export class CvTermDialogComponent implements OnInit, AfterViewInit{
   isNew: boolean;
   vocabulary: Vocabulary;
   terms: any;
@@ -35,8 +35,35 @@ export class CvTermDialogComponent implements OnInit {
 
   ngOnInit() {
     this.loading = false;
+}
+
+  ngAfterViewInit() {
+    if (this.vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary') {
+      this.terms.forEach(term => {
+        if (term.simplifiedStructure) {
+            term.simpleSrc = this.cvService.getStructureUrl(term.simplifiedStructure);
+        }
+        if (term.fragmentStructure) {
+          term.fragmentSrc = this.cvService.getStructureUrl(term.fragmentStructure);
+      }
+      });
+    }
+  }
+
+  getStructure(structure) {
+    this.cvService.getStructure(structure).subscribe(response => {
+      return response;
+    });
+  }
+
+
+  checkImg(term: any, img: string) {
+    term.fragmentSrc = this.cvService.getStructureUrl(term.fragmentStructure);
+    term.simpleSrc = this.cvService.getStructureUrl(term.simplifiedStructure);
 
   }
+ 
+
 
   submit(): void {
     this.vocabulary.terms = this.terms;

@@ -44,6 +44,34 @@
                                 <input matInput placeholder="System Category" [(ngModel)]="term.systemCategory"  name="systemCategory" />
                         </mat-form-field>
                 </div>
+                <div class = "form-row double-row"
+                *ngIf = "vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'">
+                        <div class = "str-column">
+                                <div>
+                                                <mat-form-field class="group">
+                                                                <input matInput placeholder="Simplified Structure" [(ngModel)]="term.simplifiedStructure"
+                                                                (input)= "checkImg(term, event)"  name="simplifiedStructure" />
+                                                        </mat-form-field>
+                                </div>
+                                <div  *ngIf = "term.simpleSrc">
+                                                <img [src] = "term.simpleSrc"/>
+                                </div>
+                                
+                        </div>
+                        <div class = "str-column">
+                                <div>
+                                                <mat-form-field class="group">
+                                                                <input matInput placeholder="Fragment Structure" [(ngModel)]="term.fragmentStructure"
+                                                                (input)= "checkImg(term, event)"  name="fragmentStructure" />                                 
+                                                        </mat-form-field>
+                                </div>
+                                <div *ngIf = "term.fragmentSrc">
+                                                <img [src] = "term.fragmentSrc" />
+                                </div>
+                       
+                       </div>
+               </div>
+
         </div>
 </div>
 
