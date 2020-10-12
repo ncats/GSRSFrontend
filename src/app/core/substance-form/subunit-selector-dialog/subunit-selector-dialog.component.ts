@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {cloneDeep} from 'lodash';
 
 @Component({
   selector: 'app-subunit-selector-dialog',
@@ -12,6 +13,7 @@ export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
   disulfides: any;
   siteType: string;
   dataToSend: any;
+  backup: any;
   constructor(
     public dialogRef: MatDialogRef<SubunitSelectorDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any = {}
@@ -45,6 +47,23 @@ export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (this.data.card === 'feature') {
+      if (this.feature && this.feature.name && this.feature.name !== '') {
+        if (this.feature.siteRange) {
+          this.backup = JSON.parse(JSON.stringify(this.feature));
+
+        } else {
+          this.backup = {};
+        }
+      } else {
+        this.backup = {};
+      }
+    } else if (this.data.card === 'multi-disulfide') {
+      this.backup = cloneDeep(this.disulfides);
+     } else {
+       const myClonedArray  = Object.assign([], this.data.links);
+      this.backup = cloneDeep(this.data.links);
+    }
   }
 
   save(): void {
@@ -69,7 +88,7 @@ export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
   }
 
   cancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(this.backup);
   }
   updateSites(sites: any): void {
     this.data.links = sites;
