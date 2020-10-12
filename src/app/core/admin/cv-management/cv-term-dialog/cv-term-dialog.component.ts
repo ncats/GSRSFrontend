@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { VocabularyTerm, Vocabulary, ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
