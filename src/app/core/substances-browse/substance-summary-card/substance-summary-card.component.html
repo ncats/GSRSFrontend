@@ -206,10 +206,26 @@
             </div>
           </div>
           <div class="substance-data">
+            <div class="label">Created By: </div>
+            <div>
+              <span class="value">
+                {{substance.createdBy }}
+              </span>
+            </div>
+          </div>
+          <div class="substance-data">
             <div class="label">Status: </div>
             <div>
               <span class="value">
                 {{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}
+              </span>
+            </div>
+          </div>
+          <div class="substance-data" *ngIf = "substance.status === 'approved'">
+            <div class="label">Status: </div>
+            <div>
+              <span class="value">
+                {{substance.approvedBy }}
               </span>
             </div>
           </div>
@@ -226,6 +242,14 @@
             <div>
               <span class="value">
                 {{substance.lastEdited | date : 'shortDate'}}
+              </span>
+            </div>
+          </div>
+          <div class="substance-data">
+            <div class="label">Last Modified By: </div>
+            <div>
+              <span class="value">
+                {{substance.lastEditedBy }}
               </span>
             </div>
           </div>

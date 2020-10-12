@@ -50,6 +50,12 @@
         <textarea placeholder="Enter text here" [(ngModel)]="code.comments" name="comments"></textarea>
       </div>
     </div>
+    <div class = "form-row">
+      <div class="code-text">
+        <div class="textarea-label">Comments</div>
+        <textarea placeholder="Enter text here" [(ngModel)]="code.codeText" name="codeText"></textarea>
+      </div>
+    </div>
     <div class="form-row">
       <div class="references-container">
         <app-domain-references [referencesUuids]="code.references" #references></app-domain-references>
