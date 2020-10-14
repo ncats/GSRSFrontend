@@ -130,7 +130,7 @@
           <div>
             <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5">
               <div class="code-system">
-                <span class="label">{{codeSystemName}}</span>:&nbsp;
+                <span class="label">{{codeSystemName | codeSystemDisplay | async}}</span>:&nbsp;
                 <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast">
                   <span *ngIf="codeObject.url">
                     <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
