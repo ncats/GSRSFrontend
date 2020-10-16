@@ -4311,6 +4311,20 @@
         "cvDomain": null,
         "priority": null
     },
+    "Structure Stereochemistry": {
+        "lucenePath": "root_structure_stereochemistry", 
+    "CVDomain": "STEREOCHEMISTRY_TYPE",
+       "displayName": "Structure Stereochemistry",
+        "priority":"x",
+    "description": "The structure's type of stereochemistry (absolute, achiral, racemic, etc.)." },
+    "Structure Optical Activity": {
+        "lucenePath": "root_structure_opticalActivity",
+        "CVDomain": "OPTICAL_ACTIVITY",
+       "displayName": "Structure Optical Activity",
+    "priority": "x",
+        "description": "The optical activity or rotation of the material. '(+)' and '(-)' are used for optically active materials where activity is known and significantly useful for definition. '(+/-)' is used for racemic mixtures."
+    },
+
     "Sugar": {
         "lucenePath": "root_nucleicAcid_sugars_sugar",
         "description": "The sugar itself which is used. This is a short-hand code for a defined structural sugar fragment found within the GSRS controlled vocabulary.",

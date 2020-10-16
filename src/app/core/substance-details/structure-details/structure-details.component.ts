@@ -28,6 +28,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   systematic: Array<string>;
   substanceUpdated = new Subject<SubstanceDetail>();
   showNames = false;
+  searchHref: string;
 
   constructor(
     private utilService: UtilsService,
@@ -54,6 +55,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
         const theJSON = this.structure.molfile;
         const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
         this.molfileHref = uri;
+        this.searchHref = 'structure-search?structure=' + this.structure.id;
       }
 
   }

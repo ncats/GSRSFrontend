@@ -70,9 +70,11 @@
       Login
     </button>
     <div class="logged-in" *ngIf="auth">
-      <button class="user-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()"
-        matTooltip="user menu">
-        <mat-icon class="user-icon" svgIcon="account_circle"></mat-icon>
+      <button class="user-button main-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip = "user menu">
+        <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
+      </button>
+      <button class="user-button arrow-button test-class" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip = "user menu">
+        <mat-icon class="user-icon" svgIcon="chevron_right"></mat-icon>
       </button>
       <br />
       <span class="user" *ngIf="auth && auth.identifier" matTooltip="{{auth.identifier}}">{{auth.identifier}}</span>

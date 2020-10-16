@@ -66,6 +66,9 @@
       <a class="mat-icon-button" title="Download molfile" [href]="molfileHref" download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.mol">
         <mat-icon svgIcon="get_app"></mat-icon>
       </a>
+      <a class="mat-icon-button" title="Structure Search" [href]="searchHref">
+        <mat-icon svgIcon="search"></mat-icon>
+      </a>
     </div>
     <img class="structure-img" appSubstanceImage [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
     <br/>

@@ -55,6 +55,7 @@
         cvDomain="JURISDICTION" placeholder="Jurisdiction">
       </app-tag-selector>
     </div>
+    
     <div class="form-row">
       <div class="references-container">
         <app-domain-references [referencesUuids]="name.references" #references></app-domain-references>
@@ -65,5 +66,6 @@
         <app-name-orgs [nameOrgs]="getNameOrgs(name)" #nameOrgs></app-name-orgs>
       </div>
     </div>
+      <app-audit-info [source] = "name"></app-audit-info>
   </div>
 </div>

@@ -35,7 +35,7 @@
           </mat-checkbox>
         </div>
         <div class="facet-value-label">
-          <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status'">
+          <span *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status' && facet.name !== 'Code System'">
             {{value.label}}
           </span>
           <span *ngIf="facet.name === 'Substance Class'">
@@ -43,6 +43,9 @@
           </span>
           <span *ngIf="facet.name === 'Record Status'">
             {{value.label | facetDisplay: 'status'}}
+          </span>
+          <span *ngIf="facet.name === 'Code System'">
+            {{value.label | codeSystemDisplay | async}}
           </span>
         </div>
         <div class="middle-fill"></div>

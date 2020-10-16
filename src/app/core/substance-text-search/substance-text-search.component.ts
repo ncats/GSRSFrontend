@@ -1,11 +1,12 @@
 import {Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { ConfigService } from '@gsrs-core/config';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 
 @Component({
   selector: 'app-substance-text-search',
@@ -29,17 +30,25 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   @Output() opened = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
   @Input() source?: string;
+  private CasDisplay = 'CAS';
 
   constructor(
     private utilsService: UtilsService,
     private element: ElementRef,
     public gaService: GoogleAnalyticsService,
-    public configService: ConfigService
+    public configService: ConfigService,
+    private cvService: ControlledVocabularyService
   ) { }
 
   ngOnInit() {
-
-    this.searchControl.valueChanges.pipe(
+    this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
+      let resp;
+      resp = response['CODE_SYSTEM'].dictionary;
+      if (resp['CAS']) {
+        this.CasDisplay = resp['CAS'].display;
+        }
+      });
+        this.searchControl.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(searchValue => {
@@ -69,6 +78,9 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
         } else if (value === 'Display_Name') {
           this.suggestionsFields[index] =  {value: 'Display_Name', display: 'Preferred Term'};
+        } else if(value === 'CAS'){
+          this.suggestionsFields[index] =  {value: 'CAS', display: this.CasDisplay};
+
         } else {
           this.suggestionsFields[index] =  {value: value, display: value};
         }
@@ -84,6 +96,10 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       console.log(error);
     });
 
+  }
+
+  getCasDisplay() {
+    this.cvService.getDomainVocabulary('CODE_SYSTEM')
   }
 
   @Input()

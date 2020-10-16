@@ -70,7 +70,9 @@ export class ConstituentFormComponent implements OnInit {
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(newAmount => {
       this.overlayContainer.style.zIndex = null;
-      this.privateConstituent.amount = newAmount;
+      if (newAmount) {
+        this.privateConstituent.amount = newAmount;
+      }
     });
     this.subscriptions.push(dialogSubscription);
   }
