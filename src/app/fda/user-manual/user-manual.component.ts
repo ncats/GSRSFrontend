@@ -38,7 +38,7 @@ export class UserManualComponent implements OnInit {
     downloadLink.setAttribute('download', filename);
     document.body.appendChild(downloadLink);
     downloadLink.click();
-    this.message = 'The User Manual has been downloaded to your local directory';
+    this.message = 'The User Manual has been downloaded to your local download directory';
   }
 
 }

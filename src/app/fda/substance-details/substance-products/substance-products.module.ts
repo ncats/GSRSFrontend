@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SubstanceApplicationComponent } from './substance-application/substance-application.component';
@@ -30,6 +31,7 @@ import { SubstanceClinicalTrialsEuropeComponent } from './substance-clinical-tri
     MatTabsModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule
