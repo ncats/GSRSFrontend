@@ -78,6 +78,7 @@ import { NamesDisplayPipe } from '@gsrs-core/utils/names-display-order.pipe';
 import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
+import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 
 @NgModule({
   declarations: [
@@ -155,7 +156,8 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
     GuidedSearchModule,
     MatNativeDateModule,
     AdminModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    CodeDisplayModule
   ],
   providers: [
     CanActivateAdminPage,

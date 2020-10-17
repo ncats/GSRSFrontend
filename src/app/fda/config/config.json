@@ -607,6 +607,27 @@
           "order": 210
         }
       ]
+    },
+    {
+      "display": "Help",
+      "order": 60,
+      "children": [
+        {
+          "display": "User Manual",
+          "path": "user-manual",
+          "order": 10
+        },
+        {
+          "display": "Submit a Helpdesk Ticket (JIRA)",
+          "path": "jira-submit",
+          "order": 20
+        },
+        {
+          "display": "Email GSRS Support",
+          "path": "",
+          "order": 30
+        }
+      ]
     }
   ],
   "substanceSelectorProperties": [

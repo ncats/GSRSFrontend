@@ -12,4 +12,7 @@
     <app-access-manager (accessOut)="updateAccess($event)" [access]="nucleicAcid.access">
     </app-access-manager>
   </div>
+  <div class = "form-row">
+    <app-audit-info [source] = "nucleicAcid"></app-audit-info>
+  </div>
 </div>

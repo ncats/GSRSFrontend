@@ -10,6 +10,7 @@ import {SubstanceAmount} from '@gsrs-core/substance';
 export class AmountFormDialogComponent implements OnInit {
   isNew: boolean;
   subsAmount: SubstanceAmount;
+  backup: SubstanceAmount;
 
   constructor(
     public dialogRef: MatDialogRef<AmountFormDialogComponent>,
@@ -21,9 +22,8 @@ export class AmountFormDialogComponent implements OnInit {
   ngOnInit() {
     this.subsAmount = this.data.subsAmount;
     this.data = this.data.subsAmount;
-    this.dialogRef.beforeClosed().subscribe(() => this.dialogRef.close(
-      (this.data  && this.data.type && this.data.type !== '' &&
-       this.data.type !== null) ? this.data : null));
+    this.backup = JSON.parse(JSON.stringify(this.data));
+    this.dialogRef.beforeClosed().subscribe(() => this.dialogRef.close(this.data));
 
   }
 
@@ -32,7 +32,9 @@ export class AmountFormDialogComponent implements OnInit {
   }
 
   cancel(): void {
-    this.dialogRef.close();
+    this.data.cancel = true;
+    this.data = this.backup;
+    this.dialogRef.close(this.data);
   }
 
 }

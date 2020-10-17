@@ -555,7 +555,7 @@
     color:rgba(0, 0, 0, 0.54);
     display:block;
     font-family:Roboto, "Helvetica Neue", sans-serif;
-    font-size:12px;
+    font-size:14px;
     padding-right: 12px;
 }
 
@@ -564,6 +564,16 @@
    flex-direction: row;
    align-items: center;
 margin-left: 20px;
+ }
+
+
+ :host ::ng-deep .mat-paginator-range-label{
+    margin: 0 5px 0 5px !important;
+
+  }
+
+ mat-paginator {
+     font-size:14px;
  }
 
  .page-input {

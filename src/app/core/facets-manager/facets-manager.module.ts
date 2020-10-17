@@ -13,6 +13,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { FacetDisplayPipe } from './facet-display.pipe';
 import { FacetFilterPipe } from './facet-filter.pipe';
+import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FacetFilterPipe } from './facet-filter.pipe';
     FormsModule,
     MatIconModule,
     MatProgressBarModule,
-    MatButtonModule
+    MatButtonModule,
+    CodeDisplayModule
   ],
   exports: [
     FacetsManagerComponent,

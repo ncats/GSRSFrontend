@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, Subject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -13,7 +13,7 @@ import {
   SubstanceRelated,
   SubstanceReference
 } from './substance.model';
-import { PagingResponse } from '../utils/paging-response.model';
+import { PagingResponse, ShortResult } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FacetParam } from '../facets-manager/facet.model';
 import { FacetHttpParams } from '../facets-manager/facet-http-params';
@@ -46,7 +46,8 @@ class CustomEncoder implements HttpParameterCodec {
 export class SubstanceService extends BaseHttpService {
   private searchKeys: { [structureSearchTerm: string]: string } = {};
   public showDeprecated = false;
-
+  private resultEmitter = new Subject<any>();
+  private searchResult: any;
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
@@ -54,6 +55,29 @@ export class SubstanceService extends BaseHttpService {
     private utilsService: UtilsService,
   ) {
     super(configService);
+  }
+
+  get searchResults(): Observable<ShortResult> {
+    return new Observable(observer => {
+      if (!this.searchResult) {
+        this.searchResult = { etag: '', uuids: [], total: 0};
+      }
+      observer.next(this.searchResult);
+      this.resultEmitter.subscribe(sites => {
+        observer.next(this.searchResult);
+      });
+    });
+  }
+
+  setResult(result: string, content: Array<any>, total: number) {
+    const uuid = [];
+    if (content && content.length > 0) {
+      content.forEach(substance => {
+          uuid.push(substance.uuid);
+      });
+    }
+    this.searchResult = {etag: result, uuids: uuid, total: total };
+    this.resultEmitter.next(this.searchResult);
   }
 
   getSubstancesSummaries(args: {
@@ -603,7 +627,7 @@ export class SubstanceService extends BaseHttpService {
 
 
   getSubstanceReferences(top: number = 10, user: string): Observable<any> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/references/search?top=${top}&order=$lastEdited&q=root_lastEditedBy="${user}"`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/references/search?top=${top}&order=$lastEdited&q=root_lastEditedBy:"${user}" AND NOT (root_docType:SYSTEM)`;
     return this.http.get< any>(url);
   }
 

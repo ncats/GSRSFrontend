@@ -1,396 +1,410 @@
-<div class="details-container margintop90px" *ngIf="clinicalTrial">
 
-  <div class="details-box">
-    <div class="font20px box">
-      <img [src]="flagIconSrcPath" width="25px" height="30px">
-      &nbsp;<b>Clinical Trial US Details</b>
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      <a [routerLink]="['/edit-clinical-trial', clinicalTrial.nctNumber]" [queryParams]="{}" target="_blank"
-        *ngIf="isAdmin" title='Edit Clinical Trial US Record'>
-        <mat-icon svgIcon="edit"></mat-icon>
-      </a>
-    </div>
-    <div class="row">
-      <div class="row-property-key-2">
-        NCT Number:
-      </div>
-      <div class="row-property-value-2">
-        <a href="{{clinicalTrial.url}}" target="_blank"><span
-            class="font14px fontbold colororange">{{clinicalTrial.nctNumber}}</span></a>
-        &nbsp;&nbsp;&nbsp;
-        <!--
+<div *ngIf="clinicalTrial">
+  <div *ngIf="clinicalTrial.nctNumber; else noRecord">
+
+    <div class="details-container margintop90px">
+
+      <div class="details-box">
+        <div class="font20px box">
+          <img [src]="flagIconSrcPath" width="25px" height="30px">
+          &nbsp;<b>Clinical Trial US Details</b>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a [routerLink]="['/edit-clinical-trial', clinicalTrial.nctNumber]" [queryParams]="{}" target="_blank"
+            *ngIf="isAdmin" title='Edit Clinical Trial US Record'>
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>
+        </div>
+
+
+        <div class="row">
+          <div class="row-property-key-2">
+            NCT Number:
+          </div>
+          <div class="row-property-value-2">
+            <a href="{{clinicalTrial.url}}" target="_blank"><span
+                class="font14px fontbold colororange">{{clinicalTrial.nctNumber}}</span></a>
+            &nbsp;&nbsp;&nbsp;
+            <!--
         <a [routerLink]="['/edit-clinical-trial', clinicalTrial.nctNumber]" target="_blank" title="Update Clinical Trial US">Update</a>
         -->
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property-key-2">
+            Title:
+          </div>
+          <div class="row-property-value-2">
+            {{clinicalTrial.title}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property-key-2">
+            Sponsor Name:
+          </div>
+          <div class="row-property-value-2">
+            {{clinicalTrial.sponsor}}
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="row">
-      <div class="row-property-key-2">
-        Title:
-      </div>
-      <div class="row-property-value-2">
-        {{clinicalTrial.title}}
-      </div>
-    </div>
+    <div class="details-container">
+      <!-- Tabs-->
+      <div class="mat-card bordergray">
+        <mat-tab-group>
 
-    <div class="row">
-      <div class="row-property-key-2">
-        Sponsor Name:
-      </div>
-      <div class="row-property-value-2">
-        {{clinicalTrial.sponsor}}
-      </div>
-    </div>
+          <mat-tab label="Clinical Trial US">
+            <div class="details-container">
+              <mat-card>
+                <div class="title">Clinical Trial US</div>
+                <mat-card-content>
 
-  </div>
-</div>
-
-<div class="details-container">
-  <!-- Tabs-->
-  <div class="mat-card bordergray">
-    <mat-tab-group>
-
-      <mat-tab label="Clinical Trial US">
-        <div class="details-container">
-          <mat-card>
-            <div class="title">Clinical Trial US</div>
-            <mat-card-content>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    NCT Number:
-                  </div>
-                  <div class="row-property-value">
-                    <a href="{{clinicalTrial.url}}" target="_blank"><span
-                        class="font14px fontbold colororange">{{clinicalTrial.nctNumber}}</span></a>
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Recruitment:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.recruitment}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Title:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.title}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Conditions:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.conditions}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Sponsor Name:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.sponsor}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Intervention:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.intervention}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Funded Bys:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.fundedBys}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Phases:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.phases}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Study Types:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.studyTypes}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Age Groups:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.ageGroups}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Study Designs:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.studyDesigns}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Gender:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.gender}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Study Results:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.studyResults}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Enrollment:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.enrollment}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Other Ids:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.otherIds}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Acronym:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.acronym}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Study Start Date:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.startDate|date: 'MM/dd/yyyy'}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Last Verified:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.lastVerified|date: 'MM/dd/yyyy'}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Study Completion Date:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.completionDate|date: 'MM/dd/yyyy'}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Primary Completion Date:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.primaryCompletionDate|date: 'MM/dd/yyyy'}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    First Received:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.firstReceived|date: 'MM/dd/yyyy'}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Last Updated:
-                  </div>
-                  <div class="row-property-value">
-                    {{clinicalTrial.lastUpdated|date: 'MM/dd/yyyy'}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Website Url:
-                  </div>
-                  <div class="row-property-value">
-                    <a href="{{clinicalTrial.url}}" target="_blank">{{clinicalTrial.url}}</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property-2">
-                  <div class="row-property-key-3">
-                    Outcome Measures:
-                  </div>
-                  <div class="row-property-value-3">
-                    {{clinicalTrial.outcomeMeasures}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Locations:
-                  </div>
-                  <div class="row-property-value">
-                    <div *ngIf="clinicalTrial.locationList.length > 0">
-                      <div *ngFor="let x of clinicalTrial.locationList; let i = index">
-                        {{i+1}}.{{x}}
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        NCT Number:
+                      </div>
+                      <div class="row-property-value">
+                        <a href="{{clinicalTrial.url}}" target="_blank"><span
+                            class="font14px fontbold colororange">{{clinicalTrial.nctNumber}}</span></a>
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Recruitment:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.recruitment}}
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-tab>
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Title:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.title}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Conditions:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.conditions}}
+                      </div>
+                    </div>
+                  </div>
 
-      <mat-tab label="Application ({{clinicalTrial.clinicalTrialApplicationList.length}})">
-        <div class="details-container">
-          <mat-card>
-            <div class="title">Applications in Clinical Trial </div>
-            <mat-card-content>
-              <div *ngIf="clinicalTrial.clinicalTrialApplicationList.length > 0; else noRecordApp">
-                <table width="98%" class="bordergray blueTable padleft20px">
-                  <thead>
-                    <tr valign="top">
-                      <th width="60px">#</th>
-                      <th width="200px">Application Type</th>
-                      <th width="200px">Application Number</th>
-                      <th width="300px">Center</th>
-                      <th width="200px">Decision</th>
-                      <th width="200px">Decision Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let x of clinicalTrial.clinicalTrialApplicationList; let i = index">
-                      <td>{{i+1}}</td>
-                      <td>{{x.appType}}</td>
-                      <td>{{x.appNumber}}</td>
-                      <td>{{x.center}}</td>
-                      <td>{{x.decision}}</td>
-                      <td>{{x.decisionDate}}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Sponsor Name:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.sponsor}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Intervention:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.intervention}}
+                      </div>
+                    </div>
+                  </div>
 
-              </div>
-              <ng-template #noRecordApp>
-                <p><br>
-                  There is no Application Data for this Clinical Trial
-                </p>
-              </ng-template>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-tab>
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Funded Bys:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.fundedBys}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Phases:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.phases}}
+                      </div>
+                    </div>
+                  </div>
 
-      <mat-tab label="Substance ({{clinicalTrial.clinicalTrialDrug.length}})">
-        <div class="details-container">
-          <mat-card>
-            <div class="title">Substances in Clinical Trial </div>
-            <mat-card-content>
-              <div *ngIf="clinicalTrial.clinicalTrialDrug.length > 0; else noRecordSub">
-                <table width="98%" class="bordergray blueTable padleft20px">
-                  <thead>
-                    <tr valign="top">
-                      <th width="60px">#</th>
-                      <th width="200px">Substance Name</th>
-                      <th width="200px">Structure</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let x of clinicalTrial.clinicalTrialDrug; let i = index">
-                      <td>{{i+1}}</td>
-                      <td>
-                        <div *ngIf="x.substanceUuid">
-                          <a [routerLink]="['/substances', x.substanceUuid]"
-                            target="_blank">{{x.substanceDisplayName}}</a>
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Study Types:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.studyTypes}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Age Groups:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.ageGroups}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Study Designs:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.studyDesigns}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Gender:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.gender}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Study Results:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.studyResults}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Enrollment:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.enrollment}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Other Ids:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.otherIds}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Acronym:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.acronym}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Study Start Date:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.startDate|date: 'MM/dd/yyyy'}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Last Verified:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.lastVerified|date: 'MM/dd/yyyy'}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Study Completion Date:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.completionDate|date: 'MM/dd/yyyy'}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Primary Completion Date:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.primaryCompletionDate|date: 'MM/dd/yyyy'}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        First Received:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.firstReceived|date: 'MM/dd/yyyy'}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Last Updated:
+                      </div>
+                      <div class="row-property-value">
+                        {{clinicalTrial.lastUpdated|date: 'MM/dd/yyyy'}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Website Url:
+                      </div>
+                      <div class="row-property-value">
+                        <a href="{{clinicalTrial.url}}" target="_blank">{{clinicalTrial.url}}</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property-2">
+                      <div class="row-property-key-2">
+                        Outcome Measures:
+                      </div>
+                      <div class="row-property-value-2">
+                        {{clinicalTrial.outcomeMeasures}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property-2">
+                      <div class="row-property-key-2">
+                        Locations:
+                      </div>
+                      <div class="row-property-value-2">
+                        <div *ngIf="clinicalTrial.locationList.length > 0">
+                          <div *ngFor="let x of clinicalTrial.locationList; let i = index">
+                            {{i+1}}.{{x}}
+                          </div>
                         </div>
-                      </td>
-                      <td>
-                        <div *ngIf="x.substanceUuid">
-                          <img class="structure-img" appSubstanceImage [entityId]="x.substanceUuid">
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <ng-template #noRecordSub>
-                <p><br>
-                  There is no Substance Data for this Clinical Trial
-                </p>
-              </ng-template>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-tab>
+                      </div>
+                    </div>
+                  </div>
 
-    </mat-tab-group>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Application ({{clinicalTrial.clinicalTrialApplicationList.length}})">
+            <div class="details-container">
+              <mat-card>
+                <div class="title">Applications in Clinical Trial </div>
+                <mat-card-content>
+                  <div *ngIf="clinicalTrial.clinicalTrialApplicationList.length > 0; else noRecordApp">
+                    <table width="98%" class="bordergray blueTable padleft20px">
+                      <thead>
+                        <tr valign="top">
+                          <th width="60px">#</th>
+                          <th width="200px">Application Type</th>
+                          <th width="200px">Application Number</th>
+                          <th width="300px">Center</th>
+                          <th width="200px">Decision</th>
+                          <th width="200px">Decision Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let x of clinicalTrial.clinicalTrialApplicationList; let i = index">
+                          <td>{{i+1}}</td>
+                          <td>{{x.appType}}</td>
+                          <td>{{x.appNumber}}</td>
+                          <td>{{x.center}}</td>
+                          <td>{{x.decision}}</td>
+                          <td>{{x.decisionDate}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </div>
+                  <ng-template #noRecordApp>
+                    <p><br>
+                      There is no Application Data for this Clinical Trial
+                    </p>
+                  </ng-template>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Substance ({{clinicalTrial.clinicalTrialDrug.length}})">
+            <div class="details-container">
+              <mat-card>
+                <div class="title">Substances in Clinical Trial </div>
+                <mat-card-content>
+                  <div *ngIf="clinicalTrial.clinicalTrialDrug.length > 0; else noRecordSub">
+                    <table width="98%" class="bordergray blueTable padleft20px">
+                      <thead>
+                        <tr valign="top">
+                          <th width="60px">#</th>
+                          <th width="200px">Substance Name</th>
+                          <th width="200px">Structure</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let x of clinicalTrial.clinicalTrialDrug; let i = index">
+                          <td>{{i+1}}</td>
+                          <td>
+                            <div *ngIf="x.substanceUuid">
+                              <a [routerLink]="['/substances', x.substanceUuid]"
+                                target="_blank">{{x.substanceDisplayName}}</a>
+                            </div>
+                          </td>
+                          <td>
+                            <div *ngIf="x.substanceUuid">
+                              <img class="structure-img" appSubstanceImage [entityId]="x.substanceUuid" size="150">
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <ng-template #noRecordSub>
+                    <p><br>
+                      There is no Substance Data for this Clinical Trial
+                    </p>
+                  </ng-template>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-tab>
+
+        </mat-tab-group>
+
+      </div>
+    </div>
 
   </div>
+  <ng-template #noRecord>
+    <br><br><br><br>
+    <div class="colororange padtop50px padleft50px">No Clinical Trial record found for {{this.nctNumber}}</div>
+  </ng-template>
 </div>
+<br><br><br><br>

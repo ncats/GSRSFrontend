@@ -75,6 +75,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
   }
 
   deleteLink(): void {
+    if (confirm('Are you sure you want to delete links?')) {
     this.privateLink.$$deletedCode = this.utilsService.newUUID();
    // if (!this.privateLink) {
       this.deleteTimer = setTimeout(() => {
@@ -82,6 +83,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
       }, 1000);
     // }
     this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
+    }
   }
 
   undoDelete(): void {

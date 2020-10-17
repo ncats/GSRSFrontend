@@ -95,16 +95,15 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
     navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
 
-    /*
-    this.location.replaceState(
-      this.router.createUrlTree(
-        [this.locationStrategy.path().split('?')[0].replace(this.environment.baseHref, '')],
-        navigationExtras
-      ).toString()
-    );
-    */
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      if (auth) {
+        this.isLoggedIn = true;
+      }
+      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    });
+    this.subscriptions.push(authSubscription);
 
-    const paramSub = this.activatedRoute.queryParamMap.subscribe(params => {
+    this.activatedRoute.queryParamMap.subscribe(params => {
 
       this.privateSearchTerm = params.get('search') || '';
 
@@ -118,26 +117,18 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isComponentInit = true;
       this.loadComponent();
     });
-    this.subscriptions.push(paramSub);
-
-    const authSubscription = this.authService.getAuth().subscribe(auth => {
-      if (auth) {
-        this.isLoggedIn = true;
-      }
-      this.subscriptions.push(authSubscription);
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-    });
   }
 
   ngAfterViewInit() {
   }
 
   ngOnDestroy() {
-    this.facetManagerService.unregisterFacetSearchHandler();
-
     this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     });
+    this.facetManagerService.unregisterFacetSearchHandler();
   }
 
   private loadComponent(): void {
@@ -187,7 +178,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   searchApplications() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
-    this.applicationService.getApplications(
+    const subscription = this.applicationService.getApplications(
       skip,
       this.pageSize,
       this._searchTerm,
@@ -225,12 +216,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         this.loadingService.setLoading(this.isLoading);
         this.notificationService.setNotification(notification);
       }, () => {
+        subscription.unsubscribe();
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
-    // this.populateUrlQueryParameters();
   }
-
 
   setSearchTermValue() {
     this.pageSize = 10;
@@ -248,13 +238,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
 
-    /*
-    this.router.navigate(
-      [],
-      navigationExtras
-    );
-    */
-
     const urlTree = this.router.createUrlTree([], {
       queryParams: navigationExtras.queryParams,
       queryParamsHandling: 'merge',
@@ -267,10 +250,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   get searchTerm(): string {
     return this.privateSearchTerm;
   }
-
-  // get facetParams(): { [facetName: string]: { [facetValueLabel: string]: boolean } } {
-  //   return this._facetParams;
-  //  }
 
   get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
     return this.privateFacetParams;
@@ -342,13 +321,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
           data: { 'extension': extension }
         });
         // this.overlayContainer.style.zIndex = '1002';
-        const exportSub = dialogReference.afterClosed().subscribe(name => {
+        dialogReference.afterClosed().subscribe(name => {
           // this.overlayContainer.style.zIndex = null;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
             this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
-              this.loadingService.setLoading(false);
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -360,19 +338,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
             }, error => this.loadingService.setLoading(false));
           }
         });
-        this.subscriptions.push(exportSub);
-      } else {
-        this.disableExport = true;
       }
     }
   }
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.applicationService.getApiExportUrl(etag, extension);
-  }
-
-  exportBrowseApplicationsUrl() {
-    // this.exportUrl = this.applicationService.exportBrowseApplicationsUrl();
   }
 
   get updateApplicationUrl(): string {

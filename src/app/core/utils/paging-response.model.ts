@@ -52,3 +52,9 @@ export interface Alignment {
   subunitIndex?: number;
   alignments?: Array<Alignment>;
 }
+
+export interface ShortResult {
+  etag?: string;
+  uuids?: Array<string>;
+  total?: number;
+}

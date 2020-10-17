@@ -1,11 +1,12 @@
 <mat-toolbar class="mat-elevation-z3" color="primary">
-  <div class = "logo-container">
+  <div class="logo-container">
     <span class="logo">
-    <a routerLink="/home" aria-label="home" >
-      <img [src]="logoSrcPath" alt = "gsrs-logo" />
-    </a>
-      </span>
-    <span class = "version" *ngIf = "version && version !== ''" [matTooltip]="versionTooltipMessage" matTooltipPosition="below">Ver. {{version}}</span>
+      <a routerLink="/home" aria-label="home">
+        <img [src]="logoSrcPath" alt="gsrs-logo" />
+      </a>
+    </span>
+    <span class="version" *ngIf="version && version !== ''" [matTooltip]="versionTooltipMessage"
+      matTooltipPosition="below">Ver. {{version}}</span>
   </div>
 
   <!-- <span class="nav-big">
@@ -17,14 +18,14 @@
   </span> -->
   <!-- <span class="middle-fill"></span> -->
   <span class="nav-small">
-    <button mat-icon-button [matMenuTriggerFor]="nav" (click)="increaseMenuZindex()" aria-label ="main menu">
+    <button mat-icon-button [matMenuTriggerFor]="nav" (click)="increaseMenuZindex()" aria-label="main menu">
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()">
       <a mat-menu-item [routerLink]="['/guided-search']">
         Guided Search
       </a>
-      <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf = "appId === 'fda'">
+      <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf="appId === 'fda'">
         Advanced Search
       </a>
       <div *ngFor="let navItem of navItems">
@@ -41,14 +42,17 @@
                 *ngIf="childNavItem.path">
                 {{childNavItem.display}}
               </a>
-            </div>
-            <a mat-menu-item *ngIf = "navItem.display === 'Register'" (click) = "importDialog()">
-                Import Substance
+              <a mat-menu-item [href]="'mailto:' + contactEmail + '?Subject=Support request'" *ngIf="childNavItem.display === 'Email GSRS Support'">
+                {{childNavItem.display}}
               </a>
+            </div>
+            <a mat-menu-item *ngIf="navItem.display === 'Register'" (click)="importDialog()">
+              Import Substance
+            </a>
           </mat-menu>
         </ng-container>
       </div>
-      <a mat-menu-item *ngIf="isAdmin" routerLink = "/admin">
+      <a mat-menu-item *ngIf="isAdmin" routerLink="/admin">
         Admin Panel
       </a>
       <a mat-menu-item [href]="'mailto:' + contactEmail">
@@ -66,20 +70,23 @@
       Login
     </button>
     <div class="logged-in" *ngIf="auth">
-      <button class="user-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip = "user menu">
+      <button class="user-button main-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip = "user menu">
         <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
       </button>
+      <button class="user-button arrow-button test-class" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip = "user menu">
+        <mat-icon class="user-icon" svgIcon="chevron_right"></mat-icon>
+      </button>
       <br />
-      <span class="user" *ngIf="auth && auth.identifier" matTooltip = "{{auth.identifier}}">{{auth.identifier}}</span>
+      <span class="user" *ngIf="auth && auth.identifier" matTooltip="{{auth.identifier}}">{{auth.identifier}}</span>
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
-      <a mat-menu-item  (click) = "openProfile()">
+      <a mat-menu-item (click)="openProfile()">
         <span>Profile</span>
       </a>
-      <a mat-menu-item  routerLink = "/user-downloads">
+      <a mat-menu-item routerLink="/user-downloads">
         <span>User Downloads</span>
       </a>
-      <a routerLink = "/admin" mat-menu-item *ngIf = "isAdmin">
+      <a routerLink="/admin" mat-menu-item *ngIf="isAdmin">
         <span>Admin Panel</span>
       </a>
       <button mat-menu-item (click)="authService.logout()">

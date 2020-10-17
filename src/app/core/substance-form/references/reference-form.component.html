@@ -76,4 +76,7 @@
   <div class = "form-row " *ngIf = "showPrev" >
     <app-previous-references class = "previous-ref" (selectedReference) = "fillReference($event)" ></app-previous-references>
   </div>
+  <div class = "form-row">
+    <app-audit-info [source] = "reference"></app-audit-info>
+  </div>
 </div>

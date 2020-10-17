@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
 import {MatDialogModule} from '@angular/material';
 import {MatSortModule} from '@angular/material/sort';
+import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import {MatSortModule} from '@angular/material/sort';
     MatIconModule,
     ReferencesManagerModule,
     MatDialogModule,
-    MatSortModule
+    MatSortModule,
+    CodeDisplayModule
   ],
   declarations: [
     SubstanceCodesComponent

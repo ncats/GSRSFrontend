@@ -3,6 +3,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/substance-details-base-table-display';
+import { Sort } from '@angular/material';
+import { LoadingService } from '@gsrs-core/loading/loading.service';
 
 @Component({
   selector: 'app-substance-adverseeventpt',
@@ -13,9 +15,13 @@ import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/su
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
   advPtCount = 0;
+  orderBy = 5;
+  ascDescDir = 'desc';
+  showSpinner = false;
 
   @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
+  filtered: Array<any>;
   displayedColumns: string[] = [
     'ptTerm',
     'primSoc',
@@ -26,13 +32,14 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private adverseEventService: AdverseEventService
+    private adverseEventService: AdverseEventService,
+    private loadingService: LoadingService
   ) {
     super(gaService, adverseEventService);
   }
 
   ngOnInit() {
-      if (this.bdnum) {
+    if (this.bdnum) {
       this.getSubstanceAdverseEventPt();
       this.adverseEventPtListExportUrl();
     }
@@ -40,21 +47,14 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
   getSubstanceAdverseEventPt(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
-
-    this.adverseEventService.getSubstanceAdverseEventPt(this.bdnum, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);
-      this.advPtCount = this.totalRecords;
-      this.countAdvPtOut.emit(this.advPtCount);
-    });
-
-/*
-      this.searchControl.valueChanges.subscribe(value => {
-        this.filterList(value, this.adverseevents, this.analyticsEventCategory);
-      }, error => {
-        console.log(error);
+    this.showSpinner = true;  // Start progress spinner
+    this.adverseEventService.getSubstanceAdverseEventPtAdv(this.bdnum, this.page, this.pageSize,
+      this.orderBy, this.ascDescDir).subscribe(results => {
+        this.setResultData(results);
+        this.advPtCount = this.totalRecords;
+        this.countAdvPtOut.emit(this.advPtCount);
+        this.showSpinner = false;  // Stop progress spinner
       });
-      this.countUpdate.emit(adverseevents.length);
-    });*/
   }
 
   adverseEventPtListExportUrl() {
@@ -63,4 +63,13 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     }
   }
 
+  sortData(sort: Sort) {
+    if (sort.active) {
+      this.orderBy = this.displayedColumns.indexOf(sort.active) + 2; // Adding 2, for name and bdnum.
+      this.ascDescDir = sort.direction;
+      this.getSubstanceAdverseEventPt();
+    }
+    return;
+  }
 }
+
