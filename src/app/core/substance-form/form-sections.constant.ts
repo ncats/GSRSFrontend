@@ -124,6 +124,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-ssg-definition',
     'substance-form-ssg-grade',
     'substance-form-codes-card',
+    'substance-form-notes',
     'substance-form-references'
   ]
 };

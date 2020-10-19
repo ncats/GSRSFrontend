@@ -557,7 +557,8 @@
         "Indication",
         "Dosage Form",
         "Source",
-        "Product Name Deprecated"
+        "Product Name Deprecated",
+        "Record Created By"
       ]
     },
     "ctclinicaltrial": {
