@@ -17,6 +17,9 @@ import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import * as deepEqual from 'deep-equal';
 import { SubstanceFormLinksService } from '../links/substance-form-links.service';
+import { MatDialog } from '@angular/material';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-disulfide-dialog/copy-disulfide-dialog.component';
 
 @Component({
   selector: 'app-subunit-form',
@@ -43,6 +46,8 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   substanceType: string;
   searchType: string;
   validArray: Array<string> = [];
+  private overlayContainer: HTMLElement;
+
 
 
   constructor(
@@ -51,12 +56,15 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private cvService: ControlledVocabularyService,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer,
   ) {
 
   }
 
   ngOnInit() {
     this.allSites = [];
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     if (this.subunit.sequence === '') {
       this.toggle[this.subunit.subunitIndex] = true;
     }
@@ -202,6 +210,19 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     return arr;
   }
 
+  copyDisulfides() {
+    const dialogRef = this.dialog.open(CopyDisulfideDialogComponent, {
+      data: {'unit': this.subunit.subunitIndex, 'full': this.subunit},
+      width: '600px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+      if (response ) {
+      }
+    });
+  }
+
   editSubunit(subunit: Subunit, input: string): void {
     this.toggle[subunit.subunitIndex] = !this.toggle[subunit.subunitIndex];
     if (this.toggle[subunit.subunitIndex] === false) {
@@ -276,8 +297,12 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       obj[arr2[1].toUpperCase()] = arr2[0];
     }
     let seqarr = [];
-
+    if (!this.toggle[this.subunit.subunitIndex]) {
     seqarr = this.subunit.sequence.replace(/[ ]/g, '-').split('-');
+    } else {
+      seqarr = this.editSequence.replace(/[ ]/g, '-').split('-');
+
+    }
 
     for (let i = 0; i < seqarr.length; i++) {
       let trans = obj[seqarr[i].toUpperCase()];
@@ -291,10 +316,13 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
       n = n + trans;
     }
-
+    if (!this.toggle[this.subunit.subunitIndex]) {
     this.subunit.sequence = n;
     this.substanceFormService.emitSubunitUpdate();
     this.substanceFormService.recalculateCysteine();
+    } else {
+      this.editSequence = n;
+    }
   }
 
 
