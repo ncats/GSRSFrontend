@@ -276,9 +276,7 @@ export class SubstanceFormService implements OnDestroy {
         $$diverseType: 'whole'
       };
     } else if (newClass === 'specifiedSubstanceG1') {
-      substance.structurallyDiverse = {
-        part: ['whole'],
-        $$diverseType: 'whole'
+      substance.specifiedSubstance = {
       };
     } else if (newClass === 'polymer') {
       substance.polymer = {
@@ -911,6 +909,32 @@ export class SubstanceFormService implements OnDestroy {
   // other links end
 
   // disulfide links start
+  copyDisulfideLinks(to: number, from: number): any {
+console.log(this.privateSubstance.protein.disulfideLinks);
+ const test= JSON.parse(JSON.stringify(this.privateSubstance.protein.disulfideLinks));
+ console.log(test);
+ console.log(to + ' ' + from);
+const push = [];
+const test3 = [];
+for (let i = 0; i < test.length; i++) {
+  const link = JSON.parse(JSON.stringify(test[i]));
+  if (link['sites'][0].subunitIndex === to || (link['sites'][1].subunitIndex === to)) {
+  } else if (link['sites'][0].subunitIndex === from && link['sites'][1].subunitIndex === from) {
+    const copy = JSON.parse(JSON.stringify(test[i]));
+    copy.sites[0].subunitIndex = to;
+  copy.sites[1].subunitIndex = to;
+  copy.sitesShorthand = copy.sites[0].subunitIndex + '_' + copy.sites[0].residueIndex +
+    ';' + copy.sites[1].subunitIndex + '_' + copy.sites[1].residueIndex;
+    test3.push(link);
+    test3.push(copy);
+  } else {
+    test3.push(link);
+  }
+}
+
+this.privateSubstance.protein.disulfideLinks = test3;
+this.emitDisulfideLinkUpdate();
+  }
 
   disulfideLinksUpdated(): Observable<Array<DisulfideLink>> {
     return this.substanceDisulfideLinksEmitter.asObservable();

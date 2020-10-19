@@ -81,6 +81,7 @@ import { SubstanceFormStructuralModificationsService } from './structural-modifi
 import { PreviousReferencesComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references.component';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material';
+import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-disulfide-dialog/copy-disulfide-dialog.component';
 
 @NgModule({
   imports: [
@@ -145,7 +146,8 @@ import { MatProgressSpinnerModule } from '@angular/material';
     SubmitSuccessDialogComponent,
     MergeConceptDialogComponent,
     DefinitionSwitchDialogComponent,
-    PreviousReferencesDialogComponent
+    PreviousReferencesDialogComponent,
+    CopyDisulfideDialogComponent
   ],
   exports: [
     SubstanceFormComponent,
@@ -174,7 +176,8 @@ import { MatProgressSpinnerModule } from '@angular/material';
     AuditInfoComponent,
     MergeConceptDialogComponent,
     DefinitionSwitchDialogComponent,
-    PreviousReferencesDialogComponent
+    PreviousReferencesDialogComponent,
+    CopyDisulfideDialogComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
@@ -192,7 +195,8 @@ import { MatProgressSpinnerModule } from '@angular/material';
     SubmitSuccessDialogComponent,
     MergeConceptDialogComponent,
     DefinitionSwitchDialogComponent,
-    PreviousReferencesDialogComponent
+    PreviousReferencesDialogComponent,
+    CopyDisulfideDialogComponent
   ]
 })
 export class SubstanceFormModule {
