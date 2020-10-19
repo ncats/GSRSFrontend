@@ -17,12 +17,20 @@
 
 }
 
+.tooltiptest {
+  z-index: 9999 !important;
+  background: #b71c1c;
+}
+
 .user {
   font-size:12px;
 }
 .arrow-button {
-  margin-left: -20px !important;
+  margin-left: -13px !important;
+  height:25px !important;
+  width: 25px !important;
 }
+
 
 .main-button {
 }
@@ -53,7 +61,10 @@
   }
 
 }
-
+.icon-two {
+  height:25px !important;
+  width: 25px !important;
+}
 :host ::ng-deep .mat-icon {
   height: 30px !important;
   width: 30px  !important;
