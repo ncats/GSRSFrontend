@@ -15,6 +15,7 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
   references: Array<SubstanceReference> = [];
   displayedColumns: string[] = ['citation', 'type', 'tags', 'dateAcessed'];
   substanceUpdated = new Subject<SubstanceDetail>();
+  pageSize = 10;
 
   constructor(
     public gaService: GoogleAnalyticsService,

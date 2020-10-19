@@ -23,6 +23,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   substanceUpdated = new Subject<SubstanceDetail>();
   private overlayContainer: HTMLElement;
   hideOrgs = true;
+  pageSize = 10;
 
   constructor(
     private dialog: MatDialog,
