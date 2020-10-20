@@ -47,6 +47,7 @@ export class GuidedSearchComponent implements OnInit {
           cvDomain: ''
         };
         this.queryableSubstanceDict = response;
+
         const displayProperties = ['All'];
         const displayPropertiesCommon = ['All'];
         Object.keys(this.queryableSubstanceDict).forEach(key => {
