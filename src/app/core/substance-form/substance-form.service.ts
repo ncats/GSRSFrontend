@@ -113,7 +113,7 @@ export class SubstanceFormService implements OnDestroy {
             substanceClass: substanceClass,
             references: [],
             names: [],
-            nucleicAcid: {},
+            mixture: {},
             codes: [],
             relationships: []
           };
