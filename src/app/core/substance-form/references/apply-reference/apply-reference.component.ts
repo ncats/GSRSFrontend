@@ -48,9 +48,11 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
   applyToAll(): void {
     this.applyReference(this.domainsWithReferences.definition.domain);
     this.domainKeys.forEach(key => {
-      this.domainsWithReferences[key].domains.forEach(domain => {
-        this.applyReference(domain);
-      });
+      if (this.domainsWithReferences[key]) {
+        this.domainsWithReferences[key].domains.forEach(domain => {
+          this.applyReference(domain);
+        });
+      }
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
 
