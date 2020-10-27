@@ -26,6 +26,8 @@
 <div class = "flex-row" *ngIf = "disulfideLinks && disulfideLinks.length > 0"><button mat-raised-button mat-primary (click) ="deleteAllDisulfideLinks()">
   Delete All Links
 </button></div>
+<app-audit-info [source] = "disulfideLinks"></app-audit-info>
+
 
 
 

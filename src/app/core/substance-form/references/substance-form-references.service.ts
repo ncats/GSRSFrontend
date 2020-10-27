@@ -59,6 +59,7 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
   }
 
   getDomainReferences(): DomainsWithReferences {
+    console.log('getting ref');
       let subClass = this.substance.substanceClass;
       if (this.substance.substanceClass === 'chemical') {
         subClass = 'structure';
@@ -96,7 +97,7 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
         this.privateDomainsWithReferences[key] = {
           listDisplay: key,
           displayKey: domainDisplayKeys[key],
-          domains: this.substance[key] || null
+          domains: this.substance[key] || []
         };
       } else {
         if (subClass === 'specifiedSubstance' && this.substance.specifiedSubstance &&
@@ -106,8 +107,6 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
           displayKey: 'constituent',
           domains: this.substance.specifiedSubstance.constituents || null
         };
-        console.log(key);
-        console.log(domainDisplayKeys[key]);
       }
       }
       });

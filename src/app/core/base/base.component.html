@@ -66,10 +66,10 @@
       Login
     </button>
     <div class="logged-in" *ngIf="auth">
-      <button class="user-button main-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
+      <button class="user-button main-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()"  matTooltip = "testing arglebargle 1233">
         <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
       </button>
-      <button class="user-button arrow-button test-class" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
+      <button class="user-button arrow-button test-class" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip = "testing arglebargle 1233">
         <mat-icon class="user-icon icon-two" svgIcon="chevron_down"></mat-icon>
       </button>
       <br />

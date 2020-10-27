@@ -64,6 +64,11 @@
 .icon-two {
   height:25px !important;
   width: 25px !important;
+
+  svg {
+    height: 25px !important;
+    width: 25px !important;
+  }
 }
 :host ::ng-deep .mat-icon {
   height: 30px !important;

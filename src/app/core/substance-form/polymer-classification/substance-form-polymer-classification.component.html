@@ -26,5 +26,7 @@
     <app-access-manager (accessOut)="updateAccess($event)" [access]="classification.access">
     </app-access-manager>
   </div>
+  <app-audit-info [source] = "classification"></app-audit-info>
+
 </div>
 
