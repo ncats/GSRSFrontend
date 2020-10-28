@@ -11,6 +11,7 @@ import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-structure-search',
@@ -34,13 +35,16 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     private activatedRoute: ActivatedRoute,
     private renderer: Renderer2,
     private gaService: GoogleAnalyticsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private titleService: Title
+
   ) {
     this.searchType = 'substructure';
   }
 
   ngOnInit() {
     this.gaService.sendPageView(`Structure Search`);
+    this.titleService.setTitle('Structure Search');
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }

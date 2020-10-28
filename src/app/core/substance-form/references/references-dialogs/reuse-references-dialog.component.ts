@@ -16,6 +16,8 @@ export class ReuseReferencesDialogComponent implements OnInit {
   substanceReferences: Array<SubstanceReference>;
   documentTypes: { [vocabularyValue: string]: VocabularyTerm } = {};
   displayedColumns: string[] = ['apply', 'type', 'citation', 'publicDomain', 'access'];
+  filter = false;
+  unfiltered: Array<SubstanceReference>;
 
   constructor(
     public dialogRef: MatDialogRef<ReuseReferencesDialogComponent>,
@@ -27,9 +29,23 @@ export class ReuseReferencesDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.unfiltered = JSON.parse(JSON.stringify(this.substanceReferences));
     this.getVocabularies();
     this.dialogRef.beforeClosed().subscribe(() => this.dialogRef.close(
       (this.domainReferenceUuids && this.domainReferenceUuids.length > 0) ? this.domainReferenceUuids : null));
+      console.log(this.substanceReferences);
+      this.filterRefs();
+  }
+
+  filterRefs() {
+    this.filter = !this.filter;
+    if (this.filter) {
+      this.substanceReferences = this.substanceReferences.filter( item => {
+          return item.docType !== 'SYSTEM' && item.docType !== 'VALIDATION_MESSAGE';
+      });
+    } else {
+      this.substanceReferences = JSON.parse(JSON.stringify(this.unfiltered));
+    }
   }
   
 
