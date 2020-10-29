@@ -26,11 +26,9 @@ export class GuidedSearchComponent implements OnInit {
     private configService: ConfigService,
     private utilitiesService: UtilsService,
     private activatedRoute: ActivatedRoute,
-    private titleService: Title
   ) { }
 
   ngOnInit() {
-    this.titleService.setTitle(`Guided Search`);
     const guidedSearchHash = Number(this.activatedRoute.snapshot.queryParams['g-search-hash']) || null;
     let queryStatementHashes: Array<number>;
     if (guidedSearchHash) {
