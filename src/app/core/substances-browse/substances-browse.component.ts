@@ -44,6 +44,7 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
 import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-substances-browse',
@@ -127,6 +128,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private facetManagerService: FacetsManagerService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private substanceTextSearchService: SubstanceTextSearchService,
+    private titleService: Title,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
@@ -135,6 +137,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.gaService.sendPageView('Browse Substances');
     this.pageSize = 10;
     this.pageIndex = 0;
+    this.titleService.setTitle('Browse Substances');
 
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
 

@@ -6,6 +6,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { QueryStatement } from './query-statement/query-statement.model';
 import { typeCommandOptions } from './query-statement/type-command-options.constant';
 import { UtilsService } from '@gsrs-core/utils';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-guided-search',
@@ -24,7 +25,7 @@ export class GuidedSearchComponent implements OnInit {
     private router: Router,
     private configService: ConfigService,
     private utilitiesService: UtilsService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit() {
@@ -47,6 +48,7 @@ export class GuidedSearchComponent implements OnInit {
           cvDomain: ''
         };
         this.queryableSubstanceDict = response;
+
         const displayProperties = ['All'];
         const displayPropertiesCommon = ['All'];
         Object.keys(this.queryableSubstanceDict).forEach(key => {

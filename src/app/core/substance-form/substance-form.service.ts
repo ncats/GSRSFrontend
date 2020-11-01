@@ -89,6 +89,7 @@ export class SubstanceFormService implements OnDestroy {
             },
             codes: [],
             relationships: [],
+            properties: []
           };
         } else if (substanceClass === 'protein') {
           this.privateSubstance = {
@@ -98,6 +99,7 @@ export class SubstanceFormService implements OnDestroy {
             protein: { proteinType: '' },
             codes: [],
             relationships: [],
+            properties: []
           };
         } else if (substanceClass === 'nucleicAcid') {
           this.privateSubstance = {
@@ -107,15 +109,17 @@ export class SubstanceFormService implements OnDestroy {
             nucleicAcid: {},
             codes: [],
             relationships: [],
+            properties: []
           };
         } else if (substanceClass === 'mixture') {
           this.privateSubstance = {
             substanceClass: substanceClass,
             references: [],
             names: [],
-            nucleicAcid: {},
+            mixture: {},
             codes: [],
-            relationships: []
+            relationships: [],
+            properties: []
           };
         } else if (substanceClass === 'structurallyDiverse') {
           this.privateSubstance = {
@@ -127,7 +131,8 @@ export class SubstanceFormService implements OnDestroy {
               $$diverseType: 'whole'
             },
             codes: [],
-            relationships: []
+            relationships: [],
+            properties: []
           };
         } else if (substanceClass === 'specifiedSubstanceG1') {
           this.privateSubstance = {
@@ -139,7 +144,8 @@ export class SubstanceFormService implements OnDestroy {
               references: []
             },
             codes: [],
-            relationships: []
+            relationships: [],
+            properties: []
           };
         } else if (substanceClass === 'specifiedSubstanceG3') {
           this.privateSubstance = {
@@ -151,7 +157,8 @@ export class SubstanceFormService implements OnDestroy {
               definition: {references: []},
               grade: {references: []}
             },
-            codes: []
+            codes: [],
+            properties: []
           };
         } else if (substanceClass === 'polymer') {
           this.privateSubstance = {
@@ -164,7 +171,8 @@ export class SubstanceFormService implements OnDestroy {
             },
             codes: [],
             moieties: [],
-            relationships: []
+            relationships: [],
+            properties: []
           };
         } else {
           this.privateSubstance = {

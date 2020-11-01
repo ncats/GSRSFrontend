@@ -37,7 +37,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
         if (this.type === 'classification') {
           this.displayedColumns = ['classificationTree', 'codeSystem', 'code', 'references'];
         } else {
-          this.displayedColumns = ['codeSystem', 'code', 'type', 'description', 'references'];
+          this.displayedColumns = ['codeSystem', 'code', 'type', 'comments', 'references'];
         }
 
           this.filterSubstanceCodes();

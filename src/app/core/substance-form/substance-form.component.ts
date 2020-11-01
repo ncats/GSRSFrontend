@@ -190,6 +190,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
               this.gaService.sendPageView(`Substance Register`);
               this.subClass = this.activatedRoute.snapshot.params['type'] || 'chemical';
               this.substanceClass = this.subClass;
+              this.titleService.setTitle('Register - ' + this.subClass);
               this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
                 this.setFormSections(formSections[this.subClass]);
                 this.loadingService.setLoading(false);
@@ -198,6 +199,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             });
           }
         }
+        
+
         }
       });
     this.subscriptions.push(routeSubscription);
@@ -207,7 +210,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     });
     this.subscriptions.push(routerSubscription);
-    this.titleService.setTitle('Register');
     this.approving = false;
     const definitionSubscription = this.substanceFormService.definition.subscribe(response => {
       this.definition = response;
@@ -380,6 +382,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   getSubstanceDetails(newType?: string): void {
     this.substanceService.getSubstanceDetails(this.id).pipe(take(1)).subscribe(response => {
+      if (response._name){
+        this.titleService.setTitle('Edit - ' + response._name);
+      }
       if (response) {
         this.definitionType = response.definitionType;
         if (newType) {

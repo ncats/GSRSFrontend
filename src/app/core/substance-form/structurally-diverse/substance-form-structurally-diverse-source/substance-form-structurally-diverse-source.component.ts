@@ -14,7 +14,7 @@ import { SubstanceFormStructurallyDiverseService } from '../substance-form-struc
 })
 export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceFormBase
   implements OnInit, AfterViewInit, OnDestroy {
-
+    confirm = false;
   structurallyDiverse: StructurallyDiverse;
   private subscriptions: Array<Subscription> = [];
 
@@ -34,9 +34,26 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
       this.structurallyDiverse = structurallyDiverse;
       if (!this.structurallyDiverse.$$diverseType) {
         if (this.structurallyDiverse.part.length === 1 && this.structurallyDiverse.part[0].toUpperCase() === ('WHOLE')) {
-          this.structurallyDiverse.$$diverseType = 'whole';
+          if (this.checkParts() === false) {
+            this.structurallyDiverse.$$diverseType = 'full_fields';
+
+          } else {
+            this.structurallyDiverse.$$diverseType = 'whole';
+
+          }
         } else {
-          this.structurallyDiverse.$$diverseType = 'fraction';
+          if (this.checkWhole() === false) {
+            this.structurallyDiverse.$$diverseType = 'full_fields';
+
+          } else {
+            this.structurallyDiverse.$$diverseType = 'fraction';
+
+          }
+
+          for ( let i = 0; i < this.structurallyDiverse.part.length; i++) {
+              if ( this.structurallyDiverse.part[i].toUpperCase() === ('WHOLE')) {
+              }
+          }
         }
       }
     });
@@ -58,20 +75,96 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
     }
   }
 
+  checkParts(): boolean {
+
+    if (this.structurallyDiverse.partLocation && this.structurallyDiverse.partLocation !== null &&
+      this.structurallyDiverse.partLocation !== '' ) {
+        return false;
+      } else if (this.structurallyDiverse.fractionName && this.structurallyDiverse.fractionName !== null &&
+        this.structurallyDiverse.fractionName !== '' ) {
+          return false;
+        }  else if (this.structurallyDiverse.fractionMaterialType && this.structurallyDiverse.fractionMaterialType !== null &&
+          this.structurallyDiverse.fractionMaterialType !== '' ) {
+            return false;
+          } else {
+            return true;
+          }
+  }
+
+  checkWhole(): boolean {
+    const check = ['organismFamily', 'organismGenus', 'organismSpecies', 'organismAuthor', 'infraSpecificType', 'infraSpecificName',
+     'hybridSpeciesMaternalOrganism', 'hybridSpeciesPaternalOrganism', 'developmentalStage'];
+    let found = true;
+    check.forEach( field => {
+      if (this.structurallyDiverse[field] && this.structurallyDiverse[field] !== null &&
+        this.structurallyDiverse[field] !== '' &&
+        this.structurallyDiverse[field] !== {} ) {
+         found = false;
+        }
+    });
+    return found;
+  }
+
   updateType(event: any): void {
-    this.structurallyDiverse.$$diverseType = event.value;
-    if (this.structurallyDiverse.$$diverseType === 'whole') {
-      this.structurallyDiverse.$$storedPart = this.structurallyDiverse.part;
+    this.confirm = false;
+    if (event.value === 'whole') {
+      if (this.checkParts()) {
+        this.confirm = false;
+      } else {
+        this.confirm = true;
+      }
+      if (this.structurallyDiverse.$$diverseType === 'fraction') {
+        this.structurallyDiverse.$$storedPart = this.structurallyDiverse.part;
+
+      }
       this.structurallyDiverse.part = ['WHOLE'];
     } else {
+      if (event.value === 'full_fields') {
+        this.structurallyDiverse.$$diverseType = event.value;
+        } else {
 
-      if (this.structurallyDiverse.$$storedPart) {
-        this.structurallyDiverse.part = this.structurallyDiverse.$$storedPart;
-      } else {
-        this.structurallyDiverse.part = [];
+          if (this.checkWhole()) {
+            this.confirm = false;
+          } else {
+            this.confirm = true;
+          }
+          this.structurallyDiverse.$$diverseType = event.value;
+       if (this.structurallyDiverse.$$storedPart) {
+          this.structurallyDiverse.part = this.structurallyDiverse.$$storedPart;
+        } 
       }
     }
+    this.structurallyDiverse.$$diverseType = event.value;
+  //  this.structurallyDiverse.$$diverseType = event.value;
     this.substanceFormStructurallyDiverseService.emitStructurallyDiverseUpdate();
+  }
+
+  clean() {
+    if (this.structurallyDiverse.$$diverseType === 'fraction') {
+      const check = ['organismFamily', 'organismGenus', 'organismSpecies', 'organismAuthor', 'infraSpecificType', 'infraSpecificName',
+      'hybridSpeciesMaternalOrganism', 'hybridSpeciesPaternalOrganism'];
+            check.forEach( field => {
+        if (this.structurallyDiverse[field] && this.structurallyDiverse[field] !== null &&
+          this.structurallyDiverse[field] !== '' ) {
+          //  this.structurallyDiverse[field] = null;
+          delete this.structurallyDiverse[field];
+          }
+      });
+    } else {
+      if (this.structurallyDiverse.partLocation && this.structurallyDiverse.partLocation !== null) {
+          delete  this.structurallyDiverse.partLocation;
+        }
+         if (this.structurallyDiverse.fractionName && this.structurallyDiverse.fractionName !== null) {
+            delete this.structurallyDiverse.fractionName;
+          }
+          if (this.structurallyDiverse.fractionMaterialType && this.structurallyDiverse.fractionMaterialType !== null) {
+              delete this.structurallyDiverse.fractionMaterialType;
+            }
+            if (this.structurallyDiverse.parentSubstance && this.structurallyDiverse.parentSubstance !== null ) {
+                delete this.structurallyDiverse.fractionMaterialType;
+              }
+    }
+    this.confirm = false;
   }
 
   ngOnDestroy() {

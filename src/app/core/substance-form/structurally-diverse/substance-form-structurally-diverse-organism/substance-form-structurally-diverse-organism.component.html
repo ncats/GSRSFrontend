@@ -1,5 +1,5 @@
 <div class="organism-form-container" *ngIf = "structurallyDiverse">
-  <div *ngIf = "part === 'whole'">
+  <div *ngIf = "part === 'whole' || part === 'full_fields'">
     <div *ngIf = "structurallyDiverse.sourceMaterialClass === 'ORGANISM'">
     <div class = 'form-row'>
       <mat-form-field class="family">
@@ -44,7 +44,9 @@
       </div>
     </div>
   </div>
-  <div *ngIf = "part === 'fraction'" class = 'form-row'>
+  <mat-divider class="form-divider" [inset]="true" *ngIf = "part === 'full_fields'" ></mat-divider>
+
+  <div *ngIf = "part === 'fraction' || part === 'full_fields'" class = 'form-row'>
     <div class = 'parent'>
       <div class = 'form-row'>
         <app-substance-selector class = "related-substance" (selectionUpdated)="sourceMaterialUpdated($event)"
@@ -75,5 +77,6 @@
       </div>
     </div>
     </div>
+    <app-audit-info [source] = "structurallyDiverse"></app-audit-info>
 
 </div>

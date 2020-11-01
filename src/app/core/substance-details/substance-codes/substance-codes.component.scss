@@ -9,3 +9,18 @@
   text-decoration:none;
   color: #1565C0;
 }
+
+
+.form-row {
+  width:100%;
+  display: flex;
+  flex-direction:row;
+   .label {
+     width:10%;
+     font-weight: 600;
+   }
+   .content {
+     width:90%;
+   }
+   padding-bottom: 25px;
+}

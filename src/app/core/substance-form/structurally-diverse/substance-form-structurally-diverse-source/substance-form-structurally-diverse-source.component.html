@@ -11,10 +11,17 @@
     <div class = 'column-radio'>
     <mat-radio-group class = 'type'(change) = 'updateType($event)'>
       <mat-radio-button  value = 'whole' [checked] = 'structurallyDiverse.$$diverseType === "whole"'>Whole</mat-radio-button>
-      <mat-radio-button value = 'fraction' [checked] = 'structurallyDiverse.$$diverseType !== "whole"'>Part/ Fraction</mat-radio-button>
+      <mat-radio-button value = 'fraction' [checked] = 'structurallyDiverse.$$diverseType !== "whole" &&
+      structurallyDiverse.$$diverseType !== "full_fields"'>Part/ Fraction</mat-radio-button>
+      <mat-radio-button value = 'full_fields' [checked] = 'structurallyDiverse.$$diverseType === "full_fields"'>Full Fields</mat-radio-button>
+
     </mat-radio-group>
     </div>
+    
   </div>
+  <div class = "form-row-alt" *ngIf = "confirm">
+    <div>Changes made to the now hidden form will still be submitted <button class = "mat-button mat-primary mat-flat-button" (click) = "clean()" >clean hidden fields</button></div>  
+    </div>
   <div class = "form-row">
     <app-audit-info [source] = "structurallyDiverse"></app-audit-info>
   </div>

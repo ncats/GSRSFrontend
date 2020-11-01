@@ -6,6 +6,7 @@ import { debounceTime } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {SubstanceService} from '@gsrs-core/substance';
 import {LoadingService} from '@gsrs-core/loading';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-sequence-search',
@@ -28,6 +29,8 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     private substanceService: SubstanceService,
     private gaService: GoogleAnalyticsService,
     private loadingService: LoadingService,
+    private titleService: Title
+
 
   ) {
     this.activatedRoute
@@ -58,6 +61,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Sequence Search');
     this.gaService.sendPageView(`Sequence Search`);
     this.sequenceSearchForm.controls.cutoff.valueChanges.pipe(
       debounceTime(1000)

@@ -2,7 +2,7 @@
   <div class="link-form-container">
   <div class="form-row">
     <div class="name-type">
-      <app-cv-input key = "Protein Glycosylation Type" title = "Sequence Type" (valueChange) = "glycosylation.glycosylationType = $event" [model] = "glycosylation.glycosylationType"></app-cv-input>
+      <app-cv-input key = "Protein Glycosylation Type" title = "Glycosylation Type" (valueChange) = "glycosylation.glycosylationType = $event" [model] = "glycosylation.glycosylationType"></app-cv-input>
       <br/>
       <br/>
       <button mat-raised-button mat-primary (click) = 'clearAll()' >Clear Glycosylation</button>
@@ -38,4 +38,6 @@
 
   </div>
 </div>
+<app-audit-info [source] = "privateLink"></app-audit-info>
+
 </div>

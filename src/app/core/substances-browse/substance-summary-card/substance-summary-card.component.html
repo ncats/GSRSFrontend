@@ -222,7 +222,7 @@
             </div>
           </div>
           <div class="substance-data" *ngIf = "substance.status === 'approved'">
-            <div class="label">Status: </div>
+            <div class="label">Approved By: </div>
             <div>
               <span class="value">
                 {{substance.approvedBy }}
@@ -230,7 +230,7 @@
             </div>
           </div>
           <div class="substance-data" *ngIf = "substance.approved">
-            <div class="label">Approved Date: </div>
+            <div class="label">Validated Date: </div>
             <div>
               <span class="value">
                 {{substance.approved| date : 'short'}}

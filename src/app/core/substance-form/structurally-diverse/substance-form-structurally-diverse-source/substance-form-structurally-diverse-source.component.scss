@@ -3,7 +3,12 @@
   position: relative;
 }
 
-
+.form-row-alt {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  align-items: flex-end;
+}
 .form-row {
   display: flex;
   justify-content: space-between;
