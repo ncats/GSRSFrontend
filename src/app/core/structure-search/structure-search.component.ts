@@ -36,6 +36,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     private renderer: Renderer2,
     private gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
+    private titleService: Title
 
   ) {
     this.searchType = 'substructure';
@@ -43,6 +44,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnInit() {
     this.gaService.sendPageView(`Structure Search`);
+    this.titleService.setTitle('Structure Search');
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
