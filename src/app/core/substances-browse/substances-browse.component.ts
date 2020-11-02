@@ -128,7 +128,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private facetManagerService: FacetsManagerService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private substanceTextSearchService: SubstanceTextSearchService,
-    private titleService: Title,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
@@ -137,7 +136,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.gaService.sendPageView('Browse Substances');
     this.pageSize = 10;
     this.pageIndex = 0;
-    this.titleService.setTitle('Browse Substances');
 
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
 
