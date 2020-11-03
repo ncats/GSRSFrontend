@@ -25,38 +25,6 @@ export class GeneralService extends BaseHttpService {
       );
   }
 
-  /*
-  isDisplayAppToMatchConfig(): Observable<any> {
-    const url = this.baseUrl + 'isDisplayAppToMatchConfig2';
-    return this.http.get<any>(url)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  setDisplayAppToMatchSession(checkBoxValue: boolean): Observable<any> {
-    const url = this.baseUrl + 'setDisplayAppToMatchSession' + '';
-    return this.http.get<any>(url)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  getDisplayAppToMatchSession(): Observable<any> {
-    const url = this.baseUrl + 'getDisplayAppToMatchSession2';
-    return this.http.get<any>(url)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-  */
-
   getAppIngredtMatchListCount(substanceUuid: string): Observable<any> {
     const url = this.baseUrl + 'getAppIngredtMatchListCountJson?substanceId=' + substanceUuid + '&citation=';
     return this.http.get<any>(url)
@@ -84,6 +52,39 @@ export class GeneralService extends BaseHttpService {
 
   appIngredMatchListAutoUpdateSave(applicationId: number, bdnum: string): Observable<any> {
     const url = this.baseUrl + 'appIngredMatchListAutoUpdateSaveJson?applicationId=' + applicationId + '&bdnum=' + bdnum;
+    return this.http.get<any>(url)
+      .pipe(
+        map(res => {
+          return res;
+        })
+      );
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/export/${etag}/${extension}`;
+    return url;
+  }
+
+  getManualFile(): Observable<any> {
+    const url = this.baseUrl + 'manual';
+    return this.http.get<any>(url, { headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }, responseType: 'blob' as 'json', observe: 'response' })
+    .pipe(
+      map(res => {
+        return res;
+      })
+    );
+  }
+
+  getManualUrl(): string {
+    const url = this.baseUrl + 'manual';
+    return url;
+  }
+
+  getEtagDetails(etag: string, fullname: string, source: string): Observable<any> {
+    const url = this.baseUrl + 'getEtagDetails?etagId=' + etag + '&filename=' + fullname + '&source=' + source;
     return this.http.get<any>(url)
       .pipe(
         map(res => {

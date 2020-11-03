@@ -19,6 +19,8 @@ import { ApplicationModule} from './application/application.module';
 import { SubstanceApplicationMatchListModule } from './substance-browse/substance-application-match-list/substance-application-match-list.module';
 import { ProductModule} from './product/product.module';
 import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
+import { UserManualModule } from './user-manual/user-manual.module';
+import { JiraSubmitTicketModule } from './jira-submit-ticket/jira-submit-ticket.module';
 import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
 import { SubstanceApplicationMatchListComponent} from './substance-browse/substance-application-match-list/substance-application-match-list.component';
 import { ApplicationsBrowseComponent } from './application/applications-browse/applications-browse.component';
@@ -28,6 +30,8 @@ import { SsoRefreshService } from './service/sso-refresh.service';
 import { ProductService } from './product/service/product.service';
 import { GeneralService} from './service/general.service';
 import { ShowApplicationToggleComponent } from './substance-browse/show-application-toggle/show-application-toggle.component';
+import { JiraSubmitTicketComponent } from './jira-submit-ticket/jira-submit-ticket.component';
+import { UserManualComponent } from './user-manual/user-manual.component';
 
 const fdaRoutes: Routes = [
   {
@@ -37,6 +41,14 @@ const fdaRoutes: Routes = [
   {
     path: 'sub-app-match-list/:id',
     component: SubstanceApplicationMatchListComponent
+  },
+  {
+    path: 'user-manual',
+    component: UserManualComponent
+  },
+  {
+    path: 'jira-submit',
+    component: JiraSubmitTicketComponent
   }
 ];
 
@@ -57,6 +69,8 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     ApplicationModule,
     ProductModule,
     SubstanceApplicationMatchListModule,
+    UserManualModule,
+    JiraSubmitTicketModule,
     MatCardModule,
     MatIconModule,
     MatTooltipModule,

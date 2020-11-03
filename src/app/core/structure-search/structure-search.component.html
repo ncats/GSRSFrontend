@@ -24,7 +24,7 @@
           </mat-form-field>
           <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
             <div>Similarity cutoff (tanimoto)</div>
-            <mat-slider min="0" max="1" step="0.01" [value]="similarityCutoff" (input)="searchCutoffChanged($event)"></mat-slider>
+            <mat-slider min=".40" max="1" step="0.01" [value]="similarityCutoff" (input)="searchCutoffChanged($event)"></mat-slider>
             <div>{{similarityCutoff}}</div>
           </div>
         </div>

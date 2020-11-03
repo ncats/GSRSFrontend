@@ -60,7 +60,7 @@ export class SubstanceService extends BaseHttpService {
   get searchResults(): Observable<ShortResult> {
     return new Observable(observer => {
       if (!this.searchResult) {
-        this.searchResult = { etag: '', uuids: []};
+        this.searchResult = { etag: '', uuids: [], total: 0};
       }
       observer.next(this.searchResult);
       this.resultEmitter.subscribe(sites => {
@@ -69,14 +69,14 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
-  setResult(result: string, content: Array<any>) {
+  setResult(result: string, content: Array<any>, total: number) {
     const uuid = [];
     if (content && content.length > 0) {
       content.forEach(substance => {
           uuid.push(substance.uuid);
       });
     }
-    this.searchResult = {etag: result, uuids: uuid };
+    this.searchResult = {etag: result, uuids: uuid, total: total };
     this.resultEmitter.next(this.searchResult);
   }
 

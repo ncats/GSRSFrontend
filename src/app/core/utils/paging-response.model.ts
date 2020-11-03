@@ -56,4 +56,5 @@ export interface Alignment {
 export interface ShortResult {
   etag?: string;
   uuids?: Array<string>;
+  total?: number;
 }

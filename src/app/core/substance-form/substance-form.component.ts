@@ -67,6 +67,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   user: string;
   feature: string;
   isAdmin: boolean;
+  isUpdater: boolean;
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -152,6 +153,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnInit() {
     this.loadingService.setLoading(true);
     this.isAdmin = this.authService.hasRoles('admin');
+    this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     const routeSubscription = this.activatedRoute

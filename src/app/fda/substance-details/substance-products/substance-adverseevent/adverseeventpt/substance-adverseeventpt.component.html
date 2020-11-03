@@ -5,47 +5,36 @@
     <button mat-icon-button color="primary">
       <mat-icon>arrow_downward</mat-icon>Export
     </button>
-  </a>  
+  </a>
 </div>
-<!--
-<div class="flex-row">
-  <span class="middle-fill"></span>
-  <mat-form-field [floatLabel]="'never'" class="search">
-    <input matInput placeholder="Search" [formControl]="searchControl">
-  </mat-form-field>
-</div>
--->
-<div class="responsive mat-table-style">
-  <table mat-table [dataSource]="paged">
 
-    <!--
-    <ng-container matColumnDef="bdnum">
-      <th mat-header-cell *matHeaderCellDef> Bdnum </th>
-      <td mat-cell *matCellDef="let product"> <div innerHTML="{{product.productNDC}}"></div></td>
-    </ng-container>
-  -->
+<div class="responsive mat-table-style">
+  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
+    
     <ng-container matColumnDef="ptTerm">
-      <th mat-header-cell *matHeaderCellDef> PT Term </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Term </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.ptTerm}} </td>
     </ng-container>
 
     <ng-container matColumnDef="primSoc">
-      <th mat-header-cell *matHeaderCellDef> Prim SOC </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Prim SOC </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.primSoc}} </td>
     </ng-container>
 
     <ng-container matColumnDef="caseCount">
-      <th mat-header-cell *matHeaderCellDef> Case Count </th>
-      <td mat-cell *matCellDef="let adverse"> {{adverse.caseCount}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Case Count </th>
+      <td mat-cell *matCellDef="let adverse"> {{adverse.caseCount}}</td>
     </ng-container>
 
     <ng-container matColumnDef="ptCount">
-      <th mat-header-cell *matHeaderCellDef> PT Count </th>
-      <td mat-cell *matCellDef="let adverse"> {{adverse.ptCount}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Count </th>
+      <td mat-cell *matCellDef="let adverse">
+        <div [innerHTML]="adverse.ptCount" class="colorgray"></div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="prr">
-      <th mat-header-cell *matHeaderCellDef> PRR </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> PRR </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.prr | number : '.2-2'}} </td>
     </ng-container>
 
@@ -56,3 +45,8 @@
 <mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
   (page)="getSubstanceAdverseEventPt($event)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
+
+<div *ngIf="showSpinner" class="spinnerstyle">
+  <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
+  </mat-progress-spinner>
+</div>

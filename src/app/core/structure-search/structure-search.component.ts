@@ -77,7 +77,8 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
           if (this.searchType === 'similarity') {
             this.showSimilarityCutoff = true;
-            this.similarityCutoff = params.has('cutoff') && Number(params.get('cutoff')) || 0.5;
+            this.similarityCutoff = params.has('cutoff') && Number(params.get('cutoff')) || 0.8;
+            alert(this.similarityCutoff);
           }
 
           this.searchTypeControl.setValue(this.searchType);
@@ -121,7 +122,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
     if (this.searchType === 'similarity') {
       this.showSimilarityCutoff = true;
-      this.similarityCutoff = 0.5;
+      this.similarityCutoff = 0.8;
     } else {
       this.showSimilarityCutoff = false;
     }
