@@ -11,8 +11,10 @@
     <div *ngIf="includeFacetSearch">
       <div class="facet-search-container" *ngIf = "facet.enhanced">
         <mat-form-field *ngIf="searchText[facet.name]">
-          <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value"
+          <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value" *ngIf ="facet.name !== 'Approved By'"
             (ngModelChange)="filterFacets(topIndex, $event, facet.name)" placeholder="Search  {{facet.name}}">
+            <input matInput class="search" type="text" [(ngModel)]="searchText[facet.name].value" *ngIf ="facet.name === 'Approved By'"
+            (ngModelChange)="filterFacets(topIndex, $event, facet.name)" placeholder="Search Validated By">
         </mat-form-field>
         <button mat-icon-button color="black" (click)="clearFacetSearch(topIndex, facet.name)">
           <mat-icon svgIcon="close"></mat-icon>
@@ -45,7 +47,7 @@
             {{value.label | facetDisplay: 'status'}}
           </span>
           <span *ngIf="facet.name === 'Code System'">
-            {{value.label | codeSystemDisplay | async}}
+            {{value.label | codeSystemDisplay | async }}
           </span>
         </div>
         <div class="middle-fill"></div>

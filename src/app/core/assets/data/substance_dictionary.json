@@ -280,7 +280,7 @@
         "priority": null
     },
     "Code Comments": {
-        "lucenePath": "root_codes_comments",
+        "lucenePath": "root_codes_codeText",
         "description": "Any comments regarding the relationship.",
         "type": "string",
         "cvDomain": null,
@@ -333,6 +333,13 @@
         "description": "The orginizational system which defines the code meaning (e.g. the originating database or classification system).",
         "type": "string",
         "cvDomain": "CODE_SYSTEM",
+        "priority": "x"
+    },
+    "Code Text": {
+        "lucenePath": "root_codes_comments",
+        "description": "text field for codes",
+        "type": "string",
+        "cvDomain": null,
         "priority": "x"
     },
     "Code Type": {
@@ -4315,13 +4322,13 @@
         "lucenePath": "root_structure_stereochemistry",
         "description": "The structure's type of stereochemistry (absolute, achiral, racemic, etc.).", 
         "type": "string",
-        "CvDomain": "STEREOCHEMISTRY_TYPE",
+        "cvDomain": "STEREOCHEMISTRY_TYPE",
         "priority":"x"
    }
     ,
     "Structure Optical Activity": {
         "lucenePath": "root_structure_opticalActivity",
-        "CvDomain": "OPTICAL_ACTIVITY",
+        "cvDomain": "OPTICAL_ACTIVITY",
         "type": "string",
         "priority": "x",
         "description": "The optical activity or rotation of the material. '(+)' and '(-)' are used for optically active materials where activity is known and significantly useful for definition. '(+/-)' is used for racemic mixtures."
