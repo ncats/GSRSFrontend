@@ -70,7 +70,7 @@
         <mat-icon svgIcon="search"></mat-icon>
       </a>
     </div>
-    <img class="structure-img" appSubstanceImage [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
+    <img class="structure-img" appSubstanceImage  size = "250" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
     <br/>
       <button class ="mat-raised-button mat-primary" [disabled]="structure.definedStereo == 0" (click)="toggleStereo()">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
 
