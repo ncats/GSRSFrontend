@@ -59,7 +59,6 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
   }
 
   getDomainReferences(): DomainsWithReferences {
-    console.log('getting ref');
       let subClass = this.substance.substanceClass;
       if (this.substance.substanceClass === 'chemical') {
         subClass = 'structure';
