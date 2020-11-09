@@ -59,7 +59,7 @@ export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBa
   }
 
   update(tags: Array<string>): void {
-    this.classification.polymerSubClass = tags;
+    this.classification.polymerSubclass = tags;
   }
 
   updateType(type: string): void {
