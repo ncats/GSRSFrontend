@@ -109,7 +109,7 @@ export interface PolymerClassification extends SubstanceBase {
   references?: Array<string>;
   polymerClass?: string;
   polymerGeometry?: string;
-  polymerSubClass?: Array<string>;
+  polymerSubclass?: Array<string>;
   parentSubstance?: SubstanceRelated;
   access?: Array<string>;
   sourceType?: string;
