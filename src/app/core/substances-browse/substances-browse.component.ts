@@ -128,12 +128,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private facetManagerService: FacetsManagerService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private substanceTextSearchService: SubstanceTextSearchService,
+    private title: Title,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);
     this.gaService.sendPageView('Browse Substances');
+    this.title.setTitle('Browse Substances');
+
     this.pageSize = 10;
     this.pageIndex = 0;
 
