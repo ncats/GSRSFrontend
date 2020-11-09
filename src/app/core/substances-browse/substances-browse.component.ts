@@ -135,6 +135,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);
     this.gaService.sendPageView('Browse Substances');
+
     this.title.setTitle('Browse Substances');
 
     this.pageSize = 10;
