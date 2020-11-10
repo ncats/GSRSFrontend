@@ -4319,7 +4319,7 @@
         "priority": null
     },
     "Structure Stereochemistry": {
-        "lucenePath": "root_structure_stereochemistry",
+        "lucenePath": "root_structure_stereoChemistry",
         "description": "The structure's type of stereochemistry (absolute, achiral, racemic, etc.).", 
         "type": "string",
         "cvDomain": "STEREOCHEMISTRY_TYPE",
