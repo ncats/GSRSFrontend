@@ -245,7 +245,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   cleanStructure() {
     const smiles = this.editor.getSmiles();
-    if (this.editor) {
+    if (this.jsdraw) {
       const push = {
       angleStop: this.jsdraw.angleStop,
       bondlength: this.jsdraw.bondlength,
@@ -253,9 +253,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       tor: this.jsdraw.tor,
       mol: _.cloneDeep(this.jsdraw.m)
       };
-      if ( this.jsdraw._undostack._items.length > 9) {
-      //  this.jsdraw._undostack._items.shift();
-      }
       this.jsdraw._undostack._items.push(push);
 
     }

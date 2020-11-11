@@ -141,7 +141,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       this.overlayContainer.style.zIndex = null;
 
       if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
-        if (this.editor) {
+        if (this.editor && this.editor.jsdraw) {
           const push = {
             angleStop: this.editor.jsdraw.angleStop,
           bondlength: this.editor.jsdraw.bondlength,
