@@ -80,6 +80,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     event.preventDefault();
   }
 
+// override JSDraw for Molvec paste event. Using the JSDraw menu copy function seems to ignore this at first
   checkPaste = (event: ClipboardEvent ) => {
     event.stopPropagation();
     event.stopImmediatePropagation();
@@ -245,6 +246,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   cleanStructure() {
     const smiles = this.editor.getSmiles();
+    // this is to add the current jsdraw state to the undo stack. We are creating a simulacrum of an undo event since 'setMolecule()'
+    // and 'setSmiles()' do not add the state to said stack. This allows us to undo imports and structure cleaning.
+    // only works for jsdraw, not ketcher
     if (this.jsdraw) {
       const push = {
       angleStop: this.jsdraw.angleStop,
