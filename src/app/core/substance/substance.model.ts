@@ -298,6 +298,7 @@ export interface StructuralModification extends SubstanceModifications {
   sites?: Array<Site>;
   extent?: string;
   extentAmount?: SubstanceAmount;
+  $$amount?: string;
   molecularFragment?: SubstanceRelated;
   modificationGroup?: string;
   comment?: string;

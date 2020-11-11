@@ -62,7 +62,7 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
       if (this.structural) {
         this.structural.forEach( item => {
           if (item.extentAmount) {
-            item.extent = this.displayAmount(item.extentAmount);
+            item.$$amount = this.displayAmount(item.extentAmount);
           }
       });
       }

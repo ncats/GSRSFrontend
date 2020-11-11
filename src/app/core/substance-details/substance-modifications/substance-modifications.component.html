@@ -141,7 +141,8 @@
       <ng-container matColumnDef="Extent">
         <th mat-header-cell *matHeaderCellDef> Extent </th>
         <td mat-cell *matCellDef="let structural">
-          {{structural.extent}}
+          {{structural.extent}}<br>
+          <b>Amount: </b> {{structural.$$amount}}
         </td>
       </ng-container>
 

@@ -18,6 +18,7 @@ import { environment } from '../../../environments/environment';
 import { StructureService } from '@gsrs-core/structure';
 import { LoadingService } from '@gsrs-core/loading';
 import { take } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-structure-editor',
@@ -244,6 +245,21 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   cleanStructure() {
     const smiles = this.editor.getSmiles();
+    if (this.editor) {
+      const push = {
+      angleStop: this.jsdraw.angleStop,
+      bondlength: this.jsdraw.bondlength,
+      fontsize: this.jsdraw.fontsize,
+      tor: this.jsdraw.tor,
+      mol: _.cloneDeep(this.jsdraw.m)
+      };
+      if ( this.jsdraw._undostack._items.length > 9) {
+      //  this.jsdraw._undostack._items.shift();
+      }
+      this.jsdraw._undostack._items.push(push);
+
+    }
+
     if (smiles != null && smiles !== '') {
       this.structureService.interpretStructure(smiles).pipe(take(1)).subscribe(response => {
         if (response && response.structure && response.structure.molfile) {
