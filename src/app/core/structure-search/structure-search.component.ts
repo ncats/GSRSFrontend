@@ -136,7 +136,6 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       data: {}
     });
     this.overlayContainer.style.zIndex = '1002';
-    
 
     dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
       this.overlayContainer.style.zIndex = null;
