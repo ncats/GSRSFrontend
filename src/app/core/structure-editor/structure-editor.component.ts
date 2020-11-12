@@ -246,20 +246,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   cleanStructure() {
     const smiles = this.editor.getSmiles();
-    // this is to add the current jsdraw state to the undo stack. We are creating a simulacrum of an undo event since 'setMolecule()'
-    // and 'setSmiles()' do not add the state to said stack. This allows us to undo imports and structure cleaning.
-    // only works for jsdraw, not ketcher
-    if (this.jsdraw) {
-      const push = {
-      angleStop: this.jsdraw.angleStop,
-      bondlength: this.jsdraw.bondlength,
-      fontsize: this.jsdraw.fontsize,
-      tor: this.jsdraw.tor,
-      mol: _.cloneDeep(this.jsdraw.m)
-      };
-      this.jsdraw._undostack._items.push(push);
-
-    }
 
     if (smiles != null && smiles !== '') {
       this.structureService.interpretStructure(smiles).pipe(take(1)).subscribe(response => {

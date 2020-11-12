@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 export class EditorImplementation implements Editor {
     private ketcher?: Ketcher;
-    jsdraw?: JSDraw;
+    private jsdraw?: JSDraw;
 
     constructor(ketcher?: Ketcher, jsdraw?: JSDraw) {
         this.ketcher = ketcher;

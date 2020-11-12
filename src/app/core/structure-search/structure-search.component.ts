@@ -141,18 +141,6 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       this.overlayContainer.style.zIndex = null;
 
       if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
-        if (this.editor && this.editor.jsdraw) {
-          const push = {
-            angleStop: this.editor.jsdraw.angleStop,
-          bondlength: this.editor.jsdraw.bondlength,
-          fontsize: this.editor.jsdraw.fontsize,
-          tor: this.editor.jsdraw.tor,
-          mol: _.cloneDeep(this.editor.jsdraw.m)
-          };
-          if ( this.editor.jsdraw._undostack._items.length > 9) {
-          }
-          this.editor.jsdraw._undostack._items.push(push);
-        }
         this.editor.setMolecule(structurePostResponse.structure.molfile);
       }
     }, () => {

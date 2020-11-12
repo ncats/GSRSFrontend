@@ -11,6 +11,7 @@ export interface JSDraw {
     getMolfile(): string;
     getSmiles(): string;
     getXml(): string;
+    pushundo(): any;
     setHtml(html: string): string;
 }
 
