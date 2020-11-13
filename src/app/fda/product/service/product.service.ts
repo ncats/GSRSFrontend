@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
+import { PagingResponse } from '@gsrs-core/utils';
 import { Observable, } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Product, ProductName, ProductTermAndPart, ProductCode } from '../model/product.model';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { Product, ProductName, ProductTermAndPart, ProductCode, ProductAll } from '../model/product.model';
 import { ProductCompany, ProductComponent, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
+import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
+import { Facet } from '@gsrs-core/facets-manager';
 
 @Injectable()
 export class ProductService extends BaseHttpService {
@@ -19,6 +22,69 @@ export class ProductService extends BaseHttpService {
     public configService: ConfigService,
   ) {
     super(configService);
+  }
+
+  getProducts(
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<PagingResponse<ProductAll>> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    const url = `${this.apiBaseUrl}productall/search`;
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<ProductAll>>(url, options);
+  }
+
+  getProductFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/productall/search/@facets?wait=false&kind=ix.srs.models.ProductAll&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    return this.http.get<FacetQueryResponse>(url);
+  }
+
+  filterFacets(name: string, category: string): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
+    return this.http.get(url);
+  }
+
+  retrieveFacetValues(facet: Facet): Observable<any> {
+    const url = facet._self;
+    return this.http.get<any>(url);
+  }
+
+  retrieveNextFacetValues(facet: Facet): Observable<any> {
+    const url = facet._self;
+    if (!facet.$next) {
+      return this.http.get<any>(url).pipe(
+        switchMap(response => {
+          if (response) {
+            const next = response.nextPageUri;
+            return this.http.get<any>(next);
+          } else {
+            return 'nada';
+          }
+        }));
+    } else {
+      return this.http.get<any>(facet.$next);
+    }
+
   }
 
   getSubstanceProducts(

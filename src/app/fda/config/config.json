@@ -558,7 +558,21 @@
         "Dosage Form",
         "Source",
         "Product Name Deprecated",
-        "Record Created By"
+        "Record Created By",
+        "Last Edited By",
+        "Record Create Date",
+        "Last Edited Date",
+        "Ingredient Created By",
+        "Ingredient Last Edited By"
+      ]
+    },
+    "products": {
+      "default": [
+        "Product Name",
+        "Dosage Form Name",
+        "Ingredient Type",
+        "Labeler Name",
+        "Product Name Type"
       ]
     },
     "ctclinicaltrial": {
@@ -590,9 +604,14 @@
       "order": 11
     },
     {
+      "display": "Browse Products",
+      "path": "browse-products",
+      "order": 12
+    },
+    {
       "display": "Browse Clinical Trials",
       "path": "browse-clinical-trials",
-      "order": 12
+      "order": 13
     },
     {
       "display": "Register",
