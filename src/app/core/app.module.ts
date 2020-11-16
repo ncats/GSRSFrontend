@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { HttpClientModule, HttpClientJsonpModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -79,6 +79,7 @@ import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-brows
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
+import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
 
 @NgModule({
   declarations: [
@@ -160,6 +161,10 @@ import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
     CodeDisplayModule
   ],
   providers: [
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
+    },
     CanActivateAdminPage,
     ConfigService,
     {
@@ -175,7 +180,7 @@ import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
     HighlightedSearchActionComponent,
     ExportDialogComponent,
     SubstanceEditImportDialogComponent,
-    SubstanceHistoryDialogComponent
+    SubstanceHistoryDialogComponent,
   ]
 })
 export class AppModule {}
