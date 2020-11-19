@@ -570,9 +570,19 @@
       "default": [
         "Product Name",
         "Dosage Form Name",
-        "Ingredient Type",
+        "Product Name Type",
+        "Product Code Type",
+        "Application Number",
+        "Marketing Status",
+        "Marketing Category Name",
+        "Is Listed",
         "Labeler Name",
-        "Product Name Type"
+        "Labeler DUNS",
+        "Registrant Name",
+        "Registrant DUNS",
+        "City",
+        "State",
+        "Country"
       ]
     },
     "ctclinicaltrial": {

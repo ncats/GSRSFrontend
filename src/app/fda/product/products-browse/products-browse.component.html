@@ -78,7 +78,8 @@
       <mat-card class="bordergray" *ngFor="let product of products">
 
         <mat-card-title class="borderlightorange-bottom">
-          <a class="substance-name" [routerLink]="['/productElistDetails', product.id, 'elist']" target="_blank">
+          <span class="font13px">Product NDC:</span>&nbsp;
+          <a class="substance-name" [routerLink]="['/productElistDetails', product.productId, 'elist']" target="_blank">
             {{product.productNDC}}
           </a>
           &nbsp;&nbsp;&nbsp;
@@ -89,11 +90,15 @@
           </a>
         
           <span class="center">Center:&nbsp;{{application.center}}</span>
+          -->
           <span class="middle-fill"></span>
-          <a class="approval-id" [routerLink]="['/applicationDetails', application.id]" target="_blank">
-            Status: {{application.status}}
+          <span class="font13px">Application:</span>&nbsp;
+          <a class="approval-id" [routerLink]="['/productElistDetails', product.productId, 'elist']" target="_blank">
+            <div *ngFor="let prodLabeler of product.productLabelerElistList; let indexLabeler = index">
+              {{prodLabeler.applicationNumber}}
+            </div>
           </a>
-        -->
+        
         </mat-card-title>
 
         <mat-card-content>
@@ -103,8 +108,8 @@
               <div class="row-property-key-2">
                 Product Name:
               </div>
-              <div class="row-property-value-2">
-                {{product.productName}}
+              <div class="row-property-value-2 font14px">
+                <b>{{product.productName}}</b>
               </div>
             </div>
           </div>
@@ -112,21 +117,86 @@
           <div class="row">
             <div class="row-property-2">
               <div class="row-property-key-2">
-                Labeler Name:
+                Substance Name (Active):
               </div>
               <div class="row-property-value-2">
-                {{product.labelerName}}
+                <div *ngFor="let prodActiveIng of product.productActiveElistList; let indexActiveIng = index">
+                  {{prodActiveIng.name}}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="row-property-2">
+              <div class="row-property-key-2">
+                Substance Name (Inactive):
+              </div>
+              <div class="row-property-value-2">
+                <div *ngFor="let prodInactiveIng of product.productInactiveElistList; let indexInActiveIng = index">
+                  {{prodInactiveIng.name}}
+                </div>
               </div>
             </div>
           </div>
 
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Labeler Name:
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodLabeler of product.productLabelerElistList; let indexLabeler = index">
+                  {{prodLabeler.labelerName}}
+                </div>
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Labeler DUNS:
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodLabeler of product.productLabelerElistList; let indexLabeler = index">
+                  {{prodLabeler.labelerDuns}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--
           <div class="row">
             <div class="row-property-2">
               <div class="row-property-key-2">
                 Product Name Type:
               </div>
               <div class="row-property-value-2">
-                {{product.productTypeName}}
+                <div *ngFor="let prodCode of product.productCodeElistList; let indexCode = index">
+                  {{prodCode.productTypeName}}
+                </div>
+              </div>
+            </div>
+          </div>
+          -->
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Product Name Type:
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodCode of product.productCodeElistList; let indexCode = index">
+                  {{prodCode.productTypeName}}
+                </div>
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Marketing Status:
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodMarket of product.productMarketElistList; let indexMarket = index">
+                  {{prodMarket.marketingStatus}}
+                </div>
               </div>
             </div>
           </div>
