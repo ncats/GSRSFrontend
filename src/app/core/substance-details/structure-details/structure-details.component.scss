@@ -11,7 +11,46 @@
         height: auto;
       margin-top:-12%;
       margin-bottom: -2%;
+      cursor: zoom-in;
     }
+}
+
+.structure-img-big {
+    width: 100%;
+    height: auto;
+}
+
+
+.content-fix {
+    min-height: 250px;
+    padding: 15px 20px;
+
+}
+
+.src-column {
+    display: flex;
+    flex-direction:column;
+    width:50%;
+    
+}
+
+.actions {
+    height: 75px;
+}
+
+.fixActionRow {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .spacer {
+    flex-grow: 1;
+  }
+
+  ::ng-deep .mat-dialog-container {
+    height: unset !important;
+    max-height: 90%;
 }
 
 .black-pill, .gray-pill {
