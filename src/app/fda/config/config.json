@@ -582,7 +582,8 @@
         "Registrant DUNS",
         "City",
         "State",
-        "Country"
+        "Country",
+        "Country Code"
       ]
     },
     "ctclinicaltrial": {

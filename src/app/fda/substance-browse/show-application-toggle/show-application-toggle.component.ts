@@ -103,6 +103,11 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
         dialogReference.afterClosed().subscribe(name => {
           if (name && name !== '') {
             this.loadingService.setLoading(true);
+            if (source != null) {
+              if (source === 'app') {
+                
+              }
+            }
             const fullname = name + '.' + extension;
             this.generalService.getEtagDetails(this.etag, fullname, source).subscribe(response => {
               this.loadingService.setLoading(false);
