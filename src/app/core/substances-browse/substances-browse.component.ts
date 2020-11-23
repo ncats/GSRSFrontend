@@ -375,6 +375,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                 console.log(suggestion.displayField);
                 if (this.codeSystem[suggestion.displayField]) {
                   console.log('found' + suggestion.displayField);
+                  
                   suggestion.displayField = this.codeSystem[suggestion.displayField].display;
                 }
                 this.narrowSearchSuggestions[suggestion.matchType] = [];
