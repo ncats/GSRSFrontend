@@ -8,6 +8,8 @@ import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
 import { take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-structure-details',
@@ -29,12 +31,15 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   substanceUpdated = new Subject<SubstanceDetail>();
   showNames = false;
   searchHref: string;
+  private overlayContainer: HTMLElement;
 
   constructor(
     private utilService: UtilsService,
     private structureService: StructureService,
     public gaService: GoogleAnalyticsService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer
   ) {
     super();
   }
@@ -57,6 +62,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
         this.molfileHref = uri;
         this.searchHref = 'structure-search?structure=' + this.structure.id;
       }
+      this.overlayContainer = this.overlayContainerService.getContainerElement();
 
   }
 
@@ -71,6 +77,19 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
         }
       });
     }
+  }
+
+  openModal(templateRef) {
+
+    const dialogRef = this.dialog.open(templateRef, {
+      height: '80%',
+      width: '80%'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 
   ngAfterViewInit() {
