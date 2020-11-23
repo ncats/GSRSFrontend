@@ -105,7 +105,6 @@ showInactiveUsers(): void {
           this.updateLocalData(resp, null, null, resp.user.username);
           this.filtered.data.forEach( usr => {
             if (usr['user'] && usr['user'].username === resp.user.username) {
-              console.log('setting');
               usr = resp;
             }
           });
