@@ -18,6 +18,9 @@ export class ExportDialogComponent implements OnInit {
 
   ngOnInit() {
     const date = new Date();
+    if (this.data.type) {
+      this.name = this.data.type + '-' + moment(date).format('DD-MM-YYYY_H-mm-ss');
+    }
       this.name = 'export-' + moment(date).format('DD-MM-YYYY_H-mm-ss');
       this.extension = this.data.extension;
   }
