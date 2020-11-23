@@ -10,7 +10,7 @@
       </div>
       <div class = "field-row">
         <app-tag-selector  placeholder = "polymer subclass" class = "tags subtype"
-                           (tagsUpdate)="update($event)" [tags]="classification.polymerSubClass"
+                           (tagsUpdate)="update($event)" [tags]="classification.polymerSubclass"
                            cvDomain="POLYMER_SUBCLASS"></app-tag-selector>
       <app-cv-input class = "geometry" domain = "POLYMER_GEOMETRY" title = "Polymer Geometry"
                     [model] = "classification.polymerGeometry" (valueChange)="updateGeometry($event)"></app-cv-input>

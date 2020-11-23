@@ -75,7 +75,7 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
     this.substance.names.forEach(n => {
       if (n.name) {
         let name = n.name;
-        name = name.replace(/([\u0390-\u03C9||\u2192|\u00B1-\u00B9|\u2070-\u208F|\u2190|])/g, replacer).trim();
+        name = name.replace(/([\u0390-\u03C9||\u2192|\u00B1-\u00B9|\u2000-\u208F|\u2190|])/g, replacer).trim();
         name = name.replace(bad, '');
         name = name.replace(/[[]([A-Z -.]*)\]$/g, ' !!@!$1_!@!');
         name = name.replace(/[ \t]+/g, ' ');

@@ -45,6 +45,7 @@ import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-brows
 import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 import { Title } from '@angular/platform-browser';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 
 @Component({
   selector: 'app-substances-browse',
@@ -110,6 +111,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private searchTermHash: number;
   isSearchEditable = false;
   showDeprecated = false;
+  codeSystem: any;
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -128,16 +131,22 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private facetManagerService: FacetsManagerService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private substanceTextSearchService: SubstanceTextSearchService,
-    private titleService: Title,
+    private title: Title,
+    private cvService: ControlledVocabularyService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);
     this.gaService.sendPageView('Browse Substances');
+    this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
+      this.codeSystem = response['CODE_SYSTEM'].dictionary;
+
+      });
+    this.title.setTitle('Browse Substances');
+
     this.pageSize = 10;
     this.pageIndex = 0;
-    this.titleService.setTitle('Browse Substances');
 
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
 
@@ -361,6 +370,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
             pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
               if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+                if (this.codeSystem[suggestion.displayField]) {
+                  suggestion.displayField = this.codeSystem[suggestion.displayField].display;
+                }
                 this.narrowSearchSuggestions[suggestion.matchType] = [];
                 if (suggestion.matchType === 'WORD') {
                   this.matchTypes.unshift(suggestion.matchType);

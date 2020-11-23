@@ -89,6 +89,9 @@ export class EditorImplementation implements Editor {
         if (this.ketcher != null) {
             this.ketcher.setMolecule(molfile);
         } else if (this.jsdraw != null) {
+            // from simple tests, this should push the current molecule down
+            // on the undo stack.
+            this.jsdraw.pushundo();
             this.jsdraw.options.data = molfile;
             this.jsdraw.setMolfile(molfile);
         }

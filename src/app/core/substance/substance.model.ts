@@ -109,7 +109,7 @@ export interface PolymerClassification extends SubstanceBase {
   references?: Array<string>;
   polymerClass?: string;
   polymerGeometry?: string;
-  polymerSubClass?: Array<string>;
+  polymerSubclass?: Array<string>;
   parentSubstance?: SubstanceRelated;
   access?: Array<string>;
   sourceType?: string;
@@ -298,6 +298,7 @@ export interface StructuralModification extends SubstanceModifications {
   sites?: Array<Site>;
   extent?: string;
   extentAmount?: SubstanceAmount;
+  $$amount?: string;
   molecularFragment?: SubstanceRelated;
   modificationGroup?: string;
   comment?: string;

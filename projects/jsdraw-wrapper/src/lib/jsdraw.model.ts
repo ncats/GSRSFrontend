@@ -1,10 +1,17 @@
 export interface JSDraw {
+    _undostack?: any;
+    angleStop?: any;
+    bondlength?: any;
+    fontsize?: any;
+    tor?: any;
+    m?: any;
     options: JSDrawOptions;
     activated?: boolean;
     setMolfile(molfile: string): void;
     getMolfile(): string;
     getSmiles(): string;
     getXml(): string;
+    pushundo(): any;
     setHtml(html: string): string;
 }
 

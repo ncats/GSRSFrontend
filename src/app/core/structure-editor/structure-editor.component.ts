@@ -18,6 +18,7 @@ import { environment } from '../../../environments/environment';
 import { StructureService } from '@gsrs-core/structure';
 import { LoadingService } from '@gsrs-core/loading';
 import { take } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-structure-editor',
@@ -79,6 +80,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     event.preventDefault();
   }
 
+// override JSDraw for Molvec paste event. Using the JSDraw menu copy function seems to ignore this at first
   checkPaste = (event: ClipboardEvent ) => {
     event.stopPropagation();
     event.stopImmediatePropagation();
@@ -244,6 +246,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   cleanStructure() {
     const smiles = this.editor.getSmiles();
+
     if (smiles != null && smiles !== '') {
       this.structureService.interpretStructure(smiles).pipe(take(1)).subscribe(response => {
         if (response && response.structure && response.structure.molfile) {

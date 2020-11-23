@@ -117,7 +117,7 @@ export class SubstanceService extends BaseHttpService {
         }, () => {
           observer.complete();
         });
-      } else if ((args.sequenceSearchKey != null && args.sequenceSearchTerm !== '') ||
+      } else if ((args.sequenceSearchKey != null && args.sequenceSearchKey !== '') ||
       (args.sequenceSearchTerm != null && args.sequenceSearchTerm !== '')) {
         this.searchSubstanceSequences(
           args.sequenceSearchTerm,

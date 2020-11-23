@@ -58,12 +58,23 @@ export class SubstanceModificationsComponent extends SubstanceCardBase implement
           this.agent = this.substance.modifications.agentModifications;
         }
       }
+
+      if (this.structural) {
+        this.structural.forEach( item => {
+          if (item.extentAmount) {
+            item.$$amount = this.displayAmount(item.extentAmount);
+          }
+      });
+      }
     });
+
+    
   }
 
-  displayAmount(amount: string): string {
+  displayAmount(amount: any): any {
     let returned = this.utilsService.displayAmount(amount);
-    if (!returned || returned.trim().length <= 0) {
+
+    if (!returned || returned.trim().length === 0) {
       returned = 'empty value';
     }
     return returned;

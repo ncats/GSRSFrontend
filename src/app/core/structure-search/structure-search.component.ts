@@ -12,6 +12,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { Title } from '@angular/platform-browser';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-structure-search',
@@ -78,7 +79,6 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
           if (this.searchType === 'similarity') {
             this.showSimilarityCutoff = true;
             this.similarityCutoff = params.has('cutoff') && Number(params.get('cutoff')) || 0.8;
-            alert(this.similarityCutoff);
           }
 
           this.searchTypeControl.setValue(this.searchType);
