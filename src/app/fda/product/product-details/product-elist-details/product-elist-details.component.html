@@ -191,44 +191,45 @@
       </mat-card>
     </div>
 
-    
     <!-- Establishment/Labeler Details -->
-    <div class="details-container margintop30px">
-      <mat-card class="bordergray">
-        <mat-card-title class="title2">
-          Product Labeler Details
-        </mat-card-title>
-        <mat-card-content *ngIf="product.prodEstablishmentElistList.length > 0">
-          <table class="tableStyle2">
-            <thead>
-              <tr>
-                <th>Firm Name</th>
-                <th>DUNS Number</th>
-                <th>FEI Number</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zip</th>
-                <th>Country</th>
-                <th>Country Code</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let x of product.prodEstablishmentElistList; let i = index">
-                <td>{{ x.firmName }}</td>
-                <td>{{ x.dunsNumber }}</td>
-                <td>{{ x.feiNumber }}</td>
-                <td>{{ x.address }}</td>
-                <td>{{ x.city }}</td>
-                <td>{{ x.state }}</td>
-                <td>{{ x.zip }}</td>
-                <td>{{ x.country }}</td>
-                <td>{{ x.countryCode }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </mat-card-content>
-      </mat-card>
+    <div *ngIf="product.prodEstablishmentElistList.length > 0">
+      <div class="details-container margintop30px">
+        <mat-card class="bordergray">
+          <mat-card-title class="title2">
+            Product Labeler Details
+          </mat-card-title>
+          <mat-card-content>
+            <table class="tableStyle2">
+              <thead>
+                <tr>
+                  <th>Firm Name</th>
+                  <th>DUNS Number</th>
+                  <th>FEI Number</th>
+                  <th>Address</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Zip</th>
+                  <th>Country</th>
+                  <th>Country Code</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let x of product.prodEstablishmentElistList; let i = index">
+                  <td>{{ x.firmName }}</td>
+                  <td>{{ x.dunsNumber }}</td>
+                  <td>{{ x.feiNumber }}</td>
+                  <td>{{ x.address }}</td>
+                  <td>{{ x.city }}</td>
+                  <td>{{ x.state }}</td>
+                  <td>{{ x.zip }}</td>
+                  <td>{{ x.country }}</td>
+                  <td>{{ x.countryCode }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
 
     <div class="details-container margintop30px">

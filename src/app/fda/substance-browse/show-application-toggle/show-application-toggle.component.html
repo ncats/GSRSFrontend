@@ -8,7 +8,7 @@
   </div>
 
   <!-- Export Buttons -->
-  <div class="padleft10px divheight" *ngIf="totalSubstance <= 500">
+  <div class="padleft10px divheight">
     <button matTooltip="Export All Applications for Substance Search Results" (click)="export('app')" mat-button
       class="mat-button export-button mat-raised-button">
       <mat-icon svgIcon="get_app"></mat-icon> Applications
@@ -35,5 +35,8 @@
       <mat-icon svgIcon="get_app"></mat-icon> Clinical Trials Europe
     </button>
   </div>
+</div>
 
+<div class="colorgray font11px padleft260px">The download can take some time. After the download process starts, you can move away
+  from this window and continue with your work.
 </div>

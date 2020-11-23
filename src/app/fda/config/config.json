@@ -557,33 +557,40 @@
         "Indication",
         "Dosage Form",
         "Source",
-        "Product Name Deprecated",
+        "Product Name Deprecated"
+      ],  
+      "admin": [
         "Record Created By",
-        "Last Edited By",
+        "Record Last Edited By",
         "Record Create Date",
-        "Last Edited Date",
+        "Record Last Edited",
         "Ingredient Created By",
-        "Ingredient Last Edited By"
+        "Ingredient Last Edited By",
+        "Ingredient Create Date",
+        "Ingredient Last Edited"
       ]
     },
     "products": {
       "default": [
         "Product Name",
+        "Nonproprietary Name",
+        "Product NDC",
         "Dosage Form Name",
-        "Product Name Type",
+        "Product Type",
         "Product Code Type",
         "Application Number",
-        "Marketing Status",
+        "Status",
         "Marketing Category Name",
         "Is Listed",
         "Labeler Name",
-        "Labeler DUNS",
+        "Labeler DUNS Number",
         "Registrant Name",
         "Registrant DUNS",
         "City",
         "State",
         "Country",
-        "Country Code"
+        "Country Code",
+        "Provenance"
       ]
     },
     "ctclinicaltrial": {

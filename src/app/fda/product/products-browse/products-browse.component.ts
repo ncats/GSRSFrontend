@@ -261,4 +261,40 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     return this.privateFacetParams;
   }
 
+  export() {
+    if (this.etag) {
+      const extension = 'xlsx';
+      const url = this.getApiExportUrl(this.etag, extension);
+    //  if (this.authService.getUser() !== '') {
+        const dialogReference = this.dialog.open(ExportDialogComponent, {
+          height: '215x',
+          width: '550px',
+          data: { 'extension': extension }
+        });
+        // this.overlayContainer.style.zIndex = '1002';
+        dialogReference.afterClosed().subscribe(name => {
+          // this.overlayContainer.style.zIndex = null;
+          if (name && name !== '') {
+            this.loadingService.setLoading(true);
+            const fullname = name + '.' + extension;
+            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              this.loadingService.setLoading(false);
+              const navigationExtras: NavigationExtras = {
+                queryParams: {
+                  totalSub: this.totalProducts
+                }
+              };
+              const params = { 'total': this.totalProducts };
+              this.router.navigate(['/user-downloads/', response.id]);
+            }, error => this.loadingService.setLoading(false));
+          }
+        });
+    //  }
+    }
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    return this.productService.getApiExportUrl(etag, extension);
+  }
+
 }

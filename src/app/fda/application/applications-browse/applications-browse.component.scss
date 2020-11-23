@@ -507,8 +507,6 @@ margin:auto;
 .row-property-2 {
   display: flex;
   width: 100%;
-
-	/*padding: 8px;*/
 }
 
 .row-property-key-2 {
@@ -527,6 +525,47 @@ margin:auto;
 	font-size: 13px;
 }
 
+.row-property-3 {
+  display: flex;
+  width: 33%;
+}
+
+.row-property-key-3 {
+	min-width: 42%;
+	max-width: 42%;
+	padding: 7px;
+  font-size: 12px;
+  font-weight: 600;
+	/*background-color: #edeff2;*/
+}
+
+.row-property-value-3 {
+	min-width: 58%;
+	max-width: 58%;
+	padding: 5px;
+	font-size: 13px;
+}
+
+.row-property-4 {
+  display: flex;
+  width: 66%;
+}
+
+.row-property-key-4 {
+	min-width: 23%;
+	max-width: 23%;
+	padding: 7px;
+  font-size: 12px;
+  font-weight: 600;
+	/*background-color: #edeff2;*/
+}
+
+.row-property-value-4 {
+	min-width: 77%;
+	max-width: 77%;
+	padding: 5px;
+	font-size: 13px;
+}
 
 .font9px{
   font-size: 9px;
@@ -578,6 +617,14 @@ margin:auto;
 
 .padleft10px {
   padding-left: 10px;
+}
+
+.padleft20px {
+  padding-left: 20px;
+}
+
+.marginleft20px {
+  margin-left: 20px;
 }
 
 .totalApp {
