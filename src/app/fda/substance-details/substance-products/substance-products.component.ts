@@ -35,7 +35,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     'productNDC',
   //  'name',
     'nonProprietaryName',
-    "status",
+    'status',
   //  'labelerName',
     'productNameType',
    // 'ingredientType'

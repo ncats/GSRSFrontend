@@ -15,7 +15,6 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
   clinicalTrialCount = 0;
   showSpinner = false;
-  
   @Output() countClinicalTrialOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [

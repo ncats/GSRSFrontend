@@ -154,16 +154,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.dataSource = this.products;
         this.totalProducts = pagingResponse.total;
         this.etag = pagingResponse.etag;
-
-        // Export Application Url
-        /*
-        this.exportUrl = this.productService.exportBrowseApplicationsUrl(
-          skip,
-          this.pageSize,
-          this._searchTerm,
-          this.privateFacetParams);
-      //  this.getSubstanceDetailsByBdnum();
-         */// this.applicationService.getClinicalTrialApplication(this.applications);       
         // Set Facets from paging response
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;

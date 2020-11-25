@@ -15,7 +15,6 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
 
   clinicalTrialEuCount = 0;
   showSpinner = false;
-  
   @Output() countClinicalTrialEuOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
