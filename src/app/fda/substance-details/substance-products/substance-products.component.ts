@@ -58,8 +58,11 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   }
 
   ngOnInit() {
-    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
 
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+      this.isAdmin = response;
+    });
+   
     if (this.substance && this.substance.uuid) {
       // Get Bdnum
       this.getBdnum();
