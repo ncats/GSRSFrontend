@@ -8,6 +8,7 @@ import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
 import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-substance-products',
@@ -59,7 +60,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
   ngOnInit() {
 
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       this.isAdmin = response;
     });
    

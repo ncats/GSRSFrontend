@@ -5,6 +5,7 @@ import { ApplicationService } from '../../../application/service/application.ser
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { PageEvent } from '@angular/material/paginator';
 import { AuthService } from '@gsrs-core/auth';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-substance-application',
@@ -36,7 +37,9 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
 
   ngOnInit() {
 
-    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+      this.isAdmin = response;
+    });
 
     if (this.bdnum) {
       this.getApplicationCenterByBdnum();
