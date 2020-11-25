@@ -18,6 +18,7 @@ import { StructureService } from '@gsrs-core/structure';
 import { SubstanceSummaryDynamicContent } from './substance-summary-dynamic-content.component';
 import {Router} from '@angular/router';
 import {Alignment} from '@gsrs-core/utils';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -49,7 +50,11 @@ export class SubstanceSummaryCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.isAdmin = response;
+      }
+    });
     if (this.substance.protein) {
       this.subunits = this.substance.protein.subunits;
       this.getAlignments();
