@@ -19,6 +19,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   center = '';
   fromTable = '';
   loadingStatus = '';
+  showSpinner = false;
 
   @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -66,21 +67,21 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         this.paged = [];
 
         this.getSubstanceApplications();
-
       }
-
     }
   }
 
   getSubstanceApplications(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
 
+    this.showSpinner = true;  // Start progress spinner
     this.applicationService.getSubstanceApplications(this.bdnum, this.center, this.fromTable, this.page, this.pageSize)
       .subscribe(results => {
         this.setResultData(results);
         this.applicationCount = this.totalRecords;
         this.countApplicationOut.emit(this.applicationCount);
         this.loadingStatus = '';
+        this.showSpinner = false;  // Stop progress spinner
       });
 
     /*

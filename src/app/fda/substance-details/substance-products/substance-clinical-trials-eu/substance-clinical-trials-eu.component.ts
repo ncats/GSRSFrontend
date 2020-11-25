@@ -14,7 +14,8 @@ import { PageEvent } from '@angular/material/paginator';
 export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
   clinicalTrialEuCount = 0;
-
+  showSpinner = false;
+  
   @Output() countClinicalTrialEuOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
@@ -41,10 +42,12 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
   getSubstanceClinicalTrials(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
 
+    this.showSpinner = true;  // Start progress spinner
     this.clinicalTrialService.getSubstanceClinicalTrialsEurope(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
       this.clinicalTrialEuCount = this.totalRecords;
       this.countClinicalTrialEuOut.emit(this.clinicalTrialEuCount);
+      this.showSpinner = false;  // Stop progress spinner
     });
 
     /*

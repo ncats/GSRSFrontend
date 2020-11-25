@@ -14,6 +14,7 @@ import { PageEvent } from '@angular/material/paginator';
 export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
   advCvmCount = 0;
+  showSpinner = false;
 
   @Output() countAdvCvmOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -38,11 +39,12 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
   getSubstanceAdverseEventCvm(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
 
+    this.showSpinner = true;  // Start progress spinner
     this.adverseEventService.getSubstanceAdverseEventCvm(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
       this.advCvmCount = this.totalRecords;
       this.countAdvCvmOut.emit(this.advCvmCount);
-
+      this.showSpinner = false;  // Stop progress spinner
     });
       /*
       this.searchControl.valueChanges.subscribe(value => {

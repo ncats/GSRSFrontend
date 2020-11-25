@@ -93,11 +93,11 @@ export class ProductService extends BaseHttpService {
   }
 
   getSubstanceProducts(
-    substanceUuid: string, page: number, pageSize: number
+    substanceUuid: string, country: string, page: number, pageSize: number
   ): Observable<Array<any>> {
 
     const funcName = 'productListBySubstanceUuid?substanceUuid=';
-    const url = this.baseUrl + funcName + substanceUuid + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    const url = this.baseUrl + funcName + substanceUuid + '&country=' + country + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
       .pipe(
