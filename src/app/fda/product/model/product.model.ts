@@ -130,6 +130,38 @@ export interface ProductIngredient {
   modifyDate?: number;
 }
 
+export interface ProductAll {
+  id?: number;
+  /*
+  source?: string;
+  publicDomain?: number;
+  appType?: string;
+  appNumber?: string;
+  productType?: string;
+  sourceType?: string;
+  unitPresentation?: string;
+  routeAdmin?: string;
+  status?: string;
+  nonProprietaryName?: string;
+  proprietaryName?: string;
+  pharmacedicalDosageForm?: string;
+  composeProductName?: string;
+  releaseCharacteristic?: string;
+  strengthCharacteristic?: string;
+  countryCode?: string;
+  language?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  productNameList?: Array<ProductName>;
+  productCodeList?: Array<ProductCode>;
+  productCompanyList?: Array<ProductCompany>;
+  productComponentList?: Array<ProductComponent>;
+  */
+}
+
 export interface ValidationResults {
   valid?: boolean;
   validationMessages?: Array<ValidationMessage>;

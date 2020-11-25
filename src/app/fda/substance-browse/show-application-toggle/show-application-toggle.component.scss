@@ -19,11 +19,12 @@
 }
 
 .padtop10px {
-   padding-top: -10px;
+   padding-top: 10px;
 }
 
 .export-button {
   border-radius: 4px;
+  margin-top: 5px;
 }
 
 .outer-div {
@@ -32,3 +33,25 @@
   align-items: center;
 }
 
+.font11px {
+  font-size: 11px;
+}
+
+.padleft260px {
+  padding-left: 260px;
+}
+
+.colorgray {
+  color: gray;
+}
+
+.colorgreen {
+  color: green;
+}
+
+#parent #popup {
+  display: none;
+}
+#parent:hover #popup {
+  display: block;
+}

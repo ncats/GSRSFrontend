@@ -14,6 +14,13 @@
     </div>
 
     <div class="responsive mat-table-style">
+
+      <!-- Spinner -->
+      <div *ngIf="showSpinner" class="spinnerstyle">
+        <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
+        </mat-progress-spinner>
+      </div>
+
       <table mat-table [dataSource]="paged" class="font12px">
         <ng-container matColumnDef="appType">
           <th mat-header-cell *matHeaderCellDef> Application Type </th>

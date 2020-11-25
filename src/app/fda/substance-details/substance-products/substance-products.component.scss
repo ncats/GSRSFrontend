@@ -41,6 +41,10 @@
   color: #4b4572;
 }
 
+.colorred {
+  color: red;
+}
+
 .info-container {
   margin-bottom: 15px;
 
@@ -48,6 +52,19 @@
     color: rgb(0, 0, 255);;
     text-decoration: none;
   }
+}
+
+.spinnerstyle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(150, 148, 148, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: top; /* Verticle align */
+  justify-content: center; /* horizonal align */
 }
 
 /*

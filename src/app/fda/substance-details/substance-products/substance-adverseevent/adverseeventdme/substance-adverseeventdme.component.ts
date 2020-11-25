@@ -14,6 +14,7 @@ import { PageEvent } from '@angular/material/paginator';
 export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
   advDmeCount = 0;
+  showSpinner = false;
 
   @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -38,10 +39,12 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   getSubstanceAdverseEventDme(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
 
+    this.showSpinner = true;  // Start progress spinner
     this.adverseEventService.getSubstanceAdverseEventDme(this.bdnum, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
       this.advDmeCount = this.totalRecords;
       this.countAdvDmeOut.emit(this.advDmeCount);
+      this.showSpinner = false;  // Stop progress spinner
     });
       /*
       this.searchControl.valueChanges.subscribe(value => {

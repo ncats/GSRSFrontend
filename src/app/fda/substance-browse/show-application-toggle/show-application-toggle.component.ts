@@ -94,11 +94,24 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-     // if (this.authService.getUser() !== '') {
+      if (this.authService.getUser() !== '') {
+
+        let type = '';
+        if (source != null) {
+          if (source === 'app') {
+            type = 'Application';
+          } else if (source === 'prod') {
+            type = 'Product';
+          } else if (source === 'clinicalus') {
+            type = 'ClinicalTrial-US';
+          } else if (source === 'clinicaleurope') {
+            type = "ClinicalTrial-EU";
+          }
+        }
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
-          data: { 'extension': extension }
+          data: { 'extension': extension, 'type': type }
         });
         dialogReference.afterClosed().subscribe(name => {
           if (name && name !== '') {
@@ -118,7 +131,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
             }, error => this.loadingService.setLoading(false));
           }
         });
-   //   }
+      }
     }
   }
 

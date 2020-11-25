@@ -1,0 +1,261 @@
+<br><br><br>
+<mat-sidenav-container>
+
+  <mat-sidenav mode="side" opened>
+    <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
+      [rawFacets]="rawFacets" configName="products" includeFacetSearch="true">
+    </app-facets-manager>
+  </mat-sidenav>
+
+  <!-- Browse Product Content -->
+  <mat-sidenav-content>
+    <div class="titlePosition">
+      <span class="title">Browse Products</span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Total:&nbsp;<span class="totalstyle font17px colorgray">{{totalProducts}}</span>
+      &nbsp;&nbsp;
+    </div>
+
+    <!-- Pagination -->
+    <div class="paginationPosition">
+      <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
+      </mat-paginator>
+    </div>
+
+    <br><br><br>
+    <!--
+      <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+        <mat-icon svgIcon="chevron_right"></mat-icon>
+      </button>
+    -->
+
+    <!--
+    <div class="padleft10px" *ngIf="totalApplications > 0">
+      <a [href]="exportUrl" target="_blank" matTooltip='Export Application Records'>
+        <button mat-icon-button color="primary">
+          <mat-icon>arrow_downward</mat-icon>Export
+        </button>
+      </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span class="colorgray font9px">(Download up to 1000 records)</span>
+    </div>
+    -->
+
+    <!-- Display Facet selection and Export Button -->
+    <div class="padleft10px" *ngIf="totalProducts > 0">
+
+      <!-- Display Facets selection -->
+      <div class="search-parameters">
+        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+          <div class='selected-container'>
+            <span class="capitalized font-medium-bold selected-label">
+              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+              {{facet.type}}:
+            </span>
+            <span class="no-break selected-value">
+              {{facet.val}}
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button class="display-button" color="primary"
+              (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+              <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Product Button -->
+      <button matTooltip="Export Search Results" mat-button (click)="export()" *ngIf="isLoggedIn"
+        class="mat-button export-button mat-raised-button">
+        <mat-icon svgIcon="get_app"></mat-icon> Export
+      </button>
+    </div>
+    <br>
+
+    <!-- Display Content Details -->
+    <div class="substance-cards">
+      <mat-card class="bordergray" *ngFor="let product of products">
+
+        <mat-card-title class="borderlightorange-bottom">
+          <div class="row">
+            <div class="width40">
+              <span class="font13px">Product NDC:</span>&nbsp;
+              <a class="substance-name" [routerLink]="['/productElistDetails', product.productId, 'elist']"
+                target="_blank">
+                {{product.productNDC}}
+              </a>
+              &nbsp;&nbsp;&nbsp;
+              <div *ngIf="fromtable === 'GSRS'">
+                <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
+                  matTooltip='Edit GSRS Product Record'>
+                  <mat-icon svgIcon="edit"></mat-icon>
+                </a>
+              </div>
+            </div>
+
+            <div class="width30">
+              <span class="font13px">Country:</span><span
+                class="colorgreen font17px">&nbsp;{{product.countryWithoutCode}}</span>
+              <span class="middle-fill"></span>
+            </div>
+
+            <div class="width30">
+              <span class="font13px">Application:</span>&nbsp;
+              <span class="approval-id">{{product.appTypeNumber}}</span>
+              <!--
+              <a class="approval-id" [routerLink]="['/productElistDetails', product.productId, 'elist']"
+                target="_blank">
+                {{product.appTypeNumber}}
+              </a>
+            -->
+            </div>
+
+          </div>
+        </mat-card-title>
+
+        <mat-card-content>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Product Name:
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
+                  <span class="colorlightblue font13px"><b>{{prodName.productName}}</b></span>
+                </div>
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Product Type:
+              </div>
+              <div class="row-property-value">
+                {{product.productType}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Nonproprietary Name:
+              </div>
+              <div class="row-property-value">
+                {{product.nonProprietaryName}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Route of Admin:
+              </div>
+              <div class="row-property-value">
+                {{product.routeName}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Labeler Name/DUNS:
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
+                  {{prodComp.labelerName}}
+                  <span *ngIf="prodComp.labelerDuns">&nbsp;({{prodComp.labelerDuns}})</span>
+                </div>
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                City, State, Country:
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
+                  {{prodComp.city}},&nbsp;{{prodComp.state}},&nbsp;{{prodComp.country}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Dosage Form:
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodActiveIng of product.productIngredientAllList; let indexActiveIng = index">
+                  {{prodActiveIng.dosageFormName}}
+                </div>
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Status:
+              </div>
+              <div class="row-property-value">
+                {{product.status}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Substance Name (Active):
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodActiveIng of product.productIngredientAllList; let indexActiveIng = index">
+                  {{prodActiveIng.substanceName}}
+                  <br>
+                </div>
+              </div>
+            </div>
+
+            <div class="row-property">
+              <div class="row-property-key">
+                Ingredient Type:
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodActiveIng of product.productIngredientAllList; let indexProdActiveIng = index">
+                  {{prodActiveIng.ingredientType}}
+                </div>
+              </div>
+            </div>
+            -
+          </div>
+
+          <!--
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Substance Name (Inactive):
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodInactiveIng of product.productInactiveElistList; let indexInActiveIng = index">
+                  {{prodInactiveIng.name}}
+                </div>
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+               
+              </div>
+              <div class="row-property-value">
+                <div *ngFor="let prodInactiveIng of product.productInactiveElistList; let indexInActiveIng = index">
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+        -->
+
+        </mat-card-content>
+
+      </mat-card>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

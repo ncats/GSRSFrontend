@@ -191,7 +191,6 @@
 
 table.blueTable {
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  /*font-family: Verdana, Geneva, sans-serif;*/
   border: 1px solid #1C6EA4;
   background-color: #f2f2f2;
   width: 100%;
@@ -199,8 +198,25 @@ table.blueTable {
   border-collapse: collapse;
 }
 
+table.blueTable thead {
+  background:  #c0ccee;
+  border-bottom: 1px solid #444444;
+}
+
+table.blueTable thead th {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a1a;
+  border-left: 1px solid #D0E4F5;
+  padding: 10px 10px;
+}
+
+table.blueTable thead th:first-child {
+  border-left: none;
+}
+
 table.blueTable td, table.blueTable th {
-  border: 1px solid #AAAAAA;
+  border: 1px solid #d1d1d1;
   padding: 3px 2px;
 }
 
@@ -211,24 +227,7 @@ table.blueTable tbody td {
 }
 
 table.blueTable tr:nth-child(even) {
-  background: #f5faee;
-}
-
-table.blueTable thead {
-  background:  #e8ebe1;
-  border-bottom: 1px solid #444444;
-}
-
-table.blueTable thead th {
-  font-size: 12px;
-  font-weight: 700;
-  color: #1a1a1a;
-  border-left: 1px solid #D0E4F5;
-  padding: 10px 10px;
-}
-
-table.blueTable thead th:first-child {
-  border-left: none;
+  background: #fbfdf7;
 }
 
 table.blueTable tfoot {
@@ -253,6 +252,48 @@ table.blueTable tfoot .links a{
   color: #FFFFFF;
   padding: 2px 8px;
   border-radius: 5px;
+}
+
+/* Table Style 2 */
+table.tableStyle2 {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  border: 1px solid #1C6EA4;
+  background-color: #fdfdfd;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+table.tableStyle2 thead {
+  background:  #eeeadc;
+  border-bottom: 1px solid #444444;
+}
+
+table.tableStyle2 thead th {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a1a;
+  border-left: 1px solid #5f656b;
+  padding: 10px 10px;
+}
+
+table.tableStyle2 thead th:first-child {
+  border-left: none;
+}
+
+table.tableStyle2 td, table.blueTable th {
+  border: 1px solid #d1d1d1;
+  padding: 3px 2px;
+}
+
+table.tableStyle2 tbody td {
+  font-size: 12px;
+  vertical-align: top;
+  padding: 10px 10px;
+}
+
+table.tableStyle2 tr:nth-child(even) {
+  background: #fbfdf7;
 }
 
 @media(max-width: 700px) {

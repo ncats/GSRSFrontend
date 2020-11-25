@@ -41,8 +41,4 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     super.ngOnInit();
   }
 
-  get updateApplicationUrl(): string {
-    return this.applicationService.getUpdateApplicationUrl();
-  }
-
 }

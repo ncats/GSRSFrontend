@@ -489,8 +489,8 @@ margin:auto;
 }
 
 .row-property-key {
-	min-width: 30%;
-	max-width: 30%;
+	min-width: 35%;
+	max-width: 35%;
 	padding: 7px;
   font-size: 12px;
   font-weight: 600;
@@ -498,8 +498,8 @@ margin:auto;
 }
 
 .row-property-value {
-	min-width: 70%;
-	max-width: 70%;
+	min-width: 65%;
+	max-width: 65%;
 	padding: 5px;
 	font-size: 13px;
 }
@@ -507,6 +507,8 @@ margin:auto;
 .row-property-2 {
   display: flex;
   width: 100%;
+
+	/*padding: 8px;*/
 }
 
 .row-property-key-2 {
@@ -525,47 +527,6 @@ margin:auto;
 	font-size: 13px;
 }
 
-.row-property-3 {
-  display: flex;
-  width: 33%;
-}
-
-.row-property-key-3 {
-	min-width: 42%;
-	max-width: 42%;
-	padding: 7px;
-  font-size: 12px;
-  font-weight: 600;
-	/*background-color: #edeff2;*/
-}
-
-.row-property-value-3 {
-	min-width: 58%;
-	max-width: 58%;
-	padding: 5px;
-	font-size: 13px;
-}
-
-.row-property-4 {
-  display: flex;
-  width: 66%;
-}
-
-.row-property-key-4 {
-	min-width: 23%;
-	max-width: 23%;
-	padding: 7px;
-  font-size: 12px;
-  font-weight: 600;
-	/*background-color: #edeff2;*/
-}
-
-.row-property-value-4 {
-	min-width: 77%;
-	max-width: 77%;
-	padding: 5px;
-	font-size: 13px;
-}
 
 .font9px{
   font-size: 9px;
@@ -577,6 +538,14 @@ margin:auto;
 
 .font12px{
   font-size: 12px;
+}
+
+.font13px{
+  font-size: 13px;
+}
+
+.font14px{
+  font-size: 14px;
 }
 
 .font17px {
@@ -592,11 +561,15 @@ margin:auto;
 }
 
 .colorgreen {
-  color: green;
+  color: rgb(9, 121, 33);
 }
 
 .colororange {
   color: orange;
+}
+
+.colorlightblue {
+  color: #1945bd;
 }
 
 .bordergray {
@@ -619,15 +592,15 @@ margin:auto;
   padding-left: 10px;
 }
 
-.padleft20px {
-  padding-left: 20px;
+.width40 {
+   width: 40%;
 }
 
-.marginleft20px {
-  margin-left: 20px;
+.width30 {
+   width: 30%;
 }
 
-.totalApp {
+.totalstyle {
   display:inline-block;
   color:#FFFFFF;
   border:1px solid #CCC;

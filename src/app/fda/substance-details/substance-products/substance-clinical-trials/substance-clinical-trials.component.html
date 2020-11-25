@@ -10,10 +10,17 @@
     <button mat-icon-button color="primary">
       <mat-icon>arrow_downward</mat-icon>Export
     </button>
-  </a> 
+  </a>
 </div>
 
 <div class="responsive mat-table-style">
+
+  <!-- Spinner -->
+  <div *ngIf="showSpinner" class="spinnerstyle">
+    <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
+    </mat-progress-spinner>
+  </div>
+  
   <table mat-table [dataSource]="paged">
 
     <ng-container matColumnDef="nctNumber">
