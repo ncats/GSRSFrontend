@@ -8,6 +8,7 @@ import { UtilsService } from '../../../../core/utils/utils.service';
 import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-clinical-trial-details',
@@ -36,8 +37,9 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
   ngOnInit() {
     super.ngOnInit();
 
-    this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
-
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+      this.isAdmin = response;
+    });
     this.flagIconSrcPath = `${this.configService.environment.baseHref || '/'}assets/icons/fda/united-states.svg`;
 
   }
