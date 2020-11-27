@@ -40,7 +40,7 @@
                 Product Name:
               </div>
               <div class="row-property-value">
-                <span class="colororange font16px fontbold">{{product.productName}}</span>
+                <span class="colororange font18px fontbold">{{product.productName}}</span>
               </div>
             </div>
             <div class="row-property">
@@ -94,10 +94,29 @@
           <div class="row">
             <div class="row-property">
               <div class="row-property-key">
-                Marketing Category Name:
+                Marketing Status:
+              </div>
+              <div class="row-property-value">
+                {{product.marketingStatus}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Marketing Category Code:
               </div>
               <div class="row-property-value">
                 {{product.marketingCategoryCode}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Marketing Category Name:
+              </div>
+              <div class="row-property-value">
+                {{product.marketingCategoryName}}
               </div>
             </div>
             <div class="row-property">
@@ -116,7 +135,11 @@
                 Route Name:
               </div>
               <div class="row-property-value">
-
+                <div *ngIf="product.prodRouteElistList.length > 0">
+                  <div *ngFor="let x of product.prodRouteElistList; let i = index">
+                    <span *ngIf="i > 0">|</span>{{x.routeName}}
+                  </div>
+                </div>
               </div>
             </div>
             <div class="row-property">

@@ -75,16 +75,21 @@
 
     <!-- Display Content Details -->
     <div class="substance-cards">
-      <mat-card class="bordergray" *ngFor="let product of products">
-
+      <mat-card class="bordergray" *ngFor="let product of products; let indexProd = index">
         <mat-card-title class="borderlightorange-bottom">
           <div class="row">
             <div class="width40">
               <span class="font13px">Product NDC:</span>&nbsp;
               <a class="substance-name" [routerLink]="['/productElistDetails', product.productId, 'elist']"
                 target="_blank">
-                {{product.productNDC}}
+                <span *ngIf="product.productNDC; else noProdNDC">
+                  {{product.productNDC}}
+                </span>
+                <ng-template #noProdNDC>
+                  (NO NDC)
+                </ng-template>
               </a>
+
               &nbsp;&nbsp;&nbsp;
               <div *ngIf="fromtable === 'GSRS'">
                 <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
@@ -96,7 +101,7 @@
 
             <div class="width30">
               <span class="font13px">Country:</span><span
-                class="colorgreen font17px">&nbsp;{{product.countryWithoutCode}}</span>
+                class="colororange font17px">&nbsp;{{product.countryWithoutCode}}</span>
               <span class="middle-fill"></span>
             </div>
 
@@ -123,7 +128,7 @@
               </div>
               <div class="row-property-value">
                 <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
-                  <span class="colorlightblue font13px"><b>{{prodName.productName}}</b></span>
+                  <span class="colorlightblue font14px"><b>{{prodName.productName}}</b></span>
                 </div>
               </div>
             </div>
@@ -159,7 +164,7 @@
           <div class="row">
             <div class="row-property">
               <div class="row-property-key">
-                Labeler Name/DUNS:
+                Labeler Name (DUNS):
               </div>
               <div class="row-property-value">
                 <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
@@ -174,7 +179,11 @@
               </div>
               <div class="row-property-value">
                 <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
-                  {{prodComp.city}},&nbsp;{{prodComp.state}},&nbsp;{{prodComp.country}}
+                  {{prodComp.city}}
+                  <span *ngIf="prodComp.state">,</span>
+                  {{prodComp.state}}
+                  <span *ngIf="prodComp.country">,</span>
+                  {{prodComp.country}}
                 </div>
               </div>
             </div>
@@ -186,8 +195,10 @@
                 Dosage Form:
               </div>
               <div class="row-property-value">
-                <div *ngFor="let prodActiveIng of product.productIngredientAllList; let indexActiveIng = index">
-                  {{prodActiveIng.dosageFormName}}
+                <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
+                  <span *ngIf="indexIng == 0">
+                    {{ing.dosageFormName}}
+                  </span>
                 </div>
               </div>
             </div>
@@ -204,27 +215,45 @@
           <div class="row">
             <div class="row-property">
               <div class="row-property-key">
-                Substance Name (Active):
+                Substance Name:
               </div>
               <div class="row-property-value">
-                <div *ngFor="let prodActiveIng of product.productIngredientAllList; let indexActiveIng = index">
-                  {{prodActiveIng.substanceName}}
-                  <br>
+                <div *ngFor="let prodIngred of product.productIngredientAllList; let indexIngred = index">
+                  <div *ngIf="prodIngred.substanceName">
+                    {{(indexIngred+1)}}.&nbsp;
+                    <a [routerLink]="['/substances', prodIngred.substanceId]"
+                      target="_blank">{{prodIngred.substanceName}}</a>
+                  </div>
+
+                  <!-- Display Ingredient Type -->
+                  <div *ngIf="prodIngred.ingredientType">
+                    <div *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
+                      &nbsp;&nbsp;&nbsp;&nbsp;<span class="colorgreen">
+                        ({{ prodIngred.ingredientType }})
+                      </span>
+                    </div>
+                    <ng-template #otherIngredType>
+                      &nbsp;&nbsp;({{ prodIngred.ingredientType }})
+                    </ng-template>
+                  </div>
+
                 </div>
               </div>
             </div>
 
             <div class="row-property">
               <div class="row-property-key">
-                Ingredient Type:
+
               </div>
               <div class="row-property-value">
+                <!--
                 <div *ngFor="let prodActiveIng of product.productIngredientAllList; let indexProdActiveIng = index">
                   {{prodActiveIng.ingredientType}}
                 </div>
+              -->
               </div>
             </div>
-            -
+
           </div>
 
           <!--

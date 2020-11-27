@@ -92,12 +92,26 @@ export class ProductService extends BaseHttpService {
     return url;
   }
 
+  getProductProvenanceList(
+    substanceUuid: string
+  ): Observable<any> {
+
+    const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
+  
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
   getSubstanceProducts(
-    substanceUuid: string, country: string, page: number, pageSize: number
+    substanceUuid: string, provenance: string, page: number, pageSize: number
   ): Observable<Array<any>> {
 
     const funcName = 'productListBySubstanceUuid?substanceUuid=';
-    const url = this.baseUrl + funcName + substanceUuid + '&country=' + country + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    const url = this.baseUrl + funcName + substanceUuid + '&provenance=' + provenance + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
       .pipe(
@@ -106,7 +120,6 @@ export class ProductService extends BaseHttpService {
           return results['data'];
         })
       );
-
   }
 
   getProduct(productId: string, src: string): Observable<any> {

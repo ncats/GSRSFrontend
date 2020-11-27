@@ -182,7 +182,7 @@
                           {{ing.activeMoietyName}}
                           <span class="font10px colorgray">&nbsp;(Active Moiety)</span><br>
                         </div>
-                      </ng-template>       
+                      </ng-template>
 
                     </div>
                     <ng-template #noIngred>
@@ -191,6 +191,7 @@
                   </div>
                 </div>
 
+                <!--
                 <div class="row-property-3" *ngIf="isAdmin">
                   <div class="row-property-key-3">
                     Ingred Created By:<br><br>
@@ -204,6 +205,7 @@
                     {{ing.modifyDate|date: 'MM/dd/yyyy h:mm:ss a'}}
                   </div>
                 </div>
+              -->
 
               </div>
 
@@ -220,64 +222,46 @@
                 &nbsp;{{application.title}}
               </div>
             </div>
-            <!--
-            <div class="row-property-3">
-              <div class="row-property-key-3">
-                Created Date:
-              </div>
-              <div class="row-property-value-3">
-                {{application.createDate|date: 'MM/dd/yyyy h:mm:ss a'}}
-              </div>
-            </div>
-          -->
           </div>
 
           <div class="row">
-            <div class="row-property-3">
-              <div class="row-property-key-3">
+            <div class="row-property">
+              <div class="row-property-key">
                 Sponsor Name:
               </div>
-              <div class="row-property-value-3">
+              <div class="row-property-value">
                 {{ application.sponsorName}}
               </div>
             </div>
-            <div class="row-property-3 marginleft20px">
-              <div class="row-property-key-3">
+            <div class="row-property">
+              <div class="row-property-key">
                 Submit Date:
               </div>
-              <div class="row-property-value-3">
+              <div class="row-property-value">
                 {{application.submitDate}}
               </div>
             </div>
-            <!--
-            <div class="row-property-3">
-              <div class="row-property-key-3">
-                Created By:
-              </div>
-              <div class="row-property-value-3">
-                {{application.createdBy|date: 'MM/dd/yyyy h:mm:ss a'}}
-              </div>
-            </div>
-          -->
           </div>
 
           <div class="row">
-            <div class="row-property-3">
-              <div class="row-property-key-3">
+            <div class="row-property">
+              <div class="row-property-key">
                 App Sub Type:
               </div>
-              <div class="row-property-value-3 padleft20px">
+              <div class="row-property-value">
                 {{ application.appSubType}}
               </div>
             </div>
-            <div class="row-property-3 marginleft20px">
-              <div class="row-property-key-3">
+            <div class="row-property">
+              <div class="row-property-key">
                 &nbsp;Status Date:
               </div>
-              <div class="row-property-value-3">
+              <div class="row-property-value">
                 {{application.statusDate}}
               </div>
             </div>
+
+            <!--
             <div class="row-property-3" *ngIf="isAdmin">
               <div class="row-property-key-3">
                 Record Created By:
@@ -287,27 +271,28 @@
                 {{application.createDate|date: 'MM/dd/yyyy h:mm:ss a'}}
               </div>
             </div>
+          -->
           </div>
 
           <div class="row">
-            <div class="row-property-3">
-              <div class="row-property-key-3">
+            <div class="row-property">
+              <div class="row-property-key">
                 Indications:&nbsp;<span class="badge">{{application.applicationIndicationList.length}}</span>
               </div>
-              <div class="row-property-value-3">
+              <div class="row-property-value">
                 <div class="" *ngFor="let ind of application.applicationIndicationList">
                   &bull;&nbsp;{{ ind.indication }}
                 </div>
               </div>
             </div>
 
-            <div class="row-property-3 marginleft20px">
-              <div class="row-property-key-3">
+            <div class="row-property">
+              <div class="row-property-key">
                 Clinical Trials:&nbsp;<span class="badge">0
                   <!-- {{application.clinicalTrialList.length}}-->
                 </span>
               </div>
-              <div class="row-property-value-3">
+              <div class="row-property-value">
                 <!--
                       <div class="" *ngFor="let clinical of application.clinicalTrialList">
                           &bull;&nbsp;{{ clinical.nctNumber }}
@@ -315,6 +300,8 @@
                         -->
               </div>
             </div>
+
+            <!--
             <div class="row-property-3" *ngIf="isAdmin">
               <div class="row-property-key-3">
                 Record Edited By:
@@ -324,6 +311,8 @@
                 {{application.modifyDate|date: 'MM/dd/yyyy h:mm:ss a'}}
               </div>
             </div>
+             -->
+
           </div>
         </mat-card-content>
 
