@@ -10,8 +10,8 @@
     <mat-tab label="Product ({{productCount}})">
 
       <mat-tab-group (selectedTabChange)="tabSelected($event)">
-        <mat-tab label="Product {{coun}}" *ngFor="let coun of countryList; let index = index">
-      
+        <mat-tab label="{{prov}}" *ngFor="let prov of provenanceList; let index = index">
+
           <div class="padtop5px padleft25px font15px colorblue">
             <b> {{coun}}</b>
             &nbsp;&nbsp;&nbsp;
@@ -23,21 +23,28 @@
               </button>
             </a>
           </div>
-      
+
           <div class="responsive mat-table-style">
-            
+
             <div *ngIf="showSpinner" class="spinnerstyle">
               <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
               </mat-progress-spinner>
             </div>
-            
+
             <table mat-table [dataSource]="paged" class="font12px">
-      
+
               <ng-container matColumnDef="productNDC">
                 <th mat-header-cell *matHeaderCellDef> Product NDC </th>
                 <td mat-cell *matCellDef="let product">
                   <span *ngIf="product.fromtable === 'GSRS'">
-                    <a [routerLink]="['/productDetails', product.productId, 'srs']" target="_blank">View</a>
+                    <a [routerLink]="['/productDetails', product.productId, 'srs']" target="_blank">
+                      <span *ngIf="product.productNDC; else noProdNDCGSRS">
+                        {{product.productNDC}}
+                      </span>
+                      <ng-template #noProdNDCGSRS>
+                        (NO NDC)
+                      </ng-template>
+                    </a>
                     &nbsp;&nbsp;
                     <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
                       matTooltip='Edit GSRS Product Record'>
@@ -45,13 +52,19 @@
                     </a>
                   </span>
                   <span *ngIf="product.fromtable != 'GSRS'">
-                    <a [routerLink]="['/productElistDetails', product.productId,'elist']"
-                      target="_blank">{{product.productNDC}}</a>
+                    <a [routerLink]="['/productElistDetails', product.productId,'elist']" target="_blank">
+                      <span *ngIf="product.productNDC; else noProdNDC">
+                        {{product.productNDC}}
+                      </span>
+                      <ng-template #noProdNDC>
+                        (NO NDC)
+                      </ng-template>
+                    </a>
                     <br><span class="font10px colorgray">({{product.fromtable}})</span>
                   </span>
                 </td>
               </ng-container>
-      
+
               <ng-container matColumnDef="nonProprietaryName">
                 <th mat-header-cell *matHeaderCellDef> Non Proprietary Name </th>
                 <td mat-cell *matCellDef="let product"> {{product.nonProprietaryName}} </td>
@@ -66,7 +79,7 @@
                 <th mat-header-cell *matHeaderCellDef> Route of Administrator </th>
                 <td mat-cell *matCellDef="let product"> {{product.routeName}} </td>
               </ng-container>
-    
+
               <ng-container matColumnDef="productNameType">
                 <th mat-header-cell *matHeaderCellDef> Product Type </th>
                 <td mat-cell *matCellDef="let product"> {{product.productType}} </td>
@@ -91,7 +104,7 @@
           </mat-paginator>
         </mat-tab>
       </mat-tab-group>
-      
+
 
 
       <!--  PREVIOUS CODE

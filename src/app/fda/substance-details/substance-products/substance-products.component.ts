@@ -25,12 +25,13 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   advPtCount = 0;
   advDmeCount = 0;
   advCvmCount = 0;
-
+ 
+  provenance = '';
+  provenanceList = '';
   datasourceList = '';
-  country = 'USA';
-  fromTable = '';
   loadingStatus = '';
   showSpinner = false;
+  baseDomain: string;
 
   public displayedColumns: string[] = [
     'productNDC',
@@ -44,10 +45,6 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
    'country',
    'applicationNumber',
   ];
-
-  baseDomain: string;
-
-  public countryList = ['USA', 'Canada'];
 
   constructor(
     public gaService: GoogleAnalyticsService,
@@ -68,7 +65,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       // Get Bdnum
       this.getBdnum();
 
-      // Get Product Data based on substance uuid
+      //Get Provenance List to Display in Tab
+      this.getProductProvenanceList();
+
+    // Get Product Data based on substance uuid
       this.getSubstanceProducts();
       this.productListExportUrl();
     }
@@ -117,10 +117,16 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     }
   }
 
+  getProductProvenanceList(): void {
+    this.productService.getProductProvenanceList(this.substance.uuid).subscribe(results => {
+      this.provenanceList = results.provenanceList;
+    });
+  }
+
   getSubstanceProducts(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
-    this.productService.getSubstanceProducts(this.substance.uuid, this.country, this.page, this.pageSize).subscribe(results => {
+    this.productService.getSubstanceProducts(this.substance.uuid, this.provenance, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
       this.productCount = this.totalRecords;
       this.loadingStatus = '';
@@ -141,9 +147,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       // Get Country and fromTable/Source from Tab Label
       if (textLabel != null) {
         this.loadingStatus = 'Loading data...';
-        const index = textLabel.indexOf(' ');
-        const tab = textLabel.slice(0, index);
-        this.country = textLabel.slice(index + 1, textLabel.length);
+        this.provenance = textLabel;
+      //  const index = textLabel.indexOf(' ');
+      //  const tab = textLabel.slice(0, index);
+       // this.country = textLabel.slice(index + 1, textLabel.length);
         // set the current result data to empty or null.
         this.paged = [];
 
