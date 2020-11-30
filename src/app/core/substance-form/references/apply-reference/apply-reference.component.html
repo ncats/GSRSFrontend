@@ -28,7 +28,7 @@
           <button mat-menu-item (click)="applyToAllDomainWithoutRef(domainKey)">
             <span>All {{domainKey}} without references</span>
           </button>
-          <div *ngFor="let domain of domainsWithReferences[domainKey].domains" mat-menu-item >
+          <div *ngFor="let domain of domainsWithReferences[domainKey].domains" mat-menu-item (click)="$event.stopPropagation()">
             <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey !== "relationships" && domainKey !== "constituents"'
             [checked]="domain.checked">
               {{domain[domainsWithReferences[domainKey].displayKey]}}
