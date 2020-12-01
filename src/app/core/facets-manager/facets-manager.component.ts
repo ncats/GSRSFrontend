@@ -229,10 +229,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
                     }
 
                     if (hasValues) {
-                      const facetToAdd = facetsCopy.splice(facetIndex, 1);
+                      if (this.showDeprecated === false && facet === 'Deprecated') {
+                      } else {
+                        const facetToAdd = facetsCopy.splice(facetIndex, 1);
                       facetIndex--;
                       newFacets.push(facetToAdd[0]);
                       this.searchText[facetToAdd[0].name] = { value: '', isLoading: false };
+                      }
                     }
                   }
                   break;
