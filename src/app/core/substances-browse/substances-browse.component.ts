@@ -369,7 +369,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.narrowSearchSuggestionsCount = 0;
           if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
             pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
-              if (this.codeSystem[suggestion.displayField]) {
+              if (this.codeSystem && this.codeSystem[suggestion.displayField]) {
                 suggestion.displayField = this.codeSystem[suggestion.displayField].display;
               }
               if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
