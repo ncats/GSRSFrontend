@@ -129,6 +129,7 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
     } else {
       this.removeReference(domain);
     }
+    this.substanceFormReferencesService.emitReferencesUpdate();
   }
 
   applyReference(domain: any): void {
