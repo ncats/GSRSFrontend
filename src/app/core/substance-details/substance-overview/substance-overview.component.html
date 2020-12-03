@@ -186,6 +186,32 @@
         <div class="name">Fraction Name</div>
         <div class="value blue-font">{{substance.structurallyDiverse.fractionName}}</div>
       </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse && substance.structurallyDiverse.hybridSpeciesPaternalOrganism">
+        <div class="name">Hybrid Paternal Organism</div>
+        <div class="thumb-col">
+          <img class="image-thumb" appSubstanceImage [entityId]="substance.structurallyDiverse.hybridSpeciesPaternalOrganism.refuuid"
+            size="400">
+          <div>
+            <a class="substance-name"
+              [routerLink]="['/substances', substance.structurallyDiverse.hybridSpeciesPaternalOrganism.refuuid]">
+              {{substance.structurallyDiverse.hybridSpeciesPaternalOrganism.refPname}}
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="name-value" *ngIf="substance.structurallyDiverse && substance.structurallyDiverse.hybridSpeciesMaternalOrganism">
+        <div class="name">Hybrid Paternal Organism</div>
+        <div class="thumb-col">
+          <img class="image-thumb" appSubstanceImage [entityId]="substance.structurallyDiverse.hybridSpeciesMaternalOrganism.refuuid"
+            size="400">
+          <div>
+            <a class="substance-name"
+              [routerLink]="['/substances', substance.structurallyDiverse.hybridSpeciesMaternalOrganism.refuuid]">
+              {{substance.structurallyDiverse.hybridSpeciesMaternalOrganism.refPname}}
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
     <div *ngIf="!isAdmin" class="name-value">
       <div class="name">Record Version</div>
