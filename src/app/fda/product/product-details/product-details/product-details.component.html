@@ -233,6 +233,8 @@
                 <th>#</th>
                 <th>Company Name</th>
                 <th>Company Address</th>
+                <th>Company State</th>
+                <th>Company Country</th>
                 <th>Company Code</th>
                 <th>Company Code Type</th>
                 <th>Company Role</th>
@@ -243,6 +245,8 @@
                 <td>{{i + 1}}</td>
                 <td>{{ x.companyName }}</td>
                 <td>{{ x.companyAddress }}</td>
+                <td>{{ x.state }}</td>
+                <td>{{ x.companyCountry }} </td>
                 <td>{{ x.companyCode }}</td>
                 <td>{{ x.companyCodeType }}</td>
                 <td>{{ x.companyRole }}</td>
@@ -423,7 +427,7 @@
                                       target="_blank">{{ingred.ingredientName}}</a>
                                   </div>
                                   <br>
-                                  ({{ ingred.bdnum }})
+                                  <span *ngIf="ingred.bdnum">({{ ingred.bdnum }})</span>
                                 </td>
 
                                 <td>
@@ -432,7 +436,7 @@
                                       target="_blank">{{ingred.basisOfStrengthIngredientName}}</a>
                                   </div>
                                   <br>
-                                  ({{ ingred.basisOfStrengthBdnum }})
+                                  <span *ngIf="ingred.bdnum">({{ ingred.basisOfStrengthBdnum }})</span>
                                 </td>
                                 <td>{{ ingred.ingredientType }}</td>
                                 <td>{{ ingred.ingredientLocation }}</td>

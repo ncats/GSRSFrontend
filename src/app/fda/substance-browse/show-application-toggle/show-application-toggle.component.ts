@@ -38,10 +38,21 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     private dialog: MatDialog) { }
 
   ngOnInit() {
+
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+      this.isAdmin = response;
+
+      if (this.isAdmin === true) {
+        this.isDisplayAppToMatchConfig();
+      }
+    });
+   
+    /*
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
     if (this.isAdmin === true) {
       this.isDisplayAppToMatchConfig();
     }
+    */
 
     // Get Etag and total from Browse Substance Results
     const subscriptionResult = this.substanceService.searchResults.subscribe(response => {
@@ -51,6 +62,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
       }
     });
     this.subscriptions.push(subscriptionResult);
+    
   }
 
   ngAfterViewInit() {
@@ -94,7 +106,9 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-      if (this.authService.getUser() !== '') {
+      // if (this.authService.getUser() !== '') 
+      if (this.isAdmin === true) 
+      {
 
         let type = '';
         if (source != null) {

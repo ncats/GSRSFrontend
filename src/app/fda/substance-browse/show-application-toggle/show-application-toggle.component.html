@@ -8,35 +8,35 @@
   </div>
 
   <!-- Export Buttons -->
-  <div class="padleft10px divheight">
+  <div class="padleft10px divheight" *ngIf="isAdmin">
     <button matTooltip="Export All Applications for Substance Search Results" (click)="export('app')" mat-button
       class="mat-button export-button mat-raised-button">
       <mat-icon svgIcon="get_app"></mat-icon> Applications
     </button>
   </div>
 
-  <div class="padleft10px">
+  <div class="padleft10px" *ngIf="isAdmin">
     <button matTooltip="Export All Products for Substance Search Results" mat-button (click)="export('prod')"
       class="mat-button export-button mat-raised-button">
       <mat-icon svgIcon="get_app"></mat-icon> Products
     </button>
   </div>
 
-  <div class="padleft10px">
+  <div class="padleft10px" *ngIf="isAdmin">
     <button matTooltip="Export All Clinical Trials US for Substance Search Results" mat-button
       (click)="export('clinicalus')" class="mat-button export-button mat-raised-button">
       <mat-icon svgIcon="get_app"></mat-icon> Clinical Trials US
     </button>
   </div>
 
-  <div class="padleft10px">
+  <div class="padleft10px" *ngIf="isAdmin">
     <button matTooltip="Export All Clinical Trials Europe for Substance Search Results" mat-button
       (click)="export('clinicaleurope')" class="mat-button export-button mat-raised-button">
       <mat-icon svgIcon="get_app"></mat-icon> Clinical Trials Europe
     </button>
   </div>
 
-  <div class="padleft10px padtop10px">
+  <div class="padleft10px padtop10px" *ngIf="isAdmin">
     <mat-icon class="colorgreen" matTooltip="It may take some time to download. After the download process starts, you can move away
       from the download process page and continue with your work. Go to 'User Downloads' menu in Profile to get the downloaded file.">help</mat-icon>
   </div>

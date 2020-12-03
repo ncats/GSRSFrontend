@@ -14,6 +14,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material';
 
 import * as _ from 'lodash';
+import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { PageEvent } from '@angular/material';
@@ -40,7 +41,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   totalProducts: number;
   isLoading = true;
   isError = false;
-  isAdmin: boolean;
   displayedColumns: string[];
   dataSource = [];
   appType: string;
@@ -52,6 +52,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   disableExport = false;
   private overlayContainer: HTMLElement;
   isLoggedIn = false;
+  isAdmin = false;
   etag = '';
   environment: any;
 
@@ -100,10 +101,13 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+      this.isAdmin = response;
+    });
+   
     this.activatedRoute.queryParamMap.subscribe(params => {
 
       this.privateSearchTerm = params.get('search') || '';
