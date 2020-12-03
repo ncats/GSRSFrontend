@@ -60,7 +60,7 @@ export class SubstanceSelectorComponent implements OnInit {
   processSubstanceSearch(searchValue: string = ''): void {
     const q = searchValue.replace('\"', '');
 
-    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
+    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ').toUpperCase();
 
     // const searchStr = `root_names_name:\"^${q}$\" OR ` +
     //   `root_approvalID:\"^${q}$\" OR ` +
