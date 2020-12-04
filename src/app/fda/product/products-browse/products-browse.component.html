@@ -115,7 +115,23 @@
 
             <div class="width30">
               <span class="font13px">Application:</span>&nbsp;
-              <span class="approval-id">{{product.appTypeNumber}}</span>
+
+              <span *ngIf="(product.appType && product.appNumber); else noAppType">
+                <a [routerLink]="['/applicationDarrtsDetails', product.appType, product.appNumber]"
+                  target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
+                </a>
+              </span>
+              <ng-template #noAppType>
+                <span class="approval-id">
+                  {{product.appTypeNumber}}
+                </span>
+              </ng-template>
+              <!--
+              <a class="substance-name" [routerLink]="['/applicationDetails', product.id]" target="_blank">
+                {{product.appType}}&nbsp;{{prodouct.appNumber}}
+              </a>
+            -->
+
               <!--
               <a class="approval-id" [routerLink]="['/productElistDetails', product.productId, 'elist']"
                 target="_blank">
@@ -229,112 +245,83 @@
               <div class="row-property-value">
 
                 <!-- Display Active Substance -->
-                <div *ngFor="let prodIngred of product.productIngredientAllList; let indexActiveIngred = index">
+                <ol class="olstyle">
 
-                  <div *ngIf=" prodIngred.ingredientType">
-                    <div *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
+                  <div *ngFor="let prodIngred of product.productIngredientAllList; let indexActiveIngred = index">
 
-                      <div *ngIf="prodIngred.substanceName">
-                        {{(indexActiveIngred+1)}}.&nbsp;
-                        <a [routerLink]="['/substances', prodIngred.substanceId]"
-                          target="_blank">{{prodIngred.substanceName}}</a>
-                      </div>
-                      <!--
-                      &nbsp;&nbsp;&nbsp;&nbsp;<span class="colorgreen">
-                        ({{ prodIngred.ingredientType }})
+                    <span *ngIf=" prodIngred.ingredientType">
+                      <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
+
+                        <span *ngIf="prodIngred.substanceName">
+                          <li>
+                            <a [routerLink]="['/substances', prodIngred.substanceId]"
+                              target="_blank">{{prodIngred.substanceName}}
+                            </a>
+                          </li>
+
+                        </span>
+
                       </span>
-                    -->
-                    </div>
-                  </div>
+                    </span>
 
-
-                  <!-- Display Active Ingredient Type -->
-                  <!--
-                  <div *ngIf=" prodIngred.ingredientType">
-                    <div *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
-
-                    </div>
-                    <ng-template #otherIngredType>
-                      <br>
-                      ddddddd
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;({{ prodIngred.ingredientType }})
-                    </ng-template>
-                  </div>
-                -->
-
-                </div> <!-- repeat -->
+                  </div> <!-- repeat -->
+                </ol>
 
               </div>
             </div>
 
-            <div class="row-property">
-              <div class="row-property-key">
-                Substance Name (Other):
-              </div>
-              <div class="row-property-value">
-                <!-- Display Other Substance -->
-                <div *ngFor="let prodIngred of product.productIngredientAllList; let indexIngred = index">
 
-                  <div *ngIf="prodIngred.ingredientType; else otherIngredType">
-
-                    <div *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
-
-                      <div *ngIf="prodIngred.substanceName">
-                        {{(indexIngred+1)}}.&nbsp;
-                        <a [routerLink]="['/substances', prodIngred.substanceId]"
-                          target="_blank">{{prodIngred.substanceName}}</a>
-                      </div>
-                      &nbsp;&nbsp;&nbsp;&nbsp;<span class="colorgreen">
-                        ({{ prodIngred.ingredientType }})
-                      </span>
-                    </div>
-                  </div>
-
-                  <!-- Display Other Ingredient Type -->
-                  <!--
-                  <div *ngIf=" prodIngred.ingredientType">
-                    <div *ngIf="prodIngred.ingredientType !== 'Active Ingredient'; else otherIngredType">
-
-                    </div>
-                    <ng-template #otherIngredType>
-                      <br>
-                      ddddddd
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;({{ prodIngred.ingredientType }})
-                    </ng-template>
-                  </div>
-                   -->
-
-                </div> <!-- repeat -->
-
-              </div>
-            </div>
-
-          </div>
-
-          <!--
-          <div class="row">
             <div class="row-property">
               <div class="row-property-key">
                 Substance Name (Inactive):
               </div>
               <div class="row-property-value">
-                <div *ngFor="let prodInactiveIng of product.productInactiveElistList; let indexInActiveIng = index">
-                  {{prodInactiveIng.name}}
-                </div>
+                <!-- Display Other Substance -->
+                <ol class="olstyle">
+                  <div *ngFor="let prodIngred of product.productIngredientAllList; let indexIngred = index">
+
+                    <!-- If Ingredient Type is not null -->
+                    <div *ngIf="prodIngred.ingredientType; else noIngredType">
+
+                      <!-- If Not Active Ingredient, display Substance Name and Ingredient Type-->
+                      <div *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
+
+                        <div *ngIf="prodIngred.substanceName">
+                          <li class="">
+                            <a [routerLink]="['/substances', prodIngred.substanceId]"
+                              target="_blank">{{prodIngred.substanceName}}
+                            </a>
+                          </li>
+                        </div>
+
+                        <div
+                          *ngIf="(prodIngred.ingredientType !== 'Active Ingredient') && (prodIngred.ingredientType !== 'Inactive Ingredient')">
+                          <span class="colorgreen">({{ prodIngred.ingredientType }})
+                          </span>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!-- No Ingredient Type -->
+                    <ng-template #noIngredType>
+                      <!-- if No Ingredient Type, but have Substance Name, display here. -->
+                      <div *ngIf="prodIngred.substanceName">
+                        <li class="">
+                          <a [routerLink]="['/substances', prodIngred.substanceId]"
+                            target="_blank">{{prodIngred.substanceName}}
+                          </a>
+                        </li>
+                      </div>
+                    </ng-template>
+
+                  </div> <!-- repeat -->
+                </ol>
+
               </div>
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-               
-              </div>
-              <div class="row-property-value">
-                <div *ngFor="let prodInactiveIng of product.productInactiveElistList; let indexInActiveIng = index">
-                 
-                </div>
-              </div>
-            </div>
+
           </div>
-        -->
 
         </mat-card-content>
 

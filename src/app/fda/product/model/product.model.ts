@@ -132,11 +132,12 @@ export interface ProductIngredient {
 
 export interface ProductAll {
   id?: number;
+  appTypeNumber?: string;
+  appType?: string;
+  appNumber?: string;
   /*
   source?: string;
   publicDomain?: number;
-  appType?: string;
-  appNumber?: string;
   productType?: string;
   sourceType?: string;
   unitPresentation?: string;
