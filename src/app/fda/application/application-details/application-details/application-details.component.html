@@ -10,15 +10,15 @@
           <div class="form-row">
             Application Details
             &nbsp;&nbsp;
-            &nbsp;&nbsp;
+            &nbsp;
             <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
               matTooltip='Edit GSRS Application Record (opens in new window)'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>
-            <div>
+            <span>
               <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
               </mat-icon>
-            </div>
+            </span>
           </div>
           <div class="font11px padleft30px" *ngIf="isAdmin">
             <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;

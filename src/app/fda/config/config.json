@@ -538,6 +538,7 @@
       "default": [
         "Application Type",
         "Center",
+        "Title",
         "Has Indications",
         "Has Ingredients",
         "Has Products",
