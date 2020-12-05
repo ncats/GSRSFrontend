@@ -64,7 +64,16 @@
        </div>
        <div class = "table-row" *ngIf = "browseLink">
            <div class = "label table-label">
-                <a class = "query-link" [routerLink] = "['/browse-substance']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
+                <a *ngIf = "type === 'browse'"
+                class = "query-link" [routerLink] = "['/browse-substance']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
+                    Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
+                </a>
+                <a *ngIf = "type === 'product'"
+                class = "query-link" [routerLink] = "['/browse-products']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
+                    Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
+                </a>
+                <a *ngIf = "type === 'application'"
+                class = "query-link" [routerLink] = "['/browse-applications']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
                     Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
                 </a>
             </div>

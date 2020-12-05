@@ -21,6 +21,7 @@ export class DownloadMonitorComponent implements OnInit {
   parameters: NavigationExtras = {};
   facetArray = [];
   displayOrder: string;
+  type?: string;
   constructor(
     private authService: AuthService
   ) { }
@@ -74,6 +75,13 @@ export class DownloadMonitorComponent implements OnInit {
   processQuery(url: string) {
     if (url.indexOf('status(') < 0) {
       this.browseLink = true;
+      if (url.indexOf('v1/productmainall') > 0) {
+        this.type = 'product';
+      } else if (url.indexOf('v1/applicationssrs') > 0) {
+        this.type = 'application';
+      } else {
+        this.type = 'browse';
+      }
       url = url.split('?')[1];
 
     const urlParams = new URLSearchParams(url);

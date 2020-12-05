@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-title>
-    <a class="substance-name" [routerLink]="['/substances', substance.uuid]">
+    <a class="substance-name" [routerLink]="['/substances', substance.uuid]" matTooltip = "View substance details">
       {{substance._name}}
     </a>
     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
