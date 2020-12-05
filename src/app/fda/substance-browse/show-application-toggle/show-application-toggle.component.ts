@@ -46,7 +46,6 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
         this.isDisplayAppToMatchConfig();
       }
     });
-   
     /*
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
     if (this.isAdmin === true) {
@@ -62,7 +61,6 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
       }
     });
     this.subscriptions.push(subscriptionResult);
-    
   }
 
   ngAfterViewInit() {
@@ -106,10 +104,8 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-      // if (this.authService.getUser() !== '') 
-      if (this.isAdmin === true) 
-      {
-
+      // if (this.authService.getUser() !== '')
+      if (this.isAdmin === true) {
         let type = '';
         if (source != null) {
           if (source === 'app') {
@@ -119,7 +115,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
           } else if (source === 'clinicalus') {
             type = 'ClinicalTrial-US';
           } else if (source === 'clinicaleurope') {
-            type = "ClinicalTrial-EU";
+            type = 'ClinicalTrial-EU';
           }
         }
         const dialogReference = this.dialog.open(ExportDialogComponent, {

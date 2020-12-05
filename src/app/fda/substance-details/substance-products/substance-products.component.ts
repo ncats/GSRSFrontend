@@ -25,7 +25,6 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   advPtCount = 0;
   advDmeCount = 0;
   advCvmCount = 0;
- 
   provenance = '';
   provenanceList = '';
   datasourceList = '';
@@ -35,15 +34,15 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
   public displayedColumns: string[] = [
     'productNDC',
-  //  'name',
+    //  'name',
     'nonProprietaryName',
     'status',
-  //  'labelerName',
+    //  'labelerName',
     'productNameType',
-   // 'ingredientType'
-   'routeAdmin',
-   'country',
-   'applicationNumber',
+    // 'ingredientType'
+    'routeAdmin',
+    'country',
+    'applicationNumber',
   ];
 
   constructor(
@@ -60,15 +59,13 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       this.isAdmin = response;
     });
-   
     if (this.substance && this.substance.uuid) {
       // Get Bdnum
       this.getBdnum();
-
-      //Get Provenance List to Display in Tab
+      // Get Provenance List to Display in Tab
       this.getProductProvenanceList();
 
-    // Get Product Data based on substance uuid
+      // Get Product Data based on substance uuid
       this.getSubstanceProducts();
       this.productListExportUrl();
     }
@@ -148,9 +145,9 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       if (textLabel != null) {
         this.loadingStatus = 'Loading data...';
         this.provenance = textLabel;
-      //  const index = textLabel.indexOf(' ');
-      //  const tab = textLabel.slice(0, index);
-       // this.country = textLabel.slice(index + 1, textLabel.length);
+        //  const index = textLabel.indexOf(' ');
+        //  const tab = textLabel.slice(0, index);
+        // this.country = textLabel.slice(index + 1, textLabel.length);
         // set the current result data to empty or null.
         this.paged = [];
 

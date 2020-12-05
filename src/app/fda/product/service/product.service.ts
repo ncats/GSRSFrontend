@@ -97,7 +97,6 @@ export class ProductService extends BaseHttpService {
   ): Observable<any> {
 
     const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
-  
     return this.http.get<any>(url)
       .pipe(
         map(result => {

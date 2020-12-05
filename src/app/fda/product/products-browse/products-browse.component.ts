@@ -162,7 +162,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
         }
-        //Separate Application Type and Application Number in Product Result.
+        // Separate Application Type and Application Number in Product Result.
         this.separateAppTypeNumber();
 
       }, error => {
@@ -296,17 +296,16 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           let apt = '';
           let apn = '';
           let done = false;
-          for (var char of element.appTypeNumber) {
-            //Application Number
+          for (const char of element.appTypeNumber) {
+            // Application Number
             if (char) {
               if (this.isNumber(char) === true) {
                 done = true;
                 apn = apn + char;
                 element.appNumber = apn;
-              }
-              else {
+              } else {
                 if (done === false) {
-                  //Application Type
+                  // Application Type
                   apt = apt + char;
                   element.appType = apt;
                 }
