@@ -3462,7 +3462,7 @@
         "description": "The type of relationship (e.g. 'parent -> salt solvate', 'active moiety', 'inhibitor -> 'target', 'toxin -> conjugate' etc.).",
         "type": "string",
         "cvDomain": "RELATIONSHIP_TYPE",
-        "priority": null
+        "priority": "X"
     },
     "Relationship UUID": {
         "lucenePath": "root_relationships_uuid",

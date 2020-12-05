@@ -56,7 +56,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
         const eventCategory = this.eventCategory || 'substanceTextSearch';
         const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
         this.gaService.sendEvent(eventCategory, 'search:enter-term', eventLabel);
-        return this.utilsService.getStructureSearchSuggestions(searchValue);
+        return this.utilsService.getStructureSearchSuggestions(searchValue.toUpperCase());
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
@@ -99,7 +99,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   }
 
   getCasDisplay() {
-    this.cvService.getDomainVocabulary('CODE_SYSTEM')
+    this.cvService.getDomainVocabulary('CODE_SYSTEM');
   }
 
   @Input()
