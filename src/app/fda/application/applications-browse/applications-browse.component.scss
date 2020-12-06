@@ -169,7 +169,7 @@
   .center {
     font-size: 15px;
     color: blue;
-    padding-left: 100px;
+    padding-left: 200px;
     display: inline-block;
 }
 }
@@ -531,8 +531,8 @@ margin:auto;
 }
 
 .row-property-key-3 {
-	min-width: 42%;
-	max-width: 42%;
+	min-width: 45%;
+	max-width: 45%;
 	padding: 7px;
   font-size: 12px;
   font-weight: 600;
@@ -540,8 +540,8 @@ margin:auto;
 }
 
 .row-property-value-3 {
-	min-width: 58%;
-	max-width: 58%;
+	min-width: 55%;
+	max-width: 55%;
 	padding: 5px;
 	font-size: 13px;
 }
@@ -567,6 +567,22 @@ margin:auto;
 	font-size: 13px;
 }
 
+.row-property-key-5 {
+	min-width: 35%;
+	max-width: 35%;
+	padding: 7px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.row-property-value-5 {
+	min-width: 65%;
+	max-width: 65%;
+	padding: 5px;
+	font-size: 13px;
+}
+
+
 .font9px{
   font-size: 9px;
 }
@@ -579,8 +595,16 @@ margin:auto;
   font-size: 12px;
 }
 
+.font14px{
+  font-size: 14px;
+}
+
 .font17px {
   font-size: 17px;
+}
+
+.fontweight600 {
+  font-weight: 600;
 }
 
 .colorgray {
@@ -597,6 +621,10 @@ margin:auto;
 
 .colororange {
   color: orange;
+}
+
+.colorlightblue {
+  color: #1945bd;
 }
 
 .bordergray {
@@ -647,4 +675,16 @@ margin:auto;
   height: 50px;
   padding: 0px;  
   border: 10px solid blue;
+}
+
+.width100percent {
+  width: 100%;
+}
+
+.width70percent {
+  width: 70%;
+}
+
+.width30percent {
+  width: 30%;
 }

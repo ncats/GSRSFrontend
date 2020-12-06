@@ -14,6 +14,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material';
 
 import * as _ from 'lodash';
+import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { PageEvent } from '@angular/material';
@@ -40,7 +41,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   totalProducts: number;
   isLoading = true;
   isError = false;
-  isAdmin: boolean;
   displayedColumns: string[];
   dataSource = [];
   appType: string;
@@ -52,6 +52,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   disableExport = false;
   private overlayContainer: HTMLElement;
   isLoggedIn = false;
+  isAdmin = false;
   etag = '';
   environment: any;
 
@@ -100,9 +101,12 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
+
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+      this.isAdmin = response;
+    });
 
     this.activatedRoute.queryParamMap.subscribe(params => {
 
@@ -158,6 +162,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
         }
+        // Separate Application Type and Application Number in Product Result.
+        this.separateAppTypeNumber();
+
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -254,7 +261,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
-          data: { 'extension': extension }
+          data: { 'extension': extension, 'type': 'BrowseProducts' }
         });
         // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(name => {
@@ -280,6 +287,43 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.productService.getApiExportUrl(etag, extension);
+  }
+
+  separateAppTypeNumber(): void {
+    if (this.products) {
+      this.products.forEach((element, index) => {
+        if (element.appTypeNumber) {
+          let apt = '';
+          let apn = '';
+          let done = false;
+          for (const char of element.appTypeNumber) {
+            // Application Number
+            if (char) {
+              if (this.isNumber(char) === true) {
+                done = true;
+                apn = apn + char;
+                element.appNumber = apn;
+              } else {
+                if (done === false) {
+                  // Application Type
+                  apt = apt + char;
+                  element.appType = apt;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
   }
 
 }

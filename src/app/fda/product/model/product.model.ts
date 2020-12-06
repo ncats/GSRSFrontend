@@ -82,6 +82,10 @@ export interface ProductComponent {
   charShape?: string;
   charNumFragments?: string;
   dosageForm?: string;
+  amount?: string;
+  unit?: string;
+  manufactureCode?: string;
+  manufactureCodeType?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -132,11 +136,12 @@ export interface ProductIngredient {
 
 export interface ProductAll {
   id?: number;
+  appTypeNumber?: string;
+  appType?: string;
+  appNumber?: string;
   /*
   source?: string;
   publicDomain?: number;
-  appType?: string;
-  appNumber?: string;
   productType?: string;
   sourceType?: string;
   unitPresentation?: string;

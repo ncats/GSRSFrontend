@@ -21,11 +21,13 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   fromTable = '';
   loadingStatus = '';
   showSpinner = false;
+  foundCenterList = false;
+  loadingComplete = false;
 
   @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
-    'appType', 'appNumber', 'center', 'sponsorName', 'applicationStatus', 'applicationSubType'];
+    'appType', 'appNumber', 'productName', 'sponsorName', 'applicationStatus', 'applicationSubType'];
 
   constructor(
     public gaService: GoogleAnalyticsService,
@@ -51,6 +53,10 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   getApplicationCenterByBdnum(): string {
     this.applicationService.getApplicationCenterByBdnum(this.bdnum).subscribe(results => {
       this.centerList = results.centerList;
+      if (this.centerList.length > 0) {
+        this.foundCenterList = true;
+      }
+      this.loadingComplete = true;
     });
     return this.centerList;
   }

@@ -78,25 +78,33 @@
       <mat-card class="bordergray" *ngFor="let product of products; let indexProd = index">
         <mat-card-title class="borderlightorange-bottom">
           <div class="row">
+
             <div class="width40">
               <span class="font13px">Product NDC:</span>&nbsp;
-              <a class="substance-name" [routerLink]="['/productElistDetails', product.productId, 'elist']"
-                target="_blank">
-                <span *ngIf="product.productNDC; else noProdNDC">
-                  {{product.productNDC}}
-                </span>
-                <ng-template #noProdNDC>
-                  (NO NDC)
-                </ng-template>
-              </a>
+
+              <!-- If fromtable is SPL, display SPL Details links -->
+              <span *ngIf="product.fromtable === 'SPL'">
+                <a class="substance-name" [routerLink]="['/productElistDetails', product.productId, 'elist']"
+                  target="_blank"><span *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
+                  <ng-template #noProdNDC>(NO NDC)</ng-template>
+                </a>
+              </span>
 
               &nbsp;&nbsp;&nbsp;
-              <div *ngIf="fromtable === 'GSRS'">
+              <!-- If fromtabl is GSRS, display GSRS Details links -->
+              <span *ngIf="product.fromtable === 'GSRS'">
+                <a class="substance-name" [routerLink]="['/productDetails', product.productId, 'srs']"
+                  target="_blank"><span *ngIf="product.productNDC; else noProdNDCSRS">{{product.productNDC}}</span>
+                  <ng-template #noProdNDCSRS>(NO NDC)</ng-template>
+                </a>
+
+                <!-- Edit GSRS record button -->
                 <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
                   matTooltip='Edit GSRS Product Record'>
                   <mat-icon svgIcon="edit"></mat-icon>
                 </a>
-              </div>
+              </span>
+
             </div>
 
             <div class="width30">
@@ -107,7 +115,23 @@
 
             <div class="width30">
               <span class="font13px">Application:</span>&nbsp;
-              <span class="approval-id">{{product.appTypeNumber}}</span>
+
+              <span *ngIf="(product.appType && product.appNumber); else noAppType">
+                <a [routerLink]="['/applicationDarrtsDetails', product.appType, product.appNumber]"
+                  target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
+                </a>
+              </span>
+              <ng-template #noAppType>
+                <span class="approval-id">
+                  {{product.appTypeNumber}}
+                </span>
+              </ng-template>
+              <!--
+              <a class="substance-name" [routerLink]="['/applicationDetails', product.id]" target="_blank">
+                {{product.appType}}&nbsp;{{prodouct.appNumber}}
+              </a>
+            -->
+
               <!--
               <a class="approval-id" [routerLink]="['/productElistDetails', product.productId, 'elist']"
                 target="_blank">
@@ -212,74 +236,92 @@
             </div>
           </div>
 
+
           <div class="row">
             <div class="row-property">
               <div class="row-property-key">
-                Substance Name:
+                Substance Name (Active):
               </div>
               <div class="row-property-value">
-                <div *ngFor="let prodIngred of product.productIngredientAllList; let indexIngred = index">
-                  <div *ngIf="prodIngred.substanceName">
-                    {{(indexIngred+1)}}.&nbsp;
-                    <a [routerLink]="['/substances', prodIngred.substanceId]"
-                      target="_blank">{{prodIngred.substanceName}}</a>
-                  </div>
 
-                  <!-- Display Ingredient Type -->
-                  <div *ngIf="prodIngred.ingredientType">
-                    <div *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
-                      &nbsp;&nbsp;&nbsp;&nbsp;<span class="colorgreen">
-                        ({{ prodIngred.ingredientType }})
+                <!-- Display Active Substance -->
+                <ol class="olstyle">
+
+                  <div *ngFor="let prodIngred of product.productIngredientAllList; let indexActiveIngred = index">
+
+                    <span *ngIf=" prodIngred.ingredientType">
+                      <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
+
+                        <span *ngIf="prodIngred.substanceName">
+                          <li>
+                            <a [routerLink]="['/substances', prodIngred.substanceId]"
+                              target="_blank">{{prodIngred.substanceName}}
+                            </a>
+                          </li>
+
+                        </span>
+
                       </span>
-                    </div>
-                    <ng-template #otherIngredType>
-                      &nbsp;&nbsp;({{ prodIngred.ingredientType }})
-                    </ng-template>
-                  </div>
+                    </span>
 
-                </div>
+                  </div> <!-- repeat -->
+                </ol>
+
               </div>
             </div>
 
-            <div class="row-property">
-              <div class="row-property-key">
 
-              </div>
-              <div class="row-property-value">
-                <!--
-                <div *ngFor="let prodActiveIng of product.productIngredientAllList; let indexProdActiveIng = index">
-                  {{prodActiveIng.ingredientType}}
-                </div>
-              -->
-              </div>
-            </div>
-
-          </div>
-
-          <!--
-          <div class="row">
             <div class="row-property">
               <div class="row-property-key">
                 Substance Name (Inactive):
               </div>
               <div class="row-property-value">
-                <div *ngFor="let prodInactiveIng of product.productInactiveElistList; let indexInActiveIng = index">
-                  {{prodInactiveIng.name}}
-                </div>
+                <!-- Display Other Substance -->
+                <ol class="olstyle">
+                  <div *ngFor="let prodIngred of product.productIngredientAllList; let indexIngred = index">
+
+                    <!-- If Ingredient Type is not null -->
+                    <div *ngIf="prodIngred.ingredientType; else noIngredType">
+
+                      <!-- If Not Active Ingredient, display Substance Name and Ingredient Type-->
+                      <div *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
+
+                        <div *ngIf="prodIngred.substanceName">
+                          <li class="">
+                            <a [routerLink]="['/substances', prodIngred.substanceId]"
+                              target="_blank">{{prodIngred.substanceName}}
+                            </a>
+                          </li>
+                        </div>
+
+                        <div
+                          *ngIf="(prodIngred.ingredientType !== 'Active Ingredient') && (prodIngred.ingredientType !== 'Inactive Ingredient')">
+                          <span class="colorgreen">({{ prodIngred.ingredientType }})
+                          </span>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!-- No Ingredient Type -->
+                    <ng-template #noIngredType>
+                      <!-- if No Ingredient Type, but have Substance Name, display here. -->
+                      <div *ngIf="prodIngred.substanceName">
+                        <li class="">
+                          <a [routerLink]="['/substances', prodIngred.substanceId]"
+                            target="_blank">{{prodIngred.substanceName}}
+                          </a>
+                        </li>
+                      </div>
+                    </ng-template>
+
+                  </div> <!-- repeat -->
+                </ol>
+
               </div>
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-               
-              </div>
-              <div class="row-property-value">
-                <div *ngFor="let prodInactiveIng of product.productInactiveElistList; let indexInActiveIng = index">
-                 
-                </div>
-              </div>
-            </div>
+
           </div>
-        -->
 
         </mat-card-content>
 

@@ -538,6 +538,7 @@
       "default": [
         "Application Type",
         "Center",
+        "Title",
         "Has Indications",
         "Has Ingredients",
         "Has Products",
@@ -577,6 +578,7 @@
         "Product NDC",
         "Dosage Form Name",
         "Ingredient Name",
+        "Ingredient Type",
         "Product Type",
         "Product Code Type",
         "Application Number",

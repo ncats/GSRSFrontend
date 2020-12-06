@@ -1,3 +1,9 @@
+<div *ngIf="(loadingComplete === true && foundCenterList === false && applicationCount === 0)">
+  <br>
+  <div class="padleft25px colorblue"><b>No Application Found</b></div>
+  <br>
+</div>
+
 <mat-tab-group (selectedTabChange)="applicationTabSelected($event)">
   <mat-tab label="{{appCenter}}" *ngFor="let appCenter of centerList; let index = index">
 
@@ -46,9 +52,17 @@
           <td mat-cell *matCellDef="let application"> {{application.appNumber}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="center">
-          <th mat-header-cell *matHeaderCellDef> Center </th>
-          <td mat-cell *matCellDef="let application"> {{application.center}} </td>
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell *matHeaderCellDef> Product Name </th>
+          <td mat-cell *matCellDef="let application">
+
+            <div *ngFor="let prod of application.applicationProductList; let i = index">
+              <!-- Product Names-->
+              <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
+                {{prodName.productName}}
+              </div>
+            </div>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="sponsorName">
@@ -75,3 +89,12 @@
     </mat-paginator>
   </mat-tab>
 </mat-tab-group>
+
+<!--
+</div>
+<ng-template #nocenter>
+  <br>
+  <div class="padleft25px colorblue"><b>No Application Found</b></div>
+  <br>
+</ng-template>
+-->

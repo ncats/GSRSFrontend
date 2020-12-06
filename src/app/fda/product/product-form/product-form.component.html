@@ -343,8 +343,12 @@
               </div>
 
               <div class="form-row">
-                <app-cv-input class="col-2" domain="PROD_PRODUCT_TYPE" title="Product Type" name="productType"
+                <app-cv-input class="col-1" domain="PROD_PRODUCT_TYPE" title="Product Type" name="productType"
                   [model]="product.productType" (valueChange)="product.productType = $event">
+                </app-cv-input>
+
+                <app-cv-input class="col-1" domain="PROD_PROVENANCE" title="Provenance" name="provenance"
+                  [model]="product.provenance" (valueChange)="product.provenance = $event">
                 </app-cv-input>
 
                 <app-cv-input class="col-1" domain="PROD_COUNTRY_CODE" title="Country Code" name="countryCode"
