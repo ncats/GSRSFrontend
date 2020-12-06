@@ -82,6 +82,10 @@ export interface ProductComponent {
   charShape?: string;
   charNumFragments?: string;
   dosageForm?: string;
+  amount?: string;
+  unit?: string;
+  manufactureCode?: string;
+  manufactureCodeType?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

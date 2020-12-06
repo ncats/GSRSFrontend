@@ -7,13 +7,20 @@
 <div class="bordergray mat-tab-style">
   <mat-tab-group>
 
+
     <mat-tab label="Product ({{productCount}})">
+
+      <div *ngIf="(loadingComplete === true && foundProvenanceList === false && productCount === 0)">
+        <br>
+        <div class="padleft25px colorblue"><b>No Product Found</b></div>
+        <br>
+      </div>
 
       <mat-tab-group (selectedTabChange)="tabSelected($event)">
         <mat-tab label="{{prov}}" *ngFor="let prov of provenanceList; let index = index">
 
           <div class="padtop5px padleft25px font15px colorblue">
-            <b> {{coun}}</b>
+            <b> {{prov}}</b>
             &nbsp;&nbsp;&nbsp;
             <span class="colorred">{{loadingStatus}}</span>
             &nbsp;&nbsp;&nbsp;
@@ -103,11 +110,21 @@
             (page)="getSubstanceProducts($event)" [pageSizeOptions]="[5, 10, 25, 100]">
           </mat-paginator>
         </mat-tab>
+
+
       </mat-tab-group>
 
+      <!--
+      </div>
+      <ng-template #noprovence>
+        <br>
+        <div class="padleft25px colorblue"><b>No Product Found</b></div>
+        <br>
+      </ng-template>
+    -->
+    </mat-tab>
 
-
-      <!--  PREVIOUS CODE
+    <!--  PREVIOUS CODE
       <div class="responsive mat-table-style">
         <table mat-table [dataSource]="paged">
 
@@ -166,8 +183,6 @@
         (page)="getSubstanceProducts($event)" [pageSizeOptions]="[5, 10, 25, 100]">
       </mat-paginator>
     -->
-
-    </mat-tab>
 
 
     <mat-tab label="Application ({{applicationCount}})">

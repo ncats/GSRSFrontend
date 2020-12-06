@@ -5,7 +5,12 @@
     <div class="details-container margintop90px">
       <mat-card class="bordergray">
         <mat-card-title>
-          Product Details
+          Product Details &nbsp;&nbsp;&nbsp;&nbsp;
+          <!-- Edit GSRS record button -->
+          <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
+            matTooltip='Edit GSRS Product Record'>
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>
         </mat-card-title>
         <mat-card-content>
 
@@ -209,10 +214,10 @@
             </div>
             <div class="row-property">
               <div class="row-property-key">
-
+                Provenance:
               </div>
               <div class="row-property-value">
-
+                {{product.provenance}}
               </div>
             </div>
           </div>
@@ -274,7 +279,7 @@
 
                 <br>
                 <div class="row">
-                  <div class="row-property-2">
+                  <div class="row-property">
                     <div class="row-property-key-2">
                       Dosage Form:
                     </div>
@@ -282,69 +287,95 @@
                       {{ prodComp.dosageForm }}
                     </div>
                   </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
-
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
+                      Amount:
                     </div>
-                    <div class="row-property-value">
-
+                    <div class="row-property-value-4">
+                      {{prodComp.amount}}
+                    </div>
+                  </div>
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
+                      Unit:
+                    </div>
+                    <div class="row-property-value-4">
+                      {{prodComp.unit}}
                     </div>
                   </div>
                 </div>
 
                 <div class="row">
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      Color Name:
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
+                      Code:
                     </div>
-                    <div class="row-property-value">
-                      {{prodComp.charColor}}
-                    </div>
-                  </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      Flavor Name:
-                    </div>
-                    <div class="row-property-value">
-                      {{prodComp.charFlavor}}
+                    <div class="row-property-value-4">
+                      {{prodComp.manufactureCode}}
                     </div>
                   </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      Shape Name:
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
+                      Code Type:
                     </div>
-                    <div class="row-property-value">
-                      {{prodComp.charShape}}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      Number of Fragments:
-                    </div>
-                    <div class="row-property-value">
-                      {{prodComp.charNumFragments}}
+                    <div class="row-property-value-4">
+                      {{prodComp.manufactureCodeType}}
                     </div>
                   </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
                       Size:
                     </div>
-                    <div class="row-property-value">
+                    <div class="row-property-value-4">
                       {{prodComp.charSize}}
                     </div>
                   </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
                       Imprint Text:
                     </div>
-                    <div class="row-property-value">
+                    <div class="row-property-value-4">
                       {{prodComp.charImprintText}}
                     </div>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
+                      Color Name:
+                    </div>
+                    <div class="row-property-value-4">
+                      {{prodComp.charColor}}
+                    </div>
+                  </div>
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
+                      Flavor Name:
+                    </div>
+                    <div class="row-property-value-4">
+                      {{prodComp.charFlavor}}
+                    </div>
+                  </div>
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
+                      Shape Name:
+                    </div>
+                    <div class="row-property-value-4">
+                      {{prodComp.charShape}}
+                    </div>
+                  </div>
+                  <div class="row-property-4">
+                    <div class="row-property-key-4">
+                      Number of Fragments:
+                    </div>
+                    <div class="row-property-value-4">
+                      {{prodComp.charNumFragments}}
+                    </div>
+                  </div>
+                </div>
+
+
                 <!-- Product Details End -->
 
                 <!-- Lot -->

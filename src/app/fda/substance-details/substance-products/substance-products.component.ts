@@ -31,6 +31,8 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   loadingStatus = '';
   showSpinner = false;
   baseDomain: string;
+  foundProvenanceList = false;
+  loadingComplete = false;
 
   public displayedColumns: string[] = [
     'productNDC',
@@ -59,14 +61,11 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       this.isAdmin = response;
     });
+
     if (this.substance && this.substance.uuid) {
-      // Get Bdnum
       this.getBdnum();
       // Get Provenance List to Display in Tab
       this.getProductProvenanceList();
-
-      // Get Product Data based on substance uuid
-      this.getSubstanceProducts();
       this.productListExportUrl();
     }
 
@@ -117,6 +116,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   getProductProvenanceList(): void {
     this.productService.getProductProvenanceList(this.substance.uuid).subscribe(results => {
       this.provenanceList = results.provenanceList;
+      if (this.provenanceList.length > 0) {
+        this.foundProvenanceList = true;
+      }
+      this.loadingComplete = true;
     });
   }
 

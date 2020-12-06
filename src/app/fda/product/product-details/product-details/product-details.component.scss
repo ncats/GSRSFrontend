@@ -88,6 +88,26 @@
   font-size: 12px;
 }
 
+.row-property-4 {
+  display: flex;
+  width: 25%;
+}
+
+.row-property-key-4 {
+  min-width: 40%;
+  max-width: 40%;
+  padding: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.row-property-value-4 {
+  min-width: 60%;
+  max-width: 60%;
+  padding: 6px;
+  font-size: 12px;
+}
+
 .title {
   font-size: 15px;
   font-weight: bold;
@@ -195,6 +215,10 @@
 
 .colororange {
   color: #E55913;
+}
+
+.width45percent {
+  width: 45%;
 }
 
 .textaligncenter {

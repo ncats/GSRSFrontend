@@ -367,41 +367,43 @@
             <!-- **** RIGH SIDE ****  -->
             <div class="width30percent">
 
-              <div class="row" *ngIf="isAdmin">
-                <div class="row-property-key-5">
-                  Create By:
+              <span *ngIf="isAdmin">
+                <div class="row">
+                  <div class="row-property-key-5">
+                    Create By:
+                  </div>
+                  <div class="row-property-value-5">
+                    {{application.createdBy}}
+                  </div>
                 </div>
-                <div class="row-property-value-5">
-                  {{application.createdBy}}
-                </div>
-              </div>
 
-              <div class="row" *ngIf="isAdmin">
-                <div class="row-property-key-5">
-                  Create Date:
+                <div class="row">
+                  <div class="row-property-key-5">
+                    Create Date:
+                  </div>
+                  <div class="row-property-value-5">
+                    {{application.createDate|date: 'MM/dd/yyyy h:mm a'}}
+                  </div>
                 </div>
-                <div class="row-property-value-5">
-                  {{application.createDate|date: 'MM/dd/yyyy h:mm a'}}
-                </div>
-              </div>
 
-              <div class="row" *ngIf="isAdmin">
-                <div class="row-property-key-5">
-                  Edited By:
+                <div class="row">
+                  <div class="row-property-key-5">
+                    Edited By:
+                  </div>
+                  <div class="row-property-value-5">
+                    {{application.modifiedBy}}
+                  </div>
                 </div>
-                <div class="row-property-value-5">
-                  {{application.modifiedBy}}
-                </div>
-              </div>
 
-              <div class="row" *ngIf="isAdmin">
-                <div class="row-property-key-5">
-                  Edit Date:
+                <div class="row">
+                  <div class="row-property-key-5">
+                    Edit Date:
+                  </div>
+                  <div class="row-property-value-5">
+                    {{application.modifyDate|date: 'MM/dd/yyyy h:mm a'}}
+                  </div>
                 </div>
-                <div class="row-property-value-5">
-                  {{application.modifyDate|date: 'MM/dd/yyyy h:mm a'}}
-                </div>
-              </div>
+              </span>
 
             </div> <!-- right side -->
 

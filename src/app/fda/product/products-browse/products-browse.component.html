@@ -99,7 +99,7 @@
                 </a>
 
                 <!-- Edit GSRS record button -->
-                <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="iAsdmin"
+                <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
                   matTooltip='Edit GSRS Product Record'>
                   <mat-icon svgIcon="edit"></mat-icon>
                 </a>
