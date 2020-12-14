@@ -69,7 +69,11 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
     }
 
     function replacer(match, got) {
-      return map[got.charCodeAt(0)];
+      let temp=map[got.charCodeAt(0)];
+      if(temp+"" === "undefined"){
+          return "";
+      }
+      return temp;
     }
 
     this.substance.names.forEach(n => {
