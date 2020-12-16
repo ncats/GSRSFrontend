@@ -132,9 +132,9 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
         navigationExtras.queryParams['type'] = this.sequenceSearchForm.value.type;
         navigationExtras.queryParams['seq_type'] = this.sequenceSearchForm.value.sequenceType;
         if ( this.sequenceSearchForm.value.sequence.length > 1000) {
-          navigationExtras.queryParams['sequence_search'] = this.sequenceSearchForm.value.sequence.substring(0, 1000);
+        //  navigationExtras.queryParams['sequence_search'] = this.sequenceSearchForm.value.sequence.substring(0, 1000);
         } else {
-          navigationExtras.queryParams['sequence_search'] = this.sequenceSearchForm.value.sequence;
+       //   navigationExtras.queryParams['sequence_search'] = this.sequenceSearchForm.value.sequence;
         }
 
     this.substanceService.getSubstanceSequenceResults(

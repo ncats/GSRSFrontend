@@ -16,7 +16,8 @@
       <button class = "mat-button action-button mat-primary" (click) = cleanSequence()>
         clean</button>
       <span class = "spacer"> </span>
-      <button class = "mat-button action-button mat-primary convert" matTooltip = "convert 3 letter sequence to 1 letter"  (click) = convertSequence()>
+      <button class = "mat-button action-button mat-primary convert" matTooltip = "convert 3 letter sequence to 1 letter"
+      *ngIf = "substanceType !== 'nucleicAcid'"  (click) = convertSequence()>
         convert</button>
         
 
