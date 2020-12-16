@@ -36,9 +36,13 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
-        if (params.has('sequence')) {
-          this.sequenceSearchForm.controls.sequence.setValue(params.get('sequence'));
-        }
+          if (params.has('source') && params.get('source') === 'edit') {
+            this.sequenceSearchForm.controls.sequence.setValue(JSON.parse(localStorage.getItem('gsrs_edit_sequence')));
+          } else {
+            if (params.has('sequence')) {
+            this.sequenceSearchForm.controls.sequence.setValue(params.get('sequence'));
+            }
+          }
         if (params.has('type')) {
           this.sequenceSearchForm.controls.type.setValue(params.get('type'));
         }
@@ -123,6 +127,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
   private navigateToBrowseSubstance(): void {
     this.errorMessage = '';
     this.loadingService.setLoading(true);
+    localStorage.setItem('gsrs_search_sequence', JSON.stringify(this.sequenceSearchForm.value.sequence));
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };

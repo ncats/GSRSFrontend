@@ -20,6 +20,7 @@ import { SubstanceFormLinksService } from '../links/substance-form-links.service
 import { MatDialog } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-disulfide-dialog/copy-disulfide-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-subunit-form',
@@ -50,6 +51,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
 
 
 
+
   constructor(
     private substanceFormService: SubstanceFormService,
     private substanceFormLinksService: SubstanceFormLinksService,
@@ -58,6 +60,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
+    private router: Router,
   ) {
 
   }
@@ -221,6 +224,16 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       if (response ) {
       }
     });
+  }
+
+  search() {
+  
+    localStorage.setItem('gsrs_edit_sequence', JSON.stringify(this.subunit.sequence));
+    const baseUrl = window.location.href.replace(this.router.url, '');
+    const url = baseUrl + this.router.serializeUrl(this.router.createUrlTree(['/sequence-search'],
+     { queryParams: { seq_type: this.searchType, source: 'edit'}}));
+window.open( url, '_blank');
+
   }
 
   editSubunit(subunit: Subunit, input: string): void {

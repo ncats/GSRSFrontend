@@ -160,6 +160,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
+    if ( this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
+      this.privateSequenceSearchTerm = JSON.parse(localStorage.getItem('gsrs_search_sequence'));
+    }
     this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
     this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
@@ -581,11 +584,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       queryParams: {}
     };
 
-    navigationExtras.queryParams['sequence'] = this.privateSequenceSearchTerm || null;
     navigationExtras.queryParams['type'] = this.privateSearchType || null;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
     navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType || null;
-
+    localStorage.setItem('gsrs_edit_sequence', JSON.stringify(this.privateSequenceSearchTerm));
+    navigationExtras.queryParams['source'] = 'edit';
+    navigationExtras.queryParams['sequence'] = this.privateSequenceSearchTerm || null;
     this.router.navigate(['/sequence-search'], navigationExtras);
   }
 

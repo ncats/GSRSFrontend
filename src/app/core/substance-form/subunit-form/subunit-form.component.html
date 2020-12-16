@@ -21,7 +21,7 @@
         convert</button>
         
 
-      <a class = "button-link " matTooltip ="search for sequence in a new tab" target = "_blank" [routerLink]="['/sequence-search']" [queryParams]="{sequence : subunit.sequence, seq_type: searchType}">sequence search</a>
+      <a class = "button-link " matTooltip ="search for sequence in a new tab" (click) = "search()">sequence search</a>
       <button class = "mat-button action-button mat-primary" matTooltip = "copy disulfides from another subunit"  (click) = copyDisulfides() *ngIf = "substanceType === 'protein'">
           copy disulfide links</button>
     </div>
