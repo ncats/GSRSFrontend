@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { MatTooltipModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     SubstanceTextSearchModule,
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
     RouterModule,
     SubstanceImageModule
   ],

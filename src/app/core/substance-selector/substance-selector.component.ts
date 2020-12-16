@@ -19,6 +19,7 @@ export class SubstanceSelectorComponent implements OnInit {
   @Input() hideImage?: boolean;
   errorMessage: string;
   showOptions: boolean;
+  previousSubstance: SubstanceSummary;
   displayName: string;
   private substanceSelectorProperties: Array<string> = [
     'root_names_name',
@@ -78,7 +79,13 @@ export class SubstanceSelectorComponent implements OnInit {
   }
 
   editSelectedSubstance(): void {
+    this.previousSubstance = JSON.parse(JSON.stringify(this.selectedSubstance));
     this.selectedSubstance = null;
+    this.selectionUpdated.emit(this.selectedSubstance);
+  }
+
+  revertEdit(): void {
+    this.selectedSubstance = JSON.parse(JSON.stringify(this.previousSubstance));
     this.selectionUpdated.emit(this.selectedSubstance);
   }
 
