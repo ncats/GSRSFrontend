@@ -21,6 +21,8 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     sequence: new FormControl('', Validators.required)
   });
   errorMessage = '';
+  id?: string;
+
 
 
   constructor(
@@ -37,7 +39,8 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
       .queryParamMap
       .subscribe(params => {
           if (params.has('source') && params.get('source') === 'edit') {
-            this.sequenceSearchForm.controls.sequence.setValue(JSON.parse(localStorage.getItem('gsrs_edit_sequence')));
+            this.id = params.get('source_id');
+            this.sequenceSearchForm.controls.sequence.setValue(JSON.parse(sessionStorage.getItem('gsrs_edit_sequence_' + this.id)));
           } else {
             if (params.has('sequence')) {
             this.sequenceSearchForm.controls.sequence.setValue(params.get('sequence'));
@@ -123,11 +126,22 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     });
     return newArr.join('');
     }
+    makeRandom() {
+      let text = '';
+      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+      for (let i = 0; i < 6; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+        return text;
+    }
 
   private navigateToBrowseSubstance(): void {
     this.errorMessage = '';
     this.loadingService.setLoading(true);
-    localStorage.setItem('gsrs_search_sequence', JSON.stringify(this.sequenceSearchForm.value.sequence));
+    if (!this.id) {
+        this.id = this.makeRandom();
+    }
+    sessionStorage.setItem('gsrs_search_sequence_' + this.id, JSON.stringify(this.sequenceSearchForm.value.sequence));
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
@@ -136,6 +150,8 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
         navigationExtras.queryParams['cutoff'] = this.sequenceSearchForm.value.cutoff;
         navigationExtras.queryParams['type'] = this.sequenceSearchForm.value.type;
         navigationExtras.queryParams['seq_type'] = this.sequenceSearchForm.value.sequenceType;
+        navigationExtras.queryParams['source_id'] = this.id;
+
         if ( this.sequenceSearchForm.value.sequence.length > 1000) {
         //  navigationExtras.queryParams['sequence_search'] = this.sequenceSearchForm.value.sequence.substring(0, 1000);
         } else {

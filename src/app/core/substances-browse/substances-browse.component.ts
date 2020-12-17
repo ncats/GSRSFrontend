@@ -100,6 +100,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   matchTypes?: Array<string> = [];
   narrowSearchSuggestionsCount = 0;
   private isComponentInit = false;
+  sequenceID?: string;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -161,7 +162,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
     if ( this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
-      this.privateSequenceSearchTerm = JSON.parse(localStorage.getItem('gsrs_search_sequence'));
+      this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
+      this.privateSequenceSearchTerm = JSON.parse(sessionStorage.getItem('gsrs_search_sequence_' + this.sequenceID));
     }
     this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
     this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
@@ -587,9 +589,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     navigationExtras.queryParams['type'] = this.privateSearchType || null;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
     navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType || null;
-    localStorage.setItem('gsrs_edit_sequence', JSON.stringify(this.privateSequenceSearchTerm));
+    sessionStorage.setItem('gsrs_edit_sequence_' + this.sequenceID, JSON.stringify(this.privateSequenceSearchTerm));
     navigationExtras.queryParams['source'] = 'edit';
-    navigationExtras.queryParams['sequence'] = this.privateSequenceSearchTerm || null;
+    navigationExtras.queryParams['source_id'] = this.sequenceID;
+
     this.router.navigate(['/sequence-search'], navigationExtras);
   }
 

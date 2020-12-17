@@ -227,13 +227,22 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
   }
 
   search() {
-  
-    localStorage.setItem('gsrs_edit_sequence', JSON.stringify(this.subunit.sequence));
+    const id = this.makeRandom();
+    sessionStorage.setItem('gsrs_edit_sequence_' + id, JSON.stringify(this.subunit.sequence));
     const baseUrl = window.location.href.replace(this.router.url, '');
     const url = baseUrl + this.router.serializeUrl(this.router.createUrlTree(['/sequence-search'],
-     { queryParams: { seq_type: this.searchType, source: 'edit'}}));
+     { queryParams: { seq_type: this.searchType, source: 'edit', source_id: id}}));
 window.open( url, '_blank');
 
+  }
+
+  makeRandom() {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    for (let i = 0; i < 6; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+      return text;
   }
 
   editSubunit(subunit: Subunit, input: string): void {
