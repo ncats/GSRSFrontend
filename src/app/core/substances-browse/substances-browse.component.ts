@@ -114,6 +114,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   isSearchEditable = false;
   showDeprecated = false;
   codeSystem: any;
+  previousState: Array<string> = [];
 
 
   constructor(
@@ -144,7 +145,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
    setTimeout(() => {
+     if (this.router.url === this.previousState[0]) {
       this.ngOnInit();
+     }
 
     }, 50);
   }
@@ -512,7 +515,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
     navigationExtras.queryParams['view'] = this.view;
     // navigationExtras.queryParams['g-search-hash'] = this.searchTermHash;
-
+    this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
       queryParams: navigationExtras.queryParams,
       queryParamsHandling: 'merge',

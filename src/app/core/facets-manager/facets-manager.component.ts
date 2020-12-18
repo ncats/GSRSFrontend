@@ -41,6 +41,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   showDeprecated = false;
   loggedIn = false;
   hideDeprecatedCheckbox = false;
+  previousState: Array<string> = [];
+  previousFacets: Array<any> = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -59,13 +61,29 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.environment = configService.environment;
   }
 
-  @HostListener('window:popstate', ['$event'])
+  /*@HostListener('window:popstate', ['$event'])
   onPopState(event) {
     setTimeout(() => {
       if(this.router.url === '/browse-substance') {
         this.privateFacetParams = {};
         this.ngOnInit();
       }
+    }, 50);
+  }*/
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+   setTimeout(() => {
+     if (this.router.url === this.previousState[0]) {
+       if(this.router.url === '/browse-substance') {
+        this.privateFacetParams = {};
+       } else {
+        this.privateFacetParams = this.previousFacets[0];
+        this.facetBuilder = {};
+       }
+      this.ngOnInit();
+     }
+
     }, 50);
   }
 
@@ -198,6 +216,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       }
       this.privateFacetParams = this.facetBuilder;
+      this.previousFacets.push(JSON.parse(JSON.stringify(this.privateFacetParams)));
     }
   }
 
@@ -343,6 +362,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       navigationExtras.queryParams['showDeprecated'] = null;
     }
 
+    this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
       queryParams: navigationExtras.queryParams,
       queryParamsHandling: 'merge',
