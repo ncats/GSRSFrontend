@@ -72,7 +72,8 @@
         </mat-form-field>
 
         <app-cv-input class = 'cv-field' domain = "FRACTION_MATERIAL_TYPE" title = "Fraction Material Type" (valueChange) = "updateMaterialType($event)" [model] = "structurallyDiverse.fractionMaterialType"></app-cv-input>
-        <app-cv-input class = 'cv-field' domain = "DEVELOPMENTAL_STAGE" title = "Developmental Stage" (valueChange) = "updateDevelopmentalStage($event)" [model] = "structurallyDiverse.developmentalStage"></app-cv-input>
+        <app-cv-input class = 'cv-field' domain = "DEVELOPMENTAL_STAGE" title = "Developmental Stage" *ngIf = "part !== 'full_fields'"
+         (valueChange) = "updateDevelopmentalStage($event)" [model] = "structurallyDiverse.developmentalStage"></app-cv-input>
 
       </div>
     </div>
