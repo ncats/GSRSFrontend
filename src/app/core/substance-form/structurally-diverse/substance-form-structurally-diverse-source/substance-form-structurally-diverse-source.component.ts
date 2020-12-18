@@ -93,7 +93,7 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
 
   checkWhole(): boolean {
     const check = ['organismFamily', 'organismGenus', 'organismSpecies', 'organismAuthor', 'infraSpecificType', 'infraSpecificName',
-     'hybridSpeciesMaternalOrganism', 'hybridSpeciesPaternalOrganism', 'developmentalStage'];
+     'hybridSpeciesMaternalOrganism', 'hybridSpeciesPaternalOrganism'];
     let found = true;
     check.forEach( field => {
       if (this.structurallyDiverse[field] && this.structurallyDiverse[field] !== null &&
