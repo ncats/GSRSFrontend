@@ -79,9 +79,10 @@ export class SubstanceFormService implements OnDestroy {
         this.privateSubstance = substance;
         substanceClass = this.privateSubstance.substanceClass;
       } else {
-        if (substanceClass === 'chemical') {
+        //the second case happens in the forms sometimes but really shouldn't
+        if (substanceClass === 'chemical' || substanceClass === 'structure') { 
           this.privateSubstance = {
-            substanceClass: substanceClass,
+            substanceClass: 'chemical',
             references: [],
             names: [],
             structure: {
@@ -93,7 +94,7 @@ export class SubstanceFormService implements OnDestroy {
           };
         } else if (substanceClass === 'protein') {
           this.privateSubstance = {
-            substanceClass: substanceClass,
+            substanceClass: 'protein',
             references: [],
             names: [],
             protein: { proteinType: '' },
@@ -103,7 +104,7 @@ export class SubstanceFormService implements OnDestroy {
           };
         } else if (substanceClass === 'nucleicAcid') {
           this.privateSubstance = {
-            substanceClass: substanceClass,
+            substanceClass: 'nucleicAcid',
             references: [],
             names: [],
             nucleicAcid: {},
@@ -113,7 +114,7 @@ export class SubstanceFormService implements OnDestroy {
           };
         } else if (substanceClass === 'mixture') {
           this.privateSubstance = {
-            substanceClass: substanceClass,
+            substanceClass: 'mixture',
             references: [],
             names: [],
             mixture: {},
@@ -123,7 +124,7 @@ export class SubstanceFormService implements OnDestroy {
           };
         } else if (substanceClass === 'structurallyDiverse') {
           this.privateSubstance = {
-            substanceClass: substanceClass,
+            substanceClass: 'structurallyDiverse',
             references: [],
             names: [],
             structurallyDiverse: {
@@ -134,9 +135,9 @@ export class SubstanceFormService implements OnDestroy {
             relationships: [],
             properties: []
           };
-        } else if (substanceClass === 'specifiedSubstanceG1') {
+        } else if (substanceClass === 'specifiedSubstance' || (substanceClass === 'specifiedSubstanceG1')) {
           this.privateSubstance = {
-            substanceClass: substanceClass,
+            substanceClass: 'specifiedSubstance',
             references: [],
             names: [],
             specifiedSubstance: {
@@ -182,14 +183,21 @@ export class SubstanceFormService implements OnDestroy {
             codes: []
           };
         }
+        //default values
+        
+        //TP: default to protected for root level record.
+        this.privateSubstance.access=["protected"];
+        this.privateSubstance.definitionLevel = "COMPLETE";
+        this.privateSubstance.definitionType = "PRIMARY";
+        
       }
 
       this.subClass = this.privateSubstance.substanceClass;
 
       if (this.subClass === 'chemical') {
-        this.subClass = 'structure';
+        this.subClass = 'structure'; //?
       } else if (this.subClass === 'specifiedSubstanceG1') {
-        this.subClass = 'specifiedSubstance';
+        this.subClass = 'specifiedSubstance'; //?
       }
 
       if (this.privateSubstance[this.subClass] == null) {
