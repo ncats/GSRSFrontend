@@ -114,6 +114,17 @@ export class GuidedSearchComponent implements OnInit {
     const navigationExtras: NavigationExtras = {
       queryParams: this.query ? { 'search': this.query } : null
     };
+    
+    const navigationExtras2: NavigationExtras = {
+      queryParams: {
+        'g-search-hash': queryHash.toString()
+      }
+    };
+
+    // this is a test of the push state needed
+    // to keep the back button working as desired
+    window.history.pushState({},"Guided Search", "/guided-search"
+	    + "?g-search-hash=" + navigationExtras2.queryParams["g-search-hash"]);
 
     this.router.navigate(['/browse-substance'], navigationExtras);
   }
