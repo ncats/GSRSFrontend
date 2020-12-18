@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Input, Output, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Input, Output, AfterViewInit, HostListener } from '@angular/core';
 import { Facet, FacetUpdateEvent } from './facet.model';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Subject, Subscription } from 'rxjs';
@@ -58,6 +58,17 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.facets = [];
     this.environment = configService.environment;
   }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+    setTimeout(() => {
+      if(this.router.url === '/browse-substance') {
+        this.privateFacetParams = {};
+        this.ngOnInit();
+      }
+    }, 50);
+  }
+
 
   ngOnInit() {
     this.facetString = this.activatedRoute.snapshot.queryParams['facets'] || '';
