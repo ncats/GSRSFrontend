@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 
 import { ProductService } from '../service/product.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -55,6 +55,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   isAdmin = false;
   etag = '';
   environment: any;
+  previousState: Array<string> = [];
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -78,6 +79,16 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     private locationStrategy: LocationStrategy,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog) { }
+
+    @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+   setTimeout(() => {
+     if (this.router.url === this.previousState[0]) {
+      this.ngOnInit();
+     }
+
+    }, 50);
+  }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
@@ -236,6 +247,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
 
+    this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
       queryParams: navigationExtras.queryParams,
       queryParamsHandling: 'merge',

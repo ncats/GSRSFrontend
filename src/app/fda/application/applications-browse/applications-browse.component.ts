@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { ApplicationService } from '../service/application.service';
 import { ApplicationSrs } from '../model/application.model';
@@ -52,6 +52,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   isLoggedIn = false;
   etag = '';
   environment: any;
+  previousState: Array<string> = [];
+
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -76,6 +78,16 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     private facetManagerService: FacetsManagerService,
     private dialog: MatDialog,
   ) { }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+   setTimeout(() => {
+     if (this.router.url === this.previousState[0]) {
+      this.ngOnInit();
+     }
+
+    }, 50);
+  }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
@@ -238,6 +250,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
 
+    this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
       queryParams: navigationExtras.queryParams,
       queryParamsHandling: 'merge',
