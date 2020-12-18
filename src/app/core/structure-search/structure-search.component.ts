@@ -95,22 +95,40 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     }, () => {});
   }
 
+  
   private navigateToBrowseSubstance(structureSearchTerm: string, smiles?: string): void {
 
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
+	 const navigationExtras2: NavigationExtras = {
+      queryParams: {}
+    };
 
     navigationExtras.queryParams['structure_search'] = structureSearchTerm || null;
     navigationExtras.queryParams['type'] = this.searchType || null;
+    
+    navigationExtras2.queryParams['structure'] = structureSearchTerm;
+    navigationExtras2.queryParams['type'] = this.searchType || null;
 
     if (this.searchType === 'similarity') {
       navigationExtras.queryParams['cutoff'] = this.similarityCutoff || 0;
+	    navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
     }
 
     if (smiles != null) {
       navigationExtras.queryParams['smiles'] = smiles;
     }
+	
+	
+   
+    // this is a test of the push state needed
+    // to keep the back button working as desired
+    window.history.pushState({},"Structure Search", "/structure-search"
+	    + "?structure=" + navigationExtras2.queryParams["structure"]
+		  + "&type=" + navigationExtras2.queryParams["type"]
+		  + "&cutoff=" + navigationExtras2.queryParams["cutoff"]);
+		
 
     this.router.navigate(['/browse-substance'], navigationExtras);
   }
