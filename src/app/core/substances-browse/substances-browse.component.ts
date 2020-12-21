@@ -137,8 +137,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private title: Title,
     private cvService: ControlledVocabularyService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
-    
-    
 
   ) { }
 
@@ -176,6 +174,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
+    if ( this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
+      this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
+      this.privateSequenceSearchTerm = JSON.parse(sessionStorage.getItem('gsrs_search_sequence_' + this.sequenceID));
+    }
     this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
     this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
@@ -216,6 +218,22 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
+    const dynamicSubscription = this.dynamicContentContainer.changes.pipe(take(1)).subscribe((comps: QueryList<any>) => {
+      const container = this.dynamicContentContainer.toArray();
+      const dynamicContentItemsFlat = this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
+        .filter(item => item.componentType === 'browseHeader');
+      if (container[0] != null) {
+        const viewContainerRef = container[0].viewContainerRef;
+        viewContainerRef.clear();
+
+        dynamicContentItemsFlat.forEach(dynamicContentItem => {
+          const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
+          const componentRef = viewContainerRef.createComponent(componentFactory);
+          (<SubstanceBrowseHeaderDynamicContent>componentRef.instance).test = 'testing';
+        });
+      }
+    });
+    this.subscriptions.push(dynamicSubscription);
 
 
   }
@@ -389,6 +407,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response;
           });
+          this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
