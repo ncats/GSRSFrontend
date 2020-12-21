@@ -223,6 +223,7 @@ export class ProductService extends BaseHttpService {
   }
 
   deleteProduct(): Observable<any> {
+    /*
     const url = this.apiBaseUrl + 'product(' + this.product.id + ')';
     const params = new HttpParams();
     const options = {
@@ -230,6 +231,15 @@ export class ProductService extends BaseHttpService {
     };
     const x = this.http.delete<Product>(url, options);
     return x;
+    */
+   
+   const url = this.baseUrl + 'deleteProduct?productId=' + this.product.id + '&from=ang';
+
+   return this.http.get<any>(url).pipe(
+     map(results => {
+       return results;
+     })
+   );
   }
 
   getSubstanceDetailsByBdnum(

@@ -331,7 +331,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   displayMessageAfterDeleteProd() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        message: 'The product has been deleted',
+        message: 'This product record was successfully deleted',
         type: 'home'
       }
     });
