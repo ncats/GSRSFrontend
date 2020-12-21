@@ -234,7 +234,7 @@ export class ProductService extends BaseHttpService {
     */
     const url = this.baseUrl + 'deleteProduct?productId=' + this.product.id + '&from=ang';
 
-    return this.http.get<any>(url).pipe(
+    return this.http.delete<any>(url).pipe(
       map(results => {
         return results;
       })
