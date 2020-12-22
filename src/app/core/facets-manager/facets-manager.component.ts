@@ -374,8 +374,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   
   private escapedSplit(value: string, delim: string){
-    return value.match(new RegExp('((.|^)*?([^!]|^))(" + delim + "|$)','g'))
-           .map(d=>d.replace(new RegExp(delim +'$','g'),'')); 
+    return value.match(new RegExp('((.|^)*?([^!]|^))([' + delim + ']|$)','g'))
+           .map(d=>d.replace(new RegExp('[' +delim + ']$','g'),'')); 
   }
   
   private encodeValue(facetValue: string){
