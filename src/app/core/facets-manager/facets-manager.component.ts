@@ -173,22 +173,23 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     this.populateFacets();
   }
+  
 
   facetsFromParams() {
     if (this.facetString !== '') {
-      const categoryArray = this.facetString.split(',');
+      const categoryArray = this.escapedSplit(this.facetString, ',');
       for (let i = 0; i < (categoryArray.length); i++) {
-        const categorySplit = categoryArray[i].split('*');
+        const categorySplit = this.escapedSplit(categoryArray[i],'*');
         const category = categorySplit[0];
-        const fieldsArr = categorySplit[1].split('+');
+        const fieldsArr = this.escapedSplit(categorySplit[1], '+');
         const params: { [facetValueLabel: string]: boolean } = {};
         let hasSelections = false;
         let isAllMatch = false;
         let hasExcludeOption = false;
         let includeOptionsLength = 0;
         for (let j = 0; j < fieldsArr.length; j++) {
-          const field = fieldsArr[j].split('.');
-          field[0] = decodeURIComponent(field[0]);
+          const field = this.escapedSplit(fieldsArr[j], '.');
+          field[0] = this.decodeValue(decodeURIComponent(field[0]));
           if (field[0] === 'is_all_match') {
             isAllMatch = true;
           } else {
@@ -339,7 +340,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const valArr = [];
         for (const subkey of Object.keys(cat.params)) {
           if (typeof cat.params[subkey] === 'boolean') {
-            valArr.push(subkey + '.' + cat.params[subkey]);
+            valArr.push(this.encodeValue(subkey) + '.' + cat.params[subkey]);
           }
         }
         if (cat.isAllMatch) {
@@ -371,7 +372,28 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.location.go(urlTree.toString());
   }
 
-  applyFacetsFilter(facetName: string) {
+  
+  private escapedSplit(value: string, delim: string){
+    return value.match(new RegExp('((.|^)*?([^!]|^))(" + delim + "|$)','g'))
+           .map(d=>d.replace(new RegExp(delim +'$','g'),'')); 
+  }
+  
+  private encodeValue(facetValue: string){
+    let encFV = facetValue.replace('!','!@');
+    encFV = encFV.replace(/./g,'!.');
+    encFV = encFV.replace(/+/g,'!+');
+    encFV = encFV.replace(/,/g,'!,');
+    encFV = encFV.replace(/\*/g,'!*');
+    return encFV;
+  }
+
+  
+  private decodeValue(encFV: string){
+    let decFV = encFV.replace(/!([^@])/g,"$1").replace(/[!][@]/g,'!');
+    return decFV;
+  }
+  
+  private applyFacetsFilter(facetName: string) {
     const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     let eventValue = 0;
     Object.keys(this.privateFacetParams).forEach(key => {
