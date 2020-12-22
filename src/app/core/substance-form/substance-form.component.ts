@@ -72,7 +72,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   uuid: string;
   substanceClass: string;
   status: string;
-  classes = ['protein',
+  classes = [
+    'concept',
+    'protein',
     'chemical',
     'structurallyDiverse',
     'polymer',
