@@ -37,13 +37,13 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   public displayedColumns: string[] = [
     'productNDC',
     //  'name',
-    'nonProprietaryName',
-    'status',
-    //  'labelerName',
-    'productNameType',
-    // 'ingredientType'
-    'routeAdmin',
+    'productName',
+    'labelerName',
     'country',
+    'status',
+    'productNameType',
+    'ingredientType',
+    'activeMoiety',
     'applicationNumber',
   ];
 

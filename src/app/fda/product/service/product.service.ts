@@ -223,6 +223,7 @@ export class ProductService extends BaseHttpService {
   }
 
   deleteProduct(): Observable<any> {
+    /*
     const url = this.apiBaseUrl + 'product(' + this.product.id + ')';
     const params = new HttpParams();
     const options = {
@@ -230,6 +231,14 @@ export class ProductService extends BaseHttpService {
     };
     const x = this.http.delete<Product>(url, options);
     return x;
+    */
+    const url = this.baseUrl + 'deleteProduct?productId=' + this.product.id + '&from=ang';
+
+    return this.http.delete<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
   }
 
   getSubstanceDetailsByBdnum(
@@ -318,7 +327,7 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewProductLot(prodComponentIndex: number): void {
-    const newProductLot: ProductLot = {productIngredientList: [{}]};
+    const newProductLot: ProductLot = { productIngredientList: [{}] };
     this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProductLot);
   }
 
@@ -349,42 +358,42 @@ export class ProductService extends BaseHttpService {
     const newProduct = JSON.parse(JSON.stringify(productIngredient));
     this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProduct);
   }
-   /*
+  /*
 
-  reviewProduct(prodIndex: number): void {
-    //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
-  }
+ reviewProduct(prodIndex: number): void {
+   //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
+ }
 
-  addNewIngredient(index: number): void {
-    const newIngredient: ApplicationIngredient = {};
-    this.application.applicationProductList[index].applicationIngredientList.unshift(newIngredient);
-  }
+ addNewIngredient(index: number): void {
+   const newIngredient: ApplicationIngredient = {};
+   this.application.applicationProductList[index].applicationIngredientList.unshift(newIngredient);
+ }
 
-  deleteIngredient(prodIndex: number, ingredIndex: number): void {
-    this.application.applicationProductList[prodIndex].applicationIngredientList.splice(ingredIndex, 1);
-  }
+ deleteIngredient(prodIndex: number, ingredIndex: number): void {
+   this.application.applicationProductList[prodIndex].applicationIngredientList.splice(ingredIndex, 1);
+ }
 
-  copyIngredient(ingredient: any, prodIndex: number): void {
-    const newIngredient = JSON.parse(JSON.stringify(ingredient));
-    newIngredient.reviewedBy = null;
-    newIngredient.reviewDate = null;
-    this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
-  }
+ copyIngredient(ingredient: any, prodIndex: number): void {
+   const newIngredient = JSON.parse(JSON.stringify(ingredient));
+   newIngredient.reviewedBy = null;
+   newIngredient.reviewDate = null;
+   this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
+ }
 
-  reviewIngredient(prodIndex: number, ingredIndex: number): void {
-    //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
-  }
+ reviewIngredient(prodIndex: number, ingredIndex: number): void {
+   //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
+ }
 
-  getJson() {
-    return this.application;
-  }
+ getJson() {
+   return this.application;
+ }
 
-  getUpdateApplicationUrl(): string {
-    return this.baseUrl + 'updateApplication?applicationId=';
-  }
+ getUpdateApplicationUrl(): string {
+   return this.baseUrl + 'updateApplication?applicationId=';
+ }
 
-  getApplicationListExportUrl(bdnum: string): string {
-    return this.baseUrl + 'applicationListExport?bdnum=' + bdnum;
-  }
+ getApplicationListExportUrl(bdnum: string): string {
+   return this.baseUrl + 'applicationListExport?bdnum=' + bdnum;
+ }
 */
 }
