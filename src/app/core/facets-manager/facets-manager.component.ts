@@ -380,10 +380,10 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   
   private encodeValue(facetValue: string){
     let encFV = facetValue.replace('!','!@');
-    encFV = encFV.replace(/./g,'!.');
-    encFV = encFV.replace(/+/g,'!+');
-    encFV = encFV.replace(/,/g,'!,');
-    encFV = encFV.replace(/\*/g,'!*');
+    encFV = encFV.replace(/[.]/g,'!.');
+    encFV = encFV.replace(/[+]/g,'!+');
+    encFV = encFV.replace(/[,]/g,'!,');
+    encFV = encFV.replace(/[\*]/g,'!*');
     return encFV;
   }
 
