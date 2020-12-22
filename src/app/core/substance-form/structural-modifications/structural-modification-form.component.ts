@@ -26,6 +26,13 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
   private overlayContainer: HTMLElement;
   siteDisplay: string;
   substanceType: string;
+  nucleicAcidOptions: any = [
+    {value:'U', display:'U'},
+    {value:'T', display:'T'},
+    {value:'C', display:'C'},
+    {value:'G', display:'G'},
+    {value:'A', display:'A'}
+  ];
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -40,6 +47,7 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.updateDisplay();
     this.getSubstanceType();
+    console.log(this.nucleicAcidOptions);
   }
 
   ngAfterViewInit(): void {
@@ -54,6 +62,22 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
 
   get mod(): StructuralModification {
     return this.privateMod;
+  }
+
+  updateResidue(event) {
+    console.log(event);
+    this.privateMod.residueModified = event;
+  }
+
+  updateOrigin(event): void {
+    console.log(event);
+    if (event && event.value !== '') {
+      this.privateMod.residueModified = event.value;
+    }
+  }
+
+  update(tags: Array<string>): void {
+    this.privateMod.residueModified = tags.join(';');
   }
 
   getSubstanceType(): void {
@@ -164,5 +188,23 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
       }
     }
     return null;
+  }
+
+  pipeToArray(string: string): Array<string> {
+    if (!string || string === '') {
+      return [];
+    } else {
+      return string.split(';');
+    }
+
+  }
+
+  inCV(vocab: Array<any>, property: string): boolean {
+    if (vocab) {
+      return vocab.some(r => property === r.value);
+    } else {
+      return true;
+    }
+
   }
 }

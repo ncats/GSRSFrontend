@@ -20,6 +20,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   @Input() cvDomain: string;
   @Output() tagsUpdate = new EventEmitter<Array<string>>();
   @Input() placeholder = 'Tags';
+  @Input() disableCV?: boolean;
   privateTags: Array<string> = [];
   allOptions: Array<VocabularyTerm>;  
   cvOptions: Array<VocabularyTerm>;
@@ -121,7 +122,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
       const addedTag = event.value.trim();
       this.privateTags.push(addedTag);
       this.tagsUpdate.emit(this.privateTags);
-      if (this.isAdmin && !this.inCV(this.allOptions, addedTag)) {
+      if (this.isAdmin && !this.inCV(this.allOptions, addedTag) && !this.disableCV) {
         if (confirm('Add new option to the CV?')) {
           const vocabSubscription = this.cvService.fetchFullVocabulary(this.cvDomain).subscribe ( response => {
             if (response.content && response.content.length > 0) {
