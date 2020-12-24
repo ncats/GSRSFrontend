@@ -5,6 +5,7 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
+  
   <div class="form-row">
     <div class="delete-container">
       <button mat-icon-button matTooltip="Delete name" (click)="deleteName()">
@@ -42,6 +43,12 @@
         <mat-icon *ngIf = "!viewFull"svgIcon="chevron_down"></mat-icon>
 
     </button></div>
+  </div>
+  <div class = "form-row" *ngIf="showStd && viewFull">
+    <mat-form-field class="name">
+      <textarea matInput placeholder="Standardized Name" [(ngModel)]="name.stdName" matTooltip = " standardized names will be generated upon submission if blank" name="standardizedname" (keypress)="preventNewLine($event)"></textarea>
+      <!-- <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" /> -->
+    </mat-form-field>
   </div>
   <div *ngIf="!name.$$deletedCode && viewFull">
     <div class="form-row">

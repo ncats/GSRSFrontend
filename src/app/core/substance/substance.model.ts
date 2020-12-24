@@ -191,6 +191,7 @@ export interface CountRef {
 
 export interface SubstanceName extends SubstanceBase {
   name?: string;
+  stdName?: string;
   type?: string;
   domains?: Array<string>;
   languages?: Array<string>;

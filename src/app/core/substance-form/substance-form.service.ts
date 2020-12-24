@@ -926,10 +926,7 @@ export class SubstanceFormService implements OnDestroy {
 
   // disulfide links start
   copyDisulfideLinks(to: number, from: number): any {
-console.log(this.privateSubstance.protein.disulfideLinks);
  const test= JSON.parse(JSON.stringify(this.privateSubstance.protein.disulfideLinks));
- console.log(test);
- console.log(to + ' ' + from);
 const push = [];
 const test3 = [];
 for (let i = 0; i < test.length; i++) {
@@ -1329,10 +1326,16 @@ this.emitDisulfideLinkUpdate();
           this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
         }
         this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
-        this.resetState();
-        this.substanceEmitter.next(this.privateSubstance);
-        observer.next(results);
-        observer.complete();
+        this.substanceService.getSubstanceDetails(results.uuid).subscribe(resp => {
+          this.privateSubstance = resp;
+          this.resetState();
+          this.substanceEmitter.next(this.privateSubstance);
+          observer.next(results);
+          observer.complete();
+        }, error => {
+          observer.next(results);
+          observer.complete();
+        });
       }, error => {
         results.isSuccessfull = false;
         if (error && error.error && error.error.validationMessages) {
