@@ -36,7 +36,7 @@ Make sure to have these installed in order to run the application:
   - For best results, this path should be added to your windows/bash
   - path as the command will be used a lot.
   
-## Step 2 [Optional]: Clear any previous build files
+## Step 2 [Optional]: Clear any Previous Build Files
 
 This step isn't always necessary, but can be useful when attempting to force a de novo build. The following files should be removed from the root directory:
 
@@ -46,12 +46,12 @@ node_modules
 package.json
 ```
 
-## Step 3 [Optional]: Prepare custom dojo dependency
+## Step 3 [Optional]: Prepare Custom Dojo Dependency
 
 This step isn't typically necessary. The purpose of this step is to prepare a slimmed down version of dojo for the jsdraw structure editor component, but the default build already has a form of this prepackaged. To perform a more custom dojo build, read the `lib/README.md` file and follow its instructions.
 
 
-## Step 4: Install fundamental dependencies
+## Step 4: Install Fundamental Dependencies
 
 This step acquires the "base" dependencies needed to do further builds. The full _real_ `package.json` file would have a cyclic dependency issue if we attempted to install using it directly, so we first build only the bare minimum pieces needed to build the other dependencies. This is accomplished by using a trimmed down version of the package.json file named `package.dev.json`. The following commands will make this happen:
 
