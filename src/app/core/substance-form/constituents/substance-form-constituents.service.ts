@@ -32,7 +32,7 @@ export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<A
   }
 
   addSubstanceConstituent(): void {
-    const constituent: Constituent = {references:[]};
+    const constituent: Constituent = {references: []};
     this.substance.specifiedSubstance.constituents.unshift(constituent);
     this.propertyEmitter.next(this.substance.specifiedSubstance.constituents);
   }

@@ -135,13 +135,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             this.router.onSameUrlNavigation = 'reload';
             this.loadingService.setLoading(false);
             this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
-  
+
           }, 1000);
         }
-        } 
+        }
       }
     });
- 
+
   }
 
   test() {
@@ -218,7 +218,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
-       
+
       });
     });
   }
@@ -413,7 +413,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   getDetailsFromImport(state: any, same?: boolean) {
     if (state && this.jsonValid(state)) {
       const response = JSON.parse(state);
-      
+
       this.definitionType = response.definitionType;
       this.substanceClass = response.substanceClass;
       this.status = response.status;
