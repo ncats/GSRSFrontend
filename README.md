@@ -35,6 +35,9 @@ Make sure to have these installed in order to run the application:
   - ~/.npm-global/bin/ (linux)
   - For best results, this path should be added to your windows/bash
   - path as the command will be used a lot.
+ - The angular CLI tool actually needs to have build-angular version <=0.803.25
+ - To force this installation, run `npm i @angular-devkit/build-angular@0.803.25`
+
   
 ## Step 2 [Optional]: Clear any Previous Build Files
 
@@ -84,6 +87,7 @@ bash:
 cp package.real.json package.json
 npm install
 npm audit fix
+npm i @angular-devkit/build-angular@0.803.25
 ```
 
 windows CMD:
@@ -91,7 +95,10 @@ windows CMD:
 copy package.real.json package.json
 npm install
 npm audit fix
+npm i @angular-devkit/build-angular@0.803.25
 ```
+
+Take note the last command. Newer versions of npm audit fix will attempt an upgrade of the angular CLI build tool, however, these upgrades cause issues with building. To force the specific 0.803.25 version, include the last command as shown.
 
 ## Step 6: Run Application for Specific Environment
 

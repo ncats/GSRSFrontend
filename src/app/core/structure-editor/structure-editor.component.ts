@@ -38,7 +38,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   width = 0;
   canvasToggle = true;
   canvasMessage = '';
-  tempClass = "";
+  tempClass = '';
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
   public context: CanvasRenderingContext2D;
   public canvasCopy: HTMLCanvasElement;
