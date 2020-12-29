@@ -12,7 +12,7 @@ Technology stack
 The full steps for a complete build are as follows, each will be given in more detail:
 
 1. Step 1 [Required] Obtain the required software dependencies (node, npm, and angular CLI, as mentioned above)
-2. step 2 [Optional] Clear any previous build files, locks, and local dependencies (this step is not typically necessary, but it ensures constency if there were previous local builds)
+2. Step 2 [Optional] Clear any previous build files, locks, and local dependencies (this step is not typically necessary, but it ensures constency if there were previous local builds)
 3. Step 3 [Optional] Prepare dojo dependencies and place in zip file `lib/dojo-custom-jsdraw.zip` (this dojo build is already prepared by default so this step is optional)
 4. Step 4 [Required] Prepare fundamental dependencies by doing `npm install` with `package.dev.json` file.
 5. Step 5 [Required] Prepare extended one-time build dependencies using specific build commands
