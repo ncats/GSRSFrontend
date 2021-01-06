@@ -137,7 +137,7 @@ export class SubstanceFormService implements OnDestroy {
           };
         } else if (substanceClass === 'specifiedSubstance' || (substanceClass === 'specifiedSubstanceG1')) {
           this.privateSubstance = {
-            substanceClass: 'specifiedSubstance',
+            substanceClass: 'specifiedSubstanceG1',
             references: [],
             names: [],
             specifiedSubstance: {
@@ -196,8 +196,8 @@ export class SubstanceFormService implements OnDestroy {
 
       if (this.subClass === 'chemical') {
         this.subClass = 'structure'; //?
-      } else if (this.subClass === 'specifiedSubstanceG1') {
-        this.subClass = 'specifiedSubstance'; //?
+      } else if (this.subClass === 'specifiedSubstance') {
+        this.subClass = 'specifiedSubstanceG1'; //?
       }
 
       if (this.privateSubstance[this.subClass] == null) {
