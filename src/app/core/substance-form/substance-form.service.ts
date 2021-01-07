@@ -194,10 +194,14 @@ export class SubstanceFormService implements OnDestroy {
 
       this.subClass = this.privateSubstance.substanceClass;
 
+      // Only these two substance classes differ from
+      // the name of their JSON defintional element
+      // That's why they are used as exceptions
+      
       if (this.subClass === 'chemical') {
         this.subClass = 'structure'; //?
-      } else if (this.subClass === 'specifiedSubstance') {
-        this.subClass = 'specifiedSubstanceG1'; //?
+      } else if (this.subClass === 'specifiedSubstanceG1') { 
+        this.subClass = 'specifiedSubstance'; //?
       }
 
       if (this.privateSubstance[this.subClass] == null) {
