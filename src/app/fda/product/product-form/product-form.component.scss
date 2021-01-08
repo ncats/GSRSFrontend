@@ -148,6 +148,24 @@
   margin-right: 0px;
 }  
 
+.col-6-1 {
+  width: calc((100% - 20px * 5) / 6);
+  margin-right: 20px;
+}
+
+.col-6-1:last-child {
+  margin-right: 0px;
+}  
+
+.col-6-2 {
+  width: calc((100% - 10px * 1) / (6/2));
+  margin-right: 20px;
+}
+
+.col-6-2:last-child {
+  margin-right: 0px;
+}  
+
 .validate-button{
   margin-left:15px;
 }

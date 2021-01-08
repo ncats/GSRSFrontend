@@ -64,6 +64,10 @@ export interface ProductCompany {
   id?: number;
   companyName?: string;
   companyAddress?: string;
+  companyCity?: string;
+  companyState?: string;
+  companyZip?: string;
+  companyCountry?: string;
   companyRole?: string;
   companyCode?: string;
   companyCodeType?: string;
