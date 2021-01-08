@@ -80,13 +80,13 @@
           <div class="row">
 
             <div class="width40">
-              <span class="font13px">Product NDC:</span>&nbsp;
+              <span class="font13px">Product ID:</span>&nbsp;
 
               <!-- If fromtable is SPL, display SPL Details links -->
               <span *ngIf="product.fromtable === 'SPL'">
                 <a class="substance-name" [routerLink]="['/productElistDetails', product.productId, 'elist']"
                   target="_blank"><span *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
-                  <ng-template #noProdNDC>(NO NDC)</ng-template>
+                  <ng-template #noProdNDC>(NO ID)</ng-template>
                 </a>
               </span>
 
@@ -95,7 +95,7 @@
               <span *ngIf="product.fromtable === 'GSRS'">
                 <a class="substance-name" [routerLink]="['/productDetails', product.productId, 'srs']"
                   target="_blank"><span *ngIf="product.productNDC; else noProdNDCSRS">{{product.productNDC}}</span>
-                  <ng-template #noProdNDCSRS>(NO NDC)</ng-template>
+                  <ng-template #noProdNDCSRS>(NO ID)</ng-template>
                 </a>
 
                 <!-- Edit GSRS record button -->
@@ -108,8 +108,15 @@
             </div>
 
             <div class="width30">
-              <span class="font13px">Country:</span><span
-                class="colororange font17px">&nbsp;{{product.countryWithoutCode}}</span>
+              <span class="font13px">Company Country:</span><span class="colororange font17px">&nbsp;
+                <!--{{product.countryWithoutCode}}-->
+                <span *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
+                  <span *ngIf="prodComp.countryWithoutCode">
+                    <span *ngIf="indexComp > 0">|</span>
+                    {{prodComp.countryWithoutCode}}
+                  </span>
+                </span>
+              </span>
               <span class="middle-fill"></span>
             </div>
 
@@ -206,8 +213,8 @@
                   {{prodComp.city}}
                   <span *ngIf="prodComp.state">,</span>
                   {{prodComp.state}}
-                  <span *ngIf="prodComp.country">,</span>
-                  {{prodComp.country}}
+                  <span *ngIf="prodComp.countryWithoutCode">,</span>
+                  {{prodComp.countryWithoutCode}}
                 </div>
               </div>
             </div>
