@@ -592,7 +592,7 @@
         "Registrant DUNS",
         "City",
         "State",
-        "Country",
+        "Company Country",
         "Country Code",
         "Provenance"
       ]
