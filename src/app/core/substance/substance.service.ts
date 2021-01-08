@@ -471,7 +471,7 @@ export class SubstanceService extends BaseHttpService {
   getSubstanceDetails(id: string, version?: string): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances(${id})`;
     let params = new HttpParams();
-    params = params.append('view', 'full');
+    params = params.append('view', 'internal');
     const options = {
       params: params
     };
@@ -537,7 +537,7 @@ export class SubstanceService extends BaseHttpService {
   }
 
   saveSubstance(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
-    const url = `${this.apiBaseUrl}substances`;
+    const url = `${this.apiBaseUrl}substances?view=internal`;
     let method = substance.uuid ? 'PUT' : 'POST';
     if (type && type === 'import') {
       method = 'POST';

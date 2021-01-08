@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import {SubstanceFormStructuralModificationsCardComponent} from '@gsrs-core/substance-form/structural-modifications/substance-form-structural-modifications-card.component';
 import { StructuralModificationFormComponent } from './structural-modification-form.component';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
+import { MatOptionModule, MatSelectModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -27,6 +28,8 @@ import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
+    MatOptionModule,
+    MatSelectModule,
     MatInputModule,
     SubstanceSelectorModule
   ],

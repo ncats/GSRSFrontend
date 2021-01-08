@@ -10,6 +10,7 @@ import {NameResolverDialogComponent} from '@gsrs-core/name-resolver/name-resolve
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
+import { SubstanceFormNamesService } from '@gsrs-core/substance-form/names/substance-form-names.service';
 
 @Component({
   selector: 'app-name-form',
@@ -27,13 +28,15 @@ export class NameFormComponent implements OnInit, OnDestroy {
   overlayContainer: HTMLElement;
   substanceType = '';
   viewFull = true;
+  showStd = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
     private dialog: MatDialog,
     private substanceFormService: SubstanceFormService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private nameFormService: SubstanceFormNamesService
   ) { }
 
   ngOnInit() {
@@ -42,6 +45,8 @@ export class NameFormComponent implements OnInit, OnDestroy {
       this.substanceType = def.substanceClass;
     });
     definition.unsubscribe();
+
+
   }
 
   ngOnDestroy() {
@@ -59,6 +64,17 @@ export class NameFormComponent implements OnInit, OnDestroy {
 
   get show(): boolean {
     return this.viewFull || null;
+  }
+
+  @Input()
+  set standardized(val: boolean) {
+    if (val != null) {
+     this.showStd = val;
+    }
+  }
+
+  get standardized(): boolean {
+    return this.showStd;
   }
 
   @Input()

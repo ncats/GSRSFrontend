@@ -163,6 +163,8 @@ export interface MixtureComponents extends Mixture {
 export interface DisplayStructure extends Polymer {
   id?: string;
   smiles?: string;
+  links?: any;
+  properties?: any;
 }
 
 export interface Monomer extends Polymer {
@@ -191,6 +193,7 @@ export interface CountRef {
 
 export interface SubstanceName extends SubstanceBase {
   name?: string;
+  stdName?: string;
   type?: string;
   domains?: Array<string>;
   languages?: Array<string>;
@@ -352,6 +355,8 @@ export interface SubstanceStructure extends SubstanceBase {
   references?: Array<string>;
   _properties?: CountRef;
   stereoComments?: string;
+  properties?: any;
+  links?: any;
 }
 
 export interface SubstanceMoiety extends SubstanceStructure {

@@ -137,7 +137,7 @@ export class SubstanceFormService implements OnDestroy {
           };
         } else if (substanceClass === 'specifiedSubstance' || (substanceClass === 'specifiedSubstanceG1')) {
           this.privateSubstance = {
-            substanceClass: 'specifiedSubstance',
+            substanceClass: 'specifiedSubstanceG1',
             references: [],
             names: [],
             specifiedSubstance: {
@@ -194,9 +194,13 @@ export class SubstanceFormService implements OnDestroy {
 
       this.subClass = this.privateSubstance.substanceClass;
 
+      // Only these two substance classes differ from
+      // the name of their JSON defintional element
+      // That's why they are used as exceptions
+      
       if (this.subClass === 'chemical') {
         this.subClass = 'structure'; //?
-      } else if (this.subClass === 'specifiedSubstanceG1') {
+      } else if (this.subClass === 'specifiedSubstanceG1') { 
         this.subClass = 'specifiedSubstance'; //?
       }
 
@@ -926,10 +930,7 @@ export class SubstanceFormService implements OnDestroy {
 
   // disulfide links start
   copyDisulfideLinks(to: number, from: number): any {
-console.log(this.privateSubstance.protein.disulfideLinks);
  const test= JSON.parse(JSON.stringify(this.privateSubstance.protein.disulfideLinks));
- console.log(test);
- console.log(to + ' ' + from);
 const push = [];
 const test3 = [];
 for (let i = 0; i < test.length; i++) {
@@ -1192,6 +1193,48 @@ this.emitDisulfideLinkUpdate();
     }
     */
 
+    /*the substance API call for view=internal vs the usual 'view=full' adds some properties that should not be submitted
+    and can cause errors upon submission. the view change was to allow the stdName property to be visible to the forms*/
+    if (this.privateSubstance.structure) {
+
+      if ( this.privateSubstance.structure.properties) {
+        delete this.privateSubstance.structure.properties;
+      }
+      if ( this.privateSubstance.structure.links) {
+        delete this.privateSubstance.structure.links;
+      }
+    }
+    if (this.privateSubstance.polymer && this.privateSubstance.polymer.displayStructure) {
+
+      if ( this.privateSubstance.polymer.displayStructure.properties) {
+        delete this.privateSubstance.polymer.displayStructure.properties;
+      }
+      if ( this.privateSubstance.polymer.displayStructure.links) {
+        delete this.privateSubstance.polymer.displayStructure.links;
+      }
+    }
+    if (this.privateSubstance.polymer && this.privateSubstance.polymer.idealizedStructure) {
+
+      if ( this.privateSubstance.polymer.idealizedStructure.properties) {
+        delete this.privateSubstance.polymer.idealizedStructure.properties;
+      }
+      if ( this.privateSubstance.polymer.idealizedStructure.links) {
+        delete this.privateSubstance.polymer.idealizedStructure.links;
+      }
+    }
+
+    if (this.privateSubstance.moieties) {
+      this.privateSubstance.moieties.forEach(moiety => {
+          if (moiety.properties) {
+            delete moiety.properties;
+          }
+          if (moiety.links) {
+            delete moiety.links;
+          }
+      });
+    }
+    // end view=internal changes
+
     let substanceString = JSON.stringify(this.privateSubstance);
     let substanceCopy: SubstanceDetail = JSON.parse(substanceString);
 
@@ -1329,10 +1372,16 @@ this.emitDisulfideLinkUpdate();
           this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
         }
         this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
-        this.resetState();
-        this.substanceEmitter.next(this.privateSubstance);
-        observer.next(results);
-        observer.complete();
+        this.substanceService.getSubstanceDetails(results.uuid).subscribe(resp => {
+          this.privateSubstance = resp;
+          this.resetState();
+          this.substanceEmitter.next(this.privateSubstance);
+          observer.next(results);
+          observer.complete();
+        }, error => {
+          observer.next(results);
+          observer.complete();
+        });
       }, error => {
         results.isSuccessfull = false;
         if (error && error.error && error.error.validationMessages) {

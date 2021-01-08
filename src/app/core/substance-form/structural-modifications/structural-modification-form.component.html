@@ -31,9 +31,32 @@
             </button>
           </div>
           <div class = 'residues' *ngIf = "mod.locationType === 'RESIDUE_SPECIFIC'">
-            <mat-form-field class="group">
+            <mat-form-field class="group" *ngIf = "substanceType !== 'nucleicAcid' && substanceType !== 'protein'">
               <input matInput placeholder="Residue Modified" [(ngModel)]="mod.residueModified"  name="Residue Modified" />
             </mat-form-field>
+            <div class="group" *ngIf = "substanceType === 'nucleicAcid'">
+                <div class = "flex-row">
+                <mat-form-field [ngClass] = "privateMod === 'other'?'risen':''" class = "cv-field">
+                    <mat-label>Residue Modified</mat-label>
+                    <mat-select [(ngModel)]="mod.residueModified" name="residueModified" (ngModelChange)="updateResidue($event)" [disabled] = "disable">
+                      <mat-option [value] = 'null' *ngIf = "mod.residueModified" ><span class = 'deselect' >Clear selection</span></mat-option>
+                    <mat-option *ngFor="let term of nucleicAcidOptions" [value]=" term.value">
+                      {{term.display}}
+                    </mat-option>
+                    <mat-option *ngIf = "mod.residueModified && !inCV(  nucleicAcidOptions, mod.residueModified) && mod.residueModified !== ''"
+                                value = "{{mod.residueModified}}">{{mod.residueModified}} (not in CV)</mat-option>
+                    <mat-option value = 'other' >Other (New Value)</mat-option>
+                  </mat-select>
+                  </mat-form-field>
+                  </div>
+                  <div *ngIf = "mod.residueModified === 'other'" class = "custom">
+                    <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
+                  </div>
+            </div>
+              <div class="multi" *ngIf = "substanceType === 'protein'">
+                  <app-tag-selector placeholder = "Residue Modified" class="tags" (tagsUpdate)="update($event)" disableCV = "true"
+                   [tags]="pipeToArray(mod.residueModified)" cvDomain="AMINO_ACID_RESIDUE"></app-tag-selector>
+                </div>
           </div>
         </div>
 
