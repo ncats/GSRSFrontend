@@ -58,6 +58,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceReferencesModule),
   },
   {
+    componentId: 'substance-relationships-visualization',
+    path: 'substance-relationships-visualization',
+    loadChildren: () => import('./substance-details/substance-relationships-visualization/substance-relationships-visualization.module')
+      .then(m => m.SubstanceRelationshipsVisualizationModule),
+  },
+  {
     componentId: 'substance-relationships',
     path: 'substance-relationships',
     loadChildren: () => import('./substance-details/substance-relationships/substance-relationships.module')
