@@ -174,7 +174,7 @@
         <div class="substance-data" *ngIf="substance.structure?.formula">
           <div class="label">Formula:</div>
           <div>
-            <span class="value">{{substance.structure.formula}}</span>
+            <span class="value" [innerHTML] = "substance.structure.formula"></span>
           </div>
         </div>
         <div class="substance-data" *ngIf="substance.structurallyDiverse?.part">

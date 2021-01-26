@@ -4,7 +4,7 @@ import {SubstanceDetail, SubstanceMoiety} from '../../substance/substance.model'
 import { SafeUrl } from '@angular/platform-browser';
 import {UtilsService} from '../../utils/utils.service';
 import {Subject} from 'rxjs';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material';
 
@@ -21,6 +21,7 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
   constructor(
               private utilService: UtilsService,
               private overlayContainerService: OverlayContainer,
+              private structureService: StructureService,
               private dialog: MatDialog
   ) {
     super();
@@ -31,6 +32,10 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
       this.substance = substance;
       if (this.substance != null && this.substance.moieties != null) {
         this.moieties = this.substance.moieties;
+        this.moieties.forEach( unit => {
+          unit.formula = this.structureService.formatFormula(unit);
+
+        });
       }
       this.countUpdate.emit(this.moieties.length);
     });

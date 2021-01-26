@@ -63,6 +63,10 @@ export class SubstanceSummaryCardComponent implements OnInit {
       this.subunits = this.substance.nucleicAcid.subunits;
       this.getAlignments();
     }
+
+    if (this.substance.structure && this.substance.structure.formula) {
+      this.substance.structure.formula = this.structureService.formatFormula(this.substance.structure);
+    }
     if (this.substance.approvalID) {
       this.substanceService.hasInxightLink(this.substance.approvalID).subscribe(response => {
         if (response.total && response.total > 0) {
