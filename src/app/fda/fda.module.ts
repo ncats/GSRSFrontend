@@ -32,7 +32,7 @@ import { GeneralService} from './service/general.service';
 import { ShowApplicationToggleComponent } from './substance-browse/show-application-toggle/show-application-toggle.component';
 import { JiraSubmitTicketComponent } from './jira-submit-ticket/jira-submit-ticket.component';
 import { UserManualComponent } from './user-manual/user-manual.component';
-import { ImpuritiesModule } from './impurities/impurities.module';
+import { ImpuritiesModule } from '../fda/impurities/impurities.module';
 
 const fdaRoutes: Routes = [
   {
