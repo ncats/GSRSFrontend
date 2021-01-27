@@ -304,12 +304,12 @@
 
               <div class="form-row">
                 <mat-form-field class="col-1">
-                  <input matInput placeholder="Application Number" [(ngModel)]="product.applicationNumber"
+                  <input matInput placeholder="Application Number" [(ngModel)]="product.appNumber"
                     name="source" />
                 </mat-form-field>
 
-                <app-cv-input class="col-1" domain="APPLICATION_TYPE" title="Application Type" name="applicationType"
-                  [model]="product.applicationType" (valueChange)="product.applicationType = $event">
+                <app-cv-input class="col-1" domain="APPLICATION_TYPE" title="Application Type" name="appType"
+                  [model]="product.appType" (valueChange)="product.appType = $event">
                 </app-cv-input>
                 <!--
                 <mat-form-field class="col-1">

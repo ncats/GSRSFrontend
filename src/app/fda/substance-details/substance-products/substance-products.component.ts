@@ -25,6 +25,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   advPtCount = 0;
   advDmeCount = 0;
   advCvmCount = 0;
+  impuritiesCount = 0;
   provenance = '';
   provenanceList = '';
   datasourceList = '';
@@ -97,6 +98,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
   getAdvCvmCount($event: any) {
     this.advCvmCount = $event;
+  }
+
+  getImpuritiesCount($event: any) {
+    this.impuritiesCount = $event;
   }
 
   getBdnum() {

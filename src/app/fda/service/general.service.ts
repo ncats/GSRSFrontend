@@ -67,15 +67,17 @@ export class GeneralService extends BaseHttpService {
 
   getManualFile(): Observable<any> {
     const url = this.baseUrl + 'manual';
-    return this.http.get<any>(url, { headers: {
+    return this.http.get<any>(url, {
+      headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      }, responseType: 'blob' as 'json', observe: 'response' })
-    .pipe(
-      map(res => {
-        return res;
-      })
-    );
+      }, responseType: 'blob' as 'json', observe: 'response'
+    })
+      .pipe(
+        map(res => {
+          return res;
+        })
+      );
   }
 
   getManualUrl(): string {
