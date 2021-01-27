@@ -3,7 +3,7 @@
     <input matInput placeholder="Search" [formControl]="searchControl">
   </mat-form-field>
   <span class="middle-fill"></span>
-<button *ngIf="names && names.length > 0" class = 'standardize' matTooltip = "Standardize all values in the 'Name' fields" mat-button (click)="standardize()">Standardize Names</button>
+<button *ngIf="names && names.length > 0 && appId === 'fda'" class = 'standardize' matTooltip = "Standardize all values in the 'Name' fields" mat-button (click)="standardize()">Standardize Names</button>
   <button *ngIf="names && names.length > 0" class = 'standardize' matTooltip = "show / hide  additional rows" mat-button (click)="collapse()">{{expanded? 'Collapse':'Expand'}} All</button>
   <button *ngIf="names && names.length > 0" class = 'standardize' mat-button (click)="showMore = !showMore">{{showMore? 'Hide' : 'More'}}
     <mat-icon class="chevron" *ngIf = "!showMore" svgIcon="chevron_down"></mat-icon>

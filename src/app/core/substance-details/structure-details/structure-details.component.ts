@@ -57,6 +57,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
             this.otherInchi = inchi.replace(/\"/g, '');
           });
         }
+        this.structure.formula = this.structureService.formatFormula(this.structure);
+
         const theJSON = this.structure.molfile;
         const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
         this.molfileHref = uri;

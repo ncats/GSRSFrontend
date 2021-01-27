@@ -33,7 +33,6 @@ export class ReuseReferencesDialogComponent implements OnInit {
     this.getVocabularies();
     this.dialogRef.beforeClosed().subscribe(() => this.dialogRef.close(
       (this.domainReferenceUuids && this.domainReferenceUuids.length > 0) ? this.domainReferenceUuids : null));
-      console.log(this.substanceReferences);
       this.filterRefs();
   }
 

@@ -47,7 +47,6 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.updateDisplay();
     this.getSubstanceType();
-    console.log(this.nucleicAcidOptions);
   }
 
   ngAfterViewInit(): void {
@@ -65,12 +64,10 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
   }
 
   updateResidue(event) {
-    console.log(event);
     this.privateMod.residueModified = event;
   }
 
   updateOrigin(event): void {
-    console.log(event);
     if (event && event.value !== '') {
       this.privateMod.residueModified = event.value;
     }

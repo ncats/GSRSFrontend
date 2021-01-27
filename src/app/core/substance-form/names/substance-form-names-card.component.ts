@@ -6,6 +6,7 @@ import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subscription } from 'rxjs';
 import { SubstanceFormNamesService } from './substance-form-names.service';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-form-names-card',
@@ -21,12 +22,15 @@ export class SubstanceFormNamesCardComponent
   expanded = true;
   showStd = false;
   showMore = false;
+  appId: string;
 
   constructor(
     private substanceFormNamesService: SubstanceFormNamesService,
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private configService: ConfigService,
+
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form names';
@@ -34,6 +38,7 @@ export class SubstanceFormNamesCardComponent
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Names');
+    this.appId = this.configService.environment.appId;
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
         this.canAddItemUpdate.emit(false);

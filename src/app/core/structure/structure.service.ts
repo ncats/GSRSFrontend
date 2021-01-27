@@ -57,6 +57,26 @@ export class StructureService {
     return this.http.get<ResolverResponse[]>(url);
   }
 
+  formatFormula(structure: SubstanceStructure ):string {
+    if (structure.formula == null) {
+      return '';
+    }
+    let HTMLFormula = structure.formula.replace(/([a-zA-Z])([0-9]+)/g, '$1<sub>$2</sub>');
+    if (structure.charge != null && structure.charge !== 0 && !HTMLFormula.includes('.')) {
+        let sCharge = structure.charge.toString();
+        let sSign = '+';
+        if (structure.charge < 0) {
+            sCharge = sCharge.substring(1);
+            sSign = '-';
+        }
+        if ('1' === (sCharge)) {
+          sCharge = '';
+      }
+      HTMLFormula = HTMLFormula + '<sup>' + sCharge + sSign + '</sup>';
+  }
+  return HTMLFormula;
+}
+
   getName(name: string): Observable<SubstanceDetail> {
     let params = new HttpParams();
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search`;

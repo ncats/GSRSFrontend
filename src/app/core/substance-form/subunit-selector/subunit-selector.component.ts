@@ -374,9 +374,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
           }
         });
       });
-      console.log(this.allSites);
       this.allSites.forEach(site => {
-        console.log(site);
         if (this.subunitSequences[site.subunit - 1].subunits) {
           if (this.subunitSequences[site.subunit - 1].subunits[site.residue - 1]){
           if (this.subunitSequences[site.subunit - 1].subunits[site.residue - 1].class !== '') {
