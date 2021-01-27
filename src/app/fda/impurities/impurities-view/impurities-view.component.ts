@@ -66,13 +66,9 @@ export class ImpuritiesViewComponent implements OnInit {
   }
 
   getSubstancePreferredName(substanceUuid: string): void {
-    let preferredName = '';
-    //   alert(substanceUuid);
-    //  this.generalService.getSubstanceNames(substanceUuid).subscribe(substanceNames => {
     this.impuritiesService.getSubstanceDetailsBySubstanceId(substanceUuid).subscribe(substanceNames => {
       const substanceNamesLocal = substanceNames;
 
-      console.log(JSON.stringify(substanceNames));
       this.substanceName = substanceNames.name;
       /*
       // Get Preferred Term or DisplayName == true

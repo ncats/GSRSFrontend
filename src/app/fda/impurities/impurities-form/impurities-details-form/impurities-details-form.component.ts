@@ -135,67 +135,9 @@ export class ImpuritiesDetailsFormComponent implements OnInit {
     this.impuritiesService.deleteImpuritiesDetails(this.impuritiesDetailsIndex);
   }
 
-      /*
-  relatedSubstanceUpdated(substance: SubstanceSummary): void {
-
-    this.ingredientNameMessage = '';
-    if (substance != null) {
-      const relatedSubstance: SubstanceRelated = {
-        refPname: substance._name,
-        name: substance._name,
-        refuuid: substance.uuid,
-        substanceClass: 'reference',
-        approvalID: substance.approvalID
-      };
-
-      if (relatedSubstance != null) {
-        if (relatedSubstance.refuuid != null) {
-          this.getBdnum(relatedSubstance.refuuid, 'ingredientname');
-        }
-      }
-    } else {
-      this.ingredientNameSubstanceUuid = null;
-    }
-  
-  }
-  */
-
   relatedSubstanceUpdated(substance: any): void {
     if (substance != null) {
       this.impuritiesDetails.relatedSubstanceUuid = substance.uuid;
-      /*
-      const relatedSubstance: SubstanceRelated = {
-        refPname: substance._name,
-        name: substance._name,
-        refuuid: substance.uuid,
-        substanceClass: 'reference',
-        approvalID: substance.approvalID
-        */
       }
-    
-      /*
-      if (relatedSubstance != null) {
-        if (relatedSubstance.refuuid != null) {
-          this.getBdnum(relatedSubstance.refuuid, 'basisofstrength');
-        }
-      }
-    } else {
-      this.basisofStrengthSubstanceUuid = null;
-    }
-    */
   }
-
-  //  this.ingredientNameMessage = '';
-  /*
-    if (this.ingredient.id != null) {
-      // Display this message if deleting existing Ingredient Name which is in database.
-      if (this.ingredientNameBdnumOld != null) {
-        this.ingredientNameMessage = 'Click Validate and Submit button to delete ' + this.ingredientName;
-      }
-    }
-    this.ingredientNameSubstanceUuid = null;
-    this.ingredientName = null;
-    this.ingredient.bdnum = null;
-    */
-
 }

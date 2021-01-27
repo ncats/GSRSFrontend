@@ -19,7 +19,6 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
   @Output() countImpuritiesOut: EventEmitter<number> = new EventEmitter<number>();
   showSpinner = false;
   impuritiesCount = 0;
-  
   displayedColumns: string[] = [
     'details',
     'source',

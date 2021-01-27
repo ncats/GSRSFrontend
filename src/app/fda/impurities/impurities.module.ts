@@ -64,7 +64,7 @@ const impurityRoutes: Routes = [
   ]
 })
 
-export class ImpuritiesModule { 
+export class ImpuritiesModule {
   constructor(router: Router) {
     impurityRoutes.forEach(route => {
       router.config[0].children.push(route);

@@ -22,7 +22,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
   templateUrl: './impurities-form.component.html',
   styleUrls: ['./impurities-form.component.scss']
 })
-export class ImpuritiesFormComponent implements OnInit {
+export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
   isLoading = true;
   showSubmissionMessages = false;
@@ -69,9 +69,6 @@ export class ImpuritiesFormComponent implements OnInit {
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
-
-   // this.substanceName = 'ZIDOVUDINE';
-
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -100,13 +97,6 @@ export class ImpuritiesFormComponent implements OnInit {
       });
 
     this.subscriptions.push(routeSubscription);
-
-    //   if (this.impurities) {
-    //     this.impurities.parentSubstanceId = '479f1396-4958-4f59-9d41-0bd0468c8da7';
-    //    }
-  }
-
-  ngAfterViewInit(): void {
   }
 
   ngOnDestroy(): void {
@@ -261,7 +251,7 @@ export class ImpuritiesFormComponent implements OnInit {
     this.loadingService.setLoading(true);
     this.errorMessage = 'Getting Existing Impurities...';
 
-    //Empty the Impurities Details list
+    // Empty the Impurities Details list
     this.impurities.impuritiesDetailsList.splice(0, this.impurities.impuritiesDetailsList.length);
 
     this.impuritiesService.getRelationshipImpurity(this.impurities.substanceUuid).subscribe(response => {
@@ -270,54 +260,27 @@ export class ImpuritiesFormComponent implements OnInit {
 
         if (Object.keys(this.subRelationship).length > 0) {
           this.getRelationship();
-          //  this.impurity.impuritiesList[0].relationshipList = response[0];
-          console.log(JSON.stringify(this.subRelationship));
-          //  alert(this.subRelationship.length);
-        }
-        else {
+        } else {
           this.errorMessage = 'No Impurities found';
         }
       }
     });
-
-    // alert(this.subRelationship.length);
-    //  if (this.subRelationship.length > 0) {
-    // this.getRelationship();
-    //  }
 
     this.loadingService.setLoading(false);
     this.isLoading = false;
   }
 
   getRelationship() {
-    // alert(this.subRelationship.length);
-    
     this.errorMessage = 'Found ' + this.subRelationship.length + ' Existing Impurities';
     this.subRelationship.forEach((elementRel, indexRel) => {
-      //  console.log('Index: ' + indexRel);
       this.createNewImpurities(elementRel.relationshipUuid);
-      //  this.addNewImpurities();
-      //  alert(indexRel);
-      //     this.impurity.impuritiesList[indexRel].testType = 'Type' + indexRel;
-
-      // this.impurity.impuritiesList[indexRel].subRelationship = elementRel;
-      // this.impurity.impuritiesList[indexRel].maturityType = 'Type' + indexRel;
-      //   console.log('AAAA' + JSON.stringify(elementRel));
-      //   console.log('GG' + JSON.stringify(this.impurity.impuritiesList[indexRel].subRelationship));
-      // alert(this.impurity.impuritiesList.length);
     });
-
-    //  this.impurity.impuritiesList[0].maturityType = 'Test';
   }
 
   createNewImpurities(relationshipUuid: string) {
     const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
-    //  newImpurities.testType = 'Test';
-    //  newImpurities.highLimit = 0;
     newImpuritiesDetails.relatedSubstanceUuid = relationshipUuid;
     this.impurities.impuritiesDetailsList.unshift(newImpuritiesDetails);
-    //   alert("CREATE");
-    //  alert(this.impurities.impuritiesDetailsList.length);
   }
 
   showJSON(): void {
@@ -358,28 +321,6 @@ export class ImpuritiesFormComponent implements OnInit {
     this.impuritiesService.getRelationshipImpurity(substanceId);
   }
 
-
-  /*
-  getSubuuid(uuid: string) {
-    if (uuid) {
-      this.substanceService.getSubstanceSummary(uuid).subscribe(response => {
-        this.selectedSubstance = response;
-      }, error => {
-        console.log(error);
-        if (this.name && this.name !== '') {
-          this.selectedSubstance = {_name: this.name};
-        } else {
-          this.selectedSubstance = {_name: ''};
-        }
-        this.errorMessage = 'Not in database';
-      });
-    } else {
-      this.selectedSubstance = null;
-      this.searchValue = '';
-    }
-  }
-  */
-
   processSubstanceSearch(searchValue: string = ''): void {
     // Remove double quote
     this.searchValue = searchValue.replace(/"/g, '');
@@ -388,8 +329,6 @@ export class ImpuritiesFormComponent implements OnInit {
       if (response.content && response.content.length) {
         const selectedSubstance = response.content[0];
         this.impurities.substanceUuid = selectedSubstance.uuid;
-        console.log('AAAA: ' + JSON.stringify(selectedSubstance));
-        //  this.selectionUpdated.emit(this.selectedSubstance);
         this.errorMessage = '';
       } else {
         this.errorMessage = 'No substances found';

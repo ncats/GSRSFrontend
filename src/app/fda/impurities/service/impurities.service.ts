@@ -61,7 +61,6 @@ export class ImpuritiesService extends BaseHttpService {
 
   getImpurities(id: string): Observable<any> {
     const url = this.apiBaseUrl + `impurities(${id})`;
-  
     return this.http.get<Impurities>(url)
       .pipe(
         map(result => {
@@ -123,30 +122,30 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   addNewTest(): void {
-  //  const newTest: ImpurityTest = {};
-   // this.impurity.impurityTestList.unshift(newTest);
+    //  const newTest: ImpurityTest = {};
+    // this.impurity.impurityTestList.unshift(newTest);
   }
 
   addNewImpurities(): void {
-  //  const newImpurities: Impurities = {};
-  //  this.impurities.impuritiesList.unshift(newImpurities);
+    //  const newImpurities: Impurities = {};
+    //  this.impurities.impuritiesList.unshift(newImpurities);
   }
-  
+
   addNewImpuritiesUnspecified(): void {
-    const newImpuritiesUnspec: ImpuritiesUnspecified = {identityCriteriaList: []};
+    const newImpuritiesUnspec: ImpuritiesUnspecified = { identityCriteriaList: [] };
     this.impurities.impuritiesUnspecifiedList.unshift(newImpuritiesUnspec);
   }
-  
+
   addNewIdentityCriteriaUnspecified(impuritiesUnspecifiedIndex: number) {
     const newIdentityCriteria: IdentityCriteria = {};
     this.impurities.impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.unshift(newIdentityCriteria);
   }
 
   addNewImpuritiesTotal(): void {
-    const newImpuritiesTotal: ImpuritiesTotal = {limit: 'test'};
-  //  this.impurities.impuritiesTotalList.unshift(newImpuritiesTotal);
+    const newImpuritiesTotal: ImpuritiesTotal = { limit: 'test' };
+    //  this.impurities.impuritiesTotalList.unshift(newImpuritiesTotal);
   }
-  
+
   deleteImpuritiesDetails(impuritiesDetailsIndex: number): void {
     this.impurities.impuritiesDetailsList.splice(impuritiesDetailsIndex, 1);
   }
