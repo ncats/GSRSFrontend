@@ -83,6 +83,11 @@
   margin-right: 30px;
 }
 
+.col-5-1 {
+  width: calc((100% - 30px * 4) / 5);
+  margin-right: 30px;
+}
+
 .col-2:last-child {
   margin-right: 0px;
 }  

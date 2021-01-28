@@ -1,10 +1,10 @@
 <div class="form-row">
-  <app-cv-input class="col-4-1" domain="SSG_IMPURITY_TYPE" title="Test Type" name="testType"
+  <app-cv-input class="col-4-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
     [model]="impuritiesTotal.testType" (valueChange)="impuritiesTotal.testType = $event">
   </app-cv-input>
 
   <mat-form-field class="col-4-1">
-    <input matInput placeholder="LimitType" [(ngModel)]="impuritiesTotal.limitType" name="limitType" />
+    <input matInput placeholder="Limit Type" [(ngModel)]="impuritiesTotal.limitType" name="limitType" />
   </mat-form-field>
 
   <mat-form-field class="col-4-1">

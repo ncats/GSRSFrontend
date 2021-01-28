@@ -70,8 +70,8 @@
 }
 
 .col-1 {
-  width: calc((100% - 30px * 5) / 6);
-  margin-right: 30px;
+  width: calc((100% - 20px * 5) / 6);
+  margin-right: 20px;
 }
 
 .col-1:last-child {
@@ -81,6 +81,11 @@
 .col-2 {
   width: calc((100% - 30px * 2) / 3); 
   margin-right: 30px;
+}
+
+.col-5-1 {
+  width: calc((100% - 20px * 4) / 5);
+  margin-right: 20px;
 }
 
 .col-2:last-child {
@@ -272,6 +277,10 @@ marginleft50px {
   margin-left: 50px;
 }
 
+marginleftneg20px {
+  margin-left: -20px;
+}
+
 marginleftneg40px {
   margin-left: -40px;
 }
@@ -294,6 +303,10 @@ marginleftneg7px {
 
 .padleft20px {
   padding-left: 20px;
+}
+
+.padleftneg20px {
+  padding-left: -20px;
 }
 
 .padright20px {
