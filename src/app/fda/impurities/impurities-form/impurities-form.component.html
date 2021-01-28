@@ -111,8 +111,9 @@
 
                 <div class="width32percent">
                   <app-substance-text-search class="top-search" [searchValue]="searchValue"
-                    (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch">
+                    (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" [placeholder]="subName">
                   </app-substance-text-search>
+                  <div class="colorred">{{substanceNameHintMessage}}</div>
                 </div>
 
                 <div class="width200px">

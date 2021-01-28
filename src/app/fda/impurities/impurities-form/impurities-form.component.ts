@@ -35,7 +35,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   serverError: boolean;
   searchValue: string;
   errorMessage: string;
-
+  subName = 'Substance Name *';
   impurities: Impurities;
   substanceId = null;
   id?: number;
@@ -47,6 +47,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   isAdmin = false;
   subRelationship: Array<SubRelationship> = [];
   substanceName: string;
+  substanceNameHintMessage = '';
 
   constructor(
     private impuritiesService: ImpuritiesService,
@@ -88,7 +89,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
             this.impuritiesService.loadImpurities();
             this.impurities = this.impuritiesService.impurities;
 
-           // this.impurities.substanceUuid = '479f1396-4958-4f59-9d41-0bd0468c8da7';
+            // this.impurities.substanceUuid = '479f1396-4958-4f59-9d41-0bd0468c8da7';
 
             this.loadingService.setLoading(false);
             this.isLoading = false;
@@ -113,7 +114,9 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         if (response) {
           this.impuritiesService.loadImpurities(response);
           this.impurities = this.impuritiesService.impurities;
-          this.getSubstancePreferredName(this.impurities.substanceUuid);
+          if (this.impurities.substanceUuid) {
+            this.getSubstancePreferredName(this.impurities.substanceUuid);
+          }
         } else {
           this.handleProductRetrivalError();
         }
@@ -129,34 +132,39 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   validate(): void {
-    this.isLoading = true;
-    this.serverError = false;
-    this.loadingService.setLoading(true);
 
-    //  this.validateClient();
-    // If there is no error on client side, check validation on server side
-    if (this.validationMessages.length === 0) {
-      // this.impuritiesService.validateImpurities().pipe(take(1)).subscribe(results => {
-      this.submissionMessage = null;
-      //   this.validationMessages = results.validationMessages.filter(
-      //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-      //   this.validationResult = results.valid;
+    if ((this.impurities.substanceUuid === null) || (this.impurities.substanceUuid === undefined)) {
+      this.substanceNameHintMessage = 'Substance Name is required';
+    }
 
-      this.validationResult = true;
-      this.showSubmissionMessages = true;
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
+    if (this.impurities.substanceUuid) {
+      this.isLoading = true;
+      this.serverError = false;
+      this.loadingService.setLoading(true);
 
-      if (this.validationMessages.length === 0 && this.validationResult === true) {
-        this.submissionMessage = 'Impurities is Valid. Would you like to submit?';
+      // If there is no error on client side, check validation on server side
+      if (this.validationMessages.length === 0) {
+        // this.impuritiesService.validateImpurities().pipe(take(1)).subscribe(results => {
+        this.submissionMessage = null;
+        //   this.validationMessages = results.validationMessages.filter(
+        //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+        //   this.validationResult = results.valid;
+
+        this.validationResult = true;
+        this.showSubmissionMessages = true;
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+
+        if (this.validationMessages.length === 0 && this.validationResult === true) {
+          this.submissionMessage = 'Impurities is Valid. Would you like to submit?';
+        }
+        /* }, error => {
+           this.addServerError(error);
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         });
+         */
       }
-      /* }, error => {
-         this.addServerError(error);
-         this.loadingService.setLoading(false);
-         this.isLoading = false;
-       });
-       */
-
     }
 
   }
@@ -332,7 +340,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   processSubstanceSearch(searchValue: string = ''): void {
     // Remove double quote
     this.searchValue = searchValue.replace(/"/g, '');
-
+    this.substanceNameHintMessage = '';
     this.substanceService.getQuickSubstancesSummaries(this.searchValue, true).subscribe(response => {
       if (response.content && response.content.length) {
         const selectedSubstance = response.content[0];
