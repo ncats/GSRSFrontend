@@ -145,15 +145,16 @@
               <div class="form-row borderbottom">
 
                 <div class="width32percent">
-                  
+
                 </div>
 
                 <div class="width200px">
-      
+
                 </div>
 
                 <mat-form-field class="col-3-1">
-                  <input matInput placeholder="Company Product Name" [(ngModel)]="impurities.companyProductName" name="companyProductName" />
+                  <input matInput placeholder="Company Product Name" [(ngModel)]="impurities.companyProductName"
+                    name="companyProductName" />
                 </mat-form-field>
 
                 <mat-form-field class="col-3-1 marginleft20px">
@@ -168,34 +169,6 @@
 
 
               <!-- IMPURITIES DETAILS LIST BEGIN -->
-              <!--
-            <div class="">
-              <br>
-              <hr>
-              <br>
-              <span matBadge="{{impurities.impuritiesDetailsList.length}}" matBadgeColor="accent" matBadgeSize="medium"
-                matBadgeOverlap="false">
-                <span class="titleblue"><b>Impurities</b></span>
-              </span>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <button mat-raised-button color="primary" (click)="addNewImpuritiesDetails()"
-                matTooltip="Add New Impurities">
-                <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Impurities
-              </button>
-              <br><br>
-
-              <div class="marginbottom10px"
-                *ngFor="let impuritiesDetails of impurities.impuritiesDetailsList; let impuritiesDetailsIndex = index">
-
-                <app-impurities-details-form [impuritiesDetails]="impuritiesDetails"
-                  [impuritiesDetailsIndex]="impuritiesDetailsIndex"
-                  [relatedSubstanceUuid]="impuritiesDetails.relatedSubstanceUuid">
-                </app-impurities-details-form>
-
-              </div> 
-            </div>
-            -->
-
               <mat-card class="margintop20px bordergray">
                 <mat-card-title class="titleblue">
                   <span matBadge="{{impurities.impuritiesDetailsList.length}}" matBadgeColor="accent"
@@ -224,32 +197,6 @@
 
 
               <!-- IMPURITIES UNSPECIFIED LIST BEGIN -->
-              <!--
-            <div class="">
-              <br>
-              <hr>
-              <br>
-              <span matBadge="{{impurities.impuritiesUnspecifiedList.length}}" matBadgeColor="accent"
-                matBadgeSize="medium" matBadgeOverlap="false">
-                <span class="titleblue"><b>Unspecified Impurities</b></span>
-              </span>
-
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <button mat-raised-button color="primary" (click)="addNewImpuritiesUnspecified()"
-                matTooltip="Add New Unspecified Impurities">
-                <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Unspecified Impurities
-              </button>
-              <br><br>
-              <div class="marginbottom10px"
-                *ngFor="let impuritiesUnspecified of impurities.impuritiesUnspecifiedList; let impuritiesUnspecifiedIndex = index">
-                <app-impurities-unspecified-form [impuritiesUnspecified]="impuritiesUnspecified"
-                  [impuritiesUnspecifiedIndex]="impuritiesUnspecifiedIndex">
-                </app-impurities-unspecified-form>
-              </div> 
-            </div>
-            -->
-
-
               <mat-card class="margintop20px bordergray">
                 <mat-card-title class="titleblue">
                   <b>Unspecified Impurities</b>
@@ -270,23 +217,10 @@
                 </mat-card-content>
               </mat-card>
 
-
               <!-- IMPURITIES UNSPECIFIED LIST END -->
 
 
               <!-- IMPURITIES TOTAL BEGIN -->
-              <!--
-            <div class="">
-              <br>
-              <hr>
-              <br>
-              <span class="titleblue"><b>Total Impurities</b></span>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <app-impurities-total-form [impuritiesTotal]="impurities.impuritiesTotal">
-              </app-impurities-total-form>
-            </div>
-            -->
-
               <mat-card class="margintop20px bordergray">
                 <mat-card-title class="titleblue">
                   <b>Total Impurities</b>

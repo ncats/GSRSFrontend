@@ -15,14 +15,14 @@
       name="testType" [model]="impuritiesUnspecified.testType" (valueChange)="impuritiesUnspecified.testType = $event">
     </app-cv-input>
 
-    <mat-form-field class="col-1">
-      <input matInput placeholder="Limit" [(ngModel)]="impuritiesUnspecified.limit" name="limit" />
-    </mat-form-field>
-
     <app-cv-input class="col-1" [disable]="isDisableData" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type"
       name="limitType" [model]="impuritiesUnspecified.limitType"
       (valueChange)="impuritiesUnspecified.limitType = $event">
     </app-cv-input>
+
+    <mat-form-field class="col-1">
+      <input matInput placeholder="Limit" [(ngModel)]="impuritiesUnspecified.limit" name="limit" />
+    </mat-form-field>
 
     <app-cv-input class="col-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesUnspecified.unit"
       (valueChange)="impuritiesUnspecified.unit = $event">

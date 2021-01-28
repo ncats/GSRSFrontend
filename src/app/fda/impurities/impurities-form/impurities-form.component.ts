@@ -113,6 +113,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         if (response) {
           this.impuritiesService.loadImpurities(response);
           this.impurities = this.impuritiesService.impurities;
+          this.getSubstancePreferredName(this.impurities.substanceUuid);
         } else {
           this.handleProductRetrivalError();
         }
@@ -268,6 +269,13 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
     this.loadingService.setLoading(false);
     this.isLoading = false;
+  }
+
+  getSubstancePreferredName(substanceUuid: string): void {
+    this.impuritiesService.getSubstanceDetailsBySubstanceId(substanceUuid).subscribe(substanceNames => {
+      this.searchValue = substanceNames.name;
+    });
+
   }
 
   getRelationship() {
