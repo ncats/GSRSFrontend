@@ -65,8 +65,9 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder) { }
 
   ngOnInit() {
-    // this.generateFormContorls();
-    this.isAdmin = this.authService.hasRoles('admin');
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+      this.isAdmin = response;
+    });
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
