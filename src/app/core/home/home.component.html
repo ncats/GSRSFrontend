@@ -231,20 +231,19 @@
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-
               Specified Substance Group 4
               <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-
             </a>
+
             <mat-divider></mat-divider>
             <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4Manufacturing'">
               <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-
               Specified Substance Group 4 Manufacturing
               <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-
             </a>
+
             <span *ngIf="appId === 'fda'">
+            
               <mat-divider></mat-divider>
               <a mat-list-item routerLink="/product/register">
                 <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
@@ -262,6 +261,7 @@
                 <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                 Application
               </a>
+
               <!--
               <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerApplication'">
                 <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
@@ -270,21 +270,27 @@
               </a>
               -->
               <mat-divider></mat-divider>
+              <a mat-list-item routerLink="/impurities/register">
+                <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                Impurities
+              </a>
+
+              <mat-divider></mat-divider>
               <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerBiomarker'">
                 <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-
                 Biomarker
                 <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
               </a>
+
               <mat-divider></mat-divider>
               <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerIndication'">
                 <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-
                 Indication
                 <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-
               </a>
+
             </span>
+          
           </mat-nav-list>
         </div>
       </div>

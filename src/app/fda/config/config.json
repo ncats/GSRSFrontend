@@ -647,6 +647,11 @@
           "display": "Product",
           "path": "product/register",
           "order": 210
+        },
+        {
+          "display": "Impurities",
+          "path": "impurities/register",
+          "order": 220
         }
       ]
     },
