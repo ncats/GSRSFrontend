@@ -29,7 +29,7 @@
     <br><br><br>
     <div class="divflex">
       <!-- Export Application Button -->
-      <div class="marginleft20px marginright40px">
+      <div class="marginleft20px marginright40px" *ngIf="isLoggedIn">
         <button matTooltip="Export Search Results" mat-button (click)="export()"
           class="mat-button export-button mat-raised-button">
           <mat-icon svgIcon="get_app"></mat-icon> Export
