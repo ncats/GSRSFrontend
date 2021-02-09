@@ -114,7 +114,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   getImpurities(newType?: string): void {
     if (this.id != null) {
       const id = this.id.toString();
-      this.impuritiesService.getImpurities(id).subscribe(response => {
+      const getImpuritySubscribe = this.impuritiesService.getImpurities(id).subscribe(response => {
         if (response) {
           this.impuritiesService.loadImpurities(response);
           this.impurities = this.impuritiesService.impurities;
@@ -133,6 +133,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.handleProductRetrivalError();
       });
+      this.subscriptions.push(getImpuritySubscribe);
     }
   }
 
@@ -272,7 +273,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
     const substanceUuid = this.impurities.impuritiesSubstanceList[0].substanceUuid;
     if (substanceUuid) {
-      this.impuritiesService.getRelationshipImpurity(substanceUuid).subscribe(response => {
+      const getRelImpuritySubscribe = this.impuritiesService.getRelationshipImpurity(substanceUuid).subscribe(response => {
         if (response) {
           this.subRelationship = response.data;
 
@@ -283,6 +284,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           }
         }
       });
+      this.subscriptions.push(getRelImpuritySubscribe);
     } else {
       this.errorMessage = 'Please select a Substance Name';
     }
@@ -292,9 +294,10 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   getSubstancePreferredName(substanceUuid: string): void {
-    this.impuritiesService.getSubstanceDetailsBySubstanceId(substanceUuid).subscribe(substanceNames => {
+    const getSubDetailsSubscribe = this.impuritiesService.getSubstanceDetailsBySubstanceId(substanceUuid).subscribe(substanceNames => {
       this.searchValue = substanceNames.name;
     });
+    this.subscriptions.push(getSubDetailsSubscribe);
 
   }
 
@@ -352,11 +355,12 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
       data: { message: 'Are you sure you want to delele Substance ' + (impuritiesSubstanceIndex + 1) + '?' }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    const closediagSubscribe = dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteImpuritiesSubstance(impuritiesSubstanceIndex);
       }
     });
+    this.subscriptions.push(closediagSubscribe);
   }
 
   deleteImpuritiesSubstance(impuritiesSubstanceIndex: number) {
@@ -377,7 +381,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     // Remove double quote
     this.searchValue = searchValue.replace(/"/g, '');
     this.substanceNameHintMessage = '';
-    this.substanceService.getQuickSubstancesSummaries(this.searchValue, true).subscribe(response => {
+    const getQuickSumSubscribe = this.substanceService.getQuickSubstancesSummaries(this.searchValue, true).subscribe(response => {
       if (response.content && response.content.length) {
         const selectedSubstance = response.content[0];
      //   this.impurities.substanceUuid = selectedSubstance.uuid;
@@ -386,6 +390,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         this.errorMessage = 'No substances found';
       }
     });
+    this.subscriptions.push(getQuickSumSubscribe);
   }
 
 }
