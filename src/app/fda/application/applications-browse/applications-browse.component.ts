@@ -201,7 +201,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
           skip,
           this.pageSize,
-          this.searchTerm,
+          this.privateSearchTerm,
           this.privateFacetParams);
         this.getSubstanceDetailsByBdnum();
 
@@ -227,14 +227,18 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       });
   }
 
-  /*
   setSearchTermValue() {
     this.pageSize = 10;
     this.pageIndex = 0;
-    this.searchTerm = this.searchTerm.trim();
     this.searchApplications();
   }
-  */
+
+  resetSearch() {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.privateSearchTerm = '';
+    this.searchApplications();
+  }
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
