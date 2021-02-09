@@ -28,10 +28,8 @@ import { Subscription } from 'rxjs';
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;
-  public _searchTerm?: string;
   public applications: Array<ApplicationSrs>;
-  // view = 'cards';
-  hasBackdrop = false;
+  order: string;
   pageIndex: number;
   pageSize: number;
   jumpToValue: string;
@@ -39,8 +37,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   isLoading = true;
   isError = false;
   isAdmin: boolean;
+  isLoggedIn = false;
   displayedColumns: string[];
   dataSource = [];
+  hasBackdrop = false;
   appType: string;
   appNumber: string;
   clinicalTrialApplication: Array<any>;
@@ -49,11 +49,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   privateExport = false;
   disableExport = false;
   private overlayContainer: HTMLElement;
-  isLoggedIn = false;
   etag = '';
   environment: any;
   previousState: Array<string> = [];
-
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -81,32 +79,39 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
-   setTimeout(() => {
-     if (this.router.url === this.previousState[0]) {
-      this.ngOnInit();
-     }
+    setTimeout(() => {
+      if (this.router.url === this.previousState[0]) {
+        this.ngOnInit();
+      }
 
     }, 50);
   }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
-    this.environment = this.configService.environment;
     this.gaService.sendPageView('Browse Applications');
+    // this.environment = this.configService.environment;
+
     this.pageSize = 10;
     this.pageIndex = 0;
-    this._searchTerm = '';
 
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
 
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
+
+    /*
     navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
     navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
     navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
     navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
     navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
+    */
 
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
+    this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -114,21 +119,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
+    this.isComponentInit = true;
+    this.loadComponent();
 
-    this.activatedRoute.queryParamMap.subscribe(params => {
-
-      this.privateSearchTerm = params.get('search') || '';
-
-      if (params.get('pageSize')) {
-        this.pageSize = parseInt(params.get('pageSize'), null);
-      }
-      if (params.get('pageIndex')) {
-        this.pageIndex = parseInt(params.get('pageIndex'), null);
-      }
-
-      this.isComponentInit = true;
-      this.loadComponent();
-    });
   }
 
   ngAfterViewInit() {
@@ -193,7 +186,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     const subscription = this.applicationService.getApplications(
       skip,
       this.pageSize,
-      this._searchTerm,
+      this.privateSearchTerm,
       this.privateFacetParams,
     )
       .subscribe(pagingResponse => {
@@ -208,7 +201,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
           skip,
           this.pageSize,
-          this._searchTerm,
+          this.searchTerm,
           this.privateFacetParams);
         this.getSubstanceDetailsByBdnum();
 
@@ -234,12 +227,14 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       });
   }
 
+  /*
   setSearchTermValue() {
     this.pageSize = 10;
     this.pageIndex = 0;
-    this._searchTerm = this._searchTerm.trim();
+    this.searchTerm = this.searchTerm.trim();
     this.searchApplications();
   }
+  */
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
@@ -257,16 +252,15 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       preserveFragment: true
     });
     this.location.go(urlTree.toString());
-
   }
 
   get searchTerm(): string {
     return this.privateSearchTerm;
   }
 
-  get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
-    return this.privateFacetParams;
-  }
+  // get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
+  //   return this.privateFacetParams;
+  // }
 
   getSubstanceDetailsByBdnum(): void {
     let bdnumName: any;

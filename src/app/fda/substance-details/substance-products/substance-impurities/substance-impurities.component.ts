@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ImpuritiesService } from '../../../impurities/service/impurities.service';
@@ -7,41 +7,57 @@ import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-impurities',
   templateUrl: './substance-impurities.component.html',
   styleUrls: ['./substance-impurities.component.scss']
 })
-export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
   @Input() substanceUuid: string;
   @Output() countImpuritiesOut: EventEmitter<number> = new EventEmitter<number>();
+  private subscriptions: Array<Subscription> = [];
   showSpinner = false;
   impuritiesCount = 0;
   displayedColumns: string[] = [
     'details',
+    'sourceType',
     'source',
+    'sourceid',
     'type',
     'specType',
-    'impuritiesCount',
+    'testCount',
     'unspecifiedCount'
-   // 'impurityType'
   ];
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private impuritiesService: ImpuritiesService
+    private impuritiesService: ImpuritiesService,
+    private authService: AuthService
   ) {
     super(gaService, impuritiesService);
   }
 
   ngOnInit() {
+    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+      this.isAdmin = response;
+    });
+    this.subscriptions.push(rolesSubscription);
+
     if (this.substanceUuid) {
       this.getSubstanceImpurities();
       this.impuritiesListExportUrl();
-    //  this.clinicalTrialListExportUrl();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
   }
 
   getSubstanceImpurities(pageEvent?: PageEvent): void {

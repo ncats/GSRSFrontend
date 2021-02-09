@@ -1,7 +1,8 @@
 export interface Impurities {
   id?: number;
-  substanceUuid?: string;
+  sourceType?: string;
   source?: string;
+  sourceId?: string;
   type?: string;
   specType?: string;
   companyProductName?: string;
@@ -12,9 +13,38 @@ export interface Impurities {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
-  impuritiesDetailsList?: Array<ImpuritiesDetails>;
+  impuritiesSubstanceList?: Array<ImpuritiesSubstance>;
+  impuritiesTestList?: Array<ImpuritiesTest>;
   impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
   impuritiesTotal?: ImpuritiesTotal;
+}
+
+export interface ImpuritiesSubstance {
+  id?: number;
+  substanceUuid?: string;
+  low?: number;
+  high?: number;
+  unit?: string;
+  substanceName?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ImpuritiesTest {
+  id?: number;
+  test?: string;
+  testType?: string;
+  testDescription?: number;
+  comments?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  impuritiesDetailsList?: Array<ImpuritiesDetails>;
 }
 
 export interface ImpuritiesDetails {
@@ -22,9 +52,10 @@ export interface ImpuritiesDetails {
   relatedSubstanceUuid?: string;
   impurityType?: string;
   testType?: string;
-  limit?: number;
+  limitValue?: number;
   limitType?: string;
   unit?: string;
+  comments?: string;
   substanceName?: string;
   createdBy?: string;
   createDate?: number;
@@ -50,9 +81,10 @@ export interface ImpuritiesUnspecified {
   id?: number;
   impurityType?: string;
   testType?: string;
-  limit?: number;
+  limitValue?: number;
   limitType?: string;
   unit?: string;
+  comments?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -64,9 +96,10 @@ export interface ImpuritiesUnspecified {
 export interface ImpuritiesTotal {
   id?: number;
   testType?: string;
-  limit?: string;
+  limitValue?: string;
   limitType?: number;
   amountValue?: string;
+  comments?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

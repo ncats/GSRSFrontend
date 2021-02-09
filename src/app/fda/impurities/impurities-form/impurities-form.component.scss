@@ -47,6 +47,10 @@
   /*padding-left: 70px; */
 }
 
+.divflex {
+  display: flex;
+}
+
 .mat-card {
   max-width: 1140px;
 }
@@ -61,9 +65,8 @@
 }
 
 .col-6-1 {
-  /* width: 159.333px; */
-  width: calc((100% - 30px * 5) / 6);
-  margin-right: 30px;
+  width: calc((100% - 25px * 5) / 6);
+  margin-right: 25px;
 }
 
 .col-6-1:last-child {
@@ -71,9 +74,8 @@
 }  
 
 .col-6-2 {
-  /* width: 348.667px; calc() value*/
-  width: calc((100% - 30px * 2) / 3); 
-  margin-right: 30px;
+  width: calc((100% - 25px * 2) / 3); 
+  margin-right: 25px;
 }
 
 .col-6-2:last-child {
@@ -81,9 +83,8 @@
 }  
 
 .col-6-3 {
-  /* width: 538px; calc() value*/ 
-  width: calc((100% - 30px * 1) / 2);
-  margin-right: 30px;
+  width: calc((100% - 25px * 1) / 2);
+  margin-right: 25px;
 }
 
 .col-6-3:last-child {
@@ -91,7 +92,6 @@
 }  
 
 .col-6-4 {
-  /* width: 724px; calc() value*/ 
   width: calc((100% - 20px) / (6/4));
   margin-right: 20px;
 }
@@ -101,7 +101,6 @@
 }  
 
 .col-6-5 {
-  /* width: 913.333px; calc() value*/ 
   width: calc((100% - 10px) / (6/5));
   margin-right: 10px;
 }
@@ -111,7 +110,6 @@
 }  
 
 .col-5-more {
-  /* width: calc() value*/ 
   width: calc((100% + 100px) / (6/5));
   margin-right: 10px;
 }
@@ -119,6 +117,15 @@
 .col-6-6 {
   width: 100%;
 }
+
+.col-4-1 {
+  width: calc((100% - 30px * 3) / 4);
+  margin-right: 30px;
+}
+
+.col-4-1:last-child {
+  margin-right: 0px;
+}  
 
 .hide-show-messages {
   margin-left: 10px;
@@ -291,6 +298,14 @@
   font-size: 11px;
 }
 
+.font12px {
+  font-size: 12px;
+}
+
+.font13px {
+  font-size: 13px;
+}
+
 .textalignright {
   text-align: right;
 }
@@ -321,6 +336,32 @@
 
 .cvwidth2 {
   width: 300px;
+}
+
+hr {
+  border: none;
+  border-top: 2px dotted green;
+  color: #333;
+  overflow: visible;
+  text-align: center;
+  height: 5px;
+}
+
+.tabStyle {
+  width: 250px;
+  height: 30px;
+  border: 1px solid gray;
+  background: #b2b2b2;
+/*
+background-image: linear-gradient(to bottom, #fff, #b2b2b2);
+padding: .7em 1.5em;
+float: left;
+text-decoration: none;
+color: #444;
+text-shadow: 0 1px 0 rgba(255,255,255,.8);
+border-radius: 5px 0 0 0;
+box-shadow: 0 2px 2px rgba(0,0,0,.4);
+*/
 }
 
 .mat-form-field-style > {
@@ -377,4 +418,8 @@
 
 .divclear {
   clear: both;
+}
+
+.borderbottom {
+  border-bottom: 1px solid gainsboro;
 }

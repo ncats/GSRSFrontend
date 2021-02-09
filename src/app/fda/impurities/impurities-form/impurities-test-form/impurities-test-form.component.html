@@ -1,0 +1,59 @@
+<br>
+<div class="tabStyle">
+  <div class="tabStyleHeader">Test &nbsp;{{(impuritiesTestIndex+1)}}</div>
+</div>
+<mat-card class="bordergray">
+  <mat-card-content>
+    <div class="form-row">
+      <mat-form-field class="col-4-1">
+        <input matInput placeholder="Test" [(ngModel)]="impuritiesTest.test" name="test" />
+      </mat-form-field>
+
+      <app-cv-input class="col-4-1" domain="IMPURITIES_IMPURITY_TYPE" title="Test Type" name="testType"
+        [model]="impuritiesTest.testType" (valueChange)="impuritiesTest.testType = $event">
+      </app-cv-input>
+
+      <mat-form-field class="col-4-1">
+        <input matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
+          name="testDescription" />
+      </mat-form-field>
+
+      <mat-form-field class="col-4-1">
+        <input matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments" />
+      </mat-form-field>
+
+      <button style="margin-left: -30px;" mat-icon-button color="primary" (click)="confirmDeleteImpuritiesTest()"
+        matTooltip="Delete Test">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+    </div>
+
+
+    <!-- IMPURITIES DETAILS LIST BEGIN -->
+    <div class="divflex margintop10px">
+      <div class="titleblue">
+        <span matBadge="{{impuritiesTest.impuritiesDetailsList.length}}" matBadgeColor="accent" matBadgeSize="medium"
+          matBadgeOverlap="false">
+          <span class="titleblue"><b>Impurities</b></span>
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button mat-raised-button color="primary" (click)="addNewImpuritiesDetails()" matTooltip="Add New Impurities">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Impurities
+        </button>
+      </div>
+    </div>
+
+    <!-- IMPURITIES DETAILS LIST BEGIN -->
+    <div class="marginbottom10px"
+      *ngFor="let impuritiesDetails of impuritiesTest.impuritiesDetailsList; let impuritiesDetailsIndex = index">
+      <app-impurities-details-form [impuritiesDetails]="impuritiesDetails"
+        [impuritiesDetailsIndex]="impuritiesDetailsIndex"
+        [impuritiesTestIndex]="impuritiesTestIndex"
+        [relatedSubstanceUuid]="impuritiesDetails.relatedSubstanceUuid">
+      </app-impurities-details-form>
+    </div>
+    <!-- IMPURITIES DETAILS LIST END -->
+
+  </mat-card-content>
+</mat-card>
+<br>

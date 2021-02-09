@@ -118,9 +118,10 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         if (response) {
           this.impuritiesService.loadImpurities(response);
           this.impurities = this.impuritiesService.impurities;
-          if (this.impurities.substanceUuid) {
-            this.getSubstancePreferredName(this.impurities.substanceUuid);
-          }
+
+         // if (this.impurities.substanceUuid) {
+         //   this.getSubstancePreferredName(this.impurities.substanceUuid);
+        //  }
         } else {
           this.handleProductRetrivalError();
         }
@@ -137,39 +138,41 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
   validate(): void {
 
-    if ((this.impurities.substanceUuid === null) || (this.impurities.substanceUuid === undefined)) {
+    if ((this.impurities.impuritiesSubstanceList[0].substanceUuid === null)
+     || (this.impurities.impuritiesSubstanceList[0].substanceUuid === undefined)) {
       this.substanceNameHintMessage = 'Substance Name is required';
     }
 
-    if (this.impurities.substanceUuid) {
-      this.isLoading = true;
-      this.serverError = false;
-      this.loadingService.setLoading(true);
+    //  if (this.impurities.substanceUuid) {
+    this.isLoading = true;
+    this.serverError = false;
+    this.loadingService.setLoading(true);
 
-      // If there is no error on client side, check validation on server side
-      if (this.validationMessages.length === 0) {
-        // this.impuritiesService.validateImpurities().pipe(take(1)).subscribe(results => {
-        this.submissionMessage = null;
-        //   this.validationMessages = results.validationMessages.filter(
-        //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-        //   this.validationResult = results.valid;
+    // If there is no error on client side, check validation on server side
+    if (this.validationMessages.length === 0) {
+      // this.impuritiesService.validateImpurities().pipe(take(1)).subscribe(results => {
+      this.submissionMessage = null;
+      //   this.validationMessages = results.validationMessages.filter(
+      //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+      //   this.validationResult = results.valid;
 
-        this.validationResult = true;
-        this.showSubmissionMessages = true;
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
+      this.validationResult = true;
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
 
-        if (this.validationMessages.length === 0 && this.validationResult === true) {
-          this.submissionMessage = 'Impurities is Valid. Would you like to submit?';
-        }
-        /* }, error => {
-           this.addServerError(error);
-           this.loadingService.setLoading(false);
-           this.isLoading = false;
-         });
-         */
+
+      if (this.validationMessages.length === 0 && this.validationResult === true) {
+        this.submissionMessage = 'Impurities is Valid. Would you like to submit?';
       }
+      /* }, error => {
+         this.addServerError(error);
+         this.loadingService.setLoading(false);
+         this.isLoading = false;
+       });
+       */
     }
+    //  }
 
   }
 
@@ -265,19 +268,24 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.errorMessage = 'Getting Existing Impurities...';
 
     // Empty the Impurities Details list
-    this.impurities.impuritiesDetailsList.splice(0, this.impurities.impuritiesDetailsList.length);
+    //  this.impurities.impuritiesDetailsList.splice(0, this.impurities.impuritiesDetailsList.length);
 
-    this.impuritiesService.getRelationshipImpurity(this.impurities.substanceUuid).subscribe(response => {
-      if (response) {
-        this.subRelationship = response.data;
+    const substanceUuid = this.impurities.impuritiesSubstanceList[0].substanceUuid;
+    if (substanceUuid) {
+      this.impuritiesService.getRelationshipImpurity(substanceUuid).subscribe(response => {
+        if (response) {
+          this.subRelationship = response.data;
 
-        if (Object.keys(this.subRelationship).length > 0) {
-          this.getRelationship();
-        } else {
-          this.errorMessage = 'No Impurities found';
+          if (Object.keys(this.subRelationship).length > 0) {
+            this.getRelationship();
+          } else {
+            this.errorMessage = 'No Impurities found';
+          }
         }
-      }
-    });
+      });
+    } else {
+      this.errorMessage = 'Please select a Substance Name';
+    }
 
     this.loadingService.setLoading(false);
     this.isLoading = false;
@@ -292,6 +300,8 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
   getRelationship() {
     this.errorMessage = 'Found ' + this.subRelationship.length + ' Existing Impurities';
+    // Add New Test
+    this.impuritiesService.addNewTest();
     this.subRelationship.forEach((elementRel, indexRel) => {
       this.createNewImpurities(elementRel.relationshipUuid);
     });
@@ -300,7 +310,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   createNewImpurities(relationshipUuid: string) {
     const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
     newImpuritiesDetails.relatedSubstanceUuid = relationshipUuid;
-    this.impurities.impuritiesDetailsList.unshift(newImpuritiesDetails);
+    this.impurities.impuritiesTestList[0].impuritiesDetailsList.unshift(newImpuritiesDetails);
   }
 
   showJSON(): void {
@@ -317,16 +327,16 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
   }
 
+  addNewImpuritiesSubstance() {
+    this.impuritiesService.addNewImpuritiesSubstance();
+  }
+
   addNewTest() {
     this.impuritiesService.addNewTest();
   }
 
   addNewImpurities() {
     this.impuritiesService.addNewImpurities();
-  }
-
-  addNewImpuritiesDetails() {
-    this.createNewImpurities(null);
   }
 
   addNewImpuritiesUnspecified() {
@@ -337,8 +347,30 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.addNewImpuritiesTotal();
   }
 
+  confirmDeleteImpuritiesSubstance(impuritiesSubstanceIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Substance ' + (impuritiesSubstanceIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteImpuritiesSubstance(impuritiesSubstanceIndex);
+      }
+    });
+  }
+
+  deleteImpuritiesSubstance(impuritiesSubstanceIndex: number) {
+    this.impuritiesService.deleteImpuritiesSubstance(impuritiesSubstanceIndex);
+  }
+
   getRelationshipImpurity(substanceId: string) {
     this.impuritiesService.getRelationshipImpurity(substanceId);
+  }
+
+  relatedSubstanceUpdated(substance: any, impuritiesSubstanceIndex: number): void {
+    if (substance != null) {
+      this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].substanceUuid = substance.uuid;
+    }
   }
 
   processSubstanceSearch(searchValue: string = ''): void {
@@ -348,7 +380,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.substanceService.getQuickSubstancesSummaries(this.searchValue, true).subscribe(response => {
       if (response.content && response.content.length) {
         const selectedSubstance = response.content[0];
-        this.impurities.substanceUuid = selectedSubstance.uuid;
+     //   this.impurities.substanceUuid = selectedSubstance.uuid;
         this.errorMessage = '';
       } else {
         this.errorMessage = 'No substances found';
