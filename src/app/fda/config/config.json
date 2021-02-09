@@ -265,6 +265,16 @@
       ]
     },
     {
+      "card": "substance-relationships-visualization",
+      "title": "Relationships Visualization",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        }
+      ]
+    },
+    {
       "card": "substance-notes",
       "title": "notes",
       "filters": [
@@ -619,6 +629,7 @@
     "EVMPD",
     "NCI"
   ],
+  "relationshipsVisualizationUri": "https://gsrs3d.conceptant.com/index.html?uuid=",
   "navItems": [
     {
       "display": "Browse Applications",
