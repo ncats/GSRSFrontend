@@ -629,7 +629,7 @@
     "EVMPD",
     "NCI"
   ],
-  "relationshipsVisualizationUri": "https://gsrs3d.conceptant.com/index.html?uuid=",
+  "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
   "navItems": [
     {
       "display": "Browse Applications",
