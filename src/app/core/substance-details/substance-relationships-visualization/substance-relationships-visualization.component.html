@@ -1,18 +1,18 @@
-<p>substance-relationships-visualization works!</p>
+
 <div *ngIf="substance">
         <p>This substance record has relationships which can be visualized as a network with other substance records.</p>
         <p>A simplified representation of that network can be interactively explored below.</p>
         <div class="row">
-          <div class="action-button-container one button-left">
+        <!--  <div class="action-button-container one button-left">
             <button class="search-button" name = "search" mat-raised-button color="primary" (click)="showRelationshipsVisualizationIframe()">Open Visualization Below</button>
-          </div>
+          </div> -->
           <div class="action-button-container one button-right">
             <button class="search-button" name = "search" mat-raised-button color="primary" (click)="openRelationshipsVisualizationWindow()">Open Visualization in a New Window/Tab</button>
           </div>
         </div>
-        <div *ngFor="let visualization of displayedVisualizations">
+       <!-- <div *ngFor="let visualization of displayedVisualizations">
           <iframe [src]="visualizationUri" class="substance-relationships-visualization">
             This functionality is not available in the browsers not supporting IFrames
           </iframe>
-        </div>
+        </div> -->
       </div>
