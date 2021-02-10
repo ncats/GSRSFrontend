@@ -27,7 +27,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./applications-browse.component.scss']
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  private privateSearchTerm?: string;
+  public privateSearchTerm?: string;
   public applications: Array<ApplicationSrs>;
   order: string;
   pageIndex: number;
