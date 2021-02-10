@@ -3,7 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
-import { Impurities, ImpuritiesSubstance, ImpuritiesTest, ImpuritiesUnspecified, ImpuritiesTotal, ValidationResults, IdentityCriteria } from '../model/impurities.model';
+import {
+  Impurities, ImpuritiesSubstance, ImpuritiesTesting, ImpuritiesUnspecified, ImpuritiesTotal,
+  ValidationResults, IdentityCriteria
+} from '../model/impurities.model';
 import { map, switchMap } from 'rxjs/operators';
 
 @Injectable(
@@ -94,7 +97,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   addNewTest(): void {
-    const newTest: ImpuritiesTest = { impuritiesDetailsList: [] };
+    const newTest: ImpuritiesTesting = { impuritiesDetailsList: [] };
     this.impurities.impuritiesTestList.unshift(newTest);
   }
 
@@ -141,7 +144,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   deleteIdentityCriteria(impuritiesTestIndex: number, impuritiesDetailsIndex: number, identityCriteriaIndex: number): void {
-    const impuritiesTest =  this.impurities.impuritiesTestList[impuritiesTestIndex];
+    const impuritiesTest = this.impurities.impuritiesTestList[impuritiesTestIndex];
     impuritiesTest.impuritiesDetailsList[impuritiesDetailsIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
   }
 

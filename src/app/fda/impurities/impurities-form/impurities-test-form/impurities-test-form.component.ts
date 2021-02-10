@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Impurities, ImpuritiesTest, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
+import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
 import { ImpuritiesService } from '../../service/impurities.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { LoadingService } from '@gsrs-core/loading';
@@ -13,7 +13,7 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 })
 export class ImpuritiesTestFormComponent implements OnInit {
 
-  @Input() impuritiesTest: ImpuritiesTest;
+  @Input() impuritiesTest: ImpuritiesTesting;
   @Input() impuritiesTestIndex: number;
 
   constructor( private impuritiesService: ImpuritiesService,
