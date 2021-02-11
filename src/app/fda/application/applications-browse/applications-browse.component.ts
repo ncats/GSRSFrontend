@@ -20,6 +20,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-applications-browse',
@@ -90,7 +91,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.gaService.sendPageView('Browse Applications');
-    // this.environment = this.configService.environment;
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -98,8 +98,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
-
-    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
 
     /*
     navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
@@ -109,19 +107,21 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
     */
 
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
+
     this.isComponentInit = true;
     this.loadComponent();
-
   }
 
   ngAfterViewInit() {
@@ -140,44 +140,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     if (this.isFacetsParamsInit && this.isComponentInit) {
       this.searchApplications();
     }
-  }
-
-  changePage(pageEvent: PageEvent) {
-
-    let eventAction;
-    let eventValue;
-
-    if (this.pageSize !== pageEvent.pageSize) {
-      eventAction = 'select:page-size';
-      eventValue = pageEvent.pageSize;
-    } else if (this.pageIndex !== pageEvent.pageIndex) {
-      eventAction = 'icon-button:page-number';
-      eventValue = pageEvent.pageIndex + 1;
-    }
-
-    this.gaService.sendEvent('applicationsContent', eventAction, 'pager', eventValue);
-
-    this.pageSize = pageEvent.pageSize;
-    this.pageIndex = pageEvent.pageIndex;
-    this.populateUrlQueryParameters();
-    this.searchApplications();
-  }
-
-  // for facets
-  facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
-    this.pageIndex = 0;
-    this.privateFacetParams = facetsUpdateEvent.facetParam;
-    this.displayFacets = facetsUpdateEvent.displayFacets;
-    if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
-    } else {
-      this.searchApplications();
-    }
-  }
-
-  // for facets
-  facetsLoaded(numFacetsLoaded: number) {
   }
 
   searchApplications() {
@@ -233,11 +195,27 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.searchApplications();
   }
 
-  resetSearch() {
-    this.pageSize = 10;
-    this.pageIndex = 0;
+  clearSearch(): void {
+
+    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    this.gaService.sendEvent('applicationFiltering', 'icon-button:clear-search', eventLabel);
+
     this.privateSearchTerm = '';
+    this.pageIndex = 0;
+    this.pageSize = 10;
+
+    this.populateUrlQueryParameters();
     this.searchApplications();
+  }
+
+  clearFilters(): void {
+    // for facets
+    this.displayFacets.forEach(displayFacet => {
+      displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
+    });
+    this.clearSearch();
+
+    this.facetManagerService.clearSelections();
   }
 
   populateUrlQueryParameters(): void {
@@ -265,6 +243,44 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   // get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
   //   return this.privateFacetParams;
   // }
+
+  changePage(pageEvent: PageEvent) {
+
+    let eventAction;
+    let eventValue;
+
+    if (this.pageSize !== pageEvent.pageSize) {
+      eventAction = 'select:page-size';
+      eventValue = pageEvent.pageSize;
+    } else if (this.pageIndex !== pageEvent.pageIndex) {
+      eventAction = 'icon-button:page-number';
+      eventValue = pageEvent.pageIndex + 1;
+    }
+
+    this.gaService.sendEvent('applicationsContent', eventAction, 'pager', eventValue);
+
+    this.pageSize = pageEvent.pageSize;
+    this.pageIndex = pageEvent.pageIndex;
+    this.populateUrlQueryParameters();
+    this.searchApplications();
+  }
+
+  // for facets
+  facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
+    this.pageIndex = 0;
+    this.privateFacetParams = facetsUpdateEvent.facetParam;
+    this.displayFacets = facetsUpdateEvent.displayFacets;
+    if (!this.isFacetsParamsInit) {
+      this.isFacetsParamsInit = true;
+      this.loadComponent();
+    } else {
+      this.searchApplications();
+    }
+  }
+
+  // for facets
+  facetsLoaded(numFacetsLoaded: number) {
+  }
 
   getSubstanceDetailsByBdnum(): void {
     let bdnumName: any;

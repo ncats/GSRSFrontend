@@ -23,6 +23,7 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { Subscription } from 'rxjs';
 import { ProductAll } from '../model/product.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-products-browse',
@@ -31,9 +32,10 @@ import { ProductAll } from '../model/product.model';
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  private privateSearchTerm?: string;
+  public privateSearchTerm?: string;
   public _searchTerm?: string;
   public products: Array<ProductAll>;
+  order: string;
   hasBackdrop = false;
   pageIndex: number;
   pageSize: number;
@@ -80,45 +82,53 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     private sanitizer: DomSanitizer,
     private dialog: MatDialog) { }
 
-    @HostListener('window:popstate', ['$event'])
+  @HostListener('window:popstate', ['$event'])
   onPopState(event) {
-   setTimeout(() => {
-     if (this.router.url === this.previousState[0]) {
-      this.ngOnInit();
-     }
+    setTimeout(() => {
+      if (this.router.url === this.previousState[0]) {
+        this.ngOnInit();
+      }
 
     }, 50);
   }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
-    this.environment = this.configService.environment;
     this.gaService.sendPageView('Browse Products');
+
     this.pageSize = 10;
     this.pageIndex = 0;
-    this._searchTerm = '';
 
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
 
+    /*
     navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
     navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
     navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
     navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
     navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
+    */
+
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
+    this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
       }
+      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
+    //this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+    //   this.isAdmin = response;
+    // });
 
+    /*
     this.activatedRoute.queryParamMap.subscribe(params => {
 
       this.privateSearchTerm = params.get('search') || '';
@@ -129,11 +139,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       if (params.get('pageIndex')) {
         this.pageIndex = parseInt(params.get('pageIndex'), null);
       }
-
-      this.isComponentInit = true;
-      this.loadComponent();
     });
-
+    */
+    this.isComponentInit = true;
+    this.loadComponent();
   }
 
   ngAfterViewInit() {
@@ -160,7 +169,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     const subscription = this.productService.getProducts(
       skip,
       this.pageSize,
-      this._searchTerm,
+      this.privateSearchTerm,
       this.privateFacetParams,
     )
       .subscribe(pagingResponse => {
@@ -192,6 +201,19 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
+  }
+
+  setSearchTermValue() {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.searchProducts();
+  }
+
+  resetSearch() {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.privateSearchTerm = '';
+    this.searchProducts();
   }
 
   // for facets
@@ -231,11 +253,27 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.searchProducts();
   }
 
-  setSearchTermValue() {
-    this.pageSize = 10;
+  clearSearch(): void {
+
+    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    this.gaService.sendEvent('productFiltering', 'icon-button:clear-search', eventLabel);
+
+    this.privateSearchTerm = '';
     this.pageIndex = 0;
-    this._searchTerm = this._searchTerm.trim();
+    this.pageSize = 10;
+
+    this.populateUrlQueryParameters();
     this.searchProducts();
+  }
+
+  clearFilters(): void {
+    // for facets
+    this.displayFacets.forEach(displayFacet => {
+      displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
+    });
+    this.clearSearch();
+
+    this.facetManagerService.clearSelections();
   }
 
   populateUrlQueryParameters(): void {
@@ -254,7 +292,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       preserveFragment: true
     });
     this.location.go(urlTree.toString());
-
   }
 
   get searchTerm(): string {
