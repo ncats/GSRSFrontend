@@ -1,5 +1,15 @@
 <div class="example-container mat-elevation-z8 clinical-trial-edit-page">
-	<div  *ngIf="clinicalTrial">
+
+	<div *ngIf="!clinicalTrial">
+		<p>Clinical Trial with not found for editing.</p>
+			<p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p>
+
+		
+	</div>
+	<div *ngIf="clinicalTrial">
+
+	<div *ngIf="clinicalTrial">
+
 	<p *ngIf="clinicalTrial.nctNumber">
 	<a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a>
 	&nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span>
@@ -96,8 +106,7 @@
 		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 		<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-	</mat-table>
-
+	</mat-table>	
 
 	<div *ngIf="isAdmin">
 		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
@@ -106,7 +115,9 @@
 
 	<div class="trial-detailsheader">
 		<span class="emphasize">Trial Details</span>&nbsp;
-		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a></span>
+		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a></span>&nbsp;
+		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see XML from clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber + '?displayxml=true'">XML</a></span>&nbsp;
+		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see history on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/history/' + clinicalTrial.nctNumber">History</a></span>&nbsp;
 	</div>
 
 <div class="container">
@@ -184,6 +195,9 @@
 	</div>
 </div>
 
+<div><p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p></div>
+
+
 	<div *ngIf="isTesting">
 		<div class="top-spacer">isAdmin: {{isAdmin}}</div>
 
@@ -202,5 +216,7 @@
 				<div>&nbsp;</div>
 			<div>miniSearchOutputReported: {{miniSearchOutputReported}}</div>
 		</div>
+	</div>
+		<div *ngIf="clinicalTrial">
 	</div>
 </div>

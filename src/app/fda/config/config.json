@@ -608,7 +608,8 @@
         "Gender",
         "Age Groups",
         "Intervention Type",
-        "Study Results"
+        "Study Results",
+        "Conditions"
       ]
     }
   },
