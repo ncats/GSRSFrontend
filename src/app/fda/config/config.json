@@ -265,6 +265,16 @@
       ]
     },
     {
+      "card": "substance-relationships-visualization",
+      "title": "Relationships Visualization",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        }
+      ]
+    },
+    {
       "card": "substance-notes",
       "title": "notes",
       "filters": [
@@ -620,6 +630,7 @@
     "EVMPD",
     "NCI"
   ],
+  "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
   "navItems": [
     {
       "display": "Browse Applications",
@@ -648,6 +659,11 @@
           "display": "Product",
           "path": "product/register",
           "order": 210
+        },
+        {
+          "display": "Impurities",
+          "path": "impurities/register",
+          "order": 220
         }
       ]
     },

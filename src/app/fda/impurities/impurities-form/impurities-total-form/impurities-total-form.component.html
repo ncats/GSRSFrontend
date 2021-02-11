@@ -1,0 +1,18 @@
+<div class="form-row">
+  <app-cv-input class="col-4-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
+    [model]="impuritiesTotal.testType" (valueChange)="impuritiesTotal.testType = $event">
+  </app-cv-input>
+
+  <mat-form-field class="col-4-1">
+    <input matInput placeholder="Limit Type" [(ngModel)]="impuritiesTotal.limitType" name="limitType" />
+  </mat-form-field>
+
+  <mat-form-field class="col-4-1">
+    <input matInput placeholder="Limit" [(ngModel)]="impuritiesTotal.limit" name="limit" />
+  </mat-form-field>
+
+  <mat-form-field class="col-4-1">
+    <input matInput placeholder="Amount Value" [(ngModel)]="impuritiesTotal.amountValue" name="amountValue" />
+  </mat-form-field>
+
+</div>

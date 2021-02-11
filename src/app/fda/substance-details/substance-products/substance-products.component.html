@@ -227,5 +227,10 @@
       </app-substance-adverseeventcvm>
     </mat-tab>
 
+    <mat-tab label="Impurities ({{impuritiesCount}})">
+      <app-substance-impurities [substanceUuid]="substance.uuid" (countImpuritiesOut)="getImpuritiesCount($event)">
+      </app-substance-impurities>
+    </mat-tab>
+    
   </mat-tab-group>
 </div>
