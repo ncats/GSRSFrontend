@@ -16,10 +16,11 @@ import { SubstanceTextSearchModule } from '@gsrs-core/substance-text-search/subs
 import { SubstanceSelectorModule } from '../../core/substance-selector/substance-selector.module';
 import { ImpuritiesFormComponent } from '../impurities/impurities-form/impurities-form.component';
 import { ImpuritiesDetailsFormComponent} from '../impurities/impurities-form/impurities-details-form/impurities-details-form.component';
-import { ImpuritiesViewComponent } from './impurities-view/impurities-view.component';
+import { ImpuritiesDetailsComponent } from './impurities-details/impurities-details.component';
 import { ImpuritiesUnspecifiedFormComponent } from './impurities-form/impurities-unspecified-form/impurities-unspecified-form.component';
 import { ImpuritiesTotalFormComponent } from './impurities-form/impurities-total-form/impurities-total-form.component';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { ImpuritiesTestFormComponent } from './impurities-form/impurities-test-form/impurities-test-form.component';
 
 const impurityRoutes: Routes = [
   {
@@ -32,7 +33,7 @@ const impurityRoutes: Routes = [
   },
   {
     path: 'impurities/:id',
-    component: ImpuritiesViewComponent
+    component: ImpuritiesDetailsComponent
   }
 ];
 
@@ -40,9 +41,10 @@ const impurityRoutes: Routes = [
   declarations: [
     ImpuritiesFormComponent,
     ImpuritiesDetailsFormComponent,
-    ImpuritiesViewComponent,
+    ImpuritiesDetailsComponent,
     ImpuritiesUnspecifiedFormComponent,
-    ImpuritiesTotalFormComponent
+    ImpuritiesTotalFormComponent,
+    ImpuritiesTestFormComponent
   ],
   imports: [
     RouterModule.forChild(impurityRoutes),

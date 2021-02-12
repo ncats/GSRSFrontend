@@ -107,35 +107,27 @@
             <mat-card-content>
               <!-- Impurities Form -->
 
-              <div class="form-row borderbottom">
+              <div class="form-row">
 
-                <div class="width32percent">
-                  <app-substance-text-search class="top-search" [searchValue]="searchValue"
-                    (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch"
-                    [placeholder]="subName">
-                  </app-substance-text-search>
-                  <div class="colorred">{{substanceNameHintMessage}}</div>
-                </div>
-
-                <div class="width200px">
-                  <button mat-raised-button color="primary" (click)="getImpuritiesDetails()"
-                    matTooltip="Get Impurities for Substance">
-                    Get Existing Impurities
-                  </button>
-                  <div *ngIf="errorMessage" class="padtop10px">
-                    <span class="colorred">
-                      {{errorMessage}}
-                    </span>
-                  </div>
-                </div>
+                <app-cv-input class="col-6-1" domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
+                  [model]="impurities.sourceType" (valueChange)="impurities.sourceType = $event">
+                </app-cv-input>
 
                 <app-cv-input class="col-6-1" domain="IMPURITIES_SOURCE" title="Source" name="source"
                   [model]="impurities.source" (valueChange)="impurities.source = $event">
                 </app-cv-input>
 
+                <mat-form-field class="col-6-1">
+                  <input matInput placeholder="Source ID" [(ngModel)]="impurities.sourceId" name="sourceId" />
+                </mat-form-field>
+
                 <app-cv-input class="col-6-1" domain="IMPURITIES_TYPE" title="Type" name="type"
                   [model]="impurities.type" (valueChange)="impurities.type = $event">
                 </app-cv-input>
+
+                <mat-form-field class="col-6-1">
+                  <input matInput placeholder="Product ID" [(ngModel)]="impurities.productId" name="productId" />
+                </mat-form-field>
 
                 <app-cv-input class="col-6-1" domain="IMPURITIES_SPEC_TYPE" title="Spec Type" name="specType"
                   [model]="impurities.specType" (valueChange)="impurities.specType = $event">
@@ -144,54 +136,103 @@
               </div>
 
 
-              <div class="form-row borderbottom">
-
-                <div class="width32percent">
-
-                </div>
-
-                <mat-form-field class="col-3-1">
+              <div class="form-row">
+                <mat-form-field class="col-6-3">
                   <input matInput placeholder="Company Name" [(ngModel)]="impurities.companyName" name="companyName" />
                 </mat-form-field>
 
-                <mat-form-field class="col-3-1  marginleft20px">
+                <mat-form-field class="col-6-3">
                   <input matInput placeholder="Company Product Name" [(ngModel)]="impurities.companyProductName"
                     name="companyProductName" />
                 </mat-form-field>
-
-                <mat-form-field class="col-3-1 marginleft20px">
-                  <input matInput placeholder="Product ID" [(ngModel)]="impurities.productId" name="productId" />
-                </mat-form-field>
-
               </div>
 
 
-              <!-- IMPURITIES DETAILS LIST BEGIN -->
+              <!-- IMPURITIES SUBSTANCE LIST BEGIN -->
+              <br>
+              <div class="marginbottom10px"
+                *ngFor="let impuritiesSubstance of impurities.impuritiesSubstanceList; let impuritiesSubstanceIndex = index">
+
+                <div class="divflexrow">
+                  <div class="form-row">
+                    <div class="col-4-1">
+                      <app-substance-selector class="textaligncenter"
+                        (selectionUpdated)="relatedSubstanceUpdated($event, impuritiesSubstanceIndex)"
+                        eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
+                        header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid">
+                      </app-substance-selector>
+                    </div>
+
+                    <mat-form-field class="col-4-1">
+                      <input matInput placeholder="Assay Low" [(ngModel)]="impuritiesSubstance.low" name="low" />
+                    </mat-form-field>
+
+                    <mat-form-field class="col-4-1">
+                      <input matInput placeholder="Assay High" [(ngModel)]="impuritiesSubstance.high" name="high" />
+                    </mat-form-field>
+
+                    <app-cv-input class="col-4-1" domain="PROD_UNIT" title="Unit" name="unit"
+                      [model]="impuritiesSubstance.unit" (valueChange)="impuritiesSubstance.unit = $event">
+                    </app-cv-input>
+                  </div>
+
+                  <!-- Add and Delete Impurities Substance Button -->
+                  <span class="width40px displayinlineblock">
+                    <button mat-icon-button color="primary" *ngIf="impuritiesSubstanceIndex == 0"
+                      (click)="addNewImpuritiesSubstance()" matTooltip="Add New Substance Name">
+                      <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                  </span>
+                  <button mat-icon-button color="primary" [disabled]="impurities.impuritiesSubstanceList.length == 1"
+                    (click)="confirmDeleteImpuritiesSubstance(impuritiesSubstanceIndex)"
+                    matTooltip="Delete Substance Name">
+                    <mat-icon [class.disabled]="impurities.impuritiesSubstanceList.length == 1">delete_forever
+                    </mat-icon>
+                  </button>
+                </div>
+                <hr>
+
+              </div> <!-- Loop -->
+              <!-- IMPURITIES SUBSTANCE LIST END -->
+
+
+              <!-- IMPURITIES TEST LIST BEGIN -->
               <mat-card class="margintop20px bordergray">
                 <mat-card-title class="titleblue">
-                  <span matBadge="{{impurities.impuritiesDetailsList.length}}" matBadgeColor="accent"
-                    matBadgeSize="medium" matBadgeOverlap="false">
-                    <span class="titleblue"><b>Impurities</b></span>
-                  </span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <button mat-raised-button color="primary" (click)="addNewImpuritiesDetails()"
-                    matTooltip="Add New Impurities">
-                    <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Impurities
-                  </button>
+                  <div class="divflex titleblue">
+                    <div matBadge="{{impurities.impuritiesTestList.length}}" matBadgeColor="accent"
+                      matBadgeSize="medium" matBadgeOverlap="false">
+                      <span class="titleblue"><b>Test</b></span>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div>
+                      <button mat-raised-button color="primary" (click)="addNewTest()" matTooltip="Add New Test">
+                        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Test
+                      </button>
+                    </div>
+                    <div class="width200px marginleft20px">
+                      <button mat-raised-button color="primary" (click)="getImpuritiesDetails()"
+                        matTooltip="Get Impurities for Substance">
+                        Get Existing Impurities from Substance
+                      </button>
+                      <div *ngIf="errorMessage" class="">
+                        <span class="colorred font13px">
+                          {{errorMessage}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </mat-card-title>
                 <mat-card-content>
-                  <br>
                   <div class="marginbottom10px"
-                    *ngFor="let impuritiesDetails of impurities.impuritiesDetailsList; let impuritiesDetailsIndex = index">
-                    <app-impurities-details-form [impuritiesDetails]="impuritiesDetails"
-                      [impuritiesDetailsIndex]="impuritiesDetailsIndex"
-                      [relatedSubstanceUuid]="impuritiesDetails.relatedSubstanceUuid">
-                    </app-impurities-details-form>
+                    *ngFor="let impuritiesTest of impurities.impuritiesTestList; let impuritiesTestIndex = index">
+                    <app-impurities-test-form [impuritiesTest]="impuritiesTest"
+                      [impuritiesTestIndex]="impuritiesTestIndex">
+                    </app-impurities-test-form>
                   </div> <!-- Loop -->
                 </mat-card-content>
               </mat-card>
-
-              <!-- IMPURITIES DETAILS LIST END -->
+              <!-- IMPURITIES TEST LIST END -->
 
 
               <!-- IMPURITIES UNSPECIFIED LIST BEGIN -->
@@ -222,6 +263,7 @@
 
 
               <!-- IMPURITIES TOTAL BEGIN -->
+
               <mat-card class="margintop20px bordergray">
                 <mat-card-title class="titleblue">
                   <b>Total Impurities</b>

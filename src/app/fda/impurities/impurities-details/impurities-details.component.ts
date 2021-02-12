@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified } from '../model/impurities.model';
 import { ImpuritiesService } from '../service/impurities.service';
 import { GeneralService } from '../../service/general.service';
 import { LoadingService } from '@gsrs-core/loading';
@@ -9,13 +9,14 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-impurities-view',
-  templateUrl: './impurities-view.component.html',
-  styleUrls: ['./impurities-view.component.scss']
+  selector: 'app-impurities-details',
+  templateUrl: './impurities-details.component.html',
+  styleUrls: ['./impurities-details.component.scss']
 })
-export class ImpuritiesViewComponent implements OnInit {
+export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
   id: string;
   impurities: Impurities;
@@ -25,6 +26,7 @@ export class ImpuritiesViewComponent implements OnInit {
   updateApplicationUrl: string;
   message = '';
   subRelationship: any;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private impuritiesService: ImpuritiesService,
@@ -41,35 +43,58 @@ export class ImpuritiesViewComponent implements OnInit {
     this.loadingService.setLoading(true);
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
-      this.getProduct();
+      this.getImpurities();
     } else {
       this.handleSubstanceRetrivalError();
     }
+    this.loadingService.setLoading(false);
   }
 
-  getProduct(): void {
-    this.impuritiesService.getImpurities(this.id).subscribe(response => {
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
+  }
+
+  getImpurities(): void {
+    const getImpuritiesSubscribe = this.impuritiesService.getImpurities(this.id).subscribe(response => {
       this.impurities = response;
       if (Object.keys(this.impurities).length > 0) {
-        //  this.substanceName = this.generalService.getSubstancePreferredName(this.impurities.substanceUuid);
-        this.getSubstancePreferredName(this.impurities.substanceUuid);
-        this.getRelationship();
-        //  this.getImpuritiesRelationship();
-        //  if ((this.src != null) && (this.src === 'srs')) {
-        // //    this.getSubstanceDetails();
-        //  }
+
+        // Get Substance Name for SubstanceUuid in SubstanceList
+        this.impurities.impuritiesSubstanceList.forEach((elementRel, indexRel) => {
+          if (elementRel.substanceUuid) {
+            this.impuritiesService.getSubstanceDetailsBySubstanceId(elementRel.substanceUuid).subscribe(substanceNames => {
+              elementRel.substanceName = substanceNames.name;
+            });
+          }
+        });
+
+        // Get Substance Name for RelatedSubstanceUuid in ImpuritiesSubstanceList
+        this.impurities.impuritiesTestList.forEach((elementTest, indexTes) => {
+          elementTest.impuritiesDetailsList.forEach((elementDetails, indexDetails) => {
+            if (elementDetails.relatedSubstanceUuid) {
+              this.impuritiesService.getSubstanceDetailsBySubstanceId(elementDetails.relatedSubstanceUuid).subscribe(substanceNames => {
+                elementDetails.substanceName = substanceNames.name;
+              });
+            }
+          });
+        });
       }
-      this.loadingService.setLoading(false);
     }, error => {
       this.handleSubstanceRetrivalError();
     });
+    this.subscriptions.push(getImpuritiesSubscribe);
   }
 
-  getSubstancePreferredName(substanceUuid: string): void {
-    this.impuritiesService.getSubstanceDetailsBySubstanceId(substanceUuid).subscribe(substanceNames => {
-      this.substanceName = substanceNames.name;
+  getSubstancePreferredName(substanceUuid: string) {
+    let name = '';
+    const getSubDetailsSubscribe = this.impuritiesService.getSubstanceDetailsBySubstanceId(substanceUuid).subscribe(substanceNames => {
+      name = substanceNames.name;
     });
-
+    this.subscriptions.push(getSubDetailsSubscribe);
   }
 
   /*
@@ -88,20 +113,19 @@ export class ImpuritiesViewComponent implements OnInit {
 
   getRelationship(): void {
     // alert(this.subRelationship.length);
-    this.impurities.impuritiesDetailsList.forEach((elementRel, indexRel) => {
+    const testIndex = 0;
+    const testList = this.impurities.impuritiesTestList[testIndex];
+    testList.impuritiesDetailsList.forEach((elementRel, indexRel) => {
       const relSubUuid = elementRel.relatedSubstanceUuid;
 
-      console.log(relSubUuid);
-
-      this.impuritiesService.getSubstanceDetailsBySubstanceId(relSubUuid).subscribe(substanceNames => {
-        console.log(JSON.stringify(substanceNames));
+      const getSubDetailsSubRelSubscribe = this.impuritiesService.getSubstanceDetailsBySubstanceId(relSubUuid).subscribe(substanceNames => {
+        //  console.log(JSON.stringify(substanceNames));
         elementRel.substanceName = substanceNames.name;
       });
-
+      this.subscriptions.push(getSubDetailsSubRelSubscribe);
     });
 
   }
-
 
   private handleSubstanceRetrivalError() {
     this.loadingService.setLoading(false);

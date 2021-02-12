@@ -583,19 +583,23 @@ margin:auto;
 }
 
 
-.font9px{
+.font9px {
   font-size: 9px;
 }
 
-.font10px{
+.font10px {
   font-size: 10px;
 }
 
-.font12px{
+.font12px {
   font-size: 12px;
 }
 
-.font14px{
+.font13px {
+  font-size: 13px;
+}
+
+.font14px {
   font-size: 14px;
 }
 
@@ -655,6 +659,14 @@ margin:auto;
   margin-left: 20px;
 }
 
+.marginleft40px {
+  margin-left: 40px;
+}
+
+.marginright40px {
+  margin-right: 40px;
+}
+
 .totalApp {
   display:inline-block;
   color:#FFFFFF;
@@ -687,4 +699,12 @@ margin:auto;
 
 .width30percent {
   width: 30%;
+}
+
+.width350px {
+  width: 350px;
+}
+
+.divflex {
+  display: flex;
 }

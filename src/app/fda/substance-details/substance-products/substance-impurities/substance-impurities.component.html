@@ -23,16 +23,28 @@
           <div *ngIf="impurities.id">
             <a [routerLink]="['/impurities', impurities.id]"
               target="_blank">View</a>
-            <!--
-            <br><span class="font10px colorgray">(Europe)</span>
-            -->
+              &nbsp;&nbsp;
+              <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                matTooltip='Edit Impurities Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
           </div>
         </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sourceType">
+        <th mat-header-cell *matHeaderCellDef> Source Type</th>
+        <td mat-cell *matCellDef="let impurities"> {{impurities.sourceType}} </td>
       </ng-container>
 
       <ng-container matColumnDef="source">
         <th mat-header-cell *matHeaderCellDef> Source </th>
         <td mat-cell *matCellDef="let impurities"> {{impurities.source}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sourceid">
+        <th mat-header-cell *matHeaderCellDef> Source ID</th>
+        <td mat-cell *matCellDef="let impurities"> {{impurities.sourceId}} </td>
       </ng-container>
       
       <ng-container matColumnDef="type">
@@ -45,9 +57,9 @@
         <td mat-cell *matCellDef="let impurities"> {{impurities.specType}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="impuritiesCount">
-        <th mat-header-cell *matHeaderCellDef> Impurities Count </th>
-        <td mat-cell *matCellDef="let impurities"> {{impurities.impuritiesDetailsList.length}} </td>
+      <ng-container matColumnDef="testCount">
+        <th mat-header-cell *matHeaderCellDef> Test Count </th>
+        <td mat-cell *matCellDef="let impurities"> {{impurities.impuritiesTestList.length}} </td>
       </ng-container>
 
       <ng-container matColumnDef="unspecifiedCount">

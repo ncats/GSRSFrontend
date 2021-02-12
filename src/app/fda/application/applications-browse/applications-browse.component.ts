@@ -20,6 +20,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-applications-browse',
@@ -27,11 +28,9 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./applications-browse.component.scss']
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  private privateSearchTerm?: string;
-  public _searchTerm?: string;
+  public privateSearchTerm?: string;
   public applications: Array<ApplicationSrs>;
-  // view = 'cards';
-  hasBackdrop = false;
+  order: string;
   pageIndex: number;
   pageSize: number;
   jumpToValue: string;
@@ -39,8 +38,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   isLoading = true;
   isError = false;
   isAdmin: boolean;
+  isLoggedIn = false;
   displayedColumns: string[];
   dataSource = [];
+  hasBackdrop = false;
   appType: string;
   appNumber: string;
   clinicalTrialApplication: Array<any>;
@@ -49,11 +50,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   privateExport = false;
   disableExport = false;
   private overlayContainer: HTMLElement;
-  isLoggedIn = false;
   etag = '';
   environment: any;
   previousState: Array<string> = [];
-
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -81,54 +80,48 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
-   setTimeout(() => {
-     if (this.router.url === this.previousState[0]) {
-      this.ngOnInit();
-     }
+    setTimeout(() => {
+      if (this.router.url === this.previousState[0]) {
+        this.ngOnInit();
+      }
 
     }, 50);
   }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
-    this.environment = this.configService.environment;
     this.gaService.sendPageView('Browse Applications');
+
     this.pageSize = 10;
     this.pageIndex = 0;
-    this._searchTerm = '';
 
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
 
+    /*
     navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
     navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
     navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
     navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
     navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
+    */
+
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
+    this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
-    this.activatedRoute.queryParamMap.subscribe(params => {
-
-      this.privateSearchTerm = params.get('search') || '';
-
-      if (params.get('pageSize')) {
-        this.pageSize = parseInt(params.get('pageSize'), null);
-      }
-      if (params.get('pageIndex')) {
-        this.pageIndex = parseInt(params.get('pageIndex'), null);
-      }
-
-      this.isComponentInit = true;
-      this.loadComponent();
-    });
+    this.isComponentInit = true;
+    this.loadComponent();
   }
 
   ngAfterViewInit() {
@@ -148,6 +141,108 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.searchApplications();
     }
   }
+
+  searchApplications() {
+    this.loadingService.setLoading(true);
+    const skip = this.pageIndex * this.pageSize;
+    const subscription = this.applicationService.getApplications(
+      skip,
+      this.pageSize,
+      this.privateSearchTerm,
+      this.privateFacetParams,
+    )
+      .subscribe(pagingResponse => {
+        this.isError = false;
+        this.applications = pagingResponse.content;
+        // didn't work unless I did it like this instead of
+        // below export statement
+        this.dataSource = this.applications;
+        this.totalApplications = pagingResponse.total;
+        this.etag = pagingResponse.etag;
+        // Export Application Url
+        this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
+          skip,
+          this.pageSize,
+          this.privateSearchTerm,
+          this.privateFacetParams);
+        this.getSubstanceDetailsByBdnum();
+
+        // this.applicationService.getClinicalTrialApplication(this.applications);
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          this.rawFacets = pagingResponse.facets;
+        }
+      }, error => {
+        console.log('error');
+        const notification: AppNotification = {
+          message: 'There was an error trying to retrieve Applicationss. Please refresh and try again.',
+          type: NotificationType.error,
+          milisecondsToShow: 6000
+        };
+        this.isError = true;
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+        this.notificationService.setNotification(notification);
+      }, () => {
+        subscription.unsubscribe();
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+      });
+  }
+
+  setSearchTermValue() {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.searchApplications();
+  }
+
+  clearSearch(): void {
+
+    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    this.gaService.sendEvent('applicationFiltering', 'icon-button:clear-search', eventLabel);
+
+    this.privateSearchTerm = '';
+    this.pageIndex = 0;
+    this.pageSize = 10;
+
+    this.populateUrlQueryParameters();
+    this.searchApplications();
+  }
+
+  clearFilters(): void {
+    // for facets
+    this.displayFacets.forEach(displayFacet => {
+      displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
+    });
+    this.clearSearch();
+
+    this.facetManagerService.clearSelections();
+  }
+
+  populateUrlQueryParameters(): void {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    navigationExtras.queryParams['pageSize'] = this.pageSize;
+    navigationExtras.queryParams['pageIndex'] = this.pageIndex;
+    navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+
+    this.previousState.push(this.router.url);
+    const urlTree = this.router.createUrlTree([], {
+      queryParams: navigationExtras.queryParams,
+      queryParamsHandling: 'merge',
+      preserveFragment: true
+    });
+    this.location.go(urlTree.toString());
+  }
+
+  get searchTerm(): string {
+    return this.privateSearchTerm;
+  }
+
+  // get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
+  //   return this.privateFacetParams;
+  // }
 
   changePage(pageEvent: PageEvent) {
 
@@ -185,87 +280,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   // for facets
   facetsLoaded(numFacetsLoaded: number) {
-  }
-
-  searchApplications() {
-    this.loadingService.setLoading(true);
-    const skip = this.pageIndex * this.pageSize;
-    const subscription = this.applicationService.getApplications(
-      skip,
-      this.pageSize,
-      this._searchTerm,
-      this.privateFacetParams,
-    )
-      .subscribe(pagingResponse => {
-        this.isError = false;
-        this.applications = pagingResponse.content;
-        // didn't work unless I did it like this instead of
-        // below export statement
-        this.dataSource = this.applications;
-        this.totalApplications = pagingResponse.total;
-        this.etag = pagingResponse.etag;
-        // Export Application Url
-        this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
-          skip,
-          this.pageSize,
-          this._searchTerm,
-          this.privateFacetParams);
-        this.getSubstanceDetailsByBdnum();
-
-        // this.applicationService.getClinicalTrialApplication(this.applications);
-        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-          this.rawFacets = pagingResponse.facets;
-        }
-      }, error => {
-        console.log('error');
-        const notification: AppNotification = {
-          message: 'There was an error trying to retrieve Applicationss. Please refresh and try again.',
-          type: NotificationType.error,
-          milisecondsToShow: 6000
-        };
-        this.isError = true;
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-        this.notificationService.setNotification(notification);
-      }, () => {
-        subscription.unsubscribe();
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-      });
-  }
-
-  setSearchTermValue() {
-    this.pageSize = 10;
-    this.pageIndex = 0;
-    this._searchTerm = this._searchTerm.trim();
-    this.searchApplications();
-  }
-
-  populateUrlQueryParameters(): void {
-    const navigationExtras: NavigationExtras = {
-      queryParams: {}
-    };
-    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
-    navigationExtras.queryParams['pageSize'] = this.pageSize;
-    navigationExtras.queryParams['pageIndex'] = this.pageIndex;
-    navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
-
-    this.previousState.push(this.router.url);
-    const urlTree = this.router.createUrlTree([], {
-      queryParams: navigationExtras.queryParams,
-      queryParamsHandling: 'merge',
-      preserveFragment: true
-    });
-    this.location.go(urlTree.toString());
-
-  }
-
-  get searchTerm(): string {
-    return this.privateSearchTerm;
-  }
-
-  get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
-    return this.privateFacetParams;
   }
 
   getSubstanceDetailsByBdnum(): void {
