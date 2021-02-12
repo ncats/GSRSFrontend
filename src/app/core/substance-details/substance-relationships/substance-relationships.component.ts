@@ -109,7 +109,8 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     if ((current.mediatorSubstance && current.mediatorSubstance.name)
       || (current.amount)
       || (current.qualification)
-      || (current.interactionType)) {
+      || (current.interactionType)
+      || (current.comments)) {
       return true;
     } else {
       return false;

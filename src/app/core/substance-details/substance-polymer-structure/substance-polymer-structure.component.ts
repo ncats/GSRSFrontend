@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {DisplayStructure, Polymer, PolymerClassification, SubstanceDetail} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-substance-polymer-structure',
@@ -13,8 +14,11 @@ export class SubstancePolymerStructureComponent extends SubstanceCardBase implem
   substanceUpdated = new Subject<SubstanceDetail>();
   classification: PolymerClassification;
   relatedSubstanceUuid: string;
+  molfileHref: any;
+
 
   constructor(
+    private sanitizer: DomSanitizer,
   ) {
     super();
   }
@@ -27,6 +31,9 @@ export class SubstancePolymerStructureComponent extends SubstanceCardBase implem
         this.classification = this.substance.polymer.classification;
       }
       this.relatedSubstanceUuid = this.classification.parentSubstance && this.classification.parentSubstance.refuuid || '';
+      const theJSON = this.structure.molfile;
+        const uri = this.sanitizer.bypassSecurityTrustUrl('data:text;charset=UTF-8,' + encodeURIComponent(theJSON));
+        this.molfileHref = uri;
     });
   }
 }

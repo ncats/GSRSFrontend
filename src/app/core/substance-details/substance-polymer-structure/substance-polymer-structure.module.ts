@@ -4,13 +4,15 @@ import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dyn
 import { SubstancePolymerStructureComponent } from './substance-polymer-structure.component';
 import {RouterModule} from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { MatIconModule } from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     DynamicComponentLoaderModule.forChild(SubstancePolymerStructureComponent),
-    SubstanceImageModule
+    SubstanceImageModule,
+    MatIconModule
   ],
     declarations: [SubstancePolymerStructureComponent]
 })
