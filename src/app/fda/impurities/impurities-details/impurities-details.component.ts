@@ -73,6 +73,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
         });
 
         // Get Substance Name for RelatedSubstanceUuid in ImpuritiesSubstanceList
+        /*
         this.impurities.impuritiesTestList.forEach((elementTest, indexTes) => {
           elementTest.impuritiesDetailsList.forEach((elementDetails, indexDetails) => {
             if (elementDetails.relatedSubstanceUuid) {
@@ -82,6 +83,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
             }
           });
         });
+        */
       }
     }, error => {
       this.handleSubstanceRetrivalError();
@@ -114,6 +116,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   getRelationship(): void {
     // alert(this.subRelationship.length);
     const testIndex = 0;
+    /*
     const testList = this.impurities.impuritiesTestList[testIndex];
     testList.impuritiesDetailsList.forEach((elementRel, indexRel) => {
       const relSubUuid = elementRel.relatedSubstanceUuid;
@@ -124,7 +127,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
       });
       this.subscriptions.push(getSubDetailsSubRelSubscribe);
     });
-
+  */
   }
 
   private handleSubstanceRetrivalError() {

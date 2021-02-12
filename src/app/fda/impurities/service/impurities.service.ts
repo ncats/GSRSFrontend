@@ -33,9 +33,7 @@ export class ImpuritiesService extends BaseHttpService {
       this.impurities = impurities;
     } else {
       this.impurities = {
-        impuritiesSubstanceList: [{}],
-        impuritiesTestList: [],
-        impuritiesUnspecifiedList: [],
+        impuritiesSubstanceList: [],
         impuritiesTotal: {}
       };
     }
@@ -92,13 +90,13 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   addNewImpuritiesSubstance(): void {
-    const newSubstance: ImpuritiesSubstance = {};
+    const newSubstance: ImpuritiesSubstance = { impuritiesTestList: []};
     this.impurities.impuritiesSubstanceList.unshift(newSubstance);
   }
 
-  addNewTest(): void {
-    const newTest: ImpuritiesTesting = { impuritiesDetailsList: [] };
-    this.impurities.impuritiesTestList.unshift(newTest);
+  addNewTest(impuritiesSubstanceIndex: number): void {
+    const newTest: ImpuritiesTesting = { impuritiesDetailsList: [], impuritiesUnspecifiedList: [] };
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList.unshift(newTest);
   }
 
   addNewImpurities(): void {
@@ -106,14 +104,14 @@ export class ImpuritiesService extends BaseHttpService {
     //  this.impurities.impuritiesList.unshift(newImpurities);
   }
 
-  addNewImpuritiesUnspecified(): void {
+  addNewImpuritiesUnspecified(impuritiesSubstanceIndex: number, impuritiesTestIndex: number): void {
     const newImpuritiesUnspec: ImpuritiesUnspecified = { identityCriteriaList: [] };
-    this.impurities.impuritiesUnspecifiedList.unshift(newImpuritiesUnspec);
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesUnspecifiedList.unshift(newImpuritiesUnspec);
   }
 
-  addNewIdentityCriteriaUnspecified(impuritiesUnspecifiedIndex: number) {
+  addNewIdentityCriteriaUnspecified(impuritiesSubstanceIndex: number, impuritiesTestIndex, impuritiesUnspecifiedIndex: number) {
     const newIdentityCriteria: IdentityCriteria = {};
-    this.impurities.impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.unshift(newIdentityCriteria);
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.unshift(newIdentityCriteria);
   }
 
   addNewImpuritiesTotal(): void {
@@ -136,24 +134,24 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   deleteImpuritiesTest(impuritiesTestIndex: number): void {
-    this.impurities.impuritiesTestList.splice(impuritiesTestIndex, 1);
+  //  this.impurities.impuritiesTestList.splice(impuritiesTestIndex, 1);
   }
 
   deleteImpuritiesDetails(impuritiesTestIndex: number, impuritiesDetailsIndex: number): void {
-    this.impurities.impuritiesTestList[impuritiesTestIndex].impuritiesDetailsList.splice(impuritiesDetailsIndex, 1);
+  //  this.impurities.impuritiesTestList[impuritiesTestIndex].impuritiesDetailsList.splice(impuritiesDetailsIndex, 1);
   }
 
   deleteIdentityCriteria(impuritiesTestIndex: number, impuritiesDetailsIndex: number, identityCriteriaIndex: number): void {
-    const impuritiesTest = this.impurities.impuritiesTestList[impuritiesTestIndex];
-    impuritiesTest.impuritiesDetailsList[impuritiesDetailsIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
+   // const impuritiesTest = this.impurities.impuritiesTestList[impuritiesTestIndex];
+  //  impuritiesTest.impuritiesDetailsList[impuritiesDetailsIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
   }
 
   deleteImpuritiesUnspecified(impuritiesUnspecifiedIndex: number): void {
-    this.impurities.impuritiesUnspecifiedList.splice(impuritiesUnspecifiedIndex, 1);
+  //  this.impurities.impuritiesUnspecifiedList.splice(impuritiesUnspecifiedIndex, 1);
   }
 
   deleteIdentityCriteriaUnspecified(impuritiesUnspecifiedIndex: number, identityCriteriaIndex: number): void {
-    this.impurities.impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
+   // this.impurities.impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
   }
 
   getSubstanceImpurities(

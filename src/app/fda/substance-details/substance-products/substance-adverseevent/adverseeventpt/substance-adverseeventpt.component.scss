@@ -6,6 +6,10 @@
   position: relative;
 }
 
+.divflex {
+  display: flex;
+}
+
 .font8px {
   font-size: 8px;
 }
@@ -13,13 +17,33 @@
 .font15px {
   font-size: 15px;
 }
-  
+
+.margintop10px {
+  margin-top: 10px;
+}
+
+.margintop90px {
+  margin-top: 90px;
+}
+
+marginleft50px {
+  margin-left: 50px;
+}
+
 .padleft25px {
   padding-left: 25px;
 }
   
 .padtop5px {
   padding-top: 5px;
+}
+
+.padtop10px {
+  padding-top: 10px;
+}
+
+.padtopneg50px {
+  padding-top: -50px;
 }
 
 .colorblue {
@@ -32,6 +56,24 @@
 
 .colorred {
   color: red;
+}
+
+.colororange {
+  color: rgb(228, 134, 46);
+}
+
+.bordergray {
+  border: 1px solid gray;
+}
+
+.width120px {
+  width: 120px;
+  display: block;
+}
+
+.width200px {
+  width: 200px;
+  display: block;
 }
 
 .spinnerstyle {

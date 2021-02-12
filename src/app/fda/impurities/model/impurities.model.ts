@@ -14,8 +14,6 @@ export interface Impurities {
   modifyDate?: number;
   internalVersion?: number;
   impuritiesSubstanceList?: Array<ImpuritiesSubstance>;
-  impuritiesTestList?: Array<ImpuritiesTesting>;
-  impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
   impuritiesTotal?: ImpuritiesTotal;
 }
 
@@ -31,6 +29,7 @@ export interface ImpuritiesSubstance {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
+  impuritiesTestList?: Array<ImpuritiesTesting>;
 }
 
 export interface ImpuritiesTesting {
@@ -45,6 +44,7 @@ export interface ImpuritiesTesting {
   modifyDate?: number;
   internalVersion?: number;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
+  impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>
 }
 
 export interface ImpuritiesDetails {

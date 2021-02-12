@@ -138,7 +138,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   validate(): void {
-
     if ((this.impurities.impuritiesSubstanceList[0].substanceUuid === null)
      || (this.impurities.impuritiesSubstanceList[0].substanceUuid === undefined)) {
       this.substanceNameHintMessage = 'Substance Name is required';
@@ -304,7 +303,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   getRelationship() {
     this.errorMessage = 'Found ' + this.subRelationship.length + ' Existing Impurities';
     // Add New Test
-    this.impuritiesService.addNewTest();
+ //   this.impuritiesService.addNewTest(impuritiesSubstanceIndex);
     this.subRelationship.forEach((elementRel, indexRel) => {
       this.createNewImpurities(elementRel.relationshipUuid);
     });
@@ -313,7 +312,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   createNewImpurities(relationshipUuid: string) {
     const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
     newImpuritiesDetails.relatedSubstanceUuid = relationshipUuid;
-    this.impurities.impuritiesTestList[0].impuritiesDetailsList.unshift(newImpuritiesDetails);
+ //   this.impurities.impuritiesTestList[0].impuritiesDetailsList.unshift(newImpuritiesDetails);
   }
 
   showJSON(): void {
@@ -334,17 +333,17 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.addNewImpuritiesSubstance();
   }
 
-  addNewTest() {
-    this.impuritiesService.addNewTest();
-  }
+ // addNewTest() {
+  //  this.impuritiesService.addNewTest();
+ // }
 
   addNewImpurities() {
     this.impuritiesService.addNewImpurities();
   }
 
-  addNewImpuritiesUnspecified() {
-    this.impuritiesService.addNewImpuritiesUnspecified();
-  }
+ // addNewImpuritiesUnspecified() {
+ //   this.impuritiesService.addNewImpuritiesUnspecified();
+ // }
 
   addNewImpuritiesTotal() {
     this.impuritiesService.addNewImpuritiesTotal();

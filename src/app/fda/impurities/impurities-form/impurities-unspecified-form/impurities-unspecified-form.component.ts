@@ -15,6 +15,7 @@ export class ImpuritiesUnspecifiedFormComponent implements OnInit {
 
   @Input() impuritiesUnspecified: ImpuritiesUnspecified;
   @Input() impuritiesUnspecifiedIndex: number;
+  @Input() impuritiesTestIndex: number;
 
   impurity: any;
   public subRelationship: Array<SubRelationship> = [];
@@ -48,7 +49,7 @@ export class ImpuritiesUnspecifiedFormComponent implements OnInit {
   }
 
   addNewIdentityCriteria() {
-    this.impuritiesService.addNewIdentityCriteriaUnspecified(this.impuritiesUnspecifiedIndex);
+    this.impuritiesService.addNewIdentityCriteriaUnspecified(this.impuritiesTestIndex, this.impuritiesUnspecifiedIndex, this.impuritiesUnspecifiedIndex);
   }
 
   confirmDeleteIdentityCriteria(impuritiesUnspecifiedIndex: number) {

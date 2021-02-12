@@ -2,6 +2,12 @@
   "version": "2.8 RC1",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
+  "adverseEventShinyHomepageDisplay": "true",
+  "adverseEventShinySubstanceNameDisplay": "true",
+  "adverseEventShinyAdverseEventDisplay": "true",
+  "adverseEventShinyHomepageURL": "http://fdslv22014:9000/ginas/app",
+  "adverseEventShinySubstanceNameURL": "http://fdslv01592:9000/ginas/app",
+  "adverseEventShinyAdverseEventURL": "CCCCCCCCC",
   "substanceDetailsCards": [
     {
       "card": "substance-overview",

@@ -15,6 +15,7 @@ export class ImpuritiesTestFormComponent implements OnInit {
 
   @Input() impuritiesTest: ImpuritiesTesting;
   @Input() impuritiesTestIndex: number;
+  @Input() impuritiesSubstanceIndex: number;
 
   constructor( private impuritiesService: ImpuritiesService,
     private loadingService: LoadingService,
@@ -32,6 +33,10 @@ export class ImpuritiesTestFormComponent implements OnInit {
     const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
     newImpuritiesDetails.relatedSubstanceUuid = relationshipUuid;
     this.impuritiesTest.impuritiesDetailsList.unshift(newImpuritiesDetails);
+  }
+
+  addNewImpuritiesUnspecified() {
+    this.impuritiesService.addNewImpuritiesUnspecified(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
   }
 
   confirmDeleteImpuritiesTest() {

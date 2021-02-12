@@ -21,6 +21,7 @@ import { ImpuritiesUnspecifiedFormComponent } from './impurities-form/impurities
 import { ImpuritiesTotalFormComponent } from './impurities-form/impurities-total-form/impurities-total-form.component';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { ImpuritiesTestFormComponent } from './impurities-form/impurities-test-form/impurities-test-form.component';
+import { ImpuritiesSubstanceFormComponent } from './impurities-form/impurities-substance-form/impurities-substance-form.component';
 
 const impurityRoutes: Routes = [
   {
@@ -44,7 +45,8 @@ const impurityRoutes: Routes = [
     ImpuritiesDetailsComponent,
     ImpuritiesUnspecifiedFormComponent,
     ImpuritiesTotalFormComponent,
-    ImpuritiesTestFormComponent
+    ImpuritiesTestFormComponent,
+    ImpuritiesSubstanceFormComponent
   ],
   imports: [
     RouterModule.forChild(impurityRoutes),
