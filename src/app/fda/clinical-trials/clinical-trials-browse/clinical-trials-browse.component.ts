@@ -111,8 +111,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.searchTypes = [
       {'title': 'All', 'value': 'all'},
       {'title': 'Title', 'value': 'title'},
-      {'title': 'NCT Number', 'value': 'nctNumber'}
-      // , {'title': 'UUID', 'value': 'substanceUuid'}
+      {'title': 'NCT Number', 'value': 'nctNumber'},
+      {'title': 'Substance UUID', 'value': 'substanceUuid'}
     ];
     this.isComponentInit = true;
     this.loadComponent();
@@ -292,6 +292,13 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   }
 
   deleteClinicalTrial(index: number) {
+    if (typeof this.clinicalTrials[index] === 'undefined' || ! _.has(this.clinicalTrials[index], 'nctNumber')) {
+        alert('A trial number is required.');
+        return;
+    }
+    if (!confirm('Are you sure to delete ' + this.clinicalTrials[index].nctNumber + '?')) {
+      return;
+    }
     this.loadingService.setLoading(true);
     this.clinicalTrialService.deleteClinicalTrial(this.clinicalTrials[index].nctNumber)
       .subscribe(result => {

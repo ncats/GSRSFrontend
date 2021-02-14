@@ -41,6 +41,7 @@
     <p><strong>All</strong> - search in all indexed fields; wild cards work (e.g health*).</p>
     <p><strong>Title</strong> - search for full words contained in the title field.</p>
     <p><strong>NCT Number</strong> - search for NCT Number exactly.</p>
+    <p><strong>UUID</strong> - search for substance UUID exactly.</p>
   </div>
 </mat-card>
 </div>
@@ -67,7 +68,7 @@
   
 <!-- nctNumber Column -->
   <ng-container matColumnDef="nctNumber">
-    <th mat-header-cell *matHeaderCellDef>nctNumber</th>
+    <th mat-header-cell *matHeaderCellDef>NCT Number</th>
     <td mat-cell *matCellDef="let element">
       <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + element.nctNumber">{{element.nctNumber}}</a>
     </td>
@@ -75,7 +76,7 @@
 
   <!-- title Column -->
   <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef>title</th>
+    <th mat-header-cell *matHeaderCellDef>Title</th>
     <td mat-cell *matCellDef="let element">
       <mat-expansion-panel [disabled]="true" #mep="matExpansionPanel" class='clinical-trials-browse-peak-substances-expansion-panel'>
         <mat-expansion-panel-header [collapsedHeight]="''" [expandedHeight]="''"> 
@@ -100,7 +101,7 @@
 
   <!-- ID Column -->
   <ng-container matColumnDef="lastUpdated">
-    <th mat-header-cell *matHeaderCellDef>lastUpdated</th>
+    <th mat-header-cell *matHeaderCellDef>Last Updated</th>
     <td mat-cell *matCellDef="let element">{{element.lastUpdated | date : 'MM/dd/yyyy':'UTC'}} </td>
   </ng-container>
 
