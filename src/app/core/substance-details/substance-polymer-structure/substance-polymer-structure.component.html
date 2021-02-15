@@ -1,6 +1,6 @@
 
 <div class = 'float-right' *ngIf="structure">
-    <a class="mat-icon-button" title="Download molfile" [href]="molfileHref" download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.mol">
+    <a class="mat-icon-button" title="Download molfile" [href]="molfileHref" matTooltip = "Download Molfile" download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.mol">
       <mat-icon svgIcon="get_app"></mat-icon>
     </a>
   </div>

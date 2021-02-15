@@ -9,3 +9,31 @@
   margin-top: -10px;
   vertical-align: bottom;
 }
+
+.detail {
+  padding: 10px;
+}
+
+
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.structure-image {
+  width: 150px;
+  height: auto;
+}
+
+.thumb-col{
+max-width:400px;
+}
+
+.subhead {
+display: inline-block;
+width: 150px;
+}
+
+.subval{
+display: inline;
+}

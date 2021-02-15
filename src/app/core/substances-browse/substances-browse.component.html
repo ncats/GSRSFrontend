@@ -325,6 +325,20 @@
             <mat-card-content>
               <div class="substance-content">
                 <div class="structure-container">
+                    <div *ngIf="substance.structure">
+                        <div class="mat-chip-list-container-2" *ngIf="substance.structure.stereochemistry">
+                          <mat-chip-list selectable="false" multiple="false">
+                            <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
+                          </mat-chip-list>
+                        </div>
+                      </div>
+                      <div *ngIf="!substance.structure">
+                        <div class="mat-chip-list-container-2">
+                          <mat-chip-list selectable="false" multiple="false">
+                            <mat-chip color="primary" selected>{{substance.substanceClass | facetDisplay: 'types' | uppercase}}</mat-chip>
+                          </mat-chip-list>
+                        </div>
+                      </div>
                   <div class="image-thumbnail">
                     <div *ngIf="substance.structure || substance.polymer">
                       <a class="zoom" (click)="openImageModal(substance)">
