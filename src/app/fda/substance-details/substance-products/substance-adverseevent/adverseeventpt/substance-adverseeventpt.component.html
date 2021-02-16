@@ -25,7 +25,15 @@
 
       <ng-container matColumnDef="ptTerm">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Term </th>
-        <td mat-cell *matCellDef="let adverse"> {{adverse.ptTerm}} </td>
+        <td mat-cell *matCellDef="let adverse"> 
+          {{adverse.ptTerm}} 
+          <div class="" *ngIf="adverseEventShinyAdverseEventDisplay === true">
+            <a href="{{adverseEventShinyAdverseEventURLWithParam}}{{getDecodeURL(adverse.ptTerm)}}" target="_blank"
+              title="Analysis by Adverse Event on Shiny Server">
+                Analysis by Adverse Event
+            </a>
+          </div>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="primSoc">

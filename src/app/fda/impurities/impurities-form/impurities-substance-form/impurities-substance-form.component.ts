@@ -54,6 +54,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
           this.existingImpurities = response.data;
 
           if (Object.keys(this.existingImpurities).length > 0) {
+            // Remove Duplicate Impurites Substance UUID
             this.loadExistingImpurities();
           } else {
             this.errorMessage = 'No Impurities found';
@@ -79,8 +80,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
       newImpuritiesDetails.relatedSubstanceUuid = elementRel.relationshipUuid;
 
       //Creating a New Impurities Detail for Test 0
-      this.impuritiesService.addNewImpuritiesDetails(this.impuritiesSubstanceIndex, 0, newImpuritiesDetails);
-      
+      this.impuritiesService.addNewImpuritiesDetails(this.impuritiesSubstanceIndex, 0, newImpuritiesDetails);      
     });
   }
 
@@ -120,4 +120,4 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     this.impuritiesService.deleteImpuritiesSubstance(this.impuritiesSubstanceIndex);
   }
 
-}  
+}

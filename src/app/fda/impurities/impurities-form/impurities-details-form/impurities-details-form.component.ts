@@ -42,7 +42,8 @@ export class ImpuritiesDetailsFormComponent implements OnInit {
 
   addNewImpurities() {
     const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
-    this.impuritiesService.addNewImpuritiesDetails(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, newImpuritiesDetails);  
+    this.impuritiesService.addNewImpuritiesDetails(this.impuritiesSubstanceIndex, 
+      this.impuritiesTestIndex, newImpuritiesDetails);  
   }
 
   /*
@@ -135,7 +136,8 @@ getRelationship() {
   }
 
   deleteIdentityCriteria(identityCriteriaIndex: number) {
-    this.impuritiesService.deleteIdentityCriteria(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesDetailsIndex, identityCriteriaIndex);
+    this.impuritiesService.deleteIdentityCriteria(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, 
+      this.impuritiesDetailsIndex, identityCriteriaIndex);
   }
 
 }

@@ -66,22 +66,25 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
         // Get Substance Name for SubstanceUuid in SubstanceList
         this.impurities.impuritiesSubstanceList.forEach((elementRel, indexRel) => {
           if (elementRel.substanceUuid) {
-            const impSubNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId(elementRel.substanceUuid).subscribe(substanceNames => {
-              elementRel.substanceName = substanceNames.name;
-            });
+            const impSubNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId(elementRel.substanceUuid).subscribe
+              (substanceNames => {
+                elementRel.substanceName = substanceNames.name;
+              });
             this.subscriptions.push(impSubNameSubscription);
           }
         });
 
 
         // Get Substance Name for SubstanceUuid in ImpuritiesDetailsList
-        this.impurities.impuritiesSubstanceList.forEach((elementRelSub, indexRel) => {
-          elementRelSub.impuritiesTestList.forEach((elementRelTest, indexRel) => {
-            elementRelTest.impuritiesDetailsList.forEach((elementRelImpuDet, indexRel) => {
+        this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
+          elementRelSub.impuritiesTestList.forEach((elementRelTest) => {
+            elementRelTest.impuritiesDetailsList.forEach((elementRelImpuDet) => {
               if (elementRelImpuDet.relatedSubstanceUuid) {
-                const impDetNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId(elementRelImpuDet.relatedSubstanceUuid).subscribe(substanceNames => {
-                  elementRelImpuDet.substanceName = substanceNames.name;
-                });
+                const impDetNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId
+                  (elementRelImpuDet.relatedSubstanceUuid)
+                  .subscribe(substanceNames => {
+                    elementRelImpuDet.substanceName = substanceNames.name;
+                  });
                 this.subscriptions.push(impDetNameSubscription);
               }
             });
@@ -90,13 +93,14 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
 
         // Get Substance Name for SubstanceUuid in ImpuritiesResidualSolventsList
-        this.impurities.impuritiesSubstanceList.forEach((elementRelSub, indexRel) => {
-          elementRelSub.impuritiesTestList.forEach((elementRelTest, indexRel) => {
-            elementRelTest.impuritiesResidualSolventsList.forEach((elementRelResidual, indexRel) => {
+        this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
+          elementRelSub.impuritiesTestList.forEach((elementRelTest) => {
+            elementRelTest.impuritiesResidualSolventsList.forEach((elementRelResidual) => {
               if (elementRelResidual.relatedSubstanceUuid) {
-                const impResidualNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId(elementRelResidual.relatedSubstanceUuid).subscribe(substanceNames => {
-                  elementRelResidual.substanceName = substanceNames.name;
-                });
+                const impResidualNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId
+                  (elementRelResidual.relatedSubstanceUuid).subscribe(substanceNames => {
+                    elementRelResidual.substanceName = substanceNames.name;
+                  });
                 this.subscriptions.push(impResidualNameSubscription);
               }
             });
@@ -105,13 +109,14 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
 
         // Get Substance Name for SubstanceUuid in ImpuritiesInorganicList
-        this.impurities.impuritiesSubstanceList.forEach((elementRelSub, indexRel) => {
-          elementRelSub.impuritiesTestList.forEach((elementRelTest, indexRel) => {
-            elementRelTest.impuritiesInorganicList.forEach((elementRelInorganic, indexRel) => {
+        this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
+          elementRelSub.impuritiesTestList.forEach((elementRelTest) => {
+            elementRelTest.impuritiesInorganicList.forEach((elementRelInorganic) => {
               if (elementRelInorganic.relatedSubstanceUuid) {
-                const impInorganicNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId(elementRelInorganic.relatedSubstanceUuid).subscribe(substanceNames => {
-                  elementRelInorganic.substanceName = substanceNames.name;
-                });
+                const impInorganicNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId
+                  (elementRelInorganic.relatedSubstanceUuid).subscribe(substanceNames => {
+                    elementRelInorganic.substanceName = substanceNames.name;
+                  });
                 this.subscriptions.push(impInorganicNameSubscription);
               }
             });
@@ -132,37 +137,6 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
       name = substanceNames.name;
     });
     this.subscriptions.push(getSubDetailsSubscribe);
-  }
-
-  /*
-  getImpuritiesRelationship(): void {
-    this.impuritiesService.getRelationshipImpurity(this.impurities.substanceUuid).subscribe(response => {
-      if (response) {
-        this.subRelationship = response.data;
-        this.getRelationship();
-        //  this.impurity.impuritiesList[0].relationshipList = response[0];
-        console.log(JSON.stringify(this.subRelationship));
-        //  alert(this.subRelationship.length);
-      }
-    });
-  }
-  */
-
-  getRelationship(): void {
-    // alert(this.subRelationship.length);
-    const testIndex = 0;
-    /*
-    const testList = this.impurities.impuritiesTestList[testIndex];
-    testList.impuritiesDetailsList.forEach((elementRel, indexRel) => {
-      const relSubUuid = elementRel.relatedSubstanceUuid;
- 
-      const getSubDetailsSubRelSubscribe = this.impuritiesService.getSubstanceDetailsBySubstanceId(relSubUuid).subscribe(substanceNames => {
-        //  console.log(JSON.stringify(substanceNames));
-        elementRel.substanceName = substanceNames.name;
-      });
-      this.subscriptions.push(getSubDetailsSubRelSubscribe);
-    });
-  */
   }
 
   private handleSubstanceRetrivalError() {

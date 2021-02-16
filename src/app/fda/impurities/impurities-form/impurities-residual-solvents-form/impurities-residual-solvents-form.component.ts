@@ -23,7 +23,7 @@ export class ImpuritiesResidualSolventsFormComponent implements OnInit {
   private loadingService: LoadingService,
   private authService: AuthService,
   private dialog: MatDialog) {}
-  
+    
   ngOnInit() {
   }
 

@@ -3,9 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
-import {
-  Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting, ImpuritiesUnspecified, ImpuritiesResidualSolvents, ImpuritiesInorganic,
-  ImpuritiesTotal, ValidationResults, IdentityCriteria } from '../model/impurities.model';
+import {Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting, 
+  ImpuritiesUnspecified, ImpuritiesResidualSolvents, ImpuritiesInorganic,
+  ImpuritiesTotal, ValidationResults, IdentityCriteria
+} from '../model/impurities.model';
 import { map, switchMap } from 'rxjs/operators';
 
 @Injectable(
@@ -94,33 +95,40 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   addNewTest(impuritiesSubstanceIndex: number): void {
-    const newTest: ImpuritiesTesting = { impuritiesDetailsList: [], impuritiesUnspecifiedList: [], impuritiesResidualSolventsList: [], impuritiesInorganicList: [] };
+    const newTest: ImpuritiesTesting = { impuritiesDetailsList: [], impuritiesUnspecifiedList: [], 
+      impuritiesResidualSolventsList: [], impuritiesInorganicList: [] };
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList.unshift(newTest);
   }
 
   addNewImpuritiesDetails(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, impuritiesDetails: ImpuritiesDetails): void {
-      // const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
-      this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesDetailsList.unshift(impuritiesDetails);
+    // const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex]
+    .impuritiesTestList[impuritiesTestIndex]
+    .impuritiesDetailsList.unshift(impuritiesDetails);
   }
-  
+
   addNewImpuritiesUnspecified(impuritiesSubstanceIndex: number, impuritiesTestIndex: number): void {
     const newImpuritiesUnspec: ImpuritiesUnspecified = { identityCriteriaList: [] };
-    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesUnspecifiedList.unshift(newImpuritiesUnspec);
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex]
+    .impuritiesUnspecifiedList.unshift(newImpuritiesUnspec);
   }
 
   addNewIdentityCriteriaUnspecified(impuritiesSubstanceIndex: number, impuritiesTestIndex, impuritiesUnspecifiedIndex: number) {
     const newIdentityCriteria: IdentityCriteria = {};
-    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.unshift(newIdentityCriteria);
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex]
+    .impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.unshift(newIdentityCriteria);
   }
 
   addNewImpuritiesResidualSolvents(impuritiesSubstanceIndex: number, impuritiesTestIndex: number): void {
     const newImpuritiesResidual: ImpuritiesResidualSolvents = {};
-    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesResidualSolventsList.unshift(newImpuritiesResidual);
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex]
+    .impuritiesResidualSolventsList.unshift(newImpuritiesResidual);
   }
 
   addNewImpuritiesInorganic(impuritiesSubstanceIndex: number, impuritiesTestIndex: number): void {
     const newImpuritiesInorganic: ImpuritiesInorganic = {};
-    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesInorganicList.unshift(newImpuritiesInorganic);
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex]
+    .impuritiesInorganicList.unshift(newImpuritiesInorganic);
   }
 
   addNewImpuritiesTotal(): void {
@@ -147,30 +155,36 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   deleteImpuritiesDetails(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, impuritiesDetailsIndex: number): void {
-    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesDetailsList.splice(impuritiesDetailsIndex, 1);
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex]
+    .impuritiesDetailsList.splice(impuritiesDetailsIndex, 1);
   }
 
-  deleteIdentityCriteria(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, impuritiesDetailsIndex: number, identityCriteriaIndex: number): void {
+  deleteIdentityCriteria(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, 
+    impuritiesDetailsIndex: number, identityCriteriaIndex: number): void {
     const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
     impuritiesTest.impuritiesDetailsList[impuritiesDetailsIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
   }
 
   deleteImpuritiesUnspecified(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, impuritiesUnspecifiedIndex: number): void {
-    const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
+    const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex]
+    .impuritiesTestList[impuritiesTestIndex];
     impuritiesTest.impuritiesUnspecifiedList.splice(impuritiesUnspecifiedIndex, 1);
   }
 
-  deleteIdentityCriteriaUnspecified(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, impuritiesUnspecifiedIndex: number, identityCriteriaIndex: number): void {
+  deleteIdentityCriteriaUnspecified(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, 
+    impuritiesUnspecifiedIndex: number, identityCriteriaIndex: number): void {
     const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
     impuritiesTest.impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
   }
 
-  deleteImpuritiesResidualSolvents(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, impuritiesResidualIndex: number): void {
+  deleteImpuritiesResidualSolvents(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, 
+    impuritiesResidualIndex: number): void {
     const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
     impuritiesTest.impuritiesResidualSolventsList.splice(impuritiesResidualIndex, 1);
   }
-  
-  deleteImpuritiesInorganic(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, impuritiesInorganicIndex: number): void {
+
+  deleteImpuritiesInorganic(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, 
+    impuritiesInorganicIndex: number): void {
     const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
     impuritiesTest.impuritiesInorganicList.splice(impuritiesInorganicIndex, 1);
   }

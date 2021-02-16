@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
@@ -20,12 +20,16 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   ascDescDir = 'desc';
   showSpinner = false;
 
+  @Input() substanceName: string;
   @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
   adverseEventShinySubstanceNameDisplay = false;
+  adverseEventShinyAdverseEventDisplay = false;
   adverseEventShinySubstanceNameURL: string;
+  adverseEventShinyAdverseEventURL: string;
   adverseEventShinySubstanceNameURLWithParam: string;
-  
+  adverseEventShinyAdverseEventURLWithParam: string;
+
   filtered: Array<any>;
   displayedColumns: string[] = [
     'ptTerm',
@@ -81,14 +85,34 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
   getAdverseEventShinyConfig(): void {
     if (this.configService.configData) {
+
+      // Analysis by Substance in Shiny Config
       if (this.configService.configData.adverseEventShinySubstanceNameDisplay !== null) {
         this.adverseEventShinySubstanceNameDisplay = JSON.parse(this.configService.configData.adverseEventShinySubstanceNameDisplay);
       }
       if (this.configService.configData.adverseEventShinySubstanceNameURL !== null) {
         this.adverseEventShinySubstanceNameURL = this.configService.configData.adverseEventShinySubstanceNameURL;
-        this.adverseEventShinySubstanceNameURLWithParam = this.adverseEventShinySubstanceNameURL + decodeURIComponent(this.bdnum);
+        this.adverseEventShinySubstanceNameURLWithParam = this.adverseEventShinySubstanceNameURL + decodeURIComponent(this.substanceName);
       }
+
+      // Analysis by Adverse Event in Shiny Config
+      if (this.configService.configData.adverseEventShinyAdverseEventDisplay !== null) {
+        this.adverseEventShinyAdverseEventDisplay = JSON.parse(this.configService.configData.adverseEventShinyAdverseEventDisplay);
+      }
+      if (this.configService.configData.adverseEventShinyAdverseEventURL !== null) {
+        this.adverseEventShinyAdverseEventURL = this.configService.configData.adverseEventShinyAdverseEventURL;
+        this.adverseEventShinyAdverseEventURLWithParam = this.adverseEventShinyAdverseEventURL;
+      }
+
     }
+  }
+
+  getDecodeURL(value: string): string {
+    let result = '';
+    if (value !== null) {
+      result = decodeURIComponent(value);
+    }
+    return result;
   }
 
 }

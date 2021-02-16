@@ -213,7 +213,7 @@
     </mat-tab>
 
     <mat-tab label="Adverse Event PT ({{advPtCount}})">
-      <app-substance-adverseeventpt [bdnum]="bdnum" (countAdvPtOut)="getAdvPtCount($event)">
+      <app-substance-adverseeventpt [bdnum]="bdnum" [substanceName]="substanceName" (countAdvPtOut)="getAdvPtCount($event)">
       </app-substance-adverseeventpt>
     </mat-tab>
 

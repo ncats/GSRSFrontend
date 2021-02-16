@@ -44,9 +44,9 @@ export interface ImpuritiesTesting {
   modifyDate?: number;
   internalVersion?: number;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
-  impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>
-  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>
-  impuritiesInorganicList?: Array<ImpuritiesInorganic>
+  impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
+  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>;
+  impuritiesInorganicList?: Array<ImpuritiesInorganic>;
 }
 
 export interface ImpuritiesDetails {

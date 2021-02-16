@@ -49,7 +49,6 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
 
     if (this.substanceUuid) {
       this.getSubstanceImpurities();
- 
       this.impuritiesListExportUrl();
     }
   }
@@ -78,16 +77,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
 
   getImpuritiesTestTotal(): void {
     // Get Impurities Test Count
-    if (Object.keys(this.impurities).length > 0) {
-    //  if (this.impurities.impuritiesSubstanceList.length > 0)
-  //    {
-//
-  //    }
-    }  
-  //  if (this.impurities)
-  //  this.impurities.impuritiesSubstanceList.forEach((elementRelSub, indexRel) => {
-    //  this.impuritiesTestTotal = elementRelSub.impuritiesTestList.length;
-  //  });
+    // if (Object.keys(this.impurities).length > 0) {}
   }
 
   impuritiesListExportUrl() {

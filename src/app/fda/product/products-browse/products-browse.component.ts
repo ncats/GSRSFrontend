@@ -124,23 +124,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     });
     this.subscriptions.push(authSubscription);
 
-    //this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-    //   this.isAdmin = response;
-    // });
-
-    /*
-    this.activatedRoute.queryParamMap.subscribe(params => {
-
-      this.privateSearchTerm = params.get('search') || '';
-
-      if (params.get('pageSize')) {
-        this.pageSize = parseInt(params.get('pageSize'), null);
-      }
-      if (params.get('pageIndex')) {
-        this.pageIndex = parseInt(params.get('pageIndex'), null);
-      }
-    });
-    */
     this.isComponentInit = true;
     this.loadComponent();
   }
