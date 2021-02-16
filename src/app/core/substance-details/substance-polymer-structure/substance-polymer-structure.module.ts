@@ -4,7 +4,7 @@ import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dyn
 import { SubstancePolymerStructureComponent } from './substance-polymer-structure.component';
 import {RouterModule} from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule, MatTooltipModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -12,7 +12,8 @@ import { MatIconModule } from '@angular/material';
     RouterModule,
     DynamicComponentLoaderModule.forChild(SubstancePolymerStructureComponent),
     SubstanceImageModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
     declarations: [SubstancePolymerStructureComponent]
 })

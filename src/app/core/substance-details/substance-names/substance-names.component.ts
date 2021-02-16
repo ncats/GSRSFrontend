@@ -17,7 +17,7 @@ import {UtilsService} from '@gsrs-core/utils';
 })
 export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit {
   names: Array<SubstanceName>;
-  displayedColumns: string[] = ['name', 'type', 'language', 'references'];
+  displayedColumns: string[] = ['name', 'type', 'language', 'details', 'references'];
   languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   substanceUpdated = new Subject<SubstanceDetail>();
@@ -40,12 +40,6 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       this.substance = substance;
       if (this.substance != null && this.substance.names != null) {
         this.names = this.substance.names;
-        this.names.forEach(name => {
-          if (name.nameOrgs && name.nameOrgs.length > 0) {
-            this.displayedColumns = ['name', 'type', 'language', 'naming-orgs', 'references'];
-            this.hideOrgs = false;
-          }
-        });
         this.filtered = this.substance.names;
         this.countUpdate.emit(this.names.length);
         this.searchControl.valueChanges.subscribe(value => {
