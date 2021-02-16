@@ -16,6 +16,7 @@ export class ImpuritiesUnspecifiedFormComponent implements OnInit {
   @Input() impuritiesUnspecified: ImpuritiesUnspecified;
   @Input() impuritiesUnspecifiedIndex: number;
   @Input() impuritiesTestIndex: number;
+  @Input() impuritiesSubstanceIndex: number;
 
   impurity: any;
   public subRelationship: Array<SubRelationship> = [];
@@ -32,24 +33,24 @@ export class ImpuritiesUnspecifiedFormComponent implements OnInit {
   ngOnInit() {
   }
 
-  confirmDeleteImpuritiesUnspecified(impuritiesUnspecifiedIndex: number) {
+  confirmDeleteImpuritiesUnspecified() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Unspecified Impurities ' + (impuritiesUnspecifiedIndex + 1) + '?' }
+      data: { message: 'Are you sure you want to delele Unspecified Impurities ' + (this.impuritiesUnspecifiedIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        this.deleteImpuritiesUnspecified(impuritiesUnspecifiedIndex);
+        this.deleteImpuritiesUnspecified();
       }
     });
   }
 
-  deleteImpuritiesUnspecified(impuritiesUnspecifiedIndex: number) {
-    this.impuritiesService.deleteImpuritiesUnspecified(impuritiesUnspecifiedIndex);
+  deleteImpuritiesUnspecified() {
+    this.impuritiesService.deleteImpuritiesUnspecified(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesUnspecifiedIndex);
   }
 
   addNewIdentityCriteria() {
-    this.impuritiesService.addNewIdentityCriteriaUnspecified(this.impuritiesTestIndex, this.impuritiesUnspecifiedIndex, this.impuritiesUnspecifiedIndex);
+    this.impuritiesService.addNewIdentityCriteriaUnspecified(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesUnspecifiedIndex);
   }
 
   confirmDeleteIdentityCriteria(impuritiesUnspecifiedIndex: number) {
@@ -65,7 +66,7 @@ export class ImpuritiesUnspecifiedFormComponent implements OnInit {
   }
 
   deleteIdentityCriteria(identityCriteriaUnspecIndex: number) {
-    this.impuritiesService.deleteIdentityCriteriaUnspecified(this.impuritiesUnspecifiedIndex, identityCriteriaUnspecIndex);
+    this.impuritiesService.deleteIdentityCriteriaUnspecified(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesUnspecifiedIndex, identityCriteriaUnspecIndex);
   }
 
 

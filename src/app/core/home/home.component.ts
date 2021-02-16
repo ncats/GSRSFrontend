@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
   clasicBaseHref: string;
 
   //Config for Adverse Event on Shiny Server
-  adverseEventShinyHomepageDisplay: string;
+  adverseEventShinyHomepageDisplay = false;
   adverseEventShinyHomepageURL: string;
 
   constructor(

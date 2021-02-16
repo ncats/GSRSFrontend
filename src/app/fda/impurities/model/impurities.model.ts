@@ -45,6 +45,8 @@ export interface ImpuritiesTesting {
   internalVersion?: number;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
   impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>
+  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>
+  impuritiesInorganicList?: Array<ImpuritiesInorganic>
 }
 
 export interface ImpuritiesDetails {
@@ -91,6 +93,39 @@ export interface ImpuritiesUnspecified {
   modifyDate?: number;
   internalVersion?: number;
   identityCriteriaList?: Array<IdentityCriteria>;
+}
+
+export interface ImpuritiesResidualSolvents {
+  id?: number;
+  relatedSubstanceUuid?: string;
+  pharmaceuticalLimit?: string;
+  testType?: string;
+  limitValue?: number;
+  limitType?: string;
+  unit?: string;
+  comments?: string;
+  substanceName?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ImpuritiesInorganic {
+  id?: number;
+  relatedSubstanceUuid?: string;
+  testType?: string;
+  limitValue?: number;
+  limitType?: string;
+  unit?: string;
+  comments?: string;
+  substanceName?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
 }
 
 export interface ImpuritiesTotal {

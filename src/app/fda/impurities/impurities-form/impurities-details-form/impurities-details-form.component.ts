@@ -16,7 +16,9 @@ export class ImpuritiesDetailsFormComponent implements OnInit {
   @Input() impuritiesDetails: ImpuritiesDetails;
   @Input() impuritiesDetailsIndex: number;
   @Input() impuritiesTestIndex: number;
+  @Input() impuritiesSubstanceIndex: number;
   @Input() relatedSubstanceUuid: string;
+
   impurity: any;
   public subRelationship: Array<SubRelationship> = [];
   substanceName: string;
@@ -30,18 +32,17 @@ export class ImpuritiesDetailsFormComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    /*
-    if (this.substanceId) {
-      this.substanceName = 'ZIDOVUDINE';
-   //   this.getImpurities();
-   //   this.impurity.parentSubstanceId = '479f1396-4958-4f59-9d41-0bd0468c8da7';
+  }
+
+  relatedSubstanceUpdated(substance: any): void {
+    if (substance != null) {
+      this.impuritiesDetails.relatedSubstanceUuid = substance.uuid;
     }
-    alert(this.substanceId);
-    */
   }
 
   addNewImpurities() {
-    this.impuritiesService.addNewImpurities();
+    const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
+    this.impuritiesService.addNewImpuritiesDetails(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, newImpuritiesDetails);  
   }
 
   /*
@@ -96,55 +97,45 @@ getRelationship() {
   }
   */
 
-  getRelationshipImpurity(substanceId: string) {
-    this.impuritiesService.getRelationshipImpurity(substanceId);
-  }
-
-  addImpurity() {
-    // Testing
-  }
+ // getRelationshipImpurity(substanceId: string) {
+ //   this.impuritiesService.getRelationshipImpurity(substanceId);
+ // }
 
   addNewIdentityCriteria() {
     const identityCriteria: IdentityCriteria = {};
     this.impuritiesDetails.identityCriteriaList.unshift(identityCriteria);
   }
 
-  confirmDeleteImpuritiesDetails(impuritiesTestIndex: number) {
+  confirmDeleteImpuritiesDetails() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete Impurities ' + (this.impuritiesDetailsIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        this.deleteImpuritiesDetails(impuritiesTestIndex);
+        this.deleteImpuritiesDetails();
       }
     });
   }
 
-  deleteImpuritiesDetails(impuritiesTestIndex: number) {
-    this.impuritiesService.deleteImpuritiesDetails(impuritiesTestIndex, this.impuritiesDetailsIndex);
+  deleteImpuritiesDetails() {
+    this.impuritiesService.deleteImpuritiesDetails(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesDetailsIndex);
   }
 
-  confirmDeleteIdentityCriteria(impuritiesTestIndex: number, identityCriteriaIndex: number) {
+  confirmDeleteIdentityCriteria(impuritiesDetailsIndex: number, identityCriteriaIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete Identity Criteria ' + (identityCriteriaIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        this.deleteIdentityCriteria(impuritiesTestIndex, identityCriteriaIndex);
+        this.deleteIdentityCriteria(identityCriteriaIndex);
       }
     });
   }
 
-  deleteIdentityCriteria(impuritiesTestIndex: number, identityCriteriaIndex: number) {
-    this.impuritiesService.deleteIdentityCriteria(impuritiesTestIndex, this.impuritiesDetailsIndex, identityCriteriaIndex);
-  }
-
-  relatedSubstanceUpdated(substance: any): void {
-    if (substance != null) {
-      this.impuritiesDetails.relatedSubstanceUuid = substance.uuid;
-    }
+  deleteIdentityCriteria(identityCriteriaIndex: number) {
+    this.impuritiesService.deleteIdentityCriteria(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesDetailsIndex, identityCriteriaIndex);
   }
 
 }

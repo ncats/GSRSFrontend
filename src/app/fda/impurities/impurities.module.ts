@@ -12,7 +12,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { SubstanceTextSearchModule } from '@gsrs-core/substance-text-search/substance-text-search.module';
-// import { SubstanceSelectorComponent } from '../../core/substance-selector/substance-selector.component';
 import { SubstanceSelectorModule } from '../../core/substance-selector/substance-selector.module';
 import { ImpuritiesFormComponent } from '../impurities/impurities-form/impurities-form.component';
 import { ImpuritiesDetailsFormComponent} from '../impurities/impurities-form/impurities-details-form/impurities-details-form.component';
@@ -22,6 +21,8 @@ import { ImpuritiesTotalFormComponent } from './impurities-form/impurities-total
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { ImpuritiesTestFormComponent } from './impurities-form/impurities-test-form/impurities-test-form.component';
 import { ImpuritiesSubstanceFormComponent } from './impurities-form/impurities-substance-form/impurities-substance-form.component';
+import { ImpuritiesResidualSolventsFormComponent } from './impurities-form/impurities-residual-solvents-form/impurities-residual-solvents-form.component';
+import { ImpuritiesInorganicFormComponent } from './impurities-form/impurities-inorganic-form/impurities-inorganic-form.component';
 
 const impurityRoutes: Routes = [
   {
@@ -46,7 +47,9 @@ const impurityRoutes: Routes = [
     ImpuritiesUnspecifiedFormComponent,
     ImpuritiesTotalFormComponent,
     ImpuritiesTestFormComponent,
-    ImpuritiesSubstanceFormComponent
+    ImpuritiesSubstanceFormComponent,
+    ImpuritiesResidualSolventsFormComponent,
+    ImpuritiesInorganicFormComponent
   ],
   imports: [
     RouterModule.forChild(impurityRoutes),

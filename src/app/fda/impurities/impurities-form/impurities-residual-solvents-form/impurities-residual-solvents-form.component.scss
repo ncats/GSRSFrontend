@@ -31,15 +31,6 @@
   margin-bottom: 10px;
 }
 
-.titleblue {
-  font-size: 18px;
-  font-weight: 700px;
-  font-family: Arial, Helvetica, sans-serif;
-  color: blue;
-
-  /*padding-left: 70px; */
-}
-
 .title {
    font-size: 24px;
    font-weight: 600px;
@@ -74,29 +65,52 @@
 }
 
 .col-6-1 {
-  width: calc((100% - 20px * 5) / 6);
-  margin-right: 20px;
+  width: calc((100% - 25px * 5) / 6);
+  margin-right: 25px;
 }
 
 .col-6-1:last-child {
   margin-right: 0px;
-}  
+} 
 
-.col-5-1 {
-  width: calc((100% - 30px * 4) / 5); 
-  margin-right: 30px;
+.col-3-1 {
+  width: calc((100% - 25px * 2) / 3);
+  margin-right: 25px;
 }
 
-.col-5-1:last-child {
+.col-3-1:last-child {
+  margin-right: 0px;
+} 
+
+.col-1 {
+  width: calc((100% - 20px * 5) / 6);
+  margin-right: 20px;
+}
+
+.col-1:last-child {
   margin-right: 0px;
 }  
 
-.col-4-1 {
-  width: calc((100% - 30px * 3) / 4);
+.col-2 {
+  width: calc((100% - 30px * 2) / 3); 
   margin-right: 30px;
 }
 
-.col-4-1:last-child {
+.col-5-1 {
+  width: calc((100% - 20px * 4) / 5);
+  margin-right: 20px;
+}
+
+.col-2:last-child {
+  margin-right: 0px;
+}  
+
+.col-3 {
+  width: calc((100% - 30px * 1) / 2);
+  margin-right: 30px;
+}
+
+.col-3:last-child {
   margin-right: 0px;
 }  
 
@@ -127,7 +141,15 @@
   width: 100%;
 }
 
-/*
+.col-5-1 {
+  width: calc((100% - 20px * 4) / 5);
+  margin-right: 20px;
+}
+
+.col-5-1:last-child {
+  margin-right: 0px;
+}
+
 .col-4-1 {
   width: calc((100% - 30px * 3) / 4);
   margin-right: 30px;
@@ -159,7 +181,6 @@
   width: calc((100% - 30px * 2) / 3);
   margin-right: 30px;
 }
-*/
 
 .hide-show-messages {
   margin-left: 10px;
@@ -259,10 +280,6 @@
 
 .margintop10px {
   margin-top: 10px;
-}
-
-.margintop50px {
-  margin-top: 50px;
 }
 
 .margintop90px {
@@ -451,16 +468,12 @@ marginleftneg7px {
   clear: both;
 }
 
-::ng-deep .related-substance img {
-  max-width:125px !important;
-  margin: auto;
-}
-
 .tabStyle {
-  width: 120px;
+  width: 250px;
   height: 30px;
   border: 1px solid gray;
-  background: #eee2b9;
+  background: #e9f3d9;
+  background-image: linear-gradient(to bottom, #fff, #b2b2b2);
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
   -moz-border-radius-topleft: 5px;
@@ -474,7 +487,12 @@ marginleftneg7px {
   font-weight: bold;
   font-family: Verdana;
   color: #0857d6;
-  padding-left: 30px;
+  padding-left: 20px;
   padding-top: 5px;
   padding-right: 5px;
+}
+
+::ng-deep .related-substance img {
+  max-width:125px !important;
+  margin: auto;
 }

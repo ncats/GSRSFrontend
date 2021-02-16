@@ -138,10 +138,10 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   validate(): void {
-    if ((this.impurities.impuritiesSubstanceList[0].substanceUuid === null)
-     || (this.impurities.impuritiesSubstanceList[0].substanceUuid === undefined)) {
-      this.substanceNameHintMessage = 'Substance Name is required';
-    }
+  //  if ((this.impurities.impuritiesSubstanceList[0].substanceUuid === null)
+ //    || (this.impurities.impuritiesSubstanceList[0].substanceUuid === undefined)) {
+ //     this.substanceNameHintMessage = 'Substance Name is required';
+  //  }
 
     //  if (this.impurities.substanceUuid) {
     this.isLoading = true;
@@ -262,6 +262,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     );
   }
 
+  /*
   getImpuritiesDetails() {
     this.isLoading = true;
     this.loadingService.setLoading(true);
@@ -308,12 +309,13 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
       this.createNewImpurities(elementRel.relationshipUuid);
     });
   }
-
+  
   createNewImpurities(relationshipUuid: string) {
     const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
     newImpuritiesDetails.relatedSubstanceUuid = relationshipUuid;
  //   this.impurities.impuritiesTestList[0].impuritiesDetailsList.unshift(newImpuritiesDetails);
   }
+*/
 
   showJSON(): void {
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
@@ -333,22 +335,11 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.addNewImpuritiesSubstance();
   }
 
- // addNewTest() {
-  //  this.impuritiesService.addNewTest();
- // }
-
-  addNewImpurities() {
-    this.impuritiesService.addNewImpurities();
-  }
-
- // addNewImpuritiesUnspecified() {
- //   this.impuritiesService.addNewImpuritiesUnspecified();
- // }
-
   addNewImpuritiesTotal() {
     this.impuritiesService.addNewImpuritiesTotal();
   }
 
+  /*
   confirmDeleteImpuritiesSubstance(impuritiesSubstanceIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delele Substance ' + (impuritiesSubstanceIndex + 1) + '?' }
@@ -383,7 +374,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     const getQuickSumSubscribe = this.substanceService.getQuickSubstancesSummaries(this.searchValue, true).subscribe(response => {
       if (response.content && response.content.length) {
         const selectedSubstance = response.content[0];
-     //   this.impurities.substanceUuid = selectedSubstance.uuid;
         this.errorMessage = '';
       } else {
         this.errorMessage = 'No substances found';
@@ -391,5 +381,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(getQuickSumSubscribe);
   }
+  */
 
 }

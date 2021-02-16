@@ -22,8 +22,10 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
   @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
-  adverseEventShinySubstanceNameDisplay: string;
+  adverseEventShinySubstanceNameDisplay = false;
   adverseEventShinySubstanceNameURL: string;
+  adverseEventShinySubstanceNameURLWithParam: string;
+  
   filtered: Array<any>;
   displayedColumns: string[] = [
     'ptTerm',
@@ -84,6 +86,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
       }
       if (this.configService.configData.adverseEventShinySubstanceNameURL !== null) {
         this.adverseEventShinySubstanceNameURL = this.configService.configData.adverseEventShinySubstanceNameURL;
+        this.adverseEventShinySubstanceNameURLWithParam = this.adverseEventShinySubstanceNameURL + decodeURIComponent(this.bdnum);
       }
     }
   }

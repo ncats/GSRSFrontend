@@ -165,6 +165,7 @@ export interface DisplayStructure extends Polymer {
   smiles?: string;
   links?: any;
   properties?: any;
+  molfile?: any;
 }
 
 export interface Monomer extends Polymer {

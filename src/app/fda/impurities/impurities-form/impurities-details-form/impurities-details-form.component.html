@@ -31,7 +31,7 @@
           </app-cv-input>
        
           <div class="marginleftneg7px" style="margin-left:-20px;">
-            <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesDetails(impuritiesTestIndex)"
+            <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesDetails()"
               matTooltip="Delete Impurities {{impuritiesDetailsIndex + 1}}">
               <mat-icon>delete_forever</mat-icon>
             </button>
@@ -85,7 +85,7 @@
                 </app-cv-input>
 
                 <div class="col-3-1 marginleftneg40px" style="margin-left: -40px;">
-                  <button mat-icon-button color="primary" (click)="confirmDeleteIdentityCriteria(impuritiesTestIndex, identityCriteriaIndex)"
+                  <button mat-icon-button color="primary" (click)="confirmDeleteIdentityCriteria(impuritiesDetailsIndex, identityCriteriaIndex)"
                     matTooltip="Delete Identity Criteria {{identityCriteriaIndex + 1}}">
                     <mat-icon>delete_forever</mat-icon>
                   </button>

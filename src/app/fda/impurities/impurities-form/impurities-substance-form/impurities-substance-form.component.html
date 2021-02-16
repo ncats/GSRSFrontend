@@ -1,8 +1,12 @@
+<div *ngIf="impuritiesSubstanceIndex > 0">
+  <br>
+  <hr>
+  <br>
+</div>
 <div class="divflexrow">
   <div class="form-row">
     <div class="col-4-1">
-      <app-substance-selector class="textaligncenter"
-        (selectionUpdated)="relatedSubstanceUpdated($event, impuritiesSubstanceIndex)"
+      <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
         eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
         header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid">
       </app-substance-selector>
@@ -29,16 +33,13 @@
           <mat-icon>add_circle_outline</mat-icon>
         </button>
       </span>
-      <button mat-icon-button color="primary" [disabled]="impurities.impuritiesSubstanceList.length == 1"
-        (click)="confirmDeleteImpuritiesSubstance(impuritiesSubstanceIndex)"
-        matTooltip="Delete Substance Name">
-        <mat-icon [class.disabled]="impurities.impuritiesSubstanceList.length == 1">delete_forever
-        </mat-icon>
-      </button>
     -->
+  <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesSubstance()"
+    matTooltip="Delete Substance Name">
+    <mat-icon>delete_forever</mat-icon>
+  </button>
+
 </div>
-<br>
-<hr>
 <br>
 
 <!-- IMPURITIES TEST LIST BEGIN -->
@@ -56,7 +57,7 @@
         </button>
       </div>
       <div class="width200px marginleft20px">
-        <button mat-raised-button color="primary" (click)="getImpuritiesDetails()"
+        <button mat-raised-button color="primary" (click)="getExistingImpuritiesFromSubstance()"
           matTooltip="Get Impurities for Substance">
           Get Existing Impurities from Substance
         </button>
@@ -72,7 +73,7 @@
     <div class="marginbottom10px"
       *ngFor="let impuritiesTest of impuritiesSubstance.impuritiesTestList; let impuritiesTestIndex = index">
       <app-impurities-test-form [impuritiesTest]="impuritiesTest" [impuritiesTestIndex]="impuritiesTestIndex"
-      [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
       </app-impurities-test-form>
     </div>
     <!-- Loop -->
