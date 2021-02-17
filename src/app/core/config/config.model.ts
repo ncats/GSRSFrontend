@@ -16,6 +16,12 @@ export interface Config {
     navItems?: Array<NavItem>;
     substanceSelectorProperties?: Array<string>;
     displayMatchApplication?: string;
+    adverseEventShinyHomepageDisplay?: string;
+    adverseEventShinySubstanceNameDisplay?: string;
+    adverseEventShinyAdverseEventDisplay?: string;
+    adverseEventShinyHomepageURL?: string;
+    adverseEventShinySubstanceNameURL?: string;
+    adverseEventShinyAdverseEventURL?: string;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
 }

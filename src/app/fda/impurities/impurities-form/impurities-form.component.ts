@@ -119,9 +119,9 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           this.impuritiesService.loadImpurities(response);
           this.impurities = this.impuritiesService.impurities;
 
-         // if (this.impurities.substanceUuid) {
-         //   this.getSubstancePreferredName(this.impurities.substanceUuid);
-        //  }
+          // if (this.impurities.substanceUuid) {
+          //   this.getSubstancePreferredName(this.impurities.substanceUuid);
+          //  }
         } else {
           this.handleProductRetrivalError();
         }
@@ -138,16 +138,12 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   validate(): void {
-
-    if ((this.impurities.impuritiesSubstanceList[0].substanceUuid === null)
-     || (this.impurities.impuritiesSubstanceList[0].substanceUuid === undefined)) {
-      this.substanceNameHintMessage = 'Substance Name is required';
-    }
-
-    //  if (this.impurities.substanceUuid) {
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
+
+    // Check validation on Client side.
+    this.validateClient();
 
     // If there is no error on client side, check validation on server side
     if (this.validationMessages.length === 0) {
@@ -174,6 +170,42 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
        */
     }
     //  }
+  }
+
+  setValidationMessage(message: string) {
+    const validate: ValidationMessage = {};
+    validate.message = message;
+    validate.messageType = 'ERROR';
+    this.validationMessages.push(validate);
+    this.validationResult = false;
+  }
+
+  // Validate data in client side first
+  validateClient(): void {
+    this.validationMessages = [];
+    this.validationResult = true;
+
+    // Validate Subsance
+    if (this.impurities.impuritiesSubstanceList.length === 0) {
+      this.setValidationMessage('Substance Name is required');
+    }
+
+    // Validate Substance Name
+    if (this.impurities != null) {
+      this.impurities.impuritiesSubstanceList.forEach((elementSub, index) => {
+        if (elementSub != null) {
+          if (elementSub.substanceUuid == null) {
+            this.setValidationMessage('Substance Name (' + (index + 1) + ') is required');
+          }
+        }
+      });
+    }
+
+    if (this.validationMessages.length > 0) {
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }
 
   }
 
@@ -263,59 +295,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     );
   }
 
-  getImpuritiesDetails() {
-    this.isLoading = true;
-    this.loadingService.setLoading(true);
-    this.errorMessage = 'Getting Existing Impurities...';
-
-    // Empty the Impurities Details list
-    //  this.impurities.impuritiesDetailsList.splice(0, this.impurities.impuritiesDetailsList.length);
-
-    const substanceUuid = this.impurities.impuritiesSubstanceList[0].substanceUuid;
-    if (substanceUuid) {
-      const getRelImpuritySubscribe = this.impuritiesService.getRelationshipImpurity(substanceUuid).subscribe(response => {
-        if (response) {
-          this.subRelationship = response.data;
-
-          if (Object.keys(this.subRelationship).length > 0) {
-            this.getRelationship();
-          } else {
-            this.errorMessage = 'No Impurities found';
-          }
-        }
-      });
-      this.subscriptions.push(getRelImpuritySubscribe);
-    } else {
-      this.errorMessage = 'Please select a Substance Name';
-    }
-
-    this.loadingService.setLoading(false);
-    this.isLoading = false;
-  }
-
-  getSubstancePreferredName(substanceUuid: string): void {
-    const getSubDetailsSubscribe = this.impuritiesService.getSubstanceDetailsBySubstanceId(substanceUuid).subscribe(substanceNames => {
-      this.searchValue = substanceNames.name;
-    });
-    this.subscriptions.push(getSubDetailsSubscribe);
-
-  }
-
-  getRelationship() {
-    this.errorMessage = 'Found ' + this.subRelationship.length + ' Existing Impurities';
-    // Add New Test
-    this.impuritiesService.addNewTest();
-    this.subRelationship.forEach((elementRel, indexRel) => {
-      this.createNewImpurities(elementRel.relationshipUuid);
-    });
-  }
-
-  createNewImpurities(relationshipUuid: string) {
-    const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
-    newImpuritiesDetails.relatedSubstanceUuid = relationshipUuid;
-    this.impurities.impuritiesTestList[0].impuritiesDetailsList.unshift(newImpuritiesDetails);
-  }
-
   showJSON(): void {
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -334,63 +313,8 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.addNewImpuritiesSubstance();
   }
 
-  addNewTest() {
-    this.impuritiesService.addNewTest();
-  }
-
-  addNewImpurities() {
-    this.impuritiesService.addNewImpurities();
-  }
-
-  addNewImpuritiesUnspecified() {
-    this.impuritiesService.addNewImpuritiesUnspecified();
-  }
-
   addNewImpuritiesTotal() {
     this.impuritiesService.addNewImpuritiesTotal();
-  }
-
-  confirmDeleteImpuritiesSubstance(impuritiesSubstanceIndex: number) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Substance ' + (impuritiesSubstanceIndex + 1) + '?' }
-    });
-
-    const closediagSubscribe = dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteImpuritiesSubstance(impuritiesSubstanceIndex);
-      }
-    });
-    this.subscriptions.push(closediagSubscribe);
-  }
-
-  deleteImpuritiesSubstance(impuritiesSubstanceIndex: number) {
-    this.impuritiesService.deleteImpuritiesSubstance(impuritiesSubstanceIndex);
-  }
-
-  getRelationshipImpurity(substanceId: string) {
-    this.impuritiesService.getRelationshipImpurity(substanceId);
-  }
-
-  relatedSubstanceUpdated(substance: any, impuritiesSubstanceIndex: number): void {
-    if (substance != null) {
-      this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].substanceUuid = substance.uuid;
-    }
-  }
-
-  processSubstanceSearch(searchValue: string = ''): void {
-    // Remove double quote
-    this.searchValue = searchValue.replace(/"/g, '');
-    this.substanceNameHintMessage = '';
-    const getQuickSumSubscribe = this.substanceService.getQuickSubstancesSummaries(this.searchValue, true).subscribe(response => {
-      if (response.content && response.content.length) {
-        const selectedSubstance = response.content[0];
-     //   this.impurities.substanceUuid = selectedSubstance.uuid;
-        this.errorMessage = '';
-      } else {
-        this.errorMessage = 'No substances found';
-      }
-    });
-    this.subscriptions.push(getQuickSumSubscribe);
   }
 
 }

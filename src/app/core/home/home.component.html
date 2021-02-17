@@ -4,7 +4,8 @@
       <mat-icon svgIcon="close"></mat-icon>
     </button>
   </div>
-  Welcome to the new user interface for GSRS 2.5 and onwards. Please be aware that you can return to the classic view by clicking
+  Welcome to the new user interface for GSRS 2.5 and onwards. Please be aware that you can return to the classic view by
+  clicking
   the white button on the top right. Please send any feedback to <a
     [href]="'mailto:' + contactEmail">{{contactEmail}}</a>.
 </mat-card>
@@ -50,7 +51,7 @@
         </span>
         <span *ngIf="appId === 'fda'">
           <mat-divider></mat-divider>
-         
+
           <a mat-list-item routerLink="/browse-applications">
             <mat-icon matListIcon svgIcon="search"></mat-icon>
             Browse All Applications
@@ -65,6 +66,13 @@
             <mat-icon matListIcon svgIcon="search"></mat-icon>
             Browse All Clinical Trials
           </a>
+          <div *ngIf="adverseEventShinyHomepageDisplay === true">
+            <mat-divider></mat-divider>
+            <a mat-list-item [href]="adverseEventShinyHomepageURL" target="_blank">
+              <mat-icon matListIcon svgIcon="search"></mat-icon>
+              Browse Adverse Events
+            </a>
+          </div>
           <mat-divider></mat-divider>
           <a mat-list-item routerLink="/structure-search">
             <mat-icon matListIcon svgIcon="search"></mat-icon>
@@ -75,14 +83,14 @@
             <mat-icon matListIcon svgIcon="search"></mat-icon>
             Sequence Search
           </a>
-        <mat-divider></mat-divider>
+          <mat-divider></mat-divider>
           <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=substance'">
-              <mat-icon matListIcon svgIcon="youtube"></mat-icon>
-  
-              Advanced Search
-              <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-  
-            </a>
+            <mat-icon matListIcon svgIcon="youtube"></mat-icon>
+
+            Advanced Search
+            <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+
+          </a>
 
           <mat-divider></mat-divider>
           <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=prod'">
@@ -243,7 +251,7 @@
             </a>
 
             <span *ngIf="appId === 'fda'">
-            
+
               <mat-divider></mat-divider>
               <a mat-list-item routerLink="/product/register">
                 <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
@@ -290,7 +298,7 @@
               </a>
 
             </span>
-          
+
           </mat-nav-list>
         </div>
       </div>

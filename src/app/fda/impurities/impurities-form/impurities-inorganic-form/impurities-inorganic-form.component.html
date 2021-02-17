@@ -1,0 +1,61 @@
+<br>
+<div class="tabStyle">
+  <div class="tabStyleHeader">Inorganic&nbsp;{{(impuritiesInorganicIndex+1)}}</div>
+</div>
+<mat-card class="margintop20px bordergray">
+  <mat-card-content>
+    <div class="flex-container marginleftneg7px padbottom10px">
+
+      <!-- Left Side -->
+      <div class="width25percent">
+        <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
+          header="Related Substance" [subuuid]="impuritiesInorganic.relatedSubstanceUuid">
+        </app-substance-selector>
+        <div class="textaligncenter font11px" *ngIf="impuritiesInorganic.relatedSubstanceUnii">
+          {{impuritiesInorganic.relatedSubstanceUnii}}
+        </div>
+      </div>
+
+      <!-- Right Side -->
+      <div class="flex-item width75percent padleft20px padright20px">
+
+        <div class="form-row">
+          <app-cv-input class="col-3-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
+            [model]="impuritiesInorganic.testType" (valueChange)="impuritiesInorganic.testType = $event">
+          </app-cv-input>
+
+          <app-cv-input class="col-3-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
+            [model]="impuritiesInorganic.limitType" (valueChange)="impuritiesInorganic.limitType = $event">
+          </app-cv-input>
+       
+          <div class="marginleftneg7px" style="margin-left:-20px;">
+            <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesInorganic()"
+              matTooltip="Delete Impurities Inorganic {{impuritiesInorganicIndex + 1}}">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field class="col-3-1">
+            <input matInput placeholder="Limit Value" [(ngModel)]="impuritiesInorganic.limitValue" name="limitValue" />
+          </mat-form-field>
+
+          <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesInorganic.unit"
+            (valueChange)="impuritiesInorganic.unit = $event">
+          </app-cv-input>
+
+          <mat-form-field class="col-3-1">
+            <input matInput placeholder="Comments" [(ngModel)]="impuritiesInorganic.comments" name="comments" />
+          </mat-form-field>
+        </div>
+
+      </div>
+      <!-- Right Side -->
+
+
+    </div>
+
+  </mat-card-content>
+</mat-card>

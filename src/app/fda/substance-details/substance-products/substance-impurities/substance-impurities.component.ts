@@ -3,6 +3,7 @@ import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ImpuritiesService } from '../../../impurities/service/impurities.service';
 import { SubstanceDetailsBaseTableDisplay } from '../substance-details-base-table-display';
+import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../../impurities/model/impurities.model';
 import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
@@ -20,16 +21,16 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
   @Output() countImpuritiesOut: EventEmitter<number> = new EventEmitter<number>();
   private subscriptions: Array<Subscription> = [];
   showSpinner = false;
+  impurities: any;
   impuritiesCount = 0;
+  impuritiesTestTotal = 0;
   displayedColumns: string[] = [
     'details',
     'sourceType',
     'source',
     'sourceid',
     'type',
-    'specType',
-    'testCount',
-    'unspecifiedCount'
+    'specType'
   ];
 
   constructor(
@@ -66,10 +67,17 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     this.showSpinner = true;  // Start progress spinner
     this.impuritiesService.getSubstanceImpurities(this.substanceUuid, this.page, this.pageSize).subscribe(results => {
       this.setResultData(results);
+      this.impurities = results;
+      this.getImpuritiesTestTotal();
       this.impuritiesCount = this.totalRecords;
       this.countImpuritiesOut.emit(this.impuritiesCount);
       this.showSpinner = false;  // Stop progress spinner
     });
+  }
+
+  getImpuritiesTestTotal(): void {
+    // Get Impurities Test Count
+    // if (Object.keys(this.impurities).length > 0) {}
   }
 
   impuritiesListExportUrl() {

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
+import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria, SubRelationship, ImpuritiesSubstance } from '../../model/impurities.model';
 import { ImpuritiesService } from '../../service/impurities.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { LoadingService } from '@gsrs-core/loading';
@@ -15,6 +15,7 @@ export class ImpuritiesTestFormComponent implements OnInit {
 
   @Input() impuritiesTest: ImpuritiesTesting;
   @Input() impuritiesTestIndex: number;
+  @Input() impuritiesSubstanceIndex: number;
 
   constructor( private impuritiesService: ImpuritiesService,
     private loadingService: LoadingService,
@@ -34,6 +35,10 @@ export class ImpuritiesTestFormComponent implements OnInit {
     this.impuritiesTest.impuritiesDetailsList.unshift(newImpuritiesDetails);
   }
 
+  addNewImpuritiesUnspecified() {
+    this.impuritiesService.addNewImpuritiesUnspecified(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
+  }
+
   confirmDeleteImpuritiesTest() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delele Test ' + (this.impuritiesTestIndex + 1) + '?' }
@@ -47,7 +52,7 @@ export class ImpuritiesTestFormComponent implements OnInit {
   }
 
   deleteImpuritiesTest() {
-    this.impuritiesService.deleteImpuritiesTest(this.impuritiesTestIndex);
+    this.impuritiesService.deleteImpuritiesTest(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
   }
 
 }

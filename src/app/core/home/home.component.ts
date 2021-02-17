@@ -24,6 +24,10 @@ export class HomeComponent implements OnInit {
   chemicon: string;
   clasicBaseHref: string;
 
+  //Config for Adverse Event on Shiny Server
+  adverseEventShinyHomepageDisplay = false;
+  adverseEventShinyHomepageURL: string;
+
   constructor(
     private gaService: GoogleAnalyticsService,
     private configService: ConfigService,
@@ -47,6 +51,8 @@ export class HomeComponent implements OnInit {
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';
+
+    this.getAdverseEventShinyConfig();
   }
 
   closeWelcomeMessage(): void {
@@ -57,4 +63,16 @@ export class HomeComponent implements OnInit {
   browseSubstances(): void {
     this.router.navigate(['/browse-substance']);
   }
+
+  getAdverseEventShinyConfig(): void {
+    if (this.configService.configData) {
+      if (this.configService.configData.adverseEventShinyHomepageDisplay && this.configService.configData.adverseEventShinyHomepageDisplay !== null) {
+        this.adverseEventShinyHomepageDisplay = JSON.parse(this.configService.configData.adverseEventShinyHomepageDisplay);
+      }
+      if (this.configService.configData.adverseEventShinyHomepageURL && this.configService.configData.adverseEventShinyHomepageURL !== null) {
+        this.adverseEventShinyHomepageURL = this.configService.configData.adverseEventShinyHomepageURL;
+      }
+    }
+  }
+
 }

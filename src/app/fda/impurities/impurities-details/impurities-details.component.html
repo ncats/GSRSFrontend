@@ -107,202 +107,313 @@
           </div>
 
           <!-- Substance Names Lists -->
-          <div class="details-container margintop30px">
-            <mat-card class="bordergray">
-              <mat-card-title class="title2">
-                Substance Names ({{impurities.impuritiesSubstanceList.length}})
-              </mat-card-title>
-              <mat-card-content>
-                <table class="blueTable">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Substance Name</th>
-                      <th>Assay Low</th>
-                      <th>Assay High</th>
-                      <th>Unit</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let x of impurities.impuritiesSubstanceList; let i = index">
-                      <td class="width40px">{{i + 1}}</td>
-                      <td class="width300px">
-                        <div *ngIf="x.substanceUuid">
-                          <a [routerLink]="['/substances', x.substanceUuid]" target="_blank">
-                            <span class="colororange font16px fontbold">{{x.substanceName}}</span>
-                          </a>
-                          <div *ngIf="x.substanceUuid" class="textaligncenter">
-                            <img class="structure-img" appSubstanceImage [entityId]="x.substanceUuid">
-                          </div>
-                        </div>
-                      </td>
-                      <td>{{ x.low }}</td>
-                      <td>{{ x.high }}</td>
-                      <td>{{ x.unit }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </mat-card-content>
-            </mat-card>
-          </div>
+          <div class="margintop30px marginbottom30px"
+            *ngFor="let subs of impurities.impuritiesSubstanceList; let i = index">
 
+            <div *ngIf="i > 0">
+              <br><br><br>
+            </div>
+            <div class="headerstyle title2 padleft20px">
+              <b>{{(i + 1)}} of {{impurities.impuritiesSubstanceList.length}}.&nbsp;Impurity Substance</b>
+            </div>
 
-          <!-- Impurities Test -->
-          <div class="title2 margintop30px">Total Test ({{impurities.impuritiesTestList.length}})</div>
-          <div class="details-container">
-            <mat-card class="bordergray">
-              <div *ngFor="let impTest of impurities.impuritiesTestList; let i = index">
+            <div class="bordergray">
+              <mat-card>
+                <!--
                 <mat-card-title class="title2">
-                  Test {{(i + 1)}}
+                  Substance Names ({{impurities.impuritiesSubstanceList.length}})
                 </mat-card-title>
+                -->
                 <mat-card-content>
 
-                  <div class="row">
+                  <div class="row-without-border">
                     <div class="row-property">
                       <div class="row-property-key">
-                        Test:
+                        Substance Name:
                       </div>
                       <div class="row-property-value">
-                        {{impTest.test}}
+                        <a [routerLink]="['/substances', subs.substanceUuid]" target="_blank">
+                          <span class="colororange font16px fontbold">{{subs.substanceName}}</span>
+                        </a>
+                        <div *ngIf="subs.relatedSubstanceUnii"><br>{{subs.relatedSubstanceUnii}}</div>
+                        <div *ngIf="subs.substanceUuid">
+                          <img class="structure-img" appSubstanceImage [entityId]="subs.substanceUuid">
+                        </div>
                       </div>
                     </div>
                     <div class="row-property">
                       <div class="row-property-key">
-                        Test Type:
+                        Assay Low:<br><br>
+                        Assay High:<br><br>
+                        Unit:<br>
                       </div>
                       <div class="row-property-value">
-                        {{impTest.testType}}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        Test Description:
-                      </div>
-                      <div class="row-property-value">
-                        {{impTest.testDescription}}
-                      </div>
-                    </div>
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        Comments:
-                      </div>
-                      <div class="row-property-value">
-                        {{impTest.comments}}
+                        {{subs.low}}<br><br>
+                        {{subs.high}}<br><br>
+                        {{subs.unit}}<br><br>
                       </div>
                     </div>
                   </div>
 
-                  <!-- Impurities Details List Begin -->
+                  <!-- Impurities Test List -->
+                  <!--
+                    <div class="title2">Total Test ({{subs.impuritiesTestList.length}})</div>
+                    -->
+
+                  <div *ngFor="let impTest of subs.impuritiesTestList; let i = index">
+                    <fieldset class="border">
+                      <legend class="border">
+                        Test {{(i + 1)}} of {{subs.impuritiesTestList.length}}
+                        <span class="font11px">({{subs.substanceName}})</span>
+                      </legend>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.test}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.testType}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test Description:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.testDescription}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Comments:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.comments}}
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <!-- Impurities Details List Begin -->
+                      <div class="details-container margintop30px">
+                        <mat-card class="bordergray">
+                          <mat-card-title class="title2">
+                            Impurities ({{impTest.impuritiesDetailsList.length}})
+                          </mat-card-title>
+                          <mat-card-content>
+                            <table class="blueTable">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th class="width150px">Related Substance</th>
+                                  <th>Impurity Type</th>
+                                  <th>Test Type</th>
+                                  <th>Limit Type</th>
+                                  <th>Limit Value</th>
+                                  <th>Unit</th>
+                                  <th>Comments</th>
+                                  <th>Identity Criteria</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let x of impTest.impuritiesDetailsList; let i = index">
+                                  <td>{{i + 1}}</td>
+                                  <td class="textaligncenter width200px">
+                                    <div *ngIf="x.relatedSubstanceUuid">
+                                      <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
+                                        target="_blank">{{x.substanceName}}</a>
+                                      <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
+                                      <img class="structure-image" appSubstanceImage
+                                        [entityId]="x.relatedSubstanceUuid">
+                                    </div>
+                                  </td>
+                                  <td>{{ x.impurityType }}</td>
+                                  <td>{{ x.testType }}</td>
+                                  <td>{{ x.limitType }}</td>
+                                  <td>{{ x.limitValue }}</td>
+                                  <td>{{ x.unit }}</td>
+                                  <td>{{ x.comments }}</td>
+                                  <td>
+                                    <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
+                                      <span *ngIf="j > 0"><br></span>
+                                      <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
+                                      <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
+                                      <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                      <!-- Impurities Details List End -->
+
+
+
+                      <!-- Unspecified Impurities Begin -->
+                      <div class="details-container margintop30px">
+                        <mat-card class="bordergray">
+                          <mat-card-title class="title2">
+                            Unspecified Impurities ({{impTest.impuritiesUnspecifiedList.length}})
+                          </mat-card-title>
+                          <mat-card-content>
+                            <table class="blueTable">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>Impurity Type</th>
+                                  <th>Test Type</th>
+                                  <th>Limit Type</th>
+                                  <th>Limit Value</th>
+                                  <th>Unit</th>
+                                  <th>Comments</th>
+                                  <th>Identity Criteria</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let x of impTest.impuritiesUnspecifiedList; let i = index">
+                                  <td>{{i + 1}}</td>
+                                  <td>{{ x.impurityType }}</td>
+                                  <td>{{ x.testType }}</td>
+                                  <td>{{ x.limitType }}</td>
+                                  <td>{{ x.limitValue }}</td>
+                                  <td>{{ x.unit }}</td>
+                                  <td>{{ x.comments }}</td>
+                                  <td>
+                                    <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
+                                      <span *ngIf="j > 0"><br></span>
+                                      <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
+                                      <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
+                                      <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                      <!-- Unspecified Impurities End -->
+
+
+                    </fieldset> <!-- TEST -->
+                    <br><br>
+                  </div> <!-- Test List Loop -->
+
+
+                  <!-- Impurities Residual Solvents Begin -->
                   <div class="details-container margintop30px">
                     <mat-card class="bordergray">
                       <mat-card-title class="title2">
-                        Impurities ({{impTest.impuritiesDetailsList.length}})
+                        Residual Solvents Impurities ({{subs.impuritiesResidualSolventsList.length}})
                       </mat-card-title>
                       <mat-card-content>
                         <table class="blueTable">
                           <thead>
                             <tr>
                               <th>#</th>
-                              <th class="width150px">Related Substance</th>
-                              <th>Impurity Type</th>
+                              <th>Related Substance</th>
+                              <th>Pharmaceutical Limit</th>
                               <th>Test Type</th>
                               <th>Limit Type</th>
                               <th>Limit Value</th>
                               <th>Unit</th>
                               <th>Comments</th>
-                              <th>Identity Criteria</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr *ngFor="let x of impTest.impuritiesDetailsList; let i = index">
+                            <tr *ngFor="let x of subs.impuritiesResidualSolventsList; let i = index">
                               <td>{{i + 1}}</td>
                               <td class="textaligncenter width200px">
                                 <div *ngIf="x.relatedSubstanceUuid">
                                   <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
-                                  target="_blank">{{x.substanceName}}</a>
-                                  <br>
+                                    target="_blank">{{x.substanceName}}</a>
+                                  <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
                                   <img class="structure-image" appSubstanceImage [entityId]="x.relatedSubstanceUuid">
                                 </div>
                               </td>
-                              <td>{{ x.impurityType }}</td>
+                              <td>{{ x.pharmaceuticalLimit }}</td>
                               <td>{{ x.testType }}</td>
                               <td>{{ x.limitType }}</td>
                               <td>{{ x.limitValue }}</td>
                               <td>{{ x.unit }}</td>
                               <td>{{ x.comments }}</td>
-                              <td>
-                                <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
-                                  <span *ngIf="j > 0"><br></span>
-                                  <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
-                                  <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
-                                  <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
-                                </div>
-                              </td>
                             </tr>
                           </tbody>
                         </table>
                       </mat-card-content>
                     </mat-card>
                   </div>
-                  <!-- Impurities Details List End -->
+                  <!-- Impurities Residual Solvents End -->
 
-                </mat-card-content>
-              </div> <!-- Test Loop -->
 
-            </mat-card>
-          </div>
+                  <!-- Impurities Inorganic Begin -->
+                  <div class="details-container margintop30px">
+                    <mat-card class="bordergray">
+                      <mat-card-title class="title2">
+                        Inorganic Impurities ({{subs.impuritiesInorganicList.length}})
+                      </mat-card-title>
+                      <mat-card-content>
+                        <table class="blueTable">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Related Substance</th>
+                              <th>Test Type</th>
+                              <th>Limit Type</th>
+                              <th>Limit Value</th>
+                              <th>Unit</th>
+                              <th>Comments</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let x of subs.impuritiesInorganicList; let i = index">
+                              <td>{{i + 1}}</td>
+                              <td class="textaligncenter width200px">
+                                <div *ngIf="x.relatedSubstanceUuid">
+                                  <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
+                                    target="_blank">{{x.substanceName}}</a>
+                                  <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
+                                  <img class="structure-image" appSubstanceImage [entityId]="x.relatedSubstanceUuid">
+                                </div>
+                              </td>
+                              <td>{{ x.testType }}</td>
+                              <td>{{ x.limitType }}</td>
+                              <td>{{ x.limitValue }}</td>
+                              <td>{{ x.unit }}</td>
+                              <td>{{ x.comments }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                  <!-- Impurities Residual Solvents End -->
 
-          <!-- Unspecified Impurities Begin -->
-          <div class="details-container margintop30px">
-            <mat-card class="bordergray">
-              <mat-card-title class="title2">
-                Unspecified Impurities ({{impurities.impuritiesUnspecifiedList.length}})
-              </mat-card-title>
-              <mat-card-content>
-                <table class="blueTable">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Impurity Type</th>
-                      <th>Test Type</th>
-                      <th>Limit Type</th>
-                      <th>Limit Value</th>
-                      <th>Unit</th>
-                      <th>Comments</th>
-                      <th>Identity Criteria</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let x of impurities.impuritiesUnspecifiedList; let i = index">
-                      <td>{{i + 1}}</td>
-                      <td>{{ x.impurityType }}</td>
-                      <td>{{ x.testType }}</td>
-                      <td>{{ x.limitType }}</td>
-                      <td>{{ x.limitValue }}</td>
-                      <td>{{ x.unit }}</td>
-                      <td>{{ x.comments }}</td>
-                      <td>
-                        <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
-                          <span *ngIf="j > 0"><br></span>
-                          <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
-                          <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
-                          <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </mat-card-content>
-            </mat-card>
-          </div>
-          <!-- Unspecified Impurities End -->
+                </mat-card-content> <!-- Substance List -->
+              </mat-card>
+            </div>
+
+
+          </div> <!-- Substance LOOP -->
+
 
 
           <!-- Total Impurities Begin -->
-          <div class="details-container margintop30px">
+          <div class="details-container">
             <mat-card class="bordergray">
               <mat-card-title class="title2">
                 Total Impurities

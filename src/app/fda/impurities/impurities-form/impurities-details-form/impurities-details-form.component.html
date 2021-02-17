@@ -12,6 +12,9 @@
           eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
           header="Related Substance" [subuuid]="impuritiesDetails.relatedSubstanceUuid">
         </app-substance-selector>
+        <div class="textaligncenter font11px" *ngIf="impuritiesDetails.relatedSubstanceUnii">
+        {{impuritiesDetails.relatedSubstanceUnii}}
+        </div>
       </div>
 
       <!-- Right Side -->
@@ -31,7 +34,7 @@
           </app-cv-input>
        
           <div class="marginleftneg7px" style="margin-left:-20px;">
-            <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesDetails(impuritiesTestIndex)"
+            <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesDetails()"
               matTooltip="Delete Impurities {{impuritiesDetailsIndex + 1}}">
               <mat-icon>delete_forever</mat-icon>
             </button>
@@ -64,7 +67,6 @@
             </button>
           </div>
 
-
           <div class="width75percent">
             <div class="marginbottom10px"
               *ngFor="let identityCriteria of impuritiesDetails.identityCriteriaList; let identityCriteriaIndex = index">
@@ -85,7 +87,7 @@
                 </app-cv-input>
 
                 <div class="col-3-1 marginleftneg40px" style="margin-left: -40px;">
-                  <button mat-icon-button color="primary" (click)="confirmDeleteIdentityCriteria(impuritiesTestIndex, identityCriteriaIndex)"
+                  <button mat-icon-button color="primary" (click)="confirmDeleteIdentityCriteria(impuritiesDetailsIndex, identityCriteriaIndex)"
                     matTooltip="Delete Identity Criteria {{identityCriteriaIndex + 1}}">
                     <mat-icon>delete_forever</mat-icon>
                   </button>

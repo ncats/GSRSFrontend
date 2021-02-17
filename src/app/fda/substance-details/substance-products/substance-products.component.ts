@@ -34,6 +34,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   baseDomain: string;
   foundProvenanceList = false;
   loadingComplete = false;
+  substanceName = '';
 
   public displayedColumns: string[] = [
     'productNDC',
@@ -106,6 +107,8 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
   getBdnum() {
     if (this.substance) {
+      // Get Substance Name
+      this.substanceName = this.substance._name;
       if (this.substance.codes.length > 0) {
         this.substance.codes.forEach(element => {
           if (element.codeSystem && element.codeSystem === 'BDNUM') {
