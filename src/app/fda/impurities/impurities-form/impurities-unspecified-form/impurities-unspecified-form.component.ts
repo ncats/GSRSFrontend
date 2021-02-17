@@ -46,12 +46,13 @@ export class ImpuritiesUnspecifiedFormComponent implements OnInit {
   }
 
   deleteImpuritiesUnspecified() {
-    this.impuritiesService.deleteImpuritiesUnspecified(this.impuritiesSubstanceIndex, 
+    this.impuritiesService.deleteImpuritiesUnspecified(this.impuritiesSubstanceIndex,
       this.impuritiesTestIndex, this.impuritiesUnspecifiedIndex);
   }
 
   addNewIdentityCriteria() {
-    this.impuritiesService.addNewIdentityCriteriaUnspecified(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesUnspecifiedIndex);
+    this.impuritiesService.addNewIdentityCriteriaUnspecified(this.impuritiesSubstanceIndex,
+       this.impuritiesTestIndex, this.impuritiesUnspecifiedIndex);
   }
 
   confirmDeleteIdentityCriteria(impuritiesUnspecifiedIndex: number) {
@@ -67,7 +68,7 @@ export class ImpuritiesUnspecifiedFormComponent implements OnInit {
   }
 
   deleteIdentityCriteria(identityCriteriaUnspecIndex: number) {
-    this.impuritiesService.deleteIdentityCriteriaUnspecified(this.impuritiesSubstanceIndex, 
+    this.impuritiesService.deleteIdentityCriteriaUnspecified(this.impuritiesSubstanceIndex,
       this.impuritiesTestIndex, this.impuritiesUnspecifiedIndex, identityCriteriaUnspecIndex);
   }
 

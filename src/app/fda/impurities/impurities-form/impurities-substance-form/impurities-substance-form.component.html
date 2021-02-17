@@ -10,6 +10,7 @@
         eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
         header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid">
       </app-substance-selector>
+      <div class="textaligncenter font11px" *ngIf="impuritiesSubstance.relatedSubstanceUnii">{{impuritiesSubstance.relatedSubstanceUnii}}</div>
     </div>
 
     <mat-form-field class="col-4-1">
@@ -80,5 +81,56 @@
 
   </mat-card-content>
 </mat-card>
-
 <!-- IMPURITIES TEST LIST END -->
+
+
+
+<!-- IMPURITIES RESIDUAL SOLVENT LIST BEGIN -->
+<br><br><br>
+<div class="divflex margintop50px">
+  <div class="titleblue">
+    <span matBadge="{{impuritiesSubstance.impuritiesResidualSolventsList.length}}" matBadgeColor="accent"
+      matBadgeSize="medium" matBadgeOverlap="false">
+      <span class="titleblue"><b>Residual Solvents</b></span>
+    </span>
+    
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="primary" (click)="addNewImpuritiesResidualSolvents()"
+      matTooltip="Add New Residual Solvent">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Residual Solvents
+    </button>
+  </div>
+</div>
+
+<div class="marginbottom10px"
+  *ngFor="let impuritiesResidualSolvents of impuritiesSubstance.impuritiesResidualSolventsList; let impuritiesResidualIndex = index">
+  <app-impurities-residual-solvents-form [impuritiesResidualSolvents]="impuritiesResidualSolvents"
+    [impuritiesResidualIndex]="impuritiesResidualIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+  </app-impurities-residual-solvents-form>
+</div>
+<!-- IMPURITIES RESIDUAL SOLVENT LIST END -->
+
+
+<!-- IMPURITIES ORGANICE LIST BEGIN -->
+<br><br><br>
+<div class="divflex margintop50px">
+  <div class="titleblue">
+    <span matBadge="{{impuritiesSubstance.impuritiesInorganicList.length}}" matBadgeColor="accent" matBadgeSize="medium"
+      matBadgeOverlap="false">
+      <span class="titleblue"><b>Inorganic Impurities</b></span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="primary" (click)="addNewImpuritiesInorganic()" matTooltip="Add New Inorganic">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Impurities Inorganic
+    </button>
+  </div>
+</div>
+
+<div class="marginbottom10px"
+  *ngFor="let impuritiesInorganic of impuritiesSubstance.impuritiesInorganicList; let impuritiesInorganicIndex = index">
+  <app-impurities-inorganic-form [impuritiesInorganic]="impuritiesInorganic"
+    [impuritiesInorganicIndex]="impuritiesInorganicIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+  </app-impurities-inorganic-form>
+</div>
+<!-- IMPURITIES INORGANIC LIST END -->
+      

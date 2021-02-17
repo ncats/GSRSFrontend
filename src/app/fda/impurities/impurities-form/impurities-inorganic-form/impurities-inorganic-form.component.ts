@@ -16,7 +16,6 @@ export class ImpuritiesInorganicFormComponent implements OnInit {
   @Input() impuritiesInorganic: ImpuritiesInorganic;
   @Input() impuritiesInorganicIndex: number;
   @Input() impuritiesSubstanceIndex: number;
-  @Input() impuritiesTestIndex: number;
 
   constructor(
     private impuritiesService: ImpuritiesService,
@@ -40,12 +39,13 @@ export class ImpuritiesInorganicFormComponent implements OnInit {
   }
 
   deleteImpuritiesInorganic() {
-    this.impuritiesService.deleteImpuritiesInorganic(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesInorganicIndex);
+    this.impuritiesService.deleteImpuritiesInorganic(this.impuritiesSubstanceIndex, this.impuritiesInorganicIndex);
   }
 
   relatedSubstanceUpdated(substance: any): void {
     if (substance != null) {
       this.impuritiesInorganic.relatedSubstanceUuid = substance.uuid;
+      this.impuritiesInorganic.relatedSubstanceUnii = substance.approvalID;
     }
   }
 

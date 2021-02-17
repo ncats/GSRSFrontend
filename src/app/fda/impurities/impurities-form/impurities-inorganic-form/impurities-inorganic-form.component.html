@@ -12,6 +12,9 @@
           eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
           header="Related Substance" [subuuid]="impuritiesInorganic.relatedSubstanceUuid">
         </app-substance-selector>
+        <div class="textaligncenter font11px" *ngIf="impuritiesInorganic.relatedSubstanceUnii">
+          {{impuritiesInorganic.relatedSubstanceUnii}}
+        </div>
       </div>
 
       <!-- Right Side -->

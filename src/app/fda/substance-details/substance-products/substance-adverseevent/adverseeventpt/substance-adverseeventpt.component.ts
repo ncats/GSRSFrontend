@@ -87,19 +87,23 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     if (this.configService.configData) {
 
       // Analysis by Substance in Shiny Config
-      if (this.configService.configData.adverseEventShinySubstanceNameDisplay !== null) {
+      if (this.configService.configData.adverseEventShinySubstanceNameDisplay
+         && this.configService.configData.adverseEventShinySubstanceNameDisplay !== null) {
         this.adverseEventShinySubstanceNameDisplay = JSON.parse(this.configService.configData.adverseEventShinySubstanceNameDisplay);
       }
-      if (this.configService.configData.adverseEventShinySubstanceNameURL !== null) {
+      if (this.configService.configData.adverseEventShinySubstanceNameURL 
+        && this.configService.configData.adverseEventShinySubstanceNameURL !== null) {
         this.adverseEventShinySubstanceNameURL = this.configService.configData.adverseEventShinySubstanceNameURL;
         this.adverseEventShinySubstanceNameURLWithParam = this.adverseEventShinySubstanceNameURL + decodeURIComponent(this.substanceName);
       }
 
       // Analysis by Adverse Event in Shiny Config
-      if (this.configService.configData.adverseEventShinyAdverseEventDisplay !== null) {
+      if (this.configService.configData.adverseEventShinyAdverseEventDisplay
+        && this.configService.configData.adverseEventShinyAdverseEventDisplay !== null) {
         this.adverseEventShinyAdverseEventDisplay = JSON.parse(this.configService.configData.adverseEventShinyAdverseEventDisplay);
       }
-      if (this.configService.configData.adverseEventShinyAdverseEventURL !== null) {
+      if (this.configService.configData.adverseEventShinyAdverseEventURL
+        && this.configService.configData.adverseEventShinyAdverseEventURL !== null) {
         this.adverseEventShinyAdverseEventURL = this.configService.configData.adverseEventShinyAdverseEventURL;
         this.adverseEventShinyAdverseEventURLWithParam = this.adverseEventShinyAdverseEventURL;
       }

@@ -39,14 +39,6 @@ export class ImpuritiesTestFormComponent implements OnInit {
     this.impuritiesService.addNewImpuritiesUnspecified(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
   }
 
-  addNewImpuritiesResidualSolvents() {
-    this.impuritiesService.addNewImpuritiesResidualSolvents(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
-  }
-
-  addNewImpuritiesInorganic() {
-    this.impuritiesService.addNewImpuritiesInorganic(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
-  }
-
   confirmDeleteImpuritiesTest() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delele Test ' + (this.impuritiesTestIndex + 1) + '?' }

@@ -24,12 +24,15 @@ export interface ImpuritiesSubstance {
   high?: number;
   unit?: string;
   substanceName?: string;
+  relatedSubstanceUnii?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
   impuritiesTestList?: Array<ImpuritiesTesting>;
+  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>;
+  impuritiesInorganicList?: Array<ImpuritiesInorganic>;
 }
 
 export interface ImpuritiesTesting {
@@ -45,8 +48,6 @@ export interface ImpuritiesTesting {
   internalVersion?: number;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
   impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
-  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>;
-  impuritiesInorganicList?: Array<ImpuritiesInorganic>;
 }
 
 export interface ImpuritiesDetails {
@@ -59,6 +60,7 @@ export interface ImpuritiesDetails {
   unit?: string;
   comments?: string;
   substanceName?: string;
+  relatedSubstanceUnii?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -105,6 +107,7 @@ export interface ImpuritiesResidualSolvents {
   unit?: string;
   comments?: string;
   substanceName?: string;
+  relatedSubstanceUnii?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -121,6 +124,7 @@ export interface ImpuritiesInorganic {
   unit?: string;
   comments?: string;
   substanceName?: string;
+  relatedSubstanceUnii?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

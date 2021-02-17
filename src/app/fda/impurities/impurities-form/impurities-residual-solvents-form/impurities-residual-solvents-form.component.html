@@ -12,6 +12,9 @@
           eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
           header="Related Substance" [subuuid]="impuritiesResidualSolvents.relatedSubstanceUuid">
         </app-substance-selector>
+        <div class="textaligncenter font11px" *ngIf="impuritiesResidualSolvents.relatedSubstanceUnii">
+          {{impuritiesResidualSolvents.relatedSubstanceUnii}}
+        </div>
       </div>
 
       <!-- Right Side -->
@@ -20,8 +23,8 @@
         <div class="form-row">
 
           <mat-form-field class="col-3-1">
-            <input matInput placeholder="Pharmaceutical Limit" [(ngModel)]="impuritiesResidualSolvents.pharmaceuticalLimit"
-              name="pharmaceuticalLimit" />
+            <input matInput placeholder="Pharmaceutical Limit"
+              [(ngModel)]="impuritiesResidualSolvents.pharmaceuticalLimit" name="pharmaceuticalLimit" />
           </mat-form-field>
 
           <app-cv-input class="col-3-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
@@ -29,9 +32,10 @@
           </app-cv-input>
 
           <app-cv-input class="col-3-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
-            [model]="impuritiesResidualSolvents.limitType" (valueChange)="impuritiesResidualSolvents.limitType = $event">
+            [model]="impuritiesResidualSolvents.limitType"
+            (valueChange)="impuritiesResidualSolvents.limitType = $event">
           </app-cv-input>
-       
+
           <div class="marginleftneg7px" style="margin-left:-20px;">
             <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesResidualSolvents()"
               matTooltip="Delete Impurities Residual Solvents {{impuritiesResidualIndex + 1}}">
@@ -42,11 +46,12 @@
 
         <div class="form-row">
           <mat-form-field class="col-3-1">
-            <input matInput placeholder="Limit Value" [(ngModel)]="impuritiesResidualSolvents.limitValue" name="limitValue" />
+            <input matInput placeholder="Limit Value" [(ngModel)]="impuritiesResidualSolvents.limitValue"
+              name="limitValue" />
           </mat-form-field>
 
-          <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesResidualSolvents.unit"
-            (valueChange)="impuritiesResidualSolvents.unit = $event">
+          <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit"
+            [model]="impuritiesResidualSolvents.unit" (valueChange)="impuritiesResidualSolvents.unit = $event">
           </app-cv-input>
 
           <mat-form-field class="col-3-1">

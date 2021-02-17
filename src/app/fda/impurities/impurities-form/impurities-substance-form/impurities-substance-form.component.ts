@@ -39,6 +39,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
   relatedSubstanceUpdated(substance: any): void {
     if (substance != null) {
       this.impuritiesSubstance.substanceUuid = substance.uuid;
+      this.impuritiesSubstance.relatedSubstanceUnii = substance.approvalID;
     }
   }
 
@@ -51,10 +52,12 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     if (substanceUuid) {
       const getRelImpuritySubscribe = this.impuritiesService.getRelationshipImpurity(substanceUuid).subscribe(response => {
         if (response) {
-          this.existingImpurities = response.data;
+          let relImpurities = response.data;
 
-          if (Object.keys(this.existingImpurities).length > 0) {
+          if (Object.keys(relImpurities).length > 0) {
             // Remove Duplicate Impurites Substance UUID
+            this.existingImpurities = relImpurities.filter((v, i) => relImpurities.findIndex
+            (item => item.relationshipUuid === v.relationshipUuid) === i);
             this.loadExistingImpurities();
           } else {
             this.errorMessage = 'No Impurities found';
@@ -72,15 +75,15 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
 
   loadExistingImpurities() {
     this.errorMessage = 'Found ' + this.existingImpurities.length + ' Existing Impurities';
-    //Add New Test
+    // Add New Test
     this.addNewTest();
-    this.existingImpurities.forEach((elementRel, indexRel) => {
+    this.existingImpurities.forEach((elementRel) => {
 
       const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
       newImpuritiesDetails.relatedSubstanceUuid = elementRel.relationshipUuid;
-
-      //Creating a New Impurities Detail for Test 0
-      this.impuritiesService.addNewImpuritiesDetails(this.impuritiesSubstanceIndex, 0, newImpuritiesDetails);      
+      newImpuritiesDetails.relatedSubstanceUnii = elementRel.relationshipUnii;
+      // Creating a New Impurities Detail for Test 0
+      this.impuritiesService.addNewImpuritiesDetails(this.impuritiesSubstanceIndex, 0, newImpuritiesDetails);
     });
   }
 
@@ -102,6 +105,14 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
 
   addNewTest() {
     this.impuritiesService.addNewTest(this.impuritiesSubstanceIndex);
+  }
+
+  addNewImpuritiesResidualSolvents() {
+    this.impuritiesService.addNewImpuritiesResidualSolvents(this.impuritiesSubstanceIndex);
+  }
+
+  addNewImpuritiesInorganic() {
+    this.impuritiesService.addNewImpuritiesInorganic(this.impuritiesSubstanceIndex);
   }
 
   confirmDeleteImpuritiesSubstance() {

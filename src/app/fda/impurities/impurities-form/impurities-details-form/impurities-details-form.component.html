@@ -12,6 +12,9 @@
           eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
           header="Related Substance" [subuuid]="impuritiesDetails.relatedSubstanceUuid">
         </app-substance-selector>
+        <div class="textaligncenter font11px" *ngIf="impuritiesDetails.relatedSubstanceUnii">
+        {{impuritiesDetails.relatedSubstanceUnii}}
+        </div>
       </div>
 
       <!-- Right Side -->
@@ -63,7 +66,6 @@
               <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Identity Criteria
             </button>
           </div>
-
 
           <div class="width75percent">
             <div class="marginbottom10px"

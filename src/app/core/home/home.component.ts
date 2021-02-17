@@ -66,10 +66,10 @@ export class HomeComponent implements OnInit {
 
   getAdverseEventShinyConfig(): void {
     if (this.configService.configData) {
-      if (this.configService.configData.adverseEventShinyHomepageDisplay !== null) {
+      if (this.configService.configData.adverseEventShinyHomepageDisplay && this.configService.configData.adverseEventShinyHomepageDisplay !== null) {
         this.adverseEventShinyHomepageDisplay = JSON.parse(this.configService.configData.adverseEventShinyHomepageDisplay);
       }
-      if (this.configService.configData.adverseEventShinyHomepageURL !== null) {
+      if (this.configService.configData.adverseEventShinyHomepageURL && this.configService.configData.adverseEventShinyHomepageURL !== null) {
         this.adverseEventShinyHomepageURL = this.configService.configData.adverseEventShinyHomepageURL;
       }
     }

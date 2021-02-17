@@ -16,14 +16,13 @@ export class ImpuritiesResidualSolventsFormComponent implements OnInit {
   @Input() impuritiesResidualSolvents: ImpuritiesResidualSolvents;
   @Input() impuritiesResidualIndex: number;
   @Input() impuritiesSubstanceIndex: number;
-  @Input() impuritiesTestIndex: number;
 
   constructor(
   private impuritiesService: ImpuritiesService,
   private loadingService: LoadingService,
   private authService: AuthService,
   private dialog: MatDialog) {}
-    
+
   ngOnInit() {
   }
 
@@ -40,12 +39,13 @@ export class ImpuritiesResidualSolventsFormComponent implements OnInit {
   }
   
   deleteImpuritiesResidualSolvents() {
-    this.impuritiesService.deleteImpuritiesResidualSolvents(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesResidualIndex);
+    this.impuritiesService.deleteImpuritiesResidualSolvents(this.impuritiesSubstanceIndex, this.impuritiesResidualIndex);
   }
 
   relatedSubstanceUpdated(substance: any): void {
     if (substance != null) {
       this.impuritiesResidualSolvents.relatedSubstanceUuid = substance.uuid;
+      this.impuritiesResidualSolvents.relatedSubstanceUnii = substance.approvalID;
     }
   }
 
