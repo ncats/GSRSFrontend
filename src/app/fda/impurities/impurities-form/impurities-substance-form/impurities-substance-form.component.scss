@@ -51,6 +51,19 @@
     display: flex;
   }
   
+  .flex-container {
+    display: flex;
+  }
+
+  .flex-container {
+    display: flex;
+  }
+  
+  .flex-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
   .mat-card {
     max-width: 1140px;
   }
@@ -82,12 +95,12 @@
     margin-right: 0px;
   }  
   
-  .col-6-3 {
-    width: calc((100% - 25px * 1) / 2);
+  .col-3-1 {
+    width: calc((100% - 25px * 2) / 3);
     margin-right: 25px;
   }
   
-  .col-6-3:last-child {
+  .col-3-1:last-child {
     margin-right: 0px;
   }  
   
@@ -282,8 +295,16 @@
     width: 200px;
   }
   
+  .width25percent {
+    width: 25%;
+  }
+  
   .width32percent {
     width: 32%;
+  }
+  
+  .width75percent {
+    width: 75%;
   }
   
   .colorgray {

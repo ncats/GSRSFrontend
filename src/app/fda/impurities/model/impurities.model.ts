@@ -23,6 +23,7 @@ export interface ImpuritiesSubstance {
   low?: number;
   high?: number;
   unit?: string;
+  comments?: string;
   substanceName?: string;
   relatedSubstanceUnii?: string;
   createdBy?: string;

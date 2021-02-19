@@ -654,6 +654,11 @@
       "order": 13
     },
     {
+      "display": "Browse Adverse Event",
+      "externalPath": "http://fdslv22014:9000/ginas/app",
+      "order": 14
+    },
+    {
       "display": "Register",
       "children": [
         {

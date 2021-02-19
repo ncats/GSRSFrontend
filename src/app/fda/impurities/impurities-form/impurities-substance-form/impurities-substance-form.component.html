@@ -3,44 +3,54 @@
   <hr>
   <br>
 </div>
-<div class="divflexrow">
-  <div class="form-row">
-    <div class="col-4-1">
-      <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
-        eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
-        header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid">
-      </app-substance-selector>
-      <div class="textaligncenter font11px" *ngIf="impuritiesSubstance.relatedSubstanceUnii">{{impuritiesSubstance.relatedSubstanceUnii}}</div>
+
+<div class="flex-container marginleftneg7px padbottom10px">
+
+  <!-- Left Side -->
+  <div class="width25percent">
+    <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
+      eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
+      header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid">
+    </app-substance-selector>
+    <div class="textaligncenter font11px" *ngIf="impuritiesSubstance.relatedSubstanceUnii">
+      {{impuritiesSubstance.relatedSubstanceUnii}}
     </div>
-
-    <mat-form-field class="col-4-1">
-      <input matInput placeholder="Assay Low" [(ngModel)]="impuritiesSubstance.low" name="low" />
-    </mat-form-field>
-
-    <mat-form-field class="col-4-1">
-      <input matInput placeholder="Assay High" [(ngModel)]="impuritiesSubstance.high" name="high" />
-    </mat-form-field>
-
-    <app-cv-input class="col-4-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesSubstance.unit"
-      (valueChange)="impuritiesSubstance.unit = $event">
-    </app-cv-input>
   </div>
 
-  <!-- Add and Delete Impurities Substance Button -->
-  <!--
-      <span class="width40px displayinlineblock">
-        <button mat-icon-button color="primary" *ngIf="impuritiesSubstanceIndex == 0"
-          (click)="addNewImpuritiesSubstance()" matTooltip="Add New Substance Name">
-          <mat-icon>add_circle_outline</mat-icon>
-        </button>
-      </span>
-    -->
-  <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesSubstance()"
-    matTooltip="Delete Substance Name">
-    <mat-icon>delete_forever</mat-icon>
-  </button>
 
-</div>
+  <!-- Right Side -->
+  <div class="flex-item width75percent padleft20px padright20px">
+    <div class="form-row">
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Assay Low" [(ngModel)]="impuritiesSubstance.low" name="low" />
+      </mat-form-field>
+
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Assay High" [(ngModel)]="impuritiesSubstance.high" name="high" />
+      </mat-form-field>
+
+      <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesSubstance.unit"
+        (valueChange)="impuritiesSubstance.unit = $event">
+      </app-cv-input>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="col-6-6" style="width:100%;">
+        <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesSubstance.comments" name="comments"></textarea>
+      </mat-form-field>
+
+      <!-- Add and Delete Impurities Substance Button -->
+      <div class="marginleftneg7px" style="margin-left:-10px;">
+        <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesSubstance()"
+          matTooltip="Delete Substance Name">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
+
+
+  </div> <!-- Right Side -->
+</div> <!-- container -->
 <br>
 
 <!-- IMPURITIES TEST LIST BEGIN -->
@@ -93,7 +103,7 @@
       matBadgeSize="medium" matBadgeOverlap="false">
       <span class="titleblue"><b>Residual Solvents</b></span>
     </span>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-raised-button color="primary" (click)="addNewImpuritiesResidualSolvents()"
       matTooltip="Add New Residual Solvent">
@@ -133,4 +143,3 @@
   </app-impurities-inorganic-form>
 </div>
 <!-- IMPURITIES INORGANIC LIST END -->
-      
