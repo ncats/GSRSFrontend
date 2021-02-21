@@ -24,8 +24,8 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   ) {
     this.vocabulary = data.vocabulary;
     this.terms = data.vocabulary.terms.sort(function(a, b) {
-      const textA = a.value.toUpperCase();
-      const textB = b.value.toUpperCase();
+      const textA = a.value ? a.value.toUpperCase() : '';
+      const textB = b.value ? b.value.toUpperCase() : '';
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
     });
     }

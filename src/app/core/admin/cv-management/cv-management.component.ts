@@ -38,7 +38,13 @@ export class CvManagementComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-      this.loading = true;
+      this.getVocab();
+      this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+  }
+
+  getVocab() {
+    this.loading = true;
       this.cvService.getVocabularies(null, 1000).subscribe(response => {
         this.loading = false;
         this.dictionary =  this.dictionaryService.getCVDomainRows();
@@ -57,8 +63,6 @@ export class CvManagementComponent implements OnInit {
          encodeURIComponent(JSON.stringify(this.vocabularies)));
          this.sortData({active: 'domain', direction: 'asc'});
       });
-      this.overlayContainer = this.overlayContainerService.getContainerElement();
-
   }
 
   getVocabType(type: string): string {
@@ -87,7 +91,8 @@ export class CvManagementComponent implements OnInit {
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
       if (response ) {
-          this.vocabularies[index] = response;
+        //  this.vocabularies[index] = response;
+        this.getVocab();
       }
     });
   }
