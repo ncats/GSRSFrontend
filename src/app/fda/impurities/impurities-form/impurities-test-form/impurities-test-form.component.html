@@ -2,6 +2,7 @@
 <div class="tabStyle">
   <div class="tabStyleHeader">Test &nbsp;{{(impuritiesTestIndex+1)}}</div>
 </div>
+
 <mat-card class="bordergray">
   <mat-card-content>
     <div class="form-row">
@@ -43,16 +44,48 @@
       </div>
     </div>
 
-    <!-- IMPURITIES DETAILS LIST BEGIN -->
     <div class="marginbottom10px"
       *ngFor="let impuritiesDetails of impuritiesTest.impuritiesDetailsList; let impuritiesDetailsIndex = index">
       <app-impurities-details-form [impuritiesDetails]="impuritiesDetails"
-        [impuritiesDetailsIndex]="impuritiesDetailsIndex"
-        [impuritiesTestIndex]="impuritiesTestIndex"
-        [relatedSubstanceUuid]="impuritiesDetails.relatedSubstanceUuid">
+        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex" [impuritiesDetailsIndex]="impuritiesDetailsIndex"
+        [impuritiesTestIndex]="impuritiesTestIndex" [relatedSubstanceUuid]="impuritiesDetails.relatedSubstanceUuid">
       </app-impurities-details-form>
     </div>
     <!-- IMPURITIES DETAILS LIST END -->
+
+
+    <br><br>
+    <!-- IMPURITIES UNSPECIFIED LIST BEGIN -->
+    <!--
+    <mat-card class="margintop20px bordergray">
+      <mat-card-title class="titleblue">
+      -->
+    <span matBadge="{{impuritiesTest.impuritiesUnspecifiedList.length}}" matBadgeColor="accent" matBadgeSize="medium"
+      matBadgeOverlap="false">
+      <span class="titleblue"><b>Unspecified Impurities</b></span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="primary" (click)="addNewImpuritiesUnspecified()"
+      matTooltip="Add New Unspecified Impurities">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Unspecified Impurities
+    </button>
+    <!--
+      </mat-card-title>
+      <mat-card-content>
+      -->
+    <br>
+    <div class="marginbottom10px"
+      *ngFor="let impuritiesUnspecified of impuritiesTest.impuritiesUnspecifiedList; let impuritiesUnspecifiedIndex = index">
+      <app-impurities-unspecified-form [impuritiesUnspecified]="impuritiesUnspecified"
+        [impuritiesUnspecifiedIndex]="impuritiesUnspecifiedIndex" [impuritiesTestIndex]="impuritiesTestIndex"
+        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+      </app-impurities-unspecified-form>
+    </div>
+    <!--
+      </mat-card-content>
+    </mat-card>
+  -->
+    <!-- IMPURITIES UNSPECIFIED LIST END -->
 
   </mat-card-content>
 </mat-card>

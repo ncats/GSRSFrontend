@@ -3,9 +3,9 @@
     [model]="impuritiesTotal.testType" (valueChange)="impuritiesTotal.testType = $event">
   </app-cv-input>
 
-  <mat-form-field class="col-5-1">
-    <input matInput placeholder="Limit Type" [(ngModel)]="impuritiesTotal.limitType" name="limitType" />
-  </mat-form-field>
+  <app-cv-input class="col-5-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
+    [model]="impuritiesTotal.limitType" (valueChange)="impuritiesTotal.limitType = $event">
+  </app-cv-input>
 
   <mat-form-field class="col-5-1">
     <input matInput placeholder="Limit Value" [(ngModel)]="impuritiesTotal.limitValue" name="limitValue" />

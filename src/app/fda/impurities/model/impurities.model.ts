@@ -14,8 +14,6 @@ export interface Impurities {
   modifyDate?: number;
   internalVersion?: number;
   impuritiesSubstanceList?: Array<ImpuritiesSubstance>;
-  impuritiesTestList?: Array<ImpuritiesTesting>;
-  impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
   impuritiesTotal?: ImpuritiesTotal;
 }
 
@@ -26,11 +24,15 @@ export interface ImpuritiesSubstance {
   high?: number;
   unit?: string;
   substanceName?: string;
+  relatedSubstanceUnii?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
+  impuritiesTestList?: Array<ImpuritiesTesting>;
+  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>;
+  impuritiesInorganicList?: Array<ImpuritiesInorganic>;
 }
 
 export interface ImpuritiesTesting {
@@ -45,6 +47,7 @@ export interface ImpuritiesTesting {
   modifyDate?: number;
   internalVersion?: number;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
+  impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
 }
 
 export interface ImpuritiesDetails {
@@ -57,6 +60,7 @@ export interface ImpuritiesDetails {
   unit?: string;
   comments?: string;
   substanceName?: string;
+  relatedSubstanceUnii?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -91,6 +95,41 @@ export interface ImpuritiesUnspecified {
   modifyDate?: number;
   internalVersion?: number;
   identityCriteriaList?: Array<IdentityCriteria>;
+}
+
+export interface ImpuritiesResidualSolvents {
+  id?: number;
+  relatedSubstanceUuid?: string;
+  pharmaceuticalLimit?: string;
+  testType?: string;
+  limitValue?: number;
+  limitType?: string;
+  unit?: string;
+  comments?: string;
+  substanceName?: string;
+  relatedSubstanceUnii?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ImpuritiesInorganic {
+  id?: number;
+  relatedSubstanceUuid?: string;
+  testType?: string;
+  limitValue?: number;
+  limitType?: string;
+  unit?: string;
+  comments?: string;
+  substanceName?: string;
+  relatedSubstanceUnii?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
 }
 
 export interface ImpuritiesTotal {
