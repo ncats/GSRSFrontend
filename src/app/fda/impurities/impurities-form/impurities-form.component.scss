@@ -234,6 +234,10 @@
   margin-top: 10px;
 }
 
+.margintop12px {
+  margin-top: 12px;
+}
+
 .margintop20px {
   margin-top: 20px;
 }
@@ -408,7 +412,30 @@ box-shadow: 0 2px 2px rgba(0,0,0,.4);
   mat-hint {
     color: red !important;
   }
-  
+}
+
+.mat-expansion-indicator
+{
+   pointer-events: visiblefill !important; 
+}
+
+.panel-style { 
+
+  /*
+  mat-expansion-indicator
+  {
+    pointer-events: visiblefill !important; 
+  }
+  */
+  .mat-expansion-panel-header {
+    /* background-color: rgb(238, 238, 238); */
+  }
+
+  .mat-panel-title {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+  }
 }
 
 .errortext {

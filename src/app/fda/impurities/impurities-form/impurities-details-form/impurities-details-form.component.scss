@@ -302,6 +302,10 @@ marginleftneg7px {
   margin-left: -7px;
 }
 
+.marginright10px {
+  margin-right: 10px;
+}
+
 .padtop5px {
   padding-top: 5px;
 }
@@ -316,6 +320,10 @@ marginleftneg7px {
 
 .padleft20px {
   padding-left: 20px;
+}
+
+.padleft105px {
+  padding-left: 105px;
 }
 
 .padleftneg20px {
@@ -356,6 +364,12 @@ marginleftneg7px {
   width: 25%;
 }
 
+.width160px {
+  width: 160px;
+  min-width: 160px;
+  max-width: 160px
+}
+
 .width75percent {
   width: 75%;
 }
@@ -373,7 +387,7 @@ marginleftneg7px {
 }
 
 colororange {
-  color: orangered;
+  color: rgb(158, 56, 19);
 }
 
 .font11px {
@@ -491,9 +505,9 @@ colororange {
   font-weight: bold;
   font-family: Verdana;
   color: #0857d6;
-  padding-left: 20px;
   padding-top: 5px;
   padding-right: 5px;
+  text-align: center;
 }
 
 ::ng-deep .related-substance img {

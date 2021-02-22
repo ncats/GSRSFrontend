@@ -48,6 +48,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   subRelationship: Array<SubRelationship> = [];
   substanceName: string;
   substanceNameHintMessage = '';
+  panelExpanded = true;
 
   constructor(
     private impuritiesService: ImpuritiesService,
@@ -309,7 +310,9 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
   }
 
-  addNewImpuritiesSubstance() {
+  addNewImpuritiesSubstance(event: Event) {
+    event.stopPropagation();
+
     this.impuritiesService.addNewImpuritiesSubstance();
   }
 
@@ -317,4 +320,12 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.addNewImpuritiesTotal();
   }
 
+  /*
+  panelOpened() {
+     (closed)="panelClosed()" (opened)="panelOpened()" 
+  }
+
+  panelClosed() {
+  }
+  */
 }

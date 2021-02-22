@@ -310,6 +310,10 @@ marginleftneg7px {
   padding-left: 20px;
 }
 
+.padleft185px {
+  padding-left: 185px;
+}
+
 .padleftneg20px {
   padding-left: -20px;
 }
@@ -318,12 +322,16 @@ marginleftneg7px {
   padding-right: 20px;
 }
 
+.padbottom10px {
+  padding-bottom: 10px;
+}
+
 .bordergray {
   border: 1px solid gray;
 }
 
-.padbottom10px {
-  padding-bottom: 10px;
+.borderblue {
+  border: 2px solid rgb(70, 101, 194);
 }
 
 .bordergreen {
@@ -469,7 +477,7 @@ marginleftneg7px {
   width: 120px;
   height: 30px;
   border: 1px solid gray;
-  background: #eee2b9;
+  background: #cde3fd;
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
   -moz-border-radius-topleft: 5px;

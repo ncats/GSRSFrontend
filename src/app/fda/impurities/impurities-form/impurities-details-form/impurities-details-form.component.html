@@ -1,19 +1,28 @@
 <br>
-<div class="tabStyle">
-  <div class="tabStyleHeader">Impurities&nbsp;{{(impuritiesDetailsIndex+1)}}</div>
+<div class="divflex height30px">
+  <div class="tabStyle">
+    <div class="tabStyleHeader">Impurities&nbsp;{{(impuritiesDetailsIndex+1)}}</div>
+  </div>
+  <div class="padleft105px margintopneg10px">
+    <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesDetails()"
+      matTooltip="Delete Impurities {{impuritiesDetailsIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
 </div>
+
 <mat-card class="margintop20px bordergray">
   <mat-card-content>
     <div class="flex-container marginleftneg7px padbottom10px">
 
       <!-- Left Side -->
-      <div class="width25percent">
+      <div class="width25percent textaligncenter">
         <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
           eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
           header="Related Substance" [subuuid]="impuritiesDetails.relatedSubstanceUuid">
         </app-substance-selector>
-        <div class="textaligncenter font11px" *ngIf="impuritiesDetails.relatedSubstanceUnii">
-        {{impuritiesDetails.relatedSubstanceUnii}}
+        <div class="textaligncenter font11px colororange" *ngIf="impuritiesDetails.relatedSubstanceUnii">
+          {{impuritiesDetails.relatedSubstanceUnii}}
         </div>
       </div>
 
@@ -32,13 +41,6 @@
           <app-cv-input class="col-3-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
             [model]="impuritiesDetails.limitType" (valueChange)="impuritiesDetails.limitType = $event">
           </app-cv-input>
-       
-          <div class="marginleftneg7px" style="margin-left:-20px;">
-            <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesDetails()"
-              matTooltip="Delete Impurities {{impuritiesDetailsIndex + 1}}">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </div>
 
         </div>
 
@@ -52,7 +54,8 @@
           </app-cv-input>
 
           <mat-form-field class="col-3-1">
-            <input matInput placeholder="Comments" [(ngModel)]="impuritiesDetails.comments" name="comments" />
+            <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesDetails.comments" name="comments"
+              rows="1"></textarea>
           </mat-form-field>
         </div>
 
@@ -60,10 +63,13 @@
         <!-- Identity Criteria -->
         <div class="flex-container margintop10px marginleftneg7px">
 
-          <div class="width25percent padbottom10px">
+          <div class="width25percent width160px padbottom10px marginright10px">
             <button mat-raised-button color="primary" (click)="addNewIdentityCriteria()"
               matTooltip="Add Identity Criteria">
-              <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Identity Criteria
+              <!--
+              <mat-icon svgIcon="add_circle_outline"></mat-icon>
+              -->
+              Add Identity Criteria
             </button>
           </div>
 
@@ -87,7 +93,8 @@
                 </app-cv-input>
 
                 <div class="col-3-1 marginleftneg40px" style="margin-left: -40px;">
-                  <button mat-icon-button color="primary" (click)="confirmDeleteIdentityCriteria(impuritiesDetailsIndex, identityCriteriaIndex)"
+                  <button mat-icon-button color="primary"
+                    (click)="confirmDeleteIdentityCriteria(impuritiesDetailsIndex, identityCriteriaIndex)"
                     matTooltip="Delete Identity Criteria {{identityCriteriaIndex + 1}}">
                     <mat-icon>delete_forever</mat-icon>
                   </button>

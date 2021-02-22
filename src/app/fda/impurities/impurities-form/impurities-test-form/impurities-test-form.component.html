@@ -1,9 +1,17 @@
 <br>
-<div class="tabStyle">
-  <div class="tabStyleHeader">Test &nbsp;{{(impuritiesTestIndex+1)}}</div>
+<div class="divflex height30px">
+  <div class="tabStyle">
+    <div class="tabStyleHeader">Test &nbsp;{{(impuritiesTestIndex+1)}}</div>
+  </div>
+  <div class="padleft185px margintopneg10px">
+    <button class="marginleft20px" mat-icon-button color="primary" (click)="confirmDeleteImpuritiesTest()"
+      matTooltip="Delete Test {{impuritiesTestIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
 </div>
 
-<mat-card class="bordergray">
+<mat-card class="borderblue">
   <mat-card-content>
     <div class="form-row">
       <mat-form-field class="col-2-1">
@@ -41,11 +49,6 @@
            <input matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments" />
         </mat-form-field>
         -->
-
-      <button style="margin-left: -30px;" mat-icon-button color="primary" (click)="confirmDeleteImpuritiesTest()"
-        matTooltip="Delete Test">
-        <mat-icon>delete_forever</mat-icon>
-      </button>
     </div>
 
     <!-- IMPURITIES DETAILS LIST BEGIN -->

@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { SubstanceTextSearchModule } from '@gsrs-core/substance-text-search/substance-text-search.module';
@@ -63,6 +64,7 @@ const impurityRoutes: Routes = [
     MatTooltipModule,
     MatIconModule,
     MatBadgeModule,
+    MatExpansionModule,
     SubstanceFormModule,
     SubstanceTextSearchModule,
     SubstanceSearchSelectorModule,
