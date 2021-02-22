@@ -1,13 +1,22 @@
 <br>
-<div class="tabStyle">
-  <div class="tabStyleHeader">Residual Solvents&nbsp;{{(impuritiesResidualIndex+1)}}</div>
+<div class="divflex height30px">
+  <div class="tabStyle">
+    <div class="tabStyleHeader">Residual Solvents&nbsp;{{(impuritiesResidualIndex+1)}}</div>
+  </div>
+  <div class="padleft105px margintopneg10px">
+    <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesResidualSolvents()"
+      matTooltip="Delete Impurities Residual Solvents {{impuritiesResidualIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
 </div>
+
 <mat-card class="margintop20px bordergray">
   <mat-card-content>
     <div class="flex-container marginleftneg7px padbottom10px">
 
       <!-- Left Side -->
-      <div class="width25percent">
+      <div class="width25percent textaligncenter">
         <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
           eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
           header="Related Substance" [subuuid]="impuritiesResidualSolvents.relatedSubstanceUuid">
@@ -27,21 +36,15 @@
               [(ngModel)]="impuritiesResidualSolvents.pharmaceuticalLimit" name="pharmaceuticalLimit" />
           </mat-form-field>
 
-          <app-cv-input class="col-3-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
-            [model]="impuritiesResidualSolvents.testType" (valueChange)="impuritiesResidualSolvents.testType = $event">
-          </app-cv-input>
+          <mat-form-field class="col-3-1">
+            <input matInput placeholder="Test Type"
+              [(ngModel)]="impuritiesResidualSolvents.testType" name="testType" />
+          </mat-form-field>
 
           <app-cv-input class="col-3-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
             [model]="impuritiesResidualSolvents.limitType"
             (valueChange)="impuritiesResidualSolvents.limitType = $event">
           </app-cv-input>
-
-          <div class="marginleftneg7px" style="margin-left:-20px;">
-            <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesResidualSolvents()"
-              matTooltip="Delete Impurities Residual Solvents {{impuritiesResidualIndex + 1}}">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </div>
         </div>
 
         <div class="form-row">
@@ -55,7 +58,8 @@
           </app-cv-input>
 
           <mat-form-field class="col-3-1">
-            <input matInput placeholder="Comments" [(ngModel)]="impuritiesResidualSolvents.comments" name="comments" />
+            <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesResidualSolvents.comments" name="comments"
+              rows="1"></textarea>
           </mat-form-field>
         </div>
 

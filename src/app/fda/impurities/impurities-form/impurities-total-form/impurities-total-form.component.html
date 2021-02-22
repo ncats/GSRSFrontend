@@ -1,7 +1,8 @@
 <div class="form-row">
-  <app-cv-input class="col-5-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
-    [model]="impuritiesTotal.testType" (valueChange)="impuritiesTotal.testType = $event">
-  </app-cv-input>
+  <mat-form-field class="col-3-1">
+    <input matInput placeholder="Test Type"
+      [(ngModel)]="impuritiesTotal.testType" name="testType" />
+  </mat-form-field>
 
   <app-cv-input class="col-5-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
     [model]="impuritiesTotal.limitType" (valueChange)="impuritiesTotal.limitType = $event">
@@ -16,6 +17,7 @@
   </mat-form-field>
 
   <mat-form-field class="col-5-1">
-    <input matInput placeholder="Comments" [(ngModel)]="impuritiesTotal.comments" name="comments" />
+    <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesTotal.comments" name="comments"
+    rows="1"></textarea>
   </mat-form-field>
 </div>

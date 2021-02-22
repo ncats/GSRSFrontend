@@ -1,34 +1,55 @@
 <br>
-<div class="tabStyle">
-  <div class="tabStyleHeader">Test &nbsp;{{(impuritiesTestIndex+1)}}</div>
+<div class="divflex height30px">
+  <div class="tabStyle">
+    <div class="tabStyleHeader">Test &nbsp;{{(impuritiesTestIndex+1)}}</div>
+  </div>
+  <div class="padleft185px margintopneg10px">
+    <button class="marginleft20px" mat-icon-button color="primary" (click)="confirmDeleteImpuritiesTest()"
+      matTooltip="Delete Test {{impuritiesTestIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
 </div>
 
-<mat-card class="bordergray">
+<mat-card class="borderblue">
   <mat-card-content>
     <div class="form-row">
-      <mat-form-field class="col-4-1">
+      <mat-form-field class="col-2-1">
         <input matInput placeholder="Test" [(ngModel)]="impuritiesTest.test" name="test" />
       </mat-form-field>
 
-      <app-cv-input class="col-4-1" domain="IMPURITIES_IMPURITY_TYPE" title="Test Type" name="testType"
+      <app-cv-input class="col-2-1" domain="IMPURITIES_IMPURITY_TYPE" title="Test Type" name="testType"
         [model]="impuritiesTest.testType" (valueChange)="impuritiesTest.testType = $event">
       </app-cv-input>
-
-      <mat-form-field class="col-4-1">
-        <input matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
-          name="testDescription" />
-      </mat-form-field>
-
-      <mat-form-field class="col-4-1">
-        <input matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments" />
-      </mat-form-field>
-
-      <button style="margin-left: -30px;" mat-icon-button color="primary" (click)="confirmDeleteImpuritiesTest()"
-        matTooltip="Delete Test">
-        <mat-icon>delete_forever</mat-icon>
-      </button>
     </div>
 
+    <!--
+      <div class="col-4-1">
+        <div class="textarea-label">Test Description</div>
+        <textarea placeholder="" [(ngModel)]="impuritiesTest.testDescription" name="testDescription"></textarea>
+      </div>
+      -->
+    <div class="form-row">
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
+          name="testDescription"></textarea>
+      </mat-form-field>
+      <!--
+          <mat-form-field class="col-4-1">
+           <input matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
+            name="testDescription" />
+          </mat-form-field>
+          -->
+
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments"></textarea>
+      </mat-form-field>
+      <!--
+        <mat-form-field class="col-2-1">
+           <input matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments" />
+        </mat-form-field>
+        -->
+    </div>
 
     <!-- IMPURITIES DETAILS LIST BEGIN -->
     <div class="divflex margintop10px">

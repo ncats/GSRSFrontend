@@ -1,13 +1,22 @@
 <br>
-<div class="tabStyle">
-  <div class="tabStyleHeader">Inorganic&nbsp;{{(impuritiesInorganicIndex+1)}}</div>
+<div class="divflex height30px">
+  <div class="tabStyle">
+    <div class="tabStyleHeader">Inorganic&nbsp;{{(impuritiesInorganicIndex+1)}}</div>
+  </div>
+  <div class="padleft105px margintopneg10px">
+    <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesInorganic()"
+      matTooltip="Delete Impurities Inorganic {{impuritiesInorganicIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
 </div>
-<mat-card class="margintop20px bordergray">
+
+<mat-card class="bordergray">
   <mat-card-content>
     <div class="flex-container marginleftneg7px padbottom10px">
 
       <!-- Left Side -->
-      <div class="width25percent">
+      <div class="width25percent textaligncenter">
         <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
           eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
           header="Related Substance" [subuuid]="impuritiesInorganic.relatedSubstanceUuid">
@@ -28,26 +37,21 @@
           <app-cv-input class="col-3-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
             [model]="impuritiesInorganic.limitType" (valueChange)="impuritiesInorganic.limitType = $event">
           </app-cv-input>
-       
-          <div class="marginleftneg7px" style="margin-left:-20px;">
-            <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesInorganic()"
-              matTooltip="Delete Impurities Inorganic {{impuritiesInorganicIndex + 1}}">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </div>
-        </div>
 
-        <div class="form-row">
           <mat-form-field class="col-3-1">
             <input matInput placeholder="Limit Value" [(ngModel)]="impuritiesInorganic.limitValue" name="limitValue" />
           </mat-form-field>
 
+        </div>
+
+        <div class="form-row">
           <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesInorganic.unit"
             (valueChange)="impuritiesInorganic.unit = $event">
           </app-cv-input>
 
-          <mat-form-field class="col-3-1">
-            <input matInput placeholder="Comments" [(ngModel)]="impuritiesInorganic.comments" name="comments" />
+          <mat-form-field class="col-3-2">
+            <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesInorganic.comments"
+            name="comments" rows="1"></textarea>
           </mat-form-field>
         </div>
 

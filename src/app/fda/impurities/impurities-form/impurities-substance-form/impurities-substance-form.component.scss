@@ -43,12 +43,24 @@
     font-weight: 700px;
     font-family: Arial, Helvetica, sans-serif;
     color: blue;
-  
-    /*padding-left: 70px; */
+    padding-top: 10px;
   }
   
   .divflex {
     display: flex;
+  }
+  
+  .flex-container {
+    display: flex;
+  }
+
+  .flex-container {
+    display: flex;
+  }
+  
+  .flex-item {
+    display: flex;
+    flex-direction: column;
   }
   
   .mat-card {
@@ -82,12 +94,12 @@
     margin-right: 0px;
   }  
   
-  .col-6-3 {
-    width: calc((100% - 25px * 1) / 2);
+  .col-3-1 {
+    width: calc((100% - 25px * 2) / 3);
     margin-right: 25px;
   }
   
-  .col-6-3:last-child {
+  .col-3-1:last-child {
     margin-right: 0px;
   }  
   
@@ -230,60 +242,106 @@
     margin-top: -10px;
   }
   
-  .margintop10px {
-    margin-top: 10px;
+  .margintop5px {
+    margin-top: 5px;
   }
+
+.margintop10px {
+  margin-top: 10px;
+}
   
-  .margintop20px {
-    margin-top: 20px;
-  }
+.margintop15px {
+  margin-top: 15px;
+}
   
-  .margintop90px {
-    margin-top: 90px;
-  }
+.margintop20px {
+  margin-top: 20px;
+}
   
-  .marginleft20px {
-    margin-left: 20px;
-  }
+.margintop90px {
+  margin-top: 90px;
+}
   
-  .marginleft30px {
-    margin-left: 30px;
-  }
+.margintop12px {
+  margin-top: 12px;
+}
   
-  .padtop5px {
-    padding-top: 5px;
-  }
+.marginleft20px {
+  margin-left: 20px;
+}
   
-  .padtop10px {
-    padding-top: 10px;
-  }
+.marginleft25px {
+  margin-left: 25px;
+}
+
+.marginleft30px {
+  margin-left: 30px;
+}
   
-  .padtop17px {
-    padding-top: 17px;
-  }
+.marginright30px {
+  margin-right: 30px;
+}
+
+.padtop5px {
+  padding-top: 5px;
+}
   
-  .bordergray {
-    border: 1px solid gray;
-  }
+.padtop10px {
+  padding-top: 10px;
+}
   
-  .bordergreen {
-    border: 1px solid green;
-  }
+.padtop17px {
+  padding-top: 17px;
+}
+
+.padleft185px {
+  padding-left: 185px;
+}
   
-  .width40px {
-    width: 40px;
-  }
+.borderlightgray {
+  border: 1px solid rgb(224, 224, 224);
+}
   
-  .width50px {
-    width: 50px;
-  }
+.borderyellow {
+  border: 1px solid rgb(231, 197, 2);
+}
+
+.bordergray {
+  border: 1px solid gray;
+}
   
-  .width200px {
-    width: 200px;
-  }
+.bordergreen {
+  border: 1px solid green;
+}
+  
+.borderstructure {
+  border: 1px solid rgb(231, 231, 231);
+  box-shadow: 2px 2px #eeeeee;
+  margin-right: 10px;
+}
+
+.width40px {
+  width: 40px;
+}
+  
+.width50px {
+  width: 50px;
+}
+  
+.width200px {
+  width: 200px;
+}
+  
+.width25percent {
+  width: 25%;
+}
   
   .width32percent {
     width: 32%;
+  }
+  
+  .width75percent {
+    width: 75%;
   }
   
   .colorgray {
@@ -306,6 +364,10 @@
     font-size: 13px;
   }
   
+  .textalignleft {
+    text-align: left;
+  }
+
   .textalignright {
     text-align: right;
   }
@@ -352,20 +414,10 @@
   }
   
   .tabStyle {
-    width: 250px;
+    width: 200px;
     height: 30px;
     border: 1px solid gray;
-    background: #b2b2b2;
-  /*
-  background-image: linear-gradient(to bottom, #fff, #b2b2b2);
-  padding: .7em 1.5em;
-  float: left;
-  text-decoration: none;
-  color: #444;
-  text-shadow: 0 1px 0 rgba(255,255,255,.8);
-  border-radius: 5px 0 0 0;
-  box-shadow: 0 2px 2px rgba(0,0,0,.4);
-  */
+    background: #fcf8eb
   }
   
   .mat-form-field-style > {
@@ -415,15 +467,61 @@
     
   }
   
-  .errortext {
-    color: red;
-    font-size: 11px;
-  }
+.errortext {
+  color: red;
+  font-size: 11px;
+}
   
-  .divclear {
+.divclear {
     clear: both;
-  }
+}
   
-  .borderbottom {
-    border-bottom: 1px solid gainsboro;
+.borderbottom {
+  border-bottom: 1px solid gainsboro;
+}
+
+.tabStyle {
+  width: 170px;
+  height: 30px;
+  border: 1px solid gray;
+  background: #eee2b9;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+  
+.tabStyleHeader {
+  font-size: 14px;
+  font-weight: bold;
+  font-family: Verdana;
+  color: #0857d6;
+  padding-left: 30px;
+  padding-top: 5px;
+  padding-right: 5px;
+}
+
+.panel-style { 
+  mat-expansion-panel-header {
+    /* background-color: rgb(238, 238, 238); */
   }
+
+  mat-panel-title {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+  }
+}
+
+.custom-badge {
+  .mat-badge-content {
+    background: rgb(172, 141, 4);
+    color: white;
+  }
+  .mat-badge-medium .mat-badge-above .mat-badge-top .mat-badge-content {
+    top: unset;
+    right: unset;
+  }
+}

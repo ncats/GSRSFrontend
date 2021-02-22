@@ -132,9 +132,11 @@
                         Substance Name:
                       </div>
                       <div class="row-property-value">
-                        <a [routerLink]="['/substances', subs.substanceUuid]" target="_blank">
-                          <span class="colororange font16px fontbold">{{subs.substanceName}}</span>
-                        </a>
+                        <div>
+                          <a [routerLink]="['/substances', subs.substanceUuid]" target="_blank">
+                            <span class="colororange font16px fontbold">{{subs.substanceName}}</span>
+                          </a>
+                        </div>
                         <div *ngIf="subs.relatedSubstanceUnii"><br>{{subs.relatedSubstanceUnii}}</div>
                         <div *ngIf="subs.substanceUuid">
                           <img class="structure-img" appSubstanceImage [entityId]="subs.substanceUuid">
@@ -145,12 +147,14 @@
                       <div class="row-property-key">
                         Assay Low:<br><br>
                         Assay High:<br><br>
-                        Unit:<br>
+                        Unit:<br><br>
+                        Comments:<br>
                       </div>
                       <div class="row-property-value">
                         {{subs.low}}<br><br>
                         {{subs.high}}<br><br>
                         {{subs.unit}}<br><br>
+                        {{subs.comments}}<br>
                       </div>
                     </div>
                   </div>
@@ -217,9 +221,9 @@
                               <thead>
                                 <tr>
                                   <th>#</th>
-                                  <th class="width150px">Related Substance</th>
+                                  <th class="width200px">Related Substance</th>
+                                  <th>Source Impurity Name</th>
                                   <th>Impurity Type</th>
-                                  <th>Test Type</th>
                                   <th>Limit Type</th>
                                   <th>Limit Value</th>
                                   <th>Unit</th>
@@ -232,15 +236,17 @@
                                   <td>{{i + 1}}</td>
                                   <td class="textaligncenter width200px">
                                     <div *ngIf="x.relatedSubstanceUuid">
-                                      <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
-                                        target="_blank">{{x.substanceName}}</a>
+                                      <div>
+                                        <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
+                                          target="_blank">{{x.substanceName}}</a>
+                                      </div>
                                       <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
                                       <img class="structure-image" appSubstanceImage
                                         [entityId]="x.relatedSubstanceUuid">
                                     </div>
                                   </td>
+                                  <td>{{ x.sourceImpurityName }}</td>
                                   <td>{{ x.impurityType }}</td>
-                                  <td>{{ x.testType }}</td>
                                   <td>{{ x.limitType }}</td>
                                   <td>{{ x.limitValue }}</td>
                                   <td>{{ x.unit }}</td>
@@ -325,7 +331,7 @@
                           <thead>
                             <tr>
                               <th>#</th>
-                              <th>Related Substance</th>
+                              <th class="width200px">Related Substance</th>
                               <th>Pharmaceutical Limit</th>
                               <th>Test Type</th>
                               <th>Limit Type</th>
@@ -339,8 +345,10 @@
                               <td>{{i + 1}}</td>
                               <td class="textaligncenter width200px">
                                 <div *ngIf="x.relatedSubstanceUuid">
-                                  <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
-                                    target="_blank">{{x.substanceName}}</a>
+                                  <div>
+                                    <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
+                                      target="_blank">{{x.substanceName}}</a>
+                                  </div>
                                   <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
                                   <img class="structure-image" appSubstanceImage [entityId]="x.relatedSubstanceUuid">
                                 </div>
@@ -371,7 +379,7 @@
                           <thead>
                             <tr>
                               <th>#</th>
-                              <th>Related Substance</th>
+                              <th class="width200px">Related Substance</th>
                               <th>Test Type</th>
                               <th>Limit Type</th>
                               <th>Limit Value</th>
@@ -384,8 +392,10 @@
                               <td>{{i + 1}}</td>
                               <td class="textaligncenter width200px">
                                 <div *ngIf="x.relatedSubstanceUuid">
-                                  <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
-                                    target="_blank">{{x.substanceName}}</a>
+                                  <div>
+                                    <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
+                                      target="_blank">{{x.substanceName}}</a>
+                                  </div>
                                   <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
                                   <img class="structure-image" appSubstanceImage [entityId]="x.relatedSubstanceUuid">
                                 </div>

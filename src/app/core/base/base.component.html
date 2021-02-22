@@ -32,6 +32,9 @@
         <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
           {{navItem.display}}
         </a>
+        <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath">
+          {{navItem.display}}
+        </a>
         <ng-container *ngIf="navItem.children">
           <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
             {{navItem.display}}

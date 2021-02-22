@@ -43,7 +43,9 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     }
   }
 
-  getExistingImpuritiesFromSubstance() {
+  getExistingImpuritiesFromSubstance(event: Event) {
+    event.stopPropagation();
+
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.errorMessage = 'Getting Existing Impurities...';
@@ -76,7 +78,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
   loadExistingImpurities() {
     this.errorMessage = 'Found ' + this.existingImpurities.length + ' Existing Impurities';
     // Add New Test
-    this.addNewTest();
+    this.impuritiesService.addNewTest(this.impuritiesSubstanceIndex);
     this.existingImpurities.forEach((elementRel) => {
 
       const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
@@ -103,15 +105,21 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     this.subscriptions.push(getSubDetailsSubscribe);
   }
 
-  addNewTest() {
+  addNewTest(event: Event) {
+    event.stopPropagation();
+
     this.impuritiesService.addNewTest(this.impuritiesSubstanceIndex);
   }
 
-  addNewImpuritiesResidualSolvents() {
+  addNewImpuritiesResidualSolvents(event: Event) {
+    event.stopPropagation();
+
     this.impuritiesService.addNewImpuritiesResidualSolvents(this.impuritiesSubstanceIndex);
   }
 
-  addNewImpuritiesInorganic() {
+  addNewImpuritiesInorganic(event: Event) {
+    event.stopPropagation();
+
     this.impuritiesService.addNewImpuritiesInorganic(this.impuritiesSubstanceIndex);
   }
 

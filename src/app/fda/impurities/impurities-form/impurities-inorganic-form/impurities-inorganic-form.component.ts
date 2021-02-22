@@ -26,9 +26,16 @@ export class ImpuritiesInorganicFormComponent implements OnInit {
   ngOnInit() {
   }
 
+  relatedSubstanceUpdated(substance: any): void {
+    if (substance != null) {
+      this.impuritiesInorganic.relatedSubstanceUuid = substance.uuid;
+      this.impuritiesInorganic.relatedSubstanceUnii = substance.approvalID;
+    }
+  }
+
   confirmDeleteImpuritiesInorganic() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delete Impurities Inorganic ' + (this.impuritiesInorganicIndex + 1) + '?' }
+      data: { message: 'Are you sure you want to delete Inorganic Impurities' + (this.impuritiesInorganicIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -40,13 +47,6 @@ export class ImpuritiesInorganicFormComponent implements OnInit {
 
   deleteImpuritiesInorganic() {
     this.impuritiesService.deleteImpuritiesInorganic(this.impuritiesSubstanceIndex, this.impuritiesInorganicIndex);
-  }
-
-  relatedSubstanceUpdated(substance: any): void {
-    if (substance != null) {
-      this.impuritiesInorganic.relatedSubstanceUuid = substance.uuid;
-      this.impuritiesInorganic.relatedSubstanceUnii = substance.approvalID;
-    }
   }
 
 }

@@ -1,23 +1,21 @@
 <!-- Impurities Unspecified -->
 
 <span *ngIf="impuritiesUnspecifiedIndex > 0">
-  <hr></span>
+  <hr><br></span>
 
 <div class="marginleftneg7px">
 
   <div class="form-row">
-    <app-cv-input class="col-6-1" domain="IMPURITIES_IMPURITY_TYPE" title="Impurity Type"
-      name="impurityType" [model]="impuritiesUnspecified.impurityType"
-      (valueChange)="impuritiesUnspecified.impurityType = $event">
+    <app-cv-input class="col-6-1" domain="IMPURITIES_IMPURITY_TYPE" title="Impurity Type" name="impurityType"
+      [model]="impuritiesUnspecified.impurityType" (valueChange)="impuritiesUnspecified.impurityType = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-6-1" domain="IMPURITIES_TEST_TYPE" title="Test Type"
-      name="testType" [model]="impuritiesUnspecified.testType" (valueChange)="impuritiesUnspecified.testType = $event">
+    <app-cv-input class="col-6-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
+      [model]="impuritiesUnspecified.testType" (valueChange)="impuritiesUnspecified.testType = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-6-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type"
-      name="limitType" [model]="impuritiesUnspecified.limitType"
-      (valueChange)="impuritiesUnspecified.limitType = $event">
+    <app-cv-input class="col-6-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
+      [model]="impuritiesUnspecified.limitType" (valueChange)="impuritiesUnspecified.limitType = $event">
     </app-cv-input>
 
     <mat-form-field class="col-6-1">
@@ -29,9 +27,10 @@
     </app-cv-input>
 
     <mat-form-field class="col-6-1">
-      <input matInput placeholder="Comments" [(ngModel)]="impuritiesUnspecified.comments" name="comments" />
+      <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesUnspecified.comments" name="comments"
+        rows="1"></textarea>
     </mat-form-field>
-    
+
     <div class="marginleftneg7px" style="margin-left:-40px;">
       <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesUnspecified()"
         matTooltip="Delete Unspecified Impurities {{impuritiesUnspecifiedIndex + 1}}">
@@ -55,8 +54,8 @@
         *ngFor="let identityCriteria of impuritiesUnspecified.identityCriteriaList; let identityCriteriaUnspecIndex = index">
 
         <div class="form-row padleft7px">
-          <app-cv-input class="col-3-1" domain="IMPURITIES_IDENTITY_CRITERIA_TYPE"
-            title="Identity Criteria Type" name="identityCriteriaType" [model]="identityCriteria.identityCriteriaType"
+          <app-cv-input class="col-3-1" domain="IMPURITIES_IDENTITY_CRITERIA_TYPE" title="Identity Criteria Type"
+            name="identityCriteriaType" [model]="identityCriteria.identityCriteriaType"
             (valueChange)="identityCriteria.identityCriteriaType = $event">
           </app-cv-input>
 
