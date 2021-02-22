@@ -5,9 +5,6 @@
   "adverseEventShinyHomepageDisplay": "true",
   "adverseEventShinySubstanceNameDisplay": "true",
   "adverseEventShinyAdverseEventDisplay": "true",
-  "adverseEventShinyHomepageURL": "",
-  "adverseEventShinySubstanceNameURL": "",
-  "adverseEventShinyAdverseEventURL": "",
   "substanceDetailsCards": [
     {
       "card": "substance-overview",
@@ -652,11 +649,6 @@
       "display": "Browse Clinical Trials",
       "path": "browse-clinical-trials",
       "order": 13
-    },
-    {
-      "display": "Browse Adverse Event",
-      "externalPath": "http://fdslv22014:9000/ginas/app",
-      "order": 14
     },
     {
       "display": "Register",
