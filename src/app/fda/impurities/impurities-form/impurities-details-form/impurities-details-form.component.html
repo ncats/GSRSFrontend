@@ -34,26 +34,26 @@
             [model]="impuritiesDetails.impurityType" (valueChange)="impuritiesDetails.impurityType = $event">
           </app-cv-input>
 
+          <!--
           <app-cv-input class="col-3-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
             [model]="impuritiesDetails.testType" (valueChange)="impuritiesDetails.testType = $event">
           </app-cv-input>
-
+          -->  
           <app-cv-input class="col-3-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
             [model]="impuritiesDetails.limitType" (valueChange)="impuritiesDetails.limitType = $event">
           </app-cv-input>
 
-        </div>
-
-        <div class="form-row">
           <mat-form-field class="col-3-1">
             <input matInput placeholder="Limit Value" [(ngModel)]="impuritiesDetails.limitValue" name="limitValue" />
           </mat-form-field>
+        </div>
 
+        <div class="form-row">
           <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesDetails.unit"
             (valueChange)="impuritiesDetails.unit = $event">
           </app-cv-input>
 
-          <mat-form-field class="col-3-1">
+          <mat-form-field class="col-3-2">
             <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesDetails.comments" name="comments"
               rows="1"></textarea>
           </mat-form-field>
