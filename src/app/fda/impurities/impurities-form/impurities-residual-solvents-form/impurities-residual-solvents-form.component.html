@@ -36,9 +36,10 @@
               [(ngModel)]="impuritiesResidualSolvents.pharmaceuticalLimit" name="pharmaceuticalLimit" />
           </mat-form-field>
 
-          <app-cv-input class="col-3-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
-            [model]="impuritiesResidualSolvents.testType" (valueChange)="impuritiesResidualSolvents.testType = $event">
-          </app-cv-input>
+          <mat-form-field class="col-3-1">
+            <input matInput placeholder="Test Type"
+              [(ngModel)]="impuritiesResidualSolvents.testType" name="testType" />
+          </mat-form-field>
 
           <app-cv-input class="col-3-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
             [model]="impuritiesResidualSolvents.limitType"

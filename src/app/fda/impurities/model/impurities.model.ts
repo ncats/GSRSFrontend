@@ -56,6 +56,7 @@ export interface ImpuritiesDetails {
   relatedSubstanceUuid?: string;
   impurityType?: string;
   testType?: string;
+  sourceImpurityName?: string;
   limitValue?: number;
   limitType?: string;
   unit?: string;
