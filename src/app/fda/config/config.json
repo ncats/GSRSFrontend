@@ -5,9 +5,9 @@
   "adverseEventShinyHomepageDisplay": "true",
   "adverseEventShinySubstanceNameDisplay": "true",
   "adverseEventShinyAdverseEventDisplay": "true",
-  "adverseEventShinyHomepageURL": "http://fdslv22014:9000/ginas/app",
-  "adverseEventShinySubstanceNameURL": "http://fdslv01592:9000/ginas/app?name=",
-  "adverseEventShinyAdverseEventURL": "http://fdslv01592:9000/ginas/app?ptterm=",
+  "adverseEventShinyHomepageURL": "",
+  "adverseEventShinySubstanceNameURL": "",
+  "adverseEventShinyAdverseEventURL": "",
   "substanceDetailsCards": [
     {
       "card": "substance-overview",
