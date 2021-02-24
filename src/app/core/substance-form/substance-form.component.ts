@@ -741,6 +741,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       delete rec['lastEdited'];
       delete rec['lastEditedBy'];
     }
+
+    const originHolders = defiant.json.search(old, '//*[originatorUuid]');
+    for (let i = 0; i < originHolders.length; i++) {
+      const rec = originHolders[i];
+      delete rec['originatorUuid'];
+    }
+
     delete old.approvalID;
     delete old.approved;
     delete old.approvedBy;

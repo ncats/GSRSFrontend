@@ -61,8 +61,8 @@
         </div>
 
    <div class="form-row">
-  <app-cv-input [vocabulary] = "modExtentList" title = "Extent" (valueChange)= "mod.extent = $event" [model] = "mod.extent"></app-cv-input>
-  <app-cv-input [vocabulary] = "modLocationList" title = "Location" (valueChange)= "mod.locationType = $event" [model] = "mod.locationType"></app-cv-input>
+  <app-cv-input domain = "EXTENT_TYPE" title = "Extent" (valueChange)= "mod.extent = $event" [model] = "mod.extent"></app-cv-input>
+  <app-cv-input domain = "LOCATION_TYPE" title = "Location" (valueChange)= "mod.locationType = $event" [model] = "mod.locationType"></app-cv-input>
      <div class = "group-access">
        <div class = 'form-row'>
          <mat-form-field class="group">
