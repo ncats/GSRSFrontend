@@ -257,6 +257,9 @@ export class UtilsService {
             ret += ' (limits)';
           }
         }
+        if (amt.nonNumericValue) {
+          ret += ' ' + amt.nonNumericValue;
+        }
       }
     }
     return ret;
