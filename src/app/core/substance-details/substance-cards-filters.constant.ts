@@ -131,7 +131,7 @@ export function substanceCodesFilter(
 
         if (substance.codes && substance.codes.length > 0) {
             for (let i = 0; i < substance.codes.length; i++) {
-                if (substance.codes[i].comments && substance.codes[i].comments.indexOf('|') > -1 && filter.value === 'classification') {
+                if ((substance.codes[i]._isClassification) || ( substance.codes[i].comments && substance.codes[i].comments.indexOf('|') > -1 && filter.value === 'classification')) {
                     isApproved = true;
                     break;
                 } else if (filter.value === 'identifiers') {
