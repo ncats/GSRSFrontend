@@ -1233,6 +1233,18 @@ this.emitDisulfideLinkUpdate();
           }
       });
     }
+
+    if (this.privateSubstance.protein && this.privateSubstance.protein.disulfideLinks
+       && this.privateSubstance.protein.disulfideLinks.length > 0) {
+          for ( let i = this.privateSubstance.protein.disulfideLinks.length; i >= 0;  i--) {
+            if (this.privateSubstance.protein.disulfideLinks[i] && this.privateSubstance.protein.disulfideLinks[i].sites &&
+              this.privateSubstance.protein.disulfideLinks[i].sites[0] && this.privateSubstance.protein.disulfideLinks[i].sites[1] &&
+              Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[0]).length === 0 &&
+                Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[1]).length === 0 ) {
+                  this.privateSubstance.protein.disulfideLinks.splice(i, 1);
+          }
+        }
+       }
     // end view=internal changes
 
     let substanceString = JSON.stringify(this.privateSubstance);
