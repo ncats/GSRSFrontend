@@ -37,6 +37,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   private usedSuggestedTags: Array<string> = [];
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
+  defAccess: Array<any>;
   @ViewChild('tagsInput', { read: ElementRef, static: false }) tagsInput: ElementRef<HTMLInputElement>;
   imported = false;
 
@@ -67,6 +68,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   ngAfterViewInit() {
   const subscription =  this.substanceFormService.definition.subscribe(definition => {
+    this.defAccess = this.substanceFormService.getDefinitionForDefRef();
       this.definition = definition || {};
       this.crossCheckTags();
       if (this.definition.substanceClass === 'structure') {
@@ -204,6 +206,10 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   updateAccess(access: Array<string>): void {
     this.definition.access = access;
     this.substanceFormService.updateDefinition(this.definition);
+  }
+
+  updateDefAccess(access: Array<string>): void {
+    this.substanceFormService.setDefinitionFromDefRef(access);
   }
 
   updateDefinition(): void {

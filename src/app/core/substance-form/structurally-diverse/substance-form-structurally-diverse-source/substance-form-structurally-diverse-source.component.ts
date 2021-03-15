@@ -63,6 +63,10 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
   ngAfterViewInit() {
   }
 
+  updateAccess(access: Array<string>): void {
+    this.structurallyDiverse.access = access;
+  }
+
   update(field: string, event: any): void {
     if (field === 'type') {
 

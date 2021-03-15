@@ -313,6 +313,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.definitionSwitch();
       this.feature = undefined;
     }
+    if (this.feature === 'changeApproval') {
+      this.substanceFormService.changeApproval();
+    }
 
   }
 

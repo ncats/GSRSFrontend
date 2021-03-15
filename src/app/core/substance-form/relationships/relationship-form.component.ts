@@ -88,6 +88,7 @@ export class RelationshipFormComponent implements OnInit {
   }
 
   mediatorSubstanceUpdated(substance: SubstanceSummary): void {
+    if ( substance !== null) {
     const relatedSubstance:  MediatorSubstance = {
       refPname: substance._name,
       refuuid: substance.uuid,
@@ -95,5 +96,8 @@ export class RelationshipFormComponent implements OnInit {
       approvalID: substance.approvalID
     };
     this.relationship.mediatorSubstance = relatedSubstance;
+  } else {
+    this.relationship.mediatorSubstance = {};
   }
+}
 }

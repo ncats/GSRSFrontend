@@ -30,7 +30,7 @@ export interface SubstanceBaseExtended {
   moieties?: Array<SubstanceMoiety>;
   _approvalIDDisplay?: string;
   _name?: string;
-  _name_html?: string;
+  _nameHTML?: string;
   _self?: string;
   nucleicAcid?: NucleicAcid;
   changeReason?: string;
@@ -86,6 +86,7 @@ export interface StructurallyDiverse extends SubstanceBase {
   hybridSpeciesPaternalOrganism?: SubstanceRelated;
   $$diverseType?: string;
   $$storedPart?: Array<string>;
+  access?: Array<string>;
 
 }
 
@@ -97,6 +98,7 @@ export interface Polymer extends SubstanceBase {
   monomers?: Array<Monomer>;
   classification?: PolymerClassification;
   structuralUnits?: Array<StructuralUnit>;
+    access?: Array<string>;
 }
 
 export interface SpecifiedSubstance extends SubstanceBase {
@@ -205,7 +207,7 @@ export interface SubstanceName extends SubstanceBase {
   displayName?: boolean;
   references?: Array<string>;
   _self?: string;
-  _name_html?: string;
+  _nameHTML?: string;
 }
 
 export interface SubstanceCode extends SubstanceBase {
@@ -360,6 +362,7 @@ export interface SubstanceStructure extends SubstanceBase {
   stereoComments?: string;
   properties?: any;
   links?: any;
+  _formulaHTML?: string;
 }
 
 export interface SubstanceMoiety extends SubstanceStructure {

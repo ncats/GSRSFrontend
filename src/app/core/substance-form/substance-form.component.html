@@ -33,6 +33,9 @@
               <mat-option value="unapprove">
                 Un-approve record (Remove approval ID)
               </mat-option>
+              <mat-option value="changeApproval">
+                Change Approval ID
+              </mat-option>
               <mat-option value="concept" [disabled]="substanceClass != 'concept'">
                 Set concept status to non-approved
               </mat-option>
@@ -69,7 +72,7 @@
     <span class="middle-fill"></span>
     <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
     <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
-      *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported"
+      *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
       (click)="validate('approval')">Approve</button>
 
   </div>

@@ -263,6 +263,57 @@ export class SubstanceFormService implements OnDestroy {
     });
   }
 
+  setDefinitionFromDefRef(access: any) {
+
+    if (this.privateSubstance.structurallyDiverse) {
+      this.privateSubstance.structurallyDiverse.access = access;
+    } else if (this.privateSubstance.protein) {
+      this.privateSubstance.protein.access = access;
+    } else if (this.privateSubstance.structure) {
+      this.privateSubstance.structure.access = access;
+    } else if (this.privateSubstance.mixture) {
+      this.privateSubstance.mixture.access = access;
+    } else if (this.privateSubstance.polymer) {
+      this.privateSubstance.polymer.access = access;
+    } else if (this.privateSubstance.nucleicAcid) {
+      this.privateSubstance.nucleicAcid.access = access;
+    } else if (this.privateSubstance.specifiedSubstance) {
+      this.privateSubstance.specifiedSubstance.access = access;
+    } else {
+    }
+  }
+
+  getDefinitionForDefRef() {
+
+    if (this.privateSubstance.structurallyDiverse) {
+     return this.privateSubstance.structurallyDiverse.access;
+    } else if (this.privateSubstance.protein) {
+      return this.privateSubstance.protein.access;
+    } else if (this.privateSubstance.structure) {
+      return this.privateSubstance.structure.access;
+    } else if (this.privateSubstance.mixture) {
+      return this.privateSubstance.mixture.access;
+    } else if (this.privateSubstance.polymer) {
+      return this.privateSubstance.polymer.access;
+    } else if (this.privateSubstance.nucleicAcid) {
+      return  this.privateSubstance.nucleicAcid.access;
+    } else if (this.privateSubstance.specifiedSubstance) {
+      return  this.privateSubstance.specifiedSubstance.access;
+    } else {
+    }
+  }
+
+  changeApproval() {
+    const apid = prompt('Enter new ApprovalID:');
+  
+    if (apid) {
+      const old = this.privateSubstance.approvalID;
+      this.privateSubstance.approvalID = apid;
+      alert('Approval ID changed from"' + old + '" to "' + apid + '". Submit changes to save');
+      this.definitionEmitter.next(this.getDefinition());
+    }
+  }
+
   switchType(substance: SubstanceDetail, newClass: string) {
     const fieldGetter = {
       'protein': ['protein', 'modifications', 'properties'],

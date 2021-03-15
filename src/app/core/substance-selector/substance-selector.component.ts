@@ -89,4 +89,9 @@ export class SubstanceSelectorComponent implements OnInit {
     this.selectionUpdated.emit(this.selectedSubstance);
   }
 
+  delete(): void {
+    this.selectedSubstance = null;
+    this.selectionUpdated.emit(null);
+  }
+
 }

@@ -17,7 +17,10 @@
 
     </mat-radio-group>
     </div>
-    
+    <div>
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="structurallyDiverse.access">
+      </app-access-manager>
+    </div>
   </div>
   <div class = "form-row-alt" *ngIf = "confirm">
     <div>Changes made to the now hidden form will still be submitted <button class = "mat-button mat-primary mat-flat-button" (click) = "clean()" >clean hidden fields</button></div>  
