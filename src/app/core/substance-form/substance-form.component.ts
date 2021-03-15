@@ -46,7 +46,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
   @ViewChildren('expansionPanel', { read: MatExpansionPanel }) matExpansionPanels: QueryList<MatExpansionPanel>;
   private subClass: string;
-  private definitionType: string;
+  definitionType: string;
   expandedComponents = [
     'substance-form-definition',
     'substance-form-structure',
