@@ -15,6 +15,7 @@ export class ReferencesManagerComponent implements OnInit {
   @Input() references: Array<String>;
   subRef: Array<SubstanceReference>;
   matchedRef: SubstanceReference[] = [];
+  showmore = false;
   displayedColumns: string[] = ['index', 'citation', 'docType', 'tags', 'files', 'lastEdited'];
 
 
