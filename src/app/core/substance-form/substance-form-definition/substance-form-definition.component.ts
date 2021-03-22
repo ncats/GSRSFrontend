@@ -30,6 +30,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   feature: string;
   substanceClass: string;
   status: string;
+  accessLabel?:string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   tagsCtrl = new FormControl({value: '', disabled: true});
   private suggestedTags: Array<string>;

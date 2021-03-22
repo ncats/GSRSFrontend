@@ -86,7 +86,7 @@
       <app-domain-references [referencesUuids]="definition.references" card = "definition" #references></app-domain-references>
     </div>
     <div matTooltip = "Set {{definition.substanceClass}} access">
-      <app-access-manager (accessOut)="updateDefAccess($event)" [access]="defAccess"></app-access-manager>
+      <app-access-manager (accessOut)="updateDefAccess($event)" [access]="defAccess" label = "Definition Access"></app-access-manager>
     </div>
   </div>
 
