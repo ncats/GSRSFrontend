@@ -7,6 +7,7 @@ import requests
 # data = r.content
 # dictionary_df = pd.read_csv(BytesIO(data))
 
+# dictionary_df = pd.read_excel('dictionary_current.xlsx', skiprows=range(1,892), usecols='A:M')
 dictionary_df = pd.read_excel('dictionary_current.xlsx')
 
 print(dictionary_df.head())
@@ -19,7 +20,7 @@ dictionary_df = dictionary_df[
         | (dictionary_df['Data Type'] == 'array <string>'))
 ]
 
-dictionary_df = dictionary_df.loc[:, ['Lucene Path', 'Display Name', 'Description', 'Data Type', 'CV DOMAIN', 'Data to include']]
+dictionary_df = dictionary_df.loc[:, ['Lucene Path', 'Display Name', 'Description', 'Data Type', 'CV DOMAIN', 'Data to include', 'Entity']]
 
 def set_type(df_properties):
     if 'timestamp' in df_properties['Description'].lower():
@@ -39,8 +40,14 @@ columns_to_include = ['lucenePath', 'description', 'type', 'cvDomain', 'priority
 dictionary_df.drop(columns=['Data Type'], inplace=True)
 dictionary_df.sort_values('displayName', inplace=True)
 dictionary_df.set_index('displayName', inplace=True)
-dictionary_df.loc[:, columns_to_include].to_json('../src/app/core/assets/data/substance_dictionary.json', orient='index')
 
-data_types_df = dictionary_df.loc[:, 'type'][dictionary_df['type'].unique()]
+# dictionary_df.loc[:, columns_to_include].to_json('../src/app/core/assets/data/substance_dictionary.json', orient='index')
 
-data_types_df.to_csv('./data_types.csv')
+dictionary_df.loc[:, columns_to_include].to_json('substance_dictionary.json', orient='index')
+# dictionary_df.loc[:, columns_to_include].to_json('application_dictionary.json', orient='index', indent=4)
+# dictionary_df.loc[:, columns_to_include].to_json('product_dictionary.json', orient='index', indent=4)
+# dictionary_df.loc[:, columns_to_include].to_json('clinicaltrial_dictionary.json', orient='index', indent=4)
+
+# data_types_df = dictionary_df.loc[:, 'type'][dictionary_df['type'].unique()]
+
+# data_types_df.to_csv('data_types.csv')

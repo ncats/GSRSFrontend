@@ -53,7 +53,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   getApplicationCenterByBdnum(): string {
     this.applicationService.getApplicationCenterByBdnum(this.bdnum).subscribe(results => {
       this.centerList = results.centerList;
-      if (this.centerList.length > 0) {
+      if (this.centerList && this.centerList.length > 0) {
         this.foundCenterList = true;
       }
       this.loadingComplete = true;
