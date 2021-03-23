@@ -33,7 +33,7 @@
               <mat-option value="unapprove">
                 Un-approve record (Remove approval ID)
               </mat-option>
-              <mat-option value="changeApproval">
+              <mat-option value="changeApproval" [disabled]="!id || status === 'pending'">
                 Change Approval ID
               </mat-option>
               <mat-option value="concept" [disabled]="substanceClass != 'concept'">

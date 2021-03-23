@@ -37,7 +37,7 @@
       <mat-checkbox [(ngModel)]="definition.deprecated" name="deprecated" (change)="updateDefinition()">Deprecated</mat-checkbox>
     </div>
     <div>
-      <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access"></app-access-manager>
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access" label = "Record Level Access"></app-access-manager>
     </div>
     <div class = 'redirect-links' *ngIf = "uuid" >
       <a [href]="getRedirect()" target = "_blank" matTooltip= "open old edit form in new tab">

@@ -232,11 +232,16 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
+
+        const total = this.formSections.length;
+        let finished = 0;
         if (!this.forceChange) {
+           this.loadingService.setLoading(true);
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
             .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
             .subscribe(componentFactory => {
+              this.loadingService.setLoading(true);
               this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
               this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
               this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
@@ -260,8 +265,17 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 }
               });
               this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
+              finished++;
+              if (finished >= total) {
+                this.loadingService.setLoading(false);
+              }
+            setTimeout(() => {
+              this.loadingService.setLoading(false);
+            }, 5);
             });
         });
+       // this.loadingService.setLoading(false);
+
       }
         subscription.unsubscribe();
       });
