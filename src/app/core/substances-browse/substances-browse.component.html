@@ -121,7 +121,9 @@
         </div>
       </ng-template>
       <div class="controls-container">
-
+          <div class = "title-container">
+              <span class = "main-title">Browse Substances</span>
+            </div>
 
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
           <mat-button-toggle value="table" matTooltip="Table view">
@@ -135,7 +137,7 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
 
-
+        
 
         <mat-form-field class="sort">
           <mat-label>Sort By</mat-label>
@@ -199,7 +201,7 @@
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Name </th>
                 <td mat-cell *matCellDef="let substance"><a class="table-view-name"
-                    [routerLink]="['/substances', substance.uuid]">{{substance._name}}</a></td>
+                    [routerLink]="['/substances', substance.uuid]">{{substance._nameHTML}}</a></td>
               </ng-container>
 
               <ng-container matColumnDef="approvalID">
@@ -352,8 +354,7 @@
                     </div>
                   </div>
                   <div class="tile-name">
-                    <a class="substance-name table-view-name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
-                      {{substance._name}}
+                    <a class="substance-name table-view-name" [innerHTML] = "substance._nameHTML" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
                     </a>
                     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
                     </mat-icon>

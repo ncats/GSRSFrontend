@@ -145,6 +145,20 @@
   height:19px;
 }
 
+::ng-deep .mat-paginator-range-label {
+    font-weight: 550;
+}
+
+.main-title {
+    font-size: 26px;
+    padding-left: 10px;
+    padding-right: 25px;
+    font-weight: 550;
+    padding-top: 10px;
+    color: #4793d1;
+    width: 285px;
+}
+
 .mat-card-content {
 
     .mat-chip-list-container {
@@ -292,7 +306,7 @@
 .menu-checkbox:hover {
     background-color: white;
 }
-@media(max-width: 1390px) {
+@media(max-width: 1615px) {
 
     .full-paginator {
         width: 100%;
@@ -476,6 +490,7 @@
 
 .sort{
   margin:auto;
+  margin-bottom: -7px;
 }
 
 .advanced {
@@ -576,7 +591,7 @@ margin-left: 20px;
   }
 
  mat-paginator {
-     font-size:14px;
+     font-size:16px;
  }
 
  .page-input {

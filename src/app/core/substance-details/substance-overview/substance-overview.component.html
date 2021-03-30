@@ -257,5 +257,17 @@
     <div [hidden]="!showDef">
       <app-references-manager [substance]="substance" [references]="references"></app-references-manager>
     </div>
+    <div class="name-value">
+        <div class="name">Definitional Access</div>
+        <div class="value">
+          <span *ngIf = "!defAccess || defAccess.length === 0">Public</span>
+          <span *ngIf = "defAccess && defAccess.length > 0">
+            <span class = "pre" *ngFor ="let access of defAccess;last as islast">
+              {{access}}{{!islast? ', ':''}}
+            </span>
+          </span>
+
+        </div>
+      </div>
   </div>
 </div>
