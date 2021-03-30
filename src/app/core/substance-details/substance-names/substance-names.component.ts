@@ -26,7 +26,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   pageSize = 10;
   uniqueVals: Array<string>;
   filterSelectObj = [];
-  filterBackup: Array<T>;
+  filterBackup: Array<any>;
   typeFilterOn = 'false';
 
   constructor(
@@ -159,11 +159,10 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   resetFilters() {
-    
     this.filterSelectObj.forEach((value, key) => {
       value.modelValue = undefined;
     });
-    this.typeFilterOn = false;
+    this.typeFilterOn = 'false';
     this.filtered = this.names;
     this.pageChange();
     this.searchControl.setValue('');
