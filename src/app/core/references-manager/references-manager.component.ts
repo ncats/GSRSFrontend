@@ -16,7 +16,7 @@ export class ReferencesManagerComponent implements OnInit {
   subRef: Array<SubstanceReference>;
   matchedRef: SubstanceReference[] = [];
   showmore = false;
-  displayedColumns: string[] = ['index', 'citation', 'docType', 'tags', 'files', 'lastEdited'];
+  displayedColumns: string[] = ['index', 'citation', 'docType', 'tags', 'files', 'lastEdited', 'access'];
 
 
   constructor(private substanceService: SubstanceService) { }

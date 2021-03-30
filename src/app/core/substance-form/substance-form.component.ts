@@ -237,6 +237,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         let finished = 0;
         if (!this.forceChange) {
            this.loadingService.setLoading(true);
+           const startTime = new Date();
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
             .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
@@ -268,6 +269,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
               finished++;
               if (finished >= total) {
                 this.loadingService.setLoading(false);
+              } else {
+                const currentTime = new Date();
+                if (currentTime.getTime() - startTime.getTime() > 12000) {
+                  if (confirm('There was a network error while fetching files, would you like to refresh?')) {
+                    window.location.reload(true);
+                  }
+                }
               }
             setTimeout(() => {
               this.loadingService.setLoading(false);
