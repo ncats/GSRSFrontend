@@ -259,7 +259,17 @@
     </div>
     <div class="name-value">
         <div class="name">Definitional Access</div>
-        <div class="value">
+        <div class="value blue-font">
+            <span *ngIf="(defAccess.access && defAccess.access.length > 0) else defIndicator">
+              <span>Not a public definition</span>&nbsp;
+              <mat-icon svgIcon="lock"></mat-icon>
+            </span>
+            <ng-template #defIndicator>
+              <span>Public definition</span>&nbsp;
+              <mat-icon svgIcon="lock_open"></mat-icon>
+            </ng-template>
+          </div>
+      <!--  <div class="value">
           <span *ngIf = "!defAccess || defAccess.length === 0">Public</span>
           <span *ngIf = "defAccess && defAccess.length > 0">
             <span class = "pre" *ngFor ="let access of defAccess;last as islast">
@@ -267,7 +277,7 @@
             </span>
           </span>
 
-        </div>
+        </div>-->
       </div>
   </div>
 </div>
