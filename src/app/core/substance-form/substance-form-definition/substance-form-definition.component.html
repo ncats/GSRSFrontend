@@ -5,8 +5,8 @@
     </div>
     <span class = "approval" *ngIf = "definition.approvalID && definition.approvalID !== ''">{{definition.approvalID}}</span>
   </div>
-  <div class="substance-form-row form-name" *ngIf = "definition._nameHTML">
-    <div>Preferred Term: <span class = "name" [innerHTML] = "definition._nameHTML"></span></div>
+  <div class="substance-form-row form-name" *ngIf = "definition._name">
+    <div>Preferred Term: <span class = "name" [innerHTML] = "definition._name"></span></div>
   </div>
   <div class="substance-form-row">
     <mat-form-field *ngIf = 'definition.substanceClass !== "concept"'>

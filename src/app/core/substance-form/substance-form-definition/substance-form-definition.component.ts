@@ -211,6 +211,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   updateDefAccess(access: Array<string>): void {
     this.substanceFormService.setDefinitionFromDefRef(access);
+    this.substanceFormService.updateDefinition(this.definition);
   }
 
   updateDefinition(): void {

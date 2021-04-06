@@ -260,7 +260,7 @@
     <div class="name-value">
         <div class="name">Definitional Access</div>
         <div class="value blue-font">
-            <span *ngIf="(defAccess.access && defAccess.access.length > 0) else defIndicator">
+            <span *ngIf="(defAccess && defAccess.length > 0) else defIndicator">
               <span>Not a public definition</span>&nbsp;
               <mat-icon svgIcon="lock"></mat-icon>
             </span>
