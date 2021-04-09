@@ -20,6 +20,7 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
   maternalUuid: string;
   parentUuid: string;
   structurallyDiverse: StructurallyDiverse;
+  temporaryPart: string;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -35,7 +36,11 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
     const structurallyDiverseSubscription = this.substanceFormStructurallyDiverseService
       .substanceStructurallyDiverse.subscribe(structurallyDiverse => {
       this.structurallyDiverse = structurallyDiverse;
-      this.part = this.structurallyDiverse.$$diverseType;
+     // this.part = this.structurallyDiverse.$$diverseType;
+     // when the form submits, $$diversetype is stripped so part must be used in it's place
+      if (this.structurallyDiverse.$$diverseType) {
+        this.part = this.structurallyDiverse.$$diverseType;
+      }
       if (this.part === 'whole') {
         this.menuLabelUpdate.emit('Organism Details');
         this.maternalUuid = this.structurallyDiverse.hybridSpeciesMaternalOrganism

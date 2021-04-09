@@ -22,7 +22,7 @@
   <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
 
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name</th>
       <td mat-cell *matCellDef="let name" >{{name.name}}
         <span *ngIf="name.displayName == true" matTooltip="Accepted Name">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
@@ -34,7 +34,19 @@
     </ng-container>
 
     <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Type  <div class = "flex-row right">
+          
+          <mat-form-field *ngFor="let filter of filterSelectObj" style="margin-left: 15px;">
+              <mat-label>Filter {{filter.name}}</mat-label>
+              <select matNativeControl name="{{filter.columnProp}}" [(ngModel)]="filter.modelValue"
+                (change)="filterChange(filter,$event)">
+                <option value="">-- Select {{filter.name}} --</option>
+                <option [value]="item" *ngFor="let item of filter.options">{{setDisplay(item,filter.columnProp)}}</option>
+              </select>
+            </mat-form-field>
+            &nbsp;
+            <button class = "mat-button mat-button-primary" mat-flat-button color="warn" (click)="resetFilters()">Reset</button>
+      </div></th>
       <td mat-cell *matCellDef="let name"> {{typeVocabulary[name.type] && typeVocabulary[name.type].display}} </td>
     </ng-container>
 

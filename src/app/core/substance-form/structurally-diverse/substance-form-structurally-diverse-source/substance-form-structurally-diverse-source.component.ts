@@ -17,6 +17,7 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
     confirm = false;
   structurallyDiverse: StructurallyDiverse;
   private subscriptions: Array<Subscription> = [];
+  part?: string;
 
   constructor(
     private substanceFormStructurallyDiverseService: SubstanceFormStructurallyDiverseService,
@@ -32,21 +33,27 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
     const structurallyDiverseSubscription = this.substanceFormStructurallyDiverseService
       .substanceStructurallyDiverse.subscribe(structurallyDiverse => {
       this.structurallyDiverse = structurallyDiverse;
+      console.log('upadted ' + this.structurallyDiverse.$$diverseType + this.part);
       if (!this.structurallyDiverse.$$diverseType) {
         if (this.structurallyDiverse.part.length === 1 && this.structurallyDiverse.part[0].toUpperCase() === ('WHOLE')) {
           if (this.checkParts() === false) {
             this.structurallyDiverse.$$diverseType = 'full_fields';
+            this.part = 'full_fields';
 
           } else {
             this.structurallyDiverse.$$diverseType = 'whole';
+            this.part = 'whole';
 
           }
         } else {
           if (this.checkWhole() === false) {
             this.structurallyDiverse.$$diverseType = 'full_fields';
+            this.part = 'full_fields';
 
           } else {
             this.structurallyDiverse.$$diverseType = 'fraction';
+            this.part = 'fraction';
+
 
           }
 
@@ -111,6 +118,10 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
 
   updateType(event: any): void {
     this.confirm = false;
+    console.log(event.value);
+    if (event.value && event.value !== '' && event.value !== null) {
+      this.part = event.value;
+    }
     if (event.value === 'whole') {
       if (this.checkParts()) {
         this.confirm = false;

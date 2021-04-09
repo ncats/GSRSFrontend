@@ -201,7 +201,7 @@
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Name </th>
                 <td mat-cell *matCellDef="let substance"><a class="table-view-name"
-                    [routerLink]="['/substances', substance.uuid]">{{substance._nameHTML}}</a></td>
+                    [routerLink]="['/substances', substance.uuid]">{{substance._name}}</a></td>
               </ng-container>
 
               <ng-container matColumnDef="approvalID">
@@ -354,7 +354,7 @@
                     </div>
                   </div>
                   <div class="tile-name">
-                    <a class="substance-name table-view-name" [innerHTML] = "substance._nameHTML" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
+                    <a class="substance-name table-view-name" [innerHTML] = "substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
                     </a>
                     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
                     </mat-icon>

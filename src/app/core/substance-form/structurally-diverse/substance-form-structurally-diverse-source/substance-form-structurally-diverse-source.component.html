@@ -10,10 +10,10 @@
                   (valueChange) = "update('state',$event)" [model] = "structurallyDiverse.sourceMaterialState"></app-cv-input>
     <div class = 'column-radio'>
     <mat-radio-group class = 'type'(change) = 'updateType($event)'>
-      <mat-radio-button  value = 'whole' [checked] = 'structurallyDiverse.$$diverseType && structurallyDiverse.$$diverseType === "whole"'>Whole</mat-radio-button>
-      <mat-radio-button value = 'fraction' [checked] = 'structurallyDiverse.$$diverseType && structurallyDiverse.$$diverseType !== "whole" &&
-      structurallyDiverse.$$diverseType !== "full_fields"'>Part/ Fraction</mat-radio-button>
-      <mat-radio-button value = 'full_fields' [checked] = ' structurallyDiverse.$$diverseType && structurallyDiverse.$$diverseType === "full_fields"'>Full Fields</mat-radio-button>
+      <mat-radio-button  value = 'whole' [checked] = '(part && part === "whole")'>Whole</mat-radio-button>
+      <mat-radio-button value = 'fraction' [checked] = '(part && part === "fraction")'>Part/ Fraction</mat-radio-button>
+      <mat-radio-button value = 'full_fields' [checked] = '(part && part === "full_fields")
+      '>Full Fields</mat-radio-button>
 
     </mat-radio-group>
     </div>
