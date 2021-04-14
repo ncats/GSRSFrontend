@@ -80,7 +80,7 @@ import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-di
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
-import { RegistrarsComponent } from '@gsrs-core/registrars/registrars.component';
+import { RegistrarsComponent } from './registrars/registrars.component';
 
 @NgModule({
   declarations: [
@@ -88,10 +88,10 @@ import { RegistrarsComponent } from '@gsrs-core/registrars/registrars.component'
     PageNotFoundComponent,
     BaseComponent,
     HomeComponent,
-    RegistrarsComponent,
     SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent,
+    RegistrarsComponent,
     TakePipe,
     SequenceSearchComponent,
     TrackLinkEventDirective,
