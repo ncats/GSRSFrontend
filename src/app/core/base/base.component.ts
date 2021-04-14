@@ -48,6 +48,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   navItems: Array<NavItem>;
   canRegister = false;
   registerNav: Array<NavItem>;
+  adverseEventShinyHomepageDisplay = false;
 
   constructor(
     private router: Router,
