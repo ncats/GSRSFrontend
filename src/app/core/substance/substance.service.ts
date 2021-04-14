@@ -458,6 +458,11 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url);
   }
 
+  searchFromString(value: string) {
+    const url = this.apiBaseUrl + 'substances/search?' + value;
+    return this.http.get<PagingResponse<SubstanceSummary>>(url);
+  }
+
   getRecordCount() {
     const url = this.apiBaseUrl + 'substances/@count';
     return this.http.get<any>(url);

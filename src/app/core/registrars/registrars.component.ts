@@ -56,19 +56,32 @@ export class RegistrarsComponent implements OnInit {
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.customLinks = this.configService.configData.registrarDynamicLinks;
     this.customLinks.forEach (link => {
-      console.log(link);
-      const searchStr = `${link.facetName}:${link.facetValue}`;
-      this.substanceService.searchSingleFacet(link.facetName, link.facetValue).pipe(take(1)).subscribe( response => {
-        console.log(response);
+      let str = '';
+      for (let i = 0; i < link.facets.length; i++) {
+
+        if (i === 0) {
+            str = 'facet=' + link.facets[i].facetName + '/' + link.facets[i].facetValue;
+        } else {
+          str += '&facet=' + link.facets[i].facetName + '/' + link.facets[i].facetValue;
+        }
+      }
+      this.substanceService.searchFromString(str).pipe(take(1)).subscribe( response => {
         link.total = response.total;
-        console.log(link.total);
       });
     });
     this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';
-
+    this.processFacets();
   }
 
   routeToCustom(link) {
+    for (let i = 0; i < link.facets.length; i++) {
+      let string = '';
+      if (i === 0) {
+          string = 'facets:' + link.facetName + '*' + link.facetValue + '.true';
+      } else {
+        string += ',' + link.facetName + '*' + link.facetValue + '.true';
+      }
+    }
     const navigationExtras: NavigationExtras = {
       queryParams: { 'facets': link.facetName + '*' + link.facetValue + '.true' }
     };
@@ -77,15 +90,17 @@ export class RegistrarsComponent implements OnInit {
 
   processFacets() {
     this.customLinks.forEach(link => {
-      let string = '';
+      let str = '';
       for (let i = 0; i < link.facets.length; i++) {
 
         if (i === 0) {
-            string = 'facets:' + link.facetName + '*' + link.facetValue + '.true';
+            str += '' + link.facets[i].facetName + '*' + link.facets[i].facetValue + '.true';
         } else {
-          string += ',' + link.facetName + '*' + link.facetValue + '.true';
+          str += ',' + link.facets[i].facetName + '*' + link.facets[i].facetValue + '.true';
         }
       }
+
+      link.queryParams = str;
     });
   }
 

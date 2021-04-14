@@ -300,7 +300,7 @@
                                 Statistics/ Quick Search</h3>
                         <mat-nav-list class="other-list" >
                             <span  *ngFor = "let link of customLinks; last as isLast">
-                                <a mat-list-item [routerLink] = "['/browse-substance']"  [queryParams]="{facets: link.facetName + '*' + link.facetValue + '.true'}"   (click) = "routeToCustom(link)">
+                                <a mat-list-item [routerLink] = "['/browse-substance']"  [queryParams]="{facets: link.queryParams}"   (click) = "routeToCustom(link)">
                                         <div class = "entry2">
                                                 <div class = "label2">
                                                     {{link.display}}
