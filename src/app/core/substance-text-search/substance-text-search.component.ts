@@ -23,6 +23,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   private searchContainerElement: HTMLElement;
   private query: string;
   @Input() eventCategory: string;
+  @Input() styling?: string;
   @Output() searchPerformed = new EventEmitter<string>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';

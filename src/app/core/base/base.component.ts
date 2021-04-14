@@ -46,6 +46,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   appId: string;
   clasicBaseHref: string;
   navItems: Array<NavItem>;
+  canRegister = false;
+  registerNav: Array<NavItem>;
 
   constructor(
     private router: Router,
@@ -73,12 +75,22 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(roleSubscription);
 
+    const regSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater', 'DataEntry', 'SuperDataEntry').subscribe(response => {
+      this.canRegister = response;
+    });
+    this.subscriptions.push(regSubscription);
     this.baseDomain = this.configService.configData.apiUrlDomain;
 
     this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
       this.version = this.configService.configData.version || buildInfo.version;
       this.versionTooltipMessage = `V${this.version}`;
       this.versionTooltipMessage += ` built on ${moment(buildInfo.buildTime).utc().format('ddd MMM D YYYY HH:mm:SS z')}`;
+    });
+
+    this.navItems.forEach(item => {
+      if (item.display === 'Register') {
+        this.registerNav = item.children;
+      }
     });
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();

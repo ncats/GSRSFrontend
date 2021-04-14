@@ -19,6 +19,7 @@ import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-down
 import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { CanActivateAdminPage } from './admin/can-activate-admin-page';
+import { RegistrarsComponent } from '@gsrs-core/registrars/registrars.component';
 
 const childRoutes: Routes = [
   {
@@ -32,6 +33,11 @@ const childRoutes: Routes = [
   {
     path: 'browse-substance',
     component: SubstancesBrowseComponent
+  },
+  {
+    path: 'registrars',
+    component: RegistrarsComponent,
+    canActivate: [CanRegisterSubstanceForm],
   },
   {
     path: 'substances/register',

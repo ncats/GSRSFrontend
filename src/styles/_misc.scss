@@ -11,6 +11,12 @@
     margin-bottom: 15px;
 }
 
+body {
+ /* background-color: rgba(119, 150, 202, .05);
+ background-color: rgba(94, 145, 186, .08)*/
+
+ background-color: rgba(94, 145, 186, 0.12);
+}
 .name-value {
     display: flex;
     flex-direction: row;
