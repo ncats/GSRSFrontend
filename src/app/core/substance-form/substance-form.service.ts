@@ -68,18 +68,24 @@ export class SubstanceFormService implements OnDestroy {
     this.unloadSubstance();
   }
 
-  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string): Observable<void> {
+  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, bookmarklet?: boolean): Observable<void> {
     if (method) {
       this.method = method;
     } else {
       this.method = null;
+    }
+
+    // for merge subconcept advanced function
+    if (bookmarklet) {
+      this.substanceEmitter.next(substance);
+      this.namesUpdated();
     }
     return new Observable(observer => {
       if (substance != null) {
         this.privateSubstance = substance;
         substanceClass = this.privateSubstance.substanceClass;
       } else {
-        //the second case happens in the forms sometimes but really shouldn't
+        // the second case happens in the forms sometimes but really shouldn't
         if (substanceClass === 'chemical' || substanceClass === 'structure') { 
           this.privateSubstance = {
             substanceClass: 'chemical',
@@ -183,9 +189,9 @@ export class SubstanceFormService implements OnDestroy {
             codes: []
           };
         }
-        //default values
+        // default values
         
-        //TP: default to protected for root level record.
+        // TP: default to protected for root level record.
         this.privateSubstance.access=["protected"];
         this.privateSubstance.definitionLevel = "COMPLETE";
         this.privateSubstance.definitionType = "PRIMARY";
@@ -281,6 +287,7 @@ export class SubstanceFormService implements OnDestroy {
       this.privateSubstance.specifiedSubstance.access = access;
     } else {
     }
+    this.substanceEmitter.next(this.privateSubstance);
   }
 
   getDefinitionForDefRef() {
@@ -301,6 +308,7 @@ export class SubstanceFormService implements OnDestroy {
       return  this.privateSubstance.specifiedSubstance.access;
     } else {
     }
+    this.definitionEmitter.next(this.getDefinition());
   }
 
   changeApproval() {
