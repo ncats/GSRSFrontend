@@ -289,18 +289,21 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="search-section">
+        <mat-card class="register-section">
                 <mat-card-title>
-                  Quick Links
-                </mat-card-title>
-            
-                <mat-card-content class="left-search custom-header">
+                        Quick Links
+                      </mat-card-title>
+                <mat-card-content>
+                        <div class="register-card-content">
+                                <div class="register-main">
                         <h3 class="register-header" style = "margin-bottom: 18px;">
                                 <img class="old-icon" [src]="browseAll">
                                 Statistics/ Quick Search</h3>
                         <mat-nav-list class="other-list" >
-                            <span  *ngFor = "let link of customLinks; last as isLast">
-                                <a mat-list-item [routerLink] = "['/browse-substance']"  [queryParams]="{facets: link.queryParams}"   (click) = "routeToCustom(link)">
+                            <span  *ngFor = "let link of customLinks; last as isLast; let ind = index">
+                                <span *ngIf = "ind < 15" >
+                                <a mat-list-item [routerLink] = "['/browse-substance']"  
+                                 [queryParams]="{facets: link.queryParams}"   (click) = "routeToCustom(link)">
                                         <div class = "entry2">
                                                 <div class = "label2">
                                                     {{link.display}}
@@ -310,9 +313,37 @@
                                                   </div>
                                             </div>
                                 </a>
-                                <mat-divider *ngIf = "!isLast"></mat-divider>
+                                <mat-divider *ngIf = "!isLast || ind < 13"></mat-divider>
                             </span>
+                        </span>
                         </mat-nav-list>
+                        </div>
+                        <mat-divider [vertical]="true" class="divider-vertical" *ngIf="appId === 'fda' && customLinks.length >= 15"></mat-divider>
+              <div class="register-main" *ngIf = "customLinks.length >= 15">
+                <mat-nav-list class="other-list">
+                        
+                    <div class = "header-padding" style = "height: 61px;" >
+                    </div>
+                    <span  *ngFor = "let link of customLinks; last as isLast; let ind = index">
+                        <span *ngIf = "ind >= 15">
+                            <a mat-list-item [routerLink] = "['/browse-substance']"  
+                             [queryParams]="{facets: link.queryParams}"   (click) = "routeToCustom(link)">
+                                    <div class = "entry2">
+                                            <div class = "label2">
+                                                {{link.display}}
+                                              </div>
+                                              <div class = "value2">
+                                                {{link.total? link.total : 0}}
+                                              </div>
+                                        </div>
+                            </a>
+                            <mat-divider *ngIf = "!isLast"></mat-divider>
+                        </span>
+                    </span>
+                    
+                    </mat-nav-list>
+                </div>
+                </div>
                 </mat-card-content>
         </mat-card>
 
