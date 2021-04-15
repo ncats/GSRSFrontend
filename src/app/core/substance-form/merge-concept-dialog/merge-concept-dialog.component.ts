@@ -150,6 +150,7 @@ export class MergeConceptDialogComponent implements OnInit {
       }));
       addAll(oldSub.references, newSub.references);
       oldSub.changeReason = 'Merged with ' + newBdnum;
+      // setJson(oldSub);
       this.substanceFormService.loadSubstance(oldSub.substanceClass, oldSub, null, true);
       this.addmergebutton = true;
       this.text = 'Fields merged. Click \'Confirm Deprecate old record\' to to prevent duplicate collision';
@@ -203,7 +204,7 @@ export class MergeConceptDialogComponent implements OnInit {
   concept.changeReason = 'Migrated data into:' + this.oldBdnum;
     this.loading = false;
     this.text = 'Deprecating...';
-  this.substanceService.saveSubstance(concept).subscribe(response => {
+    this.substanceService.saveSubstance(concept).subscribe(response => {
     this.loading = false;
     this.text = 'Old record deprecated, please save this record to complete the merge.';
     this.subconcepts = undefined;

@@ -68,15 +68,15 @@ export class SubstanceFormService implements OnDestroy {
     this.unloadSubstance();
   }
 
-  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, bookmarklet?: boolean): Observable<void> {
+  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean): Observable<void> {
+
     if (method) {
       this.method = method;
     } else {
       this.method = null;
     }
-
-    // for merge subconcept advanced function
-    if (bookmarklet) {
+    if (mergeConcept) {
+      this.privateSubstance = substance;
       this.substanceEmitter.next(substance);
       this.namesUpdated();
     }
