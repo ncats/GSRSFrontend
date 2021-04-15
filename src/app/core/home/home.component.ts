@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
   total: string;
   bannerMessage?: string;
 
+
   browseAll: string;
   application: string;
   chemicon: string;
@@ -51,6 +52,8 @@ export class HomeComponent implements OnInit {
     this.chemicon = `${this.configService.environment.baseHref || '/'}assets/icons/home/icon_registersubstance.png`;
     this.appId = this.configService.environment.appId;
     this.bannerMessage = this.configService.configData.bannerMessage || null;
+    this.imageLoc = `${this.environment.baseHref || '/'}assets/images/home/`;
+
 
     this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
       this.isAuthenticated = response;
