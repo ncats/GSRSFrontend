@@ -303,7 +303,7 @@
                             <span  *ngFor = "let link of customLinks; last as isLast; let ind = index">
                                 <span *ngIf = "ind < 15" >
                                 <a mat-list-item [routerLink] = "['/browse-substance']"  
-                                 [queryParams]="{facets: link.queryParams}"   (click) = "routeToCustom(link)">
+                                 [queryParams]="{facets: link.queryParams}"   >
                                         <div class = "entry2">
                                                 <div class = "label2">
                                                     {{link.display}}
