@@ -9,7 +9,7 @@
     <div>Preferred Term: <span class = "name" [innerHTML] = "definition._name"></span></div>
   </div>
   <div class="substance-form-row">
-    <mat-form-field *ngIf = 'definition.substanceClass !== "concept"'>
+    <mat-form-field *ngIf = 'definition.substanceClass !== "concept"' style = "margin-right: 5px">
       <mat-label>Definition Type</mat-label>
       <mat-select [(ngModel)]="definition.definitionType" name="definitionType" (selectionChange)="updateDefinitionType($event)" required>
         <mat-option *ngFor="let defitionType of definitionTypes" [value]="defitionType.value">

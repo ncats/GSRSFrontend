@@ -172,6 +172,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   setPrimarySubstance(substance: SubstanceSummary): void {
 
     this.primarySubstance = substance;
+    this.primarySubUuid = substance.uuid;
 
     if (this.definition.relationships == null
       || Object.prototype.toString.call(this.definition.relationships) !== '[object Array]') {
@@ -198,7 +199,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   removePrimarySubstance(): void {
     const indexToRemove = this.definition.relationships
-      .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
+      .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubUuid);
     this.definition.relationships.splice(indexToRemove, 1);
     this.primarySubstance = null;
     this.substanceFormService.updateDefinition(this.definition);

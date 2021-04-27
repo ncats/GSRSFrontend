@@ -116,7 +116,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       if (response) {
         this.loadingService.setLoading(true);
         this.overlayContainer.style.zIndex = null;
-        const read = JSON.parse(response);
+
+        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+       /* const read = JSON.parse(response);
         if (this.id && read.uuid && this.id === read.uuid) {
           this.substanceFormService.importSubstance(read, 'update');
           this.submissionMessage = null;
@@ -133,7 +137,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           this.showSubmissionMessages = false;
           this.loadingService.setLoading(false);
           this.isLoading = false;
-        } else {
+        } else {*/
           setTimeout(() => {
             this.router.onSameUrlNavigation = 'reload';
             this.loadingService.setLoading(false);
@@ -141,8 +145,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   
           }, 1000);
         }
-        } 
-      }
+       // }
+     // }
     });
  
   }
@@ -447,7 +451,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   getDetailsFromImport(state: any, same?: boolean) {
     if (state && this.jsonValid(state)) {
       const response = JSON.parse(state);
-      
+      same = false;
       this.definitionType = response.definitionType;
       this.substanceClass = response.substanceClass;
       this.status = response.status;
@@ -532,11 +536,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.formSections = [];
     sectionNames.forEach(sectionName => {
       const formSection = new SubstanceFormSection(sectionName);
-      if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
+     /* if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
         (formSection.dynamicComponentName === 'substance-form-names'
           || formSection.dynamicComponentName === 'substance-form-codes-card'))) {
-        this.formSections.push(formSection);
-      }
+      } */
+      this.formSections.push(formSection);
     });
   }
 
