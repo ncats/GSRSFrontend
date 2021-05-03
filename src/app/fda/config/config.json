@@ -743,6 +743,55 @@
       }]
     },
     {
+      "display": "Polymers",
+      "facets":[{
+        "facetName": "Substance Class",
+        "facetValue":"polymer"
+      }]
+    },
+    {
+      "display": "Structurally Diverse",
+      "facets":[{
+        "facetName": "Substance Class",
+        "facetValue":"structurallyDiverse"
+      }]
+
+    },
+    {
+      "display": "Proteins",
+      "facets":[{
+        "facetName": "Substance Class",
+        "facetValue":"protein"
+      }]
+
+    },
+    {
+      "display": "Nucleic Acids",
+      "facets":[{
+        "facetName": "Substance Class",
+        "facetValue":"nucleicAcid"
+      }]
+
+    },
+    {
+      "display": "Concepts",
+      "facets":[{
+        "facetName": "Substance Class",
+        "facetValue":"concept"
+      }]
+
+    },
+    {
+      "display": "SSG1",
+      "facets":[{
+        "facetName": "Substance Class",
+        "facetValue":"specifiedSubstanceG1"
+      }]
+
+    }
+  ],
+  "registrarDynamicLinks2": [
+    {
       "display": "Pending Chemicals",
       "facets":[{
         "facetName": "Substance Class",
@@ -751,13 +800,6 @@
     {"facetName": "Record Status",
       "facetValue":"pending"}
     ]
-    },
-    {
-      "display": "Polymers",
-      "facets":[{
-        "facetName": "Substance Class",
-        "facetValue":"polymer"
-      }]
     },
     {
       "display": "Pending Polymers",
@@ -769,14 +811,6 @@
         "facetValue":"pending"}]
     },
     {
-      "display": "Structurally Diverse",
-      "facets":[{
-        "facetName": "Substance Class",
-        "facetValue":"structurallyDiverse"
-      }]
-
-    },
-    {
       "display": "Pending Structurally Diverse",
       "facets":[{
         "facetName": "Substance Class",
@@ -784,14 +818,6 @@
       },
       {"facetName": "Record Status",
         "facetValue":"pending"}]
-
-    },
-    {
-      "display": "Proteins",
-      "facets":[{
-        "facetName": "Substance Class",
-        "facetValue":"protein"
-      }]
 
     },
     {
@@ -805,14 +831,6 @@
 
     },
     {
-      "display": "Nucleic Acids",
-      "facets":[{
-        "facetName": "Substance Class",
-        "facetValue":"nucleicAcid"
-      }]
-
-    },
-    {
       "display": "Pending Nucleic Acids",
       "facets":[{
         "facetName": "Substance Class",
@@ -823,14 +841,6 @@
 
     },
     {
-      "display": "Concepts",
-      "facets":[{
-        "facetName": "Substance Class",
-        "facetValue":"concept"
-      }]
-
-    },
-    {
       "display": "Pending Concepts",
       "facets":[{
         "facetName": "Substance Class",
@@ -838,17 +848,8 @@
       },
       {"facetName": "Record Status",
         "facetValue":"pending"}]
-
     },
-    {
-      "display": "SSG1",
-      "facets":[{
-        "facetName": "Substance Class",
-        "facetValue":"specifiedSubstanceG1"
-      }]
-
-    },
-    {
+   {
       "display": "Pending SSG1",
       "facets":[{
         "facetName": "Substance Class",

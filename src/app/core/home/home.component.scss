@@ -70,6 +70,18 @@
   width: 281px;
 }
 
+.quick-links {
+  color: #4793d1;
+  font-weight: 550;
+  margin-left: 30%;
+  font-size: 23px;
+}
+
+.resource-row {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
 .shrunken-icon {
   width: 20px;
   padding-left: 5px;
@@ -79,6 +91,11 @@
   height: 52px;
 }
 
+.trial-button {
+  color: white;
+    font-size: 18px;
+}
+
 .closed-welcome-padding {
   height:60px !important;
   width:100%;
@@ -86,6 +103,20 @@
 
 .mat-list-base {
     position: relative;
+    padding-top: 0px;
+}
+
+.resource-link {
+  color: #4793d1 !important;
+  font-weight:550;
+  margin-top: 5px;
+
+
+}
+
+.resource-desc {
+  padding-left: 15px;
+  padding-bottom: 10px;
 }
 
 .panel-header {

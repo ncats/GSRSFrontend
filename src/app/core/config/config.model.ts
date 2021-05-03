@@ -26,6 +26,7 @@ export interface Config {
     relationshipsVisualizationUri?: string;
     homeDynamicLinks?: Array<any>;
     registrarDynamicLinks?: Array<any>;
+    registrarDynamicLinks2?: Array<any>;
     bannerMessage?: string;
 }
 
