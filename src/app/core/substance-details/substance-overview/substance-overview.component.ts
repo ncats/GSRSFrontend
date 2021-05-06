@@ -32,6 +32,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   defIcon = 'drop_down';
   latestVersion: number;
   canEdit: boolean;
+  defAccess: Array<string>;
   versionControl = new FormControl('', Validators.required);
   versions: string[] = [];
   isEditable = false;
@@ -87,7 +88,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       && this.configService.configData.defaultCodeSystem !== '') {
         this.defaultCodeSystem = this.configService.configData.defaultCodeSystem;
       }
-
+    this.getDefAccess();
     if (this.substance.codes != null && this.substance.codes.length > 0) {
       const defaultCodes = [];
       this.substance.codes.forEach(code => {
@@ -114,6 +115,26 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     });
     this.subscriptions.push(subSubscription);
 
+  }
+
+  getDefAccess() {
+    if (this.substance.structurallyDiverse) {
+     this.defAccess =  this.substance.structurallyDiverse.access;
+    } else if (this.substance.protein) {
+      this.defAccess =  this.substance.protein.access;
+    } else if (this.substance.structure) {
+      this.defAccess =  this.substance.structure.access;
+    } else if (this.substance.mixture) {
+      this.defAccess = this.substance.mixture.access;
+    } else if (this.substance.polymer) {
+      this.defAccess = this.substance.polymer.access;
+    } else if (this.substance.nucleicAcid) {
+      this.defAccess = this.substance.nucleicAcid.access;
+    } else if (this.substance.specifiedSubstance) {
+      this.defAccess = this.substance.specifiedSubstance.access;
+    }
+
+    console.log(this.defAccess);
   }
 
   getSubtypeRefs(substance: SubstanceDetail): void  {

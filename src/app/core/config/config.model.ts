@@ -24,6 +24,10 @@ export interface Config {
     adverseEventShinyAdverseEventURL?: string;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
+    homeDynamicLinks?: Array<any>;
+    registrarDynamicLinks?: Array<any>;
+    registrarDynamicLinks2?: Array<any>;
+    bannerMessage?: string;
 }
 
 export interface SubstanceDetailsCard {

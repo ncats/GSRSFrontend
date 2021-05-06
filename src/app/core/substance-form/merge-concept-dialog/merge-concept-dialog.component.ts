@@ -151,7 +151,7 @@ export class MergeConceptDialogComponent implements OnInit {
       addAll(oldSub.references, newSub.references);
       oldSub.changeReason = 'Merged with ' + newBdnum;
       // setJson(oldSub);
-      this.substanceFormService.loadSubstance(oldSub.substanceClass, oldSub);
+      this.substanceFormService.loadSubstance(oldSub.substanceClass, oldSub, null, true);
       this.addmergebutton = true;
       this.text = 'Fields merged. Click \'Confirm Deprecate old record\' to to prevent duplicate collision';
       this.oldBdnum = oldBdnum;
@@ -204,11 +204,11 @@ export class MergeConceptDialogComponent implements OnInit {
   concept.changeReason = 'Migrated data into:' + this.oldBdnum;
     this.loading = false;
     this.text = 'Deprecating...';
-  this.substanceService.saveSubstance(concept).subscribe(response => {
+    this.substanceService.saveSubstance(concept).subscribe(response => {
     this.loading = false;
     this.text = 'Old record deprecated, please save this record to complete the merge.';
     this.subconcepts = undefined;
-    this.addmergebutton = false;
+    this.addmergebutton = false; 
   }, error => {
     this.loading = false;
     this.text = 'There was a problem deprecating the old record. Refresh the page to undo the changes to the parent record.';
@@ -265,6 +265,13 @@ export class MergeConceptDialogComponent implements OnInit {
       delete rec['lastEdited'];
       delete rec['lastEditedBy'];
     }
+
+    const originHolders = defiant.json.search(old, '//*[originatorUuid]');
+    for (let i = 0; i < originHolders.length; i++) {
+      const rec = originHolders[i];
+      delete rec['originatorUuid'];
+    }
+
     delete old.approvalID;
     delete old.approved;
     delete old.approvedBy;

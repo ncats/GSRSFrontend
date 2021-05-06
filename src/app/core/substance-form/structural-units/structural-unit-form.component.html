@@ -36,7 +36,7 @@
       <div class = "connectivity-container">
         <mat-form-field class = "connectivity">
           <mat-label>Connectivity</mat-label>
-          <textarea matInput [ngModel] = "unit._displayConnectivity" (ngModelChange) = "displayToConnectivity($event)">
+          <textarea matInput cdkTextareaAutosize [ngModel] = "unit._displayConnectivity" (ngModelChange) = "displayToConnectivity($event)">
           </textarea>
         </mat-form-field>
         <div class = "error-container" *ngIf = "errors && errors.length > 0">

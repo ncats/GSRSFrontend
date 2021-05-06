@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
 import { HomeComponent } from './home/home.component';
+import { RegistrarsComponent } from './registrars/registrars.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
@@ -32,6 +33,10 @@ const childRoutes: Routes = [
   {
     path: 'browse-substance',
     component: SubstancesBrowseComponent
+  },
+  {
+    path: 'registrars',
+    component: RegistrarsComponent,
   },
   {
     path: 'substances/register',

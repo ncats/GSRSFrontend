@@ -52,10 +52,6 @@
     padding-right: 15px;
   }
 
-  .connectivity {
-    width: 50%;
-  }
-
   .amount {
     width: 50%;
     padding-right: 15px;
@@ -81,7 +77,6 @@
   }
 
   .connectivity-container {
-    width:50%;
     display:flex;
     flex-direction:column;
   }
@@ -95,7 +90,7 @@
 .inner-row-bottom {
   display:flex;
   .connectivity {
-    width: 50%;
+   /* width: 50%;*/
   }
 
   .amount {

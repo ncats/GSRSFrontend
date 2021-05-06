@@ -20,6 +20,7 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
   maternalUuid: string;
   parentUuid: string;
   structurallyDiverse: StructurallyDiverse;
+  temporaryPart: string;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -35,14 +36,24 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
     const structurallyDiverseSubscription = this.substanceFormStructurallyDiverseService
       .substanceStructurallyDiverse.subscribe(structurallyDiverse => {
       this.structurallyDiverse = structurallyDiverse;
-      this.part = this.structurallyDiverse.$$diverseType;
+     // this.part = this.structurallyDiverse.$$diverseType;
+     // when the form submits, $$diversetype is stripped so part must be used in it's place
+      if (this.structurallyDiverse.$$diverseType) {
+        this.part = this.structurallyDiverse.$$diverseType;
+      }
       if (this.part === 'whole') {
         this.menuLabelUpdate.emit('Organism Details');
         this.maternalUuid = this.structurallyDiverse.hybridSpeciesMaternalOrganism
           && this.structurallyDiverse.hybridSpeciesMaternalOrganism.refuuid || '';
         this.paternalUuid = this.structurallyDiverse.hybridSpeciesPaternalOrganism
           && this.structurallyDiverse.hybridSpeciesPaternalOrganism.refuuid || '';
-      } else {
+       } else if (this.part === 'full_fields') {
+        this.menuLabelUpdate.emit('Organism Details / Parts And Fractions');
+        this.maternalUuid = this.structurallyDiverse.hybridSpeciesMaternalOrganism
+          && this.structurallyDiverse.hybridSpeciesMaternalOrganism.refuuid || '';
+        this.paternalUuid = this.structurallyDiverse.hybridSpeciesPaternalOrganism
+          && this.structurallyDiverse.hybridSpeciesPaternalOrganism.refuuid || '';
+       } else {
         this.menuLabelUpdate.emit('Parts And Fractions');
         this.parentUuid = this.structurallyDiverse.parentSubstance
           && this.structurallyDiverse.parentSubstance.refuuid || '';
@@ -63,17 +74,23 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
   }
 
   paternalUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.structurallyDiverse.hybridSpeciesPaternalOrganism = relatedSubstance;
+    if (substance !== null) {
+      const relatedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+      this.structurallyDiverse.hybridSpeciesPaternalOrganism = relatedSubstance;
+    } else {
+      this.structurallyDiverse.hybridSpeciesPaternalOrganism  = null;
+    }
+
   }
 
   maternalUpdated(substance: SubstanceSummary): void {
+    if (substance !== null) {
     const relatedSubstance: SubstanceRelated = {
       refPname: substance._name,
       name: substance._name,
@@ -82,17 +99,25 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
       approvalID: substance.approvalID
     };
     this.structurallyDiverse.hybridSpeciesMaternalOrganism = relatedSubstance;
+  } else {
+    this.structurallyDiverse.hybridSpeciesMaternalOrganism = null;
+  }
   }
 
   sourceMaterialUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.structurallyDiverse.parentSubstance = relatedSubstance;
+if (substance !== null) {
+
+  const relatedSubstance: SubstanceRelated = {
+    refPname: substance._name,
+    name: substance._name,
+    refuuid: substance.uuid,
+    substanceClass: 'reference',
+    approvalID: substance.approvalID
+  };
+  this.structurallyDiverse.parentSubstance = relatedSubstance;
+} else {
+  this.structurallyDiverse.parentSubstance = null;
+}
   }
 
   updateLocation(event): void {

@@ -106,7 +106,7 @@ export class AgentModificationFormComponent implements OnInit {
       this.mod.agentSubstance = relatedSubstance;
       this.relatedSubstanceUuid = this.mod.agentSubstance.refuuid;
     } else {
-      this.mod.agentSubstance = {};
+      this.mod.agentSubstance = null;
       this.relatedSubstanceUuid = '';
     }
   }

@@ -5,3 +5,13 @@
     left: 0;
     right: 0;
 }
+
+
+
+.mat-progress-spinner {
+    z-index: 1003;
+    position: fixed;
+  top: 50%;
+  left: calc(50% - 25px);
+/*  transform: translate(-50%, -50%); */
+}

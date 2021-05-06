@@ -3,7 +3,11 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { ConfigService } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
 import { AuthService } from '@gsrs-core/auth';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
+import { SubstanceService } from '@gsrs-core/substance';
+import { take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-home',
@@ -18,13 +22,18 @@ export class HomeComponent implements OnInit {
   isClosedWelcomeMessage = true;
   imageLoc: any;
   appId: string;
+  customLinks: Array<any>;
+  total: number;
+  bannerMessage?: string;
+  private overlayContainer: HTMLElement;
+
 
   browseAll: string;
   application: string;
   chemicon: string;
   clasicBaseHref: string;
 
-  //Config for Adverse Event on Shiny Server
+  // Config for Adverse Event on Shiny Server
   adverseEventShinyHomepageDisplay = false;
   adverseEventShinyHomepageURL: string;
 
@@ -32,7 +41,10 @@ export class HomeComponent implements OnInit {
     private gaService: GoogleAnalyticsService,
     private configService: ConfigService,
     private authService: AuthService,
-    private router: Router
+    private substanceService: SubstanceService,
+    private router: Router,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -44,15 +56,38 @@ export class HomeComponent implements OnInit {
     this.browseAll = `${this.configService.environment.baseHref || '/'}assets/icons/home/icon_browseall.png`;
     this.chemicon = `${this.configService.environment.baseHref || '/'}assets/icons/home/icon_registersubstance.png`;
     this.appId = this.configService.environment.appId;
+    this.bannerMessage = this.configService.configData.bannerMessage || null;
+    this.imageLoc = `${this.environment.baseHref || '/'}assets/images/home/`;
+
 
     this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
       this.isAuthenticated = response;
     });
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
-    this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';
+    this.customLinks = this.configService.configData.homeDynamicLinks;
+    this.customLinks.forEach (link => {
+      const searchStr = `${link.facetName}:${link.facetValue}`;
+      this.substanceService.searchSingleFacet(link.facetName, link.facetValue).pipe(take(1)).subscribe( response => {
+        link.total = response.total;
+      });
+    });
+    this.substanceService.getRecordCount().subscribe( response => {
+      this.total = response;
+    });
+   // this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'false';
+   this.isClosedWelcomeMessage = false;
 
     this.getAdverseEventShinyConfig();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+  }
+
+  routeToCustom(link) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: { 'facets': link.facetName + '*' + link.facetValue + '.true' }
+    };
+    this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
   closeWelcomeMessage(): void {
@@ -62,6 +97,19 @@ export class HomeComponent implements OnInit {
 
   browseSubstances(): void {
     this.router.navigate(['/browse-substance']);
+  }
+
+  openModal(templateRef) {
+
+    const dialogRef = this.dialog.open(templateRef, {
+      height: '200px',
+      width: '400px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 
   getAdverseEventShinyConfig(): void {

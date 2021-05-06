@@ -453,6 +453,21 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
+  searchSingleFacet(name: string, value: string) {
+    const url = this.apiBaseUrl + 'substances/search?facet=' + name + '/' + value;
+    return this.http.get<PagingResponse<SubstanceSummary>>(url);
+  }
+
+  searchFromString(value: string) {
+    const url = this.apiBaseUrl + 'substances/search?' + value;
+    return this.http.get<PagingResponse<SubstanceSummary>>(url);
+  }
+
+  getRecordCount() {
+    const url = this.apiBaseUrl + 'substances/@count';
+    return this.http.get<any>(url);
+  }
+
   getFasta(id: string): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}export/${id}.fas`;
     return this.http.get(url, { responseType: 'blob' as 'json' });

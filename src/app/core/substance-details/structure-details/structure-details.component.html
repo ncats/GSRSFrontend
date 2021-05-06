@@ -53,6 +53,7 @@
       </div>
       <div class="name-value" *ngIf="systematic" >
         <div class="name">
+          
           <a (click)="toggleNames()" class='blue-font references-link'  *ngIf = "systematic.length > 0">
             <span>{{showNames === false ? 'Show' : 'Hide'}} Systematic Names</span><mat-icon svgIcon="{{nameIcon}}"></mat-icon>
           </a>
@@ -67,7 +68,7 @@
         <mat-icon svgIcon="get_app"></mat-icon>
       </a>
       <a class="mat-icon-button" title="Structure Search" [href]="searchHref">
-        <mat-icon svgIcon="search"></mat-icon>
+        <mat-icon svgIcon="zoom_in"></mat-icon>
       </a>
     </div>
     <img class="structure-img" (click) = "openModal(structureTemplate)" appSubstanceImage  size = "250" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">

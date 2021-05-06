@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MatTableModule} from '@angular/material';
+import {MatTableModule, MatIconModule, MatTooltipModule} from '@angular/material';
 import {ReferencesManagerComponent} from './references-manager.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    MatTableModule
+    MatTableModule,
+    MatIconModule,
+    MatTooltipModule
   ],
+
   declarations: [ReferencesManagerComponent],
-  exports: [ReferencesManagerComponent]
+  exports: [ReferencesManagerComponent],
 })
 export class ReferencesManagerModule { }

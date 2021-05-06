@@ -10,6 +10,7 @@
             <mat-icon aria-label="Revert substance edit" [ngClass]="{'hidden': selectedSubstance}" svgIcon="undo"></mat-icon>
         </button>
     </div>
+    
     <div class="selected-substance" *ngIf="selectedSubstance" (mouseenter)="showOptions = true" (mouseleave)="showOptions = false">
       <div class="selected-substance-options" *ngIf="showOptions">
         <button mat-mini-fab (click)="editSelectedSubstance()">
@@ -18,6 +19,9 @@
         <a *ngIf = "selectedSubstance.uuid" mat-mini-fab target="_blank" [routerLink]="['/substances', selectedSubstance.uuid]">
             <mat-icon aria-label="Open in new tab" svgIcon="open_in_new" matTooltip = "view details in a new tab"></mat-icon>
         </a>
+          <button mat-mini-fab  (click)="delete()" matTooltip ="delete" class = "undo" >
+              <mat-icon aria-label="delete selection" svgIcon="cancel"></mat-icon>
+          </button>
       </div>
       <div class="section-header">{{header}}</div>
       <img class = "related-image" *ngIf = "selectedSubstance.uuid && !hideImage" appSubstanceImage [entityId]="selectedSubstance.uuid">

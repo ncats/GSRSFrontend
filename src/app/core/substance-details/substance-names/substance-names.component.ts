@@ -24,6 +24,10 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   private overlayContainer: HTMLElement;
   hideOrgs = true;
   pageSize = 10;
+  uniqueVals: Array<string>;
+  filterSelectObj = [];
+  filterBackup: Array<any>;
+  typeFilterOn = 'false';
 
   constructor(
     private dialog: MatDialog,
@@ -36,6 +40,15 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   ngOnInit() {
+
+    this.filterSelectObj = [
+      {
+        name: 'Name Type',
+        columnProp: 'type',
+        options: []
+      }
+    ];
+
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       if (this.substance != null && this.substance.names != null) {
@@ -43,12 +56,17 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
         this.filtered = this.substance.names;
         this.countUpdate.emit(this.names.length);
         this.searchControl.valueChanges.subscribe(value => {
-          this.filterList(value, this.names, this.analyticsEventCategory);
+          if (this.typeFilterOn === 'false') {
+            this.filterList(value, this.names, this.analyticsEventCategory);
+
+          } else if (this.typeFilterOn === 'true') {
+            const tempFilter = JSON.parse(JSON.stringify(this.filtered));
+            this.filterList(value, this.filterBackup, this.analyticsEventCategory);
+          }
         }, error => {
           console.log(error);
         });
         this.getVocabularies();
-
         // move display name to top
         this.filtered = this.names.slice().sort((a, b) => {
           let returned = -1;
@@ -62,11 +80,64 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       }
 
       this.pageChange();
+
+      this.filterSelectObj.filter((o) => {
+        o.options = this.getFilterObject(this.names, o.columnProp);
+      });
       });
       this.overlayContainer = this.overlayContainerService.getContainerElement();
+
   }
 
+  filterChange(filter, event) {
+    this.typeFilterOn = 'disable search';
+    const tempFiltered = [];
+    // const tempFiltered = this.filtered;
+    this.filterBackup = [];
+      this.names.forEach(item => {
+        const itemString = JSON.stringify(item[filter.columnProp]).toLowerCase();
+        if (itemString.indexOf(event.target.value.toLowerCase()) > -1) {
+          this.filterBackup.push(item);
+        }
+    });
+    setTimeout(() => {
+ 
+      this.names.forEach(item => {
+        const itemString = JSON.stringify(item[filter.columnProp]).toLowerCase();
+        if (itemString.indexOf(event.target.value.toLowerCase()) > -1) {
+            tempFiltered.push(item);
+        }
+    });
+    this.filtered = tempFiltered;
+    this.typeFilterOn = 'true';
+    this.page = 0;
+    this.pageChange();
+    }, 50);
+  }
 
+  setDisplay(value, column) {
+    if (column === 'type') {
+        return (this.typeVocabulary[value] && this.typeVocabulary[value].display ? this.typeVocabulary[value].display : value);
+    } else if (column === 'language') {
+      return ( this.languageVocabulary[value] && this.languageVocabulary[value].display ? this.typeVocabulary[value].display : value);
+    } else {
+      return value;
+    }
+  }
+
+  getFilterObject(fullObj, key) {
+    const uniqChk = [];
+    if (key === 'type') {
+
+    }
+    fullObj.filter((obj) => {
+      if (!uniqChk.includes(obj[key])) {
+        uniqChk.push(obj[key]);
+      }
+      return obj;
+    });
+    return uniqChk;
+  }
 
   sortData(sort: Sort) {
     const data = this.names.slice();
@@ -86,6 +157,17 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     });
     this.pageChange();
   }
+
+  resetFilters() {
+    this.filterSelectObj.forEach((value, key) => {
+      value.modelValue = undefined;
+    });
+    this.typeFilterOn = 'false';
+    this.filtered = this.names;
+    this.pageChange();
+    this.searchControl.setValue('');
+  }
+
 
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('LANGUAGE', 'NAME_TYPE').subscribe(response => {

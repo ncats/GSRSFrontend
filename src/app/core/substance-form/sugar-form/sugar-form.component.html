@@ -12,7 +12,7 @@
       </button>
     </div>
     <div class = "type">
-      <app-cv-input domain = "NUCLEIC_ACID_SUGAR" title = "Sequence Type" (valueChange) = "sugar.sugar = $event" [model] = "sugar.sugar"></app-cv-input>
+      <app-cv-input domain = "NUCLEIC_ACID_SUGAR" title = "Sugar" (valueChange) = "sugar.sugar = $event" [model] = "sugar.sugar"></app-cv-input>
     </div>
     <div class = "addRemaining">
       <button mat-flat-button mat-primary matTooltip="Add remaining {{remaining.length}} sites" [disabled] = "remaining.length === 0" (click)="addRemainingSites()">
@@ -21,7 +21,7 @@
     </div>
 
     <div class = "links">
-      <div class="label">sugar</div>
+      <div class="label">Sites</div>
       {{siteDisplay}}
       <button mat-icon-button matTooltip="Select sites from display" (click)="(openDialog())">
         <mat-icon svgIcon="edit"></mat-icon>

@@ -19,6 +19,7 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
   private subscriptions: Array<Subscription> = [];
   pageSize = 10;
   expanded = true;
+  validate = false;
 
   constructor(
     private substanceFormCodesService: SubstanceFormCodesService,
@@ -41,7 +42,7 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
   ngAfterViewInit() {
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
-        this.canAddItemUpdate.emit(false);
+      //  this.canAddItemUpdate.emit(false);
         this.hiddenStateUpdate.emit(true);
       } else {
         this.canAddItemUpdate.emit(true);

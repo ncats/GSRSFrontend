@@ -6,10 +6,10 @@
     <span class = "approval" *ngIf = "definition.approvalID && definition.approvalID !== ''">{{definition.approvalID}}</span>
   </div>
   <div class="substance-form-row form-name" *ngIf = "definition._name">
-    <div>Preferred Term: <span class = "name">{{definition._name}}</span></div>
+    <div>Preferred Term: <span class = "name" [innerHTML] = "definition._name"></span></div>
   </div>
   <div class="substance-form-row">
-    <mat-form-field *ngIf = 'definition.substanceClass !== "concept"'>
+    <mat-form-field *ngIf = 'definition.substanceClass !== "concept"' style = "margin-right: 5px">
       <mat-label>Definition Type</mat-label>
       <mat-select [(ngModel)]="definition.definitionType" name="definitionType" (selectionChange)="updateDefinitionType($event)" required>
         <mat-option *ngFor="let defitionType of definitionTypes" [value]="defitionType.value">
@@ -37,7 +37,7 @@
       <mat-checkbox [(ngModel)]="definition.deprecated" name="deprecated" (change)="updateDefinition()">Deprecated</mat-checkbox>
     </div>
     <div>
-      <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access"></app-access-manager>
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access" label = "Record Level Access"></app-access-manager>
     </div>
     <div class = 'redirect-links' *ngIf = "uuid" >
       <a [href]="getRedirect()" target = "_blank" matTooltip= "open old edit form in new tab">
@@ -84,6 +84,9 @@
   <div class="substance-form-row" *ngIf="definition.substanceClass !== 'concept'">
     <div class="references-container">
       <app-domain-references [referencesUuids]="definition.references" card = "definition" #references></app-domain-references>
+    </div>
+    <div matTooltip = "Set {{definition.substanceClass}} access">
+      <app-access-manager (accessOut)="updateDefAccess($event)" [access]="defAccess" label = "Definition Access"></app-access-manager>
     </div>
   </div>
 

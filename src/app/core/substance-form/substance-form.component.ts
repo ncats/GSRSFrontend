@@ -46,7 +46,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
   @ViewChildren('expansionPanel', { read: MatExpansionPanel }) matExpansionPanels: QueryList<MatExpansionPanel>;
   private subClass: string;
-  private definitionType: string;
+  definitionType: string;
   expandedComponents = [
     'substance-form-definition',
     'substance-form-structure',
@@ -116,7 +116,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       if (response) {
         this.loadingService.setLoading(true);
         this.overlayContainer.style.zIndex = null;
-        const read = JSON.parse(response);
+
+        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+       /* const read = JSON.parse(response);
         if (this.id && read.uuid && this.id === read.uuid) {
           this.substanceFormService.importSubstance(read, 'update');
           this.submissionMessage = null;
@@ -133,7 +137,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           this.showSubmissionMessages = false;
           this.loadingService.setLoading(false);
           this.isLoading = false;
-        } else {
+        } else {*/
           setTimeout(() => {
             this.router.onSameUrlNavigation = 'reload';
             this.loadingService.setLoading(false);
@@ -141,8 +145,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   
           }, 1000);
         }
-        } 
-      }
+       // }
+     // }
     });
  
   }
@@ -232,11 +236,17 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
+
+        const total = this.formSections.length;
+        let finished = 0;
         if (!this.forceChange) {
+           this.loadingService.setLoading(true);
+           const startTime = new Date();
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
             .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
             .subscribe(componentFactory => {
+              this.loadingService.setLoading(true);
               this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
               this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
               this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
@@ -260,8 +270,24 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 }
               });
               this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
+              finished++;
+              if (finished >= total) {
+                this.loadingService.setLoading(false);
+              } else {
+                const currentTime = new Date();
+                if (currentTime.getTime() - startTime.getTime() > 12000) {
+                  if (confirm('There was a network error while fetching files, would you like to refresh?')) {
+                    window.location.reload(true);
+                  }
+                }
+              }
+            setTimeout(() => {
+              this.loadingService.setLoading(false);
+            }, 5);
             });
         });
+       // this.loadingService.setLoading(false);
+
       }
         subscription.unsubscribe();
       });
@@ -312,6 +338,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.feature === 'switch') {
       this.definitionSwitch();
       this.feature = undefined;
+    }
+    if (this.feature === 'changeApproval') {
+      this.substanceFormService.changeApproval();
     }
 
   }
@@ -422,7 +451,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   getDetailsFromImport(state: any, same?: boolean) {
     if (state && this.jsonValid(state)) {
       const response = JSON.parse(state);
-      
+      same = false;
       this.definitionType = response.definitionType;
       this.substanceClass = response.substanceClass;
       this.status = response.status;
@@ -507,11 +536,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.formSections = [];
     sectionNames.forEach(sectionName => {
       const formSection = new SubstanceFormSection(sectionName);
-      if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
+     /* if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
         (formSection.dynamicComponentName === 'substance-form-names'
           || formSection.dynamicComponentName === 'substance-form-codes-card'))) {
-        this.formSections.push(formSection);
-      }
+      } */
+      this.formSections.push(formSection);
     });
   }
 
@@ -741,6 +770,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       delete rec['lastEdited'];
       delete rec['lastEditedBy'];
     }
+
+    const originHolders = defiant.json.search(old, '//*[originatorUuid]');
+    for (let i = 0; i < originHolders.length; i++) {
+      const rec = originHolders[i];
+      delete rec['originatorUuid'];
+    }
+
     delete old.approvalID;
     delete old.approved;
     delete old.approvedBy;

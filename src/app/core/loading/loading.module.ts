@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { LoadingComponent } from './loading/loading.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoadingOverlayComponent } from './loading-overlay/loading-overlay.component';
+import { MatProgressSpinnerModule } from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     LoadingComponent,

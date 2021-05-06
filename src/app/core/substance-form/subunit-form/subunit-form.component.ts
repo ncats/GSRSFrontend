@@ -276,7 +276,7 @@ window.open( url, '_blank');
     let ret = '';
     if (seq) {
       for (let i = 0; i < seq.length; i += 10) {
-        if (i % 60 === 0) {
+        if (i % 50 === 0) {
           ret += '\n';
         }
         ret += seq.substr(i, 10) + '     ';

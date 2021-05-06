@@ -68,18 +68,24 @@ export class SubstanceFormService implements OnDestroy {
     this.unloadSubstance();
   }
 
-  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string): Observable<void> {
+  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean): Observable<void> {
+
     if (method) {
       this.method = method;
     } else {
       this.method = null;
+    }
+    if (mergeConcept) {
+      this.privateSubstance = substance;
+      this.substanceEmitter.next(substance);
+      this.namesUpdated();
     }
     return new Observable(observer => {
       if (substance != null) {
         this.privateSubstance = substance;
         substanceClass = this.privateSubstance.substanceClass;
       } else {
-        //the second case happens in the forms sometimes but really shouldn't
+        // the second case happens in the forms sometimes but really shouldn't
         if (substanceClass === 'chemical' || substanceClass === 'structure') { 
           this.privateSubstance = {
             substanceClass: 'chemical',
@@ -260,6 +266,59 @@ export class SubstanceFormService implements OnDestroy {
         observer.complete();
       });
     });
+  }
+
+  setDefinitionFromDefRef(access: any) {
+
+    if (this.privateSubstance.structurallyDiverse) {
+      this.privateSubstance.structurallyDiverse.access = access;
+    } else if (this.privateSubstance.protein) {
+      this.privateSubstance.protein.access = access;
+    } else if (this.privateSubstance.structure) {
+      this.privateSubstance.structure.access = access;
+    } else if (this.privateSubstance.mixture) {
+      this.privateSubstance.mixture.access = access;
+    } else if (this.privateSubstance.polymer) {
+      this.privateSubstance.polymer.access = access;
+    } else if (this.privateSubstance.nucleicAcid) {
+      this.privateSubstance.nucleicAcid.access = access;
+    } else if (this.privateSubstance.specifiedSubstance) {
+      this.privateSubstance.specifiedSubstance.access = access;
+    } else {
+    }
+    this.substanceEmitter.next(this.privateSubstance);
+  }
+
+  getDefinitionForDefRef() {
+
+    if (this.privateSubstance.structurallyDiverse) {
+     return this.privateSubstance.structurallyDiverse.access;
+    } else if (this.privateSubstance.protein) {
+      return this.privateSubstance.protein.access;
+    } else if (this.privateSubstance.structure) {
+      return this.privateSubstance.structure.access;
+    } else if (this.privateSubstance.mixture) {
+      return this.privateSubstance.mixture.access;
+    } else if (this.privateSubstance.polymer) {
+      return this.privateSubstance.polymer.access;
+    } else if (this.privateSubstance.nucleicAcid) {
+      return  this.privateSubstance.nucleicAcid.access;
+    } else if (this.privateSubstance.specifiedSubstance) {
+      return  this.privateSubstance.specifiedSubstance.access;
+    } else {
+    }
+    this.definitionEmitter.next(this.getDefinition());
+  }
+
+  changeApproval() {
+    const apid = prompt('Enter new ApprovalID:');
+  
+    if (apid) {
+      const old = this.privateSubstance.approvalID;
+      this.privateSubstance.approvalID = apid;
+      alert('Approval ID changed from"' + old + '" to "' + apid + '". Submit changes to save');
+      this.definitionEmitter.next(this.getDefinition());
+    }
   }
 
   switchType(substance: SubstanceDetail, newClass: string) {
@@ -1154,6 +1213,23 @@ this.emitDisulfideLinkUpdate();
               }
             }
           }
+          if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
+            for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
+              const prop = substanceCopy.polymer.monomers[i];
+              if (!prop.monomerSubstance || prop.monomerSubstance === {}) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Monomer #' + (i + 1) + ' requires a selected substance',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              }
+            }
+          }
         }
         observer.next(results);
         observer.complete();
@@ -1232,6 +1308,18 @@ this.emitDisulfideLinkUpdate();
           }
       });
     }
+
+    if (this.privateSubstance.protein && this.privateSubstance.protein.disulfideLinks
+       && this.privateSubstance.protein.disulfideLinks.length > 0) {
+          for ( let i = this.privateSubstance.protein.disulfideLinks.length; i >= 0;  i--) {
+            if (this.privateSubstance.protein.disulfideLinks[i] && this.privateSubstance.protein.disulfideLinks[i].sites &&
+              this.privateSubstance.protein.disulfideLinks[i].sites[0] && this.privateSubstance.protein.disulfideLinks[i].sites[1] &&
+              Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[0]).length === 0 &&
+                Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[1]).length === 0 ) {
+                  this.privateSubstance.protein.disulfideLinks.splice(i, 1);
+          }
+        }
+       }
     // end view=internal changes
 
     let substanceString = JSON.stringify(this.privateSubstance);

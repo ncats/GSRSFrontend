@@ -41,7 +41,7 @@ export class SubstanceFormNamesCardComponent
     this.appId = this.configService.environment.appId;
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
-        this.canAddItemUpdate.emit(false);
+      //  this.canAddItemUpdate.emit(false);
         this.hiddenStateUpdate.emit(true);
       } else {
         this.canAddItemUpdate.emit(true);

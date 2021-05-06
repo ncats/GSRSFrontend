@@ -75,15 +75,21 @@ export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBa
   }
 
   parentSubstanceUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.classification.parentSubstance = relatedSubstance;
-    this.relatedSubstanceUuid = relatedSubstance && relatedSubstance.refuuid || '';
+    if (substance !== null){
+      const relatedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+      this.classification.parentSubstance = relatedSubstance;
+      this.relatedSubstanceUuid = relatedSubstance && relatedSubstance.refuuid || '';
+    } else {
+      this.classification.parentSubstance = null;
+      this.relatedSubstanceUuid = null;
+    }
+
   }
 
   updateAccess(access: Array<string>): void {

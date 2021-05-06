@@ -74,14 +74,19 @@ export class PropertyFormComponent implements OnInit {
   }
 
   referencedSubstanceUpdated(substance: SubstanceSummary): void {
-    const referencedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.property.referencedSubstance = referencedSubstance;
+    if (substance !== null){
+      const referencedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+      this.property.referencedSubstance = referencedSubstance;
+    } else {
+      this.property.referencedSubstance = null;
+    }
+
   }
 
   openPropertyParameter(parameter?: SubstanceParameter): void {

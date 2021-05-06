@@ -30,6 +30,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   feature: string;
   substanceClass: string;
   status: string;
+  accessLabel?:string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   tagsCtrl = new FormControl({value: '', disabled: true});
   private suggestedTags: Array<string>;
@@ -37,6 +38,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   private usedSuggestedTags: Array<string> = [];
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
+  defAccess: Array<any>;
   @ViewChild('tagsInput', { read: ElementRef, static: false }) tagsInput: ElementRef<HTMLInputElement>;
   imported = false;
 
@@ -67,6 +69,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   ngAfterViewInit() {
   const subscription =  this.substanceFormService.definition.subscribe(definition => {
+    this.defAccess = this.substanceFormService.getDefinitionForDefRef();
       this.definition = definition || {};
       this.crossCheckTags();
       if (this.definition.substanceClass === 'structure') {
@@ -169,6 +172,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   setPrimarySubstance(substance: SubstanceSummary): void {
 
     this.primarySubstance = substance;
+    this.primarySubUuid = substance.uuid;
 
     if (this.definition.relationships == null
       || Object.prototype.toString.call(this.definition.relationships) !== '[object Array]') {
@@ -195,7 +199,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   removePrimarySubstance(): void {
     const indexToRemove = this.definition.relationships
-      .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
+      .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubUuid);
     this.definition.relationships.splice(indexToRemove, 1);
     this.primarySubstance = null;
     this.substanceFormService.updateDefinition(this.definition);
@@ -203,6 +207,11 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   updateAccess(access: Array<string>): void {
     this.definition.access = access;
+    this.substanceFormService.updateDefinition(this.definition);
+  }
+
+  updateDefAccess(access: Array<string>): void {
+    this.substanceFormService.setDefinitionFromDefRef(access);
     this.substanceFormService.updateDefinition(this.definition);
   }
 

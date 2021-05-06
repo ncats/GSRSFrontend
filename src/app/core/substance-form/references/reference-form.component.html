@@ -25,10 +25,10 @@
   <div *ngIf="!reference.$$deletedCode">
     <div class="form-row">
       <mat-form-field class="url">
-        <input matInput placeholder="URL" [(ngModel)]="reference.url" name="url" />
+        <input matInput placeholder="URL" [(ngModel)]="reference.url" name="refUrl" />
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Source Id" [(ngModel)]="reference.id" name="id" />
+        <input matInput placeholder="Source Id" [(ngModel)]="reference.id" name="refId" />
       </mat-form-field>
       <app-tag-selector class="tags" (tagsUpdate)="updateTags($event)" [tags]="reference.tags"
         cvDomain="DOCUMENT_COLLECTION"></app-tag-selector>

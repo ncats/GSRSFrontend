@@ -14,6 +14,7 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
   privateAccess: Array<string> = [];
   @Output() accessOut = new EventEmitter<Array<string>>();
   tooltipMessage: string;
+  @Input() label?: string;
   accessFormGroup = new FormGroup({});
 
   constructor(

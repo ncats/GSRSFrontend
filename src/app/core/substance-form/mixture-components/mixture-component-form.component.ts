@@ -58,15 +58,21 @@ export class MixtureComponentFormComponent implements OnInit {
   }
 
   componentUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.component.substance = relatedSubstance;
-    this.relatedSubstanceUuid = this.component.substance.refuuid;
+    if (substance !== null){
+      const relatedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+      this.component.substance = relatedSubstance;
+      this.relatedSubstanceUuid = this.component.substance.refuuid;
+    } else {
+      this.component.substance = null;
+      this.relatedSubstanceUuid = null;
+    }
+  
   }
 
 }
