@@ -148,9 +148,21 @@ export class IngredientFormComponent implements OnInit {
     this.ingredient.basisOfStrengthBdnum = null;
   }
 
-  getBdnum(substanceId: string, type: string) {
+  getSubstanceCode(substanceId: string, type: string) {
     this.applicationService.getSubstanceDetailsBySubstanceId(substanceId).subscribe(response => {
       if (response) {
+        const substanceCodes = response.codes;
+        const substanceNames = response.names;
+        substanceCodes.forEach(element => {
+          console.log('CC: ' + element.codeSystem);
+          if (element.codeSystem) {
+            if (element.codeSystem === 'BDNUM') {
+              this.ingredient.bdnum = element.code;
+              this.ingredientName = response.name;
+            }
+          }
+        });
+        /*
         if (response.bdnum) {
 
           if (type === 'ingredientname') {
@@ -183,7 +195,7 @@ export class IngredientFormComponent implements OnInit {
             this.getActiveMoiety(response.substanceId, 'basisofstrength');
           }
 
-        }
+        } */
       } else {
         if (type === 'ingredientname') {
           this.ingredientNameMessage = 'There is no Ingredient Name found for this bdnum';
@@ -258,7 +270,10 @@ export class IngredientFormComponent implements OnInit {
 
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
-          this.getBdnum(relatedSubstance.refuuid, 'ingredientname');
+          this.ingredientNameMessage = '';
+          this.ingredient.ingredientName =   relatedSubstance.name;
+          this.ingredientNameSubstanceUuid = relatedSubstance.refuuid;
+          this.getSubstanceCode(relatedSubstance.refuuid, 'ingredientname');
         }
       }
     } else {
@@ -278,7 +293,7 @@ export class IngredientFormComponent implements OnInit {
 
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
-          this.getBdnum(relatedSubstance.refuuid, 'basisofstrength');
+          this.getSubstanceCode(relatedSubstance.refuuid, 'basisofstrength');
         }
       }
     } else {

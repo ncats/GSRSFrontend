@@ -26,6 +26,7 @@ export interface Command {
 
 export interface CommandInput {
     type?: string;
+    example?: string;
     constructQuery?: (
         queryValue: string | Date | number,
         condition: string,

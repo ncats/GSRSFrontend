@@ -12,203 +12,244 @@
 
   <!-- Browse Application Content -->
   <mat-sidenav-content>
-    <div class="titlePosition">
+    <div class="side-nav-content" *ngIf="applications && applications.length">
+      <div class="padleft10px" *ngIf="totalApplications > 0">
+        <div class="search-parameters">
+          <div class="mat-elevation-z2 selected-parameter bordergray" *ngIf="searchTerm">
+            <div>
+              <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+              <span>{{this.searchTerm}}</span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="clearSearch()">
+                <mat-icon svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Display Facets selection -->
+          <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+            <div class='selected-container'>
+              <span class="capitalized font-medium-bold selected-label">
+                <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+                {{facet.type}}:
+              </span>
+              <span class="no-break selected-value">
+                {{facet.val}}
+              </span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button class="display-button" color="primary"
+                (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+                <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Title, Export, Pagination -->
+      <div class="controls-container">
+
+        <div class="title-container">
+          <span class="main-title">Browse Applications</span>
+        </div>
+        <!--
+      <div class="titlePosition">
       <span class="title">Browse Applications</span>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       Total:&nbsp;<span class="totalApp font17px colorgray">{{totalApplications}}</span>
       &nbsp;&nbsp;
-    </div>
+      </div>
+      -->
 
-    <!-- Pagination -->
-    <div class="paginationPosition">
-      <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
-        [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
-      </mat-paginator>
-    </div>
+        <!-- Export Application Button -->
+        <div class="marginleft20px marginright40px" *ngIf="isLoggedIn">
+          <button matTooltip="Export Search Results" mat-button (click)="export()"
+            class="mat-button export-button mat-raised-button">
+            <mat-icon svgIcon="get_app"></mat-icon> Export
+          </button>
+        </div>
 
-    <br><br><br>
-    <div class="divflex">
-      <!-- Export Application Button -->
+
+        <!-- Pagination -->
+        <div class="paginationPosition">
+          <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
+          </mat-paginator>
+        </div>
+
+      </div>
+
+      <div class="divflex">
+
+        <!-- Export Application Button -->
+        <!--
       <div class="marginleft20px marginright40px" *ngIf="isLoggedIn">
         <button matTooltip="Export Search Results" mat-button (click)="export()"
           class="mat-button export-button mat-raised-button">
           <mat-icon svgIcon="get_app"></mat-icon> Export
         </button>
       </div>
+      -->
 
-      <div class="marginleft20px">
-        <!-- Search Any Text Text Box -->
-        <mat-form-field class="width350px font13px">
-          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm" size="50" />
-        </mat-form-field>
-        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
-          <mat-icon svgIcon="search"></mat-icon>
-        </button>
-        &nbsp;&nbsp;&nbsp;
-        <button class="activate-search-button" mat-icon-button (click)="clearFilters()">
-          Reset
-        </button>
-      </div>
-    </div>
-
-    <div class="padleft10px" *ngIf="totalApplications > 0">
-      <!-- Display Facets selection -->
-      <div class="search-parameters">
-        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
-          <div class='selected-container'>
-            <span class="capitalized font-medium-bold selected-label">
-              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
-              {{facet.type}}:
-            </span>
-            <span class="no-break selected-value">
-              {{facet.val}}
-            </span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button class="display-button" color="primary"
-              (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
-              <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
+        <div class="marginleft20px">
+          <!-- Search Any Text Text Box -->
+          <mat-form-field class="width350px font13px">
+            <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
+              size="50" />
+          </mat-form-field>
+          <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
+            <mat-icon svgIcon="search"></mat-icon>
+          </button>
+          &nbsp;&nbsp;&nbsp;
+          <button class="activate-search-button" mat-icon-button (click)="clearFilters()">
+            Reset
+          </button>
         </div>
       </div>
-    </div>
-    <br>
 
-    <!-- Display Content Details -->
-    <div class="substance-cards">
-      <mat-card class="bordergray" *ngFor="let application of applications">
 
-        <mat-card-title class="borderlightorange-bottom">
-          <a class="substance-name" [routerLink]="['/applicationDetails', application.id]" target="_blank">
-            {{application.appType}}&nbsp;{{application.appNumber}}
-          </a>
-          &nbsp;&nbsp;&nbsp;
-          <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
-            matTooltip='Edit GSRS Application Record'>
-            <mat-icon svgIcon="edit"></mat-icon>
-          </a>
-          <!--
+
+      <br>
+
+      <!-- Display Content Details -->
+      <div class="substance-cards">
+        <mat-card class="bordergray" *ngFor="let application of applications">
+
+          <mat-card-title class="borderlightorange-bottom">
+            <a class="substance-name" [routerLink]="['/applicationDetails', application.id]" target="_blank">
+              {{application.appType}}&nbsp;{{application.appNumber}}
+            </a>
+            &nbsp;&nbsp;&nbsp;
+            <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+              matTooltip='Edit GSRS Application Record'>
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>
+            <!--
           &nbsp;&nbsp;
           <a [href]="updateApplicationUrl + application.id" target="_blank" *ngIf="isAdmin"
             matTooltip='Edit GSRS Application Record'>
             <mat-icon svgIcon="edit"></mat-icon>
           </a>
           -->
-          <span class="center">Center:&nbsp;{{application.center}}</span>
-          <span class="middle-fill"></span>
-          <a class="approval-id" [routerLink]="['/applicationDetails', application.id]" target="_blank">
-            Status: {{application.status}}
-          </a>
-        </mat-card-title>
+            <span class="center">Center:&nbsp;{{application.center}}</span>
+            <span class="middle-fill"></span>
+            <a class="approval-id" [routerLink]="['/applicationDetails', application.id]" target="_blank">
+              Status: {{application.status}}
+            </a>
+          </mat-card-title>
 
-        <mat-card-content>
+          <mat-card-content>
 
 
-          <div class="row">
+            <div class="row">
 
-            <!-- ***** LEFT SIDE **** -->
-            <div class="width70percent">
-              <div class="row">
+              <!-- ***** LEFT SIDE **** -->
+              <div class="width70percent">
+                <div class="row">
 
-                <div class="width100percent">
-                  <!--Product-->
+                  <div class="width100percent">
+                    <!--Product-->
 
-                  <div *ngIf="application.applicationProductList.length > 0; else noRecordProdName">
+                    <div *ngIf="application.applicationProductList.length > 0; else noRecordProdName">
 
-                    <div *ngFor="let prod of application.applicationProductList; let index = index">
+                      <div *ngFor="let prod of application.applicationProductList; let index = index">
 
-                      <div class="row">
+                        <div class="row">
 
-                        <div class="row-property-key-4">
-                          Product Name {{index + 1}}:
-                        </div>
-                        <div class="row-property-value-4">
-                          <div *ngIf="prod.applicationProductNameList.length > 0; else noProdNameList">
-                            <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
-                              <div *ngIf="prodName.productName; else noProd">
-                                <div *ngIf="prodName.deprecated && prodName.deprecated == 'Y'; else noDeprecated">
-                                  &#9642;
-                                  <span class="colorgray">
-                                    <b>{{ prodName.productName }}</b>
-                                  </span>
-                                  <span class="font10px">
-                                    (Deprecated)
-                                  </span>
-                                </div>
-                                <ng-template #noDeprecated>
-                                  &#9642;<span class="font14px colorlightblue"><b>{{ prodName.productName }}</b></span>
-                                </ng-template>
-                              </div>
-                              <ng-template #noProd>
-                                (No Product Name)
-                              </ng-template>
-                            </div> <!-- repeat Product Name -->
-                          </div>
-                          <ng-template #noProdNameList>
-                            (No Product Name)
-                          </ng-template>
-                        </div>
-                        <!--
-                    </div>
-                  -->
-
-                      </div>
-
-                      <div *ngFor="let ing of prod.applicationIngredientList; let indexIng = index">
-                        <div class=" row">
-                          <!--
-                      <div class="row-property-4">
-                      -->
                           <div class="row-property-key-4">
-                            Ingredient Name: {{ indexIng + 1}}:
+                            Product Name {{index + 1}}:
                           </div>
                           <div class="row-property-value-4">
-
-                            <!-- Display Ingredient Name -->
-                            <div *ngIf="ing.bdnum; else noIngred">
-                              <span class="colorred">&diams;</span>
-                              <a [routerLink]="['/substances', ing.substanceId]"
-                                target="_blank">{{ing.ingredientName}}</a>
-                              <br>
-
-                              <!-- Display Ingredient Type -->
-                              <div *ngIf="ing.ingredientType">
-                                <div *ngIf="ing.ingredientType === 'Active Ingredient'; else otherIngredType">
-                                  &nbsp;&nbsp;<span class="colorgreen">
-                                    ({{ ing.ingredientType }})
-                                  </span>
+                            <div *ngIf="prod.applicationProductNameList.length > 0; else noProdNameList">
+                              <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
+                                <div *ngIf="prodName.productName; else noProd">
+                                  <div *ngIf="prodName.deprecated && prodName.deprecated == 'Y'; else noDeprecated">
+                                    &#9642;
+                                    <span class="colorgray">
+                                      <b>{{ prodName.productName }}</b>
+                                    </span>
+                                    <span class="font10px">
+                                      (Deprecated)
+                                    </span>
+                                  </div>
+                                  <ng-template #noDeprecated>
+                                    &#9642;<span
+                                      class="font14px colorlightblue"><b>{{ prodName.productName }}</b></span>
+                                  </ng-template>
                                 </div>
-                                <ng-template #otherIngredType>
-                                  &nbsp;&nbsp;({{ ing.ingredientType }})
+                                <ng-template #noProd>
+                                  (No Product Name)
                                 </ng-template>
-                              </div>
-
-                              <!-- Active Moiety -->
-                              <div *ngIf="ing.activeMoietyUnii; else noActiveUnii" class="padtop5px">
-                                <span class="colororange">&diams;</span>
-                                <a [routerLink]="['/substances', ing.activeMoietyUnii]"
-                                  target="_blank">{{ing.activeMoietyName}}</a>
-                                <span class="font10px colorgray">&nbsp;(Active Moiety)</span>
-                                <br>
-                              </div>
-                              <ng-template #noActiveUnii>
-                                <div *ngIf="ing.activeMoietyName">
-                                  {{ing.activeMoietyName}}
-                                  <span class="font10px colorgray">&nbsp;(Active Moiety)</span><br>
-                                </div>
-                              </ng-template>
-
+                              </div> <!-- repeat Product Name -->
                             </div>
-                            <ng-template #noIngred>
-                              (No Ingredient Name)
+                            <ng-template #noProdNameList>
+                              (No Product Name)
                             </ng-template>
                           </div>
                           <!--
+                    </div>
+                  -->
+
+                        </div>
+
+                        <div *ngFor="let ing of prod.applicationIngredientList; let indexIng = index">
+                          <div class=" row">
+                            <!--
+                      <div class="row-property-4">
+                      -->
+                            <div class="row-property-key-4">
+                              Ingredient Name: {{ indexIng + 1}}:
+                            </div>
+                            <div class="row-property-value-4">
+
+                              <!-- Display Ingredient Name -->
+                              <div *ngIf="ing.bdnum; else noIngred">
+                                <span class="colorred">&diams;</span>
+                                <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank">{{ing._name}}</a>
+                                <br>
+
+                                <!-- Display Ingredient Type -->
+                                <div *ngIf="ing.ingredientType">
+                                  <div *ngIf="ing.ingredientType === 'Active Ingredient'; else otherIngredType">
+                                    &nbsp;&nbsp;<span class="colorgreen">
+                                      ({{ ing.ingredientType }})
+                                    </span>
+                                  </div>
+                                  <ng-template #otherIngredType>
+                                    &nbsp;&nbsp;({{ ing.ingredientType }})
+                                  </ng-template>
+                                </div>
+
+                                <!-- Active Moiety -->
+                                <div *ngIf="ing.activeMoietyUnii; else noActiveUnii" class="padtop5px">
+                                  <span class="colororange">&diams;</span>
+                                  <a [routerLink]="['/substances', ing.activeMoietyUnii]"
+                                    target="_blank">{{ing.activeMoietyName}}</a>
+                                  <span class="font10px colorgray">&nbsp;(Active Moiety)</span>
+                                  <br>
+                                </div>
+                                <ng-template #noActiveUnii>
+                                  <div *ngIf="ing.activeMoietyName">
+                                    {{ing.activeMoietyName}}
+                                    <span class="font10px colorgray">&nbsp;(Active Moiety)</span><br>
+                                  </div>
+                                </ng-template>
+
+                              </div>
+                              <ng-template #noIngred>
+                                (No Ingredient Name)
+                              </ng-template>
+                            </div>
+                            <!--
                       </div>
                       -->
 
-                          <!--
+                            <!--
                 <div class="row-property-3" *ngIf="isAdmin">
                   <div class="row-property-key-3">
                     Ingred Created By:<br><br>
@@ -224,114 +265,114 @@
                 </div>
               -->
 
+                          </div>
+
+                        </div> <!-- repeat Ingred -->
+
+                      </div> <!-- repeat Prod-->
+
+                    </div>
+
+                    <ng-template #noRecordProdName>
+                      <div class="row">
+                        <div class="row-property-key-4">
+                          Product Name 1:
                         </div>
-
-                      </div> <!-- repeat Ingred -->
-
-                    </div> <!-- repeat Prod-->
+                        <div class="row-property-value-4">
+                          (No Product Name)
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="row-property-key-4">
+                          Ingredient Name 1:
+                        </div>
+                        <div class="row-property-value-4">
+                          (No Ingredient Name)
+                        </div>
+                      </div>
+                    </ng-template>
 
                   </div>
 
-                  <ng-template #noRecordProdName>
-                    <div class="row">
-                      <div class="row-property-key-4">
-                        Product Name 1:
-                      </div>
-                      <div class="row-property-value-4">
-                        (No Product Name)
-                      </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="row-property-key-4">
+                    Title:
+                  </div>
+                  <div class="row-property-value-4">
+                    {{application.title}}
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="row-property-key-4">
+                    Sponsor Name:
+                  </div>
+                  <div class="row-property-value-4">
+                    {{ application.sponsorName}}
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="row-property">
+                    <div class="row-property-key-3">
+                      Status Date:
                     </div>
-                    <div class="row">
-                      <div class="row-property-key-4">
-                        Ingredient Name 1:
-                      </div>
-                      <div class="row-property-value-4">
-                        (No Ingredient Name)
-                      </div>
+                    <div class="row-property-value-3">
+                      &nbsp;{{application.statusDate}}
                     </div>
-                  </ng-template>
-
-                </div>
-
-              </div>
-
-
-              <div class="row">
-                <div class="row-property-key-4">
-                  Title:
-                </div>
-                <div class="row-property-value-4">
-                  {{application.title}}
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property-key-4">
-                  Sponsor Name:
-                </div>
-                <div class="row-property-value-4">
-                  {{ application.sponsorName}}
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key-3">
-                    Status Date:
                   </div>
-                  <div class="row-property-value-3">
-                    &nbsp;{{application.statusDate}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Clinical Trials:
-                    <!--
+                  <div class="row-property">
+                    <div class="row-property-key">
+                      Clinical Trials:
+                      <!--
                     <span class="badge">0
                     -->
-                    <!-- {{application.clinicalTrialList.length}}-->
-                    <!--
+                      <!-- {{application.clinicalTrialList.length}}-->
+                      <!--
                       </span>
                       -->
-                  </div>
-                  <div class="row-property-value">
-                    <!--
+                    </div>
+                    <div class="row-property-value">
+                      <!--
                       <div class="" *ngFor="let clinical of application.clinicalTrialList">
                           &bull;&nbsp;{{ clinical.nctNumber }}
                         </div>
                         -->
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key-3">
-                    Submit Date:
-                  </div>
-                  <div class="row-property-value-3">
-                    &nbsp;{{application.submitDate}}
-                  </div>
-                </div>
-
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Indications:&nbsp;
-                    <!--
-                    <span class="badge">{{application.applicationIndicationList.length}}</span>
-                    -->
-                  </div>
-                  <div class="row-property-value">
-                    <div class="" *ngFor="let ind of application.applicationIndicationList">
-                      <span *ngIf="ind.indication">
-                        &bull;&nbsp;{{ ind.indication }}
-                      </span>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <!--
+                <div class="row">
+                  <div class="row-property">
+                    <div class="row-property-key-3">
+                      Submit Date:
+                    </div>
+                    <div class="row-property-value-3">
+                      &nbsp;{{application.submitDate}}
+                    </div>
+                  </div>
+
+                  <div class="row-property">
+                    <div class="row-property-key">
+                      Indications:&nbsp;
+                      <!--
+                    <span class="badge">{{application.applicationIndicationList.length}}</span>
+                    -->
+                    </div>
+                    <div class="row-property-value">
+                      <div class="" *ngFor="let ind of application.applicationIndicationList">
+                        <span *ngIf="ind.indication">
+                          &bull;&nbsp;{{ ind.indication }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!--
               <div class="row-property-3 bordergray">
 
               <div class="row">
@@ -357,64 +398,64 @@
               </div>
               </div> -->
 
-              <!--
+                <!--
             </div> -->
-              <!-- left side-->
+                <!-- left side-->
 
-            </div> <!-- LEFT SIDE -->
+              </div> <!-- LEFT SIDE -->
 
 
-            <!-- **** RIGH SIDE ****  -->
-            <div class="width30percent">
+              <!-- **** RIGH SIDE ****  -->
+              <div class="width30percent">
 
-              <span *ngIf="isAdmin">
-                <div class="row">
-                  <div class="row-property-key-5">
-                    Create By:
+                <span *ngIf="isAdmin">
+                  <div class="row">
+                    <div class="row-property-key-5">
+                      Create By:
+                    </div>
+                    <div class="row-property-value-5">
+                      {{application.createdBy}}
+                    </div>
                   </div>
-                  <div class="row-property-value-5">
-                    {{application.createdBy}}
+
+                  <div class="row">
+                    <div class="row-property-key-5">
+                      Create Date:
+                    </div>
+                    <div class="row-property-value-5">
+                      {{application.createDate|date: 'MM/dd/yyyy h:mm a'}}
+                    </div>
                   </div>
-                </div>
 
-                <div class="row">
-                  <div class="row-property-key-5">
-                    Create Date:
+                  <div class="row">
+                    <div class="row-property-key-5">
+                      Edited By:
+                    </div>
+                    <div class="row-property-value-5">
+                      {{application.modifiedBy}}
+                    </div>
                   </div>
-                  <div class="row-property-value-5">
-                    {{application.createDate|date: 'MM/dd/yyyy h:mm a'}}
+
+                  <div class="row">
+                    <div class="row-property-key-5">
+                      Edit Date:
+                    </div>
+                    <div class="row-property-value-5">
+                      {{application.modifyDate|date: 'MM/dd/yyyy h:mm a'}}
+                    </div>
                   </div>
-                </div>
+                </span>
 
-                <div class="row">
-                  <div class="row-property-key-5">
-                    Edited By:
-                  </div>
-                  <div class="row-property-value-5">
-                    {{application.modifiedBy}}
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="row-property-key-5">
-                    Edit Date:
-                  </div>
-                  <div class="row-property-value-5">
-                    {{application.modifyDate|date: 'MM/dd/yyyy h:mm a'}}
-                  </div>
-                </div>
-              </span>
-
-            </div> <!-- right side -->
+              </div> <!-- right side -->
 
 
-          </div> <!-- row -->
+            </div> <!-- row -->
 
 
-        </mat-card-content>
+          </mat-card-content>
 
-      </mat-card>
+        </mat-card>
+      </div>
     </div>
-
   </mat-sidenav-content>
 </mat-sidenav-container>

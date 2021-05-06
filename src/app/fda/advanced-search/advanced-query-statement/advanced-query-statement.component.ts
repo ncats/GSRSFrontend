@@ -17,7 +17,7 @@ import { UtilsService } from '@gsrs-core/utils';
   styleUrls: ['./advanced-query-statement.component.scss']
 })
 
-export class AdvancedQueryStatementComponent implements OnInit {
+export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
 
   queryableSubstanceDict: QueryableSubstanceDictionary;
   displayProperties: Array<string>;
@@ -46,14 +46,6 @@ export class AdvancedQueryStatementComponent implements OnInit {
     'Product',
     'Clinical Trial'
   ];
-
-  /*
-  commandOptions = [
-    'Exact Match',
-    'Contains',
-    'Starts With'
-  ];
-  */
   searchFields: Array<String>;
   conditionControl = new FormControl();
   categoryControl = new FormControl();
@@ -65,6 +57,8 @@ export class AdvancedQueryStatementComponent implements OnInit {
   selectedQueryablePropertyType: string;
   selectedLucenePath: string;
   commandOptions: Array<string>;
+  commandOptionsExample: string;
+  isShowAllCommandOptions = false;
   selectedCommandOption: string;
   commandInputs: Array<CommandInput>;
   queryParts: Array<string> = [];
@@ -91,15 +85,13 @@ export class AdvancedQueryStatementComponent implements OnInit {
   @Input()
   set category(cat) {
     this.categoryinput = cat;
-  //  this.loadSearchField();
+    //  this.loadSearchField();
   }
 
   @Input()
   set queryableDictionary(queryableSubstanceDictionary: QueryableSubstanceDictionary) {
     if (queryableSubstanceDictionary != null) {
-     // alert('UUUU ' + JSON.stringify(queryableSubstanceDictionary));
       this._queryableDictionary = queryableSubstanceDictionary;
-     // alert("YYYY " + JSON.stringify(this._queryableDictionary));
     }
   }
 
@@ -144,7 +136,6 @@ export class AdvancedQueryStatementComponent implements OnInit {
     this.subscriptions.push(allQueriablePropertiesSubscription);
 
     const commandSubscription = this.commandControl.valueChanges.subscribe((command: string) => {
-    //  alert(command);
       this.setCommand(command);
     });
     this.subscriptions.push(commandSubscription);
@@ -195,9 +186,6 @@ export class AdvancedQueryStatementComponent implements OnInit {
 
   }
 
-  ngAfterViewInit() {
-  }
-
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
@@ -205,8 +193,7 @@ export class AdvancedQueryStatementComponent implements OnInit {
   }
 
   getSearchField() {
-    const url = `${this.configService.environment.baseHref}assets/data/` + this.dictionaryFileName;
-    // alert(url);
+    // const url = `${this.configService.environment.baseHref}assets/data/` + this.dictionaryFileName;
     this.http.get(`${this.configService.environment.baseHref}assets/data/` + this.dictionaryFileName)
       .subscribe((response: QueryableSubstanceDictionary) => {
 
@@ -253,14 +240,11 @@ export class AdvancedQueryStatementComponent implements OnInit {
       // this.searchFields.splice(0, this.searchFields.length);
       if (this.categoryinput === 'Substance') {
         this.dictionaryFileName = 'substance_dictionary.json';
-      }
-      if (this.categoryinput === 'Application') {
+      } else if (this.categoryinput === 'Application') {
         this.dictionaryFileName = 'application_dictionary.json';
-      }
-      else if (this.categoryinput === 'Product') {
+      } else if (this.categoryinput === 'Product') {
         this.dictionaryFileName = 'product_dictionary.json';
-      }
-      else if (this.categoryinput === 'Clinical Trial') {
+      } else if (this.categoryinput === 'Clinical Trial') {
         this.dictionaryFileName = 'clinicaltrial_dictionary.json';
       }
     }
@@ -268,50 +252,64 @@ export class AdvancedQueryStatementComponent implements OnInit {
   }
 
   queryablePropertySelected(queryableProperty: string): void {
-   // alert('GGGGG ' + queryableProperty);
-   // alert(JSON.stringify(this._queryableDictionary));
     this.processQueriablePropertyChange(queryableProperty);
     if (!this._queryableDictionary[queryableProperty].cvDomain && this._queryableDictionary[queryableProperty].type === 'string') {
-    //  alert('AAAAAAAA');
-      this.commandControl.setValue('ALL of the following words in any order or position');
+      //  this.commandControl.setValue('ALL of the following words in any order or position');
+      this.commandControl.setValue('Contains');
     } else {
       this.commandControl.setValue(this.commandOptions[0]);
     }
   }
 
   private processQueriablePropertyChange(queryableProperty: string): void {
-  //  alert('in process');
-   // alert(JSON.stringify(this._queryableDictionary));
     this.selectedQueryableProperty = queryableProperty;
-
     if (this._queryableDictionary[queryableProperty].cvDomain) {
       this.setCvOptions(this._queryableDictionary[queryableProperty].cvDomain);
     }
     this.selectedLucenePath = this._queryableDictionary[queryableProperty].lucenePath;
-  //  alert(this.selectedLucenePath);
     if (this.selectedLucenePath) {
       this.selectedLucenePath = this.selectedLucenePath + ':';
     }
     this.selectedQueryablePropertyType = this._queryableDictionary[queryableProperty].type;
+
     this.commandOptions = Object.keys(
       this.typeCommandOptions[this._queryableDictionary[queryableProperty].type]
-    ).filter(option => {
-      return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values';
-    }).sort((a, b) => {
-      if (a === 'the following exact default values') {
-        return -1;
-      }
-      if (b === 'the following exact default values') {
-        return 1;
-      }
-      if (a.toLowerCase() < b.toLowerCase()) {
-        return -1;
-      }
-      if (a.toLowerCase() > b.toLowerCase()) {
-        return 1;
-      }
-      return 0;
-    });
+    )
+    .filter(
+        option => {
+          let result = false;
+          //  return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values'
+          // && (this.commandOptionsShowAll === false && (option === 'Contains' || option === 'Exact Match' || option === 'Starts With')));
+          if (this.isShowAllCommandOptions === false) {
+            if (option === 'Contains' || option === 'Exact Match' || option === 'Starts With') {
+              result = true;
+            } else if (this._queryableDictionary[queryableProperty].cvDomain && option === 'the following exact default values') {
+              result = true;
+            } else {
+              result = false;
+            }
+          } else {
+            if (this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values') {
+              result = true;
+            }
+          }
+          return result;
+        }
+      ).sort((a, b) => {
+        if (a === 'the following exact default values') {
+          return -1;
+        }
+        if (b === 'the following exact default values') {
+          return 1;
+        }
+        if (a.toLowerCase() < b.toLowerCase()) {
+          return -1;
+        }
+        if (a.toLowerCase() > b.toLowerCase()) {
+          return 1;
+        }
+        return 0;
+      });
   }
 
   setCvOptions(cvDomain: string): void {
@@ -321,6 +319,9 @@ export class AdvancedQueryStatementComponent implements OnInit {
   }
 
   refreshQuery(): void {
+    if (this.commandInputs && this.commandInputs.length > 0) {
+      this.commandOptionsExample = this.commandInputs[0].example;
+    }
     this.queryParts = [];
     this.commandInputs.forEach((commandInput, index) => {
       if (this.commandInputValueDict[commandInput.type] && this.commandInputValueDict[commandInput.type][index] != null) {
@@ -383,6 +384,11 @@ export class AdvancedQueryStatementComponent implements OnInit {
     } else {
       this.queryablePropertiesControl.setValue('All');
     }
+  }
+
+  showAllCommandOptions(): void {
+    this.isShowAllCommandOptions = !this.isShowAllCommandOptions;
+    this.processQueriablePropertyChange(this.selectedQueryableProperty);
   }
 
   private setCommand(command: string): void {

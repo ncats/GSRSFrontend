@@ -159,6 +159,9 @@
           {{option}}
         </mat-option>
       </mat-select>
+      <mat-hint class="action-hint">
+        <a (click)="showAllCommandOptions()">{{isShowAllCommandOptions? 'Hide Some Options':'Show More Options'}}</a>
+      </mat-hint>
     </mat-form-field>
   </div>
   
@@ -178,6 +181,9 @@
                           commandInputValueDict[commandInput.type]
                       )">
           <mat-error *ngIf="!commandInputValueDict[commandInput.type][index]">Required</mat-error>
+          <mat-hint class="action-hint">
+            <span *ngIf="commandOptionsExample">{{this.commandOptionsExample}}</span>
+          </mat-hint>
         </mat-form-field>
       </div>
       <div *ngIf="commandInput.type == 'datetime'">

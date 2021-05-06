@@ -102,7 +102,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private isComponentInit = false;
   sequenceID?: string;
   
-
   // needed for facets
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;

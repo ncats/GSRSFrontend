@@ -88,11 +88,11 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
       // Analysis by Substance in Shiny Config
       if (this.configService.configData.adverseEventShinySubstanceNameDisplay
-         && this.configService.configData.adverseEventShinySubstanceNameDisplay !== null) {
+        && this.configService.configData.adverseEventShinySubstanceNameDisplay !== null) {
         this.adverseEventShinySubstanceNameDisplay = JSON.parse(this.configService.configData.adverseEventShinySubstanceNameDisplay);
       }
-      if (this.configService.configData.adverseEventShinySubstanceNameURL 
-        && this.configService.configData.adverseEventShinySubstanceNameURL !== null) {
+      if (this.configService.configData.adverseEventShinySubstanceNameURL
+         && this.configService.configData.adverseEventShinySubstanceNameURL !== null) {
         this.adverseEventShinySubstanceNameURL = this.configService.configData.adverseEventShinySubstanceNameURL;
         this.adverseEventShinySubstanceNameURLWithParam = this.adverseEventShinySubstanceNameURL + decodeURIComponent(this.substanceName);
       }

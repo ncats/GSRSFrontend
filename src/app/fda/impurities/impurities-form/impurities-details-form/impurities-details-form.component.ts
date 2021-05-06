@@ -80,7 +80,8 @@ export class ImpuritiesDetailsFormComponent implements OnInit {
   }
 
   deleteIdentityCriteria(identityCriteriaIndex: number) {
-    this.impuritiesService.deleteIdentityCriteria(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesDetailsIndex, identityCriteriaIndex);
+    this.impuritiesService.deleteIdentityCriteria(this.impuritiesSubstanceIndex,
+      this.impuritiesTestIndex, this.impuritiesDetailsIndex, identityCriteriaIndex);
   }
 
 }

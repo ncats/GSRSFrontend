@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { AdvancedSearchService } from './service/advanced-search.service'
+import { AdvancedSearchService } from './service/advanced-search.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
@@ -24,6 +24,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
@@ -35,6 +36,7 @@ import { AdvancedQueryStatementComponent } from './advanced-query-statement/adva
 import { StructureEditorModule } from '@gsrs-core/structure-editor/structure-editor.module';
 import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { FacetDisplayPipe } from '@gsrs-core/facets-manager/facet-display.pipe';
 
 const advSearchRoutes: Routes = [
   {
@@ -70,6 +72,7 @@ const advSearchRoutes: Routes = [
     MatTooltipModule,
     MatTabsModule,
     MatBottomSheetModule,
+    MatProgressSpinnerModule,
     MatDatepickerModule,
     FormsModule,
     ReactiveFormsModule,

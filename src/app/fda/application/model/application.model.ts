@@ -165,3 +165,81 @@ export interface MessageLink {
   href: string;
   text: string;
 }
+
+// GSRS 3.0 in Spring Boot
+export interface Application {
+  id?: number;
+  appType?: string;
+  appNumber?: string;
+  title?: string;
+  sponsorName?: string;
+  nonProprietaryName?: string;
+  submitDate?: string;
+  appSubType?: string;
+  divisionClassDesc?: string;
+  status?: string;
+  center?: string;
+  source?: string;
+  publicDomain?: string;
+  version?: number;
+  provenance?: string;
+  externalTitle?: string;
+  statusDate?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  isDisabled?: boolean;
+  applicationProductList?: Array<Product>;
+  applicationIndicationList?: Array<ApplicationIndication>;
+  clinicalTrialList?: Array<ClinicalTrial>;
+  productTechEffectList?: Array<ProductTechnicalEffect>;
+  productEffectedList?: Array<ProductEffected>;
+  applicationHistoryList?: Array<ApplicationSrsHistory>;
+}
+
+export interface Product {
+  id?: number;
+  productName?: string;
+  amount?: number;
+  dosageForm?: string;
+  routeAdmin?: string;
+  unitPresentation?: string;
+  unit?: string;
+  reviewedBy?: string;
+  reviewDate?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  applicationProductNameList?: Array<ProductName>;
+  applicationIngredientList?: Array<ApplicationIngredient>;
+}
+
+export interface ProductName {
+  id?: number;
+  productName?: string;
+  productNameType?: string;
+  provenance?: string;
+  deprecated?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ApplicationIndication {
+  id?: number;
+  indication?: string;
+  amount?: number;
+  dosageForm?: string;
+  routeAdmin?: string;
+  unitPresentation?: string;
+  unit?: string;
+  reviewedBy?: string;
+  reviewDate?: number;
+  internalVersion?: number;
+}

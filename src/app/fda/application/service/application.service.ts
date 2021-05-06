@@ -5,6 +5,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { ApplicationSrs, ValidationResults, ApplicationIngredient } from '../model/application.model';
+import { Application } from '../model/application.model';
 import { ApplicationIndicationSrs, ProductSrs, ProductNameSrs } from '../model/application.model';
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
@@ -22,7 +23,11 @@ export class ApplicationService extends BaseHttpService {
 
   totalRecords: 0;
   application: ApplicationSrs;
+  entity = 'ApplicationSrs';
+ // entityContext = 'application';
+  entityContext = 'applicationssrs';
 
+  apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
   constructor(
     public http: HttpClient,
     public configService: ConfigService
@@ -35,7 +40,7 @@ export class ApplicationService extends BaseHttpService {
     pageSize: number = 10,
     searchTerm?: string,
     facets?: FacetParam
-  ): Observable<PagingResponse<ApplicationSrs>> {
+  ): Observable<PagingResponse<Application>> {
     let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
@@ -45,12 +50,13 @@ export class ApplicationService extends BaseHttpService {
 
     params = params.appendFacetParams(facets);
 
-    const url = `${this.apiBaseUrl}applicationssrs/search`;
+    // const url = this.apiBaseUrl + 'applicationssrs/search';
+    const url = this.apiBaseUrlWithEntityContext + 'search';
     const options = {
       params: params
     };
 
-    return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
+    return this.http.get<PagingResponse<Application>>(url, options);
   }
 
   exportBrowseApplicationsUrl(
@@ -86,7 +92,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   getApiExportUrl(etag: string, extension: string): string {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/export/${etag}/${extension}`;
+    const url = this.apiBaseUrlWithEntityContext + 'export/' + etag + '/' + extension;
     return url;
   }
 
@@ -169,11 +175,12 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  // Changed for Spring Boot
   getApplicationDetails(
     id: number
   ): Observable<any> {
-    const url = this.baseUrl + 'applicationDetails2?id=' + id;
-
+   // const url = this.baseUrl + 'applicationDetails2?id=' + id;
+    const url = this.apiBaseUrlWithEntityContext + id;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -192,6 +199,18 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  // Changed, work Spring Boot and Play
+  getSubstanceDetailsByAnyId(
+    id: string
+  ): Observable<any> {
+    const url = this.apiBaseUrl + 'substances(' + id + ')';
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   getSubstanceDetailsByBdnum(
     bdnum: string
   ): Observable<any> {
@@ -203,10 +222,13 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  // Changed, work Spring Boot and Play
   getSubstanceDetailsBySubstanceId(
     substanceId: string
   ): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+    // const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes'
+    // const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+    const url = this.apiBaseUrl + 'substances(' + substanceId + ')';
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -311,8 +333,9 @@ export class ApplicationService extends BaseHttpService {
     });
   }
 
+  // Changed this function for GSRS 3.0 Spring Boot
   validateApp(): Observable<ValidationResults> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/@validate`;
+    const url = this.apiBaseUrlWithEntityContext + '@validate';
     return this.http.post(url, this.application);
   }
 

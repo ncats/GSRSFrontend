@@ -84,12 +84,16 @@
             Sequence Search
           </a>
           <mat-divider></mat-divider>
+          <!--
           <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=substance'">
             <mat-icon matListIcon svgIcon="youtube"></mat-icon>
-
             Advanced Search
             <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-
+          </a>
+          -->
+          <a mat-list-item routerLink="/advanced-search">
+            <mat-icon matListIcon svgIcon="youtube"></mat-icon>
+            Advanced Search
           </a>
 
           <mat-divider></mat-divider>
