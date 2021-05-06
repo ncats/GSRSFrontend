@@ -332,7 +332,7 @@
                                                 {{link.display}}
                                               </div>
                                               <div class = "value2">
-                                                {{link.total? link.total : 0}}
+                                                {{link.total? link.total : 0 | number:'1.0':'en-US'}}
                                               </div>
                                         </div>
                             </a>

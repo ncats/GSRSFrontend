@@ -6,6 +6,8 @@ import { AuthService } from '@gsrs-core/auth';
 import { Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '@gsrs-core/substance';
 import { take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-home',
@@ -21,8 +23,9 @@ export class HomeComponent implements OnInit {
   imageLoc: any;
   appId: string;
   customLinks: Array<any>;
-  total: string;
+  total: number;
   bannerMessage?: string;
+  private overlayContainer: HTMLElement;
 
 
   browseAll: string;
@@ -39,7 +42,9 @@ export class HomeComponent implements OnInit {
     private configService: ConfigService,
     private authService: AuthService,
     private substanceService: SubstanceService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -74,6 +79,8 @@ export class HomeComponent implements OnInit {
    this.isClosedWelcomeMessage = false;
 
     this.getAdverseEventShinyConfig();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
   }
 
   routeToCustom(link) {
@@ -90,6 +97,19 @@ export class HomeComponent implements OnInit {
 
   browseSubstances(): void {
     this.router.navigate(['/browse-substance']);
+  }
+
+  openModal(templateRef) {
+
+    const dialogRef = this.dialog.open(templateRef, {
+      height: '200px',
+      width: '400px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 
   getAdverseEventShinyConfig(): void {

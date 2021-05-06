@@ -138,7 +138,7 @@
                 [expanded]="false">
                 <mat-expansion-panel-header>
                   <mat-panel-title  class = "panel-header">
-                       FDA Register
+                       Register Other
                   </mat-panel-title>
                 </mat-expansion-panel-header>
                   <div>
@@ -304,7 +304,7 @@
     
     <div class = "flex-row" style = "padding-bottom: 10px;">
       <div class = "data">
-          Total substances: {{total}}
+          Total substances: {{total | number:'1.0':'en-US'}}
       </div>
       </div>
       <div class = "flex-row test" style = "padding-bottom: 10px;">
@@ -327,7 +327,10 @@
     <h2 class = "home" style = "padding-top:15px;">Helpful Resources</h2>
       <div class="row resource-row" id="resource1">
 
-          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip">GSRSFind Excel tools</a></h3>
+          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(excel)" >GSRSFind Excel tools</a></h3>
+          <div class = "img-container">
+
+          </div>
             <div class = "resource-desc"> GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)
             GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.
             </div>
@@ -335,7 +338,7 @@
           <mat-divider class = "divide-test"></mat-divider>
 
           <div class="row resource-row" id="resource2">
-          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href ="https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx">User Registration Guide</a></h3>
+          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(guide)" >User Registration Guide</a></h3>
           
           <div class = "resource-desc"> The GSRS user registration guide is comprehensive set of instructions for registering new substances of all types in GSRS.
          </div> 
@@ -343,33 +346,72 @@
           <mat-divider class = "divide-test"></mat-divider>
 
           <div class="row resource-row" id="resource3">
-              <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_11-20-19.xlsx">GSRS Data Dictionary</a></h3>
+              <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(dictionary)" >GSRS Data Dictionary</a></h3>
               <div class = "resource-desc">  The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.
                 </div>  
             </div>
               <mat-divider class = "divide-test"></mat-divider>
 
               <div class="row resource-row" id="resource4">
-                  <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_schema_10_30_19.json">GSRS JSON schema</a></h3>
+                  <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(schema)" >GSRS JSON schema</a></h3>
                   <div class = "resource-desc">    This file contains a JSON formatted schema used by GSRS for recording substances to help visualize the substance object described by the GSRS Data Dictionary.
                     </div>  
                 </div>
                 <div class="row resource-row" id="resource5">
-                    <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/#/api#chemical%20search">GSRS API Documentation</a></h3>
+                    <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" target ="_blank" href = "https://gsrs.ncats.nih.gov/#/api#chemical%20search">GSRS API Documentation</a></h3>
                     <div class = "resource-desc">       Swagger documentation of the GSRS API calls with working examples and implementation notes.
                       </div> 
                     </div>
                   <mat-divider class = "divide-test"></mat-divider>
 
                   <div class="row resource-row" id="resource5">
-                      <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://www.fda.gov/industry/fda-resources-data-standards/substance-identification">ISO 11238 Standard</a></h3>
+                      <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" target ="_blank" href = "https://www.fda.gov/industry/fda-resources-data-standards/substance-identification">ISO 11238 Standard</a></h3>
                       <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes. 
                         </div> 
                       </div>
 
   </mat-card>
 
+  <ng-template #excel>
+      <div mat-dialog-content class = "button-modal">
+          <a class = "modal-button" href = "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip">Click to download GSRSFind Excel tools.zip</a>
+      </div>
+      <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        </div>
+  </ng-template>
 
+  <ng-template #schema>
+      <div mat-dialog-content class = "button-modal">
+          <a class = "modal-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_schema_10_30_19.json">Click to download GSRS JSON schema.json</a>
+      </div>
+      <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        </div>
+  </ng-template>
+
+  <ng-template #dictionary>
+      <div mat-dialog-content class = "button-modal" >
+          <a class = "modal-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_11-20-19.xlsx">Click to download GSRS Data Dictionary.xlsx</a>
+      </div>
+      <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        </div>
+  </ng-template>
+
+  <ng-template #guide>
+      <div mat-dialog-content class = "button-modal">
+          <a class = "modal-button"href ="https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx">Click to download User Registration Guide.docx</a>
+      </div>
+      <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        </div>
+  </ng-template>
+<!--
       <mat-card class = "home-card" >
     <h2 class = "home" style = "padding-top:15px;">Helpful Resources</h2>
       <div class="row resource-row" id="resource1">
@@ -453,7 +495,7 @@
                         </div>
                       </div>
   
-    </mat-card>
+    </mat-card>-->
     <!--<mat-card class = "home-card" >
     
         <div class="row" id="design">
