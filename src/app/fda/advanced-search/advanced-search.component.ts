@@ -209,7 +209,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     });
     this.facetViewCategory.push('All');
   }
-
   getBrowseSubstanceDetails() {
     const subscriptionBrowseSub = this.advancedSearchService.getSubstances(
       0,
@@ -589,9 +588,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     // Put facets to URL
     //  alert(this.privateFacetParams);
     //   alert(!this.privateFacetParamsUrl);
-  //  if ((this.privateFacetParams) && (!this.privateFacetParamsUrl)) {
-  //    this.populateUrlQueryParameters();
-  //  }
+    //  if ((this.privateFacetParams) && (!this.privateFacetParamsUrl)) {
+    //    this.populateUrlQueryParameters();
+    //  }
 
     const queryStatementHashes = [];
 
@@ -608,7 +607,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     localStorage.setItem(queryHash.toString(), queryStatementHashesString);
 
 
-  //  alert("INSIDE SEARCH " + this.navigationExtrasFacet.queryParams['facets']);
+    //  alert("INSIDE SEARCH " + this.navigationExtrasFacet.queryParams['facets']);
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
@@ -619,7 +618,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
     //   this.navigationExtrasFacet['facets'] = this.navigationExtrasFacet.queryParams['facets'];
 
-  //  alert('FACET URL' + this.privateFacetParamsUrl);
+    //  alert('FACET URL' + this.privateFacetParamsUrl);
 
     /*
     const navigationExtras: NavigationExtras = {
@@ -663,17 +662,16 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
     if ((this.query) || (Object.keys(this.privateFacetParams).length > 0)) {
       if (this.category) {
-          this.router.navigate(['/browse-substance'], navigationExtras);
-        } else if (this.category === 'Application') {
-          this.router.navigate(['/browse-applications'], navigationExtras);
-        } else if (this.category === 'Product') {
-          this.router.navigate(['/browse-products'], navigationExtras);
-        } else if (this.category === 'Clinical Trial') {
-          this.router.navigate(['/browse-clinical-trials'], navigationExtras);
-        }
-      } else {
         this.router.navigate(['/browse-substance'], navigationExtras);
+      } else if (this.category === 'Application') {
+        this.router.navigate(['/browse-applications'], navigationExtras);
+      } else if (this.category === 'Product') {
+        this.router.navigate(['/browse-products'], navigationExtras);
+      } else if (this.category === 'Clinical Trial') {
+        this.router.navigate(['/browse-clinical-trials'], navigationExtras);
       }
+    } else {
+      this.router.navigate(['/browse-substance'], navigationExtras);
     }
   }
 
