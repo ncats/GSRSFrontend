@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { ConfigService } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
@@ -6,15 +6,16 @@ import { AuthService } from '@gsrs-core/auth';
 import { Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '@gsrs-core/substance';
 import { take } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSidenav } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { UtilsService } from '@gsrs-core/utils';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   environment: Environment;
   baseDomain: string;
   isAuthenticated = false;
@@ -23,9 +24,12 @@ export class HomeComponent implements OnInit {
   imageLoc: any;
   appId: string;
   customLinks: Array<any>;
-  total: number;
+  total: string;
+  isCollapsed = true;
+  hasBackdrop = false;
   bannerMessage?: string;
   private overlayContainer: HTMLElement;
+  @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
 
 
   browseAll: string;
@@ -44,7 +48,9 @@ export class HomeComponent implements OnInit {
     private substanceService: SubstanceService,
     private router: Router,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    public utilsService: UtilsService,
+
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -67,9 +73,14 @@ export class HomeComponent implements OnInit {
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.customLinks = this.configService.configData.homeDynamicLinks;
     this.customLinks.forEach (link => {
+      link.total = 0;
       const searchStr = `${link.facetName}:${link.facetValue}`;
       this.substanceService.searchSingleFacet(link.facetName, link.facetValue).pipe(take(1)).subscribe( response => {
-        link.total = response.total;
+        if (response){
+        link.total = Number(response.total);
+        } else {
+          link.total = 0;
+        }
       });
     });
     this.substanceService.getRecordCount().subscribe( response => {
@@ -81,6 +92,40 @@ export class HomeComponent implements OnInit {
     this.getAdverseEventShinyConfig();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
+  }
+ngAfterViewInit(){
+  this.processResponsiveness();
+  const openSubscription = this.matSideNav.openedStart.subscribe(() => {
+    this.utilsService.handleMatSidenavOpen(1100);
+  });
+  const closeSubscription = this.matSideNav.closedStart.subscribe(() => {
+    this.utilsService.handleMatSidenavClose();
+  });
+
+}
+
+@HostListener('window:resize', ['$event'])
+onResize() {
+  this.processResponsiveness();
+}
+
+private processResponsiveness = () => {
+  setTimeout(() => {
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.isCollapsed = true;
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
+      }
+    }
+  });
+}
+  openSideNav() {
+    this.gaService.sendEvent('substancesFiltering', 'button:sidenav', 'open');
+    this.matSideNav.open();
   }
 
   routeToCustom(link) {
