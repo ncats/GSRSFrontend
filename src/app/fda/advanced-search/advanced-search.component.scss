@@ -404,11 +404,11 @@ white-space: nowrap;
 
 /* label style */
 .mat-tab-label{
-  /*
+  
   background: #e7e7e7;
   color:  rgb(155, 39, 39);
   min-width: 60px!important;
-  */
+  
 }
 /* focus style */
 .mat-tab-group.mat-primary .mat-tab-label:not(.mat-tab-disabled):focus, .mat-tab-group.mat-primary .mat-tab-link:not(.mat-tab-disabled):focus, .mat-tab-nav-bar.mat-primary .mat-tab-label:not(.mat-tab-disabled):focus, .mat-tab-nav-bar.mat-primary .mat-tab-link:not(.mat-tab-disabled):focus{
@@ -450,6 +450,7 @@ white-space: nowrap;
 :host ::ng-deep .mat-tab-label-active {
   color: black;
   font-weight: bold;
+  background-color: rgb(227, 229, 233);
   /*
    color: rgb(248, 250, 248);
    background-color: rgb(44, 70, 141);

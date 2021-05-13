@@ -28,6 +28,7 @@ export interface Config {
     registrarDynamicLinks?: Array<any>;
     registrarDynamicLinks2?: Array<any>;
     bannerMessage?: string;
+    substance?: any;
 }
 
 export interface SubstanceDetailsCard {

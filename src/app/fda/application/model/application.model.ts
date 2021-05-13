@@ -65,6 +65,8 @@ export interface ProductNameSrs {
 export interface ApplicationIngredient {
   id?: number;
   applicantIngredName?: string;
+  substanceKey?: string;
+  substanceKeyType?: string;
   bdnum?: string;
   basisOfStrengthBdnum?: string;
   average?: string;
@@ -85,8 +87,9 @@ export interface ApplicationIngredient {
   modifyDate?: number;
   farmSubstanceId?: number;
   farmSubstance?: string;
-  ingredientName?: string;
-  substanceId?: string;
+  _substanceUuid?: string;
+  _approvalID?: string;
+  _name?: string;
   activeMoietyName?: string;
   activeMoietyUnii?: string;
   subRelationshipList?: Array<SubRelationship>;

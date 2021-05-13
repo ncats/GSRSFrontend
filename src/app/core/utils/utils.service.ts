@@ -23,6 +23,7 @@ export class UtilsService {
 
   getStructureSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+
     return this.http.get<SubstanceSuggestionsGroup>(url + 'suggest?q=' + searchTerm);
   }
 

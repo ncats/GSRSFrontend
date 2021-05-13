@@ -54,6 +54,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   environment: any;
   previousState: Array<string> = [];
   private searchTermHash: number;
+  lastPage: number;
+  invalidPage = false;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -124,6 +126,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.isComponentInit = true;
     this.loadComponent();
 
+    // TESTING TESTING
+    this.isLoggedIn = true;
   }
 
   ngAfterViewInit() {
@@ -267,6 +271,29 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.pageIndex = pageEvent.pageIndex;
     this.populateUrlQueryParameters();
     this.searchApplications();
+  }
+
+  customPage(event: any): void {
+    if (this.validatePageInput(event)) {
+      this.invalidPage = false;
+      const newpage = Number(event.target.value) - 1;
+      this.pageIndex = newpage;
+      this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newpage);
+      this.populateUrlQueryParameters();
+      this.searchApplications();
+    }
+  }
+
+  validatePageInput(event: any): boolean {
+    if (event && event.target) {
+      const newpage = Number(event.target.value);
+      if (!isNaN(Number(newpage))) {
+        if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   // for facets

@@ -24,7 +24,7 @@ export class ApplicationService extends BaseHttpService {
   totalRecords: 0;
   application: ApplicationSrs;
   entity = 'ApplicationSrs';
- // entityContext = 'application';
+  // entityContext = 'application';
   entityContext = 'applicationssrs';
 
   apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
@@ -88,6 +88,7 @@ export class ApplicationService extends BaseHttpService {
       search = 'applicationssrs';
     }
     const url = `${this.configService.configData.apiBaseUrl}api/v1/${search}/export/${etag}`;
+    console.log("Inside APPLICATION Service getExportOptions " + url);
     return this.http.get<any>(url);
   }
 
@@ -99,7 +100,9 @@ export class ApplicationService extends BaseHttpService {
   getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = `${this.apiBaseUrlWithEntityContext}search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      //  url = this.apiBaseUrlWithEntityContext + 'search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=`${facet.name.replace(' ', '+')}`&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      console.log("INSIDE APPLICATION Service getApplicationFacets " + url);
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
@@ -109,7 +112,8 @@ export class ApplicationService extends BaseHttpService {
   }
 
   filterFacets(name: string, category: string): Observable<any> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
+    const url = this.apiBaseUrlWithEntityContext + 'search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=' + name;
+    console.log("INSIDE Application Service filterFacets: " + url);
     return this.http.get(url);
   }
 
@@ -179,7 +183,7 @@ export class ApplicationService extends BaseHttpService {
   getApplicationDetails(
     id: number
   ): Observable<any> {
-   // const url = this.baseUrl + 'applicationDetails2?id=' + id;
+    // const url = this.baseUrl + 'applicationDetails2?id=' + id;
     const url = this.apiBaseUrlWithEntityContext + id;
     return this.http.get<any>(url).pipe(
       map(results => {
@@ -228,13 +232,38 @@ export class ApplicationService extends BaseHttpService {
   ): Observable<any> {
     // const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes'
     // const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+
+    // TESTING TESTING
+    this.apiBaseUrl = 'http://localhost:9000/ginas/app/api/v1/';
+    
     const url = this.apiBaseUrl + 'substances(' + substanceId + ')';
+    alert(url);
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
       })
     );
   }
+
+    // Changed, work Spring Boot and Play
+    getSubstanceCodesBySubstanceUuid(
+      substanceId: string
+    ): Observable<any> {
+      // const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes'
+      // const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+  
+      // TESTING TESTING
+      this.apiBaseUrl = 'http://localhost:9000/ginas/app/api/v1/';
+      
+      const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes';
+      alert(url);
+      return this.http.get<any>(url).pipe(
+        map(results => {
+          return results;
+        })
+      );
+    }
+ 
 
   getApplicationCenterByBdnum(
     bdnum: string
@@ -301,7 +330,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   saveApplication(): Observable<ApplicationSrs> {
-    const url = this.apiBaseUrl + `applicationssrs`;
+    const url = this.apiBaseUrlWithEntityContext;
     const params = new HttpParams();
     const options = {
       params: params,
@@ -340,7 +369,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   deleteApplication(): Observable<any> {
-    const url = this.apiBaseUrl + 'applicationssrs(' + this.application.id + ')';
+    const url = this.apiBaseUrlWithEntityContext + '(' + this.application.id + ')';
     const params = new HttpParams();
     const options = {
       params: params
@@ -422,6 +451,18 @@ export class ApplicationService extends BaseHttpService {
 
   getApplicationListExportUrl(bdnum: string): string {
     return this.baseUrl + 'applicationListExport?bdnum=' + bdnum;
+  }
+
+  getSubstanceCodeCodeSystemConfig(): string {
+    let url = null;
+    url = `${(this.configService.configData && this.configService.configData.substanceCodeCodeSystem)}`;
+    return url;
+  }
+
+  getSubstanceCodeIdTypeConfig(): string {
+    let url = null;
+    url = `${(this.configService.configData && this.configService.configData.substanceCodeIdType)}`;
+    return url;
   }
 
 } // class

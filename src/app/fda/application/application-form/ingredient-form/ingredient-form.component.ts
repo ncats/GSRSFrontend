@@ -8,6 +8,8 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SubstanceSearchSelectorComponent } from '../../../substance-search-select/substance-search-selector.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';
+import { ConfigService } from '@gsrs-core/config/config.service';
+import { GsrsModule } from '@gsrs-core/gsrs.module';
 
 @Component({
   selector: 'app-ingredient-form',
@@ -32,20 +34,27 @@ export class IngredientFormComponent implements OnInit {
   ingredientNameActiveMoiety: any;
   basisOfStrengthActiveMoiety: any;
   username = null;
-
+  substanceConfig: any;
+ 
   constructor(
     private applicationService: ApplicationService,
     public cvService: ControlledVocabularyService,
     private authService: AuthService,
+    private configService: ConfigService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
     setTimeout(() => {
       this.username = this.authService.getUser();
+
+      // Get Substance Linking Key Details from Config file
+      this.substanceConfig = this.configService.configData.substance;
+      this.ingredient.substanceKeyType = this.substanceConfig.linking.keyType.default;
+
       this.ingredientNameBdnumOld = this.ingredient.bdnum;
       this.basisofStrengthBdnumOld = this.ingredient.basisOfStrengthBdnum;
-      this.getSubstanceId(this.ingredient.bdnum, 'ingredientname');
-      this.getSubstanceId(this.ingredient.basisOfStrengthBdnum, 'basisofstrength');
+    //  this.getSubstanceId(this.ingredient.bdnum, 'ingredientname');
+   //   this.getSubstanceId(this.ingredient.basisOfStrengthBdnum, 'basisofstrength');
     }, 600);
   }
 
@@ -149,19 +158,22 @@ export class IngredientFormComponent implements OnInit {
   }
 
   getSubstanceCode(substanceId: string, type: string) {
-    this.applicationService.getSubstanceDetailsBySubstanceId(substanceId).subscribe(response => {
+    alert( this.ingredient._name);
+    this.applicationService.getSubstanceCodesBySubstanceUuid(substanceId).subscribe(response => {
       if (response) {
-        const substanceCodes = response.codes;
-        const substanceNames = response.names;
-        substanceCodes.forEach(element => {
-          console.log('CC: ' + element.codeSystem);
-          if (element.codeSystem) {
-            if (element.codeSystem === 'BDNUM') {
-              this.ingredient.bdnum = element.code;
-              this.ingredientName = response.name;
+        const substanceCodes = response;
+          for (let index = 0; index < substanceCodes.length; index++) {
+          if (substanceCodes[index].codeSystem) {
+
+            if ((substanceCodes[index].codeSystem === this.ingredient.substanceKeyType) &&
+            (substanceCodes[index].type == 'PRIMARY')) {
+              this.ingredient.substanceKey = substanceCodes[index].code;
+           //   this.ingredient.substanceKeyType = this.applicationService.getSubstanceCodeIdTypeConfig();
+              break;
             }
           }
-        });
+        };
+
         /*
         if (response.bdnum) {
 
@@ -198,15 +210,17 @@ export class IngredientFormComponent implements OnInit {
         } */
       } else {
         if (type === 'ingredientname') {
-          this.ingredientNameMessage = 'There is no Ingredient Name found for this bdnum';
+          this.ingredientNameMessage = 'There is no Ingredient Name found for this Substance Code';
         } else {
-          this.basisOfStrengthMessage = 'There is no Basis of Strength found for this bdnum';
+          this.basisOfStrengthMessage = 'There is no Basis of Strength found for this Substance Code';
         }
       }
     });
   }
 
+  /*
   getSubstanceId(bdnum: string, type: string) {
+    alert("SUBBBBBBBBB");
     if (bdnum != null) {
       this.applicationService.getSubstanceDetailsByBdnum(bdnum).subscribe(response => {
         if (response) {
@@ -243,6 +257,7 @@ export class IngredientFormComponent implements OnInit {
       });
     }
   }
+  */
 
   getActiveMoiety(substanceId: string, type: string) {
     if (substanceId != null) {
@@ -258,6 +273,8 @@ export class IngredientFormComponent implements OnInit {
   }
 
   ingredientNameUpdated(substance: SubstanceSummary): void {
+    alert('GGGGG ' + substance.uuid);
+
     this.ingredientNameMessage = '';
     if (substance != null) {
       const relatedSubstance: SubstanceRelated = {
@@ -271,13 +288,15 @@ export class IngredientFormComponent implements OnInit {
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
           this.ingredientNameMessage = '';
-          this.ingredient.ingredientName =   relatedSubstance.name;
-          this.ingredientNameSubstanceUuid = relatedSubstance.refuuid;
+          this.ingredient._name =   relatedSubstance.name;
+          this.ingredient._substanceUuid = relatedSubstance.refuuid;
+
           this.getSubstanceCode(relatedSubstance.refuuid, 'ingredientname');
         }
+        
       }
     } else {
-      this.ingredientNameSubstanceUuid = null;
+      this.ingredient._substanceUuid = null;
     }
   }
 

@@ -898,5 +898,12 @@
         "facetValue":"pending"}]
 
     }
-  ]
+  ],
+  "substance":{
+    "linking":{
+      "keyType":{
+        "default":"BDNUM"
+      }
+    }
+  }
 }

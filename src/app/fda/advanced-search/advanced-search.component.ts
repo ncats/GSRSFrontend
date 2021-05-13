@@ -585,12 +585,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
 
   processSearch(): void {
-    // Put facets to URL
-    //  alert(this.privateFacetParams);
-    //   alert(!this.privateFacetParamsUrl);
-    //  if ((this.privateFacetParams) && (!this.privateFacetParamsUrl)) {
-    //    this.populateUrlQueryParameters();
-    //  }
 
     const queryStatementHashes = [];
 
@@ -606,62 +600,45 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
     localStorage.setItem(queryHash.toString(), queryStatementHashesString);
 
-
-    //  alert("INSIDE SEARCH " + this.navigationExtrasFacet.queryParams['facets']);
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
-    if (this.query) {
-      navigationExtras.queryParams['search'] = this.query;
-    }
-    navigationExtras.queryParams['facets'] = this.navigationExtrasFacet.queryParams['facets'];
-
-    //   this.navigationExtrasFacet['facets'] = this.navigationExtrasFacet.queryParams['facets'];
-
-    //  alert('FACET URL' + this.privateFacetParamsUrl);
-
-    /*
-    const navigationExtras: NavigationExtras = {
-      //   queryParams: this.query ? { 'search': this.query, 'facets': this.privateFacetParamsUrl } : null
-
-      queryParams: { 'facets': this.privateFacetParamsUrl }
-    };
-    */
-    // }
-
-
-    const navigationExtrasClinical: NavigationExtras = {
-      queryParams: this.query ? { 'searchTerm': this.query, 'facets': this.privateFacetParamsUrl } : null
-    };
-
-    /*
-    const navigationExtrasClinical: NavigationExtras = {
-      queryParams: this.query ? { 'facets': this.privateFacetParamsUrl } : null
-    };
-  }
-  */
-
-    const navigationExtras2: NavigationExtras = {
-      queryParams: {
-        'g-search-hash': queryHash.toString()
-      }
-    };
-
-    // this is a test of the push state needed
-    // to keep the back button working as desired
-    window.history.pushState({}, 'Advanced Search', '/advanced-search'
-      + '?g-search-hash=' + navigationExtras2.queryParams['g-search-hash']);
-
-
-    // If Substance Tab selected, go to Browse Substance Page.
-    // If Application Tab selected, go to Browse Application page.
-    // alert('this.query:' + this.query);
-    // alert(Object.keys(this.privateFacetParams).length);
-    // alert('facet: ' + JSON.stringify(this.privateFacetParams));
-    const paramLength = Object.keys(this.privateFacetParams).length;
 
     if ((this.query) || (Object.keys(this.privateFacetParams).length > 0)) {
-      if (this.category) {
+
+      if (this.query) {
+        if (this.category === 'Clinical Trial') {
+          navigationExtras.queryParams['searchTerm'] = this.query;
+        }
+        else
+          navigationExtras.queryParams['search'] = this.query;
+      }
+
+      navigationExtras.queryParams['facets'] = this.navigationExtrasFacet.queryParams['facets'];
+
+      //const navigationExtrasClinical: NavigationExtras = {
+      //  queryParams: this.query ? { 'searchTerm': this.query, 'facets': this.privateFacetParamsUrl } : null
+      // };
+
+      /*
+      const navigationExtrasClinical: NavigationExtras = {
+      queryParams: this.query ? { 'facets': this.privateFacetParamsUrl } : null
+      };
+      }
+      */
+
+      const navigationExtras2: NavigationExtras = {
+        queryParams: {
+          'g-search-hash': queryHash.toString()
+        }
+      };
+
+      // this is a test of the push state needed
+      // to keep the back button working as desired
+      window.history.pushState({}, 'Advanced Search', '/advanced-search'
+        + '?g-search-hash=' + navigationExtras2.queryParams['g-search-hash']);
+
+      if (this.category === 'Substance') {
         this.router.navigate(['/browse-substance'], navigationExtras);
       } else if (this.category === 'Application') {
         this.router.navigate(['/browse-applications'], navigationExtras);
@@ -669,9 +646,11 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.router.navigate(['/browse-products'], navigationExtras);
       } else if (this.category === 'Clinical Trial') {
         this.router.navigate(['/browse-clinical-trials'], navigationExtras);
+      } else {
+        this.router.navigate(['/browse-substance'], navigationExtras);
       }
     } else {
-      this.router.navigate(['/browse-substance'], navigationExtras);
+      alert ("Please select any criteria to search");
     }
   }
 
