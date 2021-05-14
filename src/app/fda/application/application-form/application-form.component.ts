@@ -9,7 +9,7 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
-import { ApplicationSrs, ValidationMessage } from '../model/application.model';
+import { Application, ValidationMessage } from '../model/application.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,7 +35,7 @@ import { element } from 'protractor';
 
 export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  application: ApplicationSrs;
+  application: Application;
   /*
   centerList: Array<VocabularyTerm> = [];
   appTypeList: Array<VocabularyTerm> = [];

@@ -1,3 +1,4 @@
+/*
 export interface ApplicationSrs {
   id?: number;
   appType?: string;
@@ -29,7 +30,9 @@ export interface ApplicationSrs {
   productEffectedList?: Array<ProductEffected>;
   applicationHistoryList?: Array<ApplicationSrsHistory>;
 }
+*/
 
+/*
 export interface ProductSrs {
   id?: number;
   productName?: string;
@@ -62,48 +65,6 @@ export interface ProductNameSrs {
   internalVersion?: number;
 }
 
-export interface ApplicationIngredient {
-  id?: number;
-  applicantIngredName?: string;
-  substanceKey?: string;
-  substanceKeyType?: string;
-  bdnum?: string;
-  basisOfStrengthBdnum?: string;
-  average?: string;
-  low?: string;
-  high?: string;
-  lowLimit?: string;
-  highLimit?: string;
-  nonNumericValue?: string;
-  ingredientType?: string;
-  unit?: string;
-  grade?: string;
-  reviewedBy?: string;
-  reviewDate?: number;
-  internalVersion?: number;
-  createdBy?: string;
-  createDate?: number;
-  modifiedBy?: string;
-  modifyDate?: number;
-  farmSubstanceId?: number;
-  farmSubstance?: string;
-  _substanceUuid?: string;
-  _approvalID?: string;
-  _name?: string;
-  activeMoietyName?: string;
-  activeMoietyUnii?: string;
-  subRelationshipList?: Array<SubRelationship>;
-}
-
-export interface SubRelationship {
-  id?: string;
-  substanceId?: string;
-  ownerBdnum?: string;
-  relationshipType?: string;
-  relationshipName?: string;
-  relationshipUnii?: string;
-}
-
 export interface ApplicationIndicationSrs {
   id?: number;
   indication?: string;
@@ -117,57 +78,7 @@ export interface ApplicationIndicationSrs {
   internalVersion?: number;
 }
 
-export interface ProductTechnicalEffect {
-  id?: number;
-  technicalEffect?: string;
-  farmTechEffectId?: number;
-  substanceId?: number;
-  createdBy?: string;
-  createDate?: number;
-  internalVersion?: number;
-}
-
-export interface ProductEffected {
-  id?: number;
-  effectedProduct?: string;
-  farmProductId?: number;
-  substanceId?: number;
-  createdBy?: string;
-  createDate?: number;
-  internalVersion?: number;
-}
-
-export interface ApplicationSrsHistory {
-  id?: number;
-  productName?: string;
-  sponsorName?: string;
-  status?: string;
-  statusDate?: number;
-  createDate?: number;
-}
-
-export interface ClinicalTrial {
-  nctNumber?: String;
-}
-
-export interface ValidationResults {
-  valid?: boolean;
-  validationMessages?: Array<ValidationMessage>;
-}
-
-export interface ValidationMessage {
-  actionType?: string;
-  appliedChange?: boolean;
-  links?: Array<MessageLink>;
-  message?: string;
-  messageType?: string;
-  suggestedChange?: boolean;
-}
-
-export interface MessageLink {
-  href: string;
-  text: string;
-}
+*/
 
 // GSRS 3.0 in Spring Boot
 export interface Application {
@@ -234,6 +145,41 @@ export interface ProductName {
   internalVersion?: number;
 }
 
+export interface ApplicationIngredient {
+  id?: number;
+  applicantIngredName?: string;
+  bdnum?: string;
+  basisOfStrengthBdnum?: string;
+  substanceKey?: string;
+  substanceKeyType?: string;
+  basisOfStrengthSubstanceKey?: string;
+  basisOfStrengthSubstanceKeyType?: string;
+  average?: string;
+  low?: string;
+  high?: string;
+  lowLimit?: string;
+  highLimit?: string;
+  nonNumericValue?: string;
+  ingredientType?: string;
+  unit?: string;
+  grade?: string;
+  reviewedBy?: string;
+  reviewDate?: number;
+  internalVersion?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  farmSubstanceId?: number;
+  farmSubstance?: string;
+  _substanceUuid?: string;
+  _approvalID?: string;
+  _name?: string;
+  activeMoietyName?: string;
+  activeMoietyUnii?: string;
+  subRelationshipList?: Array<SubRelationship>;
+}
+
 export interface ApplicationIndication {
   id?: number;
   indication?: string;
@@ -245,4 +191,65 @@ export interface ApplicationIndication {
   reviewedBy?: string;
   reviewDate?: number;
   internalVersion?: number;
+}
+
+export interface SubRelationship {
+  id?: string;
+  substanceId?: string;
+  ownerBdnum?: string;
+  relationshipType?: string;
+  relationshipName?: string;
+  relationshipUnii?: string;
+}
+
+export interface ProductTechnicalEffect {
+  id?: number;
+  technicalEffect?: string;
+  farmTechEffectId?: number;
+  substanceId?: number;
+  createdBy?: string;
+  createDate?: number;
+  internalVersion?: number;
+}
+
+export interface ProductEffected {
+  id?: number;
+  effectedProduct?: string;
+  farmProductId?: number;
+  substanceId?: number;
+  createdBy?: string;
+  createDate?: number;
+  internalVersion?: number;
+}
+
+export interface ApplicationSrsHistory {
+  id?: number;
+  productName?: string;
+  sponsorName?: string;
+  status?: string;
+  statusDate?: number;
+  createDate?: number;
+}
+
+export interface ClinicalTrial {
+  nctNumber?: String;
+}
+
+export interface ValidationResults {
+  valid?: boolean;
+  validationMessages?: Array<ValidationMessage>;
+}
+
+export interface ValidationMessage {
+  actionType?: string;
+  appliedChange?: boolean;
+  links?: Array<MessageLink>;
+  message?: string;
+  messageType?: string;
+  suggestedChange?: boolean;
+}
+
+export interface MessageLink {
+  href: string;
+  text: string;
 }

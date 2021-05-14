@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
-import { ConfigService } from '@gsrs-core/config';
+import { map, switchMap } from 'rxjs/operators';
 import { BaseHttpService } from '@gsrs-core/base';
+import { ConfigService } from '@gsrs-core/config';
 import { PagingResponse } from '@gsrs-core/utils';
-import { ApplicationSrs, ValidationResults, ApplicationIngredient } from '../model/application.model';
-import { Application } from '../model/application.model';
-import { ApplicationIndicationSrs, ProductSrs, ProductNameSrs } from '../model/application.model';
+import { Facet } from '@gsrs-core/facets-manager';
+import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
+import { Application, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
+import { ValidationResults } from '../model/application.model';
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
-import { map, switchMap } from 'rxjs/operators';
-import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
-import { Facet } from '@gsrs-core/facets-manager';
 
 @Injectable(
   {
@@ -22,8 +21,8 @@ import { Facet } from '@gsrs-core/facets-manager';
 export class ApplicationService extends BaseHttpService {
 
   totalRecords: 0;
-  application: ApplicationSrs;
-  entity = 'ApplicationSrs';
+  application: Application;
+  entity = 'Application';
   // entityContext = 'application';
   entityContext = 'applicationssrs';
 
@@ -298,7 +297,7 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
-  loadApplication(application?: ApplicationSrs): void {
+  loadApplication(application?: Application): void {
     // if Update/Exist Application
     // setTimeout(() => {
     if (application != null) {
@@ -306,7 +305,7 @@ export class ApplicationService extends BaseHttpService {
 
       // Add a new Indication if there is no indication record.
       if (this.application.applicationIndicationList.length < 1) {
-        const newIndication: ApplicationIndicationSrs = {};
+        const newIndication: ApplicationIndication = {};
         this.application.applicationIndicationList.unshift(newIndication);
       }
 
@@ -329,7 +328,7 @@ export class ApplicationService extends BaseHttpService {
     //  });
   }
 
-  saveApplication(): Observable<ApplicationSrs> {
+  saveApplication(): Observable<Application> {
     const url = this.apiBaseUrlWithEntityContext;
     const params = new HttpParams();
     const options = {
@@ -343,10 +342,10 @@ export class ApplicationService extends BaseHttpService {
 
     // Update Application
     if ((this.application != null) && (this.application.id)) {
-      return this.http.put<ApplicationSrs>(url, this.application, options);
+      return this.http.put<Application>(url, this.application, options);
     } else {
       // Save New Application
-      return this.http.post<ApplicationSrs>(url, this.application, options);
+      return this.http.post<Application>(url, this.application, options);
     }
   }
 
@@ -374,12 +373,12 @@ export class ApplicationService extends BaseHttpService {
     const options = {
       params: params
     };
-    const x = this.http.delete<ApplicationSrs>(url, options);
+    const x = this.http.delete<Application>(url, options);
     return x;
   }
 
   addNewIndication(): void {
-    const newIndication: ApplicationIndicationSrs = {};
+    const newIndication: ApplicationIndication = {};
     this.application.applicationIndicationList.unshift(newIndication);
   }
 
@@ -388,7 +387,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   addNewProduct(): void {
-    const newProduct: ProductSrs = {
+    const newProduct: Product = {
       applicationProductNameList: [{}],
       applicationIngredientList: [{}]
     };
@@ -397,7 +396,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   addNewProductName(prodIndex: number): void {
-    const newProductName: ProductNameSrs = {};
+    const newProductName: ProductName = {};
 
     this.application.applicationProductList[prodIndex].applicationProductNameList.unshift(newProductName);
   }
@@ -453,6 +452,7 @@ export class ApplicationService extends BaseHttpService {
     return this.baseUrl + 'applicationListExport?bdnum=' + bdnum;
   }
 
+  /*
   getSubstanceCodeCodeSystemConfig(): string {
     let url = null;
     url = `${(this.configService.configData && this.configService.configData.substanceCodeCodeSystem)}`;
@@ -464,5 +464,6 @@ export class ApplicationService extends BaseHttpService {
     url = `${(this.configService.configData && this.configService.configData.substanceCodeIdType)}`;
     return url;
   }
-
+  */
+ 
 } // class

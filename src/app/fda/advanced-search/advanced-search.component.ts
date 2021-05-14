@@ -11,40 +11,39 @@ import {
   ElementRef, AfterViewInit
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { QueryableSubstanceDictionary } from '@gsrs-core/guided-search/queryable-substance-dictionary.model';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
-import { ConfigService } from '@gsrs-core/config';
-// import { QueryStatement } from './query-statement/query-statement.model';
-// import { typeCommandOptions } from './query-statement/type-command-options.constant';
-import { UtilsService } from '@gsrs-core/utils';
-import { environment } from '../../../environments/environment';
-import { EditorImplementation } from '@gsrs-core/structure-editor/structure-editor-implementation.model';
-import { Ketcher } from 'ketcher-wrapper';
-import { JSDraw } from 'jsdraw-wrapper';
+import { Location, formatNumber } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { FormControl } from '@angular/forms';
-import { Editor } from '@gsrs-core/structure-editor/structure.editor.model';
-import { AdvancedQueryStatement } from './advanced-query-statement/advanced-query-statement.model';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog, MatTabChangeEvent } from '@angular/material';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { Subscription } from 'rxjs';
+import { transform } from 'lodash';
+import { environment } from '../../../environments/environment';
+import { ConfigService } from '@gsrs-core/config';
+import { UtilsService } from '@gsrs-core/utils';
+import { Ketcher } from 'ketcher-wrapper';
+import { JSDraw } from 'jsdraw-wrapper';
+/*
 import { InterpretStructureResponse } from '@gsrs-core/structure/structure-post-response.model';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { StructureImportComponent } from '@gsrs-core/structure/structure-import/structure-import.component';
-import { AdvancedSearchService } from './service/advanced-search.service';
-import { formatNumber } from '@angular/common';
+import { EditorImplementation } from '@gsrs-core/structure-editor/structure-editor-implementation.model';
 import { ApplicationsBrowseComponent } from '../application/applications-browse/applications-browse.component';
+*/
 import { Facet, FacetParam, FacetValue, FacetUpdateEvent, FacetsManagerService } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { Subscription } from 'rxjs';
-import { SubstanceDetail, SubstanceName, SubstanceCode } from '@gsrs-core/substance/substance.model';
+import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
+import { QueryableSubstanceDictionary } from '@gsrs-core/guided-search/queryable-substance-dictionary.model';
+import { Editor } from '@gsrs-core/structure-editor/structure.editor.model';
+import { AdvancedQueryStatement } from './advanced-query-statement/advanced-query-statement.model';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
 import { LoadingService } from '@gsrs-core/loading';
-import { transform } from 'lodash';
-import { Location } from '@angular/common';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { ApplicationService } from '../application/service/application.service';
 import { ProductService } from '../product/service/product.service';
 import { ClinicalTrialService } from '../clinical-trials/clinical-trial/clinical-trial.service';
+import { AdvancedSearchService } from './service/advanced-search.service';
 
 @Component({
   selector: 'app-advanced-search',

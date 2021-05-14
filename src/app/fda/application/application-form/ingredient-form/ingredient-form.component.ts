@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { ProductSrs, ApplicationIngredient } from '../../model/application.model';
+import { Product, ApplicationIngredient } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationService } from '../../service/application.service';
