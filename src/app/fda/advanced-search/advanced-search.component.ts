@@ -208,6 +208,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     });
     this.facetViewCategory.push('All');
   }
+
   getBrowseSubstanceDetails() {
     const subscriptionBrowseSub = this.advancedSearchService.getSubstances(
       0,
@@ -584,7 +585,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
 
   processSearch(): void {
-
     const queryStatementHashes = [];
 
     this.queryStatements.forEach(queryStatement => {
@@ -608,23 +608,16 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       if (this.query) {
         if (this.category === 'Clinical Trial') {
           navigationExtras.queryParams['searchTerm'] = this.query;
-        }
-        else
+        } else {
           navigationExtras.queryParams['search'] = this.query;
+        }
+      } else if (Object.keys(this.privateFacetParams).length > 0) {
+        navigationExtras.queryParams['facets'] = this.navigationExtrasFacet.queryParams['facets'];
       }
 
-      navigationExtras.queryParams['facets'] = this.navigationExtrasFacet.queryParams['facets'];
-
-      //const navigationExtrasClinical: NavigationExtras = {
-      //  queryParams: this.query ? { 'searchTerm': this.query, 'facets': this.privateFacetParamsUrl } : null
+      // const navigationExtrasClinical: NavigationExtras = {
+      // queryParams: this.query ? { 'searchTerm': this.query, 'facets': this.privateFacetParamsUrl } : null
       // };
-
-      /*
-      const navigationExtrasClinical: NavigationExtras = {
-      queryParams: this.query ? { 'facets': this.privateFacetParamsUrl } : null
-      };
-      }
-      */
 
       const navigationExtras2: NavigationExtras = {
         queryParams: {
@@ -649,7 +642,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.router.navigate(['/browse-substance'], navigationExtras);
       }
     } else {
-      alert ("Please select any criteria to search");
+      alert('Please select any criteria to search');
     }
   }
 

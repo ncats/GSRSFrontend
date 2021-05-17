@@ -62,8 +62,8 @@
               {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
           </div>
-          <div *ngIf="ingredient.substanceCode">
-            <span class="colororange">{{ingredient.substanceCode}}</span><span class="colorgray font11px"> (Substance Code)</span>
+          <div *ngIf="ingredient.substanceKey">
+            <span class="colororange">{{ingredient.substanceKey}}</span><span class="colorgray font11px"> (Substance Key)</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName(ingredIndex)"
               matTooltip="Delete Ingredient Name {{ingredIndex + 1}}">

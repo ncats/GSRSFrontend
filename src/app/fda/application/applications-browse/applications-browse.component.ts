@@ -166,6 +166,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
         this.etag = pagingResponse.etag;
+
+        if (pagingResponse.total % this.pageSize === 0) {
+          this.lastPage = (pagingResponse.total / this.pageSize);
+        } else {
+          this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
+        }        
         // Export Application Url
         /*
         this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(

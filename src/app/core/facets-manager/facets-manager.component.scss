@@ -109,25 +109,3 @@
         margin-bottom: 10px;
     }
 }
-
-.row {
-    margin-right: 125px;
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: space-between;
-}
-
-.col {
-    flex-grow: 1;
-    min-width: 30%;
-    margin-right: 20px;
-    margin-bottom: 15px;
-}
-.panel-height {
-    height: 470px;
-    overflow: auto;
-    margin-bottom: 10px;
-    padding-right: 5px;
-}
-

@@ -1,22 +1,18 @@
-<mat-checkbox [ngModel] = "showDeprecated" *ngIf ="loggedIn && !hideDeprecatedCheckbox
-" class = "deprecated" (change) = "toggleDeprecated()">Show Deprecated Records</mat-checkbox>
-<div  [ngClass]="{'row': showAllFacets === 'true'}">
-  <!--
-<div [ngClass]="{'col': showAllFacets === 'true'}">
--->
-  <div [ngClass]="{'col': showAllFacets === 'true'}" *ngFor="let facet of facets; index as topIndex">
+<mat-checkbox [ngModel] = "showDeprecated" *ngIf ="loggedIn && !hideDeprecatedCheckbox"
+ class = "deprecated" (change) = "toggleDeprecated()">Show Deprecated Records</mat-checkbox>
 
-    <mat-accordion multi="true">
-      <mat-expansion-panel
-        [expanded]="panelExpanded === true || facetParams[facet.name] != null">
+  <mat-accordion multi="true">
+    <mat-expansion-panel *ngFor="let facet of facets; index as topIndex"
+      [expanded]="panelExpanded === true || facetParams[facet.name] != null">
         <mat-expansion-panel-header>
           <mat-panel-title>
             {{facet.name | facetDisplay}}
           </mat-panel-title>
         </mat-expansion-panel-header>
         
+        <!--
         <div [ngClass]="{'panel-height': showAllFacets === 'true'}">
-        
+        -->
         <div *ngIf="includeFacetSearch">
           <div class="facet-search-container" *ngIf = "facet.enhanced">
             <mat-form-field *ngIf="searchText[facet.name]">
@@ -101,15 +97,8 @@
             </button>
           </div>
         </div>
-        
+        <!--
       </div>
-    
-      </mat-expansion-panel>
-    </mat-accordion> 
-
-
-    <!--
-</div>
--->
-</div>
-</div>
+    -->    
+    </mat-expansion-panel>
+  </mat-accordion>

@@ -38,8 +38,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   @Output() facetsLoaded = new EventEmitter<number>();
   private environment: Environment;
   @Input() includeFacetSearch = false;
-  @Input() showAllFacets: string = 'false';
-  @Input() panelExpanded: boolean = false;
+  @Input() showAllFacets = 'false';
+  @Input() panelExpanded = false;
   showDeprecated = false;
   loggedIn = false;
   hideDeprecatedCheckbox = false;
@@ -80,7 +80,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   onPopState(event) {
    setTimeout(() => {
      if (this.router.url === this.previousState[0]) {
-       if(this.router.url === '/browse-substance') {
+       if (this.router.url === '/browse-substance') {
         this.privateFacetParams = {};
        } else {
         this.privateFacetParams = this.previousFacets[0];
@@ -179,14 +179,14 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     this.populateFacets();
   }
-  
-  @Input() 
+
+  @Input()
   set facetViewCategorySelected(facetViewCategorySelected: string) {
     this._facetViewCategorySelected = facetViewCategorySelected;
     this.populateFacets();
   }
 
-  @Input() 
+  @Input()
   set facetNameText(facetNameText: string) {
     this._facetNameText = facetNameText;
     this.populateFacets();
@@ -196,7 +196,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     if (this.facetString !== '') {
       const categoryArray = this.escapedSplit(this.facetString, ',');
       for (let i = 0; i < (categoryArray.length); i++) {
-        const categorySplit = this.escapedSplit(categoryArray[i],'*');
+        const categorySplit = this.escapedSplit(categoryArray[i], '*');
         const category = categorySplit[0];
         const fieldsArr = this.escapedSplit(categorySplit[1], '+');
         const params: { [facetValueLabel: string]: boolean } = {};
@@ -294,18 +294,16 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           }
 
         });
-        } 
-        else {
-          if (this._configName && this._configName === 'substances' && this._facetViewCategorySelected != 'All') {
+        } else {
+          if (this._configName && this._configName === 'substances' && this._facetViewCategorySelected !== 'All') {
             this.facetsConfig['facetView'].forEach(categoryRow => {
-            const category = categoryRow["category"];
-            const categoryFacets = categoryRow["facets"];
+            const category = categoryRow['category'];
+            const categoryFacets = categoryRow['facets'];
             if (category === this._facetViewCategorySelected) {
               categoryFacets.forEach(facet => {
               for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
                 this.toggle[facetIndex] = true;
                 if (facet === facetsCopy[facetIndex].name) {
-                  
                   // Facet Name Search
                   let facetNameTextFound = true;
                   if ((this._facetNameText) && (this._facetNameText.length > 0)) {
@@ -314,7 +312,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
                       facetNameTextFound = true;
                     }
                   }
-                  
+
                   if (facetNameTextFound === true) {
                   if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
                     let hasValues = false;
@@ -338,21 +336,17 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
                 }
                   break;
                 }
-              }          
+              }
               });
             }
             });
-          }
-                
-            else {
+          } else {
             for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
               this.searchText[facetsCopy[facetIndex].name] = { value: '', isLoading: false };
               newFacets.push(facetsCopy[facetIndex]);
-            }  
+            }
           }
-      
-      } //else 
-
+        }
         this.facets = newFacets;
         this.facetsLoaded.emit(this.facets.length);
         this.cleanFacets();
@@ -448,27 +442,26 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.location.go(urlTree.toString());
   }
 
-  
-  private escapedSplit(value: string, delim: string){
-    return value.match(new RegExp('((.|^)*?([^!]|^))([' + delim + ']|$)','g'))
-           .map(d=>d.replace(new RegExp('[' +delim + ']$','g'),'')); 
+
+  private escapedSplit(value: string, delim: string) {
+    return value.match(new RegExp('((.|^)*?([^!]|^))([' + delim + ']|$)', 'g'))
+           .map(d => d.replace(new RegExp('[' + delim + ']$', 'g'), ''));
   }
-  
-  private encodeValue(facetValue: string){
-    let encFV = facetValue.replace('!','!@');
-    encFV = encFV.replace(/[.]/g,'!.');
-    encFV = encFV.replace(/[\+]/g,'!+');
-    encFV = encFV.replace(/[,]/g,'!,');
-    encFV = encFV.replace(/[\*]/g,'!*');
+
+  private encodeValue(facetValue: string) {
+    let encFV = facetValue.replace('!', '!@');
+    encFV = encFV.replace(/[.]/g, '!.');
+    encFV = encFV.replace(/[\+]/g, '!+');
+    encFV = encFV.replace(/[,]/g, '!,');
+    encFV = encFV.replace(/[\*]/g, '!*');
     return encFV;
   }
 
-  
-  private decodeValue(encFV: string){
-    let decFV = encFV.replace(/!([^@])/g,"$1").replace(/[!][@]/g,'!');
+  private decodeValue(encFV: string) {
+    const decFV = encFV.replace(/!([^@])/g, '$1').replace(/[!][@]/g, '!');
     return decFV;
   }
-  
+
   private applyFacetsFilter(facetName: string) {
     const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     let eventValue = 0;
@@ -554,13 +547,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
     const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
     this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
-  
+
     // Call if calling from Advanced Search
     if (this.showAllFacets && this.showAllFacets === 'true') {
       this.setDisplayFacets();
       this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams,
         displayFacets: this.displayFacets,
-        deprecated: this.showDeprecated}); 
+        deprecated: this.showDeprecated});
     }
   }
 

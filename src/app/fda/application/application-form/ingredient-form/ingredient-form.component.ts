@@ -35,7 +35,7 @@ export class IngredientFormComponent implements OnInit {
   basisOfStrengthActiveMoiety: any;
   username = null;
   substanceConfig: any;
- 
+
   constructor(
     private applicationService: ApplicationService,
     public cvService: ControlledVocabularyService,
@@ -166,13 +166,13 @@ export class IngredientFormComponent implements OnInit {
           if (substanceCodes[index].codeSystem) {
 
             if ((substanceCodes[index].codeSystem === this.ingredient.substanceKeyType) &&
-            (substanceCodes[index].type == 'PRIMARY')) {
+            (substanceCodes[index].type === 'PRIMARY')) {
               this.ingredient.substanceKey = substanceCodes[index].code;
            //   this.ingredient.substanceKeyType = this.applicationService.getSubstanceCodeIdTypeConfig();
               break;
             }
           }
-        };
+        }
 
         /*
         if (response.bdnum) {
@@ -293,7 +293,7 @@ export class IngredientFormComponent implements OnInit {
 
           this.getSubstanceCode(relatedSubstance.refuuid, 'ingredientname');
         }
-        
+
       }
     } else {
       this.ingredient._substanceUuid = null;
