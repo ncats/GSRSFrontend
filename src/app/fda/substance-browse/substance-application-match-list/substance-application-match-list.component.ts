@@ -6,7 +6,7 @@ import { UtilsService } from '../../../core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ApplicationService } from '../../application/service/application.service';
 import { Subscription } from 'rxjs';
-import { ApplicationSrs, ApplicationIngredient } from '../../application/model/application.model';
+import { Application, ApplicationIngredient } from '../../application/model/application.model';
 
 @Component({
   selector: 'app-substance-application-match-list',
@@ -25,7 +25,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
   updated = 'false';
   autoUpdateSavedSuccess = false;
   private subscriptions: Array<Subscription> = [];
-  application: ApplicationSrs;
+  application: Application;
   preferredTerm = '';
 
   constructor(

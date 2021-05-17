@@ -67,10 +67,12 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'the following contained phrase, which must be found as written (no partial words)': {
+        // 'the following contained phrase, which must be found as written (no partial words)': {
+            'Exact Match': {
             commandInputs: [
                 {
                     type: 'text',
+                    example: 'Example: aspirin sodium',
                     constructQuery: (
                         queryValue: string,
                         condition: string,
@@ -82,7 +84,7 @@ export const typeCommandOptions: CommandTypesDict = {
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'the following contained phrase, which must be found as written (no partial words)',
+                            command: 'Exact Match',
                             commandInputValues: [queryValue],
                             query: query
                         });
@@ -120,10 +122,12 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'a WORD that contains': {
+        // 'a WORD that contains': {
+            'Contains': {
             commandInputs: [
                 {
                     type: 'text',
+                    example: 'Example: sodium',
                     constructQuery: (
                         queryValue: string,
                         condition: string,
@@ -135,7 +139,7 @@ export const typeCommandOptions: CommandTypesDict = {
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'a WORD that contains',
+                            command: 'Contains',
                             commandInputValues: [queryValue],
                             query: query
                         });
@@ -143,10 +147,12 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'a WORD that starts with': {
+       // 'a WORD that starts with': {
+            'Starts With': {
             commandInputs: [
                 {
                     type: 'text',
+                    example: 'Example: aspir',
                     constructQuery: (
                         queryValue: string,
                         condition: string,
@@ -158,7 +164,7 @@ export const typeCommandOptions: CommandTypesDict = {
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'a WORD that contains',
+                            command: 'Starts With',
                             commandInputValues: [queryValue],
                             query: query
                         });

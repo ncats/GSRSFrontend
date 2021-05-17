@@ -1,0 +1,240 @@
+{
+    "Application Deprecated":{
+        "lucenePath":"root_deprecated",
+        "description":"Deprecated",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Application Number":{
+        "lucenePath":"root_appNumber",
+        "description":"Application Number",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Application Record Create Date":{
+        "lucenePath":"root_createDate",
+        "description":"Record Create Date",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Application Record Created By":{
+        "lucenePath":"root_createdBy",
+        "description":"Record Created By",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Application Record Last Edited":{
+        "lucenePath":"root_modifyDate",
+        "description":"Record Last Edited",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Application Record Last Edited By":{
+        "lucenePath":"root_modifiedBy",
+        "description":"Record Last Edited By",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Application Status":{
+        "lucenePath":"root_status",
+        "description":"Application Status",
+        "type":"string",
+        "cvDomain":"APPLICATION_STATUS",
+        "priority":"x"
+    },
+    "Application Sub Type":{
+        "lucenePath":"root_appSubType",
+        "description":"Application Sub Type",
+        "type":"string",
+        "cvDomain":"APPLICATION_SUB_TYPE",
+        "priority":"x"
+    },
+    "Application Type":{
+        "lucenePath":"root_appType",
+        "description":"Application Type",
+        "type":"string",
+        "cvDomain":"APPLICATION_TYPE",
+        "priority":"x"
+    },
+    "Bdnum":{
+        "lucenePath":"root_applicationProductList_applicationIngredientList_bdnum",
+        "description":"Bdnum",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Center":{
+        "lucenePath":"root_center",
+        "description":"In Application, lists of centers such as CDER, CBER, CFSAN, etc.",
+        "type":"string",
+        "cvDomain":"CENTER",
+        "priority":"x"
+    },
+    "Division Class Description":{
+        "lucenePath":"root_divisionClassDesc",
+        "description":"Division Class Description",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Dosage Form":{
+        "lucenePath":"root_applicationProductList_dosageForm",
+        "description":"Dosage Form",
+        "type":"string",
+        "cvDomain":"DOSAGE_FORM",
+        "priority":"x"
+    },
+    "Has Indications":{
+        "lucenePath":"root_hasIndications",
+        "description":"Has Indications",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Has Ingredients":{
+        "lucenePath":"root_hasIngredients",
+        "description":"Has Ingredients",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Has Products":{
+        "lucenePath":"root_hasProducts",
+        "description":"Has Products",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Indication":{
+        "lucenePath":"root_applicationIndicationList_indication",
+        "description":"Indication",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Ingredient Create Date":{
+        "lucenePath":"root_applicationProductList_applicationIngredientList_createDate",
+        "description":"Ingredient Create Date",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Ingredient Created By":{
+        "lucenePath":"root_applicationProductList_applicationIngredientList_createdBy",
+        "description":"Ingredient Created By",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Ingredient Last Edited":{
+        "lucenePath":"root_applicationProductList_applicationIngredientList_modifyDate",
+        "description":"Ingredient Last Edited",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Ingredient Last Edited By":{
+        "lucenePath":"root_applicationProductList_applicationIngredientList_modifiedBy",
+        "description":"Ingredient Last Edited By",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Ingredient Name":{
+        "lucenePath":"root_ingredientName",
+        "description":"Ingredient Name",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Ingredient Type":{
+        "lucenePath":"root_applicationProductList_applicationIngredientList_ingredientType",
+        "description":"Ingredient Type",
+        "type":"string",
+        "cvDomain":"INGREDIENT_TYPE",
+        "priority":"x"
+    },
+    "Product Name":{
+        "lucenePath":"root_applicationProductList_applicationProductNameList_productName",
+        "description":"Product Name",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Product Name Deprecated":{
+        "lucenePath":"root_productNameDeprecated",
+        "description":"Product Name Deprecated",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Provenance (GSRS)":{
+        "lucenePath":"root_provenance",
+        "description":"Provenance (GSRS)",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Public Domain":{
+        "lucenePath":"root_publicDomain",
+        "description":"Public Domain",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Source":{
+        "lucenePath":"root_source",
+        "description":"Source",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Sponsor Name":{
+        "lucenePath":"root_sponsorName",
+        "description":"Sponsor Name",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Status Date Year":{
+        "lucenePath":"root_statusDateYear",
+        "description":"Status Date Year",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Submit Date":{
+        "lucenePath":"root_submitDate",
+        "description":"Submit Date",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Submit Date Year":{
+        "lucenePath":"root_submitDateYear",
+        "description":"Submit Date Year",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Technical Effect":{
+        "lucenePath":"root_ProductTechnicalEffect_technicalEffect",
+        "description":"Technical Effect",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Title":{
+        "lucenePath":"root_title",
+        "description":"Title",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    }
+}

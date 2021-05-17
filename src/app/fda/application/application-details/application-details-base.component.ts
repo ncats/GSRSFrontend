@@ -63,6 +63,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   }
 
   getSubstanceDetails() {
+    /*
     if (this.application != null) {
       this.application.applicationProductList.forEach(elementProd => {
         if (elementProd != null) {
@@ -96,6 +97,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
         }
       });
     }
+    */
   }
 
   isNumber(str: any): boolean {

@@ -180,6 +180,7 @@
             </div>
           </div>
 
+          <!-- Commenting out for 3.0 right now.  Will fix this soon.
           <div class="row">
             <div class="row-property-2">
               <div class="row-property-key-2">
@@ -214,14 +215,15 @@
                 </div>
               </div>
             </div>
-
           </div>
+          -->
 
         </mat-card-content>
       </mat-card>
     </div>
 
     <!-- Display Application History -->
+    <!--
     <div class="" *ngIf="application.applicationHistoryList.length > 0">
       <br>
       <mat-card class="bordergray">
@@ -252,9 +254,11 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <!-- End Technical Effect loop -->
+    -->
+    <!-- End Application History loop -->
 
     <!-- Display Technical Effect -->
+    <!--
     <div class="" *ngIf="application.productTechEffectList.length > 0">
       <br>
       <mat-card class="bordergray">
@@ -277,9 +281,11 @@
         </mat-card-content>
       </mat-card>
     </div>
+    -->
     <!-- End Technical Effect loop -->
 
     <!-- Display Effected Product -->
+    <!--
     <div class="" *ngIf="application.productEffectedList.length > 0">
       <br>
       <mat-card class="bordergray">
@@ -302,6 +308,7 @@
         </mat-card-content>
       </mat-card>
     </div>
+    -->
     <!-- End Effected Product loop -->
 
     <br>
@@ -438,9 +445,9 @@
                     <tr *ngFor="let ingred of prod.applicationIngredientList; let i = index">
                       <td>{{ ingred.applicantIngredName }}</td>
                       <td>
-                        <div *ngIf="ingred.substanceId">
-                          <a [routerLink]="['/substances', ingred.substanceId]"
-                            target="_blank">{{ingred.ingredientName}}</a>
+                        <div *ngIf="ingred._substanceUuid">
+                          <a [routerLink]="['/substances', ingred._substanceUuid]"
+                            target="_blank">{{ingred._name}}</a>
                         </div>
                         <br>
                         <span *ngIf="ingred.bdnum">
@@ -449,9 +456,9 @@
                       </td>
 
                       <td>
-                        <div *ngIf="ingred.basisOfStrengthSubstanceId">
-                          <a [routerLink]="['/substances', ingred.basisOfStrengthSubstanceId]"
-                            target="_blank">{{ingred.basisOfStrengthIngredientName}}</a>
+                        <div *ngIf="ingred._basisOfStrengthSubstanceUuid">
+                          <a [routerLink]="['/substances', ingred._basisOfStrengthSubstanceUuid]"
+                            target="_blank">{{ingred._basisOfStrengthName}}</a>
                         </div>
                         <br>
                         <span *ngIf="ingred.basisOfStrengthBdnum">

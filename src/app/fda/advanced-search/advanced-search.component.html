@@ -1,0 +1,259 @@
+<div class="div-center margintop50px">
+  <div class="div-flex">
+    <div class="title">
+      Advanced Search
+    </div>
+    <div class="margintop30px marginleft200px">
+      <a [routerLink]="['/structure-search']">
+        <span class="font12px">Structure Search</span>
+      </a>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <a [routerLink]="['/sequence-search']">
+        <span class="font12px">Sequence Search</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Search Button -->
+  <div class="search-button">
+    <div>
+      <button mat-flat-button color="primary" (click)="processSearch()">Search</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <mat-tab-group class="tab-style margintop30px" (selectedTabChange)="tabSelectedUpdated($event)">
+    <mat-tab label="Substance">
+      <ng-template mat-tab-label>
+        <div>Substance<br>
+          <div>
+            ({{substanceCount}})
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Application">
+      <ng-template mat-tab-label>
+        <div>Application<br>
+          <!--
+          <div [ngClass]="category === 'Application' ? 'font12px colorwhite' : 'font12px colorblack'">
+          -->
+          <div>
+            ({{applicationCount}})
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Product">
+      <ng-template mat-tab-label>
+        <div>Product<br>
+          <div>
+            ({{productCount}})
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Clinical Trial">
+      <ng-template mat-tab-label>
+        <div>Clinical Trial<br>
+          <div>
+            ({{clinicalTrialCount}})
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <!--
+    <mat-tab label="Adverse Event">
+      <ng-template mat-tab-label>
+        <div>Adverse Event<br>
+          <div>
+            ({{adverseEventCount}})
+          </div>
+        </div>
+      </ng-template>
+      <br>
+    </mat-tab>
+    -->
+  </mat-tab-group>
+
+  <mat-card>
+    <mat-card-title>
+    </mat-card-title>
+    <mat-card-content>
+      <div class="builder-container">
+        <div class="builder-row"
+          *ngFor="let queryStatement of queryStatements; index as index, first as isFirst, last as isLast">
+          <div class="query-statement-container">
+            <app-advanced-query-statement [category]="category" [queryStatementHash]="queryStatement.queryHash"
+              [index]="index" [queryableDictionary]="queryableSubstanceDict" [queryableOptions]="displayProperties"
+              [queryableOptionsCommon]="displayPropertiesCommon" (queryUpdated)="queryUpdated($event, index)">
+            </app-advanced-query-statement>
+          </div>
+
+          <div class="actions-container">
+            <div class="button-container">
+              <button *ngIf="!isFirst || queryStatements.length > 1" mat-icon-button aria-label="remove query statement"
+                (click)="removeQueryStatement(index)">
+                <mat-icon svgIcon="remove_circle_outline"></mat-icon>
+              </button>
+            </div>
+
+            <div class="button-container">
+              <button *ngIf="isLast" mat-icon-button aria-label="add query statement" (click)="addQueryStatement()">
+                <mat-icon svgIcon="add_circle_outline"></mat-icon>
+              </button>
+            </div>
+
+            <!--
+              <div class="query-builder-actions" *ngIf="isFirst">
+                <button mat-flat-button color="primary" (click)="processSearch()">Search</button>
+              </div>
+              -->
+          </div>
+        </div>
+      </div>
+
+      <div class="titlequery">
+        Query
+      </div>
+      <div class="query-container">
+        <div class="query-value">
+          {{queryDisplay}}
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-expansion-panel [expanded]="false" class="margintop10px">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="colorgray"><b>Filter by <span class="colororange">
+              {{category}}</span> Facets({{numFacetsLoaded}})</b>
+        </div>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="div-flex">
+      <!--
+      <div class="colorgray"><b>Filter by <span class="colororange">
+            {{category}}</span> Facets({{numFacetsLoaded}})</b>
+      </div>
+      -->
+      <div>
+        <mat-form-field>
+          <input matInput placeholder="Search Facet Name" [(ngModel)]="facetNameText" name="facetNameText" />
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="category === 'Substance'">
+        <mat-form-field>
+          <mat-label>Facet View:</mat-label>
+          <mat-select [formControl]="facetViewControl" (selectionChange)="facetViewChange($event)">
+            <mat-option *ngFor="let option of facetViewCategory" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="align-right">
+        <button class="bordergray" mat-flat-button (click)="togglePanelExpand()">{{panelExpanded? 'Collapse':'Expand'}}
+          All</button>
+      </div>
+    </div>
+    <br>
+
+    <!-- Spinner -->
+    <div *ngIf="showSpinner" class="spinnerstyle">
+      <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
+    <div class="">
+      <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
+        [rawFacets]="rawFacets" [configName]="facetKey" includeFacetSearch="true"
+        [facetViewCategorySelected]="facetViewCategorySelected" showAllFacets="true" [panelExpanded]="panelExpanded"
+        [facetNameText]="facetNameText">
+      </app-facets-manager>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Search Button -->
+
+  <br><br><br>
+</div>
+
+<!-- Structure Editor Begin -->
+<!--
+    <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
+      <mat-expansion-panel-header class="">
+          <mat-panel-title class="margintop12px">
+            AND Search Structure
+          </mat-panel-title>
+          <mat-panel-description class="marginleft25px">
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="search-content-container" #contentContainer>
+          <mat-card>
+            <div class="structure-editor-actions-container">
+              <div class="editor-container">
+                <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)">
+                </app-structure-editor>
+              </div>
+              <div class="search-actions">
+                <div class="two">
+                  <mat-form-field class="search-type-select">
+                    <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)"
+                      [formControl]="searchTypeControl" value="substructure">
+                      <mat-option value="substructure">
+                        Substructure
+                      </mat-option>
+                      <mat-option value="similarity">
+                        Similarity
+                      </mat-option>
+                      <mat-option value="exact">
+                        Exact
+                      </mat-option>
+                      <mat-option value="flex">
+                        Flex
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
+                    <div>Similarity cutoff (tanimoto)</div>
+                    <mat-slider min=".40" max="1" step="0.01" [value]="similarityCutoff"
+                      (input)="searchCutoffChanged($event)"></mat-slider>
+                    <div>{{similarityCutoff}}</div>
+                  </div>
+                </div>
+                
+              <div class="action-button-container three">
+                <button class="search-button" name="search" mat-raised-button color="primary"
+                  (click)="search()">Search</button>
+              </div>
+              
+                <div class="action-button-container one">
+                  <button class="import-button" name="export" mat-raised-button color="primary"
+                    (click)="openStructureImportDialog()">Import</button>
+                </div>
+                <div class="action-button-container one">
+                  <button class="export-button" name="import" mat-raised-button color="primary"
+                    (click)="openStructureExportDialog()">Export</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4>
+                Get Structure From Name
+              </h4>
+              <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
+            </div>
+      </mat-card>
+    </div>
+  </mat-expansion-panel>
+  -->
+<!-- Structure Editor End -->

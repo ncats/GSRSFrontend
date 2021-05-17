@@ -79,7 +79,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
         } else if (value === 'Display_Name') {
           this.suggestionsFields[index] =  {value: 'Display_Name', display: 'Preferred Term'};
-        } else if(value === 'CAS'){
+        } else if (value === 'CAS') {
           this.suggestionsFields[index] =  {value: 'CAS', display: this.CasDisplay};
 
         } else {

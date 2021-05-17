@@ -37,7 +37,6 @@ export class ImpuritiesResidualSolventsFormComponent implements OnInit {
       }
     });
   }
-  
   deleteImpuritiesResidualSolvents() {
     this.impuritiesService.deleteImpuritiesResidualSolvents(this.impuritiesSubstanceIndex, this.impuritiesResidualIndex);
   }

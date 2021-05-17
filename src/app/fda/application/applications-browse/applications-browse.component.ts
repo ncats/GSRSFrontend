@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { ApplicationService } from '../service/application.service';
-import { ApplicationSrs } from '../model/application.model';
+import { Application } from '../model/application.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
 import { MatDialog } from '@angular/material';
@@ -29,7 +29,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   public privateSearchTerm?: string;
-  public applications: Array<ApplicationSrs>;
+  public applications: Array<Application>;
   order: string;
   pageIndex: number;
   pageSize: number;
@@ -53,6 +53,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   etag = '';
   environment: any;
   previousState: Array<string> = [];
+  private searchTermHash: number;
+  lastPage: number;
+  invalidPage = false;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -122,6 +125,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     this.isComponentInit = true;
     this.loadComponent();
+
+    // TESTING TESTING
+    this.isLoggedIn = true;
   }
 
   ngAfterViewInit() {
@@ -153,22 +159,30 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     )
       .subscribe(pagingResponse => {
         this.isError = false;
+
         this.applications = pagingResponse.content;
         // didn't work unless I did it like this instead of
         // below export statement
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
         this.etag = pagingResponse.etag;
+
+        if (pagingResponse.total % this.pageSize === 0) {
+          this.lastPage = (pagingResponse.total / this.pageSize);
+        } else {
+          this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
+        }        
         // Export Application Url
+        /*
         this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
           skip,
           this.pageSize,
           this.privateSearchTerm,
           this.privateFacetParams);
-        this.getSubstanceDetailsByBdnum();
-
-        // this.applicationService.getClinicalTrialApplication(this.applications);
-        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+        */
+       // this.getSubstanceDetailsByBdnum();
+       // this.applicationService.getClinicalTrialApplication(this.applications);
+       if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
         }
       }, error => {
@@ -265,6 +279,29 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.searchApplications();
   }
 
+  customPage(event: any): void {
+    if (this.validatePageInput(event)) {
+      this.invalidPage = false;
+      const newpage = Number(event.target.value) - 1;
+      this.pageIndex = newpage;
+      this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newpage);
+      this.populateUrlQueryParameters();
+      this.searchApplications();
+    }
+  }
+
+  validatePageInput(event: any): boolean {
+    if (event && event.target) {
+      const newpage = Number(event.target.value);
+      if (!isNaN(Number(newpage))) {
+        if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
@@ -282,10 +319,24 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   facetsLoaded(numFacetsLoaded: number) {
   }
 
+  editAdvancedSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'Browse Application search term' :
+      `${this.privateSearchTerm}`;
+    this.gaService.sendEvent('Application Filtering', 'icon-button:edit-advanced-search', eventLabel);
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+      //  'g-search-hash': this.searchTermHash
+      }
+    };
+
+    this.router.navigate(['/advanced-search'], navigationExtras);
+  }
+
   getSubstanceDetailsByBdnum(): void {
-    let bdnumName: any;
-    let relationship: any;
-    let substanceId: string;
+    // let bdnumName: any;
+    // let relationship: any;
+    // let substanceId: string;
 
     this.applications.forEach((element, index) => {
 
@@ -301,7 +352,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
           // Get Substance Details such as Name, Substance Id, unii
           if (elementIngred.bdnum != null) {
 
-            this.applicationService.getSubstanceDetailsByBdnum(elementIngred.bdnum).subscribe(response => {
+            /*
+            this.applicationService.getSubstanceDetailsByAnyId(elementIngred.bdnum).subscribe(response => {
+              if (response) {
+
+              }
               bdnumName = response;
               if (bdnumName != null) {
                 if (bdnumName.name != null) {
@@ -327,6 +382,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
                 }
               }
             });
+            */
 
           }
         });

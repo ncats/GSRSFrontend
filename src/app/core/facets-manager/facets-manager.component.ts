@@ -38,11 +38,16 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   @Output() facetsLoaded = new EventEmitter<number>();
   private environment: Environment;
   @Input() includeFacetSearch = false;
+  @Input() showAllFacets = 'false';
+  @Input() panelExpanded = false;
   showDeprecated = false;
   loggedIn = false;
   hideDeprecatedCheckbox = false;
   previousState: Array<string> = [];
   previousFacets: Array<any> = [];
+  _facetViewCategorySelected: string;
+  _configName: string;
+  _facetNameText: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -75,7 +80,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   onPopState(event) {
    setTimeout(() => {
      if (this.router.url === this.previousState[0]) {
-       if(this.router.url === '/browse-substance') {
+       if (this.router.url === '/browse-substance') {
         this.privateFacetParams = {};
        } else {
         this.privateFacetParams = this.previousFacets[0];
@@ -166,6 +171,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input()
   set configName(configName: string) {
     this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
+    this._configName = configName;
     if ( configName === 'applications' ||  configName === 'ctclinicaltrial' || configName === 'products') {
       this.hideDeprecatedCheckbox = true;
     } else {
@@ -173,13 +179,24 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     this.populateFacets();
   }
-  
+
+  @Input()
+  set facetViewCategorySelected(facetViewCategorySelected: string) {
+    this._facetViewCategorySelected = facetViewCategorySelected;
+    this.populateFacets();
+  }
+
+  @Input()
+  set facetNameText(facetNameText: string) {
+    this._facetNameText = facetNameText;
+    this.populateFacets();
+  }
 
   facetsFromParams() {
     if (this.facetString !== '') {
       const categoryArray = this.escapedSplit(this.facetString, ',');
       for (let i = 0; i < (categoryArray.length); i++) {
-        const categorySplit = this.escapedSplit(categoryArray[i],'*');
+        const categorySplit = this.escapedSplit(categoryArray[i], '*');
         const category = categorySplit[0];
         const fieldsArr = this.escapedSplit(categorySplit[1], '+');
         const params: { [facetValueLabel: string]: boolean } = {};
@@ -243,6 +260,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         this.showAudit = this.authService.hasRoles('admin');
         const facetKeys = Object.keys(this.facetsConfig) || [];
 
+        if (this.showAllFacets === 'false') {
         facetKeys.forEach(facetKey => {
           if (this.facetsConfig[facetKey].length
             && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
@@ -276,7 +294,59 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           }
 
         });
+        } else {
+          if (this._configName && this._configName === 'substances' && this._facetViewCategorySelected !== 'All') {
+            this.facetsConfig['facetView'].forEach(categoryRow => {
+            const category = categoryRow['category'];
+            const categoryFacets = categoryRow['facets'];
+            if (category === this._facetViewCategorySelected) {
+              categoryFacets.forEach(facet => {
+              for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
+                this.toggle[facetIndex] = true;
+                if (facet === facetsCopy[facetIndex].name) {
+                  // Facet Name Search
+                  let facetNameTextFound = true;
+                  if ((this._facetNameText) && (this._facetNameText.length > 0)) {
+                    facetNameTextFound = false;
+                    if (facetsCopy[facetIndex].name.toLowerCase().indexOf(this._facetNameText.toLowerCase().trim()) > -1) {
+                      facetNameTextFound = true;
+                    }
+                  }
 
+                  if (facetNameTextFound === true) {
+                  if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
+                    let hasValues = false;
+                    for (let valueIndex = 0; valueIndex < facetsCopy[facetIndex].values.length; valueIndex++) {
+                      if (facetsCopy[facetIndex].values[valueIndex].count) {
+                        hasValues = true;
+                        break;
+                      }
+                    }
+
+                    if (hasValues) {
+                      if (this.showDeprecated === false && facet === 'Deprecated') {
+                      } else {
+                        const facetToAdd = facetsCopy.splice(facetIndex, 1);
+                      facetIndex--;
+                      newFacets.push(facetToAdd[0]);
+                      this.searchText[facetToAdd[0].name] = { value: '', isLoading: false };
+                      }
+                    }
+                  }
+                }
+                  break;
+                }
+              }
+              });
+            }
+            });
+          } else {
+            for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
+              this.searchText[facetsCopy[facetIndex].name] = { value: '', isLoading: false };
+              newFacets.push(facetsCopy[facetIndex]);
+            }
+          }
+        }
         this.facets = newFacets;
         this.facetsLoaded.emit(this.facets.length);
         this.cleanFacets();
@@ -372,27 +442,26 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.location.go(urlTree.toString());
   }
 
-  
-  private escapedSplit(value: string, delim: string){
-    return value.match(new RegExp('((.|^)*?([^!]|^))([' + delim + ']|$)','g'))
-           .map(d=>d.replace(new RegExp('[' +delim + ']$','g'),'')); 
+
+  private escapedSplit(value: string, delim: string) {
+    return value.match(new RegExp('((.|^)*?([^!]|^))([' + delim + ']|$)', 'g'))
+           .map(d => d.replace(new RegExp('[' + delim + ']$', 'g'), ''));
   }
-  
-  private encodeValue(facetValue: string){
-    let encFV = facetValue.replace('!','!@');
-    encFV = encFV.replace(/[.]/g,'!.');
-    encFV = encFV.replace(/[\+]/g,'!+');
-    encFV = encFV.replace(/[,]/g,'!,');
-    encFV = encFV.replace(/[\*]/g,'!*');
+
+  private encodeValue(facetValue: string) {
+    let encFV = facetValue.replace('!', '!@');
+    encFV = encFV.replace(/[.]/g, '!.');
+    encFV = encFV.replace(/[\+]/g, '!+');
+    encFV = encFV.replace(/[,]/g, '!,');
+    encFV = encFV.replace(/[\*]/g, '!*');
     return encFV;
   }
 
-  
-  private decodeValue(encFV: string){
-    let decFV = encFV.replace(/!([^@])/g,"$1").replace(/[!][@]/g,'!');
+  private decodeValue(encFV: string) {
+    const decFV = encFV.replace(/!([^@])/g, '$1').replace(/[!][@]/g, '!');
     return decFV;
   }
-  
+
   private applyFacetsFilter(facetName: string) {
     const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     let eventValue = 0;
@@ -478,6 +547,14 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     isAllMatchString = this.privateFacetParams[facetName].isAllMatch.toString();
     const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
     this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
+
+    // Call if calling from Advanced Search
+    if (this.showAllFacets && this.showAllFacets === 'true') {
+      this.setDisplayFacets();
+      this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams,
+        displayFacets: this.displayFacets,
+        deprecated: this.showDeprecated});
+    }
   }
 
   updateAllMatch(facetName: string): void {
