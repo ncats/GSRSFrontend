@@ -27,16 +27,16 @@ bash build.sh
 
 Make sure to have these installed in order to run the application:
 
-- [Node](https://nodejs.org/en/)
-- [npm](https://www.npmjs.com/) - usually included in the node installation
-- Angular CLI - on any command line run `npm install -g @angular/cli@latest`
- - The angular cli "ng" executable will be located in this folder:
-  - C:\Users\<USER>\AppData\Roaming\npm\ (Windows 7)
-  - ~/.npm-global/bin/ (linux)
-  - For best results, this path should be added to your windows/bash
-  - path as the command will be used a lot.
- - The angular CLI tool currently needs to have build-angular version <=0.803.25
- - To force this installation after an audit fix run `npm i @angular-devkit/build-angular@0.803.25`
+* [Node](https://nodejs.org/en/)
+* [npm](https://www.npmjs.com/) - usually included in the node installation
+* Angular CLI - on any command line run `npm install -g @angular/cli@latest`
+ * The angular cli "ng" executable will be located in this folder:
+   * `C:\Users\<USER>\AppData\Roaming\npm\` (Windows 7)
+   * `~/.npm-global/bin/` (linux)
+   * Note: For best results, this path should be added to your windows/bash
+     path as the command will be used a lot.
+   * The angular CLI tool currently needs to have build-angular version <=0.803.25
+   * To force this installation after an audit fix run `npm i @angular-devkit/build-angular@0.803.25`
 
   
 ## Step 2 [Optional]: Clear any Previous Build Files
