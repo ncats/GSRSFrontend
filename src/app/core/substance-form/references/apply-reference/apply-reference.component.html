@@ -39,7 +39,7 @@
             </mat-checkbox>
             <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey === "constituents"'
             [checked]="domain.checked">
-            {{(domain.substance.name.length>40)? (domain.substance.name | slice:0:40)+'...':(domain.substance.name)}}
+            {{(domain.substance.name.length > 40)? (domain.substance.name | slice:0:40)+'...':(domain.substance.name)}}
             </mat-checkbox>
           </div>
         </mat-menu>
