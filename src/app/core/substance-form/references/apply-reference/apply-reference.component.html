@@ -31,15 +31,15 @@
           <div *ngFor="let domain of domainsWithReferences[domainKey].domains" mat-menu-item (click)="$event.stopPropagation()">
             <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey !== "relationships" && domainKey !== "constituents"'
             [checked]="domain.checked">
-              {{domain[domainsWithReferences[domainKey].displayKey]}}
+            {{(domain[domainsWithReferences[domainKey].displayKey].length>50)? (domain[domainsWithReferences[domainKey].displayKey] | slice:0:50)+'...':(domain[domainsWithReferences[domainKey].displayKey])}}
             </mat-checkbox>
             <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey === "relationships"'
             [checked]="domain.checked">
-              {{domain.relatedSubstance.name}}
+            {{(domain.relatedSubstance.name.length>40)? (domain.relatedSubstance.name | slice:0:40)+'...':(domain.relatedSubstance.name)}}
             </mat-checkbox>
             <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey === "constituents"'
             [checked]="domain.checked">
-              {{domain.substance.name}}
+            {{(domain.substance.name.length>40)? (domain.substance.name | slice:0:40)+'...':(domain.substance.name)}}
             </mat-checkbox>
           </div>
         </mat-menu>
