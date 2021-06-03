@@ -199,7 +199,7 @@
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Name </th>
                 <td mat-cell *matCellDef="let substance"><a class="table-view-name"
-                    [routerLink]="['/substances', substance.uuid]">{{substance._name}}</a></td>
+                    [routerLink]="['/substances', substance.uuid]" [innerHTML] = "substance._name_html"></a></td>
               </ng-container>
 
               <ng-container matColumnDef="approvalID">
