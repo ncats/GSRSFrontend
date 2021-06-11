@@ -43,24 +43,20 @@ import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 
 const productRoutes: Routes = [
   {
+    path: 'product/register',
+    component: ProductFormComponent
+  },
+  {
     path: 'browse-products',
     component: ProductsBrowseComponent
   },
   {
-    path: 'products/:id',
-    component: ProductElistDetailsComponent
-  },
-  {
-    path: 'productElistDetails/:id/:src',
-    component: ProductElistDetailsComponent
-  },
-  {
-    path: 'productDetails/:id/:src',
+    path: 'product/:id',
     component: ProductDetailsComponent
   },
   {
-    path: 'product/register',
-    component: ProductFormComponent
+    path: 'productelist/:id',
+    component: ProductElistDetailsComponent
   },
   {
     path: 'product/:id/edit',

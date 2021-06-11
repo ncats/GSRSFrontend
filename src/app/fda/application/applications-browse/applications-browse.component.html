@@ -9,7 +9,7 @@
 
   <!-- Browse Application Content -->
   <mat-sidenav-content>
-    <div class="side-nav-content" *ngIf="applications && applications.length">
+    <div class="side-nav-content">
       <div class="search-parameters">
 
         <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
@@ -58,8 +58,18 @@
           <span class="main-title">Browse Applications</span>
         </div>
 
+        <!-- Sort By -->
+        <mat-form-field class="sort">
+          <mat-label>Sort By</mat-label>
+          <mat-select (selectionChange)="searchApplications()" [(ngModel)]="order">
+            <mat-option *ngFor="let option of sortValues" [value]="option.value">
+              {{option.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <!-- Export Application Button -->
-        <div class="export" *ngIf="isLoggedIn">
+        <div class="export">
           <button matTooltip="Export Search Results" mat-button (click)="export()"
             class="mat-button export-button mat-raised-button">
             <mat-icon svgIcon="get_app"></mat-icon> Export
@@ -99,12 +109,12 @@
       </div>
 
       <!-- Display Content Details -->
-      <div class="cards">
+      <div class="cards" *ngIf="applications && applications.length; else noRecordApplication">
         <div class="substance-cards">
           <mat-card *ngFor="let application of applications">
             <mat-card-title>
               <div>
-                <a class="substance-name" [routerLink]="['/applicationDetails', application.id]" target="_blank">
+                <a class="substance-name" [routerLink]="['/application', application.id]" target="_blank">
                   {{application.appType}}&nbsp;{{application.appNumber}}
                 </a>
                 &nbsp;&nbsp;&nbsp;
@@ -119,7 +129,7 @@
               </div>
 
               <div>
-                <a class="approval-id" [routerLink]="['/applicationDetails', application.id]" target="_blank">
+                <a class="approval-id" [routerLink]="['/application', application.id]" target="_blank">
                   Status: {{application.status}}
                 </a>
               </div>
@@ -193,7 +203,7 @@
                               <div class="row-property-value-4">
 
                                 <!-- Display Ingredient Name -->
-                                <div *ngIf="ing.bdnum; else noIngred">
+                                <div *ngIf="ing.substanceKey; else noIngred">
                                   <!--
                                   <span class="colorred">&diams;</span>
                                   -->
@@ -204,12 +214,10 @@
                                   <!-- Display Ingredient Type -->
                                   <div *ngIf="ing.ingredientType">
                                     <div *ngIf="ing.ingredientType === 'Active Ingredient'; else otherIngredType">
-                                      &nbsp;&nbsp;<span class="colorgreen">
-                                        ({{ ing.ingredientType }})
-                                      </span>
+                                      <span class="colorgreen">({{ ing.ingredientType }})</span>
                                     </div>
                                     <ng-template #otherIngredType>
-                                      &nbsp;&nbsp;({{ ing.ingredientType }})
+                                      ({{ ing.ingredientType }})
                                     </ng-template>
                                   </div>
 
@@ -238,22 +246,22 @@
                               <!--
                       </div>
                       -->
+                             <!--
 
-                              <!--
-                <div class="row-property-3" *ngIf="isAdmin">
-                  <div class="row-property-key-3">
-                    Ingred Created By:<br><br>
-                    Ingred Edited By:
-                  </div>
-                  <div class="row-property-value-3">
-                    {{ing.createdBy}}<br>
-                    {{ing.createDate|date: 'MM/dd/yyyy h:mm:ss a'}}
-                    <br>
-                    {{ing.modifiedBy}}<br>
-                    {{ing.modifyDate|date: 'MM/dd/yyyy h:mm:ss a'}}
-                  </div>
-                </div>
-              -->
+                              <div class="row-property-3">
+                                <div class="row-property-key-3">
+                                  Ingred Created By:<br><br>
+                                  Ingred Edited By:
+                                </div>
+                                <div class="row-property-value-3">
+                                  {{ing.createdBy}}<br>
+                                  {{ing.createDate|date: 'MM/dd/yyyy h:mm:ss a'}}
+                                  <br>
+                                  {{ing.modifiedBy}}<br>
+                                  {{ing.modifyDate|date: 'MM/dd/yyyy h:mm:ss a'}}
+                                </div>
+                              </div>
+                            -->
 
                             </div>
 
@@ -326,6 +334,7 @@
                       -->
                       </div>
                       <div class="row-property-value">
+                        &nbsp;
                         <!--
                       <div class="" *ngFor="let clinical of application.clinicalTrialList">
                           &bull;&nbsp;{{ clinical.nctNumber }}
@@ -380,10 +389,10 @@
                 </div>
                 <div class="row-property-value-3">
                   {{application.createdBy}}
-                
+
                 {{application.modifiedBy}}<br>
                 {{application.modifyDate|date: 'MM/dd/yyyy h:mm:ss a'}}
-                
+
                 </div>
               </div>
               </div> -->
@@ -396,9 +405,11 @@
 
 
                 <!-- **** RIGH SIDE ****  -->
+
                 <div class="width30percent">
 
-                  <span *ngIf="isAdmin">
+                  <!--  *ngIf="isAdmin" -->
+                  <span>
                     <div class="row">
                       <div class="row-property-key-5">
                         Create By:
@@ -413,7 +424,7 @@
                         Create Date:
                       </div>
                       <div class="row-property-value-5">
-                        {{application.createDate|date: 'MM/dd/yyyy h:mm a'}}
+                        {{application.creationDate|date: 'MM/dd/yyyy h:mm a'}}
                       </div>
                     </div>
 
@@ -431,7 +442,7 @@
                         Edit Date:
                       </div>
                       <div class="row-property-value-5">
-                        {{application.modifyDate|date: 'MM/dd/yyyy h:mm a'}}
+                        {{application.lastModifiedDate|date: 'MM/dd/yyyy h:mm a'}}
                       </div>
                     </div>
                   </span>
@@ -445,6 +456,9 @@
           </mat-card>
         </div>
       </div>
+      <ng-template #noRecordApplication>
+       <!-- No Application Found. -->
+      </ng-template>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

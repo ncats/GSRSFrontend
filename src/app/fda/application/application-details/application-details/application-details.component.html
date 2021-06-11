@@ -2,16 +2,16 @@
   <br><br><br><br>
   {{message}}
 </div>
-<div *ngIf="application">
-  <div *ngIf="application.id; else noRecordProd">
-    <div class="details-container margintop90px">
-      <mat-card class="bordergray">
-        <mat-card-title>
-          <div class="form-row">
+<div *ngIf="application && application.id">
+  <div class="details-container margintop90px">
+    <mat-card class="bordergray">
+      <mat-card-title>
+        <div class="divflexrow">
+          <div>
             Application Details
-            &nbsp;&nbsp;
-            &nbsp;
-            <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+            &nbsp;&nbsp;&nbsp;
+            <!--  *ngIf="isAdmin" -->
+            <a [routerLink]="['/application', application.id, 'edit']" target="_blank"
               matTooltip='Edit GSRS Application Record (opens in new window)'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>
@@ -20,84 +20,145 @@
               </mat-icon>
             </span>
           </div>
-          <div class="font11px padleft30px" *ngIf="isAdmin">
+
+          <!--  *ngIf="isAdmin" -->
+          <div class="width650px textalignright font11px">
             <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Create Date:</span>
             {{application.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modify Date:</span> {{application.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+            <span class="colorgray">Modify Date:</span> {{application.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
           </div>
-        </mat-card-title>
+        </div>
+      </mat-card-title>
 
-        <mat-card-content>
+      <mat-card-content>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Application Type and Number:
-              </div>
-              <div class="row-property-value">
-                <span
-                  class="colororange font16px fontbold"><b>{{application.appType}}&nbsp;{{application.appNumber}}</b></span>
-              </div>
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Type and Number:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Center:
-              </div>
-              <div class="row-property-value">
-                {{application.center}}
-              </div>
+            <div class="row-property-value">
+              <span
+                class="colororange font16px fontbold"><b>{{application.appType}}&nbsp;{{application.appNumber}}</b></span>
             </div>
           </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Sponsor Name:
-              </div>
-              <div class="row-property-value">
-                {{application.sponsorName}}
-              </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Center:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Non Proprietary Name:
-              </div>
-              <div class="row-property-value">
-                {{application.nonProprietaryName}}
-              </div>
+            <div class="row-property-value">
+              {{application.center}}
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Title:
-              </div>
-              <div class="row-property-value">
-                {{application.title}}
-              </div>
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Sponsor Name:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                External Title:
-              </div>
-              <div class="row-property-value">
-                {{application.externalTitle}}
-              </div>
+            <div class="row-property-value">
+              {{application.sponsorName}}
             </div>
           </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Public Domain:
-              </div>
-              <div class="row-property-value">
-                {{application.publicDomain}}
-              </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Non Proprietary Name:
             </div>
+            <div class="row-property-value">
+              {{application.nonProprietaryName}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Title:
+            </div>
+            <div class="row-property-value">
+              {{application.title}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              External Title:
+            </div>
+            <div class="row-property-value">
+              {{application.externalTitle}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Sub Type:
+            </div>
+            <div class="row-property-value">
+              {{application.appSubType}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Division Class Desc:
+            </div>
+            <div class="row-property-value">
+              {{application.divisionClassDesc}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Status:
+            </div>
+            <div class="row-property-value">
+              {{application.status}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Submit Date:
+            </div>
+            <div class="row-property-value">
+              {{application.submitDate}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Provenance:
+            </div>
+            <div class="row-property-value">
+              {{application.provenance}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Status Date:
+            </div>
+            <div class="row-property-value">
+              {{application.statusDate}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Public Domain:
+            </div>
+            <div class="row-property-value">
+              {{application.publicDomain}}
+            </div>
+          </div>
+          <!--
             <div class="row-property">
               <div class="row-property-key">
                 Version:
@@ -106,81 +167,25 @@
                 {{application.version}}
               </div>
             </div>
-          </div>
+            -->
+        </div>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Application Sub Type:
-              </div>
-              <div class="row-property-value">
-                {{application.appSubType}}
-              </div>
+        <div class="row">
+          <div class="row-property-2">
+            <div class="row-property-key-2">
+              Indications:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Division Class Desc:
-              </div>
-              <div class="row-property-value">
-                {{application.divisionClassDesc}}
+            <div class="row-property-value-2">
+              <div *ngFor="let ind of application.applicationIndicationList; let i = index">
+                <span *ngIf="ind.indication">
+                  &bull;&nbsp;{{ind.indication}} <br>
+                </span>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Application Status:
-              </div>
-              <div class="row-property-value">
-                {{application.status}}
-              </div>
-            </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Submit Date:
-              </div>
-              <div class="row-property-value">
-                {{application.submitDate}}
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Source:
-              </div>
-              <div class="row-property-value">
-                {{application.source}}
-              </div>
-            </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Status Date:
-              </div>
-              <div class="row-property-value">
-                {{application.statusDate}}
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="row-property-2">
-              <div class="row-property-key-2">
-                Indications:
-              </div>
-              <div class="row-property-value-2">
-                <div *ngFor="let ind of application.applicationIndicationList; let i = index">
-                  <span *ngIf="ind.indication">
-                    &bull;&nbsp;{{ind.indication}} <br>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Commenting out for 3.0 right now.  Will fix this soon.
+        <!-- Commenting out for 3.0 right now.  Will fix this soon.
           <div class="row">
             <div class="row-property-2">
               <div class="row-property-key-2">
@@ -218,12 +223,12 @@
           </div>
           -->
 
-        </mat-card-content>
-      </mat-card>
-    </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
 
-    <!-- Display Application History -->
-    <!--
+  <!-- Display Application History -->
+  <!--
     <div class="" *ngIf="application.applicationHistoryList.length > 0">
       <br>
       <mat-card class="bordergray">
@@ -255,10 +260,10 @@
       </mat-card>
     </div>
     -->
-    <!-- End Application History loop -->
+  <!-- End Application History loop -->
 
-    <!-- Display Technical Effect -->
-    <!--
+  <!-- Display Technical Effect -->
+  <!--
     <div class="" *ngIf="application.productTechEffectList.length > 0">
       <br>
       <mat-card class="bordergray">
@@ -282,10 +287,10 @@
       </mat-card>
     </div>
     -->
-    <!-- End Technical Effect loop -->
+  <!-- End Technical Effect loop -->
 
-    <!-- Display Effected Product -->
-    <!--
+  <!-- Display Effected Product -->
+  <!--
     <div class="" *ngIf="application.productEffectedList.length > 0">
       <br>
       <mat-card class="bordergray">
@@ -309,190 +314,190 @@
       </mat-card>
     </div>
     -->
-    <!-- End Effected Product loop -->
+  <!-- End Effected Product loop -->
 
-    <br>
-    <div class="details-container">
-      <mat-card class="bordergray">
-        <mat-card-content>
-          <div *ngFor="let prod of application.applicationProductList; let i = index">
-            <div class="title2">
-              Product {{i + 1}}
-            </div>
+  <br>
+  <div class="details-container">
+    <mat-card class="bordergray">
+      <mat-card-content>
+        <div *ngFor="let prod of application.applicationProductList; let i = index">
+          <div class="title2">
+            Product {{i + 1}}
+          </div>
 
-            <!-- Product Names-->
-            <div *ngIf="prod.applicationProductNameList.length > 0; else noRecordProdName">
-              <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Product Name:
-                  </div>
-                  <div class="row-property-value">
-                    {{prodName.productName}}
-                  </div>
+          <!-- Product Names-->
+          <div *ngIf="prod.applicationProductNameList.length > 0; else noRecordProdName">
+            <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Product Name:
                 </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Product Name Type:
-                  </div>
-                  <div class="row-property-value">
-                    {{prodName.productNameType}}
-                  </div>
+                <div class="row-property-value">
+                  {{prodName.productName}}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Product Name Type:
+                </div>
+                <div class="row-property-value">
+                  {{prodName.productNameType}}
                 </div>
               </div>
             </div>
-            <ng-template #noRecordProdName>
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Product Name:
-                  </div>
-                  <div class="row-property-value">
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Product Name Type:
-                  </div>
-                  <div class="row-property-value">
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-
+          </div>
+          <ng-template #noRecordProdName>
             <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
-                  Dosage Form:
+                  Product Name:
                 </div>
                 <div class="row-property-value">
-                  {{prod.dosageForm}}
                 </div>
               </div>
               <div class="row-property">
                 <div class="row-property-key">
-                  Route of Administration:
+                  Product Name Type:
                 </div>
                 <div class="row-property-value">
-                  {{prod.routeAdmin}}
                 </div>
               </div>
             </div>
+          </ng-template>
 
-            <div class="row">
-              <div class="row-property">
-                <div class="row-property-key">
-                  Amount:
-                </div>
-                <div class="row-property-value">
-                  {{prod.amount}}
-                </div>
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Dosage Form:
               </div>
-              <div class="row-property">
-                <div class="row-property-key">
-                  Unit of Presentation:
-                </div>
-                <div class="row-property-value">
-                  {{prod.unitPresentation}}
-                </div>
+              <div class="row-property-value">
+                {{prod.dosageForm}}
               </div>
             </div>
-
-            <div class="row">
-              <div class="row-property">
-                <div class="row-property-key">
-                  Unit:
-                </div>
-                <div class="row-property-value">
-                  {{prod.unit}}
-                </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Route of Administration:
               </div>
-              <div class="row-property">
-                <div class="row-property-key">
-                  Reviewed By:
-                </div>
-                <div class="row-property-value">
-                  {{prod.reviewedBy}}&nbsp;{{prod.reviewDate|date: 'MM/dd/yyyy'}}
-                </div>
+              <div class="row-property-value">
+                {{prod.routeAdmin}}
               </div>
             </div>
+          </div>
 
-            <!-- Display Ingredient -->
-            <mat-card class="bordergray margintop10px">
-              <mat-card-title class="title2">
-                <span class="title3">Substances in Application ({{prod.applicationIngredientList.length}})</span>
-              </mat-card-title>
-              <mat-card-content>
-                <table class="blueTable">
-                  <thead>
-                    <tr height="30px" valign="top">
-                      <th>Applicant Ingredient Name</th>
-                      <th>Ingredient Name</th>
-                      <th>Basis Of Strength</th>
-                      <th>Ingredient Type</th>
-                      <th>Average</th>
-                      <th>Low</th>
-                      <th>High</th>
-                      <th>Low Limit</th>
-                      <th>High Limit</th>
-                      <th>Unit</th>
-                      <th>Non Numeric Value</th>
-                      <th>Grade</th>
-                      <th>Reviewed By</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let ingred of prod.applicationIngredientList; let i = index">
-                      <td>{{ ingred.applicantIngredName }}</td>
-                      <td>
-                        <div *ngIf="ingred._substanceUuid">
-                          <a [routerLink]="['/substances', ingred._substanceUuid]"
-                            target="_blank">{{ingred._name}}</a>
-                        </div>
-                        <br>
-                        <span *ngIf="ingred.bdnum">
-                          ({{ ingred.bdnum }})
-                        </span>
-                      </td>
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Amount:
+              </div>
+              <div class="row-property-value">
+                {{prod.amount}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Unit of Presentation:
+              </div>
+              <div class="row-property-value">
+                {{prod.unitPresentation}}
+              </div>
+            </div>
+          </div>
 
-                      <td>
-                        <div *ngIf="ingred._basisOfStrengthSubstanceUuid">
-                          <a [routerLink]="['/substances', ingred._basisOfStrengthSubstanceUuid]"
-                            target="_blank">{{ingred._basisOfStrengthName}}</a>
-                        </div>
-                        <br>
-                        <span *ngIf="ingred.basisOfStrengthBdnum">
-                          ({{ ingred.basisOfStrengthBdnum }})
-                        </span>
-                      </td>
-                      <td>{{ ingred.ingredientType }}</td>
-                      <td>{{ ingred.average }}</td>
-                      <td>{{ ingred.low }}</td>
-                      <td>{{ ingred.high }}</td>
-                      <td>{{ ingred.lowLimit }}</td>
-                      <td>{{ ingred.highLimit }}</td>
-                      <td>{{ ingred.unit }}</td>
-                      <td>{{ ingred.nonNumericValue }}</td>
-                      <td>{{ ingred.grade }}</td>
-                      <td>{{ ingred.reviewedBy }}&nbsp;{{ ingred.reviewDate|date: 'MM/dd/yyyy' }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </mat-card-content>
-            </mat-card>
-            <br>
-            <!-- End Ingredient loop -->
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Unit:
+              </div>
+              <div class="row-property-value">
+                {{prod.unit}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Reviewed By:
+              </div>
+              <div class="row-property-value">
+                {{prod.reviewedBy}}&nbsp;{{prod.reviewDate|date: 'MM/dd/yyyy'}}
+              </div>
+            </div>
+          </div>
 
+          <!-- Display Ingredient -->
+          <mat-card class="bordergray margintop10px">
+            <mat-card-title class="title2">
+              <span class="title3">Substances in Application ({{prod.applicationIngredientList.length}})</span>
+            </mat-card-title>
+            <mat-card-content>
+              <table class="blueTable">
+                <thead>
+                  <tr height="30px" valign="top">
+                    <th>Applicant Ingredient Name</th>
+                    <th>Ingredient Name</th>
+                    <th>Basis Of Strength</th>
+                    <th>Ingredient Type</th>
+                    <th>Average</th>
+                    <th>Low</th>
+                    <th>High</th>
+                    <th>Low Limit</th>
+                    <th>High Limit</th>
+                    <th>Unit</th>
+                    <th>Non Numeric Value</th>
+                    <th>Grade</th>
+                    <th>Reviewed By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let ingred of prod.applicationIngredientList; let i = index">
+                    <td>{{ ingred.applicantIngredName }}</td>
+                    <td>
+                      <div *ngIf="ingred._substanceUuid">
+                        <a [routerLink]="['/substances', ingred._substanceUuid]"
+                          target="_blank">{{ingred._ingredientName}}</a>
+                      </div>
+                      <br>
+                      <span *ngIf="ingred.substanceKey">
+                        ({{ ingred.substanceKey }})<br>(BDNUM)
+                      </span>
+                    </td>
 
-          </div> <!-- repeat prod -->
-        </mat-card-content>
-      </mat-card>
-    </div>
+                    <td>
+                      <div *ngIf="ingred._basisOfStrengthSubstanceUuid">
+                        <a [routerLink]="['/substances', ingred._basisOfStrengthSubstanceUuid]"
+                          target="_blank">{{ingred._basisOfStrengthIngredientName}}</a>
+                      </div>
+                      <br>
+                      <span *ngIf="ingred.basisOfStrengthSubstanceKey">
+                        ({{ingred.basisOfStrengthSubstanceKey}})<br>(BDNUM)
+                      </span>
+                    </td>
+                    <td>{{ ingred.ingredientType }}</td>
+                    <td>{{ ingred.average }}</td>
+                    <td>{{ ingred.low }}</td>
+                    <td>{{ ingred.high }}</td>
+                    <td>{{ ingred.lowLimit }}</td>
+                    <td>{{ ingred.highLimit }}</td>
+                    <td>{{ ingred.unit }}</td>
+                    <td>{{ ingred.nonNumericValue }}</td>
+                    <td>{{ ingred.grade }}</td>
+                    <td>{{ ingred.reviewedBy }}&nbsp;{{ ingred.reviewDate|date: 'MM/dd/yyyy' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card-content>
+          </mat-card>
+          <!-- End Ingredient loop -->
 
+          <br><br>
+        </div> <!-- repeat prod -->
+      </mat-card-content>
+    </mat-card>
   </div>
-  <ng-template #noRecordProd>
-    <br><br><br><br>
-    <div class="colororange padtop50px padleft50px">No Application record found.</div>
-  </ng-template>
+
 </div>
+<!--
+<ng-template #noRecordProd>
+  <br><br><br><br>
+  <div class="colororange padtop50px padleft50px">No Application record found.</div>
+</ng-template>
+-->
 <br><br><br><br>

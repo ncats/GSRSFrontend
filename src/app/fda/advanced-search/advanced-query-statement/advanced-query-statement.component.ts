@@ -9,7 +9,13 @@ import { AdvancedQueryStatement } from './advanced-query-statement.model';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '@gsrs-core/config';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
+import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { UtilsService } from '@gsrs-core/utils';
+import { SubstanceService } from '@gsrs-core/substance/substance.service';
+import { ApplicationService } from '../../application/service/application.service';
+import { ProductService } from '../../product/service/product.service';
+import { ClinicalTrialService } from '../../clinical-trials/clinical-trial/clinical-trial.service';
+import { AdvancedSearchService } from '../service/advanced-search.service';
 
 @Component({
   selector: 'app-advanced-query-statement',
@@ -79,6 +85,11 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     private router: Router,
     private configService: ConfigService,
     private utilitiesService: UtilsService,
+    private substanceService: SubstanceService,
+    public applicationService: ApplicationService,
+    public productService: ProductService,
+    private clinicalTrialService: ClinicalTrialService,
+    private facetManagerService: FacetsManagerService,
     private activatedRoute: ActivatedRoute,
   ) { }
 
@@ -153,17 +164,26 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     let queryStatement: AdvancedQueryStatement;
 
     if (this.queryStatementHash) {
+    //  alert('this' + this.queryStatementHash);
       const queryStatementString = localStorage.getItem(this.queryStatementHash.toString());
+    //  alert('HASH' + queryStatementString);
       if (queryStatementString) {
         queryStatement = JSON.parse(queryStatementString);
       }
     }
 
     if (queryStatement != null) {
+   //   alert(JSON.stringify(queryStatement));
+   //   alert(JSON.stringify(queryStatement.queryableProperty));
+   //   alert('FILE ' + JSON.stringify(this._queryableDictionary));
+   //   alert('QUERY PROPERTY ' + queryStatement.queryableProperty);
+  //    alert('GGG' + JSON.stringify(this._queryableDictionary[queryStatement.queryableProperty]));
       const queryablePropertyType = this._queryableDictionary[queryStatement.queryableProperty].type;
+  //    alert(queryablePropertyType);
       let inputType: string;
       const commandObject = typeCommandOptions[queryablePropertyType][queryStatement.command] as Command;
       if (commandObject.commandInputs) {
+  //      alert(JSON.stringify(commandObject));
         inputType = commandObject.commandInputs[0].type;
         this.commandInputValueDict[inputType] = queryStatement.commandInputValues;
       }
@@ -190,6 +210,41 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  private loadFileName() {
+    if (this.category) {
+      this.query = '';
+      this.facetManagerService.clearSelections();
+      this.facetManagerService.unregisterFacetSearchHandler();
+
+      if (this.category === 'Substance') {
+        this.dictionaryFileName = 'substance_dictionary.json';
+        this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);
+     //   this.rawFacets = this.rawFacetsSubstance;
+     //   this.facetKey = 'substances';
+      } else if (this.category === 'Application') {
+        this.dictionaryFileName = 'application_dictionary.json';
+        this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
+     //   this.rawFacets = this.rawFacetsApplication;
+     //   this.facetKey = 'applications';
+      } else if (this.category === 'Product') {
+        this.dictionaryFileName = 'product_dictionary.json';
+        this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
+     //   this.rawFacets = this.rawFacetsProduct;
+     //   this.facetKey = 'products';
+      } else if (this.category === 'Clinical Trial') {
+        this.dictionaryFileName = 'clinicaltrial_dictionary.json';
+        this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
+     //   this.rawFacets = this.rawFacetsClinicalTrial;
+     //   this.facetKey = 'ctclinicaltrial';
+      } else if (this.category === 'Adverse Event') {
+        this.dictionaryFileName = 'adverseevent_dictionary.json';
+        // this.rawFacets.length = 0;
+     //   this.rawFacets.splice(0, this.rawFacets.length);
+      }
+    }
+    this.getSearchField();
   }
 
   getSearchField() {

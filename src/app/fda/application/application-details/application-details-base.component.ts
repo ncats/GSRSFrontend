@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationService } from '../service/application.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
+import { SafeUrl } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
-import { SafeUrl } from '@angular/platform-browser';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { ApplicationService } from '../service/application.service';
+import { GeneralService } from '../../service/general.service';
 
 @Component({
   selector: 'app-application-details-base',
@@ -27,6 +28,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
 
   constructor(
     public applicationService: ApplicationService,
+    public generalService: GeneralService,
     public activatedRoute: ActivatedRoute,
     public loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
@@ -43,52 +45,47 @@ export class ApplicationDetailsBaseComponent implements OnInit {
         this.getApplicationDetails();
       } else {
         this.message = 'The application Id in url should be a number';
-        this.loadingService.setLoading(false);
       }
     } else {
       this.handleSubstanceRetrivalError();
     }
+    this.loadingService.setLoading(false);
   }
 
   getApplicationDetails(): void {
-    this.applicationService.getApplicationDetails(this.id).subscribe(response => {
+    this.applicationService.getApplicationById(this.id).subscribe(response => {
       this.application = response;
       if (Object.keys(this.application).length > 0) {
-        this.getSubstanceDetails();
+        this.getSubstanceBySubstanceKey();
       }
-      this.loadingService.setLoading(false);
     }, error => {
-      this.handleSubstanceRetrivalError();
+    //  this.message = 'No Application record found';
+     // this.handleSubstanceRetrivalError();
     });
   }
 
-  getSubstanceDetails() {
-    /*
+  getSubstanceBySubstanceKey() {
     if (this.application != null) {
       this.application.applicationProductList.forEach(elementProd => {
         if (elementProd != null) {
           elementProd.applicationIngredientList.forEach(elementIngred => {
             if (elementIngred != null) {
-              // Get Ingredient Name
-              if (elementIngred.bdnum) {
-                this.applicationService.getSubstanceDetailsByBdnum(elementIngred.bdnum).subscribe(response => {
+              // Get Substance Details, uuid, approval_id, substance name
+              if (elementIngred.substanceKey) {
+                this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
                   if (response) {
-                    if (response.substanceId) {
-                      elementIngred.substanceId = response.substanceId;
-                      elementIngred.ingredientName = response.name;
-                    }
+                    elementIngred._substanceUuid = response.uuid;
+                    elementIngred._ingredientName = response._name;
                   }
                 });
               }
 
               // Get Basis of Strength
-              if (elementIngred.basisOfStrengthBdnum) {
-                this.applicationService.getSubstanceDetailsByBdnum(elementIngred.basisOfStrengthBdnum).subscribe(response => {
+              if (elementIngred.basisOfStrengthSubstanceKey) {
+                this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey).subscribe(response => {
                   if (response) {
-                    if (response.substanceId) {
-                      elementIngred.basisOfStrengthSubstanceId = response.substanceId;
-                      elementIngred.basisOfStrengthIngredientName = response.name;
-                    }
+                    elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
+                    elementIngred._basisOfStrengthIngredientName = response._name;
                   }
                 });
               }
@@ -97,7 +94,6 @@ export class ApplicationDetailsBaseComponent implements OnInit {
         }
       });
     }
-    */
   }
 
   isNumber(str: any): boolean {

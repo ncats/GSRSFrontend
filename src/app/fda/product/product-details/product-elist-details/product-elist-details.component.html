@@ -1,5 +1,5 @@
 <div *ngIf="product">
-  <div *ngIf="product.productId; else noRecordProd">
+  <div *ngIf="product.productId">
     <div class="details-container margintop90px">
       <mat-card class="bordergray">
         <mat-card-title>
@@ -14,11 +14,11 @@
               </div>
               <div class="row-property-value">
                 <ng-container *ngIf="product.productNDC !== null">
-                  <a href="{{product.prodNDCUrl}}" target="_blank">
+                  <a href="{{dailyMedUrl}}" target="_blank">
                     {{product.productNDC}}
                   </a>
                   &nbsp;&nbsp;
-                  <a href="{{product.prodNDCUrl}}" target="_blank">
+                  <a href="{{dailyMedUrl}}" target="_blank">
                     <img [src]="iconSrcPath">
                   </a>
                 </ng-container>
@@ -209,7 +209,7 @@
               </div>
             </div>
           </div>
-
+ 
         </mat-card-content>
       </mat-card>
     </div>
@@ -276,15 +276,15 @@
               <tr *ngFor="let x of product.prodActiveElistList; let i = index">
                 <td>{{i + 1}}</td>
                 <td>
-                  <div *ngIf="x.substanceId">
-                    <a [routerLink]="['/substances', x.substanceId]" target="_blank">{{x.name}}</a>
+                  <div *ngIf="x._substanceUuid">
+                    <a [routerLink]="['/substances', x._substanceUuid]" target="_blank">{{x.name}}</a>
                   </div>
                 </td>
                 <td>{{ x.activeMoietyName }}
                 </td>
                 <td class="textaligncenter">
-                  <div *ngIf="x.substanceId">
-                    <img class="structure-img" appSubstanceImage [entityId]="x.substanceId">
+                  <div *ngIf="x._substanceUuid">
+                    <img class="structure-img" appSubstanceImage [entityId]="x._substanceUuid">
                   </div>
                 </td>
                 <td>{{ x.unii }}</td>
@@ -315,8 +315,8 @@
               <tr *ngFor="let x of product.prodInactiveElistList; let i = index">
                 <td>{{i + 1}}</td>
                 <td>
-                  <div *ngIf="x.substanceId">
-                    <a [routerLink]="['/substances', x.substanceId]" target="_blank">{{x.name}}</a>
+                  <div *ngIf="x._substanceUuid">
+                    <a [routerLink]="['/substances', x._substanceUuid]" target="_blank">{{x.name}}</a>
                   </div>
                 </td>
                 <td>{{ x.unii }}</td>
@@ -328,8 +328,10 @@
       </mat-card>
     </div>
   </div>
+  <!--
   <ng-template #noRecordProd>
     <br><br><br><br>
     <div class="colororange padtop50px padleft50px">There is no Product Data found.</div>
   </ng-template>
+  -->
 </div>

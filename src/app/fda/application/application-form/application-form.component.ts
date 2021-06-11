@@ -25,6 +25,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NativeDateAdapter, DateAdapter, MAT_NATIVE_DATE_FORMATS } from '@angular/material';
 import { element } from 'protractor';
+import { GeneralService } from '../../service/general.service';
 
 @Component({
   selector: 'app-application-form',
@@ -64,6 +65,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   constructor(
     private applicationService: ApplicationService,
+    private generalService: GeneralService,
     private authService: AuthService,
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
@@ -122,7 +124,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   getApplicationDetails(newType?: string): void {
-    this.applicationService.getApplicationDetails(this.id).subscribe(response => {
+    this.applicationService.getApplicationById(this.id).subscribe(response => {
       if (response) {
         this.applicationService.loadApplication(response);
         this.application = this.applicationService.application;

@@ -55,7 +55,7 @@ const applicationRoutes: Routes = [
     component: ApplicationsBrowseComponent
   },
   {
-    path: 'applicationDetails/:id',
+    path: 'application/:id',
     component: ApplicationDetailsComponent
   },
   {

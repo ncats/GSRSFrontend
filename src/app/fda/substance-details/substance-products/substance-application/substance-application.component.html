@@ -12,11 +12,13 @@
       &nbsp;&nbsp;&nbsp;
       <span class="colorred">{{loadingStatus}}</span>
       &nbsp;&nbsp;&nbsp;
+      <!--
       <a [href]="exportUrl" target="_blank" matTooltip='ApplicationRecords' *ngIf="totalRecords > 0">
         <button mat-icon-button color="primary">
           <mat-icon>arrow_downward</mat-icon>Export All Applications
         </button>
       </a>
+      -->
     </div>
 
     <div class="responsive mat-table-style">
@@ -32,7 +34,7 @@
           <th mat-header-cell *matHeaderCellDef> Application Type </th>
           <td mat-cell *matCellDef="let application">
             <span *ngIf="application.fromTable === 'SRS'">
-              <a [routerLink]="['/applicationDetails', application.id]" target="_blank">{{application.appType}}</a>
+              <a [routerLink]="['/application', application.id]" target="_blank">{{application.appType}}</a>
               &nbsp;&nbsp;
               <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
                 matTooltip='Edit GSRS Application Record'>

@@ -22,11 +22,11 @@ export class ApplicationService extends BaseHttpService {
 
   totalRecords: 0;
   application: Application;
-  entity = 'Application';
   // entityContext = 'application';
   entityContext = 'applicationssrs';
-
   apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
+  apiBaseUrlWithEntityAllContext = this.apiBaseUrl + 'applicationall' + '/';
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService
@@ -35,6 +35,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   getApplications(
+    order: string,
     skip: number = 0,
     pageSize: number = 10,
     searchTerm?: string,
@@ -48,6 +49,10 @@ export class ApplicationService extends BaseHttpService {
     }
 
     params = params.appendFacetParams(facets);
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
 
     // const url = this.apiBaseUrl + 'applicationssrs/search';
     const url = this.apiBaseUrlWithEntityContext + 'search';
@@ -162,6 +167,21 @@ export class ApplicationService extends BaseHttpService {
 
   }
 */
+
+  getApplicationCenterList(
+    substanceKey: string
+  ): Observable<any> {
+    //  const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
+
+    const url = this.apiBaseUrlWithEntityAllContext + 'distcenter/' + substanceKey;
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
   getSubstanceApplications(
     bdnum: string, center: string, fromTable: string, page: number, pageSize: number
   ): Observable<Array<any>> {
@@ -177,8 +197,22 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  searchApplicationBySubstanceKey(
+    substanceKey: string // , center: string, fromTable: string, page: number, pageSize: number
+  ): Observable<Array<any>> {
+
+    //    const func = this.baseUrl + 'applicationListByBdnum?bdnum=';
+    const url = this.apiBaseUrlWithEntityContext + 'search?q=' + substanceKey;
+    // + '&center=' + center + '&fromTable=' + fromTable + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   // Changed for Spring Boot
-  getApplicationDetails(
+  getApplicationById(
     id: number
   ): Observable<any> {
     // const url = this.baseUrl + 'applicationDetails2?id=' + id;
@@ -202,21 +236,11 @@ export class ApplicationService extends BaseHttpService {
   }
 
   // Changed, work Spring Boot and Play
+  /*
   getSubstanceDetailsByAnyId(
     id: string
   ): Observable<any> {
     const url = this.apiBaseUrl + 'substances(' + id + ')';
-    return this.http.get<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
-  }
-
-  getSubstanceDetailsByBdnum(
-    bdnum: string
-  ): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceDetailsByBdnum?bdnum=' + bdnum;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -235,7 +259,6 @@ export class ApplicationService extends BaseHttpService {
     this.apiBaseUrl = 'http://localhost:9000/ginas/app/api/v1/';
 
     const url = this.apiBaseUrl + 'substances(' + substanceId + ')';
-    alert(url);
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -260,6 +283,7 @@ export class ApplicationService extends BaseHttpService {
       })
     );
   }
+  */
 
   getApplicationCenterByBdnum(
     bdnum: string

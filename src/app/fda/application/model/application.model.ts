@@ -174,7 +174,10 @@ export interface ApplicationIngredient {
   farmSubstance?: string;
   _substanceUuid?: string;
   _approvalID?: string;
-  _name?: string;
+  _ingredientName?: string;
+  _basisOfStrengthSubstanceUuid?: string;
+  _basisOfStrengthApprovalID?: string;
+  _basisOfStrengthIngredientName?: string;
   activeMoietyName?: string;
   activeMoietyUnii?: string;
   subRelationshipList?: Array<SubRelationship>;

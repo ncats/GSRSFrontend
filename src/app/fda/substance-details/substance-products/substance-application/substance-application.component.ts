@@ -1,11 +1,18 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { ApplicationService } from '../../../application/service/application.service';
-import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { MatDialog } from '@angular/material';
 import { PageEvent } from '@angular/material/paginator';
-import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
+import { AuthService } from '@gsrs-core/auth';
+import { LoadingService } from '@gsrs-core/loading/loading.service';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { FacetParam } from '@gsrs-core/facets-manager';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { ApplicationService } from '../../../application/service/application.service';
+import { GeneralService } from '../../../service/general.service';
+import { Application } from '../../../application/model/application.model';
+import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
+import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 
 @Component({
   selector: 'app-substance-application',
@@ -23,6 +30,12 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   showSpinner = false;
   foundCenterList = false;
   loadingComplete = false;
+  // result: any;
+  public privateSearchTerm?: string;
+  private privateFacetParams: FacetParam;
+  privateExport = false;
+  disableExport = false;
+  etag = '';
 
   @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -30,9 +43,13 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     'appType', 'appNumber', 'productName', 'sponsorName', 'applicationStatus', 'applicationSubType'];
 
   constructor(
+    private router: Router,
+    public authService: AuthService,
+    private loadingService: LoadingService,
     public gaService: GoogleAnalyticsService,
     private applicationService: ApplicationService,
-    public authService: AuthService
+    private generalService: GeneralService,
+    private dialog: MatDialog
   ) {
     super(gaService, applicationService);
   }
@@ -43,13 +60,44 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
       this.isAdmin = response;
     });
 
+    if (this.substance && this.substance.uuid) {
+      this.generalService.getSubstanceCodesBySubstanceUuid(this.substance.uuid).subscribe(results => {
+        if (results) {
+          const substanceCodes = results;
+          for (let index = 0; index < substanceCodes.length; index++) {
+            if (substanceCodes[index].codeSystem) {
+                this.bdnum = substanceCodes[index].code;
+                break;
+            }
+          }
+        }
+      });
+    }
+
     if (this.bdnum) {
-      this.getApplicationCenterByBdnum();
+      this.getApplicationCenterList();
+     // this.getApplicationCenterByBdnum();
       // this.getSubstanceApplications();
       this.applicationListExportUrl();
     }
   }
 
+  searchApplicationBySubstanceKey(): string {
+    this.applicationService.searchApplicationBySubstanceKey(this.bdnum).subscribe(results => {
+      this.results = results;
+      if (results) {
+    //    const content = results.content;
+        if (this.centerList && this.centerList.length > 0) {
+          this.foundCenterList = true;
+        }
+        this.loadingComplete = true;
+      }
+    });
+    return this.centerList;
+  }
+
+  /* PLAY FRAMEWORK */
+  /*
   getApplicationCenterByBdnum(): string {
     this.applicationService.getApplicationCenterByBdnum(this.bdnum).subscribe(results => {
       this.centerList = results.centerList;
@@ -59,6 +107,17 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
       this.loadingComplete = true;
     });
     return this.centerList;
+  }
+  */
+
+ getApplicationCenterList(): void {
+    this.applicationService.getApplicationCenterList(this.bdnum).subscribe(results => {
+      this.centerList = results;
+      if (this.centerList && this.centerList.length > 0) {
+        this.foundCenterList = true;
+      }
+      this.loadingComplete = true;
+    });
   }
 
   applicationTabSelected($event) {
@@ -102,6 +161,42 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         this.countUpdate.emit(clinicaltrials.length);
       });
       */
+  }
+
+  export() {
+    if (this.etag) {
+      const extension = 'xlsx';
+      const url = this.getApiExportUrl(this.etag, extension);
+   //   if (this.authService.getUser() !== '') {
+        const dialogReference = this.dialog.open(ExportDialogComponent, {
+          height: '215x',
+          width: '550px',
+          data: { 'extension': extension, 'type': 'substanceApplicationImpurties' }
+        });
+        // this.overlayContainer.style.zIndex = '1002';
+        dialogReference.afterClosed().subscribe(name => {
+          // this.overlayContainer.style.zIndex = null;
+          if (name && name !== '') {
+            this.loadingService.setLoading(true);
+            const fullname = name + '.' + extension;
+            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              this.loadingService.setLoading(false);
+              const navigationExtras: NavigationExtras = {
+                queryParams: {
+                  totalSub: this.applicationCount
+                }
+              };
+              const params = { 'total': this.applicationCount };
+              this.router.navigate(['/user-downloads/', response.id]);
+            }, error => this.loadingService.setLoading(false));
+          }
+        });
+     // }
+    }
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    return this.applicationService.getApiExportUrl(etag, extension);
   }
 
   get updateApplicationUrl(): string {

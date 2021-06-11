@@ -99,12 +99,14 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   showSpinner = false;
   category = 'Substance';
   configName: 'substances';
+  tabClicked = false;
   @ViewChild('contentContainer', { static: true }) contentContainer;
   private overlayContainer: HTMLElement;
   dictionaryFileName: string;
   private subscriptions: Array<Subscription> = [];
   panelExpanded = false;
   numFacetsLoaded = 0;
+  queryStatementHashes: Array<number>;
   private privateFacetParams: FacetParam;
   privateFacetParamsUrl: string;
   facetKey = 'substances';
@@ -174,11 +176,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
     this.titleService.setTitle(`Advanced Search`);
     const guidedSearchHash = Number(this.activatedRoute.snapshot.queryParams['g-search-hash']) || null;
-    let queryStatementHashes: Array<number>;
     if (guidedSearchHash) {
       const queryStatementHashesString = localStorage.getItem(guidedSearchHash.toString());
       if (queryStatementHashesString != null) {
-        queryStatementHashes = JSON.parse(queryStatementHashesString);
+        this.queryStatementHashes = JSON.parse(queryStatementHashesString);
       }
     }
 
@@ -315,6 +316,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     if (event) {
       this.category = event.tab.textLabel;
       if (this.category) {
+        this.tabClicked = true;
         this.loadFileName();
       }
     }
@@ -378,6 +380,18 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         });
         this.displayProperties = displayProperties;
         this.displayPropertiesCommon = displayPropertiesCommon;
+
+        if (this.queryStatementHashes != null) {
+        //  alert(this.tabClicked);
+          if (this.tabClicked === false) {
+            this.queryStatementHashes.forEach(queryStatementHash => {
+                this.queryStatements.push({queryHash: queryStatementHash});
+            });
+          }
+        // } else {
+        //  alert('GGG');
+        //  this.queryStatements.push({});
+        }
 
         if (this.queryStatements.length === 0) {
           this.queryStatements.push({});
@@ -590,6 +604,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.queryStatements.forEach(queryStatement => {
       const queryStatementString = JSON.stringify(queryStatement);
       const hash = this.utilitiesService.hashCode(queryStatementString);
+
       localStorage.setItem(hash.toString(), queryStatementString);
       queryStatementHashes.push(hash);
     });
@@ -610,6 +625,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           navigationExtras.queryParams['searchTerm'] = this.query;
         } else {
           navigationExtras.queryParams['search'] = this.query;
+          navigationExtras.queryParams['g-search-hash'] = queryHash.toString();
         }
       } else if (Object.keys(this.privateFacetParams).length > 0) {
         navigationExtras.queryParams['facets'] = this.navigationExtrasFacet.queryParams['facets'];

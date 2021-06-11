@@ -24,7 +24,7 @@
           <button mat-flat-button color="primary" (click)="clearFilters()">
             <span>RESET</span>
           </button>
-          <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
+          <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
           <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
@@ -53,7 +53,7 @@
               <span>{{this.searchTerm}}</span>
             </div>
             <div class="actions-container">
-              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
+              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
                 <mat-icon svgIcon="edit"></mat-icon>
               </button>
               <button mat-icon-button color="primary" (click)="clearSearch()">

@@ -1,6 +1,6 @@
 {
     "Active Moiety":{
-        "lucenePath":"root_activeMoiety",
+        "lucenePath":"root_productIngredientAllList_activeMoietyName",
         "description":"Active Moiety",
         "type":"string",
         "cvDomain":null,
@@ -14,21 +14,21 @@
         "priority":"x"
     },
     "Company Country":{
-        "lucenePath":"root_country",
+        "lucenePath":"root_productIngredientAllList_countryWithoutCode",
         "description":"Company Country",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
     },
     "Dosage Form Name":{
-        "lucenePath":"root_dosageFormName",
+        "lucenePath":"root_productIngredientAllList_dosageFormName",
         "description":"Dosage Form Name",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
     },
     "FEI Number":{
-        "lucenePath":"root_feiNumber",
+        "lucenePath":"root_productCompanyAllList_feiNumber",
         "description":"FEI Number",
         "type":"string",
         "cvDomain":null,
@@ -42,22 +42,22 @@
         "priority":"x"
     },
     "Ingredient Name":{
-        "lucenePath":"root_ingredientName",
+        "lucenePath":"root_productIngredientAllList_substanceName",
         "description":"Ingredient Name",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
     },
     "Ingredient Type":{
-        "lucenePath":"root_ingredientType",
+        "lucenePath":"root_productIngredientAllList_ingredientType",
         "description":"Ingredient Type",
         "type":"string",
         "cvDomain":"INGREDIENT_TYPE",
         "priority":"x"
     },
-    "Ingredient UNII":{
-        "lucenePath":"root_unii",
-        "description":"Ingredient UNII",
+    "Ingredient Approval ID":{
+        "lucenePath":"root_productIngredientAllList_substanceApprovalId",
+        "description":"Ingredient Approval ID",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
@@ -70,28 +70,28 @@
         "priority":"x"
     },
     "Labeler City":{
-        "lucenePath":"root_city",
+        "lucenePath":"root_productCompanyAllList_city",
         "description":"City",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
     },
     "Labeler DUNS Number":{
-        "lucenePath":"root_labelerDuns",
+        "lucenePath":"root_productCompanyAllList_labelerDuns",
         "description":"Labeler DUNS Number",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
     },
     "Labeler Name":{
-        "lucenePath":"root_labelerName",
+        "lucenePath":"root_productCompanyAllList_labelerName",
         "description":"Labeler Name",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
     },
     "Labeler State":{
-        "lucenePath":"root_state",
+        "lucenePath":"root_productIngredientAllList_state",
         "description":"State",
         "type":"string",
         "cvDomain":null,
@@ -111,23 +111,23 @@
         "cvDomain":null,
         "priority":"x"
     },
-    "Product Application Number":{
+    "Application Number":{
         "lucenePath":"root_appNumber",
         "description":"Product Application Number",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
     },
-    "Product Application Type":{
+    "Application Type":{
         "lucenePath":"root_appType",
         "description":"Product Application Type",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
     },
-    "Product Bdnum":{
-        "lucenePath":"root_bdnum",
-        "description":"Product Bdnum",
+    "Substance Key":{
+        "lucenePath":"root_productIngredientAllList_substanceKey",
+        "description":"Substance Key",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
@@ -137,17 +137,17 @@
         "description":"Product Deprecated",
         "type":"string",
         "cvDomain":null,
-        "priority":"x"
+        "priority":null
     },
     "Product ID":{
-        "lucenePath":"root_productId",
+        "lucenePath":"root_productNDC",
         "description":"Product ID",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
     },
     "Product Name":{
-        "lucenePath":"root_productName",
+        "lucenePath":"root_productNameAllList_productName",
         "description":"Product Name",
         "type":"string",
         "cvDomain":null,
@@ -182,7 +182,7 @@
         "priority":"x"
     },
     "Route of Admin":{
-        "lucenePath":"root_routeOfAdmin",
+        "lucenePath":"root_routeName",
         "description":"Route of Admin",
         "type":"string",
         "cvDomain":"PROD_ROUTE_OF_ADMIN",
