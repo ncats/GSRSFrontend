@@ -46,6 +46,7 @@ import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-cor
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 import { Title } from '@angular/platform-browser';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-substances-browse',
@@ -114,6 +115,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   showDeprecated = false;
   codeSystem: any;
   previousState: Array<string> = [];
+  facetViewCategorySelected = 'Default';
+  facetViewCategory: Array<String> = [];
+  facetViewControl = new FormControl();
 
 
   constructor(
@@ -206,6 +210,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.subscriptions.push(authSubscription);
     this.isComponentInit = true;
     this.loadComponent();
+
+    this.loadFacetViewFromConfig();
   }
 
   ngAfterViewInit() {
@@ -316,6 +322,22 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     } else {
       this.searchSubstances();
     }
+  }
+
+  facetViewChange(event): void {
+    this.facetViewCategorySelected = event.value;
+    console.log(event.value);
+  }
+
+  loadFacetViewFromConfig() {
+    this.facetViewControl.setValue(this.facetViewCategorySelected);
+    const facetConf = this.configService.configData.facets && this.configService.configData.facets['substances'] || {};
+    facetConf['facetView'].forEach(categoryRow => {
+      const category = categoryRow['category'];
+      this.facetViewCategory.push(category);
+    });
+    this.facetViewCategory.push('All');
+    console.log('loaded');
   }
 
   // for facets

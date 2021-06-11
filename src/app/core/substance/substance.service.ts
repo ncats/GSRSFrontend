@@ -455,7 +455,7 @@ export class SubstanceService extends BaseHttpService {
 
   searchSingleFacet(name: string, value: string) {
     const url = this.apiBaseUrl + 'substances/search?facet=' + name + '/' + value;
-    return this.http.get<PagingResponse<SubstanceSummary>>(url);
+    return this.http.get<any>(url);
   }
 
   searchFromString(value: string) {

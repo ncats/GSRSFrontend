@@ -83,7 +83,7 @@ export class RegistrarsComponent implements OnInit {
         }
       }
       this.substanceService.searchFromString(str).pipe(take(1)).subscribe( response => {
-        link.total = response.total;
+        link.total =  Number(response.total);
       });
     });
     this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';

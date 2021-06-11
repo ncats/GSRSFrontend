@@ -9,6 +9,7 @@ import { PropertyParameterDialogComponent } from '../property-parameter-dialog/p
 import { UtilsService } from '../../utils/utils.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 
 @Component({
   selector: 'app-property-form',
@@ -23,12 +24,14 @@ export class PropertyFormComponent implements OnInit {
   propertyNameList: Array<VocabularyTerm> = [];
   propertyTypeList: Array<VocabularyTerm> = [];
   private overlayContainer: HTMLElement;
+  _nonNumeric: string;
 
   constructor(
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private substanceFormService: SubstanceFormService
   ) { }
 
   ngOnInit() {
@@ -41,6 +44,9 @@ export class PropertyFormComponent implements OnInit {
     this.referencedSubstanceUuid = this.privateProperty.referencedSubstance && this.privateProperty.referencedSubstance.refuuid || '';
     if ( !this.privateProperty.value) {
       this.privateProperty.value = {};
+    }
+    if (this.property.value && this.property.value.nonNumericValue) {
+      this._nonNumeric = this.property.value.nonNumericValue;
     }
   }
 
@@ -134,7 +140,18 @@ export class PropertyFormComponent implements OnInit {
       this.overlayContainer.style.zIndex = null;
       this.property.name = features.name || '';
       this.property.value.nonNumericValue = features.siteRange;
+      this._nonNumeric = features.siteRange;
     });
+  }
+
+  validateRange() {
+    try {
+      this.substanceFormService.stringToSites(this._nonNumeric);
+      this.property.value.nonNumericValue = this._nonNumeric;
+    } catch (error) {
+      alert('invalid shorthand for a site. Must be of form "{subunit}_{residue}" with multiple ranges seperated by a comma. Changes will be reverted');
+      this._nonNumeric = this.property.value.nonNumericValue;
+    }
   }
 
   addOtherOption(vocab: Array<VocabularyTerm>, property: string) {

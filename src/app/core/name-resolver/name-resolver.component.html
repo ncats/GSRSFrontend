@@ -23,7 +23,7 @@
     <ng-container *ngIf="matchedNames">
       <div class='name-result' *ngFor="let name of matchedNames.content">
         <img appSubstanceImage [entityId]="name.uuid" /><br />
-        GSRS duplicate<br />
+        GSRS Record<br />
         {{  name._name}}
         <br />
         <button *ngIf="name.structure" mat-raised-button color="primary" class="name-result-button"

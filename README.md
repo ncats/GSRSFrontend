@@ -11,13 +11,13 @@ Technology stack
 
 Make sure to have these installed in order to run the application:
 
-- [Node](https://nodejs.org/en/)
-- [npm](https://www.npmjs.com/) - usually included in the node installation
-- Angular CLI - on any command line run `npm install -g @angular/cli@latest`
- - On Windows 7, the angular cli "ng" executable will be located in this folder:
-  - C:\Users\<USER>\AppData\Roaming\npm\
-  - Hopefully, you've already added this folder to you windows environment path.
-  - ... the ng.exe program will be used quite a bit.
+* [Node](https://nodejs.org/en/)
+* [npm](https://www.npmjs.com/) - usually included in the node installation
+* Angular CLI - on any command line run `npm install -g @angular/cli@latest`
+  * Note: On Windows, the angular cli "ng" executable will be located in this folder:
+    * C:\Users\<USER>\AppData\Roaming\npm\
+    * Hopefully, you've already added this folder to you windows environment path.
+    * ... the ng program will be used quite a bit.
 
 ## Install Application Packages
 
