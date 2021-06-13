@@ -439,7 +439,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
 
   editAdvancedSearch(): void {
   //  const eventLabel = environment.isAnalyticsPrivate ? 'Browse Clinical Trial search term' :
-      `${this.privateSearchTerm}`;
+  //    `${this.privateSearchTerm}`;
   //  this.gaService.sendEvent('Clinical Trial Filtering', 'icon-button:edit-advanced-search', eventLabel);
 
     const navigationExtras: NavigationExtras = {
