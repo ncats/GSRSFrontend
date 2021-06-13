@@ -5,9 +5,7 @@
     <mat-form-field class="amount-type">
       <mat-label>Type *</mat-label>
       <mat-select [formControl]="typeControl">
-        <mat-option value ="">
-          
-        </mat-option>
+          <mat-option [value] = 'null' ><span class = 'deselect' >Clear selection</span></mat-option>
         <mat-option *ngFor="let type of amountTypeList" [value]="type.value">
           {{type.display}}
         </mat-option>
@@ -44,6 +42,7 @@
       <mat-form-field class="amount-units">
         <mat-label>Units</mat-label>
         <mat-select [formControl]="unitsControl">
+            <mat-option [value] = 'null' ><span class = 'deselect' >Clear selection</span></mat-option>
           <mat-option *ngFor="let unit of amountUnitList" [value]="unit.value">
             {{unit.display}}
           </mat-option>
