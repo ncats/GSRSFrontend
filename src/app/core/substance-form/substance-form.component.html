@@ -4,7 +4,7 @@
     <button mat-flat-button color="primary" class="import-button" (click)="importDialog()">Import JSON</button>
 
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-      *ngIf="validationMessages && validationMessages.length > 0">
+      *ngIf="(validationMessages && validationMessages.length > 0)">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
       <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
@@ -103,6 +103,9 @@
         <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
           [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
           Submit</button>
+          <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false"
+           >
+          Cancel</button> 
         <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
           [disabled]="isLoading || !canApprove"> Confirm Approval</button>
 

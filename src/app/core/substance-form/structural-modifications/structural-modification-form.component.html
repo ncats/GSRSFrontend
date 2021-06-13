@@ -30,7 +30,7 @@
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
           </div>
-          <div class = 'residues' *ngIf = "mod.locationType === 'RESIDUE_SPECIFIC'">
+          <div class = 'residues'>
             <mat-form-field class="group" *ngIf = "substanceType !== 'nucleicAcid' && substanceType !== 'protein'">
               <input matInput placeholder="Residue Modified" [(ngModel)]="mod.residueModified"  name="Residue Modified" />
             </mat-form-field>
