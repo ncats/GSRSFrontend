@@ -102,7 +102,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   narrowSearchSuggestionsCount = 0;
   private isComponentInit = false;
   sequenceID?: string;
-  
+
   // needed for facets
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
@@ -116,6 +116,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   codeSystem: any;
   previousState: Array<string> = [];
   facetViewCategorySelected = 'Default';
+  facetDisplayType = 'facetView';
   facetViewCategory: Array<String> = [];
   facetViewControl = new FormControl();
 

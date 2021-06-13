@@ -86,6 +86,16 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   canvasToggle = true;
   canvasMessage = '';
   tempClass = '';
+  categoryOptions = [
+    'Substance',
+    'Application',
+    'Product',
+    'Clinical Trial'
+  ];
+  tabSelectedIndex = 0;
+  category = 'Substance';
+  configName: 'substances';
+  tabClicked = false;
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
   public context: CanvasRenderingContext2D;
   public canvasCopy: HTMLCanvasElement;
@@ -97,9 +107,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   ];
   ketcherFilePath: string;
   showSpinner = false;
-  category = 'Substance';
-  configName: 'substances';
-  tabClicked = false;
   @ViewChild('contentContainer', { static: true }) contentContainer;
   private overlayContainer: HTMLElement;
   dictionaryFileName: string;
@@ -128,6 +135,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   queryFacet = '';
   queryDisplay = '';
   facetNameText = '';
+  facetDisplayType = 'all';
   substanceFacetsDisplay = ['Record Status', 'Substance Class', 'Relationships', 'GInAS Tag'];
   applicationFacetsDisplay = ['Center', 'Application Type', 'Application Status', 'Provenance (GSRS)'];
   productFacetsDisplay = ['Provenance', 'Company Country', 'Product Type', 'Dosage Form Name'];
@@ -169,19 +177,39 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadingService.setLoading(true);
     this.showSpinner = true;  // Start progress spinner
+
+    this.titleService.setTitle(`Advanced Search`);
+    const advancedSearchHash = Number(this.activatedRoute.snapshot.queryParams['g-search-hash']) || null;
+
+    // Get Stored Search Criteria
+    if (advancedSearchHash) {
+      const queryStatementHashesString = localStorage.getItem(advancedSearchHash.toString());
+      if (queryStatementHashesString != null) {
+        this.queryStatementHashes = JSON.parse(queryStatementHashesString);
+
+        // Get Category from Stored Cookies
+        if (this.queryStatementHashes[0] != null) {
+          const categoryStored = localStorage.getItem(this.queryStatementHashes[0].toString());
+          if (categoryStored != null) {
+            this.category = categoryStored;
+            this.categoryOptions.forEach((cat, index) => {
+              if (cat != null) {
+                if (cat === categoryStored) {
+                  this.tabSelectedIndex = index;
+                }
+              }
+            });
+            this.queryStatementHashes.splice(0, 1);
+          }
+        }
+
+      }
+    }
+    this.getBrowseClinicalTrialDetails();
+
     this.getBrowseSubstanceDetails();
     this.getBrowseApplicationDetails();
     this.getBrowseProductDetails();
-    this.getBrowseClinicalTrialDetails();
-
-    this.titleService.setTitle(`Advanced Search`);
-    const guidedSearchHash = Number(this.activatedRoute.snapshot.queryParams['g-search-hash']) || null;
-    if (guidedSearchHash) {
-      const queryStatementHashesString = localStorage.getItem(guidedSearchHash.toString());
-      if (queryStatementHashesString != null) {
-        this.queryStatementHashes = JSON.parse(queryStatementHashesString);
-      }
-    }
 
     this.loadFileName();
 
@@ -325,6 +353,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   private loadFileName() {
     if (this.category) {
       this.query = '';
+      this.facetDisplayType = 'default';
       this.facetManagerService.clearSelections();
       this.facetManagerService.unregisterFacetSearchHandler();
 
@@ -333,6 +362,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);
         this.rawFacets = this.rawFacetsSubstance;
         this.facetKey = 'substances';
+        this.facetDisplayType = 'facetView';
       } else if (this.category === 'Application') {
         this.dictionaryFileName = 'application_dictionary.json';
         this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
@@ -382,15 +412,11 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.displayPropertiesCommon = displayPropertiesCommon;
 
         if (this.queryStatementHashes != null) {
-        //  alert(this.tabClicked);
           if (this.tabClicked === false) {
             this.queryStatementHashes.forEach(queryStatementHash => {
-                this.queryStatements.push({queryHash: queryStatementHash});
+              this.queryStatements.push({ queryHash: queryStatementHash });
             });
           }
-        // } else {
-        //  alert('GGG');
-        //  this.queryStatements.push({});
         }
 
         if (this.queryStatements.length === 0) {
@@ -472,8 +498,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.queryFacet = '';
     this.displayFacets.forEach((element, index) => {
       if (element) {
-        // alert("EEE: " + element.type + '  ' + index);
-
         const boolQuery = (this.query && index === 0) ? ' AND ' : '';
         const bool = (this.queryFacet) ? ' AND ' : '';
         this.queryFacet = boolQuery + this.queryFacet + bool + element.type + ':' + element.val;
@@ -491,25 +515,11 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.displayFacets = facetsUpdateEvent.displayFacets;
 
     this.populateUrlQueryParameters();
-    // alert(JSON.stringify(this.privateFacetParams));
     this.facetQueryConstruct();
-
-
-    // alert('READY ' + applyReady);
-
-    /*
-    let locationPath = this.location.path();
-    if (locationPath) {
-      let str = decodeURIComponent(locationPath);
-      if (str) {
-        this.privateFacetParamsUrl = str.split('facets=')[1];
-      }
-    }
-    */
 
     let applyReady = false;
     for (const key of Object.keys(this.privateFacetParams)) {
-      if (this.privateFacetParams[key].isUpdated === false) {
+      if ((this.privateFacetParams[key].isUpdated === false) && (this.displayFacets.length > 0)) {
         applyReady = true;
       } else {
         applyReady = false;
@@ -517,7 +527,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       }
     }
 
-    // alert(JSON.stringify(this.navigationExtrasFacet));
     // When Apply Button is clicked, Do Search]
     if (applyReady === true) { // && this.privateFacetParamsUrl) {
       this.setFacetLocationUrl();
@@ -601,17 +610,29 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   processSearch(): void {
     const queryStatementHashes = [];
 
+    // Store in cookies, Category tab (Substance, Application, etc)
+    const categoryHash = this.utilitiesService.hashCode(this.category);
+    localStorage.setItem(categoryHash.toString(), this.category);
+    queryStatementHashes.push(categoryHash);
+
+    // Generate Hash Code for Query Statement
     this.queryStatements.forEach(queryStatement => {
       const queryStatementString = JSON.stringify(queryStatement);
       const hash = this.utilitiesService.hashCode(queryStatementString);
 
+      // Store in cookies, Each Query Statement is stored in separate hash
       localStorage.setItem(hash.toString(), queryStatementString);
+
+      // Push Query Statements Hashes in Array
       queryStatementHashes.push(hash);
     });
 
+    // Generate Hash Code for Query
     const queryHash = this.utilitiesService.hashCode(this.query);
+
     const queryStatementHashesString = JSON.stringify(queryStatementHashes);
 
+    // Store in cookies,  store in Query Hash - Query Statement Hashes Array
     localStorage.setItem(queryHash.toString(), queryStatementHashesString);
 
     const navigationExtras: NavigationExtras = {

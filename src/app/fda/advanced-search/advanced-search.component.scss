@@ -578,35 +578,33 @@
   width: 100%;
 }
 
+::ng-deep .mat-expansion-panel {
+  margin-right: 40px;
+}
+
 ::ng-deep .col {
   float: left;
-  width: 33%;
-  white-space: nowrap;
+  width: 30%;
+  padding-right: 5px;
+  margin-right: 70px;
+  margin-left: 50px;
 }
 
-::ng-deep .col2 {
-  flex-grow: 1;
-  min-width: 31%;
-  max-width: 31%;
-  margin-right: 20px;
-  margin-bottom: 15px;
+::ng-deep .col:nth-child(n) {
+  margin-right: 22px;
+}
+
+::ng-deep .col:nth-child(3n+1) {
+  clear: left;
 }
 
 ::ng-deep .panel-height {
-  height: 470px;
+  height: 500px;
   overflow: auto;
-  margin-bottom: 10px;
   padding-right: 5px;
 }
 
-::ng-deep .panel-height {
-  height: 470px;
-  overflow: auto;
-  margin-bottom: 10px;
-  padding-right: 5px;
+::ng-deep .panel-height-scroll {
+  height: 800px;
+  overflow-y: scroll;
 }
-
-::ng-deep .marginbottom15px {
-   margin-bottom: 15px;
-}
-

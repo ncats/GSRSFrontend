@@ -47,11 +47,6 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     'OR',
     'NOT'
   ];
-  categoryOptions = [
-    'Application',
-    'Product',
-    'Clinical Trial'
-  ];
   searchFields: Array<String>;
   conditionControl = new FormControl();
   categoryControl = new FormControl();
@@ -164,26 +159,17 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     let queryStatement: AdvancedQueryStatement;
 
     if (this.queryStatementHash) {
-    //  alert('this' + this.queryStatementHash);
       const queryStatementString = localStorage.getItem(this.queryStatementHash.toString());
-    //  alert('HASH' + queryStatementString);
       if (queryStatementString) {
         queryStatement = JSON.parse(queryStatementString);
       }
     }
 
     if (queryStatement != null) {
-   //   alert(JSON.stringify(queryStatement));
-   //   alert(JSON.stringify(queryStatement.queryableProperty));
-   //   alert('FILE ' + JSON.stringify(this._queryableDictionary));
-   //   alert('QUERY PROPERTY ' + queryStatement.queryableProperty);
-  //    alert('GGG' + JSON.stringify(this._queryableDictionary[queryStatement.queryableProperty]));
       const queryablePropertyType = this._queryableDictionary[queryStatement.queryableProperty].type;
-  //    alert(queryablePropertyType);
       let inputType: string;
       const commandObject = typeCommandOptions[queryablePropertyType][queryStatement.command] as Command;
       if (commandObject.commandInputs) {
-  //      alert(JSON.stringify(commandObject));
         inputType = commandObject.commandInputs[0].type;
         this.commandInputValueDict[inputType] = queryStatement.commandInputValues;
       }
@@ -210,100 +196,6 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
-  }
-
-  private loadFileName() {
-    if (this.category) {
-      this.query = '';
-      this.facetManagerService.clearSelections();
-      this.facetManagerService.unregisterFacetSearchHandler();
-
-      if (this.category === 'Substance') {
-        this.dictionaryFileName = 'substance_dictionary.json';
-        this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);
-     //   this.rawFacets = this.rawFacetsSubstance;
-     //   this.facetKey = 'substances';
-      } else if (this.category === 'Application') {
-        this.dictionaryFileName = 'application_dictionary.json';
-        this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
-     //   this.rawFacets = this.rawFacetsApplication;
-     //   this.facetKey = 'applications';
-      } else if (this.category === 'Product') {
-        this.dictionaryFileName = 'product_dictionary.json';
-        this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
-     //   this.rawFacets = this.rawFacetsProduct;
-     //   this.facetKey = 'products';
-      } else if (this.category === 'Clinical Trial') {
-        this.dictionaryFileName = 'clinicaltrial_dictionary.json';
-        this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
-     //   this.rawFacets = this.rawFacetsClinicalTrial;
-     //   this.facetKey = 'ctclinicaltrial';
-      } else if (this.category === 'Adverse Event') {
-        this.dictionaryFileName = 'adverseevent_dictionary.json';
-        // this.rawFacets.length = 0;
-     //   this.rawFacets.splice(0, this.rawFacets.length);
-      }
-    }
-    this.getSearchField();
-  }
-
-  getSearchField() {
-    // const url = `${this.configService.environment.baseHref}assets/data/` + this.dictionaryFileName;
-    this.http.get(`${this.configService.environment.baseHref}assets/data/` + this.dictionaryFileName)
-      .subscribe((response: QueryableSubstanceDictionary) => {
-
-        response['All'] = {
-          lucenePath: 'text',
-          description: 'All fields',
-          type: 'string',
-          cvDomain: ''
-        };
-        this.queryableSubstanceDict = response;
-        // console.log(JSON.stringify('AAAA ' + this.queryableSubstanceDict));
-
-        const displayProperties = ['All'];
-        const displayPropertiesCommon = ['All'];
-        Object.keys(this.queryableSubstanceDict).forEach(key => {
-          displayProperties.push(key);
-          if (this.queryableSubstanceDict[key].priority != null) {
-            displayPropertiesCommon.push(key);
-          }
-        });
-        this.displayProperties = displayProperties;
-        this.searchFields = displayPropertiesCommon;
-
-        /*
-        if (queryStatementHashes != null) {
-          queryStatementHashes.forEach(queryStatementHash => {
-            this.queryStatements.push({ queryHash: queryStatementHash });
-          });
-        } else {
-          this.queryStatements.push({});
-        }
-        */
-        this.queryStatements.push({});
-      });
-
-    // this.searchFields = this.displayPropertiesCommon;
-
-    //  console.log(JSON.stringify(this.displayPropertiesCommon));
-  }
-
-  private loadSearchField() {
-    if (this.categoryinput) {
-      // Empty current SearchField Array
-      // this.searchFields.splice(0, this.searchFields.length);
-      if (this.categoryinput === 'Substance') {
-        this.dictionaryFileName = 'substance_dictionary.json';
-      } else if (this.categoryinput === 'Application') {
-        this.dictionaryFileName = 'application_dictionary.json';
-      } else if (this.categoryinput === 'Product') {
-        this.dictionaryFileName = 'product_dictionary.json';
-      } else if (this.categoryinput === 'Clinical Trial') {
-        this.dictionaryFileName = 'clinicaltrial_dictionary.json';
-      }
-    }
-    this.getSearchField();
   }
 
   queryablePropertySelected(queryableProperty: string): void {

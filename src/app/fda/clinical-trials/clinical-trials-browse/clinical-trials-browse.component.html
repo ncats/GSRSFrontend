@@ -1,126 +1,175 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
   <mat-sidenav [disableClose]="true" #matSideNavInstance mode="side" opened="false">
-    <app-facets-manager
-      (facetsParamsUpdated)="facetsParamsUpdated($event)"
-      (facetsLoaded)="facetsLoaded($event)"
-      [rawFacets]="rawFacets"
-      configName="ctclinicaltrial"
-      includeFacetSearch="true">
+    <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
+      [rawFacets]="rawFacets" configName="ctclinicaltrial" includeFacetSearch="true">
     </app-facets-manager>
   </mat-sidenav>
-<mat-sidenav-content>
-  
-<div class="example-container mat-elevation-z8 clinical-trials-browse-wrapper">
-<h3>Browse Clinical Trials</h3>
-<div>
-<form class="filter-form clinical-trials-browse-filter-form">
-  <mat-form-field class='clinical-trials-browse-filter-form-searchTerm'>
-    <input matInput placeholder="Search Term" [(ngModel)]="searchTerm" name="searchTerm" (keyup.enter)="setSearchTermValue();" />
-  </mat-form-field>
 
-  <mat-form-field class='clinical-trials-browse-filter-form-searchType'>
-    <mat-label>Type</mat-label>
-    <mat-select  [(ngModel)]="searchType" name="searchType">
-      <mat-option *ngFor="let searchType of searchTypes" [value]="searchType.value">
-        {{searchType.title}}
-     </mat-option>
-    </mat-select>
-  </mat-form-field>
- <button mat-flat-button color="primary" class="clinical-trials-browse-filter-form-button-open"  matSuffix aria-label="Search Clinical Trials" (click)="setSearchTermValue();">Go</button>
- <span *ngIf="!showHelp">
-  <button mat-icon-button aria-label="Show Help" (click)="toggleShowHelp()">?</button>
-</span>
-</form>
-<mat-card class='clinical-trials-browse-show-help' *ngIf="showHelp">
-  <div>
-  <span class="middle-fill"></span>
-  <button class="clinical-trials-browse-filter-form-help-button-close" mat-icon-button (click)="toggleShowHelp()">
-    <mat-icon svgIcon="close"></mat-icon>
-  </button>
-  </div>
-  <div>
-    <p><strong>All</strong> - search in all indexed fields; wild cards work (e.g health*).</p>
-    <p><strong>Title</strong> - search for full words contained in the title field.</p>
-    <p><strong>NCT Number</strong> - search for NCT Number exactly.</p>
-    <p><strong>UUID</strong> - search for substance UUID exactly.</p>
-  </div>
-</mat-card>
-</div>
-<div>
-  <mat-paginator #paginator [length]="totalClinicalTrials" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
-  (page)="changePage($event)">
-</mat-paginator>
-</div>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <mat-sidenav-content>
+    <div class="side-nav-content">
+      <div class="search-parameters">
+
+        <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+            <span>{{searchTerm}}</span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Display Facets selection -->
+        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+          <div class='selected-container'>
+            <span class="capitalized font-medium-bold selected-label">
+              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+              {{facet.type}}:
+            </span>
+            <span class="no-break selected-value">
+              {{facet.val}}
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button class="display-button" color="primary"
+              (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+              <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+          *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
+          <span>RESET</span>
+        </button>
+      </div>
+
+      <div class="example-container mat-elevation-z8 clinical-trials-browse-wrapper">
+        <h3>Browse Clinical Trials</h3>
+        <div>
+          <form class="filter-form clinical-trials-browse-filter-form">
+            <mat-form-field class='clinical-trials-browse-filter-form-searchTerm'>
+              <input matInput placeholder="Search Term" [(ngModel)]="searchTerm" name="searchTerm"
+                (keyup.enter)="setSearchTermValue();" />
+            </mat-form-field>
+
+            <mat-form-field class='clinical-trials-browse-filter-form-searchType'>
+              <mat-label>Type</mat-label>
+              <mat-select [(ngModel)]="searchType" name="searchType">
+                <mat-option *ngFor="let searchType of searchTypes" [value]="searchType.value">
+                  {{searchType.title}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-flat-button color="primary" class="clinical-trials-browse-filter-form-button-open" matSuffix
+              aria-label="Search Clinical Trials" (click)="setSearchTermValue();">Go</button>
+            <span *ngIf="!showHelp">
+              <button mat-icon-button aria-label="Show Help" (click)="toggleShowHelp()">?</button>
+            </span>
+          </form>
+          <mat-card class='clinical-trials-browse-show-help' *ngIf="showHelp">
+            <div>
+              <span class="middle-fill"></span>
+              <button class="clinical-trials-browse-filter-form-help-button-close" mat-icon-button
+                (click)="toggleShowHelp()">
+                <mat-icon svgIcon="close"></mat-icon>
+              </button>
+            </div>
+            <div>
+              <p><strong>All</strong> - search in all indexed fields; wild cards work (e.g health*).</p>
+              <p><strong>Title</strong> - search for full words contained in the title field.</p>
+              <p><strong>NCT Number</strong> - search for NCT Number exactly.</p>
+              <p><strong>UUID</strong> - search for substance UUID exactly.</p>
+            </div>
+          </mat-card>
+        </div>
+        <div>
+          <mat-paginator #paginator [length]="totalClinicalTrials" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
+          </mat-paginator>
+        </div>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
 
-  <!--- Note that these columns can be defined in any order.
+          <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
 
 
- <!-- edit Column -->
+          <!-- edit Column -->
 
- <ng-container matColumnDef="edit">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element">
-        <a class="clinical-trials-browse-edit1"  title="Edit in this tab" [routerLink]="['/edit-clinical-trial', element.nctNumber]" [queryParams]="{}" >Edit</a>&nbsp;<a class="clinical-trials-browse-edit2" target="_blank" title="Edit in new tab" [href]="'edit-clinical-trial/' + element.nctNumber">+</a>
-    </td>
-  </ng-container>
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <a class="clinical-trials-browse-edit1" title="Edit in this tab"
+                [routerLink]="['/edit-clinical-trial', element.nctNumber]" [queryParams]="{}">Edit</a>&nbsp;<a
+                class="clinical-trials-browse-edit2" target="_blank" title="Edit in new tab"
+                [href]="'edit-clinical-trial/' + element.nctNumber">+</a>
+            </td>
+          </ng-container>
 
-<!-- nctNumber Column -->
-  <ng-container matColumnDef="nctNumber">
-    <th mat-header-cell *matHeaderCellDef>NCT Number</th>
-    <td mat-cell *matCellDef="let element">
-      <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + element.nctNumber">{{element.nctNumber}}</a>
-    </td>
-  </ng-container>
+          <!-- nctNumber Column -->
+          <ng-container matColumnDef="nctNumber">
+            <th mat-header-cell *matHeaderCellDef>NCT Number</th>
+            <td mat-cell *matCellDef="let element">
+              <a target="_blank" title="see clinicaltrials.gov"
+                [href]="'https://clinicaltrials.gov/ct2/show/' + element.nctNumber">{{element.nctNumber}}</a>
+            </td>
+          </ng-container>
 
-  <!-- title Column -->
-  <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef>Title</th>
-    <td mat-cell *matCellDef="let element">
-      <mat-expansion-panel [disabled]="true" #mep="matExpansionPanel" class='clinical-trials-browse-peak-substances-expansion-panel'>
-        <mat-expansion-panel-header [collapsedHeight]="''" [expandedHeight]="''">
-          <div (click)="mep.expanded = !mep.expanded">{{element.title}} <span *ngIf="element.clinicalTrialDrug"> ({{element.clinicalTrialDrug.length}}) </span></div>
-        </mat-expansion-panel-header>
-<div class="clinical-trials-browse-substance-peak">
-<div *ngIf="element.clinicalTrialDrug">
-<div *ngFor="let item of element.clinicalTrialDrug">
-  <a target="_blank" [routerLink]="['/substances', item.substanceUuid]" >{{item.substanceDisplayName}}</a>
-</div>
-</div>
-<pre>
+          <!-- title Column -->
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef>Title</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-expansion-panel [disabled]="true" #mep="matExpansionPanel"
+                class='clinical-trials-browse-peak-substances-expansion-panel'>
+                <mat-expansion-panel-header [collapsedHeight]="''" [expandedHeight]="''">
+                  <div (click)="mep.expanded = !mep.expanded">{{element.title}} <span *ngIf="element.clinicalTrialDrug">
+                      ({{element.clinicalTrialDrug.length}}) </span></div>
+                </mat-expansion-panel-header>
+                <div class="clinical-trials-browse-substance-peak">
+                  <div *ngIf="element.clinicalTrialDrug">
+                    <div *ngFor="let item of element.clinicalTrialDrug">
+                      <a target="_blank"
+                        [routerLink]="['/substances', item.substanceUuid]">{{item.substanceDisplayName}}</a>
+                    </div>
+                  </div>
+                  <pre>
 <div *ngIf="element.clinicalTrialDrug"><div *ngFor="let item of element.clinicalTrialDrug">{{item.substanceDisplayName}}&#9;{{item.substanceUuid}}</div></div>
 </pre>
-<pre>
+                  <pre>
 <div *ngIf="element.clinicalTrialDrug"><span>{{lodash.map(element.clinicalTrialDrug, 'substanceDisplayName').join("; ")}}</span>&#9;<span>{{lodash.map(element.clinicalTrialDrug, 'substanceUuid').join("; ")}}</span></div>
 </pre>
-</div>
-      </mat-expansion-panel>
-  </td>
-  </ng-container>
+                </div>
+              </mat-expansion-panel>
+            </td>
+          </ng-container>
 
-  <!-- ID Column -->
-  <ng-container matColumnDef="lastUpdated">
-    <th mat-header-cell *matHeaderCellDef>Last Updated</th>
-    <td mat-cell *matCellDef="let element">{{element.lastUpdated | date : 'MM/dd/yyyy':'UTC'}} </td>
-  </ng-container>
+          <!-- ID Column -->
+          <ng-container matColumnDef="lastUpdated">
+            <th mat-header-cell *matHeaderCellDef>Last Updated</th>
+            <td mat-cell *matCellDef="let element">{{element.lastUpdated | date : 'MM/dd/yyyy':'UTC'}} </td>
+          </ng-container>
 
-  <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell class ="clinical-trials-browse-button-cell" *matCellDef="let element; let index = index">
-          <span class="clinical-trials-browse-del" aria-label="Del" (click)="deleteClinicalTrial(index);">Del</span>
-        </td>
-    </ng-container>
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell class="clinical-trials-browse-button-cell" *matCellDef="let element; let index = index">
+              <span class="clinical-trials-browse-del" aria-label="Del" (click)="deleteClinicalTrial(index);">Del</span>
+            </td>
+          </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-<div>
-  <mat-paginator #paginator [length]="totalClinicalTrials" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50, 100]"
-  (page)="changePage($event)">
-</mat-paginator>
-</div>
-</div>
-</mat-sidenav-content>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div>
+          <mat-paginator #paginator [length]="totalClinicalTrials" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>
 </mat-sidenav-container>
