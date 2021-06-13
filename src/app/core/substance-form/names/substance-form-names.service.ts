@@ -82,6 +82,7 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
         name = name.replace(/([\u002d|\u0390-\u03C9|\u2122|\u2192|\u00B1-\u00B9|\u2000-\u208F|\u2e17-\u2e40|\u301c-\u30a0|\ufe31-\uff0d|\u2190|])/g, replacer).trim();
         name = name.replace(' -', '-');
         name = name.replace('- ', '-');
+        name = name.replace(bad, '');
         name = name.replace(/[[]([A-Z -.]*)\]$/g, ' !!@!$1_!@!');
         name = name.replace(/[ \t]+/g, ' ');
         name = name.replace(/[[]/g, '(');
