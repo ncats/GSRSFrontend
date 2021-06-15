@@ -20,10 +20,10 @@ import { ValidationResults } from '../model/application.model';
 
 export class ApplicationService extends BaseHttpService {
 
-  totalRecords: 0;
+  totalRecords = 0;
   application: Application;
-  // entityContext = 'application';
-  entityContext = 'applicationssrs';
+  entityContext = 'application';
+  // entityContext = 'applicationssrs';
   apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
   apiBaseUrlWithEntityAllContext = this.apiBaseUrl + 'applicationall' + '/';
 
@@ -173,8 +173,21 @@ export class ApplicationService extends BaseHttpService {
   ): Observable<any> {
     //  const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
 
-    const url = this.apiBaseUrlWithEntityAllContext + 'distcenter/' + substanceKey;
+   // const url = this.apiBaseUrlWithEntityAllContext + 'distcenter/' + substanceKey;
+   const url = this.apiBaseUrlWithEntityContext + 'distcenter/' + substanceKey;
     return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getApplicationBySubstanceKeyCenter(substanceKey: string): Observable<any> {
+   // const url = this.apiBaseUrlWithEntityAllContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:' + substanceKey;
+
+    const url = this.apiBaseUrlWithEntityContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:' + substanceKey;
+    return this.http.get<Application>(url)
       .pipe(
         map(result => {
           return result;

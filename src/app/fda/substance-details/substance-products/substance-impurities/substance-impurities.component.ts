@@ -168,6 +168,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
       this.setResultData(results);
       this.impurities = results;
       this.impuritiesCount = this.totalRecords;
+      this.impuritiesService.totalRecords = this.totalRecords;
       this.countImpuritiesOut.emit(this.impuritiesCount);
       this.showSpinner = false;  // Stop progress spinner
     });

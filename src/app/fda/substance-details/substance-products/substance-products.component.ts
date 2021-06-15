@@ -75,7 +75,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     });
 
     if (this.substance && this.substance.uuid) {
-      //  this.getSubstanceKey();
+      this.getSubstanceKey();
       // Get Provenance List to Display in Tab
       this.getProductProvenanceList();
       this.productListExportUrl();
@@ -115,7 +115,6 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     this.impuritiesCount = $event;
   }
 
-  /*
   getSubstanceKey() {
     if (this.substance) {
       // Get Substance Name
@@ -131,7 +130,6 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       }
     }
   }
-*/
 
   getProductProvenanceList(): void {
     this.productService.getProductProvenanceList(this.substance.uuid).subscribe(results => {

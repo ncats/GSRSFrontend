@@ -55,16 +55,16 @@ const applicationRoutes: Routes = [
     component: ApplicationsBrowseComponent
   },
   {
+    path: 'application/register',
+    component: ApplicationFormComponent
+  },
+  {
     path: 'application/:id',
     component: ApplicationDetailsComponent
   },
   {
     path: 'applicationDarrtsDetails/:appType/:appNumber',
     component: ApplicationDarrtsDetailsComponent
-  },
-  {
-    path: 'application/register',
-    component: ApplicationFormComponent
   },
   {
     path: 'application/:id/edit',

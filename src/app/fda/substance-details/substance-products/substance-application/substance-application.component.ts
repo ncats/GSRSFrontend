@@ -22,7 +22,9 @@ import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 
 export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
+  application: any;
   applicationCount = 0;
+  totalApplication = 0;
   centerList = '';
   center = '';
   fromTable = '';
@@ -36,7 +38,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   privateExport = false;
   disableExport = false;
   etag = '';
-
+  @Input() bdnum: string;
   @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
@@ -55,17 +57,18 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   }
 
   ngOnInit() {
-
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       this.isAdmin = response;
     });
 
+    /*
     if (this.substance && this.substance.uuid) {
+      alert(this.substance.uuid);
       this.generalService.getSubstanceCodesBySubstanceUuid(this.substance.uuid).subscribe(results => {
         if (results) {
           const substanceCodes = results;
           for (let index = 0; index < substanceCodes.length; index++) {
-            if (substanceCodes[index].codeSystem) {
+            if (substanceCodes[index].codeSystem === 'BDNUM') {
                 this.bdnum = substanceCodes[index].code;
                 break;
             }
@@ -73,6 +76,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         }
       });
     }
+    */
 
     if (this.bdnum) {
       this.getApplicationCenterList();
@@ -134,9 +138,55 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         // set the current result data to empty or null.
         this.paged = [];
 
-        this.getSubstanceApplications();
+        this.getApplicationBySubstanceKeyCenter();
       }
     }
+  }
+
+  /*
+  getApplicationBySubstanceKeyCenter(pageEvent?: PageEvent): void {
+    this.setPageEvent(pageEvent);
+
+    this.showSpinner = true;  // Start progress spinner
+    // , this.page, this.pageSize
+    this.applicationService.getApplicationBySubstanceKeyCenter(this.bdnum).subscribe(results => {
+      this.setResultData(results.content);
+      this.application = results.content;
+      this.totalApplication = results.total;
+      this.applicationService.totalRecords = results.total;
+      this.etag = results.etag;
+      this.countApplicationOut.emit(this.totalApplication);
+      this.loadingStatus = '';
+      this.showSpinner = false;  // Stop progress spinner
+    });
+  }
+  */
+
+  // GSRS 3.0
+  getApplicationBySubstanceKeyCenter(pageEvent?: PageEvent) {
+    this.setPageEvent(pageEvent);
+    this.showSpinner = true;  // Start progress spinner
+    const skip = this.page * this.pageSize;
+    const privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:' + this.bdnum; + ' AND root_center:' + this.center;
+    const subscription = this.applicationService.getApplications(
+      'default',
+      skip,
+      this.pageSize,
+      privateSearch,
+      this.privateFacetParams
+    )
+      .subscribe(pagingResponse => {
+        this.applicationService.totalRecords = pagingResponse.total;
+        this.setResultData(pagingResponse.content);
+        this.applicationCount = pagingResponse.total;
+        this.etag = pagingResponse.etag;
+      }, error => {
+        console.log('error');
+      }, () => {
+        subscription.unsubscribe();
+      });
+      this.loadingStatus = '';
+      this.showSpinner = false;  // Stop progress spinner
   }
 
   getSubstanceApplications(pageEvent?: PageEvent): void {
@@ -171,7 +221,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
-          data: { 'extension': extension, 'type': 'substanceApplicationImpurties' }
+          data: { 'extension': extension, 'type': 'substanceApplication' }
         });
         // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(name => {
