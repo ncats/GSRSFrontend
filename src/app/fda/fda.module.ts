@@ -34,6 +34,7 @@ import { JiraSubmitTicketComponent } from './jira-submit-ticket/jira-submit-tick
 import { UserManualComponent } from './user-manual/user-manual.component';
 import { ImpuritiesModule } from '../fda/impurities/impurities.module';
 import { AdvancedSearchModule } from '../fda/advanced-search/advanced-search.module';
+import { AdverseEventsBrowseModule } from '../fda/adverse-event/adverse-events-browse.module';
 
 const fdaRoutes: Routes = [
   {
@@ -72,6 +73,7 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     ProductModule,
     ImpuritiesModule,
     AdvancedSearchModule,
+    AdverseEventsBrowseModule,
     SubstanceApplicationMatchListModule,
     UserManualModule,
     JiraSubmitTicketModule,

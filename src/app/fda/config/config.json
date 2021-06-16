@@ -664,6 +664,31 @@
         "Study Results",
         "Conditions"
       ]
+    },
+    "adverseeventpt": {
+      "default": [
+        "Adverse Event",
+        "Prim SOC",
+        "Ingredient Name",
+        "Substance Key"
+      ]
+    },
+    "adverseeventdme": {
+      "default": [
+        "DME Reactions",
+        "PTTerm Meddra",
+        "Ingredient Name",
+        "Substance Key"
+      ]
+    },
+    "adverseeventcvm": {
+      "default": [
+        "Adverse Event",
+        "Species",
+        "Route of Administration",
+        "Ingredient Name",
+        "Substance Key"
+      ]
     }
   },
   "codeSystemOrder": [

@@ -156,10 +156,11 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
       this.totalImpurities = results.total;
       this.etag = results.etag;
       this.countImpuritiesOut.emit(this.totalImpurities);
-      this.showSpinner = false;  // Stop progress spinner
     });
+    this.showSpinner = false;  // Stop progress spinner
   }
 
+  /*
   getSubstanceImpurities(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
 
@@ -173,6 +174,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
       this.showSpinner = false;  // Stop progress spinner
     });
   }
+  */
 
   export() {
     if (this.etag) {

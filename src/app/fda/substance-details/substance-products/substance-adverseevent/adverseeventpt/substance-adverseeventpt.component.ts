@@ -1,11 +1,16 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { AdverseEventService } from '../../../../adverseevent/service/adverseevent.service';
+import { AdverseEventService } from '../../../../adverse-event/service/adverseevent.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/substance-details-base-table-display';
 import { Sort } from '@angular/material';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { ConfigService } from '@gsrs-core/config';
+import { FacetParam } from '@gsrs-core/facets-manager';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { AuthService } from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-adverseeventpt',
@@ -15,11 +20,20 @@ import { ConfigService } from '@gsrs-core/config';
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
-  advPtCount = 0;
+  // advPtCount = 0;
+  adverseEventCount = 0;
+
   orderBy = 5;
   ascDescDir = 'desc';
   showSpinner = false;
+  public privateSearchTerm?: string;
+  private privateFacetParams: FacetParam;
+  privateExport = false;
+  disableExport = false;
+  etag = '';
+  loadingStatus = ''
 
+  @Input() bdnum: string
   @Input() substanceName: string;
   @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -40,22 +54,54 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   ];
 
   constructor(
+    private router: Router,
     public gaService: GoogleAnalyticsService,
     private adverseEventService: AdverseEventService,
     private loadingService: LoadingService,
     private configService: ConfigService,
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {
     super(gaService, adverseEventService);
   }
 
   ngOnInit() {
     if (this.bdnum) {
-      this.getSubstanceAdverseEventPt();
+    //  this.getSubstanceAdverseEventPt();
+      this.getAdverseEventPt();
       this.adverseEventPtListExportUrl();
       this.getAdverseEventShinyConfig();
     }
   }
 
+  getAdverseEventPt(pageEvent?: PageEvent) {
+    this.setPageEvent(pageEvent);
+    this.showSpinner = true;  // Start progress spinner
+    const skip = this.page * this.pageSize;
+    const privateSearch = 'root_substanceKey:' + this.bdnum;
+    const subscription = this.adverseEventService.getAdverseEventPt(
+      'default',
+      skip,
+      this.pageSize,
+      privateSearch,
+      this.privateFacetParams
+    )
+      .subscribe(pagingResponse => {
+        this.adverseEventService.totalRecords = pagingResponse.total;
+        this.adverseEventCount = pagingResponse.total;
+        this.setResultData(pagingResponse.content);
+        this.etag = pagingResponse.etag;
+        this.countAdvPtOut.emit(this.adverseEventCount);
+      }, error => {
+        console.log('error');
+      }, () => {
+        subscription.unsubscribe();
+      });
+      this.loadingStatus = '';
+      this.showSpinner = false;  // Stop progress spinner
+  }
+
+  /*
   getSubstanceAdverseEventPt(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
@@ -67,6 +113,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
         this.showSpinner = false;  // Stop progress spinner
       });
   }
+  */
 
   adverseEventPtListExportUrl() {
     if (this.bdnum != null) {
@@ -78,9 +125,45 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     if (sort.active) {
       this.orderBy = this.displayedColumns.indexOf(sort.active) + 2; // Adding 2, for name and bdnum.
       this.ascDescDir = sort.direction;
-      this.getSubstanceAdverseEventPt();
+      this.getAdverseEventPt();
     }
     return;
+  }
+
+  export() {
+    if (this.etag) {
+      const extension = 'xlsx';
+      const url = this.getApiExportUrl(this.etag, extension);
+   //   if (this.authService.getUser() !== '') {
+        const dialogReference = this.dialog.open(ExportDialogComponent, {
+          height: '215x',
+          width: '550px',
+          data: { 'extension': extension, 'type': 'substanceAdverseEventPt' }
+        });
+        // this.overlayContainer.style.zIndex = '1002';
+        dialogReference.afterClosed().subscribe(name => {
+          // this.overlayContainer.style.zIndex = null;
+          if (name && name !== '') {
+            this.loadingService.setLoading(true);
+            const fullname = name + '.' + extension;
+            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              this.loadingService.setLoading(false);
+              const navigationExtras: NavigationExtras = {
+                queryParams: {
+                  totalSub: this.adverseEventCount
+                }
+              };
+              const params = { 'total': this.adverseEventCount };
+              this.router.navigate(['/user-downloads/', response.id]);
+            }, error => this.loadingService.setLoading(false));
+          }
+        });
+     // }
+    }
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    return this.adverseEventService.getApiExportUrlPt(etag, extension);
   }
 
   getAdverseEventShinyConfig(): void {

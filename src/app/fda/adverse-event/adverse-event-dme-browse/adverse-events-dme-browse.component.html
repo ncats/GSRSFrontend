@@ -1,0 +1,211 @@
+<mat-sidenav-container>
+
+  <mat-sidenav mode="side" opened>
+    <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
+      [rawFacets]="rawFacets" configName="adverseeventdme" includeFacetSearch="true">
+    </app-facets-manager>
+  </mat-sidenav>
+
+
+
+  <!-- Browse Adverse Event DME Content -->
+  <mat-sidenav-content>
+    <div class="side-nav-content">
+      <div class="search-parameters">
+
+        <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+            <span>{{searchTerm}}</span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Display Facets selection -->
+        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+          <div class='selected-container'>
+            <span class="capitalized font-medium-bold selected-label">
+              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+              {{facet.type}}:
+            </span>
+            <span class="no-break selected-value">
+              {{facet.val}}
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button class="display-button" color="primary"
+              (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+              <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+          *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
+          <span>RESET</span>
+        </button>
+      </div>
+
+      <!-- Title, Export, Pagination -->
+      <div class="controls-container">
+
+        <div class="title-container">
+          <span class="main-title">Browse Adverse Event DME</span>
+        </div>
+
+        <!-- Sort By -->
+        <!--
+        <mat-form-field class="sort">
+          <mat-label>Sort By</mat-label>
+          <mat-select (selectionChange)="searchAdverseEventPt()" [(ngModel)]="order">
+            <mat-option *ngFor="let option of sortValues" [value]="option.value">
+              {{option.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+         -->
+        <!-- Export AdverseEventDme Button -->
+        <div class="export">
+          <button matTooltip="Export Search Results" mat-button (click)="export()"
+            class="mat-button export-button mat-raised-button">
+            <mat-icon svgIcon="get_app"></mat-icon> Export
+          </button>
+        </div>
+
+        <div class="break"></div>
+        <!-- Pagination -->
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalAdverseEventPt" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="search-text">
+        <!-- Search Any Text Text Box -->
+        <mat-form-field class="width350px font13px">
+          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
+            size="50" />
+        </mat-form-field>
+        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </div>
+
+      <!-- Display Content Details -->
+      <div class="cards" *ngIf="adverseEventDme && adverseEventDme.length; else noRecordApplication">
+        <div class="substance-cards">
+          <mat-card *ngFor="let adverseEventDme of adverseEventDme">
+            <mat-card-title>
+              <div>
+                <span class="font13px">DME Reactions:</span>&nbsp;
+                {{adverseEventDme.dmeReactions}}
+              </div>
+
+              <div>
+
+              </div>
+
+              <div>
+
+              </div>
+            </mat-card-title>
+
+            <mat-card-content>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Ingredient Name:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseEventDme.name}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Substance Key:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseEventDme.substanceKey}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    PTTerm Meddra:
+                  </div>
+                  <div class="row-property-value">
+                    {{ adverseEventDme.ptTermMeddra}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Case Count:
+                  </div>
+                  <div class="row-property-value">
+                    {{ adverseEventDme.caseCount}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    DME Count:
+                  </div>
+                  <div class="row-property-value">
+                    {{ adverseEventDme.dmeCount}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    DME Count Percent:
+                  </div>
+                  <div class="row-property-value">
+                    {{ adverseEventDme.dmeCountPercent}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Weighted Average PRR:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseEventDme.weightedAvgPrr | number : '.2-2'}}
+                  </div>
+                </div>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+      <ng-template #noRecordApplication>
+        <!-- No Application Found. -->
+      </ng-template>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -454,10 +454,12 @@
                         <a [routerLink]="['/substances', ingred._substanceUuid]"
                           target="_blank">{{ingred._ingredientName}}</a>
                       </div>
+                      <!--
                       <br>
                       <span *ngIf="ingred.substanceKey">
                         ({{ ingred.substanceKey }})<br>(BDNUM)
                       </span>
+                      -->
                     </td>
 
                     <td>
@@ -465,10 +467,12 @@
                         <a [routerLink]="['/substances', ingred._basisOfStrengthSubstanceUuid]"
                           target="_blank">{{ingred._basisOfStrengthIngredientName}}</a>
                       </div>
+                      <!--
                       <br>
                       <span *ngIf="ingred.basisOfStrengthSubstanceKey">
                         ({{ingred.basisOfStrengthSubstanceKey}})<br>(BDNUM)
                       </span>
+                      -->
                     </td>
                     <td>{{ ingred.ingredientType }}</td>
                     <td>{{ ingred.average }}</td>
