@@ -55,11 +55,8 @@
     "core-js": "2.5.4",
     "cronstrue": "1.94.0",
     "defiant.js": "2.2.6",
-    "file-select": "file:dist/file-select/file-select-0.0.1.tgz",
     "hammerjs": "2.0.8",
     "helmet": "3.21.2",
-    "jsdraw-wrapper": "file:dist/jsdraw-wrapper/jsdraw-wrapper-0.0.1.tgz",
-    "ketcher-wrapper": "file:dist/ketcher-wrapper/ketcher-wrapper-0.0.1.tgz",
     "lodash": "4.17.15",
     "lucene-query-parser": "1.2.0",
     "moment": "2.26.0",
@@ -112,4 +109,3 @@
     }
   }
 }
-

@@ -30,14 +30,15 @@ import {AuthService} from '@gsrs-core/auth/auth.service';
 })
 export class ClinicalTrialEditComponent implements OnInit {
   clinicalTrial: ClinicalTrial;
-  // 'nctNumber',
+  defaultSubstanceKeyType = 'UUID';
+  agencySubstanceKeyType = 'UUID';
+
   isAdmin: boolean;
-  isTesting  = false;
+  isTesting  = true;
   displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
-  public  _nctNumber: string;
-
-
+  public  _trialNumber: string;
+  bulkInputValue = '';
   // public facets: Array<Facet> = [];
   // private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
   pageIndex: number;
@@ -62,12 +63,12 @@ export class ClinicalTrialEditComponent implements OnInit {
   ngOnInit() {
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
       this.isAdmin = response;
-      if (this.isTesting) {
-      }
+      // __alex__ turning for for gsrs3 testing
+      this.isAdmin = true;
       if (this.isAdmin) {
-        this.displayedColumns = ['id', 'name', 'substanceUuid', 'protectedMatch', 'link', 'delete'];
+        this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'link', 'delete'];
        } else {
-         this.displayedColumns = ['name', 'substanceUuid', 'protectedMatch', 'link'];
+         this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'link'];
        }
     });
     this.pageSize = 10;
@@ -76,13 +77,13 @@ export class ClinicalTrialEditComponent implements OnInit {
     this.activatedRoute
       .queryParamMap
       .subscribe(params => {
-        this._nctNumber = params.get('nctNumber') || '';
+        this._trialNumber = params.get('trialNumber') || '';
         this.getClinicalTrial();
       });
     */
 
         this.activatedRoute.paramMap.subscribe(params => {
-        this._nctNumber = params.get('nctNumber');
+        this._trialNumber = params.get('trialNumber');
         this.getClinicalTrial();
       });
   }
@@ -90,28 +91,29 @@ export class ClinicalTrialEditComponent implements OnInit {
   reportMiniSearchOutput(data) {
    this.clinicalTrialService.getSubstanceDetailsFromName(data.value).subscribe(
     substanceDetails => {
-      if (substanceDetails == null
-          || substanceDetails.content == null
-          || substanceDetails.content[0] == null
+      if (substanceDetails === null
+          || substanceDetails.content === null
+          || substanceDetails.content[0] === null
 //          || substanceDetails.content[0].name===String('NULL')
 //          || substanceDetails.content[0].name===String('null')
         ) {
-          this.dataSource.data[data.myIndex].substanceUuid = null;
+          this.dataSource.data[data.myIndex].substanceKey = null;
         } else {
           this.dataSource.data[data.myIndex].name = data.value;
-          this.dataSource.data[data.myIndex].substanceUuid = substanceDetails.content[0].uuid;
+          this.dataSource.data[data.myIndex].substanceKey = substanceDetails.content[0].uuid;
         }
-    }, error => {
-      this.dataSource.data[data.myIndex].substanceUuid = null;
-
+    }, () => {
+      this.dataSource.data[data.myIndex].substanceKey = null;
     }
 );
     this.dataSource.data = this.dataSource.data;
   }
 
+  // need to work on this from config.
   addRow() {
-    const model = { id: '', name: '',  substanceUuid: ''};
+    const model = { id: '', name: '', substanceKey: '', substanceKeyType: this.defaultSubstanceKeyType };
     this.dataSource.data.push(model);
+
     // why?
     this.dataSource.data = this.dataSource.data;
   }
@@ -130,13 +132,14 @@ export class ClinicalTrialEditComponent implements OnInit {
   getClinicalTrial() {
     this.loadingService.setLoading(true);
     this.dataSource.data = [];
-    this.clinicalTrialService.getClinicalTrial(this._nctNumber)
+    this.clinicalTrialService.getClinicalTrial(this._trialNumber)
       .subscribe( data => {
         this.isError = false;
         data.clinicalTrialDrug.forEach(element => {
           this.dataSource.data.push({
              id: element.id,
-             substanceUuid: element.substanceUuid,
+             substanceKey: element.substanceKey,
+             substanceKeyType: element.substanceKeyType,
              name: element.substanceDisplayName,
              protectedMatch: element.protectedMatch
             }
@@ -145,7 +148,7 @@ export class ClinicalTrialEditComponent implements OnInit {
         // Weird, why is this necessary?
         this.clinicalTrial = data;
         this.dataSource.data = this.dataSource.data;
-      }, error => {
+      }, () => {
         const notification: AppNotification = {
           message: 'There was an error trying to retrieve clinical trial. Please refresh and try again.',
           type: NotificationType.error,
@@ -166,12 +169,12 @@ export class ClinicalTrialEditComponent implements OnInit {
     this.loadingService.setLoading(true);
     const newClinicalTrial = _.cloneDeep(this.clinicalTrial);
     const newClinicalTrialDrugs: Array<ClinicalTrialDrug> = [];
-    // let newNctNumber: string;
-    this.dataSource.data.forEach((element, index)  => {
+    this.dataSource.data.forEach((element)  => {
       const ctd = {} as ClinicalTrialDrug;
       ctd.id = element.id;
-      ctd.nctNumber = element.nctNumber;
-      ctd.substanceUuid = element.substanceUuid;
+      ctd.trialNumber = element.trialNumber;
+      ctd.substanceKey = element.substanceKey;
+      ctd.substanceKeyType = element.substanceKeyType;
       ctd.protectedMatch = element.protectedMatch;
       newClinicalTrialDrugs.push(ctd);
     });
@@ -192,7 +195,7 @@ export class ClinicalTrialEditComponent implements OnInit {
           this.dataSource.data.push(
             {
               id: element.id,
-              substanceUuid: element.substanceUuid,
+              substanceKey: element.substanceKey,
               name: element.substanceDisplayName,
               protectedMatch: element.protectedMatch
             }
@@ -215,17 +218,16 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.notificationService.setNotification(notification);
       }, error => {
         let message = 'There was an error trying to update clinical trial.';
-        const noChange = false;
-        if (error.error.errors != null) {
+          if (error.error.errors !== undefined && error.error.errors !== null) {
          error.error.errors.forEach(element => {
            if (element) {
              message = message + ' ' + element;
            }
          });
-        }
-        if (error.error.validationMessages != null) {
+          }
+          if (error.error.validationMessages !== undefined  && error.error.validationMessages !== null) {
           error.error.validationMessages.forEach(element => {
-            if (element.message != null) {
+            if (element.message !== null) {
               message = message + ' ' + element.message;
             }
          });
@@ -243,7 +245,77 @@ export class ClinicalTrialEditComponent implements OnInit {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       }).add(() => {
+        console.log('Inside empty add method.');
       });
   }
 
+    copyInputMessage(inputElement) {
+    inputElement.select();
+    document.execCommand('copy');
+//    inputElement.setSelectionRange(0, 0);
+//    this.textMessageFunc('Text');
+  }
+
+  substancesToClipboard1a() {
+      const textArray = [];
+      this.dataSource.data.forEach(element => {
+        textArray.push(element.substanceKey);
+      });
+      this.copyTextAreaToClipBoard(textArray.join('\n'));
+    }
+    substancesToClipboard1b() {
+      const textArray = [];
+      this.dataSource.data.forEach(element => {
+        textArray.push(element.substanceKey);
+      });
+      this.copyTextAreaToClipBoard(textArray.join('; '));
+    }
+
+
+    substancesToClipboard2a() {
+      const textArray = [];
+      this.dataSource.data.forEach(element => {
+        textArray.push(element.name + '\t' + element.substanceKey);
+      });
+      this.copyTextAreaToClipBoard(textArray.join('\n'));
+    }
+
+    substancesToClipboard2b() {
+      const textArray1 = [];
+      const textArray2 = [];
+      this.dataSource.data.forEach(element => {
+        textArray1.push(element.name);
+        textArray2.push(element.substanceKey);
+      });
+      this.copyTextAreaToClipBoard(textArray1.join('; ') + '\t' + textArray2.join('; '));
+    }
+
+    substancesToClipboard3a() {
+      const textArray = [];
+      this.dataSource.data.forEach(element => {
+        textArray.push(this._trialNumber + '\t' + element.name + '\t' + element.substanceKey);
+      });
+      this.copyTextAreaToClipBoard(textArray.join('\n'));
+    }
+
+    substancesToClipboard3b() {
+      const textArray1 = [];
+      const textArray2 = [];
+      this.dataSource.data.forEach(element => {
+        textArray1.push(element.name);
+        textArray2.push(element.substanceKey);
+      });
+      this.copyTextAreaToClipBoard(this._trialNumber + '\t' + textArray1.join('; ') + '\t' + textArray2.join('; '));
+    }
+
+
+    copyTextAreaToClipBoard(message: string) {
+      const cleanText = message.replace(/<\/?[^>]+(>|$)/g, '');
+      const x = document.createElement('TEXTAREA') as HTMLTextAreaElement;
+      x.value = cleanText;
+      document.body.appendChild(x);
+      x.select();
+      document.execCommand('copy');
+      document.body.removeChild(x);
+    }
 } // end class

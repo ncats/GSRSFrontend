@@ -75,7 +75,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   onPopState(event) {
    setTimeout(() => {
      if (this.router.url === this.previousState[0]) {
-       if(this.router.url === '/browse-substance') {
+       if (this.router.url === '/browse-substance') {
         this.privateFacetParams = {};
        } else {
         this.privateFacetParams = this.previousFacets[0];
@@ -173,13 +173,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     this.populateFacets();
   }
-  
+
 
   facetsFromParams() {
     if (this.facetString !== '') {
       const categoryArray = this.escapedSplit(this.facetString, ',');
       for (let i = 0; i < (categoryArray.length); i++) {
-        const categorySplit = this.escapedSplit(categoryArray[i],'*');
+        const categorySplit = this.escapedSplit(categoryArray[i], '*');
         const category = categorySplit[0];
         const fieldsArr = this.escapedSplit(categorySplit[1], '+');
         const params: { [facetValueLabel: string]: boolean } = {};
@@ -372,27 +372,27 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.location.go(urlTree.toString());
   }
 
-  
-  private escapedSplit(value: string, delim: string){
-    return value.match(new RegExp('((.|^)*?([^!]|^))([' + delim + ']|$)','g'))
-           .map(d=>d.replace(new RegExp('[' +delim + ']$','g'),'')); 
+
+  private escapedSplit(value: string, delim: string) {
+    return value.match(new RegExp('((.|^)*?([^!]|^))([' + delim + ']|$)', 'g'))
+           .map(d => d.replace(new RegExp('[' + delim + ']$', 'g'), ''));
   }
-  
-  private encodeValue(facetValue: string){
-    let encFV = facetValue.replace('!','!@');
-    encFV = encFV.replace(/[.]/g,'!.');
-    encFV = encFV.replace(/[\+]/g,'!+');
-    encFV = encFV.replace(/[,]/g,'!,');
-    encFV = encFV.replace(/[\*]/g,'!*');
+
+  private encodeValue(facetValue: string) {
+    let encFV = facetValue.replace('!', '!@');
+    encFV = encFV.replace(/[.]/g, '!.');
+    encFV = encFV.replace(/[\+]/g, '!+');
+    encFV = encFV.replace(/[,]/g, '!,');
+    encFV = encFV.replace(/[\*]/g, '!*');
     return encFV;
   }
 
-  
-  private decodeValue(encFV: string){
-    let decFV = encFV.replace(/!([^@])/g,"$1").replace(/[!][@]/g,'!');
+
+  private decodeValue(encFV: string) {
+    const decFV = encFV.replace(/!([^@])/g, '$1').replace(/[!][@]/g, '!');
     return decFV;
   }
-  
+
   private applyFacetsFilter(facetName: string) {
     const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     let eventValue = 0;

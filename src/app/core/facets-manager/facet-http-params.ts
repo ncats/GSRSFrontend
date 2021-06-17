@@ -34,7 +34,8 @@ export class FacetHttpParams extends HttpParams {
         }
         if ( deprecated ) {
         } else if (!hasDeprecated ) {
-            clone = clone.append('facet', 'Deprecated/Not Deprecated');
+		// __alex__ trying to remove this
+        //     clone = clone.append('facet', 'Deprecated/Not Deprecated');
         }
         return clone;
     }

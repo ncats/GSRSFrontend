@@ -858,5 +858,9 @@
         "facetValue":"pending"}]
 
     }
-  ]
+  ],
+  "clinicalTrialSubstanceKeyType": {
+      "default": "UUID",
+      "agency": "BDNUM"
+  }
 }

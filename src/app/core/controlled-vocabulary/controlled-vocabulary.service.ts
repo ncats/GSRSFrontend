@@ -216,7 +216,7 @@ export class ControlledVocabularyService extends BaseHttpService {
     const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
     return url;
   }
-    
+
 
   search(domain: string, query: string): Observable<Array<VocabularyTerm>> {
     return new Observable(observer => {

@@ -26,7 +26,8 @@ export interface Config {
     relationshipsVisualizationUri?: string;
     homeDynamicLinks?: Array<any>;
     registrarDynamicLinks?: Array<any>;
-    bannerMessage?: string;
+  bannerMessage?: string;
+//  clinicalTrialSubstanceKeyTypes: ClinicalTrialSubstanceKeyTypes; 
 }
 
 export interface SubstanceDetailsCard {
@@ -51,4 +52,9 @@ export interface NavItem {
     externalPath?: string;
     order?: number;
     children?: Array<NavItem>;
+}
+
+export interface ClinicalTrialSubstanceKeyTypes {
+  default: string;
+  display: string;
 }

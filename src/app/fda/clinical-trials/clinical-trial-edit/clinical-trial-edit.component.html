@@ -6,12 +6,13 @@
 
 		
 	</div>
-	<div *ngIf="clinicalTrial">
 
 	<div *ngIf="clinicalTrial">
 
-	<p *ngIf="clinicalTrial.nctNumber">
-	<a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a>
+	<div *ngIf="clinicalTrial">
+
+	<p *ngIf="clinicalTrial.trialNumber">
+	<a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.trialNumber}}</a>
 	&nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span>
 	</p>	
 	</div>
@@ -29,6 +30,7 @@
 		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
 		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
+
 
 	<mat-table #table [dataSource]="dataSource">
 <!--
@@ -58,16 +60,16 @@
 				</span>
 			</mat-cell>
 		</ng-container>
-		<!-- substanceUuid -->
-		<ng-container matColumnDef="substanceUuid">
-			<mat-header-cell *matHeaderCellDef> Substance UUID </mat-header-cell>
+		<!-- substanceKey -->
+		<ng-container matColumnDef="substanceKey">
+			<mat-header-cell *matHeaderCellDef>Substance Key</mat-header-cell>
 			<mat-cell *matCellDef="let element">
 					<span *ngIf="!isAdmin"> 
-					{{element.substanceUuid}}
+					{{element.substanceKey}}
 					</span> 
 					<span *ngIf="isAdmin"> 
 						<mat-form-field floatLabel="never">
-					<input  matInput placeholder="substanceUuid" [value]="element.substanceUuid" [(ngModel)]="element.substanceUuid">
+					<input  matInput placeholder="substanceKey" [value]="element.substanceKey" [(ngModel)]="element.substanceKey">
 					</mat-form-field> 
 				</span> 
 			</mat-cell>
@@ -92,7 +94,7 @@
 		<ng-container matColumnDef="link">
 			<mat-header-cell *matHeaderCellDef></mat-header-cell>
 			<mat-cell *matCellDef="let element">
-					<a target="_blank" [routerLink]="['/substances', element.substanceUuid]" >link</a>
+					<a target="_blank" [routerLink]="['/substances', element.substanceKey]" >link</a>
 			</mat-cell>
 		</ng-container>
 
@@ -111,13 +113,34 @@
 	<div *ngIf="isAdmin">
 		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
 		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
+    Copy(<span class='copy-button' (click)="substancesToClipboard1a();">1a</span> <span class='copy-button' (click)="substancesToClipboard1b();">1b</span> <span class='copy-button' (click)="substancesToClipboard2a();">2a</span> <span class='copy-button' (click)="substancesToClipboard2b();">2b</span> <span class='copy-button' (click)="substancesToClipboard3a();">3a</span> <span class='copy-button' (click)="substancesToClipboard3b();">3b</span>) 
+
+
+<div style='margin-top: 20px'>
+<div>
+ <textarea matInput id='bulk-input' #bulkInput placeholder="Bulk Input"
+
+  [(ngModel)]="bulkInputValue"
+                                  
+ ></textarea>                    
+ </div>
+<div>
+<div class='copy-button' (click)="parseBulkInput();">parse</div>
+</div>
+
+
+</div>
+
+
+
+
 	</div>
 
 	<div class="trial-detailsheader">
 		<span class="emphasize">Trial Details</span>&nbsp;
-		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a></span>&nbsp;
-		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see XML from clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber + '?displayxml=true'">XML</a></span>&nbsp;
-		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see history on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/history/' + clinicalTrial.nctNumber">History</a></span>&nbsp;
+		<span *ngIf="clinicalTrial.trialNumber"><a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.trialNumber}}</a></span>&nbsp;
+		<span *ngIf="clinicalTrial.trialNumber"><a target="_blank" title="see XML from clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber + '?displayxml=true'">XML</a></span>&nbsp;
+		<span *ngIf="clinicalTrial.trialNumber"><a target="_blank" title="see history on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/history/' + clinicalTrial.trialNumber">History</a></span>&nbsp;
 	</div>
 
 <div class="container">
@@ -174,7 +197,7 @@
 			<p>Outcome Measures:</p>
 			<div class="indent-list" *ngFor="let content of clinicalTrial.outcomeMeasures.split('\|')">{{ content }}</div>
 		</div>
-		<p *ngIf="clinicalTrial.nctNumber">Url: <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.url}}</a></p>
+		<p *ngIf="clinicalTrial.trialNumber">Url: <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.url}}</a></p>
 
 	</div>
 	</div>

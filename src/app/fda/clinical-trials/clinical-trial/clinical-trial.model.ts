@@ -1,7 +1,8 @@
 export interface ClinicalTrialDrug {
   id: number;
-  nctNumber: string;
-  substanceUuid: string;
+  trialNumber: string;
+  substanceKey: string;
+  substanceKeyType: 'UUID';
   protectedMatch: boolean;
   substanceDisplayName: string;
 }
@@ -16,7 +17,7 @@ export interface BdnumNameAll {
 }
 
 export interface ClinicalTrial {
-  nctNumber: string;
+  trialNumber: string;
   title: string;
   recruitment: string;
   phases: string;

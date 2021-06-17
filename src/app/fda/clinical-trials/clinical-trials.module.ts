@@ -34,7 +34,7 @@ const clinicalTrialsRoutes: Routes = [
       component: ClinicalTrialsBrowseComponent
     },
    {
-    path: 'edit-clinical-trial/:nctNumber',
+    path: 'edit-clinical-trial/:trialNumber',
       component: ClinicalTrialEditComponent
     },
     {
@@ -42,11 +42,11 @@ const clinicalTrialsRoutes: Routes = [
       component: ClinicalTrialAddComponent
     },
     {
-    path: 'clinicalTrialDetails/:nctNumber/:src',
+    path: 'clinicalTrialDetails/:trialNumber/:src',
       component: ClinicalTrialDetailsComponent
     },
     {
-    path: 'clinicalTrialEuropeDetails/:nctNumber/:src',
+    path: 'clinicalTrialEuropeDetails/:trialNumber/:src',
       component: ClinicalTrialEuropeDetailsComponent
     }
 ];
