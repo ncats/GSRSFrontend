@@ -36,6 +36,7 @@ export class IngredientFormComponent implements OnInit {
   basisOfStrengthActiveMoiety: any;
   username = null;
   substanceConfig: any;
+  substanceKeyType: string;
 
   constructor(
     private authService: AuthService,
@@ -56,6 +57,12 @@ export class IngredientFormComponent implements OnInit {
 
       this.ingredientNameBdnumOld = this.ingredient.bdnum;
       this.basisofStrengthBdnumOld = this.ingredient.basisOfStrengthBdnum;
+
+      // Get Substance Linking Key Type from Config
+      this.substanceKeyType = this.generalService.getSubstanceKeyType();
+      if (!this.substanceKeyType) {
+        alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Ingredient Name');
+      }
       //  this.getSubstanceId(this.ingredient.bdnum, 'ingredientname');
       //   this.getSubstanceId(this.ingredient.basisOfStrengthBdnum, 'basisofstrength');
     }, 600);
@@ -172,9 +179,16 @@ export class IngredientFormComponent implements OnInit {
               if (type) {
                 if (type === 'ingredientname') {
                   this.ingredient.substanceKey = substanceCodes[index].code;
+                  this.ingredient.substanceKeyType = this.substanceKeyType;
+
+                  if (!this.ingredient.basisOfStrengthSubstanceKey) {
+                    this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
+                    this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyType;
+                  }
                 }
                 if (type === 'basisofstrength') {
                   this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
+                  this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyType;
                 }
               }
               break;

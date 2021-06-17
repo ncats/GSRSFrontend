@@ -8,6 +8,7 @@ import { PagingResponse } from '@gsrs-core/utils';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { Application, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
+import { ApplicationAll, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
 import { ValidationResults } from '../model/application.model';
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
@@ -61,6 +62,35 @@ export class ApplicationService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<Application>>(url, options);
+  }
+
+  getApplicationAll(
+    order: string,
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<PagingResponse<ApplicationAll>> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
+    // const url = this.apiBaseUrl + 'applicationssrs/search';
+    const url = this.apiBaseUrlWithEntityAllContext + 'search';
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<ApplicationAll>>(url, options);
   }
 
   exportBrowseApplicationsUrl(

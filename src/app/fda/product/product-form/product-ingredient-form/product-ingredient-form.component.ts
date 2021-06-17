@@ -208,6 +208,11 @@ export class ProductIngredientFormComponent implements OnInit {
                 if (type === 'ingredientname') {
                   this.ingredient.substanceKey = substanceCodes[index].code;
                   this.ingredient.substanceKeyType = this.substanceKeyType;
+
+                  if (!this.ingredient.basisOfStrengthSubstanceKey) {
+                    this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
+                    this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyType;
+                  }
                 }
 
                 if (type === 'basisofstrength') {

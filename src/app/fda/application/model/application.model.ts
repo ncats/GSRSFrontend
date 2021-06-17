@@ -256,3 +256,72 @@ export interface MessageLink {
   href: string;
   text: string;
 }
+
+/* Application All Models */
+
+export interface ApplicationAll {
+  id?: string;
+  appType?: string;
+  appNumber?: string;
+  sponsorName?: string;
+  appStatus?: string;
+  divisionClassDesc?: string;
+  appSubType?: string;
+  center?: string;
+  fromTable?: string;
+  inDarrtsDetail?: string;
+  provenance?: string;
+  substanceId?: string;
+  name?: string;
+  bdnum?: string;
+  unii?: string;
+  productName?: string;
+  appCount?: string;
+  ingredientType?: string;
+  applicationProductList?: Array<ProductSrsAll>;
+  indicationList?: Array<AppIndicationAll>;
+}
+
+export interface ProductSrsAll {
+  id?: string;
+  appType?: string;
+  appNumber?: string;
+  productName?: string;
+  dosageForm?: string;
+  applicationProductNameList?: Array<ProductNameSrsAll>;
+  applicationIngredientList?: Array<AppIngredientAll>;
+}
+
+export interface ProductNameSrsAll {
+  id?: string;
+  productName?: string;
+  fromTable?: string;
+  applicationProductNameList?: Array<ProductName>;
+  applicationIngredientList?: Array<ApplicationIngredient>;
+}
+
+export interface AppIngredientAll {
+  id?: string;
+  applicantIngredName?: string;
+  bdnum?: string;
+  ingredientType?: string;
+}
+
+export interface AppIndicationAll {
+  id?: number;
+  productName?: string;
+  amount?: number;
+  dosageForm?: string;
+  routeAdmin?: string;
+  unitPresentation?: string;
+  unit?: string;
+  reviewedBy?: string;
+  reviewDate?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  applicationProductNameList?: Array<ProductName>;
+  applicationIngredientList?: Array<ApplicationIngredient>;
+}
