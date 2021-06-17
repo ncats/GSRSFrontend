@@ -24,17 +24,17 @@ export class AdverseEventService extends BaseHttpService {
 
   // TESTING TESTING TESTING
 
-  apiBaseUrlPt = 'http://localhost:8080/api/v1/';
-  apiBaseUrlDme = 'http://localhost:8081/api/v1/';
-  apiBaseUrlCvm = 'http://localhost:8082/api/v1/';
+//  apiBaseUrlPt = 'http://localhost:8080/api/v1/';
+//  apiBaseUrlDme = 'http://localhost:8081/api/v1/';
+//  apiBaseUrlCvm = 'http://localhost:8082/api/v1/';
 
- // apiBaseUrlWithEntityPtContext = this.apiBaseUrl + 'adverseeventpt' + '/';
- // apiBaseUrlWithEntityDmeContext = this.apiBaseUrl + 'adverseeventdme' + '/';
- // apiBaseUrlWithEntityCvmContext = this.apiBaseUrl + 'adverseeventcvm' + '/';
+  apiBaseUrlWithEntityPtContext = this.apiBaseUrl + 'adverseeventpt' + '/';
+  apiBaseUrlWithEntityDmeContext = this.apiBaseUrl + 'adverseeventdme' + '/';
+  apiBaseUrlWithEntityCvmContext = this.apiBaseUrl + 'adverseeventcvm' + '/';
 
-   apiBaseUrlWithEntityPtContext = this.apiBaseUrlPt + 'adverseeventpt' + '/';
-   apiBaseUrlWithEntityDmeContext = this.apiBaseUrlDme + 'adverseeventdme' + '/';
-   apiBaseUrlWithEntityCvmContext = this.apiBaseUrlCvm + 'adverseeventcvm' + '/';
+ //  apiBaseUrlWithEntityPtContext = this.apiBaseUrlPt + 'adverseeventpt' + '/';
+ //  apiBaseUrlWithEntityDmeContext = this.apiBaseUrlDme + 'adverseeventdme' + '/';
+ //  apiBaseUrlWithEntityCvmContext = this.apiBaseUrlCvm + 'adverseeventcvm' + '/';
 
   constructor(
     public http: HttpClient,

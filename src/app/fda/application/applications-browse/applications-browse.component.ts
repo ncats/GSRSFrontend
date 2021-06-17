@@ -384,7 +384,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-      if (this.authService.getUser() !== '') {
+    //  if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
@@ -408,7 +408,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
             }, error => this.loadingService.setLoading(false));
           }
         });
-      }
+    //  }
     }
   }
 

@@ -8,7 +8,7 @@ import { PagingResponse } from '@gsrs-core/utils';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { Application, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
-import { ApplicationAll, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
+import { ApplicationAll } from '../model/application.model';
 import { ValidationResults } from '../model/application.model';
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
@@ -23,8 +23,8 @@ export class ApplicationService extends BaseHttpService {
 
   totalRecords = 0;
   application: Application;
-  entityContext = 'application';
-  // entityContext = 'applicationssrs';
+  //entityContext = 'application';
+  entityContext = 'applicationssrs';
   apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
   apiBaseUrlWithEntityAllContext = this.apiBaseUrl + 'applicationall' + '/';
 
