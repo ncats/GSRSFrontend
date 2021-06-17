@@ -180,6 +180,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         this.setResultData(pagingResponse.content);
         this.applicationCount = pagingResponse.total;
         this.etag = pagingResponse.etag;
+        this.countApplicationOut.emit(this.applicationCount);
       }, error => {
         console.log('error');
       }, () => {

@@ -41,25 +41,19 @@
         <ng-container matColumnDef="appType">
           <th mat-header-cell *matHeaderCellDef> Application Type </th>
           <td mat-cell *matCellDef="let application">
-            <!--
             <span *ngIf="(application.fromTable && application.fromTable === 'SRS')">
-            -->
             <a [routerLink]="['/application', application.id]" target="_blank">{{application.appType}}</a>
             &nbsp;&nbsp;
             <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
               matTooltip='Edit GSRS Application Record'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>
-            <!--
             </span>
-             -->
-            <!--
             <span *ngIf="application.fromTable && application.fromTable !== 'SRS'">
               <a [routerLink]="['/applicationDarrtsDetails', application.appType, application.appNumber]"
                 target="_blank">{{application.appType}}</a>
               <br><span class="font10px colorgray">(Integrity)</span>
             </span>
-            -->
           </td>
         </ng-container>
 
