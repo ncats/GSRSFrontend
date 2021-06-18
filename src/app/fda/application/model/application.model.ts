@@ -1,3 +1,4 @@
+/*
 export interface ApplicationSrs {
   id?: number;
   appType?: string;
@@ -29,7 +30,9 @@ export interface ApplicationSrs {
   productEffectedList?: Array<ProductEffected>;
   applicationHistoryList?: Array<ApplicationSrsHistory>;
 }
+*/
 
+/*
 export interface ProductSrs {
   id?: number;
   productName?: string;
@@ -62,11 +65,95 @@ export interface ProductNameSrs {
   internalVersion?: number;
 }
 
+export interface ApplicationIndicationSrs {
+  id?: number;
+  indication?: string;
+  amount?: number;
+  dosageForm?: string;
+  routeAdmin?: string;
+  unitPresentation?: string;
+  unit?: string;
+  reviewedBy?: string;
+  reviewDate?: number;
+  internalVersion?: number;
+}
+
+*/
+
+// GSRS 3.0 in Spring Boot
+export interface Application {
+  id?: number;
+  appType?: string;
+  appNumber?: string;
+  title?: string;
+  sponsorName?: string;
+  nonProprietaryName?: string;
+  submitDate?: string;
+  appSubType?: string;
+  divisionClassDesc?: string;
+  status?: string;
+  center?: string;
+  source?: string;
+  publicDomain?: string;
+  version?: number;
+  provenance?: string;
+  externalTitle?: string;
+  statusDate?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  isDisabled?: boolean;
+  applicationProductList?: Array<Product>;
+  applicationIndicationList?: Array<ApplicationIndication>;
+  clinicalTrialList?: Array<ClinicalTrial>;
+  productTechEffectList?: Array<ProductTechnicalEffect>;
+  productEffectedList?: Array<ProductEffected>;
+  applicationHistoryList?: Array<ApplicationSrsHistory>;
+}
+
+export interface Product {
+  id?: number;
+  productName?: string;
+  amount?: number;
+  dosageForm?: string;
+  routeAdmin?: string;
+  unitPresentation?: string;
+  unit?: string;
+  reviewedBy?: string;
+  reviewDate?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  applicationProductNameList?: Array<ProductName>;
+  applicationIngredientList?: Array<ApplicationIngredient>;
+}
+
+export interface ProductName {
+  id?: number;
+  productName?: string;
+  productNameType?: string;
+  provenance?: string;
+  deprecated?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
 export interface ApplicationIngredient {
   id?: number;
   applicantIngredName?: string;
   bdnum?: string;
   basisOfStrengthBdnum?: string;
+  substanceKey?: string;
+  substanceKeyType?: string;
+  basisOfStrengthSubstanceKey?: string;
+  basisOfStrengthSubstanceKeyType?: string;
   average?: string;
   low?: string;
   high?: string;
@@ -85,23 +172,15 @@ export interface ApplicationIngredient {
   modifyDate?: number;
   farmSubstanceId?: number;
   farmSubstance?: string;
-  ingredientName?: string;
-  substanceId?: string;
+  _substanceUuid?: string;
+  _approvalID?: string;
+  _name?: string;
   activeMoietyName?: string;
   activeMoietyUnii?: string;
   subRelationshipList?: Array<SubRelationship>;
 }
 
-export interface SubRelationship {
-  id?: string;
-  substanceId?: string;
-  ownerBdnum?: string;
-  relationshipType?: string;
-  relationshipName?: string;
-  relationshipUnii?: string;
-}
-
-export interface ApplicationIndicationSrs {
+export interface ApplicationIndication {
   id?: number;
   indication?: string;
   amount?: number;
@@ -112,6 +191,15 @@ export interface ApplicationIndicationSrs {
   reviewedBy?: string;
   reviewDate?: number;
   internalVersion?: number;
+}
+
+export interface SubRelationship {
+  id?: string;
+  substanceId?: string;
+  ownerBdnum?: string;
+  relationshipType?: string;
+  relationshipName?: string;
+  relationshipUnii?: string;
 }
 
 export interface ProductTechnicalEffect {

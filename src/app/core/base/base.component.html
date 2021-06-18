@@ -22,10 +22,10 @@
      <span style = "font-size:16px;">Menu &nbsp;</span><mat-icon svgIcon="menu"></mat-icon>
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()" class = "reg-a">
-      <a mat-menu-item [routerLink]="['/guided-search']">
-        Guided Search
-      </a>
+      <!--
       <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf="appId === 'fda'">
+      -->
+      <a mat-menu-item [routerLink]="['/advanced-search']">
         Advanced Search
       </a>
       <div *ngFor="let navItem of navItems">
@@ -69,20 +69,20 @@
   </div>
   <div>
       <button class = "top-button extra-item" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="browse" (click)="increaseMenuZindex()" aria-label="main menu" *ngIf = "appId === 'fda'">
-          <span style = "font-size:16px;">Other Browse</span>
+          <span style = "font-size:16px;">Browse Other</span>
          <mat-icon svgIcon="chevron_down"></mat-icon>
          </button>
          <mat-menu #browse="matMenu" (closed)="removeZindex()">
       <a mat-menu-item routerLink="/browse-applications">
-        Browse All Applications
+        Browse Applications
       </a>
       <mat-divider></mat-divider>
       <a mat-menu-item routerLink="/browse-products">
-        Browse All Products
+        Browse Products
       </a>
       <mat-divider></mat-divider>
       <a mat-menu-item routerLink="/browse-clinical-trials">
-        Browse All Clinical Trials
+        Browse Clinical Trials
       </a>
       <div *ngIf="adverseEventShinyHomepageDisplay === true">
         <mat-divider></mat-divider>
@@ -108,14 +108,17 @@
          <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath">
            {{navItem.display}}
          </a>
-             <a mat-menu-item *ngIf="navItem.display === 'Register'" (click)="importDialog()">
-               Import Substance
-             </a>
+            
+       </div>
+       <div>
+          <a mat-menu-item (click)="importDialog()">
+              Import Substance
+            </a>
        </div>
      </mat-menu>
     </div>
   <span class="middle-fill"></span>
-  <app-substance-text-search class="top-search" [searchValue]="searchValue"
+  <app-substance-text-search class="top-search" [searchValue]="searchValue" placeholder = "Search Substances"
     (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
     (closed)="removeZindex()">
   </app-substance-text-search>
@@ -148,12 +151,11 @@
       </button>
     </mat-menu>
   </div>
-  <div class="classic-view-container">
-    <a mat-raised-button [href]="baseDomain + classicLinkPath + classicLinkQueryParamsString" target="_blank">
-      <div hidden>open classic site in new window</div>
-      Classic Site
-      <mat-icon matListIcon svgIcon="open_in_new"></mat-icon>
-    </a>
+  <div class="classic-view-container"  *ngIf="auth && auth.identifier">
+      <a class = "top-button extra-item" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [routerLink]="['/registrars']" *ngIf = "canRegister">
+          <span style = "font-size:16px;">Registrars</span>
+         
+  </a>
   </div>
 </mat-toolbar>
 <app-main-notification></app-main-notification>

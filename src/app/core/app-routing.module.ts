@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
 import { HomeComponent } from './home/home.component';
+import { RegistrarsComponent } from './registrars/registrars.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
@@ -19,7 +20,6 @@ import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-down
 import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { CanActivateAdminPage } from './admin/can-activate-admin-page';
-import { RegistrarsComponent } from './registrars/registrars.component';
 
 const childRoutes: Routes = [
   {
@@ -37,7 +37,6 @@ const childRoutes: Routes = [
   {
     path: 'registrars',
     component: RegistrarsComponent,
-    canActivate: [CanRegisterSubstanceForm],
   },
   {
     path: 'substances/register',

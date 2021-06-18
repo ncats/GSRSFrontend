@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
-import { ConfigService } from '@gsrs-core/config';
+import { map, switchMap } from 'rxjs/operators';
 import { BaseHttpService } from '@gsrs-core/base';
+import { ConfigService } from '@gsrs-core/config';
 import { PagingResponse } from '@gsrs-core/utils';
-import { ApplicationSrs, ValidationResults, ApplicationIngredient } from '../model/application.model';
-import { ApplicationIndicationSrs, ProductSrs, ProductNameSrs } from '../model/application.model';
+import { Facet } from '@gsrs-core/facets-manager';
+import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
+import { Application, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
+import { ValidationResults } from '../model/application.model';
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
-import { map, switchMap } from 'rxjs/operators';
-import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
-import { Facet } from '@gsrs-core/facets-manager';
 
 @Injectable(
   {
@@ -21,8 +21,12 @@ import { Facet } from '@gsrs-core/facets-manager';
 export class ApplicationService extends BaseHttpService {
 
   totalRecords: 0;
-  application: ApplicationSrs;
+  application: Application;
+  entity = 'Application';
+  // entityContext = 'application';
+  entityContext = 'applicationssrs';
 
+  apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
   constructor(
     public http: HttpClient,
     public configService: ConfigService
@@ -35,7 +39,7 @@ export class ApplicationService extends BaseHttpService {
     pageSize: number = 10,
     searchTerm?: string,
     facets?: FacetParam
-  ): Observable<PagingResponse<ApplicationSrs>> {
+  ): Observable<PagingResponse<Application>> {
     let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
@@ -45,12 +49,13 @@ export class ApplicationService extends BaseHttpService {
 
     params = params.appendFacetParams(facets);
 
-    const url = `${this.apiBaseUrl}applicationssrs/search`;
+    // const url = this.apiBaseUrl + 'applicationssrs/search';
+    const url = this.apiBaseUrlWithEntityContext + 'search';
     const options = {
       params: params
     };
 
-    return this.http.get<PagingResponse<ApplicationSrs>>(url, options);
+    return this.http.get<PagingResponse<Application>>(url, options);
   }
 
   exportBrowseApplicationsUrl(
@@ -86,14 +91,17 @@ export class ApplicationService extends BaseHttpService {
   }
 
   getApiExportUrl(etag: string, extension: string): string {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/export/${etag}/${extension}`;
+    const url = this.apiBaseUrlWithEntityContext + 'export/' + etag + '/' + extension;
     return url;
   }
 
   getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = `${this.apiBaseUrlWithEntityContext}search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      // url = this.apiBaseUrlWithEntityContext + 'search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip
+      // =0&fdim=200&sideway=true&field=`${facet.name.replace(' ', '+')}`&top=14448&fskip=
+      // 0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
@@ -103,7 +111,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   filterFacets(name: string, category: string): Observable<any> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
+    const url = this.apiBaseUrlWithEntityContext + 'search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=' + name;
     return this.http.get(url);
   }
 
@@ -169,11 +177,12 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  // Changed for Spring Boot
   getApplicationDetails(
     id: number
   ): Observable<any> {
-    const url = this.baseUrl + 'applicationDetails2?id=' + id;
-
+    // const url = this.baseUrl + 'applicationDetails2?id=' + id;
+    const url = this.apiBaseUrlWithEntityContext + id;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -192,6 +201,18 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  // Changed, work Spring Boot and Play
+  getSubstanceDetailsByAnyId(
+    id: string
+  ): Observable<any> {
+    const url = this.apiBaseUrl + 'substances(' + id + ')';
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   getSubstanceDetailsByBdnum(
     bdnum: string
   ): Observable<any> {
@@ -203,10 +224,36 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  // Changed, work Spring Boot and Play
   getSubstanceDetailsBySubstanceId(
     substanceId: string
   ): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+    // const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes'
+    // const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+
+    // TESTING TESTING
+    this.apiBaseUrl = 'http://localhost:9000/ginas/app/api/v1/';
+
+    const url = this.apiBaseUrl + 'substances(' + substanceId + ')';
+    alert(url);
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  // Changed, work Spring Boot and Play
+  getSubstanceCodesBySubstanceUuid(
+    substanceId: string
+  ): Observable<any> {
+    // const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes'
+    // const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+
+    // TESTING TESTING
+    this.apiBaseUrl = 'http://localhost:9000/ginas/app/api/v1/';
+
+    const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes';
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -247,7 +294,7 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
-  loadApplication(application?: ApplicationSrs): void {
+  loadApplication(application?: Application): void {
     // if Update/Exist Application
     // setTimeout(() => {
     if (application != null) {
@@ -255,7 +302,7 @@ export class ApplicationService extends BaseHttpService {
 
       // Add a new Indication if there is no indication record.
       if (this.application.applicationIndicationList.length < 1) {
-        const newIndication: ApplicationIndicationSrs = {};
+        const newIndication: ApplicationIndication = {};
         this.application.applicationIndicationList.unshift(newIndication);
       }
 
@@ -278,8 +325,8 @@ export class ApplicationService extends BaseHttpService {
     //  });
   }
 
-  saveApplication(): Observable<ApplicationSrs> {
-    const url = this.apiBaseUrl + `applicationssrs`;
+  saveApplication(): Observable<Application> {
+    const url = this.apiBaseUrlWithEntityContext;
     const params = new HttpParams();
     const options = {
       params: params,
@@ -292,10 +339,10 @@ export class ApplicationService extends BaseHttpService {
 
     // Update Application
     if ((this.application != null) && (this.application.id)) {
-      return this.http.put<ApplicationSrs>(url, this.application, options);
+      return this.http.put<Application>(url, this.application, options);
     } else {
       // Save New Application
-      return this.http.post<ApplicationSrs>(url, this.application, options);
+      return this.http.post<Application>(url, this.application, options);
     }
   }
 
@@ -311,23 +358,24 @@ export class ApplicationService extends BaseHttpService {
     });
   }
 
+  // Changed this function for GSRS 3.0 Spring Boot
   validateApp(): Observable<ValidationResults> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/@validate`;
+    const url = this.apiBaseUrlWithEntityContext + '@validate';
     return this.http.post(url, this.application);
   }
 
   deleteApplication(): Observable<any> {
-    const url = this.apiBaseUrl + 'applicationssrs(' + this.application.id + ')';
+    const url = this.apiBaseUrlWithEntityContext + '(' + this.application.id + ')';
     const params = new HttpParams();
     const options = {
       params: params
     };
-    const x = this.http.delete<ApplicationSrs>(url, options);
+    const x = this.http.delete<Application>(url, options);
     return x;
   }
 
   addNewIndication(): void {
-    const newIndication: ApplicationIndicationSrs = {};
+    const newIndication: ApplicationIndication = {};
     this.application.applicationIndicationList.unshift(newIndication);
   }
 
@@ -336,7 +384,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   addNewProduct(): void {
-    const newProduct: ProductSrs = {
+    const newProduct: Product = {
       applicationProductNameList: [{}],
       applicationIngredientList: [{}]
     };
@@ -345,7 +393,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   addNewProductName(prodIndex: number): void {
-    const newProductName: ProductNameSrs = {};
+    const newProductName: ProductName = {};
 
     this.application.applicationProductList[prodIndex].applicationProductNameList.unshift(newProductName);
   }
@@ -400,5 +448,19 @@ export class ApplicationService extends BaseHttpService {
   getApplicationListExportUrl(bdnum: string): string {
     return this.baseUrl + 'applicationListExport?bdnum=' + bdnum;
   }
+
+  /*
+  getSubstanceCodeCodeSystemConfig(): string {
+    let url = null;
+    url = `${(this.configService.configData && this.configService.configData.substanceCodeCodeSystem)}`;
+    return url;
+  }
+
+  getSubstanceCodeIdTypeConfig(): string {
+    let url = null;
+    url = `${(this.configService.configData && this.configService.configData.substanceCodeIdType)}`;
+    return url;
+  }
+  */
 
 } // class

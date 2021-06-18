@@ -53,7 +53,7 @@ export class StructureService {
   }
 
   resolveName(name: string): Observable<ResolverResponse[]> {
-    const url = `${this.configService.configData.apiBaseUrl}resolve/${name}`;
+    const url = `${this.configService.configData.apiBaseUrl}resolve/?name=${encodeURIComponent(name)}`;
     return this.http.get<ResolverResponse[]>(url);
   }
 
@@ -97,7 +97,7 @@ export class StructureService {
   }
 
   molvec(file: any): Observable<any> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/foo/ocrStructure`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/ocrStructure`;
     return this.http.post<any>(url, file);
 
   }

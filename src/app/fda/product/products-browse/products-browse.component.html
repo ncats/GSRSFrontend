@@ -51,8 +51,25 @@
 
     <!-- Display Facet selection -->
     <div class="padleft10px" *ngIf="totalProducts > 0">
-      <!-- Display Facets selection -->
       <div class="search-parameters">
+        <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+            <span>{{this.searchTerm}}</span>
+          </div>
+          <div class="actions-container">
+            <!--
+          <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
+          -->
+            <button mat-icon-button color="primary" (click)="clearSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Display Facets selection -->
         <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
           <div class='selected-container'>
             <span class="capitalized font-medium-bold selected-label">
@@ -73,7 +90,7 @@
       </div>
     </div>
     <br>
-    
+
     <!-- Display Content Details -->
     <div class="substance-cards">
       <mat-card class="bordergray" *ngFor="let product of products; let indexProd = index">

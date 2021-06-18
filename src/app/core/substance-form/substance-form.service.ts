@@ -194,8 +194,7 @@ export class SubstanceFormService implements OnDestroy {
         // TP: default to protected for root level record.
         this.privateSubstance.access=["protected"];
         this.privateSubstance.definitionLevel = "COMPLETE";
-        this.privateSubstance.definitionType = "PRIMARY";
-        
+        this.privateSubstance.definitionType = "PRIMARY";        
       }
 
       this.subClass = this.privateSubstance.substanceClass;
@@ -205,9 +204,9 @@ export class SubstanceFormService implements OnDestroy {
       // That's why they are used as exceptions
       
       if (this.subClass === 'chemical') {
-        this.subClass = 'structure'; //?
+        this.subClass = 'structure';
       } else if (this.subClass === 'specifiedSubstanceG1') { 
-        this.subClass = 'specifiedSubstance'; //?
+        this.subClass = 'specifiedSubstance';
       }
 
       if (this.privateSubstance[this.subClass] == null) {

@@ -319,13 +319,4 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   addNewImpuritiesTotal() {
     this.impuritiesService.addNewImpuritiesTotal();
   }
-
-  /*
-  panelOpened() {
-     (closed)="panelClosed()" (opened)="panelOpened()" 
-  }
-
-  panelClosed() {
-  }
-  */
 }

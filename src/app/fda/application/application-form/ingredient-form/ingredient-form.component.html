@@ -54,16 +54,16 @@
 
         <!-- Display Ingredient Name -->
         <div class="padall5px fontfamilyhelvetica">
-          <div *ngIf="ingredientName">
-            <span class="colormaroon"><b>{{ingredientName}}</b></span>
+          <div *ngIf="ingredient._name">
+            <span class="colormaroon"><b>{{ingredient._name}}</b></span>
             <br>
             <!-- Display Active Moiety -->
             <div *ngFor="let active of ingredientNameActiveMoiety; let activeIndex = index">
               {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
           </div>
-          <div *ngIf="ingredient.bdnum">
-            <span class="colororange">{{ingredient.bdnum}}</span><span class="colorgray font11px"> (Bdnum)</span>
+          <div *ngIf="ingredient.substanceKey">
+            <span class="colororange">{{ingredient.substanceKey}}</span><span class="colorgray font11px"> (Substance Key)</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName(ingredIndex)"
               matTooltip="Delete Ingredient Name {{ingredIndex + 1}}">

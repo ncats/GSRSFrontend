@@ -181,6 +181,12 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'alarm-on',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-alarm_on-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'view-list',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-view_list-24px.svg'));
+      iconRegistry.addSvgIcon(
+        'glasses',
+        sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-glasses-24px.svg'));
   }
 
 }

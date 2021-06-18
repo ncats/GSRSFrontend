@@ -35,7 +35,8 @@
       </div>
       <div  *ngIf = "property.propertyType === 'PROTEIN FEATURE' || property.propertyType === 'NUCLEIC ACID FEATURE'">
         <div class="amount-title">Site Range</div>
-        <div>{{property.value.nonNumericValue}}
+        <div>
+          <input [(ngModel)] = "_nonNumeric" (focusout)= "validateRange()">
           <button mat-icon-button (click) = "openFeatureDialog()" matTooltip="Edit Feature Sites">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>

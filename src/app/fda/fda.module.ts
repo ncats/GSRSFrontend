@@ -33,6 +33,7 @@ import { ShowApplicationToggleComponent } from './substance-browse/show-applicat
 import { JiraSubmitTicketComponent } from './jira-submit-ticket/jira-submit-ticket.component';
 import { UserManualComponent } from './user-manual/user-manual.component';
 import { ImpuritiesModule } from '../fda/impurities/impurities.module';
+import { AdvancedSearchModule } from '../fda/advanced-search/advanced-search.module';
 
 const fdaRoutes: Routes = [
   {
@@ -63,13 +64,14 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
   imports: [
     CommonModule,
     RouterModule.forChild(fdaRoutes),
-   DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
+    DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
     DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicBrowseComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
     ClinicalTrialsModule.forRoot(),
     ApplicationModule,
     ProductModule,
     ImpuritiesModule,
+    AdvancedSearchModule,
     SubstanceApplicationMatchListModule,
     UserManualModule,
     JiraSubmitTicketModule,

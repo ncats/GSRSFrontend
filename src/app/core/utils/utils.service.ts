@@ -20,7 +20,7 @@ export class UtilsService {
     public configService: ConfigService,
     private sanitizer: DomSanitizer
   ) {}
-// __alex__
+// __alex__dontcommit
 
   getStructureSearchSuggestionsClinicalTrial(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
     // const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
@@ -32,9 +32,8 @@ export class UtilsService {
 
 
   getStructureSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
-    // const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
 
-    const url = 'https://gsrs.ncats.nih.gov/ginas/app/api/v1/';
     return this.http.get<SubstanceSuggestionsGroup>(url + 'suggest?q=' + searchTerm);
   }
 

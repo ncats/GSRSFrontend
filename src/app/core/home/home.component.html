@@ -1,25 +1,29 @@
 <div class = "main-container">
+  <mat-sidenav-container [hasBackdrop]="hasBackdrop">
+    <mat-sidenav  [disableClose]="!isCollapsed"  #matSideNavInstance mode="side" opened="true">
+  
 
-    <div class = "side-bar" style = "padding-left:15px;">
+
+    <div class = "side-bar" >
         <div class="register-main">
             <mat-card-content class="left-search" >
               <mat-card class = "side-header" style = "margin-bottom:10px;">
-                  <h2>Quick Links</h2>
+                  <h2 class = "quick-links">Quick Links</h2>
               </mat-card>
                 <mat-accordion multi="true">
                     <mat-expansion-panel 
                       [expanded]="true">
                       <mat-expansion-panel-header>
                         <mat-panel-title class = "panel-header">
-                            <img class="old-icon" [src]="browseAll"> Search
+                             Substances
                         </mat-panel-title>
                       </mat-expansion-panel-header>
     
                             <mat-nav-list>
                                
                                 <a mat-list-item routerLink="/browse-substance">
-                                  <mat-icon matListIcon svgIcon="search"></mat-icon>
-                                  Browse All Substances
+                                  <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                                  Browse Substances
                                 </a>
                                   <mat-divider></mat-divider>
                         
@@ -33,9 +37,9 @@
                                     Sequence Search
                                   </a>
                                   <mat-divider></mat-divider>
-                                  <a mat-list-item routerLink="/guided-search">
+                                  <a mat-list-item routerLink="/advanced-search">
                                     <mat-icon matListIcon svgIcon="youtube"></mat-icon>
-                                    Guided Search
+                                    Advanced Search
                                   </a>                           
                                   </mat-nav-list>
                         
@@ -44,7 +48,7 @@
                     [expanded]="false">
                     <mat-expansion-panel-header>
                       <mat-panel-title  class = "panel-header">
-                          <img class="old-icon" [src]="browseAll">  FDA Search
+                            Other
                       </mat-panel-title>
                     </mat-expansion-panel-header>
                       <mat-nav-list>
@@ -52,23 +56,23 @@
                               <mat-divider></mat-divider>
                     
                               <a mat-list-item routerLink="/browse-applications">
-                                <mat-icon matListIcon svgIcon="search"></mat-icon>
-                                Browse All Applications
+                                <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                                Browse Applications
                               </a>
                               <mat-divider></mat-divider>
                               <a mat-list-item routerLink="/browse-products">
-                                <mat-icon matListIcon svgIcon="search"></mat-icon>
-                                Browse All Products
+                                <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                                Browse Products
                               </a>
                               <mat-divider></mat-divider>
                               <a mat-list-item routerLink="/browse-clinical-trials">
-                                <mat-icon matListIcon svgIcon="search"></mat-icon>
-                                Browse All Clinical Trials
+                                <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                                Browse Clinical Trials
                               </a>
                               <div *ngIf="adverseEventShinyHomepageDisplay === true">
                                 <mat-divider></mat-divider>
                                 <a mat-list-item [href]="adverseEventShinyHomepageURL" target="_blank">
-                                  <mat-icon matListIcon svgIcon="search"></mat-icon>
+                                  <mat-icon matListIcon svgIcon="glasses"></mat-icon>
                                   Browse Adverse Events
                                 </a>
                               </div>
@@ -83,7 +87,7 @@
                   [expanded]="true">
                   <mat-expansion-panel-header>
                     <mat-panel-title  class = "panel-header">
-                        <img class="old-icon" [src]="chemicon">   Register
+                           Register
                     </mat-panel-title>
                   </mat-expansion-panel-header>
                     <mat-nav-list class="main-list">
@@ -138,7 +142,7 @@
                 [expanded]="false">
                 <mat-expansion-panel-header>
                   <mat-panel-title  class = "panel-header">
-                      <img class="old-icon" [src]="application">   FDA Register
+                       Register Other
                   </mat-panel-title>
                 </mat-expansion-panel-header>
                   <div>
@@ -169,14 +173,7 @@
                         Specified Substance Group 4
                         <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
                       </a>
-          
-                      <mat-divider></mat-divider>
-                      <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4Manufacturing'">
-                        <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-                        Specified Substance Group 4 Manufacturing
-                        <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-                      </a>
-          
+
                       <span *ngIf="appId === 'fda'">
           
                         <mat-divider></mat-divider>
@@ -236,9 +233,12 @@
             </mat-card-content>
           </div>
         </div>
-    
-       
-    <div class = "main-page" [ngClass] = "isClosedWelcomeMessage? 'topMargin' : ''"  *ngIf="bannerMessage && bannerMessage !== ''">
+      </mat-sidenav>
+      <mat-sidenav-content>   
+        <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+          <mat-icon svgIcon="chevron_right"></mat-icon>
+        </button>     
+    <div class="side-nav-content" [ngClass] = "isClosedWelcomeMessage? 'topMargin' : ''"  *ngIf="bannerMessage && bannerMessage !== ''">
         <mat-card class="welcome-banner home-card">
             <div class = "banner-main" [innerHTML] = "bannerMessage">
             </div>
@@ -269,7 +269,7 @@
            </div>
     
       <div class = "row">
-        <h1 class = "home">GSRS - Global Substance Registration System</h1>
+        <h1 class = "home">Global Substance Registration System - GSRS</h1>
         <div style = "padding-left:15px;">
             The main goal of the GSRS software is 
             to assist agencies in registering and documenting information about substances found in medicines.
@@ -280,15 +280,12 @@
        
       </div>
       <div class = "flex-row" style = "padding:5px;">
-          <app-substance-text-search class="main-search" placeholder = "Search All Substances" styling = "homePage" [searchValue]="searchValue"
+          <app-substance-text-search class="main-search" placeholder = "Search Substances" styling = "homePage" [searchValue]="searchValue"
           (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
           (closed)="removeZindex()">
         </app-substance-text-search>
       </div>
     <div class = "flex-row even" style = " margin-bottom: 25px;">
-        <div class="button-container">
-            <a mat-raised-button class="big-button" routerLink="/structure-search">Structure Search</a>
-          </div>
         <div class="button-container">
             <a mat-raised-button class="big-button" routerLink="/browse-substance">Browse Substances</a>
           </div>
@@ -296,12 +293,18 @@
               
               <a mat-raised-button class="big-button" routerLink="/browse-applications">Browse Applications</a>
             </div>
-          </div>
+          <div class="button-container">
+              <a mat-raised-button class="big-button" routerLink="/structure-search">Structure Search</a>
+            </div>
+            <div class="button-container">
+                <a mat-raised-button class="big-button" routerLink="/sequence-search">Sequence Search</a>
+              </div>
+            </div>
           <mat-divider class = "divide-test"></mat-divider>
     
     <div class = "flex-row" style = "padding-bottom: 10px;">
       <div class = "data">
-          Total substances: {{total}}
+          Total substances: {{total | number:'1.0':'en-US'}}
       </div>
       </div>
       <div class = "flex-row test" style = "padding-bottom: 10px;">
@@ -311,14 +314,206 @@
                   {{link.display}}
                 </div>
                 <div class = "value">
-                  {{link.total? link.total : 0}}
+                  {{link.total  | number:'1.0':'en-US'}}
                 </div>
               </span>
         </div>
     </div>
     <div style = "padding-left:15px; padding-top: 10px;">
     </div>
-    </mat-card><mat-card class = "home-card" >
+    </mat-card>
+
+    <mat-card class = "home-card" >
+    <h2 class = "home" style = "padding-top:15px;">Helpful Resources</h2>
+  </mat-card>
+    <div class = "row3">
+      <mat-card class="temprow left-link" id="resource1">
+
+          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(excel)" >GSRSFind Excel tools</a></h3>
+          <div class = "img-container">
+            <img class = "test" src = "{{imageLoc}}xlsx.png" />
+         </div>
+            <div class = "resource-desc"> GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)
+            GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.
+            </div>
+          </mat-card>
+
+          <mat-card class="temprow right-link" id="resource2">
+          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(guide)" >User Registration Guide</a></h3>
+          <div class = "img-container">
+              <img class = "test" src = "{{imageLoc}}guide.png" />
+           </div>    
+          <div class = "resource-desc"> The GSRS user registration guide is comprehensive set of instructions for registering new substances of all types in GSRS.
+         </div> 
+        </mat-card>
+      </div>
+      <div class = "row3">
+      <mat-card class="temprow left-link" id="resource2">
+              <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(dictionary)" >GSRS Data Dictionary</a></h3>
+              <div class = "img-container">
+                  <img class = "test" src = "{{imageLoc}}dictionary.png" />
+               </div>
+              <div class = "resource-desc">  The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.
+                </div>  
+            
+          </mat-card>
+
+          <mat-card class="temprow right-link" id="resource2">
+                    <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" target ="_blank" href = "https://gsrs.ncats.nih.gov/#/api#chemical%20search">GSRS API Documentation</a></h3>
+                    <div class = "img-container">
+                        <img class = "test" src = "{{imageLoc}}API.png" />
+                     </div>
+                    <div class = "resource-desc">       Swagger documentation of the GSRS API calls with working examples and implementation notes.
+                    </div>
+          </mat-card>
+        </div>
+        <div class = "row3">
+            <mat-card class="temprow left-link" id="resource2">
+                    
+              <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(schema)" >GSRS JSON schema</a></h3>
+              <div class = "img-container">
+                  <img class = "test" src = "{{imageLoc}}json.png" />
+               </div>
+                  <div class = "resource-desc">    This file contains a JSON formatted schema used by GSRS for recording substances to help visualize the substance object described by the GSRS Data Dictionary.
+                    </div>
+                  </mat-card>  
+                  <mat-card class="temprow right-link" id="resource2">
+                      <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" target ="_blank" href = "https://www.fda.gov/industry/fda-resources-data-standards/substance-identification">ISO 11238 Standard</a></h3>
+                      <div class = "img-container">
+                          <img class = "test" src = "{{imageLoc}}iso2.png" />
+                       </div>
+                      <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes. 
+                        </div> 
+                      </mat-card>
+                      </div>
+
+  
+
+  <ng-template #excel>
+      <div mat-dialog-content class = "button-modal">
+          <a class = "modal-button" href = "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip">Click to download GSRSFind Excel tools.zip</a>
+      </div>
+      <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        </div>
+  </ng-template>
+
+  <ng-template #schema>
+      <div mat-dialog-content class = "button-modal">
+          <a class = "modal-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_schema_10_30_19.json">Click to download GSRS JSON schema.json</a>
+      </div>
+      <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        </div>
+  </ng-template>
+
+  <ng-template #dictionary>
+      <div mat-dialog-content class = "button-modal" >
+          <a class = "modal-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_11-20-19.xlsx">Click to download GSRS Data Dictionary.xlsx</a>
+      </div>
+      <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        </div>
+  </ng-template>
+
+  <ng-template #guide>
+      <div mat-dialog-content class = "button-modal">
+          <a class = "modal-button"href ="https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx">Click to download User Registration Guide.docx</a>
+      </div>
+      <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        </div>
+  </ng-template>
+<!--
+      <mat-card class = "home-card" >
+    <h2 class = "home" style = "padding-top:15px;">Helpful Resources</h2>
+      <div class="row resource-row" id="resource1">
+
+          <h3 > <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip">GSRSFind Excel tools</a></h3>
+            <div class = "resource-desc"> GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)
+            GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.
+            </div>
+          </div>
+          <mat-divider class = "divide-test"></mat-divider>
+
+          <div class="row resource-row" id="resource2">
+          <h3><a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" style = "color:white" href ="https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx">User Registration Guide</a></h3>
+          
+          <div class = "resource-desc"> The GSRS user registration guide is comprehensive set of instructions for registering new substances of all types in GSRS.
+         </div> 
+        </div>
+          <mat-divider class = "divide-test"></mat-divider>
+
+          <div class="row resource-row" id="resource3">
+              <h3 class = "resource-link"><a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_11-20-19.xlsx">GSRS Data Dictionary</a></h3>
+              <div class = "resource-desc">  The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.
+                </div>  
+            </div>
+
+              <div class="row resource-row" id="resource4">
+                  <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_schema_10_30_19.json">GSRS JSON schema</a></h3>
+                  <div class = "resource-desc">    This file contains a JSON formatted schema used by GSRS for recording substances to help visualize the substance object described by the GSRS Data Dictionary.
+                    </div>  
+                </div>
+
+                <div class="row resource-row" id="resource5">
+                    <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/#/api#chemical%20search">GSRS API Documentation</a></h3>
+                    <div class = "resource-desc">       Swagger documentation of the GSRS API calls with working examples and implementation notes.
+                      </div> 
+                    </div>
+
+                  <div class="row resource-row" id="resource5">
+                      <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://www.iso.org/standard/69697.html">ISO 11238 Standard</a></h3>
+                      <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes. 
+                        </div> 
+                      </div>
+
+  </mat-card>
+
+  <mat-card class = "home-card" >
+      <h2 class = "home" style = "padding-top:15px;">Helpful Resources</h2>
+      <div class = "test1">
+        <div class="wed-test" id="resource1">
+          <div class = "inner1">
+            <h3 > <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip">GSRSFind Excel tools</a></h3>
+              <div class = "resource-desc"> GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)
+              GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.
+              </div>
+            </div>
+            </div>
+  
+            <div class="wed-test" id="resource2">
+            <h3><a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" style = "color:white" href ="https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx">User Registration Guide</a></h3>
+            
+            <div class = "resource-desc"> The GSRS user registration guide is comprehensive set of instructions for registering new substances of all types in GSRS.
+           </div> 
+          </div>
+  </div><div class = "test1">
+            <div class="wed-test" id="resource3">
+                <h3 class = "resource-link"> <a class = "resource-link mat-raised" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_11-20-19.xlsx">GSRS Data Dictionary</a></h3>
+                <div class = "resource-desc">  The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.
+                  </div>  
+              </div>
+  
+                <div class="wed-test" id="resource4">
+                    <h3 class = "resource-link">  <a class = "resource-link" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_schema_10_30_19.json">GSRS JSON schema</a></h3>
+                    <div class = "resource-desc">    This file contains a JSON formatted schema used by GSRS for recording substances to help visualize the substance object described by the GSRS Data Dictionary.
+                      </div>  
+                  </div>
+  
+                    <div class="wed-test" id="resource5">
+                        <h3 class = "resource-link"> <a class = "resource-link" href = "https://www.iso.org/standard/69697.html">ISO 11238 Standard</a></h3>
+                        <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes. 
+                          </div> 
+                        </div>
+                      </div>
+  
+    </mat-card>-->
+    <!--<mat-card class = "home-card" >
     
         <div class="row" id="design">
                 <h2  class = "home">Functional Design Studies</h2>
@@ -450,7 +645,8 @@
                 </div>
             </div>
         </div>
-    </mat-card>
+    </mat-card>-->
 
     </div>
-    
+    </mat-sidenav-content>
+    </mat-sidenav-container>

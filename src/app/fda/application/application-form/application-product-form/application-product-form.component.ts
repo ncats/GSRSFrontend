@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ApplicationSrs } from '../../model/application.model';
+import { Application } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationService } from '../../service/application.service';
@@ -14,7 +14,7 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 })
 export class ApplicationProductFormComponent implements OnInit {
 
-  @Input() application: ApplicationSrs;
+  @Input() application: Application;
   reviewProductMessage: Array<any> = [];
   productMessage = '';
   username = null;

@@ -20,7 +20,8 @@ export class RegistrarsComponent implements OnInit {
   isClosedWelcomeMessage = true;
   imageLoc: any;
   appId: string;
-  customLinks: Array<any>;
+  customLinks1: Array<any>;
+  customLinks2: Array<any>;
 
   browseAll: string;
   application: string;
@@ -54,8 +55,10 @@ export class RegistrarsComponent implements OnInit {
     });
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
-    this.customLinks = this.configService.configData.registrarDynamicLinks;
-    this.customLinks.forEach (link => {
+    this.customLinks1 = this.configService.configData.registrarDynamicLinks;
+    this.customLinks2 = this.configService.configData.registrarDynamicLinks2;
+
+    this.customLinks1.forEach (link => {
       let str = '';
       for (let i = 0; i < link.facets.length; i++) {
 
@@ -67,6 +70,20 @@ export class RegistrarsComponent implements OnInit {
       }
       this.substanceService.searchFromString(str).pipe(take(1)).subscribe( response => {
         link.total = response.total;
+      });
+    });
+    this.customLinks2.forEach (link => {
+      let str = '';
+      for (let i = 0; i < link.facets.length; i++) {
+
+        if (i === 0) {
+            str = 'facet=' + link.facets[i].facetName + '/' + link.facets[i].facetValue;
+        } else {
+          str += '&facet=' + link.facets[i].facetName + '/' + link.facets[i].facetValue;
+        }
+      }
+      this.substanceService.searchFromString(str).pipe(take(1)).subscribe( response => {
+        link.total =  Number(response.total);
       });
     });
     this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';
@@ -89,7 +106,21 @@ export class RegistrarsComponent implements OnInit {
   }
 
   processFacets() {
-    this.customLinks.forEach(link => {
+    this.customLinks1.forEach(link => {
+      let str = '';
+      for (let i = 0; i < link.facets.length; i++) {
+
+        if (i === 0) {
+            str += '' + link.facets[i].facetName + '*' + link.facets[i].facetValue + '.true';
+        } else {
+          str += ',' + link.facets[i].facetName + '*' + link.facets[i].facetValue + '.true';
+        }
+      }
+
+      link.queryParams = str;
+    });
+
+    this.customLinks2.forEach(link => {
       let str = '';
       for (let i = 0; i < link.facets.length; i++) {
 
