@@ -160,9 +160,7 @@
                                 <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
                                   <div *ngIf="prodName.productName; else noProd">
                                     <div *ngIf="prodName.deprecated && prodName.deprecated == 'Y'; else noDeprecated">
-                                      <!--
                                       &#9642;
-                                      -->
                                       <span class="colorgray">
                                         <b>{{ prodName.productName }}</b>
                                       </span>
@@ -171,9 +169,7 @@
                                       </span>
                                     </div>
                                     <ng-template #noDeprecated>
-                                      <!--
                                       &#9642;
-                                      -->
                                       <span class="font14px colorlightblue"><b>{{ prodName.productName }}</b></span>
                                     </ng-template>
                                   </div>
@@ -204,9 +200,7 @@
 
                                 <!-- Display Ingredient Name -->
                                 <div *ngIf="ing.substanceKey; else noIngred">
-                                  <!--
                                   <span class="colorred">&diams;</span>
-                                  -->
                                   <a [routerLink]="['/substances', ing._substanceUuid]"
                                     target="_blank">{{ing._ingredientName}}</a>
                                   <br>
@@ -246,7 +240,7 @@
                               <!--
                       </div>
                       -->
-                             <!--
+                              <!--
 
                               <div class="row-property-3">
                                 <div class="row-property-key-3">
@@ -457,7 +451,7 @@
         </div>
       </div>
       <ng-template #noRecordApplication>
-       <!-- No Application Found. -->
+        <!-- No Application Found. -->
       </ng-template>
     </div>
   </mat-sidenav-content>

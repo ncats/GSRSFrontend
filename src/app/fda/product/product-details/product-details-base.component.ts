@@ -8,6 +8,7 @@ import { UtilsService } from '../../../core/utils/utils.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ProductService } from '../service/product.service';
 import { GeneralService } from '../../service/general.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-details-base',
@@ -21,6 +22,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
   product: any;
   iconSrcPath: string;
   message = '';
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     public productService: ProductService,
@@ -46,10 +48,17 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
     this.loadingService.setLoading(false);
   }
 
+  ngOnDestroy(): void {
+    // this.applicationService.unloadSubstance();
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
   ngAfterViewInit() { }
 
   getProduct(): void {
-    this.productService.getProduct(this.productId, this.src).subscribe(response => {
+    const prodSubscription = this.productService.getProduct(this.productId, this.src).subscribe(response => {
       if (response) {
       this.product = response;
      // if (Object.keys(this.product).length > 0) {
@@ -60,6 +69,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
       this.message = 'No Product record found';
       // this.handleSubstanceRetrivalError();
     });
+    this.subscriptions.push(prodSubscription);
   }
 
   getSubstanceBySubstanceKey() {
@@ -72,22 +82,24 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
                 if (elementIngred != null) {
                   // Get Substance Details, uuid, approval_id, substance name
                   if (elementIngred.substanceKey) {
-                    this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
+                    const subSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
                       if (response) {
                         elementIngred._substanceUuid = response.uuid;
                         elementIngred._ingredientName = response._name;
                       }
                     });
+                    this.subscriptions.push(subSubscription);
                   }
 
                   // Get Basis of Strength
                   if (elementIngred.basisOfStrengthSubstanceKey) {
-                    this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey).subscribe(response => {
+                    const subBasisSubscription =  this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey).subscribe(response => {
                       if (response) {
                         elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
                         elementIngred._basisOfStrengthIngredientName = response._name;
                       }
                     });
+                    this.subscriptions.push(subBasisSubscription);
                   }
                 }
               });  // Ingredient Loop

@@ -23,8 +23,8 @@ export class ApplicationService extends BaseHttpService {
 
   totalRecords = 0;
   application: Application;
-  //entityContext = 'application';
-  entityContext = 'applicationssrs';
+  entityContext = 'application';
+  // entityContext = 'applicationssrs';
   apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
   apiBaseUrlWithEntityAllContext = this.apiBaseUrl + 'applicationall' + '/';
 
