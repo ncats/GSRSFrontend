@@ -1,5 +1,4 @@
 {
-  "apiBaseUrl": "http://compound-reg.ncats.io:8080/",
   "version": "3.0",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
