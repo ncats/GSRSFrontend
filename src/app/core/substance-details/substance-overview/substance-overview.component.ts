@@ -45,6 +45,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   clasicBaseHref: string;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
+  showlinks = false;
 
 
   constructor(
@@ -88,6 +89,10 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       && this.configService.configData.defaultCodeSystem !== '') {
         this.defaultCodeSystem = this.configService.configData.defaultCodeSystem;
       }
+
+    if (this.configService.configData && this.configService.configData.showOldLinks) {
+      this.showlinks = true;
+    }
     this.getDefAccess();
     if (this.substance.codes != null && this.substance.codes.length > 0) {
       const defaultCodes = [];

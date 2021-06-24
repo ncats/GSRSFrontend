@@ -29,6 +29,7 @@ export interface Config {
     registrarDynamicLinks2?: Array<any>;
     bannerMessage?: string;
     substance?: any;
+    showOldLinks?: boolean;
 }
 
 export interface SubstanceDetailsCard {
