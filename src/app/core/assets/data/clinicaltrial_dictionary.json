@@ -13,12 +13,12 @@
         "cvDomain":null,
         "priority":"x"
     },
-    "Clinical Trial Deprecated":{
+    "Deprecated":{
         "lucenePath":"root_deprecated",
         "description":"Clinical Trial Deprecated",
         "type":"string",
         "cvDomain":null,
-        "priority":"x"
+        "priority":null
     },
     "Conditions":{
         "lucenePath":"root_conditions",
@@ -51,13 +51,6 @@
     "Last Updated Year":{
         "lucenePath":"root_lastUpdatedYear",
         "description":"Last Updated Year",
-        "type":"string",
-        "cvDomain":null,
-        "priority":"x"
-    },
-    "Outcome Measures":{
-        "lucenePath":"root_outcomeMeasures",
-        "description":"Outcome Measures",
         "type":"string",
         "cvDomain":null,
         "priority":"x"

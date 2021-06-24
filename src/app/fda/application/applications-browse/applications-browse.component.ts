@@ -1,26 +1,28 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { ApplicationService } from '../service/application.service';
-import { Application } from '../model/application.model';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ConfigService } from '@gsrs-core/config';
+import { PageEvent } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { Location, LocationStrategy } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { PageEvent } from '@angular/material';
+import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { Subscription } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { applicationSearchSortValues } from './application-search-sort-values';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { ApplicationService } from '../service/application.service';
+import { GeneralService } from '../../service/general.service';
+import { Application } from '../model/application.model';
 
 @Component({
   selector: 'app-applications-browse',
@@ -31,6 +33,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   public privateSearchTerm?: string;
   public applications: Array<Application>;
   order: string;
+  public sortValues = applicationSearchSortValues;
   pageIndex: number;
   pageSize: number;
   jumpToValue: string;
@@ -54,6 +57,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   environment: any;
   previousState: Array<string> = [];
   private searchTermHash: number;
+  isSearchEditable = false;
   lastPage: number;
   invalidPage = false;
 
@@ -66,6 +70,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   constructor(
     public applicationService: ApplicationService,
+    public generalService: GeneralService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private locationStrategy: LocationStrategy,
@@ -78,6 +83,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     private authService: AuthService,
     private overlayContainerService: OverlayContainer,
     private facetManagerService: FacetsManagerService,
+    private utilsService: UtilsService,
     private dialog: MatDialog,
   ) { }
 
@@ -102,16 +108,14 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       queryParams: {}
     };
 
-    /*
-    navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
-    navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
-    navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
-    navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
-    navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
-    */
-
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
@@ -126,8 +130,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.isComponentInit = true;
     this.loadComponent();
 
-    // TESTING TESTING
-    this.isLoggedIn = true;
   }
 
   ngAfterViewInit() {
@@ -152,6 +154,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
     const subscription = this.applicationService.getApplications(
+      this.order,
       skip,
       this.pageSize,
       this.privateSearchTerm,
@@ -171,20 +174,13 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
           this.lastPage = (pagingResponse.total / this.pageSize);
         } else {
           this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
-        }        
-        // Export Application Url
-        /*
-        this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
-          skip,
-          this.pageSize,
-          this.privateSearchTerm,
-          this.privateFacetParams);
-        */
-       // this.getSubstanceDetailsByBdnum();
-       // this.applicationService.getClinicalTrialApplication(this.applications);
-       if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+        }
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
         }
+
+        this.getSubstanceBySubstanceKey();
+        // this.applicationService.getClinicalTrialApplication(this.applications);
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -210,7 +206,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   }
 
   clearSearch(): void {
-
     const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
     this.gaService.sendEvent('applicationFiltering', 'icon-button:clear-search', eventLabel);
 
@@ -284,7 +279,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.invalidPage = false;
       const newpage = Number(event.target.value) - 1;
       this.pageIndex = newpage;
-      this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newpage);
+      this.gaService.sendEvent('applicationsContent', 'select:page-number', 'pager', newpage);
       this.populateUrlQueryParameters();
       this.searchApplications();
     }
@@ -326,20 +321,19 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     const navigationExtras: NavigationExtras = {
       queryParams: {
-      //  'g-search-hash': this.searchTermHash
+        'g-search-hash': this.searchTermHash.toString()
       }
     };
 
     this.router.navigate(['/advanced-search'], navigationExtras);
   }
 
-  getSubstanceDetailsByBdnum(): void {
+  getSubstanceBySubstanceKey(): void {
     // let bdnumName: any;
     // let relationship: any;
     // let substanceId: string;
 
     this.applications.forEach((element, index) => {
-
       element.applicationProductList.forEach((elementProd, indexProd) => {
 
         // Sort Product Name by create date descending
@@ -348,48 +342,41 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         });
 
         elementProd.applicationIngredientList.forEach((elementIngred, indexIngred) => {
+          if (elementIngred.substanceKey != null) {
 
-          // Get Substance Details such as Name, Substance Id, unii
-          if (elementIngred.bdnum != null) {
-
-            /*
-            this.applicationService.getSubstanceDetailsByAnyId(elementIngred.bdnum).subscribe(response => {
+            const substanceSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
               if (response) {
-
-              }
-              bdnumName = response;
-              if (bdnumName != null) {
-                if (bdnumName.name != null) {
-                  elementIngred.ingredientName = bdnumName.name;
-
-                  if (bdnumName.substanceId != null) {
-                    substanceId = bdnumName.substanceId;
-                    elementIngred.substanceId = substanceId;
-
-                    // Get Active Moiety - Relationship
-                    this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
-                      relationship = responseRel;
-                      relationship.forEach((elementRel, indexRel) => {
-                        if (elementRel.relationshipName != null) {
-                          elementIngred.activeMoietyName = elementRel.relationshipName;
-                          elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
-                        }
-                      });
-
-                    });
-
-                  }
+                // Get Substance Details, uuid, approval_id, substance name
+                if (elementIngred.substanceKey) {
+                  this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(responseInactive => {
+                    if (responseInactive) {
+                      elementIngred._substanceUuid = responseInactive.uuid;
+                      elementIngred._ingredientName = responseInactive._name;
+                    }
+                  });
                 }
+
+                // Get Active Moiety - Relationship
+                /*
+                this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
+                  relationship = responseRel;
+                  relationship.forEach((elementRel, indexRel) => {
+                    if (elementRel.relationshipName != null) {
+                      elementIngred.activeMoietyName = elementRel.relationshipName;
+                      elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
+                    }
+                  });
+                });
+                */
               }
             });
-            */
-
+            this.subscriptions.push(substanceSubscription);
           }
-        });
+        }); // Ingredient forEach
 
-      });
+      }); // Product forEach
 
-    });
+    }); // Application forEach
 
   }
 
@@ -397,7 +384,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-      if (this.authService.getUser() !== '') {
+    //  if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
@@ -421,7 +408,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
             }, error => this.loadingService.setLoading(false));
           }
         });
-      }
+    //  }
     }
   }
 

@@ -15,7 +15,7 @@
           matTooltip='Register a New Product'>
           Register New Product
         </button>&nbsp;&nbsp;&nbsp;
-        <button mat-flat-button color="primary" [routerLink]="['/productDetails', product.id, 'srs']"
+        <button mat-flat-button color="primary" [routerLink]="['/product', product.id]"
           matTooltip='View this Product Record'>View Product
         </button>&nbsp;&nbsp;&nbsp;
         <span *ngIf="isAdmin">
@@ -85,10 +85,9 @@
             <br>
             <div class="font11px">
               <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Create Date:</span>
-              {{product.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Create Date:</span> {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modify Date:</span> {{product.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+              <span class="colorgray">Modify Date:</span> {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
             </div>
           </div>
         </div>

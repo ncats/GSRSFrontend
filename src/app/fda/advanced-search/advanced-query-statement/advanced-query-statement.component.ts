@@ -9,7 +9,13 @@ import { AdvancedQueryStatement } from './advanced-query-statement.model';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '@gsrs-core/config';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
+import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { UtilsService } from '@gsrs-core/utils';
+import { SubstanceService } from '@gsrs-core/substance/substance.service';
+import { ApplicationService } from '../../application/service/application.service';
+import { ProductService } from '../../product/service/product.service';
+import { ClinicalTrialService } from '../../clinical-trials/clinical-trial/clinical-trial.service';
+import { AdvancedSearchService } from '../service/advanced-search.service';
 
 @Component({
   selector: 'app-advanced-query-statement',
@@ -40,11 +46,6 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     'AND',
     'OR',
     'NOT'
-  ];
-  categoryOptions = [
-    'Application',
-    'Product',
-    'Clinical Trial'
   ];
   searchFields: Array<String>;
   conditionControl = new FormControl();
@@ -79,6 +80,11 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     private router: Router,
     private configService: ConfigService,
     private utilitiesService: UtilsService,
+    private substanceService: SubstanceService,
+    public applicationService: ApplicationService,
+    public productService: ProductService,
+    private clinicalTrialService: ClinicalTrialService,
+    private facetManagerService: FacetsManagerService,
     private activatedRoute: ActivatedRoute,
   ) { }
 
@@ -190,65 +196,6 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
-  }
-
-  getSearchField() {
-    // const url = `${this.configService.environment.baseHref}assets/data/` + this.dictionaryFileName;
-    this.http.get(`${this.configService.environment.baseHref}assets/data/` + this.dictionaryFileName)
-      .subscribe((response: QueryableSubstanceDictionary) => {
-
-        response['All'] = {
-          lucenePath: 'text',
-          description: 'All fields',
-          type: 'string',
-          cvDomain: ''
-        };
-        this.queryableSubstanceDict = response;
-        // console.log(JSON.stringify('AAAA ' + this.queryableSubstanceDict));
-
-        const displayProperties = ['All'];
-        const displayPropertiesCommon = ['All'];
-        Object.keys(this.queryableSubstanceDict).forEach(key => {
-          displayProperties.push(key);
-          if (this.queryableSubstanceDict[key].priority != null) {
-            displayPropertiesCommon.push(key);
-          }
-        });
-        this.displayProperties = displayProperties;
-        this.searchFields = displayPropertiesCommon;
-
-        /*
-        if (queryStatementHashes != null) {
-          queryStatementHashes.forEach(queryStatementHash => {
-            this.queryStatements.push({ queryHash: queryStatementHash });
-          });
-        } else {
-          this.queryStatements.push({});
-        }
-        */
-        this.queryStatements.push({});
-      });
-
-    // this.searchFields = this.displayPropertiesCommon;
-
-    //  console.log(JSON.stringify(this.displayPropertiesCommon));
-  }
-
-  private loadSearchField() {
-    if (this.categoryinput) {
-      // Empty current SearchField Array
-      // this.searchFields.splice(0, this.searchFields.length);
-      if (this.categoryinput === 'Substance') {
-        this.dictionaryFileName = 'substance_dictionary.json';
-      } else if (this.categoryinput === 'Application') {
-        this.dictionaryFileName = 'application_dictionary.json';
-      } else if (this.categoryinput === 'Product') {
-        this.dictionaryFileName = 'product_dictionary.json';
-      } else if (this.categoryinput === 'Clinical Trial') {
-        this.dictionaryFileName = 'clinicaltrial_dictionary.json';
-      }
-    }
-    this.getSearchField();
   }
 
   queryablePropertySelected(queryableProperty: string): void {

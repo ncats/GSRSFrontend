@@ -93,10 +93,9 @@
             <br>
             <div>
               <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Create Date:</span>
-              {{application.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Create Date:</span> {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modify Date:</span> {{application.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+              <span class="colorgray">Modify Date:</span> {{application.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
             </div>
           </div>
         </div>
@@ -148,10 +147,10 @@
                   (dateInput)="dateInputEventSubmitDate($event)">
                 <mat-datepicker-toggle matSuffix [for]="pickerSubmit"></mat-datepicker-toggle>
                 <mat-datepicker #pickerSubmit></mat-datepicker>
-                
+
                 <mat-error *ngIf="appForm.get('submitDateControl').hasError('minlength')">Min 8 characters
                 </mat-error>
-            
+
               <mat-hint *ngIf="submitDateMessage">{{submitDateMessage}}</mat-hint>
               </mat-form-field>
             -->

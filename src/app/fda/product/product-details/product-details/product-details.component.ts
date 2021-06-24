@@ -7,6 +7,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ProductDetailsBaseComponent } from '../product-details-base.component';
+import { GeneralService } from '../../../service/general.service';
 
 @Component({
   selector: 'app-product-details',
@@ -17,6 +18,7 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
 
   constructor(
     public productService: ProductService,
+    generalService: GeneralService,
     activatedRoute: ActivatedRoute,
     loadingService: LoadingService,
     mainNotificationService: MainNotificationService,
@@ -24,7 +26,7 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
   ) {
-    super(productService, activatedRoute, loadingService, mainNotificationService,
+    super(productService, generalService, activatedRoute, loadingService, mainNotificationService,
       router, gaService, utilsService);
   }
 

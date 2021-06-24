@@ -5,25 +5,20 @@
 
       <mat-card class="bordergray">
         <mat-card-title>
-          <div class="divflex">
-            <div class="width250px">
-              Impurities Details
-            </div>
-            <div>
-              <!-- Edit GSRS record button -->
-              <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank"
-                matTooltip='Edit GSRS Impurities Record'>
-                <mat-icon svgIcon="edit"></mat-icon>
-              </a>
-            </div>
-            <div class="width120px">&nbsp;</div>
-            <div class="font11px">
-              <span class="colorgray">Created By:</span> {{impurities.createdBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Create Date:</span>
-              {{impurities.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modified By:</span> {{impurities.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modify Date:</span> {{impurities.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-            </div>
+          <div class="width250px">
+            Impurities Details&nbsp;&nbsp;&nbsp;&nbsp;
+            <!-- Edit GSRS record button -->
+            <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="isAdmin"
+              matTooltip='Edit GSRS Impurities Record'>
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>
+          </div>
+          <div class="width60percent font11px">
+            <span class="colorgray">Created By:</span> {{impurities.createdBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Create
+              Date:</span>{{impurities.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modified By:</span> {{impurities.modifiedBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modify Date:</span> {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
           </div>
         </mat-card-title>
 

@@ -62,7 +62,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
   }
 
   getSubstanceNames(substanceId: string): void {
-    this.generalService.getSubstanceNames(substanceId).subscribe(substanceNames => {
+    this.generalService.getSubstanceNamesBySubstanceUuid(substanceId).subscribe(substanceNames => {
       this.substanceNames = substanceNames;
 
       // Get Preferred Term or DisplayName == true
@@ -78,7 +78,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
     this.loadingService.setLoading(true);
     this.dataSource[index].autoUpdateMessage = 'Saving....Please wait.';
     this.dataSource[index].isDisableButton = true;
-    this.applicationService.getApplicationDetails(applicationId).subscribe(response => {
+    this.applicationService.getApplicationById(applicationId).subscribe(response => {
       if (response) {
         this.application = response;
 

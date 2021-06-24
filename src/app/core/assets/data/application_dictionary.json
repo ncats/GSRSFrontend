@@ -4,7 +4,7 @@
         "description":"Deprecated",
         "type":"string",
         "cvDomain":null,
-        "priority":"x"
+        "priority":null
     },
     "Application Number":{
         "lucenePath":"root_appNumber",
@@ -14,7 +14,7 @@
         "priority":"x"
     },
     "Application Record Create Date":{
-        "lucenePath":"root_createDate",
+        "lucenePath":"root_creationDate",
         "description":"Record Create Date",
         "type":"string",
         "cvDomain":null,
@@ -28,7 +28,7 @@
         "priority":"x"
     },
     "Application Record Last Edited":{
-        "lucenePath":"root_modifyDate",
+        "lucenePath":"lastModifiedDate",
         "description":"Record Last Edited",
         "type":"string",
         "cvDomain":null,
@@ -62,9 +62,9 @@
         "cvDomain":"APPLICATION_TYPE",
         "priority":"x"
     },
-    "Bdnum":{
-        "lucenePath":"root_applicationProductList_applicationIngredientList_bdnum",
-        "description":"Bdnum",
+    "Substance Key":{
+        "lucenePath":"root_applicationProductList_applicationIngredientList_substanceKey",
+        "description":"Substance Key",
         "type":"string",
         "cvDomain":null,
         "priority":"x"
@@ -95,21 +95,21 @@
         "description":"Has Indications",
         "type":"string",
         "cvDomain":null,
-        "priority":"x"
+        "priority":null
     },
     "Has Ingredients":{
         "lucenePath":"root_hasIngredients",
         "description":"Has Ingredients",
         "type":"string",
         "cvDomain":null,
-        "priority":"x"
+        "priority":null
     },
     "Has Products":{
         "lucenePath":"root_hasProducts",
         "description":"Has Products",
         "type":"string",
         "cvDomain":null,
-        "priority":"x"
+        "priority":null
     },
     "Indication":{
         "lucenePath":"root_applicationIndicationList_indication",
@@ -119,7 +119,7 @@
         "priority":"x"
     },
     "Ingredient Create Date":{
-        "lucenePath":"root_applicationProductList_applicationIngredientList_createDate",
+        "lucenePath":"root_applicationProductList_applicationIngredientList_creationDate",
         "description":"Ingredient Create Date",
         "type":"string",
         "cvDomain":null,
@@ -133,7 +133,7 @@
         "priority":"x"
     },
     "Ingredient Last Edited":{
-        "lucenePath":"root_applicationProductList_applicationIngredientList_modifyDate",
+        "lucenePath":"root_applicationProductList_applicationIngredientList_lastModifiedDate",
         "description":"Ingredient Last Edited",
         "type":"string",
         "cvDomain":null,
@@ -168,7 +168,7 @@
         "priority":"x"
     },
     "Product Name Deprecated":{
-        "lucenePath":"root_productNameDeprecated",
+        "lucenePath":"root_applicationProductList_applicationProductNameList_deprecated",
         "description":"Product Name Deprecated",
         "type":"string",
         "cvDomain":null,
@@ -219,13 +219,6 @@
     "Submit Date Year":{
         "lucenePath":"root_submitDateYear",
         "description":"Submit Date Year",
-        "type":"string",
-        "cvDomain":null,
-        "priority":"x"
-    },
-    "Technical Effect":{
-        "lucenePath":"root_ProductTechnicalEffect_technicalEffect",
-        "description":"Technical Effect",
         "type":"string",
         "cvDomain":null,
         "priority":"x"

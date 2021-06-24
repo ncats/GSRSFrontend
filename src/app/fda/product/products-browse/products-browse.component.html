@@ -9,60 +9,19 @@
 
   <!-- Browse Product Content -->
   <mat-sidenav-content>
-    <div class="titlePosition">
-      <span class="title">Browse Products</span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      Total:&nbsp;<span class="totalstyle font17px colorgray">{{totalProducts}}</span>
-      &nbsp;&nbsp;
-    </div>
 
-    <!-- Pagination -->
-    <div class="paginationPosition">
-      <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
-        [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
-      </mat-paginator>
-    </div>
-
-    <br><br><br>
-    <div class="divflex">
-      <!-- Export Product Button -->
-      <div class="marginleft20px marginright40px" *ngIf="isLoggedIn">
-        <button matTooltip="Export Search Results" mat-button (click)="export()"
-          class="mat-button export-button mat-raised-button">
-          <mat-icon svgIcon="get_app"></mat-icon> Export
-        </button>
-      </div>
-
-      <div class="marginleft20px">
-        <!-- Search Any Text Text Box -->
-        <mat-form-field class="width350px font13px">
-          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
-            size="50" />
-        </mat-form-field>
-        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
-          <mat-icon svgIcon="search"></mat-icon>
-        </button>
-        &nbsp;&nbsp;&nbsp;
-        <button class="activate-search-button" mat-icon-button (click)="clearFilters()">
-          Reset
-        </button>
-      </div>
-    </div>
-
-    <!-- Display Facet selection -->
-    <div class="padleft10px" *ngIf="totalProducts > 0">
+    <div class="side-nav-content">
       <div class="search-parameters">
+
         <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
           <div>
             <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-            <span>{{this.searchTerm}}</span>
+            <span>{{searchTerm}}</span>
           </div>
           <div class="actions-container">
-            <!--
-          <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
-            <mat-icon svgIcon="edit"></mat-icon>
-          </button>
-          -->
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
             <button mat-icon-button color="primary" (click)="clearSearch()">
               <mat-icon svgIcon="delete_forever"></mat-icon>
             </button>
@@ -87,271 +46,434 @@
             </button>
           </div>
         </div>
+        <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+          *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
+          <span>RESET</span>
+        </button>
+      </div>
+
+      <!-- Title, Export, Pagination -->
+      <div class="controls-container">
+
+        <div class="title-container">
+          <span class="main-title">Browse Products</span>
+        </div>
+
+        <!-- Sort By -->
+        <mat-form-field class="sort">
+          <mat-label>Sort By</mat-label>
+          <mat-select (selectionChange)="searchProducts()" [(ngModel)]="order">
+            <mat-option *ngFor="let option of sortValues" [value]="option.value">
+              {{option.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Export Product Button -->
+        <div class="export" *ngIf="isLoggedIn">
+          <button matTooltip="Export Search Results" mat-button (click)="export()"
+            class="mat-button export-button mat-raised-button">
+            <mat-icon svgIcon="get_app"></mat-icon> Export
+          </button>
+        </div>
+
+        <div class="break"></div>
+        <!-- Pagination -->
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="search-text">
+        <!-- Search Any Text Text Box -->
+        <mat-form-field class="width350px font13px">
+          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
+            size="50" />
+        </mat-form-field>
+        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </div>
+
+
+
+
+      <!--
+
+    <div class="titlePosition">
+      <span class="title">Browse Products</span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Total:&nbsp;<span class="totalstyle font17px colorgray">{{totalProducts}}</span>
+      &nbsp;&nbsp;
+    </div>
+
+  
+    <div class="paginationPosition">
+      <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
+      </mat-paginator>
+    </div>
+
+    <br><br><br>
+    <div class="divflex">
+     
+      <div class="marginleft20px marginright40px" *ngIf="isLoggedIn">
+        <button matTooltip="Export Search Results" mat-button (click)="export()"
+          class="mat-button export-button mat-raised-button">
+          <mat-icon svgIcon="get_app"></mat-icon> Export
+        </button>
+      </div>
+
+      <div class="marginleft20px">
+        <mat-form-field class="width350px font13px">
+          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
+            size="50" />
+        </mat-form-field>
+        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+        &nbsp;&nbsp;&nbsp;
+        <button class="activate-search-button" mat-icon-button (click)="clearFilters()">
+          Reset
+        </button>
+      </div>
+    </div>
+    -->
+
+      <!--
+    <div class="padleft10px" *ngIf="totalProducts > 0">
+      <div class="search-parameters">
+        <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+            <span>{{this.searchTerm}}</span>
+          </div>
+          <div class="actions-container">
+
+            <button mat-icon-button color="primary" (click)="clearSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+
+  
+        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+          <div class='selected-container'>
+            <span class="capitalized font-medium-bold selected-label">
+              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+              {{facet.type}}:
+            </span>
+            <span class="no-break selected-value">
+              {{facet.val}}
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button class="display-button" color="primary"
+              (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+              <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <br>
+    -->
 
-    <!-- Display Content Details -->
-    <div class="substance-cards">
-      <mat-card class="bordergray" *ngFor="let product of products; let indexProd = index">
-        <mat-card-title class="borderlightorange-bottom">
-          <div class="row">
+      <!-- Display Content Details -->
+      <div class="cards"  *ngIf="products && products.length">
+        <div class="substance-cards">
+          <mat-card *ngFor="let product of products; let indexProd = index">
+            <mat-card-title>
+              <div>
+                <span class="font13px">Product ID:</span>&nbsp;
 
-            <div class="width40">
-              <span class="font13px">Product ID:</span>&nbsp;
+                <!-- If fromtable is SPL, display SPL Details links -->
+                <span *ngIf="product.fromtable === 'SPL'">
+                  <a class="substance-name" [routerLink]="['/productelist', product.productId]"
+                    target="_blank"><span *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
+                    <ng-template #noProdNDC>(NO ID)</ng-template>
+                  </a>
+                </span>
 
-              <!-- If fromtable is SPL, display SPL Details links -->
-              <span *ngIf="product.fromtable === 'SPL'">
-                <a class="substance-name" [routerLink]="['/productElistDetails', product.productId, 'elist']"
-                  target="_blank"><span *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
-                  <ng-template #noProdNDC>(NO ID)</ng-template>
-                </a>
-              </span>
+                &nbsp;&nbsp;&nbsp;
+                <!-- If fromtable is GSRS, display GSRS Details links -->
+                <span *ngIf="product.fromtable === 'GSRS'">
+                  <a class="substance-name" [routerLink]="['/product', product.productId]"
+                    target="_blank"><span *ngIf="product.productNDC; else noProdNDCSRS">{{product.productNDC}}</span>
+                    <ng-template #noProdNDCSRS>(NO ID)</ng-template>
+                  </a>
 
-              &nbsp;&nbsp;&nbsp;
-              <!-- If fromtabl is GSRS, display GSRS Details links -->
-              <span *ngIf="product.fromtable === 'GSRS'">
-                <a class="substance-name" [routerLink]="['/productDetails', product.productId, 'srs']"
-                  target="_blank"><span *ngIf="product.productNDC; else noProdNDCSRS">{{product.productNDC}}</span>
-                  <ng-template #noProdNDCSRS>(NO ID)</ng-template>
-                </a>
+                  <!-- Edit GSRS record button -->
+                  <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
+                    matTooltip='Edit GSRS Product Record'>
+                    <mat-icon svgIcon="edit"></mat-icon>
+                  </a>
+                </span>
+              </div>
 
-                <!-- Edit GSRS record button -->
-                <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
-                  matTooltip='Edit GSRS Product Record'>
-                  <mat-icon svgIcon="edit"></mat-icon>
-                </a>
-              </span>
-
-            </div>
-
-            <div class="width30">
-              <span class="font13px">Company Country:</span><span class="colororange font17px">&nbsp;
-                <!--{{product.countryWithoutCode}}-->
-                <span *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
-                  <span *ngIf="prodComp.countryWithoutCode">
-                    <span *ngIf="indexComp > 0">|</span>
-                    {{prodComp.countryWithoutCode}}
+              <div class="center">
+                <span class="font13px">Company Country:</span><span class="colororange font17px">&nbsp;
+                  <!--{{product.countryWithoutCode}}-->
+                  <span *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
+                    <span *ngIf="prodComp.countryWithoutCode">
+                      <span *ngIf="indexComp > 0">|</span>
+                      {{prodComp.countryWithoutCode}}
+                    </span>
                   </span>
                 </span>
-              </span>
-              <span class="middle-fill"></span>
-            </div>
+              </div>
 
-            <div class="width30">
-              <span class="font13px">Application:</span>&nbsp;
-
-              <span *ngIf="(product.appType && product.appNumber); else noAppType">
-                <a [routerLink]="['/applicationDarrtsDetails', product.appType, product.appNumber]"
-                  target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
-                </a>
-              </span>
-              <ng-template #noAppType>
-                <span class="approval-id">
-                  {{product.appTypeNumber}}
+              <div>
+                <span class="font13px">Application:</span>&nbsp;
+                <span *ngIf="(product.appType && product.appNumber); else noAppType">
+                  <a [routerLink]="['/applicationDarrtsDetails', product.appType, product.appNumber]"
+                    target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
+                  </a>
                 </span>
-              </ng-template>
-              <!--
-              <a class="substance-name" [routerLink]="['/applicationDetails', product.id]" target="_blank">
-                {{product.appType}}&nbsp;{{prodouct.appNumber}}
-              </a>
-            -->
-
-              <!--
-              <a class="approval-id" [routerLink]="['/productElistDetails', product.productId, 'elist']"
-                target="_blank">
-                {{product.appTypeNumber}}
-              </a>
-            -->
-            </div>
-
-          </div>
-        </mat-card-title>
-
-        <mat-card-content>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Product Name:
-              </div>
-              <div class="row-property-value">
-                <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
-                  <span class="colorlightblue font14px"><b>{{prodName.productName}}</b></span>
-                </div>
-              </div>
-            </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Product Type:
-              </div>
-              <div class="row-property-value">
-                {{product.productType}}
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Nonproprietary Name:
-              </div>
-              <div class="row-property-value">
-                {{product.nonProprietaryName}}
-              </div>
-            </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Route of Admin:
-              </div>
-              <div class="row-property-value">
-                {{product.routeName}}
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Labeler Name (DUNS):
-              </div>
-              <div class="row-property-value">
-                <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
-                  {{prodComp.labelerName}}
-                  <span *ngIf="prodComp.labelerDuns">&nbsp;({{prodComp.labelerDuns}})</span>
-                </div>
-              </div>
-            </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                City, State, Country:
-              </div>
-              <div class="row-property-value">
-                <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
-                  {{prodComp.city}}
-                  <span *ngIf="prodComp.state">,</span>
-                  {{prodComp.state}}
-                  <span *ngIf="prodComp.countryWithoutCode">,</span>
-                  {{prodComp.countryWithoutCode}}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Dosage Form:
-              </div>
-              <div class="row-property-value">
-                <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
-                  <span *ngIf="indexIng == 0">
-                    {{ing.dosageFormName}}
+                <ng-template #noAppType>
+                  <span class="approval-id">
+                    {{product.appTypeNumber}}
                   </span>
+                </ng-template>
+              </div>
+            </mat-card-title>
+
+            <mat-card-content>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Product Name:
+                  </div>
+                  <div class="row-property-value">
+                    <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
+                      <span class="colorlightblue font14px"><b>{{prodName.productName}}</b></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Product Type:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.productType}}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Status:
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Nonproprietary Name:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.nonProprietaryName}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Route of Admin:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.routeName}}
+                  </div>
+                </div>
               </div>
-              <div class="row-property-value">
-                {{product.status}}
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Labeler Name (DUNS):
+                  </div>
+                  <div class="row-property-value">
+                    <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
+                      {{prodComp.labelerName}}
+                      <span *ngIf="prodComp.labelerDuns">&nbsp;({{prodComp.labelerDuns}})</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    City, State, Country:
+                  </div>
+                  <div class="row-property-value">
+                    <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
+                      {{prodComp.city}}
+                      <span *ngIf="prodComp.state">,</span>
+                      {{prodComp.state}}
+                      <span *ngIf="prodComp.countryWithoutCode">,</span>
+                      {{prodComp.countryWithoutCode}}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Substance Name (Active):
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Dosage Form:
+                  </div>
+                  <div class="row-property-value">
+                    <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
+                      <span *ngIf="indexIng == 0">
+                        {{ing.dosageFormName}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Status:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.status}}
+                  </div>
+                </div>
               </div>
-              <div class="row-property-value">
 
-                <!-- Display Active Substance -->
-                <ol class="olstyle">
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Create By:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.createdBy}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Edited By:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.modifiedBy}}
+                  </div>
+                </div>
+              </div>
 
-                  <div *ngFor="let prodIngred of product.productIngredientAllList; let indexActiveIngred = index">
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Create Date:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Edit Date:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+              </div>
 
-                    <span *ngIf=" prodIngred.ingredientType">
-                      <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Substance Name (Active):
+                  </div>
+                  <div class="row-property-value">
 
-                        <span *ngIf="prodIngred.substanceName">
-                          <li>
-                            <a [routerLink]="['/substances', prodIngred.substanceId]"
-                              target="_blank">{{prodIngred.substanceName}}
-                            </a>
-                          </li>
+                    <!-- Display Active Substance -->
+                    <ol class="olstyle">
 
+                      <div *ngFor="let prodIngred of product.productIngredientAllList; let indexActiveIngred = index">
+
+                        <span *ngIf=" prodIngred.ingredientType">
+                          <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
+
+                            <span *ngIf="prodIngred.substanceName">
+                              <li>
+                                <a [routerLink]="['/substances', prodIngred.substanceUuid]"
+                                  target="_blank">{{prodIngred.substanceName}}
+                                </a>
+                              </li>
+
+                            </span>
+
+                          </span>
                         </span>
 
-                      </span>
-                    </span>
+                      </div> <!-- repeat -->
+                    </ol>
 
-                  </div> <!-- repeat -->
-                </ol>
-
-              </div>
-            </div>
+                  </div>
+                </div>
 
 
-            <div class="row-property">
-              <div class="row-property-key">
-                Substance Name (Inactive):
-              </div>
-              <div class="row-property-value">
-                <!-- Display Other Substance -->
-                <ol class="olstyle">
-                  <div *ngFor="let prodIngred of product.productIngredientAllList; let indexIngred = index">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Substance Name (Inactive):
+                  </div>
+                  <div class="row-property-value">
+                    <!-- Display Other Substance -->
+                    <ol class="olstyle">
+                      <div *ngFor="let prodIngred of product.productIngredientAllList; let indexIngred = index">
 
-                    <!-- If Ingredient Type is not null -->
-                    <div *ngIf="prodIngred.ingredientType; else noIngredType">
+                        <!-- If Ingredient Type is not null -->
+                        <div *ngIf="prodIngred.ingredientType; else noIngredType">
 
-                      <!-- If Not Active Ingredient, display Substance Name and Ingredient Type-->
-                      <div *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
+                          <!-- If Not Active Ingredient, display Substance Name and Ingredient Type-->
+                          <div *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
 
-                        <div *ngIf="prodIngred.substanceName">
-                          <li class="">
-                            <a [routerLink]="['/substances', prodIngred.substanceId]"
-                              target="_blank">{{prodIngred.substanceName}}
-                            </a>
-                          </li>
+                            <div *ngIf="prodIngred.substanceName">
+                              <li class="">
+                                <a [routerLink]="['/substances', prodIngred.substanceUuid]"
+                                  target="_blank">{{prodIngred.substanceName}}
+                                </a>
+                              </li>
+                            </div>
+
+                            <div
+                              *ngIf="(prodIngred.ingredientType !== 'Active Ingredient') && (prodIngred.ingredientType !== 'Inactive Ingredient')">
+                              <span class="colorgreen">({{ prodIngred.ingredientType }})
+                              </span>
+                            </div>
+                          </div>
+
                         </div>
 
-                        <div
-                          *ngIf="(prodIngred.ingredientType !== 'Active Ingredient') && (prodIngred.ingredientType !== 'Inactive Ingredient')">
-                          <span class="colorgreen">({{ prodIngred.ingredientType }})
-                          </span>
-                        </div>
-                      </div>
+                        <!-- No Ingredient Type -->
+                        <ng-template #noIngredType>
+                          <!-- if No Ingredient Type, but have Substance Name, display here. -->
+                          <div *ngIf="prodIngred.substanceName">
+                            <li class="">
+                              <a [routerLink]="['/substances', prodIngred.substanceUuid]"
+                                target="_blank">{{prodIngred.substanceName}}
+                              </a>
+                            </li>
+                          </div>
+                        </ng-template>
 
-                    </div>
+                      </div> <!-- repeat -->
+                    </ol>
 
-                    <!-- No Ingredient Type -->
-                    <ng-template #noIngredType>
-                      <!-- if No Ingredient Type, but have Substance Name, display here. -->
-                      <div *ngIf="prodIngred.substanceName">
-                        <li class="">
-                          <a [routerLink]="['/substances', prodIngred.substanceId]"
-                            target="_blank">{{prodIngred.substanceName}}
-                          </a>
-                        </li>
-                      </div>
-                    </ng-template>
-
-                  </div> <!-- repeat -->
-                </ol>
+                  </div>
+                </div>
 
               </div>
-            </div>
 
-          </div>
+            </mat-card-content>
 
-        </mat-card-content>
-
-      </mat-card>
+          </mat-card>
+        </div>
+      </div>
     </div>
-
   </mat-sidenav-content>
 </mat-sidenav-container>

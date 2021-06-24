@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
+import { PagingResponse } from '@gsrs-core/utils';
+import { Facet } from '@gsrs-core/facets-manager';
+import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import {
   Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting,
   ImpuritiesUnspecified, ImpuritiesResidualSolvents, ImpuritiesInorganic, ImpuritiesTotal, ValidationResults, IdentityCriteria
 } from '../model/impurities.model';
-import { map, switchMap } from 'rxjs/operators';
 
 @Injectable(
   {
@@ -20,11 +23,51 @@ export class ImpuritiesService extends BaseHttpService {
   totalRecords: 0;
   impurities: Impurities;
 
+  apiBaseUrlWithEntityContext = this.apiBaseUrl + 'impurities' + '/';
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService
   ) {
     super(configService);
+  }
+
+  getImpuritiesBySubstanceUuid(substanceUuid: string): Observable<any> {
+    const url = this.apiBaseUrlWithEntityContext + 'search?q=root_impuritiesSubstanceList_substanceUuid:' + substanceUuid;
+    return this.http.get<Impurities>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  searchImpurities(
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<PagingResponse<Impurities>> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    const url = this.apiBaseUrlWithEntityContext + 'search';
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<Impurities>>(url, options);
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    const url = this.apiBaseUrlWithEntityContext + 'export/' + etag + '/' + extension;
+    return url;
   }
 
   loadImpurities(impurities?: Impurities): void {
@@ -170,7 +213,7 @@ export class ImpuritiesService extends BaseHttpService {
 
   deleteIdentityCriteriaUnspecified(impuritiesSubstanceIndex: number, impuritiesTestIndex: number,
     impuritiesUnspecifiedIndex: number, identityCriteriaIndex: number): void {
-      const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
+    const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
     impuritiesTest.impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
   }
 

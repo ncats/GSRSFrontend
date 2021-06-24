@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../../service/application.service';
+import { GeneralService } from '../../../service/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -18,6 +19,7 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
 
   constructor(
     public applicationService: ApplicationService,
+    public generalService: GeneralService,
     activatedRoute: ActivatedRoute,
     loadingService: LoadingService,
     mainNotificationService: MainNotificationService,
@@ -26,7 +28,7 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
     utilsService: UtilsService,
     // authService: AuthService,
   ) {
-    super(applicationService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService);
+    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService);
       // , authService);
   }
 
