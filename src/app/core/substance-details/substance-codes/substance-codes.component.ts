@@ -43,6 +43,11 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
           this.filterSubstanceCodes();
 
         if (this.codes != null && this.codes.length) {
+          this.codes.forEach(code => {
+            if (code.url) {
+              code.url = code.url.trim();
+            }
+          });
           this.filtered = this.codes;
           this.pageChange();
 

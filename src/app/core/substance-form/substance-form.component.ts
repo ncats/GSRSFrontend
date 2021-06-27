@@ -87,6 +87,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     imported = false;
     forceChange = false;
     sameSubstance = false;
+    UNII: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -201,11 +202,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.setFormSections(formSections[this.subClass]);
                 this.loadingService.setLoading(false);
                 this.isLoading = false;
+                
               });
             });
           }
         }
-        
+
 
         }
       });
@@ -231,9 +233,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
        
       });
     });
+
   }
 
   ngAfterViewInit(): void {
+
+
+    
+
+
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
 
@@ -283,6 +291,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
               }
             setTimeout(() => {
               this.loadingService.setLoading(false);
+              this.UNII = this.substanceFormService.getUNII();
             }, 5);
             });
         });

@@ -1,6 +1,6 @@
 <div *ngIf="substance">
   <div class='options-area'>
-    <a mat-icon-button [href]="oldUrl" target="_blank" matTooltip="view in old application"><span hidden>open in old
+    <a mat-icon-button [href]="oldUrl" target="_blank" *ngIf = "showlinks" matTooltip="view in old application"><span hidden>open in old
         application in new tab</span>
       <mat-icon svgIcon="open_in_new"></mat-icon>
     </a>
