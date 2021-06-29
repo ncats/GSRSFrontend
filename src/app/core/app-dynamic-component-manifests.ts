@@ -172,6 +172,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceMixtureSourceModule),
   },
   {
+    componentId: 'substance-mixture-parent',
+    path: 'substance-mixture-parent',
+    loadChildren: () => import('./substance-details/substance-mixture-parent/substance-mixture-parent.module')
+      .then(m => m.SubstanceMixtureParentModule),
+  },
+  {
     componentId: 'substance-history',
     path: 'substance-history',
     loadChildren: () => import('./substance-details/substance-history/substance-history.module')
@@ -182,6 +188,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'substance-ssg-parent-substance',
     loadChildren: () => import('./substance-details/substance-ssg-parent-substance/substance-ssg-parent-substance.module')
       .then(m => m.SubstanceSsgParentSubstanceModule),
+  },
+  {
+    componentId: 'substance-ssg1-parent',
+    path: 'substance-ssg1-parent',
+    loadChildren: () => import('./substance-details/substance-ssg1-parent/substance-ssg1-parent.module')
+      .then(m => m.SubstanceSsg1ParentModule),
   },
   {
     componentId: 'substance-ssg-grade',
