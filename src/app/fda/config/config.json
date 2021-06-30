@@ -396,6 +396,16 @@
       ]
     },
     {
+      "card": "substance-ssg1-parent",
+      "title": "SSG1 parent",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "$$constituentParents"
+        }
+      ]
+    },
+    {
       "card": "substance-constituents",
       "title": "specified substance constituents",
       "filters": [
@@ -938,7 +948,9 @@
   "substance":{
     "linking":{
       "keyType":{
-        "default":"BDNUM"
+        "default":"BDNUM",
+        "orgDisplayKeyType":"BDNUM",
+        "clinicalTrialKeyType":"UUID"
       }
     }
   }

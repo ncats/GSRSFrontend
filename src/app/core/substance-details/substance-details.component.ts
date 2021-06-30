@@ -151,16 +151,31 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
         this.titleService.setTitle(response._name);
         this.substance = response;
         this.substanceUpdated.next(response);
+        this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
+          if (substanceProperty != null) {
+            this.insertSubstanceProperty(substanceProperty);
+          }
+        });
           this.substanceService.getMixtureParent(id).subscribe(response2 => {
             if (response2 && response2.content && response2.content.length > 0) {
               this.substance.$$mixtureParents = response2.content;
+              this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
+                if (substanceProperty != null) {
+                  this.insertSubstanceProperty(substanceProperty);
+                }
+              });
             }
-            this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
-              if (substanceProperty != null) {
-                this.insertSubstanceProperty(substanceProperty);
+          });
+            this.substanceService.getConstituentParent(id).subscribe(response3 => {
+              if (response3 && response3.content && response3.content.length > 0) {
+                this.substance.$$constituentParents = response3.content;
+                this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
+                  if (substanceProperty != null) {
+                    this.insertSubstanceProperty(substanceProperty);
+                  }
+                });
               }
             });
-          });
       } else {
         this.handleSubstanceRetrivalError();
       }

@@ -1,1 +1,13 @@
-<p>substance-ssg1-parent works!</p>
+<h4 class="panel-title">This substance has the following group 1 specified substance forms:</h4>
+    <div class="flex-row wrap">
+      <div *ngFor="let component of substance.$$constituentParents" class="thumb-col">
+        <div *ngIf="component.approvalID" class="code">{{component.approvalID}}</div>
+        <div *ngIf="!component.approvalID" class="code">{{component.uuid}}</div>
+        <img class="image-icon" appSubstanceImage [entityId]="component.uuid">
+        <div>
+          <a class="substance-name" [routerLink]="['/substances', component.uuid]">
+            {{component._name}}
+          </a>
+        </div>
+      </div>
+    </div>
