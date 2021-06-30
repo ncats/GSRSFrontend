@@ -40,7 +40,7 @@
       <app-access-manager (accessOut)="updateAccess($event)" [access]="definition.access" label = "Record Level Access"></app-access-manager>
     </div>
     <div class = 'redirect-links' *ngIf = "uuid" >
-      <a [href]="getRedirect()" target = "_blank" matTooltip= "open old edit form in new tab">
+      <a [href]="getRedirect()" *ngIf = "oldlink" target = "_blank" matTooltip= "open old edit form in new tab">
         Old edit form <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
       </a>
       <br/>

@@ -53,7 +53,7 @@ export class StructureService {
   }
 
   resolveName(name: string): Observable<ResolverResponse[]> {
-    const url = `${this.configService.configData.apiBaseUrl}resolve/?name=${encodeURIComponent(name)}`;
+    const url = `${this.configService.configData.apiBaseUrl}resolve?name=${encodeURIComponent(name)}`;
     return this.http.get<ResolverResponse[]>(url);
   }
 

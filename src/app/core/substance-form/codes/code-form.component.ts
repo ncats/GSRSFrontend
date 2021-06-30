@@ -70,6 +70,12 @@ export class CodeFormComponent implements OnInit {
     }
   }
 
+  trimWhitespace(value) {
+
+    this.code.url = value;
+    this.privateCode.url = value.trim().trim().trim();
+  }
+
   undoDelete(): void {
     clearTimeout(this.deleteTimer);
     delete this.privateCode.$$deletedCode;

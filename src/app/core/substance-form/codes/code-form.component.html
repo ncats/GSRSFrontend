@@ -41,7 +41,7 @@
   <div *ngIf="!code.$$deletedCode && viewFull">
     <div class="form-row">
       <mat-form-field class="url">
-        <input matInput placeholder="Url" [(ngModel)]="code.url" name="url" />
+        <input matInput placeholder="Url" [ngModel]="code.url" (ngModelChange) = "trimWhitespace($event)" name="url" />
       </mat-form-field>
     </div>
     <div class="form-row">

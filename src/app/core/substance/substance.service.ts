@@ -668,5 +668,10 @@ export class SubstanceService extends BaseHttpService {
       })
     );
   }
+
+  getMixtureParent(id: string) {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search?q=root_mixture_components_substance_refuuid:"${id}"`;
+    return this.http.get< any>(url);
+  }
 }
 

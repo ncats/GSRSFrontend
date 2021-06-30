@@ -35,6 +35,7 @@ export interface SubstanceBaseExtended {
   nucleicAcid?: NucleicAcid;
   changeReason?: string;
   protein?: Protein;
+  $$mixtureParents?: any;
 }
 
 export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
