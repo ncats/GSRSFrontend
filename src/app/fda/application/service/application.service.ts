@@ -5,6 +5,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { BaseHttpService } from '@gsrs-core/base';
 import { ConfigService } from '@gsrs-core/config';
 import { PagingResponse } from '@gsrs-core/utils';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { Application, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
@@ -21,6 +22,8 @@ import { ValidationResults } from '../model/application.model';
 
 export class ApplicationService extends BaseHttpService {
 
+  private _bypassUpdateCheck = false;
+  private applicationStateHash?: number;
   totalRecords = 0;
   application: Application;
   entityContext = 'application';
@@ -30,7 +33,8 @@ export class ApplicationService extends BaseHttpService {
 
   constructor(
     public http: HttpClient,
-    public configService: ConfigService
+    public configService: ConfigService,
+    public utilsService: UtilsService
   ) {
     super(configService);
   }
@@ -214,9 +218,11 @@ export class ApplicationService extends BaseHttpService {
   }
 
   getApplicationBySubstanceKeyCenter(substanceKey: string): Observable<any> {
-   // const url = this.apiBaseUrlWithEntityAllContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:' + substanceKey;
+   // const url = this.apiBaseUrlWithEntityAllContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:'
+   // + substanceKey;
 
-    const url = this.apiBaseUrlWithEntityContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:' + substanceKey;
+    const url = this.apiBaseUrlWithEntityContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:'
+     + substanceKey;
     return this.http.get<Application>(url)
       .pipe(
         map(result => {
@@ -359,6 +365,20 @@ export class ApplicationService extends BaseHttpService {
         //  return results['data'];
       })
     );
+  }
+
+  get isApplicationUpdated(): boolean {
+    const applicationString = JSON.stringify(this.application);
+    if (this._bypassUpdateCheck) {
+      this._bypassUpdateCheck = false;
+      return false;
+    } else {
+      return this.applicationStateHash !== this.utilsService.hashCode(applicationString);
+    }
+  }
+
+  bypassUpdateCheck(): void {
+    this._bypassUpdateCheck = true;
   }
 
   loadApplication(application?: Application): void {

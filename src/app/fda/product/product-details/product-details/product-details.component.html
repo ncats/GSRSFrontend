@@ -35,7 +35,7 @@
           <thead>
             <tr height="30px">
               <th>Full Product Name</th>
-              <th>Product Name Type</th>
+              <th>Product Type</th>
               <th>Term and Term Part</th>
             </tr>
           </thead>
@@ -479,16 +479,12 @@
                                     <a [routerLink]="['/substances', ingred._substanceUuid]"
                                       target="_blank">{{ingred._ingredientName}}</a>
                                   </div>
+                                  <!--
                                   <br>
                                   <span *ngIf="ingred.substanceKey">
                                     ({{ingred.substanceKey}})
-                                    <!--
-                                    <span *ngIf="ingred.substanceKeyType">
-                                      <br>
-                                      ({{ingred.substanceKeyType}})
-                                    </span>
-                                    -->
                                   </span>
+                                  -->
                                 </td>
 
                                 <td>
@@ -496,16 +492,12 @@
                                     <a [routerLink]="['/substances', ingred._basisOfStrengthSubstanceUuid]"
                                       target="_blank">{{ingred._basisOfStrengthIngredientName}}</a>
                                   </div>
+                                  <!--
                                   <br>
                                   <span *ngIf="ingred.basisOfStrengthSubstanceKey">
                                     ({{ingred.basisOfStrengthSubstanceKey}})
-                                    <!--
-                                    <span *ngIf="ingred.basisOfStrengthSubstanceKeyType">
-                                      <br>
-                                      ({{ingred.basisOfStrengthSubstanceKeyType}})
-                                    </span>
-                                    -->
                                   </span>
+                                  -->
                                 </td>
                                 <td>{{ ingred.ingredientType }}</td>
                                 <td>{{ ingred.ingredientLocation }}</td>

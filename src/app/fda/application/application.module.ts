@@ -47,6 +47,9 @@ import { ConfirmDialogModule } from '../confirm-dialog/confirm-dialog.module';
 // import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { CanActivateRegisterApplicationFormComponent } from './application-form/can-activate-register-application-form.component';
+import { CanActivateUpdateApplicationFormComponent } from './application-form/can-activate-update-application-form.component';
+import { CanDeactivateApplicationFormComponent } from './application-form/can-deactivate-application-form.component';
 // import { AppDateAdapter } from '../format-datepicker/format-datepicker';
 
 const applicationRoutes: Routes = [
@@ -56,7 +59,15 @@ const applicationRoutes: Routes = [
   },
   {
     path: 'application/register',
-    component: ApplicationFormComponent
+    component: ApplicationFormComponent,
+    canActivate: [CanActivateRegisterApplicationFormComponent],
+    canDeactivate: [CanDeactivateApplicationFormComponent]
+  },
+  {
+    path: 'application/:id/edit',
+    component: ApplicationFormComponent,
+    canActivate: [CanActivateUpdateApplicationFormComponent],
+    canDeactivate: [CanDeactivateApplicationFormComponent]
   },
   {
     path: 'application/:id',
@@ -65,10 +76,6 @@ const applicationRoutes: Routes = [
   {
     path: 'applicationDarrtsDetails/:appType/:appNumber',
     component: ApplicationDarrtsDetailsComponent
-  },
-  {
-    path: 'application/:id/edit',
-    component: ApplicationFormComponent
   }
 ];
 
@@ -119,26 +126,17 @@ const applicationRoutes: Routes = [
     ApplicationDetailsBaseComponent,
     ApplicationFormComponent,
     ApplicationProductFormComponent,
-    IngredientFormComponent,
- //   CvInputComponent,
-//    JsonDialogFdaComponent,
-//    ConfirmDialogComponent
+    IngredientFormComponent
   ],
   exports: [
     ApplicationsBrowseComponent,
- //   CvInputComponent,
- //   JsonDialogFdaComponent,
-//    ConfirmDialogComponent
   ],
   entryComponents: [
- //   JsonDialogFdaComponent,
-//    ConfirmDialogComponent
-  ]
- // ,
- // providers: [
- //   {provide: DateAdapter, useClass: AppDateAdapter},
- //   {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
-// ]
+  ],
+  providers: [
+    CanActivateRegisterApplicationFormComponent,
+    CanActivateUpdateApplicationFormComponent
+ ]
 })
 
 export class ApplicationModule {
@@ -152,7 +150,10 @@ export class ApplicationModule {
     return {
       ngModule: ApplicationModule,
       providers: [
-        ApplicationService
+        ApplicationService,
+        CanActivateRegisterApplicationFormComponent,
+        CanActivateUpdateApplicationFormComponent,
+        CanDeactivateApplicationFormComponent
       ]
     };
   }

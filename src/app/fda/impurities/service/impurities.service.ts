@@ -5,6 +5,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import {
@@ -20,6 +21,8 @@ import {
 
 export class ImpuritiesService extends BaseHttpService {
 
+  private _bypassUpdateCheck = false;
+  private impuritiesStateHash?: number;
   totalRecords: 0;
   impurities: Impurities;
 
@@ -27,9 +30,24 @@ export class ImpuritiesService extends BaseHttpService {
 
   constructor(
     public http: HttpClient,
-    public configService: ConfigService
+    public configService: ConfigService,
+    public utilsService: UtilsService
   ) {
     super(configService);
+  }
+
+  get isImpuritiesUpdated(): boolean {
+    const impuritiestring = JSON.stringify(this.impurities);
+    if (this._bypassUpdateCheck) {
+      this._bypassUpdateCheck = false;
+      return false;
+    } else {
+      return this.impuritiesStateHash !== this.utilsService.hashCode(impuritiestring);
+    }
+  }
+
+  bypassUpdateCheck(): void {
+    this._bypassUpdateCheck = true;
   }
 
   getImpuritiesBySubstanceUuid(substanceUuid: string): Observable<any> {

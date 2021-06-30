@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
   template: '',
   styleUrls: ['./product-details-base.component.scss']
 })
-export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
+export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   productId: string;
   src: string;
@@ -93,7 +93,8 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
 
                   // Get Basis of Strength
                   if (elementIngred.basisOfStrengthSubstanceKey) {
-                    const subBasisSubscription =  this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey).subscribe(response => {
+                    const subBasisSubscription =  this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey)
+                    .subscribe(response => {
                       if (response) {
                         elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
                         elementIngred._basisOfStrengthIngredientName = response._name;

@@ -300,6 +300,7 @@ else {
   ingredientNameUpdated(substance: SubstanceSummary): void {
     this.ingredientNameMessage = '';
     if (substance != null) {
+      alert('GGGGG');
       const relatedSubstance: SubstanceRelated = {
         refPname: substance._name,
         name: substance._name,
@@ -342,6 +343,7 @@ else {
 
           this.ingredient._basisOfStrengthIngredientName = relatedSubstance.name;
           this.ingredient._basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
+
         }
       }
     } else {
