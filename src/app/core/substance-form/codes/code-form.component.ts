@@ -73,6 +73,7 @@ export class CodeFormComponent implements OnInit {
   trimWhitespace(value) {
 
     this.code.url = value;
+    this.privateCode.url = this.privateCode.url.replace(/[\u200A|\u2009|\u2006|\u2008]/g, ' ').trim();
     this.privateCode.url = value.trim().trim().trim();
   }
 
