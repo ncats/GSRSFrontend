@@ -388,4 +388,11 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   }
 
+  logout() {
+    this.authService.logout();
+    setTimeout(() => {
+      this.router.navigate(['/home']);
+    }, 1200);
+  }
+
 }

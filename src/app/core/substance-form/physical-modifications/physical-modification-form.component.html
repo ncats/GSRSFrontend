@@ -117,6 +117,10 @@
         <input matInput placeholder="Group" [(ngModel)]="mod.modificationGroup" required name="group" />
       </mat-form-field>
     </div>
+    <div class = "access">
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="mod.access">
+      </app-access-manager>
+    </div>
 
 
   </div>

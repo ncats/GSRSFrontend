@@ -87,6 +87,12 @@ const childRoutes: Routes = [
 
   },
   {
+    path: 'admin/:function',
+    component: AdminComponent,
+    canActivate: [CanActivateAdmin]
+
+  },
+  {
     path: 'monitor/:id',
     component: MonitorComponent,
     canActivate: [CanActivateAdmin]
