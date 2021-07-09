@@ -125,7 +125,7 @@
               <h2>{{section.menuLabel}}</h2>
               <div class="middle-fill"></div>
               <div *ngIf="section.canAddItem">
-                <button mat-flat-button color="primary" id = ""Add new {{section.menuLabel}}" (click)="section.addItem(); $event.stopPropagation()"
+                <button mat-flat-button color="primary" id = "Add new {{section.menuLabel}}" (click)="section.addItem(); $event.stopPropagation()"
                   matTooltip="Add new {{section.menuLabel}}">
                   Add {{section.menuLabel}}
                   <mat-icon svgIcon="add_circle_outline"></mat-icon>
