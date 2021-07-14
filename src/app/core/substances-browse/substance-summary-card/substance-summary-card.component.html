@@ -153,16 +153,16 @@
             {{substance._relationships.count}}
           </div>
         </div>
-        <div class="substance-data" *ngIf="substance.mixture && substance.mixture.components && substance.mixture.components.length > 0">
+        <div class="substance-data" *ngIf="substance._mixture && substance._mixture.components && substance._mixture.components.count">
           <div class="label">Components:</div>
           <div>
-            <span class="value">{{substance.mixture.components.length}}</span>
+            <span class="value">{{substance._mixture.components.count}}</span>
           </div>
         </div>
-        <div class="substance-data" *ngIf="substance.specifiedSubstance && substance.specifiedSubstance.constituents">
+        <div class="substance-data" *ngIf="substance._specifiedSubstance && substance._specifiedSubstance.constituents">
           <div class="label">Constituents:</div>
           <div>
-            <span class="value">{{substance.specifiedSubstance.constituents.length}}</span>
+            <span class="value">{{substance._specifiedSubstance.constituents.count}}</span>
           </div>
         </div>
           <div class="substance-data" *ngIf="substance.nucleicAcid && substance.nucleicAcid.subunits">
