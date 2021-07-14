@@ -30,6 +30,7 @@ export class ApplicationService extends BaseHttpService {
   // entityContext = 'applicationssrs';
   apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
   apiBaseUrlWithEntityAllContext = this.apiBaseUrl + 'applicationall' + '/';
+  apiBaseUrlWithEntityDarrtsContext = this.apiBaseUrl + 'applicationdarrts' + '/';
 
   constructor(
     public http: HttpClient,
@@ -276,7 +277,20 @@ export class ApplicationService extends BaseHttpService {
   getApplicationDarrtsDetails(
     appType: string, appNumber: string
   ): Observable<any> {
-    const url = this.baseUrl + 'applicationDarrtsDetails2?appType=' + appType + '&appNumber=' + appNumber;
+    let appTypeNumber = appType + appNumber;
+    const url = this.apiBaseUrlWithEntityDarrtsContext + appTypeNumber;
+   // const url = this.baseUrl + 'applicationDarrtsDetails2?appType=' + appType + '&appNumber=' + appNumber;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getSubstanceParentConcept(
+    substanceKey: string
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithEntityDarrtsContext + 'substanceparentconcept/' + substanceKey;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -356,17 +370,6 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
-  getCurrentDate(
-  ): Observable<any> {
-    const url = this.baseUrl + 'getCurrentDateJson';
-    return this.http.get<Array<any>>(url).pipe(
-      map(results => {
-        return results;
-        //  return results['data'];
-      })
-    );
-  }
-
   get isApplicationUpdated(): boolean {
     const applicationString = JSON.stringify(this.application);
     if (this._bypassUpdateCheck) {
@@ -419,11 +422,11 @@ export class ApplicationService extends BaseHttpService {
       params: params,
       type: 'JSON',
       headers: {
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
+        'auth-username': 'admin',
+        'auth-password': 'admin'
       }
     };
-    //  console.log('APP: ' + this.application);
-
     // Update Application
     if ((this.application != null) && (this.application.id)) {
       return this.http.put<Application>(url, this.application, options);

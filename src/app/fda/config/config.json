@@ -594,7 +594,7 @@
         {
           "category": "Codes",
           "facets": ["ATCC", "BDNUM", "BIOLOGIC SUBSTANCE CLASSIFICATION CODE", "CAS", "CAYMAN", "CERES", "CFR", "CFSAN PSEUDO CAS", "ChEMBL", "CLINICAL_TRIALS.GOV", "Code System", "CODEX ALIMENTARIUS (GSFA)", "COSMETIC INGREDIENT REVIEW (CIR)", "DASH INDICATION", "DEA NO.", "DME Reactions", "DRUG BANK", "DRUG CENTRAL", "DSLD", "EC (ENZYME CLASS)", "EC SCIENTIFIC COMMITTEE ON CONSUMER SAFETY OPINION", "ECHA (EC/EINECS)", "EMA ASSESSMENT REPORTS", "EMA VETERINARY ASSESSMENT REPORTS", "EPA CompTox", "EPA PESTICIDE CODE", "EU CLINICAL TRIALS REGISTER", "EU FOOD ADDITIVES", "EU-Orphan Drug", "EVMPD", "FARM SUBSTANCE ID", "FDA ORPHAN DRUG", "FDA UNII", "Food Contact Sustance Notif, (FCN No.)", "GENE", "GRIN", "HEALTH -CANADA NHP INGREDIENT MONOGRAPH", "HEALTH-CANADA NHP INGREDIENT RECORD", "HSDB", "IARC", "INCB IDS CODE", "INN", "INS", "ITIS", "IUPHAR", "JAPANESE REVIEW", "JECFA EVALUATION", "JECFA MONOGRAPH", "JMPR-PESTICIDE RESIDUE", "KEGG", "LactMed", "LIVERTOX", "LOINC", "MANUFACTURER PRODUCT INFORMATION", "MERCK INDEX", "MESH", "MIRBASE", "MPNS", "NCBI TAXONOMY", "NCI_THESAURUS", "NDF-RT", "NSC", "Other", "PFAF", "PHAROS", "PROTEIN ID", "PUBCHEM", "RXCUI", "STARI", "SUPERSEDED_BD_NUM", "SWGDRUG", "UCSF-FDA TRANSPORTAL", "UNII", "UNIPROT", "USDA PLANTS", "USP_CATALOG", "USP-HMC", "WEB RESOURCE", "WHO INTERNATIONAL PHARMACOPEIA", "WHO INTERNATIONAL PHARMACPOEIA", "WHO-ATC", "WHO-ESSENTIAL MEDICINES LIST", "WHO-SDG", "WHO-SDG Level 1", "WHO-SDG Level 2", "WHO-VATC", "WIKIPEDIA", "YELLOW LIST"]
-        }    
+        }
       ]
     },
     "applications": {
@@ -623,7 +623,7 @@
         "Division Class Description",
         "Source",
         "Product Name Deprecated"
-      ],  
+      ],
       "admin": [
         "Record Created By",
         "Record Last Edited By",
@@ -681,7 +681,11 @@
         "Adverse Event",
         "Prim SOC",
         "Ingredient Name",
-        "Substance Key"
+        "Substance Key",
+        "ATC Level 1",
+        "ATC Level 2",
+        "ATC Level 3",
+        "ATC Level 4"
       ]
     },
     "adverseeventdme": {
@@ -689,7 +693,11 @@
         "DME Reactions",
         "PTTerm Meddra",
         "Ingredient Name",
-        "Substance Key"
+        "Substance Key",
+        "ATC Level 1",
+        "ATC Level 2",
+        "ATC Level 3",
+        "ATC Level 4"
       ]
     },
     "adverseeventcvm": {
@@ -698,7 +706,11 @@
         "Species",
         "Route of Administration",
         "Ingredient Name",
-        "Substance Key"
+        "Substance Key",
+        "ATC Level 1",
+        "ATC Level 2",
+        "ATC Level 3",
+        "ATC Level 4"
       ]
     }
   },

@@ -43,6 +43,7 @@ import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { ApplicationService } from '../application/service/application.service';
 import { ProductService } from '../product/service/product.service';
 import { ClinicalTrialService } from '../clinical-trials/clinical-trial/clinical-trial.service';
+import { AdverseEventService } from '../adverse-event/service/adverseevent.service';
 import { AdvancedSearchService } from './service/advanced-search.service';
 
 @Component({
@@ -90,7 +91,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     'Substance',
     'Application',
     'Product',
-    'Clinical Trial'
+    'Clinical Trial',
+    'Adverse Event'
   ];
   tabSelectedIndex = 0;
   category = 'Substance';
@@ -122,6 +124,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   rawFacetsApplication: Array<Facet> = [];
   rawFacetsProduct: Array<Facet> = [];
   rawFacetsClinicalTrial: Array<Facet> = [];
+  rawFacetsAdverseEventPt: Array<Facet> = [];
+  rawFacetsAdverseEventDme: Array<Facet> = [];
+  rawFacetsAdverseEventCvm: Array<Facet> = [];
   public displayFacets: Array<DisplayFacet> = [];
   facetViewCategorySelected = 'Default';
   facetViewCategory: Array<String> = [];
@@ -147,12 +152,17 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   applications: any;
   products: any;
   clinicalTrials: any;
+  adverseEventPt: any;
+  adverseEventDme: any;
+  adverseEventCvm: any;
 
   substanceCount = '0';
   applicationCount = '0';
   productCount = '0';
   clinicalTrialCount = '0';
-  adverseEventCount = '0';
+  adverseEventPtCount = '0';
+  adverseEventDmeCount = '0';
+  adverseEventCvmCount = '0';
 
   constructor(
     private http: HttpClient,
@@ -160,6 +170,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
     private advancedSearchService: AdvancedSearchService,
+    private adverseEventService: AdverseEventService,
     private configService: ConfigService,
     private utilitiesService: UtilsService,
     private substanceService: SubstanceService,
@@ -210,6 +221,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.getBrowseSubstanceDetails();
     this.getBrowseApplicationDetails();
     this.getBrowseProductDetails();
+    this.getBrowseAdverseEventPtDetails();
+ //   this.getBrowseAdverseEventDmeDetails();
+ //   this.getBrowseAdverseEventCvmDetails();
 
     this.loadFileName();
 
@@ -320,6 +334,70 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.subscriptions.push(subscriptionBrowseClinical);
   }
 
+  getBrowseAdverseEventPtDetails() {
+    const subscriptionBrowseAdvPt = this.adverseEventService.getAdverseEventPt(
+      null,
+      0,
+      10,
+      null,
+      this.privateFacetParams,
+    )
+      .subscribe(pagingResponse => {
+        this.adverseEventPt = pagingResponse.content;
+
+        this.adverseEventPtCount = formatNumber(Number(pagingResponse.total), 'en-US', '1.0-0');
+
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          this.rawFacetsAdverseEventPt = pagingResponse.facets;
+          // this.productFacetsQuickSearch = this.populateFacets(pagingResponse.facets, this.productFacetsDisplay, 'browse-products');
+        }
+      });
+    this.subscriptions.push(subscriptionBrowseAdvPt);
+  }
+
+  getBrowseAdverseEventDmeDetails() {
+    const subscriptionBrowseAdvDme = this.adverseEventService.getAdverseEventDme(
+      null,
+      0,
+      10,
+      null,
+      this.privateFacetParams,
+    )
+      .subscribe(pagingResponse => {
+        this.adverseEventDme = pagingResponse.content;
+
+        this.adverseEventDmeCount = formatNumber(Number(pagingResponse.total), 'en-US', '1.0-0');
+
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          this.rawFacetsAdverseEventDme = pagingResponse.facets;
+          // this.productFacetsQuickSearch = this.populateFacets(pagingResponse.facets, this.productFacetsDisplay, 'browse-products');
+        }
+      });
+    this.subscriptions.push(subscriptionBrowseAdvDme);
+  }
+
+  getBrowseAdverseEventCvmDetails() {
+    const subscriptionBrowseAdvCvm = this.adverseEventService.getAdverseEventCvm(
+      null,
+      0,
+      10,
+      null,
+      this.privateFacetParams,
+    )
+      .subscribe(pagingResponse => {
+        this.adverseEventCvm = pagingResponse.content;
+
+        this.adverseEventCvmCount = formatNumber(Number(pagingResponse.total), 'en-US', '1.0-0');
+
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          this.rawFacetsAdverseEventCvm = pagingResponse.facets;
+          // this.productFacetsQuickSearch = this.populateFacets(pagingResponse.facets, this.productFacetsDisplay, 'browse-products');
+        }
+      });
+    this.subscriptions.push(subscriptionBrowseAdvCvm);
+  }
+
+
   /*
   private populateFacets(rawFacets: Array<Facet>, facetDisplay: Array<String>, browse: string): Array<Facet> {
     const facetQuickSearch: Array<Facet> = [];
@@ -380,8 +458,13 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.facetKey = 'ctclinicaltrial';
       } else if (this.category === 'Adverse Event') {
         this.dictionaryFileName = 'adverseevent_dictionary.json';
-        // this.rawFacets.length = 0;
-        this.rawFacets.splice(0, this.rawFacets.length);
+        this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventPtFacets);
+        this.rawFacets = this.rawFacetsAdverseEventPt;
+        this.facetKey = 'adverseeventpt';
+      //  this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
+      //  this.rawFacets = this.rawFacetsAdverseEventDme;
+      //  this.facetKey = 'adverseeventDme';
+       // this.rawFacets.splice(0, this.rawFacets.length);
       }
     }
     this.getSearchField();
@@ -675,6 +758,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.router.navigate(['/browse-products'], navigationExtras);
       } else if (this.category === 'Clinical Trial') {
         this.router.navigate(['/browse-clinical-trials'], navigationExtras);
+      } else if (this.category === 'Adverse Event') {
+        this.router.navigate(['/browse-adverse-events'], navigationExtras);
       } else {
         this.router.navigate(['/browse-substance'], navigationExtras);
       }

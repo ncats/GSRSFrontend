@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -8,7 +9,6 @@ import { UtilsService } from '../../../core/utils/utils.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ProductService } from '../service/product.service';
 import { GeneralService } from '../../service/general.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-details-base',
@@ -22,7 +22,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   product: any;
   iconSrcPath: string;
   message = '';
-  private subscriptions: Array<Subscription> = [];
+  subscriptions: Array<Subscription> = [];
 
   constructor(
     public productService: ProductService,
@@ -49,7 +49,6 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnDestroy(): void {
-    // this.applicationService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });

@@ -66,7 +66,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(params => {
         if (params['id']) {
           const id = params['id'];
-          alert(id);
           this.title = 'Update Product';
           if (id !== this.id) {
             this.id = id;

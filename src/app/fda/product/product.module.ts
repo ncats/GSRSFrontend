@@ -25,6 +25,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { ProductDetailsBaseComponent } from './product-details/product-details-base.component';
@@ -51,22 +52,22 @@ const productRoutes: Routes = [
   },
   {
     path: 'product/register',
-    component: ProductFormComponent,
-    canActivate: [CanActivateRegisterProductFormComponent],
-    canDeactivate: [CanDeactivateProductFormComponent]
+    component: ProductFormComponent
+   // canActivate: [CanActivateRegisterProductFormComponent],
+   // canDeactivate: [CanDeactivateProductFormComponent]
   },
   {
     path: 'product/:id/edit',
-    component: ProductFormComponent,
-    canActivate: [CanActivateUpdateProductFormComponent],
-    canDeactivate: [CanDeactivateProductFormComponent]
+    component: ProductFormComponent
+  //  canActivate: [CanActivateUpdateProductFormComponent],
+  //  canDeactivate: [CanDeactivateProductFormComponent]
   },
   {
     path: 'product/:id',
     component: ProductDetailsComponent
   },
   {
-    path: 'productelist/:id',
+    path: 'product-elist/:id',
     component: ProductElistDetailsComponent
   }
 ];
@@ -98,6 +99,7 @@ const productRoutes: Routes = [
     MatTooltipModule,
     MatTabsModule,
     MatBottomSheetModule,
+    MatProgressSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,

@@ -1,20 +1,10 @@
-<br><br><br><br>
+<mat-sidenav-container class="margintop90px sidenav-container-size">
 
-<!--
-<mat-tab-group>
-
-  <mat-tab label="Adverse Event PT">
-  -->
-
-<mat-sidenav-container>
-
-  <mat-sidenav mode="side" opened>
+  <mat-sidenav #pt mode="side" opened>
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
       [rawFacets]="rawFacets" configName="adverseeventpt" includeFacetSearch="true">
     </app-facets-manager>
   </mat-sidenav>
-
-
 
   <!-- Browse Adverse Event Pt Content -->
   <mat-sidenav-content>
@@ -126,7 +116,7 @@
             <mat-card-title>
               <div>
                 <span class="font13px">Adverse Event:</span>&nbsp;
-                {{adverseeventpt.ptTerm}}
+                {{adverseeventpt.adverseEvent}}
               </div>
 
               <div>
@@ -146,7 +136,8 @@
                     Ingredient Name:
                   </div>
                   <div class="row-property-value">
-                    {{adverseeventpt.name}}
+                    <a [routerLink]="['/substances', adverseeventpt.substanceId]"
+                      target="_blank">{{adverseeventpt.name}}</a>
                   </div>
                 </div>
                 <div class="row-property">
@@ -246,22 +237,3 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-
-
-<!--
-  </mat-tab>
-
-  <mat-tab label="Adverse Event DME">
-
-    dddddddd
-  </mat-tab>
-
-
-  <mat-tab label="Adverse Event CVM">
-
-    CVM
-  </mat-tab>
-
-</mat-tab-group>
--->

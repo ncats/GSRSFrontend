@@ -5,6 +5,11 @@ import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { map } from 'rxjs/operators';
 import { SubstanceRelationship } from '@gsrs-core/substance/substance.model';
+import { PagingResponse } from '@gsrs-core/utils';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { Facet } from '@gsrs-core/facets-manager';
+import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
+import { Application } from '../application/model/application.model';
 
 @Injectable()
 export class GeneralService extends BaseHttpService {
@@ -52,7 +57,6 @@ export class GeneralService extends BaseHttpService {
   getSubstanceByAnyId(
     id: string
   ): Observable<any> {
-
     const url = this.apiBaseUrl + 'substances(' + id + ')';
     return this.http.get<any>(url).pipe(
       map(results => {
@@ -60,6 +64,34 @@ export class GeneralService extends BaseHttpService {
       })
     );
   }
+
+  /*
+  getSubstanceKeyBySubstanceUuid(
+    substanceUuid: string
+  ): string {
+    let substanceKey = null;
+    const url = this.apiBaseUrl + 'substances(' + substanceUuid + ')/codes';
+    const response = this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+
+    response.subscribe(substanceCodes => {
+      if (substanceCodes) {
+        for (let index = 0; index < substanceCodes.length; index++) {
+          if (substanceCodes[index].codeSystem && this.getSubstanceKeyType) {
+            if ((substanceCodes[index].codeSystem === this.getSubstanceKeyType) &&
+              (substanceCodes[index].type === 'PRIMARY')) {
+              substanceKey = substanceCodes[index].code;
+            }
+          }
+        }
+      }
+    });
+    return substanceKey;
+  }
+  */
 
   getSubstanceRelationships(substanceUuid: string): Observable<Array<SubstanceRelationship>> {
 
@@ -77,17 +109,106 @@ export class GeneralService extends BaseHttpService {
       );
   }
 
-  getAppIngredtMatchListCount(substanceUuid: string): Observable<any> {
-    const url = this.baseUrl + 'getAppIngredtMatchListCountJson?substanceId=' + substanceUuid + '&citation=';
-    return this.http.get<any>(url)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
+  getAppIngredtMatchListSearchResult(
+    order: string,
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<PagingResponse<Application>> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    const url = this.apiBaseUrl + 'application/search';
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<Application>>(url, options);
   }
 
-  getApplicationIngredientMatchList(substanceUuid: string): Observable<any> {
+  createAppIngredMatchSearchCritieria(substanceUuid: string): string {
+    let fullFacetField = '';
+    this.getSubstanceNamesBySubstanceUuid(substanceUuid).subscribe(responseNames => {
+      if (responseNames) {
+        const names = responseNames;
+        names.forEach((element, index) => {
+          const facetField = 'root_applicationProductList_applicationProductNameList_productName:';
+          if (element) {
+            if (element.name) {
+              if (index > 0) {
+                fullFacetField = fullFacetField + ' OR ';
+              }
+              fullFacetField = fullFacetField + facetField + "\"" + element.name + "\"";
+            }
+          }
+        });
+      }
+    });
+    return fullFacetField;
+  }
+
+  // getAppIngredtMatchListCount(substanceUuid: string)
+  //   : Observable<PagingResponse<Application>> {
+  //   let count = 0;
+  //   let fullFacetField = '';
+  //   let result : PagingResponse<Application>;
+  /*
+  this.getSubstanceNamesBySubstanceUuid(substanceUuid).subscribe(responseNames => {
+    if (responseNames) {
+      const names = responseNames;
+      names.forEach((element, index) => {
+        const facetField = "root_applicationProductList_applicationProductNameList_productName:";
+        if (element) {
+          if (element.name) {
+            if (index > 0) {
+              fullFacetField = fullFacetField + " OR ";
+            }
+            fullFacetField = fullFacetField + facetField + "\"" + element.name + "\"";
+          }
+        }
+      });
+
+      // DO Application Search in Product Name
+      const facetParam = { "Has Ingredients": { "params": { "Has No Ingredient": true }, "isAllMatch": false } };
+
+      this.getAppIngredtMatchListSearchResult(null, 0, 10, fullFacetField, facetParam).subscribe(response => {
+      //   alert('RRRRRRR' + JSON.stringify(response));
+      //   if (response) {
+      //     alert("RESULT RESPONSE");
+      //      result = response;
+      //    }
+          return response;
+      });
+    }
+  });
+  */
+  // return result;
+
+  /*
+  const url = this.baseUrl + 'getAppIngredtMatchListCountJson?substanceId=' + substanceUuid + '&citation=';
+  return this.http.get<any>(url)
+    .pipe(
+      map(res => {
+        return res;
+      })
+    );
+  */
+
+  // }
+
+  getApplicationIngredientMatchList(substanceUuid: string): Observable<Application> {
+    const result = null;
+    // result = this.getAppIngredtMatchListCount(substanceUuid);
+  //  JSON.stringify(result);
+    return result;
+    /*
     const url = this.baseUrl + 'getAppIngredMatchList2?substanceId=' + substanceUuid + '&citation=';
     return this.http.get<any>(url)
       .pipe(
@@ -95,6 +216,7 @@ export class GeneralService extends BaseHttpService {
           return res.data;
         })
       );
+    */
   }
 
   appIngredMatchListAutoUpdateSave(applicationId: number, bdnum: string): Observable<any> {
@@ -149,6 +271,11 @@ export class GeneralService extends BaseHttpService {
       key = substanceConfig.linking.keyType.default;
     }
     return key;
+  }
+
+  getCurrentDate(): any {
+    const currentDate = new Date();
+    return currentDate;
   }
 
 }

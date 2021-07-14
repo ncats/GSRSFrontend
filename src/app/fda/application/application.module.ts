@@ -74,7 +74,7 @@ const applicationRoutes: Routes = [
     component: ApplicationDetailsComponent
   },
   {
-    path: 'applicationDarrtsDetails/:appType/:appNumber',
+    path: 'application-darrts/:appType/:appNumber',
     component: ApplicationDarrtsDetailsComponent
   }
 ];
