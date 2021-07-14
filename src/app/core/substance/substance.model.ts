@@ -35,6 +35,8 @@ export interface SubstanceBaseExtended {
   nucleicAcid?: NucleicAcid;
   changeReason?: string;
   protein?: Protein;
+  $$mixtureParents?: any;
+  $$constituentParents?: any;
 }
 
 export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
@@ -46,7 +48,15 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _moieties?: CountRef;
   _properties?: CountRef;
   _matchContext?: MatchContext;
+  _mixture?: ParentCountHref;
+  _specifiedSubstance?: ParentCountHref;
 }
+export interface ParentCountHref {
+  components?: CountRef;
+  constituents?: CountRef;
+}
+
+
 
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
   names?: Array<SubstanceName>;

@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
-import { Observable, } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Facet } from '@gsrs-core/facets-manager';
+import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { Product, ProductName, ProductTermAndPart, ProductCode, ProductAll } from '../model/product.model';
 import { ProductCompany, ProductComponent, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
-import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
-import { Facet } from '@gsrs-core/facets-manager';
 
 @Injectable()
 export class ProductService extends BaseHttpService {
 
-  totalRecords: 0;
+  totalRecords = 0;
   product: Product;
+
+  apiBaseUrlWithEntityContext = this.apiBaseUrl + 'product' + '/';
+  apiBaseUrlWithBrowseEntityContext = this.apiBaseUrl + 'productmainall' + '/';
+  apiBaseUrlWithElistContext = this.apiBaseUrl + 'productelist' + '/';
 
   constructor(
     public http: HttpClient,
@@ -25,6 +29,7 @@ export class ProductService extends BaseHttpService {
   }
 
   getProducts(
+    order: string,
     skip: number = 0,
     pageSize: number = 10,
     searchTerm?: string,
@@ -39,7 +44,11 @@ export class ProductService extends BaseHttpService {
 
     params = params.appendFacetParams(facets);
 
-    const url = `${this.apiBaseUrl}productmainall/search`;
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
+    const url = this.apiBaseUrlWithBrowseEntityContext + 'search';
     const options = {
       params: params
     };
@@ -84,19 +93,25 @@ export class ProductService extends BaseHttpService {
     } else {
       return this.http.get<any>(facet.$next);
     }
-
   }
 
   getApiExportUrl(etag: string, extension: string): string {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/productmainall/export/${etag}/${extension}`;
+    // const url = `${this.configService.configData.apiBaseUrl}api/v1/productmainall/export/${etag}/${extension}`;
+    const url = this.apiBaseUrlWithBrowseEntityContext + `export/${etag}/${extension}`;
     return url;
+  }
+
+  getProductListExportUrl(substanceId: string): string {
+    return this.baseUrl + 'productListExport?substanceId=' + substanceId;
   }
 
   getProductProvenanceList(
     substanceUuid: string
   ): Observable<any> {
 
-    const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
+    //  const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
+
+    const url = this.apiBaseUrlWithBrowseEntityContext + 'distprovenance/' + substanceUuid;
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -105,6 +120,7 @@ export class ProductService extends BaseHttpService {
       );
   }
 
+  /* WORKS In PLAY FRAMEWORK */
   getSubstanceProducts(
     substanceUuid: string, provenance: string, page: number, pageSize: number
   ): Observable<Array<any>> {
@@ -121,9 +137,29 @@ export class ProductService extends BaseHttpService {
       );
   }
 
-  getProduct(productId: string, src: string): Observable<any> {
-    const url = this.baseUrl + 'productDetails2?id=' + productId + '&src=' + src;
+  getProductsBySubstanceUUid(
+    substanceUuid: string, provenance: string, page: number, pageSize: number
+  ): Observable<Array<any>> {
 
+    const funcName = 'productListBySubstanceUuid?substanceUuid=';
+    const url = this.baseUrl + funcName + substanceUuid + '&provenance=' + provenance + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+
+    return this.http.get<Array<any>>(url)
+      .pipe(
+        map(results => {
+          this.totalRecords = results['totalRecords'];
+          return results['data'];
+        })
+      );
+  }
+
+  getProductElist(
+    productId: string
+  ): Observable<any> {
+
+    //  const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
+
+    const url = this.apiBaseUrlWithElistContext + productId;
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -145,8 +181,50 @@ export class ProductService extends BaseHttpService {
       );
   }
 
-  getProductListExportUrl(substanceId: string): string {
-    return this.baseUrl + 'productListExport?substanceId=' + substanceId;
+  getSubstanceDetailsByBdnum(
+    bdnum: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'getSubstanceDetailsByBdnum?bdnum=' + bdnum;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getSubstanceDetailsBySubstanceId(
+    substanceId: string
+  ): Observable<any> {
+    const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getSubstanceRelationship(
+    substanceId: string
+  ): Observable<Array<any>> {
+    const url = this.baseUrl + 'getRelationshipBySubstanceId?substanceId=' + substanceId;
+    return this.http.get<Array<any>>(url).pipe(
+      map(results => {
+        return results['data'];
+      })
+    );
+  }
+
+  getProduct(productId: string, src: string): Observable<any> {
+    // const url = this.baseUrl + 'productDetails2?id=' + productId + '&src=' + src;
+
+    const url = this.apiBaseUrlWithEntityContext + productId;
+
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
   }
 
   loadProduct(product?: Product): void {
@@ -241,39 +319,6 @@ export class ProductService extends BaseHttpService {
     );
   }
 
-  getSubstanceDetailsByBdnum(
-    bdnum: string
-  ): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceDetailsByBdnum?bdnum=' + bdnum;
-    return this.http.get<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
-  }
-
-  getSubstanceDetailsBySubstanceId(
-    substanceId: string
-  ): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
-    return this.http.get<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
-  }
-
-  getSubstanceRelationship(
-    substanceId: string
-  ): Observable<Array<any>> {
-    const url = this.baseUrl + 'getRelationshipBySubstanceId?substanceId=' + substanceId;
-    return this.http.get<Array<any>>(url).pipe(
-      map(results => {
-        return results['data'];
-      })
-    );
-  }
-
   addNewProductName(): void {
     const newProductName: ProductName = { productTermAndTermPartList: [] };
     this.product.productNameList.unshift(newProductName);
@@ -346,21 +391,59 @@ export class ProductService extends BaseHttpService {
 
   copyProductComponent(productComp: any): void {
     const newProduct = JSON.parse(JSON.stringify(productComp));
+    /*
+    newProduct.id = null;
+    newProduct.createdBy = null;
+    newProduct.creationDate = null;
+    newProduct.createdBy = null;
+    newProduct.lastModifiedDate = null;
+    */
     this.product.productComponentList.unshift(newProduct);
   }
 
   copyProductLot(productLot: any, prodComponentIndex: number): void {
-    const newProduct = JSON.parse(JSON.stringify(productLot));
-    this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProduct);
+    /*
+    let newProduct: any;
+
+    newProduct = productLot;
+
+    if (newProduct != null) {
+      newProduct.id = null;
+      newProduct.createdBy = null;
+      newProduct.creationDate = null;
+      newProduct.modifiedBy = null;
+      newProduct.lastModifiedDate = null;
+
+      newProduct.productIngredientList.forEach(elementIngred => {
+        if (elementIngred != null) {
+          elementIngred.id = null;
+          elementIngred.createdBy = null;
+          elementIngred.creationDate = null;
+          elementIngred.modifiedBy = null;
+          elementIngred.lastModifiedDate = null;
+        }
+      });
+      */
+      const newProduct = JSON.parse(JSON.stringify(productLot));
+
+      this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProduct);
+   // }
   }
 
   copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
     const newProduct = JSON.parse(JSON.stringify(productIngredient));
+    /*
+    newProduct.id = null;
+    newProduct.createdBy = null;
+    newProduct.creationDate = null;
+    newProduct.modifiedBy = null;
+    newProduct.lastModifiedDate = null;
+    */
     this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProduct);
   }
-  /*
 
- reviewProduct(prodIndex: number): void {
+  /*
+  reviewProduct(prodIndex: number): void {
    //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
  }
 

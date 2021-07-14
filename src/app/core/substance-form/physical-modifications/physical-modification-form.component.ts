@@ -69,6 +69,10 @@ export class PhysicalModificationFormComponent implements OnInit {
     delete this.privateMod.$$deletedCode;
   }
 
+  updateAccess(access: Array<string>): void {
+    this.mod.access = access;
+  }
+
   openParameterDialog(): void {
     if (!this.mod.parameters) {
       this.mod.parameters = [];

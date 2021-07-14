@@ -33,7 +33,7 @@
               <mat-option value="unapprove">
                 Un-approve record (Remove approval ID)
               </mat-option>
-              <mat-option value="changeApproval" [disabled]="!id || status === 'pending'">
+              <mat-option value="changeApproval" [disabled]="!id || status === 'pending' || (substanceClass === 'concept' && UNII === 'non-approved record')">
                 Change Approval ID
               </mat-option>
               <mat-option value="concept" [disabled]="substanceClass != 'concept'">
@@ -125,8 +125,8 @@
               <h2>{{section.menuLabel}}</h2>
               <div class="middle-fill"></div>
               <div *ngIf="section.canAddItem">
-                <button mat-flat-button color="primary" (click)="section.addItem(); $event.stopPropagation()"
-                  matTooltip="Add new">
+                <button mat-flat-button color="primary" id = "Add new {{section.menuLabel}}" (click)="section.addItem(); $event.stopPropagation()"
+                  matTooltip="Add new {{section.menuLabel}}">
                   Add {{section.menuLabel}}
                   <mat-icon svgIcon="add_circle_outline"></mat-icon>
                 </button>

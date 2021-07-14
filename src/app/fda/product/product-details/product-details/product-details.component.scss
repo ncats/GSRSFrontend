@@ -13,9 +13,22 @@
   margin-bottom: 20px;
 }
 
+.divflexrow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+}
+
 .box {
   display: flex;
   align-items: top;
+}
+
+.div-scroll {
+  width: 100%;
+  overflow-x: scroll;
 }
 
 .mat-card {
@@ -27,6 +40,7 @@
 
 .mat-card-title {
   display: flex;
+  justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
   flex-direction: row;
@@ -177,6 +191,10 @@
   font-size: 10px;
 }
 
+.font11px {
+  font-size: 11px;
+}
+
 .font14px {
   font-size: 14px;
 }
@@ -221,8 +239,22 @@
   width: 45%;
 }
 
+.width60percent {
+  width: 60%;
+  max-width: 60%;
+}
+
+.width650px {
+  width: 650px;
+  max-width: 650px;
+}
+
 .textaligncenter {
   text-align: center;
+}
+
+.textalignright {
+  text-align: right;
 }
 
 .backgroundblue {

@@ -22,7 +22,7 @@
   </div>
 
   <!-- TABS -->
-  <mat-tab-group class="tab-style margintop30px" (selectedTabChange)="tabSelectedUpdated($event)">
+  <mat-tab-group class="tab-style margintop30px" [selectedIndex]="tabSelectedIndex" (selectedTabChange)="tabSelectedUpdated($event)">
     <mat-tab label="Substance">
       <ng-template mat-tab-label>
         <div>Substance<br>
@@ -66,7 +66,6 @@
       </ng-template>
     </mat-tab>
 
-    <!--
     <mat-tab label="Adverse Event">
       <ng-template mat-tab-label>
         <div>Adverse Event<br>
@@ -77,7 +76,7 @@
       </ng-template>
       <br>
     </mat-tab>
-    -->
+    
   </mat-tab-group>
 
   <mat-card>
@@ -176,16 +175,21 @@
     <div class="">
       <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
         [rawFacets]="rawFacets" [configName]="facetKey" includeFacetSearch="true"
-        [facetViewCategorySelected]="facetViewCategorySelected" showAllFacets="true" [panelExpanded]="panelExpanded"
-        [facetNameText]="facetNameText">
+        [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType" [panelExpanded]="panelExpanded"
+        [facetNameText]="facetNameText" calledFrom="advancedsearch">
       </app-facets-manager>
     </div>
   </mat-expansion-panel>
 
   <!-- Search Button -->
+  <div class="search-button">
+    <div>
+      <button mat-flat-button color="primary" (click)="processSearch()">Search</button>
+    </div>
+  </div>
 
-  <br><br><br>
 </div>
+<br><br><br>
 
 <!-- Structure Editor Begin -->
 <!--
@@ -230,12 +234,12 @@
                     <div>{{similarityCutoff}}</div>
                   </div>
                 </div>
-                
+
               <div class="action-button-container three">
                 <button class="search-button" name="search" mat-raised-button color="primary"
                   (click)="search()">Search</button>
               </div>
-              
+
                 <div class="action-button-container one">
                   <button class="import-button" name="export" mat-raised-button color="primary"
                     (click)="openStructureImportDialog()">Import</button>

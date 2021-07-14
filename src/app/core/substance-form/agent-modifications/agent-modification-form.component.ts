@@ -50,6 +50,10 @@ export class AgentModificationFormComponent implements OnInit {
     return this.privateMod;
   }
 
+  updateAccess(access: Array<string>): void {
+    this.mod.access = access;
+  }
+
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('AGENT_MODIFICATION_TYPE', 'AGENT_MODIFICATION_PROCESS', 'ROLE').subscribe(response => {
       this.modTypeList = response['AGENT_MODIFICATION_TYPE'].list;

@@ -13,7 +13,7 @@ import {UtilsService} from '@gsrs-core/utils';
 })
 export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<SubstanceReference> implements OnInit {
   references: Array<SubstanceReference> = [];
-  displayedColumns: string[] = ['citation', 'type', 'tags', 'files', 'dateAcessed', 'access'];
+  displayedColumns: string[] = ['citation', 'type', 'tags', 'files', 'access'];
   substanceUpdated = new Subject<SubstanceDetail>();
   pageSize = 10;
 

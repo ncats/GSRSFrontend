@@ -24,7 +24,8 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Auth } from '@gsrs-core/auth/auth.model';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
+// import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-clinical-trials-browse',
@@ -70,8 +71,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   public displayFacets: Array<DisplayFacet> = [];
   private isFacetsParamsInit = false;
   public isCollapsed = true;
-
-
+  private searchTermHash: number;
+  isSearchEditable = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -85,7 +86,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private authService: AuthService,
     private overlayContainerService: OverlayContainer,
     private location: Location,
-    private facetManagerService: FacetsManagerService
+    private facetManagerService: FacetsManagerService,
+    public gaService: GoogleAnalyticsService,
   ) {}
 
   ngOnInit() {
@@ -98,10 +100,17 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+
+    // Need this to go back to Advanced Search
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      // __alex__ turning for for gsrs3 testing
+      // __alex__ turning on for gsrs3 testing
       this.isAdmin = true;
       // this.showAudit = this.authService.hasRoles('admin');
        if (this.isAdmin) {
@@ -367,8 +376,12 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
 
   // see substance code
   clearFilters(): void {
-    this.facetManagerService.clearSelections();
+    // for facets
+    this.displayFacets.forEach(displayFacet => {
+      displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
+    });
     this.clearSearch();
+    this.facetManagerService.clearSelections();
   }
 
   get searchTerm(): string {
@@ -426,4 +439,17 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.showHelp = !this.showHelp;
   }
 
+  editAdvancedSearch(): void {
+  //  const eventLabel = environment.isAnalyticsPrivate ? 'Browse Clinical Trial search term' :
+  //    `${this.privateSearchTerm}`;
+  //  this.gaService.sendEvent('Clinical Trial Filtering', 'icon-button:edit-advanced-search', eventLabel);
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        'g-search-hash': this.searchTermHash.toString()
+      }
+    };
+
+    this.router.navigate(['/advanced-search'], navigationExtras);
+  }
 }

@@ -13,10 +13,10 @@
         </ul>
       </mat-tab>
       <mat-tab label="SMILES" *ngIf="smiles">
-        <p>{{smiles}}</p>
+        <textarea cdkTextareaAutosize id = "smiles" readonly style = "height:150px;">{{smiles}}</textarea>
       </mat-tab>
       <mat-tab label="InChi" *ngIf="inchi">
-        <p>{{inchi}}</p>
+        <textarea cdkTextareaAutosize id = "inchi" readonly style = "height:150px;">{{inchi}}</textarea>
       </mat-tab>
     </mat-tab-group>
   </div>

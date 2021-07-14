@@ -13,6 +13,7 @@ import { FormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-form-definition',
@@ -41,12 +42,14 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   defAccess: Array<any>;
   @ViewChild('tagsInput', { read: ElementRef, static: false }) tagsInput: ElementRef<HTMLInputElement>;
   imported = false;
+  oldlink = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
     public substanceService: SubstanceService,
     private substanceFormService: SubstanceFormService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private configService: ConfigService
   ) {
     super();
   }
@@ -65,6 +68,11 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       this.filteredSuggestedTags = this.suggestedTags.filter(tag => tag.toLowerCase().indexOf((value || '').toLowerCase()) > -1);
     });
     this.subscriptions.push(tagsSubscription);
+
+    if (this.configService.configData && this.configService.configData.showOldLinks) {
+      this.oldlink = true;
+
+    }
   }
 
   ngAfterViewInit() {

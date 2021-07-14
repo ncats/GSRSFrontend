@@ -102,7 +102,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   narrowSearchSuggestionsCount = 0;
   private isComponentInit = false;
   sequenceID?: string;
-  
+
   // needed for facets
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
@@ -116,6 +116,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   codeSystem: any;
   previousState: Array<string> = [];
   facetViewCategorySelected = 'Default';
+  facetDisplayType = 'facetView';
   facetViewCategory: Array<String> = [];
   facetViewControl = new FormControl();
 
@@ -564,10 +565,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.location.go(urlTree.toString());
   }
 
-  editGuidedSearch(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'guided search term' :
+  editAdvancedSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'advanced search term' :
       `${this.privateSearchTerm}`;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-guided-search', eventLabel);
+    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-advanced-search', eventLabel);
 
     const navigationExtras: NavigationExtras = {
       queryParams: {
@@ -575,7 +576,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
     };
 
-    this.router.navigate(['/guided-search'], navigationExtras);
+    this.router.navigate(['/advanced-search'], navigationExtras);
   }
 
   editStructureSearch(): void {

@@ -26,7 +26,7 @@
       <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;
       {{ingredient.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
       <span class="colorgray">Modified By:</span> {{ingredient.modifiedBy}}&nbsp;&nbsp;&nbsp;
-      {{ingredient.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+      {{ingredient.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
     </span>
   </span>
 </div>
@@ -44,7 +44,7 @@
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="ingredientNameUpdated($event)"
           (showMessage)="showMessageIngredientName($event)" eventCategory="ingredName" placeholder="Ingredient Name"
-          header="Ingredient Name" [subuuid]="ingredientNameSubstanceUuid">
+          header="Ingredient Name" [subuuid]="substanceUuid">
         </app-substance-search-selector>
 
         <div *ngIf="ingredientNameMessage" class="colorred font12px">
@@ -58,11 +58,11 @@
             <br>
             <!-- Display Active Moiety -->
             <div *ngFor="let active of ingredientNameActiveMoiety; let activeIndex = index">
-              {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
+              {{active}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
           </div>
-          <div *ngIf="ingredient.bdnum">
-            <span class="colororange">{{ingredient.bdnum}}</span><span class="colorgray font11px"> (Bdnum)</span>
+          <div *ngIf="ingredient.substanceKey">
+            <span class="colororange">{{ingredient.substanceKey}}</span><span class="colorgray font11px"> ({{substanceKeyType}})</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName()"
               matTooltip="Delete Ingredient Name {{prodIngredientIndex + 1}}">
@@ -78,7 +78,7 @@
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
           (showMessage)="showMessageBasisOfStrength($event)" eventCategory="substanceRelationshipRelatedSub"
-          placeholder="Basis Of Strength" header="Basis Of Strength" [subuuid]="basisofStrengthSubstanceUuid">
+          placeholder="Basis Of Strength" header="Basis Of Strength" [subuuid]="basisOfStrengthSubstanceUuid">
         </app-substance-search-selector>
 
         <div *ngIf="basisOfStrengthMessage" class="colorred font12px">
@@ -87,8 +87,8 @@
 
         <!-- Display Basis of Strength Details -->
         <div class="padall5px fontfamilyhelvetica">
-          <div *ngIf="basisOfStrengthName">
-            <span class="colormaroon"><b>{{basisOfStrengthName}}</b></span>
+          <div *ngIf="basisOfStrengthIngredientName">
+            <span class="colormaroon"><b>{{basisOfStrengthIngredientName}}</b></span>
             <br>
             <!-- Display Active Moiety -->
             <div *ngFor="let active of basisOfStrengthActiveMoiety; let activeIndex = index">
@@ -96,9 +96,9 @@
             </div>
           </div>
 
-          <div *ngIf="ingredient.basisOfStrengthBdnum">
-            <span class="colororange">{{ingredient.basisOfStrengthBdnum}}</span><span class="colorgray font11px">
-              (Bdnum)</span>
+          <div *ngIf="ingredient.basisOfStrengthSubstanceKey">
+            <span class="colororange">{{ingredient.basisOfStrengthSubstanceKey}}</span><span class="colorgray font11px">
+              ({{substanceKeyType}})</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteBasisOfStrength()"
               matTooltip="Delete Basis of Strength {{prodIngredientIndex + 1}}">

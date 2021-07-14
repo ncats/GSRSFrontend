@@ -36,6 +36,7 @@
 
 .mat-card-title {
   display: flex;
+  justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
   flex-direction: row;
@@ -289,6 +290,11 @@
 
 .width50percent {
   width: 50%;
+}
+
+.width60percent {
+  width: 60%;
+  max-width: 60%;
 }
 
 .textalignleft {

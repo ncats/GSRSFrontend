@@ -1154,6 +1154,8 @@ this.emitDisulfideLinkUpdate();
     this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
   }
 
+
+
   // end change reason
 
   validateSubstance(): Observable<ValidationResults> {
@@ -1390,6 +1392,10 @@ this.emitDisulfideLinkUpdate();
         observer.complete();
       });
     });
+  }
+
+  getUNII() {
+    return this.privateSubstance._approvalIDDisplay;
   }
 
   approveSubstance(): Observable<any> {

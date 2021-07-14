@@ -8,6 +8,7 @@ import { PagingResponse } from '@gsrs-core/utils';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { Application, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
+import { ApplicationAll } from '../model/application.model';
 import { ValidationResults } from '../model/application.model';
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
@@ -20,13 +21,13 @@ import { ValidationResults } from '../model/application.model';
 
 export class ApplicationService extends BaseHttpService {
 
-  totalRecords: 0;
+  totalRecords = 0;
   application: Application;
-  entity = 'Application';
-  // entityContext = 'application';
-  entityContext = 'applicationssrs';
-
+  entityContext = 'application';
+  // entityContext = 'applicationssrs';
   apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
+  apiBaseUrlWithEntityAllContext = this.apiBaseUrl + 'applicationall' + '/';
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService
@@ -35,6 +36,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   getApplications(
+    order: string,
     skip: number = 0,
     pageSize: number = 10,
     searchTerm?: string,
@@ -49,6 +51,10 @@ export class ApplicationService extends BaseHttpService {
 
     params = params.appendFacetParams(facets);
 
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
     // const url = this.apiBaseUrl + 'applicationssrs/search';
     const url = this.apiBaseUrlWithEntityContext + 'search';
     const options = {
@@ -56,6 +62,35 @@ export class ApplicationService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<Application>>(url, options);
+  }
+
+  getApplicationAll(
+    order: string,
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<PagingResponse<ApplicationAll>> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
+    // const url = this.apiBaseUrl + 'applicationssrs/search';
+    const url = this.apiBaseUrlWithEntityAllContext + 'search';
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<ApplicationAll>>(url, options);
   }
 
   exportBrowseApplicationsUrl(
@@ -162,6 +197,34 @@ export class ApplicationService extends BaseHttpService {
 
   }
 */
+
+  getApplicationCenterList(
+    substanceKey: string
+  ): Observable<any> {
+    //  const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
+
+   // const url = this.apiBaseUrlWithEntityAllContext + 'distcenter/' + substanceKey;
+   const url = this.apiBaseUrlWithEntityContext + 'distcenter/' + substanceKey;
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getApplicationBySubstanceKeyCenter(substanceKey: string): Observable<any> {
+   // const url = this.apiBaseUrlWithEntityAllContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:' + substanceKey;
+
+    const url = this.apiBaseUrlWithEntityContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:' + substanceKey;
+    return this.http.get<Application>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
   getSubstanceApplications(
     bdnum: string, center: string, fromTable: string, page: number, pageSize: number
   ): Observable<Array<any>> {
@@ -177,8 +240,22 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
+  searchApplicationBySubstanceKey(
+    substanceKey: string // , center: string, fromTable: string, page: number, pageSize: number
+  ): Observable<Array<any>> {
+
+    //    const func = this.baseUrl + 'applicationListByBdnum?bdnum=';
+    const url = this.apiBaseUrlWithEntityContext + 'search?q=' + substanceKey;
+    // + '&center=' + center + '&fromTable=' + fromTable + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   // Changed for Spring Boot
-  getApplicationDetails(
+  getApplicationById(
     id: number
   ): Observable<any> {
     // const url = this.baseUrl + 'applicationDetails2?id=' + id;
@@ -202,21 +279,11 @@ export class ApplicationService extends BaseHttpService {
   }
 
   // Changed, work Spring Boot and Play
+  /*
   getSubstanceDetailsByAnyId(
     id: string
   ): Observable<any> {
     const url = this.apiBaseUrl + 'substances(' + id + ')';
-    return this.http.get<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
-  }
-
-  getSubstanceDetailsByBdnum(
-    bdnum: string
-  ): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceDetailsByBdnum?bdnum=' + bdnum;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -235,7 +302,6 @@ export class ApplicationService extends BaseHttpService {
     this.apiBaseUrl = 'http://localhost:9000/ginas/app/api/v1/';
 
     const url = this.apiBaseUrl + 'substances(' + substanceId + ')';
-    alert(url);
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -260,6 +326,7 @@ export class ApplicationService extends BaseHttpService {
       })
     );
   }
+  */
 
   getApplicationCenterByBdnum(
     bdnum: string

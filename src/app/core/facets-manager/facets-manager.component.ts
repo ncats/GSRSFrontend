@@ -38,13 +38,14 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   @Output() facetsLoaded = new EventEmitter<number>();
   private environment: Environment;
   @Input() includeFacetSearch = false;
-  @Input() showAllFacets = 'false';
+  @Input() calledFrom = 'default';
   @Input() panelExpanded = false;
   showDeprecated = false;
   loggedIn = false;
   hideDeprecatedCheckbox = false;
   previousState: Array<string> = [];
   previousFacets: Array<any> = [];
+  _facetDisplayType = 'default';
   _facetViewCategorySelected: string;
   _configName: string;
   _facetNameText: string;
@@ -78,16 +79,16 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
-   setTimeout(() => {
-     if (this.router.url === this.previousState[0]) {
-       if (this.router.url === '/browse-substance') {
-        this.privateFacetParams = {};
-       } else {
-        this.privateFacetParams = this.previousFacets[0];
-        this.facetBuilder = {};
-       }
-      this.ngOnInit();
-     }
+    setTimeout(() => {
+      if (this.router.url === this.previousState[0]) {
+        if (this.router.url === '/browse-substance') {
+          this.privateFacetParams = {};
+        } else {
+          this.privateFacetParams = this.previousFacets[0];
+          this.facetBuilder = {};
+        }
+        this.ngOnInit();
+      }
 
     }, 50);
   }
@@ -96,14 +97,16 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   ngOnInit() {
     this.facetString = this.activatedRoute.snapshot.queryParams['facets'] || '';
     const show = this.activatedRoute.snapshot.queryParams['showDeprecated'] || 'false';
-    if ( show === 'true') {
+    if (show === 'true') {
       this.showDeprecated = true;
     }
     this.facetsFromParams();
     this.setDisplayFacets();
-    this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams,
+    this.facetsParamsUpdated.emit({
+      facetParam: this.privateFacetParams,
       displayFacets: this.displayFacets,
-      deprecated: this.showDeprecated });
+      deprecated: this.showDeprecated
+    });
     const deleteEventSubscription = this.facetManagerService.clearSelectionsEvent.subscribe(() => {
       this.clearFacetSelection();
     });
@@ -172,11 +175,18 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   set configName(configName: string) {
     this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
     this._configName = configName;
-    if ( configName === 'applications' ||  configName === 'ctclinicaltrial' || configName === 'products') {
+    if (configName === 'applications' || configName === 'ctclinicaltrial' || configName === 'products'
+    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm') {
       this.hideDeprecatedCheckbox = true;
     } else {
       this.hideDeprecatedCheckbox = false;
     }
+    this.populateFacets();
+  }
+
+  @Input()
+  set facetDisplayType(facetDisplayType: string) {
+    this._facetDisplayType = facetDisplayType;
     this.populateFacets();
   }
 
@@ -242,8 +252,10 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.showDeprecated = !this.showDeprecated;
     setTimeout(() => {
       this.populateUrlQueryParameters(this.showDeprecated);
-          this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams, displayFacets: this.displayFacets,
-            deprecated: this.showDeprecated });
+      this.facetsParamsUpdated.emit({
+        facetParam: this.privateFacetParams, displayFacets: this.displayFacets,
+        deprecated: this.showDeprecated
+      });
 
     });
   }
@@ -260,87 +272,102 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         this.showAudit = this.authService.hasRoles('admin');
         const facetKeys = Object.keys(this.facetsConfig) || [];
 
-        if (this.showAllFacets === 'false') {
-        facetKeys.forEach(facetKey => {
-          if (this.facetsConfig[facetKey].length
-            && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
-            this.facetsConfig[facetKey].forEach(facet => {
-              for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
-                this.toggle[facetIndex] = true;
-                if (facet === facetsCopy[facetIndex].name) {
-                  if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
-                    let hasValues = false;
-                    for (let valueIndex = 0; valueIndex < facetsCopy[facetIndex].values.length; valueIndex++) {
-                      if (facetsCopy[facetIndex].values[valueIndex].count) {
-                        hasValues = true;
-                        break;
-                      }
-                    }
+        if (this._facetDisplayType) {
+          if (this._facetDisplayType === 'default') {
+            facetKeys.forEach(facetKey => {
+              if (this.facetsConfig[facetKey].length
+                && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
+                this.facetsConfig[facetKey].forEach(facet => {
+                  for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
+                    this.toggle[facetIndex] = true;
+                    if (facet === facetsCopy[facetIndex].name) {
 
-                    if (hasValues) {
-                      if (this.showDeprecated === false && facet === 'Deprecated') {
-                      } else {
-                        const facetToAdd = facetsCopy.splice(facetIndex, 1);
-                      facetIndex--;
-                      newFacets.push(facetToAdd[0]);
-                      this.searchText[facetToAdd[0].name] = { value: '', isLoading: false };
+                      // Facet Name Search
+                      let facetNameTextFound = true;
+                      if ((this._facetNameText) && (this._facetNameText.length > 0)) {
+                        facetNameTextFound = false;
+                        if (facetsCopy[facetIndex].name.toLowerCase().indexOf(this._facetNameText.toLowerCase().trim()) > -1) {
+                          facetNameTextFound = true;
+                        }
                       }
+
+                      if (facetNameTextFound === true) {
+                        if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
+                          let hasValues = false;
+                          for (let valueIndex = 0; valueIndex < facetsCopy[facetIndex].values.length; valueIndex++) {
+                            if (facetsCopy[facetIndex].values[valueIndex].count) {
+                              hasValues = true;
+                              break;
+                            }
+                          }
+
+                          if (hasValues) {
+                            if (this.showDeprecated === false && facet === 'Deprecated') {
+                            } else {
+                              const facetToAdd = facetsCopy.splice(facetIndex, 1);
+                              facetIndex--;
+                              newFacets.push(facetToAdd[0]);
+                              this.searchText[facetToAdd[0].name] = { value: '', isLoading: false };
+                            }
+                          }
+                        }
+                      }
+
+                      break;
                     }
                   }
-                  break;
-                }
+                });
               }
             });
-          }
+          } else if (this._facetDisplayType === 'facetView' && this._facetViewCategorySelected !== 'All') {
+            if (this._configName && this._configName === 'substances') {
+              this.facetsConfig['facetView'].forEach(categoryRow => {
+                const category = categoryRow['category'];
+                const categoryFacets = categoryRow['facets'];
+                if (category === this._facetViewCategorySelected) {
+                  categoryFacets.forEach(facet => {
+                    for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
+                      this.toggle[facetIndex] = true;
+                      if (facet === facetsCopy[facetIndex].name) {
+                        // Facet Name Search
+                        let facetNameTextFound = true;
+                        if ((this._facetNameText) && (this._facetNameText.length > 0)) {
+                          facetNameTextFound = false;
+                          if (facetsCopy[facetIndex].name.toLowerCase().indexOf(this._facetNameText.toLowerCase().trim()) > -1) {
+                            facetNameTextFound = true;
+                          }
+                        }
 
-        });
-        } else {
-          if (this._configName && this._configName === 'substances' && this._facetViewCategorySelected !== 'All') {
-            this.facetsConfig['facetView'].forEach(categoryRow => {
-            const category = categoryRow['category'];
-            const categoryFacets = categoryRow['facets'];
-            if (category === this._facetViewCategorySelected) {
-              categoryFacets.forEach(facet => {
-              for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
-                this.toggle[facetIndex] = true;
-                if (facet === facetsCopy[facetIndex].name) {
-                  // Facet Name Search
-                  let facetNameTextFound = true;
-                  if ((this._facetNameText) && (this._facetNameText.length > 0)) {
-                    facetNameTextFound = false;
-                    if (facetsCopy[facetIndex].name.toLowerCase().indexOf(this._facetNameText.toLowerCase().trim()) > -1) {
-                      facetNameTextFound = true;
-                    }
-                  }
+                        if (facetNameTextFound === true) {
+                          if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
+                            let hasValues = false;
+                            for (let valueIndex = 0; valueIndex < facetsCopy[facetIndex].values.length; valueIndex++) {
+                              if (facetsCopy[facetIndex].values[valueIndex].count) {
+                                hasValues = true;
+                                break;
+                              }
+                            }
 
-                  if (facetNameTextFound === true) {
-                  if (facetsCopy[facetIndex].values != null && facetsCopy[facetIndex].values.length) {
-                    let hasValues = false;
-                    for (let valueIndex = 0; valueIndex < facetsCopy[facetIndex].values.length; valueIndex++) {
-                      if (facetsCopy[facetIndex].values[valueIndex].count) {
-                        hasValues = true;
+                            if (hasValues) {
+                              if (this.showDeprecated === false && facet === 'Deprecated') {
+                              } else {
+                                const facetToAdd = facetsCopy.splice(facetIndex, 1);
+                                facetIndex--;
+                                newFacets.push(facetToAdd[0]);
+                                this.searchText[facetToAdd[0].name] = { value: '', isLoading: false };
+                              }
+                            }
+                          }
+                        }
+
                         break;
                       }
                     }
-
-                    if (hasValues) {
-                      if (this.showDeprecated === false && facet === 'Deprecated') {
-                      } else {
-                        const facetToAdd = facetsCopy.splice(facetIndex, 1);
-                      facetIndex--;
-                      newFacets.push(facetToAdd[0]);
-                      this.searchText[facetToAdd[0].name] = { value: '', isLoading: false };
-                      }
-                    }
-                  }
+                  });
                 }
-                  break;
-                }
-              }
               });
             }
-            });
-          } else {
+          } else { // Show ALL Facets
             for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
               this.searchText[facetsCopy[facetIndex].name] = { value: '', isLoading: false };
               newFacets.push(facetsCopy[facetIndex]);
@@ -404,8 +431,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       if (this.privateFacetParams[key] !== undefined &&
         this.privateFacetParams[key].hasSelections === true &&
         !(this.showDeprecated && key === 'Deprecated' && this.privateFacetParams[key] !== undefined &&
-            this.privateFacetParams[key].params &&
-            this.privateFacetParams[key].params['Deprecated'] === true)) {
+          this.privateFacetParams[key].params &&
+          this.privateFacetParams[key].params['Deprecated'] === true)) {
         const cat = this.privateFacetParams[key];
         const valArr = [];
         for (const subkey of Object.keys(cat.params)) {
@@ -421,13 +448,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const newHash = this.utilsService.hashCode(paramsString, this.privateFacetParams[key].isAllMatch.toString());
         this.privateFacetParams[key].currentStateHash = newHash;
         this.privateFacetParams[key].isUpdated = false;
+      }
     }
-  }
     facetString = catArr.join(',');
     if (facetString !== '') {
       navigationExtras.queryParams['facets'] = facetString;
     }
-     if (this.showDeprecated) {
+    if (this.showDeprecated) {
       navigationExtras.queryParams['showDeprecated'] = 'true';
     } else {
       navigationExtras.queryParams['showDeprecated'] = null;
@@ -445,7 +472,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   private escapedSplit(value: string, delim: string) {
     return value.match(new RegExp('((.|^)*?([^!]|^))([' + delim + ']|$)', 'g'))
-           .map(d => d.replace(new RegExp('[' + delim + ']$', 'g'), ''));
+      .map(d => d.replace(new RegExp('[' + delim + ']$', 'g'), ''));
   }
 
   private encodeValue(facetValue: string) {
@@ -473,9 +500,11 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.gaService.sendEvent('substancesFiltering', 'button:apply-facet', eventLabel, eventValue);
     this.populateUrlQueryParameters();
     this.setDisplayFacets();
-    this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams,
-       displayFacets: this.displayFacets,
-        deprecated: this.showDeprecated});
+    this.facetsParamsUpdated.emit({
+      facetParam: this.privateFacetParams,
+      displayFacets: this.displayFacets,
+      deprecated: this.showDeprecated
+    });
   }
 
   removeFacet(type: string, bool: boolean, val: string): void {
@@ -548,12 +577,14 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     const newHash = this.utilsService.hashCode(paramsString, isAllMatchString);
     this.privateFacetParams[facetName].isUpdated = newHash !== this.privateFacetParams[facetName].currentStateHash;
 
-    // Call if calling from Advanced Search
-    if (this.showAllFacets && this.showAllFacets === 'true') {
+    // Pass which facet is selected when calling from Advanced Search.
+    if (this.calledFrom && this.calledFrom === 'advancedsearch') {
       this.setDisplayFacets();
-      this.facetsParamsUpdated.emit({ facetParam: this.privateFacetParams,
+      this.facetsParamsUpdated.emit({
+        facetParam: this.privateFacetParams,
         displayFacets: this.displayFacets,
-        deprecated: this.showDeprecated});
+        deprecated: this.showDeprecated
+      });
     }
   }
 

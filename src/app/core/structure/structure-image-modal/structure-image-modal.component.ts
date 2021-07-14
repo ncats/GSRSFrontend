@@ -25,7 +25,7 @@ export class StructureImageModalComponent implements OnInit {
     this.structure = (this.data && this.data.structure) ? this.data.structure : null;
     if (this.data.smiles) {
       this.smiles = this.data.smiles;
-      this.structureService.getInchi(this.data.uuid).subscribe(inchi => {
+      this.structureService.getOtherInchi(this.data.uuid).subscribe(inchi => {
         this.inchi = inchi;
       });
     }

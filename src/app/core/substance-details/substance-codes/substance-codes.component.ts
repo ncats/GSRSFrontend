@@ -43,6 +43,11 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
           this.filterSubstanceCodes();
 
         if (this.codes != null && this.codes.length) {
+          this.codes.forEach(code => {
+            if (code.url) {
+              code.url = code.url.trim();
+            }
+          });
           this.filtered = this.codes;
           this.pageChange();
 
@@ -80,7 +85,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       this.substance.codes.forEach(code => {
         if (code.comments && code.comments.indexOf('|') > -1 && this.type === 'classification') {
           this.codes.push(code);
-        } else if (this.type === 'identifiers') {
+        } else if (!(code.comments && code.comments.indexOf('|') > -1) && this.type === 'identifiers') {
           this.codes.push(code);
         }
       });

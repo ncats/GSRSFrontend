@@ -1,29 +1,37 @@
 .details-container {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /*padding: 20px;*/
-  }
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*padding: 20px;*/
+}
   
-  .details-box {
-    max-width: 1028px;
-    width: 100%;
-    box-sizing: border-box;
-      margin-bottom: 20px;
-  }
+.details-box {
+  max-width: 1028px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
   
-  .box {
-    display: flex;
-    align-items: top;
-  }
-  
-  .mat-card {
-    max-width: 1028px;
-    width: 100%;
-    /*box-sizing: border-box;*/
-      /*margin-bottom: 20px;*/
-  }
+.box {
+  display: flex;
+  align-items: top;
+}
+ 
+.divflexrow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+}
+
+.mat-card {
+  max-width: 1028px;
+  width: 100%;
+  /*box-sizing: border-box;*/
+  /*margin-bottom: 20px;*/
+}
   
   .mat-card-title {
     display: flex;
@@ -34,7 +42,7 @@
     white-space: nowrap;
     white-space: normal;
   }
-  
+
   .row {
     display: flex;
       width: 100%;
@@ -202,7 +210,16 @@
   .bordergray {
       border: 1px solid gray;
   }
-  
+
+  .width650px {
+    width: 650px;
+    max-width: 650px;
+  }
+    
+  .textalignright {
+    text-align: right;
+  }
+
   table.blueTable {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     /*font-family: Verdana, Geneva, sans-serif;*/
