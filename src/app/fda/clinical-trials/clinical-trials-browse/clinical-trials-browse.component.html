@@ -80,19 +80,19 @@
     <td mat-cell *matCellDef="let element">
       <mat-expansion-panel [disabled]="true" #mep="matExpansionPanel" class='clinical-trials-browse-peak-substances-expansion-panel'>
         <mat-expansion-panel-header [collapsedHeight]="''" [expandedHeight]="''"> 
-          <div (click)="mep.expanded = !mep.expanded">{{element.title}} <span *ngIf="element.clinicalTrialDrug"> ({{element.clinicalTrialDrug.length}}) </span></div>
+          <div (click)="mep.expanded = !mep.expanded">{{element.title}} <span *ngIf="element.clinicalTrialUSDrug"> ({{element.clinicalTrialUSDrug.length}}) </span></div>
         </mat-expansion-panel-header>
 <div class="clinical-trials-browse-substance-peak">
-<div *ngIf="element.clinicalTrialDrug">
-<div *ngFor="let item of element.clinicalTrialDrug">
+<div *ngIf="element.clinicalTrialUSDrug">
+<div *ngFor="let item of element.clinicalTrialUSDrug">
   <a target="_blank" [routerLink]="['/substances', item.substanceKey]" >{{item.substanceDisplayName}}</a>
 </div>
 </div>
 <pre>
-<div *ngIf="element.clinicalTrialDrug"><div *ngFor="let item of element.clinicalTrialDrug">{{item.substanceDisplayName}}&#9;{{item.substanceKey}}</div></div>
+<div *ngIf="element.clinicalTrialUSDrug"><div *ngFor="let item of element.clinicalTrialUSDrug">{{item.substanceDisplayName}}&#9;{{item.substanceKey}}</div></div>
 </pre>
 <pre>
-<div *ngIf="element.clinicalTrialDrug"><span>{{lodash.map(element.clinicalTrialDrug, 'substanceDisplayName').join("; ")}}</span>&#9;<span>{{lodash.map(element.clinicalTrialDrug, 'substanceKey').join("; ")}}</span></div>
+<div *ngIf="element.clinicalTrialUSDrug"><span>{{lodash.map(element.clinicalTrialUSDrug, 'substanceDisplayName').join("; ")}}</span>&#9;<span>{{lodash.map(element.clinicalTrialUSDrug, 'substanceKey').join("; ")}}</span></div>
 </pre>
 </div>
       </mat-expansion-panel>

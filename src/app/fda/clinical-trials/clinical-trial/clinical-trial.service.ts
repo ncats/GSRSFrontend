@@ -59,10 +59,10 @@ export class ClinicalTrialService extends BaseHttpService {
     skip: number = 0,
     type?: string
   ): Observable<PagingResponse<ClinicalTrial>> {
-
     let params = new FacetHttpParams();
     let url = this.apiBaseUrl;
-    url += 'clinicaltrial/search';
+    // /search
+    url += 'clinicaltrialus/search';
     if (!searchTerm) { searchTerm = ''; }
     if (searchTerm !== null && searchTerm !== '') {
       if (type !== null && type !== '') {
@@ -71,7 +71,7 @@ export class ClinicalTrialService extends BaseHttpService {
           params = params.append('q', 'root_ctId:\"^' + searchTerm + '$\"');
         } else if (type === 'substanceKey' ) {
           // not working yet
-          params = params.append('q', 'root_clinicalTrialDrug_substanceKey:\"^' + searchTerm + '$\"');
+          params = params.append('q', 'root_clinicalTrialUSDrug_substanceKey:\"^' + searchTerm + '$\"');
         } else if (type === 'title') {
           params = params.append('q', 'root_title:\"' + searchTerm + '\"');
         } else {
@@ -96,11 +96,13 @@ export class ClinicalTrialService extends BaseHttpService {
     const options = {
       params: params
     };
+    console.log('XXXX 3');
+
     return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
   }
 
   deleteClinicalTrial(id: string): Observable<any> {
-    const url = `${this.apiBaseUrl}clinicaltrial(${id})`;
+    const url = `${this.apiBaseUrl}clinicaltrialus(${id})`;
     const params = new HttpParams();
     // params = params.append('view', 'full');
     const options = {
@@ -111,7 +113,7 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   getClinicalTrial(id: string): Observable<ClinicalTrial> {
-    const url = this.apiBaseUrl + `clinicaltrial(${id})`;
+    const url = this.apiBaseUrl + `clinicaltrialus(${id})`;
     const params = new HttpParams();
     // params = params.append('view', 'full');
     const options = {
@@ -169,7 +171,7 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   addClinicalTrial(body): Observable<ClinicalTrial> {
-    const url = this.apiBaseUrl + `clinicaltrial`;
+    const url = this.apiBaseUrl + `clinicaltrialus`;
     const params = new HttpParams();
     const options = {
       params: params,
@@ -240,7 +242,7 @@ export class ClinicalTrialService extends BaseHttpService {
   getClinicalTrialsFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/clinicaltrial/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${searchTerm}`;
+      url = `${this.configService.configData.apiBaseUrl}api/v1/clinicaltrialus/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
@@ -252,7 +254,7 @@ export class ClinicalTrialService extends BaseHttpService {
   // see substance.service
   filterFacets(name: string, category: string ): Observable<any> {
     console.log('I am in the service, filter facets');
-    const url =  `${this.configService.configData.apiBaseUrl}api/v1/clinicaltrial/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
+    const url =  `${this.configService.configData.apiBaseUrl}api/v1/clinicaltrialus/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
     return this.http.get(url);
   }
 // see substance.service

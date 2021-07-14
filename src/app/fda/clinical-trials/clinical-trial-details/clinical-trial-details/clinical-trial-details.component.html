@@ -354,12 +354,12 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="Substance ({{clinicalTrial.clinicalTrialDrug.length}})">
+          <mat-tab label="Substance ({{clinicalTrial.clinicalTrialUSDrug.length}})">
             <div class="details-container">
               <mat-card>
                 <div class="title">Substances in Clinical Trial </div>
                 <mat-card-content>
-                  <div *ngIf="clinicalTrial.clinicalTrialDrug.length > 0; else noRecordSub">
+                  <div *ngIf="clinicalTrial.clinicalTrialUSDrug.length > 0; else noRecordSub">
                     <table width="98%" class="bordergray blueTable padleft20px">
                       <thead>
                         <tr valign="top">
@@ -369,7 +369,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let x of clinicalTrial.clinicalTrialDrug; let i = index">
+                        <tr *ngFor="let x of clinicalTrial.clinicalTrialUSDrug; let i = index">
                           <td>{{i+1}}</td>
                           <td>
                             <div *ngIf="x.substanceUuid">

@@ -32,9 +32,13 @@ export class FacetHttpParams extends HttpParams {
                 }
             });
         }
-        if ( deprecated ) {
-        } else if (!hasDeprecated ) {
-            clone = clone.append('facet', 'Deprecated/Not Deprecated');
+      if (deprecated) {
+          // empty line
+          
+      } else if (!hasDeprecated) {
+          // __alex__dontcommit
+          // cause ct browse listing to not work? 
+          clone = clone.append('facet', 'Deprecated/Not Deprecated');
         }
         return clone;
     }

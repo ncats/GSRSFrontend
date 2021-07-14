@@ -25,7 +25,7 @@
 			</span> 
 		</div>
 	
-	<h3>Substances in Clinical Trial <span *ngIf="clinicalTrial && clinicalTrial.clinicalTrialDrug"> ({{ clinicalTrial.clinicalTrialDrug.length}})</span></h3>
+	<h3>Substances in Clinical Trial <span *ngIf="clinicalTrial && clinicalTrial.clinicalTrialUSDrug"> ({{ clinicalTrial.clinicalTrialUSDrug.length}})</span></h3>
   <div *ngIf="isAdmin">
 		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
 		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>

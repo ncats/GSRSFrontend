@@ -1,4 +1,4 @@
-export interface ClinicalTrialDrug {
+export interface ClinicalTrialUSDrug {
   id: number;
   trialNumber: string;
   substanceKey: string;
@@ -35,9 +35,8 @@ export interface ClinicalTrial {
   locations: string;
   locationList: Array<string>;
   sponsorList: Array<string>;
-  clinicalTrialDrug: Array<ClinicalTrialDrug>;
+  clinicalTrialUSDrug: Array<ClinicalTrialUSDrug>;
   internalVersion: number;
-
   firstReceived: string;
   lastVerified: string;
   primaryCompletionDate: string;

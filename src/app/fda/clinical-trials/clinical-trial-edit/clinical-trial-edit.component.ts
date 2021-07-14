@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router} from '@angular/router';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial, BdnumNameAll } from '../clinical-trial/clinical-trial.model';
-import { ClinicalTrialDrug } from '../clinical-trial/clinical-trial.model';
+import { ClinicalTrialUSDrug } from '../clinical-trial/clinical-trial.model';
 import { MiniSearchComponent } from '../mini-search/mini-search.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
@@ -132,10 +132,13 @@ export class ClinicalTrialEditComponent implements OnInit {
   getClinicalTrial() {
     this.loadingService.setLoading(true);
     this.dataSource.data = [];
+    console.log('XXXX ab' + this._trialNumber);
     this.clinicalTrialService.getClinicalTrial(this._trialNumber)
       .subscribe( data => {
         this.isError = false;
-        data.clinicalTrialDrug.forEach(element => {
+        console.log('XXXX ac' + data);
+        if (data.clinicalTrialUSDrug !== null) {
+        data.clinicalTrialUSDrug.forEach(element => {
           this.dataSource.data.push({
              id: element.id,
              substanceKey: element.substanceKey,
@@ -144,7 +147,8 @@ export class ClinicalTrialEditComponent implements OnInit {
              protectedMatch: element.protectedMatch
             }
           );
-        });
+          });
+        }
         // Weird, why is this necessary?
         this.clinicalTrial = data;
         this.dataSource.data = this.dataSource.data;
@@ -168,17 +172,17 @@ export class ClinicalTrialEditComponent implements OnInit {
     // var that = this;
     this.loadingService.setLoading(true);
     const newClinicalTrial = _.cloneDeep(this.clinicalTrial);
-    const newClinicalTrialDrugs: Array<ClinicalTrialDrug> = [];
+    const newClinicalTrialUSDrugs: Array<ClinicalTrialUSDrug> = [];
     this.dataSource.data.forEach((element)  => {
-      const ctd = {} as ClinicalTrialDrug;
+      const ctd = {} as ClinicalTrialUSDrug;
       ctd.id = element.id;
       ctd.trialNumber = element.trialNumber;
       ctd.substanceKey = element.substanceKey;
       ctd.substanceKeyType = element.substanceKeyType;
       ctd.protectedMatch = element.protectedMatch;
-      newClinicalTrialDrugs.push(ctd);
+      newClinicalTrialUSDrugs.push(ctd);
     });
-    newClinicalTrial.clinicalTrialDrug = newClinicalTrialDrugs;
+    newClinicalTrial.clinicalTrialUSDrug = newClinicalTrialUSDrugs;
     this.clinicalTrialService.updateClinicalTrial(
       newClinicalTrial
     )
@@ -191,7 +195,7 @@ export class ClinicalTrialEditComponent implements OnInit {
         if (0) {
         this.isError = false;
         this.dataSource.data = [];
-        data.clinicalTrialDrug.forEach(element => {
+        data.clinicalTrialUSDrug.forEach(element => {
           this.dataSource.data.push(
             {
               id: element.id,
