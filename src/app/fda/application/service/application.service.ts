@@ -422,9 +422,7 @@ export class ApplicationService extends BaseHttpService {
       params: params,
       type: 'JSON',
       headers: {
-        'Content-type': 'application/json',
-        'auth-username': 'admin',
-        'auth-password': 'admin'
+        'Content-type': 'application/json'
       }
     };
     // Update Application
