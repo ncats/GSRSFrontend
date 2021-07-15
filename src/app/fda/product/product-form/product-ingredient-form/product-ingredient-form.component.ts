@@ -27,7 +27,7 @@ import { ConfigService } from '@gsrs-core/config/config.service';
   templateUrl: './product-ingredient-form.component.html',
   styleUrls: ['./product-ingredient-form.component.scss']
 })
-export class ProductIngredientFormComponent implements OnInit {
+export class ProductIngredientFormComponent implements OnInit, OnDestroy {
 
   @ViewChildren('checkBox') checkBox: QueryList<any>;
   @Input() ingredient: ProductIngredient;
@@ -58,6 +58,7 @@ export class ProductIngredientFormComponent implements OnInit {
   basisOfStrengthActiveMoiety = new Array<String>();
   selectedIngredientLocation = new Array<any>();
   substanceKeyType = '';
+  private subscriptions: Array<Subscription> = [];
 
   locationList: Array<any> = [
     { value: 'Whole', checked: false },
@@ -196,7 +197,7 @@ export class ProductIngredientFormComponent implements OnInit {
   }
 
   getSubstanceCode(substanceUuid: string, type: string) {
-    this.generalService.getSubstanceCodesBySubstanceUuid(substanceUuid).subscribe(response => {
+    const subCodeSubscription = this.generalService.getSubstanceCodesBySubstanceUuid(substanceUuid).subscribe(response => {
       if (response) {
         const substanceCodes = response;
         for (let index = 0; index < substanceCodes.length; index++) {
@@ -226,20 +227,25 @@ export class ProductIngredientFormComponent implements OnInit {
         }
       }
     });
+    this.subscriptions.push(subCodeSubscription);
   }
 
   getSubstanceBySubstanceKey() {
     if (this.ingredient != null) {
       // Get Substance Details, uuid, approval_id, substance name
       if (this.ingredient.substanceKey) {
-        this.generalService.getSubstanceByAnyId(this.ingredient.substanceKey).subscribe(response => {
+        const subSubscription = this.generalService.getSubstanceByAnyId(this.ingredient.substanceKey).subscribe(response => {
           if (response) {
             if (response.uuid) {
               this.substanceUuid = response.uuid;
               this.ingredientName = response._name;
+
+             // Get Active Moiety
+             this.getActiveMoiety(this.substanceUuid, 'ingredientname');
             }
           }
         });
+        this.subscriptions.push(subSubscription);
       }
 
       // Get Basis of Strength
@@ -249,6 +255,9 @@ export class ProductIngredientFormComponent implements OnInit {
             if (response.uuid) {
               this.basisOfStrengthSubstanceUuid = response.uuid;
               this.basisOfStrengthIngredientName = response._name;
+
+              // Get Active Moiety
+              this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
             }
           }
         });

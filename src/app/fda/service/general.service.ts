@@ -100,7 +100,8 @@ export class GeneralService extends BaseHttpService {
   }
 
   getSearchCount(substanceUuid: string): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceSearchCountBySubstanceUuid?substanceUuid=' + substanceUuid;
+   // const url = this.baseUrl + 'getSubstanceSearchCountBySubstanceUuid?substanceUuid=' + substanceUuid;
+   const url = this.apiBaseUrl + 'searchcount/' + substanceUuid;
     return this.http.get<any>(url)
       .pipe(
         map(res => {

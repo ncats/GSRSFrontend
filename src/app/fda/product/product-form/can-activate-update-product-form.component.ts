@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { take } from 'rxjs/operators';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras, UrlTree } from '@angular/router';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { Observable } from 'rxjs';
@@ -16,9 +17,9 @@ export class CanActivateUpdateProductFormComponent implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
         return new Observable(observer => {
-            this.authService.getAuth().subscribe(auth => {
+            this.authService.getAuth().pipe(take(1)).subscribe(auth => {
                 if (auth) {
-                    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').subscribe(response => {
+                    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
                         if (response) {
                             observer.next(true);
                             observer.complete();

@@ -68,37 +68,37 @@
     width: calc((100% - 30px * 3) / 4);
     margin-right: 30px;
   }
-  
+
   .col-1:last-child {
     margin-right: 0px;
-  }  
-  
+  }
+
   .col-2 {
     /* width: 348.667px; calc() value*/
-    width: calc((100% - 30px * 1) / 2); 
+    width: calc((100% - 30px * 1) / 2);
     margin-right: 30px;
   }
-  
+
   .col-2:last-child {
     margin-right: 0px;
-  }  
-  
+  }
+
   .col-1-5 {
     /* width: 159.333px; */
     width: calc((100% - 20px * 4) / 5);
     margin-right: 20px;
   }
-  
+
   .col-1-5:last-child {
     margin-right: 0px;
-  }  
-  
+  }
+
   .col-4-5 {
     /* width: 159.333px; */
     width: calc((100% - 5px) / (5/4));
     margin-right: 20px;
   }
-  
+
   .col-4-5:last-child {
     margin-right: 0px;
   }
@@ -116,17 +116,17 @@
 
 .col-1:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-2 {
   /* width: 348.667px; calc() value*/
-  width: calc((100% - 30px * 1) / 2); 
+  width: calc((100% - 30px * 1) / 2);
   margin-right: 30px;
 }
 
 .col-2:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-1-5 {
   /* width: 159.333px; */
@@ -136,7 +136,7 @@
 
 .col-1-5:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-4-5 {
   /* width: 159.333px; */
@@ -146,7 +146,7 @@
 
 .col-4-5:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-6-1 {
   width: calc((100% - 20px * 5) / 6);
@@ -155,7 +155,7 @@
 
 .col-6-1:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-6-2 {
   width: calc((100% - 10px * 1) / (6/2));
@@ -164,7 +164,7 @@
 
 .col-6-2:last-child {
   margin-right: 0px;
-}  
+}
 
 .validate-button{
   margin-left:15px;
@@ -406,14 +406,14 @@
   float: left;
 }
 
-.disabled { 
-  cursor: not-allowed; 
-} 
-
-.disabledfield { 
+.disabled {
   cursor: not-allowed;
-  color: red; 
-} 
+}
+
+.disabledfield {
+  cursor: not-allowed;
+  color: red;
+}
 
 hr {
   border: none;
@@ -433,7 +433,7 @@ hr {
 
 .mat-select-value {
   color: blue;
-}  
+}
 
 .mat-form-field-label {
   color: rgb(127, 127, 133) !important;
@@ -442,7 +442,7 @@ hr {
 
 .mat-form-field-underline {
   background-color: rgb(68, 68, 218) !important;
-} 
+}
 
  /*Focused: change color of label*/
 .mat-focused .mat-form-field-label {
@@ -452,15 +452,15 @@ hr {
 /*Focused: change color of underline*/
 .mat-form-field-ripple {
   background-color: rgb(70, 116, 106) !important;;
-} 
+}
 
-.mat-form-field-disabled .mat-form-field-underline 
-{ 
-  background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 10%, #c2c7cc 0 ) !important; 
+.mat-form-field-disabled .mat-form-field-underline
+{
+  background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 10%, #c2c7cc 0 ) !important;
   background-size: 1px 100% !important;
-  background-repeat: repeat-x !important; 
+  background-repeat: repeat-x !important;
   cursor: not-allowed;
-} 
+}
 
 .mat-form-field-disabled:hover {
   cursor: not-allowed;
@@ -473,3 +473,10 @@ hr {
   -moz-box-shadow: 2px 4px 12px 0px rgba(145,140,145,1);
   box-shadow: 2px 4px 12px 0px rgba(145,140,145,1);
 }
+
+.small-icon {
+  width: 15px;
+  height: 15px;
+  padding-left: 0px;
+}
+

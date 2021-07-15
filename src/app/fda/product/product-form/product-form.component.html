@@ -15,9 +15,10 @@
           matTooltip='Register a New Product'>
           Register New Product
         </button>&nbsp;&nbsp;&nbsp;
-        <button mat-flat-button color="primary" [routerLink]="['/product', product.id]"
-          matTooltip='View this Product Record'>View Product
-        </button>&nbsp;&nbsp;&nbsp;
+        <a mat-flat-button color="primary" routerLink="/product/{{product.id}}" target="_blank" matTooltip='Opens in a new window'>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          View Product</a>
+        &nbsp;&nbsp;&nbsp;
         <span *ngIf="isAdmin">
           <button mat-flat-button color="primary" (click)="confirmDeleteProduct()" matTooltip='Delete this Product'>
             Delete
@@ -227,7 +228,7 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
-      
+
                 <mat-form-field class="col-1">
                   <mat-label>Release Characteristic</mat-label>
                   <mat-select matNativeControl [(ngModel)]="product.releaseCharacteristic" name="releaseCharacteristic"
@@ -406,7 +407,7 @@
                         <mat-option *ngFor="let productCodeType of productCodeTypeList" [value]="productCodeType.value">
                           {{productCodeType.display}}
                         </mat-option>
-                      </mat-select> 
+                      </mat-select>
                     </mat-form-field>
                     -->
                   </div>

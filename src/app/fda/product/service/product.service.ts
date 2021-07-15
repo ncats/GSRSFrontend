@@ -461,6 +461,10 @@ export class ProductService extends BaseHttpService {
     this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProduct);
   }
 
+  getViewProductUrl(id: number): string {
+    return this.apiBaseUrlWithEntityContext + id;
+  }
+
   /*
   reviewProduct(prodIndex: number): void {
    //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);

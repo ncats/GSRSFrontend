@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ApplicationIngredient } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
@@ -17,7 +18,7 @@ import { GeneralService } from 'src/app/fda/service/general.service';
   templateUrl: './ingredient-form.component.html',
   styleUrls: ['./ingredient-form.component.scss']
 })
-export class IngredientFormComponent implements OnInit {
+export class IngredientFormComponent implements OnInit, OnDestroy {
   @Input() ingredient: ApplicationIngredient;
   @Input() prodIndex: number;
   @Input() ingredIndex: number;
@@ -38,6 +39,7 @@ export class IngredientFormComponent implements OnInit {
   username = null;
   substanceConfig: any;
   substanceKeyTypeConfig: string;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private authService: AuthService,
@@ -71,6 +73,12 @@ export class IngredientFormComponent implements OnInit {
 
       this.getSubstanceBySubstanceKey();
     }, 600);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   addNewIngredient(prodIndex: number) {
@@ -172,7 +180,7 @@ export class IngredientFormComponent implements OnInit {
   }
 
   getSubstanceCode(substanceUuid: string, type: string) {
-    this.generalService.getSubstanceCodesBySubstanceUuid(substanceUuid).subscribe(response => {
+    const subCodesSubscription = this.generalService.getSubstanceCodesBySubstanceUuid(substanceUuid).subscribe(response => {
       if (response) {
         const substanceCodes = response;
         for (let index = 0; index < substanceCodes.length; index++) {
@@ -201,13 +209,14 @@ export class IngredientFormComponent implements OnInit {
         }
       }
     });
+    this.subscriptions.push(subCodesSubscription);
   }
 
   getSubstanceBySubstanceKey() {
     if (this.ingredient != null) {
       // Get Substance Details, uuid, approval_id, substance name
       if (this.ingredient.substanceKey) {
-        this.generalService.getSubstanceByAnyId(this.ingredient.substanceKey).subscribe(response => {
+        const subIdSubscription = this.generalService.getSubstanceByAnyId(this.ingredient.substanceKey).subscribe(response => {
           if (response) {
             if (response.uuid) {
               this.substanceUuid = response.uuid;
@@ -215,11 +224,12 @@ export class IngredientFormComponent implements OnInit {
             }
           }
         });
+        this.subscriptions.push(subIdSubscription);
       }
 
       // Get Basis of Strength
       if (this.ingredient.basisOfStrengthSubstanceKey) {
-        this.generalService.getSubstanceByAnyId(this.ingredient.basisOfStrengthSubstanceKey).subscribe(response => {
+        const subIdSubscription = this.generalService.getSubstanceByAnyId(this.ingredient.basisOfStrengthSubstanceKey).subscribe(response => {
           if (response) {
             if (response.uuid) {
               this.basisOfStrengthSubstanceUuid = response.uuid;
@@ -227,6 +237,7 @@ export class IngredientFormComponent implements OnInit {
             }
           }
         });
+        this.subscriptions.push(subIdSubscription);
       }
     }
   }
@@ -319,13 +330,14 @@ export class IngredientFormComponent implements OnInit {
   getActiveMoiety(substanceId: string, type: string) {
     if (substanceId != null) {
       // Get Active Moiety - Relationship
-      this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
+      const activeSub = this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
         if ((type != null) && (type === 'ingredientname')) {
           this.ingredientNameActiveMoiety = responseRel;
         } else {
           this.basisOfStrengthActiveMoiety = responseRel;
         }
       });
+      this.subscriptions.push(activeSub);
     }
   }
 

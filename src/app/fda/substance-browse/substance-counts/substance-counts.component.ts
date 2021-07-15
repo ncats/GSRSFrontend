@@ -39,7 +39,9 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
 
   getSearchCount(): void {
     this.generalService.getSearchCount(this.substance.uuid).subscribe(searchCount => {
-      this.searchCount = searchCount;
+      if (searchCount) {
+        this.searchCount = searchCount;
+      }
     });
   }
 
