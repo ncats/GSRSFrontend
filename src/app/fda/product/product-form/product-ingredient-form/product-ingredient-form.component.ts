@@ -267,8 +267,8 @@ export class ProductIngredientFormComponent implements OnInit {
               const relType = responseRel[i].type;
               // if type is ACTIVE MOIETY, get Relationship Name
               if (relType && relType === 'ACTIVE MOIETY') {
-                if ((type != null) && (type === 'ingredientname')) {
-                  if (responseRel[i].relatedSubstance.name) {
+                if (responseRel[i].relatedSubstance.name) {
+                  if ((type != null) && (type === 'ingredientname')) {
                     this.ingredientNameActiveMoiety.push(responseRel[i].relatedSubstance.name);
                   } else {
                     this.basisOfStrengthActiveMoiety.push(responseRel[i].relatedSubstance.name);
@@ -297,6 +297,7 @@ export class ProductIngredientFormComponent implements OnInit {
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
           this.ingredientNameMessage = '';
+          this.ingredientNameActiveMoiety.length = 0;
 
           if (!this.substanceKeyType) {
             alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Ingredient Name');
@@ -307,6 +308,14 @@ export class ProductIngredientFormComponent implements OnInit {
 
             this.substanceUuid = relatedSubstance.refuuid;
             this.ingredientName = relatedSubstance.name;
+
+            // Populate Basis of Strength if it is empty/null
+            if (!this.ingredient.basisOfStrengthSubstanceKey) {
+              this.basisOfStrengthIngredientName = relatedSubstance.name;
+              this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
+              // Get Active Moiety
+              this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
+            }
 
             // Get Active Moiety
             this.getActiveMoiety(this.substanceUuid, 'ingredientname');
@@ -331,6 +340,7 @@ export class ProductIngredientFormComponent implements OnInit {
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
           this.basisOfStrengthMessage = '';
+          this.basisOfStrengthActiveMoiety.length = 0;  //Clear Array
 
           if (!this.substanceKeyType) {
             alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Ingredient Name');
@@ -341,8 +351,8 @@ export class ProductIngredientFormComponent implements OnInit {
             this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
             this.basisOfStrengthIngredientName = relatedSubstance.name;
 
-             // Get Active Moiety
-             this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
+            // Get Active Moiety
+            this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
           }
         }
       }
@@ -357,6 +367,29 @@ export class ProductIngredientFormComponent implements OnInit {
 
   showMessageBasisOfStrength(message: string): void {
     this.basisOfStrengthMessage = message;
+  }
+
+
+  confirmReviewIngredient() {
+    if (this.ingredient.reviewDate) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: { message: 'Are you sure you want to overwrite Reviewed By and Review Date?' }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result && result === true) {
+          this.reviewIngredient();
+        }
+      });
+    } else {
+      this.reviewIngredient();
+    }
+  }
+
+  reviewIngredient() {
+    const currentDate = this.generalService.getCurrentDate();
+    this.ingredient.reviewDate = currentDate;
+    this.ingredient.reviewedBy = this.username;
   }
 
   /*

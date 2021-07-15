@@ -24,15 +24,22 @@ import { ImpuritiesTestFormComponent } from './impurities-form/impurities-test-f
 import { ImpuritiesSubstanceFormComponent } from './impurities-form/impurities-substance-form/impurities-substance-form.component';
 import { ImpuritiesResidualSolventsFormComponent } from './impurities-form/impurities-residual-solvents-form/impurities-residual-solvents-form.component';
 import { ImpuritiesInorganicFormComponent } from './impurities-form/impurities-inorganic-form/impurities-inorganic-form.component';
+import { CanActivateRegisterImpuritiesFormComponent } from './impurities-form/can-activate-register-impurities-form.component';
+import { CanActivateUpdateImpuritiesFormComponent } from './impurities-form/can-activate-update-impurities-form.component';
+import { CanDeactivateImpuritiesFormComponent } from './impurities-form/can-deactivate-impurities-form.component';
 
 const impurityRoutes: Routes = [
   {
     path: 'impurities/register',
-    component: ImpuritiesFormComponent
+    component: ImpuritiesFormComponent,
+    canActivate: [CanActivateRegisterImpuritiesFormComponent],
+    canDeactivate: [CanActivateUpdateImpuritiesFormComponent]
   },
   {
     path: 'impurities/:id/edit',
-    component: ImpuritiesFormComponent
+    component: ImpuritiesFormComponent,
+    canActivate: [CanActivateUpdateImpuritiesFormComponent],
+    canDeactivate: [CanActivateUpdateImpuritiesFormComponent]
   },
   {
     path: 'impurities/:id',
@@ -70,7 +77,12 @@ const impurityRoutes: Routes = [
     SubstanceSearchSelectorModule,
     SubstanceSelectorModule,
     SubstanceImageModule
-  ]
+  ],
+  providers: [
+    CanActivateRegisterImpuritiesFormComponent,
+    CanActivateUpdateImpuritiesFormComponent,
+    CanDeactivateImpuritiesFormComponent
+ ]
 })
 
 export class ImpuritiesModule {
@@ -84,6 +96,9 @@ export class ImpuritiesModule {
     return {
       ngModule: ImpuritiesModule,
       providers: [
+        CanActivateRegisterImpuritiesFormComponent,
+        CanActivateUpdateImpuritiesFormComponent,
+        CanDeactivateImpuritiesFormComponent
       ]
     };
   }

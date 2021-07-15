@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -17,10 +18,11 @@ import { ProductElist } from '../../model/productelist/productelist.model';
   styleUrls: ['./product-elist-details.component.scss']
 })
 
-export class ProductElistDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit {
+export class ProductElistDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dailyMedUrl = '';
   product: ProductElist;
+  showSpinner = false;
 
   constructor(
     producService: ProductService,
@@ -54,41 +56,55 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
         this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=' + this.product.productNDC;
       }
     }, error => {
+      this.message = 'No Product record found';
     });
+
     this.loadingService.setLoading(false);
   }
 
   getSubstanceByApprovalID() {
     if (this.product != null) {
 
-      // Active Ingredient
-      this.product.prodActiveElistList.forEach(elementActive => {
-        if (elementActive != null) {
-          // Get Substance Details, uuid
-          if (elementActive.unii) {
-            this.generalService.getSubstanceByAnyId(elementActive.unii).subscribe(response => {
-              if (response) {
-                elementActive._substanceUuid = response.uuid;
-              }
-            });
-          }
-        }
-      });
+      // Sort Active Substance Name in Ascending order
+      if (this.product.prodActiveElistList.length > 0) {
+        this.product.prodActiveElistList.sort((a, b) => (a.name < b.name ? -1 : 1));
 
-      // Inactive Ingredient
-      this.product.prodInactiveElistList.forEach(elementInactive => {
-        if (elementInactive != null) {
-          // Get Substance Details, uuid
-          if (elementInactive.unii) {
-            this.generalService.getSubstanceByAnyId(elementInactive.unii).subscribe(response => {
-              if (response) {
-                elementInactive._substanceUuid = response.uuid;
-              }
-            });
-          }
-        }
-      });
+        // Active Ingredient - get Substance Uuid for each Substance Name
+        this.product.prodActiveElistList.forEach(elementActive => {
 
+          if (elementActive != null) {
+            // Get Substance Details, uuid
+            if (elementActive.unii) {
+              const subActiveSubscription = this.generalService.getSubstanceByAnyId(elementActive.unii).subscribe(response => {
+                if (response) {
+                  elementActive._substanceUuid = response.uuid;
+                }
+              });
+              this.subscriptions.push(subActiveSubscription);
+            }
+          }
+        });
+      }
+
+      // Sort Inactive Substance Name in Ascending order
+      if (this.product.prodInactiveElistList.length > 0) {
+        this.product.prodInactiveElistList.sort((a, b) => (a.name < b.name ? -1 : 1));
+
+        // Inactive Ingredient - get Substance Uuid for each Substance Name
+        this.product.prodInactiveElistList.forEach(elementInactive => {
+          if (elementInactive != null) {
+            // Get Substance Details, uuid
+            if (elementInactive.unii) {
+              const subInactiveSubscription = this.generalService.getSubstanceByAnyId(elementInactive.unii).subscribe(response => {
+                if (response) {
+                  elementInactive._substanceUuid = response.uuid;
+                }
+              });
+              this.subscriptions.push(subInactiveSubscription);
+            }
+          }
+        });
+      }
     }
   }
 

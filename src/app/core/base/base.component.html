@@ -84,6 +84,10 @@
       <a mat-menu-item routerLink="/browse-clinical-trials">
         Browse Clinical Trials
       </a>
+      <mat-divider></mat-divider>
+      <a mat-menu-item routerLink="/browse-adverse-events">
+        Browse Adverse Events
+      </a>
       <div *ngIf="adverseEventShinyHomepageDisplay === true">
         <mat-divider></mat-divider>
         <a mat-menu-item [href]="adverseEventShinyHomepageURL" target="_blank">
@@ -96,9 +100,9 @@
           <span style = "font-size:16px;">Register</span>
          <mat-icon svgIcon="chevron_down"></mat-icon>
          </button>
-     
+
   </div>
-  
+
      <div>
      <mat-menu #reg="matMenu" (closed)="removeZindex()">
        <div *ngFor="let navItem of registerNav">
@@ -108,7 +112,7 @@
          <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath">
            {{navItem.display}}
          </a>
-            
+
        </div>
        <div>
           <a mat-menu-item (click)="importDialog()">
@@ -154,7 +158,7 @@
   <div class="classic-view-container"  *ngIf="auth && auth.identifier">
       <a class = "top-button extra-item" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [routerLink]="['/registrars']" *ngIf = "canRegister">
           <span style = "font-size:16px;">Registrars</span>
-         
+
   </a>
   </div>
 </mat-toolbar>

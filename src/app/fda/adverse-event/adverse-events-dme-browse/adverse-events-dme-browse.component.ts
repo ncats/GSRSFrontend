@@ -147,12 +147,13 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
   }
 
   private loadComponent(): void {
-    if (this.isFacetsParamsInit && this.isComponentInit) {
+ //   if (this.isFacetsParamsInit && this.isComponentInit) {
       this.searchAdverseEventDme();
-    }
+ //   }
   }
 
   searchAdverseEventDme() {
+
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
     const subscription = this.adverseEventService.getAdverseEventDme(

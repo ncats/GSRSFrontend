@@ -265,6 +265,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
         if (response.id) {
+          this.impuritiesService.bypassUpdateCheck();
           const id = response.id;
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';

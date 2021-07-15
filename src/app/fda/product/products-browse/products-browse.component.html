@@ -121,7 +121,7 @@
       &nbsp;&nbsp;
     </div>
 
-  
+
     <div class="paginationPosition">
       <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
         [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
@@ -130,7 +130,7 @@
 
     <br><br><br>
     <div class="divflex">
-     
+
       <div class="marginleft20px marginright40px" *ngIf="isLoggedIn">
         <button matTooltip="Export Search Results" mat-button (click)="export()"
           class="mat-button export-button mat-raised-button">
@@ -170,7 +170,7 @@
           </div>
         </div>
 
-  
+
         <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
           <div class='selected-container'>
             <span class="capitalized font-medium-bold selected-label">
@@ -203,7 +203,7 @@
 
                 <!-- If fromtable is SPL, display SPL Details links -->
                 <span *ngIf="product.fromtable === 'SPL'">
-                  <a class="substance-name" [routerLink]="['/productelist', product.productId]"
+                  <a class="substance-name" [routerLink]="['/product-elist', product.productId]"
                     target="_blank"><span *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
                     <ng-template #noProdNDC>(NO ID)</ng-template>
                   </a>

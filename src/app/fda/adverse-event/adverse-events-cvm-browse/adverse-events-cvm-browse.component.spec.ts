@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdverseEventCvmBrowseComponent } from './adverse-event-cvm-browse.component';
+import { AdverseEventsCvmBrowseComponent } from './adverse-events-cvm-browse.component';
 
-describe('AdverseEventCvmBrowseComponent', () => {
+describe('AdverseEventsCvmBrowseComponent', () => {
   let component: AdverseEventCvmBrowseComponent;
   let fixture: ComponentFixture<AdverseEventCvmBrowseComponent>;
 

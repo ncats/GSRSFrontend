@@ -94,7 +94,7 @@
 </div>
 
 <!-- Application Matching List -->
-<div *ngIf="appMatchListCount > 0">
+<div *ngIf="this.isShowMatchList === 'true' && appMatchListCount >= 0">
   <br>
   <a class="colorred padtop10" [routerLink]="['/sub-app-match-list', substanceId]" target="_blank">
     Matching Application Names&nbsp;

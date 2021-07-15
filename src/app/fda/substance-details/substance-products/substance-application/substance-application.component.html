@@ -50,7 +50,7 @@
             </a>
             </span>
             <span *ngIf="application.fromTable && application.fromTable !== 'SRS'">
-              <a [routerLink]="['/applicationDarrtsDetails', application.appType, application.appNumber]"
+              <a [routerLink]="['/application-details', application.appType, application.appNumber]"
                 target="_blank">{{application.appType}}</a>
               <br><span class="font10px colorgray">(Integrity)</span>
             </span>

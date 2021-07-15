@@ -1,0 +1,51 @@
+{
+    "Adverse Event/PT Term":{
+        "lucenePath":"root_adverseEvent",
+        "description":"PT Term",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Prim SOC":{
+        "lucenePath":"root_primSoc",
+        "description":"Prim SOC",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "DME Reactions":{
+        "lucenePath":"root_dmeReactions",
+        "description":"DME Reactions",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "PT Term DME Meddra":{
+        "lucenePath":"root_ptTermMeddra",
+        "description":"PT Term DME Meddra",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Species":{
+        "lucenePath":"root_species",
+        "description":"Species",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Ingredient Name":{
+        "lucenePath":"root_name",
+        "description":"Ingredient Name",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    },
+    "Substance Key":{
+        "lucenePath":"root_substanceKey",
+        "description":"Substance Key",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x"
+    }     
+}

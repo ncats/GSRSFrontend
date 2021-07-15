@@ -22,17 +22,17 @@ import { environment } from '../../../../environments/environment';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AdverseEventService } from '../service/adverseevent.service';
 import { GeneralService } from '../../service/general.service';
-import { AdverseEventPt } from '../model/adverse-event.model';
+import { AdverseEventCvm } from '../model/adverse-event.model';
 
 @Component({
-  selector: 'app-adverse-event-browse',
-  templateUrl: './adverse-event-browse.component.html',
-  styleUrls: ['./adverse-event-browse.component.scss']
+  selector: 'app-adverse-events-cvm-browse',
+  templateUrl: './adverse-events-cvm-browse.component.html',
+  styleUrls: ['./adverse-events-cvm-browse.component.scss']
 })
 
-export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   public privateSearchTerm?: string;
-  public adverseEventPt: Array<AdverseEventPt>;
+  public adverseEventCvm: Array<AdverseEventCvm>;
   order: string;
   // public sortValues = applicationSearchSortValues;
   pageIndex: number;
@@ -61,7 +61,7 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
   isSearchEditable = false;
   lastPage: number;
   invalidPage = false;
-  totalAdverseEventPt = 0;
+  totalAdverseEventCvm = 0;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -100,8 +100,8 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnInit() {
-    this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventPtFacets);
-    this.gaService.sendPageView('Browse Adverse Event');
+    this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
+    this.gaService.sendPageView('Browse Adverse Event Dme');
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -148,14 +148,14 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   private loadComponent(): void {
     if (this.isFacetsParamsInit && this.isComponentInit) {
-      this.searchAdverseEventPt();
+      this.searchAdverseEventCvm();
     }
   }
 
-  searchAdverseEventPt() {
+  searchAdverseEventCvm() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
-    const subscription = this.adverseEventService.getAdverseEventPt(
+    const subscription = this.adverseEventService.getAdverseEventCvm(
       this.order,
       skip,
       this.pageSize,
@@ -165,11 +165,11 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
       .subscribe(pagingResponse => {
         this.isError = false;
 
-        this.adverseEventPt = pagingResponse.content;
+        this.adverseEventCvm = pagingResponse.content;
         // didn't work unless I did it like this instead of
         // below export statement
-        this.dataSource = this.adverseEventPt;
-        this.totalAdverseEventPt = pagingResponse.total;
+        this.dataSource = this.adverseEventCvm;
+        this.totalAdverseEventCvm = pagingResponse.total;
         this.etag = pagingResponse.etag;
 
         if (pagingResponse.total % this.pageSize === 0) {
@@ -204,7 +204,7 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
   setSearchTermValue() {
     this.pageSize = 10;
     this.pageIndex = 0;
-    this.searchAdverseEventPt();
+    this.searchAdverseEventCvm();
   }
 
   clearSearch(): void {
@@ -216,7 +216,7 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.pageSize = 10;
 
     this.populateUrlQueryParameters();
-    this.searchAdverseEventPt();
+    this.searchAdverseEventCvm();
   }
 
   clearFilters(): void {
@@ -273,7 +273,7 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
     this.populateUrlQueryParameters();
-    this.searchAdverseEventPt();
+    this.searchAdverseEventCvm();
   }
 
   customPage(event: any): void {
@@ -283,7 +283,7 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.pageIndex = newpage;
       this.gaService.sendEvent('adverseEventPtContent', 'select:page-number', 'pager', newpage);
       this.populateUrlQueryParameters();
-      this.searchAdverseEventPt();
+      this.searchAdverseEventCvm();
     }
   }
 
@@ -308,7 +308,7 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isFacetsParamsInit = true;
       this.loadComponent();
     } else {
-      this.searchAdverseEventPt();
+      this.searchAdverseEventCvm();
     }
   }
 
@@ -378,31 +378,31 @@ export class AdverseEventBrowseComponent implements OnInit, AfterViewInit, OnDes
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-   //   if (this.authService.getUser() !== '') {
-        const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': 'browseAdverseEventPt' }
-        });
-        // this.overlayContainer.style.zIndex = '1002';
-        dialogReference.afterClosed().subscribe(name => {
-          // this.overlayContainer.style.zIndex = null;
-          if (name && name !== '') {
-            this.loadingService.setLoading(true);
-            const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
-              this.loadingService.setLoading(false);
-              const navigationExtras: NavigationExtras = {
-                queryParams: {
-                  totalSub: this.totalAdverseEventPt
-                }
-              };
-              const params = { 'total': this.totalAdverseEventPt };
-              this.router.navigate(['/user-downloads/', response.id]);
-            }, error => this.loadingService.setLoading(false));
-          }
-        });
-     // }
+      //   if (this.authService.getUser() !== '') {
+      const dialogReference = this.dialog.open(ExportDialogComponent, {
+        height: '215x',
+        width: '550px',
+        data: { 'extension': extension, 'type': 'browseAdverseEventCvm' }
+      });
+      // this.overlayContainer.style.zIndex = '1002';
+      dialogReference.afterClosed().subscribe(name => {
+        // this.overlayContainer.style.zIndex = null;
+        if (name && name !== '') {
+          this.loadingService.setLoading(true);
+          const fullname = name + '.' + extension;
+          this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.loadingService.setLoading(false);
+            const navigationExtras: NavigationExtras = {
+              queryParams: {
+                totalSub: this.totalAdverseEventCvm
+              }
+            };
+            const params = { 'total': this.totalAdverseEventCvm };
+            this.router.navigate(['/user-downloads/', response.id]);
+          }, error => this.loadingService.setLoading(false));
+        }
+      });
+      // }
     }
   }
 

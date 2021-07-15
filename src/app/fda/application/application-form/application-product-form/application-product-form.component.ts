@@ -6,6 +6,7 @@ import { ApplicationService } from '../../service/application.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';
+import { GeneralService } from 'src/app/fda/service/general.service';
 
 @Component({
   selector: 'app-application-product-form',
@@ -23,6 +24,7 @@ export class ApplicationProductFormComponent implements OnInit {
     private applicationService: ApplicationService,
     public cvService: ControlledVocabularyService,
     private authService: AuthService,
+    private generalService: GeneralService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -90,12 +92,9 @@ export class ApplicationProductFormComponent implements OnInit {
   }
 
   reviewProduct(prodIndex: number) {
-    this.applicationService.getCurrentDate().subscribe(response => {
-      if (response) {
-        this.application.applicationProductList[prodIndex].reviewDate = response.date;
-        this.application.applicationProductList[prodIndex].reviewedBy = this.username;
-      }
-    });
+    const currentDate = this.generalService.getCurrentDate();
+    this.application.applicationProductList[prodIndex].reviewDate = currentDate;
+    this.application.applicationProductList[prodIndex].reviewedBy = this.username;
   }
 
   addNewIngredient(prodIndex: number) {

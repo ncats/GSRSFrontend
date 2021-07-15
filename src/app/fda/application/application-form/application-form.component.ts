@@ -312,6 +312,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
         if (response.id) {
+          this.applicationService.bypassUpdateCheck();
           const id = response.id;
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';

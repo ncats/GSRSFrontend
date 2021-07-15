@@ -9,7 +9,11 @@
 
       <ol>
         <div *ngFor="let names of substanceNames; let namesIndex = index">
-          <li>{{names.name}}</li>
+          <li>{{names.name}}
+            <span *ngIf="names.displayName === true">
+              &nbsp;<b>(Preferred Term)</b>
+            </span>
+          </li>
         </div>
       </ol>
 
@@ -17,6 +21,8 @@
       <div class="colorgreen font18px"><b>Applications Lists that contain Substance Ingredient Names in Product Names or
           Reference IND:</b></div>
 
+      <br><br>
+      <span class="font16px"><b>Total Applications Found: </b><span class="font18px colorred"><b>{{total}}</b></span></span>
       <br><br>
       <mat-table [dataSource]="dataSource" class="font12px bordergray">
 
@@ -33,29 +39,31 @@
             <!-- Update and View Application Button -->
             <div class="divflex padtop5px">
               <div class="padleft15px">
-                <a [routerLink]="['/application', element.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                <a [routerLink]="['/application', element.id, 'edit']" target="_blank"
                   matTooltip='Edit Application Record'>
                   <mat-icon svgIcon="edit"></mat-icon>
                 </a>
               </div>
               <div class="padleft10px">
-                <a [routerLink]="['/applicationDetails', element.id]" target="_blank"
+                <a [routerLink]="['/application', element.id]" target="_blank"
                   matTooltip="View Application Record">
                   <mat-icon>article</mat-icon>
                 </a>
               </div>
             </div>
             <!-- Auto Update Application Button -->
-            <div class="padbottom7px" *ngIf="exactMatchName">
-              <span *ngIf="element.bdnum === '(No Bdnum)'">
+            <!--
+            <div class="padbottom7px" *ngIf="element.exactMatchName">
+              <span *ngIf="element.bdnum === '(No Substance Key)'">
                 <br>
-                <button mat-flat-button color="primary" [disabled]="element.isDisableButton" *ngIf="isAdmin"
+                <button mat-flat-button color="primary" [disabled]="element.isDisableButton"
                   (click)="autoUpdateApp(i, element.id, element.exactMatchBdnum)">Auto
                   Update
                 </button>
                 <div *ngIf="element.autoUpdateMessage"><span class="colorred">{{element.autoUpdateMessage}}</span></div>
               </span>
             </div>
+            -->
           </td>
         </ng-container>
 
@@ -84,7 +92,7 @@
           <td mat-cell *matCellDef="let element" class="cellstyle"> {{element.productName}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="Application Bdnum">
+        <ng-container matColumnDef="Application Substance Key">
           <th mat-header-cell *matHeaderCellDef class="headerstyle"> Application Bdnum </th>
           <td mat-cell *matCellDef="let element" class="cellstyle backgroundyellow">
             <span *ngIf="element.bdnum !== '(No Bdnum)'" class="colorpurple">

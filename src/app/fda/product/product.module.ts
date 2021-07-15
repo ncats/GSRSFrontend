@@ -25,6 +25,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { ProductDetailsBaseComponent } from './product-details/product-details-base.component';
@@ -40,27 +41,34 @@ import { SubstanceSearchSelectorModule } from '../substance-search-select/substa
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { ProductsBrowseComponent } from './products-browse/products-browse.component';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { CanActivateRegisterProductFormComponent } from './product-form/can-activate-register-product-form.component';
+import { CanActivateUpdateProductFormComponent } from './product-form/can-activate-update-product-form.component';
+import { CanDeactivateProductFormComponent } from './product-form/can-deactivate-product-form.component';
 
 const productRoutes: Routes = [
   {
-    path: 'product/register',
-    component: ProductFormComponent
-  },
-  {
     path: 'browse-products',
     component: ProductsBrowseComponent
+  },
+  {
+    path: 'product/register',
+    component: ProductFormComponent,
+    canActivate: [CanActivateRegisterProductFormComponent],
+    canDeactivate: [CanDeactivateProductFormComponent]
+  },
+  {
+    path: 'product/:id/edit',
+    component: ProductFormComponent,
+    canActivate: [CanActivateUpdateProductFormComponent],
+    canDeactivate: [CanDeactivateProductFormComponent]
   },
   {
     path: 'product/:id',
     component: ProductDetailsComponent
   },
   {
-    path: 'productelist/:id',
+    path: 'product-elist/:id',
     component: ProductElistDetailsComponent
-  },
-  {
-    path: 'product/:id/edit',
-    component: ProductFormComponent
   }
 ];
 
@@ -91,6 +99,7 @@ const productRoutes: Routes = [
     MatTooltipModule,
     MatTabsModule,
     MatBottomSheetModule,
+    MatProgressSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
@@ -107,13 +116,17 @@ const productRoutes: Routes = [
     ProductFormComponent,
     ProductComponentFormComponent,
     ProductLotFormComponent,
-    ProductIngredientFormComponent
+    ProductIngredientFormComponent,
   ],
   exports: [
     ProductsBrowseComponent,
     ProductDetailsBaseComponent,
     ProductDetailsComponent,
     ProductElistDetailsComponent
+  ],
+  providers: [
+    CanActivateRegisterProductFormComponent,
+    CanActivateUpdateProductFormComponent
   ]
 })
 
@@ -128,7 +141,10 @@ export class ProductModule {
     return {
       ngModule: ProductModule,
       providers: [
-        ProductService
+        ProductService,
+        CanActivateRegisterProductFormComponent,
+        CanActivateUpdateProductFormComponent,
+        CanDeactivateProductFormComponent
       ]
     };
   }

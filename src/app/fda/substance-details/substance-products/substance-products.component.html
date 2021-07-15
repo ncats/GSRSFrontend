@@ -31,7 +31,7 @@
             <!-- Export Button -->
             <!--  *ngIf="isAdmin" -->
             <span class="export">
-              <button matTooltip="Export Search Results" mat-button (click)="export()"
+              <button matTooltip="Export Search Results" mat-button (click)="export()" *ngIf="isAdmin"
                 class="mat-button export-button mat-raised-button">
                 <mat-icon svgIcon="get_app"></mat-icon> Export
               </button>
@@ -66,7 +66,7 @@
                     </a>
                   </span>
                   <span *ngIf="product.fromtable != 'GSRS'">
-                    <a [routerLink]="['/productelist', product.productId]" target="_blank">
+                    <a [routerLink]="['/product-elist', product.productId]" target="_blank">
                       <span *ngIf="product.productNDC; else noProdNDC">
                         {{product.productNDC}}
                       </span>

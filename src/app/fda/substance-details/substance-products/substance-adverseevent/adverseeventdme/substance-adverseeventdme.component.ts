@@ -28,7 +28,7 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   privateExport = false;
   disableExport = false;
   etag = '';
-  loadingStatus = ''
+  loadingStatus = '';
 
   @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 

@@ -31,9 +31,9 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   privateExport = false;
   disableExport = false;
   etag = '';
-  loadingStatus = ''
+  loadingStatus = '';
 
-  @Input() bdnum: string
+  @Input() bdnum: string;
   @Input() substanceName: string;
   @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 

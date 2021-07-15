@@ -1,6 +1,7 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -8,21 +9,20 @@ import { UtilsService } from '../../../core/utils/utils.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ProductService } from '../service/product.service';
 import { GeneralService } from '../../service/general.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-details-base',
   template: '',
   styleUrls: ['./product-details-base.component.scss']
 })
-export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
+export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   productId: string;
   src: string;
   product: any;
   iconSrcPath: string;
   message = '';
-  private subscriptions: Array<Subscription> = [];
+  subscriptions: Array<Subscription> = [];
 
   constructor(
     public productService: ProductService,
@@ -49,7 +49,6 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    // this.applicationService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -93,7 +92,8 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
 
                   // Get Basis of Strength
                   if (elementIngred.basisOfStrengthSubstanceKey) {
-                    const subBasisSubscription =  this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey).subscribe(response => {
+                    const subBasisSubscription =  this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey)
+                    .subscribe(response => {
                       if (response) {
                         elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
                         elementIngred._basisOfStrengthIngredientName = response._name;

@@ -170,6 +170,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         this.totalApplications = pagingResponse.total;
         this.etag = pagingResponse.etag;
 
+        // alert('This etag' + this.etag);
         if (pagingResponse.total % this.pageSize === 0) {
           this.lastPage = (pagingResponse.total / this.pageSize);
         } else {
@@ -338,7 +339,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
         // Sort Product Name by create date descending
         elementProd.applicationProductNameList.sort((a, b) => {
-          return <any>new Date(b.createDate) - <any>new Date(a.createDate);
+          return <any>new Date(b.creationDate) - <any>new Date(a.creationDate);
         });
 
         elementProd.applicationIngredientList.forEach((elementIngred, indexIngred) => {
@@ -381,6 +382,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   }
 
   export() {
+    // alert('EXPORT etag' + this.etag);
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);

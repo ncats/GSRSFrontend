@@ -167,7 +167,8 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
     const skip = this.page * this.pageSize;
-    const privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:' + this.bdnum; + ' AND root_center:' + this.center;
+    const privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:'
+     + this.bdnum + ' AND root_center:' + this.center;
     const subscription = this.applicationService.getApplicationAll(
       'default',
       skip,

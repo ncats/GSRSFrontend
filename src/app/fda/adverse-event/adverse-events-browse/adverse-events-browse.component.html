@@ -1,0 +1,19 @@
+<br><br><br><br><br>
+<mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedTabChange)="tabSelectedUpdated($event)">
+
+  <mat-tab label="Adverse Event PT">
+    <app-adverse-events-pt-browse>
+    </app-adverse-events-pt-browse>
+  </mat-tab>
+
+  <mat-tab label="Adverse Event DME">
+    <app-adverse-events-dme-browse>
+    </app-adverse-events-dme-browse>
+  </mat-tab>
+
+  <mat-tab label="Adverse Event CVM">
+    <app-adverse-events-cvm-browse>
+    </app-adverse-events-cvm-browse>
+  </mat-tab>
+
+</mat-tab-group>

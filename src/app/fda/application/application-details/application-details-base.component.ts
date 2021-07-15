@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -25,6 +26,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   isAdmin = false;
   updateApplicationUrl: string;
   message = '';
+  subscriptions: Array<Subscription> = [];
 
   constructor(
     public applicationService: ApplicationService,
@@ -52,6 +54,12 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     this.loadingService.setLoading(false);
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
   getApplicationDetails(): void {
     this.applicationService.getApplicationById(this.id).subscribe(response => {
       this.application = response;
@@ -72,22 +80,24 @@ export class ApplicationDetailsBaseComponent implements OnInit {
             if (elementIngred != null) {
               // Get Substance Details, uuid, approval_id, substance name
               if (elementIngred.substanceKey) {
-                this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
+                const ingSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
                   if (response) {
                     elementIngred._substanceUuid = response.uuid;
                     elementIngred._ingredientName = response._name;
                   }
                 });
+                this.subscriptions.push(ingSubscription);
               }
 
               // Get Basis of Strength
               if (elementIngred.basisOfStrengthSubstanceKey) {
-                this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey).subscribe(response => {
+                const basisSubscription = this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey).subscribe(response => {
                   if (response) {
                     elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
                     elementIngred._basisOfStrengthIngredientName = response._name;
                   }
                 });
+                this.subscriptions.push(basisSubscription);
               }
             }
           });
@@ -114,7 +124,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/browse-substance']);
+     // this.router.navigate(['/browse-substance']);
     }, 5000);
 
   }
