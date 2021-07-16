@@ -1,7 +1,7 @@
 <div class = "main-container">
   <mat-sidenav-container [hasBackdrop]="hasBackdrop">
     <mat-sidenav  [disableClose]="!isCollapsed"  #matSideNavInstance mode="side" opened="true">
-  
+
 
 
     <div class = "side-bar" >
@@ -11,22 +11,22 @@
                   <h2 class = "quick-links">Quick Links</h2>
               </mat-card>
                 <mat-accordion multi="true">
-                    <mat-expansion-panel 
+                    <mat-expansion-panel
                       [expanded]="true">
                       <mat-expansion-panel-header>
                         <mat-panel-title class = "panel-header">
                              Substances
                         </mat-panel-title>
                       </mat-expansion-panel-header>
-    
+
                             <mat-nav-list>
-                               
+
                                 <a mat-list-item routerLink="/browse-substance">
                                   <mat-icon matListIcon svgIcon="glasses"></mat-icon>
                                   Browse Substances
                                 </a>
                                   <mat-divider></mat-divider>
-                        
+
                                   <a mat-list-item routerLink="/structure-search">
                                     <mat-icon matListIcon svgIcon="search"></mat-icon>
                                     Structure Search
@@ -40,11 +40,11 @@
                                   <a mat-list-item routerLink="/advanced-search">
                                     <mat-icon matListIcon svgIcon="youtube"></mat-icon>
                                     Advanced Search
-                                  </a>                           
+                                  </a>
                                   </mat-nav-list>
-                        
+
                     </mat-expansion-panel>
-                    <mat-expansion-panel 
+                    <mat-expansion-panel
                     [expanded]="false">
                     <mat-expansion-panel-header>
                       <mat-panel-title  class = "panel-header">
@@ -54,7 +54,7 @@
                       <mat-nav-list>
                           <span>
                               <mat-divider></mat-divider>
-                    
+
                               <a mat-list-item routerLink="/browse-applications">
                                 <mat-icon matListIcon svgIcon="glasses"></mat-icon>
                                 Browse Applications
@@ -69,6 +69,11 @@
                                 <mat-icon matListIcon svgIcon="glasses"></mat-icon>
                                 Browse Clinical Trials
                               </a>
+                              <mat-divider></mat-divider>
+                              <a mat-list-item routerLink="/browse-adverse-events">
+                                <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                                Browse Adverse Events
+                              </a>
                               <div *ngIf="adverseEventShinyHomepageDisplay === true">
                                 <mat-divider></mat-divider>
                                 <a mat-list-item [href]="adverseEventShinyHomepageURL" target="_blank">
@@ -76,14 +81,14 @@
                                   Browse Adverse Events
                                 </a>
                               </div>
-                             
+
                               </span>
                       </mat-nav-list>
                     <ng-container>
-                     
+
                     </ng-container>
                   </mat-expansion-panel>
-                  <mat-expansion-panel 
+                  <mat-expansion-panel
                   [expanded]="true">
                   <mat-expansion-panel-header>
                     <mat-panel-title  class = "panel-header">
@@ -126,19 +131,19 @@
                           Mixture
                         </a>
                           <mat-divider></mat-divider>
-            
+
                           <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
                             <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-            
+
                             Specified Substance Group 1
                           </a>
-            
+
                       </mat-nav-list>
                   <ng-container>
-                   
+
                   </ng-container>
                 </mat-expansion-panel>
-                <mat-expansion-panel 
+                <mat-expansion-panel
                 [expanded]="false">
                 <mat-expansion-panel-header>
                   <mat-panel-title  class = "panel-header">
@@ -147,13 +152,13 @@
                 </mat-expansion-panel-header>
                   <div>
                   <mat-nav-list class="other-list">
-                      
+
                       <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG2'">
                         <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-          
+
                         Specified Substance Group 2
                         <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-          
+
                       </a>
                       <mat-divider></mat-divider>
                       <a mat-list-item routerLink="/substances/register/specifiedSubstanceG3">
@@ -175,7 +180,7 @@
                       </a>
 
                       <span *ngIf="appId === 'fda'">
-          
+
                         <mat-divider></mat-divider>
                         <a mat-list-item routerLink="/product/register">
                           <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
@@ -193,7 +198,7 @@
                           <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                           Application
                         </a>
-          
+
                         <!--
                         <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerApplication'">
                           <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
@@ -206,27 +211,27 @@
                           <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                           Impurities
                         </a>
-          
+
                         <mat-divider></mat-divider>
                         <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerBiomarker'">
                           <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                           Biomarker
                           <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
                         </a>
-          
+
                         <mat-divider></mat-divider>
                         <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerIndication'">
                           <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                           Indication
                           <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
                         </a>
-          
+
                       </span>
-          
+
                     </mat-nav-list>
                   </div>
                 <ng-container>
-                 
+
                 </ng-container>
               </mat-expansion-panel>
                   </mat-accordion>
@@ -234,10 +239,10 @@
           </div>
         </div>
       </mat-sidenav>
-      <mat-sidenav-content>   
+      <mat-sidenav-content>
         <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
           <mat-icon svgIcon="chevron_right"></mat-icon>
-        </button>     
+        </button>
     <div class="side-nav-content" [ngClass] = "isClosedWelcomeMessage? 'topMargin' : ''"  *ngIf="bannerMessage && bannerMessage !== ''">
         <mat-card class="welcome-banner home-card">
             <div class = "banner-main" [innerHTML] = "bannerMessage">
@@ -248,11 +253,11 @@
                   <mat-icon svgIcon="close"></mat-icon>
                 </button>
               </div>-->
-          
+
 
           </mat-card>
     <mat-card class=" home-card" [ngClass] = "(bannerMessage && bannerMessage !== '')? '' : 'topMargin'" >
-    
+
         <div class = "flex-row image-row">
           <div class = "image-container">
             <img class = "display-image" src = "{{imageLoc}}pills1.png" />
@@ -267,17 +272,17 @@
                   <img class = "display-image" src = "{{imageLoc}}dna.png" />
                 </div>
            </div>
-    
+
       <div class = "row">
         <h1 class = "home">Global Substance Registration System - GSRS</h1>
         <div style = "padding-left:15px;">
-            The main goal of the GSRS software is 
+            The main goal of the GSRS software is
             to assist agencies in registering and documenting information about substances found in medicines.
              The Global Ingredient Archival System provides a common identifier for all of the substances used in medicinal products,
              utilizing a consistent definition of substances globally,
             including active substances under clinical investigation, consistent with the ISO 11238 standard.
         </div>
-       
+
       </div>
       <div class = "flex-row" style = "padding:5px;">
           <app-substance-text-search class="main-search" placeholder = "Search Substances" styling = "homePage" [searchValue]="searchValue"
@@ -290,7 +295,7 @@
             <a mat-raised-button class="big-button" routerLink="/browse-substance">Browse Substances</a>
           </div>
           <div class="button-container" *ngIf="appId === 'fda'">
-              
+
               <a mat-raised-button class="big-button" routerLink="/browse-applications">Browse Applications</a>
             </div>
           <div class="button-container">
@@ -301,7 +306,7 @@
               </div>
             </div>
           <mat-divider class = "divide-test"></mat-divider>
-    
+
     <div class = "flex-row" style = "padding-bottom: 10px;">
       <div class = "data">
           Total substances: {{total | number:'1.0':'en-US'}}
@@ -342,9 +347,9 @@
           <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(guide)" >User Registration Guide</a></h3>
           <div class = "img-container">
               <img class = "test" src = "{{imageLoc}}guide.png" />
-           </div>    
+           </div>
           <div class = "resource-desc"> The GSRS user registration guide is comprehensive set of instructions for registering new substances of all types in GSRS.
-         </div> 
+         </div>
         </mat-card>
       </div>
       <div class = "row3">
@@ -354,8 +359,8 @@
                   <img class = "test" src = "{{imageLoc}}dictionary.png" />
                </div>
               <div class = "resource-desc">  The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.
-                </div>  
-            
+                </div>
+
           </mat-card>
 
           <mat-card class="temprow right-link" id="resource2">
@@ -369,25 +374,25 @@
         </div>
         <div class = "row3">
             <mat-card class="temprow left-link" id="resource2">
-                    
+
               <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(schema)" >GSRS JSON schema</a></h3>
               <div class = "img-container">
                   <img class = "test" src = "{{imageLoc}}json.png" />
                </div>
                   <div class = "resource-desc">    This file contains a JSON formatted schema used by GSRS for recording substances to help visualize the substance object described by the GSRS Data Dictionary.
                     </div>
-                  </mat-card>  
+                  </mat-card>
                   <mat-card class="temprow right-link" id="resource2">
                       <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" target ="_blank" href = "https://www.fda.gov/industry/fda-resources-data-standards/substance-identification">ISO 11238 Standard</a></h3>
                       <div class = "img-container">
                           <img class = "test" src = "{{imageLoc}}iso2.png" />
                        </div>
-                      <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes. 
-                        </div> 
+                      <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes.
+                        </div>
                       </mat-card>
                       </div>
 
-  
+
 
   <ng-template #excel>
       <div mat-dialog-content class = "button-modal">
@@ -442,34 +447,34 @@
 
           <div class="row resource-row" id="resource2">
           <h3><a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" style = "color:white" href ="https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx">User Registration Guide</a></h3>
-          
+
           <div class = "resource-desc"> The GSRS user registration guide is comprehensive set of instructions for registering new substances of all types in GSRS.
-         </div> 
+         </div>
         </div>
           <mat-divider class = "divide-test"></mat-divider>
 
           <div class="row resource-row" id="resource3">
               <h3 class = "resource-link"><a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_11-20-19.xlsx">GSRS Data Dictionary</a></h3>
               <div class = "resource-desc">  The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.
-                </div>  
+                </div>
             </div>
 
               <div class="row resource-row" id="resource4">
                   <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_schema_10_30_19.json">GSRS JSON schema</a></h3>
                   <div class = "resource-desc">    This file contains a JSON formatted schema used by GSRS for recording substances to help visualize the substance object described by the GSRS Data Dictionary.
-                    </div>  
+                    </div>
                 </div>
 
                 <div class="row resource-row" id="resource5">
                     <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://gsrs.ncats.nih.gov/#/api#chemical%20search">GSRS API Documentation</a></h3>
                     <div class = "resource-desc">       Swagger documentation of the GSRS API calls with working examples and implementation notes.
-                      </div> 
+                      </div>
                     </div>
 
                   <div class="row resource-row" id="resource5">
                       <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" href = "https://www.iso.org/standard/69697.html">ISO 11238 Standard</a></h3>
-                      <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes. 
-                        </div> 
+                      <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes.
+                        </div>
                       </div>
 
   </mat-card>
@@ -485,42 +490,42 @@
               </div>
             </div>
             </div>
-  
+
             <div class="wed-test" id="resource2">
             <h3><a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" style = "color:white" href ="https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx">User Registration Guide</a></h3>
-            
+
             <div class = "resource-desc"> The GSRS user registration guide is comprehensive set of instructions for registering new substances of all types in GSRS.
-           </div> 
+           </div>
           </div>
   </div><div class = "test1">
             <div class="wed-test" id="resource3">
                 <h3 class = "resource-link"> <a class = "resource-link mat-raised" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_11-20-19.xlsx">GSRS Data Dictionary</a></h3>
                 <div class = "resource-desc">  The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.
-                  </div>  
+                  </div>
               </div>
-  
+
                 <div class="wed-test" id="resource4">
                     <h3 class = "resource-link">  <a class = "resource-link" href = "https://gsrs.ncats.nih.gov/downloads/GSRS_schema_10_30_19.json">GSRS JSON schema</a></h3>
                     <div class = "resource-desc">    This file contains a JSON formatted schema used by GSRS for recording substances to help visualize the substance object described by the GSRS Data Dictionary.
-                      </div>  
+                      </div>
                   </div>
-  
+
                     <div class="wed-test" id="resource5">
                         <h3 class = "resource-link"> <a class = "resource-link" href = "https://www.iso.org/standard/69697.html">ISO 11238 Standard</a></h3>
-                        <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes. 
-                          </div> 
+                        <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes.
+                          </div>
                         </div>
                       </div>
-  
+
     </mat-card>-->
     <!--<mat-card class = "home-card" >
-    
+
         <div class="row" id="design">
                 <h2  class = "home">Functional Design Studies</h2>
                 <a href="https://gsrs.ncats.nih.gov//assets/files/DiederikDiscussiononNames.pdf"
                    class="link">Functional design requirements for substance
                     names, including domain, jurisdiction and language (pdf)</a>
-    
+
                 <div class = "spaced">&nbsp;Substance Names, Mandatory Sources and
                     Standardization</div>
                 <br> <a href="https://gsrs.ncats.nih.gov/assets/files/FunctionalDesignSept2013.pdf"
@@ -532,17 +537,17 @@
                 <br> <a href="https://gsrs.ncats.nih.gov/assets/files/DiederikSubstanceFinal.pdf"
                         class="link">Functional design requirements: amlodipine,
                 rosuvastatin zinc, and linaclotide examples (pdf)</a>
-    
+
                 <div class = "spaced">&nbsp;Functional Design ISO/ FDIS-IDMP DATABASE 11238</div>
                 <br>
         </div>
       </mat-card><mat-card class = "home-card">
-    
-    
+
+
         <div class="row" id="cases">
             <div class="col-md-12">
                 <h2 class ="home">Case Studies</h2>
-    
+
                 <div class="flex-row">
                     <div class="third">
                         <h3>Amlodipine Besilate</h3>
@@ -565,8 +570,8 @@
                                  class="img-responsive"/>
                         </div>
                         <div>
-    
-    
+
+
                             <p class = "para">Protein Substance</p>
                             <p class = "para">Amino Acid Sequence</p>
                             <p class = "para">Disulfide Linkages</p>
@@ -574,7 +579,7 @@
                                class="btn  mat-button mat-primary mat-flat-button  btn-primary">Learn more</a> <br/>
                         </div>
                     </div>
-    
+
                     <div class="third">
                         <h3>Insulin Degludec</h3>
                         <div>
@@ -582,8 +587,8 @@
                                  class="img-responsive"/>
                         </div>
                         <div>
-    
-    
+
+
                             <p class = "para">Protein Substance</p>
                             <p class = "para">C-Terminus Modification</p>
                             <p class = "para">Structural Modification</p>
@@ -600,7 +605,7 @@
                                  alt="Brentuximab Vedotin" class="img-responsive"/>
                         </div>
                         <div>
-    
+
                             <p class = "para">Protein Substance</p>
                             <p class = "para">Variable substitution</p>
                             <p class = "para">Modification</p>
@@ -608,7 +613,7 @@
                                class="btn  mat-button mat-primary mat-flat-button btn-primary">Learn more</a> <br/>
                         </div>
                     </div>
-    
+
                     <div class="third">
                         <h3>Ritonavir</h3>
                         <div>
@@ -616,16 +621,16 @@
                                  class="img-responsive"/>
                         </div>
                         <div>
-    
+
                             <p class = "para">Group 1 Specified Substance</p>
                             <p class = "para">Physical Forms</p>
                             <p class = "para">Physical Properties</p>
                             <a href="https://gsrs.ncats.nih.gov/assets/files/Case%20Study%203%20-%20Ritonavir.pdf"
                                class="btn  mat-button mat-primary mat-flat-button  btn-primary">Learn more</a>
-    
+
                         </div>
                     </div>
-    
+
                     <div class="third">
                         <h3>Simethicone</h3>
                         <div>
@@ -633,7 +638,7 @@
                                  class="img-responsive"/>
                         </div>
                         <div>
-    
+
                             <p class = "para">Group 1 Specified Substance</p>
                             <p class = "para">Multiple Substance Ingredient</p>
                             <p class = "para">Physical Properties</p>
@@ -641,7 +646,7 @@
                                class="btn  mat-button mat-primary mat-flat-button  btn-primary">Learn more</a>
                         </div>
                     </div>
-    
+
                 </div>
             </div>
         </div>

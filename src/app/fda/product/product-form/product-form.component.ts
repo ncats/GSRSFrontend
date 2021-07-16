@@ -42,6 +42,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   isAdmin = false;
   expiryDateMessage = '';
   manufactureDateMessage = '';
+  viewProductUrl = '';
 
   constructor(
     private productService: ProductService,
@@ -90,7 +91,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.applicationService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -251,6 +251,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
         if (response.id) {
+          this.productService.bypassUpdateCheck();
           const id = response.id;
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
@@ -440,5 +441,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       return !nan;
     }
     return false;
+  }
+
+  getViewProductUrl(): string {
+    return this.productService.getViewProductUrl(this.id);
   }
 }

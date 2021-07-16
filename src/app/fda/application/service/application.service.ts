@@ -5,6 +5,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { BaseHttpService } from '@gsrs-core/base';
 import { ConfigService } from '@gsrs-core/config';
 import { PagingResponse } from '@gsrs-core/utils';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { Application, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
@@ -21,16 +22,20 @@ import { ValidationResults } from '../model/application.model';
 
 export class ApplicationService extends BaseHttpService {
 
+  private _bypassUpdateCheck = false;
+  private applicationStateHash?: number;
   totalRecords = 0;
   application: Application;
   entityContext = 'application';
   // entityContext = 'applicationssrs';
   apiBaseUrlWithEntityContext = this.apiBaseUrl + this.entityContext + '/';
   apiBaseUrlWithEntityAllContext = this.apiBaseUrl + 'applicationall' + '/';
+  apiBaseUrlWithEntityDarrtsContext = this.apiBaseUrl + 'applicationdarrts' + '/';
 
   constructor(
     public http: HttpClient,
-    public configService: ConfigService
+    public configService: ConfigService,
+    public utilsService: UtilsService
   ) {
     super(configService);
   }
@@ -214,9 +219,11 @@ export class ApplicationService extends BaseHttpService {
   }
 
   getApplicationBySubstanceKeyCenter(substanceKey: string): Observable<any> {
-   // const url = this.apiBaseUrlWithEntityAllContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:' + substanceKey;
+   // const url = this.apiBaseUrlWithEntityAllContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:'
+   // + substanceKey;
 
-    const url = this.apiBaseUrlWithEntityContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:' + substanceKey;
+    const url = this.apiBaseUrlWithEntityContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:'
+     + substanceKey;
     return this.http.get<Application>(url)
       .pipe(
         map(result => {
@@ -270,7 +277,20 @@ export class ApplicationService extends BaseHttpService {
   getApplicationDarrtsDetails(
     appType: string, appNumber: string
   ): Observable<any> {
-    const url = this.baseUrl + 'applicationDarrtsDetails2?appType=' + appType + '&appNumber=' + appNumber;
+    let appTypeNumber = appType + appNumber;
+    const url = this.apiBaseUrlWithEntityDarrtsContext + appTypeNumber;
+   // const url = this.baseUrl + 'applicationDarrtsDetails2?appType=' + appType + '&appNumber=' + appNumber;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getSubstanceParentConcept(
+    substanceKey: string
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithEntityDarrtsContext + 'substanceparentconcept/' + substanceKey;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -350,15 +370,18 @@ export class ApplicationService extends BaseHttpService {
     );
   }
 
-  getCurrentDate(
-  ): Observable<any> {
-    const url = this.baseUrl + 'getCurrentDateJson';
-    return this.http.get<Array<any>>(url).pipe(
-      map(results => {
-        return results;
-        //  return results['data'];
-      })
-    );
+  get isApplicationUpdated(): boolean {
+    const applicationString = JSON.stringify(this.application);
+    if (this._bypassUpdateCheck) {
+      this._bypassUpdateCheck = false;
+      return false;
+    } else {
+      return this.applicationStateHash !== this.utilsService.hashCode(applicationString);
+    }
+  }
+
+  bypassUpdateCheck(): void {
+    this._bypassUpdateCheck = true;
   }
 
   loadApplication(application?: Application): void {
@@ -402,8 +425,6 @@ export class ApplicationService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    //  console.log('APP: ' + this.application);
-
     // Update Application
     if ((this.application != null) && (this.application.id)) {
       return this.http.put<Application>(url, this.application, options);

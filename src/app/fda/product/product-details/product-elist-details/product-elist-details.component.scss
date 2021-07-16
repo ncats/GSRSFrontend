@@ -182,7 +182,7 @@
 }
 
 .fontbold {
-    font-weight: 500;	
+    font-weight: 500;
 }
 
 .colororange {
@@ -304,6 +304,19 @@ table.tableStyle2 tr:nth-child(even) {
   background: #fbfdf7;
 }
 
+.spinnerstyle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(150, 148, 148, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: top; /* Verticle align */
+  justify-content: center; /* horizonal align */
+}
+
 @media(max-width: 700px) {
   .mat-card-title {
     flex-direction: column;
@@ -323,7 +336,7 @@ table.tableStyle2 tr:nth-child(even) {
 
   .row {
     flex-direction: column;
-    
+
     &:not(:last-child) {
       border-bottom: none;
 
