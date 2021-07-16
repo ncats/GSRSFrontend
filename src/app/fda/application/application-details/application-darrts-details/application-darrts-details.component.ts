@@ -35,7 +35,6 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
 
   ngOnInit() {
     this.appType = this.activatedRoute.snapshot.params['appType'];
-    alert(this.appType);
     this.appNumber = this.activatedRoute.snapshot.params['appNumber'];
     this.loadingService.setLoading(true);
 
