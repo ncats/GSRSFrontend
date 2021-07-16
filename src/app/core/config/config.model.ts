@@ -24,6 +24,8 @@ export interface Config {
     adverseEventShinyAdverseEventURL?: string;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
+    customToolbarComponent?: string;
+    pfdaBaseUrl?: string;
 }
 
 export interface SubstanceDetailsCard {

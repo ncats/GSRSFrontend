@@ -46,6 +46,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   appId: string;
   clasicBaseHref: string;
   navItems: Array<NavItem>;
+  customToolbarComponent: string = '';
 
   constructor(
     private router: Router,
@@ -64,6 +65,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
     this.navItems = this.configService.configData.navItems;
+    this.customToolbarComponent = this.configService.configData.customToolbarComponent;
   }
 
   ngOnInit() {

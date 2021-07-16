@@ -1,4 +1,4 @@
-<mat-toolbar class="mat-elevation-z3" color="primary">
+<mat-toolbar *ngIf="!customToolbarComponent || customToolbarComponent.length == 0" class="mat-elevation-z3" color="primary">
   <div class="logo-container">
     <span class="logo">
       <a routerLink="/home" aria-label="home">
@@ -105,6 +105,9 @@
     </a>
   </div>
 </mat-toolbar>
+<div *ngIf="customToolbarComponent == 'precisionFDA'">
+  <app-pfda-toolbar></app-pfda-toolbar>
+</div>
 <app-main-notification></app-main-notification>
 <app-loading></app-loading>
 <router-outlet></router-outlet>
