@@ -231,6 +231,7 @@ export interface SubstanceCode extends SubstanceBase {
   url?: string;
   references?: Array<string>;
   _self?: string;
+  _isClassifcation?: boolean;
 }
 
 export interface SubstanceNote extends SubstanceBase {
