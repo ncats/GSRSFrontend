@@ -58,6 +58,7 @@ export class CvManagementComponent implements OnInit {
             this.filterList(value, this.vocabularies);
           }, error => {
             this.loading = false;
+            
             alert('The controlled vocabulary has failed to load from the server' +
              (error && error.message ? 'with the following message \n\n' + error.message : ''));
           });

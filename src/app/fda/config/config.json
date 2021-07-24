@@ -2,7 +2,6 @@
   "version": "3.0",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
-  "showOldLinks": false,
   "adverseEventShinyHomepageDisplay": "true",
   "adverseEventShinySubstanceNameDisplay": "true",
   "adverseEventShinyAdverseEventDisplay": "true",
