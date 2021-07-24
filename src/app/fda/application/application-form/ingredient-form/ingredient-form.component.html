@@ -45,7 +45,7 @@
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="ingredientNameUpdated($event)"
           (showMessage)="showMessageIngredientName($event)" eventCategory="ingredName" placeholder="Ingredient Name"
-          header="Ingredient Name" [subuuid]="ingredient._substanceUuid">
+          header="Ingredient Name" [subuuid]="substanceUuid">
         </app-substance-search-selector>
 
         <div *ngIf="ingredientNameMessage" class="colorred font12px">
@@ -54,8 +54,8 @@
 
         <!-- Display Ingredient Name -->
         <div class="padall5px fontfamilyhelvetica">
-          <div *ngIf="ingredient._ingredientName">
-            <span class="colormaroon"><b>{{ingredient._ingredientName}}</b></span>
+          <div *ngIf="ingredientName">
+            <span class="colormaroon"><b>{{ingredientName}}</b></span>
             <br>
             <!-- Display Active Moiety -->
             <div *ngFor="let active of ingredientNameActiveMoiety; let activeIndex = index">
@@ -63,7 +63,8 @@
             </div>
           </div>
           <div *ngIf="ingredient.substanceKey">
-            <span class="colororange">{{ingredient.substanceKey}}</span><span class="colorgray font11px"> (BDNUM)</span>
+            <span class="colororange">{{ingredient.substanceKey}}</span><span class="colorgray font11px">
+               ({{ingredient.substanceKeyType}})</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName(ingredIndex)"
               matTooltip="Delete Ingredient Name {{ingredIndex + 1}}">
@@ -80,17 +81,17 @@
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
           (showMessage)="showMessageBasisOfStrength($event)" eventCategory="substanceRelationshipRelatedSub"
-          placeholder="Basis Of Strength" header="Basis Of Strength" [subuuid]="ingredient._basisOfStrengthSubstanceUuid">
+          placeholder="Basis Of Strength" header="Basis Of Strength" [subuuid]="basisOfStrengthSubstanceUuid">
         </app-substance-search-selector>
 
-      
+
         <div *ngIf="basisOfStrengthMessage" class="colorred font12px">
           {{basisOfStrengthMessage}}
         </div>
 
         <div class="padall5px fontfamilyhelvetica">
-          <div *ngIf="ingredient._basisOfStrengthIngredientName">
-            <span class="colormaroon"><b>{{ingredient._basisOfStrengthIngredientName}}</b></span>
+          <div *ngIf="basisOfStrengthIngredientName">
+            <span class="colormaroon"><b>{{basisOfStrengthIngredientName}}</b></span>
             <br>
             <!-- Display Active Moiety -->
             <div *ngFor="let active of basisOfStrengthActiveMoiety; let activeIndex = index">
@@ -100,7 +101,7 @@
 
           <div *ngIf="ingredient.basisOfStrengthSubstanceKey">
             <span class="colororange">{{ingredient.basisOfStrengthSubstanceKey}}</span><span class="colorgray font11px">
-              (BDNUM)</span>
+              ({{ingredient.basisOfStrengthSubstanceKeyType}})</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteBasisOfStrength(ingredIndex)"
               matTooltip="Delete Basis of Strength {{ingredIndex + 1}}">

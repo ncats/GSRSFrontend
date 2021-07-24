@@ -1,5 +1,9 @@
+<div *ngIf="message" class="colororange padtop50px padleft50px">
+  <br><br><br><br>
+  {{message}}
+</div>
 <div *ngIf="application">
-  <div *ngIf="application.appType; else noRecordProd">
+  <div *ngIf="application.appType && application.appNumber">
     <div class="details-container margintop90px">
       <mat-card class="bordergray">
         <mat-card-title>
@@ -22,7 +26,7 @@
                 Application Type Number:
               </div>
               <div class="row-property-value">
-                <b>{{application.appType}}&nbsp;{{application.appNumber}}</b>
+                <span class="colorblue font16px fontbold"><b>{{application.appType}}&nbsp;{{application.appNumber}}</b></span>
               </div>
             </div>
           </div>
@@ -60,7 +64,7 @@
                 Status Date:
               </div>
               <div class="row-property-value">
-                {{application.statusDate}}
+                {{application.statusDate |date: 'MM/dd/yyyy'}}
               </div>
             </div>
           </div>
@@ -95,10 +99,10 @@
             </div>
             <div class="row-property">
               <div class="row-property-key">
-
+                Route of Administration:
               </div>
               <div class="row-property-value">
-
+                {{application.routeOfAdmin}}
               </div>
             </div>
           </div>
@@ -110,7 +114,7 @@
               </div>
               <div class="row-property-value-2">
                 <div *ngFor="let ind of application.indicationList; let i = index">
-                  &bull;&nbsp;{{ind}} <br>
+                  &bull;&nbsp;{{ind.indication}} <br>
                 </div>
               </div>
             </div>
@@ -134,7 +138,7 @@
                 <th>Part No</th>
                 <th>Substance Name</th>
                 <th>Structure</th>
-                <th>Bdnum</th>
+                <th>Substance Key</th>
                 <th>Unii</th>
                 <th>Activity</th>
                 <th>Potency</th>
@@ -148,21 +152,26 @@
                 <td>{{ x.productNo }}</td>
                 <td>{{ x.partNo }}</td>
                 <td>
-                  <div *ngIf="x.substanceId">
-                    <a [routerLink]="['/substances', x.substanceId]" target="_blank">{{x.name}}</a>
+                  <div *ngIf="x._ingredientname">
+                    <div *ngIf="x._substanceUuid; else noSubUuid">
+                      <a [routerLink]="['/substances', x._substanceUuid]" target="_blank">{{x._ingredientname}}</a>
+                    </div>
+                    <ng-template #noSubUuid>
+                      {{x._ingredientname}}
+                    </ng-template>
                   </div>
                 </td>
                 <td>
-                  <div *ngIf="x.substanceId">
-                    <img class="structure-img" appSubstanceImage [entityId]="x.substanceId">
+                  <div *ngIf="x._substanceUuid">
+                    <img class="structure-img" appSubstanceImage [entityId]="x._substanceUuid">
                   </div>
                 </td>
-                <td>{{ x.bdnum }}</td>
-                <td>{{ x.unii }}</td>
+                <td>{{ x.substanceKey }}</td>
+                <td>{{ x._approvalID }}</td>
                 <td>{{ x.activity }}</td>
                 <td>{{ x.potency }}</td>
-                <td>{{ x.parentBdnum }}</td>
-                <td>{{ x.parentDisplayTerm }}</td>
+                <td>{{ x._parentSubstanceKey }}</td>
+                <td>{{ x._parentDisplayTerm }}</td>
               </tr>
             </tbody>
           </table>
@@ -170,8 +179,10 @@
       </mat-card>
     </div>
   </div>
+  <!--
   <ng-template #noRecordProd>
     <br><br><br><br>
     <div class="colororange padtop50px padleft50px">There is no Application Data found.</div>
   </ng-template>
+  -->
 </div>

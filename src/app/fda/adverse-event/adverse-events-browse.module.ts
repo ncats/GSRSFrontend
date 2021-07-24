@@ -35,14 +35,19 @@ import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 // import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { AdverseEventService } from './service/adverseevent.service';
-import { AdverseEventBrowseComponent } from './adverse-events-browse/adverse-event-browse.component';
-import { AdverseEventsDmeBrowseComponent } from './adverse-event-dme-browse/adverse-events-dme-browse.component';
-import { AdverseEventCvmBrowseComponent } from './adverse-event-cvm-browse/adverse-event-cvm-browse.component';
+import { AdverseEventsPtBrowseComponent } from './adverse-events-pt-browse/adverse-events-pt-browse.component';
+import { AdverseEventsDmeBrowseComponent } from './adverse-events-dme-browse/adverse-events-dme-browse.component';
+import { AdverseEventsCvmBrowseComponent } from './adverse-events-cvm-browse/adverse-events-cvm-browse.component';
+import { AdverseEventsBrowseComponent } from './adverse-events-browse/adverse-events-browse.component';
 
 const advEventRoutes: Routes = [
   {
-    path: 'adverse-event-browse',
-    component: AdverseEventBrowseComponent
+    path: 'browse-adverse-events',
+    component: AdverseEventsBrowseComponent
+  },
+  {
+    path: 'adverse-event-pt-browse',
+    component: AdverseEventsPtBrowseComponent
   },
   {
     path: 'adverse-event-dme-browse',
@@ -50,7 +55,7 @@ const advEventRoutes: Routes = [
   },
   {
     path: 'adverse-event-cvm-browse',
-    component: AdverseEventCvmBrowseComponent
+    component: AdverseEventsCvmBrowseComponent
   }
 ];
 
@@ -90,9 +95,11 @@ const advEventRoutes: Routes = [
     FacetsManagerModule
   ],
   declarations: [
-    AdverseEventBrowseComponent,
+    AdverseEventsPtBrowseComponent,
     AdverseEventsDmeBrowseComponent,
-    AdverseEventCvmBrowseComponent
+    AdverseEventsCvmBrowseComponent,
+    AdverseEventsBrowseComponent,
+    AdverseEventsBrowseComponent
   ],
   exports: [
   ]

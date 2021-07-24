@@ -5,6 +5,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { Product, ProductName, ProductTermAndPart, ProductCode, ProductAll } from '../model/product.model';
@@ -14,6 +15,8 @@ import { ValidationResults } from '../model/product.model';
 @Injectable()
 export class ProductService extends BaseHttpService {
 
+  private _bypassUpdateCheck = false;
+  private productStateHash?: number;
   totalRecords = 0;
   product: Product;
 
@@ -24,6 +27,7 @@ export class ProductService extends BaseHttpService {
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
+    public utilsService: UtilsService
   ) {
     super(configService);
   }
@@ -225,6 +229,21 @@ export class ProductService extends BaseHttpService {
           return result;
         })
       );
+  }
+
+
+  get isProductUpdated(): boolean {
+    const productString = JSON.stringify(this.product);
+    if (this._bypassUpdateCheck) {
+      this._bypassUpdateCheck = false;
+      return false;
+    } else {
+      return this.productStateHash !== this.utilsService.hashCode(productString);
+    }
+  }
+
+  bypassUpdateCheck(): void {
+    this._bypassUpdateCheck = true;
   }
 
   loadProduct(product?: Product): void {
@@ -440,6 +459,10 @@ export class ProductService extends BaseHttpService {
     newProduct.lastModifiedDate = null;
     */
     this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProduct);
+  }
+
+  getViewProductUrl(id: number): string {
+    return this.apiBaseUrlWithEntityContext + id;
   }
 
   /*

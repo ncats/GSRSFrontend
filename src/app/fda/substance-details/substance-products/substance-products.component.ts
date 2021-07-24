@@ -166,11 +166,14 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   }
   */
 
- getSubstanceProducts(pageEvent?: PageEvent) {
+  getSubstanceProducts(pageEvent?: PageEvent) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
     const skip = this.page * this.pageSize;
     const privateSearch = 'root_productIngredientAllList_substanceUuid:' + this.substance.uuid;
+    // Facet Search for "Provenance"
+    this.privateFacetParams = { 'Provenance': { 'params': { 'SPL': true }, 'isAllMatch': false } };
+
     const subscription = this.productService.getProducts(
       'default',
       skip,
@@ -188,15 +191,15 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       }, () => {
         subscription.unsubscribe();
       });
-      this.loadingStatus = '';
-      this.showSpinner = false;  // Stop progress spinner
+    this.loadingStatus = '';
+    this.showSpinner = false;  // Stop progress spinner
   }
 
   export() {
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-   //   if (this.authService.getUser() !== '') {
+      if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
@@ -220,7 +223,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
             }, error => this.loadingService.setLoading(false));
           }
         });
-     // }
+      }
     }
   }
 
@@ -254,6 +257,5 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
     }
   }
-
 
 }

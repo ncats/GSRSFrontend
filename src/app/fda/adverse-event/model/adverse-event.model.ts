@@ -1,5 +1,6 @@
 export interface AdverseEventPt {
   id?: number;
+  substanceId?: string;
   substanceKey?: string;
   name?: string;
   ptTerm?: string;
@@ -15,6 +16,7 @@ export interface AdverseEventPt {
 
 export interface AdverseEventDme {
   id?: number;
+  substanceId?: string;
   substanceKey?: string;
   name?: string;
   dmeReactions?: string;
@@ -26,6 +28,7 @@ export interface AdverseEventDme {
 
 export interface AdverseEventCvm {
   id?: number;
+  substanceId?: string;
   substanceKey?: string;
   name?: string;
   routeOfAdmin?: string;
