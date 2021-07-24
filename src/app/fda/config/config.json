@@ -2,11 +2,11 @@
   "version": "3.0",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
-  "showOldLinks": true,
+  "showOldLinks": false,
   "adverseEventShinyHomepageDisplay": "true",
   "adverseEventShinySubstanceNameDisplay": "true",
   "adverseEventShinyAdverseEventDisplay": "true",
-  "bannerMessage": "<h3>announcement test</h3>This is a test of the custom banner message <b>this text should be in bold</b>",
+  "bannerMessage": null,
   "substanceDetailsCards": [
     {
       "card": "substance-overview",
