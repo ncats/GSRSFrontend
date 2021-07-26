@@ -27,7 +27,7 @@ import { ConfigService } from '@gsrs-core/config/config.service';
   templateUrl: './product-ingredient-form.component.html',
   styleUrls: ['./product-ingredient-form.component.scss']
 })
-export class ProductIngredientFormComponent implements OnInit, OnDestroy {
+export class ProductIngredientFormComponent implements OnInit {
 
   @ViewChildren('checkBox') checkBox: QueryList<any>;
   @Input() ingredient: ProductIngredient;
@@ -57,7 +57,7 @@ export class ProductIngredientFormComponent implements OnInit, OnDestroy {
   ingredientNameActiveMoiety = new Array<String>();
   basisOfStrengthActiveMoiety = new Array<String>();
   selectedIngredientLocation = new Array<any>();
-  substanceKeyType = '';
+  substanceKeyTypeConfig = '';
   private subscriptions: Array<Subscription> = [];
 
   locationList: Array<any> = [
@@ -89,8 +89,8 @@ export class ProductIngredientFormComponent implements OnInit, OnDestroy {
       this.basisofStrengthSubstanceKeyOld = this.ingredient.basisOfStrengthSubstanceKey;
 
       // Get Substance Linking Key Type from Config
-      this.substanceKeyType = this.generalService.getSubstanceKeyType();
-      if (!this.substanceKeyType) {
+      this.substanceKeyTypeConfig = this.generalService.getSubstanceKeyType();
+      if (!this.substanceKeyTypeConfig) {
         alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Ingredient Name');
       }
       this.getSubstanceBySubstanceKey();
@@ -202,23 +202,23 @@ export class ProductIngredientFormComponent implements OnInit, OnDestroy {
         const substanceCodes = response;
         for (let index = 0; index < substanceCodes.length; index++) {
           if (substanceCodes[index].codeSystem) {
-            if ((substanceCodes[index].codeSystem === this.substanceKeyType) &&
+            if ((substanceCodes[index].codeSystem === this.substanceKeyTypeConfig) &&
               (substanceCodes[index].type === 'PRIMARY')) {
 
               if (type) {
                 if (type === 'ingredientname') {
                   this.ingredient.substanceKey = substanceCodes[index].code;
-                  this.ingredient.substanceKeyType = this.substanceKeyType;
+                  this.ingredient.substanceKeyType = this.substanceKeyTypeConfig;
 
                   if (!this.ingredient.basisOfStrengthSubstanceKey) {
                     this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
-                    this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyType;
+                    this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
                   }
                 }
 
                 if (type === 'basisofstrength') {
                   this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
-                  this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyType;
+                  this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
                 }
               }
               break;
@@ -270,7 +270,6 @@ export class ProductIngredientFormComponent implements OnInit, OnDestroy {
       // Get Active Moiety - Relationship
       this.generalService.getSubstanceRelationships(substanceUuid).subscribe(responseRel => {
         if (responseRel) {
-          console.log(JSON.stringify(responseRel));
           if (responseRel && responseRel.length > 0) {
             for (let i = 0; i < responseRel.length; i++) {
               const relType = responseRel[i].type;
@@ -308,11 +307,10 @@ export class ProductIngredientFormComponent implements OnInit, OnDestroy {
           this.ingredientNameMessage = '';
           this.ingredientNameActiveMoiety.length = 0;
 
-          if (!this.substanceKeyType) {
+          if (!this.substanceKeyTypeConfig) {
             alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Ingredient Name');
             this.ingredientNameMessage = 'Add Substance Key Type in Config';
           } else {
-
             this.getSubstanceCode(relatedSubstance.refuuid, 'ingredientname');
 
             this.substanceUuid = relatedSubstance.refuuid;
@@ -349,10 +347,10 @@ export class ProductIngredientFormComponent implements OnInit, OnDestroy {
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
           this.basisOfStrengthMessage = '';
-          this.basisOfStrengthActiveMoiety.length = 0;  //Clear Array
+          this.basisOfStrengthActiveMoiety.length = 0;  // Clear Array
 
-          if (!this.substanceKeyType) {
-            alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Ingredient Name');
+          if (!this.substanceKeyTypeConfig) {
+            alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Basis of Strength');
             this.basisOfStrengthMessage = 'Add Substance Key Type in Config';
           } else {
             this.getSubstanceCode(relatedSubstance.refuuid, 'basisofstrength');
@@ -361,7 +359,7 @@ export class ProductIngredientFormComponent implements OnInit, OnDestroy {
             this.basisOfStrengthIngredientName = relatedSubstance.name;
 
             // Get Active Moiety
-            this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
+            this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
           }
         }
       }

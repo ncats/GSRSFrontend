@@ -135,6 +135,11 @@ export class ApplicationService extends BaseHttpService {
     return url;
   }
 
+  getAppAllApiExportUrl(etag: string, extension: string): string {
+    const url = this.apiBaseUrlWithEntityAllContext + 'export/' + etag + '/' + extension;
+    return url;
+  }
+
   getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
@@ -209,7 +214,8 @@ export class ApplicationService extends BaseHttpService {
     //  const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
 
    // const url = this.apiBaseUrlWithEntityAllContext + 'distcenter/' + substanceKey;
-   const url = this.apiBaseUrlWithEntityContext + 'distcenter/' + substanceKey;
+
+   const url = this.apiBaseUrlWithEntityAllContext + 'distcenter/' + substanceKey;
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -277,9 +283,53 @@ export class ApplicationService extends BaseHttpService {
   getApplicationDarrtsDetails(
     appType: string, appNumber: string
   ): Observable<any> {
-    let appTypeNumber = appType + appNumber;
+    const appTypeNumber = appType + appNumber;
     const url = this.apiBaseUrlWithEntityDarrtsContext + appTypeNumber;
    // const url = this.baseUrl + 'applicationDarrtsDetails2?appType=' + appType + '&appNumber=' + appNumber;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getApplicationHistory(
+    applicationId: number
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithEntityContext + 'applicationhistory/' + applicationId;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getProductTechnicalEffect(
+    applicationId: number
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithEntityContext + 'prodtechnicaleffect/' + applicationId;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getProductEffected(
+    applicationId: number
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithEntityContext + 'prodeffected/' + applicationId;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
+  getClinicalTrialApplication(
+    applicationId: number
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithEntityContext + 'appclinicaltrial/' + applicationId;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -297,6 +347,7 @@ export class ApplicationService extends BaseHttpService {
       })
     );
   }
+
 
   // Changed, work Spring Boot and Play
   /*

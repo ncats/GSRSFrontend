@@ -70,7 +70,7 @@
 
         <!-- Export Application Button -->
         <div class="export">
-          <button matTooltip="Export Search Results" mat-button (click)="export()"
+          <button matTooltip="Export Search Results" mat-button (click)="export()" *ngIf="isAdmin"
             class="mat-button export-button mat-raised-button">
             <mat-icon svgIcon="get_app"></mat-icon> Export
           </button>
