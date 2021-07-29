@@ -10,7 +10,9 @@
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
       <td mat-cell *matCellDef="let name" >
-        <span [innerHTML] = "name.name"></span>
+        <span *ngIf = "name._nameHTML" [innerHTML] = "name._nameHTML"></span>
+        <span *ngIf = "!name._nameHTML" [innerHTML] = "name.name"></span>
+
         <span *ngIf="name.displayName == true" matTooltip="Accepted Name">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
         </span>
