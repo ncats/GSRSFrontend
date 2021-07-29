@@ -31,6 +31,7 @@ export interface SubstanceBaseExtended {
   _approvalIDDisplay?: string;
   _name?: string;
   _name_html?: string;
+  _nameHTML?: string;
   _self?: string;
   nucleicAcid?: NucleicAcid;
   changeReason?: string;
@@ -206,6 +207,7 @@ export interface SubstanceName extends SubstanceBase {
   references?: Array<string>;
   _self?: string;
   _name_html?: string;
+  _nameHTML?: string;
 }
 
 export interface SubstanceCode extends SubstanceBase {
