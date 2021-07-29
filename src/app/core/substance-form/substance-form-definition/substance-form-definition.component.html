@@ -5,7 +5,7 @@
     </div>
     <span class = "approval" *ngIf = "definition.approvalID && definition.approvalID !== ''">{{definition.approvalID}}</span>
   </div>
-  <div class="substance-form-row form-name" *ngIf = "definition._name">
+  <div class="substance-form-row form-name" *ngIf = "definition._nameHTML">
     <div>Preferred Term: <span class = "name" [innerHTML] = "definition._nameHTML"></span></div>
   </div>
   <div class="substance-form-row">
