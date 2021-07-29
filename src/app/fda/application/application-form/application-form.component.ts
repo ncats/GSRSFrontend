@@ -31,7 +31,7 @@ import { GeneralService } from '../../service/general.service';
   selector: 'app-application-form',
   templateUrl: './application-form.component.html',
   styleUrls: ['./application-form.component.scss'],
- // encapsulation: ViewEncapsulation.None
+  // encapsulation: ViewEncapsulation.None
 })
 
 export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -301,6 +301,15 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
+    // Set Provenance to GSRS
+    if (this.application) {
+      if (this.application.id) {
+      } else {
+        if (this.application.provenance === null || this.application.provenance === undefined) {
+          this.application.provenance = 'GSRS';
+        }
+      }
+    }
     this.applicationService.saveApplication().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -340,7 +349,9 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
           }, 8000);
         }
       }*/
+
     );
+
   }
 
   private handleApplicationRetrivalError() {

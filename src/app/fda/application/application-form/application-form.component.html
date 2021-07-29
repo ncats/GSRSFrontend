@@ -17,9 +17,14 @@
           matTooltip='Register a New Application'>
           Register New Application
         </button>&nbsp;&nbsp;&nbsp;
+        <!--
         <button mat-flat-button color="primary" [routerLink]="['/application', application.id]"
           matTooltip='View this Application Record'>View Application
-        </button>&nbsp;&nbsp;&nbsp;
+        -->
+        <a mat-flat-button color="primary" routerLink="/application/{{application.id}}" target="_blank" matTooltip='Opens in a new window'>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          View Application</a>
+        &nbsp;&nbsp;&nbsp;
         <span *ngIf="isAdmin">
           <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
             matTooltip='Delete this Application'>

@@ -34,8 +34,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   basisOfStrengthSubstanceUuid: string;
   basisOfStrengthMessage = '';
   relationship: any;
-  ingredientNameActiveMoiety: any;
-  basisOfStrengthActiveMoiety: any;
+  ingredientNameActiveMoiety = new Array<String>();
+  basisOfStrengthActiveMoiety = new Array<String>();
   username = null;
   substanceConfig: any;
   substanceKeyTypeConfig: string;
@@ -327,17 +327,29 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   }
   */
 
-  getActiveMoiety(substanceId: string, type: string) {
-    if (substanceId != null) {
+  getActiveMoiety(substanceUuid: string, type: string) {
+    if (substanceUuid != null) {
       // Get Active Moiety - Relationship
-      const activeSub = this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
-        if ((type != null) && (type === 'ingredientname')) {
-          this.ingredientNameActiveMoiety = responseRel;
-        } else {
-          this.basisOfStrengthActiveMoiety = responseRel;
+      this.generalService.getSubstanceRelationships(substanceUuid).subscribe(responseRel => {
+        if (responseRel) {
+          if (responseRel && responseRel.length > 0) {
+            for (let i = 0; i < responseRel.length; i++) {
+              const relType = responseRel[i].type;
+              // if type is ACTIVE MOIETY, get Relationship Name
+              if (relType && relType === 'ACTIVE MOIETY') {
+                if (responseRel[i].relatedSubstance.name) {
+                  if ((type != null) && (type === 'ingredientname')) {
+                    this.ingredientNameActiveMoiety.push(responseRel[i].relatedSubstance.name);
+                  } else {
+                    this.basisOfStrengthActiveMoiety.push(responseRel[i].relatedSubstance.name);
+                  }
+                }
+                break;
+              }
+            }
+          }
         }
       });
-      this.subscriptions.push(activeSub);
     }
   }
 
@@ -355,22 +367,32 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
           this.ingredientNameMessage = '';
+          this.ingredientNameActiveMoiety.length = 0;
 
-          this.getSubstanceCode(relatedSubstance.refuuid, 'ingredientname');
+          if (!this.substanceKeyTypeConfig) {
+            alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Ingredient Name');
+            this.ingredientNameMessage = 'Add Substance Key Type in Config';
+          } else {
+            this.getSubstanceCode(relatedSubstance.refuuid, 'ingredientname');
 
-          this.ingredientName = relatedSubstance.name;
-          this.ingredientNameSubstanceUuid = relatedSubstance.refuuid;
+            this.substanceUuid = relatedSubstance.refuuid;
+            this.ingredientName = relatedSubstance.name;
 
-          // Populate Basis of Strength if it is empty/null
-          if (!this.ingredient.basisOfStrengthSubstanceKey) {
-            this.basisOfStrengthIngredientName = relatedSubstance.name;
-            this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
+            // Populate Basis of Strength if it is empty/null
+            if (!this.ingredient.basisOfStrengthSubstanceKey) {
+              this.basisOfStrengthIngredientName = relatedSubstance.name;
+              this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
+              // Get Active Moiety
+              this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
+            }
+
+            // Get Active Moiety
+            this.getActiveMoiety(this.substanceUuid, 'ingredientname');
           }
         }
       }
     } else {
-      this.ingredientNameSubstanceUuid = null;
-
+      this.substanceUuid = null;
     }
   }
 
@@ -387,18 +409,27 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
           this.basisOfStrengthMessage = '';
+          this.basisOfStrengthActiveMoiety.length = 0;  //Clear Array
 
-          this.getSubstanceCode(relatedSubstance.refuuid, 'basisofstrength');
+          if (!this.substanceKeyTypeConfig) {
+            alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Basis of Strength');
+            this.basisOfStrengthMessage = 'Add Substance Key Type in Config';
+          } else {
+            this.getSubstanceCode(relatedSubstance.refuuid, 'basisofstrength');
 
-          this.basisOfStrengthIngredientName = relatedSubstance.name;
-          this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
+            this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
+            this.basisOfStrengthIngredientName = relatedSubstance.name;
 
+            // Get Active Moiety
+            this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
+          }
         }
       }
     } else {
       this.basisOfStrengthSubstanceUuid = null;
     }
   }
+
 
   showMessageIngredientName(message: string): void {
     this.ingredientNameMessage = message;

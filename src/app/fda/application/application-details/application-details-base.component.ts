@@ -61,15 +61,45 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   }
 
   getApplicationDetails(): void {
-    this.applicationService.getApplicationById(this.id).subscribe(response => {
+    const appIdSubscription = this.applicationService.getApplicationById(this.id).subscribe(response => {
       this.application = response;
       if (Object.keys(this.application).length > 0) {
+        // Get Substance by Substance Key
         this.getSubstanceBySubstanceKey();
+
+        // Get Application History
+        const appHistSubscription = this.applicationService.getApplicationHistory(this.id).subscribe(response => {
+          this.application.applicationHistoryList = [];
+          this.application.applicationHistoryList = response;
+        });
+        this.subscriptions.push(appHistSubscription);
+
+        // Get Product Technical Effect
+        const prodTechEffectSubscription = this.applicationService.getProductTechnicalEffect(this.id).subscribe(response => {
+          this.application.productTechEffectList = [];
+          this.application.productTechEffectList = response;
+        });
+        this.subscriptions.push(prodTechEffectSubscription);
+
+        // Get Product Effected
+        const prodEffectedSubscription = this.applicationService.getProductEffected(this.id).subscribe(response => {
+          this.application.productEffectedList = [];
+          this.application.productEffectedList = response;
+        });
+        this.subscriptions.push(prodEffectedSubscription);
+
+        // Get Clinical Trial Application
+        const clinicalSubscription = this.applicationService.getClinicalTrialApplication(this.id).subscribe(response => {
+          this.application.clinicalTrialList = [];
+          this.application.clinicalTrialList = response;
+        });
+        this.subscriptions.push(clinicalSubscription);
       }
     }, error => {
-    //  this.message = 'No Application record found';
-     // this.handleSubstanceRetrivalError();
+      //  this.message = 'No Application record found';
+      // this.handleSubstanceRetrivalError();
     });
+    this.subscriptions.push(appIdSubscription);
   }
 
   getSubstanceBySubstanceKey() {
@@ -124,7 +154,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-     // this.router.navigate(['/browse-substance']);
+      // this.router.navigate(['/browse-substance']);
     }, 5000);
 
   }

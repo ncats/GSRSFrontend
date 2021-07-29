@@ -16,16 +16,16 @@
     <mat-icon>check_circle</mat-icon>
   </button>
   <span *ngIf="ingredient.reviewDate" class="colorgray font12px">Reviewed
-    By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+    By:&nbsp;{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
   </span>
 
   &nbsp;&nbsp;&nbsp;
   <span class="font11px" *ngIf="ingredient">
     <span *ngIf="ingredient.id">
       <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;
-      {{ingredient.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+      {{ingredient.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
       <span class="colorgray">Modified By:</span> {{ingredient.modifiedBy}}&nbsp;&nbsp;&nbsp;
-      {{ingredient.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+      {{ingredient.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
     </span>
   </span>
 </div>
@@ -59,7 +59,7 @@
             <br>
             <!-- Display Active Moiety -->
             <div *ngFor="let active of ingredientNameActiveMoiety; let activeIndex = index">
-              {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
+              {{active}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
           </div>
           <div *ngIf="ingredient.substanceKey">
@@ -95,7 +95,7 @@
             <br>
             <!-- Display Active Moiety -->
             <div *ngFor="let active of basisOfStrengthActiveMoiety; let activeIndex = index">
-              {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
+              {{active}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
           </div>
 

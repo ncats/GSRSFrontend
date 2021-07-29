@@ -25,7 +25,8 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   application: any;
   applicationCount = 0;
   totalApplication = 0;
-  centerList = '';
+  centerList: Array<String> = [];
+  centerListOriginal: Array<String> = [];
   center = '';
   fromTable = '';
   loadingStatus = '';
@@ -33,11 +34,12 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   foundCenterList = false;
   loadingComplete = false;
   // result: any;
-  public privateSearchTerm?: string;
+  public privateSearch?: string;
   private privateFacetParams: FacetParam;
   privateExport = false;
   disableExport = false;
   etag = '';
+  etagAllExport = '';
   @Input() bdnum: string;
   @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -80,25 +82,31 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
 
     if (this.bdnum) {
       this.getApplicationCenterList();
-     // this.getApplicationCenterByBdnum();
+
+      this.privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:'
+        + this.bdnum;
+      this.getApplicationBySubstanceKeyCenter(null, 'initial');
+      // this.getApplicationCenterByBdnum();
       // this.getSubstanceApplications();
-      this.applicationListExportUrl();
+      // this.applicationListExportUrl();
     }
   }
 
+  /*
   searchApplicationBySubstanceKey(): string {
     this.applicationService.searchApplicationBySubstanceKey(this.bdnum).subscribe(results => {
       this.results = results;
       if (results) {
     //    const content = results.content;
-        if (this.centerList && this.centerList.length > 0) {
-          this.foundCenterList = true;
+     //   if (this.centerList && this.centerList.length > 0) {
+    //      this.foundCenterList = true;
         }
         this.loadingComplete = true;
       }
     });
-    return this.centerList;
+  //  return this.centerList;
   }
+  */
 
   /* PLAY FRAMEWORK */
   /*
@@ -114,11 +122,28 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   }
   */
 
- getApplicationCenterList(): void {
+  getApplicationCenterList(): void {
     this.applicationService.getApplicationCenterList(this.bdnum).subscribe(results => {
+      this.centerListOriginal = results;
       this.centerList = results;
       if (this.centerList && this.centerList.length > 0) {
         this.foundCenterList = true;
+
+        // Replace 'Darrts' to 'Integrity' and 'SRS' to 'GSRS'
+        this.centerList.forEach((cent, index) => {
+          if (cent != null) {
+            let centerReplace = '';
+            if (cent.indexOf('Darrts') > 0) {
+              centerReplace = cent.replace('Darrts', 'Integrity');
+            } else if (cent.indexOf('SRS') > 0) {
+              centerReplace = cent.replace('SRS', 'GSRS');
+            }
+
+            if (centerReplace.length > 0) {
+              this.centerList[index] = centerReplace;
+            }
+          }
+        });
       }
       this.loadingComplete = true;
     });
@@ -135,16 +160,30 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         this.center = textLabel.slice(0, index);
         this.fromTable = textLabel.slice(index + 1, textLabel.length);
 
-        // set the current result data to empty or null.
-        this.paged = [];
+        let fromReplace = '';
 
-        this.getApplicationBySubstanceKeyCenter();
+        if (this.fromTable.indexOf('Integrity') >= 0) {
+          fromReplace = this.fromTable.replace('Integrity', 'Darrts');
+        } else if (this.fromTable.indexOf('GSRS') >= 0) {
+          fromReplace = this.fromTable.replace('GSRS', 'SRS');
+        }
+        if (fromReplace && fromReplace.length > 0) {
+          this.fromTable = fromReplace;
+        }
       }
+
+      // set the current result data to empty or null.
+      this.paged = [];
+
+      this.privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:'
+        + this.bdnum + ' AND root_center:' + this.center + ' AND root_fromTable: ' + this.fromTable;
+
+      this.getApplicationBySubstanceKeyCenter();
     }
   }
 
   /*
-  getApplicationBySubstanceKeyCenter(pageEvent?: PageEvent): void {
+  getApplicationBySubstanceKeyCenter(pageEvent ?: PageEvent): void {
     this.setPageEvent(pageEvent);
 
     this.showSpinner = true;  // Start progress spinner
@@ -163,35 +202,45 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   */
 
   // GSRS 3.0
-  getApplicationBySubstanceKeyCenter(pageEvent?: PageEvent) {
+  getApplicationBySubstanceKeyCenter(pageEvent?: PageEvent, searchType?: string) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
     const skip = this.page * this.pageSize;
-    const privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:'
-     + this.bdnum + ' AND root_center:' + this.center;
+
+    // if (searchType && searchType === 'initial') {
+    //    this.pageSize = 100;
+    //  }
     const subscription = this.applicationService.getApplicationAll(
       'default',
       skip,
       this.pageSize,
-      privateSearch,
+      this.privateSearch,
       this.privateFacetParams
     )
       .subscribe(pagingResponse => {
-        this.applicationService.totalRecords = pagingResponse.total;
-        this.setResultData(pagingResponse.content);
-        this.applicationCount = pagingResponse.total;
-        this.etag = pagingResponse.etag;
-        this.countApplicationOut.emit(this.applicationCount);
+
+        if (searchType && searchType === 'initial') {
+          this.etagAllExport = pagingResponse.etag;
+        } else {
+          this.applicationService.totalRecords = pagingResponse.total;
+          this.applicationCount = pagingResponse.total;
+
+          this.setResultData(pagingResponse.content);
+
+          this.etag = pagingResponse.etag;
+          this.countApplicationOut.emit(this.applicationCount);
+        }
       }, error => {
         console.log('error');
       }, () => {
         subscription.unsubscribe();
       });
-      this.loadingStatus = '';
-      this.showSpinner = false;  // Stop progress spinner
+    this.loadingStatus = '';
+    this.showSpinner = false;  // Stop progress spinner
   }
 
-  getSubstanceApplications(pageEvent?: PageEvent): void {
+  /*
+  getSubstanceApplications(pageEvent ?: PageEvent): void {
     this.setPageEvent(pageEvent);
 
     this.showSpinner = true;  // Start progress spinner
@@ -203,23 +252,24 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         this.loadingStatus = '';
         this.showSpinner = false;  // Stop progress spinner
       });
-
-    /*
-        this.searchControl.valueChanges.subscribe(value => {
-          this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
-        }, error => {
-          console.log(error);
-        });
-        this.countUpdate.emit(clinicaltrials.length);
+  */
+  /*
+      this.searchControl.valueChanges.subscribe(value => {
+        this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
+      }, error => {
+        console.log(error);
       });
-      */
-  }
+      this.countUpdate.emit(clinicaltrials.length);
+    });
+
+}
+*/
 
   export() {
-    if (this.etag) {
+    if (this.etagAllExport) {
       const extension = 'xlsx';
-      const url = this.getApiExportUrl(this.etag, extension);
-   //   if (this.authService.getUser() !== '') {
+      const url = this.getApiExportUrl(this.etagAllExport, extension);
+      if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
@@ -243,12 +293,12 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
             }, error => this.loadingService.setLoading(false));
           }
         });
-     // }
+      }
     }
   }
 
   getApiExportUrl(etag: string, extension: string): string {
-    return this.applicationService.getApiExportUrl(etag, extension);
+    return this.applicationService.getAppAllApiExportUrl(etag, extension);
   }
 
   get updateApplicationUrl(): string {
