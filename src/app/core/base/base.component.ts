@@ -118,7 +118,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.environment = this.configService.environment;
     this.appId = this.environment.appId;
 
-    this.logoSrcPath = `${this.environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
+    this.logoSrcPath = `${this.environment.baseHref || ''}assets/images/gsrs-logo.svg`;
 
     const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof ResolveEnd) {

@@ -42,7 +42,7 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
   ngOnInit() {
     this.productId = this.activatedRoute.snapshot.params['id'];
     this.getProduct();
-    this.iconSrcPath = `${this.configService.environment.baseHref || '/'}assets/icons/fda/icon_dailymed.png`;
+    this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
   }
 
   ngAfterViewInit() { }

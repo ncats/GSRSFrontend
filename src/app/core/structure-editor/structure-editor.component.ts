@@ -44,10 +44,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   public context: CanvasRenderingContext2D;
   public canvasCopy: HTMLCanvasElement;
   private jsdrawScriptUrls = [
-    `${environment.baseHref || '/'}assets/dojo/dojo.js`,
-    `${environment.baseHref || '/'}assets/jsdraw/Scilligence.JSDraw2.Pro.js`,
-    `${environment.baseHref || '/'}assets/jsdraw/Scilligence.JSDraw2.Resources.js`,
-    `${environment.baseHref || '/'}assets/jsdraw/JSDraw.extensions.js`
+    `${environment.baseHref || ''}assets/dojo/dojo.js`,
+    `${environment.baseHref || ''}assets/jsdraw/Scilligence.JSDraw2.Pro.js`,
+    `${environment.baseHref || ''}assets/jsdraw/Scilligence.JSDraw2.Resources.js`,
+    `${environment.baseHref || ''}assets/jsdraw/JSDraw.extensions.js`
 
   ];
   ketcherFilePath: string;
@@ -106,7 +106,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       window.addEventListener('drop', this.preventDrag);
       window.addEventListener('paste', this.checkPaste);
 
-      this.ketcherFilePath = `${environment.baseHref || '/'}assets/ketcher/ketcher.html`;
+      this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/ketcher.html`;
 
       this.structureEditor = environment.structureEditor;
 

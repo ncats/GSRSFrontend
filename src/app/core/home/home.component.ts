@@ -58,12 +58,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.environment = this.configService.environment;
-    this.application = `${this.configService.environment.baseHref || '/'}assets/icons/home/icon_application.png`;
-    this.browseAll = `${this.configService.environment.baseHref || '/'}assets/icons/home/icon_browseall.png`;
-    this.chemicon = `${this.configService.environment.baseHref || '/'}assets/icons/home/icon_registersubstance.png`;
+    this.application = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_application.png`;
+    this.browseAll = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_browseall.png`;
+    this.chemicon = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_registersubstance.png`;
     this.appId = this.configService.environment.appId;
     this.bannerMessage = this.configService.configData.bannerMessage || null;
-    this.imageLoc = `${this.environment.baseHref || '/'}assets/images/home/`;
+    this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/`;
 
 
     this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {

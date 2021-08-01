@@ -34,7 +34,7 @@ export class SsoRefreshService implements OnDestroy   {
       if (auth != null && this.refreshInterval == null) {
         clearInterval(this.refreshInterval);
         this.refreshInterval = setInterval(() => {
-          this.iframe.src = `${this.baseHref || '/'}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
+          this.iframe.src = `${this.baseHref || ''}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
         }, 120000);
       } else {
         clearInterval(this.refreshInterval);

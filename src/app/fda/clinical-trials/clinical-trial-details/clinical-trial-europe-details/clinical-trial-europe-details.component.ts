@@ -35,7 +35,7 @@ export class ClinicalTrialEuropeDetailsComponent extends ClinicalTrialDetailsBas
   ngOnInit() {
     super.ngOnInit();
 
-    this.flagIconSrcPath = `${this.environment.baseHref || '/'}assets/icons/fda/european-union.svg`;
+    this.flagIconSrcPath = `${this.environment.baseHref || ''}assets/icons/fda/european-union.svg`;
 
   }
 
