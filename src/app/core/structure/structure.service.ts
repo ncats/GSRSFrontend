@@ -96,6 +96,11 @@ export class StructureService {
     return this.http.post<InterpretStructureResponse>(url, mol);
   }
 
+  interpretStructure(mol: string, mode: string, standardize: string): Observable<InterpretStructureResponse> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/interpretStructure?mode=` + mode + '&standardize=' +standardize;
+    return this.http.post<InterpretStructureResponse>(url, mol);
+  }
+
   molvec(file: any): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/ocrStructure`;
     return this.http.post<any>(url, file);
