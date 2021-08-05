@@ -88,10 +88,19 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   search(): void {
     const mol = this.editor.getMolfile();
-    this.structureService.interpretStructure(mol, 'query', '').subscribe((response: InterpretStructureResponse) => {
+    this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
       const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
       this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
       this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
+    }, () => {});
+  }
+
+  standardize(standard: string): void {
+    const mol = this.editor.getMolfile();
+    this.structureService.interpretStructure(mol, '', standard).subscribe((response: InterpretStructureResponse) => {
+      if (response && response.structure && response.structure.molfile) {
+        this.editor.setMolecule(response.structure.molfile);
+      }
     }, () => {});
   }
 

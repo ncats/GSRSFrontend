@@ -256,4 +256,13 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
+  standardize(standard: string): void {
+    const mol = this.editor.getMolfile();
+    this.structureService.interpretStructure(mol, '', standard).subscribe((response: any) => {
+      if (response && response.structure && response.structure.molfile) {
+        this.editor.setMolecule(response.structure.molfile);
+      }
+    }, () => {});
+  }
+
 }

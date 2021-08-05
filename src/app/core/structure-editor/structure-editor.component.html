@@ -6,13 +6,32 @@
 
 <div id ="canvas-container">
   <div class="below-editor-container">
-    <div class="molvec-message">
-      Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
+      <div class = "clean-button">
+          <button mat-button color="primary" (click)="cleanStructure()" >
+              <mat-icon svgIcon="brush"></mat-icon>
+              Clean structure
+            </button>
+      </div>
+    <div class="molvec-message" >
+        Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
     </div>
-    <button mat-button color="primary" (click)="cleanStructure()">
-      <mat-icon svgIcon="brush"></mat-icon>
-      Clean structure
-    </button>
+   
+    <div class = "options">
+        <mat-form-field>
+            <mat-label>Structure Options</mat-label>
+            <mat-select placeholder="Structure Options" name = "Opts" >
+                <mat-option value="REMOVE_HYDROGENS" >
+                    Remove Explicit Hydrogens
+                </mat-option>
+                <mat-option value="ADD_HYDROGENS" >
+                    Add Explicit Hydrogens
+                </mat-option>
+                <mat-option value="STEREO_FLATTEN" >
+                   Remove Stereo Bonds
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
   </div>
   <div id = "canvas-label canvas" *ngIf = "height > 0">Original Image:
     <a class = "blue-font toggle" (click) = "canvasToggle = !canvasToggle">{{canvasToggle? 'hide': 'show'}}</a>
