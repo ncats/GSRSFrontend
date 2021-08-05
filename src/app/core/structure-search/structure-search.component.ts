@@ -22,6 +22,7 @@ import * as _ from 'lodash';
 export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   private editor: Editor;
   private searchType: string;
+  _searchtype: string;
   similarityCutoff?: number;
   showSimilarityCutoff = false;
   searchTypeControl = new FormControl();
@@ -41,6 +42,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   ) {
     this.searchType = 'substructure';
+    this._searchtype ='substructure';
   }
 
   ngOnInit() {
@@ -74,6 +76,8 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
           }
           if (params.has('type')) {
             this.searchType = params.get('type');
+            this._searchtype = params.get('type');
+
           }
 
           if (this.searchType === 'similarity') {
@@ -141,6 +145,8 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   searchTypeSelected(event): void {
     this.searchType = event.value;
+    this._searchtype = event.value;
+
 
     this.gaService.sendEvent('structureSearch', 'select:search-type', this.searchType);
 
