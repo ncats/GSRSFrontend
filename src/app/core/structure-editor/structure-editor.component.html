@@ -19,7 +19,7 @@
     <div class = "options">
         <mat-form-field>
             <mat-label>Structure Options</mat-label>
-            <mat-select placeholder="Structure Options" name = "Opts" >
+            <mat-select placeholder="Structure Options" name = "Opts" (selectionChange)= "standardize($event.value)">
                 <mat-option value="REMOVE_HYDROGENS" >
                     Remove Explicit Hydrogens
                 </mat-option>
