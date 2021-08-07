@@ -10,7 +10,7 @@
     "applications": true,
     "products": false,
     "clinicaltrials": false,
-    "adverseevent": false,
+    "adverseevents": false,
     "impurites": true
     },
   "substanceDetailsCards": [
