@@ -30,6 +30,15 @@ export interface Config {
     bannerMessage?: string;
     substance?: any;
     showOldLinks?: boolean;
+    loadedComponents?: LoadedComponents;
+}
+
+export interface LoadedComponents {
+    applications?: boolean;
+    products?: boolean;
+    clinicaltrials?: boolean;
+    adverseevent?: boolean;
+    impurities?: boolean;
 }
 
 export interface SubstanceDetailsCard {

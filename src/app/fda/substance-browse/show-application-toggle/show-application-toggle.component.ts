@@ -26,6 +26,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
   etagDetails: any;
   paramUrl = '';
   totalSubstance = 0;
+  loadedComponents: any;
 
   constructor(
     private generalService: GeneralService,
@@ -46,6 +47,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
         this.isDisplayAppToMatchConfig();
       }
     });
+    this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
     /*
     this.isAdmin = this.authService.hasAnyRoles('Admin', 'SuperUpdater');
     if (this.isAdmin === true) {

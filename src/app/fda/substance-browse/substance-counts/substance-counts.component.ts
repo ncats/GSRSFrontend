@@ -5,6 +5,7 @@ import { SubstanceDetail } from '@gsrs-core/substance';
 import { GeneralService } from '../../service/general.service';
 import { ConfigService } from '../../../core/config/config.service';
 import { ApplicationService } from '../../application/service/application.service';
+import { LoadedComponents } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-counts',
@@ -23,6 +24,7 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
   isShowMatchList = 'false';
   // application: Application;
   displayMatchApplicationConfig = false;
+  loadedComponents: LoadedComponents;
 
   constructor(
     private applicationService: ApplicationService,
@@ -35,6 +37,8 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
     this.substanceId = this.substance.uuid;
     this.getSearchCount();
     this.getAppIngredMatchListCount();
+    this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
+
   }
 
   getSearchCount(): void {
