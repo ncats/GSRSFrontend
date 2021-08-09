@@ -14,7 +14,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { StructureEditorComponent } from './structure-editor.component';
 import {DragDropPasteDirective} from '@gsrs-core/substance-form/structure/drag-drop-paste.component';
 import { StructureModule } from '@gsrs-core/structure/structure.module';
-import { MatSelectModule } from '@angular/material';
+import { MatSelectModule, MatMenuModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -26,6 +26,7 @@ import { MatSelectModule } from '@angular/material';
     MatIconModule,
     MatDialogModule,
     MatProgressBarModule,
+    MatMenuModule,
     ReactiveFormsModule,
     KetcherWrapperModule,
     JsdrawWrapperModule,
