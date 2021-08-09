@@ -40,11 +40,13 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   foundProvenanceList = false;
   loadingComplete = false;
   substanceName = '';
-  public privateSearchTerm?: string;
+  public privateSearch?: string;
   private privateFacetParams: FacetParam;
+  public privateSearchTerm?: string;
   privateExport = false;
   disableExport = false;
   etag = '';
+  etagAllExport = '';
 
   public displayedColumns: string[] = [
     'productId',
@@ -76,9 +78,13 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
     if (this.substance && this.substance.uuid) {
       this.getSubstanceKey();
+
       // Get Provenance List to Display in Tab
       this.getProductProvenanceList();
-      this.productListExportUrl();
+
+      this.privateSearch = 'root_productIngredientAllList_substanceUuid:' + this.substance.uuid;
+      this.getSubstanceProducts(null, 'initial');
+      //  this.productListExportUrl();
     }
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -166,26 +172,30 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   }
   */
 
-  getSubstanceProducts(pageEvent?: PageEvent) {
+  getSubstanceProducts(pageEvent?: PageEvent, searchType?: string) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
     const skip = this.page * this.pageSize;
-    const privateSearch = 'root_productIngredientAllList_substanceUuid:' + this.substance.uuid;
+
     // Facet Search for "Provenance"
-    this.privateFacetParams = { 'Provenance': { 'params': { 'SPL': true }, 'isAllMatch': false } };
+    // this.privateFacetParams = { 'Provenance': { 'params': { 'SPL': true }, 'isAllMatch': false } };
 
     const subscription = this.productService.getProducts(
       'default',
       skip,
       this.pageSize,
-      privateSearch,
+      this.privateSearch,
       this.privateFacetParams
     )
       .subscribe(pagingResponse => {
-        this.productService.totalRecords = pagingResponse.total;
-        this.setResultData(pagingResponse.content);
-        this.productCount = pagingResponse.total;
-        this.etag = pagingResponse.etag;
+        if (searchType && searchType === 'initial') {
+          this.etagAllExport = pagingResponse.etag;
+        } else {
+          this.productService.totalRecords = pagingResponse.total;
+          this.setResultData(pagingResponse.content);
+          this.productCount = pagingResponse.total;
+          this.etag = pagingResponse.etag;
+        }
       }, error => {
         console.log('error');
       }, () => {
@@ -196,10 +206,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   }
 
   export() {
-    if (this.etag) {
+    if (this.etagAllExport) {
       const extension = 'xlsx';
-      const url = this.getApiExportUrl(this.etag, extension);
-      if (this.authService.getUser() !== '') {
+      const url = this.getApiExportUrl(this.etagAllExport, extension);
+     // if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
@@ -223,7 +233,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
             }, error => this.loadingService.setLoading(false));
           }
         });
-      }
+   //   }
     }
   }
 
@@ -250,6 +260,9 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
         // this.country = textLabel.slice(index + 1, textLabel.length);
         // set the current result data to empty or null.
         this.paged = [];
+
+        this.privateSearch = 'root_productIngredientAllList_substanceUuid:'
+          + this.substance.uuid + ' AND root_provenance:' + this.provenance;
 
         this.getSubstanceProducts();
 

@@ -241,7 +241,7 @@ export class ProductIngredientFormComponent implements OnInit {
               this.ingredientName = response._name;
 
              // Get Active Moiety
-             this.getActiveMoiety(this.substanceUuid, 'ingredientname');
+              this.getActiveMoiety(this.substanceUuid, 'ingredientname');
             }
           }
         });
@@ -257,7 +257,7 @@ export class ProductIngredientFormComponent implements OnInit {
               this.basisOfStrengthIngredientName = response._name;
 
               // Get Active Moiety
-              this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
+              this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
             }
           }
         });
@@ -321,7 +321,7 @@ export class ProductIngredientFormComponent implements OnInit {
               this.basisOfStrengthIngredientName = relatedSubstance.name;
               this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
               // Get Active Moiety
-              this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
+              this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
             }
 
             // Get Active Moiety

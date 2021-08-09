@@ -52,15 +52,15 @@ const productRoutes: Routes = [
   },
   {
     path: 'product/register',
-    component: ProductFormComponent,
-    canActivate: [CanActivateRegisterProductFormComponent],
-    canDeactivate: [CanDeactivateProductFormComponent]
+    component: ProductFormComponent
+  //  canActivate: [CanActivateRegisterProductFormComponent],
+  //  canDeactivate: [CanDeactivateProductFormComponent]
   },
   {
     path: 'product/:id/edit',
-    component: ProductFormComponent,
-    canActivate: [CanActivateUpdateProductFormComponent],
-    canDeactivate: [CanDeactivateProductFormComponent]
+    component: ProductFormComponent
+   // canActivate: [CanActivateUpdateProductFormComponent],
+   // canDeactivate: [CanDeactivateProductFormComponent]
   },
   {
     path: 'product/:id',

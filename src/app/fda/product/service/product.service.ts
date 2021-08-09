@@ -288,7 +288,9 @@ export class ProductService extends BaseHttpService {
       params: params,
       type: 'JSON',
       headers: {
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
+        'auth-username': 'admin',
+        'auth-password': 'admin'
       }
     };
     //  console.log('APP: ' + this.application);
