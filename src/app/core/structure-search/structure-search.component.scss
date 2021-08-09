@@ -15,6 +15,11 @@
   white-space: nowrap;
 }
 
+.clean-button {
+    margin-top: -15px;
+  }
+
+  
 .mat-card {
     margin-top: 15px;
     box-sizing: border-box;
@@ -85,44 +90,19 @@
 
     .search-actions {
         flex-direction: row;
-        border-left: none;
-        padding-top: 10px;
-        padding-left: 0;
-        margin-left: 0;
-
-        .one {
-            order: 1;
-        }
-
-        .export-button {
-            margin-left: 7px;
-        }
-
-        .two {
-            order: 2;
-            margin-left: auto;
-            display: flex;
-            padding-right: 10px;
-
-            .similarity-cutoff {
-                margin: 0;
-                margin-top: 1px;
-            }
-        }
-
-        .three {
-            order: 3;
-        }
+        width: 100%;
+       
+    }
+    .two {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
     }
 
     .action-button-container {
-        width: auto;
-        margin-top: 0;
-        align-self: flex-start;
-
-        button {
-            width: auto;
-        }
+        width: 50%;
+        margin: auto;
+    margin-top: 20px;
     }
 }
 

@@ -243,8 +243,8 @@
         <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
           <mat-icon svgIcon="chevron_right"></mat-icon>
         </button>
-    <div class="side-nav-content" [ngClass] = "isClosedWelcomeMessage? 'topMargin' : ''"  *ngIf="bannerMessage && bannerMessage !== ''">
-        <mat-card class="welcome-banner home-card">
+    <div class="side-nav-content" [ngClass] = "isClosedWelcomeMessage? 'topMargin' : ''" >
+        <mat-card class="welcome-banner home-card"  *ngIf="bannerMessage && bannerMessage !== ''">
             <div class = "banner-main" [innerHTML] = "bannerMessage">
             </div>
 

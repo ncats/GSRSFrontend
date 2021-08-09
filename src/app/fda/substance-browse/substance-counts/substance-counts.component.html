@@ -1,5 +1,5 @@
-<div class="counts-container" *ngIf="searchCount">
-  <div class="counts-column">
+<div class="counts-container" *ngIf="searchCount && loadedComponents">
+  <div class="counts-column" *ngIf = "loadedComponents && loadedComponents.applications">
     <div>
       Application Count:
     </div>
@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  <div class="counts-column">
+  <div class="counts-column" *ngIf = "loadedComponents && loadedComponents.products">
     <div>
       Product Count:
     </div>
@@ -56,7 +56,7 @@
     </div>
   </div>
 
-  <div class="counts-column">
+  <div class="counts-column" *ngIf = "loadedComponents && loadedComponents.clinicaltrials">
     <div>
       Clinical Trial Count:
     </div>
@@ -74,7 +74,7 @@
     </div>
   </div>
 
-  <div class="counts-column">
+  <div class="counts-column" *ngIf = "loadedComponents && loadedComponents.adverseevent">
     <div>
       Adverse Event Count:
     </div>
@@ -94,7 +94,7 @@
 </div>
 
 <!-- Application Matching List -->
-<div *ngIf="this.isShowMatchList === 'true' && appMatchListCount >= 0">
+<div *ngIf="this.isShowMatchList === 'true' && appMatchListCount >= 0 && loadedComponents && loadedComponents.applications">
   <br>
   <a class="colorred padtop10" [routerLink]="['/sub-app-match-list', substanceId]" target="_blank">
     Matching Application Names&nbsp;

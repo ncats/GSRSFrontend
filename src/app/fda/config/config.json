@@ -6,6 +6,13 @@
   "adverseEventShinySubstanceNameDisplay": "true",
   "adverseEventShinyAdverseEventDisplay": "true",
   "bannerMessage": null,
+  "loadedComponents": {
+    "applications": true,
+    "products": false,
+    "clinicaltrials": false,
+    "adverseevents": false,
+    "impurites": true
+    },
   "substanceDetailsCards": [
     {
       "card": "substance-overview",

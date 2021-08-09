@@ -28,6 +28,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isCollapsed = true;
   hasBackdrop = false;
   bannerMessage?: string;
+  
+  
+  //these may be necessary due to a strange quirk
+  //of angular and ngif
+  searchValue: string;
+  processSubstanceSearch: any;
+  increaseMenuZindex: any;
+  removeZindex:any;
+  
+  
   private overlayContainer: HTMLElement;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
 

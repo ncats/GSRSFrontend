@@ -6,13 +6,20 @@
 
 <div id ="canvas-container">
   <div class="below-editor-container">
-    <div class="molvec-message">
-      Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
+      
+    <div class="molvec-message" >
+        Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
     </div>
-    <button mat-button color="primary" (click)="cleanStructure()">
-      <mat-icon svgIcon="brush"></mat-icon>
-      Clean structure
-    </button>
+   
+    <div class = "options">
+        <button mat-button color="primary" [matMenuTriggerFor]="importMenu">Structure Options &#9660; </button>
+    </div>
+    <div class = "clean-button">
+        <button mat-button color="primary" (click)="cleanStructure()" >
+            <mat-icon svgIcon="brush"></mat-icon>
+            Clean structure
+          </button>
+    </div>
   </div>
   <div id = "canvas-label canvas" *ngIf = "height > 0">Original Image:
     <a class = "blue-font toggle" (click) = "canvasToggle = !canvasToggle">{{canvasToggle? 'hide': 'show'}}</a>
@@ -24,3 +31,15 @@
   </div>
 </div> 
 </div>
+
+<mat-menu #importMenu="matMenu">
+    <button mat-menu-item (click)="standardize('REMOVE_HYDROGENS')">
+        Remove Explicit Hydrogens
+    </button>
+    <button mat-menu-item (click)="standardize('ADD_HYDROGENS')">
+        Add Explicit Hydrogens
+      </button>
+      <button mat-menu-item (click)="standardize('STEREO_FLATTEN')">
+          Remove Stereo Bonds
+        </button>
+  </mat-menu>
