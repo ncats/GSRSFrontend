@@ -3,6 +3,7 @@ import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute, N
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
+import { SessionExpirationComponent } from '../auth/session-expiration/session-expiration.component'
 import { ConfigService } from '../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { LoadingService } from '../loading/loading.service';

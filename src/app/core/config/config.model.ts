@@ -25,6 +25,7 @@ export interface Config {
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
     customToolbarComponent?: string;
+    sessionExpirationWarning?: SessionExpirationWarning;
     pfdaBaseUrl?: string;
 }
 
@@ -50,4 +51,9 @@ export interface NavItem {
     externalPath?: string;
     order?: number;
     children?: Array<NavItem>;
+}
+
+export interface SessionExpirationWarning {
+    maxSessionDurationMinutes: number;
+    extendSessionApiUrl: string;
 }

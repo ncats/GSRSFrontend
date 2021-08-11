@@ -1,0 +1,11 @@
+<h2 mat-dialog-title class="dialog-title">
+  {{dialogTitle}}
+</h2>
+<div mat-dialog-content>
+  {{dialogMessage}}
+</div>
+<div class="dialog-actions flex-row" mat-dialog-actions>
+  <span class="middle-fill"></span>
+  <button *ngIf="timeRemainingSeconds>0" mat-flat-button color="primary" (click)="extendSession()">Extend Session</button>
+  <button *ngIf="timeRemainingSeconds<=0" mat-flat-button color="primary" (click)="login()">Login</button>
+</div>
