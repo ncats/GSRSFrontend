@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { ConfigService } from '@gsrs-core/config';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
 import { AuthService } from '@gsrs-core/auth';
 import { Router, NavigationExtras } from '@angular/router';
@@ -27,6 +27,7 @@ export class RegistrarsComponent implements OnInit {
   application: string;
   chemicon: string;
   clasicBaseHref: string;
+  loadedComponents: LoadedComponents;
 
   // Config for Adverse Event on Shiny Server
   adverseEventShinyHomepageDisplay = false;
@@ -48,6 +49,7 @@ export class RegistrarsComponent implements OnInit {
     this.application = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_application.png`;
     this.browseAll = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_browseall.png`;
     this.chemicon = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_registersubstance.png`;
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
     this.appId = this.configService.environment.appId;
 
     this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { ConfigService } from '@gsrs-core/config';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
 import { AuthService } from '@gsrs-core/auth';
 import { Router, NavigationExtras } from '@angular/router';
@@ -30,12 +30,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   bannerMessage?: string;
   
   
-  //these may be necessary due to a strange quirk
-  //of angular and ngif
+  // these may be necessary due to a strange quirk
+  // of angular and ngif
   searchValue: string;
   processSubstanceSearch: any;
   increaseMenuZindex: any;
   removeZindex:any;
+  loadedComponents: LoadedComponents;
   
   
   private overlayContainer: HTMLElement;
@@ -71,8 +72,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.application = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_application.png`;
     this.browseAll = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_browseall.png`;
     this.chemicon = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_registersubstance.png`;
+
     this.appId = this.configService.environment.appId;
     this.bannerMessage = this.configService.configData.bannerMessage || null;
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
     this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/`;
 
 
@@ -81,7 +84,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
-    this.customLinks = this.configService.configData.homeDynamicLinks;
+    this.customLinks = this.configService.configData.homeDynamicLinks || [];
     this.customLinks.forEach (link => {
       link.total = 0;
       const searchStr = `${link.facetName}:${link.facetValue}`;

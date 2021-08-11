@@ -23,6 +23,7 @@ export class SubstanceFormNamesCardComponent
   showStd = false;
   showMore = false;
   appId: string;
+  standardizeButton = false;
 
   constructor(
     private substanceFormNamesService: SubstanceFormNamesService,
@@ -39,6 +40,7 @@ export class SubstanceFormNamesCardComponent
   ngOnInit() {
     this.menuLabelUpdate.emit('Names');
     this.appId = this.configService.environment.appId;
+    this.standardizeButton = this.configService.configData.showNameStandardizeButton || false;
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
       //  this.canAddItemUpdate.emit(false);
