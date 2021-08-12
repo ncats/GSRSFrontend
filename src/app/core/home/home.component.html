@@ -75,11 +75,13 @@
                               </a>
                               </span>
                               <span *ngIf = "loadedComponents.adverseevents">
-                              <mat-divider></mat-divider>
-                              <a mat-list-item routerLink="/browse-adverse-events">
-                                <mat-icon matListIcon svgIcon="glasses"></mat-icon>
-                                Browse Adverse Events
-                              </a>
+                                <span *ngIf="!adverseEventShinyHomepageDisplay">
+                                    <mat-divider></mat-divider>
+                                    <a mat-list-item routerLink="/browse-adverse-events">
+                                      <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                                      Browse Adverse Events
+                                    </a>
+                                </span>
                               <div *ngIf="adverseEventShinyHomepageDisplay === true">
                                 <mat-divider></mat-divider>
                                 <a mat-list-item [href]="adverseEventShinyHomepageURL" target="_blank">
