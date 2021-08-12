@@ -33,9 +33,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // these may be necessary due to a strange quirk
   // of angular and ngif
   searchValue: string;
-  processSubstanceSearch: any;
-  increaseMenuZindex: any;
-  removeZindex:any;
   loadedComponents: LoadedComponents;
   
   
@@ -168,6 +165,28 @@ private processResponsiveness = () => {
     dialogRef.afterClosed().subscribe(result => {
       this.overlayContainer.style.zIndex = null;
     });
+  }
+
+
+  increaseMenuZindex(): void {
+    this.overlayContainer.style.zIndex = '1001';
+  }
+
+  removeZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.navigateToSearchResults(searchValue);
+  }
+
+  navigateToSearchResults(searchTerm: string) {
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: searchTerm ? { 'search': searchTerm } : null
+    };
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
   getAdverseEventShinyConfig(): void {
