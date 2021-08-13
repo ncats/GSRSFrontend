@@ -50,32 +50,40 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
 import { CanActivateRegisterApplicationFormComponent } from './application-form/can-activate-register-application-form.component';
 import { CanActivateUpdateApplicationFormComponent } from './application-form/can-activate-update-application-form.component';
 import { CanDeactivateApplicationFormComponent } from './application-form/can-deactivate-application-form.component';
+import { ApplicationLoadedComponent } from './application-loaded.component';
+
 // import { AppDateAdapter } from '../format-datepicker/format-datepicker';
 
 const applicationRoutes: Routes = [
   {
     path: 'browse-applications',
-    component: ApplicationsBrowseComponent
+    component: ApplicationsBrowseComponent,
+    canActivate: [ApplicationLoadedComponent],
+
   },
   {
     path: 'application/register',
     component: ApplicationFormComponent,
-    canActivate: [CanActivateRegisterApplicationFormComponent],
+    canActivate: [ApplicationLoadedComponent, CanActivateRegisterApplicationFormComponent],
     canDeactivate: [CanDeactivateApplicationFormComponent]
   },
   {
     path: 'application/:id/edit',
     component: ApplicationFormComponent,
-    canActivate: [CanActivateUpdateApplicationFormComponent],
+    canActivate: [ApplicationLoadedComponent, CanActivateUpdateApplicationFormComponent],
     canDeactivate: [CanDeactivateApplicationFormComponent]
   },
   {
     path: 'application/:id',
-    component: ApplicationDetailsComponent
+    component: ApplicationDetailsComponent,
+    canActivate: [ApplicationLoadedComponent],
+
   },
   {
     path: 'application-darrts/:appType/:appNumber',
-    component: ApplicationDarrtsDetailsComponent
+    component: ApplicationDarrtsDetailsComponent,
+    canActivate: [ApplicationLoadedComponent],
+
   }
 ];
 
@@ -135,7 +143,8 @@ const applicationRoutes: Routes = [
   ],
   providers: [
     CanActivateRegisterApplicationFormComponent,
-    CanActivateUpdateApplicationFormComponent
+    CanActivateUpdateApplicationFormComponent,
+    ApplicationLoadedComponent
  ]
 })
 
@@ -153,6 +162,7 @@ export class ApplicationModule {
         ApplicationService,
         CanActivateRegisterApplicationFormComponent,
         CanActivateUpdateApplicationFormComponent,
+        ApplicationLoadedComponent,
         CanDeactivateApplicationFormComponent
       ]
     };

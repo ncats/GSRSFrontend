@@ -27,27 +27,37 @@ import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/cl
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { ActivateClinicalTrialsComponent } from './activate-clinical-trials.component';
 
 const clinicalTrialsRoutes: Routes = [
    {
     path: 'browse-clinical-trials',
-      component: ClinicalTrialsBrowseComponent
+      component: ClinicalTrialsBrowseComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
+
     },
    {
     path: 'edit-clinical-trial/:nctNumber',
-      component: ClinicalTrialEditComponent
+      component: ClinicalTrialEditComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
+
     },
     {
     path: 'add-clinical-trial',
-      component: ClinicalTrialAddComponent
+      component: ClinicalTrialAddComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
+
     },
     {
     path: 'clinicalTrialDetails/:nctNumber/:src',
-      component: ClinicalTrialDetailsComponent
+      component: ClinicalTrialDetailsComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
+
     },
     {
     path: 'clinicalTrialEuropeDetails/:nctNumber/:src',
-      component: ClinicalTrialEuropeDetailsComponent
+      component: ClinicalTrialEuropeDetailsComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
     }
 ];
 // abcd
@@ -88,6 +98,9 @@ const clinicalTrialsRoutes: Routes = [
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
     ClinicalTrialAddComponent
+  ],
+  providers: [
+    ActivateClinicalTrialsComponent
   ]
 })
 export class ClinicalTrialsModule {
@@ -101,7 +114,8 @@ export class ClinicalTrialsModule {
     return {
       ngModule: ClinicalTrialsModule,
       providers: [
-        ClinicalTrialService
+        ClinicalTrialService,
+        ActivateClinicalTrialsComponent
       ]
     };
   }
