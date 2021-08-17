@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import * as moment from 'moment';
 import { take } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { NavigationExtras } from '@angular/router';
   templateUrl: './download-monitor.component.html',
   styleUrls: ['./download-monitor.component.scss']
 })
-export class DownloadMonitorComponent implements OnInit {
+export class DownloadMonitorComponent implements OnInit, OnDestroy {
   @Input() id: string;
   @Input() fromRoute?: boolean;
   @Output() deletedEmitter = new EventEmitter();
@@ -22,6 +22,7 @@ export class DownloadMonitorComponent implements OnInit {
   facetArray = [];
   displayOrder: string;
   type?: string;
+  killed = false;
   constructor(
     private authService: AuthService
   ) { }
@@ -30,29 +31,40 @@ export class DownloadMonitorComponent implements OnInit {
     this.refresh();
   }
 
-  refresh(spawn?: boolean) {
-    this.authService.getUpdateStatus(this.id).pipe(take(1)).subscribe( response => {
-      this.download = response;
-      if (response.originalQuery) {
-        this.processQuery(response.originalQuery);
-      }
-
-      this.exists = true;
-      if (this.download.started) {
-        this.download.startedHuman = moment(this.download.started).fromNow();
-      }
-      if (this.download.finished) {
-        this.download.finishedHuman = moment(this.download.finished).fromNow();
-      }
-        if (this.download.status === 'RUNNING' || this.download.status === 'PREPARING' || this.download.status === 'INITIALIZED') {
-          setTimeout(() => {
-            this.refresh(true);
-          }, 400);
+  refresh(stop?: boolean) {
+    if (!stop) {
+      this.authService.getUpdateStatus(this.id).pipe(take(1)).subscribe( response => {
+    //    console.log((this.exists? this.exists : 't') + '---' + this.download.status);
+        this.download = response;
+        if (response.originalQuery) {
+          this.processQuery(response.originalQuery);
         }
-    }, error => {
-      this.exists = false;
-    });
+
+        this.exists = true;
+        if (this.download.started) {
+          this.download.startedHuman = moment(this.download.started).fromNow();
+        }
+        if (this.download.finished) {
+          this.download.finishedHuman = moment(this.download.finished).fromNow();
+        }
+          if (this.download.status === 'RUNNING' || this.download.status === 'PREPARING' || this.download.status === 'INITIALIZED') {
+            if (!this.killed) {
+              setTimeout(() => {
+                this.refresh();
+              }, 1400);
+            }
+          }
+      }, error => {
+        this.exists = false;
+      });
+    }
   }
+
+  ngOnDestroy () {
+    this.killed = true;
+    this.exists = false;
+    this.refresh(true);
+   }
 
   cancel() {
     this.authService.changeDownload(this.download.cancelUrl.url).pipe(take(1)).subscribe(response => {
