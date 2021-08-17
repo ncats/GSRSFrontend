@@ -422,7 +422,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     return this.applicationService.getUpdateApplicationUrl();
   }
 
-  // appType: string, appNumber: string
   /*
   getClinicalTrialApplication() {
     let clinicalTrial: Array<any> = [];
