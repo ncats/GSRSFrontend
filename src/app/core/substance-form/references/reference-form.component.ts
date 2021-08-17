@@ -3,6 +3,7 @@ import { SubstanceReference } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
+import { ConfigService } from '../../config/config.service'
 import { UtilsService } from '../../utils/utils.service';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormReferencesService } from './substance-form-references.service';
@@ -22,10 +23,12 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   @Input() hideDelete = false;
   private overlayContainer: HTMLElement;
   deleteTimer: any;
+  disableReferenceDocumentUpload = false;
   showPrev = false;
   private subscriptions: Array<Subscription> = [];
   constructor(
     private cvService: ControlledVocabularyService,
+    private configService: ConfigService,
     private utilsService: UtilsService,
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private dialog: MatDialog,
@@ -35,7 +38,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-
+    this.disableReferenceDocumentUpload = this.configService.configData.disableReferenceDocumentUpload;
   }
 
   ngAfterViewInit() {

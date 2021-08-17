@@ -26,6 +26,7 @@ export interface Config {
     relationshipsVisualizationUri?: string;
     customToolbarComponent?: string;
     sessionExpirationWarning?: SessionExpirationWarning;
+    disableReferenceDocumentUpload?: boolean;
     pfdaBaseUrl?: string;
 }
 
