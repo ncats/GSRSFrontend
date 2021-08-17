@@ -2,10 +2,14 @@
     Success
 </h1>
 <div mat-dialog-content>
-    Update was performed.
+    {{dialogMessage}}
 </div>
-<div class="flex-row" mat-dialog-actions>
+<div class="flex-row" mat-dialog-actions *ngIf="!fileUrl">
     <button mat-flat-button color="primary" (click)="dismissDialog('continue')">Continue Editing</button>
     <button mat-flat-button color="primary" (click)="dismissDialog('browse')">Go to Browse</button>
     <button mat-flat-button color="primary" (click)="dismissDialog('view')">View Substance</button>
+</div>
+<div class="flex-row" mat-dialog-actions *ngIf="fileUrl">
+    <span class="middle-fill"></span>
+    <button mat-flat-button color="primary" (click)="dismissDialog('viewInPfda')">View Substance File</button>
 </div>

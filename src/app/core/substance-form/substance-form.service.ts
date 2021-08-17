@@ -1385,6 +1385,12 @@ this.emitDisulfideLinkUpdate();
         } else if (this.privateSubstance.substanceClass === 'mixture') {
           this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
         }
+
+        // For precisionFDA
+        if (substance.fileUrl) {
+          results.fileUrl = substance.fileUrl;
+        }
+
         this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
         this.substanceService.getSubstanceDetails(results.uuid).subscribe(resp => {
           this.privateSubstance = resp;

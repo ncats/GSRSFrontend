@@ -26,6 +26,7 @@ export interface SubstanceFormResults {
     valid?: boolean;
     validationMessages?: Array<ValidationMessage>;
     serverError?: any;
+    fileUrl?: string;	// For precisionFDA
 }
 
 export interface ValidationResults {

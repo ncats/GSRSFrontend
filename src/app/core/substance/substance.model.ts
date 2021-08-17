@@ -63,6 +63,7 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
   specifiedSubstance?: SpecifiedSubstance;
   specifiedSubstanceG3?: SpecifiedSubstanceG3;
   _matchContext?: MatchContext;
+  fileUrl?: string;	// For precisionFDA
 }
 
 export interface StructurallyDiverse extends SubstanceBase {

@@ -569,7 +569,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
-      this.openSuccessDialog('approve');
+      this.openSuccessDialog({ type: 'approve' });
       this.submissionMessage = 'Substance was approved successfully';
       this.showSubmissionMessages = true;
       this.validationResult = false;
@@ -601,7 +601,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       if (!this.id) {
         this.id = response.uuid;
       }
-      this.openSuccessDialog();
+      this.openSuccessDialog({ type: 'submit', fileUrl: response.fileUrl });
     }, (error: SubstanceFormResults) => {
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
@@ -798,8 +798,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     return old;
   }
 
-  openSuccessDialog(type?: string): void {
-    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {});
+  openSuccessDialog({ type, fileUrl }: { type?: 'submit'|'approve', fileUrl?: string }): void {
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
+      data: {
+        type: type,
+        fileUrl: fileUrl
+      }
+    });
     this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
@@ -811,6 +816,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.router.navigate(['/browse-substance']);
       } else if (response === 'view') {
         this.router.navigate(['/substances', this.id]);
+      } else if (response === 'viewInPfda') {
+        // View the submitted substance file in the user's precisionFDA home
+        window.location.assign(fileUrl);
       } else {
         this.submissionMessage = 'Substance was saved successfully!';
         if (type && type === 'approve') {
