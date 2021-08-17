@@ -96,7 +96,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
             this.id = id;
             this.gaService.sendPageView(`Application Edit`);
             this.getApplicationDetails();
-            //   this.getVocabularies();
           }
         } else {
           this.title = 'Register New Application';
@@ -104,7 +103,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
             this.gaService.sendPageView(`Application Register`);
             this.applicationService.loadApplication();
             this.application = this.applicationService.application;
-            //  this.getVocabularies();
             this.loadingService.setLoading(false);
             this.isLoading = false;
           });
