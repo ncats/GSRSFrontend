@@ -109,7 +109,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
             this.isLoading = false;
           });
         }
-      });
+      }, error => {
+        this.loadingService.setLoading(false); });
     this.subscriptions.push(routeSubscription);
   }
 
@@ -328,7 +329,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
           this.router.navigate(['/application', id, 'edit']);
         }
       }, 4000);
-    }
+    }, error => {
+      this.loadingService.setLoading(false); }
       /*
       , (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;
