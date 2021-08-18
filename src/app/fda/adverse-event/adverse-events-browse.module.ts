@@ -39,23 +39,28 @@ import { AdverseEventsPtBrowseComponent } from './adverse-events-pt-browse/adver
 import { AdverseEventsDmeBrowseComponent } from './adverse-events-dme-browse/adverse-events-dme-browse.component';
 import { AdverseEventsCvmBrowseComponent } from './adverse-events-cvm-browse/adverse-events-cvm-browse.component';
 import { AdverseEventsBrowseComponent } from './adverse-events-browse/adverse-events-browse.component';
+import { ActivateAdverseeventsComponent } from './activate-adverse-events.component';
 
 const advEventRoutes: Routes = [
   {
     path: 'browse-adverse-events',
-    component: AdverseEventsBrowseComponent
+    component: AdverseEventsBrowseComponent,
+    canActivate: [ActivateAdverseeventsComponent]
   },
   {
     path: 'adverse-event-pt-browse',
-    component: AdverseEventsPtBrowseComponent
+    component: AdverseEventsPtBrowseComponent,
+    canActivate: [ActivateAdverseeventsComponent]
   },
   {
     path: 'adverse-event-dme-browse',
-    component: AdverseEventsDmeBrowseComponent
+    component: AdverseEventsDmeBrowseComponent,
+    canActivate: [ActivateAdverseeventsComponent]
   },
   {
     path: 'adverse-event-cvm-browse',
-    component: AdverseEventsCvmBrowseComponent
+    component: AdverseEventsCvmBrowseComponent,
+    canActivate: [ActivateAdverseeventsComponent]
   }
 ];
 
@@ -102,6 +107,9 @@ const advEventRoutes: Routes = [
     AdverseEventsBrowseComponent
   ],
   exports: [
+  ],
+  providers: [
+    ActivateAdverseeventsComponent
   ]
 })
 
@@ -116,7 +124,8 @@ export class AdverseEventsBrowseModule {
     return {
       ngModule: AdverseEventsBrowseModule,
       providers: [
-        AdverseEventService
+        AdverseEventService,
+        ActivateAdverseeventsComponent
       ]
     };
   }

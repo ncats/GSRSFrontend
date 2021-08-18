@@ -68,7 +68,7 @@
     [routerLink]="['/browse-substance']" aria-label="browse substances" >Browse Substances</button>
   </div>
   <div>
-      <button class = "top-button extra-item" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="browse" (click)="increaseMenuZindex()" aria-label="main menu" *ngIf = "appId === 'fda'">
+      <button class = "top-button extra-item" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="browse" (click)="increaseMenuZindex()" aria-label="main menu" *ngIf = "loadedComponents">
           <span style = "font-size:16px;">Browse Other</span>
          <mat-icon svgIcon="chevron_down"></mat-icon>
          </button>

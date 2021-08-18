@@ -31,6 +31,7 @@ export interface Config {
     substance?: any;
     showOldLinks?: boolean;
     loadedComponents?: LoadedComponents;
+    showNameStandardizeButton?: boolean;
 }
 
 export interface LoadedComponents {

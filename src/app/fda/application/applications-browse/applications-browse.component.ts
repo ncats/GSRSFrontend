@@ -407,7 +407,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
               };
               const params = { 'total': this.totalApplications };
               this.router.navigate(['/user-downloads/', response.id]);
-            }, error => this.loadingService.setLoading(false));
+            }, error => {this.loadingService.setLoading(false); });
           }
         });
     //  }
@@ -422,7 +422,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     return this.applicationService.getUpdateApplicationUrl();
   }
 
-  // appType: string, appNumber: string
   /*
   getClinicalTrialApplication() {
     let clinicalTrial: Array<any> = [];

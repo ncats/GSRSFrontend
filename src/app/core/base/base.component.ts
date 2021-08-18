@@ -11,7 +11,7 @@ import { MatBottomSheet, MatBottomSheetRef, MatDialog } from '@angular/material'
 import { Observable, Subscription } from 'rxjs';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
-import { NavItem } from '../config/config.model';
+import { NavItem, LoadedComponents } from '../config/config.model';
 import { UtilsService } from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import * as moment from 'moment';
@@ -49,6 +49,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   canRegister = false;
   registerNav: Array<NavItem>;
   adverseEventShinyHomepageDisplay = false;
+  loadedComponents: LoadedComponents;
 
   constructor(
     private router: Router,
@@ -70,7 +71,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
     const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
       this.isAdmin = response;
     });

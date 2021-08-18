@@ -44,31 +44,37 @@ import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { CanActivateRegisterProductFormComponent } from './product-form/can-activate-register-product-form.component';
 import { CanActivateUpdateProductFormComponent } from './product-form/can-activate-update-product-form.component';
 import { CanDeactivateProductFormComponent } from './product-form/can-deactivate-product-form.component';
+import { ActivateProductsComponent } from './activate-products.component';
 
 const productRoutes: Routes = [
   {
     path: 'browse-products',
-    component: ProductsBrowseComponent
+    component: ProductsBrowseComponent,
+    canActivate: [ActivateProductsComponent]
   },
   {
     path: 'product/register',
-    component: ProductFormComponent
-  //  canActivate: [CanActivateRegisterProductFormComponent],
-  //  canDeactivate: [CanDeactivateProductFormComponent]
+    component: ProductFormComponent,
+    canActivate: [ActivateProductsComponent, CanActivateRegisterProductFormComponent],
+    canDeactivate: [CanDeactivateProductFormComponent]
   },
   {
     path: 'product/:id/edit',
-    component: ProductFormComponent
-   // canActivate: [CanActivateUpdateProductFormComponent],
-   // canDeactivate: [CanDeactivateProductFormComponent]
+    component: ProductFormComponent,
+    canActivate: [ActivateProductsComponent, CanActivateUpdateProductFormComponent],
+    canDeactivate: [CanDeactivateProductFormComponent]
   },
   {
     path: 'product/:id',
-    component: ProductDetailsComponent
+    component: ProductDetailsComponent,
+    canActivate: [ActivateProductsComponent]
+
   },
   {
     path: 'product-elist/:id',
-    component: ProductElistDetailsComponent
+    component: ProductElistDetailsComponent,
+    canActivate: [ActivateProductsComponent]
+
   }
 ];
 
@@ -126,7 +132,8 @@ const productRoutes: Routes = [
   ],
   providers: [
     CanActivateRegisterProductFormComponent,
-    CanActivateUpdateProductFormComponent
+    CanActivateUpdateProductFormComponent,
+    ActivateProductsComponent
   ]
 })
 
@@ -144,7 +151,8 @@ export class ProductModule {
         ProductService,
         CanActivateRegisterProductFormComponent,
         CanActivateUpdateProductFormComponent,
-        CanDeactivateProductFormComponent
+        CanDeactivateProductFormComponent,
+        ActivateProductsComponent
       ]
     };
   }

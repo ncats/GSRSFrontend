@@ -8,7 +8,7 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table-display';
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
-import { ConfigService } from '@gsrs-core/config';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { FacetParam } from '@gsrs-core/facets-manager';
@@ -47,7 +47,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   disableExport = false;
   etag = '';
   etagAllExport = '';
-
+  loadedComponents: LoadedComponents;
   public displayedColumns: string[] = [
     'productId',
     'productName',
@@ -72,6 +72,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   }
 
   ngOnInit() {
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       this.isAdmin = response;
     });
