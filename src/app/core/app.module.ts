@@ -80,6 +80,7 @@ import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-di
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
+import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 
 @NgModule({
   declarations: [
@@ -103,6 +104,7 @@ import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
     ExportDialogComponent,
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
+    ShowMolfileDialogComponent,
     NamesDisplayPipe
   ],
   imports: [
@@ -182,6 +184,7 @@ import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
     ExportDialogComponent,
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
+    ShowMolfileDialogComponent
   ]
 })
 export class AppModule {}
