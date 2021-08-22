@@ -19,6 +19,9 @@ import { SubstanceSummaryDynamicContent } from './substance-summary-dynamic-cont
 import {Router} from '@angular/router';
 import {Alignment} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatDialog } from '@angular/material';
+import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -38,6 +41,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   alignments?: Array<Alignment>;
   inxightLink = false;
   inxightUrl: string;
+  overlayContainer: any;
   constructor(
     public utilsService: UtilsService,
     public gaService: GoogleAnalyticsService,
@@ -46,10 +50,14 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private structureService: StructureService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private router: Router,
+    private overlayContainerService: OverlayContainer,
+    private dialog: MatDialog,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
   ngOnInit() {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       if (response) {
         this.isAdmin = response;
@@ -158,4 +166,22 @@ export class SubstanceSummaryCardComponent implements OnInit {
       }
     }
   }
+
+  openModal(templateRef) {
+
+    const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
+
+      minWidth: '40%',
+      maxWidth: '90%',
+      height: '90%',
+      data: {uuid: this.substance.uuid, approval: this.substance.approvalID}
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
+  }
+
+
 }

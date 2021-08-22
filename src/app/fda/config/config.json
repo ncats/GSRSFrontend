@@ -7,12 +7,13 @@
   "adverseEventShinyAdverseEventDisplay": "true",
   "bannerMessage": null,
   "showNameStandardizeButton": true,
+  "apiBaseUrl": "http://fdadev.ncats.io:9000/ginas/app/",
   "loadedComponents": {
-    "applications": true,
-    "products": true,
-    "clinicaltrials": true,
-    "adverseevents": true,
-    "impurities": true
+    "applications": false,
+    "products": false,
+    "clinicaltrials": false,
+    "adverseevents": false,
+    "impurities": false
     },
   "substanceDetailsCards": [
     {
@@ -743,16 +744,19 @@
   "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
   "navItems": [
     {
+      "component": "applications",
       "display": "Browse Applications",
       "path": "browse-applications",
       "order": 11
     },
     {
+      "component": "products",
       "display": "Browse Products",
       "path": "browse-products",
       "order": 12
     },
     {
+      "component": "clinicaltrials",
       "display": "Browse Clinical Trials",
       "path": "browse-clinical-trials",
       "order": 13
@@ -760,17 +764,21 @@
     {
       "display": "Register",
       "children": [
-        {
+        { 
+           "component": "applications",
           "display": "Application",
           "path": "application/register",
           "order": 200
         },
         {
+          "component": "products",
           "display": "Product",
           "path": "product/register",
           "order": 210
         },
-        {
+       {
+
+       "component": "impurities",
           "display": "Impurities",
           "path": "impurities/register",
           "order": 220

@@ -88,13 +88,34 @@ export class BaseComponent implements OnInit, OnDestroy {
       this.versionTooltipMessage = `V${this.version}`;
       this.versionTooltipMessage += ` built on ${moment(buildInfo.buildTime).utc().format('ddd MMM D YYYY HH:mm:SS z')}`;
     });
-
+    
+    
     this.navItems.forEach(item => {
       if (item.display === 'Register') {
         this.registerNav = item.children;
       }
     });
+    if (this.loadedComponents) {
+      for(let i = this.navItems.length - 1; i >= 0; i--) {
+        if (this.navItems[i].children) {
+        for (let j = this.navItems[i].children.length - 1; j >= 0; j--) {
+          if (this.navItems[i].children[j].component) {
+            if (!this.loadedComponents[this.navItems[i].children[j].component]) {
+              this.navItems[i].children.splice(j, 1);
+          }
+        }
 
+        }
+        
+    }
+    if (this.navItems[i].component) {
+      if (!this.loadedComponents[this.navItems[i].component]) {
+        this.navItems.splice(i, 1);
+
+    }
+  }
+  }
+}
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     let urlPath = this.router.routerState.snapshot.url.split('?')[0];

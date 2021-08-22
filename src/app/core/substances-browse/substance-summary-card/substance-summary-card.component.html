@@ -77,6 +77,9 @@
 
 
         <mat-menu #downloadMenu="matMenu">
+            <a mat-menu-item  (click) = "openModal(molfileDialog)" >
+                <span>Show Molfile</span>
+              </a>
           <a mat-menu-item *ngIf="substance.structure"
             (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
             <span>Download Molfile</span>

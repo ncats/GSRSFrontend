@@ -64,4 +64,5 @@ export interface NavItem {
     externalPath?: string;
     order?: number;
     children?: Array<NavItem>;
+    component?: string;
 }
