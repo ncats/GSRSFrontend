@@ -77,7 +77,7 @@
 
 
         <mat-menu #downloadMenu="matMenu">
-            <a mat-menu-item  (click) = "openModal(molfileDialog)" >
+            <a mat-menu-item  (click) = "openMolModal()" >
                 <span>Show Molfile</span>
               </a>
           <a mat-menu-item *ngIf="substance.structure"
