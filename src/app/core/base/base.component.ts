@@ -72,19 +72,10 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    // this causes memory errors in the build script
-   /* let notempty = false;
-    for (const property in this.loadedComponents) {
-      if (this.loadedComponents[property] === true) {
-        notempty = true;
-      }
-    }
-    if (!notempty) {
-      this.loadedComponents = null;
-    }*/
+   
   let notempty = false;
-    if(this.loadedComponents) { 
-      if(this.loadedComponents.applications) {
+    if (this.loadedComponents) { 
+      if (this.loadedComponents.applications) {
         notempty = true;
       } else if (this.loadedComponents.clinicaltrials) {
         notempty = true;
