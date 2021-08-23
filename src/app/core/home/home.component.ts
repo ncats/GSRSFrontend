@@ -73,6 +73,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.appId = this.configService.environment.appId;
     this.bannerMessage = this.configService.configData.bannerMessage || null;
     this.loadedComponents = this.configService.configData.loadedComponents || null;
+    let notempty = false;
+    for (const property in this.loadedComponents) {
+      if (this.loadedComponents[property] === true) {
+        notempty = true;
+      }
+    }
+    if (!notempty) {
+      this.loadedComponents = null;
+    }
+
     this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/`;
 
 

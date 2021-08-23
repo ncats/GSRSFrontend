@@ -72,6 +72,15 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
+    let notempty = false;
+    for (const property in this.loadedComponents) {
+      if (this.loadedComponents[property] === true) {
+        notempty = true;
+      }
+    }
+    if (!notempty) {
+      this.loadedComponents = null;
+    }
     const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
       this.isAdmin = response;
     });
