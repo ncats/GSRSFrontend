@@ -74,7 +74,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
    
   let notempty = false;
-    if (this.loadedComponents) { 
+    if (this.loadedComponents) {
       if (this.loadedComponents.applications) {
         notempty = true;
       } else if (this.loadedComponents.clinicaltrials) {
@@ -86,8 +86,10 @@ export class BaseComponent implements OnInit, OnDestroy {
       } else if (this.loadedComponents.products) {
         notempty = true;
       }
-    if (!notempty) {
-      this.loadedComponents = null;
+
+      if (!notempty) {
+        this.loadedComponents = null;
+      }
     }
     const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
       this.isAdmin = response;
