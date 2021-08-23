@@ -72,6 +72,7 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
+    // this causes memory errors in the build script
    /* let notempty = false;
     for (const property in this.loadedComponents) {
       if (this.loadedComponents[property] === true) {
@@ -81,6 +82,22 @@ export class BaseComponent implements OnInit, OnDestroy {
     if (!notempty) {
       this.loadedComponents = null;
     }*/
+  let notempty = false;
+    if(this.loadedComponents) { 
+      if(this.loadedComponents.applications) {
+        notempty = true;
+      } else if (this.loadedComponents.clinicaltrials) {
+        notempty = true;
+      } else if (this.loadedComponents.adverseevents) {
+        notempty = true;
+      } else if (this.loadedComponents.impurities) {
+        notempty = true;
+      } else if (this.loadedComponents.products) {
+        notempty = true;
+      }
+    if (!notempty) {
+      this.loadedComponents = null;
+    }
     const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
       this.isAdmin = response;
     });
