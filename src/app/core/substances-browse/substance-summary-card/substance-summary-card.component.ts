@@ -169,7 +169,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
 
   openMolModal() {
 
-/*    const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
+    const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
 
       minWidth: '40%',
       maxWidth: '90%',
@@ -180,7 +180,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.overlayContainer.style.zIndex = null;
-    });*/
+    });
   }
 
 
