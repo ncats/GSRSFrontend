@@ -535,7 +535,7 @@
   "contactEmail": "precisionfda-support@dnanexus.com",
   "sessionExpirationWarning": {
     "extendSessionApiUrl": "/api/update_active",
-    "maxSessionDurationMinutes": 30
+    "maxSessionDurationMinutes": 15
   },
   "disableReferenceDocumentUpload": true,
   "googleAnalyticsId": "",
