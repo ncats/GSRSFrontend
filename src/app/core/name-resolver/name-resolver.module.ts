@@ -4,10 +4,12 @@ import { NameResolverComponent } from './name-resolver.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { LoadingModule } from '../loading/loading.module';
 import { NameResolverDialogComponent } from './name-resolver-dialog.component';
+import { ExternalSiteWarningDialogComponent } from './external-site-warning-dialog/external-site-warning-dialog.component';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
@@ -17,6 +19,7 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     FormsModule,
     MatInputModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatIconModule,
     RouterModule,
     LoadingModule,
@@ -24,14 +27,16 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
   ],
   declarations: [
     NameResolverComponent,
-    NameResolverDialogComponent
+    NameResolverDialogComponent,
+    ExternalSiteWarningDialogComponent
   ],
   exports: [
     NameResolverComponent,
     NameResolverDialogComponent
   ],
   entryComponents: [
-    NameResolverDialogComponent
+    NameResolverDialogComponent,
+    ExternalSiteWarningDialogComponent
   ]
 })
 export class NameResolverModule { }

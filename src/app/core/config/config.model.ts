@@ -27,6 +27,7 @@ export interface Config {
     customToolbarComponent?: string;
     sessionExpirationWarning?: SessionExpirationWarning;
     disableReferenceDocumentUpload?: boolean;
+    externalSiteWarning?: ExternalSiteWarning;
     pfdaBaseUrl?: string;
 }
 
@@ -57,4 +58,10 @@ export interface NavItem {
 export interface SessionExpirationWarning {
     maxSessionDurationMinutes: number;
     extendSessionApiUrl: string;
+}
+
+export interface ExternalSiteWarning {
+    enabled: boolean;
+    dialogTitle: string;
+    dialogMessage: string;
 }
