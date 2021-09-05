@@ -10,3 +10,11 @@
     <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
   </div>
 </div>
+<div class = 'form-row' *ngIf = "sugars && sugars.length > 0">
+    <span class = "middle-fill"></span>
+       <div class = "form-row">
+        <button mat-button (click)="addOtherSugar()">
+          Add sugar <mat-icon svgIcon="add_circle_outline"></mat-icon>
+        </button>
+      </div>
+</div>
