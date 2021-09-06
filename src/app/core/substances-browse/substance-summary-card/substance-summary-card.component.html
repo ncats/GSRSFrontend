@@ -117,8 +117,8 @@
         <div class="substance-data substance-names" *ngIf="names && names.length">
           <div class="label">Names:</div>
           <div>
-            <div class="value space-bottom" *ngFor="let nameObject of names | namesDisplayOrder">
-              {{nameObject.name}}
+            <div class="value space-bottom" *ngFor="let nameObject of names | namesDisplayOrder" [innerHTML] = nameObject._nameHTML>
+              
               <span *ngIf="nameObject.displayName == true" matTooltip="Accepted Name">
                 <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
               </span>

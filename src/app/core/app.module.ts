@@ -80,6 +80,7 @@ import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-di
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
+import {SubstanceMolecularWeightDisplay} from '@gsrs-core/utils/substance-mw-display.pipe';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,8 @@ import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
     ExportDialogComponent,
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
-    NamesDisplayPipe
+    NamesDisplayPipe,
+    SubstanceMolecularWeightDisplay
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
