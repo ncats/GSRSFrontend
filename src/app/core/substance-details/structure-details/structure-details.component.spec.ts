@@ -4,6 +4,7 @@ import { ConfigService } from '../../config/config.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UtilsService } from '../../utils/utils.service';
 import { UtilsServiceStub } from '../../../testing/utils-service-stub';
+import { SubstanceMolecularWeightDisplay } from '../../utils/substance-mw-display.pipe';
 
 describe('StructureDetailsComponent', () => {
   let component: StructureDetailsComponent;
