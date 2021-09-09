@@ -11,9 +11,8 @@
     </div>
     <div class="name-value">
       <div class="name">Molecular Weight</div>
+      <div class="value blue-font" [innerHTML] = "substance | molecularWeightDisplay" ></div>
       <div class="value blue-font">{{structure.mwt}}</div>
-      <div class="value green-font" [innerHTML] = "substance | molecularWeightDisplay" ></div>
-        
     </div>
     <div class="name-value">
       <div class="name">Optical Activity</div>
