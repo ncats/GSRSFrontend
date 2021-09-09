@@ -5,6 +5,7 @@ import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dyn
 import {MatIconModule, MatListModule} from '@angular/material';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import {SubstanceMolecularWeightDisplay } from '@gsrs-core/utils/substance-mw-display.pipe';
 
 @NgModule({
   imports: [
@@ -13,10 +14,12 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     MatIconModule,
     ReferencesManagerModule,
     SubstanceImageModule,
-    MatListModule
+    MatListModule,
+    SubstanceMolecularWeightDisplay
   ],
   declarations: [
-    StructureDetailsComponent
+    StructureDetailsComponent,
+    SubstanceMolecularWeightDisplay
   ]
 })
 export class StructureDetailsModule { }

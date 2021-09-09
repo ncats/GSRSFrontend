@@ -10,7 +10,6 @@ import {Subject} from 'rxjs';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { SubstanceMolecularWeightDisplay } from '@gsrs-core/utils/substance-mw-display.pipe';
 
 @Component({
   selector: 'app-structure-details',
