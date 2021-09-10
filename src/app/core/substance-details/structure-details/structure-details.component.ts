@@ -32,6 +32,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   showNames = false;
   searchHref: string;
   private overlayContainer: HTMLElement;
+  mwDisplay: string;
 
   constructor(
     private utilService: UtilsService,
@@ -65,7 +66,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
         this.searchHref = 'structure-search?structure=' + this.structure.id;
       }
       this.overlayContainer = this.overlayContainerService.getContainerElement();
-
+      this.mwDisplay= this.getMwDisplay(this.substance);
   }
 
 
@@ -163,4 +164,19 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   }
 
 
+  getMwDisplay(chemicalSubstance: any): string {
+    var displayValue= "[unassigned]";
+    const mwPropertyname ="MOL_WEIGHT";
+    chemicalSubstance.properties.array.forEach(element => {
+        if(element.name.indexOf( mwPropertyname) ===0) {
+            displayValue = element.value.average != null ? element.value.average : element.value.nonNumericValue;
+            displayValue += " prop";
+        }
+        
+    });
+    if( displayValue.length ===0 && chemicalSubstance.structure !==null) {
+        displayValue=chemicalSubstance.mwt + 20000;
+    }
+     return displayValue;
+  }
 }
