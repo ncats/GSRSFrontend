@@ -165,17 +165,20 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
 
 
   getMwDisplay(chemicalSubstance: any): string {
-    var displayValue= "[unassigned]";
+    const defaultDisplayValue= '[unassigned]';
+    var displayValue= defaultDisplayValue;
     const mwPropertyname ="MOL_WEIGHT";
-    chemicalSubstance.properties.array.forEach(element => {
+    chemicalSubstance.properties.forEach(element => {
         if(element.name.indexOf( mwPropertyname) ===0) {
             displayValue = element.value.average != null ? element.value.average : element.value.nonNumericValue;
-            displayValue += " prop";
+            console.log('using property');
+            //displayValue += ' prop';
         }
         
     });
-    if( displayValue.length ===0 && chemicalSubstance.structure !==null) {
-        displayValue=chemicalSubstance.mwt + 20000;
+    if( (displayValue.length ===0 ||displayValue===defaultDisplayValue) && chemicalSubstance.structure !==null) {
+        displayValue=chemicalSubstance.structure.mwt;
+        console.log('using intrinsic MW');
     }
      return displayValue;
   }
