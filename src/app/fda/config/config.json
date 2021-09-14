@@ -7,7 +7,6 @@
   "adverseEventShinyAdverseEventDisplay": "true",
   "bannerMessage": null,
   "showNameStandardizeButton": true,
-  "apiBaseUrl": "http://fdadev.ncats.io:9000/ginas/app/",
   "loadedComponents": {
     "applications": false,
     "products": false,

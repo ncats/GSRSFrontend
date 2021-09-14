@@ -11,7 +11,7 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <app-cv-input domain = "PHYSICAL_MODIFICATION_ROLE" class = "type" title = "Modification Role" (valueChange) = "mod.physicalModificationRole = $event" [model] = "mod.physicalModificationRole"></app-cv-input>
+    <app-cv-input domain = "PHYSICAL_MODIFICATION_ROLE" class = "type" title = "Modification Role" (valueChange) = "updateRole($event" [model] = "mod.physicalModificationRole"></app-cv-input>
     <div class = 'amount'>
       <div class = "label amt-label">
         Parameters
@@ -126,5 +126,8 @@
   </div>
   <div class = "form-row">
     <app-audit-info [source] = "mod"></app-audit-info>
+  </div>
+  <div class = "form-row invalid-note" *ngIf = "invalid">
+    <div>*physical modifications require a modification role or parameter with a modification type
   </div>
 </div>

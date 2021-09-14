@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, HostListener} from '@angular/core';
 import {PhysicalModification, SubstanceAmount, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {Subscription} from 'rxjs';
@@ -24,6 +24,51 @@ export class PhysicalModificationFormComponent implements OnInit {
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
   siteDisplay: string;
+  invalid = false;
+
+  @HostListener('focusout') onFocusout() {
+    if (!this.privateMod.physicalModificationRole) {
+      let present = false;
+      if (this.privateMod.parameters){
+      this.privateMod.parameters.forEach (param => {
+        if (param.amount.type) {
+          present = true;
+        }
+      });
+      if (!present) {
+        this.invalid = true;
+      } else {
+        this.invalid = false;
+      }
+    } else {
+      this.invalid = true;
+    }
+    } else {
+      this.invalid = false;
+    }
+  }
+
+  @HostListener('focusin') onFocusin() {
+    if (!this.privateMod.physicalModificationRole) {
+      let present = false;
+      if (this.privateMod.parameters){
+      this.privateMod.parameters.forEach (param => {
+        if (param.amount.type) {
+          present = true;
+        }
+      });
+      if (!present) {
+        this.invalid = true;
+      } else {
+        this.invalid = false;
+      }
+    } else {
+      this.invalid = true;
+    }
+    } else {
+      this.invalid = false;
+    }
+  }
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -69,6 +114,28 @@ export class PhysicalModificationFormComponent implements OnInit {
     delete this.privateMod.$$deletedCode;
   }
 
+  updateRequired(): void {
+    if (!this.privateMod.physicalModificationRole) {
+      let present = false;
+      if (this.privateMod.parameters){
+      this.privateMod.parameters.forEach (param => {
+        if (param.amount.type) {
+          present = true;
+        }
+      });
+      if (!present) {
+        this.invalid = true;
+      } else {
+        this.invalid = false;
+      }
+    } else {
+      this.invalid = true;
+    }
+    } else {
+      this.invalid = false;
+    }
+  }
+
   updateAccess(access: Array<string>): void {
     this.mod.access = access;
   }
@@ -90,6 +157,11 @@ export class PhysicalModificationFormComponent implements OnInit {
       }
     });
     this.subscriptions.push(dialogSubscription);
+  }
+
+  updateRole(event: any) {
+    this.mod.physicalModificationRole = event;
+    this.updateRequired();
   }
 
   openPropertyParameter(parameter?: any): void {
@@ -121,6 +193,7 @@ export class PhysicalModificationFormComponent implements OnInit {
             parameter[key] = newParameter[key];
           });
         }
+        this.updateRequired();
       }
     });
   }
