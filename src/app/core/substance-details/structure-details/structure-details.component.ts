@@ -10,6 +10,7 @@ import {Subject} from 'rxjs';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-structure-details',
@@ -40,7 +41,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     public gaService: GoogleAnalyticsService,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private configService: ConfigService
   ) {
     super();
   }
@@ -167,7 +169,12 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   getMwDisplay(chemicalSubstance: any): string {
     const defaultDisplayValue= '[unassigned]';
     var displayValue= defaultDisplayValue;
-    const mwPropertyname ="MOL_WEIGHT";
+    if( this.configService.configData && this.configService.configData.molecularWeightPropertyName)  {
+
+    }
+    const mwPropertyname =( this.configService.configData && this.configService.configData.molecularWeightPropertyName) ? 
+      this.configService.configData.molecularWeightPropertyName : 'MOL_WEIGHT (calc)';
+    console.log('mwPropertyname: ' + mwPropertyname);
     chemicalSubstance.properties.forEach(element => {
         if(element.name.indexOf( mwPropertyname) ===0) {
             displayValue = element.value.average != null ? element.value.average : element.value.nonNumericValue;

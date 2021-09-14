@@ -24,6 +24,7 @@ export interface Config {
     adverseEventShinyAdverseEventURL?: string;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
+    molecularWeightPropertyName?: string;
 }
 
 export interface SubstanceDetailsCard {
