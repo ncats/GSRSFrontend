@@ -51,7 +51,7 @@ export class PhysicalModificationFormComponent implements OnInit {
   @HostListener('focusin') onFocusin() {
     if (!this.privateMod.physicalModificationRole) {
       let present = false;
-      if (this.privateMod.parameters){
+      if (this.privateMod.parameters) {
       this.privateMod.parameters.forEach (param => {
         if (param.amount.type) {
           present = true;
