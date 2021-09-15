@@ -25,9 +25,9 @@
       <a mat-menu-item [routerLink]="['/guided-search']">
         Guided Search
       </a>
-      <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf="appId === 'fda'">
+      <!--a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf="appId === 'fda'">
         Advanced Search
-      </a>
+      </a-->
       <div *ngFor="let navItem of navItems">
         <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
           {{navItem.display}}

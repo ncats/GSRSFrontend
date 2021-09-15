@@ -1,6 +1,6 @@
 {
-  "version": "2.8 RC1",
-  "contactEmail": "GSRSSupport@fda.hhs.gov",
+  "version": "2.7.1 USP",
+  "contactEmail": "mitch.miller@thinkscience.us",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
   "adverseEventShinySubstanceNameDisplay": "true",
@@ -9,13 +9,6 @@
     {
       "card": "substance-overview",
       "title": "overview"
-    },
-    {
-      "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events",
-      "filters": [
-        {}
-      ]
     },
     {
       "card": "substance-primary-definition",
@@ -264,16 +257,6 @@
             "CONSTITUENT",
             "SUB_CONCEPT->SUBSTANCE"
           ]
-        }
-      ]
-    },
-    {
-      "card": "substance-relationships-visualization",
-      "title": "Relationships Visualization",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
         }
       ]
     },
@@ -636,21 +619,6 @@
   "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
   "navItems": [
     {
-      "display": "Browse Applications",
-      "path": "browse-applications",
-      "order": 11
-    },
-    {
-      "display": "Browse Products",
-      "path": "browse-products",
-      "order": 12
-    },
-    {
-      "display": "Browse Clinical Trials",
-      "path": "browse-clinical-trials",
-      "order": 13
-    },
-    {
       "display": "Register",
       "children": [
         {
@@ -698,5 +666,6 @@
     "root_codes_BDNUM",
     "root_codes_CAS",
     "root_codes_ECHA\\ \\(EC\\/EINECS\\)"
-  ]
+  ],
+  "molecularWeightPropertyName" : "MOL_WEIGHT (calc)"
 }

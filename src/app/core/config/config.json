@@ -1,5 +1,5 @@
 {
-  "version": "2.7.1",
+  "version": "2.7.1 USP",
   "substanceDetailsCards": [
     {
       "card": "substance-overview",
@@ -531,5 +531,6 @@
     "root_codes_BDNUM",
     "root_codes_CAS",
     "root_codes_ECHA\\ \\(EC\/EINECS\\)"
-  ]
+  ],
+  "molecularWeightPropertyName" : "MOL_WEIGHT (calc)"
 }
