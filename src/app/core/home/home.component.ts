@@ -73,6 +73,36 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.appId = this.configService.environment.appId;
     this.bannerMessage = this.configService.configData.bannerMessage || null;
     this.loadedComponents = this.configService.configData.loadedComponents || null;
+    // this code cause memory errors in the build process
+    /*let notempty = false;
+    for (const property in this.loadedComponents) {
+      if (this.loadedComponents[property] === true) {
+        notempty = true;
+      }
+    }
+    if (!notempty) {
+      this.loadedComponents = null;
+    }*/
+
+    let notempty = false;
+    if (this.loadedComponents) {
+      if (this.loadedComponents.applications) {
+        notempty = true;
+      } else if (this.loadedComponents.clinicaltrials) {
+        notempty = true;
+      } else if (this.loadedComponents.adverseevents) {
+        notempty = true;
+      } else if (this.loadedComponents.impurities) {
+        notempty = true;
+      } else if (this.loadedComponents.products) {
+        notempty = true;
+      }
+
+      if (!notempty) {
+        this.loadedComponents = null;
+      }
+    }
+
     this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/`;
 
 

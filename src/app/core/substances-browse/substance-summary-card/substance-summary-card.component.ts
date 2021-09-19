@@ -167,7 +167,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
     }
   }
 
-  openModal(templateRef) {
+  openMolModal() {
 
     const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
 

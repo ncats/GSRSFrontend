@@ -21,3 +21,12 @@
 <mat-paginator *ngIf="relationships && relationships.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true"
   (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
+
+
+
+<div *ngIf = "relationships && relationships.length > 0" style = "display: flex;">
+    <span class="middle-fill"></span>
+    <button mat-button (click)="addRelationship()">
+        Add relationship <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
+  </div>

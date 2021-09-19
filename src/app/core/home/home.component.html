@@ -80,9 +80,9 @@
                                     <a mat-list-item routerLink="/browse-adverse-events">
                                       <mat-icon matListIcon svgIcon="glasses"></mat-icon>
                                       Browse Adverse Events
-                                    </a>
-                                </span>
-                              <div *ngIf="adverseEventShinyHomepageDisplay === true">
+                                    </a>Other
+                                </span>Other
+                              <div *ngIf="adverseEventShOtherinyHomepageDisplay === true">
                                 <mat-divider></mat-divider>
                                 <a mat-list-item [href]="adverseEventShinyHomepageURL" target="_blank">
                                   <mat-icon matListIcon svgIcon="glasses"></mat-icon>
@@ -152,7 +152,7 @@
 
                   </ng-container>
                 </mat-expansion-panel>
-                <mat-expansion-panel
+                <mat-expansion-panel  *ngIf="loadedComponents" 
                 [expanded]="false">
                 <mat-expansion-panel-header>
                   <mat-panel-title  class = "panel-header">

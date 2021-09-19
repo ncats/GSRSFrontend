@@ -58,5 +58,4 @@ export class SubstanceFormMonomersCardComponent extends SubstanceCardBaseFiltere
   deleteMonomer(monomer: Monomer): void {
     this.substanceFormMonomersService.deleteSubstanceMonomer(monomer);
   }
-
 }
