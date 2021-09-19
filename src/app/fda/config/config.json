@@ -7,13 +7,12 @@
   "adverseEventShinyAdverseEventDisplay": "true",
   "bannerMessage": null,
   "showNameStandardizeButton": true,
-  "apiBaseUrl": "http://fdadev.ncats.io:9000/ginas/app/",
   "loadedComponents": {
-    "applications": false,
-    "products": false,
-    "clinicaltrials": false,
-    "adverseevents": false,
-    "impurities": false
+    "applications": true,
+    "products": true,
+    "clinicaltrials": true,
+    "adverseevents": true,
+    "impurities": true
     },
   "substanceDetailsCards": [
     {
@@ -764,7 +763,7 @@
     {
       "display": "Register",
       "children": [
-        { 
+        {
            "component": "applications",
           "display": "Application",
           "path": "application/register",
