@@ -408,7 +408,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
   }
 
   getApiExportUrl(etag: string, extension: string): string {
-    return this.adverseEventService.getApiExportUrlPt(etag, extension);
+    return this.adverseEventService.getApiExportUrlDme(etag, extension);
   }
 
 }

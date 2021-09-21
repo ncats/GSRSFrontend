@@ -34,13 +34,13 @@ const impurityRoutes: Routes = [
     path: 'impurities/register',
     component: ImpuritiesFormComponent,
     canActivate: [ActivateImpuritiesComponent, CanActivateRegisterImpuritiesFormComponent],
-    canDeactivate: [CanActivateUpdateImpuritiesFormComponent]
+    canDeactivate: [CanDeactivateImpuritiesFormComponent]
   },
   {
     path: 'impurities/:id/edit',
     component: ImpuritiesFormComponent,
     canActivate: [ActivateImpuritiesComponent, CanActivateUpdateImpuritiesFormComponent],
-    canDeactivate: [CanActivateUpdateImpuritiesFormComponent]
+    canDeactivate: [CanDeactivateImpuritiesFormComponent]
   },
   {
     path: 'impurities/:id',
