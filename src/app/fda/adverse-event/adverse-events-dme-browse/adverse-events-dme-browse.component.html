@@ -1,4 +1,4 @@
-<mat-sidenav-container class="margintop90px">
+<mat-sidenav-container autosize="true" class="margintop90px sidenav-container-size">
   <mat-sidenav #dme mode="side" opened>
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
       [rawFacets]="rawFacets" configName="adverseeventdme" includeFacetSearch="true">
