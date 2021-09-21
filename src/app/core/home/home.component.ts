@@ -28,6 +28,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isCollapsed = true;
   hasBackdrop = false;
   bannerMessage?: string;
+  usefulLinks?: Array<any>;
+  excelCard?: any;
   
   
   // these may be necessary due to a strange quirk
@@ -83,6 +85,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (!notempty) {
       this.loadedComponents = null;
     }*/
+
+
+    
+//this is to set the groundwork for having all the 'useful links be dynamically rendered. Right now we are only doing this for excel tools through.
+   
+    if (this.configService.configData.usefulLinks) {
+      this.configService.configData.usefulLinks.forEach (link => {
+        if (link.title === 'GSRSFind Excel tools') {
+          this.excelCard = link;
+        }
+      });
+    }
 
     let notempty = false;
     if (this.loadedComponents) {

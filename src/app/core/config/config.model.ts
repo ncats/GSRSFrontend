@@ -32,6 +32,8 @@ export interface Config {
     showOldLinks?: boolean;
     loadedComponents?: LoadedComponents;
     showNameStandardizeButton?: boolean;
+    molWeightRounding?: number;
+    usefulLinks?: Array<UsefulLink>;
 }
 
 export interface LoadedComponents {
@@ -65,4 +67,13 @@ export interface NavItem {
     order?: number;
     children?: Array<NavItem>;
     component?: string;
+}
+
+export interface UsefulLink {
+    title: string;
+    description: string;
+    href: string;
+    imageFile: string;
+    linkHref: string;
+    templateDescription?: string;
 }

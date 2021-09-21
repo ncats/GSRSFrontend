@@ -348,7 +348,7 @@
     <h2 class = "home" style = "padding-top:15px;">Helpful Resources</h2>
   </mat-card>
     <div class = "row3">
-      <mat-card class="temprow left-link" id="resource1">
+      <mat-card class="temprow left-link" id="resource1" *ngIf = "!excelCard">
 
           <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(excel)" >GSRSFind Excel tools</a></h3>
           <div class = "img-container">
@@ -358,6 +358,14 @@
             GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.
             </div>
           </mat-card>
+
+          <mat-card class="temprow left-link" id="resource1" *ngIf = "excelCard">
+            <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(excel)" >{{excelCard.title? excelCard.title : 'no tile'}}</a></h3>
+            <div class = "img-container">
+              <img class = "test" src = "{{imageLoc}}{{excelCard.imageFile}}" />
+           </div>
+              <div class = "resource-desc" [innerHtml] = "excelCard.description">  </div>
+            </mat-card>
 
           <mat-card class="temprow right-link" id="resource2">
           <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(guide)" >User Registration Guide</a></h3>
@@ -412,7 +420,7 @@
 
   <ng-template #excel>
       <div mat-dialog-content class = "button-modal">
-          <a class = "modal-button" href = "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip">Click to download GSRSFind Excel tools.zip</a>
+          <a class = "modal-button" href = "{{excelCard.href}}">{{excelCard.templateDescription}}</a>
       </div>
       <div mat-dialog-actions>
           <span class="middle-fill"></span>
