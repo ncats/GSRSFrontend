@@ -38,7 +38,7 @@ export class AdvancedSearchService extends BaseHttpService {
   }
 
   getApplicationCount(): Observable<number> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/@count`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/application/@count`;
     return this.http.get<number>(url);
   }
 
@@ -87,7 +87,7 @@ export class AdvancedSearchService extends BaseHttpService {
     }
     params = params.appendFacetParams(facets);
 
-    const url = `${this.apiBaseUrl}applicationssrs/search`;
+    const url = `${this.apiBaseUrl}application/search`;
     const options = {
       params: params
     };
