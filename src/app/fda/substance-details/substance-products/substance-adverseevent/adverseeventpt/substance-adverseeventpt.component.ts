@@ -49,7 +49,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   // FAERS DASHBOARD
   FAERSDashboardAdverseEventUrl: string;
   FAERSDashboardSubstanceName: string;
-  FAERSDashboardSearchTerm = "/select/Search%20Term/"; // GSRS Adverse Event 'Substance Name'
+  FAERSDashboardSearchTerm = "/select/Search%20Term/"; // FAERS Adverse Event 'Substance Name'
   FAERSDashboardReactionTerm = "/select/Reaction%20Term/"; // GSRS Adverse Event 'PT Term'
   FAERSDashboardReactionGroup = "/select/Reaction%20Group/"; // GSRS Adverse Event 'Prim SOC'
 
