@@ -289,9 +289,13 @@ window.open( url, '_blank');
     if (!this.toggle[this.subunit.subunitIndex]) {
 
       const toArray = this.subunit.sequence.split('');
-      const cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      let cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
       if (this.toggle[this.subunit.subunitIndex] === false) {
 
+      }
+      if (this.substanceType !== 'protein') {
+          //non-proteins should have sequences be upper-case always
+          cleanedSequence = cleanedSequence.toUpperCase();
       }
       if (cleanedSequence !== this.subunit.sequence) {
         this.subunit.sequence = cleanedSequence;
@@ -300,7 +304,11 @@ window.open( url, '_blank');
       }
     } else {
       const toArray = this.editSequence.replace(/\s/g, '').split('');
-      const cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      let cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      if (this.substanceType !== 'protein') {
+          //non-proteins should have sequences be upper-case always
+          cleanedSequence = cleanedSequence.toUpperCase();
+      }
       this.editSequence = this.preformatSeq(cleanedSequence);
     }
   }
