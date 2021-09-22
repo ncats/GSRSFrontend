@@ -263,6 +263,17 @@ export class AdverseEventService extends BaseHttpService {
 
   }
 
+  getFaersDashboardRecordByName(
+    name: string
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithEntityPtContext + 'faersdashboard/' + name;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   getApiExportUrlPt(etag: string, extension: string): string {
     const url = this.apiBaseUrlWithEntityPtContext + 'export/' + etag + '/' + extension;
     return url;

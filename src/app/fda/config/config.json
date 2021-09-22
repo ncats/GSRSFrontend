@@ -5,6 +5,7 @@
   "adverseEventShinyHomepageDisplay": "true",
   "adverseEventShinySubstanceNameDisplay": "true",
   "adverseEventShinyAdverseEventDisplay": "true",
+  "FAERSDashboardAdverseEventUrl": "https://fis.fda.gov/sense/app/d10be6bb-494e-4cd2-82e4-0135608ddc13/sheet/45beeb74-30ab-46be-8267-5756582633b4/state/analysis",
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "loadedComponents": {

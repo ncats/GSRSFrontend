@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material';
@@ -11,6 +11,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { AuthService } from '@gsrs-core/auth';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-adverseeventpt',
@@ -18,7 +19,7 @@ import { AuthService } from '@gsrs-core/auth';
   styleUrls: ['./substance-adverseeventpt.component.scss']
 })
 
-export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
   // advPtCount = 0;
   adverseEventCount = 0;
@@ -32,6 +33,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   disableExport = false;
   etag = '';
   loadingStatus = '';
+  private subscriptions: Array<Subscription> = [];
 
   @Input() bdnum: string;
   @Input() substanceName: string;
@@ -43,6 +45,13 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   adverseEventShinyAdverseEventURL: string;
   adverseEventShinySubstanceNameURLWithParam: string;
   adverseEventShinyAdverseEventURLWithParam: string;
+
+  // FAERS DASHBOARD
+  FAERSDashboardAdverseEventUrl: string;
+  FAERSDashboardSubstanceName: string;
+  FAERSDashboardSearchTerm = "/select/Search%20Term/"; // GSRS Adverse Event 'Substance Name'
+  FAERSDashboardReactionTerm = "/select/Reaction%20Term/"; // GSRS Adverse Event 'PT Term'
+  FAERSDashboardReactionGroup = "/select/Reaction%20Group/"; // GSRS Adverse Event 'Prim SOC'
 
   filtered: Array<any>;
   displayedColumns: string[] = [
@@ -67,11 +76,21 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
   ngOnInit() {
     if (this.bdnum) {
-    //  this.getSubstanceAdverseEventPt();
       this.getAdverseEventPt();
+
+      // FAERS DASHBOARD
+      this.getFaersDashboardUrl();
+      this.getFaersDashboardRecordByName();
+
       this.adverseEventPtListExportUrl();
       this.getAdverseEventShinyConfig();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   getAdverseEventPt(pageEvent?: PageEvent) {
@@ -97,8 +116,8 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
       }, () => {
         subscription.unsubscribe();
       });
-      this.loadingStatus = '';
-      this.showSpinner = false;  // Stop progress spinner
+    this.loadingStatus = '';
+    this.showSpinner = false;  // Stop progress spinner
   }
 
   /*
@@ -134,36 +153,63 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-   //   if (this.authService.getUser() !== '') {
-        const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': 'substanceAdverseEventPt' }
-        });
-        // this.overlayContainer.style.zIndex = '1002';
-        dialogReference.afterClosed().subscribe(name => {
-          // this.overlayContainer.style.zIndex = null;
-          if (name && name !== '') {
-            this.loadingService.setLoading(true);
-            const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
-              this.loadingService.setLoading(false);
-              const navigationExtras: NavigationExtras = {
-                queryParams: {
-                  totalSub: this.adverseEventCount
-                }
-              };
-              const params = { 'total': this.adverseEventCount };
-              this.router.navigate(['/user-downloads/', response.id]);
-            }, error => this.loadingService.setLoading(false));
-          }
-        });
-     // }
+      //   if (this.authService.getUser() !== '') {
+      const dialogReference = this.dialog.open(ExportDialogComponent, {
+        height: '215x',
+        width: '550px',
+        data: { 'extension': extension, 'type': 'substanceAdverseEventPt' }
+      });
+      // this.overlayContainer.style.zIndex = '1002';
+      dialogReference.afterClosed().subscribe(name => {
+        // this.overlayContainer.style.zIndex = null;
+        if (name && name !== '') {
+          this.loadingService.setLoading(true);
+          const fullname = name + '.' + extension;
+          this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.loadingService.setLoading(false);
+            const navigationExtras: NavigationExtras = {
+              queryParams: {
+                totalSub: this.adverseEventCount
+              }
+            };
+            const params = { 'total': this.adverseEventCount };
+            this.router.navigate(['/user-downloads/', response.id]);
+          }, error => this.loadingService.setLoading(false));
+        }
+      });
+      // }
     }
   }
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.adverseEventService.getApiExportUrlPt(etag, extension);
+  }
+
+  getFaersDashboardRecordByName(): void {
+    // Get FAERS Name from database table that contains 'P' and 'G' in name.
+    // Example: Acetazolamide (G) instead of GSRS name Acetazolamide
+    const faersNameSubscription = this.adverseEventService.getFaersDashboardRecordByName(this.substanceName).subscribe(results => {
+      if (results) {
+        if (results.name) {
+          this.FAERSDashboardSubstanceName = results.name;
+          this.FAERSDashboardAdverseEventUrl = this.FAERSDashboardAdverseEventUrl +  results.name + this.FAERSDashboardReactionTerm;
+        }
+      }
+    });
+    this.subscriptions.push(faersNameSubscription);
+  }
+
+  getFaersDashboardUrl(): void {
+    if (this.configService.configData) {
+      if (this.configService.configData.FAERSDashboardAdverseEventUrl
+        && this.configService.configData.FAERSDashboardAdverseEventUrl !== null) {
+        const faersUrlConfig = this.configService.configData.FAERSDashboardAdverseEventUrl;
+
+        // FULL FAERS DASHBOARD URL
+        // faersUrl + /select/Search%20Term/ + FaersName + /select/Reaction%20Term/ + ptTerm + /select/Reaction%20Group/ + primSoc;
+        this.FAERSDashboardAdverseEventUrl = faersUrlConfig + this.FAERSDashboardSearchTerm;
+      }
+    }
   }
 
   getAdverseEventShinyConfig(): void {
@@ -175,7 +221,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
         this.adverseEventShinySubstanceNameDisplay = JSON.parse(this.configService.configData.adverseEventShinySubstanceNameDisplay);
       }
       if (this.configService.configData.adverseEventShinySubstanceNameURL
-         && this.configService.configData.adverseEventShinySubstanceNameURL !== null) {
+        && this.configService.configData.adverseEventShinySubstanceNameURL !== null) {
         this.adverseEventShinySubstanceNameURL = this.configService.configData.adverseEventShinySubstanceNameURL;
         this.adverseEventShinySubstanceNameURLWithParam = this.adverseEventShinySubstanceNameURL + decodeURIComponent(this.substanceName);
       }
