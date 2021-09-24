@@ -238,10 +238,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngAfterViewInit(): void {
 
-
-    
-
-
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
 
@@ -884,4 +880,7 @@ mergeConcept() {
     this.overlayContainer.style.zIndex = '1000';
   }
 
+  fixLink(link: string) {
+    return this.substanceService.oldLinkFix(link);
+  }
 }

@@ -88,8 +88,8 @@
         <div class="validation-message" *ngFor="let message of validationMessages; index as i">
           <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
             {{message.messageType}}</div>
-          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br />
-              <a [href]="link.href.replace('ginas/app/substance','ginas/app/beta/substances')" class="internal-link"
+          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br />{{link.href}}{{link.text}}
+              <a [href]="fixLink(link.href)" class="internal-link"
                 target="_blank">{{link.text}}</a></span>
           </div>
           <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
