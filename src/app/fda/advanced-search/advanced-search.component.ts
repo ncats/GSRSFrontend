@@ -222,8 +222,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.getBrowseApplicationDetails();
     this.getBrowseProductDetails();
     this.getBrowseAdverseEventPtDetails();
- //   this.getBrowseAdverseEventDmeDetails();
- //   this.getBrowseAdverseEventCvmDetails();
+    this.getBrowseAdverseEventDmeDetails();
+    this.getBrowseAdverseEventCvmDetails();
 
     this.loadFileName();
 
@@ -463,7 +463,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.facetKey = 'adverseeventpt';
       //  this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
       //  this.rawFacets = this.rawFacetsAdverseEventDme;
-      //  this.facetKey = 'adverseeventDme';
+     //   this.facetKey = 'adverseeventDme';
        // this.rawFacets.splice(0, this.rawFacets.length);
       }
     }

@@ -21,7 +21,7 @@ export class CanActivateUpdateApplicationFormComponent implements CanActivate {
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
         return new Observable(observer => {
             const loadedComponents = this.configService.configData.loadedComponents || null;
-            if( loadedComponents && loadedComponents.applications){
+            if (loadedComponents && loadedComponents.applications) {
             this.authService.getAuth().pipe(take(1)).subscribe(auth => {
                 if (auth) {
                     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {

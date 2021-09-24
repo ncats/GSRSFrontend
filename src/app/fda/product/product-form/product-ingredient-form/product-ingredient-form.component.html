@@ -62,7 +62,8 @@
             </div>
           </div>
           <div *ngIf="ingredient.substanceKey">
-            <span class="colororange">{{ingredient.substanceKey}}</span><span class="colorgray font11px"> ({{substanceKeyType}})</span>
+            <span class="colororange">{{ingredient.substanceKey}}</span><span class="colorgray font11px">
+              ({{ingredient.substanceKeyType}})</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName()"
               matTooltip="Delete Ingredient Name {{prodIngredientIndex + 1}}">
@@ -98,7 +99,7 @@
 
           <div *ngIf="ingredient.basisOfStrengthSubstanceKey">
             <span class="colororange">{{ingredient.basisOfStrengthSubstanceKey}}</span><span class="colorgray font11px">
-              ({{substanceKeyType}})</span>
+              ({{ingredient.basisOfStrengthSubstanceKeyType}})</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteBasisOfStrength()"
               matTooltip="Delete Basis of Strength {{prodIngredientIndex + 1}}">
