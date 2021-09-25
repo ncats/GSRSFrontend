@@ -11,6 +11,9 @@
     <!-- Register and View Product buttons -->
     <span *ngIf="product">
       <span *ngIf="product.id">
+        <button mat-flat-button color="primary" [routerLink]="['/browse-products']" matTooltip='Browse Product'>
+          Browse Product
+        </button>&nbsp;&nbsp;&nbsp;
         <button mat-flat-button color="primary" [routerLink]="['/product/register']"
           matTooltip='Register a New Product'>
           Register New Product
