@@ -149,8 +149,8 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'name': return this.utilsService.compare(a.name.toUpperCase(), b.name.toUpperCase(), isAsc);
-        case 'type': return this.utilsService.compare(a.type, b.type, isAsc);
+        case 'name': return this.utilsService.compare(a.name ? a.name.toUpperCase() : '', b.name ? b.name.toUpperCase() : '', isAsc);
+        case 'type': return this.utilsService.compare(a.type ? a.type : '', b.type ? b.type : '', isAsc);
         case 'language': return this.utilsService.compare(this.getLanguages(a), this.getLanguages(b), isAsc);
         default: return 0;
       }
