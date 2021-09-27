@@ -309,9 +309,7 @@ export class ApplicationService extends BaseHttpService {
     appType: string, appNumber: string
   ): Observable<any> {
     const appTypeNumber = appType + appNumber;
-    alert(appTypeNumber);
     const url = this.apiBaseUrlWithApplicationDarrtsEntityUrl + appTypeNumber;
-    alert(url);
    // const url = this.baseUrl + 'applicationDarrtsDetails2?appType=' + appType + '&appNumber=' + appNumber;
     return this.http.get<any>(url).pipe(
       map(results => {
