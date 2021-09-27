@@ -684,6 +684,12 @@
         "Company Country",
         "Country Code",
         "Provenance"
+      ],
+      "admin": [
+        "Record Created By",
+        "Record Last Edited By",
+        "Record Create Date",
+        "Record Last Edited"
       ]
     },
     "ctclinicaltrial": {

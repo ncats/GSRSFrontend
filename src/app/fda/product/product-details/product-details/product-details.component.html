@@ -220,12 +220,13 @@
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
-              Product Code:/Product Type:
+              Product ID/Code:<br>
+              Product Type:
             </div>
             <div class="row-property-value">
               <div *ngFor="let prodCode of product.productCodeList; let indexCode = index">
-                <b>Product Code:</b>&nbsp;{{prodCode.productCode}}&nbsp;&nbsp;
-                <b>Product Type:</b>&nbsp;&nbsp;{{prodCode.productCodeType}}<br><br>
+                <span class="font14px"><b>{{prodCode.productCode}}</b></span><br>
+                {{prodCode.productCodeType}}<br>
               </div>
             </div>
           </div>
