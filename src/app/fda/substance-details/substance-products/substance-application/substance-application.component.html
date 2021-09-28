@@ -13,7 +13,7 @@
       <span class="colorred">{{loadingStatus}}</span>
       &nbsp;&nbsp;&nbsp;
       <!-- Export Button -->
-      <span class="export">
+      <span class="export" *ngIf="isAdmin">
         <button matTooltip="Export Search Results" mat-button (click)="export()"
           class="mat-button export-button mat-raised-button">
           <mat-icon svgIcon="get_app"></mat-icon> Export All Applications
@@ -68,6 +68,7 @@
 
             <div *ngFor="let prod of application.applicationProductList; let i = index">
               <!-- Product Names-->
+               {{prod.id}}
               <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
                 {{prodName.productName}}
               </div>
