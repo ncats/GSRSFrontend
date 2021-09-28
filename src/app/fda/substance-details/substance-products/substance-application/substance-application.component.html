@@ -68,7 +68,6 @@
 
             <div *ngFor="let prod of application.applicationProductList; let i = index">
               <!-- Product Names-->
-               {{prod.id}}
               <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
                 {{prodName.productName}}
               </div>
