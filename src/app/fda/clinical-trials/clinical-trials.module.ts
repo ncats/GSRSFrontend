@@ -27,6 +27,7 @@ import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/cl
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { MatMenuModule } from '@angular/material/menu';
 
 const clinicalTrialsRoutes: Routes = [
    {
@@ -72,7 +73,8 @@ const clinicalTrialsRoutes: Routes = [
     RouterModule.forChild(clinicalTrialsRoutes),
     MatProgressBarModule,
     SubstanceImageModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    MatMenuModule
   ],
   declarations: [
     MiniSearchComponent,

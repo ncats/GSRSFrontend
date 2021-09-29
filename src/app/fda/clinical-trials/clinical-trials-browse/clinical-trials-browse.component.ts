@@ -110,8 +110,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      // __alex__ turning on for gsrs3 testing
-      this.isAdmin = true;
+      // testing
+      // this.isAdmin = true;
       // this.showAudit = this.authService.hasRoles('admin');
        if (this.isAdmin) {
         this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated', 'delete'];
@@ -138,7 +138,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
-    // this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   ngOnDestroy() {

@@ -4,7 +4,6 @@ import { Observable, throwError, of } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { ClinicalTrial } from './clinical-trial.model';
-import { BdnumNameAll } from './clinical-trial.model';
 import { PagingResponse } from '@gsrs-core/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
@@ -14,7 +13,9 @@ import {Facet, FacetQueryResponse, FacetHttpParams} from '@gsrs-core/facets-mana
 export class ClinicalTrialService extends BaseHttpService {
 
   totalRecords: 0;
-  ncatsApiBaseUrl = 'https://gsrs.ncats.nih.gov/ginas/app/api/v1/';
+  // ncatsApiBaseUrl = 'https://gsrs.ncats.nih.gov/ginas/app/api/v1/';
+  // ncatsApiBaseUrl = 'http://fdslv01592:9000/ginas/app/api/v1/';
+  // ncatsApiBaseUrl = 'http://localhost:8080/api/v1/';
 
   constructor(
     public http: HttpClient,
@@ -61,7 +62,7 @@ export class ClinicalTrialService extends BaseHttpService {
   ): Observable<PagingResponse<ClinicalTrial>> {
     let params = new FacetHttpParams();
     let url = this.apiBaseUrl;
-    // /search
+    // search
     url += 'clinicaltrialus/search';
     if (!searchTerm) { searchTerm = ''; }
     if (searchTerm !== null && searchTerm !== '') {
@@ -125,18 +126,9 @@ export class ClinicalTrialService extends BaseHttpService {
 
   getSubstanceDetailsFromName(name: string): Observable<any> {
 
-    // __alex__ original
-    // const url = this.apiBaseUrl + 'substances/search?q=root_names_name:"^'
-    //  + encodeURIComponent(name) + '$"&fdim=1';
-    // __alex__ temporary
-    // const url = this.apiBaseUrl
-    // + 'api/v1/clinicaltrial/@substancenamepassthru/search?name='
-    // + encodeURIComponent(name);
-    // __alex__ ncats
-
-    const url = this.ncatsApiBaseUrl + 'substances/search?q=root_names_name:"^'
-     + encodeURIComponent(name) + '$"&fdim=1';
-
+    // ^ = %5E 
+    const url = this.apiBaseUrl + 'substances/search?q=root_names_name:"%5E'
+      + encodeURIComponent(name) + '$"&fdim=1';
 
     const params = new HttpParams();
     // params = params.append('view', 'full');
@@ -148,27 +140,18 @@ export class ClinicalTrialService extends BaseHttpService {
     const x = this.http.get<any>(url);
     return x;
   }
-
+  
   getSubstanceDetailsFromSubstanceKey(substanceKey: string): Observable<any> {
-    // __alex__ original
-    // const url = this.apiBaseUrl + 'substances(' + encodeURIComponent(substanceKey) + ')';
-
-    // __alex__ temporary
-    // const url = this.apiBaseUrl
-    // + 'api/v1/clinicaltrial/@substancepassthru/'
-    // + encodeURIComponent(substanceKey);
-
-    //  __alex__ ncats
-    const url = this.ncatsApiBaseUrl + 'substances(' + encodeURIComponent(substanceKey) + ')';
-
-    const params = new HttpParams();
-    // params = params.append('view', 'full');
+    const url = this.apiBaseUrl + 'substances(' + encodeURIComponent(substanceKey) + ')';
+    let params = new HttpParams();
+    params = params.append('view', 'full');
     const options = {
       params: params
     };
-    const x = this.http.get<any>(url);
+    const x = this.http.get<any>(url, options);
     return x;
   }
+
 
   addClinicalTrial(body): Observable<ClinicalTrial> {
     const url = this.apiBaseUrl + `clinicaltrialus`;
@@ -185,7 +168,7 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   updateClinicalTrial(body): Observable<ClinicalTrial> {
-    const url = this.apiBaseUrl + `clinicaltrial`;
+    const url = this.apiBaseUrl + `clinicaltrialus`;
     const params = new HttpParams();
     // params = params.append('view', 'full');
     const options = {

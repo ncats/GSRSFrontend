@@ -3,6 +3,8 @@ export interface ClinicalTrialUSDrug {
   trialNumber: string;
   substanceKey: string;
   substanceKeyType: 'UUID';
+  orgSubstanceKey: string;
+  orgSubstanceKeyType: 'BDNUM';
   protectedMatch: boolean;
   substanceDisplayName: string;
 }
