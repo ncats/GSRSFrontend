@@ -23,7 +23,7 @@
           View Product</a>
         &nbsp;&nbsp;&nbsp;
         <span *ngIf="isAdmin">
-          <button mat-flat-button color="primary" (click)="confirmDeleteProduct()" matTooltip='Delete this Product'>
+          <button mat-flat-button color="primary" (click)="confirmDeleteProduct(product.id)" matTooltip='Delete this Product'>
             Delete
           </button>&nbsp;&nbsp;&nbsp;
         </span>

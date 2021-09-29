@@ -9,7 +9,7 @@
   </a>
   -->
   <!-- Export Button -->
-  <span class="export">
+  <span class="export" *ngIf="isAdmin">
     <button matTooltip="Export Search Results" mat-button (click)="export()"
       class="mat-button export-button mat-raised-button">
       <mat-icon svgIcon="get_app"></mat-icon> Export

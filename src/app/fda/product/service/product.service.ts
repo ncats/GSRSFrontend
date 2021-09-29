@@ -20,9 +20,9 @@ export class ProductService extends BaseHttpService {
   totalRecords = 0;
   product: Product;
 
-  apiBaseUrlWithEntityContext = this.apiBaseUrl + 'product' + '/';
-  apiBaseUrlWithBrowseEntityContext = this.apiBaseUrl + 'productmainall' + '/';
-  apiBaseUrlWithElistContext = this.apiBaseUrl + 'productelist' + '/';
+  apiBaseUrlWithProductEntityUrl = this.apiBaseUrl + 'products' + '/';
+  apiBaseUrlWithProductBrowseEntityUrl = this.apiBaseUrl + 'productsall' + '/';
+  apiBaseUrlWithProductElistEntityUrl = this.apiBaseUrl + 'productselist' + '/';
 
   constructor(
     public http: HttpClient,
@@ -52,7 +52,7 @@ export class ProductService extends BaseHttpService {
       params = params.append('order', order);
     }
 
-    const url = this.apiBaseUrlWithBrowseEntityContext + 'search';
+    const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'search';
     const options = {
       params: params
     };
@@ -63,7 +63,7 @@ export class ProductService extends BaseHttpService {
   getProductFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/productmainall/search/@facets?wait=false&kind=ix.srs.models.ProductElistMain&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = this.apiBaseUrlWithProductBrowseEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.products.productall.models.ProductMainAll&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
@@ -73,7 +73,7 @@ export class ProductService extends BaseHttpService {
   }
 
   filterFacets(name: string, category: string): Observable<any> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${name}`;
+    const url = this.apiBaseUrlWithProductBrowseEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.products.productall.models.ProductMainAll&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
     return this.http.get(url);
   }
 
@@ -101,10 +101,11 @@ export class ProductService extends BaseHttpService {
 
   getApiExportUrl(etag: string, extension: string): string {
     // const url = `${this.configService.configData.apiBaseUrl}api/v1/productmainall/export/${etag}/${extension}`;
-    const url = this.apiBaseUrlWithBrowseEntityContext + `export/${etag}/${extension}`;
+    const url = this.apiBaseUrlWithProductBrowseEntityUrl + `export/${etag}/${extension}`;
     return url;
   }
 
+  // 2.x play framework, Will REMOVE in Future
   getProductListExportUrl(substanceId: string): string {
     return this.baseUrl + 'productListExport?substanceId=' + substanceId;
   }
@@ -115,7 +116,7 @@ export class ProductService extends BaseHttpService {
 
     //  const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
 
-    const url = this.apiBaseUrlWithBrowseEntityContext + 'distprovenance/' + substanceUuid;
+    const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'distprovenance/' + substanceUuid;
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -124,7 +125,7 @@ export class ProductService extends BaseHttpService {
       );
   }
 
-  /* WORKS In PLAY FRAMEWORK */
+  // 2.x play framework, Will REMOVE in Future
   getSubstanceProducts(
     substanceUuid: string, provenance: string, page: number, pageSize: number
   ): Observable<Array<any>> {
@@ -141,6 +142,7 @@ export class ProductService extends BaseHttpService {
       );
   }
 
+  // 2.x play framework, Will REMOVE in Future
   getProductsBySubstanceUUid(
     substanceUuid: string, provenance: string, page: number, pageSize: number
   ): Observable<Array<any>> {
@@ -157,21 +159,7 @@ export class ProductService extends BaseHttpService {
       );
   }
 
-  getProductElist(
-    productId: string
-  ): Observable<any> {
-
-    //  const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
-
-    const url = this.apiBaseUrlWithElistContext + productId;
-    return this.http.get<any>(url)
-      .pipe(
-        map(result => {
-          return result;
-        })
-      );
-  }
-
+  // 2.x play framework, Will REMOVE in Future
   getIngredientNameByBdnum(
     bdnum: string)
     : Observable<any> {
@@ -185,6 +173,7 @@ export class ProductService extends BaseHttpService {
       );
   }
 
+  // 2.x play framework, Will REMOVE in Future
   getSubstanceDetailsByBdnum(
     bdnum: string
   ): Observable<any> {
@@ -196,6 +185,7 @@ export class ProductService extends BaseHttpService {
     );
   }
 
+  // 2.x play framework, Will REMOVE in Future
   getSubstanceDetailsBySubstanceId(
     substanceId: string
   ): Observable<any> {
@@ -207,6 +197,7 @@ export class ProductService extends BaseHttpService {
     );
   }
 
+  // 2.x play framework, Will REMOVE in Future
   getSubstanceRelationship(
     substanceId: string
   ): Observable<Array<any>> {
@@ -218,11 +209,10 @@ export class ProductService extends BaseHttpService {
     );
   }
 
-  getProduct(productId: string, src: string): Observable<any> {
-    // const url = this.baseUrl + 'productDetails2?id=' + productId + '&src=' + src;
-
-    const url = this.apiBaseUrlWithEntityContext + productId;
-
+  getProductElist(
+    productId: string
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithProductElistEntityUrl + productId;
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -230,7 +220,6 @@ export class ProductService extends BaseHttpService {
         })
       );
   }
-
 
   get isProductUpdated(): boolean {
     const productString = JSON.stringify(this.product);
@@ -246,26 +235,25 @@ export class ProductService extends BaseHttpService {
     this._bypassUpdateCheck = true;
   }
 
+  getProduct(productId: string, src: string): Observable<any> {
+    const url = this.apiBaseUrlWithProductEntityUrl + productId;
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getViewProductUrl(productId: number): string {
+    return this.apiBaseUrlWithProductEntityUrl + productId;
+  }
+
   loadProduct(product?: Product): void {
     // if Update/Exist Application
     // setTimeout(() => {
     if (product != null) {
       this.product = product;
-
-      /*
-      // Add a new Indication if there is no indication record.
-      if (this.product.applicationIndicationList.length < 1) {
-        const newIndication: ApplicationIndicationSrs = {};
-        this.product.applicationIndicationList.unshift(newIndication);
-      }
-      */
-      // Add a new Product Name if there is no Product Name record.
-      /* if (this.application.applicationProductList[0].applicationProductNameList.length < 1) {
-         const newProductNameSrs: ProductNameSrs = {};
-         this.application.applicationProductList[0].applicationProductNameList.unshift(newProductNameSrs);
-       }
-      */
-      //  console.log('AFTER' + JSON.stringify(this.product));
     } else {
       this.product = {
         productNameList: [{}],
@@ -282,7 +270,7 @@ export class ProductService extends BaseHttpService {
   }
 
   saveProduct(): Observable<Product> {
-    const url = this.apiBaseUrl + `product`;
+    const url = this.apiBaseUrlWithProductEntityUrl;
     const params = new HttpParams();
     const options = {
       params: params,
@@ -291,8 +279,6 @@ export class ProductService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    //  console.log('APP: ' + this.application);
-
     // Update Product
     if ((this.product != null) && (this.product.id)) {
       return this.http.put<Product>(url, this.product, options);
@@ -315,21 +301,16 @@ export class ProductService extends BaseHttpService {
   }
 
   validateProd(): Observable<ValidationResults> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/product/@validate`;
+    const url = this.apiBaseUrlWithProductEntityUrl + '@validate';
     return this.http.post(url, this.product);
   }
 
-  deleteProduct(): Observable<any> {
-    /*
-    const url = this.apiBaseUrl + 'product(' + this.product.id + ')';
-    const params = new HttpParams();
-    const options = {
-      params: params
-    };
-    const x = this.http.delete<Product>(url, options);
+  deleteProduct(productId: number): Observable<any> {
+   // const url = this.baseUrl + 'deleteProduct?productId=' + this.product.id + '&from=ang';
+
+    const url = this.apiBaseUrlWithProductEntityUrl + '(' + productId + ')';
+    const x = this.http.delete<Product>(url);
     return x;
-    */
-    const url = this.baseUrl + 'deleteProduct?productId=' + this.product.id + '&from=ang';
 
     return this.http.delete<any>(url).pipe(
       map(results => {
@@ -443,10 +424,10 @@ export class ProductService extends BaseHttpService {
         }
       });
       */
-      const newProduct = JSON.parse(JSON.stringify(productLot));
+    const newProduct = JSON.parse(JSON.stringify(productLot));
 
-      this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProduct);
-   // }
+    this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProduct);
+    // }
   }
 
   copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
@@ -459,10 +440,6 @@ export class ProductService extends BaseHttpService {
     newProduct.lastModifiedDate = null;
     */
     this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProduct);
-  }
-
-  getViewProductUrl(id: number): string {
-    return this.apiBaseUrlWithEntityContext + id;
   }
 
   /*

@@ -56,7 +56,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     */
 
     // TESTING TESTING TESTING TESTING. NEED TO REMOVE
-   this.isDisplayAppToMatchConfig();
+    // this.isDisplayAppToMatchConfig();
 
     // Get Etag and total from Browse Substance Results
     const subscriptionResult = this.substanceService.searchResults.subscribe(response => {

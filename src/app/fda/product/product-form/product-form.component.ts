@@ -309,20 +309,20 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-  confirmDeleteProduct() {
+  confirmDeleteProduct(productId: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete this Product?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        this.deleteProduct();
+        this.deleteProduct(productId);
       }
     });
   }
 
-  deleteProduct(): void {
-    this.productService.deleteProduct().subscribe(response => {
+  deleteProduct(productId: number): void {
+    this.productService.deleteProduct(productId).subscribe(response => {
       if (response) {
         this.displayMessageAfterDeleteProd();
       }
