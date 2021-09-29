@@ -257,7 +257,6 @@
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let substance">
                   <button
-                    *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer"
                     mat-icon-button [matMenuTriggerFor]="downloadMenu">
                     <mat-icon svgIcon="get_app"></mat-icon>
                   </button>
@@ -277,6 +276,10 @@
                   </button>
 
                   <mat-menu #downloadMenu="matMenu">
+                      <a mat-menu-item  (click) = "downloadJson(substance.uuid)" >
+                          <span>Download JSON</span>
+                        </a>
+                    <span *ngIf = 'substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer'>
                     <a mat-menu-item *ngIf="substance.structure"
                       (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
                       <span>Download Molfile</span>
@@ -289,6 +292,7 @@
                       (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')">
                       <span>Download Fasta</span>
                     </a>
+                  </span>
                   </mat-menu>
 
                   <mat-menu #searchMenu="matMenu">
@@ -369,10 +373,11 @@
                   </div>
                   <div class = "tile-button-container">
                       <button
-                      *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer"
+                     
                       mat-icon-button [matMenuTriggerFor]="downloadMenu">
                       <mat-icon svgIcon="get_app"></mat-icon>
                     </button>
+                    <span *ngIf = 'substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer'>
 
                     <button *ngIf="substance.structure || substance.polymer" mat-icon-button
                       [matMenuTriggerFor]="searchMenu">
@@ -387,12 +392,18 @@
                     <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
                       <mat-icon svgIcon="file_copy"></mat-icon>
                     </button>
+                    </span>
                   </div>
 
                 </div>
 
 
                   <mat-menu #downloadMenu="matMenu">
+
+                      <a mat-menu-item  (click) = "downloadJson(substance.uuid)" >
+                          <span>Download JSON</span>
+                        </a>
+
                       <a mat-menu-item *ngIf="substance.structure"
                         (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
                         <span>Download Molfile</span>

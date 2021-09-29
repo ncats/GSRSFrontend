@@ -45,7 +45,6 @@
           {{substance.definitionLevel }} DEFINITION
         </div>
         <button
-          *ngIf="substance.structure || (substance.protein || substance.nucleicAcid) || substance.polymer"
           mat-icon-button [matMenuTriggerFor]="downloadMenu">
           <mat-icon svgIcon="get_app"></mat-icon>
         </button>
@@ -77,7 +76,11 @@
 
 
         <mat-menu #downloadMenu="matMenu">
-            <a mat-menu-item  (click) = "openMolModal()" >
+
+            <a mat-menu-item  (click) = "downloadJson()" >
+                <span>Download JSON</span>
+              </a>
+            <a mat-menu-item  (click) = "openMolModal()" *ngIf = "substance.structure || substance.polymer">
                 <span>Show Molfile</span>
               </a>
           <a mat-menu-item *ngIf="substance.structure"
@@ -133,16 +136,25 @@
           <div>
             <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5">
               <div class="code-system">
-                <span class="label">{{codeSystemName | codeSystemDisplay | async}}</span>:&nbsp;
+                <span class="label">{{codeSystemName | codeSystemDisplay | async}}
+
+                  </span>:&nbsp;
                 <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast">
                   <span *ngIf="codeObject.url">
                     <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
                       evCategory="substancesContent" evAction="link:code" aria-label ="view site in new tab">
                       <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
                       <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
+                      <span *ngIf = "codeSystems[codeSystemName].length > 1" style = "font-size: 90%;
+                          font-weight: 300;">[{{codeObject.type}}]</span>
+
                     </a>
                   </span>
-                  <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}</span>
+                  <span *ngIf="!codeObject.url">{{codeObject.code.trim()}} 
+                      <span *ngIf = "codeSystems[codeSystemName].length > 1" style = "font-size: 90%;
+                          font-weight: 300;">[{{codeObject.type}}]</span>
+                  </span>
+
                   <span *ngIf="!isLast">, </span>
                 </span>
               </div>

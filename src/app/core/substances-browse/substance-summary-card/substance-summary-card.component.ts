@@ -152,6 +152,12 @@ export class SubstanceSummaryCardComponent implements OnInit {
     });
   }
 
+  downloadJson() {
+    this.substanceService.getSubstanceDetails(this.substance.uuid).pipe(take(1)).subscribe(response => {
+        this.downloadFile(JSON.stringify(response), this.substance.uuid + '.json');
+    });
+  }
+
   getAlignments(): void {
     if (this.substance._matchContext) {
       if (this.substance._matchContext.alignments) {

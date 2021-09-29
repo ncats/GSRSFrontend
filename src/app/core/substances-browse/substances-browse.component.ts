@@ -840,4 +840,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.overlayContainer.style.zIndex = null;
   }
 
+
+  downloadJson(id: string) {
+    this.substanceService.getSubstanceDetails(id).pipe(take(1)).subscribe(response => {
+        this.downloadFile(JSON.stringify(response), id + '.json');
+    });
+
+  }
+
 }
