@@ -189,7 +189,7 @@
         <div class="substance-data" *ngIf="substance.structure?.mwt">
           <div class="label">Mol. Weight:</div>
           <div>
-            <span class="value">{{substance.structure.mwt}}</span>
+            <span class="value">{{substance.structure.mwt  | number: rounding}}</span>
           </div>
         </div>
         <div class="substance-data" *ngIf="substance.structure?.formula">

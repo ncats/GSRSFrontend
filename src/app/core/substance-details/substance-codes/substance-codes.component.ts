@@ -61,6 +61,11 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
         }
       }
     });
+
+    if (this.type === 'identifiers') {
+      this.pageSize = 10;
+    }
+    
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
   sortData(sort: Sort) {
@@ -75,6 +80,8 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       return this.utilsService.compare(a[sort.active] ? a[sort.active] : null, b[sort.active] ? b[sort.active] : null, isAsc);
     });
     this.pageChange();
+
+    
   }
 
   ngAfterViewInit(): void {

@@ -22,7 +22,7 @@
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
         <div class="mat-elevation-z2 narrow-search-suggestions">
           <div>
-            Would you like to restrict the search for this to field?
+            Would you like to restrict this search to a field?
           </div>&nbsp;
           <button mat-flat-button color="primary" [matMenuTriggerFor]="searchSuggestions"
             (menuOpened)="increaseOverlayZindex()" (menuClosed)="decreaseOverlayZindex()">

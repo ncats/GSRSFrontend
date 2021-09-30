@@ -22,6 +22,7 @@ import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material';
 import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -42,6 +43,8 @@ export class SubstanceSummaryCardComponent implements OnInit {
   inxightLink = false;
   inxightUrl: string;
   overlayContainer: any;
+  rounding = '1.0-2';
+
   constructor(
     public utilsService: UtilsService,
     public gaService: GoogleAnalyticsService,
@@ -52,6 +55,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
+    private configService: ConfigService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
@@ -85,6 +89,10 @@ export class SubstanceSummaryCardComponent implements OnInit {
     } else {
       this.getApprovalID();
     }
+
+    if (this.configService.configData && this.configService.configData.molWeightRounding) {
+      this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
+  }
   }
 
   getApprovalID() {
