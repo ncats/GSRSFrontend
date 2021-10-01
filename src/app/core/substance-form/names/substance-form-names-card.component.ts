@@ -52,6 +52,22 @@ export class SubstanceFormNamesCardComponent
       });
     this.subscriptions.push(definitionSubscription);
     const namesSubscription = this.substanceFormNamesService.substanceNames.subscribe(names => {
+      names.sort(function (a, b) {
+        if (a.displayName) {
+          return -1;
+        } else {
+          if (b.displayName) {
+            return 1;
+          }
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        }
+      });
       this.names = names;
       this.filtered = names;
       const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
