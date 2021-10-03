@@ -20,7 +20,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { transform } from 'lodash';
 import { environment } from '../../../environments/environment';
-import { ConfigService } from '@gsrs-core/config';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { UtilsService } from '@gsrs-core/utils';
 import { Ketcher } from 'ketcher-wrapper';
 import { JSDraw } from 'jsdraw-wrapper';
@@ -61,7 +61,7 @@ export interface FacetValueAdvanced {
 */
 
 export class AdvancedSearchComponent implements OnInit, OnDestroy {
-
+  loadedComponents: LoadedComponents;
   query: string;
   queryStatements: Array<AdvancedQueryStatement> = [];
   queryableSubstanceDict: QueryableSubstanceDictionary;
@@ -189,6 +189,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.loadingService.setLoading(true);
     this.showSpinner = true;  // Start progress spinner
 
+    // Get configration values to hide/show Modules
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
+
     this.titleService.setTitle(`Advanced Search`);
     const advancedSearchHash = Number(this.activatedRoute.snapshot.queryParams['g-search-hash']) || null;
 
@@ -216,14 +219,25 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
       }
     }
-    this.getBrowseClinicalTrialDetails();
 
     this.getBrowseSubstanceDetails();
-    this.getBrowseApplicationDetails();
-    this.getBrowseProductDetails();
-    this.getBrowseAdverseEventPtDetails();
-    this.getBrowseAdverseEventDmeDetails();
-    this.getBrowseAdverseEventCvmDetails();
+
+    if (this.loadedComponents) {
+      if (this.loadedComponents.applications) {
+        this.getBrowseApplicationDetails();
+      }
+      if (this.loadedComponents.products) {
+        this.getBrowseProductDetails();
+      }
+      if (this.loadedComponents.clinicaltrials) {
+        this.getBrowseClinicalTrialDetails();
+      }
+      if (this.loadedComponents.adverseevents) {
+        this.getBrowseAdverseEventPtDetails();
+        this.getBrowseAdverseEventDmeDetails();
+        this.getBrowseAdverseEventCvmDetails();
+      }
+    }
 
     this.loadFileName();
 
@@ -461,10 +475,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventPtFacets);
         this.rawFacets = this.rawFacetsAdverseEventPt;
         this.facetKey = 'adverseeventpt';
-      //  this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
-      //  this.rawFacets = this.rawFacetsAdverseEventDme;
-     //   this.facetKey = 'adverseeventDme';
-       // this.rawFacets.splice(0, this.rawFacets.length);
+        //  this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
+        //  this.rawFacets = this.rawFacetsAdverseEventDme;
+        //   this.facetKey = 'adverseeventDme';
+        // this.rawFacets.splice(0, this.rawFacets.length);
       }
     }
     this.getSearchField();

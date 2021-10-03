@@ -22,19 +22,9 @@ export class AdverseEventService extends BaseHttpService {
 
   totalRecords = 0;
 
-  // TESTING TESTING TESTING
-
-//  apiBaseUrlPt = 'http://localhost:8080/api/v1/';
-//  apiBaseUrlDme = 'http://localhost:8081/api/v1/';
-//  apiBaseUrlCvm = 'http://localhost:8082/api/v1/';
-
   apiBaseUrlWithEntityPtContext = this.apiBaseUrl + 'adverseeventpt' + '/';
   apiBaseUrlWithEntityDmeContext = this.apiBaseUrl + 'adverseeventdme' + '/';
   apiBaseUrlWithEntityCvmContext = this.apiBaseUrl + 'adverseeventcvm' + '/';
-
- //  apiBaseUrlWithEntityPtContext = this.apiBaseUrlPt + 'adverseeventpt' + '/';
- //  apiBaseUrlWithEntityDmeContext = this.apiBaseUrlDme + 'adverseeventdme' + '/';
- //  apiBaseUrlWithEntityCvmContext = this.apiBaseUrlCvm + 'adverseeventcvm' + '/';
 
   constructor(
     public http: HttpClient,
@@ -201,15 +191,15 @@ export class AdverseEventService extends BaseHttpService {
     bdnum: string, page: number, pageSize: number, orderBy: string, ascDescDir: string
   ): Observable<Array<any>> {
     const url = this.baseUrl + 'adverseEventPtListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize='
-    + pageSize + '&orderBy=' + orderBy + '&ascDescDir=' + ascDescDir;
+      + pageSize + '&orderBy=' + orderBy + '&ascDescDir=' + ascDescDir;
 
     return this.http.get<Array<any>>(url)
-    .pipe(
-      map(results => {
-        this.totalRecords = results['totalRecords'];
-        return results['data'];
-      })
-    );
+      .pipe(
+        map(results => {
+          this.totalRecords = results['totalRecords'];
+          return results['data'];
+        })
+      );
   }
 
   getSubstanceAdverseEventPtAdv(
@@ -225,12 +215,12 @@ export class AdverseEventService extends BaseHttpService {
     // + pageSize + '&orderBy=' + orderBy + '&ascDescDir=' + ascDescDir;
 
     return this.http.get<Array<any>>(url)
-    .pipe(
-      map(results => {
-        this.totalRecords = results['recordsTotal'];
-        return results['data'];
-      })
-    );
+      .pipe(
+        map(results => {
+          this.totalRecords = results['recordsTotal'];
+          return results['data'];
+        })
+      );
   }
 
   getSubstanceAdverseEventDme(
@@ -239,12 +229,12 @@ export class AdverseEventService extends BaseHttpService {
     const url = this.baseUrl + 'adverseEventDmeListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
-    .pipe(
-      map(results => {
-        this.totalRecords = results['totalRecords'];
-        return results['data'];
-      })
-    );
+      .pipe(
+        map(results => {
+          this.totalRecords = results['totalRecords'];
+          return results['data'];
+        })
+      );
 
   }
 
@@ -254,12 +244,12 @@ export class AdverseEventService extends BaseHttpService {
     const url = this.baseUrl + 'adverseEventCvmListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
 
     return this.http.get<Array<any>>(url)
-    .pipe(
-      map(results => {
-        this.totalRecords = results['totalRecords'];
-        return results['data'];
-      })
-    );
+      .pipe(
+        map(results => {
+          this.totalRecords = results['totalRecords'];
+          return results['data'];
+        })
+      );
 
   }
 

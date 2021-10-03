@@ -21,6 +21,14 @@ export class AdvancedSearchService extends BaseHttpService {
   totalRecords: 0;
   baseHref: '';
 
+  apiBaseUrlWithApplicationEntityUrl = this.apiBaseUrl + 'applications' + '/';
+  apiBaseUrlWithApplicationAllEntityUrl = this.apiBaseUrl + 'applicationsall' + '/';
+  apiBaseUrlWithApplicationDarrtsEntityUrl = this.apiBaseUrl + 'applicationsdarrts' + '/';
+
+  apiBaseUrlWithProductEntityUrl = this.apiBaseUrl + 'products' + '/';
+  apiBaseUrlWithProductBrowseEntityUrl = this.apiBaseUrl + 'productsall' + '/';
+  apiBaseUrlWithProductElistEntityUrl = this.apiBaseUrl + 'productselist' + '/';
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
@@ -38,14 +46,15 @@ export class AdvancedSearchService extends BaseHttpService {
   }
 
   getApplicationCount(): Observable<number> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/application/@count`;
+    const url = this.apiBaseUrlWithApplicationEntityUrl + `@count`;
     return this.http.get<number>(url);
   }
 
   getProductCount(): Observable<number> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/productmainall/@count`;
+    const url = this.apiBaseUrlWithProductBrowseEntityUrl + `@count`;
     return this.http.get<number>(url);
   }
+
   getClinicalTrialCount(): Observable<number> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/ctclinicaltrial/@count`;
     return this.http.get<number>(url);
@@ -87,7 +96,7 @@ export class AdvancedSearchService extends BaseHttpService {
     }
     params = params.appendFacetParams(facets);
 
-    const url = `${this.apiBaseUrl}application/search`;
+    const url = this.apiBaseUrlWithApplicationEntityUrl + 'search';
     const options = {
       params: params
     };
@@ -109,7 +118,7 @@ export class AdvancedSearchService extends BaseHttpService {
     }
     params = params.appendFacetParams(facets);
 
-    const url = `${this.apiBaseUrl}productmainall/search`;
+    const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'search';
     const options = {
       params: params
     };
