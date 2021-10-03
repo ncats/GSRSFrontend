@@ -225,11 +225,14 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     if (this.loadedComponents) {
       if (this.loadedComponents.applications) {
         this.getBrowseApplicationDetails();
-      } else if (this.loadedComponents.products) {
+      }
+      if (this.loadedComponents.products) {
         this.getBrowseProductDetails();
-      } else if (this.loadedComponents.clinicaltrials) {
+      }
+      if (this.loadedComponents.clinicaltrials) {
         this.getBrowseClinicalTrialDetails();
-      } else if (this.loadedComponents.adverseevents) {
+      }
+      if (this.loadedComponents.adverseevents) {
         this.getBrowseAdverseEventPtDetails();
         this.getBrowseAdverseEventDmeDetails();
         this.getBrowseAdverseEventCvmDetails();
