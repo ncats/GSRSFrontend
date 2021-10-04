@@ -43,7 +43,7 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   agencySubstanceKeyType = 'UUID';
 
   isAdmin: boolean;
-  isTesting  = true;
+  isTesting  = false;
   displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
   public  _trialNumber: string;
@@ -385,14 +385,6 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
         this.loadingService.setLoading(this.isLoading);
       });
   }
-
-
-
-
-
-
-
-
 
   updateClinicalTrial() {
     // var that = this;

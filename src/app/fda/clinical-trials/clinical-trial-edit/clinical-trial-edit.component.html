@@ -115,44 +115,8 @@
 	</mat-table>
 
 	<div *ngIf="isAdmin">
-		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
-		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
-		Copy(<span class='copy-button' (click)="substancesToClipboard1a();">1a</span> <span class='copy-button' (click)="substancesToClipboard1b();">1b</span> <span class='copy-button' (click)="substancesToClipboard2a();">2a</span> <span class='copy-button' (click)="substancesToClipboard2b();">2b</span> <span class='copy-button' (click)="substancesToClipboard3a();">3a</span> <span class='copy-button' (click)="substancesToClipboard3b();">3b</span>)
-		<div>
 
-    <mat-menu #copyMenu="matMenu" xPosition="before">
-      <span matTooltip='copy substances in various delimited formats'>Copy</span>
-      <span matTooltip='xyz'>
-xyz
-      </span>
-    </mat-menu>
 
-		</div>
-		<div>
-			<mat-form-field appearance="none">
-  <mat-label>Copy</mat-label>
-  <mat-select [(value)]="selected">
-    <mat-option>select</mat-option>
-    <mat-option value="option1">n->u; ...</mat-option>
-    <mat-option value="option2">n->k; ...</mat-option>
-    <mat-option value="option3">n->u _</mat-option>
-    <mat-option value="option4">n->k _</mat-option>
-    <mat-option value="option5">#->n->u _</mat-option>
-    <mat-option value="option6">#->n->k _</mat-option>
-    <mat-option value="option7">all fields</mat-option>
-  </mat-select>
-</mat-form-field>
-
-		</div>
-		<div style='margin-top: 20px'>
-			<div>
-				<textarea matInput id='bulk-input' #bulkInput placeholder="Bulk Input"
-									[(ngModel)]="bulkInputValue"></textarea>
-			</div>
-			<div>
-				<div class='copy-button' (click)="parseBulkInput();">parse</div>
-			</div>
-		</div>
 
 	</div>
 
