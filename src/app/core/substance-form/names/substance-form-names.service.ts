@@ -25,6 +25,23 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
       if (this.substance.names == null) {
         this.substance.names = [];
       }
+      // sort the names by display / primary name first, then alphabetically on initialization.
+      substance.names.sort(function (a, b) {
+        if (a.displayName) {
+          return -1;
+        } else {
+          if (b.displayName) {
+            return 1;
+          }
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        }
+      });
       this.substanceFormService.resetState();
       this.propertyEmitter.next(this.substance.names);
     });
