@@ -175,7 +175,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   set configName(configName: string) {
     this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
     this._configName = configName;
-    if (configName === 'applications' || configName === 'ctclinicaltrial' || configName === 'products'
+    if (configName === 'applications' || configName === 'clinicaltrialus' || configName === 'products'
     || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm') {
       this.hideDeprecatedCheckbox = true;
     } else {

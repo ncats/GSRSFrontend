@@ -88,7 +88,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private location: Location,
     private facetManagerService: FacetsManagerService,
     public gaService: GoogleAnalyticsService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
@@ -110,18 +110,20 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+      // testing
+      // this.isAdmin = true;
       // this.showAudit = this.authService.hasRoles('admin');
-      if (this.isAdmin) {
-        this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated', 'delete'];
-      } else {
-        this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated'];
-      }
+       if (this.isAdmin) {
+        this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated', 'delete'];
+       } else {
+         this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
+       }
     });
     this.searchTypes = [
-      { 'title': 'All', 'value': 'all' },
-      { 'title': 'Title', 'value': 'title' },
-      { 'title': 'NCT Number', 'value': 'nctNumber' },
-      { 'title': 'Substance UUID', 'value': 'substanceUuid' }
+      {'title': 'All', 'value': 'all'},
+      {'title': 'Title', 'value': 'title'},
+      {'title': 'Trial Number', 'value': 'trialNumber'},
+      {'title': 'Substance Key', 'value': 'substanceKey'}
     ];
     this.isComponentInit = true;
     this.loadComponent();
@@ -136,7 +138,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
-    // this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   ngOnDestroy() {
@@ -210,7 +211,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
       this.privateFacetParams,
       (this.pageIndex * this.pageSize),
     );
-    if (this.argsHash == null || this.argsHash !== newArgsHash) {
+    if (this.argsHash === null || this.argsHash !== newArgsHash) {
       this.isLoading = true;
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
@@ -226,41 +227,41 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
       })
         .subscribe(pagingResponse => {
           this.isError = false;
-          /*
-                    if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0
-                      && pagingResponse.skip === 0
-                      && (!pagingResponse.sideway || pagingResponse.sideway.length < 2)
-                    ) {
-                      this.exactMatchSubstances = pagingResponse.exactMatches;
-                      this.showExactMatches = true;
-                    }
-          */
+/*
+          if (pagingResponse.exactMatches && pagingResponse.exactMatches.length > 0
+            && pagingResponse.skip === 0
+            && (!pagingResponse.sideway || pagingResponse.sideway.length < 2)
+          ) {
+            this.exactMatchSubstances = pagingResponse.exactMatches;
+            this.showExactMatches = true;
+          }
+*/
           this.clinicalTrials = pagingResponse.content;
           this.totalClinicalTrials = pagingResponse.total;
           this.dataSource.data = this.clinicalTrials;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
           }
-          /*
-                    this.narrowSearchSuggestions = {};
-                    this.matchTypes = [];
-                    this.narrowSearchSuggestionsCount = 0;
-                    if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
-                      pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
-                        if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
-                          this.narrowSearchSuggestions[suggestion.matchType] = [];
-                          if (suggestion.matchType === 'WORD') {
-                            this.matchTypes.unshift(suggestion.matchType);
-                          } else {
-                            this.matchTypes.push(suggestion.matchType);
-                          }
-                        }
-                        this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
-                        this.narrowSearchSuggestionsCount++;
-                      });
-                    }
-          */
-        }, error => {
+/*
+          this.narrowSearchSuggestions = {};
+          this.matchTypes = [];
+          this.narrowSearchSuggestionsCount = 0;
+          if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+            pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+              if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+                this.narrowSearchSuggestions[suggestion.matchType] = [];
+                if (suggestion.matchType === 'WORD') {
+                  this.matchTypes.unshift(suggestion.matchType);
+                } else {
+                  this.matchTypes.push(suggestion.matchType);
+                }
+              }
+              this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+              this.narrowSearchSuggestionsCount++;
+            });
+          }
+*/
+        }, () => {
           // this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
             message: 'There was an error trying to retrieve ClinicalTrials. Please refresh and try again.',
@@ -301,21 +302,21 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   }
 
   deleteClinicalTrial(index: number) {
-    if (typeof this.clinicalTrials[index] === 'undefined' || !_.has(this.clinicalTrials[index], 'nctNumber')) {
-      alert('A trial number is required.');
-      return;
+    if (typeof this.clinicalTrials[index] === 'undefined' || ! _.has(this.clinicalTrials[index], 'trialNumber')) {
+        alert('A trial number is required.');
+        return;
     }
-    if (!confirm('Are you sure to delete ' + this.clinicalTrials[index].nctNumber + '?')) {
+    if (!confirm('Are you sure to delete ' + this.clinicalTrials[index].trialNumber + '?')) {
       return;
     }
     this.loadingService.setLoading(true);
-    this.clinicalTrialService.deleteClinicalTrial(this.clinicalTrials[index].nctNumber)
-      .subscribe(result => {
+    this.clinicalTrialService.deleteClinicalTrial(this.clinicalTrials[index].trialNumber)
+      .subscribe( () => {
         this.isError = false;
         const deletedClinicalTrials = this.clinicalTrials.splice(index, 1);
         this.dataSource.data = this.clinicalTrials;
         const notification: AppNotification = {
-          message: 'You deleted the clinical trial record for:' + deletedClinicalTrials[0].nctNumber,
+          message: 'You deleted the clinical trial record for:' + deletedClinicalTrials[0].trialNumber,
           type: NotificationType.success,
           milisecondsToShow: 6000
         };
@@ -323,7 +324,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
         this.notificationService.setNotification(notification);
-      }, error => {
+      }, () => {
         const notification: AppNotification = {
           message: 'There was an error trying to delete a clinical trial.',
           type: NotificationType.error,

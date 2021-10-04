@@ -707,6 +707,21 @@
         "Conditions"
       ]
     },
+    "clinicaltrialus": {
+      "default": [
+        "Has Substances",
+        "CT Matching Complete",
+        "Last Updated Year",
+        "Primary Completion Year",
+        "First Posted Year",
+        "Study Types",
+        "Gender",
+        "Age Groups",
+        "Intervention Type",
+        "Study Results",
+        "Conditions"
+      ]
+    },
     "adverseeventpt": {
       "default": [
         "Adverse Event",
