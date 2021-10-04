@@ -100,7 +100,7 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   deleteClinicalTrial(id: string): Observable<any> {
-    const url = `${this.apiBaseUrl}clinicaltrialus(${id})`;
+    const url = `${this.apiBaseUrl}clinicaltrialus/${id}`;
     const params = new HttpParams();
     // params = params.append('view', 'full');
     const options = {
