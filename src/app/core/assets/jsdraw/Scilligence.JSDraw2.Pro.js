@@ -33,5 +33,8 @@ JSDraw2.licensecode='405562533916781761723242424242424131213141512181';
 //////////////////////////////////////////////////////////////////////////////////
 // JSDraw default settings
 
-JSDraw2.defaultoptions = {};
+JSDraw2.defaultoptions = {
+//Set the base URL for images and additional script loading
+"imagebase" : document.baseURI
+};
 
