@@ -28,6 +28,10 @@ export class JsdrawWrapperComponent implements AfterViewInit {
         window['dojo'].ready(() => {
           this.jsdraw = new window['JSDraw'](this.randomId);
           this.jsDrawOnLoad.emit(this.jsdraw);
+          //customization of buttons
+          if(window['afterSketcherMade']){
+            window['afterSketcherMade']();
+          }
         });
       } else if (count < 5000) {
         count++;
