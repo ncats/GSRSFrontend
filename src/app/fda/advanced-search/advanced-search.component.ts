@@ -194,7 +194,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
 
     // Get configuration value to hide/show Facets View in Advanced Search
-    this.advancedSearchFacetDisplay = this.configService.configData.advancedSearchFacetDisplay;
+    this.advancedSearchFacetDisplay = this.configService.configData.advancedSearchFacetDisplay || false;
 
     this.titleService.setTitle(`Advanced Search`);
     const advancedSearchHash = Number(this.activatedRoute.snapshot.queryParams['g-search-hash']) || null;
