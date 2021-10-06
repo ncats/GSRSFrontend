@@ -62,7 +62,7 @@ export interface FacetValueAdvanced {
 
 export class AdvancedSearchComponent implements OnInit, OnDestroy {
   loadedComponents: LoadedComponents;
-  advancedSearchFacetDisplay: boolean;
+  advancedSearchFacetDisplay = false;
   query: string;
   queryStatements: Array<AdvancedQueryStatement> = [];
   queryableSubstanceDict: QueryableSubstanceDictionary;
