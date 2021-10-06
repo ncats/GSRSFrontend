@@ -23,6 +23,7 @@ export interface Config {
     adverseEventShinySubstanceNameURL?: string;
     adverseEventShinyAdverseEventURL?: string;
     FAERSDashboardAdverseEventUrl?: string;
+    advancedSearchFacetDisplay?: boolean;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
     homeDynamicLinks?: Array<any>;

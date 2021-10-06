@@ -128,7 +128,8 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-expansion-panel [expanded]="false" class="margintop10px">
+  <!-- FACET VIEW/DISPLAY -->
+  <mat-expansion-panel [expanded]="false" class="margintop10px width100percent"  *ngIf="advancedSearchFacetDisplay">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <div class="colorgray"><b>Filter by <span class="colororange">
@@ -172,7 +173,7 @@
       <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
       </mat-progress-spinner>
     </div>
-    <div class="">
+    <div>
       <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
         [rawFacets]="rawFacets" [configName]="facetKey" includeFacetSearch="true"
         [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType" [panelExpanded]="panelExpanded"
