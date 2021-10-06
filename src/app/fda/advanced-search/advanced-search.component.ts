@@ -62,6 +62,7 @@ export interface FacetValueAdvanced {
 
 export class AdvancedSearchComponent implements OnInit, OnDestroy {
   loadedComponents: LoadedComponents;
+  advancedSearchFacetDisplay = false;
   query: string;
   queryStatements: Array<AdvancedQueryStatement> = [];
   queryableSubstanceDict: QueryableSubstanceDictionary;
@@ -191,6 +192,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
     // Get configration values to hide/show Modules
     this.loadedComponents = this.configService.configData.loadedComponents || null;
+
+    // Get configuration value to hide/show Facets View in Advanced Search
+    this.advancedSearchFacetDisplay = this.configService.configData.advancedSearchFacetDisplay || false;
 
     this.titleService.setTitle(`Advanced Search`);
     const advancedSearchHash = Number(this.activatedRoute.snapshot.queryParams['g-search-hash']) || null;
