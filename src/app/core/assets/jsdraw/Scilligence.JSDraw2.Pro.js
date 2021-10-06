@@ -38,3 +38,5 @@ JSDraw2.defaultoptions = {
 "imagebase" : document.baseURI
 };
 
+scil.Utils._scripturl=document.baseURI;
+
