@@ -1,3 +1,5 @@
+JSDraw2.defaultoptions.imagebase = document.baseURI;
+
 scil.Utils.imgSrc = function (button, wrapasinurl) {
 var s = null;
 if (button != null)
