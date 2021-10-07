@@ -100,31 +100,31 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-      //   if (this.authService.getUser() !== '') {
-      const dialogReference = this.dialog.open(ExportDialogComponent, {
-        height: '215x',
-        width: '550px',
-        data: { 'extension': extension, 'type': 'substanceAdverseEventCvm' }
-      });
-      // this.overlayContainer.style.zIndex = '1002';
-      dialogReference.afterClosed().subscribe(name => {
-        // this.overlayContainer.style.zIndex = null;
-        if (name && name !== '') {
-          this.loadingService.setLoading(true);
-          const fullname = name + '.' + extension;
-          this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
-            this.loadingService.setLoading(false);
-            const navigationExtras: NavigationExtras = {
-              queryParams: {
-                totalSub: this.adverseEventCount
-              }
-            };
-            const params = { 'total': this.adverseEventCount };
-            this.router.navigate(['/user-downloads/', response.id]);
-          }, error => this.loadingService.setLoading(false));
-        }
-      });
-      // }
+      if (this.authService.getUser() !== '') {
+        const dialogReference = this.dialog.open(ExportDialogComponent, {
+          height: '215x',
+          width: '550px',
+          data: { 'extension': extension, 'type': 'substanceAdverseEventCvm' }
+        });
+        // this.overlayContainer.style.zIndex = '1002';
+        dialogReference.afterClosed().subscribe(name => {
+          // this.overlayContainer.style.zIndex = null;
+          if (name && name !== '') {
+            this.loadingService.setLoading(true);
+            const fullname = name + '.' + extension;
+            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              this.loadingService.setLoading(false);
+              const navigationExtras: NavigationExtras = {
+                queryParams: {
+                  totalSub: this.adverseEventCount
+                }
+              };
+              const params = { 'total': this.adverseEventCount };
+              this.router.navigate(['/user-downloads/', response.id]);
+            }, error => this.loadingService.setLoading(false));
+          }
+        });
+      }
     }
   }
 

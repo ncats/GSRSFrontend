@@ -210,7 +210,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     if (this.etagAllExport) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etagAllExport, extension);
-     // if (this.authService.getUser() !== '') {
+      if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
@@ -234,7 +234,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
             }, error => this.loadingService.setLoading(false));
           }
         });
-   //   }
+      }
     }
   }
 
