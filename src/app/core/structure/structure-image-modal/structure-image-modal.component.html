@@ -3,7 +3,9 @@
     <button mat-mini-fab (click)="dismissDialog()">
       <mat-icon svgIcon="close"></mat-icon>
     </button>
+    <div style = "height:600px;min-height:601px;">
     <img *ngIf="structure" appSubstanceImage [entityId]="structure" size="600" stereo="true">
+    </div>
     <mat-tab-group *ngIf="smiles || (names && names.length > 0) || inchi">
       <mat-tab label="Systematic Names" *ngIf="names && names.length > 0">
         <ul>

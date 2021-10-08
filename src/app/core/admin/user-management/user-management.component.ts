@@ -162,6 +162,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
 
 
   deleteUser(username: string, index: number): void {
+    if (confirm('Are you sure you want to set this user to inactive? This is essentially deleting the user.')) {
     this.adminService.deleteUser(username).subscribe( response => {
       if (response) {
         this.updateLocalData(response, index, null, username);
@@ -170,6 +171,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         this.filtered.data = backup;
       }
     });
+  }
   }
 
   addUser(): void {

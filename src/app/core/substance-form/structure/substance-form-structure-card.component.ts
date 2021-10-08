@@ -197,10 +197,14 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   generateSRU(): void {
+    this.loadingService.setLoading(true);
     this.structureService.interpretStructure(this.structure.molfile).subscribe(response => {
       if (response.structuralUnits && response.structuralUnits.length > 0) {
         this.substanceFormStructuralUnitsService.updateSRUs(response.structuralUnits);
       }
+      this.loadingService.setLoading(false);
+    }, error => {
+      this.loadingService.setLoading(false);
     });
   }
 
