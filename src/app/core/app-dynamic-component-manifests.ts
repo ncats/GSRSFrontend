@@ -38,6 +38,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'substance-names',
     loadChildren: () => import('./substance-details/substance-names/substance-names.module')
       .then(m => m.SubstanceNamesModule),
+  } ,
+  {
+    componentId: 'substance-dictionary',
+    path: 'substance-dictionary',
+    loadChildren: () => import('./substance-details/substance-dictionary/substance-dictionary.module')
+      .then(m => m.SubstanceNamesModule),
   },
   {
     componentId: 'substance-notes',

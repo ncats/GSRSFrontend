@@ -1,9 +1,19 @@
 {
-  "version": "2.7.1 USP",
+  "version": "2.7.2 USP",
   "substanceDetailsCards": [
     {
       "card": "substance-overview",
       "title": "overview"
+    },
+    {
+      "card": "substance-dictionary",
+      "title": "dictionary",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "names"
+        }
+      ]
     },
     {
       "card": "substance-primary-definition",

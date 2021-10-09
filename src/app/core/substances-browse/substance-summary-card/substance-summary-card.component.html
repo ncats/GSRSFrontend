@@ -1,8 +1,6 @@
 <mat-card>
   <mat-card-title>
-    <a class="substance-name" [routerLink]="['/substances', substance.uuid]" matTooltip = "View substance details" >
-      <span [innerHTML] = "substance._nameHTML"></span>
-    </a>
+     
     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
     </mat-icon>
     <span class="middle-fill"></span>
@@ -267,9 +265,9 @@
     <div *ngIf = "alignments" >
       <app-sequence-alignment *ngFor = "let alignment of alignments"  [alignmentArray] = "alignment"></app-sequence-alignment>
     </div>
-    <div>
+    <!--div>
       <app-substance-hierarchy [uuid] = "this.substance.uuid" [name] = "this.substance._name" [approvalID] ="this.substance.approvalID" ></app-substance-hierarchy>
-    </div>
+    </div-->
     <div>
       <ng-template appCardDynamicSection></ng-template>
       <!--

@@ -1,0 +1,159 @@
+.mat-card {
+    max-width: 1228px;
+    margin-bottom: 20px;
+}
+
+.mat-card, .controls-container {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mat-card-title {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.mat-card-title {
+    white-space: normal;
+
+    .substance-name {
+        color: #448aff;
+        padding-right: 10px;
+    }
+
+      .approval {
+        font-size: 16px;
+        color: #c7254e;
+      }
+
+}
+
+.substance-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.tile .structure-container {
+    width:100%;
+    padding-right:0px;
+}
+
+.structure-container {
+    padding-right: 10px;
+}
+
+.mat-card-content {
+
+    .mat-chip-list-container {
+        margin-left: -10px;
+        margin-bottom: 10px;
+    }
+}
+
+.tile .image-thumbnail {
+    margin:auto;
+    margin-bottom:20px;
+    height:175px;
+    width:175px;
+}
+
+.image-thumbnail{
+    height:150px;
+    width:150px;
+}
+
+.zoom:hover{
+    cursor:zoom-in;
+}
+
+.substance-data {
+    display: flex;
+    flex-direction: row;
+
+    &:not(:last-child) {
+        margin-bottom: 15px;
+    }
+
+    .label {
+        font-weight: bold;
+        min-width: 100px;
+    }
+}
+
+.icon-align{
+    margin-top: -10px;
+    vertical-align: bottom;
+}
+
+.ext-link{
+    color: #448aff;
+    text-decoration-style: unset;
+}
+
+@media(max-width: 700px) {
+    .mat-card-title {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .substance-name {
+            margin-bottom: 10px;
+        }
+    }
+
+    .substance-data {
+        flex-direction: column;
+
+        .label {
+            margin-bottom: 10px;
+        }
+
+        .value, .code-system {
+            padding-left: 20px;
+        }
+    }
+}
+
+.lock-icon {
+    color: #f0ad4e;
+}
+
+@media(max-width: 600px) {
+
+    .substance-content {
+        flex-direction: column;
+
+        .image-thumbnail {
+            margin: 0 auto;
+        }
+    }
+}
+
+.definition {
+  padding: 7px 0px;
+}
+
+.similarity {
+  padding-left: 10px;
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+  color: #c7254e;
+}
+
+.similarity-label {
+  font-style: italic;
+}
+
+.inxight-container {
+    text-align: right;
+    padding-bottom: 15px;
+}
+
+.small-icon {
+    height:20px;
+    width: 20px;
+    padding-bottom: 5px;
+    vertical-align: middle;
+}
