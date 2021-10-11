@@ -43,7 +43,7 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     componentId: 'substance-dictionary',
     path: 'substance-dictionary',
     loadChildren: () => import('./substance-details/substance-dictionary/substance-dictionary.module')
-      .then(m => m.SubstanceNamesModule),
+      .then(m => m.SubstanceDictionaryModule),
   },
   {
     componentId: 'substance-notes',

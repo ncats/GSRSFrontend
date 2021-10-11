@@ -28,4 +28,4 @@ import {MatDialogModule, MatIconModule, MatSortModule, MatTooltipModule} from '@
   declarations: [SubstanceDictionaryComponent,
   ]
 })
-export class SubstanceNamesModule { }
+export class SubstanceDictionaryModule { }
