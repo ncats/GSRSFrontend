@@ -1232,6 +1232,43 @@ this.emitDisulfideLinkUpdate();
               }
             }
           }
+          if (substanceCopy.modifications && substanceCopy.modifications.physicalModifications) {
+            for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
+              const prop = substanceCopy.modifications.physicalModifications[i];
+              if (!prop.physicalModificationRole ) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Physical Modification #' + (i + 1) + ' requires a modification type or valid parameter',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              } else {
+                let present = false;
+                prop.parameters.forEach (param => {
+                  if (param.amount.type) {
+                    present = true;
+                  }
+                });
+                if (!present) {
+                  const invalidPropertyMessage: ValidationMessage = {
+                    actionType: 'frontEnd',
+                    appliedChange: false,
+                    links: [],
+                    message: 'Physical Modification #' + (i + 1) + ' requires a modification type or valid parameter',
+                    messageType: 'ERROR',
+                    suggestedChange: true
+                  };
+                  results.validationMessages.push(invalidPropertyMessage);
+                  results.valid = false;
+                }
+              }
+            }
+          }
         }
         observer.next(results);
         observer.complete();

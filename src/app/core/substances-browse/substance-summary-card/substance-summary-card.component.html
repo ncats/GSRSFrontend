@@ -44,31 +44,33 @@
         <div class = 'definition' *ngIf = "substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
           {{substance.definitionLevel }} DEFINITION
         </div>
-        <button
+        <div class = "button-wrapper">
+        <button class = "summary-button"
           mat-icon-button [matMenuTriggerFor]="downloadMenu">
           <mat-icon svgIcon="get_app"></mat-icon>
         </button>
 
-        <button *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
+        <button class = "summary-button" *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
 
-        <a  class = "mat-icon-button" aria-label = "Advanced Search"  mat-icon-button [routerLink]="['/advanced-search']"
+        <a  class = "mat-icon-button" aria-label = "Advanced Search" class = "summary-button" mat-icon-button [routerLink]="['/advanced-search']"
           matTooltip='Advanced Search'>
           <mat-icon svgIcon="youtube"></mat-icon>
         </a>
 
-        <a class = "mat-icon-button" matTooltip = "edit substance" aria-label = "edit substance" *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
+        <a class = "mat-icon-button" matTooltip = "edit substance" class = "summary-button" aria-label = "edit substance" *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
           <mat-icon svgIcon="edit"></mat-icon>
         </a>
 
-        <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+        <button class = "summary-button" *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
           <mat-icon svgIcon="file_copy"></mat-icon>
         </button>
 
-        <button *ngIf="subunits" mat-icon-button [matMenuTriggerFor]="sequenceMenu" matTooltip = "sequence search">
+        <button  class = "summary-button" *ngIf="subunits" mat-icon-button [matMenuTriggerFor]="sequenceMenu" matTooltip = "sequence search">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
+      </div>
 
 
         <mat-menu #sequenceMenu="matMenu">

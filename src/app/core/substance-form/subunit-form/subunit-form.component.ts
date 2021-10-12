@@ -194,7 +194,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
    }*/
 
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string, type: string): any {
-    const vocab = (this.vocabulary[unitValue] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue].display);
+    const vocab = (this.vocabulary[unitValue.toUpperCase()] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue.toUpperCase()].display);
     const arr = [];
     const formatted = {
       'modification': 'Structural Modification',

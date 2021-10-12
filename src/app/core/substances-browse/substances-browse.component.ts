@@ -426,6 +426,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               this.narrowSearchSuggestionsCount++;
             });
           }
+          this.matchTypes.sort();
+
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response;
           });

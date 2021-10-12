@@ -20,14 +20,16 @@
     <div class="side-nav-content" *ngIf="substances && substances.length">
       <div class="narrow-search-suggestions-container"
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
-        <div class="mat-elevation-z2 narrow-search-suggestions">
+        <div class = "flex-row">
+        <div class="mat-elevation-z2 narrow-search-suggestions" style = "margin:auto; background-color: white;">
           <div>
             Would you like to restrict this search to a field?
           </div>&nbsp;
-          <button mat-flat-button color="primary" [matMenuTriggerFor]="searchSuggestions"
+          <button mat-flat-button color="primary" [matMenuTriggerFor]="searchSuggestions" style = "padding-right: 5px;"
             (menuOpened)="increaseOverlayZindex()" (menuClosed)="decreaseOverlayZindex()">
-            <span>Matches</span>&nbsp;
+            <span>Fields </span>&nbsp;
             {{narrowSearchSuggestionsCount}}
+            <mat-icon svgIcon = "drop_down"></mat-icon>
           </button>
           <button mat-flat-button color="primary" (click)="clearFilters()">
             <span>RESET</span>
@@ -52,6 +54,12 @@
             </div>
           </mat-menu>
         </div>
+      </div>
+        <div class = "flex-row">
+          <div class="mat-elevation-z2 narrow-search-suggestions" style = "margin:auto; background-color: white; margin-top: 12px; ">
+              For more options use the    <a routerLink="/advanced-search" style = "padding-left: 6px;"> Advanced Search</a>
+          </div>
+      </div>
       </div>
       <ng-template #filterParameters>
         <div class="search-parameters">
