@@ -79,14 +79,13 @@ export class SubstanceDictionaryComponent implements OnInit {
     } else {
       this.getApprovalID();
     }
-    this.innName="no INN name!";
+    this.innName = 'no INN name!';
     this.names.forEach(name => {
-      console.log("name.name: " + name.name);
-      if (name.name.toUpperCase().endsWith("[INN]") ) {
+      console.log('name.name: ' + name.name);
+      if (name.name.toUpperCase().endsWith('[INN]') ) {
         this.innName = name.name;
       }
     });
-    
   }
 
   getApprovalID() {
