@@ -803,7 +803,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       data: {
         type: type,
         fileUrl: fileUrl
-      }
+      },
+      disableClose: true
     });
     this.overlayContainer.style.zIndex = '1002';
 

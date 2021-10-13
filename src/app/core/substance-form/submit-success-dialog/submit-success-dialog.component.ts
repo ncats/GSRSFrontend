@@ -7,6 +7,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
   styleUrls: ['./submit-success-dialog.component.scss']
 })
 export class SubmitSuccessDialogComponent implements OnInit {
+  dialogTitle: string;
   dialogMessage: string = "Update was performed.";
   fileUrl: string = null;
 
@@ -16,9 +17,11 @@ export class SubmitSuccessDialogComponent implements OnInit {
   ) {
     switch (data.type) {
       case 'submit':
+        this.dialogTitle = 'Submission Success';
         this.dialogMessage = 'Substance was submitted successfully';
         break;
       case 'approve':
+        this.dialogTitle = 'Submission Approved';
         this.dialogMessage = 'Substance was approved successfully';
         break;
     }
@@ -27,6 +30,8 @@ export class SubmitSuccessDialogComponent implements OnInit {
     // whereby we display a button that reveals the substance file uploaded onto the pFDA environment
     if (data.fileUrl) {
       this.fileUrl = data.fileUrl;
+      this.dialogTitle = 'Substance Saved';
+      this.dialogMessage = 'The substance was saved successfully your pFDA Home';
     }
    }
 

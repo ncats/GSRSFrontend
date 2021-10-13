@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>
-    Success
+    {{dialogTitle}}
 </h1>
 <div mat-dialog-content>
     {{dialogMessage}}
@@ -11,5 +11,6 @@
 </div>
 <div class="flex-row" mat-dialog-actions *ngIf="fileUrl">
     <span class="middle-fill"></span>
+    <button mat-flat-button color="primary" (click)="dismissDialog('browse')">Go to Browse</button>
     <button mat-flat-button color="primary" (click)="dismissDialog('viewInPfda')">View Substance File</button>
 </div>
