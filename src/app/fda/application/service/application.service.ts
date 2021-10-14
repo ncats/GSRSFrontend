@@ -27,9 +27,10 @@ export class ApplicationService extends BaseHttpService {
   totalRecords = 0;
   application: Application;
 
-  apiBaseUrlWithApplicationEntityUrl = this.apiBaseUrl + 'applications' + '/';
-  apiBaseUrlWithApplicationAllEntityUrl = this.apiBaseUrl + 'applicationsall' + '/';
-  apiBaseUrlWithApplicationDarrtsEntityUrl = this.apiBaseUrl + 'applicationsdarrts' + '/';
+  apiBaseUrlWithApplicationEntityUrl =       this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+  apiBaseUrlWithApplicationAllEntityUrl =    this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
+//TODO: remove explicit references like this if at all possible
+  apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
 
   constructor(
     public http: HttpClient,
