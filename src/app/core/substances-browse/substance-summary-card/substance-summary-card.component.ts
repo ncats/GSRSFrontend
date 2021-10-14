@@ -33,7 +33,8 @@ export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceSummary;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Input() showAudit: boolean;
-  isAdmin = false;
+  isAdmin = false;  //this shouldn't be called "isAdmin", it's typically used to mean "canUpdate". Should fix for future devs.
+  canCreate = false; //meant to allow creating new records
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
   @Input() names?: Array<SubstanceName>;
@@ -62,9 +63,14 @@ export class SubstanceSummaryCardComponent implements OnInit {
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
-    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {
       if (response) {
         this.isAdmin = response;
+      }
+    });
+    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'admin').pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.canCreate = response;
       }
     });
     if (this.substance.protein) {
