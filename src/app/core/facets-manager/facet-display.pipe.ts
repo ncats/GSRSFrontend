@@ -31,13 +31,13 @@ export class FacetDisplayPipe implements PipeTransform {
       return 'Stereochemistry';
     }
     if (name === 'root_lastEdited') {
-      return 'Last Edited';
+      return 'Last Edited Date';
     }
     if (name === 'root_approved') {
-      return 'Last Validated';
+      return 'Last Validated Date';
     }
-    if (name === 'root_approved') {
-      return 'Last Validated';
+    if (name === 'root_created') {
+      return 'Created Date';
     }
     if (name === 'Approved By') {
       return 'Validated By';
