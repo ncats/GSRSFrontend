@@ -63,7 +63,7 @@
           <mat-icon svgIcon="edit"></mat-icon>
         </a>
 
-        <button class = "summary-button" *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+        <button class = "summary-button" *ngIf="canCreate" mat-icon-button [matMenuTriggerFor]="editMenu">
           <mat-icon svgIcon="file_copy"></mat-icon>
         </button>
 
