@@ -9,6 +9,7 @@
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
+  "approvalCodeName":"UNII",
   "loadedComponents": {
     "applications": true,
     "products": true,
