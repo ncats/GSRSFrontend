@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
 import {
   SubstanceDetail,
+  SubstanceBase,
   SubstanceName,
   SubstanceSummary,
   SubstanceCode,
@@ -19,14 +20,19 @@ import { SubstanceSummaryDynamicContent } from '../../substances-browse/substanc
 import {Router} from '@angular/router';
 import {Alignment} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
+import { GeneralService } from 'src/app/fda/service/general.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
 
 @Component({
   selector: 'substance-dictionary-component',
   templateUrl: './substance-dictionary.component.html',
   styleUrls: ['./substance-dictionary.component.scss']
 })
-export class SubstanceDictionaryComponent implements OnInit {
-  private privateSubstance: SubstanceSummary;
+export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<SubstanceDetail> implements OnInit {
+  private privateSubstance: SubstanceDetail;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Input() showAudit: boolean;
   isAdmin = false;
@@ -38,7 +44,11 @@ export class SubstanceDictionaryComponent implements OnInit {
   alignments?: Array<Alignment>;
   inxightLink = false;
   inxightUrl: string;
+  substanceUpdated = new Subject<SubstanceDetail>();
   innName: string;
+  usanName: string;
+  banName: string;
+  pronName: string;
 
   constructor(
     public utilsService: UtilsService,
@@ -49,14 +59,25 @@ export class SubstanceDictionaryComponent implements OnInit {
     private componentFactoryResolver: ComponentFactoryResolver,
     private router: Router,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
-  ) { }
+  ) { 
+    super(gaService);
+  }
 
   ngOnInit() {
+    console.log('ngOnInit');
+    this.substanceUpdated.subscribe(substance => {
+      console.log('subscribe.  substance:' + substance);
+      this.substance = substance;
+      this.finishiInit();
+    });
     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       if (response) {
         this.isAdmin = response;
       }
     });
+  }
+
+  finishiInit() {
     if (this.substance.protein) {
       this.subunits = this.substance.protein.subunits;
       this.getAlignments();
@@ -79,16 +100,26 @@ export class SubstanceDictionaryComponent implements OnInit {
     } else {
       this.getApprovalID();
     }
-    this.innName="no INN name!";
-    this.names.forEach(name => {
-      console.log("name.name: " + name.name);
-      if (name.name.toUpperCase().endsWith("[INN]") ) {
+    this.innName = '';
+    this.pronName='';
+    this.banName='';
+    this.usanName='';
+
+    this.substance.names.forEach(name => {
+      //console.log('name.name: ' + name.name);
+      if (name.name.toUpperCase().endsWith('[INN]') ) {
+        console.log('found our innName');
         this.innName = name.name;
+      } else if(name.name.toUpperCase().endsWith('[USAN]')){
+        this.usanName=name.name;
+      } else if(name.name.toUpperCase().endsWith('[BAN]')){
+        this.banName=name.name;
+      } else if(name.type.toUpperCase()==='PRON'){
+        this.pronName=name.name;
       }
     });
-    
-  }
 
+  }
   getApprovalID() {
     if (!this.substance.approvalID) {
       if (this.substance._approvalIDDisplay &&
@@ -99,18 +130,36 @@ export class SubstanceDictionaryComponent implements OnInit {
     }
   }
 
-  @Input()
-  set substance(substance: SubstanceSummary) {
+/*  @Input()
+  set substance(substance: SubstanceDetail) {
     if (substance != null) {
       this.privateSubstance = substance;
-
+      this.substance=substance;
       this.loadDynamicContent();
     }
+  }*/
+
+  getSubstanceDetails(id: string, version?: string) {
+    this.substanceService.getSubstanceDetails(id, version).subscribe(response => {
+      if (response) {
+        //this.substance = response;
+        this.substanceUpdated.next(response);
+        
+      } else {
+        //this.handleSubstanceRetrivalError();
+      }
+      //this.loadingService.setLoading(false);
+    }, error => {
+      this.gaService.sendException('getSubstanceDetails: error from API call');
+//      this.loadingService.setLoading(false);
+//      this.handleSubstanceRetrivalError();
+    });
   }
 
-  get substance(): SubstanceSummary {
+
+  /*get substance(): SubstanceDetail {
     return this.privateSubstance;
-  }
+  }*/
 
   openImageModal(): void {
     this.openImage.emit(this.substance);

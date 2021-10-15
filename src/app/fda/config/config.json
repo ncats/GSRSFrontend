@@ -5,7 +5,18 @@
   "adverseEventShinyHomepageDisplay": "true",
   "adverseEventShinySubstanceNameDisplay": "true",
   "adverseEventShinyAdverseEventDisplay": "true",
+  "apiBaseUrl" : "http://localhost:9000/ginas/app/",
   "substanceDetailsCards": [
+    {
+      "card": "substance-dictionary",
+      "title": "dictionary",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "names"
+        }
+      ]
+    },
     {
       "card": "substance-overview",
       "title": "overview"

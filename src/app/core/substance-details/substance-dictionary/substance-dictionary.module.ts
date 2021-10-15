@@ -8,7 +8,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
-import {MatDialogModule, MatIconModule, MatSortModule, MatTooltipModule} from '@angular/material';
+import {MatDialogModule, MatIconModule, MatSortModule, MatTooltipModule, MatChipsModule, MatMenuModule, MatCardModule} from '@angular/material';
+import { RouterModule } from '@angular/router';
+import { SequenceAlignmentComponent } from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
+import { SubstanceHierarchyComponent } from '@gsrs-core/substances-browse/substance-hierarchy/substance-hierarchy.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -23,9 +26,14 @@ import {MatDialogModule, MatIconModule, MatSortModule, MatTooltipModule} from '@
     MatIconModule,
     MatDialogModule,
     MatSortModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatChipsModule,
+    RouterModule,
+    MatMenuModule,
+    MatCardModule,
+
   ],
-  declarations: [SubstanceDictionaryComponent,
+  declarations: [SubstanceDictionaryComponent
   ]
 })
 export class SubstanceDictionaryModule { }

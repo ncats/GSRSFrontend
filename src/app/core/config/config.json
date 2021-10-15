@@ -1,5 +1,6 @@
 {
   "version": "2.7.2 USP",
+  "apiBaseUrl" : "http://localhost:8081/api",
   "substanceDetailsCards": [
     {
       "card": "substance-overview",

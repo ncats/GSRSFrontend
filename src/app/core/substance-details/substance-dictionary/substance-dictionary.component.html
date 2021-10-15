@@ -24,18 +24,18 @@
         <div *ngIf="!substance.structure">
           <div class="mat-chip-list-container">
             <mat-chip-list selectable="false" multiple="false">
-              <mat-chip color="primary" selected>{{substance.substanceClass | facetDisplay: 'types' | uppercase}}</mat-chip>
+             <!-- <mat-chip color="primary" selected>{{substance.substanceClass | facetDisplay: 'types' | uppercase}}</mat-chip>-->
             </mat-chip-list>
           </div>
         </div>
         <div class="image-thumbnail">
           <div *ngIf="substance.structure || substance.polymer">
             <a class="zoom" (click)="openImageModal(substance)">
-              <img appSubstanceImage [entityId]="substance.uuid"  [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
+            <!--  <img appSubstanceImage [entityId]="substance.uuid"  [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">-->
             </a>
           </div>
           <div *ngIf="!substance.structure && !substance.polymer">
-            <img appSubstanceImage [entityId]="substance.uuid" [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
+         <!--   <img appSubstanceImage [entityId]="substance.uuid" [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">-->
           </div>
         </div>
         <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
@@ -114,17 +114,18 @@
 
       </div>
       <div>
-        <div class="substance-data substance-names" *ngIf="names && names.length">
-          <div class="label">Names:</div>
+        <div class="substance-data substance-names" >
+          <!--*ngIf="names && names.length"-->
+          <!--div class="label">Names:</div>
           <div>
-            <div class="value space-bottom" *ngFor="let nameObject of names | namesDisplayOrder" [innerHTML] = nameObject._nameHTML>
+              <div class="value space-bottom" *ngFor="let nameObject of names | namesDisplayOrder" [innerHTML] = nameObject._nameHTML>
               
               <span *ngIf="nameObject.displayName == true" matTooltip="Accepted Name">
                 <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
               </span>
-            </div>
+            </div>>
           </div>
-        </div>
+        </div-->
         <div class="substance-data substance-names" *ngIf="names">
           <div class="label">INN Name:</div>
           <div class="value space-bottom">
@@ -134,9 +135,9 @@
         <div class="substance-data substance-code-systems" *ngIf="codeSystems">
           <div class="label">Codes:</div>
           <div>
-            <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5">
+          <!--  <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5">-->
               <div class="code-system">
-                <span class="label">{{codeSystemName | codeSystemDisplay | async}}</span>:&nbsp;
+               <!-- <span class="label">{{codeSystemName | codeSystemDisplay | async}}</span>:&nbsp;-->
                 <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast">
                   <span *ngIf="codeObject.url">
                     <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
@@ -149,7 +150,7 @@
                   <span *ngIf="!isLast">, </span>
                 </span>
               </div>
-            </div>
+           <!-- </div> -->
           </div>
         </div>
         <div class="substance-data substance-relationships"
@@ -195,6 +196,38 @@
           </div>
         </div>
       </div>
+      
+      <div class="substance-data substance-names" > <!--*ngIf="names"-->
+        <div *ngIf='innName'>
+          <div class="label">INN Name:</div>
+          <div class="value space-bottom">
+          {{ innName }}
+          </div>
+        </div>
+        <div *ngIf='usanName'>
+          <div class="label">USAN Name:</div>
+          <div class="value space-bottom">
+          {{ usanName }}
+          </div>
+        </div>
+        <div *ngIf='banName'>
+          <div class="label">BAN Name:</div>
+          <div class="value space-bottom">
+          {{ banName }}
+          </div>
+        </div>
+        <div *ngIf='pronName'>
+          <div class="label">Prononciation:</div>
+          <div class="value space-bottom">
+          {{ pronName }}
+          </div>
+        </div>
+        </div>
+
+
+    </div>
+
+
     
       <div class="right-aligned">
         <div *ngIf = "inxightLink" class = "inxight-container">
@@ -269,18 +302,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div *ngIf = "alignments" >
-      <app-sequence-alignment *ngFor = "let alignment of alignments"  [alignmentArray] = "alignment"></app-sequence-alignment>
-    </div>
-    <div>
-      <app-substance-hierarchy [uuid] = "this.substance.uuid" [name] = "this.substance._name" [approvalID] ="this.substance.approvalID" ></app-substance-hierarchy>
-    </div>
-    <div>
-      <ng-template appCardDynamicSection></ng-template>
-      <!--
-      <ng-template appBrowseHeaderDynamicSection></ng-template>
-      -->
     </div>
   </mat-card-content>
 </mat-card>
