@@ -709,7 +709,7 @@
         "Conditions"
       ]
     },
-    "clinicaltrialus": {
+    "clinicaltrialsus": {
       "default": [
         "Has Substances",
         "CT Matching Complete",
