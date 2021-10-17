@@ -100,8 +100,9 @@ export class GeneralService extends BaseHttpService {
   }
 
   getSearchCount(substanceUuid: string): Observable<any> {
+   const url = `${this.configService.configData.apiBaseUrl}api/v1/searchcounts/` + substanceUuid;
    // const url = this.baseUrl + 'getSubstanceSearchCountBySubstanceUuid?substanceUuid=' + substanceUuid;
-   const url = this.apiBaseUrl + 'searchcounts/' + substanceUuid;
+   // const url = this.apiBaseUrl + 'searchcounts/' + substanceUuid;
     return this.http.get<any>(url)
       .pipe(
         map(res => {
@@ -230,11 +231,26 @@ export class GeneralService extends BaseHttpService {
       );
   }
 
+  // for GSRS 3.0
+  getApiExportUrlBrowseSubstance(etag: string, extension: string, source: string): string {
+    let url = '';
+    if (source) {
+      if (source === 'app') {
+        return url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/${etag}/appxlsx`;
+      }
+      if (source === 'prod') {
+        return url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/${etag}/prodxlsx`;
+      }
+    }
+    return url;
+  }
+
   getApiExportUrl(etag: string, extension: string): string {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/applicationssrs/export/${etag}/${extension}`;
     return url;
   }
 
+  // for 2.x, will REMOVE in the future
   getEtagDetails(etag: string, fullname: string, source: string): Observable<any> {
     const url = this.baseUrl + 'getEtagDetails?etagId=' + etag + '&filename=' + fullname + '&source=' + source;
     return this.http.get<any>(url)

@@ -3,10 +3,10 @@
     <div class = "download-header">
           <div class = "download-name">{{download.displayFilename}}</div>
           <div class = "status">
-               <span class = "time-label">Status: </span> 
+               <span class = "time-label">Status: </span>
                <span class = "time-field large-val">{{download.status}}</span>
           </div>
-    </div>       
+    </div>
 
  <div  class = "form-row ">
    <div class = "side-bar text-center">
@@ -25,7 +25,7 @@
                </mat-icon>
                <div>
                <div class = "label"><i>Download Cancelled</i></div>
-               
+
                </div>
            </div>
            <div *ngIf="download.status === 'COMPLETE'">
@@ -33,13 +33,13 @@
                    </mat-icon>
                    <div>
                    <div class = "label"><i>Export complete</i></div>
-                   
+
                    </div>
                </div>
 
-           
+
        </div>
-              
+
        <div class = "bottom-button">
             <a mat-button  *ngIf="download.complete" class = "mat-flat-button mat-primary" color = "primary"  [href] = "this.download.downloadUrl.url" target = "_blank">
                        <mat-icon svgIcon="get_app"></mat-icon>
@@ -49,11 +49,11 @@
                    (click to cancel)
                </button>
        </div>
-      
+
    </div>
    <div class = "main-bar">
 
-   <div class="main-container">          
+   <div class="main-container">
        <div class = "table-row" *ngIf = "download.numRecords !== null && (download.status === 'RUNNING')" >
            <div class = "label table-label">Records Processed So Far:</div>
            <div class = "table-value">{{download.numRecords}}</div>
@@ -76,6 +76,10 @@
                 class = "query-link" [routerLink] = "['/browse-applications']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
                     Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
                 </a>
+                <a *ngIf = "type === 'adverseevent'"
+                class = "query-link" [routerLink] = "['/browse-adverse-events']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
+                    Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
+                </a>
             </div>
            <div class = "table-value facet-container">
                <div class = "query-row" *ngIf = "parameters.search">
@@ -90,13 +94,13 @@
                                 </div>
                     </span>
                </span>
-               
+
             <div class = "query-row" *ngIf = "parameters.order">
                     <div class = "query-label">Sort By: </div>
                     <div class = "query-value">{{displayOrder}}</div>
                 </div>
-           
-            
+
+
         </div>
        </div>
        <div class = "table-row" *ngIf = "download.size" >
@@ -107,20 +111,20 @@
                <div class = "label table-label">SHA-1:</div>
                <div class = "table-value">{{download.sha1}}</div>
            </div>
-       
+
        </div>
    </div>
 <div class = "end-bar">
 <div class = "job-dates">
    <div *ngIf="download.started" class = "table-row" matTooltip = "{{download.started | date: 'long'}}">
-          <span class = "time-label">Started: </span> 
+          <span class = "time-label">Started: </span>
            <span class = "time-field">{{download.startedHuman}}</span>
    </div>
    <div *ngIf="download.finished" class = "table-row"  matTooltip = "{{download.finished | date: 'long'}}">
-       <span class = "time-label">Ended: </span> 
+       <span class = "time-label">Ended: </span>
            <span class = "time-field">{{download.finishedHuman}}</span>
    </div>
-</div>  
+</div>
 <div *ngIf="!download.enabled" class = "bottom-button" >
    <button mat-button class = "mat-flat-button mat-primary" color = "primary"  (click)="deleteDownload()">
        <mat-icon svgIcon="delete_forever"></mat-icon>
@@ -143,4 +147,4 @@
        <div class = "deleted">
            Download not found
        </div>
-   </div>    
+   </div>

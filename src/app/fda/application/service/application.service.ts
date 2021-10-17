@@ -27,9 +27,14 @@ export class ApplicationService extends BaseHttpService {
   totalRecords = 0;
   application: Application;
 
-  apiBaseUrlWithApplicationEntityUrl = this.apiBaseUrl + 'applications' + '/';
-  apiBaseUrlWithApplicationAllEntityUrl = this.apiBaseUrl + 'applicationsall' + '/';
-  apiBaseUrlWithApplicationDarrtsEntityUrl = this.apiBaseUrl + 'applicationsdarrts' + '/';
+  //apiBaseUrlWithApplicationEntityUrl = this.apiBaseUrl + 'applications' + '/';
+  //apiBaseUrlWithApplicationAllEntityUrl = this.apiBaseUrl + 'applicationsall' + '/';
+  // apiBaseUrlWithApplicationDarrtsEntityUrl = this.apiBaseUrl + 'applicationsdarrts' + '/';
+
+  apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+  apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
+  //TODO: remove explicit references like this if at all possible
+  apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
 
   constructor(
     public http: HttpClient,
@@ -67,10 +72,24 @@ export class ApplicationService extends BaseHttpService {
     return this.http.get<PagingResponse<Application>>(url, options);
   }
 
+  /*
   getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
       url = this.apiBaseUrlWithApplicationEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.application.application.models.Application&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    return this.http.get<FacetQueryResponse>(url);
+  }
+  */
+
+  getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/applications/search/@facets?wait=false&kind=gov.hhs.gsrs.application.application.models.Application&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
@@ -198,7 +217,7 @@ export class ApplicationService extends BaseHttpService {
   getApplicationCenterList(
     substanceKey: string
   ): Observable<any> {
-   const url = this.apiBaseUrlWithApplicationAllEntityUrl + 'distcenter/' + substanceKey;
+    const url = this.apiBaseUrlWithApplicationAllEntityUrl + 'distcenter/' + substanceKey;
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -208,11 +227,11 @@ export class ApplicationService extends BaseHttpService {
   }
 
   getApplicationBySubstanceKeyCenter(substanceKey: string): Observable<any> {
-   // const url = this.apiBaseUrlWithEntityAllContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:'
-   // + substanceKey;
+    // const url = this.apiBaseUrlWithEntityAllContext + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:'
+    // + substanceKey;
 
     const url = this.apiBaseUrlWithApplicationEntityUrl + 'search?q=root_applicationProductList_applicationIngredientList_substanceKey:'
-     + substanceKey;
+      + substanceKey;
     return this.http.get<Application>(url)
       .pipe(
         map(result => {
@@ -310,7 +329,7 @@ export class ApplicationService extends BaseHttpService {
   ): Observable<any> {
     const appTypeNumber = appType + appNumber;
     const url = this.apiBaseUrlWithApplicationDarrtsEntityUrl + appTypeNumber;
-   // const url = this.baseUrl + 'applicationDarrtsDetails2?appType=' + appType + '&appNumber=' + appNumber;
+    // const url = this.baseUrl + 'applicationDarrtsDetails2?appType=' + appType + '&appNumber=' + appNumber;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -488,10 +507,9 @@ export class ApplicationService extends BaseHttpService {
   }
 
   deleteApplication(): Observable<any> {
-    const url = this.apiBaseUrlWithApplicationEntityUrl + '(' + this.application.id + ')';
+    const url = this.apiBaseUrlWithApplicationEntityUrl + this.application.id;
     const params = new HttpParams();
     const options = {
-      params: params
     };
     const x = this.http.delete<Application>(url, options);
     return x;

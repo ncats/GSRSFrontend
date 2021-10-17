@@ -29,7 +29,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
+import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { AdvancedSearchComponent } from '../advanced-search/advanced-search.component';
 import { AdvancedQueryStatementComponent } from './advanced-query-statement/advanced-query-statement.component';
@@ -37,6 +39,7 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor/structure-edi
 import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FacetDisplayPipe } from '@gsrs-core/facets-manager/facet-display.pipe';
+import { TypeAheadSearchComponent } from '../advanced-search/type-ahead-search/type-ahead-search.component';
 
 const advSearchRoutes: Routes = [
   {
@@ -85,7 +88,8 @@ const advSearchRoutes: Routes = [
   ],
   declarations: [
     AdvancedSearchComponent,
-    AdvancedQueryStatementComponent
+    AdvancedQueryStatementComponent,
+    TypeAheadSearchComponent
   ],
   exports: [
     AdvancedSearchComponent

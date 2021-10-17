@@ -297,6 +297,42 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     );
   }
 
+
+  confirmDeleteImpurities() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete this Impurities?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteImpurities();
+      }
+    });
+  }
+
+  deleteImpurities(): void {
+    this.impuritiesService.deleteImpurities().subscribe(response => {
+      this.impuritiesService.bypassUpdateCheck();
+      this.displayMessageAfterDeleteImpurities();
+    }, (err) => {
+      console.log(err);
+    }
+    );
+  }
+
+  displayMessageAfterDeleteImpurities() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: 'This impurities record was deleted successfully',
+        type: 'home'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(['/home']);
+    });
+  }
+
   showJSON(): void {
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -320,4 +356,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   addNewImpuritiesTotal() {
     this.impuritiesService.addNewImpuritiesTotal();
   }
+
+
 }

@@ -21,13 +21,13 @@ export class AdvancedSearchService extends BaseHttpService {
   totalRecords: 0;
   baseHref: '';
 
-  apiBaseUrlWithApplicationEntityUrl = this.apiBaseUrl + 'applications' + '/';
-  apiBaseUrlWithApplicationAllEntityUrl = this.apiBaseUrl + 'applicationsall' + '/';
-  apiBaseUrlWithApplicationDarrtsEntityUrl = this.apiBaseUrl + 'applicationsdarrts' + '/';
+  apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+  apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
+  apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
 
-  apiBaseUrlWithProductEntityUrl = this.apiBaseUrl + 'products' + '/';
-  apiBaseUrlWithProductBrowseEntityUrl = this.apiBaseUrl + 'productsall' + '/';
-  apiBaseUrlWithProductElistEntityUrl = this.apiBaseUrl + 'productselist' + '/';
+  apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
+  apiBaseUrlWithProductBrowseEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productsall' + '/';
+  apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
 
   constructor(
     public http: HttpClient,
@@ -148,4 +148,23 @@ export class AdvancedSearchService extends BaseHttpService {
     return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
   }
 
+  getTypeAheadSearchText(category: string, fieldName: string, searchTerm: string): Observable<any> {
+    let url: string;
+    let entityUrl: string;
+    if (category) {
+      if (category === 'Application') {
+        entityUrl = this.apiBaseUrlWithApplicationEntityUrl;
+      }
+      url = entityUrl + 'suggest/' + fieldName + '?q=' + searchTerm;
+    }
+    return this.http.get<any>(url);
+  }
+
+  /*
+  getSearchSuggestions(searchTerm: string): Observable<Any> {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+
+    return this.http.get<Any>(url + 'suggest?q=' + searchTerm);
+  }
+  */
 }

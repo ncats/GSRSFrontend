@@ -69,8 +69,8 @@
         </mat-form-field>
 
         <!-- Export Application Button -->
-        <div class="export">
-          <button matTooltip="Export Search Results" mat-button (click)="export()" *ngIf="isAdmin"
+        <div class="export" *ngIf="isAdmin">
+          <button matTooltip="Export Search Results" mat-button (click)="export()"
             class="mat-button export-button mat-raised-button">
             <mat-icon svgIcon="get_app"></mat-icon> Export
           </button>

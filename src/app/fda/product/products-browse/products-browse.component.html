@@ -70,7 +70,7 @@
         </mat-form-field>
 
         <!-- Export Product Button -->
-        <div class="export" *ngIf="isLoggedIn">
+        <div class="export" *ngIf="isAdmin">
           <button matTooltip="Export Search Results" mat-button (click)="export()"
             class="mat-button export-button mat-raised-button">
             <mat-icon svgIcon="get_app"></mat-icon> Export

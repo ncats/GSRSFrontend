@@ -12,26 +12,27 @@
 
 
       <!-- Register and View Application buttons -->
-      <!--
-    <span *ngIf="impurity">
-      <span *ngIf="impurity.id">
-        <button mat-flat-button color="primary" [routerLink]="['/application/register']"
+    <span *ngIf="impurities">
+      <span *ngIf="impurities.id">
+        <button mat-flat-button color="primary" [routerLink]="['/impurities/register']"
           matTooltip='Register Impurities'>
           Register New Impurities
         </button>&nbsp;&nbsp;&nbsp;
-        <button mat-flat-button color="primary" [routerLink]="['/applicationDetails', application.id]"
-          matTooltip='View this Impurity Record'>View Impurities
-        </button>&nbsp;&nbsp;&nbsp;
+
+        <a mat-flat-button color="primary" [routerLink]="['/impurities', impurities.id]" target="_blank"
+          matTooltip='View this Impurity Record (opens in a new window)'>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          View Impurities</a>&nbsp;&nbsp;&nbsp;
+
         <span *ngIf="isAdmin">
-          <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
+          <button mat-flat-button color="primary" (click)="confirmDeleteImpurities()"
             matTooltip='Delete this Impurity'>
             Delete
           </button>&nbsp;&nbsp;&nbsp;
         </span>
+
       </span>
     </span>
-    -->
-
 
       <!-- Validate and Submit Button -->
       &nbsp;

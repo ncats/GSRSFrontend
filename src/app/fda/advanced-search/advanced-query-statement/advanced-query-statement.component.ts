@@ -12,6 +12,7 @@ import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
+import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { ApplicationService } from '../../application/service/application.service';
 import { ProductService } from '../../product/service/product.service';
 import { ClinicalTrialService } from '../../clinical-trials/clinical-trial/clinical-trial.service';
@@ -72,6 +73,8 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
   categoryinput: string;
   advancedQueryStatements: Array<AdvancedQueryStatement> = [];
   dictionaryFileName: string;
+
+  searchValue: string;
 
   constructor(
     private overlayContainerService: OverlayContainer,
@@ -354,6 +357,64 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
         this.queryUpdated,
         this.queryParts
       );
+    }
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.navigateToSearchResults(searchValue);
+  }
+
+  navigateToSearchResults(searchTerm: string) {
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: searchTerm ? { 'search': searchTerm } : null
+    };
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+
+  ingredientNameUpdated(substance: SubstanceSummary): void {
+  //  this.ingredientNameMessage = '';
+    if (substance != null) {
+      const relatedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+
+      if (relatedSubstance != null) {
+        /*
+        if (relatedSubstance.refuuid != null) {
+          this.ingredientNameMessage = '';
+          this.ingredientNameActiveMoiety.length = 0;
+
+          if (!this.substanceKeyTypeConfig) {
+            alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Ingredient Name');
+            this.ingredientNameMessage = 'Add Substance Key Type in Config';
+          } else {
+            this.getSubstanceCode(relatedSubstance.refuuid, 'ingredientname');
+
+            this.substanceUuid = relatedSubstance.refuuid;
+            this.ingredientName = relatedSubstance.name;
+
+            // Populate Basis of Strength if it is empty/null
+            if (!this.ingredient.basisOfStrengthSubstanceKey) {
+              this.basisOfStrengthIngredientName = relatedSubstance.name;
+              this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
+              // Get Active Moiety
+              this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
+            }
+
+            // Get Active Moiety
+            this.getActiveMoiety(this.substanceUuid, 'ingredientname');
+          }
+        }
+        */
+      }
+    } else {
+      //this.substanceUuid = null;
     }
   }
 

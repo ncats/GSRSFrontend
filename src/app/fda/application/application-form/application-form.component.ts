@@ -393,16 +393,18 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   deleteApplication(): void {
     this.applicationService.deleteApplication().subscribe(response => {
-      if (response) {
-        this.displayMessageAfterDeleteApp();
-      }
-    });
+      this.applicationService.bypassUpdateCheck();
+      this.displayMessageAfterDeleteApp();
+    }, (err) => {
+      console.log(err);
+    }
+    );
   }
 
   displayMessageAfterDeleteApp() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        message: 'The application has been deleted',
+        message: 'This application record was deleted successfully',
         type: 'home'
       }
     });

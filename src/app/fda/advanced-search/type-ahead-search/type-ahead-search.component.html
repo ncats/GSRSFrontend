@@ -1,0 +1,17 @@
+<form>
+  <!-- Search Text Box -->
+  <mat-form-field [floatLabel]="'never'" class="search-form-field space-right-small">
+    <input class="search" type="text" placeholder="Enter Search Value (Type Ahead) *" aria-label="Search Text" matInput
+      [formControl]="searchControl" [matAutocomplete]="searchAuto" (focus)="focused()">
+
+    <!-- Auto Complete -->
+    <mat-autocomplete class="substance-select" panelWidth="auto" #searchAuto="matAutocomplete"
+      (optionSelected)="searchOptionSelected($event)" (closed)="autoCompleteClosed()">
+      <mat-option *ngFor="let suggestion of substanceSuggestionsGroup" [value]="suggestion.key">
+        <div [innerHTML]="highlight(suggestion.key)" class="suggestion-styling">{{suggestion.key}}</div>
+      </mat-option>
+      <pre aria-hidden="true" class="mat-option overflow-comp" id='overflow'></pre>
+    </mat-autocomplete>
+  </mat-form-field>
+
+</form>

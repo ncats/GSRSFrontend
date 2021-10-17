@@ -43,6 +43,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   expiryDateMessage = '';
   manufactureDateMessage = '';
   viewProductUrl = '';
+  message = '';
 
   constructor(
     private productService: ProductService,
@@ -109,6 +110,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadingService.setLoading(false);
         this.isLoading = false;
       }, error => {
+        this.message = 'No Product Record found for Id ' + this.id;
         this.gaService.sendException('getProductDetails: error from API call');
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -323,16 +325,18 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteProduct(productId: number): void {
     this.productService.deleteProduct(productId).subscribe(response => {
-      if (response) {
-        this.displayMessageAfterDeleteProd();
-      }
-    });
+      this.productService.bypassUpdateCheck();
+      this.displayMessageAfterDeleteProd();
+    }, (err) => {
+      console.log(err);
+    }
+    );
   }
 
   displayMessageAfterDeleteProd() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        message: 'This product record was successfully deleted',
+        message: 'This product record was deleted successfully',
         type: 'home'
       }
     });

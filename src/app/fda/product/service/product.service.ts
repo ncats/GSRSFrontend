@@ -20,9 +20,9 @@ export class ProductService extends BaseHttpService {
   totalRecords = 0;
   product: Product;
 
-  apiBaseUrlWithProductEntityUrl = this.apiBaseUrl + 'products' + '/';
-  apiBaseUrlWithProductBrowseEntityUrl = this.apiBaseUrl + 'productsall' + '/';
-  apiBaseUrlWithProductElistEntityUrl = this.apiBaseUrl + 'productselist' + '/';
+  apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
+  apiBaseUrlWithProductBrowseEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productsall' + '/';
+  apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
 
   constructor(
     public http: HttpClient,
@@ -63,7 +63,7 @@ export class ProductService extends BaseHttpService {
   getProductFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = this.apiBaseUrlWithProductBrowseEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.products.productall.models.ProductMainAll&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = `${this.configService.configData.apiBaseUrl}api/v1/productsall/search/@facets?wait=false&kind=gov.hhs.gsrs.products.productall.models.ProductMainAll&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
@@ -306,17 +306,11 @@ export class ProductService extends BaseHttpService {
   }
 
   deleteProduct(productId: number): Observable<any> {
-   // const url = this.baseUrl + 'deleteProduct?productId=' + this.product.id + '&from=ang';
-
-    const url = this.apiBaseUrlWithProductEntityUrl + '(' + productId + ')';
-    const x = this.http.delete<Product>(url);
+    const options = {
+    };
+    const url = this.apiBaseUrlWithProductEntityUrl + productId;
+    const x = this.http.delete<Product>(url, options);
     return x;
-
-    return this.http.delete<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
   }
 
   addNewProductName(): void {

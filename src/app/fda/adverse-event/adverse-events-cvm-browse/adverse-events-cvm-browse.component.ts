@@ -100,7 +100,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
   }
 
   ngOnInit() {
-    this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
+    this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventCvmFacets);
     this.gaService.sendPageView('Browse Adverse Event Dme');
 
     this.pageSize = 10;
