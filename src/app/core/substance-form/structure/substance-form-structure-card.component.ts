@@ -162,16 +162,15 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
         this.structure.uuid = '';
         this.substanceFormStructureService.updateMoieties(structurePostResponse.moieties);
-
+        if (this.substanceType !== 'polymer') {
         if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
           clearTimeout(this.userMessageTimer);
-          if (this.substanceType !== 'polymer') {
             this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
-          }
           this.userMessageTimer = setTimeout(() => {
             this.userMessage = null;
           }, 20000);
         }
+      }
       }
     }
   }

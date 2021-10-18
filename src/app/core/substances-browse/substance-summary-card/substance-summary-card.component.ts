@@ -45,6 +45,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   inxightUrl: string;
   overlayContainer: any;
   rounding = '1.0-2';
+  showAll = [];
 
   constructor(
     public utilsService: UtilsService,

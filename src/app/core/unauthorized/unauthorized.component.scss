@@ -1,0 +1,17 @@
+.main-container {
+margin-top: 100px;
+}
+
+.form-row {
+    width:100%;
+    flex-direction: row;
+  
+    .equal-width {
+        flex: 1 0 0;
+    }
+
+    padding: 25px;
+    font-size: 26px;
+    line-height: 46px;
+    text-align: center;
+}

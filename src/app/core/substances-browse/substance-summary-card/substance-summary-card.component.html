@@ -141,12 +141,13 @@
         <div class="substance-data substance-code-systems" *ngIf="codeSystems">
           <div class="label">Codes:</div>
           <div>
-            <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5">
+            <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5; index as codeindex">
               <div class="code-system">
                 <span class="label">{{codeSystemName | codeSystemDisplay | async}}
 
                   </span>:&nbsp;
-                <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast">
+                <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast; index as index">
+                  <span *ngIf = "index < 6  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
                   <span *ngIf="codeObject.url">
                     <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
                       evCategory="substancesContent" evAction="link:code" aria-label ="view site in new tab">
@@ -163,6 +164,10 @@
                   </span>
 
                   <span *ngIf="!isLast">, </span>
+                  </span>
+                </span>
+                <span *ngIf = "codeSystems[codeSystemName].length > 4">
+                  <a class = "moreLink" (click) = "!showAll[codeSystemName]? showAll[codeSystemName] = true: (showAll[codeSystemName] === true ? showAll[codeSystemName] = false : showAll[codeSystemName] = true)">{{showAll[codeSystemName] ? 'Show Less': 'Show More'}}</a>
                 </span>
               </div>
             </div>
