@@ -7,6 +7,10 @@
     min-height:5px;
 }
 
+::ng-deep .facetView > * {
+    z-index: 1002 !important;
+}
+
 .mat-expansion-panel-header {
     padding: 0 12px;
 }
