@@ -157,7 +157,7 @@
 
         <mat-form-field class="sort">
           <mat-label>Sort By</mat-label>
-          <mat-select (selectionChange)="searchSubstances()" [(ngModel)]="order">
+          <mat-select (selectionChange)="searchSubstances()" (openedChange)="openedSortSubstances($event)" [(ngModel)]="order">
             <mat-option *ngFor="let option of sortValues" [value]="option.value">
               {{option.display}}
             </mat-option>
