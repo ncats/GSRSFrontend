@@ -2,7 +2,7 @@
   <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
     <mat-form-field style = "margin-left: 30px;" *ngIf="isAdmin" id = "facetView" class = "facetView">
       <mat-label>Facet View:</mat-label>
-      <mat-select [formControl]="facetViewControl" (selectionChange)="facetViewChange($event)">
+      <mat-select [formControl]="facetViewControl" (openedChange)="openedFacetViewChange($event)" (selectionChange)="facetViewChange($event)">
         <mat-option *ngFor="let option of facetViewCategory" [value]="option">
           {{option}}
         </mat-option>
