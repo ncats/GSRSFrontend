@@ -327,7 +327,22 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   facetViewChange(event): void {
     this.facetViewCategorySelected = event.value;
-    console.log(event.value);
+  }
+
+  openedSortSubstances(event: any) {
+    if (event) {
+      this.overlayContainer.style.zIndex = '1002';
+    } else {
+      this.overlayContainer.style.zIndex = '1000';
+    }
+  }
+  
+  openedFacetViewChange(event: any) {
+    if (event) {
+      this.overlayContainer.style.zIndex = '1002';
+    } else {
+      this.overlayContainer.style.zIndex = '1000';
+    }
   }
 
   loadFacetViewFromConfig() {
