@@ -151,9 +151,20 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(paramsSubscription);
 
+    const authSubscription2 = this.authService.checkAuth().subscribe(auth => {
+    }, error => {
+      if (error.status === 403 && (this.router.url.split('?')[0] !== '/login' && this.router.url.split('?')[0] !== '/unauthorized')) {
+        this.loadingService.setLoading(false);
+        this.router.navigate(['/unauthorized']);
+      }
+    });
+      this.subscriptions.push(authSubscription2);
+
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       this.auth = auth;
+    }, error => {
     });
+
     this.subscriptions.push(authSubscription);
 
     this.environment = this.configService.environment;

@@ -35,6 +35,11 @@ export class AuthService {
     });
   }
 
+  public checkAuth(): Observable<Auth> {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    return this.http.get<any>(`${url}whoami`);
+  }
+
   private fetchAuth(): Observable<Auth> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
     return this.http.get<Auth>(`${url}whoami`);
