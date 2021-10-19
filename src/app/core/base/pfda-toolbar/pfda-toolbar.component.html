@@ -26,6 +26,11 @@
 
   <span class="middle-fill"></span>
 
+  <app-substance-text-search class="top-search" [searchValue]="searchValue"
+    (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
+    (closed)="removeZindex()">
+  </app-substance-text-search>
+
   <a href="mailto:precisionfda-support@dnanexus.com">
     <div class="pfda-toolbar-button">
       <mat-icon class="pfda-toolbar-button-icon" svgIcon="pfda_support"></mat-icon>

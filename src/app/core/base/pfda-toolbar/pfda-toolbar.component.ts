@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { ConfigService } from '../../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { AuthService } from '../../auth/auth.service';
+import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { Auth } from '../../auth/auth.model';
 import { Subscription } from 'rxjs';
 
@@ -16,14 +17,17 @@ export class PfdaToolbarComponent implements OnInit {
   logoSrcPath: string;
   homeIconPath: string;
   auth?: Auth;
+  searchValue: string;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private configService: ConfigService,
     private overlayContainerService: OverlayContainer,
-    public authService: AuthService,
+    private substanceTextSearchService: SubstanceTextSearchService,
+    public authService: AuthService
   ) { 
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       this.auth = auth;
@@ -39,6 +43,34 @@ export class PfdaToolbarComponent implements OnInit {
     this.homeIconPath = `${baseHref}assets/images/pfda/home.svg`;
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+    if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
+      this.searchValue = this.activatedRoute.snapshot.queryParamMap.get('search');
+    }
+
+    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
+      this.searchValue = params.get('search');
+    });
+    this.subscriptions.push(paramsSubscription);
+
+    this.substanceTextSearchService.registerSearchComponent('main-substance-search');
+    const cleanSearchSubscription = this.substanceTextSearchService.setSearchComponentValueEvent('main-substance-search')
+    .subscribe(value => {
+      this.searchValue = value;
+    });
+    this.subscriptions.push(cleanSearchSubscription);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.navigateToSearchResults(searchValue);
+  }
+
+  navigateToSearchResults(searchTerm: string) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: searchTerm ? { 'search': searchTerm } : null
+    };
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
   increaseMenuZindex(): void {
