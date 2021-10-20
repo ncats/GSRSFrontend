@@ -548,6 +548,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         });
         this.codes[substanceId].codeSystemNames = this.sortCodeSystems(this.codes[substanceId].codeSystemNames);
+        this.codes[substanceId].codeSystemNames.forEach(sysName => {
+          this.codes[substanceId].codeSystems[sysName] = this.codes[substanceId].codeSystems[sysName].sort((a, b) => {
+            let test = 0;
+            if (a.type === 'PRIMARY' && b.type !== 'PRIMARY') {
+              test =  1;
+            } else if (a.type !== 'PRIMARY' && b.type === 'PRIMARY') {
+            test = -1;
+            } else {
+            test = 0;
+          }
+          return test;
+          });
+        });
+
       }
       this.loadingService.setLoading(false);
     }, error => {
