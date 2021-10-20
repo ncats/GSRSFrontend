@@ -56,9 +56,9 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     const substanceUuid = this.impuritiesSubstance.substanceUuid;
     if (substanceUuid) {
       const getRelImpuritySubscribe = this.impuritiesService.getRelationshipImpurity(substanceUuid).subscribe(response => {
-        if (response) {
-          const relImpurities = response.data;
 
+        if (response) {
+          const relImpurities = response;
           if (Object.keys(relImpurities).length > 0) {
             // Remove Duplicate Impurites Substance UUID
             this.existingImpurities = relImpurities.filter((v, i) => relImpurities.findIndex

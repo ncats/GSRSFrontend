@@ -26,7 +26,7 @@ export class ImpuritiesService extends BaseHttpService {
   totalRecords: 0;
   impurities: Impurities;
 
-  apiBaseUrlWithEntityContext = this.apiBaseUrl + 'impurities' + '/';
+  apiBaseUrlWithEntityContext = this.configService.configData.apiBaseUrl + 'api/v1/impurities' + '/';
 
   constructor(
     public http: HttpClient,
@@ -195,7 +195,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   deleteImpurities(): Observable<any> {
-    const url = this.apiBaseUrl + 'impurities(' + this.impurities.id + ')';
+    const url = this.apiBaseUrlWithEntityContext + this.impurities.id;
     const params = new HttpParams();
     const options = {
       params: params
@@ -263,7 +263,7 @@ export class ImpuritiesService extends BaseHttpService {
   getRelationshipImpurity(
     substanceId: string
   ): Observable<any> {
-    const url = this.baseUrl + 'getRelationshipImpurity?substanceId=' + substanceId;
+    const url = this.apiBaseUrlWithEntityContext + 'subRelationship/' + substanceId;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;

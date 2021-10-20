@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { QueryableSubstanceDictionary, CommandInput, Command } from '@gsrs-core/guided-search/queryable-substance-dictionary.model';
 import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { typeCommandOptions, inputTypes } from '@gsrs-core/guided-search/query-statement/type-command-options.constant';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -12,10 +13,13 @@ import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
+import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { ApplicationService } from '../../application/service/application.service';
 import { ProductService } from '../../product/service/product.service';
 import { ClinicalTrialService } from '../../clinical-trials/clinical-trial/clinical-trial.service';
+import { SubstanceSuggestionsGroup } from '@gsrs-core/utils';
 import { AdvancedSearchService } from '../service/advanced-search.service';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material';
 
 @Component({
   selector: 'app-advanced-query-statement',
@@ -72,6 +76,21 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
   categoryinput: string;
   advancedQueryStatements: Array<AdvancedQueryStatement> = [];
   dictionaryFileName: string;
+  searchValue: string;
+
+  searchControl = new FormControl();
+  substanceSuggestionsGroup: SubstanceSuggestionsGroup;
+  suggestionsFields: Array<any>;
+  suggestions: Array<any> = [];
+  private testElem: HTMLElement;
+  matOpen = true;
+  categorySearch: string;
+  typeAheadFieldName: string;
+  selectedQueryableSuggest: string;
+  @Output() searchPerformed = new EventEmitter<string>();
+  @Output() opened = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
+  @Output() typeAheadUpdatedOut: EventEmitter<String> = new EventEmitter<String>();
 
   constructor(
     private overlayContainerService: OverlayContainer,
@@ -86,6 +105,7 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     private clinicalTrialService: ClinicalTrialService,
     private facetManagerService: FacetsManagerService,
     private activatedRoute: ActivatedRoute,
+    private advancedSearchService: AdvancedSearchService
   ) { }
 
   @Input()
@@ -190,6 +210,27 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
       this.queryablePropertiesControl.setValue('All');
     }
 
+    // Type Ahead/Suggestion in Search Text box
+    this.searchControl.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(searchValue => {
+        this.query = searchValue;
+        //  const eventCategory = this.eventCategory || 'advancedSearchTypeAheadTextSearch';
+        //  const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
+        //  this.gaService.sendEvent(eventCategory, 'TypeAheadSearch:enter-term', eventLabel);
+
+        // Search text by fieldName for Type Ahead
+        return this.advancedSearchService.getTypeAheadSearchText(this.categoryinput, this.selectedQueryableSuggest, searchValue)
+      })
+    ).subscribe((response: SubstanceSuggestionsGroup) => {
+      this.substanceSuggestionsGroup = response;
+      this.suggestionsFields = Object.keys(this.substanceSuggestionsGroup);
+    }, error => {
+      //  this.gaService.sendException('type ahead search suggestion error from API call');
+      console.log(error);
+    });
+
   }
 
   ngOnDestroy() {
@@ -200,6 +241,10 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
 
   queryablePropertySelected(queryableProperty: string): void {
     this.processQueriablePropertyChange(queryableProperty);
+
+    // Get Suggestion/TypeAhead text from file
+    this.selectedQueryableSuggest = this._queryableDictionary[queryableProperty].suggest;
+
     if (!this._queryableDictionary[queryableProperty].cvDomain && this._queryableDictionary[queryableProperty].type === 'string') {
       //  this.commandControl.setValue('ALL of the following words in any order or position');
       this.commandControl.setValue('Contains');
@@ -222,7 +267,7 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     this.commandOptions = Object.keys(
       this.typeCommandOptions[this._queryableDictionary[queryableProperty].type]
     )
-    .filter(
+      .filter(
         option => {
           let result = false;
           //  return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values'
@@ -357,6 +402,19 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     }
   }
 
+  processSubstanceSearch(searchValue: string) {
+    this.navigateToSearchResults(searchValue);
+  }
+
+  navigateToSearchResults(searchTerm: string) {
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: searchTerm ? { 'search': searchTerm } : null
+    };
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+
   increaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = '1002';
   }
@@ -371,6 +429,63 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     } else {
       this.decreaseOverlayZindex();
     }
+  }
+
+  searchOptionSelected(event?: MatAutocompleteSelectedEvent) {
+    //  const eventCategory = this.eventCategory || 'advancedSearchTypeAheadTextSearch';
+    const eventLabel = !this.configService.environment.isAnalyticsPrivate && event.option.value || 'auto-complete option';
+    // this.gaService.sendEvent(eventCategory, 'select:auto-complete', eventLabel);
+    let searchTerm = event.option.value;
+
+    this.searchPerformed.emit(searchTerm);
+
+    if (searchTerm) {
+      this.queryParts = [];
+      this.commandInputs.forEach((commandInput, index) => {
+        //    if (this.commandInputValueDict[commandInput.type] && this.commandInputValueDict[commandInput.type][index] != null) {
+        commandInput.constructQuery(
+          searchTerm,
+          this.selectedCondition,
+          this.selectedQueryableProperty,
+          this.selectedLucenePath,
+          this.queryUpdated,
+          this.queryParts
+        );
+      });
+    }
+  }
+
+  highlight(field: string) {
+    if (!this.query) {
+      return field;
+    } else {
+      if (this.matOpen) {
+        this.testElem = document.querySelector('#overflow') as HTMLElement;
+        if (this.testElem != null) {
+          this.testElem.innerText = field;
+          if (this.testElem.scrollWidth > this.testElem.offsetWidth) {
+            const pos = field.toUpperCase().indexOf(this.query.toUpperCase());
+            field = '...' + field.substring(pos - 15, field.length);
+          }
+        }
+      }
+      const query = this.query.replace(/(?=[() ])/g, '\\');
+      return field.replace(new RegExp(query, 'gi'), match => {
+        return '<strong>' + match + '</strong>';
+      });
+    }
+  }
+
+  focused(): void {
+    if (this.suggestionsFields != null && this.suggestionsFields.length > 0) {
+      this.matOpen = true;
+      this.opened.emit();
+    }
+  }
+
+  autoCompleteClosed(): void {
+    this.matOpen = false;
+    this.closed.emit();
   }
 
 }

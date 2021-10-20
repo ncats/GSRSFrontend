@@ -1,5 +1,5 @@
 <br><br><br><br><br>
-<mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedTabChange)="tabSelectedUpdated($event)">
+<mat-tab-group [(selectedIndex)]="tabSelectedIndex" (selectedTabChange)="tabSelectedUpdated($event)">
 
   <mat-tab label="Adverse Event PT">
     <app-adverse-events-pt-browse>

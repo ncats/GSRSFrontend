@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 import { GeneralService } from '../../service/general.service';
 import { ConfigService } from '../../../core/config/config.service';
@@ -20,6 +20,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
   private subscriptions: Array<Subscription> = [];
   test: any;
   isAdmin = false;
+  privateExport = false;
   displayMatchApplicationConfig = false;
   displayMatchAppCheckBoxValue = false;
   etag = '';
@@ -108,19 +109,18 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
   export(source: string) {
     if (this.etag) {
       const extension = 'xlsx';
-      const url = this.getApiExportUrl(this.etag, extension);
-      // if (this.authService.getUser() !== '')
+      const url = this.getApiExportUrl(this.etag, extension, source);
       if (this.isAdmin === true) {
         let type = '';
         if (source != null) {
           if (source === 'app') {
-            type = 'Application';
+            type = 'browseSubstanceApplication';
           } else if (source === 'prod') {
-            type = 'Product';
+            type = 'browseSubstanceProduct';
           } else if (source === 'clinicalus') {
-            type = 'ClinicalTrial-US';
+            type = 'browseSubstanceClinicalTrial-US';
           } else if (source === 'clinicaleurope') {
-            type = 'ClinicalTrial-EU';
+            type = 'browseSubstanceClinicalTrial-EU';
           }
         }
         const dialogReference = this.dialog.open(ExportDialogComponent, {
@@ -132,16 +132,12 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
-            this.generalService.getEtagDetails(this.etag, fullname, source).subscribe(response => {
+            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
-              /*
               const navigationExtras: NavigationExtras = {
                 queryParams: {
-                  totalSub: this.totalApplications
                 }
               };
-              const params = { 'total': this.totalSubstance };
-              */
               this.router.navigate(['/user-downloads/', response.id]);
             }, error => this.loadingService.setLoading(false));
           }
@@ -150,8 +146,8 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     }
   }
 
-  getApiExportUrl(etag: string, extension: string): string {
-    return this.generalService.getApiExportUrl(etag, extension);
+  getApiExportUrl(etag: string, extension: string, source: string): string {
+    return this.generalService.getApiExportUrlBrowseSubstance(etag, extension, source);
   }
 
 }

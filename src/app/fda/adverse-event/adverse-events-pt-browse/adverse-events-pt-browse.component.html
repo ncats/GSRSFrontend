@@ -70,7 +70,7 @@
             -->
 
           <!-- Export AdverseEventPt Button -->
-          <div class="export">
+          <div class="export" *ngIf="isAdmin">
             <button matTooltip="Export Search Results" mat-button (click)="export()"
               class="mat-button export-button mat-raised-button">
               <mat-icon svgIcon="get_app"></mat-icon> Export
@@ -116,7 +116,7 @@
               <mat-card-title>
                 <div>
                   <span class="font13px">Adverse Event:</span>&nbsp;
-                  {{adverseeventpt.adverseEvent}}
+                  {{adverseeventpt.ptTerm}}
                 </div>
 
                 <div>

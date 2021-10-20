@@ -9,6 +9,7 @@ export interface QueryableSubstanceDictionary {
         type: string;
         cvDomain?: string;
         priority?: string;
+        suggest?: string;
     };
 }
 

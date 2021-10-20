@@ -22,9 +22,9 @@ export class AdverseEventService extends BaseHttpService {
 
   totalRecords = 0;
 
-  apiBaseUrlWithEntityPtContext = this.apiBaseUrl + 'adverseeventpt' + '/';
-  apiBaseUrlWithEntityDmeContext = this.apiBaseUrl + 'adverseeventdme' + '/';
-  apiBaseUrlWithEntityCvmContext = this.apiBaseUrl + 'adverseeventcvm' + '/';
+  apiBaseUrlWithEntityPtContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventpt' + '/';
+  apiBaseUrlWithEntityDmeContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventdme' + '/';
+  apiBaseUrlWithEntityCvmContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventcvm' + '/';
 
   constructor(
     public http: HttpClient,
@@ -136,10 +136,7 @@ export class AdverseEventService extends BaseHttpService {
   getAdverseEventPtFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.apiBaseUrlWithEntityPtContext}search/@facets?wait=false&kind=ix.srs.models.AdverseEvent&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
-      // url = this.apiBaseUrlWithEntityContext + 'search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip
-      // =0&fdim=200&sideway=true&field=`${facet.name.replace(' ', '+')}`&top=14448&fskip=
-      // 0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = `${this.configService.configData.apiBaseUrl}api/v1/adverseeventpt/search/@facets?wait=false&kind=gov.hhs.gsrs.adverseevents.adverseeventpt.models.AdverseEventPt&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
@@ -151,10 +148,19 @@ export class AdverseEventService extends BaseHttpService {
   getAdverseEventDmeFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.apiBaseUrlWithEntityPtContext}search/@facets?wait=false&kind=ix.srs.models.AdverseEvent&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
-      // url = this.apiBaseUrlWithEntityContext + 'search/@facets?wait=false&kind=ix.srs.models.ApplicationSrs&skip
-      // =0&fdim=200&sideway=true&field=`${facet.name.replace(' ', '+')}`&top=14448&fskip=
-      // 0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = `${this.configService.configData.apiBaseUrl}api/v1/adverseeventdme/search/@facets?wait=false&kind=gov.hhs.gsrs.adverseevents.adverseeventdme.models.AdverseEventDme&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    return this.http.get<FacetQueryResponse>(url);
+  }
+
+  getAdverseEventCvmFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/adverseeventcvm/search/@facets?wait=false&kind=gov.hhs.gsrs.adverseevents.adverseeventcvm.models.AdverseEventCvm&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {

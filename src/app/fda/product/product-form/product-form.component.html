@@ -14,19 +14,22 @@
         <button mat-flat-button color="primary" [routerLink]="['/browse-products']" matTooltip='Browse Product'>
           Browse Product
         </button>&nbsp;&nbsp;&nbsp;
+
         <button mat-flat-button color="primary" [routerLink]="['/product/register']"
           matTooltip='Register a New Product'>
           Register New Product
         </button>&nbsp;&nbsp;&nbsp;
+
         <a mat-flat-button color="primary" routerLink="/product/{{product.id}}" target="_blank" matTooltip='Opens in a new window'>
           <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-          View Product</a>
-        &nbsp;&nbsp;&nbsp;
+          View Product</a>&nbsp;&nbsp;&nbsp;
+
         <span *ngIf="isAdmin">
           <button mat-flat-button color="primary" (click)="confirmDeleteProduct(product.id)" matTooltip='Delete this Product'>
             Delete
           </button>&nbsp;&nbsp;&nbsp;
         </span>
+
       </span>
     </span>
 
