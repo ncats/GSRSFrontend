@@ -31,7 +31,7 @@ export class SubmitSuccessDialogComponent implements OnInit {
     if (data.fileUrl) {
       this.fileUrl = data.fileUrl;
       this.dialogTitle = 'Substance Saved';
-      this.dialogMessage = 'The substance was saved successfully your pFDA Home';
+      this.dialogMessage = 'The substance was saved successfully as a file in your pFDA My Home area.';
     }
    }
 
