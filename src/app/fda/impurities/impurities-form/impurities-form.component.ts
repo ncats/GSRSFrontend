@@ -66,7 +66,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder) { }
 
   ngOnInit() {
-
     const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
       this.isAdmin = response;
     });

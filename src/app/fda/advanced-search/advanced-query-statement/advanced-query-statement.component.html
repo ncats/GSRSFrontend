@@ -169,11 +169,46 @@
   <!-- Search Textbox -->
   <div class="query-column">
     <div class="query-input" *ngFor="let commandInput of commandInputs; index as index">
-      <div>
-        <app-type-ahead-search [category]="categoryinput">
+
+
+
+      <!--
+      <div *ngIf="selectedQueryableSuggest">
+        <app-type-ahead-search [category]="categoryinput" [fieldName]="selectedQueryableSuggest"
+          (typeAheadUpdatedOut)="typeAheadUpdated($event)">
         </app-type-ahead-search>
       </div>
-      <div *ngIf="commandInput.type == 'text' || commandInput.type == 'boolean' || commandInput.type == 'number'">
+      -->
+
+      <!-- TYPE AHEAD Textbox -->
+      <div *ngIf="selectedQueryableSuggest">
+        <mat-form-field [floatLabel]="'never'" class=" search-form-field space-right-small">
+          <input class="search" type="text" placeholder="Enter Search Value (Type Ahead) *" aria-label="Search Text"
+            matInput [formControl]="searchControl" [matAutocomplete]="searchAuto" (focus)="focused()"
+            (keyup)="commandInput.constructQuery(
+              $event.target.value.trim(),
+              selectedCondition,
+              selectedQueryableProperty,
+              selectedLucenePath,
+              queryUpdated,
+              queryParts,
+              commandInputValueDict[commandInput.type]
+          )">
+
+          <!-- Auto Complete -->
+          <mat-autocomplete class="substance-select" panelWidth="auto" #searchAuto="matAutocomplete"
+            (optionSelected)="searchOptionSelected($event)" (closed)="autoCompleteClosed()">
+            <mat-option *ngFor="let suggestion of substanceSuggestionsGroup" [value]="suggestion.key">
+              <div [innerHTML]="highlight(suggestion.key)" class="suggestion-styling">{{suggestion.key}}</div>
+            </mat-option>
+            <pre aria-hidden="true" class="mat-option overflow-comp" id='overflow'></pre>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <!-- Display Text Box if NOT Type Ahead/Suggestion -->
+      <div
+        *ngIf="!selectedQueryableSuggest && (commandInput.type == 'text' || commandInput.type == 'boolean' || commandInput.type == 'number')">
         <mat-form-field floatLabel="never">
           <input [type]="commandInput.type" [name]="'input_' + index" matInput
             [(ngModel)]="commandInputValueDict[commandInput.type][index]" required placeholder="Enter search value"

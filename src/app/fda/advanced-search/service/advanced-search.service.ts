@@ -21,6 +21,7 @@ export class AdvancedSearchService extends BaseHttpService {
   totalRecords: 0;
   baseHref: '';
 
+  apiBaseUrlWithSubstanceEntityUrl = this.configService.configData.apiBaseUrl || '' + 'api/v1/substances' + '/';
   apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
   apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
   apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
@@ -28,6 +29,13 @@ export class AdvancedSearchService extends BaseHttpService {
   apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
   apiBaseUrlWithProductBrowseEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productsall' + '/';
   apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
+
+  apiBaseUrlWithClinicalTrialEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/clinicaltrialsus' + '/';
+
+  apiBaseUrlWithEntityPtContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventpt' + '/';
+  apiBaseUrlWithEntityDmeContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventdme' + '/';
+  apiBaseUrlWithEntityCvmContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventcvm' + '/';
+
 
   constructor(
     public http: HttpClient,
@@ -151,11 +159,47 @@ export class AdvancedSearchService extends BaseHttpService {
   getTypeAheadSearchText(category: string, fieldName: string, searchTerm: string): Observable<any> {
     let url: string;
     let entityUrl: string;
+    let slash = '/';
     if (category) {
+      if (category === 'Substance') {
+        entityUrl = `${this.configService.configData.apiBaseUrl}api/v1/`;
+      }
       if (category === 'Application') {
         entityUrl = this.apiBaseUrlWithApplicationEntityUrl;
       }
-      url = entityUrl + 'suggest/' + fieldName + '?q=' + searchTerm;
+      if (category === 'Product') {
+        entityUrl = this.apiBaseUrlWithProductBrowseEntityUrl;
+      }
+      if (category === 'Clinical Trial') {
+        entityUrl = this.apiBaseUrlWithClinicalTrialEntityUrl;
+      }
+      if (category === 'Adverse Event') {
+        if (fieldName) {
+          if (fieldName === 'Ingredient_Name') {
+            entityUrl = this.apiBaseUrlWithEntityPtContext;
+          }
+          if (fieldName === 'PT_Term') {
+            entityUrl = this.apiBaseUrlWithEntityPtContext;
+          }
+          if (fieldName === 'Prim_SOC') {
+            entityUrl = this.apiBaseUrlWithEntityPtContext;
+          }
+          if (fieldName === 'DME_Reactions') {
+            entityUrl = this.apiBaseUrlWithEntityDmeContext;
+          }
+          if (fieldName === 'PTTerm_Meddra') {
+            entityUrl = this.apiBaseUrlWithEntityDmeContext;
+          }
+          if (fieldName === 'Adverse_Event') {
+            entityUrl = this.apiBaseUrlWithEntityCvmContext;
+          }
+          if (fieldName === 'Species') {
+            entityUrl = this.apiBaseUrlWithEntityCvmContext;
+          }
+        }
+      }
+
+      url = entityUrl + 'suggest' + slash + fieldName + '?q=' + searchTerm;
     }
     return this.http.get<any>(url);
   }

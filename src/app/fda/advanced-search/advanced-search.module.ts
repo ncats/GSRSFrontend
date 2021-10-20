@@ -39,7 +39,6 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor/structure-edi
 import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FacetDisplayPipe } from '@gsrs-core/facets-manager/facet-display.pipe';
-import { TypeAheadSearchComponent } from '../advanced-search/type-ahead-search/type-ahead-search.component';
 
 const advSearchRoutes: Routes = [
   {
@@ -88,8 +87,7 @@ const advSearchRoutes: Routes = [
   ],
   declarations: [
     AdvancedSearchComponent,
-    AdvancedQueryStatementComponent,
-    TypeAheadSearchComponent
+    AdvancedQueryStatementComponent
   ],
   exports: [
     AdvancedSearchComponent

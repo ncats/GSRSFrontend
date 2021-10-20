@@ -80,6 +80,9 @@ export const typeCommandOptions: CommandTypesDict = {
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>
                     ) => {
+                        if (queryValue) {
+                            queryValue = queryValue.replace(/['"]+/g, '');
+                        }
                         const query = queryValue.trim() && `${condition}${lucenePath}"^${queryValue.trim()}$"` || '';
                         eventEmitter.emit({
                             condition: condition,
@@ -135,6 +138,9 @@ export const typeCommandOptions: CommandTypesDict = {
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>
                     ) => {
+                        if (queryValue) {
+                            queryValue = queryValue.replace(/['"]+/g, '');
+                        }
                         const query = queryValue.trim() && `${condition}${lucenePath}"*${queryValue.trim()}*"` || '';
                         eventEmitter.emit({
                             condition: condition,
@@ -160,6 +166,9 @@ export const typeCommandOptions: CommandTypesDict = {
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>
                     ) => {
+                        if (queryValue) {
+                            queryValue = queryValue.replace(/['"]+/g, '');
+                        }
                         const query = queryValue.trim() && `${condition}${lucenePath}"^${queryValue.trim()}*"` || '';
                         eventEmitter.emit({
                             condition: condition,
