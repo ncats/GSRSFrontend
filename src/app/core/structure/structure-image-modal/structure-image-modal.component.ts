@@ -29,6 +29,9 @@ export class StructureImageModalComponent implements OnInit {
       this.structureService.getOtherInchi(this.data.uuid).subscribe(inchi => {
         this.inchi = inchi;
       });
+      this.structureService.getInchi(this.data.uuid).subscribe(inchiKey=> {
+        this.inchiKey = inchiKey;
+      });
     }
     if (this.data && this.data.names && this.data.names.length) {
       for (const name of this.data.names) {
