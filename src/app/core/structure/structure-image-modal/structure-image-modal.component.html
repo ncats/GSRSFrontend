@@ -6,7 +6,7 @@
     <div style = "height:600px;min-height:601px;">
     <img *ngIf="structure" appSubstanceImage [entityId]="structure" size="600" stereo="true">
     </div>
-    <mat-tab-group *ngIf="smiles || (names && names.length > 0) || inchi">
+    <mat-tab-group *ngIf="smiles || (names && names.length > 0) || inchi || inchiKey">
       <mat-tab label="Systematic Names" *ngIf="names && names.length > 0">
         <ul>
           <li *ngFor="let name of names">
@@ -15,10 +15,11 @@
         </ul>
       </mat-tab>
       <mat-tab label="SMILES" *ngIf="smiles">
-        <textarea cdkTextareaAutosize id = "smiles" readonly style = "height:150px;">{{smiles}}</textarea>
+        <textarea cdkTextareaAutosize id = "smiles" readonly style = "height:45px;">{{smiles}}</textarea>
       </mat-tab>
-      <mat-tab label="InChi" *ngIf="inchi">
-        <textarea cdkTextareaAutosize id = "inchi" readonly style = "height:150px;">{{inchi}}</textarea>
+      <mat-tab label="InChi" *ngIf="inchi || inchiKey">
+        <textarea cdkTextareaAutosize id = "inchi" readonly style = "height:45px;">{{inchi}}</textarea>
+        <textarea cdkTextareaAutosize id = "inchiKey" readonly style = "height:45px;">{{inchiKey}}</textarea>
       </mat-tab>
     </mat-tab-group>
   </div>

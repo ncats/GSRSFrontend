@@ -13,6 +13,7 @@ export class StructureImageModalComponent implements OnInit {
   structure: string;
   smiles: string;
   inchi: string;
+  inchiKey: string;
   names: string[] = [];
   constructor(
     private utilsService: UtilsService,
@@ -27,6 +28,9 @@ export class StructureImageModalComponent implements OnInit {
       this.smiles = this.data.smiles;
       this.structureService.getOtherInchi(this.data.uuid).subscribe(inchi => {
         this.inchi = inchi;
+      });
+      this.structureService.getInchi(this.data.uuid).subscribe(inchiKey=> {
+        this.inchiKey = inchiKey;
       });
     }
     if (this.data && this.data.names && this.data.names.length) {
