@@ -13,6 +13,7 @@ export class StructureImageModalComponent implements OnInit {
   structure: string;
   smiles: string;
   inchi: string;
+  inchiKey: string;
   names: string[] = [];
   constructor(
     private utilsService: UtilsService,
