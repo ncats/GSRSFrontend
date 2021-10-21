@@ -1,11 +1,23 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { ConfigService } from '../config/config.service';
 
 @Pipe({
   name: 'facetDisplay'
 })
 export class FacetDisplayPipe implements PipeTransform {
+  constructor(
+    public configService: ConfigService
+  ) { }
 
   transform(name: any, args?: any): any {
+    //TODO: move this snippet to the constructor to be run only once
+    let codeTerm = 'UNII';
+    if (this.configService.configData && this.configService.configData.approvalCodeName) {
+	     codeTerm = this.configService.configData.approvalCodeName;
+	  }
+
+
+
     if (args) {
       if (args === 'types') {
         if (name === 'structurallyDiverse') {
@@ -21,7 +33,7 @@ export class FacetDisplayPipe implements PipeTransform {
         }
       } else if (args === 'status') {
         if (name === 'approved') {
-          return 'Validated (UNII)';
+          return 'Validated (' + codeTerm + ')';
         } else if (name === 'non-approved') {
           return 'non-Validated';
         }
@@ -31,13 +43,13 @@ export class FacetDisplayPipe implements PipeTransform {
       return 'Stereochemistry';
     }
     if (name === 'root_lastEdited') {
-      return 'Last Edited';
+      return 'Last Edited Date';
     }
     if (name === 'root_approved') {
-      return 'Last Validated';
+      return 'Last Validated Date';
     }
-    if (name === 'root_approved') {
-      return 'Last Validated';
+    if (name === 'root_created') {
+      return 'Created Date';
     }
     if (name === 'Approved By') {
       return 'Validated By';

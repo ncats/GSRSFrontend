@@ -20,6 +20,7 @@ import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-down
 import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { CanActivateAdminPage } from './admin/can-activate-admin-page';
+import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
 
 const childRoutes: Routes = [
   {
@@ -29,6 +30,10 @@ const childRoutes: Routes = [
   {
     path: 'home',
     component: HomeComponent
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent
   },
   {
     path: 'browse-substance',

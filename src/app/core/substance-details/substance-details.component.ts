@@ -221,6 +221,16 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.insertSubstanceProperty(property, m + 1, end);
       return;
     }
+
+
+    this.substanceDetailsProperties.forEach(prop => {
+      if (prop.title === 'identifiers') {
+        prop.title = 'Codes - Identifiers';
+      }
+      if (prop.title === 'classification') {
+        prop.title = 'Codes - Classification';
+      }
+    });
   }
 
   private handleSubstanceRetrivalError() {

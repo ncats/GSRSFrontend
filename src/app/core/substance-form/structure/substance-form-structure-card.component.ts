@@ -162,16 +162,15 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
         this.structure.uuid = '';
         this.substanceFormStructureService.updateMoieties(structurePostResponse.moieties);
-
+        if (this.substanceType !== 'polymer') {
         if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
           clearTimeout(this.userMessageTimer);
-
-          this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
-
+            this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
           this.userMessageTimer = setTimeout(() => {
             this.userMessage = null;
           }, 20000);
         }
+      }
       }
     }
   }
@@ -197,10 +196,14 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   generateSRU(): void {
+    this.loadingService.setLoading(true);
     this.structureService.interpretStructure(this.structure.molfile).subscribe(response => {
       if (response.structuralUnits && response.structuralUnits.length > 0) {
         this.substanceFormStructuralUnitsService.updateSRUs(response.structuralUnits);
       }
+      this.loadingService.setLoading(false);
+    }, error => {
+      this.loadingService.setLoading(false);
     });
   }
 

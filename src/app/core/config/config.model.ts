@@ -36,6 +36,7 @@ export interface Config {
     showNameStandardizeButton?: boolean;
     molWeightRounding?: number;
     usefulLinks?: Array<UsefulLink>;
+    approvalCodeName?: string;
 }
 
 export interface LoadedComponents {

@@ -22,6 +22,7 @@ import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material';
 import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -32,7 +33,8 @@ export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceSummary;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Input() showAudit: boolean;
-  isAdmin = false;
+  isAdmin = false;  //this shouldn't be called "isAdmin", it's typically used to mean "canUpdate". Should fix for future devs.
+  canCreate = false; //meant to allow creating new records
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
   @Input() names?: Array<SubstanceName>;
@@ -42,6 +44,9 @@ export class SubstanceSummaryCardComponent implements OnInit {
   inxightLink = false;
   inxightUrl: string;
   overlayContainer: any;
+  rounding = '1.0-2';
+  showAll = [];
+
   constructor(
     public utilsService: UtilsService,
     public gaService: GoogleAnalyticsService,
@@ -52,15 +57,21 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
+    private configService: ConfigService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
-    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {
       if (response) {
         this.isAdmin = response;
+      }
+    });
+    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'admin').pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.canCreate = response;
       }
     });
     if (this.substance.protein) {
@@ -85,6 +96,10 @@ export class SubstanceSummaryCardComponent implements OnInit {
     } else {
       this.getApprovalID();
     }
+
+    if (this.configService.configData && this.configService.configData.molWeightRounding) {
+      this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
+  }
   }
 
   getApprovalID() {
@@ -149,6 +164,12 @@ export class SubstanceSummaryCardComponent implements OnInit {
       const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
       const componentRef = viewContainerRef.createComponent(componentFactory);
       (<SubstanceSummaryDynamicContent>componentRef.instance).substance = this.privateSubstance;
+    });
+  }
+
+  downloadJson() {
+    this.substanceService.getSubstanceDetails(this.substance.uuid).pipe(take(1)).subscribe(response => {
+        this.downloadFile(JSON.stringify(response), this.substance.uuid + '.json');
     });
   }
 

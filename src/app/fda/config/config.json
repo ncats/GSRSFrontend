@@ -9,6 +9,7 @@
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
+  "approvalCodeName":"UNII",
   "loadedComponents": {
     "applications": true,
     "products": true,
@@ -577,6 +578,7 @@
       "admin": [
         "Record Created By",
         "root_lastEdited",
+        "root_created",
         "root_lastEditedBy",
         "root_approved",
         "Approved By",
@@ -587,11 +589,11 @@
       "facetView": [
         {
           "category": "Default",
-          "facets": ["Deprecated", "Record Status", "Substance Class", "GInAS Tag", "GInAS Domain", "Code System", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Application Center", "Application Type", "Application Status", "Material Type", "Family", "Parts", "Moiety Type", "Molecular Weight", "SubstanceStereochemistry", "root_approved", "root_lastEdited", "Record Created By", "Approved By", "root_lastEditedBy", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Protein Type", "Product Ingredient Type", "Product Name Type", "Product Dosage Form", "Definition Level", "Clinical Trial Count", "Relationships"]
+          "facets": ["Deprecated", "Record Status", "Substance Class", "GInAS Tag", "GInAS Domain", "Code System", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Application Center", "Application Type", "Application Status", "Material Type", "Family", "Parts", "Moiety Type", "Molecular Weight", "SubstanceStereochemistry", "root_approved", "Approved By", "root_created", "Record Created By", "root_lastEdited", "root_lastEditedBy", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Protein Type", "Product Ingredient Type", "Product Name Type", "Product Dosage Form", "Definition Level", "Clinical Trial Count", "Relationships"]
         },
         {
           "category": "Record Data",
-          "facets": ["Deprecated", "Record Status", "Substance Class", "Definition Type", "Definition Level", "GInAS Tag", "GInAS Domain", "GInAS Language", "GInAS Name Jurisdiction", "Code System", "root_approved", "root_lastEdited", "Record Created By", "root_lastEditedBy", "Approved By", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Validation", "Reference Type", "GInAS Document Tag", "Relationships"]
+          "facets": ["Deprecated", "Record Status", "Substance Class", "Definition Type", "Definition Level", "GInAS Tag", "GInAS Domain", "GInAS Language", "GInAS Name Jurisdiction", "Code System", "root_approved", "Approved By", "root_created", "Record Created By", "root_lastEdited", "root_lastEditedBy", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Validation", "Reference Type", "GInAS Document Tag", "Relationships"]
         },
         {
           "category": "User Data",
@@ -694,6 +696,21 @@
       ]
     },
     "ctclinicaltrial": {
+      "default": [
+        "Has Substances",
+        "CT Matching Complete",
+        "Last Updated Year",
+        "Primary Completion Year",
+        "First Posted Year",
+        "Study Types",
+        "Gender",
+        "Age Groups",
+        "Intervention Type",
+        "Study Results",
+        "Conditions"
+      ]
+    },
+    "clinicaltrialsus": {
       "default": [
         "Has Substances",
         "CT Matching Complete",

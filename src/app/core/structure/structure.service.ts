@@ -34,9 +34,9 @@ export class StructureService {
     const url = `${this.configService.configData.apiBaseUrl}img/${id}.mol`;
     return this.http.get(url, {responseType: 'blob' as 'json'});
   }
-
+  //TODO: this is the inchikey, should be renamed
   getInchi(id: string): Observable<string> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/structure!$inchikey()`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/$structure!$inchikey()`;
     return this.http.get(url, {responseType: 'text'});
   }
 
@@ -45,10 +45,10 @@ export class StructureService {
     return this.http.get(url, {responseType: 'text'});
   }
 
-
+  //TODO: this is the full inchi, should be renamed
   getOtherInchi(id: string): Observable<string> {
   // get the other half of the inchi
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/structure!$inchi()`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/$structure!$inchi()`;
     return this.http.get(url, {responseType: 'text'});
   }
 

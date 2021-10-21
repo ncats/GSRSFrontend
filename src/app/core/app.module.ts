@@ -81,6 +81,7 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
 import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
+import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substan
     PageNotFoundComponent,
     BaseComponent,
     HomeComponent,
+    UnauthorizedComponent,
     SubstancesBrowseComponent,
     StructureSearchComponent,
     SubstanceDetailsComponent,

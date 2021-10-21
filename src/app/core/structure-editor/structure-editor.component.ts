@@ -245,8 +245,18 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   cleanStructure() {
-    const smiles = this.editor.getSmiles();
+    const molfile = this.editor.getMolfile();
 
+    if (molfile != null && molfile !== '') {
+      this.structureService.interpretStructure(molfile).pipe(take(1)).subscribe(response => {
+        if (response && response.structure && response.structure.smiles) {
+          this.cleanStructureSmiles(response.structure.smiles);
+        }
+      });
+    }
+  }
+
+  cleanStructureSmiles(smiles: string) {
     if (smiles != null && smiles !== '') {
       this.structureService.interpretStructure(smiles).pipe(take(1)).subscribe(response => {
         if (response && response.structure && response.structure.molfile) {
@@ -255,6 +265,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       });
     }
   }
+
 
   standardize(standard: string): void {
     this.loadingService.setLoading(true);

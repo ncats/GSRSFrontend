@@ -10,6 +10,10 @@
             <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
             <input id="fileInput" hidden type="file" (change)="uploadFile($event)" name="file1" accept=".json">
     </div>
+    <div class = "full-row-col"  *ngIf = "!this.record" style = "margin-top:10px;">
+       <div style = "width:100%">Or paste JSON here:</div> 
+        <textarea [(ngModel)] = "pastedJSON" cdkAutosizeMinRows="5" (change) = "checkLoaded($event)" style = "min-height: 100px;"></textarea>
+    </div>
     <div class = "message">
         {{message}}
     </div>

@@ -52,6 +52,7 @@ export class SubstanceFormNamesCardComponent
       });
     this.subscriptions.push(definitionSubscription);
     const namesSubscription = this.substanceFormNamesService.substanceNames.subscribe(names => {
+
       this.names = names;
       this.filtered = names;
       const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
@@ -67,6 +68,7 @@ export class SubstanceFormNamesCardComponent
   }
 
   ngAfterViewInit() {
+
   }
 
 

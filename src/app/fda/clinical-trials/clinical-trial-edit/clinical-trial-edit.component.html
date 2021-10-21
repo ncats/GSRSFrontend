@@ -2,41 +2,40 @@
 
 	<div *ngIf="!clinicalTrial">
 		<p>Clinical Trial with not found for editing.</p>
-			<p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p>
-
-		
+		<p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p>
 	</div>
+
 	<div *ngIf="clinicalTrial">
 
 	<div *ngIf="clinicalTrial">
-
-	<p *ngIf="clinicalTrial.nctNumber">
-	<a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a>
-	&nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span>
-	</p>	
+		<p *ngIf="clinicalTrial.trialNumber">
+			<a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.trialNumber}}</a>
+			&nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span>
+		</p>
 	</div>
 
-	<div  *ngIf="clinicalTrial">
-			<span> 
-				<mat-checkbox class='match-complete-checkbox' [disabled]="!isAdmin" [value]="clinicalTrial.gsrsMatchingComplete"  [(ngModel)] = "clinicalTrial.gsrsMatchingComplete"> 
-					<label>Matching Complete</label> 
-				</mat-checkbox>
-			</span> 
-		</div>
-	
-	<h3>Substances in Clinical Trial <span *ngIf="clinicalTrial && clinicalTrial.clinicalTrialDrug"> ({{ clinicalTrial.clinicalTrialDrug.length}})</span></h3>
-  <div *ngIf="isAdmin">
+	<div *ngIf="clinicalTrial">
+		<span>
+			<mat-checkbox class='match-complete-checkbox' [disabled]="!isAdmin" [value]="clinicalTrial.gsrsMatchingComplete" [(ngModel)]="clinicalTrial.gsrsMatchingComplete">
+				<label>Matching Complete</label>
+			</mat-checkbox>
+		</span>
+	</div>
+
+	<h3>Substances in Clinical Trial <span *ngIf="clinicalTrial && clinicalTrial.clinicalTrialUSDrug"> ({{ clinicalTrial.clinicalTrialUSDrug.length}})</span></h3>
+	<div *ngIf="isAdmin">
 		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
 		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
 
+
 	<mat-table #table [dataSource]="dataSource">
-<!--
-		<ng-container matColumnDef="index">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>Index</th>
-			<td mat-cell *matCellDef="let element; let i = index">{{i}}</td>
-		  </ng-container>
--->
+		<!--
+			<ng-container matColumnDef="index">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header>Index</th>
+				<td mat-cell *matCellDef="let element; let i = index">{{i}}</td>
+				</ng-container>
+	-->
 		<!-- id  -->
 		<ng-container matColumnDef="id" class='id-container'>
 			<mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
@@ -50,152 +49,160 @@
 		<ng-container matColumnDef="name">
 			<mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
 			<mat-cell *matCellDef="let element; let i = index;">
-				<span *ngIf="!isAdmin"> 
+				<span *ngIf="!isAdmin">
 					{{element.name}}
-				</span> 
+				</span>
 				<span *ngIf="isAdmin">
 					<app-mini-search [myIndex]="i" [myInitialSearch]="element && element.name" (miniSearchOutput)="reportMiniSearchOutput($event)"></app-mini-search>
 				</span>
 			</mat-cell>
 		</ng-container>
-		<!-- substanceUuid -->
-		<ng-container matColumnDef="substanceUuid">
-			<mat-header-cell *matHeaderCellDef> Substance UUID </mat-header-cell>
+		<!-- substanceKey -->
+		<ng-container matColumnDef="substanceKey">
+			<mat-header-cell *matHeaderCellDef>Substance Key</mat-header-cell>
 			<mat-cell *matCellDef="let element">
-					<span *ngIf="!isAdmin"> 
-					{{element.substanceUuid}}
-					</span> 
-					<span *ngIf="isAdmin"> 
-						<mat-form-field floatLabel="never">
-					<input  matInput placeholder="substanceUuid" [value]="element.substanceUuid" [(ngModel)]="element.substanceUuid">
-					</mat-form-field> 
-				</span> 
+				<span *ngIf="!isAdmin">
+					{{element.substanceKey}}
+				</span>
+				<span *ngIf="isAdmin">
+					<mat-form-field floatLabel="never">
+						<input matInput placeholder="substanceKey" [value]="element.substanceKey" [(ngModel)]="element.substanceKey">
+					</mat-form-field>
+				</span>
 			</mat-cell>
 		</ng-container>
 
 		<ng-container matColumnDef="protectedMatch">
 			<mat-header-cell *matHeaderCellDef> Protected Match </mat-header-cell>
 			<mat-cell *matCellDef="let element">
-					<span *ngIf="!isAdmin"> 
+				<span *ngIf="!isAdmin">
 					{{element.protectedMatch}}
-					</span>
-					<span>
-						<mat-checkbox class="protected-match-checkbox" [disabled]="!isAdmin" [value]="element.protectedMatch"  [(ngModel)] = "element.protectedMatch"> 
-							<label><mat-icon  class="mat-icon material-icons protected-match-icon" role="img" aria-hidden="true">lock</mat-icon></label> 
-						</mat-checkbox>				
-					</span> 
+				</span>
+				<span>
+					<mat-checkbox class="protected-match-checkbox" [disabled]="!isAdmin" [value]="element.protectedMatch" [(ngModel)]="element.protectedMatch">
+						<label><mat-icon class="mat-icon material-icons protected-match-icon" role="img" aria-hidden="true">lock</mat-icon></label>
+					</mat-checkbox>
+				</span>
 			</mat-cell>
 		</ng-container>
 
+		<!-- orgSubstanceKey -->
+		<ng-container matColumnDef="orgSubstanceKey">
+			<mat-header-cell *matHeaderCellDef>Org. Substance Key</mat-header-cell>
+			<mat-cell *matCellDef="let element">
+				{{element.orgSubstanceKey}}
+			</mat-cell>
+		</ng-container>
 
 		<!-- link -->
 		<ng-container matColumnDef="link">
 			<mat-header-cell *matHeaderCellDef></mat-header-cell>
 			<mat-cell *matCellDef="let element">
-					<a target="_blank" [routerLink]="['/substances', element.substanceUuid]" >link</a>
+				<a target="_blank" [routerLink]="['/substances', element.substanceKey]">link</a>
 			</mat-cell>
 		</ng-container>
 
 		<!-- delete -->
 		<ng-container matColumnDef="delete">
-				<mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
-				<mat-cell *matCellDef="let element; let i = index">
-					<button mat-flat-button color="primary" matSuffix aria-label="Del" (click)="removeRow(i);">Del</button>
-				</mat-cell>
-			</ng-container>	
+			<mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+			<mat-cell *matCellDef="let element; let i = index">
+				<button mat-flat-button color="primary" matSuffix aria-label="Del" (click)="removeRow(i);">Del</button>
+			</mat-cell>
+		</ng-container>
 		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 		<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-	</mat-table>	
+	</mat-table>
 
 	<div *ngIf="isAdmin">
-		<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add</button>
-		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
+
+
+
 	</div>
 
 	<div class="trial-detailsheader">
 		<span class="emphasize">Trial Details</span>&nbsp;
-		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.nctNumber}}</a></span>&nbsp;
-		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see XML from clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber + '?displayxml=true'">XML</a></span>&nbsp;
-		<span *ngIf="clinicalTrial.nctNumber"><a target="_blank" title="see history on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/history/' + clinicalTrial.nctNumber">History</a></span>&nbsp;
+		<span *ngIf="clinicalTrial.trialNumber"><a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.trialNumber}}</a></span>&nbsp;
+		<span *ngIf="clinicalTrial.trialNumber"><a target="_blank" title="see XML from clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber + '?displayxml=true'">XML</a></span>&nbsp;
+		<span *ngIf="clinicalTrial.trialNumber"><a target="_blank" title="see history on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/history/' + clinicalTrial.trialNumber">History</a></span>&nbsp;
 	</div>
 
-<div class="container">
-	<div class="trial-detailsone">
-	<div *ngIf="clinicalTrial">
-	<div>
-		<p *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</p>
-		<div *ngIf="clinicalTrial.intervention">
-			<p><span class="emphasize">Intervention</span>:</p>
-			<div class="indent-list" *ngFor="let content of clinicalTrial.intervention.split('\|')">{{ content }}</div>
-		</div>
-	    <p *ngIf="clinicalTrial.recruitment">Recruitment: {{clinicalTrial.recruitment}}</p>
-		<div *ngIf="clinicalTrial.conditions">
-			<p>Conditions:</p>
-        	<div class="indent-list" *ngFor="let content of clinicalTrial.conditions.split('\|')">{{ content }}</div>
-		</div>
-		<div *ngIf="clinicalTrial.sponsor">
-			<p>Sponsors:</p>
-			<div class="indent-list" *ngFor="let content of clinicalTrial.sponsor.split('\|')">{{ content }}</div>
-		</div>
-		<div *ngIf="clinicalTrial.locations">
-			<p>Locations:</p>
-			<div class="indent-list" *ngFor="let content of clinicalTrial.locations.split('\|')">{{ content }}</div>
-		</div>
-		<div *ngIf="clinicalTrial.fundedBys">
-			<p>Sponsor:</p>
-			<div class="indent-list" *ngFor="let content of clinicalTrial.fundedBys.split('\|')">{{ content }}</div>
+	<div class="container">
+		<div class="trial-detailsone">
+			<div *ngIf="clinicalTrial">
+				<div>
+					<p *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</p>
+					<div *ngIf="clinicalTrial.intervention">
+						<p><span class="emphasize">Intervention</span>:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.intervention.split('\|')">{{ content }}</div>
+					</div>
+					<p *ngIf="clinicalTrial.recruitment">Recruitment: {{clinicalTrial.recruitment}}</p>
+					<div *ngIf="clinicalTrial.conditions">
+						<p>Conditions:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.conditions.split('\|')">{{ content }}</div>
+					</div>
+					<div *ngIf="clinicalTrial.sponsor">
+						<p>Sponsors:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.sponsor.split('\|')">{{ content }}</div>
+					</div>
+					<div *ngIf="clinicalTrial.locations">
+						<p>Locations:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.locations.split('\|')">{{ content }}</div>
+					</div>
+					<div *ngIf="clinicalTrial.fundedBys">
+						<p>Sponsor:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.fundedBys.split('\|')">{{ content }}</div>
+					</div>
+
+					<div *ngIf="clinicalTrial.phases">
+						<p>Phases:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.phases.split('\|')">{{ content }}</div>
+					</div>
+
+					<div *ngIf="clinicalTrial.studyTypes">
+						<p>Study Types:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.studyTypes.split('\|')">{{ content }}</div>
+					</div>
+
+					<div *ngIf="clinicalTrial.ageGroups">
+						<p>Age Groups:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.ageGroups.split('\|')">{{ content }}</div>
+					</div>
+					<p *ngIf="clinicalTrial.gender">Gender: {{clinicalTrial.gender}}</p>
+					<p *ngIf="clinicalTrial.allocation">Allocation: {{clinicalTrial.allocation}}</p>
+					<p *ngIf="clinicalTrial.studyResults">Study Results: {{clinicalTrial.studyResults}}</p>
+					<p *ngIf="clinicalTrial.enrollment">Enrollment: {{clinicalTrial.enrollment}}</p>
+					<div *ngIf="clinicalTrial.otherIds">
+						<p>Other Ids:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.otherIds.split('\|')">{{ content }}</div>
+					</div>
+					<p *ngIf="clinicalTrial.acronym">Acronym: {{clinicalTrial.acronym}}</p>
+					<div *ngIf="clinicalTrial.outcomeMeasures">
+						<p>Outcome Measures:</p>
+						<div class="indent-list" *ngFor="let content of clinicalTrial.outcomeMeasures.split('\|')">{{ content }}</div>
+					</div>
+					<p *ngIf="clinicalTrial.trialNumber">Url: <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.url}}</a></p>
+
+				</div>
+			</div>
 		</div>
 
-		<div *ngIf="clinicalTrial.phases">
-			<p>Phases:</p>
-			<div class="indent-list" *ngFor="let content of clinicalTrial.phases.split('\|')">{{ content }}</div>
-		</div>
-		
-		<div *ngIf="clinicalTrial.studyTypes">
-			<p>Study Types:</p>
-			<div class="indent-list" *ngFor="let content of clinicalTrial.studyTypes.split('\|')">{{ content }}</div>
-		</div>
+		<div class="trial-detailstwo">
 
-		<div *ngIf="clinicalTrial.ageGroups">
-			<p>Age Groups:</p>
-			<div class="indent-list" *ngFor="let content of clinicalTrial.ageGroups.split('\|')">{{ content }}</div>
+			<div *ngIf="clinicalTrial.lastUpdated || clinicalTrial.lastUpdated">
+				<p>Updated:</p>
+				<div class="indent-list" *ngIf="clinicalTrial.lastUpdated" title="Last updated by CT.gov">{{clinicalTrial.lastUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">ct.gov</span></div>
+				<div class="indent-list" *ngIf="clinicalTrial.gsrsUpdated" title="Last updated on gsrs">{{clinicalTrial.gsrsUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">gsrs</span></div>
+			</div>
+			<p *ngIf="clinicalTrial.firstReceived">First Received: {{clinicalTrial.firstReceived|date : "MM/dd/yyyy" : "UTC"}}</p>
+			<p *ngIf="clinicalTrial.startDate">Study Start Date: {{clinicalTrial.startDate|date : "MM/dd/yyyy" : "UTC"}}</p>
+			<p *ngIf="clinicalTrial.lastVerified">Last Verified: {{clinicalTrial.lastVerified}}</p>
+			<p *ngIf="clinicalTrial.primaryCompletionDate">Primary Completion Date: {{clinicalTrial.primaryCompletionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
+			<p *ngIf="clinicalTrial.completionDate">Study Completion Date: {{clinicalTrial.completionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
 		</div>
-		<p *ngIf="clinicalTrial.gender">Gender: {{clinicalTrial.gender}}</p>
-		<p *ngIf="clinicalTrial.allocation">Allocation: {{clinicalTrial.allocation}}</p>
-		<p *ngIf="clinicalTrial.studyResults">Study Results: {{clinicalTrial.studyResults}}</p>
-		<p *ngIf="clinicalTrial.enrollment">Enrollment: {{clinicalTrial.enrollment}}</p>
-		<div *ngIf="clinicalTrial.otherIds">
-			<p>Other Ids:</p>
-			<div class="indent-list" *ngFor="let content of clinicalTrial.otherIds.split('\|')">{{ content }}</div>
-		</div>
-		<p *ngIf="clinicalTrial.acronym">Acronym: {{clinicalTrial.acronym}}</p>
-		<div *ngIf="clinicalTrial.outcomeMeasures">
-			<p>Outcome Measures:</p>
-			<div class="indent-list" *ngFor="let content of clinicalTrial.outcomeMeasures.split('\|')">{{ content }}</div>
-		</div>
-		<p *ngIf="clinicalTrial.nctNumber">Url: <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.nctNumber">{{clinicalTrial.url}}</a></p>
-
 	</div>
-	</div>
-	</div>
 
-	<div class="trial-detailstwo">
-
-		<div *ngIf="clinicalTrial.lastUpdated || clinicalTrial.lastUpdated">
-			<p>Updated:</p>
-			<div class="indent-list" *ngIf="clinicalTrial.lastUpdated" title="Last updated by CT.gov">{{clinicalTrial.lastUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">ct.gov</span></div>
-			<div class="indent-list" *ngIf="clinicalTrial.gsrsUpdated" title="Last updated on gsrs">{{clinicalTrial.gsrsUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">gsrs</span></div>
-		</div>
-		<p *ngIf="clinicalTrial.firstReceived">First Received: {{clinicalTrial.firstReceived|date : "MM/dd/yyyy" : "UTC"}}</p>
-		<p *ngIf="clinicalTrial.startDate">Study Start Date: {{clinicalTrial.startDate|date : "MM/dd/yyyy" : "UTC"}}</p>
-		<p *ngIf="clinicalTrial.lastVerified">Last Verified: {{clinicalTrial.lastVerified}}</p>
-		<p *ngIf="clinicalTrial.primaryCompletionDate">Primary Completion Date: {{clinicalTrial.primaryCompletionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
-		<p *ngIf="clinicalTrial.completionDate">Study Completion Date: {{clinicalTrial.completionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
-	</div>
-</div>
-
-<div><p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p></div>
+	<div><p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p></div>
 
 
 	<div *ngIf="isTesting">
@@ -213,10 +220,8 @@
 		</div>
 
 		<div *ngIf="miniSearchOutputReported">
-				<div>&nbsp;</div>
+			<div>&nbsp;</div>
 			<div>miniSearchOutputReported: {{miniSearchOutputReported}}</div>
 		</div>
 	</div>
-		<div *ngIf="clinicalTrial">
 	</div>
-</div>

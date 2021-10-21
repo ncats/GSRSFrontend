@@ -73,9 +73,9 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'relatedRecord': return this.utilService.compare(a.relatedSubstance.name.toUpperCase(),
-          b.relatedSubstance.name.toUpperCase(), isAsc);
-        case 'type': return this.utilService.compare(a.type, b.type, isAsc);
+        case 'relatedRecord': return this.utilService.compare(a.relatedSubstance.name ? a.relatedSubstance.name.toUpperCase() : '',
+        b.relatedSubstance.name ? b.relatedSubstance.name.toUpperCase() : '', isAsc);
+        case 'type': return this.utilService.compare(a.type ? a.type : '', b.type ? b.type : '', isAsc);
         default: return 0;
       }
     });

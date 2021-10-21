@@ -27,6 +27,7 @@ import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/cl
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { MatMenuModule } from '@angular/material/menu';
 import { ActivateClinicalTrialsComponent } from './activate-clinical-trials.component';
 
 const clinicalTrialsRoutes: Routes = [
@@ -37,10 +38,9 @@ const clinicalTrialsRoutes: Routes = [
 
     },
    {
-    path: 'edit-clinical-trial/:nctNumber',
+    path: 'edit-clinical-trial/:trialNumber',
       component: ClinicalTrialEditComponent,
       canActivate: [ActivateClinicalTrialsComponent]
-
     },
     {
     path: 'add-clinical-trial',
@@ -49,13 +49,12 @@ const clinicalTrialsRoutes: Routes = [
 
     },
     {
-    path: 'clinicalTrialDetails/:nctNumber/:src',
+    path: 'clinicalTrialDetails/:trialNumber/:src',
       component: ClinicalTrialDetailsComponent,
       canActivate: [ActivateClinicalTrialsComponent]
-
     },
     {
-    path: 'clinicalTrialEuropeDetails/:nctNumber/:src',
+    path: 'clinicalTrialEuropeDetails/:trialNumber/:src',
       component: ClinicalTrialEuropeDetailsComponent,
       canActivate: [ActivateClinicalTrialsComponent]
     }
@@ -82,7 +81,8 @@ const clinicalTrialsRoutes: Routes = [
     RouterModule.forChild(clinicalTrialsRoutes),
     MatProgressBarModule,
     SubstanceImageModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    MatMenuModule
   ],
   declarations: [
     MiniSearchComponent,

@@ -327,7 +327,22 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   facetViewChange(event): void {
     this.facetViewCategorySelected = event.value;
-    console.log(event.value);
+  }
+
+  openedSortSubstances(event: any) {
+    if (event) {
+      this.overlayContainer.style.zIndex = '1002';
+    } else {
+      this.overlayContainer.style.zIndex = '1000';
+    }
+  }
+  
+  openedFacetViewChange(event: any) {
+    if (event) {
+      this.overlayContainer.style.zIndex = '1002';
+    } else {
+      this.overlayContainer.style.zIndex = '1000';
+    }
   }
 
   loadFacetViewFromConfig() {
@@ -426,6 +441,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               this.narrowSearchSuggestionsCount++;
             });
           }
+          this.matchTypes.sort();
+
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response;
           });
@@ -531,6 +548,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         });
         this.codes[substanceId].codeSystemNames = this.sortCodeSystems(this.codes[substanceId].codeSystemNames);
+        this.codes[substanceId].codeSystemNames.forEach(sysName => {
+          this.codes[substanceId].codeSystems[sysName] = this.codes[substanceId].codeSystems[sysName].sort((a, b) => {
+            let test = 0;
+            if (a.type === 'PRIMARY' && b.type !== 'PRIMARY') {
+              test =  1;
+            } else if (a.type !== 'PRIMARY' && b.type === 'PRIMARY') {
+            test = -1;
+            } else {
+            test = 0;
+          }
+          return test;
+          });
+        });
+
       }
       this.loadingService.setLoading(false);
     }, error => {
@@ -838,6 +869,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
+  }
+
+
+  downloadJson(id: string) {
+    this.substanceService.getSubstanceDetails(id).pipe(take(1)).subscribe(response => {
+        this.downloadFile(JSON.stringify(response), id + '.json');
+    });
+
   }
 
 }

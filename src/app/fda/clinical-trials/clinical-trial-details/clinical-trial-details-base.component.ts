@@ -17,7 +17,7 @@ import { ClinicalTrial } from '../../application/model/application.model';
 
 export class ClinicalTrialDetailsBaseComponent implements OnInit {
 
-  nctNumber: string;
+  trialNumber: string;
   src: string;
   clinicalTrial: any;
   flagIconSrcPath: string;
@@ -34,10 +34,10 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
 
   ngOnInit() {
    // this.loadingService.setLoading(true);
-    this.nctNumber = this.activatedRoute.snapshot.params['nctNumber'];
+    this.trialNumber = this.activatedRoute.snapshot.params['trialNumber'];
     this.src = this.activatedRoute.snapshot.params['src'];
 
-    if (this.nctNumber != null) {
+    if (this.trialNumber != null) {
       this.getClinicalTrialDetails();
     } else {
       this.handleSubstanceRetrivalError();
@@ -45,7 +45,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
   }
 
   getClinicalTrialDetails(): void {
-    this.clinicalTrialService.getClinicalTrialDetails(this.nctNumber, this.src).subscribe(response => {
+    this.clinicalTrialService.getClinicalTrialDetails(this.trialNumber, this.src).subscribe(response => {
       this.clinicalTrial = response;
    //   this.loadingService.setLoading(false);
     }, error => {

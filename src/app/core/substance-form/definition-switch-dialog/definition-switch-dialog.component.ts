@@ -414,7 +414,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             console.log('SENT SUBSTANCE');
             console.log(nsub);
             let errorString = 'VALIDATION ERROR - \n\n';
-            if (error && error.error) {
+            if (error && error.error && error.error.validationMessages) {
               error.error.validationMessages.forEach( e => {
                 if (e.messageType === 'ERROR') {
                   errorString += e.message + '\n\n';
@@ -422,6 +422,8 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               });
             } else if (error && error.message) {
               errorString += error.message;
+            } else {
+              errorString += "unknown server error";
             }
             this.error = errorString;
             this.undo(step);

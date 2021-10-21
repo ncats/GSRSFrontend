@@ -54,7 +54,7 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
     }
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
-      return this.utilsService.compare(a[sort.active].toUpperCase, b[sort.active].toUpperCase, isAsc);
+      return this.utilsService.compare(a[sort.active] ? a[sort.active].toUpperCase : '', b[sort.active] ? b[sort.active].toUpperCase : '', isAsc);
     });
     this.pageChange();
   }
