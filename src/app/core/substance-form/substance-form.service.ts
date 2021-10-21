@@ -1235,38 +1235,25 @@ this.emitDisulfideLinkUpdate();
           if (substanceCopy.modifications && substanceCopy.modifications.physicalModifications) {
             for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
               const prop = substanceCopy.modifications.physicalModifications[i];
-              if (!prop.physicalModificationRole ) {
+              let present = false;
+                prop.parameters.forEach (param => {
+                  if (param.parameterName) {
+                    present = true;
+                  }
+              });
+
+              if (!prop.physicalModificationRole && !present) {
                 const invalidPropertyMessage: ValidationMessage = {
                   actionType: 'frontEnd',
                   appliedChange: false,
                   links: [],
-                  message: 'Physical Modification #' + (i + 1) + ' requires a modification type or valid parameter',
+                  message: 'Physical Modification #' + (i + 1) + ' requires a modification role or valid parameter',
                   messageType: 'ERROR',
                   suggestedChange: true
                 };
-                
                 results.validationMessages.push(invalidPropertyMessage);
                 results.valid = false;
-              } else {
-                let present = false;
-                prop.parameters.forEach (param => {
-                  if (param.amount.type) {
-                    present = true;
-                  }
-                });
-                if (!present) {
-                  const invalidPropertyMessage: ValidationMessage = {
-                    actionType: 'frontEnd',
-                    appliedChange: false,
-                    links: [],
-                    message: 'Physical Modification #' + (i + 1) + ' requires a modification type or valid parameter',
-                    messageType: 'ERROR',
-                    suggestedChange: true
-                  };
-                  results.validationMessages.push(invalidPropertyMessage);
-                  results.valid = false;
-                }
-              }
+              } 
             }
           }
         }
