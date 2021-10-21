@@ -1,10 +1,12 @@
-<div class="divflex" *ngIf = "loadedComponents">
+<div class="divflex" *ngIf="loadedComponents">
   <!-- If in ginas.conf file (play framework), ix.gsrs.fda.applications.display.appToMatch = true,
      display checkbox in the top of Browse Substance page-->
-  <div *ngIf="displayMatchApplicationConfig === true">
-    <mat-checkbox [checked]="displayMatchAppCheckBoxValue" (change)="setDisplayAppToMatchSession($event.checked) ">
-      <span class="font14px"><b>Display Match Application Names</b></span>
-    </mat-checkbox>
+  <div *ngIf="isAdmin && loadedComponents && loadedComponents.applications">
+    <div *ngIf="displayMatchApplicationConfig === true">
+      <mat-checkbox [checked]="displayMatchAppCheckBoxValue" (change)="setDisplayAppToMatchSession($event.checked) ">
+        <span class="font14px"><b>Display Match Application Names</b></span>
+      </mat-checkbox>
+    </div>
   </div>
 
   <!-- Export Buttons -->
@@ -40,7 +42,9 @@
   -->
 
   <div class="padleft10px padtop10px" *ngIf="isAdmin">
-    <mat-icon class="colorgreen" matTooltip="It may take some time to download. After the download process starts, you can move away
-      from the download process page and continue with your work. Go to 'User Downloads' menu in Profile to get the downloaded file.">help</mat-icon>
+    <mat-icon class="colorgreen"
+      matTooltip="It may take some time to download. After the download process starts, you can move away
+      from the download process page and continue with your work. Go to 'User Downloads' menu in Profile to get the downloaded file.">help
+    </mat-icon>
   </div>
 </div>
