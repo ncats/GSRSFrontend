@@ -64,7 +64,7 @@ export class SubstanceEditImportDialogComponent implements OnInit {
           this.loaded = false;
         } else {
           this.loaded = true;
-          this.record = read;
+          this.record = this.pastedJSON;
           this.message = '';
         }
     }
