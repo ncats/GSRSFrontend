@@ -35,8 +35,7 @@ JSDraw2.licensecode='405562533916781761723242424242424131213141512181';
 
 JSDraw2.defaultoptions = {
 //Set the base URL for images and additional script loading
-"imagebase" : document.baseURI
+"imagebase" : document.baseURI + "assets/jsdraw/"
 };
 
-scil.Utils._scripturl=document.baseURI;
 
