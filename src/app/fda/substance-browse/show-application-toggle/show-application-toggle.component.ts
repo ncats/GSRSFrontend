@@ -30,6 +30,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
   loadedComponents: any;
   exportOptions: Array<any>;
   hasAdditionalDownloads = false;
+  additionalExportOptions: Array<any>;
 
   constructor(
     private generalService: GeneralService,
@@ -163,6 +164,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
           if (element.extension) {
             if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx')) {
               this.hasAdditionalDownloads = true;
+              this.additionalExportOptions.push(element.extension);
             }
           }
         });
