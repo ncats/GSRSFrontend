@@ -10,19 +10,19 @@
   </div>
 
   <!-- Export Buttons -->
-  <div class="padleft10px divheight" *ngIf="isAdmin && loadedComponents && loadedComponents.applications">
-    <button matTooltip="Export All Applications for Substance Search Results" (click)="export('app')" mat-button
-      class="mat-button export-button mat-raised-button">
-      <mat-icon svgIcon="get_app"></mat-icon> Applications
-    </button>
-  </div>
+    <div class="padleft10px divheight" *ngIf="isAdmin && loadedComponents && loadedComponents.applications">
+      <button matTooltip="Export All Applications for Substance Search Results" (click)="export('app')" mat-button
+        class="mat-button export-button mat-raised-button">
+        <mat-icon svgIcon="get_app"></mat-icon> Applications
+      </button>
+    </div>
 
-  <div class="padleft10px" *ngIf="isAdmin && loadedComponents && loadedComponents.products">
-    <button matTooltip="Export All Products for Substance Search Results" mat-button (click)="export('prod')"
-      class="mat-button export-button mat-raised-button">
-      <mat-icon svgIcon="get_app"></mat-icon> Products
-    </button>
-  </div>
+    <div class="padleft10px" *ngIf="isAdmin && loadedComponents && loadedComponents.products">
+      <button matTooltip="Export All Products for Substance Search Results" mat-button (click)="export('prod')"
+        class="mat-button export-button mat-raised-button">
+        <mat-icon svgIcon="get_app"></mat-icon> Products
+      </button>
+    </div>
 
   <!-- THE BACKEND IS NOT READY in 3.0 RC2. DISABLING NOW  -->
   <!--
@@ -40,11 +40,12 @@
     </button>
   </div>
   -->
-
-  <div class="padleft10px padtop10px" *ngIf="isAdmin">
+  <div class="padleft10px padtop10px"
+    *ngIf="((isAdmin && hasAdditionalDownloads) && (loadedComponents.applications || loadedComponents.products))">
     <mat-icon class="colorgreen"
       matTooltip="It may take some time to download. After the download process starts, you can move away
       from the download process page and continue with your work. Go to 'User Downloads' menu in Profile to get the downloaded file.">help
     </mat-icon>
   </div>
+
 </div>
