@@ -196,6 +196,12 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
       this.queryParts = queryStatement.queryParts;
       this.conditionControl.setValue(queryStatement.condition.trim(), { emitEvent: false });
       this.selectedCondition = queryStatement.condition;
+
+      // Get Suggestion/TypeAhead text from file
+      if (queryStatement.queryableProperty) {
+        this.selectedQueryableSuggest = this._queryableDictionary[queryStatement.queryableProperty].suggest;
+      }
+
       this.isShowCommonFields = this.queryableOptionsCommon.indexOf(queryStatement.queryableProperty) > -1;
       if (this.queryableOptionsCommon.indexOf(queryStatement.queryableProperty) > -1) {
         this.isShowCommonFields = true;

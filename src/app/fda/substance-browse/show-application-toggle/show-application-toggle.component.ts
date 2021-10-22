@@ -28,6 +28,9 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
   paramUrl = '';
   totalSubstance = 0;
   loadedComponents: any;
+  exportOptions: Array<any>;
+  hasAdditionalDownloads = false;
+  additionalExportOptions = [];
 
   constructor(
     private generalService: GeneralService,
@@ -64,6 +67,9 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
       if (response) {
         this.etag = response.etag;
         this.totalSubstance = response.total;
+
+        // Get Export Option lists
+        this.getExportOptions();
       }
     });
     this.subscriptions.push(subscriptionResult);
@@ -148,6 +154,22 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
 
   getApiExportUrl(etag: string, extension: string, source: string): string {
     return this.generalService.getApiExportUrlBrowseSubstance(etag, extension, source);
+  }
+
+  getExportOptions() {
+    this.substanceService.getExportOptions(this.etag).subscribe(response => {
+      this.exportOptions = response;
+      if (this.exportOptions) {
+        this.exportOptions.forEach(element => {
+          if (element.extension) {
+            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx')) {
+              this.hasAdditionalDownloads = true;
+              this.additionalExportOptions.push(element.extension);
+            }
+          }
+        });
+      }
+    });
   }
 
 }
