@@ -30,7 +30,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
   loadedComponents: any;
   exportOptions: Array<any>;
   hasAdditionalDownloads = false;
-  additionalExportOptions: Array<any>;
+  additionalExportOptions = [];
 
   constructor(
     private generalService: GeneralService,

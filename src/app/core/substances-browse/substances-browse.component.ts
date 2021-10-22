@@ -446,7 +446,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response.filter(exp => {
           if (exp.extension) {
-//TODO Make this generic somehow, so addditional-type exports are isolated
+            //TODO Make this generic somehow, so addditional-type exports are isolated
             if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx')) {
               return false;
             }
