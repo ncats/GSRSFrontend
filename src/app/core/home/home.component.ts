@@ -129,7 +129,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.customLinks.forEach (link => {
       link.total = 0;
       const searchStr = `${link.facetName}:${link.facetValue}`;
-      this.substanceService.searchSingleFacet(link.facetName, link.facetValue).pipe(take(1)).subscribe( response => {
+      this.substanceService.searchSingleFacetSimpleCount(link.facetName, link.facetValue).pipe(take(1)).subscribe( response => {
         if (response){
         link.total = Number(response.total);
         } else {
