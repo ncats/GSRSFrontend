@@ -272,7 +272,7 @@ height:175px;
 
 .substance-data {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   &:not(:last-child) {
       margin-bottom: 15px;
@@ -707,4 +707,12 @@ margin:auto;
 
 .divflex {
   display: flex;
+}
+
+span.label {
+  font-weight: bold;
+}
+
+.reallybold {
+  font-weight: bold;
 }

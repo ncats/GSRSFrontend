@@ -6,9 +6,9 @@
     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
     </mat-icon>
     <span class="middle-fill"></span>
-    <div class="approval">
+    <!--div class="approval">
       {{substance.approvalID}}
-    </div>
+    </div-->
   </mat-card-title>
 
   <mat-card-content>
@@ -31,7 +31,7 @@
         <div class="image-thumbnail">
           <div *ngIf="substance.structure || substance.polymer">
             <a class="zoom" (click)="openImageModal(substance)">
-            <!--  <img appSubstanceImage [entityId]="substance.uuid"  [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">-->
+              <img appSubstanceImage [entityId]="substance.uuid"  [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
             </a>
           </div>
           <div *ngIf="!substance.structure && !substance.polymer">
@@ -73,7 +73,6 @@
             subunit {{unit.subunitIndex}} ({{unit.sequence && unit.sequence.length || 0}}) similarity search
           </a>
         </mat-menu>
-
 
 
         <mat-menu #downloadMenu="matMenu">
@@ -126,12 +125,6 @@
             </div>>
           </div>
         </div-->
-        <div class="substance-data substance-names" *ngIf="names">
-          <div class="label">INN Name:</div>
-          <div class="value space-bottom">
-          {{ innName }}
-        </div>
-        </div>
         <div class="substance-data substance-code-systems" *ngIf="codeSystems">
           <div class="label">Codes:</div>
           <div>
@@ -153,13 +146,13 @@
            <!-- </div> -->
           </div>
         </div>
-        <div class="substance-data substance-relationships"
+        <!--div class="substance-data substance-relationships"
           *ngIf="substance._relationships && substance._relationships.count != null">
           <div class="label">Relationships:</div>
           <div class="value">
             {{substance._relationships.count}}
           </div>
-        </div>
+        </div-->
         <div class="substance-data" *ngIf="substance.protein && substance.protein.subunits">
           <div class="label">Subunits:</div>
           <div>
@@ -172,18 +165,6 @@
               <span class="value">{{substance.nucleicAcid.subunits.length}}</span>
             </div>
           </div>
-        <div class="substance-data" *ngIf="substance.structure?.mwt">
-          <div class="label">Mol. Weight:</div>
-          <div>
-            <span class="value">{{substance.structure.mwt}}</span>
-          </div>
-        </div>
-        <div class="substance-data" *ngIf="substance.structure?.formula">
-          <div class="label">Formula:</div>
-          <div>
-            <span class="value" [innerHTML] = "substance.structure.formula"></span>
-          </div>
-        </div>
         <div class="substance-data" *ngIf="substance.structurallyDiverse?.part">
           <div class="label">Part:</div>
           <div>
@@ -197,40 +178,133 @@
         </div>
       </div>
       
-      <div class="substance-data substance-names" > <!--*ngIf="names"-->
-        <div *ngIf='innName'>
+      <div > <!--*ngIf="names" class="substance-data substance-names"-->
+        <!--div *ngIf='innName'>
           <div class="label">INN Name:</div>
           <div class="value space-bottom">
           {{ innName }}
           </div>
-        </div>
-        <div *ngIf='usanName'>
-          <div class="label">USAN Name:</div>
-          <div class="value space-bottom">
+        </div-->
+        <!--p *ngIf='usanName'>
+          <span class="label">USAN Name:</span>
+          <span class="value space-bottom">
           {{ usanName }}
-          </div>
-        </div>
-        <div *ngIf='banName'>
-          <div class="label">BAN Name:</div>
-          <div class="value space-bottom">
+          </span>
+        </p>
+        <p *ngIf='banName'>
+          <span class="label" style="font-weight: bold;">BAN Name:</span>
+          <span class="value space-bottom">
           {{ banName }}
-          </div>
-        </div>
-        <div *ngIf='pronName'>
-          <div class="label">Prononciation:</div>
-          <div class="value space-bottom">
-          {{ pronName }}
-          </div>
-        </div>
+          </span>
+        </p>
+        <p *ngIf='uspName'>
+          <span class="label">USP Name:</span>
+          <span class="value">
+          {{ uspName }}
+          </span>
+        </p-->
+
         </div>
 
 
     </div>
 
+    <table border="1px">
+      <tr>
+        <td width="20%">Pronounced</td>
+        <td width="*">{{ pronName }}</td>
+      </tr>
+      <tr>
+        <td>USAN Year of Adoption</td>
+        <td>1993</td>
+      </tr>
+      <tr>
+        <td colspan="2"> 
+          <table>
+          <tr>
+            <th width="33%">Official Names</th>
+            <th width="33%">Common Names</th>
+            <th width="33%">Inventory Brand Names</th>
+          </tr>
+          <tr>
+            <td border="1px">
+              <p *ngIf='usanName'>
+                <span class="reallybold">USAN</span>
+                <span class="value space-bottom">{{ usanName }}</span>
+              </p>
+            <p *ngIf='innName'>
+              <span class="reallybold">INN</span>
+              <span class="value space-bottom">{{ innName }}</span>
+            </p>
+            <p *ngIf='uspName'>
+              <span class="reallybold">USP</span>
+              <span class="value">{{ uspName }}
+              </span>
+            </p>
+            <p *ngIf='banName'>
+              <span class="reallybold" style="font-weight: bold;">BAN</span>
+              <span class="value space-bottom"> {{ banName }}</span>
+            </p>
+            </td>
+            <td>
+              <p *ngIf='iupacName'>
+                <span class="label">IUPAC Name:</span>
+                <span class="value"> {{ iupacName }}</span>
+              </p>
+              <p *ngIf='indexName'>
+                <span class="label">Index Name:</span>
+                <span class="value"> {{ indexName }}</span>
+              </p>
+      
+            </td>
+            <td> 
+              <div *ngFor = "let mname of manufacturerNames">
+                <span style="font-weight:bold;"> {{mname.manufacturerName}}</span>
+                <span> {{mname.substanceName}}</span>
+              </div>
+              <span *ngIf="manufacturerNames.length ===0">No innovator names</span>
+            </td>
+          </tr>
+  
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>Identifiers</td>
+        <td>
+          <p *ngIf='usanId'>
+            <span class="reallybold">USAN</span>
+            <span class="value space-bottom"> {{ usanId }}</span>
+          </p>
+          <p *ngIf='innId'>
+            <span class="reallybold">INN</span>
+            <span class="value space-bottom"> {{ innId }}</span>
+          </p>
+          <p *ngIf='casRn'>
+            <span class="reallybold">CAS-RN</span>
+            <span class="value space-bottom"> {{ casRn }}</span>
+          </p>
+          <p *ngIf='substance.approvalID'>
+            <span class="reallybold">UNII</span>
+            <span class="value space-bottom"> {{ substance.approvalID }}</span>
+          </p>
+  
+        </td>
+      </tr>
+<tr *ngIf="substance.structure">
+    <td>Molecular Formula</td>
+    <td class="value blue-font" [innerHTML] = "substance.structure.formula"></td>
+</tr>
+  <tr>
+    <td class="name">Molecular Weight</td>
+    <td class="value blue-font"  >{{mwDisplay}}</td>
+  </tr>
+
+    </table>
 
     
       <div class="right-aligned">
-        <div *ngIf = "inxightLink" class = "inxight-container">
+        <!--div *ngIf = "inxightLink" class = "inxight-container">
             <a class = "ext-link" [href] = "inxightUrl" target ="_blank">
               Inxight Drugs <mat-icon class = "icon small-icon" svgIcon="open_in_new"></mat-icon>
             </a>
@@ -300,7 +374,7 @@
               </span>
             </div>
           </div>
-        </div>
+        </div-->
       </div>
     </div>
   </mat-card-content>

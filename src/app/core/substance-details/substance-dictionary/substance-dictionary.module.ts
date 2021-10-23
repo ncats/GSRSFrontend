@@ -12,6 +12,7 @@ import {MatDialogModule, MatIconModule, MatSortModule, MatTooltipModule, MatChip
 import { RouterModule } from '@angular/router';
 import { SequenceAlignmentComponent } from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
 import { SubstanceHierarchyComponent } from '@gsrs-core/substances-browse/substance-hierarchy/substance-hierarchy.component';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -31,7 +32,7 @@ import { SubstanceHierarchyComponent } from '@gsrs-core/substances-browse/substa
     RouterModule,
     MatMenuModule,
     MatCardModule,
-
+    SubstanceImageModule
   ],
   declarations: [SubstanceDictionaryComponent
   ]

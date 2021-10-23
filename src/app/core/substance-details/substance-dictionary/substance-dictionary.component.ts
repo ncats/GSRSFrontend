@@ -24,7 +24,7 @@ import {Subject} from 'rxjs';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { GeneralService } from 'src/app/fda/service/general.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @Component({
   selector: 'substance-dictionary-component',
@@ -49,6 +49,20 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
   usanName: string;
   banName: string;
   pronName: string;
+  iupacName: string;
+  uspName: string;
+  indexName: string;
+
+  usanId: string;
+  innId: string;
+  uspId: string;
+  casRn: string;
+  mwDisplay: string;
+
+  
+
+  manufacturerNames: Array<ManufacturerName>;
+  MANUFACTURER_TYPE : string = 'MANUFACTURER';
 
   constructor(
     public utilsService: UtilsService,
@@ -75,6 +89,7 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
         this.isAdmin = response;
       }
     });
+    this.manufacturerNames = [];
   }
 
   finishiInit() {
@@ -109,15 +124,53 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
       //console.log('name.name: ' + name.name);
       if (name.name.toUpperCase().endsWith('[INN]') ) {
         console.log('found our innName');
-        this.innName = name.name;
+        this.innName = name.name.replace('[INN]','');
       } else if(name.name.toUpperCase().endsWith('[USAN]')){
-        this.usanName=name.name;
+        this.usanName=name.name.replace('[USAN]','');
+        console.log('found our usanName');
       } else if(name.name.toUpperCase().endsWith('[BAN]')){
-        this.banName=name.name;
+        console.log('found our banName');
+        this.banName=name.name.replace('[BAN]','');
+      } else if(name.name.toUpperCase().endsWith('[IUPAC]')) {
+        console.log('found our iupacName');
+        this.iupacName=name.name.replace('[IUPAC]', '');
+      } else if(name.name.toUpperCase().endsWith('[USP]')) {
+        console.log('found our uspName');
+        this.uspName=name.name;
+      } else if(name.name.toUpperCase().endsWith('[INDEX-NAME]')) {
+      console.log('found our index name');
+      this.indexName=name.name.replace('[INDEX-NAME]','');
       } else if(name.type.toUpperCase()==='PRON'){
         this.pronName=name.name;
       }
+      let manufName = this.getManufacturerName(name, this.substance);
+      
+      if(manufName != null && manufName.length>0) {
+        console.log('found manuf name ' + manufName);
+        let matchedManuName = this.manufacturerNames.find(n=> n.substanceName=== name.name);
+        console.log('matchedManuName: ' + matchedManuName);
+        if( !matchedManuName || matchedManuName===null) {
+          console.log('ADDED');
+          this.manufacturerNames.push( new ManufacturerName( name.name, manufName));
+        }
+      }
     });
+
+    this.substance.codes.forEach(cd=>{
+      if( cd.codeSystem==='CAS' && cd.type==='PRIMARY') {
+        this.casRn = cd.code;
+      } else if( cd.codeSystem==='INN' && cd.type==='PRIMARY') {
+        this.innId=cd.code;
+      } else if(cd.codeSystem==='USAN' && cd.type==='PRIMARY')/*may not exist*/ {
+        this.usanId = cd.code;
+      }
+
+    });
+    console.log('end of init, this.manufacturerNames.length: ' + this.manufacturerNames.length);
+
+    if(this.substance.structure ){
+      this.mwDisplay = this.substance.structure.mwt.toString();
+    }
 
   }
   getApprovalID() {
@@ -216,5 +269,37 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
         });
       }
     }
+  }
+
+  getManufacturerName(subName : SubstanceName, parentSubstance: SubstanceDetail) : string{
+    if(subName==null) {
+      return null;
+    }
+    let manufactured = null;
+
+    console.log('in isManufacturerName, subName ' + subName.name);
+    //parentSubstance.references.forEach(pr=> console.log('parent ref: ' + pr.uuid + ' type: ' + pr.docType + '; cit: ' + pr.citation));
+      
+    subName.references.forEach(r=>{
+      console.log('looking for ref ' + r);
+      const foundItem= parentSubstance.references.find(pr=>pr.uuid===r && pr.docType===this.MANUFACTURER_TYPE);
+      if(foundItem != null){
+        console.log('found item: ' + JSON.stringify(foundItem));
+        manufactured = foundItem.citation;
+      }
+    });
+    return manufactured;
+  }
+
+   
+}
+
+export class ManufacturerName {
+  substanceName: string;
+  manufacturerName: string;
+
+  constructor(subName: string, manuName: string) {
+    this.substanceName  =subName;
+    this.manufacturerName= manuName;
   }
 }
