@@ -25,6 +25,7 @@ import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-l
 import { GeneralService } from 'src/app/fda/service/general.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { ifError } from 'assert';
 
 @Component({
   selector: 'substance-dictionary-component',
@@ -52,6 +53,8 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
   iupacName: string;
   uspName: string;
   indexName: string;
+  categoryName: string;
+  usanDate: string;
 
   usanId: string;
   innId: string;
@@ -59,9 +62,7 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
   casRn: string;
   mwDisplay: string;
 
-  
-
-  manufacturerNames: Array<ManufacturerName>;
+    manufacturerNames: Array<ManufacturerName>;
   MANUFACTURER_TYPE : string = 'MANUFACTURER';
 
   constructor(
@@ -142,6 +143,8 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
       this.indexName=name.name.replace('[INDEX-NAME]','');
       } else if(name.type.toUpperCase()==='PRON'){
         this.pronName=name.name;
+      }else if (name.type.toUpperCase()==='CATEGORY') {
+        this.categoryName =name.name;
       }
       let manufName = this.getManufacturerName(name, this.substance);
       
@@ -154,6 +157,12 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
           this.manufacturerNames.push( new ManufacturerName( name.name, manufName));
         }
       }
+
+      this.substance.references.forEach(r=>{
+        if(r.docType.toUpperCase() === 'USAN DATE') {
+          this.usanDate = r.citation;
+        }
+      });
     });
 
     this.substance.codes.forEach(cd=>{

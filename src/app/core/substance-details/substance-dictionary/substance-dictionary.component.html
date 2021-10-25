@@ -215,26 +215,30 @@
         <td width="*">{{ pronName }}</td>
       </tr>
       <tr>
-        <td>USAN Year of Adoption</td>
-        <td>1993</td>
+        <td width="20%">USAN Year of Adoption</td>
+        <td width="*">{{ usanDate }}</td>
       </tr>
       <tr>
-        <td colspan="2"> 
+        <th colspan="2"> 
+          Non-Proprietary Names
+          </th>
+          </tr>
+          <tr>
+          <td colspan="2"> 
           <table>
           <tr>
             <th width="33%">Official Names</th>
             <th width="33%">Common Names</th>
-            <th width="33%">Inventory Brand Names</th>
           </tr>
           <tr>
             <td border="1px">
               <p *ngIf='usanName'>
                 <span class="reallybold">USAN</span>
-                <span class="value space-bottom">{{ usanName }}</span>
+                <span class="value space-bottom"> {{ usanName }}</span>
               </p>
             <p *ngIf='innName'>
               <span class="reallybold">INN</span>
-              <span class="value space-bottom">{{ innName }}</span>
+              <span class="value space-bottom"> {{ innName }}</span>
             </p>
             <p *ngIf='uspName'>
               <span class="reallybold">USP</span>
@@ -257,17 +261,22 @@
               </p>
       
             </td>
-            <td> 
-              <div *ngFor = "let mname of manufacturerNames">
-                <span style="font-weight:bold;"> {{mname.manufacturerName}}</span>
-                <span> {{mname.substanceName}}</span>
-              </div>
-              <span *ngIf="manufacturerNames.length ===0">No innovator names</span>
-            </td>
           </tr>
   
           </table>
         </td>
+      </tr>
+      <tr>
+        <td>Innovator Brand Names
+        </td>
+        <td> 
+          <div *ngFor = "let mname of manufacturerNames">
+            <span style="font-weight:bold;">{{mname.manufacturerName}}</span>
+            <span> {{mname.substanceName}}</span>
+          </div>
+          <span *ngIf="manufacturerNames.length ===0">No innovator names</span>
+        </td>
+
       </tr>
       <tr>
         <td>Identifiers</td>
@@ -291,6 +300,10 @@
   
         </td>
       </tr>
+      <tr >
+        <td>Therapeutic Category</td>
+        <td class="value blue-font" >{{categoryName}}</td>
+    </tr>
 <tr *ngIf="substance.structure">
     <td>Molecular Formula</td>
     <td class="value blue-font" [innerHTML] = "substance.structure.formula"></td>
