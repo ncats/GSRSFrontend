@@ -197,7 +197,8 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
       this.conditionControl.setValue(queryStatement.condition.trim(), { emitEvent: false });
       this.selectedCondition = queryStatement.condition;
 
-      // Get Suggestion/TypeAhead text from file
+      // Get Suggestion/TypeAhead text from file from 'suggest' key, if there is a value, will use to display
+      // typeahead text box.
       if (queryStatement.queryableProperty) {
         this.selectedQueryableSuggest = this._queryableDictionary[queryStatement.queryableProperty].suggest;
       }
