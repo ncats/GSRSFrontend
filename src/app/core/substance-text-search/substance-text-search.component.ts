@@ -45,10 +45,16 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       let resp;
       resp = response['CODE_SYSTEM'].dictionary;
+
+// TODO: this should be done for ALL codesystems, not just ones with the domain value
+// of CAS. If another codesystem domain value is "XXX_YY", but its display value is "Special Code System",
+// it should show "Special Code System" 
+
       if (resp['CAS']) {
         this.CasDisplay = resp['CAS'].display;
         }
       });
+    
         this.searchControl.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -61,27 +67,30 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
+
+      //TODO: This should use the config file for a list rather than be hard-coded
       const showTypes = [ 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
+
       this.suggestionsFields =   Object.keys(this.substanceSuggestionsGroup).filter(function(item) {
         return showTypes.indexOf(item) > -1;
       });
-     /* this.suggestionsFields.forEach((value, index) => {
-        if (value === 'Approval_ID') {
-          this.suggestionsFields[index] = 'UNII';
-        }
-        if (value === 'Display_Name') {
-          this.suggestionsFields[index] =  'Preferred Term';
-        }
-      });*/
       this.suggestionsFields.sort(function(x, y) { return x === 'Display_Name' ? -1 : y === 'Display_Name' ? 1 : 0; });
       this.suggestionsFields.forEach((value, index) => {
         if (value === 'Approval_ID') {
+          //TODO: This should not be hard-coded, but should use the config file.
+          // not all users will use UNIIs.
           this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
         } else if (value === 'Display_Name') {
           this.suggestionsFields[index] =  {value: 'Display_Name', display: 'Preferred Term'};
+//TODO make the below work for all code systems, not just CAS. Pseudo code is:
+//
+//  else if(this.CV_OF_CODESYSTEMS.contains(value)){
+//     let disp = this.CV_OF_CODESYSTEMS.get(value).display;
+//     this.suggestionsFields[index] =  {value: value, display: disp};
+//  }
+//
         } else if (value === 'CAS') {
           this.suggestionsFields[index] =  {value: 'CAS', display: this.CasDisplay};
-
         } else {
           this.suggestionsFields[index] =  {value: value, display: value};
         }
@@ -97,10 +106,6 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       console.log(error);
     });
 
-  }
-
-  getCasDisplay() {
-    this.cvService.getDomainVocabulary('CODE_SYSTEM');
   }
 
   @Input()
