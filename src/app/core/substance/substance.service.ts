@@ -625,6 +625,24 @@ export class SubstanceService extends BaseHttpService {
     }
   }
 
+//TODO: Needs to be abstracted away
+// WIP pseudocode:
+/*
+  getPrimaryCode(reference: SubstanceRelated , codeSystem: string): Observable<string> {
+    //TODO: may need to url-encode some codeSystems for spaces/hyphens
+    const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:` + codeSystem + `)(type:PRIMARY)($0)/code`;
+    const refPname = `${this.apiBaseUrl}substances(${ reference.refPname  })/codes(codeSystem:` + codeSystem + `)(type:PRIMARY)($0)/code`;
+        return this.http.get<any>(refuuid).pipe(
+          catchError(error => this.http.get(refPname))
+        );
+  }
+  getPrimaryCode(reference: SubstanceRelated): Observable<string> {
+    let cs: string;
+    //TODO: need to establish the config name, and how to deal with default values
+    cs = `${this.configService.configData.primaryCodeSystem}`;
+    return getPrimaryCode(reference, cs);
+  }
+*/
   getBDNUM(reference: SubstanceRelated ): Observable<string> {
     const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
     const refPname = `${this.apiBaseUrl}substances(${ reference.refPname  })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
