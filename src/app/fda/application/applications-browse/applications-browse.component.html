@@ -122,6 +122,11 @@
                   matTooltip='Edit GSRS Application Record'>
                   <mat-icon svgIcon="edit"></mat-icon>
                 </a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a style="margin-top:-5px;" mat-icon-button [routerLink]="['/application/register']" [queryParams]="{copy:application.id}"
+                  matTooltip='copy Application to new registration form' *ngIf="isAdmin">
+                  <mat-icon svgIcon="file_copy"></mat-icon>
+                </a>
               </div>
 
               <div>

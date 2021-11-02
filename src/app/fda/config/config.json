@@ -1,5 +1,6 @@
 {
   "version": "3.0",
+  "apiBaseUrl": "http://localhost:8081/",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -791,6 +792,12 @@
       "display": "Browse Clinical Trials",
       "path": "browse-clinical-trials",
       "order": 13
+    },
+    {
+      "component": "adverseevents",
+      "display": "Browse Adverse Events",
+      "path": "browse-adverse-events",
+      "order": 14
     },
     {
       "display": "Register",
