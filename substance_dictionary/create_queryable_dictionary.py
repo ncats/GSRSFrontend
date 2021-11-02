@@ -8,7 +8,7 @@ import requests
 # dictionary_df = pd.read_csv(BytesIO(data))
 
 # dictionary_df = pd.read_excel('dictionary_current.xlsx', skiprows=range(1,892), usecols='A:M')
-dictionary_df = pd.read_excel('dictionary_current.xlsx')
+dictionary_df = pd.read_excel('dictionary_current_all_entities.xlsx')
 
 print(dictionary_df.head())
 
@@ -20,7 +20,7 @@ dictionary_df = dictionary_df[
         | (dictionary_df['Data Type'] == 'array <string>'))
 ]
 
-dictionary_df = dictionary_df.loc[:, ['Lucene Path', 'Display Name', 'Description', 'Data Type', 'CV DOMAIN', 'Data to include', 'Entity']]
+dictionary_df = dictionary_df.loc[:, ['Lucene Path', 'Display Name', 'Description', 'Data Type', 'CV DOMAIN', 'Data to include', 'Entity', 'Suggest Field Name']]
 
 def set_type(df_properties):
     if 'timestamp' in df_properties['Description'].lower():
@@ -33,21 +33,26 @@ def set_type(df_properties):
 
 dictionary_df['type'] = dictionary_df.loc[:, ['Lucene Path', 'Data Type', 'Description']].apply(set_type, axis=1)
 
-dictionary_df.rename(columns={"Lucene Path": "lucenePath", "Description": "description", "Display Name": "displayName", "CV DOMAIN": "cvDomain", "Data to include": "priority"}, inplace=True)
+dictionary_df.rename(columns={"Lucene Path": "lucenePath", "Description": "description", "Display Name": "displayName", "CV DOMAIN": "cvDomain", "Data to include": "priority", "Suggest Field Name": "suggest"}, inplace=True)
 
-columns_to_include = ['lucenePath', 'description', 'type', 'cvDomain', 'priority']
+columns_to_include = ['lucenePath', 'description', 'type', 'cvDomain', 'priority', 'suggest']
 
 dictionary_df.drop(columns=['Data Type'], inplace=True)
 dictionary_df.sort_values('displayName', inplace=True)
 dictionary_df.set_index('displayName', inplace=True)
 
-# dictionary_df.loc[:, columns_to_include].to_json('../src/app/core/assets/data/substance_dictionary.json', orient='index')
+application_df = dictionary_df[dictionary_df['Entity']=='Application']
+substance_df = dictionary_df[dictionary_df['Entity']=='Substance']
+product_df = dictionary_df[dictionary_df['Entity']=='Product']
+ctus_df = dictionary_df[dictionary_df['Entity']=='ClinicalTrialUS']
+cteu_df = dictionary_df[dictionary_df['Entity']=='ClinicalTrialEurope']
 
-dictionary_df.loc[:, columns_to_include].to_json('substance_dictionary.json', orient='index')
-# dictionary_df.loc[:, columns_to_include].to_json('application_dictionary.json', orient='index', indent=4)
-# dictionary_df.loc[:, columns_to_include].to_json('product_dictionary.json', orient='index', indent=4)
-# dictionary_df.loc[:, columns_to_include].to_json('clinicaltrial_dictionary.json', orient='index', indent=4)
+# You can preview the sub dictionary here
+print(cteu_df)
 
-# data_types_df = dictionary_df.loc[:, 'type'][dictionary_df['type'].unique()]
+application_df.loc[:, columns_to_include].to_json('application_dictionary.json',orient='index', indent=4)
+substance_df.loc[:, columns_to_include].to_json('substance_dictionary.json',orient='index', indent=4)
+product_df.loc[:, columns_to_include].to_json('product_dictionary.json',orient='index', indent=4)
+ctus_df.loc[:, columns_to_include].to_json('ctus_dictionary.json',orient='index', indent=4)
+cteu_df.loc[:, columns_to_include].to_json('cteu_dictionary.json',orient='index', indent=4)
 
-# data_types_df.to_csv('data_types.csv')

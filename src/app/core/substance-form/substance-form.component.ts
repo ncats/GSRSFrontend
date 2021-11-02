@@ -828,7 +828,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     }
 
-
     return old;
   }
 

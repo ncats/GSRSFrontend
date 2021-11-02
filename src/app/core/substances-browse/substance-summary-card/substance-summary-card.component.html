@@ -147,7 +147,7 @@
 
                   </span>:&nbsp;
                 <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast; index as index">
-                  <span *ngIf = "index < 6  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
+                  <span *ngIf = "index < 5  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
                   <span *ngIf="codeObject.url">
                     <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
                       evCategory="substancesContent" evAction="link:code" aria-label ="view site in new tab">
