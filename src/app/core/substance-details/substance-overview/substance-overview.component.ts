@@ -199,6 +199,37 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
 }
 
+getMwDisplay(chemicalSubstance: any): string {
+  const defaultDisplayValue= '[unassigned]';
+  var displayValue= defaultDisplayValue;
+  if( this.configService.configData && this.configService.configData.molecularWeightPropertyName)  {
+
+  }
+  const mwPropertyname =( this.configService.configData && this.configService.configData.molecularWeightPropertyName) ? 
+    this.configService.configData.molecularWeightPropertyName : 'MOL_WEIGHT (calc)';
+  console.log('mwPropertyname: ' + mwPropertyname);
+  chemicalSubstance.properties.forEach(element => {
+      if(element.name.indexOf( mwPropertyname) ===0) {
+          displayValue = element.value.average != null ? element.value.average : element.value.nonNumericValue;
+          console.log('using property');
+          //displayValue += ' prop';
+      }
+  });
+  if( (displayValue.length ===0 ||displayValue===defaultDisplayValue) && chemicalSubstance.structure !==null) {
+      displayValue=chemicalSubstance.structure.mwt;
+      console.log('using intrinsic MW');
+  }
+  const polymerMWPropertyName = 'MOL_WEIGHT';
+  if(displayValue.length ===0 ||displayValue===defaultDisplayValue) {
+    chemicalSubstance.properties.forEach(element => {
+      if(element.name.indexOf( polymerMWPropertyName) ===0) {
+          displayValue = element.value.average != null ? element.value.average : element.value.nonNumericValue;
+          console.log('using polymer mw property ' + element.name);
+      }
+  });
+  }
+   return displayValue;
+}
 
 
 }

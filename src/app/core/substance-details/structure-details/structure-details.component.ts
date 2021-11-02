@@ -68,7 +68,6 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
         this.searchHref = 'structure-search?structure=' + this.structure.id;
       }
       this.overlayContainer = this.overlayContainerService.getContainerElement();
-      this.mwDisplay= this.getMwDisplay(this.substance);
   }
 
 
@@ -165,28 +164,4 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     this.showStereo = !this.showStereo;
   }
 
-
-  getMwDisplay(chemicalSubstance: any): string {
-    const defaultDisplayValue= '[unassigned]';
-    var displayValue= defaultDisplayValue;
-    if( this.configService.configData && this.configService.configData.molecularWeightPropertyName)  {
-
-    }
-    const mwPropertyname =( this.configService.configData && this.configService.configData.molecularWeightPropertyName) ? 
-      this.configService.configData.molecularWeightPropertyName : 'MOL_WEIGHT (calc)';
-    console.log('mwPropertyname: ' + mwPropertyname);
-    chemicalSubstance.properties.forEach(element => {
-        if(element.name.indexOf( mwPropertyname) ===0) {
-            displayValue = element.value.average != null ? element.value.average : element.value.nonNumericValue;
-            console.log('using property');
-            //displayValue += ' prop';
-        }
-        
-    });
-    if( (displayValue.length ===0 ||displayValue===defaultDisplayValue) && chemicalSubstance.structure !==null) {
-        displayValue=chemicalSubstance.structure.mwt;
-        console.log('using intrinsic MW');
-    }
-     return displayValue;
-  }
 }

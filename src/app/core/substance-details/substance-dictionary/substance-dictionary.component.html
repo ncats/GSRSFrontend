@@ -44,23 +44,6 @@
         <div class = 'definition' *ngIf = "substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
           {{substance.definitionLevel }} DEFINITION
         </div>
-        <button
-          *ngIf="substance.structure || (substance.protein || substance.nucleicAcid) || substance.polymer"
-          mat-icon-button [matMenuTriggerFor]="downloadMenu">
-          <mat-icon svgIcon="get_app"></mat-icon>
-        </button>
-
-        <button *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
-          <mat-icon svgIcon="search"></mat-icon>
-        </button>
-
-        <a class = "mat-icon-button" matTooltip = "edit substance" aria-label = "edit substance" *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
-          <mat-icon svgIcon="edit"></mat-icon>
-        </a>
-
-        <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
-          <mat-icon svgIcon="file_copy"></mat-icon>
-        </button>
 
         <button *ngIf="subunits" mat-icon-button [matMenuTriggerFor]="sequenceMenu" matTooltip = "sequence search">
           <mat-icon svgIcon="search"></mat-icon>
@@ -100,15 +83,6 @@
             <span>Search Structure</span>
           </a>
 
-        </mat-menu>
-
-        <mat-menu #editMenu="matMenu">
-          <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid}" matTooltip = 'copy substance to new registration form'>
-            <span>Copy Substance to New Form</span>
-          </a>
-          <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]" [queryParams] = "{copy:substance.uuid,copyType:'definition'}" matTooltip = 'copy definition to new registration form'>
-            <span>Copy Definition to New Form</span>
-          </a>
         </mat-menu>
 
       </div>
@@ -211,15 +185,19 @@
 
     <table border="1px">
       <tr>
-        <td width="20%">Pronounced</td>
+        <td width="20%" class="boldlabel">Pronounced</td>
         <td width="*">{{ pronName }}</td>
       </tr>
       <tr>
-        <td width="20%">USAN Year of Adoption</td>
+        <td width="20%" class="boldlabel">USAN Year of Adoption</td>
         <td width="*">{{ usanDate }}</td>
       </tr>
       <tr>
-        <th colspan="2"> 
+        <td width="20%" class="boldlabel">Substance Class</td>
+        <td width="*">{{substance.substanceClass | classDisplay}}</td>
+      </tr>
+      <tr>
+        <th colspan="2" > 
           Non-Proprietary Names
           </th>
           </tr>
@@ -233,31 +211,34 @@
           <tr>
             <td border="1px">
               <p *ngIf='usanName'>
-                <span class="reallybold">USAN</span>
+                <span class="boldlabel">USAN</span>
                 <span class="value space-bottom"> {{ usanName }}</span>
               </p>
             <p *ngIf='innName'>
-              <span class="reallybold">INN</span>
+              <span class="boldlabel">INN</span>
               <span class="value space-bottom"> {{ innName }}</span>
             </p>
             <p *ngIf='uspName'>
-              <span class="reallybold">USP</span>
+              <span class="boldlabel">USP</span>
               <span class="value">{{ uspName }}
               </span>
             </p>
             <p *ngIf='banName'>
-              <span class="reallybold" style="font-weight: bold;">BAN</span>
+              <span class="boldlabel" style="font-weight: bold;">BAN</span>
               <span class="value space-bottom"> {{ banName }}</span>
             </p>
             </td>
             <td>
               <p *ngIf='iupacName'>
-                <span class="label">IUPAC Name:</span>
+                <span class="boldlabel">IUPAC Name:</span>
                 <span class="value"> {{ iupacName }}</span>
               </p>
               <p *ngIf='indexName'>
-                <span class="label">Index Name:</span>
+                <span class="boldlabel">Index Name:</span>
                 <span class="value"> {{ indexName }}</span>
+              </p>
+              <p>
+                {{ commonNames.length }} more common names available
               </p>
       
             </td>
@@ -267,8 +248,8 @@
         </td>
       </tr>
       <tr>
-        <td>Innovator Brand Names
-        </td>
+        <th>Innovator Brand Names
+        </th>
         <td> 
           <div *ngFor = "let mname of manufacturerNames">
             <span style="font-weight:bold;">{{mname.manufacturerName}}</span>
@@ -279,43 +260,42 @@
 
       </tr>
       <tr>
-        <td>Identifiers</td>
+        <th>Identifiers</th>
         <td>
           <p *ngIf='usanId'>
-            <span class="reallybold">USAN</span>
+            <span class="boldlabel">USAN</span>
             <span class="value space-bottom"> {{ usanId }}</span>
           </p>
           <p *ngIf='innId'>
-            <span class="reallybold">INN</span>
+            <span class="boldlabel">INN</span>
             <span class="value space-bottom"> {{ innId }}</span>
           </p>
           <p *ngIf='casRn'>
-            <span class="reallybold">CAS-RN</span>
+            <span class="boldlabel">CAS-RN</span>
             <span class="value space-bottom"> {{ casRn }}</span>
           </p>
           <p *ngIf='substance.approvalID'>
-            <span class="reallybold">UNII</span>
+            <span class="boldlabel">UNII</span>
             <span class="value space-bottom"> {{ substance.approvalID }}</span>
           </p>
   
         </td>
       </tr>
       <tr >
-        <td>Therapeutic Category</td>
+        <td class="boldlabel"> Therapeutic Category</td>
         <td class="value blue-font" >{{categoryName}}</td>
     </tr>
 <tr *ngIf="substance.structure">
-    <td>Molecular Formula</td>
+    <th>Molecular Formula</th>
     <td class="value blue-font" [innerHTML] = "substance.structure.formula"></td>
 </tr>
   <tr>
-    <td class="name">Molecular Weight</td>
+    <th class="name">Molecular Weight</th>
     <td class="value blue-font"  >{{mwDisplay}}</td>
   </tr>
 
     </table>
 
-    
       <div class="right-aligned">
         <!--div *ngIf = "inxightLink" class = "inxight-container">
             <a class = "ext-link" [href] = "inxightUrl" target ="_blank">
