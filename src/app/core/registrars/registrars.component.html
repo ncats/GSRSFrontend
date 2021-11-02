@@ -77,71 +77,11 @@
                   Sequence Search
                 </a>
                 <mat-divider></mat-divider>
-                <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=substance'">
+                <a mat-list-item routerLink="/advanced-search">
                   <mat-icon matListIcon svgIcon="youtube"></mat-icon>
-      
                   Advanced Search
                   <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-      
                 </a>
-              <span *ngIf="loadedComponents && loadedComponents.products">
-                <mat-divider></mat-divider>
-                <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=prod'">
-                  <mat-icon matListIcon svgIcon="local-pharmacy"></mat-icon>
-                  Product
-                  <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-      
-                </a>
-              </span>
-              <span *ngIf="loadedComponents && loadedComponents.applications">
-      
-                <mat-divider></mat-divider>
-                <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=app'">
-                  <mat-icon matListIcon svgIcon="find-in-page"></mat-icon>
-                  Application
-                  <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-      
-                </a>
-              </span>
-              <span *ngIf="loadedComponents && loadedComponents.clinicaltrials">
-                <mat-divider></mat-divider>
-                <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=clinical'">
-                  <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
-      
-                  Clinical Trial
-                  <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-      
-                </a>
-              </span>
-              <span *ngIf="loadedComponents && loadedComponents.adverseevents">
-      
-             <!--   <mat-divider></mat-divider>
-                <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=biomarker'">
-                  <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
-      
-                  Biomarker
-                  <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-      
-                </a>
-      
-                <mat-divider></mat-divider>
-                <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=indication'">
-                  <mat-icon matListIcon svgIcon="insert-chart"></mat-icon>
-      
-                  Indication/Sponsor
-                  <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-      
-                </a>-->
-      
-                <mat-divider></mat-divider>
-                <a mat-list-item [href]="baseDomain + clasicBaseHref + 'advancedSearch?t=adverse'">
-                  <mat-icon matListIcon svgIcon="note"></mat-icon>
-      
-      
-                  Adverse Event <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-      
-                </a>
-              </span>
               </span>
             </mat-nav-list>
           </mat-card-content>

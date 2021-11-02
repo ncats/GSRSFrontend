@@ -39,13 +39,16 @@ export class SubstanceSummaryCardComponent implements OnInit {
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
   @Input() names?: Array<SubstanceName>;
   @Input() codeSystemNames?: Array<string>;
-  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
+//  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   alignments?: Array<Alignment>;
   inxightLink = false;
   inxightUrl: string;
   overlayContainer: any;
   rounding = '1.0-2';
   showAll = [];
+  privateCodeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
+  privateCodeSystemNames?:  Array<string>;
+  allPrimary = [];
 
   constructor(
     public utilsService: UtilsService,
@@ -123,6 +126,35 @@ export class SubstanceSummaryCardComponent implements OnInit {
 
   get substance(): SubstanceSummary {
     return this.privateSubstance;
+  }
+
+  @Input()
+  set codeSystems(codeSystems: any) {
+    if (codeSystems && this.codeSystemNames) {
+      this.privateCodeSystems = codeSystems;
+      this.formatCodeSystems();
+    }
+  }
+
+  get codeSystems(): any {
+    return this.privateCodeSystems;
+  }
+
+  formatCodeSystems() {
+    // sort() function in substance-browse isn't working... pushing this as alternative to get all primary codes first
+    this.codeSystemNames.forEach(sysName => {
+      const testing = [];
+      this.allPrimary[sysName] = 'true';
+      this.codeSystems[sysName].forEach(code => {
+          if (code.type === 'PRIMARY') {
+            testing.unshift(code);
+          } else {
+            this.allPrimary[sysName] = 'false';
+            testing.push(code);
+          }
+      });
+      this.codeSystems[sysName] = testing;
+      });
   }
 
   openImageModal(): void {

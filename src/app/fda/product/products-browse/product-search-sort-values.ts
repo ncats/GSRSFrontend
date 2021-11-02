@@ -12,11 +12,11 @@ export const productSearchSortValues = [
     'display': 'Product ID, Descending'
   },
   {
-    'value': '^root_productIngredientAllList_substanceName',
+    'value': '^Ingredient Name',
     'display': 'Ingredient Name, A-Z'
   },
   {
-    'value': '$root_productIngredientAllList_substanceName',
+    'value': '$Ingredient Name',
     'display': 'Ingredient Name, Z-A'
   },
   {

@@ -64,7 +64,7 @@ export class AdvancedSearchService extends BaseHttpService {
   }
 
   getClinicalTrialCount(): Observable<number> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/ctclinicaltrial/@count`;
+    const url = this.apiBaseUrlWithClinicalTrialEntityUrl + `@count`;
     return this.http.get<number>(url);
   }
 
@@ -76,7 +76,8 @@ export class AdvancedSearchService extends BaseHttpService {
   ): Observable<PagingResponse<SubstanceDetail>> {
     let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
-    params = params.append('top', pageSize.toString());
+    params = params.append('top', '1');  // setting top=1, faster result, no content
+    params = params.append('view','key'); // setting view=key, faster result, no content
     if (searchTerm !== null && searchTerm !== '') {
       params = params.append('q', searchTerm);
     }
@@ -98,7 +99,8 @@ export class AdvancedSearchService extends BaseHttpService {
   ): Observable<PagingResponse<Application>> {
     let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
-    params = params.append('top', pageSize.toString());
+    params = params.append('top', '1');  // setting top=1, faster result, no content
+    params = params.append('view','key'); // setting view=key, faster result, no content
     if (searchTerm !== null && searchTerm !== '') {
       params = params.append('q', searchTerm);
     }
@@ -120,7 +122,8 @@ export class AdvancedSearchService extends BaseHttpService {
   ): Observable<PagingResponse<ProductAll>> {
     let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
-    params = params.append('top', pageSize.toString());
+    params = params.append('top', '1');  // setting top=1, faster result, no content
+    params = params.append('view','key'); // setting view=key, faster result, no content
     if (searchTerm !== null && searchTerm !== '') {
       params = params.append('q', searchTerm);
     }
@@ -142,13 +145,14 @@ export class AdvancedSearchService extends BaseHttpService {
   ): Observable<PagingResponse<ClinicalTrial>> {
     let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
-    params = params.append('top', pageSize.toString());
+    params = params.append('top', '1');  // setting top=1, faster result, no content
+    params = params.append('view','key'); // setting view=key, faster result, no content
     if (searchTerm !== null && searchTerm !== '') {
       params = params.append('q', searchTerm);
     }
     params = params.appendFacetParams(facets);
 
-    const url = `${this.apiBaseUrl}ctclinicaltrial/search`;
+    const url = this.apiBaseUrlWithClinicalTrialEntityUrl + 'search';
     const options = {
       params: params
     };
@@ -176,7 +180,8 @@ export class AdvancedSearchService extends BaseHttpService {
       if (category === 'Adverse Event') {
         if (fieldName) {
           if (fieldName === 'Ingredient_Name') {
-            entityUrl = this.apiBaseUrlWithEntityPtContext;
+            entityUrl = `${this.configService.configData.apiBaseUrl}api/v1/`;
+            fieldName = 'Name';
           }
           if (fieldName === 'PT_Term') {
             entityUrl = this.apiBaseUrlWithEntityPtContext;

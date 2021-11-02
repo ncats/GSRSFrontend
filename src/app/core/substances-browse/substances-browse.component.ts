@@ -224,7 +224,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
-    const dynamicSubscription = this.dynamicContentContainer.changes.pipe(take(1)).subscribe((comps: QueryList<any>) => {
+    const dynamicSubscription = this.dynamicContentContainer.changes.subscribe((comps: QueryList<any>) => {
       const container = this.dynamicContentContainer.toArray();
       const dynamicContentItemsFlat = this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
         .filter(item => item.componentType === 'browseHeader');
@@ -444,7 +444,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.matchTypes.sort();
 
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
-            this.exportOptions = response;
+            this.exportOptions = response.filter(exp => {
+          if (exp.extension) {
+            //TODO Make this generic somehow, so addditional-type exports are isolated
+            if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx')) {
+              return false;
+            }
+          }
+              return true;
+            });
           });
           this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
