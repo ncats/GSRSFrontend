@@ -26,6 +26,7 @@ import { GeneralService } from 'src/app/fda/service/general.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { ifError } from 'assert';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'substance-dictionary-component',
@@ -62,7 +63,8 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
   casRn: string;
   mwDisplay: string;
 
-    manufacturerNames: Array<ManufacturerName>;
+  manufacturerNames: Array<ManufacturerName>;
+  commonNames: Array<String>;
   MANUFACTURER_TYPE : string = 'MANUFACTURER';
 
   constructor(
@@ -73,7 +75,9 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
     private structureService: StructureService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private router: Router,
+    private configService: ConfigService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
+    
   ) { 
     super(gaService);
   }
@@ -91,6 +95,7 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
       }
     });
     this.manufacturerNames = [];
+    this.commonNames=[];
   }
 
   finishiInit() {
@@ -145,6 +150,13 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
         this.pronName=name.name;
       }else if (name.type.toUpperCase()==='CATEGORY') {
         this.categoryName =name.name;
+      } else if( name.type.toUpperCase()==='CN') {
+        let commonName = this.commonNames.find(n=> n=== name.name);
+        console.log('commonName: ' + commonName);
+        if( !commonName || commonName===null) {
+          console.log('adding common name: ' + name.name);
+          this.commonNames.push(name.name);
+        }
       }
       let manufName = this.getManufacturerName(name, this.substance);
       
@@ -175,11 +187,12 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
       }
 
     });
-    console.log('end of init, this.manufacturerNames.length: ' + this.manufacturerNames.length);
+    console.log('in init, this.manufacturerNames.length: ' + this.manufacturerNames.length);
 
     if(this.substance.structure ){
       this.mwDisplay = this.substance.structure.mwt.toString();
     }
+    this.mwDisplay= this.getMwDisplay(this.substance);
 
   }
   getApprovalID() {
@@ -300,7 +313,30 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
     return manufactured;
   }
 
-   
+  getMwDisplay(chemicalSubstance: any): string {
+    const defaultDisplayValue= '[unassigned]';
+    var displayValue= defaultDisplayValue;
+    if( this.configService.configData && this.configService.configData.molecularWeightPropertyName)  {
+
+    }
+    const mwPropertyname =( this.configService.configData && this.configService.configData.molecularWeightPropertyName) ? 
+      this.configService.configData.molecularWeightPropertyName : 'MOL_WEIGHT (calc)';
+    console.log('mwPropertyname: ' + mwPropertyname);
+    chemicalSubstance.properties.forEach(element => {
+        if(element.name.indexOf( mwPropertyname) ===0) {
+            displayValue = element.value.average != null ? element.value.average : element.value.nonNumericValue;
+            console.log('using property');
+            //displayValue += ' prop';
+        }
+        
+    });
+    if( (displayValue.length ===0 ||displayValue===defaultDisplayValue) && chemicalSubstance.structure !==null) {
+        displayValue=chemicalSubstance.structure.mwt;
+        console.log('using intrinsic MW');
+    }
+     return displayValue;
+  }
+
 }
 
 export class ManufacturerName {
@@ -311,4 +347,5 @@ export class ManufacturerName {
     this.substanceName  =subName;
     this.manufacturerName= manuName;
   }
+
 }
