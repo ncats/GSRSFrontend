@@ -8,7 +8,7 @@ import requests
 # dictionary_df = pd.read_csv(BytesIO(data))
 
 # dictionary_df = pd.read_excel('dictionary_current.xlsx', skiprows=range(1,892), usecols='A:M')
-dictionary_df = pd.read_excel('dictionary_current.xlsx')
+dictionary_df = pd.read_excel('dictionary_current_all_entities.xlsx')
 
 print(dictionary_df.head())
 
@@ -41,13 +41,18 @@ dictionary_df.drop(columns=['Data Type'], inplace=True)
 dictionary_df.sort_values('displayName', inplace=True)
 dictionary_df.set_index('displayName', inplace=True)
 
-# dictionary_df.loc[:, columns_to_include].to_json('../src/app/core/assets/data/substance_dictionary.json', orient='index')
+application_df = dictionary_df[dictionary_df['Entity']=='Application']
+substance_df = dictionary_df[dictionary_df['Entity']=='Substance']
+product_df = dictionary_df[dictionary_df['Entity']=='Product']
+ctus_df = dictionary_df[dictionary_df['Entity']=='ClinicalTrialUS']
+cteu_df = dictionary_df[dictionary_df['Entity']=='ClinicalTrialEurope']
 
-dictionary_df.loc[:, columns_to_include].to_json('substance_dictionary.json', orient='index')
-# dictionary_df.loc[:, columns_to_include].to_json('application_dictionary.json', orient='index', indent=4)
-# dictionary_df.loc[:, columns_to_include].to_json('product_dictionary.json', orient='index', indent=4)
-# dictionary_df.loc[:, columns_to_include].to_json('clinicaltrial_dictionary.json', orient='index', indent=4)
+# You can preview the sub dictionary here
+print(cteu_df)
 
-# data_types_df = dictionary_df.loc[:, 'type'][dictionary_df['type'].unique()]
+application_df.loc[:, columns_to_include].to_json('application_dictionary.json',orient='index', indent=4)
+substance_df.loc[:, columns_to_include].to_json('substance_dictionary.json',orient='index', indent=4)
+product_df.loc[:, columns_to_include].to_json('product_dictionary.json',orient='index', indent=4)
+ctus_df.loc[:, columns_to_include].to_json('ctus_dictionary.json',orient='index', indent=4)
+cteu_df.loc[:, columns_to_include].to_json('cteu_dictionary.json',orient='index', indent=4)
 
-# data_types_df.to_csv('data_types.csv')
