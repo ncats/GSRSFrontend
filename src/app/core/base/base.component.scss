@@ -216,14 +216,14 @@
 }
 
 // hides extra browse (for half 1920 to save space)
-@media(max-width: 1280px ) {
+@media(max-width: 1380px ) {
   .extra-browse {
     display: none !important;
   }
 }
 
 // hides all but main menu
-@media(max-width: 1350px ) {
+@media(max-width: 1450px ) {
   .extra-item {
     display: none !important;
   }

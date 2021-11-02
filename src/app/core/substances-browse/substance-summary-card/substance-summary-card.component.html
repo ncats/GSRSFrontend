@@ -153,14 +153,14 @@
                       evCategory="substancesContent" evAction="link:code" aria-label ="view site in new tab">
                       <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
                       <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
-                      <span *ngIf = "codeSystems[codeSystemName].length > 1" style = "font-size: 90%;
-                          font-weight: 300;">[{{codeObject.type}}]</span>
+                      <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
+                          font-weight: 400;">[{{codeObject.type}}]</span>
 
                     </a>
                   </span>
                   <span *ngIf="!codeObject.url">{{codeObject.code.trim()}} 
-                      <span *ngIf = "codeSystems[codeSystemName].length > 1" style = "font-size: 90%;
-                          font-weight: 300;">[{{codeObject.type}}]</span>
+                      <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
+                          font-weight: 400;">[{{codeObject.type}}]</span>
                   </span>
 
                   <span *ngIf="!isLast">, </span>
