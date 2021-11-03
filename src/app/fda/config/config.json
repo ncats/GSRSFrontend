@@ -793,6 +793,12 @@
       "order": 13
     },
     {
+      "component": "adverseevents",
+      "display": "Browse Adverse Events",
+      "path": "browse-adverse-events",
+      "order": 14
+    },
+    {
       "display": "Register",
       "children": [
         {

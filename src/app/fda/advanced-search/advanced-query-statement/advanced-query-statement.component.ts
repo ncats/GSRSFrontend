@@ -274,27 +274,29 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     this.commandOptions = Object.keys(
       this.typeCommandOptions[this._queryableDictionary[queryableProperty].type]
     )
-      .filter(
-        option => {
-          let result = false;
-          //  return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values'
-          // && (this.commandOptionsShowAll === false && (option === 'Contains' || option === 'Exact Match' || option === 'Starts With')));
-          if (this.isShowAllCommandOptions === false) {
-            if (option === 'Contains' || option === 'Exact Match' || option === 'Starts With') {
-              result = true;
-            } else if (this._queryableDictionary[queryableProperty].cvDomain && option === 'the following exact default values') {
-              result = true;
-            } else {
-              result = false;
-            }
-          } else {
-            if (this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values') {
-              result = true;
-            }
+    .filter(
+      option => {
+        let result = false;
+        //  return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values'
+        // && (this.commandOptionsShowAll === false && (option === 'Contains' || option === 'Exact Match' || option === 'Starts With')));
+        if (this.isShowAllCommandOptions === false) {
+          if (option === 'Contains' || option === 'Exact Match' || option === 'Starts With') {
+            result = true;
+          } else if (this._queryableDictionary[queryableProperty].cvDomain && option === 'the following exact default values') {
+            result = true;
+          } else if (this.selectedQueryablePropertyType === 'timestamp') {
+            result = true;
+          }  else {
+            result = false;
           }
-          return result;
+        } else {
+          if (this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values') {
+            result = true;
+          }
         }
-      ).sort((a, b) => {
+        return result;
+      }
+    ).sort((a, b) => {
         if (a === 'the following exact default values') {
           return -1;
         }
