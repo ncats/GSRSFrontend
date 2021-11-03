@@ -72,11 +72,13 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
           let returned = -1;
           if (a.displayName) {
             returned = -1;
-          } else if ( b.displayName === true) {
+          } else if (b.displayName) {
             returned = 1;
-          } else if (b.preferred === true && a.displayName !== true) {
+          } else if (b.preferred && !a.preferred) {
             returned = 1;
-          } else if (!b.displayName && !a.displayName && a.name > b.name) {
+          } else if (!b.preferred && a.preferred) {
+            returned = -1;
+          }else if (a.name.toUpperCase() > b.name.toUpperCase()) {
             returned = 1;
           }
           return returned;
