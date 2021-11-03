@@ -62,9 +62,9 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       }
     });
 
-    if (this.type === 'identifiers') {
+  //  if (this.type === 'identifiers') {
       this.pageSize = 10;
-    }
+  //  }
     
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }

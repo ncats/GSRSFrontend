@@ -791,6 +791,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       old.codes = [];
       old.notes = [];
       old.relationships = [];
+      old.tags = [];
     }
     delete old['createdBy'];
     delete old['created'];
