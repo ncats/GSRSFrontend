@@ -228,7 +228,7 @@
 }
 
 .fontbold {
-  font-weight: 500;	
+  font-weight: 500;
 }
 
 .colorgray {
@@ -274,9 +274,9 @@
   max-width: 200px;
 }
 
-.width250px {
-  width: 250px;
-  max-width: 250px;
+.width300px {
+  width: 300px;
+  max-width: 300px;
 }
 
 .width300px {
@@ -432,7 +432,7 @@ table.blueTable tfoot .links a{
 
   .row {
     flex-direction: column;
-    
+
     &:not(:last-child) {
       border-bottom: none;
 

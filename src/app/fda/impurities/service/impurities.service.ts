@@ -101,7 +101,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   getImpurities(id: string): Observable<any> {
-    const url = this.apiBaseUrl + `impurities(${id})`;
+    const url = this.apiBaseUrlWithEntityContext + `${id}`;
     return this.http.get<Impurities>(url)
       .pipe(
         map(result => {

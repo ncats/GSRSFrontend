@@ -5,12 +5,17 @@
 
       <mat-card class="bordergray">
         <mat-card-title>
-          <div class="width250px">
+          <div class="width300px">
             Impurities Details&nbsp;&nbsp;&nbsp;&nbsp;
             <!-- Edit GSRS record button -->
             <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="isAdmin"
               matTooltip='Edit GSRS Impurities Record'>
               <mat-icon svgIcon="edit"></mat-icon>
+            </a>
+            <!-- Copy Impurities -->
+            <a  mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copy:impurities.id}"
+              matTooltip='copy Impurities to new registration form' *ngIf="isAdmin">
+              <mat-icon svgIcon="file_copy"></mat-icon>
             </a>
           </div>
           <div class="width60percent font11px">
