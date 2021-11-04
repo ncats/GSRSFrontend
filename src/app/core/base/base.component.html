@@ -64,11 +64,11 @@
     </mat-menu>
   </span>
   <div >
-    <button class = "top-button extra-item" mat-button mat-primary-button style = "font-size:16px;color:white; padding-right:10px;margin-right:15px;padding-top:10px; padding-bottom:10px;" class = "menu-button extra-item"
+    <button class = "top-button extra-item " mat-button mat-primary-button style = "font-size:16px;color:white; padding-right:10px;margin-right:15px;padding-top:10px; padding-bottom:10px;" class = "menu-button extra-item"
     [routerLink]="['/browse-substance']" aria-label="browse substances" >Browse Substances</button>
   </div>
   <div *ngIf = "this.loadedComponents">
-      <button class = "top-button extra-item" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="browse" (click)="increaseMenuZindex()" aria-label="main menu" *ngIf = "loadedComponents">
+      <button class = "top-button extra-browse" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="browse" (click)="increaseMenuZindex()" aria-label="main menu" *ngIf = "loadedComponents">
           <span style = "font-size:16px;">Browse Other</span>
          <mat-icon svgIcon="chevron_down"></mat-icon>
          </button>
@@ -163,13 +163,16 @@
       <a routerLink="/admin" mat-menu-item *ngIf="isAdmin">
         <span>Admin Panel</span>
       </a>
+      <a [routerLink]="['/registrars']" class = "add-at-low-res" *ngIf = "canRegister" mat-menu-item >
+        <span>Registrars</span>
+      </a>
       <button mat-menu-item (click)="logout()">
         <span>Logout</span>
       </button>
     </mat-menu>
   </div>
   <div class="classic-view-container"  *ngIf="auth && auth.identifier">
-      <a class = "top-button extra-item" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [routerLink]="['/registrars']" *ngIf = "canRegister">
+      <a class = "top-button hide-at-low-res" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [routerLink]="['/registrars']" *ngIf = "canRegister">
           <span style = "font-size:16px;">Registrars</span>
 
   </a>
