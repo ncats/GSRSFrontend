@@ -11,6 +11,7 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { Subscription } from 'rxjs';
+import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { FormBuilder } from '@angular/forms';
@@ -84,23 +85,24 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
             this.id = id;
             this.gaService.sendPageView(`Impurity Edit`);
             this.getImpurities();
-            //   this.getVocabularies();
           }
-        } else {
+        } else { //Copy Impurities to register form
           this.title = 'Register Impurities';
-          setTimeout(() => {
+          this.id = this.activatedRoute.snapshot.queryParams['copy'] || null;
+          if (this.id) {
+            this.getImpurities('copy');
             this.gaService.sendPageView(`Impurities Register`);
-            this.impuritiesService.loadImpurities();
-            this.impurities = this.impuritiesService.impurities;
-
-            // this.impurities.substanceUuid = '479f1396-4958-4f59-9d41-0bd0468c8da7';
-
-            this.loadingService.setLoading(false);
-            this.isLoading = false;
-          });
+          } else {
+            setTimeout(() => {
+              this.gaService.sendPageView(`Impurities Register`);
+              this.impuritiesService.loadImpurities();
+              this.impurities = this.impuritiesService.impurities;
+              this.loadingService.setLoading(false);
+              this.isLoading = false;
+            });
+          }
         }
       });
-
     this.subscriptions.push(routeSubscription);
   }
 
@@ -116,6 +118,11 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
       const id = this.id.toString();
       const getImpuritySubscribe = this.impuritiesService.getImpurities(id).subscribe(response => {
         if (response) {
+
+          // before copying existing impurities, delete the id
+          if (newType && newType === 'copy') {
+            this.scrub(response);
+          }
           this.impuritiesService.loadImpurities(response);
           this.impurities = this.impuritiesService.impurities;
 
@@ -356,5 +363,48 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.addNewImpuritiesTotal();
   }
 
+  scrub(oldraw: any): any {
+    const old = oldraw;
+    const idHolders = defiant.json.search(old, '//*[id]');
+    for (let i = 0; i < idHolders.length; i++) {
+      if (idHolders[i].id) {
+        delete idHolders[i].id;
+      }
+    }
+
+    const createHolders = defiant.json.search(old, '//*[creationDate]');
+    for (let i = 0; i < createHolders.length; i++) {
+      delete createHolders[i].creationDate;
+    }
+
+    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    for (let i = 0; i < createdByHolders.length; i++) {
+      delete createdByHolders[i].createdBy;
+    }
+
+    const modifyHolders = defiant.json.search(old, '//*[lastModifiedDate]');
+    for (let i = 0; i < modifyHolders.length; i++) {
+      delete modifyHolders[i].lastModifiedDate;
+    }
+
+    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    for (let i = 0; i < modifiedByHolders.length; i++) {
+      delete modifiedByHolders[i].modifiedBy;
+    }
+
+    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    for (let i = 0; i < intVersionHolders.length; i++) {
+        delete intVersionHolders[i].internalVersion;
+    }
+
+    delete old['creationDate'];
+    delete old['createdBy'];
+    delete old['modifiedBy'];
+    delete old['lastModifiedDate'];
+    delete old['internalVersion'];
+    delete old['$$update'];
+
+    return old;
+  }
 
 }

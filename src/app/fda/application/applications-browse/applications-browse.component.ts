@@ -185,7 +185,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       }, error => {
         console.log('error');
         const notification: AppNotification = {
-          message: 'There was an error trying to retrieve Applicationss. Please refresh and try again.',
+          message: 'There was an error trying to retrieve Applications. Please refresh and try again.',
           type: NotificationType.error,
           milisecondsToShow: 6000
         };

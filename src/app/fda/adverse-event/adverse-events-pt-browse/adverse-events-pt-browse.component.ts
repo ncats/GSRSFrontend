@@ -185,7 +185,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
       }, error => {
         console.log('error');
         const notification: AppNotification = {
-          message: 'There was an error trying to retrieve Applicationss. Please refresh and try again.',
+          message: 'There was an error trying to retrieve Adverse Event PT. Please refresh and try again.',
           type: NotificationType.error,
           milisecondsToShow: 6000
         };
