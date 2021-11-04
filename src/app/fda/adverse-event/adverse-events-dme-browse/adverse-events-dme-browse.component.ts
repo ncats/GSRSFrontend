@@ -187,7 +187,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
       }, error => {
         console.log('error');
         const notification: AppNotification = {
-          message: 'There was an error trying to retrieve Applicationss. Please refresh and try again.',
+          message: 'There was an error trying to retrieve Adverse Event DME. Please refresh and try again.',
           type: NotificationType.error,
           milisecondsToShow: 6000
         };
