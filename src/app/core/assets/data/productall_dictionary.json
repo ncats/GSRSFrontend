@@ -4,7 +4,7 @@
         "description":"Active Moiety",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Active_Moiety"
     },
     "Application Type Number":{
@@ -12,15 +12,15 @@
         "description":"Application Type Number",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Application_Type_Number"
     },
     "Company Country":{
-        "lucenePath":"root_productCompanyAllList_countryWithoutCode",
+        "lucenePath":"root_productIngredientAllList_countryWithoutCode",
         "description":"Company Country",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Company_Country"
     },
     "Dosage Form Name":{
@@ -28,7 +28,7 @@
         "description":"Dosage Form Name",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Dosage_Form_Name"
     },
     "FEI Number":{
@@ -36,7 +36,7 @@
         "description":"FEI Number",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "From Table":{
@@ -44,7 +44,7 @@
         "description":"From Table",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Ingredient Approval ID":{
@@ -52,7 +52,7 @@
         "description":"Ingredient Approval ID",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Ingredient Name":{
@@ -60,7 +60,7 @@
         "description":"Ingredient Name",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Ingredient_Name"
     },
     "Ingredient Type":{
@@ -68,7 +68,7 @@
         "description":"Ingredient Type",
         "type":"string",
         "cvDomain":"INGREDIENT_TYPE",
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Ingredient_Type"
     },
     "Is Listed":{
@@ -76,7 +76,7 @@
         "description":"Is Listed",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Labeler City":{
@@ -84,7 +84,7 @@
         "description":"City",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Labeler DUNS Number":{
@@ -92,7 +92,7 @@
         "description":"Labeler DUNS Number",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Labeler Name":{
@@ -100,15 +100,15 @@
         "description":"Labeler Name",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Labeler_Name"
     },
     "Labeler State":{
-        "lucenePath":"root_productCompanyAllList_state",
+        "lucenePath":"root_productIngredientAllList_state",
         "description":"State",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Marketing Category Name":{
@@ -116,7 +116,7 @@
         "description":"Marketing Category Name",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Marketing_Category_Name"
     },
     "Nonproprietary Name":{
@@ -124,7 +124,7 @@
         "description":"Nonproprietary Name",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Nonproprietary_Name"
     },
     "Product Application Number":{
@@ -132,7 +132,7 @@
         "description":"Product Application Number",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Product Application Type":{
@@ -140,7 +140,7 @@
         "description":"Product Application Type",
         "type":"string",
         "cvDomain":"APPLICATION_TYPE",
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Product Deprecated":{
@@ -164,7 +164,7 @@
         "description":"Product ID",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Product_ID"
     },
     "Product Name":{
@@ -172,7 +172,7 @@
         "description":"Product Name",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Product_Name"
     },
     "Product Source":{
@@ -180,7 +180,7 @@
         "description":"Product Source",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Product Status":{
@@ -188,7 +188,7 @@
         "description":"Status",
         "type":"string",
         "cvDomain":"PROD_STATUS",
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Product Type":{
@@ -196,7 +196,7 @@
         "description":"Product Type",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Product_Type"
     },
     "Provenance":{
@@ -204,7 +204,7 @@
         "description":"Provenance",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Provenance"
     },
     "Route of Admin":{
@@ -212,7 +212,7 @@
         "description":"Route of Admin",
         "type":"string",
         "cvDomain":"PROD_ROUTE_OF_ADMIN",
-        "priority":"x",
+        "priority":1.0,
         "suggest":"Route_of_Admin"
     },
     "Source Type":{
@@ -220,7 +220,7 @@
         "description":"Source Type",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Substance Key":{
@@ -228,7 +228,7 @@
         "description":"Substance Key",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     },
     "Unit Presentation":{
@@ -236,7 +236,7 @@
         "description":"Unit Presentation",
         "type":"string",
         "cvDomain":"PROD_UNIT_PRESENTATION",
-        "priority":"x",
+        "priority":1.0,
         "suggest":null
     }
 }
