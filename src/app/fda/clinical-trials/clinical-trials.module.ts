@@ -37,7 +37,7 @@ const clinicalTrialsRoutes: Routes = [
       canActivate: [ActivateClinicalTrialsComponent]
 
     },
-   {
+    {
     path: 'edit-clinical-trial/:trialNumber',
       component: ClinicalTrialEditComponent,
       canActivate: [ActivateClinicalTrialsComponent]
@@ -49,7 +49,7 @@ const clinicalTrialsRoutes: Routes = [
 
     },
     {
-    path: 'clinicalTrialDetails/:trialNumber/:src',
+    path: 'clinical-trial/:trialNumber',
       component: ClinicalTrialDetailsComponent,
       canActivate: [ActivateClinicalTrialsComponent]
     },

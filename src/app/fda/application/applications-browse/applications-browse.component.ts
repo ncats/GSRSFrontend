@@ -181,7 +181,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         }
 
         this.getSubstanceBySubstanceKey();
-        // this.applicationService.getClinicalTrialApplication(this.applications);
+        // Get Application Clinical Trial Record
+        this.getClinicalTrialApplication();
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -386,31 +387,31 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-    //  if (this.authService.getUser() !== '') {
-        const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': 'BrowseApplications' }
-        });
-        // this.overlayContainer.style.zIndex = '1002';
-        dialogReference.afterClosed().subscribe(name => {
-          // this.overlayContainer.style.zIndex = null;
-          if (name && name !== '') {
-            this.loadingService.setLoading(true);
-            const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
-              this.loadingService.setLoading(false);
-              const navigationExtras: NavigationExtras = {
-                queryParams: {
-                  totalSub: this.totalApplications
-                }
-              };
-              const params = { 'total': this.totalApplications };
-              this.router.navigate(['/user-downloads/', response.id]);
-            }, error => {this.loadingService.setLoading(false); });
-          }
-        });
-    //  }
+      //  if (this.authService.getUser() !== '') {
+      const dialogReference = this.dialog.open(ExportDialogComponent, {
+        height: '215x',
+        width: '550px',
+        data: { 'extension': extension, 'type': 'BrowseApplications' }
+      });
+      // this.overlayContainer.style.zIndex = '1002';
+      dialogReference.afterClosed().subscribe(name => {
+        // this.overlayContainer.style.zIndex = null;
+        if (name && name !== '') {
+          this.loadingService.setLoading(true);
+          const fullname = name + '.' + extension;
+          this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.loadingService.setLoading(false);
+            const navigationExtras: NavigationExtras = {
+              queryParams: {
+                totalSub: this.totalApplications
+              }
+            };
+            const params = { 'total': this.totalApplications };
+            this.router.navigate(['/user-downloads/', response.id]);
+          }, error => { this.loadingService.setLoading(false); });
+        }
+      });
+      //  }
     }
   }
 
@@ -422,26 +423,15 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     return this.applicationService.getUpdateApplicationUrl();
   }
 
-  /*
   getClinicalTrialApplication() {
-    let clinicalTrial: Array<any> = [];
-    let app: any;
+    this.applications.forEach((app, index) => {
+      // Get Clinical Trial Application
+      const clinicalSubscription = this.applicationService.getClinicalTrialApplication(app.id).subscribe(response => {
+        app._clinicalTrialList = [];
+        app._clinicalTrialList = response;
+      })
+      this.subscriptions.push(clinicalSubscription);
+    });
+  }
 
-    console.log('clinical');
-    this.applications.forEach((element, index) => {
-      //app = element;
-      this.applicationService.getClinicalTrialApplication(element.appType, element.appNumber).subscribe(response => {
-        clinicalTrial = response;
-        //element.clinicalTrialList = response;
-
-        clinicalTrial.forEach(element1 => {
-          if (element1.nctn != null) {
-            element.clinicalTrialList[0].nctNumber = element1.nctn;
-          }
-          console.log("NCT length: " + clinicalTrial.length);
-        });
-        });
-      });
-    }
-*/
 }

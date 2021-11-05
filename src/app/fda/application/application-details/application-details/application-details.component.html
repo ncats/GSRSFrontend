@@ -203,8 +203,11 @@
                     <tr *ngFor="let clinical of application.clinicalTrialList; let i = index">
                       <td>{{(i+1)}}</td>
                       <td>
-                        <a [routerLink]="['/clinicalTrialDetails', clinical.nctNumber, 'srs']"
+                        <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.trialNumber">{{clinical.trialNumber}}</a>
+                        <!--
+                        <a [routerLink]="['/clinical-trial', clinical.nctNumber]"
                           target="_blank">{{clinical.nctNumber}}</a>
+                        -->
                       </td>
                       <td>
                         <a [href]="clinical.url" target="_blank"
