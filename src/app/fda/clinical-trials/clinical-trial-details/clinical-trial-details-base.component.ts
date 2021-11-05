@@ -35,7 +35,6 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
   ngOnInit() {
    // this.loadingService.setLoading(true);
     this.trialNumber = this.activatedRoute.snapshot.params['trialNumber'];
-    this.src = this.activatedRoute.snapshot.params['src'];
 
     if (this.trialNumber != null) {
       this.getClinicalTrialDetails();

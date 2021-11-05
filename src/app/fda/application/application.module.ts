@@ -76,14 +76,12 @@ const applicationRoutes: Routes = [
   {
     path: 'application/:id',
     component: ApplicationDetailsComponent,
-    canActivate: [ApplicationLoadedComponent],
-
+    canActivate: [ApplicationLoadedComponent]
   },
   {
     path: 'application-darrts/:appType/:appNumber',
     component: ApplicationDarrtsDetailsComponent,
-    canActivate: [ApplicationLoadedComponent],
-
+    canActivate: [ApplicationLoadedComponent]
   }
 ];
 

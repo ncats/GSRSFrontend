@@ -319,21 +319,18 @@
                     <div class="row-property">
                       <div class="row-property-key">
                         Clinical Trials:
-                        <!--
-                    <span class="badge">0
-                    -->
-                        <!-- {{application.clinicalTrialList.length}}-->
-                        <!--
-                      </span>
-                      -->
+                        <span class="badge">
+                          {{application._clinicalTrialList.length}}
+                        </span>
                       </div>
                       <div class="row-property-value">
                         &nbsp;
-                        <!--
-                      <div class="" *ngFor="let clinical of application.clinicalTrialList">
-                          &bull;&nbsp;{{ clinical.nctNumber }}
+                        <div class="" *ngFor="let clinical of application._clinicalTrialList">
+                          &bull;&nbsp;
+                          <span *ngIf="clinical.nctNumber">
+                            <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.trialNumber">{{clinical.trialNumber}}</a>
+                          </span>
                         </div>
-                        -->
                       </div>
                     </div>
                   </div>

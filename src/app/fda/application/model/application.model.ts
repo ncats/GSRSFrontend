@@ -107,7 +107,7 @@ export interface Application {
   modifyDate?: number;
   applicationProductList?: Array<Product>;
   applicationIndicationList?: Array<ApplicationIndication>;
-//  clinicalTrialList?: Array<ClinicalTrial>;
+  _clinicalTrialList?: Array<ClinicalTrial>;
 //  productTechEffectList?: Array<ProductTechnicalEffect>;
 //  productEffectedList?: Array<ProductEffected>;
 //  applicationHistoryList?: Array<ApplicationSrsHistory>;

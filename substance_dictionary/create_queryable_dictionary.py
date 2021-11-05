@@ -52,8 +52,8 @@ application_df.loc[:, columns_to_include].to_json('application_dictionary.json',
 substance_df.loc[:, columns_to_include].to_json('substance_dictionary.json',orient='index', indent=4)
 
 #TODO: fix the conventions for the filenames below
-productall_df.loc[:, columns_to_include].to_json('product_dictionary.json',orient='index', indent=4)
-product_df.loc[:, columns_to_include].to_json('productCORE_dictionary.json',orient='index', indent=4)
+productall_df.loc[:, columns_to_include].to_json('productall_dictionary.json',orient='index', indent=4)
+product_df.loc[:, columns_to_include].to_json('product_dictionary.json',orient='index', indent=4)
 
 
 ctus_df.loc[:, columns_to_include].to_json('ctus_dictionary.json',orient='index', indent=4)
