@@ -70,9 +70,15 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
         // move display name to top
         this.filtered = this.names.slice().sort((a, b) => {
           let returned = -1;
-          if ( b.displayName === true) {
+          if (a.displayName) {
+            returned = -1;
+          } else if (b.displayName) {
             returned = 1;
-          } else if (b.preferred === true && a.displayName !== true) {
+          } else if (b.preferred && !a.preferred) {
+            returned = 1;
+          } else if (!b.preferred && a.preferred) {
+            returned = -1;
+          }else if (a.name.toUpperCase() > b.name.toUpperCase()) {
             returned = 1;
           }
           return returned;

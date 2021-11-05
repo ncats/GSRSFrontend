@@ -216,7 +216,7 @@
 }
 
 // hides extra browse (for half 1920 to save space)
-@media(max-width: 1280px ) {
+@media(max-width: 1500px ) {
   .extra-browse {
     display: none !important;
   }
@@ -228,4 +228,33 @@
     display: none !important;
   }
 }
+
+
+
+  @media(max-width: 1610px ) {
+    .add-at-low-res{
+      display: inline !important;
+    }
+
+    .hide-at-low-res{
+      display: none !important;
+    }
+  }
+
+    @media(min-width: 1610px ) {
+      .add-at-low-res{
+        display: none !important;
+      }
+
+      .hide-at-low-res{
+        display: inline-block;
+      }
+    }
+
+  @media(max-width: 1650px ) {
+    .extra-item-2 {
+      display: none !important;
+    }
+  }
+
 

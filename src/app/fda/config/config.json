@@ -570,7 +570,7 @@
         "Protein Type",
         "modified",
         "Product Ingredient Type",
-        "Product Name Type",
+        "Product Type",
         "Product Dosage Form",
         "Definition Level",
         "Clinical Trial Count"
@@ -589,7 +589,7 @@
       "facetView": [
         {
           "category": "Default",
-          "facets": ["Deprecated", "Record Status", "Substance Class", "GInAS Tag", "GInAS Domain", "Code System", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Application Center", "Application Type", "Application Status", "Material Type", "Family", "Parts", "Moiety Type", "Molecular Weight", "SubstanceStereochemistry", "root_approved", "Approved By", "root_created", "Record Created By", "root_lastEdited", "root_lastEditedBy", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Protein Type", "Product Ingredient Type", "Product Name Type", "Product Dosage Form", "Definition Level", "Clinical Trial Count", "Relationships"]
+          "facets": ["Deprecated", "Record Status", "Substance Class", "GInAS Tag", "GInAS Domain", "Code System", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Application Center", "Application Type", "Application Status", "Material Type", "Family", "Parts", "Moiety Type", "Molecular Weight", "SubstanceStereochemistry", "root_approved", "Approved By", "root_created", "Record Created By", "root_lastEdited", "root_lastEditedBy", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Protein Type", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Definition Level", "Clinical Trial Count", "Relationships"]
         },
         {
           "category": "Record Data",
@@ -601,11 +601,11 @@
         },
         {
           "category": "CMC Data",
-          "facets": ["Record Status", "Substance Class", "Code System", "GInAS Tag", "Moiety Type", "Application Center", "Application Type", "Application Status", "Product Ingredient Type", "Product Name Type", "Product Dosage Form", "Clinical Trial Count", "CFR", "Qualification", "Interaction Type"]
+          "facets": ["Record Status", "Substance Class", "Code System", "GInAS Tag", "Moiety Type", "Application Center", "Application Type", "Application Status", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial Count", "CFR", "Qualification", "Interaction Type"]
         },
         {
           "category": "Medical Data",
-          "facets": ["Record Status", "Substance Class", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Code System", "GInAS Tag", "Product Ingredient Type", "Product Name Type", "Product Dosage Form", "Clinical Trial Count", "CFR"]
+          "facets": ["Record Status", "Substance Class", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Code System", "GInAS Tag", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial Count", "CFR"]
         },
         {
           "category": "Chemistry",
