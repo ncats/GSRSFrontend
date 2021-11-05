@@ -188,7 +188,7 @@
         "description":"The role of the agent in the modification process.",
         "type":"string",
         "cvDomain":"ROLE",
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Agent Modification Type":{
@@ -196,7 +196,7 @@
         "description":"The type of agent modification.",
         "type":"string",
         "cvDomain":"AGENT_MODIFICATION_TYPE",
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Agent Modification UUID":{
@@ -311,6 +311,22 @@
         "priority":null,
         "suggest":null
     },
+    "BDNUM":{
+        "lucenePath":"root_codes_BDNUM",
+        "description":"The BDNUM code associated with the record. This field is not restricted to primary codes, but includes all code types which have the BDNUM codesystem.",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x",
+        "suggest":"BDNUM"
+    },
+    "CAS RN":{
+        "lucenePath":"root_codes_CAS",
+        "description":"The CAS RN code associated with the record. This field is not restricted to primary codes, but includes all code types which have the CAS RN codesystem.",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x",
+        "suggest":"CAS"
+    },
     "Chemical Structure Last Edited By":{
         "lucenePath":"root_structure_lastEditedBy",
         "description":"A string representing a user or entity which last edited the record (or element).",
@@ -327,6 +343,54 @@
         "priority":null,
         "suggest":null
     },
+    "Chemical Structure Molecular Weight":{
+        "lucenePath":"root_structure_mwt",
+        "description":"The molecular weight of the structure.",
+        "type":"number",
+        "cvDomain":null,
+        "priority":"x",
+        "suggest":null
+    },
+    "Chemical Structure Optical Activity":{
+        "lucenePath":"root_structure_opticalActivity",
+        "description":"The optical activity or rotation of the material. \"(+)\" and \"(-)\" are used for optically active materials where activity is known and significantly useful for definition. \"(+\/-)\" is used for racemic mixtures.",
+        "type":"string",
+        "cvDomain":"OPTICAL_ACTIVITY",
+        "priority":null,
+        "suggest":null
+    },
+    "Chemical Structure SMILES":{
+        "lucenePath":"root_structure_smiles",
+        "description":"The chemical structure in SMILES format.",
+        "type":"string",
+        "cvDomain":null,
+        "priority":null,
+        "suggest":null
+    },
+    "Chemical Structure Stereo Centers":{
+        "lucenePath":"root_structure_stereoCenters",
+        "description":"A count of possible stereocenters.",
+        "type":"number",
+        "cvDomain":null,
+        "priority":"x",
+        "suggest":null
+    },
+    "Chemical Structure Stereo Comments":{
+        "lucenePath":"root_structure_stereoComments",
+        "description":"Some textually descriptive information about specific stereochemistry that cannot adequately be captured elsewhere.",
+        "type":"string",
+        "cvDomain":null,
+        "priority":null,
+        "suggest":null
+    },
+    "Chemical Structure Stereochemistry":{
+        "lucenePath":"root_structure_stereoChemistry",
+        "description":"The structure's type of stereochemistry (absolute, achiral, racemic, etc.).",
+        "type":"string",
+        "cvDomain":"STEREOCHEMISTRY_TYPE",
+        "priority":"x",
+        "suggest":null
+    },
     "Code Access":{
         "lucenePath":"root_codes_access",
         "description":"Marking the record or element as belonging to certain groups for use in tracking which groups should receive visibility, export and\/or inclusion in specific reports.",
@@ -337,7 +401,7 @@
     },
     "Code Comments":{
         "lucenePath":"root_codes_comments",
-        "description":"Any comments regarding the relationship.",
+        "description":"Any comments regarding the code. Usage note: in current GSRS verion 3.0 and below, comments values shown in UI are actually stored as codeText.",
         "type":"string",
         "cvDomain":null,
         "priority":"x",
@@ -365,6 +429,14 @@
         "type":"boolean",
         "cvDomain":null,
         "priority":null,
+        "suggest":null
+    },
+    "Code Details Text":{
+        "lucenePath":"root_codes_codeText",
+        "description":"Code Text, often used for showing hierarchy. Usage note: in current GSRS verion 3.0 and below, codeText values shown in UI are actually stored as comments.",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x",
         "suggest":null
     },
     "Code Last Edited By":{
@@ -526,6 +598,14 @@
         "cvDomain":"AMOUNT_UNIT",
         "priority":null,
         "suggest":null
+    },
+    "Display Name":{
+        "lucenePath":"root_Display Name",
+        "description":"The Display Name (preferred term) of the substance record.",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x",
+        "suggest":"Display Name"
     },
     "Display Structure UUID":{
         "lucenePath":"root_polymer_classification_uuid",
@@ -748,7 +828,7 @@
         "description":"The \"Priority Name\" (usually the display name) of the record being referenced.",
         "type":"string",
         "cvDomain":null,
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Group 1 Specified Substance Constituent Substance UUID":{
@@ -1084,7 +1164,7 @@
         "description":"The \"Priority Name\" (usually the display name) of the record being referenced.",
         "type":"string",
         "cvDomain":null,
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Mixture Component Substance Access":{
@@ -1588,7 +1668,7 @@
         "description":"The \"Priority Name\" (usually the display name) of the record being referenced.",
         "type":"string",
         "cvDomain":null,
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Molecular Fragment RefUUID":{
@@ -1852,7 +1932,7 @@
         "description":"The \"Priority Name\" (usually the display name) of the record being referenced.",
         "type":"string",
         "cvDomain":null,
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Monomer Substance RefUUID":{
@@ -2724,7 +2804,7 @@
         "description":"The name of the paramater which qualifies \/ conditions the property's measurement or domain of applicability. .",
         "type":"string",
         "cvDomain":null,
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Physical Modification Parameter UUID":{
@@ -2740,7 +2820,7 @@
         "description":"The role that the physical modification has in the process of the modification.",
         "type":"string",
         "cvDomain":"PHYSICAL_MODIFICATION_ROLE",
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Physical Modification UUID":{
@@ -2820,7 +2900,7 @@
         "description":"The set of subclasses describing the polymer (e.g. \"cross-link\", \"graft\").",
         "type":"string",
         "cvDomain":"POLYMER_SUBCLASS",
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Polymer Classification Source Type":{
@@ -2988,7 +3068,7 @@
         "description":"A general classification of the polymer geometry (e.g. \"linear\", \"branch\", \"network\").",
         "type":"string",
         "cvDomain":"POLYMER_GEOMETRY",
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Polymer Last Edited By":{
@@ -3724,7 +3804,7 @@
         "description":"A description of the reason for the last change to the record.",
         "type":"string",
         "cvDomain":null,
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Record Created By":{
@@ -3756,7 +3836,7 @@
         "description":"The type of definition (\"primary\" or \"alternative\"). Primary definitions are the main descriptive form of the substance definition, while \"alternative\" definitions may be seen as definitional \"synonyms\" of some primary record.",
         "type":"string",
         "cvDomain":null,
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Record Deprecated":{
@@ -3786,6 +3866,22 @@
     "Record Status":{
         "lucenePath":"root_status",
         "description":"The current record status (e.g. \"pending\", \"approved\"). This is not a regulatory status, but simply the status of record validation and curation. .",
+        "type":"string",
+        "cvDomain":null,
+        "priority":null,
+        "suggest":null
+    },
+    "Record Tags":{
+        "lucenePath":"root_tags",
+        "description":"A collection of strings which mark the reference as having specific properties (nomenclature, spectra, definition, etc).",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x",
+        "suggest":null
+    },
+    "Record Version":{
+        "lucenePath":"root_version",
+        "description":"The version of the substance being viewed. Increments with every saved edit.",
         "type":"string",
         "cvDomain":null,
         "priority":null,
@@ -3876,7 +3972,7 @@
         "description":"The reference text or citation.",
         "type":"string",
         "cvDomain":null,
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Reference Type":{
@@ -4172,7 +4268,7 @@
         "description":"A string representing a user or entity which last edited the record (or element).",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":null,
         "suggest":null
     },
     "Relationship Last Edited Date":{
@@ -4180,7 +4276,7 @@
         "description":"A UNIX timestamp marking when the record was last edited (or sometimes exported) to form the record (or element) in its current state.",
         "type":"timestamp",
         "cvDomain":null,
-        "priority":"x",
+        "priority":null,
         "suggest":null
     },
     "Relationship Originator UUID":{
@@ -4884,7 +4980,7 @@
         "description":"The type of location specification for a residue modified in a structural modification. (e.g. \"site-specific\" or \"residue-specific\").",
         "type":"string",
         "cvDomain":"LOCATION_TYPE",
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Structural Modification Modification Group":{
@@ -4908,7 +5004,7 @@
         "description":"The type of structural modification.",
         "type":"string",
         "cvDomain":"STRUCTURAL_MODIFICATION_TYPE",
-        "priority":null,
+        "priority":"x",
         "suggest":null
     },
     "Structural Modification UUID":{
@@ -5109,6 +5205,22 @@
         "type":"string",
         "cvDomain":"ATROPISOMERISM",
         "priority":null,
+        "suggest":null
+    },
+    "Structure InChIKey":{
+        "lucenePath":"root_structure_inchikey",
+        "description":"The InChIKey associated with the chemical structure.",
+        "type":"string",
+        "cvDomain":null,
+        "priority":"x",
+        "suggest":null
+    },
+    "Substance Class":{
+        "lucenePath":"root_substanceClass",
+        "description":"This value wall always be \"reference\" if it is intended as a real reference and \"mention\" if it is a place-holder. However, it can also specify a full substance class, in which case the whole record reference object is meant to be a full entire record rather than a reference.",
+        "type":"string",
+        "cvDomain":"SUBSTANCE_CLASS",
+        "priority":"x",
         "suggest":null
     }
 }
