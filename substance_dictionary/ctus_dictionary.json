@@ -16,7 +16,7 @@
         "suggest":null
     },
     "Clinical Trial US Age Groups (index values)":{
-        "lucenePath":"root_getAgeGroupIndexing ",
+        "lucenePath":"root_getAgeGroupIndexing",
         "description":"A list of age groups of participants",
         "type":"string",
         "cvDomain":null,
@@ -40,7 +40,7 @@
         "suggest":null
     },
     "Clinical Trial US Conditions (index values)":{
-        "lucenePath":"root_getConditionsIndexing ",
+        "lucenePath":"root_getConditionsIndexing",
         "description":"A list of conditions indicated in the trial",
         "type":"string",
         "cvDomain":null,
@@ -112,7 +112,7 @@
         "suggest":null
     },
     "Clinical Trial US First Received Year":{
-        "lucenePath":"root_getFirstPostedYear ",
+        "lucenePath":"root_getFirstPostedYear",
         "description":"First received year at the source",
         "type":"string",
         "cvDomain":null,
@@ -144,7 +144,7 @@
         "suggest":null
     },
     "Clinical Trial US Has Substances":{
-        "lucenePath":"root_getHasSubstances ",
+        "lucenePath":"root_getHasSubstances",
         "description":"String indicating whether or not any substances from the trial have been matched",
         "type":"string",
         "cvDomain":null,
@@ -168,7 +168,7 @@
         "suggest":null
     },
     "Clinical Trial US Intervention Type (index values)":{
-        "lucenePath":"root_getInterventionTypeIndexing ",
+        "lucenePath":"root_getInterventionTypeIndexing",
         "description":"A list of interventions types indicated in the trial",
         "type":"string",
         "cvDomain":null,
@@ -176,7 +176,7 @@
         "suggest":null
     },
     "Clinical Trial US Interventions (index values)":{
-        "lucenePath":"root_getInterventionIndexing ",
+        "lucenePath":"root_getInterventionIndexing",
         "description":"A list of interventions indicated in the trial",
         "type":"string",
         "cvDomain":null,
@@ -208,7 +208,7 @@
         "suggest":null
     },
     "Clinical Trial US Last Updated Year":{
-        "lucenePath":"root_getLastUpdatedYear ",
+        "lucenePath":"root_getLastUpdatedYear",
         "description":"The year the trial was last updated at the source",
         "type":"string",
         "cvDomain":null,
@@ -256,7 +256,7 @@
         "suggest":null
     },
     "Clinical Trial US Outcome Measures (index values)":{
-        "lucenePath":"root_getOutcomeMeasureIndexing ",
+        "lucenePath":"root_getOutcomeMeasureIndexing",
         "description":"A list of outcome measures indicated in the trial",
         "type":"string",
         "cvDomain":null,
@@ -280,7 +280,7 @@
         "suggest":null
     },
     "Clinical Trial US Primary Completion Year":{
-        "lucenePath":"root_getPrimaryCompletionYear ",
+        "lucenePath":"root_getPrimaryCompletionYear",
         "description":"Primary completion year at the source",
         "type":"string",
         "cvDomain":null,
@@ -312,7 +312,7 @@
         "suggest":null
     },
     "Clinical Trial US Sponsors (index values)":{
-        "lucenePath":"root_getSponsorIndexing ",
+        "lucenePath":"root_getSponsorIndexing",
         "description":"A list of sponsors indicated in the trial",
         "type":"string",
         "cvDomain":null,
