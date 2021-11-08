@@ -286,6 +286,8 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
             result = true;
           } else if (this.selectedQueryablePropertyType === 'timestamp') {
             result = true;
+          } else if (this.selectedQueryablePropertyType === 'number') {
+            result = true;
           }  else {
             result = false;
           }

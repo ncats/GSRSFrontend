@@ -1,16 +1,19 @@
 <div class="padtop5px padleft25px font15px colorblue">
   <b>Clinical Trial</b>
+  <!--
   &nbsp;&nbsp;&nbsp;
   <a [href]="exportUrl" target="_blank" matTooltip='Export Clinical Trial Records' *ngIf="totalRecords > 0">
+  -->
     <!--
     <button mat-raised-button color="primary">
       <mat-icon>arrow_downward</mat-icon>Export
     </button>
-    -->
+
     <button mat-icon-button color="primary">
       <mat-icon>arrow_downward</mat-icon>Export
     </button>
   </a>
+     -->
 </div>
 
 <div class="responsive mat-table-style">
@@ -26,6 +29,8 @@
     <ng-container matColumnDef="nctNumber">
       <th mat-header-cell *matHeaderCellDef> NCT Number </th>
       <td mat-cell *matCellDef="let clinical">
+
+        <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.trialNumber">{{clinical.trialNumber}}</a>
 
         <!--
         <div *ngIf="clinical.fromSource === 'EU'">

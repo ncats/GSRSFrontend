@@ -19,6 +19,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   clinicalTrialCount = 0;
   showSpinner = false;
   private subscriptions: Array<Subscription> = [];
+  @Input() substanceUuid: string;
   @Output() countClinicalTrialOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
@@ -53,9 +54,9 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
     const subscriptionClinical = this.clinicalTrialService.getClinicalTrials({
-      searchTerm: null,
+      searchTerm: this.substanceUuid,
       cutoff: null,
-      type: "substancekey",
+      type: "substanceKey",
       order: 'asc',
       pageSize: 5,
       facets: this.privateFacetParams,

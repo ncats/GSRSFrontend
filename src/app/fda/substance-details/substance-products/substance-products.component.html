@@ -225,15 +225,17 @@
 
     <div *ngIf = "loadedComponents && loadedComponents.clinicaltrials">
       <mat-tab label="Clinical Trial ({{clinicalTrialCount}})" >
-        <app-substance-clinical-trials [bdnum]="bdnum" (countClinicalTrialOut)="getClinicalTrialCount($event)">
+        <app-substance-clinical-trials [bdnum]="bdnum" [substanceUuid]="substance.uuid" (countClinicalTrialOut)="getClinicalTrialCount($event)">
         </app-substance-clinical-trials>
       </mat-tab>
     </div>
 
+    <!--
     <mat-tab label="Clinical Trial Europe ({{clinicalTrialEuCount}})" *ngIf = "loadedComponents && loadedComponents.clinicaltrials">
-      <app-substance-clinical-trials-eu [bdnum]="bdnum" (countClinicalTrialEuOut)="getClinicalTrialEuCount($event)">
+      <app-substance-clinical-trials-eu [bdnum]="bdnum" [substanceUuid]="substance.uuid" (countClinicalTrialEuOut)="getClinicalTrialEuCount($event)">
       </app-substance-clinical-trials-eu>
     </mat-tab>
+    -->
 
     <mat-tab label="Adverse Event PT ({{advPtCount}})" *ngIf = "loadedComponents && loadedComponents.adverseevents">
       <app-substance-adverseeventpt [bdnum]="bdnum" [substanceName]="substanceName"

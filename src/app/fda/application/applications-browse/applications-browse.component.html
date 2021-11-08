@@ -328,7 +328,7 @@
                         <div class="" *ngFor="let clinical of application._clinicalTrialList">
                           &bull;&nbsp;
                           <span *ngIf="clinical.nctNumber">
-                            <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.trialNumber">{{clinical.trialNumber}}</a>
+                            <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.nctNumber">{{clinical.nctNumber}}</a>
                           </span>
                         </div>
                       </div>

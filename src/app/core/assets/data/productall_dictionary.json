@@ -69,7 +69,7 @@
         "type":"string",
         "cvDomain":"INGREDIENT_TYPE",
         "priority":"x",
-        "suggest":"Ingredient_Type"
+        "suggest":null
     },
     "Is Listed":{
         "lucenePath":"root_isListed",
@@ -213,7 +213,7 @@
         "type":"string",
         "cvDomain":"PROD_ROUTE_OF_ADMIN",
         "priority":"x",
-        "suggest":"Route_of_Admin"
+        "suggest":null
     },
     "Source Type":{
         "lucenePath":"root_sourceType",
