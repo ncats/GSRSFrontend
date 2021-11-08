@@ -301,7 +301,7 @@
         "type":"string",
         "cvDomain":null,
         "priority":"x",
-        "suggest":null
+        "suggest":"Name"
     },
     "Approval ID":{
         "lucenePath":"root_approvalID",

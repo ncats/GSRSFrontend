@@ -234,7 +234,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.getBrowseProductDetails();
       }
       if (this.loadedComponents.clinicaltrials) {
-        this.getBrowseClinicalTrialDetails();
+     //   this.getBrowseClinicalTrialDetails();
       }
       if (this.loadedComponents.adverseevents) {
         this.getBrowseAdverseEventPtDetails();
@@ -471,8 +471,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.facetKey = 'products';
       } else if (this.category === 'Clinical Trial') {
         this.dictionaryFileName = 'ctus_dictionary.json';
-        this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
-        this.rawFacets = this.rawFacetsClinicalTrial;
+      //  this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
+      //  this.rawFacets = this.rawFacetsClinicalTrial;
         this.facetKey = 'ctclinicaltrial';
       } else if (this.category === 'Adverse Event') {
         this.dictionaryFileName = 'adverseevent_dictionary.json';

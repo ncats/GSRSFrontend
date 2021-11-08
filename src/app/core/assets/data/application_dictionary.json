@@ -28,7 +28,7 @@
         "description":"Record Create Date",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":null,
         "suggest":null
     },
     "Application Record Created By":{
@@ -44,7 +44,7 @@
         "description":"Record Last Edited",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":null,
         "suggest":null
     },
     "Application Record Last Edited By":{
@@ -148,7 +148,7 @@
         "description":"Ingredient Create Date",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":null,
         "suggest":null
     },
     "Ingredient Created By":{
@@ -164,7 +164,7 @@
         "description":"Ingredient Last Edited",
         "type":"string",
         "cvDomain":null,
-        "priority":"x",
+        "priority":null,
         "suggest":null
     },
     "Ingredient Last Edited By":{
@@ -252,7 +252,7 @@
         "description":"Status Date of Application",
         "type":"Date",
         "cvDomain":null,
-        "priority":"x",
+        "priority":null,
         "suggest":null
     },
     "Status Date Year":{
@@ -268,7 +268,7 @@
         "description":"Submit Date of Application",
         "type":"Date",
         "cvDomain":null,
-        "priority":"x",
+        "priority":null,
         "suggest":null
     },
     "Submit Date Year":{

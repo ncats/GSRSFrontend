@@ -22,7 +22,8 @@
   </div>
 
   <!-- TABS -->
-  <mat-tab-group class="tab-style margintop30px" [selectedIndex]="tabSelectedIndex" (selectedTabChange)="tabSelectedUpdated($event)">
+  <mat-tab-group class="tab-style margintop30px" [selectedIndex]="tabSelectedIndex"
+    (selectedTabChange)="tabSelectedUpdated($event)">
     <mat-tab label="Substance">
       <ng-template mat-tab-label>
         <div>Substance<br>
@@ -56,6 +57,9 @@
       </ng-template>
     </mat-tab>
 
+    <!-- Commenting Clinical Trial tabe for 3.0, will work on it in future release. The browse clinical trial not using
+        the same search mechanism as other browsers  -->
+    <!--
     <mat-tab label="Clinical Trial" *ngIf="loadedComponents && loadedComponents.clinicaltrials">
       <ng-template mat-tab-label>
         <div>Clinical Trial<br>
@@ -65,6 +69,7 @@
         </div>
       </ng-template>
     </mat-tab>
+    -->
 
     <mat-tab label="Adverse Event" *ngIf="loadedComponents && loadedComponents.adverseevents">
       <ng-template mat-tab-label>
@@ -129,7 +134,7 @@
   </mat-card>
 
   <!-- FACET VIEW/DISPLAY -->
-  <mat-expansion-panel [expanded]="false" class="margintop10px width100percent"  *ngIf="advancedSearchFacetDisplay">
+  <mat-expansion-panel [expanded]="false" class="margintop10px width100percent" *ngIf="advancedSearchFacetDisplay">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <div class="colorgray"><b>Filter by <span class="colororange">
@@ -176,8 +181,8 @@
     <div>
       <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
         [rawFacets]="rawFacets" [configName]="facetKey" includeFacetSearch="true"
-        [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType" [panelExpanded]="panelExpanded"
-        [facetNameText]="facetNameText" calledFrom="advancedsearch">
+        [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"
+        [panelExpanded]="panelExpanded" [facetNameText]="facetNameText" calledFrom="advancedsearch">
       </app-facets-manager>
     </div>
   </mat-expansion-panel>

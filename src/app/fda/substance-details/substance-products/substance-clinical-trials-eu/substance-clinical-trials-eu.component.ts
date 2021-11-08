@@ -4,6 +4,8 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/clinical-trial.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { PageEvent } from '@angular/material/paginator';
+import { Subscription, Observable, Subject } from 'rxjs';
+import { FacetParam } from '@gsrs-core/facets-manager';
 
 @Component({
   selector: 'app-substance-clinical-trials-eu',
@@ -15,6 +17,9 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
 
   clinicalTrialEuCount = 0;
   showSpinner = false;
+  private privateFacetParams: FacetParam;
+  private subscriptions: Array<Subscription> = [];
+  @Input() substanceUuid: string;
   @Output() countClinicalTrialEuOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
@@ -38,17 +43,30 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     }
   }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+  
   getSubstanceClinicalTrials(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
-
     this.showSpinner = true;  // Start progress spinner
-    this.clinicalTrialService.getSubstanceClinicalTrialsEurope(this.bdnum, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);
-      this.clinicalTrialEuCount = this.totalRecords;
-      this.countClinicalTrialEuOut.emit(this.clinicalTrialEuCount);
-      this.showSpinner = false;  // Stop progress spinner
-    });
-
+    const subscriptionClinical = this.clinicalTrialService.getClinicalTrials({
+      searchTerm: this.substanceUuid,
+      cutoff: null,
+      type: "substanceKey",
+      order: 'asc',
+      pageSize: 5,
+      facets: this.privateFacetParams,
+      skip: 0
+    })
+      .subscribe(pagingResponse => {
+        this.setResultData(pagingResponse.content);
+        this.clinicalTrialEuCount = pagingResponse.total;
+        this.countClinicalTrialEuOut.emit(this.clinicalTrialEuCount);
+        this.showSpinner = false;  // Stop progress spinner
+      });
     /*
         this.searchControl.valueChanges.subscribe(value => {
           this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
@@ -58,7 +76,23 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
         this.countUpdate.emit(clinicaltrials.length);
       });
       */
+     this.subscriptions.push(subscriptionClinical);
   }
+
+  /*
+  getSubstanceClinicalTrials(pageEvent?: PageEvent): void {
+    this.setPageEvent(pageEvent);
+
+    this.showSpinner = true;  // Start progress spinner
+
+    this.clinicalTrialService.getSubstanceClinicalTrialsEurope(this.bdnum, this.page, this.pageSize).subscribe(results => {
+      this.setResultData(results);
+      this.clinicalTrialEuCount = this.totalRecords;
+      this.countClinicalTrialEuOut.emit(this.clinicalTrialEuCount);
+      this.showSpinner = false;  // Stop progress spinner
+    });
+  }
+  */
 
   clinicalTrialListExportUrl() {
     if (this.bdnum != null) {
