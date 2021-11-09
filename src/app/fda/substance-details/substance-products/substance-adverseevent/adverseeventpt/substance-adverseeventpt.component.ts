@@ -75,6 +75,11 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   }
 
   ngOnInit() {
+    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+      this.isAdmin = response;
+    });
+    this.subscriptions.push(rolesSubscription);
+
     if (this.bdnum) {
       this.getAdverseEventPt();
 

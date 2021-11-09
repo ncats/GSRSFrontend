@@ -10,6 +10,7 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { AuthService } from '@gsrs-core/auth';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-substance-adverseeventdme',
@@ -29,6 +30,7 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   disableExport = false;
   etag = '';
   loadingStatus = '';
+  private subscriptions: Array<Subscription> = [];
 
   @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -48,6 +50,11 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   }
 
   ngOnInit() {
+    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+      this.isAdmin = response;
+    });
+    this.subscriptions.push(rolesSubscription);
+
     if (this.bdnum) {
       this.getAdverseEventDme();
       // this.getSubstanceAdverseEventDme();
@@ -55,6 +62,12 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
     }
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+  
   getAdverseEventDme(pageEvent?: PageEvent) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
