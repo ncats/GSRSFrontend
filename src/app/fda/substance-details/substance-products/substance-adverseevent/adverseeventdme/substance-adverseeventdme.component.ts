@@ -48,6 +48,9 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   }
 
   ngOnInit() {
+    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+      this.isAdmin = response;
+    });
     if (this.bdnum) {
       this.getAdverseEventDme();
       // this.getSubstanceAdverseEventDme();
