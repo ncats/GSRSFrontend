@@ -42,9 +42,9 @@
       <ng-container matColumnDef="ptTerm">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Term </th>
         <td mat-cell *matCellDef="let adverse">
-          {{adverse.adverseEvent}}
+          {{adverse.ptTerm}}
           <span class="" *ngIf="adverseEventShinyAdverseEventDisplay === true">
-            <a href="{{adverseEventShinyAdverseEventURLWithParam}}{{getDecodeURL(adverse.adverseEvent)}}"
+            <a href="{{adverseEventShinyAdverseEventURLWithParam}}{{getDecodeURL(adverse.ptTerm)}}"
               target="_blank" title="Analysis by Adverse Event/PT Term on Shiny Server">
               <mat-icon>analytics</mat-icon>
             </a>
