@@ -64,6 +64,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     })
       .subscribe(pagingResponse => {
         this.setResultData(pagingResponse.content);
+        this.clinicalTrialService.totalRecords = pagingResponse.total;
         this.clinicalTrialCount = pagingResponse.total;
         this.countClinicalTrialOut.emit(this.clinicalTrialCount);
         this.showSpinner = false;  // Stop progress spinner
