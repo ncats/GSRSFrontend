@@ -12,7 +12,7 @@ import {Facet, FacetQueryResponse, FacetHttpParams} from '@gsrs-core/facets-mana
 @Injectable()
 export class ClinicalTrialService extends BaseHttpService {
 
-  totalRecords: 0;
+  totalRecords = 0;
 
   constructor(
     public http: HttpClient,
