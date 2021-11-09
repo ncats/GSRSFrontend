@@ -141,7 +141,7 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
   }
 
   getApiExportUrl(etag: string, extension: string): string {
-    return this.adverseEventService.getApiExportUrlPt(etag, extension);
+    return this.adverseEventService.getApiExportUrlCvm(etag, extension);
   }
 
   adverseEventCvmListExportUrl() {
