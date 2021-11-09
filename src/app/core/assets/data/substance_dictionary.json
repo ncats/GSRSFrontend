@@ -308,8 +308,8 @@
         "description":"The Unique Ingredient Identifier (UNII, aka \"Approval ID\") is a unique ID generated for each substance record.",
         "type":"string",
         "cvDomain":null,
-        "priority":null,
-        "suggest":null
+        "priority":"x",
+        "suggest":"Approval_ID"
     },
     "BDNUM":{
         "lucenePath":"root_codes_BDNUM",
@@ -493,7 +493,7 @@
         "type":"string",
         "cvDomain":null,
         "priority":"x",
-        "suggest":null
+        "suggest":"Code"
     },
     "Count Amount Access":{
         "lucenePath":"root_moieties_countAmount_access",

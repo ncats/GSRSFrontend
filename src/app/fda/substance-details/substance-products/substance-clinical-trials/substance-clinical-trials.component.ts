@@ -52,19 +52,20 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
   getSubstanceClinicalTrials(pageEvent?: PageEvent): void {
     this.setPageEvent(pageEvent);
+    const skip = this.page * this.pageSize;
     this.showSpinner = true;  // Start progress spinner
     const subscriptionClinical = this.clinicalTrialService.getClinicalTrials({
       searchTerm: this.substanceUuid,
       cutoff: null,
       type: "substanceKey",
       order: 'asc',
-      pageSize: 5,
+      pageSize: this.pageSize,
       facets: this.privateFacetParams,
-      skip: 0
+      skip: skip
     })
       .subscribe(pagingResponse => {
-        this.setResultData(pagingResponse.content);
         this.clinicalTrialService.totalRecords = pagingResponse.total;
+        this.setResultData(pagingResponse.content);
         this.clinicalTrialCount = pagingResponse.total;
         this.countClinicalTrialOut.emit(this.clinicalTrialCount);
         this.showSpinner = false;  // Stop progress spinner
