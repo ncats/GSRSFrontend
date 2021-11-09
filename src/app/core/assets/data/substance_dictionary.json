@@ -493,7 +493,7 @@
         "type":"string",
         "cvDomain":null,
         "priority":"x",
-        "suggest":null
+        "suggest":"Code"
     },
     "Count Amount Access":{
         "lucenePath":"root_moieties_countAmount_access",
