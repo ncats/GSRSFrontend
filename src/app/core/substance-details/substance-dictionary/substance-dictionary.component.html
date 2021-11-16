@@ -297,6 +297,20 @@
     <td class="value blue-font"  >{{mwDisplay}}</td>
   </tr>
 
+  <tr *ngFor = "let relationship of substance.relationships">
+    <th >Active moiety</th>
+    <td > <!--*ngIf="relationship.type==='ACTIVE MOIETY'"-->
+      <div class = "thumb-col">
+        <div>{{relationship.relatedSubstance.linkingID}}</div>
+        <img class="structure-image" appSubstanceImage [entityId]="relationship.relatedSubstance.refuuid">
+        <div>
+          <a class="substance-name" [routerLink]="['/substances', relationship.relatedSubstance.refuuid]" >
+            {{relationship.relatedSubstance.name}}
+          </a>
+        </div>
+      </div>
+    </td>
+  </tr>
     </table>
 
       <div class="right-aligned">
