@@ -2,6 +2,10 @@ language: node_js
 node_js:
   - 7
 install:
+  - cp package.dev.json package.json
+  - npm run build-file-select
+  - npm run build-jsdraw-wrapper
+  - npm run build-ketcher-wrapper
   - npm install
 script:
   - npm run build:fda:prod
