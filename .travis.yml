@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-  - 8
+  - 7
 
 install:
-  - npm install -g @angular/cli@latest
+  - npm install -g @angular/cli
   - cp package.dev.json package.json
   - npm run build-file-select
   - npm run build-jsdraw-wrapper
