@@ -1,11 +1,14 @@
+dist: trusty
+
 language: node_js
 node_js:
   - lts/*
 
 install:
+
+  - cp package.dev.json package.json
   - npm install --save-dev @angular-devkit/build-angular
   - npm install -g @angular/cli
-  - cp package.dev.json package.json
   - npm run build-file-select
   - npm run build-jsdraw-wrapper
   - npm run build-ketcher-wrapper
