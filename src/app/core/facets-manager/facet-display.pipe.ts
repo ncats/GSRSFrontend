@@ -63,6 +63,9 @@ export class FacetDisplayPipe implements PipeTransform {
     if (name === 'GInAS Tag') {
       return 'Source Tag';
     }
+    if (name === 'GInAS Domain') {
+      return 'Domain';
+    }
     return name.trim();
   }
 
