@@ -277,10 +277,10 @@
             <span class="boldlabel">CAS-RN®</span>
             <span class="value space-bottom"> {{ casRn }}</span>
           </p>
-          <p *ngIf='substance.approvalID'>
-            <span class="boldlabel">UNII</span>
-            <span class="value space-bottom"> {{ substance.approvalID }}</span>
-          </p>
+          <span class="boldlabel">UNII</span>
+            <span *ngIf='substance.approvalID' class="value space-bottom"> {{ substance.approvalID }}</span>
+          
+            <span *ngIf='!substance.approvalID' class="value space-bottom"> {{ NO_DATA_STRING }}</span>
   
         </td>
       </tr>
@@ -298,7 +298,8 @@
   </tr>
 
   <tr *ngFor = "let relationship of substance.relationships">
-    <th >Active moiety</th>
+    <div *ngIf="requiredRelationshipTypes.indexOf(relationship.type) >-1">
+    <th >{{relationship.type}}</th>
     <td > <!--*ngIf="relationship.type==='ACTIVE MOIETY'"-->
       <div class = "thumb-col">
         <div>{{relationship.relatedSubstance.linkingID}}</div>
@@ -310,6 +311,7 @@
         </div>
       </div>
     </td>
+  </div>
   </tr>
     </table>
 

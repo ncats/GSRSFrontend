@@ -66,6 +66,10 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
   manufacturerNames: Array<ManufacturerName>;
   commonNames: Array<String>;
   MANUFACTURER_TYPE : string = 'MANUFACTURER';
+  NO_DATA_STRING : string = "Not Available";
+
+  requiredRelationshipTypes : string[] = ["ACTIVE MOIETY", "SALT/SOLVATE->PARENT", "PARENT->SALT/SOLVATE", "ENANTIOMER->RACEMATE", "RACEMATE->ENANTIOMER",
+    "CONSTITUENT ALWAYS PRESENT->PARENT", "PARENT->ACTIVE CONSTITUENT ALWAYS PRESENT"];
 
   constructor(
     public utilsService: UtilsService,
@@ -121,11 +125,16 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
     } else {
       this.getApprovalID();
     }
-    this.innName = '';
-    this.pronName='';
-    this.banName='';
-    this.usanName='';
-
+    this.innName = this.NO_DATA_STRING;
+    this.pronName=this.NO_DATA_STRING;
+    this.banName=this.NO_DATA_STRING;
+    this.usanName=this.NO_DATA_STRING;
+    this.usanDate=this.NO_DATA_STRING;
+    this.categoryName = this.NO_DATA_STRING;
+    this.usanId =this.NO_DATA_STRING;
+    this.casRn=this.NO_DATA_STRING;
+    this.innId=this.NO_DATA_STRING;
+    
     this.substance.names.forEach(name => {
       //console.log('name.name: ' + name.name);
       if (name.name.toUpperCase().endsWith('[INN]') ) {
@@ -176,6 +185,9 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
         }
       });
     });
+    if( this.manufacturerNames.length ===0 ) {
+      this.manufacturerNames.push(new ManufacturerName(this.NO_DATA_STRING, this.NO_DATA_STRING));
+    }
 
     this.substance.codes.forEach(cd=>{
       if( cd.codeSystem==='CAS' && cd.type==='PRIMARY') {
