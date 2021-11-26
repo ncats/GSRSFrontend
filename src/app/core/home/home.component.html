@@ -381,6 +381,25 @@
                 </div>
 
           </mat-card>
+          <mat-card class="temprow right-link" id="resource2" *ngIf = "!guideCard">
+              <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(guide)" >GSRS User Guide</a></h3>
+              <div class = "img-container">
+                  <img class = "test" src = "{{imageLoc}}guide.png" />
+               </div>
+              <div class = "resource-desc"> The GSRS user guide is comprehensive set of instructions for searching and registering new substances of all types in GSRS.
+             </div>
+            </mat-card>
+          </div>
+          <div class = "row3">
+          <mat-card class="temprow left-link" id="resource2" *ngIf = "!dictionaryCard">
+                  <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(dictionary)" >GSRS Data Dictionary</a></h3>
+                  <div class = "img-container">
+                      <img class = "test" src = "{{imageLoc}}dictionary.png" />
+                   </div>
+                  <div class = "resource-desc">  The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.
+                    </div>
+    
+              </mat-card>
 
           <mat-card class="temprow right-link" id="resource2">
                     <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" target ="_blank" href = "https://gsrs.ncats.nih.gov/#/api#chemical%20search">GSRS API Documentation</a></h3>
@@ -435,7 +454,7 @@
 
   <ng-template #dictionary>
       <div mat-dialog-content class = "button-modal" >
-          <a class = "modal-button" href = "{{dictionaryCard.href}}">{{dictionaryCard.templateDescription}}</a>
+          <a class = "modal-button" href = "{{dictionaryCard.href}}">{{dictionaryCard ? dictionaryCard.templateDescription : "click to download GSRS Data Dictionary.xlsx"}}</a>
       </div>
       <div mat-dialog-actions>
           <span class="middle-fill"></span>
@@ -445,7 +464,7 @@
 
   <ng-template #guide>
       <div mat-dialog-content class = "button-modal">
-          <a class = "modal-button"href ="{{guideCard.href}}">{{guideCard.templateDescription}}</a>
+          <a class = "modal-button"href ="{{guideCard.href}}">{{guideCard ? guideCard.templateDescription : "click to download GSRS User Guide.docx"}}</a>
       </div>
       <div mat-dialog-actions>
           <span class="middle-fill"></span>
