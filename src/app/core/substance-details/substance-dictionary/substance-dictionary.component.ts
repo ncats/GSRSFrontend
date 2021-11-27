@@ -68,8 +68,15 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
   MANUFACTURER_TYPE : string = 'MANUFACTURER';
   NO_DATA_STRING : string = "Not Available";
 
+  MAX_NAMES_AT_ONCE: number = 3;
+
+  otherCodes: Array<SubstanceCode> = [];
+
   requiredRelationshipTypes : string[] = ["ACTIVE MOIETY", "SALT/SOLVATE->PARENT", "PARENT->SALT/SOLVATE", "ENANTIOMER->RACEMATE", "RACEMATE->ENANTIOMER",
     "CONSTITUENT ALWAYS PRESENT->PARENT", "PARENT->ACTIVE CONSTITUENT ALWAYS PRESENT"];
+
+  public showOtherCodes: boolean=false;
+  public showOtherNames: boolean=false;
 
   constructor(
     public utilsService: UtilsService,
@@ -196,6 +203,10 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
         this.innId=cd.code;
       } else if(cd.codeSystem==='USAN' && cd.type==='PRIMARY')/*may not exist*/ {
         this.usanId = cd.code;
+      } else {
+        if(this.otherCodes.indexOf(cd)<0) {
+          this.otherCodes.push(cd);
+        }
       }
 
     });
@@ -349,6 +360,13 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
      return displayValue;
   }
 
+  toggleOtherCodes() {
+    this.showOtherCodes = !this.showOtherCodes;
+  }
+
+  toggleOtherNames() {
+    this.showOtherNames=!this.showOtherNames;
+  }
 }
 
 export class ManufacturerName {
@@ -359,5 +377,5 @@ export class ManufacturerName {
     this.substanceName  =subName;
     this.manufacturerName= manuName;
   }
-
 }
+

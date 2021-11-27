@@ -88,17 +88,6 @@
       </div>
       <div>
         <div class="substance-data substance-names" >
-          <!--*ngIf="names && names.length"-->
-          <!--div class="label">Names:</div>
-          <div>
-              <div class="value space-bottom" *ngFor="let nameObject of names | namesDisplayOrder" [innerHTML] = nameObject._nameHTML>
-              
-              <span *ngIf="nameObject.displayName == true" matTooltip="Accepted Name">
-                <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
-              </span>
-            </div>>
-          </div>
-        </div-->
         <div class="substance-data substance-code-systems" *ngIf="codeSystems">
           <div class="label">Codes:</div>
           <div>
@@ -197,62 +186,68 @@
         <td width="*">{{substance.substanceClass }}</td>
       </tr>
       <tr>
-        <th colspan="2" > 
-          Non-Proprietary Names
-          </th>
-          </tr>
-          <tr>
-          <td colspan="2"> 
+        <th colspan="2" >Non-Proprietary Names</th>
+      </tr>
+      <tr>
+        <td colspan="2"> 
           <table>
           <tr>
             <th width="33%">Official Names</th>
             <th width="33%">Common Names</th>
           </tr>
           <tr>
-            <td border="1px">
+            <td style='border:"1px"'>
               <ul>
-              <li *ngIf='usanName'>
-                <span class="boldlabel">USAN</span>
-                <span class="value space-bottom"> {{ usanName }}</span>
-              </li>
-            <li *ngIf='innName'>
-              <span class="boldlabel">INN</span>
-              <span class="value space-bottom"> {{ innName }}</span>
-            </li>
-            <li *ngIf='uspName'>
-              <span class="boldlabel">USP</span>
-              <span class="value">{{ uspName }}
-              </span>
-            </li>
-            <li *ngIf='banName'>
-              <span class="boldlabel" style="font-weight: bold;">BAN</span>
-              <span class="value space-bottom"> {{ banName }}</span>
-            </li>
-            </ul>
+                <li *ngIf='usanName'>
+                  <span class="boldlabel">USAN</span>
+                  <span class="value space-bottom"> {{ usanName }}</span>
+                </li>
+                <li *ngIf='innName'>
+                  <span class="boldlabel">INN</span>
+                  <span class="value space-bottom"> {{ innName }}</span>
+                </li>
+                <li *ngIf='uspName'>
+                  <span class="boldlabel">USP</span>
+                  <span class="value">{{ uspName }}
+                  </span>
+                </li>
+                <li *ngIf='banName'>
+                  <span class="boldlabel" style="font-weight: bold;">BAN</span>
+                  <span class="value space-bottom"> {{ banName }}</span>
+                </li>
+              </ul>
             </td>
             <td>
               <ul>
-              <li *ngIf='iupacName'>
-                <span class="boldlabel">IUPAC Name:</span>
-                <span class="value"> {{ iupacName }}</span>
-              </li>
-              <li *ngIf='indexName'>
-                <span class="boldlabel">Index Name:</span>
-                <span class="value"> {{ indexName }}</span>
-              </li>
-              <li>
-                total {{ commonNames.length }} common names available
-              </li>
-            </ul>
+                <li *ngIf='iupacName'>
+                  <span class="boldlabel">IUPAC Name:</span>
+                  <span class="value"> {{ iupacName }}</span>
+                </li>
+                <li *ngIf='indexName'>
+                  <span class="boldlabel">Index Name:</span>
+                  <span class="value"> {{ indexName }}</span>
+                </li>
+                <li>
+                  total {{ commonNames.length }} common names available
+                </li>
+              </ul>
+              <div *ngIf='commonNames.length > MAX_NAMES_AT_ONCE '>
+                <a (click)="toggleOtherNames()">...</a>
+              </div>
+              <div *ngIf='showOtherNames'>
+                <div *ngFor = "let currentName of commonNames; index as index" >
+                  <span name='otherNameName' class="value space-bottom">{{currentName.name}}</span>
+                </div>
+              </div>
+          
             </td>
           </tr>
-  
-          </table>
+         </table>
         </td>
       </tr>
       <tr>
-        <th>Innovator Brand Names
-        </th>
+        <td class="boldlabel">Innovator Brand Names
+        </td>
         <td> 
           <div *ngFor = "let mname of manufacturerNames">
             <span style="font-weight:bold;">{{mname.manufacturerName}}</span>
@@ -281,20 +276,28 @@
             <span *ngIf='substance.approvalID' class="value space-bottom"> {{ substance.approvalID }}</span>
           
             <span *ngIf='!substance.approvalID' class="value space-bottom"> {{ NO_DATA_STRING }}</span>
-  
+          <p *ngIf='otherCodes.length>0'>
+            <a (click)="toggleOtherCodes()">...</a>
+          </p>
+          <div  id='otherCodes' *ngIf='showOtherCodes'>
+            <div *ngFor = "let currentCode of otherCodes; index as index" >
+              <span name='otherCodeSystem' class="boldlabel">{{currentCode.codeSystem}} </span> 
+              <span name='otherCodeCode' class="value space-bottom">{{currentCode.code}}</span>
+            </div>
+          </div>
         </td>
       </tr>
       <tr >
         <td class="boldlabel"> Therapeutic Category</td>
-        <td class="value blue-font" >{{categoryName}}</td>
+        <td class="value space-bottom" >{{categoryName}}</td>
     </tr>
 <tr *ngIf="substance.structure">
-    <th>Molecular Formula</th>
-    <td class="value blue-font" [innerHTML] = "substance.structure.formula"></td>
+  <td class="boldlabel">Molecular Formula</td>
+    <td class="value space-bottom" [innerHTML] = "substance.structure.formula"></td>
 </tr>
   <tr>
-    <th class="name">Molecular Weight</th>
-    <td class="value blue-font"  >{{mwDisplay}}</td>
+    <td class="boldlabel">Molecular Weight</td> 
+    <td class="value space-bottom"  >{{mwDisplay}}</td>
   </tr>
 
   <tr *ngFor = "let relationship of substance.relationships">
