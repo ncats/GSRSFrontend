@@ -81,8 +81,8 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
     )
       .subscribe(pagingResponse => {
         this.adverseEventService.totalRecords = pagingResponse.total;
-        this.setResultData(pagingResponse.content);
         this.adverseEventCount = pagingResponse.total;
+        this.setResultData(pagingResponse.content);
         this.etag = pagingResponse.etag;
         this.countAdvCvmOut.emit(this.adverseEventCount);
       }, error => {

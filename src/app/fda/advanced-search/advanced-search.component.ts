@@ -494,7 +494,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       .subscribe((response: QueryableSubstanceDictionary) => {
 
         response['All'] = {
-          lucenePath: 'text',
+          lucenePath: '',
           description: 'All substance fields',
           type: 'string',
           cvDomain: ''
@@ -784,6 +784,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     } else {
       alert('Please select any criteria to search');
     }
+  }
+
+  processSearchOut(): void {
+    this.processSearch();
   }
 
   /*

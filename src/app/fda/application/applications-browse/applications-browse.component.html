@@ -93,7 +93,6 @@
             </mat-form-field>
             <span class="page-label"> of {{lastPage}}</span>
           </div>
-
         </div>
       </div>
 
@@ -447,6 +446,15 @@
           </mat-card>
         </div>
       </div>
+
+      <!-- Pagination at the bottom of the page -->
+      <!--
+      <div class="controls-container">
+        <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+        </mat-paginator>
+      </div>
+      -->
       <ng-template #noRecordApplication>
         <!-- No Application Found. -->
       </ng-template>
