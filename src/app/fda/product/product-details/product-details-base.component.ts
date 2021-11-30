@@ -22,6 +22,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   product: any;
   iconSrcPath: string;
   message = '';
+  isAdmin = false;
   subscriptions: Array<Subscription> = [];
 
   constructor(

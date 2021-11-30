@@ -185,6 +185,7 @@
         <mat-form-field [floatLabel]="'never'" class=" search-form-field space-right-small">
           <input class="search" type="text" placeholder="Enter Search Value (Type Ahead) *" aria-label="Search Text"
             matInput [formControl]="searchControl" [matAutocomplete]="searchAuto" (focus)="focused()"
+            (keyup.enter)="processSearch()"
             (keyup)="commandInput.constructQuery(
               $event.target.value.trim(),
               selectedCondition,
@@ -212,6 +213,7 @@
         <mat-form-field floatLabel="never">
           <input [type]="commandInput.type" [name]="'input_' + index" matInput
             [(ngModel)]="commandInputValueDict[commandInput.type][index]" required placeholder="Enter search value"
+            (keyup.enter)="processSearch()"
             (keyup)="commandInput.constructQuery(
                           $event.target.value.trim(),
                           selectedCondition,
@@ -230,7 +232,8 @@
       <div *ngIf="commandInput.type == 'datetime'">
         <mat-form-field floatLabel="never">
           <input matInput required placeholder="m/d/yyyy" [(ngModel)]="commandInputValueDict[commandInput.type][index]"
-            (dateChange)="commandInput.constructQuery(
+          (keyup.enter)="processSearch()"
+          (dateChange)="commandInput.constructQuery(
                           $event.value,
                           selectedCondition,
                           selectedQueryableProperty,
@@ -264,7 +267,8 @@
                       queryUpdated,
                       queryParts,
                       commandInputValueDict[commandInput.type]
-                  )">
+                  )"
+                  (keyup.enter)="processSearch()">
             <mat-option *ngFor="let option of cvOptions" [value]="option.value" [matTooltip]="option.display">
               {{option.display}}
             </mat-option>
@@ -276,3 +280,4 @@
   </div>
 
 </div>
+
