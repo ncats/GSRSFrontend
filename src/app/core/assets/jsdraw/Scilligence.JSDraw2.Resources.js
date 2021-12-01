@@ -1,3 +1,6 @@
+//GSRS addition 12/01/2021
+scil.Utils._scripturl=null; //this helps ensure temporary cached settings aren't honored
+
 scil.Utils.imgSrc = function (button, wrapasinurl) {
 var s = null;
 if (button != null)
