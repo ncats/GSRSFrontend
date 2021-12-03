@@ -221,6 +221,9 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
             if (response.uuid) {
               this.substanceUuid = response.uuid;
               this.ingredientName = response._name;
+
+              // Get Active Moiety
+              this.getActiveMoiety(this.substanceUuid, 'ingredientname');
             }
           }
         });
@@ -234,6 +237,9 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
             if (response.uuid) {
               this.basisOfStrengthSubstanceUuid = response.uuid;
               this.basisOfStrengthIngredientName = response._name;
+
+               // Get Active Moiety
+               this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
             }
           }
         });
@@ -328,6 +334,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   */
 
   getActiveMoiety(substanceUuid: string, type: string) {
+    alert("GGGGGGGGGGGGGGG " + substanceUuid);
     if (substanceUuid != null) {
       // Get Active Moiety - Relationship
       this.generalService.getSubstanceRelationships(substanceUuid).subscribe(responseRel => {
