@@ -334,7 +334,6 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   */
 
   getActiveMoiety(substanceUuid: string, type: string) {
-    alert("GGGGGGGGGGGGGGG " + substanceUuid);
     if (substanceUuid != null) {
       // Get Active Moiety - Relationship
       this.generalService.getSubstanceRelationships(substanceUuid).subscribe(responseRel => {
