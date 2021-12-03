@@ -227,16 +227,13 @@
                   <span class="boldlabel">Index Name:</span>
                   <span class="value"> {{ indexName }}</span>
                 </li>
-                <li>
-                  total {{ commonNames.length }} common names available
-                </li>
               </ul>
-              <div *ngIf='commonNames.length > MAX_NAMES_AT_ONCE '>
-                <a (click)="toggleOtherNames()">...</a>
-              </div>
+              
+                <a (click)="toggleOtherNames()">See {{ commonNames.length }} common name(s).</a>
+              
               <div *ngIf='showOtherNames'>
                 <div *ngFor = "let currentName of commonNames; index as index" >
-                  <span name='otherNameName' class="value space-bottom">{{currentName.name}}</span>
+                  <span name='otherNameName' class="value space-bottom">{{currentName.substanceName}} {{ currentName.joinedTags()}}</span>
                 </div>
               </div>
           

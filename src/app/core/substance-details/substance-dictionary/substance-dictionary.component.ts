@@ -27,6 +27,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { ifError } from 'assert';
 import { ConfigService } from '@gsrs-core/config';
+import { TagSelectorComponent } from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
 
 @Component({
   selector: 'substance-dictionary-component',
@@ -64,7 +65,7 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
   mwDisplay: string;
 
   manufacturerNames: Array<ManufacturerName>;
-  commonNames: Array<String>;
+  commonNames: CommonNameList;
   MANUFACTURER_TYPE : string = 'MANUFACTURER';
   NO_DATA_STRING : string = "Not Available";
 
@@ -106,7 +107,7 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
       }
     });
     this.manufacturerNames = [];
-    this.commonNames=[];
+    this.commonNames=new CommonNameList();
   }
 
   finishiInit() {
@@ -142,6 +143,7 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
     this.casRn=this.NO_DATA_STRING;
     this.innId=this.NO_DATA_STRING;
     
+    let tagNameExp = new RegExp(/\[(.+)\]/);
     this.substance.names.forEach(name => {
       //console.log('name.name: ' + name.name);
       if (name.name.toUpperCase().endsWith('[INN]') ) {
@@ -167,12 +169,26 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
       }else if (name.type.toUpperCase()==='CATEGORY') {
         this.categoryName =name.name;
       } else if( name.type.toUpperCase()==='CN') {
+        var actualName=name.name; 
+        var tag = '';
+        var matchName=tagNameExp.exec(name.name);
+        
+        if( matchName!==null) {
+          tag=matchName[1];
+          actualName=actualName.replace(matchName[0],'').trimRight();
+        }
+        console.log('actualName: ' + actualName + '; tag: ' +tag);
+        this.commonNames.addName(actualName, tag);
+        /*if( actualName.indexOf(']')=== actualName.length-1 && actualName.match)
+        if( this.commonNames.containsName(name.name)){
+
+        }
         let commonName = this.commonNames.find(n=> n=== name.name);
         console.log('commonName: ' + commonName);
         if( !commonName || commonName===null) {
           console.log('adding common name: ' + name.name);
           this.commonNames.push(name.name);
-        }
+        }*/
       }
       let manufName = this.getManufacturerName(name, this.substance);
       
@@ -185,7 +201,7 @@ export class SubstanceDictionaryComponent extends SubstanceCardBaseFilteredList<
           this.manufacturerNames.push( new ManufacturerName( name.name, manufName));
         }
       }
-
+      console.log('in init,  commonnames ' + this.commonNames.length);
       this.substance.references.forEach(r=>{
         if(r.docType.toUpperCase() === 'USAN DATE') {
           this.usanDate = r.citation;
@@ -377,5 +393,47 @@ export class ManufacturerName {
     this.substanceName  =subName;
     this.manufacturerName= manuName;
   }
+}
+
+export class CommonNameList extends Array<CommonNameHolder> {
+  public addName = (name: string, tag: string)=> {
+    //see if name is on list
+    let nameFound: Boolean;
+    this.forEach(element => {
+      if( element.substanceName===name) {
+        if(tag!==null && tag.length>0 && element.tags.indexOf(tag) === -1) {
+          element.tags.push(tag);
+        }
+        nameFound=true;
+      }
+    });
+
+    if( !nameFound){
+      this.push( new CommonNameHolder(name, tag));
+    }
+  }
+  containsName(name: string) : Boolean{
+    var nm = this.find(n=>n.substanceName===name);
+    return (nm && nm.substanceName.length>0);
+  }
+
+}
+
+export class CommonNameHolder {
+  constructor(newName: string, firstTag: string) {
+    this.substanceName=newName;
+    if( firstTag!==null && firstTag.length>0) {
+      this.tags = [firstTag];
+    } else {
+      this.tags = [];
+    }
+    
+  }
+  joinedTags(): string {
+    return this.tags.length==0 ? '' : '(' + this.tags.join(', ') + ')';
+  }
+  substanceName: string;
+  tags: Array<String>;
+  
 }
 
