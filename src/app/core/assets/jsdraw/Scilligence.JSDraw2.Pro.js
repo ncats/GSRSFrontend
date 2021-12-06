@@ -47,7 +47,8 @@ scil.Utils.imgSrc = function (button, wrapasinurl) {
 var s = null;
 if (button != null)
     button = button.toLowerCase();
-var imgbase64 = JSDraw2.Resources[button];
+
+var imgbase64 = (JSDraw2.Resources)?JSDraw2.Resources[button]:null;
 if (imgbase64 != null) {
     var p = button.lastIndexOf('.');
     var type = button.substr(p + 1);
@@ -64,7 +65,7 @@ return s;
 scil.App.imgSmall = function (button, wrapasurl) {
 if (button != null)
     button = button.toLowerCase();
-var imgbase64 = JSDraw2.Resources['small/' + button];
+var imgbase64 = (JSDraw2.Resources)?JSDraw2.Resources['small/' + button]:null;
 if (imgbase64 != null) {
     var p = button.lastIndexOf('.');
     var type = button.substr(p + 1);
