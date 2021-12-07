@@ -6,12 +6,11 @@ node_js:
 
 install:
 
-  - cp package.dev.json package.json
-  - npm install --save-dev @angular-devkit/build-angular
-  - npm install -g @angular/cli
-  - npm run build-file-select
-  - npm run build-jsdraw-wrapper
-  - npm run build-ketcher-wrapper
-  - npm install
+
+
+  - npm install -g @angular/cli@latest
+  - npm i @angular-devkit/build-angular@0.803.25
+
 script:
+  - ./build.sh
   - npm run build:fda:prod
