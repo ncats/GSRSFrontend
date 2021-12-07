@@ -11,3 +11,6 @@ install:
 script:
   - ./build.sh
   - npm run build:fda:prod
+
+after_failure:
+  - cat /home/travis/.npm/_logs/*.log
