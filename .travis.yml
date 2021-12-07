@@ -1,0 +1,13 @@
+dist: trusty
+
+language: node_js
+node_js:
+  - 12.14.1
+
+install:
+  - npm install -g @angular/cli@latest
+  - npm i @angular-devkit/build-angular@0.803.25
+
+script:
+  - ./build.sh
+  - npm run build:fda:prod
