@@ -187,6 +187,9 @@ export class AppComponent {
       iconRegistry.addSvgIcon(
         'glasses',
         sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-glasses-24px.svg'));
+        iconRegistry.addSvgIcon(
+          'paste',
+          sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-paste-24px.svg'));
   }
 
 }

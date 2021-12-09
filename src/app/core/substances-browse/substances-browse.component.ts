@@ -264,6 +264,18 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  clipboard(value: string) {
+    console.log(value);
+    const event = (e: ClipboardEvent) => {
+      e.clipboardData.setData('text/plain', value);
+      e.preventDefault();
+      // ...('copy', e), as event is outside scope
+      document.removeEventListener('copy', e);
+  };
+  document.addEventListener('copy', event);
+  document.execCommand('copy');
+  }
+
   changePage(pageEvent: PageEvent) {
 
     let eventAction;
