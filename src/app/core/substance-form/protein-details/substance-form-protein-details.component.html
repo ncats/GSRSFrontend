@@ -8,8 +8,8 @@
       <app-cv-input  class = "cv-input"  domain = "SEQUENCE_ORIGIN" title = "Sequence Origin" (valueChange) = "updateOrigin($event)" [model] = "protein.sequenceOrigin"></app-cv-input>
     <app-cv-input  domain = "SEQUENCE_TYPE" title = "Sequence Type" [model] = "protein.sequenceType" (valueChange)="updateSequenceType($event)"></app-cv-input>
     <div>
-      <app-access-manager (accessOut)="updateAccess($event)" [access]="protein.access">
-      </app-access-manager>
+   <!--   <app-access-manager (accessOut)="updateAccess($event)" [access]="protein.access">
+      </app-access-manager>-->
     </div>
   </div>
   <div class = "form-row">

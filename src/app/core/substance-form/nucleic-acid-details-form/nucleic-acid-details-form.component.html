@@ -9,8 +9,8 @@
       <app-cv-input domain = "SEQUENCE_ORIGIN" title = "Sequence Origin" (valueChange) = "update('sequenceOrigin',$event)" [model] = "nucleicAcid.sequenceOrigin"></app-cv-input>
     </div>
     <app-cv-input class = "seqtype" domain = "SEQUENCE_TYPE" title = "Sequence Type" [model] = "nucleicAcid.sequenceType" (valueChange)="update('sequenceType',$event)"></app-cv-input>
-    <app-access-manager (accessOut)="updateAccess($event)" [access]="nucleicAcid.access">
-    </app-access-manager>
+  <!--  <app-access-manager (accessOut)="updateAccess($event)" [access]="nucleicAcid.access">
+    </app-access-manager>-->
   </div>
   <div class = "form-row">
     <app-audit-info [source] = "nucleicAcid"></app-audit-info>
