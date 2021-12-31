@@ -13,7 +13,7 @@
       </a>
       -->
       <!-- Export Button -->
-      <span class="export" *ngIf="isAdmin">
+      <span class="export" *ngIf="isAdmin && adverseEventCount > 0">
         <button matTooltip="Export Search Results" mat-button (click)="export()"
           class="mat-button export-button mat-raised-button">
           <mat-icon svgIcon="get_app"></mat-icon> Export
@@ -66,7 +66,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Count </th>
         <td mat-cell *matCellDef="let adverse">
           <div *ngIf="FAERSDashboardAdverseEventUrl; else noFaersLink">
-              <a href="{{FAERSDashboardAdverseEventUrl}}{{getDecodeURL(adverse.adverseEvent)}}{{FAERSDashboardReactionGroup}}{{getDecodeURL(adverse.primSoc)}}"
+              <a href="{{FAERSDashboardAdverseEventUrl}}{{getDecodeURL(adverse.ptTerm)}}{{FAERSDashboardReactionGroup}}{{getDecodeURL(adverse.primSoc)}}"
                 target="_blank" title="FAERS Public Dashboard">
                 <div [innerHTML]="adverse.ptCount"></div>
               </a>

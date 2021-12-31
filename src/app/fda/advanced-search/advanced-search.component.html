@@ -94,7 +94,7 @@
           <div class="query-statement-container">
             <app-advanced-query-statement [category]="category" [queryStatementHash]="queryStatement.queryHash"
               [index]="index" [queryableDictionary]="queryableSubstanceDict" [queryableOptions]="displayProperties"
-              [queryableOptionsCommon]="displayPropertiesCommon" (queryUpdated)="queryUpdated($event, index)">
+              [queryableOptionsCommon]="displayPropertiesCommon" (queryUpdated)="queryUpdated($event, index)" (processSearchOut)="processSearchOut()">
             </app-advanced-query-statement>
           </div>
 
@@ -121,10 +121,10 @@
         </div>
       </div>
 
-      <div class="titlequery">
+      <div class="titlequery" *ngIf="queryDisplay">
         Query
       </div>
-      <div class="query-container">
+      <div class="query-container" *ngIf="queryDisplay">
         <div class="query-value">
           {{queryDisplay}}
         </div>
@@ -192,6 +192,7 @@
     <div>
       <button mat-flat-button color="primary" (click)="processSearch()">Search</button>
     </div>
+    <div (keyup.enter)="processSearch()"></div>
   </div>
 
 </div>

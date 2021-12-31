@@ -30,6 +30,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   bannerMessage?: string;
   usefulLinks?: Array<any>;
   excelCard?: any;
+  guideCard?: any;
+  dictionaryCard?: any;
   
   
   // these may be necessary due to a strange quirk
@@ -94,6 +96,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.configService.configData.usefulLinks.forEach (link => {
         if (link.title === 'GSRSFind Excel tools') {
           this.excelCard = link;
+        }
+        if (link.title === 'GSRS User Guide') {
+          this.guideCard = link;
+        }
+        if (link.title === 'GSRS Data Dictionary') {
+          this.dictionaryCard = link;
         }
       });
     }

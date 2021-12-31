@@ -17,7 +17,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
   opticalActivityList: Array<VocabularyTerm> = [];
   atropisomerismList: Array<VocabularyTerm> = [];
   optical: string;
-  @Input() hideAccess = false;
+  @Input() hideAccess = true;
   @Input() showSettings = false;
   @Input() type?: string;
   @Output() structureImported = new EventEmitter<InterpretStructureResponse>();

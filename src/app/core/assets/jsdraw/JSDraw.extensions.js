@@ -907,4 +907,9 @@ var callback = function(){
         //pubchem
         document.querySelectorAll("[cmd=pubchem]")[0].closest("td").nextElementSibling.remove();
         document.querySelectorAll("[cmd=pubchem]")[0].closest("td").remove();
+     
+        // This prevents atom list dialog from being tied to an old now deactivated form:
+        // Note that this is still an issue if there is more than one editor being used at one
+        // time. JSDraw will need to fix.
+        JSDraw2.Editor.atomlistDlg=null;
     }

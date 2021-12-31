@@ -40,6 +40,8 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
   private _index = 0;
   private _queryableDictionary: QueryableSubstanceDictionary;
   @Output() queryUpdated = new EventEmitter<AdvancedQueryStatement>();
+  @Output() processSearchOut = new EventEmitter<void>();
+
   // @Output() tabSelectUpdated = new EventEmitter<String>();
   private allOptions: Array<string>;
   queryableOptionsAll: Array<string>;
@@ -499,4 +501,7 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     this.closed.emit();
   }
 
+  processSearch(): void {
+    this.processSearchOut.emit();
+  }
 }

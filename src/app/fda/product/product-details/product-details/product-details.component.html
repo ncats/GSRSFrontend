@@ -10,7 +10,7 @@
           <div>
             Product Details &nbsp;&nbsp;&nbsp;&nbsp;
             <!-- Edit GSRS record button -->
-            <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
+            <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
               matTooltip='Edit GSRS Product Record'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>

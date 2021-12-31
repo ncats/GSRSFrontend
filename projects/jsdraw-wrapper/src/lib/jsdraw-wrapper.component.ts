@@ -24,7 +24,8 @@ export class JsdrawWrapperComponent implements AfterViewInit {
     let count = 0;
 
     if (isPlatformBrowser(this.platformId)) {
-      if (window['JSDraw'] && window['dojo']) {
+      //this will ensure that the extra resources file has been loaded before the full editor is
+      if (window['JSDraw'] && window['dojo'] && window['scil'] && window['scil'].Utils && window['scil'].Utils._loadedAdditions) {
         window['dojo'].ready(() => {
           this.jsdraw = new window['JSDraw'](this.randomId);
           this.jsDrawOnLoad.emit(this.jsdraw);

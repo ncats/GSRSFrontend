@@ -109,6 +109,9 @@
               </span>
             </div>
             <div class="actions-container">
+            <!--  <button mat-icon-button color="primary" (click)="clipboard(this.smiles)">
+                    <mat-icon  color="primary" svgIcon="paste"></mat-icon>
+                  </button>-->
               <button mat-icon-button color="primary" (click)="editStructureSearch()">
                 <mat-icon svgIcon="edit"></mat-icon>
               </button>
@@ -454,10 +457,22 @@
           </mat-card>
         </div>
       </div>
-      <div class="controls-container">
+      <div class = "full-paginator" style = "justify-content: flex-end;">
+        <div>
         <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
           [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
         </mat-paginator>
+      </div>
+      <div class="page-selector">
+          <span class="page-label">Page: </span>
+          <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+            <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+              [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+              (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+              (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+          </mat-form-field>
+          <span class="page-label"> of {{lastPage}}</span>
+        </div>
       </div>
     </div>
     <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">

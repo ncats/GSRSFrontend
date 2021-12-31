@@ -8,6 +8,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ProductDetailsBaseComponent } from '../product-details-base.component';
 import { GeneralService } from '../../../service/general.service';
+import { AuthService } from '@gsrs-core/auth/auth.service';
 
 @Component({
   selector: 'app-product-details',
@@ -25,12 +26,17 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
+    public authService: AuthService
   ) {
     super(productService, generalService, activatedRoute, loadingService, mainNotificationService,
       router, gaService, utilsService);
   }
 
   ngOnInit() {
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+      this.isAdmin = response;
+    });
+
     super.ngOnInit();
   }
 

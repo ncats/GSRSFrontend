@@ -23,7 +23,17 @@
     "description": "GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)<br/>GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.",
     "href": "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip",
     "imageFile": "xlsx.png",
-  "templateDescription": "Click to download GSRSFind Excel tools.zip"}
+  "templateDescription": "Click to download GSRSFind Excel tools.zip"},
+  {"title": "GSRS User Guide",
+    "description": "The GSRS user guide is comprehensive set of instructions for searching and registering new substances of all types in GSRS.",
+    "href": "https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx",
+    "imageFile": "guide.png",
+  "templateDescription": "Click to download GSRS User Guide.docx"},
+  {"title": "GSRS Data Dictionary",
+    "description": " The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.",
+    "href": "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_11-20-19.xlsx",
+    "imageFile": "dictionary.png",
+  "templateDescription": "Click to download GSRS Data Dictionary.xlsx"}
 ],
   "substanceDetailsCards": [
     {

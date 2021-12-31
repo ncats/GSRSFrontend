@@ -45,6 +45,10 @@
                 *ngIf="childNavItem.path">
                 {{childNavItem.display}}
               </a>
+              <a mat-menu-item [href]="[childNavItem.href]"
+                *ngIf="childNavItem.href">
+                {{childNavItem.display}}
+              </a>
               <a mat-menu-item [href]="'mailto:' + contactEmail + '?Subject=Support request'" *ngIf="childNavItem.display === 'Email GSRS Support'">
                 {{childNavItem.display}}
               </a>

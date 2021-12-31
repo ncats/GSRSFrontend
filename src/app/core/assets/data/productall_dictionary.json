@@ -56,7 +56,7 @@
         "suggest":null
     },
     "Ingredient Name":{
-        "lucenePath":"root_productIngredientAllList_substanceName",
+        "lucenePath":"Ingredient Name",
         "description":"Ingredient Name",
         "type":"string",
         "cvDomain":null,
