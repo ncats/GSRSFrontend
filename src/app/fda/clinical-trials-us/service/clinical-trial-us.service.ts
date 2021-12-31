@@ -61,7 +61,7 @@ export class ClinicalTrialUSService extends BaseHttpService {
   getClinicalTrialUSFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/clinicaltrialsus` 
+      url = `${this.configService.configData.apiBaseUrl}api/v1/clinicaltrialsus`
        + `/search/@facets?wait=false&kind=gov.hhs.gsrs.clinicaltrial.us.clinicaltrialus.models.ClinicalTrialUS`
        + `&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}`
        + `&top=14448&fskip=0&fetch=100&order=%24lastModifiedDate&ffilter=${searchTerm}`;

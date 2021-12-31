@@ -1,6 +1,7 @@
 <div class="top-fixed">
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
+    
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
       *ngIf="validationMessages && validationMessages.length > 0">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
@@ -49,7 +50,7 @@
     <!-- Validation Message Display and Submit Button -->
     <div *ngIf="validationMessages">
       <span *ngIf=" validationMessages.length > 0">
-        <div class="submission-message" *ngIf='!serverError && !approving'>
+        <div class="submission-message" *n gIf='!serverError && !approving'>
           Please correct or dismiss the following errors and submit again:
         </div>
         <div class="validation-message" *ngFor="let message of validationMessages; index as i">

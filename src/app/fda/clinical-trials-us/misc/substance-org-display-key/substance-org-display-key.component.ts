@@ -40,14 +40,14 @@ export class SubstanceOrgDisplayKeyComponent implements OnInit, AfterViewInit, O
   substance: any;
   orgDisplayKey: string;
   orgDisplayKeyType: string;
-  
+
   constructor( public generalService: GeneralService) {}
 
   @Input() substanceKey: string;
 
   ngOnChanges(changes: any) {
       this.doSomething(changes.substanceKey.currentValue);
-      // You can also use categoryId.previousValue and 
+      // You can also use categoryId.previousValue and
       // categoryId.firstChange for comparing old and new values
   }
 

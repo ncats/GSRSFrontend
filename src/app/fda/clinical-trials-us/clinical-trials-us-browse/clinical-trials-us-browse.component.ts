@@ -412,7 +412,7 @@ export class ClinicalTrialsUSBrowseComponent implements OnInit, AfterViewInit, O
   }
 
   getSubstanceKeysFromClinicalTrialUSTrial(clinicalTrialUS: ClinicalTrialUS) {
-    if (clinicalTrialUS==null) { return null; }
+    if (clinicalTrialUS == null) { return null; }
     return _.map(clinicalTrialUS.clinicalTrialUSDrug, 'substanceKey');
   }
 

@@ -239,7 +239,7 @@ console.log(results);
     // archana had this code commented out
     // but without it you get spinner on 500 error
       , (error
-        //: SubstanceFormResults
+        // SubstanceFormResults
         ) => {
         this.showSubmissionMessages = true;
         this.loadingService.setLoading(false);

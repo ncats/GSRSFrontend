@@ -79,18 +79,17 @@ export class ClinicalTrialUSDetailsBaseComponent implements OnInit, AfterViewIni
 
   getSubstanceBySubstanceKey() {
     if (this.clinicalTrialUS != null) {
-      console.log('getting substanes .... before foreach')
-
+      console.log('getting substances .... before foreach');
       this.clinicalTrialUS.clinicalTrialUSDrug.forEach(elementSubstance => {
-        console.log('getting substanes ....')
+        console.log('getting substances ....');
         if (elementSubstance != null) {
           // Get Substance Details, uuid, substance name
           if (elementSubstance.substanceKey) {
-            console.log('getting substanes .... if substancekey')
+            console.log('getting substances .... if substancekey');
 
             const subSubscription = this.generalService.getSubstanceByAnyId(elementSubstance.substanceKey).subscribe(response => {
               if (response) {
-                console.log('getting substanes .... if response')
+                console.log('getting substances .... if response');
                 elementSubstance._substanceUuid = response.uuid;
                 elementSubstance._substanceName = response._name;
               }
