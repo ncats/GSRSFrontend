@@ -65,6 +65,17 @@ export class GeneralService extends BaseHttpService {
     );
   }
 
+  getFullSubstanceByAnyId(
+    id: string
+  ): Observable<any> {
+    const url = this.apiBaseUrl + 'substances(' + id + ')?view=full';
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   /*
   getSubstanceKeyBySubstanceUuid(
     substanceUuid: string
@@ -289,6 +300,63 @@ export class GeneralService extends BaseHttpService {
     }
     return key;
   }
+
+  // __alex__ potentiall move this an other service begin
+
+  getClinicalTrialUSSubstanceKeyType(): string {
+    let key = null;
+    if (this.configService.configData && this.configService.configData.substance) {
+      const substanceConfig = this.configService.configData && this.configService.configData.substance;
+      key = substanceConfig.linking.keyType.clinicalTrialUSKeyType;
+    }
+    return key;
+  }
+
+  getClinicalTrialUSSubstanceOrgDisplayKeyType(): string {
+    let key = null;
+    if (this.configService.configData && this.configService.configData.substance) {
+      const substanceConfig = this.configService.configData && this.configService.configData.substance;
+      key = substanceConfig.linking.keyType.clinicalTrialUSOrgDisplayKeyType;
+    }
+    return key;
+  }
+
+  getClinicalTrialUSSubstanceOrgDisplayKey(substance: any, type?: string): string {
+    console.log('type0:' + type);
+
+    if (substance == null) { return null; }
+    if (type == null) {
+      type = this.getClinicalTrialUSSubstanceOrgDisplayKeyType();
+    }
+    if (type == null) { return null; };
+    if (type === 'UUID') {
+      return substance.uuid;
+    } else if (type === 'BDNUM') {
+      console.log('type1:' + type);
+      console.log(substance);
+      let code = null;
+      if (substance.codes && substance.codes !== null && substance.codes.length > 0) {
+        for (const element of substance.codes) {
+          console.log('code1');
+
+          if (element.codeSystem && element.codeSystem === 'BDNUM') {
+            console.log('code2');
+            if (element.type && element.type === 'PRIMARY') {
+              code = element.code;
+              console.log('code3:' + code);
+
+              break;
+            }
+          }
+        }
+      }
+      console.log('code: ' + code);
+      return code;
+    }
+    return null;
+  }
+  // __alex__ potentiall move this an other service end
+
 
   getCurrentDate(): any {
     const currentDate = new Date();

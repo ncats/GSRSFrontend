@@ -271,12 +271,16 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const newFacets = [];
         this.showAudit = this.authService.hasRoles('admin');
         const facetKeys = Object.keys(this.facetsConfig) || [];
-
+        console.log('this.facetsConfig: ');
+        console.log(this.facetsConfig);
         if (this._facetDisplayType) {
           if (this._facetDisplayType === 'default') {
+            console.log('... _facetDisplayType default ');
             facetKeys.forEach(facetKey => {
+              console.log('... facetKey');
               if (this.facetsConfig[facetKey].length
                 && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
+                console.log('... facetKey' + facetKey);
                 this.facetsConfig[facetKey].forEach(facet => {
                   for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
                     this.toggle[facetIndex] = true;

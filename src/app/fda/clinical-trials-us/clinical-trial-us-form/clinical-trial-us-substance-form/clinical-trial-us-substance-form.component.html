@@ -1,0 +1,88 @@
+<!-- Buttons: delete, review -->
+<div class="marginbottomminus17px padleft220px">
+  <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="totalSubstance == 1"
+    (click)="confirmDeleteSubstance(substanceIndex)"
+    matTooltip="Delete Substance Details {{substanceIndex + 1}}">
+    <mat-icon [class.disabled]="totalSubstance == 1">delete_forever</mat-icon>
+  </button>
+  &nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <!-- keep for later
+  <span class="font11px textalignright" *ngIf="substance">
+    <span *ngIf="substance.id">
+      <span class="colorgray">Created By:</span> {{substance.createdBy}}&nbsp;&nbsp;&nbsp;
+      {{substance.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+      <span class="colorgray">Modified By:</span> {{substance.modifiedBy}}&nbsp;&nbsp;&nbsp;
+      {{substance.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+    </span>
+  </span>
+  -->
+</div>
+
+
+<!-- Display Substance -->
+<fieldset class="border">
+  <legend class="border">Substance Details&nbsp;<b><span
+        class="colorgreen font17px">{{substanceIndex + 1}}</span></b>
+  </legend>
+
+  <div class="divflexrow">
+    <!-- Substance Name -->
+    <!-- removed class related-substance -->
+    <div class="col-1-12 flex-column">
+      <div class="related-substance-border">
+        <app-substance-search-selector (selectionUpdated)="substanceNameUpdated($event)"
+          (showMessage)="showMessageSubstanceName($event)" eventCategory="ingredName" placeholder="Substance Name"
+          header="Substance Name" [subuuid]="substanceKey" [showSubstanceImage]=false>
+        </app-substance-search-selector>
+
+        <div *ngIf="substanceNameMessage" class="colorred font12px">
+          {{substanceNameMessage}}
+        </div>
+
+        <!-- Display Substance Name Details -->
+        <div class="padall5px fontfamilyhelvetica">
+          <div *ngIf="substanceName">
+            <span class="colormaroon"><b>{{substanceName}}</b></span>
+            <br>
+          </div>
+          <div class="col-6" *ngIf="substance.substanceKey">
+            <span class="colororange">{{substance.substanceKey}}</span><span class="colorgray font11px">
+              ({{substance.substanceKeyType}})</span>
+            <br>
+            <app-substance-org-display-key 
+               [substanceKey]="substance.substanceKey">
+            </app-substance-org-display-key> 
+
+<!--
+            <button mat-icon-button color="primary" (click)="confirmDeleteSubstanceName()"
+              matTooltip="Delete Substance Name {{substanceIndex + 1}}">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+-->            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-column">
+      <span>
+        <mat-checkbox matTooltip="Protected match" class="protected-match-checkbox" [value]="substance.protectedMatch" [(ngModel)]="substance.protectedMatch">
+          <label>Protected</label>
+        </mat-checkbox>
+      </span>
+    </div>
+    <div class="flex-column">
+      another column 2
+    </div>
+  </div>
+
+  <div class="form-row margintop10px">
+     <!-- get cv example from products -->
+  </div>
+
+  <div class="form-row">
+
+  </div> <!-- row-->
+
+</fieldset>
+<br>

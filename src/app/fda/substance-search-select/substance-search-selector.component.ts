@@ -9,6 +9,7 @@ import { SubstanceSummary } from '@gsrs-core/substance/substance.model';
 })
 export class SubstanceSearchSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
+  @Input() showSubstanceImage = true;
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Output() showMessage = new EventEmitter<String>();
@@ -56,7 +57,9 @@ export class SubstanceSearchSelectorComponent implements OnInit {
 
     const searchStr = `root_names_name:\"^${q}$\" OR ` +
       `root_approvalID:\"^${q}$\" OR ` +
-      `root_codes_BDNUM:\"^${q}$\"`;
+      `root_codes_BDNUM:\"^${q}$\" OR ` +
+      `root_uuid:\"^${q}$\"`
+      ;
 
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       this.loadingStructure = true;

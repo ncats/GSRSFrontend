@@ -19,6 +19,7 @@ import { ApplicationModule} from './application/application.module';
 import { SubstanceApplicationMatchListModule } from './substance-browse/substance-application-match-list/substance-application-match-list.module';
 import { ProductModule} from './product/product.module';
 import { ClinicalTrialsModule } from './clinical-trials/clinical-trials.module';
+import { ClinicalTrialUSModule} from './clinical-trials-us/clinical-trial-us.module';
 import { UserManualModule } from './user-manual/user-manual.module';
 import { JiraSubmitTicketModule } from './jira-submit-ticket/jira-submit-ticket.module';
 import { SubstanceCountsComponent } from './substance-browse/substance-counts/substance-counts.component';
@@ -28,6 +29,7 @@ import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials
 import { fdaSubstanceCardsFilters } from './substance-details/fda-substance-cards-filters.constant';
 import { SsoRefreshService } from './service/sso-refresh.service';
 import { ProductService } from './product/service/product.service';
+import { ClinicalTrialUSService } from './clinical-trials-us/service/clinical-trial-us.service';
 import { GeneralService} from './service/general.service';
 import { ShowApplicationToggleComponent } from './substance-browse/show-application-toggle/show-application-toggle.component';
 import { JiraSubmitTicketComponent } from './jira-submit-ticket/jira-submit-ticket.component';
@@ -71,6 +73,7 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     ClinicalTrialsModule.forRoot(),
     ApplicationModule,
     ProductModule,
+    ClinicalTrialUSModule,
     ImpuritiesModule,
     AdvancedSearchModule,
     AdverseEventsBrowseModule,
@@ -120,6 +123,7 @@ export class FdaModule {
       ngModule: FdaModule,
       providers: [
         ProductService,
+        ClinicalTrialUSService,
         GeneralService
       ]
     };

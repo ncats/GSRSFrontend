@@ -1,0 +1,182 @@
+<div class="top-fixed">
+  <div class="actions-container">
+    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+      *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+    </button>
+    <span class="middle-fill"></span>
+
+    <!-- Register and View ClinicalTrialUS buttons -->
+    <span *ngIf="clinicalTrialUS">
+      <span *ngIf="clinicalTrialUS.trialNumber">
+        <button mat-flat-button color="primary" [routerLink]="['/browse-clinical-trials-us']" matTooltip='Browse US Clinical Trials'>
+          Browse US Clinical Trials 
+        </button>&nbsp;&nbsp;&nbsp;
+
+        <button mat-flat-button color="primary" [routerLink]="['/clinical-trial-us/register']"
+          matTooltip='Register a New US Clinical Trial'>
+          Register a New US Clinical Trial
+        </button>&nbsp;&nbsp;&nbsp;
+
+        <a mat-flat-button color="primary" routerLink="/clinical-trial-us/{{clinicalTrialUS.trialNumber}}" target="_blank" matTooltip='Opens in a new window'>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          View US Clinical Trial</a>&nbsp;&nbsp;&nbsp;
+
+        <span *ngIf="isAdmin">
+          <button mat-flat-button color="primary" (click)="confirmDeleteClinicalTrialUS(clinicalTrialUS.trialNumber)" matTooltip='Delete this US Clinical Trial'>
+            Delete
+          </button>&nbsp;&nbsp;&nbsp;
+        </span>
+
+      </span>
+    </span>
+
+    <!-- Validate and Submit Button -->
+    &nbsp;
+    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
+  </div>
+
+  <!-- Validation Message Display -->
+  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+    <div class="submission-message" *ngIf="submissionMessage">
+      {{submissionMessage}}
+    </div>
+
+    <!-- Validation Message Display and Submit Button -->
+    <div *ngIf="validationMessages">
+      <span *ngIf=" validationMessages.length > 0">
+        <div class="submission-message" *ngIf='!serverError && !approving'>
+          Please correct or dismiss the following errors and submit again:
+        </div>
+        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+            {{message.messageType}}</div>
+          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
+                target="_blank">{{link.text}}</a></span></div>
+          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+            (click)="dismissValidationMessage(i)">
+            <mat-icon svgIcon="cancel"></mat-icon>
+          </button>
+        </div>
+      </span>
+
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" (click)="submit()"
+          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
+          Submit</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Display Form Fields -->
+
+<div class="form-content-container mat-form-field-style">
+  <div class="scrollable-container">
+    <div class="cards-container">
+
+      <div class="" *ngIf="clinicalTrialUS">
+        <div class="title_box">
+          <div class="title">
+            {{title}}
+          </div>
+
+          <div class="font11px" *ngIf="clinicalTrialUS.trialNumber">
+            <br>
+            <div class="font11px">
+              <!-- <span class="colorgray">Created By:</span> {{clinicalTrialUS.createdBy}}&nbsp;&nbsp;&nbsp; -->
+              <span class="colorgray">Create Date:</span> {{clinicalTrialUS.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+              <!-- <span class="colorgray">Modified By:</span> {{clinicalTrialUS.modifiedBy}}&nbsp;&nbsp;&nbsp; -->
+              <span class="colorgray">Modify Date:</span> {{clinicalTrialUS.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+            </div>
+          </div>
+        </div>
+
+        <mat-card class="bordergray" *ngIf="clinicalTrialUS">
+          <mat-card-content>
+
+            <!-- TRIAL DETAILS -->
+			<!-- get formatting from -->
+            <br>
+            <div>
+              <div class="row">
+                <mat-form-field class="col-2">
+                  <input matInput [disabled]="true" placeholder="Trial Number" [(ngModel)]="clinicalTrialUS.trialNumber" name="trialNumber" />
+                </mat-form-field>
+              </div>
+              <div class="row">
+                <mat-form-field class="col-2">
+                  <input matInput placeholder="Title" [(ngModel)]="clinicalTrialUS.title" name="title" />
+                </mat-form-field>
+              </div>
+
+            </div> <!-- TRIAL Details End -->
+
+          </mat-card-content>
+        </mat-card>
+
+
+      <!-- SUBSTANCE START -->
+      <br>
+      <hr>
+      <br>
+
+    <div *ngIf="showAddNewSubstancesTextArea" style='margin-bottom: 1em'>
+      <mat-form-field style='width: 100%'>
+        <mat-label>Bulk Add Substances</mat-label>
+        <textarea matInput name="newSubstancesText" [(ngModel)]="newSubstancesText" placeholder="Add one per line (name or substance key)"></textarea>
+      </mat-form-field>
+
+      <button [disabled]="newSubstancesTextSubmitted"  mat-raised-button color="primary" (click)="addNewSubstances()" matTooltip="Process list of names">
+        Submit
+      </button>&nbsp;
+
+      <span *ngIf="newSubstancesTextSubmitted" (click)="unlockNewSubstancesTextSubmitted()" matTooltip="Process list of names">
+        <small><a><u>unlock</u></a></small>
+      </span>&nbsp;
+
+      <button mat-raised-button color="primary" (click)="setShowAddNewSubstancesTextArea(false)" matTooltip="Add New Substances">
+        Close
+      </button>
+
+      <div>{{newSubstancesMessage}}</div>
+    </div>
+
+      <span matBadge="{{clinicalTrialUS.clinicalTrialUSDrug.length}}" matBadgeColor="warn" matBadgeOverlap="false">
+        <span class="titleorange">SUBSTANCES</span>
+      </span>
+
+      <span class=""></span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button mat-raised-button color="primary" (click)="addNewSubstance()" matTooltip="Add New Substances">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add
+      </button>&nbsp;
+
+
+
+      <button *ngIf="!showAddNewSubstancesTextArea" mat-raised-button color="primary" (click)="setShowAddNewSubstancesTextArea(true)" matTooltip="Add New Substances">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Bulk Add
+      </button>
+
+
+
+        <div
+        *ngFor="let substance of clinicalTrialUS.clinicalTrialUSDrug; let substanceIndex = index">
+        <app-clinical-trial-us-substance-form [substance]="substance"
+          [totalSubstance]="clinicalTrialUS.clinicalTrialUSDrug.length" [substanceIndex]="substanceIndex">
+        </app-clinical-trial-us-substance-form>
+      </div>
+      <!-- SUBSTANCE END -->
+      </div> <!-- ngIf = clinicalTrialUS -->
+    </div>
+  </div>
+
+  <br>
+</div>
