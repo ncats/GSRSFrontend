@@ -1,0 +1,127 @@
+<div>here xyz</div>
+
+<div *ngIf="message" class="colororange padtop50px padleft50px">
+  <br><br><br><br>
+  {{message}}
+</div>
+<div *ngIf="clinicalTrialUS && clinicalTrialUS.trialNumber">
+  <div class="details-container margintop90px">
+    <mat-card class="bordergray">
+      <mat-card-title>
+        <div class="divflexrow">
+          <div>
+            Clinical Trial US Details &nbsp;&nbsp;&nbsp;&nbsp;
+            <!-- Edit GSRS record button -->
+            <a [routerLink]="['/clinical-trial-us', clinicalTrialUS.trialNumber, 'edit']" target="_blank" *ngIf="isAdmin"
+              matTooltip='Edit GSRS Clinical Trial US Record'>
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>
+            <span>
+              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
+              </mat-icon>
+            </span>
+          </div>
+
+          <div class="width60percent textalignright font11px" *ngIf="clinicalTrialUS.trialNumber">
+            <span class="colorgray">Created By:</span> <!-- clinicalTrialUS.createdBy &nbsp;&nbsp;&nbsp; --> 
+            <span class="colorgray">Create Date:</span>
+            {{clinicalTrialUS.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modified By:</span> <!-- clinicalTrialUS.modifiedBy}}&nbsp;&nbsp;&nbsp; --> 
+            <span class="colorgray">Modify Date:</span> {{clinicalTrialUS.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+          </div>
+        </div>
+      </mat-card-title>
+      <mat-card-content>
+
+        <!-- Trial Details -->
+        <br>
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Title:
+            </div>
+            <div class="row-property-value">
+              {{clinicalTrialUS.title}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Other field
+            </div>
+            <div class="row-property-value">
+              
+            </div>
+          </div>
+        </div>
+
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+  <br><br>
+  <!-- TAB BEGINS HERE -->
+  <mat-card class="bordergray">
+    <mat-card-content class="bordergray">
+      <mat-tab-group>
+        <mat-tab label="Tab 1">
+
+                    <!-- Display Ingredient -->
+
+                    <mat-card class="bordergray">
+                      <mat-card-title class="title2">
+                        <span class="title3 colororange">
+                          Substances
+                          ({{clinicalTrialUSDrug.length}})
+                        </span>
+                      </mat-card-title>
+                      <mat-card-content>
+                        <div class="div-scroll">
+                          <table class="blueTable">
+                            <thead>
+                              <tr height="30px">
+                                <th>Id</th>
+                                <th>Substance</th>
+                                <th>Protected Match</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let substance of clinicalTrialUSDrug; let indexSubstance = index">
+								<td>{{ substance.id }}</td>
+                                <td>
+                                  <div *ngIf="ingred._substanceUuid">
+                                    <a [routerLink]="['/substances', substance._substanceUuid]"
+                                      target="_blank">{{substance._substanceName}}</a>
+                                  </div>
+                                  <!--
+                                  <br>
+                                  <span *ngIf="substance.substanceKey">
+                                    ({{substance.substanceKey}})
+                                  </span>
+                                  -->
+                                </td>
+                                <td>{{ substance.protectedMatch }}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                    <br>
+
+
+
+        </mat-tab>
+      </mat-tab-group>
+
+    </mat-card-content>
+  </mat-card>
+</div>
+<!--
+<ng-template #noRecordProd>
+  <br><br><br><br>
+  <div class="colororange padtop50px padleft50px">There is no Product Data found.</div>
+</ng-template>
+-->
+<br><br><br>

@@ -90,7 +90,13 @@
         Browse Clinical Trials
       </a>
       <mat-divider></mat-divider>
-          </span>
+    </span>
+    <span *ngIf = "loadedComponents.clinicaltrialsus">
+      <a mat-menu-item routerLink="/browse-clinical-trials-us">
+        Browse US Clinical Trials
+      </a>
+      <mat-divider></mat-divider>
+    </span>
 
     <span *ngIf = "loadedComponents.adverseevents">
       <a mat-menu-item routerLink="/browse-adverse-events">

@@ -43,6 +43,7 @@ export interface LoadedComponents {
     applications?: boolean;
     products?: boolean;
     clinicaltrials?: boolean;
+    clinicaltrialsus?: boolean;
     adverseevents?: boolean;
     impurities?: boolean;
 }

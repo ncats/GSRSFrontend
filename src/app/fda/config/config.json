@@ -14,6 +14,7 @@
     "applications": true,
     "products": true,
     "clinicaltrials": true,
+    "clinicaltrialsus": true,
     "adverseevents": true,
     "impurities": true
     },
@@ -793,6 +794,12 @@
       "order": 13
     },
     {
+      "component": "clinicaltrialsus",
+      "display": "Browse Clinical Trials",
+      "path": "browse-clinical-trials-us",
+      "order": 999
+    },
+    {
       "component": "adverseevents",
       "display": "Browse Adverse Events",
       "path": "browse-adverse-events",
@@ -1014,7 +1021,9 @@
       "keyType":{
         "default":"BDNUM",
         "orgDisplayKeyType":"BDNUM",
-        "clinicalTrialKeyType":"UUID"
+        "clinicalTrialKeyType":"UUID",
+        "clinicalTrialUSKeyType":"UUID",
+        "clinicalTrialUSOrgDisplayKeyType":"BDNUM"
       }
     }
   }

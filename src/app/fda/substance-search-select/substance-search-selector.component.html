@@ -14,7 +14,9 @@
       </a>
     </div>
     <div class="section-header">{{header}}</div>
-    <img class="related-image" *ngIf="selectedSubstance.uuid" appSubstanceImage [entityId]="selectedSubstance.uuid">
+    <span *ngIf="showSubstanceImage">
+      <img class="related-image" *ngIf="selectedSubstance.uuid" appSubstanceImage [entityId]="selectedSubstance.uuid">
+    </span>
     <!-- Spinner -->
     <div>
       <mat-progress-spinner strokeWidth="3" [diameter]="30" mode="indeterminate" *ngIf="loadingStructure">
