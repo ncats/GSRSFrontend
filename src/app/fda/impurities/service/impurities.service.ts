@@ -51,7 +51,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   getImpuritiesBySubstanceUuid(substanceUuid: string): Observable<any> {
-    const url = this.apiBaseUrlWithEntityContext + 'search?q=root_impuritiesSubstanceList_substanceUuid:' + substanceUuid;
+    const url = this.apiBaseUrlWithEntityContext + 'search?q=root_impuritiesSubstanceList_substanceUuid:\"' + substanceUuid + '"';
     return this.http.get<Impurities>(url)
       .pipe(
         map(result => {
