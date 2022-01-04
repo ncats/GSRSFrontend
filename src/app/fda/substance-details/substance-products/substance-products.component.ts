@@ -83,7 +83,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       // Get Provenance List to Display in Tab
       this.getProductProvenanceList();
 
-      this.privateSearch = 'root_productIngredientAllList_substanceUuid:' + this.substance.uuid;
+      this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"' + this.substance.uuid + '"';
       this.getSubstanceProducts(null, 'initial');
       //  this.productListExportUrl();
     }
@@ -262,8 +262,8 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
         // set the current result data to empty or null.
         this.paged = [];
 
-        this.privateSearch = 'root_productIngredientAllList_substanceUuid:'
-          + this.substance.uuid + ' AND root_provenance:' + this.provenance;
+        this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"'
+          + this.substance.uuid + '\" AND root_provenance:' + this.provenance;
 
         this.getSubstanceProducts();
 
