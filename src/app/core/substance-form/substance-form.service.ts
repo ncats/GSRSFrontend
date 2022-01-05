@@ -1274,6 +1274,14 @@ this.emitDisulfideLinkUpdate();
       if (this.privateSubstance.structurallyDiverse.$$storedPart) {
         delete this.privateSubstance.structurallyDiverse.$$storedPart;
       }
+
+      const toclean = ['organismFamily', 'organismGenus', 'organismSpecies', 'organismAuthor', 'infraSpecificName', 'infraSpecificType', 'fractionMaterialType', 'fractionName', 'developmentalStage'];
+      toclean.forEach( field => {
+        if (this.privateSubstance.structurallyDiverse[field] && this.privateSubstance.structurallyDiverse[field] !== null &&
+          this.privateSubstance.structurallyDiverse[field] !== '') {
+            this.privateSubstance.structurallyDiverse[field] = this.privateSubstance.structurallyDiverse[field].trim();
+          }
+      });
     }
     /*
     if (this.privateSubstance.nucleicAcid) {
