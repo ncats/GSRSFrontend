@@ -25,9 +25,9 @@
       <!--
       <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf="appId === 'fda'">
       -->
-      <a mat-menu-item [routerLink]="['/advanced-search']">
-        Advanced Search
-      </a>
+        <a mat-menu-item [routerLink]="['/guided-search']">
+          Guided Search
+        </a>
       <div *ngFor="let navItem of navItems">
         <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
           {{navItem.display}}
@@ -71,52 +71,13 @@
     <button class = "top-button extra-item " mat-button mat-primary-button style = "font-size:16px;color:white; padding-right:10px;margin-right:15px;padding-top:10px; padding-bottom:10px;" class = "menu-button extra-item"
     [routerLink]="['/browse-substance']" aria-label="browse substances" >Browse Substances</button>
   </div>
-  <div *ngIf = "this.loadedComponents">
-      <button class = "top-button extra-browse" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="browse" (click)="increaseMenuZindex()" aria-label="main menu" *ngIf = "loadedComponents">
-          <span style = "font-size:16px;">Browse Other</span>
-         <mat-icon svgIcon="chevron_down"></mat-icon>
-         </button>
-         <mat-menu #browse="matMenu" (closed)="removeZindex()">
-           <span *ngIf = "loadedComponents.applications">
-      <a mat-menu-item routerLink="/browse-applications" >
-        Browse Applications
-      </a>
-      <mat-divider></mat-divider>
-    </span>
-    <span *ngIf = "loadedComponents.products">
-      <a mat-menu-item routerLink="/browse-products">
-        Browse Products
-      </a>
-      <mat-divider></mat-divider>
-    </span>
-    <span *ngIf = "loadedComponents.clinicaltrials">
-      <a mat-menu-item routerLink="/browse-clinical-trials">
-        Browse Clinical Trials
-      </a>
-      <mat-divider></mat-divider>
-          </span>
-
-    <span *ngIf = "loadedComponents.adverseevents">
-      <a mat-menu-item routerLink="/browse-adverse-events">
-        Browse Adverse Events
-      </a>
-      <div *ngIf="adverseEventShinyHomepageDisplay === true">
-        <mat-divider></mat-divider>
-      
-        <a mat-menu-item [href]="adverseEventShinyHomepageURL" target="_blank">
-          Browse Adverse Events
-        </a>
-        </div>
-      </span>
-
-      </mat-menu>
-        </div><div>
+  <div>
       <button class = "top-button extra-item" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="reg" (click)="increaseMenuZindex()" aria-label="main menu" *ngIf = "canRegister">
           <span style = "font-size:16px;">Register</span>
          <mat-icon svgIcon="chevron_down"></mat-icon>
          </button>
          <button class = "top-button extra-item" mat-button mat-primary-button style = "font-size:16px;color:white; padding-right:10px;margin-right:15px;padding-top:10px; padding-bottom:10px;" class = "menu-button extra-item"
-    [routerLink]="['/advanced-search']" aria-label="advanced search" >Advanced Search</button>
+    [routerLink]="['/guided-search']" aria-label="guided search" >Guided Search</button>
 
   </div>
 

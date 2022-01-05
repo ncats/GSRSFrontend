@@ -245,7 +245,7 @@
                 <td mat-cell *matCellDef="let substance">
                   <span *ngIf="codes[substance.uuid] && codes[substance.uuid].codeSystems">
                     <span
-                      *ngFor="let codeSystemName of sortCodeSystems(codes[substance.uuid].codeSystemNames) | take: 5">
+                      *ngFor="let codeSystemName of codes[substance.uuid].codeSystemNames | take: 5">
                       <div>
                         <strong>{{codeSystemName}}</strong>:&nbsp;
                         <span

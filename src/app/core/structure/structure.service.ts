@@ -97,7 +97,7 @@ export class StructureService {
   }
 
   molvec(file: any): Observable<any> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/ocrStructure`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/foo/ocrStructure`;
     return this.http.post<any>(url, file);
 
   }

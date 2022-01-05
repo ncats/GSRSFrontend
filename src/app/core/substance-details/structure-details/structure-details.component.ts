@@ -34,6 +34,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   searchHref: string;
   private overlayContainer: HTMLElement;
   rounding = '1.0-2';
+  mwDisplay: string;
+
 
   constructor(
     private utilService: UtilsService,
@@ -71,6 +73,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
       if (this.configService.configData && this.configService.configData.molWeightRounding) {
           this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
       }
+      this.mwDisplay = this.getMwDisplay(this.substance);
 
   }
 
@@ -168,5 +171,26 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     this.showStereo = !this.showStereo;
   }
 
+  getMwDisplay(chemicalSubstance: any): string {
+    const defaultDisplayValue= '[unassigned]';
+    let displayValue= defaultDisplayValue;
+    if( this.configService.configData && this.configService.configData.molecularWeightPropertyName)  {
+
+    }
+    const mwPropertyname =( this.configService.configData && this.configService.configData.molecularWeightPropertyName) ? 
+      this.configService.configData.molecularWeightPropertyName : 'MOL_WEIGHT (calc)';
+    chemicalSubstance.properties.forEach(element => {
+        if(element.name.indexOf( mwPropertyname) ===0) {
+            displayValue = element.value.average != null ? element.value.average : element.value.nonNumericValue;
+            console.log('using property');
+            //displayValue += ' prop';
+        }
+
+    });
+    if( (displayValue.length ===0 ||displayValue===defaultDisplayValue) && chemicalSubstance.structure !==null) {
+        displayValue=chemicalSubstance.structure.mwt;
+    }
+     return displayValue;
+  }
 
 }

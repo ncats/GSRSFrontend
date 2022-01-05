@@ -68,18 +68,6 @@
                 class = "query-link" [routerLink] = "['/browse-substance']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
                     Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
                 </a>
-                <a *ngIf = "type === 'product'"
-                class = "query-link" [routerLink] = "['/browse-products']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
-                    Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
-                </a>
-                <a *ngIf = "type === 'application'"
-                class = "query-link" [routerLink] = "['/browse-applications']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
-                    Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
-                </a>
-                <a *ngIf = "type === 'adverseevent'"
-                class = "query-link" [routerLink] = "['/browse-adverse-events']" [queryParams] = "parameters" target = "_blank" matTooltip = "open browse results in new tab">
-                    Original Query<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon> :
-                </a>
             </div>
            <div class = "table-value facet-container">
                <div class = "query-row" *ngIf = "parameters.search">

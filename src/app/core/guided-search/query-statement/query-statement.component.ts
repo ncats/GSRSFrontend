@@ -196,7 +196,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
     this.selectedQueryablePropertyType = this._queryableDictionary[queryableProperty].type;
     
     /* Commenting for now. At this moment will use Exact Match, Contains, and Starts With. April, 2020 */
-    /*
+    
     this.commandOptions = Object.keys(
       this.typeCommandOptions[this._queryableDictionary[queryableProperty].type]
     ).filter(option => {
@@ -216,7 +216,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
       }
       return 0;
     });
-    */
+    
   }
 
   setCvOptions(cvDomain: string): void {

@@ -37,6 +37,8 @@ export interface Config {
     molWeightRounding?: number;
     usefulLinks?: Array<UsefulLink>;
     approvalCodeName?: string;
+    molecularWeightPropertyName?: string;
+
 }
 
 export interface LoadedComponents {

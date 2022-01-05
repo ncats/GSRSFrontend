@@ -26,7 +26,7 @@
       <div class="section-header">{{header}}</div>
       <img class = "related-image" *ngIf = "selectedSubstance.uuid && !hideImage" appSubstanceImage [entityId]="selectedSubstance.uuid">
       <div>
-        {{selectedSubstance._name}}
+        <span [innerHTML] = "selectedSubstance._nameHTML"></span>
         <span class = 'code' *ngIf = "errorMessage === 'Not in database'"><br/>NOT IN DATABASE</span>
       </div>
     </div>

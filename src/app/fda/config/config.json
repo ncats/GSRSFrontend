@@ -1,21 +1,21 @@
 {
-  "version": "3.0",
-  "contactEmail": "GSRSSupport@fda.hhs.gov",
-  "displayMatchApplication": "true",
-  "adverseEventShinyHomepageDisplay": "true",
-  "adverseEventShinySubstanceNameDisplay": "true",
-  "adverseEventShinyAdverseEventDisplay": "true",
-  "FAERSDashboardAdverseEventUrl": "https://fis.fda.gov/sense/app/d10be6bb-494e-4cd2-82e4-0135608ddc13/sheet/45beeb74-30ab-46be-8267-5756582633b4/state/analysis",
+  "version": "2.8.1",
+  "contactEmail": "ginas@mail.nih.gov",
+  "displayMatchApplication": "false",
+  "adverseEventShinyHomepageDisplay": "false",
+  "adverseEventShinySubstanceNameDisplay": "false",
+  "adverseEventShinyAdverseEventDisplay": "false",
   "bannerMessage": null,
+  "apiBaseUrl": "http://fdadev.ncats.io:9000/ginas/app/",
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
   "approvalCodeName":"UNII",
   "loadedComponents": {
-    "applications": true,
-    "products": true,
-    "clinicaltrials": true,
-    "adverseevents": true,
-    "impurities": true
+    "applications": false,
+    "products": false,
+    "clinicaltrials": false,
+    "adverseevents": false,
+    "impurities": false
     },
   "usefulLinks": [
     {"title": "GSRSFind Excel tools",
@@ -38,13 +38,6 @@
     {
       "card": "substance-overview",
       "title": "overview"
-    },
-    {
-      "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs",
-      "filters": [
-        {}
-      ]
     },
     {
       "card": "substance-primary-definition",
@@ -297,16 +290,6 @@
       ]
     },
     {
-      "card": "substance-relationships-visualization",
-      "title": "Relationships Visualization",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        }
-      ]
-    },
-    {
       "card": "substance-notes",
       "title": "notes",
       "filters": [
@@ -521,36 +504,6 @@
           "propertyToCheck": "admin"
         }
       ]
-    },
-    {
-      "card": "substance-ssg-parent-substance",
-      "title": "parent substance",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "specifiedSubstanceG3.parentSubstance"
-        }
-      ]
-    },
-    {
-      "card": "substance-ssg-definition",
-      "title": "definition",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "specifiedSubstanceG3.definition"
-        }
-      ]
-    },
-    {
-      "card": "substance-ssg-grade",
-      "title": "grade",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "specifiedSubstanceG3.grade"
-        }
-      ]
     }
   ],
   "facets": {
@@ -560,41 +513,33 @@
         "Record Status",
         "Substance Class",
         "GInAS Tag",
-        "Relationships",
         "Code System",
         "ATC Level 1",
         "ATC Level 2",
         "ATC Level 3",
         "ATC Level 4",
-        "WHO-SDG Level 1",
-        "WHO-SDG Level 2",
-        "Application Status",
-        "Application Type",
         "DME Reactions",
         "Moiety Type",
         "Molecular Weight",
         "SubstanceStereochemistry",
+        "Relationships",
         "Record Level Access",
         "Display Name Level Access",
         "Definition Level Access",
         "Protein Type",
-        "modified",
-        "Product Ingredient Type",
-        "Product Type",
-        "Product Dosage Form",
-        "Definition Level",
-        "Clinical Trial Count"
+        "Protein Subtype",
+        "modified"
       ],
       "admin": [
         "Record Created By",
+        "Record Last Edited By",
+        "Record Create Date",
+        "Record Last Edited",
         "root_lastEdited",
         "root_created",
         "root_lastEditedBy",
         "root_approved",
-        "Approved By",
-        "Material Type",
-        "Family",
-        "Parts"
+        "Approved By"
       ],
       "facetView": [
         {
@@ -608,14 +553,6 @@
         {
           "category": "User Data",
           "facets": ["Record Created By", "Approved By", "root_lastEditedBy"]
-        },
-        {
-          "category": "CMC Data",
-          "facets": ["Record Status", "Substance Class", "Code System", "GInAS Tag", "Moiety Type", "Application Center", "Application Type", "Application Status", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial Count", "CFR", "Qualification", "Interaction Type"]
-        },
-        {
-          "category": "Medical Data",
-          "facets": ["Record Status", "Substance Class", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Code System", "GInAS Tag", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial Count", "CFR"]
         },
         {
           "category": "Chemistry",
@@ -634,143 +571,6 @@
           "facets": ["ATCC", "BDNUM", "BIOLOGIC SUBSTANCE CLASSIFICATION CODE", "CAS", "CAYMAN", "CERES", "CFR", "CFSAN PSEUDO CAS", "ChEMBL", "CLINICAL_TRIALS.GOV", "Code System", "CODEX ALIMENTARIUS (GSFA)", "COSMETIC INGREDIENT REVIEW (CIR)", "DASH INDICATION", "DEA NO.", "DME Reactions", "DRUG BANK", "DRUG CENTRAL", "DSLD", "EC (ENZYME CLASS)", "EC SCIENTIFIC COMMITTEE ON CONSUMER SAFETY OPINION", "ECHA (EC/EINECS)", "EMA ASSESSMENT REPORTS", "EMA VETERINARY ASSESSMENT REPORTS", "EPA CompTox", "EPA PESTICIDE CODE", "EU CLINICAL TRIALS REGISTER", "EU FOOD ADDITIVES", "EU-Orphan Drug", "EVMPD", "FARM SUBSTANCE ID", "FDA ORPHAN DRUG", "FDA UNII", "Food Contact Sustance Notif, (FCN No.)", "GENE", "GRIN", "HEALTH -CANADA NHP INGREDIENT MONOGRAPH", "HEALTH-CANADA NHP INGREDIENT RECORD", "HSDB", "IARC", "INCB IDS CODE", "INN", "INS", "ITIS", "IUPHAR", "JAPANESE REVIEW", "JECFA EVALUATION", "JECFA MONOGRAPH", "JMPR-PESTICIDE RESIDUE", "KEGG", "LactMed", "LIVERTOX", "LOINC", "MANUFACTURER PRODUCT INFORMATION", "MERCK INDEX", "MESH", "MIRBASE", "MPNS", "NCBI TAXONOMY", "NCI_THESAURUS", "NDF-RT", "NSC", "Other", "PFAF", "PHAROS", "PROTEIN ID", "PUBCHEM", "RXCUI", "STARI", "SUPERSEDED_BD_NUM", "SWGDRUG", "UCSF-FDA TRANSPORTAL", "UNII", "UNIPROT", "USDA PLANTS", "USP_CATALOG", "USP-HMC", "WEB RESOURCE", "WHO INTERNATIONAL PHARMACOPEIA", "WHO INTERNATIONAL PHARMACPOEIA", "WHO-ATC", "WHO-ESSENTIAL MEDICINES LIST", "WHO-SDG", "WHO-SDG Level 1", "WHO-SDG Level 2", "WHO-VATC", "WIKIPEDIA", "YELLOW LIST"]
         }
       ]
-    },
-    "applications": {
-      "default": [
-        "Application Type",
-        "Center",
-        "Title",
-        "Has Indications",
-        "Has Ingredients",
-        "Has Products",
-        "Status Date Year",
-        "Submit Date",
-        "Submit Date Year",
-        "Application Number",
-        "Ingredient Name",
-        "Provenance (GSRS)",
-        "Public Domain",
-        "Product Name",
-        "Sponsor Name",
-        "Application Status",
-        "Ingredient Type",
-        "Substance Key",
-        "Application Sub Type",
-        "Indication",
-        "Dosage Form",
-        "Division Class Description",
-        "Source",
-        "Product Name Deprecated"
-      ],
-      "admin": [
-        "Record Created By",
-        "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited",
-        "Ingredient Created By",
-        "Ingredient Last Edited By",
-        "Ingredient Create Date",
-        "Ingredient Last Edited"
-      ]
-    },
-    "products": {
-      "default": [
-        "Product Name",
-        "Nonproprietary Name",
-        "Product NDC",
-        "Dosage Form Name",
-        "Ingredient Name",
-        "Ingredient Type",
-        "Product Type",
-        "Product Code Type",
-        "Application Number",
-        "Status",
-        "Marketing Category Name",
-        "Route of Admin",
-        "Is Listed",
-        "Labeler Name",
-        "Labeler DUNS Number",
-        "Registrant Name",
-        "Registrant DUNS",
-        "City",
-        "State",
-        "Company Country",
-        "Country Code",
-        "Provenance"
-      ],
-      "admin": [
-        "Record Created By",
-        "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited"
-      ]
-    },
-    "ctclinicaltrial": {
-      "default": [
-        "Has Substances",
-        "CT Matching Complete",
-        "Last Updated Year",
-        "Primary Completion Year",
-        "First Posted Year",
-        "Study Types",
-        "Gender",
-        "Age Groups",
-        "Intervention Type",
-        "Study Results",
-        "Conditions"
-      ]
-    },
-    "clinicaltrialsus": {
-      "default": [
-        "Has Substances",
-        "CT Matching Complete",
-        "Last Updated Year",
-        "Primary Completion Year",
-        "First Posted Year",
-        "Study Types",
-        "Gender",
-        "Age Groups",
-        "Intervention Type",
-        "Study Results",
-        "Conditions"
-      ]
-    },
-    "adverseeventpt": {
-      "default": [
-        "Adverse Event",
-        "Prim SOC",
-        "Ingredient Name",
-        "Substance Key",
-        "ATC Level 1",
-        "ATC Level 2",
-        "ATC Level 3",
-        "ATC Level 4"
-      ]
-    },
-    "adverseeventdme": {
-      "default": [
-        "DME Reactions",
-        "PTTerm Meddra",
-        "Ingredient Name",
-        "Substance Key",
-        "ATC Level 1",
-        "ATC Level 2",
-        "ATC Level 3",
-        "ATC Level 4"
-      ]
-    },
-    "adverseeventcvm": {
-      "default": [
-        "Adverse Event",
-        "Species",
-        "Route of Administration",
-        "Ingredient Name",
-        "Substance Key",
-        "ATC Level 1",
-        "ATC Level 2",
-        "ATC Level 3",
-        "ATC Level 4"
-      ]
     }
   },
   "codeSystemOrder": [
@@ -785,54 +585,6 @@
   "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
   "navItems": [
     {
-      "component": "applications",
-      "display": "Browse Applications",
-      "path": "browse-applications",
-      "order": 11
-    },
-    {
-      "component": "products",
-      "display": "Browse Products",
-      "path": "browse-products",
-      "order": 12
-    },
-    {
-      "component": "clinicaltrials",
-      "display": "Browse Clinical Trials",
-      "path": "browse-clinical-trials",
-      "order": 13
-    },
-    {
-      "component": "adverseevents",
-      "display": "Browse Adverse Events",
-      "path": "browse-adverse-events",
-      "order": 14
-    },
-    {
-      "display": "Register",
-      "children": [
-        {
-           "component": "applications",
-          "display": "Application",
-          "path": "application/register",
-          "order": 200
-        },
-        {
-          "component": "products",
-          "display": "Product",
-          "path": "product/register",
-          "order": 210
-        },
-       {
-
-       "component": "impurities",
-          "display": "Impurities",
-          "path": "impurities/register",
-          "order": 220
-        }
-      ]
-    },
-    {
       "display": "Help",
       "order": 60,
       "children": [
@@ -840,11 +592,6 @@
           "display": "User Manual",
           "path": "user-manual",
           "order": 10
-        },
-        {
-          "display": "Submit a Helpdesk Ticket (JIRA)",
-          "path": "jira-submit",
-          "order": 20
         },
         {
           "display": "Email GSRS Support",

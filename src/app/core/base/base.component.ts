@@ -74,23 +74,12 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
    
   let notempty = false;
-    if (this.loadedComponents) {
-      if (this.loadedComponents.applications) {
-        notempty = true;
-      } else if (this.loadedComponents.clinicaltrials) {
-        notempty = true;
-      } else if (this.loadedComponents.adverseevents) {
-        notempty = true;
-      } else if (this.loadedComponents.impurities) {
-        notempty = true;
-      } else if (this.loadedComponents.products) {
-        notempty = true;
-      }
+  
 
       if (!notempty) {
         this.loadedComponents = null;
       }
-    }
+    
     const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
       this.isAdmin = response;
     });

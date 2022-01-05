@@ -618,7 +618,7 @@ export class SubstanceService extends BaseHttpService {
   oldLinkFix(link: string): string {
     if (link && link.length > 10) {
       const oid = link.split('/');
-      const link3 = 'substances/' + oid[oid.length - 1];
+      const link3 = this.baseUrl + 'beta/substances/' + oid[oid.length - 1];
       return link3;
     } else {
       return link;

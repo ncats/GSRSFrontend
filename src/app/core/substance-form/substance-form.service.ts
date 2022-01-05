@@ -549,6 +549,7 @@ export class SubstanceFormService implements OnDestroy {
       lastEdited: this.privateSubstance.lastEdited,
       lastEditedBy: this.privateSubstance.lastEditedBy,
       _name: this.privateSubstance._name,
+      _nameHTML: this.privateSubstance._nameHTML,
       tags: this.privateSubstance.tags
     };
     if (this.privateSubstance.status) {
