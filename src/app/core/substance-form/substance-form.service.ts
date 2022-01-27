@@ -1368,7 +1368,7 @@ this.emitDisulfideLinkUpdate();
       deletedUuids.forEach(uuid => {
         substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
       });
-      substanceString = substanceString.replace(/,,/g, ',');
+      substanceString = substanceString.replace(/,[,]+/g, ',');
       substanceString = substanceString.replace(/\[,/g, '[');
       substanceString = substanceString.replace(/,\]/g, ']');
       substanceCopy = JSON.parse(substanceString);
