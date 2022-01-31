@@ -19,7 +19,7 @@ install:
   - npm install --save --legacy-peer-deps
   - npm install sass-loader@latest --legacy-peer-deps
   - npm i -g webpack-cli
-  - npm install --save-dev webpack
+  - npm install --save-dev --legacy-peer-deps webpack
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
