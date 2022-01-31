@@ -96,7 +96,7 @@
     "karma-jasmine-html-reporter": "0.2.2",
     "mkdirp": "0.5.1",
     "ng-packagr": "5.4.0",
-    "node-sass": "6.0.1",
+    "sass": "1.49.0"
     "protractor": "5.4.0",
     "rimraf": "2.6.3",
     "ts-node": "5.0.1",
