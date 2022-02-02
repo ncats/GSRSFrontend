@@ -24,6 +24,6 @@ script:
   - npm run build:fda:prod
   
 after_success:
-  - ls
-  - git clone https://github.com/ncats/gsrs-ci.git
+  - ls ./dist/browser
+  - git clone --depth=50 https://github.com/ncats/gsrs-ci.git ncats/gsrs-ci
   - ls -l
