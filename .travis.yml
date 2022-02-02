@@ -22,3 +22,8 @@ install:
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
+  
+after_success:
+  - ls
+  - git clone https://github.com/ncats/gsrs-ci.git
+  - ls -l
