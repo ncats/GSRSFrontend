@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
+import { Title } from '@angular/platform-browser';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -33,10 +34,11 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-    public configService: ConfigService
+    public configService: ConfigService,
+    titleService: Title
   ) {
     super(producService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService);
+      router, gaService, utilsService, titleService);
   }
 
   ngOnInit() {
@@ -52,6 +54,9 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
     this.productService.getProductElist(this.productId).subscribe(response => {
       this.product = response;
       if (response) {
+
+        this.titleService.setTitle(`Product ` + this.product.productNDC);
+
         this.getSubstanceByApprovalID();
         this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=' + this.product.productNDC;
       }

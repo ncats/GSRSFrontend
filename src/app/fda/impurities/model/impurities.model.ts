@@ -8,6 +8,8 @@ export interface Impurities {
   companyProductName?: string;
   companyName?: string;
   productId?: string;
+  dateType?: string;
+  dateTypeDate?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -20,17 +22,20 @@ export interface Impurities {
 export interface ImpuritiesSubstance {
   id?: number;
   substanceUuid?: string;
+  approvalID?: string;
   low?: number;
   high?: number;
   unit?: string;
   comments?: string;
   substanceName?: string;
-  relatedSubstanceUnii?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
+  _ingredientName?: string;
+  _parentSubstanceName?: string;
+  _parentSubstanceUuid?: string;
   impuritiesTestList?: Array<ImpuritiesTesting>;
   impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>;
   impuritiesInorganicList?: Array<ImpuritiesInorganic>;
@@ -68,6 +73,7 @@ export interface ImpuritiesDetails {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
+  _ingredientName?: string;
   identityCriteriaList?: Array<IdentityCriteria>;
 }
 

@@ -1,64 +1,64 @@
 <mat-sidenav-container autosize="true" class="margintop90px sidenav-container-size">
 
-    <mat-sidenav #pt mode="side" opened>
-      <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
-        [rawFacets]="rawFacets" configName="adverseeventpt" includeFacetSearch="true">
-      </app-facets-manager>
-    </mat-sidenav>
+  <mat-sidenav #pt mode="side" opened>
+    <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
+      [rawFacets]="rawFacets" configName="adverseeventpt" includeFacetSearch="true">
+    </app-facets-manager>
+  </mat-sidenav>
 
-    <!-- Browse Adverse Event Pt Content -->
-    <mat-sidenav-content>
-      <div class="side-nav-content">
-        <div class="search-parameters">
+  <!-- Browse Adverse Event Pt Content -->
+  <mat-sidenav-content>
+    <div class="side-nav-content">
+      <div class="search-parameters">
 
-          <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
-            <div>
-              <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-              <span>{{searchTerm}}</span>
-            </div>
-            <div class="actions-container">
-              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
-                <mat-icon svgIcon="edit"></mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="clearSearch()">
-                <mat-icon svgIcon="delete_forever"></mat-icon>
-              </button>
-            </div>
+        <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+            <span>{{searchTerm}}</span>
           </div>
-
-          <!-- Display Facets selection -->
-          <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
-            <div class='selected-container'>
-              <span class="capitalized font-medium-bold selected-label">
-                <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
-                {{facet.type}}:
-              </span>
-              <span class="no-break selected-value">
-                {{facet.val}}
-              </span>
-            </div>
-            <div class="actions-container">
-              <button mat-icon-button class="display-button" color="primary"
-                (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
-                <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
-              </button>
-            </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
           </div>
-          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
-            *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
-            <span>RESET</span>
-          </button>
         </div>
 
-        <!-- Title, Export, Pagination -->
-        <div class="controls-container">
-
-          <div class="title-container">
-            <span class="main-title">Browse Adverse Event PT</span>
+        <!-- Display Facets selection -->
+        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+          <div class='selected-container'>
+            <span class="capitalized font-medium-bold selected-label">
+              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+              {{facet.type}}:
+            </span>
+            <span class="no-break selected-value">
+              {{facet.val}}
+            </span>
           </div>
+          <div class="actions-container">
+            <button mat-icon-button class="display-button" color="primary"
+              (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+              <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+          *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
+          <span>RESET</span>
+        </button>
+      </div>
 
-          <!-- Sort By -->
-          <!--
+      <!-- Title, Export, Pagination -->
+      <div class="controls-container">
+
+        <div class="title-container">
+          <span class="main-title">Browse Adverse Event PT</span>
+        </div>
+
+        <!-- Sort By -->
+        <!--
             <mat-form-field class="sort">
               <mat-label>Sort By</mat-label>
               <mat-select (selectionChange)="searchAdverseEventPt()" [(ngModel)]="order">
@@ -69,172 +69,193 @@
             </mat-form-field>
             -->
 
-          <!-- Export AdverseEventPt Button -->
-          <div class="export" *ngIf="isAdmin">
-            <button matTooltip="Export Search Results" mat-button (click)="export()"
-              class="mat-button export-button mat-raised-button">
-              <mat-icon svgIcon="get_app"></mat-icon> Export
-            </button>
-          </div>
-
-          <div class="break"></div>
-          <!-- Pagination -->
-          <div class="full-paginator">
-            <mat-paginator #paginator [length]="totalAdverseEventPt" [pageIndex]="pageIndex" [pageSize]="pageSize"
-              [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
-            </mat-paginator>
-
-            <div class="page-selector">
-              <span class="page-label">Page: </span>
-              <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
-                <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
-                  [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
-                  (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
-                  (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
-              </mat-form-field>
-              <span class="page-label"> of {{lastPage}}</span>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="search-text">
-          <!-- Search Any Text Text Box -->
-          <mat-form-field class="width350px font13px">
-            <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
-              size="50" />
-          </mat-form-field>
-          <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
-            <mat-icon svgIcon="search"></mat-icon>
+        <!-- Export AdverseEventPt Button -->
+        <div class="export" *ngIf="isAdmin">
+          <button matTooltip="Export Search Results" mat-button (click)="export()"
+            class="mat-button export-button mat-raised-button">
+            <mat-icon svgIcon="get_app"></mat-icon> Export
           </button>
         </div>
 
-        <!-- Display Content Details -->
-        <div class="cards" *ngIf="adverseEventPt && adverseEventPt.length; else noRecordAdverseEventPt">
-          <div class="substance-cards">
-            <mat-card *ngFor="let adverseeventpt of adverseEventPt">
-              <mat-card-title>
-                <div>
-                  <span class="font13px">Adverse Event:</span>&nbsp;
-                  {{adverseeventpt.ptTerm}}
-                </div>
+        <div class="break"></div>
+        <!-- Pagination -->
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalAdverseEventPt" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
 
-                <div>
-
-                </div>
-
-                <div>
-
-                </div>
-              </mat-card-title>
-
-              <mat-card-content>
-
-                <div class="row">
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      Ingredient Name:
-                    </div>
-                    <div class="row-property-value">
-                      <a [routerLink]="['/substances', adverseeventpt.substanceId]"
-                        target="_blank">{{adverseeventpt.name}}</a>
-                    </div>
-                  </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      Substance Key:
-                    </div>
-                    <div class="row-property-value">
-                      {{adverseeventpt.substanceKey}}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      Prim SOC:
-                    </div>
-                    <div class="row-property-value">
-                      {{ adverseeventpt.primSoc}}
-                    </div>
-                  </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      PRR:
-                    </div>
-                    <div class="row-property-value">
-                      {{adverseeventpt.prr | number : '.2-2'}}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      Case Count:
-                    </div>
-                    <div class="row-property-value">
-                      {{adverseeventpt.caseCount}}
-                    </div>
-                  </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      SOC Count:
-                    </div>
-                    <div class="row-property-value">
-                      {{adverseeventpt.socCount}}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      PT Count:
-                    </div>
-                    <div class="row-property-value">
-                      {{adverseeventpt.ptCount}}
-                    </div>
-                  </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      SOC Count Percent:
-                    </div>
-                    <div class="row-property-value">
-                      {{adverseeventpt.socCountPercent}}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      PT Count Percent:
-                    </div>
-                    <div class="row-property-value">
-                      {{adverseeventpt.ptCountPercent}}
-                    </div>
-                  </div>
-                  <div class="row-property">
-                    <div class="row-property-key">
-                      PT Count Total Vs Drug:
-                    </div>
-                    <div class="row-property-value">
-                      {{adverseeventpt.ptCountTotalVsDrug}}
-                    </div>
-                  </div>
-                </div>
-
-              </mat-card-content>
-
-            </mat-card>
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
           </div>
         </div>
-        <ng-template #noRecordAdverseEventPt>
-          <!-- No Adverse Event Pt Record Found. -->
-        </ng-template>
-      </div>
-    </mat-sidenav-content>
-</mat-sidenav-container>
 
+      </div>
+
+      <div class="search-text">
+        <!-- Search Any Text Text Box -->
+        <mat-form-field class="width350px font13px">
+          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
+            size="50" />
+        </mat-form-field>
+        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </div>
+
+      <!-- Display Content Details -->
+      <div class="cards" *ngIf="adverseEventPt && adverseEventPt.length; else noRecordAdverseEventPt">
+        <div class="substance-cards">
+          <mat-card *ngFor="let adverseeventpt of adverseEventPt">
+            <mat-card-title>
+              <div>
+                <span class="font13px">Adverse Event:</span>&nbsp;
+                {{adverseeventpt.ptTerm}}
+              </div>
+
+              <div>
+
+              </div>
+
+              <div>
+
+              </div>
+            </mat-card-title>
+
+            <mat-card-content>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Ingredient Name:
+                  </div>
+                  <div class="row-property-value">
+                    <a [routerLink]="['/substances', adverseeventpt.substanceId]"
+                      target="_blank">{{adverseeventpt.name}}</a>
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Substance Key:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseeventpt.substanceKey}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Prim SOC:
+                  </div>
+                  <div class="row-property-value">
+                    {{ adverseeventpt.primSoc}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    PRR:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseeventpt.prr | number : '.2-2'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Case Count:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseeventpt.caseCount}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    SOC Count:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseeventpt.socCount}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    PT Count:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseeventpt.ptCount}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    SOC Count Percent:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseeventpt.socCountPercent}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    PT Count Percent:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseeventpt.ptCountPercent}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    PT Count Total Vs Drug:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverseeventpt.ptCountTotalVsDrug}}
+                  </div>
+                </div>
+              </div>
+
+            </mat-card-content>
+
+          </mat-card>
+        </div>
+      </div> <!-- class=cards -->
+
+      <!-- Pagination at the bottom of the page -->
+      <div class="controls-container">
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalAdverseEventPt" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noRecordAdverseEventPt>
+        <!-- No Adverse Event PT Record Found. -->
+      </ng-template>
+
+    </div> <!-- class=side-nav-content -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -37,6 +38,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
+    public titleService: Title
     // private authService: AuthService,
   ) { }
 
@@ -64,6 +66,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     const appIdSubscription = this.applicationService.getApplicationById(this.id).subscribe(response => {
       this.application = response;
       if (Object.keys(this.application).length > 0) {
+        this.titleService.setTitle(`Application ` + this.application.appType + ' ' + this.application.appNumber);
         // Get Substance by Substance Key
         this.getSubstanceBySubstanceKey();
 

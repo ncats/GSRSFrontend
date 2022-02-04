@@ -12,27 +12,28 @@
 
 
       <!-- Register and View Application buttons -->
-    <span *ngIf="impurities">
-      <span *ngIf="impurities.id">
-        <button mat-flat-button color="primary" [routerLink]="['/impurities/register']"
-          matTooltip='Register Impurities'>
-          Register New Impurities
-        </button>&nbsp;&nbsp;&nbsp;
-
-        <a mat-flat-button color="primary" [routerLink]="['/impurities', impurities.id]" target="_blank"
-          matTooltip='View this Impurity Record (opens in a new window)'>
-          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-          View Impurities</a>&nbsp;&nbsp;&nbsp;
-
-        <span *ngIf="isAdmin">
-          <button mat-flat-button color="primary" (click)="confirmDeleteImpurities()"
-            matTooltip='Delete this Impurity'>
-            Delete
+      <span *ngIf="impurities">
+        <span *ngIf="impurities.id">
+          <button mat-flat-button color="primary" [routerLink]="['/impurities/register']"
+            matTooltip='Register Impurities'>
+            Register New Impurities
           </button>&nbsp;&nbsp;&nbsp;
-        </span>
 
+          <a mat-flat-button color="primary" [routerLink]="['/impurities', impurities.id]" target="_blank"
+            matTooltip='View this Impurity Record (opens in a new window)'>
+            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+            View Impurities
+          </a>&nbsp;&nbsp;&nbsp;
+
+          <span *ngIf="isAdmin">
+            <button mat-flat-button color="primary" (click)="confirmDeleteImpurities()"
+              matTooltip='Delete this Impurity'>
+              Delete
+            </button>&nbsp;&nbsp;&nbsp;
+          </span>
+
+        </span>
       </span>
-    </span>
 
       <!-- Validate and Submit Button -->
       &nbsp;
@@ -97,7 +98,8 @@
                 <span class="colorgray">Create Date:</span>
                 {{impurities.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
                 <span class="colorgray">Modified By:</span> {{impurities.modifiedBy}}&nbsp;&nbsp;&nbsp;
-                <span class="colorgray">Modify Date:</span> {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                <span class="colorgray">Modify Date:</span>
+                {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
               </div>
             </div>
           </div> <!-- title_box-->
@@ -132,15 +134,29 @@
                 </app-cv-input>
               </div>
 
+              <!-- Second Row -->
               <div class="form-row">
-                <mat-form-field class="col-6-3">
+                <mat-form-field class="col-6-2">
                   <input matInput placeholder="Company Name" [(ngModel)]="impurities.companyName" name="companyName" />
                 </mat-form-field>
 
-                <mat-form-field class="col-6-3">
+                <mat-form-field class="col-6-2">
                   <input matInput placeholder="Company Product Name" [(ngModel)]="impurities.companyProductName"
                     name="companyProductName" />
                 </mat-form-field>
+
+                <app-cv-input class="col-6-1" domain="IMPURITIES_DATE_TYPE" title="Date Type" name="dateType"
+                  [model]="impurities.dateType" (valueChange)="impurities.dateType = $event">
+                </app-cv-input>
+
+                <mat-form-field class="col-6-1">
+                  <!--
+                  <input matInput placeholder="Date Type Date" [(ngModel)]="impurities.dateTypeDate"
+                    name="dateTypeDate" />
+                  -->
+                  <input matInput placeholder="Date Type Date" name="dateTypeDate" (ngModelChange)="updateDateTypeDate($event)" [ngModel]="impurities.dateTypeDate |date:'yyyy-MM-dd'" #dateT="ngModel" type="date"/>
+                </mat-form-field>
+
               </div>
               <!-- TOP SECTION END  -->
 

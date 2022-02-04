@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material';
 import { Location, LocationStrategy } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
@@ -61,7 +62,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
   isSearchEditable = false;
   lastPage: number;
   invalidPage = false;
-  totalAdverseEventPt = 0;
+  totalAdverseEventDme = 0;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -87,6 +88,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     private facetManagerService: FacetsManagerService,
     private utilsService: UtilsService,
     private dialog: MatDialog,
+    private titleService: Title
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -102,6 +104,8 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
     this.gaService.sendPageView('Browse Adverse Event Dme');
+
+    this.titleService.setTitle(`Browse Adverse Events`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -169,7 +173,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
         // didn't work unless I did it like this instead of
         // below export statement
         this.dataSource = this.adverseEventDme;
-        this.totalAdverseEventPt = pagingResponse.total;
+        this.totalAdverseEventDme = pagingResponse.total;
         this.etag = pagingResponse.etag;
 
         if (pagingResponse.total % this.pageSize === 0) {
@@ -394,10 +398,10 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
             this.loadingService.setLoading(false);
             const navigationExtras: NavigationExtras = {
               queryParams: {
-                totalSub: this.totalAdverseEventPt
+                totalSub: this.totalAdverseEventDme
               }
             };
-            const params = { 'total': this.totalAdverseEventPt };
+            const params = { 'total': this.totalAdverseEventDme };
             this.router.navigate(['/user-downloads/', response.id]);
           }, error => this.loadingService.setLoading(false));
         }

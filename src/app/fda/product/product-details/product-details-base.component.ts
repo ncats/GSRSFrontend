@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -34,6 +35,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
+    public titleService: Title
   ) { }
 
   ngOnInit() {
@@ -58,12 +60,27 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   ngAfterViewInit() { }
 
   getProduct(): void {
-    const prodSubscription = this.productService.getProduct(this.productId, this.src).subscribe(response => {
+    const prodSubscription = this.productService.getProduct(this.productId).subscribe(response => {
       if (response) {
-      this.product = response;
-     // if (Object.keys(this.product).length > 0) {
-      this.getSubstanceBySubstanceKey();
-    //  }
+        this.product = response;
+        if (Object.keys(this.product).length > 0) {
+
+          // Add title on the browser. Concatenate multiple Product Code
+          let prodCode = '';
+          this.product.productCodeList.forEach((elementProdCode, indexProdCode) => {
+            if (elementProdCode != null) {
+              if (elementProdCode.productCode) {
+                if (indexProdCode > 0) {
+                  prodCode = prodCode.concat('|');
+                }
+                prodCode = prodCode.concat(elementProdCode.productCode);
+              }
+            }
+          });
+          this.titleService.setTitle(`Product ` + prodCode);
+
+          this.getSubstanceBySubstanceKey();
+        }
       }
     }, error => {
       this.message = 'No Product record found';
@@ -93,13 +110,13 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
                   // Get Basis of Strength
                   if (elementIngred.basisOfStrengthSubstanceKey) {
-                    const subBasisSubscription =  this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey)
-                    .subscribe(response => {
-                      if (response) {
-                        elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
-                        elementIngred._basisOfStrengthIngredientName = response._name;
-                      }
-                    });
+                    const subBasisSubscription = this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey)
+                      .subscribe(response => {
+                        if (response) {
+                          elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
+                          elementIngred._basisOfStrengthIngredientName = response._name;
+                        }
+                      });
                     this.subscriptions.push(subBasisSubscription);
                   }
                 }

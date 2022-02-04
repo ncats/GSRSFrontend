@@ -94,9 +94,9 @@
             </mat-form-field>
             <span class="page-label"> of {{lastPage}}</span>
           </div>
-
         </div>
-      </div>
+
+      </div> <!-- class=controls-container -->
 
       <div class="search-text">
         <!-- Search Any Text Text Box -->
@@ -109,18 +109,13 @@
         </button>
       </div>
 
-
-
-
       <!--
-
     <div class="titlePosition">
       <span class="title">Browse Products</span>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       Total:&nbsp;<span class="totalstyle font17px colorgray">{{totalProducts}}</span>
       &nbsp;&nbsp;
     </div>
-
 
     <div class="paginationPosition">
       <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
@@ -194,7 +189,7 @@
     -->
 
       <!-- Display Content Details -->
-      <div class="cards"  *ngIf="products && products.length">
+      <div class="cards" *ngIf="products && products.length">
         <div class="substance-cards">
           <mat-card *ngFor="let product of products; let indexProd = index">
             <mat-card-title>
@@ -203,8 +198,8 @@
 
                 <!-- If fromtable is SPL, display SPL Details links -->
                 <span *ngIf="product.fromtable === 'SPL'">
-                  <a class="substance-name" [routerLink]="['/product-elist', product.productId]"
-                    target="_blank"><span *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
+                  <a class="substance-name" [routerLink]="['/product-elist', product.productId]" target="_blank"><span
+                      *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
                     <ng-template #noProdNDC>(NO ID)</ng-template>
                   </a>
                 </span>
@@ -212,8 +207,8 @@
                 &nbsp;&nbsp;&nbsp;
                 <!-- If fromtable is GSRS, display GSRS Details links -->
                 <span *ngIf="product.fromtable === 'GSRS'">
-                  <a class="substance-name" [routerLink]="['/product', product.productId]"
-                    target="_blank"><span *ngIf="product.productNDC; else noProdNDCSRS">{{product.productNDC}}</span>
+                  <a class="substance-name" [routerLink]="['/product', product.productId]" target="_blank"><span
+                      *ngIf="product.productNDC; else noProdNDCSRS">{{product.productNDC}}</span>
                     <ng-template #noProdNDCSRS>(NO ID)</ng-template>
                   </a>
 
@@ -364,7 +359,7 @@
                 </div>
               </div>
 
-              <div class="row"  *ngIf="isAdmin">
+              <div class="row" *ngIf="isAdmin">
                 <div class="row-property">
                   <div class="row-property-key">
                     Create Date:
@@ -473,7 +468,28 @@
 
           </mat-card>
         </div>
+      </div> <!-- class=cards -->
+
+      <!-- Pagination at the bottom of the page -->
+      <div class="controls-container">
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
       </div>
-    </div>
+
+    </div> <!-- class=side-nav-content -->
   </mat-sidenav-content>
 </mat-sidenav-container>

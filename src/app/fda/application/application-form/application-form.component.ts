@@ -11,6 +11,7 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
 import { Application, ValidationMessage } from '../model/application.model';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -76,7 +77,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private titleService: Title) { }
 
   // get submitDateControl() { return this.appForm.get('submitDateControl'); }
 
@@ -101,6 +103,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
           this.title = 'Register New Application';
           setTimeout(() => {
             this.gaService.sendPageView(`Application Register`);
+            this.titleService.setTitle(`Register Application`);
             this.applicationService.loadApplication();
             this.application = this.applicationService.application;
             this.loadingService.setLoading(false);

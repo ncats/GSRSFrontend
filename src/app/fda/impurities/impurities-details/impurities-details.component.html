@@ -13,7 +13,7 @@
               <mat-icon svgIcon="edit"></mat-icon>
             </a>
             <!-- Copy Impurities -->
-            <a  mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copy:impurities.id}"
+            <a mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copy:impurities.id}"
               matTooltip='copy Impurities to new registration form' *ngIf="isAdmin">
               <mat-icon svgIcon="file_copy"></mat-icon>
             </a>
@@ -90,6 +90,25 @@
           <div class="row">
             <div class="row-property">
               <div class="row-property-key">
+                Date Type:
+              </div>
+              <div class="row-property-value">
+                {{impurities.dateType}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Date Type Date:
+              </div>
+              <div class="row-property-value">
+                {{impurities.dateTypeDate|date: 'MM/dd/yyyy'}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
                 Company Product Name:
               </div>
               <div class="row-property-value">
@@ -105,6 +124,7 @@
               </div>
             </div>
           </div>
+
 
           <!-- Substance Names Lists -->
           <div class="margintop30px marginbottom30px"
@@ -137,7 +157,7 @@
                             <span class="colororange font16px fontbold">{{subs.substanceName}}</span>
                           </a>
                         </div>
-                        <div *ngIf="subs.relatedSubstanceUnii"><br>{{subs.relatedSubstanceUnii}}</div>
+                        <div *ngIf="subs.approvalID"><br>{{subs.approvalID}}</div>
                         <div *ngIf="subs.substanceUuid">
                           <img class="structure-img" appSubstanceImage [entityId]="subs.substanceUuid">
                         </div>

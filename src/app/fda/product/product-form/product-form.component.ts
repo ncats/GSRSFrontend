@@ -11,6 +11,7 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
 import { Product, ValidationMessage } from '../model/product.model';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -56,7 +57,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private overlayContainerService: OverlayContainer,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private titleService: Title) { }
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
@@ -78,6 +80,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           this.title = 'Register New Product';
           setTimeout(() => {
             this.gaService.sendPageView(`Product Register`);
+            this.titleService.setTitle(`Register Product`);
             this.productService.loadProduct();
             this.product = this.productService.product;
             this.loadingService.setLoading(false);
@@ -100,7 +103,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   getProductDetails(newType?: string): void {
     if (this.id != null) {
       const id = this.id.toString();
-      this.productService.getProduct(id, 'srs').subscribe(response => {
+      this.productService.getProduct(id).subscribe(response => {
         if (response) {
           this.productService.loadProduct(response);
           this.product = this.productService.product;

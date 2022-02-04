@@ -5,8 +5,16 @@
   }
 }
 
+.bordergray {
+  border:1px solid gray;
+}
+
 .font10px {
 	font-size: 10px;
+}
+
+.font12px {
+  font-size: 12px;
 }
 
 .font15px {
@@ -21,6 +29,18 @@
   color: red;
 }
 
+.colorgreen {
+  color: green;
+}
+
+.colorpurple {
+  color: purple;
+}
+
+.colorblue {
+  color: rgb(56, 40, 201);
+}
+
 .padleft25px {
 	padding-left: 25px;
 }
@@ -29,9 +49,18 @@
   padding-top: 5px;
 }
 
-.colorblue {
-  color: #4b4572;
+.marginbottom10px {
+  margin-bottom: 10px;
 }
+
+.width100px {
+  width: 100px;
+}
+
+ol, li {
+  margin-left:0px;
+  padding-left:0px
+}​
 
 .spinnerstyle {
   position: absolute;

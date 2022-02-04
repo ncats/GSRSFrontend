@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
+import { Title } from '@angular/platform-browser';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -26,10 +27,11 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-    public authService: AuthService
+    public authService: AuthService,
+    titleService: Title
   ) {
     super(productService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService);
+      router, gaService, utilsService, titleService);
   }
 
   ngOnInit() {

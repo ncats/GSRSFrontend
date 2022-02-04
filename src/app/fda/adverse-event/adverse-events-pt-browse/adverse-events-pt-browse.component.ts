@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material';
 import { Location, LocationStrategy } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
@@ -87,6 +88,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     private facetManagerService: FacetsManagerService,
     private utilsService: UtilsService,
     private dialog: MatDialog,
+    private titleService: Title
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -102,6 +104,8 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventPtFacets);
     this.gaService.sendPageView('Browse Adverse Event');
+
+    this.titleService.setTitle(`Browse Adverse Events`);
 
     this.pageSize = 10;
     this.pageIndex = 0;

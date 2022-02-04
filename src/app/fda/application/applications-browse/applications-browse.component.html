@@ -124,7 +124,9 @@
               </div>
 
               <div>
-                <span class="center">Center:&nbsp;{{application.center}}</span>
+                <span class="center">Center:&nbsp;<span class="colorlightpurple">{{application.center}}</span></span>
+                &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                <span class="center colordarkblue">Provenance:&nbsp;<span class="colordarkblue">{{application.provenance}}</span></span>
               </div>
 
               <div>
@@ -200,8 +202,14 @@
                                 <!-- Display Ingredient Name -->
                                 <div *ngIf="ing.substanceKey; else noIngred">
                                   <span class="colorred">&diams;</span>
-                                  <a [routerLink]="['/substances', ing._substanceUuid]"
-                                    target="_blank">{{ing._ingredientName}}</a>
+                                  <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank"
+                                    onmouseover="document.getElementById('div1').style.display = 'block';">
+                                    {{ing._ingredientName}}
+                                  </a>
+                                    <!-- Display Structure -->
+                                    <div id="div1" *ngIf="ing._substanceUuid" style="display:none;">
+                                      <img class="structure-img" appSubstanceImage [entityId]="ing._substanceUuid" size="400">
+                                    </div>
                                   <br>
 
                                   <!-- Display Ingredient Type -->
@@ -327,7 +335,8 @@
                         <div class="" *ngFor="let clinical of application._clinicalTrialList">
                           &bull;&nbsp;
                           <span *ngIf="clinical.nctNumber">
-                            <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.nctNumber">{{clinical.nctNumber}}</a>
+                            <a target="_blank" title="see clinicaltrials.gov"
+                              [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.nctNumber">{{clinical.nctNumber}}</a>
                           </span>
                         </div>
                       </div>
@@ -445,19 +454,31 @@
 
           </mat-card>
         </div>
-      </div>
+      </div> <!-- class=cards -->
 
       <!-- Pagination at the bottom of the page -->
-      <!--
       <div class="controls-container">
-        <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
-        [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
-        </mat-paginator>
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
       </div>
-      -->
+
       <ng-template #noRecordApplication>
         <!-- No Application Found. -->
       </ng-template>
-    </div>
+    </div> <!-- class=side-nav-content -->
   </mat-sidenav-content>
 </mat-sidenav-container>
