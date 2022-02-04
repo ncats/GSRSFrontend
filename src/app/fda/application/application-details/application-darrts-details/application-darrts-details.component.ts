@@ -3,6 +3,7 @@ import { ApplicationService } from '../../service/application.service';
 import { GeneralService } from '../../../service/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
+import { Title } from '@angular/platform-browser';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
@@ -27,9 +28,10 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
+    titleService: Title
     // authService: AuthService,
   ) {
-    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService);
+    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService);
     // , authService);
   }
 
@@ -49,6 +51,7 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
     const appDarrtsSubscription = this.applicationService.getApplicationDarrtsDetails(this.appType, this.appNumber).subscribe(response => {
       this.application = response;
       if (response) {
+        this.titleService.setTitle(`Application ` + this.application.appType + ' ' + this.application.appNumber);
         this.getSubstanceBySubstanceKey();
       }
       this.loadingService.setLoading(false);

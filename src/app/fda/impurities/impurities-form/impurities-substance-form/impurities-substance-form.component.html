@@ -20,8 +20,8 @@
           eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
           header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid">
         </app-substance-selector>
-        <div class="textaligncenter font11px" *ngIf="impuritiesSubstance.relatedSubstanceUnii">
-          {{impuritiesSubstance.relatedSubstanceUnii}}
+        <div class="textaligncenter font11px" *ngIf="impuritiesSubstance.approvalID">
+          {{impuritiesSubstance.approvalID}}
         </div>
       </div>
 

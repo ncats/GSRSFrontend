@@ -11,6 +11,9 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { Subscription } from 'rxjs';
+import * as moment from 'moment';
+import { DatePipe, formatDate } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -64,7 +67,8 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private titleService: Title) { }
 
   ngOnInit() {
     const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
@@ -84,6 +88,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           if (id !== this.id) {
             this.id = id;
             this.gaService.sendPageView(`Impurity Edit`);
+            this.titleService.setTitle(`Update Impurities`);
             this.getImpurities();
           }
         } else { //Copy Impurities to register form
@@ -95,6 +100,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           } else {
             setTimeout(() => {
               this.gaService.sendPageView(`Impurities Register`);
+              this.titleService.setTitle(`Register Impurities`);
               this.impuritiesService.loadImpurities();
               this.impurities = this.impuritiesService.impurities;
               this.loadingService.setLoading(false);
@@ -394,7 +400,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
     const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
     for (let i = 0; i < intVersionHolders.length; i++) {
-        delete intVersionHolders[i].internalVersion;
+      delete intVersionHolders[i].internalVersion;
     }
 
     delete old['creationDate'];
@@ -405,6 +411,12 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     delete old['$$update'];
 
     return old;
+  }
+
+  updateDateTypeDate(event) {
+    const impDate = new Date(event);
+    // Adding one day since the Date object is decreasing one day.  moment.utc did not work.
+    this.impurities.dateTypeDate = moment(impDate).add(1, 'days').format('MM/DD/yyyy');
   }
 
 }

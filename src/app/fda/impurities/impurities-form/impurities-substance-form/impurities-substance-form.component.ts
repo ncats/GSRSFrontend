@@ -42,7 +42,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
   relatedSubstanceUpdated(substance: any): void {
     if (substance != null) {
       this.impuritiesSubstance.substanceUuid = substance.uuid;
-      this.impuritiesSubstance.relatedSubstanceUnii = substance.approvalID;
+      this.impuritiesSubstance.approvalID = substance.approvalID;
     }
   }
 

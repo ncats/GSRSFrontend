@@ -235,7 +235,7 @@ export class ProductService extends BaseHttpService {
     this._bypassUpdateCheck = true;
   }
 
-  getProduct(productId: string, src: string): Observable<any> {
+  getProduct(productId: string): Observable<any> {
     const url = this.apiBaseUrlWithProductEntityUrl + productId;
     return this.http.get<any>(url)
       .pipe(

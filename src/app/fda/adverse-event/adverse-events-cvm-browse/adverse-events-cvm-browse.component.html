@@ -93,8 +93,8 @@
             </mat-form-field>
             <span class="page-label"> of {{lastPage}}</span>
           </div>
-
         </div>
+
       </div>
 
       <div class="search-text">
@@ -109,7 +109,7 @@
       </div>
 
       <!-- Display Content Details -->
-      <div class="cards" *ngIf="adverseEventCvm && adverseEventCvm.length; else noRecordApplication">
+      <div class="cards" *ngIf="adverseEventCvm && adverseEventCvm.length; else noRecordAdverseEvent">
         <div class="substance-cards">
           <mat-card *ngFor="let adverseEventCvm of adverseEventCvm">
             <mat-card-title>
@@ -136,7 +136,7 @@
                   </div>
                   <div class="row-property-value">
                     <a [routerLink]="['/substances', adverseEventCvm.substanceId]"
-                    target="_blank">{{adverseEventCvm.name}}</a>
+                      target="_blank">{{adverseEventCvm.name}}</a>
                   </div>
                 </div>
 
@@ -184,10 +184,32 @@
             </mat-card-content>
           </mat-card>
         </div>
+      </div> <!-- class=cards -->
+
+      <!-- Pagination at the bottom of the page -->
+      <div class="controls-container">
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalAdverseEventCvm" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
       </div>
-      <ng-template #noRecordApplication>
-        <!-- No Application Found. -->
+
+      <ng-template #noRecordAdverseEvent>
+        <!-- No Adverse Event Found. -->
       </ng-template>
-    </div>
+
+    </div> <!-- class=side-nav-content -->
   </mat-sidenav-content>
 </mat-sidenav-container>

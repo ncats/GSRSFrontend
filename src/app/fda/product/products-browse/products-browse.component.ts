@@ -7,6 +7,7 @@ import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -86,7 +87,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     private locationStrategy: LocationStrategy,
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private titleService: Title) { }
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
@@ -101,6 +103,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
     this.gaService.sendPageView('Browse Products');
+
+    this.titleService.setTitle(`Browse Products`);
 
     this.pageSize = 10;
     this.pageIndex = 0;

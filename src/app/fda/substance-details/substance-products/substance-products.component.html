@@ -254,7 +254,7 @@
     </mat-tab>
 
     <mat-tab label="Impurities Specs ({{impuritiesCount}})"  *ngIf = "loadedComponents && loadedComponents.impurities">
-      <app-substance-impurities [substanceUuid]="substance.uuid" (countImpuritiesOut)="getImpuritiesCount($event)">
+      <app-substance-impurities [substanceUuid]="substance.uuid" (countImpuritiesOut)="getImpuritiesCount($event)" [substanceName]="substanceName">
       </app-substance-impurities>
     </mat-tab>
 

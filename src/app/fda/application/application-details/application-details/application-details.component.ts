@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
+import { Title } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
@@ -28,8 +29,9 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
     public authService: AuthService,
+    titleService: Title
   ) {
-    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService);
+    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService);
   }
 
   ngOnInit() {

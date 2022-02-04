@@ -9,6 +9,7 @@ import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { AuthService } from '@gsrs-core/auth';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ImpuritiesService } from '../../../impurities/service/impurities.service';
+import { GeneralService } from '../../../service/general.service';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { SubstanceDetailsBaseTableDisplay } from '../substance-details-base-table-display';
 import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../../impurities/model/impurities.model';
@@ -24,10 +25,13 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
   @Input() substanceUuid: string;
+  @Input() substanceName: string;
   @Output() countImpuritiesOut: EventEmitter<number> = new EventEmitter<number>();
   private subscriptions: Array<Subscription> = [];
+  parentSubstance: string;
+  parentSubstanceUuid: string;
   showSpinner = false;
-  impurities: any;
+  impurities: Array<Impurities>;
   totalImpurities = 0;
   impuritiesCount = 0;
   impuritiesTestTotal = 0;
@@ -39,18 +43,21 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
   disableExport = false;
   etag = '';
   displayedColumns: string[] = [
-    'details',
+    'productName',
     'sourceType',
     'source',
     'sourceid',
     'type',
-    'specType'
+    'specType',
+    'parentSubstance',
+    'relatedSubstance'
   ];
 
   constructor(
     private router: Router,
     public gaService: GoogleAnalyticsService,
     private impuritiesService: ImpuritiesService,
+    private generalService: GeneralService,
     private authService: AuthService,
     private loadingService: LoadingService,
     private dialog: MatDialog
@@ -96,7 +103,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
 
   searchImpurities() {
     this.privateSearchTerm = this.substanceUuid;
-  //  this.loadingService.setLoading(true);
+    //  this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
     const subscription = this.impuritiesService.searchImpurities(
       skip,
@@ -105,11 +112,11 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
       this.privateFacetParams,
     )
       .subscribe(pagingResponse => {
-       // this.isError = false;
+        // this.isError = false;
 
         this.setResultData(pagingResponse.content);
         this.impurities = pagingResponse.content;
-        this.impuritiesCount =  pagingResponse.total;
+        this.impuritiesCount = pagingResponse.total;
         this.countImpuritiesOut.emit(this.impuritiesCount);
         this.etag = pagingResponse.etag;
 
@@ -121,27 +128,27 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
         }
         */
         // Set Facets from paging response
-      /*  if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-          this.rawFacets = pagingResponse.facets;
-        }
-        */
+        /*  if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+            this.rawFacets = pagingResponse.facets;
+          }
+          */
       }, error => {
-       /*
-        console.log('error');
-        const notification: AppNotification = {
-          message: 'There was an error trying to retrieve Products. Please refresh and try again.',
-          type: NotificationType.error,
-          milisecondsToShow: 6000
-        };
-        this.isError = true;
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-        this.notificationService.setNotification(notification);
-        */
+        /*
+         console.log('error');
+         const notification: AppNotification = {
+           message: 'There was an error trying to retrieve Products. Please refresh and try again.',
+           type: NotificationType.error,
+           milisecondsToShow: 6000
+         };
+         this.isError = true;
+         this.isLoading = false;
+         this.loadingService.setLoading(this.isLoading);
+         this.notificationService.setNotification(notification);
+         */
       }, () => {
         subscription.unsubscribe();
-     //   this.isLoading = false;
-     //   this.loadingService.setLoading(this.isLoading);
+        //   this.isLoading = false;
+        //   this.loadingService.setLoading(this.isLoading);
       });
   }
 
@@ -152,14 +159,99 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     // , this.page, this.pageSize
     this.impuritiesService.getImpuritiesBySubstanceUuid(this.substanceUuid).subscribe(results => {
       this.impuritiesService.totalRecords = results.total;
-      this.setResultData(results.content);
       this.impurities = results.content;
+
+      // Load Impurities Test Details by Substance Uuid
+      this.loadImpuritiesTestDetails();
+
+      this.setResultData(this.impurities);
+
       this.totalImpurities = results.total;
 
       this.etag = results.etag;
       this.countImpuritiesOut.emit(this.totalImpurities);
     });
     this.showSpinner = false;  // Stop progress spinner
+  }
+
+  /*
+  getImpuritiesByTestImpuritiesDetails(pageEvent?: PageEvent): void {
+    this.setPageEvent(pageEvent);
+
+    this.showSpinner = true;  // Start progress spinner
+    // , this.page, this.pageSize
+    this.impuritiesService.getImpuritiesBySubstanceUuid(this.substanceUuid).subscribe(results => {
+      this.impuritiesService.totalRecords = results.total;
+      this.impurities = results.content;
+
+      //Load Impurities Test Details by Substance Uuid
+      this.loadImpuritiesTestDetails();
+
+      this.setResultData(this.impurities);
+
+      this.totalImpurities = results.total;
+
+      this.etag = results.etag;
+      this.countImpuritiesOut.emit(this.totalImpurities);
+    });
+    this.showSpinner = false;  // Stop progress spinner
+  }
+  */
+
+  loadImpuritiesTestDetails() {
+    this.impurities.forEach((element, index) => {
+      element.impuritiesSubstanceList.forEach((elementSub, indexSub) => {
+
+        if (elementSub.substanceUuid) {
+          // if current Substance is same as Parent Substance of Impurities
+          if (elementSub.substanceUuid === this.substanceUuid) {
+            elementSub._parentSubstanceName = this.substanceName;
+            elementSub._parentSubstanceUuid = elementSub.substanceUuid;
+          }
+        }
+        elementSub.impuritiesTestList.forEach((elementTest, indexTest) => {
+
+          elementTest.impuritiesDetailsList.forEach((elementDetail, indexDetail) => {
+
+            if (elementDetail.relatedSubstanceUuid != null) {
+              // if current Substance is same as Impurities Details of Impurities
+              if (elementDetail.relatedSubstanceUuid === this.substanceUuid) {
+                const subSubscription = this.generalService.getSubstanceNamesBySubstanceUuid(elementSub.substanceUuid).subscribe(substanceNames => {
+                  let subNames = substanceNames;
+
+                  // Get Preferred Term or DisplayName == true
+                  subNames.forEach((names, index) => {
+                    if (names.displayName === true) {
+                      elementSub._parentSubstanceName = names.name;
+                      elementSub._parentSubstanceUuid = elementSub.substanceUuid;
+                    }
+                  });
+                });
+                this.subscriptions.push(subSubscription);
+              }
+            }
+          }); // Impurities Details forEach
+        }); // Test forEach
+      }); // Substance forEach
+    }); // Impurities forEach
+  }
+
+  getSubstanceNames(substanceUuid: string): string {
+    let preferredTerm;
+    if (substanceUuid) {
+      const subSubscription = this.generalService.getSubstanceNamesBySubstanceUuid(substanceUuid).subscribe(substanceNames => {
+        let subNames = substanceNames;
+
+        // Get Preferred Term or DisplayName == true
+        subNames.forEach((names, index) => {
+          if (names.displayName === true) {
+            preferredTerm = names.name;
+          }
+        });
+      });
+      this.subscriptions.push(subSubscription);
+      return preferredTerm;
+    }
   }
 
   /*

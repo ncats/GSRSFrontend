@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UtilsService } from '../../../core/utils/utils.service';
@@ -39,6 +40,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
     private mainNotificationService: MainNotificationService,
     private impuritiesService: ImpuritiesService,
     private generalService: GeneralService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
@@ -71,6 +73,8 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
       this.impurities = response;
       if (Object.keys(this.impurities).length > 0) {
 
+        this.titleService.setTitle(`Impurities Details`);
+
         // Get Substance Name for SubstanceUuid in SubstanceList
         this.impurities.impuritiesSubstanceList.forEach((elementRel, indexRel) => {
           if (elementRel.substanceUuid) {
@@ -78,7 +82,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
               (substance => {
                 if (substance) {
                   elementRel.substanceName = substance._name;
-                  elementRel.relatedSubstanceUnii = substance.approvalID;
+                  elementRel.approvalID = substance.approvalID;
                 }
               });
             this.subscriptions.push(impSubNameSubscription);
