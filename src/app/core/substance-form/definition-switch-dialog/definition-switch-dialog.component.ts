@@ -5,8 +5,8 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { DomSanitizer } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import * as defiant from '../../../../../node_modules/defiant.js/dist/defiant.min.js';
-import { LoadingService } from '@gsrs-core/loading/index.js';
-import { UtilsService } from '@gsrs-core/utils/index.js';
+import { LoadingService } from '@gsrs-core/loading/index';
+import { UtilsService } from '@gsrs-core/utils/index';
 
 @Component( {
   selector: 'app-definition-switch-dialog',

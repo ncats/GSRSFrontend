@@ -85,7 +85,7 @@ export class UtilsService {
     return stringArray.join(' ');
   }
 
-  /* tslint:disable:no-bitwise */
+  /* eslint-disable no-bitwise */
   hashCode(...args): number {
     const stringToHash = JSON.stringify([...args]);
     let hash = 0, i, chr;

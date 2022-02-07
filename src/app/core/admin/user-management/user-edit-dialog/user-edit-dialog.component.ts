@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { isString } from 'util';
 import { IfStmt } from '@angular/compiler';
@@ -138,12 +138,12 @@ export class UserEditDialogComponent implements OnInit {
         groups.push(this.newGroup);
       }
       const userEditObj: UserEditObject = {
-        'username': this.user.user.username,
-        'isAdmin': this.user.user.admin,
-          'isActive': this.user.active,
-          'email': this.user.user.email || null,
-          'roles': rolesArr,
-          'groups' : groups,
+        username: this.user.user.username,
+        isAdmin: this.user.user.admin,
+        isActive: this.user.active,
+        email: this.user.user.email || null,
+        roles: rolesArr,
+        groups: groups
       };
 
       this.adminService.editUser(userEditObj, this.userID).pipe(take(1)).subscribe(response => {
@@ -179,13 +179,13 @@ export class UserEditDialogComponent implements OnInit {
         groups.push(this.newGroup);
       }
       const userEditObj: UserEditObject = {
-        'username': this.user.user.username,
-        'isAdmin': this.user.user.admin,
-        'isActive': this.user.active,
-        'email': this.user.user.email || null,
-        'roles': rolesArr,
-        'groups' : groups,
-        'password': this.newPassword
+        username: this.user.user.username,
+        isAdmin: this.user.user.admin,
+        isActive: this.user.active,
+        email: this.user.user.email || null,
+        roles: rolesArr,
+        groups: groups,
+        password: this.newPassword
       };
 
       this.adminService.addUser(userEditObj).pipe(take(1)).subscribe(response => {

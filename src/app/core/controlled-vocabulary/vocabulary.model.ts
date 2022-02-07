@@ -30,7 +30,7 @@ export interface VocabularyTerm {
 
 export interface VocabularyDictionary {
     [domain: string]: {
-        dictionary?: { [vocabularyValue: string]: VocabularyTerm },
-        list?: Array<VocabularyTerm>
+        dictionary?: { [vocabularyValue: string]: VocabularyTerm };
+        list?: Array<VocabularyTerm>;
     };
 }

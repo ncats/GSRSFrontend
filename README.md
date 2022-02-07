@@ -98,7 +98,6 @@ Doing the install at this time may reveal some elements that suggest an audit fi
 
 ```
 npm audit fix
-npm i @angular-devkit/build-angular@0.803.25
 ```
 
 ## Step 6: Run Application for Specific Environment

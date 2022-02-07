@@ -12,7 +12,7 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   templateUrl: './nucleic-acid-details-form.component.html',
   styleUrls: ['./nucleic-acid-details-form.component.scss']
 })
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 export class NucleicAcidDetailsFormComponent extends SubstanceCardBaseFilteredList<NucleicAcid> implements OnInit, AfterViewInit, OnDestroy {
 
   nucleicAcid: NucleicAcid;

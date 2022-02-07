@@ -5,7 +5,7 @@ import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
 import { isString } from 'util';
 import { Router } from '@angular/router';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user-profile',

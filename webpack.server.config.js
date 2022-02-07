@@ -3,7 +3,12 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: { server: './server.ts' },
-  resolve: { extensions: ['.js', '.ts'] },
+  resolve: { 
+    extensions: ['.js', '.ts'],
+    fallback: {
+      "util": require.resolve("util/")
+    }
+   },
   target: 'node',
   mode: 'none',
   // this makes sure we include node_modules and other 3rd party libraries

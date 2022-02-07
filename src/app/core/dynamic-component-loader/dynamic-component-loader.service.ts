@@ -27,31 +27,13 @@ export class DynamicComponentLoader {
   }
 
   /**
- * Get the value as an observable
- *
- * @template T
- * @param {(T | NgModuleFactory<T> | Promise<T> | Observable<T>)} value
- * @returns
- * @memberof LibConfigService
- */
-  private _wrapIntoObservable<T>(value: T | NgModuleFactory<T> | Promise<T> | Observable<T>) {
-    if (value instanceof Observable) {
-      return value;
-    } else if (value instanceof Promise) {
-      return from(value);
-    } else {
-      return of(value);
-    }
-  }
-
-  /**
    *  Retrieve a ComponentFactory, based on the specified componentId
    *  (defined in the DynamicComponentManifest array).
    *
    * @template T
-   * @param {string} componentId
-   * @param {Injector} [injector]
-   * @returns {Observable<ComponentFactory<T>>}
+   * @param componentId
+   * @param injector
+   * @returns
    * @memberof DynamicComponentLoader
    */
   getComponentFactory<T>(componentId: string, injector?: Injector): Observable<ComponentFactory<T>> {
@@ -77,14 +59,14 @@ export class DynamicComponentLoader {
     }));
   }
 
-    /**
+  /**
    * Load the factory object
    *
    * @template T
-   * @param {NgModuleFactory<any>} ngModuleFactory
-   * @param {string} componentId
-   * @param {Injector} [injector]
-   * @returns {Promise<ComponentFactory<T>>}
+   * @param ngModuleFactory
+   * @param componentId
+   * @param injector
+   * @returns
    * @memberof DynamicComponentLoader
    */
   loadFactory<T>(ngModuleFactory: NgModuleFactory<any>, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
@@ -123,5 +105,23 @@ export class DynamicComponentLoader {
     }
 
     return Promise.resolve(moduleRef.componentFactoryResolver.resolveComponentFactory<T>(dynamicComponentType));
+  }
+
+  /**
+  * Get the value as an observable
+  *
+  * @template T
+  * @param value
+  * @returns
+  * @memberof LibConfigService
+  */
+  private _wrapIntoObservable<T>(value: T | NgModuleFactory<T> | Promise<T> | Observable<T>) {
+    if (value instanceof Observable) {
+      return value;
+    } else if (value instanceof Promise) {
+      return from(value);
+    } else {
+      return of(value);
+    }
   }
 }

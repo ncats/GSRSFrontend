@@ -8,7 +8,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {MatSort, MatSortModule} from '@angular/material/sort';
-import { MatIconModule, MatTooltipModule } from '@angular/material';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   imports: [

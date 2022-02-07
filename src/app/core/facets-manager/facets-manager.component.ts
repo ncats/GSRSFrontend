@@ -20,26 +20,18 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./facets-manager.component.scss']
 })
 export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit {
-  facetString: string;
-  public facets: Array<Facet>;
-  private privateRawFacets: Array<Facet>;
-  public displayFacets: Array<DisplayFacet> = [];
-  private privateFacetParams: FacetParam;
-  public facetBuilder: FacetParam;
-  searchText: { [faceName: string]: { value: string, isLoading: boolean } } = {};
-  private facetSearchChanged = new Subject<{ index: number, query: any }>();
-  private activeSearchedFaced: Facet;
-  private facetsAuthSubscription: Subscription;
-  private subscriptions: Array<Subscription> = [];
   @Output() facetsParamsUpdated = new EventEmitter<FacetUpdateEvent>();
-  showAudit: boolean;
-  private facetsConfig: { [permission: string]: Array<string> };
-  toggle: Array<boolean> = [];
   @Output() facetsLoaded = new EventEmitter<number>();
-  private environment: Environment;
   @Input() includeFacetSearch = false;
   @Input() calledFrom = 'default';
   @Input() panelExpanded = false;
+  facetString: string;
+  public facets: Array<Facet>;
+  public displayFacets: Array<DisplayFacet> = [];
+  public facetBuilder: FacetParam;
+  searchText: { [faceName: string]: { value: string; isLoading: boolean; } } = {};
+  showAudit: boolean;
+  toggle: Array<boolean> = [];
   showDeprecated = false;
   loggedIn = false;
   hideDeprecatedCheckbox = false;
@@ -49,6 +41,14 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   _facetViewCategorySelected: string;
   _configName: string;
   _facetNameText: string;
+  private privateFacetParams: FacetParam;
+  private privateRawFacets: Array<Facet>;
+  private facetSearchChanged = new Subject<{ index: number; query: any; }>();
+  private activeSearchedFaced: Facet;
+  private facetsAuthSubscription: Subscription;
+  private subscriptions: Array<Subscription> = [];
+  private facetsConfig: { [permission: string]: Array<string> };
+  private environment: Environment;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -93,6 +93,42 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }, 50);
   }
 
+  @Input()
+  set rawFacets(facets: Array<Facet>) {
+    this.privateRawFacets = facets || [];
+    this.populateFacets();
+  }
+
+  @Input()
+  set configName(configName: string) {
+    this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
+    this._configName = configName;
+    if (configName === 'applications' || configName === 'clinicaltrialsus' || configName === 'products'
+    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm') {
+      this.hideDeprecatedCheckbox = true;
+    } else {
+      this.hideDeprecatedCheckbox = false;
+    }
+    this.populateFacets();
+  }
+
+  @Input()
+  set facetDisplayType(facetDisplayType: string) {
+    this._facetDisplayType = facetDisplayType;
+    this.populateFacets();
+  }
+
+  @Input()
+  set facetViewCategorySelected(facetViewCategorySelected: string) {
+    this._facetViewCategorySelected = facetViewCategorySelected;
+    this.populateFacets();
+  }
+
+  @Input()
+  set facetNameText(facetNameText: string) {
+    this._facetNameText = facetNameText;
+    this.populateFacets();
+  }
 
   ngOnInit() {
     this.facetString = this.activatedRoute.snapshot.queryParams['facets'] || '';
@@ -140,8 +176,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
           let isInSearhResults = false;
 
-          for (let i = 0; i < response.content.length; i++) {
-            if (response.content[i].label === value.label) {
+          for (const r of response.content) {
+            if (r.label === value.label) {
               isInSearhResults = true;
               break;
             }
@@ -165,48 +201,11 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  @Input()
-  set rawFacets(facets: Array<Facet>) {
-    this.privateRawFacets = facets || [];
-    this.populateFacets();
-  }
-
-  @Input()
-  set configName(configName: string) {
-    this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
-    this._configName = configName;
-    if (configName === 'applications' || configName === 'clinicaltrialsus' || configName === 'products'
-    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm') {
-      this.hideDeprecatedCheckbox = true;
-    } else {
-      this.hideDeprecatedCheckbox = false;
-    }
-    this.populateFacets();
-  }
-
-  @Input()
-  set facetDisplayType(facetDisplayType: string) {
-    this._facetDisplayType = facetDisplayType;
-    this.populateFacets();
-  }
-
-  @Input()
-  set facetViewCategorySelected(facetViewCategorySelected: string) {
-    this._facetViewCategorySelected = facetViewCategorySelected;
-    this.populateFacets();
-  }
-
-  @Input()
-  set facetNameText(facetNameText: string) {
-    this._facetNameText = facetNameText;
-    this.populateFacets();
-  }
-
   facetsFromParams() {
     if (this.facetString !== '') {
       const categoryArray = this.escapedSplit(this.facetString, ',');
-      for (let i = 0; i < (categoryArray.length); i++) {
-        const categorySplit = this.escapedSplit(categoryArray[i], '*');
+      for (const c of categoryArray) {
+        const categorySplit = this.escapedSplit(c, '*');
         const category = categorySplit[0];
         const fieldsArr = this.escapedSplit(categorySplit[1], '+');
         const params: { [facetValueLabel: string]: boolean } = {};
@@ -214,8 +213,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         let isAllMatch = false;
         let hasExcludeOption = false;
         let includeOptionsLength = 0;
-        for (let j = 0; j < fieldsArr.length; j++) {
-          const field = this.escapedSplit(fieldsArr[j], '.');
+        for (const f of fieldsArr) {
+          const field = this.escapedSplit(f, '.');
           field[0] = this.decodeValue(decodeURIComponent(field[0]));
           if (field[0] === 'is_all_match') {
             isAllMatch = true;

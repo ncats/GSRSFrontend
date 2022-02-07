@@ -17,7 +17,7 @@ import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import * as deepEqual from 'deep-equal';
 import { SubstanceFormLinksService } from '../links/substance-form-links.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-disulfide-dialog/copy-disulfide-dialog.component';
 import { Router } from '@angular/router';
@@ -150,7 +150,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
         this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
         this.vocabulary.X = nonStandard;
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const key in this.vocabulary) {
           this.validArray.push(this.vocabulary[key].value);
         }
@@ -160,7 +160,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.cvService.getDomainVocabulary('NUCLEIC_ACID_BASE').subscribe(response => {
         this.vocabulary = response['NUCLEIC_ACID_BASE'].dictionary;
         this.vocabulary.X = nonStandard;
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const key in this.vocabulary) {
           this.validArray.push(this.vocabulary[key].value);
         }

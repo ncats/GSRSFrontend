@@ -7,8 +7,8 @@ export interface Config {
     substanceDetailsCards?: Array<SubstanceDetailsCard>;
     facets?: {
         [name: string]: {
-            [permission: string]: Array<string>
-        }
+            [permission: string]: Array<string>;
+        };
     };
     codeSystemOrder?: Array<string>;
     contactEmail?: string;
@@ -22,6 +22,7 @@ export interface Config {
     adverseEventShinyHomepageURL?: string;
     adverseEventShinySubstanceNameURL?: string;
     adverseEventShinyAdverseEventURL?: string;
+    // eslint-disable-next-line member-delimiter-style
     FAERSDashboardAdverseEventUrl?: string;
     advancedSearchFacetDisplay?: boolean;
     facetDisplay?: Array<any>;

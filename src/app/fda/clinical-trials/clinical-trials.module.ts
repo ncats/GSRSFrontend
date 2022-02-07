@@ -22,7 +22,7 @@ import { MiniSearchComponent } from './mini-search/mini-search.component';
 import { ClinicalTrialService } from './clinical-trial/clinical-trial.service';
 import { ClinicalTrialDetailsBaseComponent } from './clinical-trial-details/clinical-trial-details-base.component';
 import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details/clinical-trial-details.component';
-// tslint:disable-next-line: max-line-length
+// eslint-disable-next-line max-len
 import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/clinical-trial-europe-details/clinical-trial-europe-details.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
@@ -110,7 +110,7 @@ export class ClinicalTrialsModule {
     });
   }
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: ClinicalTrialsModule,
       providers: [
