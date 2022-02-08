@@ -17,7 +17,6 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 
 
   constructor(
-    @ViewChild('scroller', {static: false}) private myScrollContainer: ElementRef,
     public cvService: ControlledVocabularyService,
     public dialogRef: MatDialogRef<CvTermDialogComponent>,
     public scrollToService: ScrollToService,
@@ -30,6 +29,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
     });
     }
+    @ViewChild('scroller', {static: false}) private myScrollContainer: ElementRef;
 
 
 
