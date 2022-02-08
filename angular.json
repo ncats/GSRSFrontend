@@ -379,7 +379,7 @@
       "prefix": "ncats",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/jsdraw-wrapper/tsconfig.lib.json",
             "project": "projects/jsdraw-wrapper/ng-package.json"
@@ -416,7 +416,7 @@
       "prefix": "ncats",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/ketcher-wrapper/tsconfig.lib.json",
             "project": "projects/ketcher-wrapper/ng-package.json"
@@ -453,7 +453,7 @@
       "prefix": "ncats",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/file-select/tsconfig.lib.json",
             "project": "projects/file-select/ng-package.json"
