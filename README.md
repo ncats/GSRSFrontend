@@ -37,7 +37,6 @@ Make sure to have these installed in order to run the application:
      path as the command will be used a lot.
    * The angular CLI tool currently needs to have build-angular version <=0.803.25
    * To force this installation after an audit fix run `npm i @angular-devkit/build-angular@0.803.25`
-
   
 ## Step 2 [Optional]: Clear any Previous Build Files
 
