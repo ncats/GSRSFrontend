@@ -5,8 +5,8 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { DomSanitizer } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import * as defiant from '../../../../../node_modules/defiant.js/dist/defiant.min.js';
-import { LoadingService } from '@gsrs-core/loading/index.js';
-import { UtilsService } from '@gsrs-core/utils/index.js';
+import { LoadingService } from '@gsrs-core/loading/index';
+import { UtilsService } from '@gsrs-core/utils/index';
 
 @Component( {
   selector: 'app-definition-switch-dialog',
@@ -75,13 +75,13 @@ export class DefinitionSwitchDialogComponent implements OnInit {
     this.structureid = this.utilsService.newUUID();
     this.alt = {};
 
-    this.currentAlts = _.chain(this.sub.relationships).filter(function (r) {
+    this.currentAlts = this.sub.relationships.map(r=>r).filter(function (r) {
       if (r.type === 'SUBSTANCE->SUB_ALTERNATE') {
         return r;
       }
     }).map(function (r) {
       return r['relatedSubstance'];
-    }).value();
+    });
 
     if (this.currentAlts.length > 0) {
       this.text = 'Select a substance to switch';

@@ -6,7 +6,7 @@ import { SubstanceFormService } from '../substance-form.service';
 import { StructureService } from '../../structure/structure.service';
 import { LoadingService } from '../../loading/loading.service';
 import { InterpretStructureResponse, StructureImportComponent, StructureImageModalComponent } from '@gsrs-core/structure';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';

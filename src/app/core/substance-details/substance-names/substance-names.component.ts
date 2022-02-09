@@ -3,10 +3,10 @@ import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-l
 import {SubstanceDetail, SubstanceName} from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
-import {Sort} from '@angular/material';
+import {Sort} from '@angular/material/sort';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {UtilsService} from '@gsrs-core/utils';
 

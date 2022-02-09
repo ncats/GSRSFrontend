@@ -94,116 +94,6 @@ export class ControlledVocabularyService extends BaseHttpService {
     });
   }
 
-  private fetchVocabulariesFromServer(...domainArgs: Array<string>): Observable<VocabularyDictionary> {
-
-    const url = `${this.apiBaseUrl}vocabularies/search`;
-    let params = new HttpParams();
-    params = params.append('top', '100000');
-
-    const domains = [...domainArgs];
-    const unProcessedDomains = domains.slice();
-
-    let domainLuceneQuery = '';
-
-    const responseDomainVocabulary: VocabularyDictionary = {};
-
-    domains.forEach((domain, index) => {
-      this.vocabularyLoadingIndicators[domain] = true;
-      if (this.vocabularySubject[domain] == null) {
-        this.vocabularySubject[domain] = new Subject();
-      }
-
-      responseDomainVocabulary[domain] = {
-        dictionary: {},
-        list: []
-      };
-
-      if (index > 0) {
-        domainLuceneQuery += ' OR ';
-      }
-
-      domainLuceneQuery += `root_domain:${domain}`;
-
-    });
-
-    params = params.append('q', domainLuceneQuery);
-
-    const options = {
-      params: params
-    };
-
-    return this.http.get<PagingResponse<Vocabulary>>(url, options).pipe(
-      map((response: PagingResponse<Vocabulary>) => {
-
-        if (response.content && response.content.length) {
-
-          response.content.forEach(vocabulary => {
-
-            const singleDomainVocabulary: VocabularyDictionary = {};
-
-            if (vocabulary.terms && vocabulary.terms.length) {
-
-              if (!singleDomainVocabulary[vocabulary.domain]) {
-                singleDomainVocabulary[vocabulary.domain] = {
-                  dictionary: {}
-                };
-              }
-
-              singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms.sort(function(a, b) {
-                const termA = (a.display && a.display.toUpperCase()) || (a.value && a.value.toUpperCase()) || '';
-                const termB = (b.display && b.display.toUpperCase()) || (b.value && b.value.toUpperCase()) || '';
-                if (termA < termB) {
-                  return -1;
-                }
-                if (termA > termB) {
-                  return 1;
-                }
-                return 0;
-              });
-
-
-              vocabulary.terms.forEach(vocabularyTerm => {
-                singleDomainVocabulary[vocabulary.domain].dictionary[vocabularyTerm.value] = vocabularyTerm;
-              });
-            }
-
-            if (this.vocabularySubject[vocabulary.domain] != null) {
-              this.vocabularySubject[vocabulary.domain].next(singleDomainVocabulary);
-              this.vocabularySubject[vocabulary.domain].complete();
-              this.vocabularySubject[vocabulary.domain] = null;
-              responseDomainVocabulary[vocabulary.domain] = singleDomainVocabulary[vocabulary.domain];
-              this.vocabularyDictionary[vocabulary.domain] = responseDomainVocabulary[vocabulary.domain];
-              this.vocabularyLoadingIndicators[vocabulary.domain] = false;
-            }
-
-            unProcessedDomains.splice(unProcessedDomains.indexOf(vocabulary.domain), 1);
-          });
-
-          if (unProcessedDomains && unProcessedDomains.length) {
-            unProcessedDomains.forEach(domain => {
-              const singleDomainVocabulary: VocabularyDictionary = {};
-              singleDomainVocabulary[domain] = { dictionary: {}, list: [] };
-              this.vocabularySubject[domain].next(singleDomainVocabulary);
-              this.vocabularySubject[domain].complete();
-              this.vocabularySubject[domain] = null;
-            });
-          }
-
-        } else {
-          domains.forEach((domain, index) => {
-            const singleDomainVocabulary: VocabularyDictionary = {};
-            singleDomainVocabulary[domain] = { dictionary: {}, list: [] };
-            this.vocabularySubject[domain].next(singleDomainVocabulary);
-            this.vocabularySubject[domain].complete();
-            this.vocabularyLoadingIndicators[domain] = false;
-          });
-        }
-
-        return responseDomainVocabulary;
-      })
-    );
-  }
-
   getStructure(structure: string) {
     const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
     return this.http.get(url);
@@ -216,7 +106,7 @@ export class ControlledVocabularyService extends BaseHttpService {
     const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
     return url;
   }
-    
+
 
   search(domain: string, query: string): Observable<Array<VocabularyTerm>> {
     return new Observable(observer => {
@@ -271,5 +161,115 @@ export class ControlledVocabularyService extends BaseHttpService {
   public addVocabTerm(vocab: any): Observable<any> {
     const url = `${this.apiBaseUrl}vocabularies`;
     return this.http.put( url, vocab);
+  }
+
+  private fetchVocabulariesFromServer(...domainArgs: Array<string>): Observable<VocabularyDictionary> {
+
+    const url = `${this.apiBaseUrl}vocabularies/search`;
+    let params = new HttpParams();
+    params = params.append('top', '100000');
+
+    const domains = [...domainArgs];
+    const unProcessedDomains = domains.slice();
+
+    let domainLuceneQuery = '';
+
+    const responseDomainVocabulary: VocabularyDictionary = {};
+
+    domains.forEach((domain, index) => {
+      this.vocabularyLoadingIndicators[domain] = true;
+      if (this.vocabularySubject[domain] == null) {
+        this.vocabularySubject[domain] = new Subject();
+      }
+
+      responseDomainVocabulary[domain] = {
+        dictionary: {},
+        list: []
+      };
+
+      if (index > 0) {
+        domainLuceneQuery += ' OR ';
+      }
+
+      domainLuceneQuery += `root_domain:${domain}`;
+
+    });
+
+    params = params.append('q', domainLuceneQuery);
+
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<Vocabulary>>(url, options).pipe(
+      map((response: PagingResponse<Vocabulary>) => {
+
+        if (response.content && response.content.length) {
+
+          response.content.forEach(vocabulary => {
+
+            const singleDomainVocabulary: VocabularyDictionary = {};
+
+            if (vocabulary.terms && vocabulary.terms.length) {
+
+              if (!singleDomainVocabulary[vocabulary.domain]) {
+                singleDomainVocabulary[vocabulary.domain] = {
+                  dictionary: {}
+                };
+              }
+              // eslint-disable-next-line prefer-arrow-functions
+              singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms.sort(function(a, b) {
+                const termA = (a.display && a.display.toUpperCase()) || (a.value && a.value.toUpperCase()) || '';
+                const termB = (b.display && b.display.toUpperCase()) || (b.value && b.value.toUpperCase()) || '';
+                if (termA < termB) {
+                  return -1;
+                }
+                if (termA > termB) {
+                  return 1;
+                }
+                return 0;
+              });
+
+
+              vocabulary.terms.forEach(vocabularyTerm => {
+                singleDomainVocabulary[vocabulary.domain].dictionary[vocabularyTerm.value] = vocabularyTerm;
+              });
+            }
+
+            if (this.vocabularySubject[vocabulary.domain] != null) {
+              this.vocabularySubject[vocabulary.domain].next(singleDomainVocabulary);
+              this.vocabularySubject[vocabulary.domain].complete();
+              this.vocabularySubject[vocabulary.domain] = null;
+              responseDomainVocabulary[vocabulary.domain] = singleDomainVocabulary[vocabulary.domain];
+              this.vocabularyDictionary[vocabulary.domain] = responseDomainVocabulary[vocabulary.domain];
+              this.vocabularyLoadingIndicators[vocabulary.domain] = false;
+            }
+
+            unProcessedDomains.splice(unProcessedDomains.indexOf(vocabulary.domain), 1);
+          });
+
+          if (unProcessedDomains && unProcessedDomains.length) {
+            unProcessedDomains.forEach(domain => {
+              const singleDomainVocabulary: VocabularyDictionary = {};
+              singleDomainVocabulary[domain] = { dictionary: {}, list: [] };
+              this.vocabularySubject[domain].next(singleDomainVocabulary);
+              this.vocabularySubject[domain].complete();
+              this.vocabularySubject[domain] = null;
+            });
+          }
+
+        } else {
+          domains.forEach((domain, index) => {
+            const singleDomainVocabulary: VocabularyDictionary = {};
+            singleDomainVocabulary[domain] = { dictionary: {}, list: [] };
+            this.vocabularySubject[domain].next(singleDomainVocabulary);
+            this.vocabularySubject[domain].complete();
+            this.vocabularyLoadingIndicators[domain] = false;
+          });
+        }
+
+        return responseDomainVocabulary;
+      })
+    );
   }
 }

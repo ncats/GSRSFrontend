@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceDetail, Definition} from '../../substance/substance.model';
-import { MatDialog} from '@angular/material';
+import { MatDialog} from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subject } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';

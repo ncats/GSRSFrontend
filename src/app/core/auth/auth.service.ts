@@ -18,7 +18,7 @@ export class AuthService {
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.isLoading = true;
     this.fetchAuth().pipe(take(1)).subscribe(auth => {
@@ -35,14 +35,13 @@ export class AuthService {
     });
   }
 
+  get auth(): Auth {
+    return this._auth;
+  }
+
   public checkAuth(): Observable<Auth> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
     return this.http.get<any>(`${url}whoami`);
-  }
-
-  private fetchAuth(): Observable<Auth> {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    return this.http.get<Auth>(`${url}whoami`);
   }
 
   login(username: string, password: string): Observable<Auth> {
@@ -104,10 +103,6 @@ export class AuthService {
     });
   }
 
-  get auth(): Auth {
-    return this._auth;
-  }
-
   logout(): void {
     // if (
     //   !this.configService.configData
@@ -120,8 +115,7 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.removeItem('authToken');
       const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i];
+      for (const cookie of cookies) {
           const eqPos = cookie.indexOf('=');
           const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
           document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
@@ -149,8 +143,8 @@ export class AuthService {
     const rolesList = [...roles];
 
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
-      for (let i = 0; i < rolesList.length; i++) {
-        let role = rolesList[i].charAt(0).toLowerCase() + rolesList[i].slice(1);
+      for (const r of rolesList) {
+        let role = r.charAt(0).toLowerCase() + r.slice(1);
         role = role.charAt(0).toUpperCase() + role.slice(1);
         if (this._auth.roles.indexOf(role as Role) === -1) {
           return false;
@@ -179,8 +173,8 @@ export class AuthService {
   hasAnyRoles(...roles: Array<Role|string>): boolean {
     const rolesList = [...roles];
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
-      for (let i = 0; i < rolesList.length; i++) {
-        let role = rolesList[i].charAt(0).toLowerCase() + rolesList[i].slice(1);
+      for (const r of rolesList) {
+        let role = r.charAt(0).toLowerCase() + r.slice(1);
         role = role.charAt(0).toUpperCase() + role.slice(1);
         if (this._auth.roles.indexOf(role as Role) > -1) {
           return true;
@@ -237,5 +231,10 @@ export class AuthService {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
     return this.http.get< any >(`${url}profile/downloads`);
 
+  }
+
+  private fetchAuth(): Observable<Auth> {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    return this.http.get<Auth>(`${url}whoami`);
   }
 }

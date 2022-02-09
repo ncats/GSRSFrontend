@@ -13,7 +13,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { PropertyFormComponent } from './property-form.component';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
-import { MatCheckboxModule, MatListModule } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   imports: [

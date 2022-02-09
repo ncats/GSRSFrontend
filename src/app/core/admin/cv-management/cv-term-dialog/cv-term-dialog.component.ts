@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { VocabularyTerm, Vocabulary, ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 
 @Component({
@@ -51,9 +51,9 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   }
 
   getStructure(structure) {
-    this.cvService.getStructure(structure).subscribe(response => {
-      return response;
-    });
+    this.cvService.getStructure(structure).subscribe(response => (
+      response
+    ));
   }
 
 
@@ -62,7 +62,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
     term.simpleSrc = this.cvService.getStructureUrl(term.simplifiedStructure);
 
   }
- 
+
 
 
   submit(): void {
@@ -71,7 +71,9 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
       this.loading = false;
       if (response.terms && response.terms.length === this.vocabulary.terms.length) {
         alert('vocabulary updated');
-        setTimeout(() => {this.dialogRef.close(response); }, 200);
+        setTimeout(() => {
+          this.dialogRef.close(response);
+        }, 200);
         } else {
           alert('invalid vocabulary');
         }

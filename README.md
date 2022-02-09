@@ -96,8 +96,7 @@ npm install
 Doing the install at this time may reveal some elements that suggest an audit fix. While this can be done, newer versions of the angular build tool are not compatible with the current build process, so the specific <=0.803.25 version must be forced. To both do a basic audit fix and force this version, you can run the following commands (either windows CMD or bash):
 
 ```
-npm audit fix
-npm i @angular-devkit/build-angular@0.803.25
+npm audit fix // this step not needed after angular upgrade
 ```
 
 ## Step 6: Run Application for Specific Environment

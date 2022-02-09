@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { InterpretStructureResponse } from '../structure/structure-post-response.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { Editor } from '../structure-editor/structure.editor.model';
 import { LoadingService } from '../loading/loading.service';

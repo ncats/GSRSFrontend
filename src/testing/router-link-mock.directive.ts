@@ -1,9 +1,9 @@
 import { Directive, Input } from '@angular/core';
 
-/* tslint:disable:directive-selector */
-/* tslint:disable:use-host-property-decorator */
-/* tslint:disable:directive-class-suffix */
-/* tslint:disable:no-input-rename */
+/* eslint-disable @angular-eslint/directive-selector */
+/* eslint-disable */
+/* eslint-disable @angular-eslint/directive-class-suffix */
+/* eslint-disable @angular-eslint/no-input-rename */
 @Directive({
     selector: '[routerLink]',
     host: { '(click)': 'onClick()' }

@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DynamicComponentLoaderModule } from '@gsrs-core/dynamic-component-loader';
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 import { fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests, fdaDynamicBrowseComponentManifests } from './fda-dynamic-componet-manifests';
 import { SubstanceCardsModule } from '@gsrs-core/substance-details';
 import { ApplicationModule} from './application/application.module';
@@ -115,7 +115,7 @@ export class FdaModule {
       router.config[0].children.push(route);
     });
   }
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: FdaModule,
       providers: [

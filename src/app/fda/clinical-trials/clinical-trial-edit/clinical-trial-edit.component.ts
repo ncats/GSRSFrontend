@@ -14,7 +14,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTable } from '@angular/material/table';
 
 import { FormsModule } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {AuthService} from '@gsrs-core/auth/auth.service';
 import { Pipe, PipeTransform } from '@angular/core';

@@ -36,7 +36,7 @@ export class ScrollToRegistration {
 
     unregister(): void {
         this.triggerElement.removeEventListener('click', this.scrollToEventHandler);
-        this.registrationTerminatedSubject.next();
+        this.registrationTerminatedSubject.next(0);
     }
 
     inactivateRegistration(): void {

@@ -13,6 +13,18 @@ export class ConfigService {
 
     constructor(private http: HttpClient) { }
 
+    get configData(): Config {
+        return this._configData;
+    }
+
+    set configData(configData: Config) {
+        this._configData = configData;
+    }
+
+    get environment(): Environment {
+        return this._environment;
+    }
+
     // This is the method you want to call at bootstrap
     // Important: It should return a Promise
     load(environment: Environment): Promise<any> {
@@ -50,9 +62,11 @@ export class ConfigService {
                     const filteredNavItems = config.navItems.filter(navItem => {
                         if (navItem.children != null && navItem.children.length > 0) {
                             let isNotExisting = true;
+                            // eslint-disable-next-line prefer-for-of
                             for (let i = 0; i < navItemsCopy.length; i++) {
                                 if (navItemsCopy[i].display === navItem.display && navItemsCopy[i].children != null) {
                                     navItemsCopy[i].children = navItemsCopy[i].children.concat(navItem.children);
+                                    // eslint-disable-next-line arrow-body-style
                                     navItemsCopy[i].children.sort((a, b) => {
                                         return a.order - b.order;
                                     });
@@ -74,17 +88,5 @@ export class ConfigService {
                 this._configData = config;
             })
             .catch((err: any) => Promise.resolve());
-    }
-
-    get configData(): Config {
-        return this._configData;
-    }
-
-    set configData(configData: Config) {
-        this._configData = configData;
-    }
-
-    get environment(): Environment {
-        return this._environment;
     }
 }

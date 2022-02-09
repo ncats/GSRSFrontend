@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverse-event/service/adverseevent.service';
 import { SubstanceDetailsBaseTableDisplay } from '../../../substance-products/substance-details-base-table-display';
-import { Sort } from '@angular/material';
+import { Sort } from '@angular/material/sort';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { ConfigService } from '@gsrs-core/config';
 import { FacetParam } from '@gsrs-core/facets-manager';

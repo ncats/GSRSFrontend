@@ -4,7 +4,7 @@ import {SubstanceAmount, SubstanceDetail, SubstanceProperty} from '../../substan
 import {Subject} from 'rxjs';
 import { UtilsService } from '@gsrs-core/utils';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-substance-properties',
