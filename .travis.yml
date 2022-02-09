@@ -25,5 +25,5 @@ script:
   
 after_success:
   - ls ./dist/browser
-  - git clone --depth=50 https://${GIT_ACCESS_TOKEN}github.com/ncats/gsrs-ci.git ncats/gsrs-ci
+  - git clone --depth=50 https://${GIT_ACCESS_TOKEN}@github.com/ncats/gsrs-ci.git ncats/gsrs-ci
   - ls -l
