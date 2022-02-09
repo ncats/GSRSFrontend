@@ -7,11 +7,16 @@ node_js:
 install:
 
   - cp package.dev.json package.json
-  - npm install --save-dev @angular-devkit/build-angular
-  - npm install -g @angular/cli
+  - rm -rf node_modules
+  - rm package-lock.json
+  - rm -rf package.json
+  - cp package.dev.json package.json
+  - npm install
   - npm run build-file-select
   - npm run build-jsdraw-wrapper
   - npm run build-ketcher-wrapper
+  - cp package.real.json package.json
   - npm install
+  - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod

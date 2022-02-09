@@ -6,7 +6,7 @@ import {UtilsService} from '../../utils/utils.service';
 import {Subject} from 'rxjs';
 import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({

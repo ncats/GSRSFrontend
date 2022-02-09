@@ -19,7 +19,7 @@ import { SubstanceFormPolymerClassificationService } from './substance-form-poly
   templateUrl: './substance-form-polymer-classification.component.html',
   styleUrls: ['./substance-form-polymer-classification.component.scss']
 })
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBase
   implements OnInit, AfterViewInit, OnDestroy {
 

@@ -16,7 +16,7 @@ import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
 import {ConfigService} from '@gsrs-core/config';
 import { catchError } from 'rxjs/operators';
 import { LoadingService } from '@gsrs-core/loading';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 

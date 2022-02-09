@@ -4,7 +4,8 @@ import {
   Injectable,
   Injector,
   NgModuleFactory,
-  Compiler
+  Compiler,
+  createNgModuleRef
 } from '@angular/core';
 import { from, Observable, throwError, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
@@ -27,31 +28,13 @@ export class DynamicComponentLoader {
   }
 
   /**
- * Get the value as an observable
- *
- * @template T
- * @param {(T | NgModuleFactory<T> | Promise<T> | Observable<T>)} value
- * @returns
- * @memberof LibConfigService
- */
-  private _wrapIntoObservable<T>(value: T | NgModuleFactory<T> | Promise<T> | Observable<T>) {
-    if (value instanceof Observable) {
-      return value;
-    } else if (value instanceof Promise) {
-      return from(value);
-    } else {
-      return of(value);
-    }
-  }
-
-  /**
    *  Retrieve a ComponentFactory, based on the specified componentId
    *  (defined in the DynamicComponentManifest array).
    *
    * @template T
-   * @param {string} componentId
-   * @param {Injector} [injector]
-   * @returns {Observable<ComponentFactory<T>>}
+   * @param componentId
+   * @param injector
+   * @returns
    * @memberof DynamicComponentLoader
    */
   getComponentFactory<T>(componentId: string, injector?: Injector): Observable<ComponentFactory<T>> {
@@ -69,26 +52,26 @@ export class DynamicComponentLoader {
     }
 
     return this._wrapIntoObservable(path()).pipe(mergeMap((t: any) => {
-      let moduleFactory = null;
+      // let moduleFactory = null;
       const offlineMode = this.compiler instanceof Compiler;
       //  true means AOT enalbed compiler (Prod build), false means JIT enabled compiler (Dev build)
-      moduleFactory = offlineMode ? t : this.compiler.compileModuleSync(t);
-      return this.loadFactory<T>(moduleFactory, componentId, injector);
+      // moduleFactory = offlineMode ? t : this.compiler.compileModuleSync(t);
+      return this.loadFactory<T>(t, componentId, injector);
     }));
   }
 
-    /**
+  /**
    * Load the factory object
    *
    * @template T
-   * @param {NgModuleFactory<any>} ngModuleFactory
-   * @param {string} componentId
-   * @param {Injector} [injector]
-   * @returns {Promise<ComponentFactory<T>>}
+   * @param ngModuleFactory
+   * @param componentId
+   * @param injector
+   * @returns
    * @memberof DynamicComponentLoader
    */
-  loadFactory<T>(ngModuleFactory: NgModuleFactory<any>, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
-    const moduleRef = ngModuleFactory.create(injector || this.injector);
+  loadFactory<T>(module: any, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
+    const moduleRef = createNgModuleRef(module, injector || this.injector);
     const dynamicComponentType = moduleRef.injector.get(DYNAMIC_COMPONENT, null);
     if (!dynamicComponentType) {
       const dynamicModule: LazyLoadedComponentManifest = moduleRef.injector.get(DYNAMIC_MODULE, null);
@@ -123,5 +106,23 @@ export class DynamicComponentLoader {
     }
 
     return Promise.resolve(moduleRef.componentFactoryResolver.resolveComponentFactory<T>(dynamicComponentType));
+  }
+
+  /**
+  * Get the value as an observable
+  *
+  * @template T
+  * @param value
+  * @returns
+  * @memberof LibConfigService
+  */
+  private _wrapIntoObservable<T>(value: T | NgModuleFactory<T> | Promise<T> | Observable<T>) {
+    if (value instanceof Observable) {
+      return value;
+    } else if (value instanceof Promise) {
+      return from(value);
+    } else {
+      return of(value);
+    }
   }
 }

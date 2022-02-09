@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SubstanceSsgGradeComponent } from './substance-ssg-grade.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [

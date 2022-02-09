@@ -13,7 +13,7 @@ import { SubstanceFormBase } from '../base-classes/substance-form-base';
   templateUrl: './substance-form-mixture-details.component.html',
   styleUrls: ['./substance-form-mixture-details.component.scss']
 })
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 export class SubstanceFormMixtureDetailsComponent  extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
 
   parent: SubstanceRelated;

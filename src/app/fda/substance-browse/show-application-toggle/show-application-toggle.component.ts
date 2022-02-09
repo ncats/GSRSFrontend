@@ -6,7 +6,7 @@ import { ConfigService } from '../../../core/config/config.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { LoadingService } from '@gsrs-core/loading';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { Subscription } from 'rxjs';

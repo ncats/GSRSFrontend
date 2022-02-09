@@ -51,8 +51,8 @@ export interface UploadObject {
     status: string;
     version?: number;
     _self?: {
-        type: string,
-        url: string
+        type: string;
+        url: string;
         };
 }
 

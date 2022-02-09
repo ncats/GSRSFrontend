@@ -1,10 +1,12 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ProductService } from '../../product/service/product.service';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table-display';
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';

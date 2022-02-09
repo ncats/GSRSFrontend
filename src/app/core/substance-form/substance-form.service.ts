@@ -454,7 +454,7 @@ export class SubstanceFormService implements OnDestroy {
       this.ready().subscribe(() => {
         const definition = this.getDefinition();
         observer.next(definition);
-        // tslint:disable-next-line:no-shadowed-variable
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         this.definitionEmitter.subscribe(definition => {
           observer.next(definition);
         });
@@ -1368,7 +1368,7 @@ this.emitDisulfideLinkUpdate();
       deletedUuids.forEach(uuid => {
         substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
       });
-      substanceString = substanceString.replace(/,,/g, ',');
+      substanceString = substanceString.replace(/,[,]+/g, ',');
       substanceString = substanceString.replace(/\[,/g, '[');
       substanceString = substanceString.replace(/,\]/g, ']');
       substanceCopy = JSON.parse(substanceString);
@@ -1561,7 +1561,7 @@ this.emitDisulfideLinkUpdate();
     }
     const toks = slist.split(';');
     const sites = [];
-    // tslint:disable-next-line:forin
+    // eslint-disable-next-line guard-for-in
     for (const i in toks) {
       const l = toks[i];
       if (l === '') {

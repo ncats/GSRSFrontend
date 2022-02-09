@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_BOTTOM_SHEET_DATA } from '@angular/material';
-import { MatBottomSheetRef } from '@angular/material';
+import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 
 @Component({

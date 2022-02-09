@@ -342,13 +342,15 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-structurally-diverse-source',
     path: 'substance-form-structurally-diverse-source',
-    loadChildren: () => import('./substance-form/structurally-diverse/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.module')
+    loadChildren: () =>
+    import('./substance-form/structurally-diverse/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.module')
       .then(m => m.SubstanceFormStructurallyDiverseSourceModule)
   },
   {
     componentId: 'substance-form-structurally-diverse-organism',
     path: 'substance-form-structurally-diverse-organism',
-    loadChildren: () => import('./substance-form/structurally-diverse/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.module')
+    loadChildren: () =>
+    import('./substance-form/structurally-diverse/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.module')
       .then(m => m.SubstanceFormStructurallyDiverseOrganismModule)
   },
   {

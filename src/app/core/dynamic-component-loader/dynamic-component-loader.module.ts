@@ -21,7 +21,7 @@ export class DynamicComponentLoaderModule {
   static forRoot(
       lazyLoadedManifests: LazyLoadedComponentManifest[] = [],
       dynamicManifests: DynamicComponentManifest<any>[] = []
-    ): ModuleWithProviders {
+    ): ModuleWithProviders<any> {
     return {
       ngModule: DynamicComponentLoaderModule,
       providers: [
@@ -34,7 +34,7 @@ export class DynamicComponentLoaderModule {
       ],
     };
   }
-  static forModule(manifest: LazyLoadedComponentManifest): ModuleWithProviders {
+  static forModule(manifest: LazyLoadedComponentManifest): ModuleWithProviders<any> {
     return {
       ngModule: DynamicComponentLoaderModule,
       providers: [
@@ -46,7 +46,7 @@ export class DynamicComponentLoaderModule {
       ],
     };
   }
-  static forChild(component: Type<any>): ModuleWithProviders {
+  static forChild(component: Type<any>): ModuleWithProviders<any> {
     return {
       ngModule: DynamicComponentLoaderModule,
       providers: [

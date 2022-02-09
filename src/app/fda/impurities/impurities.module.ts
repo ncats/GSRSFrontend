@@ -9,7 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatExpansionModule } from '@angular/material';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { SubstanceTextSearchModule } from '@gsrs-core/substance-text-search/substance-text-search.module';
@@ -95,7 +95,7 @@ export class ImpuritiesModule {
     });
   }
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: ImpuritiesModule,
       providers: [

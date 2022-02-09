@@ -16,14 +16,6 @@ export class ExpandDetailsDirective implements AfterViewInit, OnDestroy {
     private renderer: Renderer2
   ) { }
 
-  ngAfterViewInit() {
-  }
-
-  ngOnDestroy() {
-    clearTimeout(this.timerToExpand);
-    clearTimeout(this.timerToCollapse);
-  }
-
   @ContentChild(ExpandableDetailsDirective, {static: false})
   set expandableDetails(expandableDetails: ExpandableDetailsDirective) {
     this.expandableDetailsElement = expandableDetails.element.nativeElement;
@@ -70,6 +62,14 @@ export class ExpandDetailsDirective implements AfterViewInit, OnDestroy {
         this.collapseDetails();
       }, 1000);
     }
+  }
+
+  ngAfterViewInit() {
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.timerToExpand);
+    clearTimeout(this.timerToCollapse);
   }
 
   private expandDetails(): void {
