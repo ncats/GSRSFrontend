@@ -25,4 +25,4 @@ script:
   
 after_success:
   - ls ./dist/browser
-  - .travis/test.sh
+  - test.sh
