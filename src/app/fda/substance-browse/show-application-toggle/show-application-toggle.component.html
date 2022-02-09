@@ -17,7 +17,7 @@
       </button>
     </div>
 
-    <div class="padleft10px" *ngIf="isAdmin && loadedComponents && loadedComponents.products && additionalExportOptions.indexOf('prodxlsx') > -1">
+    <div class="padleft10px divheight" *ngIf="isAdmin && loadedComponents && loadedComponents.products && additionalExportOptions.indexOf('prodxlsx') > -1">
       <button matTooltip="Export All Products for Substance Search Results" mat-button (click)="export('prod')"
         class="mat-button export-button mat-raised-button">
         <mat-icon svgIcon="get_app"></mat-icon> Products

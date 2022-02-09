@@ -74,9 +74,16 @@
           [model]="product.dosageForm" (valueChange)="product.dosageForm = $event">
         </app-cv-input>
 
+        <!-- Multiple Selection from dropdown of Route of Administration -->
+        <app-tag-selector class="col-1" class="tags" (tagsUpdate)="updateRouteAdmin($event, prodIndex)" [tags]="localRouteAdmin" cvDomain="PROD_ROUTE_OF_ADMIN"
+        placeholder="Route of Administration">
+        </app-tag-selector>
+
+        <!--
         <app-cv-input class="col-1" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration"
           name="routeAdmin" [model]="product.routeAdmin" (valueChange)="product.routeAdmin = $event">
         </app-cv-input>
+        -->
 
         <app-cv-input class="col-1" domain="PROD_UNIT_PRESENTATION" title="Unit Of Presentation"
           name="unitPresentation" [model]="product.unitPresentation"

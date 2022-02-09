@@ -19,6 +19,7 @@ export class ApplicationProductFormComponent implements OnInit {
   reviewProductMessage: Array<any> = [];
   productMessage = '';
   username = null;
+  localRouteAdmin: Array<String> = [];
 
   constructor(
     private applicationService: ApplicationService,
@@ -101,4 +102,7 @@ export class ApplicationProductFormComponent implements OnInit {
     this.applicationService.addNewIngredient(prodIndex);
   }
 
+  updateRouteAdmin(routeAdmins: Array<string>, prodIndex: number): void {
+    this.application.applicationProductList[prodIndex].routeAdmin = routeAdmins.toString();
+  }
 }

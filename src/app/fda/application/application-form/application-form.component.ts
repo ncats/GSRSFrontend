@@ -133,6 +133,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
         // Check if Data is from external source, and Disable some fields.
         if (this.application) {
+          this.titleService.setTitle(`Edit Application ` + this.application.appType + ' ' + this.application.appNumber);
           if (this.application.provenance) {
             if (this.application.provenance.toLowerCase() === 'darrts') {
               this.isDisableData = true;
