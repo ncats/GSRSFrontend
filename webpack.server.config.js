@@ -18,7 +18,18 @@ module.exports = {
     filename: '[name].js'
   },
   module: {
-    rules: [{ test: /\.ts$/, loader: 'ts-loader' }]
+    rules: [
+      { test: /\.ts$/, loader: 'ts-loader' },
+      {
+        test: /\.(sass|less|css)$/,
+        use: [
+            "style-loader", // 3. Inject styles into DOM
+            "css-loader", // 2. Turns css into commonjs
+            "sass-loader", // 1. Turns sass into css
+        ]
+      },
+      { test: /\.txt$/, use: 'raw-loader' }
+    ]
   },
   plugins: [
     // Temporary Fix for issue: https://github.com/angular/angular/issues/11580

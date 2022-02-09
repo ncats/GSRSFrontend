@@ -108,6 +108,7 @@
     "ng-packagr": "13.2.1",
     "node-sass": "7.0.1",
     "protractor": "7.0.0",
+    "raw-loader": "4.0.2",
     "rimraf": "3.0.2",
     "ts-node": "10.5.0",
     "tslib": "2.3.1",
