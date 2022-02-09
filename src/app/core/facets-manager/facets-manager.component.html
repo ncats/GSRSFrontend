@@ -48,11 +48,11 @@
           <div class="facet-value-checkbox">
             <mat-checkbox class="include" matTooltip="Include"
               (change)="updateFacetSelection($event, facet.name, value.label, true)"
-              [checked]="facetParams[facet.name] !== null && facetParams[facet.name].params[value.label] === true">
+              [checked]="facetParams[facet.name] && facetParams[facet.name].params[value.label] === true">
             </mat-checkbox>
             <mat-checkbox class="exclude" matTooltip="Exclude"
               (change)="updateFacetSelection($event, facet.name, value.label, false)"
-              [checked]="facetParams[facet.name] !== null && facetParams[facet.name].params[value.label] === false"
+              [checked]="facetParams[facet.name] && facetParams[facet.name].params[value.label] === false"
               *ngIf="facet.$showAdvanced">
             </mat-checkbox>
           </div>
@@ -104,11 +104,11 @@
           All Match
         </mat-checkbox>
         <div class="pull-right">
-          <button *ngIf="facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading"
+          <button *ngIf="facetParams[facet.name] && facetParams[facet.name].hasSelections" mat-flat-button [disabled]="isLoading"
             (click)="clearFacetSelection(facet.name)">
             Clear
           </button>
-          <button *ngIf="facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary"
+          <button *ngIf="facetParams[facet.name] && facetParams[facet.name].isUpdated" class="apply-button" mat-flat-button color="primary"
             [disabled]="isLoading" (click)="applyFacetsFilter(facet.name)">
             Apply
           </button>

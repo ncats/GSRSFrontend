@@ -189,7 +189,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
               || this.privateFacetParams[this.activeSearchedFaced.name].params[value.label] === false)) {
             removeFacet = false;
           }
-
           return !removeFacet;
         });
         this.activeSearchedFaced.values = this.activeSearchedFaced.values.concat(response.content);
@@ -255,7 +254,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         facetParam: this.privateFacetParams, displayFacets: this.displayFacets,
         deprecated: this.showDeprecated
       });
-
     });
   }
 
@@ -423,7 +421,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
-
     const catArr = [];
     let facetString = '';
     for (const key of Object.keys(this.privateFacetParams)) {
@@ -528,7 +525,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let paramsString: string;
     let isAllMatchString: string;
-
     if (this.privateFacetParams[facetName] == null) {
       this.privateFacetParams[facetName] = {
         params: {},
@@ -588,7 +584,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   updateAllMatch(facetName: string): void {
-
     const eventLabel = this.environment.isAnalyticsPrivate ? 'facet' : `${facetName}`;
     const eventValue = this.privateFacetParams[facetName].isAllMatch ? 1 : 0;
     this.gaService.sendEvent('substancesFiltering', `check:facet-all_match`, eventLabel, eventValue);
