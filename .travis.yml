@@ -25,4 +25,5 @@ script:
   
 after_success:
   - ls ./dist/browser
-  - test.sh
+  - ls
+  - bash test.sh
