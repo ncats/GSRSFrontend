@@ -21,7 +21,7 @@ install:
   - npm install --save-dev webpack
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
-  - npm run build:fda:prod
+  - npm --version
   
 after_success:
   - ls ./dist/browser
