@@ -21,6 +21,7 @@ import { UtilsService } from '../utils/utils.service';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
+import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { stringify } from 'querystring';
 class CustomEncoder implements HttpParameterCodec {
@@ -47,6 +48,8 @@ export class SubstanceService extends BaseHttpService {
   private searchKeys: { [structureSearchTerm: string]: string } = {};
   public showDeprecated = false;
   private resultEmitter = new Subject<any>();
+  showImagePopup = new Subject<boolean>();
+  imagePopupUnit = new Subject<StructuralUnit>();
   private searchResult: any;
   constructor(
     public http: HttpClient,
