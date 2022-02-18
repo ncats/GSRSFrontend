@@ -10,7 +10,9 @@ setup_git() {
 cp -r frontend/src/main/resources/static/substanceRelationshipVisualizer ./
 rm -rf frontend/src/main/resources/static
 mkdir frontend/src/main/resources/static
-git commit -m "travis test"
+git add frontend/src/main/resources/static
+git add -u 
+git commit -m "travis test before build"
 git push -u origin fda_travis_sync
 ls
 
