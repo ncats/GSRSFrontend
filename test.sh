@@ -1,13 +1,14 @@
 #!/bin/sh
 
 setup_git() {
+  cd ../
   git clone --depth=50 -b fda https://GsrsBot:${GIT_ACCESS_TOKEN}@github.com/ncats/gsrs-ci.git
   ls -l
   git stash
   git fetch
   cd gsrs-ci
   git status
-  git checkout fda_travis_sync
+  git checkout -b fda_travis_sync
   git merge fda
 cp -r frontend/src/main/resources/static/substanceRelationshipVisualizer ./
 rm -rf frontend/src/main/resources/static
