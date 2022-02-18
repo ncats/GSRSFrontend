@@ -6,6 +6,7 @@ setup_git() {
   git stash
   cd gsrs-ci
   git status
+  git checkout -b fda_travis_sync
 cp -r frontend/src/main/resources/static/substanceRelationshipVisualizer ./
 rm -rf frontend/src/main/resources/static
 mkdir frontend/src/main/resources/static
