@@ -7,9 +7,11 @@ setup_git() {
   cd gsrs-ci
   git status
   git checkout -b fda_travis_sync
+  git merge fda
 cp -r frontend/src/main/resources/static/substanceRelationshipVisualizer ./
 rm -rf frontend/src/main/resources/static
 mkdir frontend/src/main/resources/static
+cp -r ../workspace/GSRSFrontend/dist/browser/* frontend/src/main/resources/static/
 git add frontend/src/main/resources/static
 git add -u 
 git commit -m "travis test before build"
