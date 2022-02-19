@@ -8,7 +8,9 @@ setup_git() {
   git fetch
   cd gsrs-ci
   git status
-  git checkout -b fda_travis_sync
+  git fetch
+  git checkout fda_travis_sync
+  git fetch
   git pull
   git merge fda
 cp -r frontend/src/main/resources/static/substanceRelationshipVisualizer ./
