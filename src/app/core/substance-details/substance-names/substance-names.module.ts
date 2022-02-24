@@ -12,6 +12,10 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { TableModule } from 'primeng/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -20,12 +24,15 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     CdkTableModule,
     MatPaginatorModule,
     MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
     ReactiveFormsModule,
     FormsModule,
     ReferencesManagerModule,
     MatIconModule,
     MatDialogModule,
     MatSortModule,
+    TableModule,
     MatTooltipModule
   ],
   declarations: [SubstanceNamesComponent,
