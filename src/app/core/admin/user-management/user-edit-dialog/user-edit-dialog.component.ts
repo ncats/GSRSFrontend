@@ -85,6 +85,7 @@ export class UserEditDialogComponent implements OnInit {
       } else {
         this.newUser = true;
         this.user = {groups: [], roles: [],  user: {}};
+        this.user.active = true;
         this.loading = false;
         this.adminService.getGroups().pipe(take(1)).subscribe( response => {
           this.groups = [];
