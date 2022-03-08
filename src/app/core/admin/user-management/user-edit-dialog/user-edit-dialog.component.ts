@@ -26,6 +26,7 @@ export class UserEditDialogComponent implements OnInit {
   groups: Array< any >;
   submitted = false;
   response: any;
+  isError: boolean = false;
   roles = [
     {name: 'Query', hasRole: false},
     {name: 'DataEntry', hasRole: false},
@@ -119,8 +120,10 @@ export class UserEditDialogComponent implements OnInit {
 
   saveChanges(): void {
     if (this.changePassword && this.newPassword !== '' ) {
+      this.isError = true;
       this.message = 'Cancel or submit new password to save other changes';
     } else {
+      this.isError = false;
       const rolesArr = [];
       this.roles.forEach(role => {
         if (role.hasRole) {
@@ -149,13 +152,17 @@ export class UserEditDialogComponent implements OnInit {
 
       this.adminService.editUser(userEditObj, this.userID).pipe(take(1)).subscribe(response => {
         if (response && response.user) {
+          this.isError = false;
           this.successfulChange(response);
         } else {
+          this.isError = true;
           this.message = 'Unable to edit user';
         }
       }, error => {
+        this.isError = true;
         this.message = 'Unable to edit user';
-        if (error.error && isString(error.error) ) {
+        if (error.error) {
+          this.isError = true;
           this.message = error;
         }
       });
@@ -163,6 +170,7 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   addUser(): void {
+    this.isError = false;
     if (this.newPassword === this.newPasswordConfirm) {
       const rolesArr = [];
       this.roles.forEach(role => {
@@ -194,11 +202,24 @@ export class UserEditDialogComponent implements OnInit {
           this.successfulChange(response);
         }
       }, error => {
-        if (error.error && isString(error.error) ) {
-          this.message = error.error;
+        if (error.error) {
+          this.isError = true;
+          this.message = error.error.message.split(':')[1];
         }
+        this.adminService.getUserByName(this.user.user.username).pipe(take(1)).subscribe(response => {
+          let userIsActive = false;
+          userIsActive = response.active;
+          if(userIsActive) {
+            this.message += '. This user is active.';
+          } else {
+            this.message += '. This user is NOT active.';
+          }
+
+        }, err => {
+        });
       });
     } else {
+      this.isError = true;
       this.message = 'passwords do not match';
     }
   }
@@ -217,18 +238,23 @@ export class UserEditDialogComponent implements OnInit {
 
   validatePassword(): void {
     if (this.newPassword !== this.newPasswordConfirm) {
+      this.isError = true;
       this.message = 'Error: passwords do not match';
       this.newPassword = '';
       this.newPasswordConfirm = '';
     } else {
+      this.isError = false;
       if ( this.authService.getUser === this.user.identifier ) {
         this.adminService.changeMyPassword('', this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+        this.isError = false;
           this.changePassword = !this.changePassword;
           this.message = 'Password updated successfully';
         }, error => {
-          if (error.error && isString(error.error) ) {
+          if (error.error) {
+            this.isError = true;
             this.message = 'Error - ' + error.error;
           } else {
+            this.isError = true;
             this.newPassword = '';
             this.newPasswordConfirm = '';
             this.changePassword = !this.changePassword;
@@ -238,11 +264,14 @@ export class UserEditDialogComponent implements OnInit {
       } else {
         this.adminService.changePassword( this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
           this.changePassword = !this.changePassword;
+          this.isError = false;
           this.message = 'Password updated successfully';
         }, error => {
-          if (error.error && isString(error.error) ) {
+          if (error.error) {
+            this.isError = true;
             this.message = 'Error: ' + error.error;
           } else {
+            this.isError = true;
             this.newPassword = '';
             this.newPasswordConfirm = '';
             this.changePassword = !this.changePassword;
