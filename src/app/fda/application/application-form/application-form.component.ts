@@ -111,7 +111,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
           });
         }
       }, error => {
-        this.loadingService.setLoading(false); });
+        this.loadingService.setLoading(false);
+      });
     this.subscriptions.push(routeSubscription);
   }
 
@@ -332,7 +333,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
         }
       }, 4000);
     }, error => {
-      this.loadingService.setLoading(false); }
+      this.loadingService.setLoading(false);
+    }
       /*
       , (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;
@@ -496,7 +498,29 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     const isValid = this.validateDate(this.application.statusDate);
     if (isValid === false) {
       this.statusDateMessage = 'Status Date is invalid';
+    } else {
+      const isValid = this.validateFutureDate(this.application.statusDate);
+      if (isValid === false) {
+        this.statusDateMessage = 'Status Date should not be a future date';
+      }
     }
+  }
+
+  validateFutureDate(dateinput: any): boolean {
+    let isValid = true;
+    // compare if the entered date is future date or not
+    const now = new Date();
+    const nowDate = now.setHours(0, 0, 0);
+    if ((dateinput !== null) && (dateinput.length > 0)) {
+      if ((dateinput.length >= 8) || (dateinput.length <= 10)) {
+        const enteredDate = new Date(dateinput);
+        const enteredDateOnly = enteredDate.setHours(0, 0, 0);
+        if (enteredDateOnly > nowDate) {
+          isValid = false;
+        }
+      }
+    }
+    return isValid;
   }
 
   validateDate(dateinput: any): boolean {

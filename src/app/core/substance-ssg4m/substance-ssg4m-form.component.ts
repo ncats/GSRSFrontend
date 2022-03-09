@@ -7,7 +7,7 @@ import {
   QueryList,
   OnDestroy, HostListener
 } from '@angular/core';
-import { formSections } from './form-sections.constant';
+import { formSections } from '../substance-form/form-sections.constant';
 import { ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { LoadingService } from '../loading/loading.service';
@@ -15,9 +15,9 @@ import { MainNotificationService } from '../main-notification/main-notification.
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { SubstanceFormSection } from './substance-form-section';
-import { SubstanceFormService } from './substance-form.service';
-import { ValidationMessage, SubstanceFormResults, SubstanceFormDefinition } from './substance-form.model';
+import { SubstanceFormSection } from '../substance-form/substance-form-section';
+import { SubstanceFormService } from '../substance-form/substance-form.service';
+import { ValidationMessage, SubstanceFormResults, SubstanceFormDefinition } from '../substance-form/substance-form.model';
 import { Subscription, Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
@@ -28,21 +28,21 @@ import { Title } from '@angular/platform-browser';
 import { AuthService } from '@gsrs-core/auth';
 import { take, map } from 'rxjs/operators';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
-import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
-import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
+import { SubmitSuccessDialogComponent } from '../substance-form/submit-success-dialog/submit-success-dialog.component';
+import { MergeConceptDialogComponent } from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
+import { DefinitionSwitchDialogComponent } from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 
 
 @Component({
-  selector: 'app-substance-form',
-  templateUrl: './substance-form.component.html',
-  styleUrls: ['./substance-form.component.scss']
+  selector: 'app-substance-ssg4m-form',
+  templateUrl: './substance-ssg4m-form.component.html',
+  styleUrls: ['./substance-ssg4m-form.component.scss']
 })
-export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   id?: string;
-  formSections: Array< SubstanceFormSection > = [];
+  formSections: Array<SubstanceFormSection> = [];
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
   @ViewChildren('expansionPanel', { read: MatExpansionPanel }) matExpansionPanels: QueryList<MatExpansionPanel>;
   private subClass: string;
@@ -55,9 +55,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ];
   showSubmissionMessages = false;
   submissionMessage: string;
-  validationMessages: Array< ValidationMessage >;
+  validationMessages: Array<ValidationMessage>;
   validationResult = false;
-  private subscriptions: Array< Subscription > = [];
+  private subscriptions: Array<Subscription> = [];
   copy: string;
   private overlayContainer: HTMLElement;
   serverError: boolean;
@@ -84,10 +84,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     'specifiedSubstanceG2',
     'specifiedSubstanceG3',
     'specifiedSubstanceG4m'];
-    imported = false;
-    forceChange = false;
-    sameSubstance = false;
-    UNII: string;
+  imported = false;
+  forceChange = false;
+  sameSubstance = false;
+  UNII: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -121,40 +121,40 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
         // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
 
-       /* const read = JSON.parse(response);
-        if (this.id && read.uuid && this.id === read.uuid) {
-          this.substanceFormService.importSubstance(read, 'update');
-          this.submissionMessage = null;
-          this.validationMessages = [];
-          this.showSubmissionMessages = false;
+        /* const read = JSON.parse(response);
+         if (this.id && read.uuid && this.id === read.uuid) {
+           this.substanceFormService.importSubstance(read, 'update');
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {
+         if ( read.substanceClass === this.substanceClass) {
+           this.imported = true;
+           this.substanceFormService.importSubstance(read);
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {*/
+        setTimeout(() => {
+          this.router.onSameUrlNavigation = 'reload';
           this.loadingService.setLoading(false);
-          this.isLoading = false;
-        } else {
-        if ( read.substanceClass === this.substanceClass) {
-          this.imported = true;
-          this.substanceFormService.importSubstance(read);
-          this.submissionMessage = null;
-          this.validationMessages = [];
-          this.showSubmissionMessages = false;
-          this.loadingService.setLoading(false);
-          this.isLoading = false;
-        } else {*/
-          setTimeout(() => {
-            this.router.onSameUrlNavigation = 'reload';
-            this.loadingService.setLoading(false);
-            this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+          this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
 
-          }, 1000);
-        }
-       // }
-     // }
+        }, 1000);
+      }
+      // }
+      // }
     });
 
   }
 
   test() {
     this.router.navigated = false;
-        this.router.navigate([this.router.url]);
+    this.router.navigate([this.router.url]);
   }
 
   ngOnInit() {
@@ -185,30 +185,26 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             this.imported = true;
             this.getDetailsFromImport(record.record);
             this.gaService.sendPageView(`Substance Register`);
-
           } else {
-          this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
-          if (this.copy) {
-            const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
-            this.getPartialSubstanceDetails(this.copy, copyType);
-            this.gaService.sendPageView(`Substance Register`);
-          } else {
-            setTimeout(() => {
+            this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
+            if (this.copy) {
+              const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
+              this.getPartialSubstanceDetails(this.copy, copyType);
               this.gaService.sendPageView(`Substance Register`);
-              this.subClass = this.activatedRoute.snapshot.params['type'] || 'chemical';
-              this.substanceClass = this.subClass;
-              this.titleService.setTitle('Register - ' + this.subClass);
-              this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
-                this.setFormSections(formSections[this.subClass]);
-                this.loadingService.setLoading(false);
-                this.isLoading = false;
-
+            } else {
+              setTimeout(() => {
+                this.gaService.sendPageView(`Substance Register`);
+                this.subClass = this.activatedRoute.snapshot.params['type'] || 'specifiedSubstanceG4m';
+                this.substanceClass = this.subClass;
+                this.titleService.setTitle('Register - ' + this.subClass);
+                this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+                  this.setFormSections(formSections[this.subClass]);
+                  this.loadingService.setLoading(false);
+                  this.isLoading = false;
+                });
               });
-            });
+            }
           }
-        }
-
-
         }
       });
     this.subscriptions.push(routeSubscription);
@@ -233,67 +229,65 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
       });
     });
-
   }
 
   ngAfterViewInit(): void {
-
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
 
         const total = this.formSections.length;
         let finished = 0;
         if (!this.forceChange) {
-           this.loadingService.setLoading(true);
-           const startTime = new Date();
-        this.dynamicComponents.forEach((cRef, index) => {
-          this.dynamicComponentLoader
-            .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-            .subscribe(componentFactory => {
-              this.loadingService.setLoading(true);
-              this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
-              this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
-              this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
-                this.formSections[index].menuLabel = label;
-              });
-              const hiddenStateSubscription =
-                this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
-                  this.formSections[index].isHidden = isHidden;
+          this.loadingService.setLoading(true);
+          const startTime = new Date();
+          this.dynamicComponents.forEach((cRef, index) => {
+            this.dynamicComponentLoader
+              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
+              .subscribe(componentFactory => {
+                this.loadingService.setLoading(true);
+                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
+                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
+                  this.formSections[index].menuLabel = label;
                 });
-              this.subscriptions.push(hiddenStateSubscription);
-              this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
-                this.formSections[index].canAddItem = isList;
-                if (isList) {
-                  const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
-                    this.formSections[index].matExpansionPanel.open();
-                    this.formSections[index].dynamicComponentRef.instance.addItem();
+                const hiddenStateSubscription =
+                  this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+                    this.formSections[index].isHidden = isHidden;
                   });
-                  this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
-                    aieSubscription.unsubscribe();
-                  });
-                }
-              });
-              this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
-              finished++;
-              if (finished >= total) {
-                this.loadingService.setLoading(false);
-              } else {
-                const currentTime = new Date();
-                if (currentTime.getTime() - startTime.getTime() > 12000) {
-                  if (confirm('There was a network error while fetching files, would you like to refresh?')) {
-                    window.location.reload();
+                this.subscriptions.push(hiddenStateSubscription);
+                this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
+                  this.formSections[index].canAddItem = isList;
+                  if (isList) {
+                    const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
+                      this.formSections[index].matExpansionPanel.open();
+                      this.formSections[index].dynamicComponentRef.instance.addItem();
+                    });
+                    this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
+                      aieSubscription.unsubscribe();
+                    });
+                  }
+                });
+                this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
+                finished++;
+                if (finished >= total) {
+                  this.loadingService.setLoading(false);
+                } else {
+                  const currentTime = new Date();
+                  if (currentTime.getTime() - startTime.getTime() > 12000) {
+                    if (confirm('There was a network error while fetching files, would you like to refresh?')) {
+                      window.location.reload();
+                    }
                   }
                 }
-              }
-            setTimeout(() => {
-              this.loadingService.setLoading(false);
-              this.UNII = this.substanceFormService.getUNII();
-            }, 5);
-            });
-        });
-       // this.loadingService.setLoading(false);
+                setTimeout(() => {
+                  this.loadingService.setLoading(false);
+                  this.UNII = this.substanceFormService.getUNII();
+                }, 5);
+              });
+          });
+          // this.loadingService.setLoading(false);
 
-      }
+        }
         subscription.unsubscribe();
       });
   }
@@ -418,7 +412,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   getSubstanceDetails(newType?: string): void {
     this.substanceService.getSubstanceDetails(this.id).pipe(take(1)).subscribe(response => {
-      if (response._name){
+      if (response._name) {
         this.titleService.setTitle('Edit - ' + response._name);
       }
       if (response) {
@@ -463,41 +457,41 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.substanceFormService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
         this.setFormSections(formSections[response.substanceClass]);
         if (!same) {
-        setTimeout(() => {
-          this.forceChange = true;
-          this.dynamicComponents.forEach((cRef, index) => {
-            this.dynamicComponentLoader
-              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-              .subscribe(componentFactory => {
-                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
-                this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
-                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
-                  this.formSections[index].menuLabel = label;
-                });
-                const hiddenStateSubscription =
-                  this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
-                    this.formSections[index].isHidden = isHidden;
+          setTimeout(() => {
+            this.forceChange = true;
+            this.dynamicComponents.forEach((cRef, index) => {
+              this.dynamicComponentLoader
+                .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
+                .subscribe(componentFactory => {
+                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                  this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
+                  this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
+                    this.formSections[index].menuLabel = label;
                   });
-                this.subscriptions.push(hiddenStateSubscription);
-                this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
-                  this.formSections[index].canAddItem = isList;
-                  if (isList) {
-                    const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
-                      this.formSections[index].matExpansionPanel.open();
-                      this.formSections[index].dynamicComponentRef.instance.addItem();
+                  const hiddenStateSubscription =
+                    this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+                      this.formSections[index].isHidden = isHidden;
                     });
-                    this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
-                      aieSubscription.unsubscribe();
-                    });
-                  }
+                  this.subscriptions.push(hiddenStateSubscription);
+                  this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
+                    this.formSections[index].canAddItem = isList;
+                    if (isList) {
+                      const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
+                        this.formSections[index].matExpansionPanel.open();
+                        this.formSections[index].dynamicComponentRef.instance.addItem();
+                      });
+                      this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
+                        aieSubscription.unsubscribe();
+                      });
+                    }
+                  });
+                  this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
                 });
-                this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
-              });
-          });
+            });
 
-          this.canApprove = false;
-        });
-      }
+            this.canApprove = false;
+          });
+        }
       }, error => {
         this.loadingService.setLoading(false);
       });
@@ -541,10 +535,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.formSections = [];
     sectionNames.forEach(sectionName => {
       const formSection = new SubstanceFormSection(sectionName);
-     /* if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
-        (formSection.dynamicComponentName === 'substance-form-names'
-          || formSection.dynamicComponentName === 'substance-form-codes-card'))) {
-      } */
+      /* if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
+         (formSection.dynamicComponentName === 'substance-form-names'
+           || formSection.dynamicComponentName === 'substance-form-codes-card'))) {
+       } */
       this.formSections.push(formSection);
     });
   }
@@ -861,21 +855,21 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     });
     this.subscriptions.push(dialogSubscription);
 
-}
+  }
 
 
-mergeConcept() {
-  this.feature = undefined;
-  const dialogRef = this.dialog.open(MergeConceptDialogComponent, {
-    width: '900px', data: {uuid: this.id}
-  });
-  this.overlayContainer.style.zIndex = '1002';
-}
+  mergeConcept() {
+    this.feature = undefined;
+    const dialogRef = this.dialog.open(MergeConceptDialogComponent, {
+      width: '900px', data: { uuid: this.id }
+    });
+    this.overlayContainer.style.zIndex = '1002';
+  }
 
   definitionSwitch() {
     this.feature = undefined;
     const dialogRef = this.dialog.open(DefinitionSwitchDialogComponent, {
-      width: '900px', data: {uuid: this.id}, autoFocus: false
+      width: '900px', data: { uuid: this.id }, autoFocus: false
     });
     this.overlayContainer.style.zIndex = '1000';
   }

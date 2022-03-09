@@ -110,7 +110,7 @@
       <!-- Display Content Details -->
       <div class="cards" *ngIf="applications && applications.length; else noRecordApplication">
         <div class="substance-cards">
-          <mat-card *ngFor="let application of applications">
+          <mat-card *ngFor="let application of applications; let index = index">
             <mat-card-title>
               <div>
                 <a class="substance-name" [routerLink]="['/application', application.id]" target="_blank">
@@ -126,7 +126,8 @@
               <div>
                 <span class="center">Center:&nbsp;<span class="colorlightpurple">{{application.center}}</span></span>
                 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                <span class="center colordarkblue">Provenance:&nbsp;<span class="colordarkblue">{{application.provenance}}</span></span>
+                <span class="center colordarkblue">Provenance:&nbsp;<span
+                    class="colordarkblue">{{application.provenance}}</span></span>
               </div>
 
               <div>
@@ -149,12 +150,12 @@
 
                       <div *ngIf="application.applicationProductList.length > 0; else noRecordProdName">
 
-                        <div *ngFor="let prod of application.applicationProductList; let index = index">
+                        <div *ngFor="let prod of application.applicationProductList; let indexProd = index">
 
                           <div class="row">
 
                             <div class="row-property-key-4">
-                              Product Name {{index + 1}}:
+                              Product Name {{indexProd + 1}}:
                             </div>
                             <div class="row-property-value-4">
                               <div *ngIf="prod.applicationProductNameList.length > 0; else noProdNameList">
@@ -195,22 +196,48 @@
                       <div class="row-property-4">
                       -->
                               <div class="row-property-key-4">
-                                Ingredient Name: {{ indexIng + 1}}:
+                                Ingredient Name: {{indexIng + 1}}:
                               </div>
                               <div class="row-property-value-4">
 
                                 <!-- Display Ingredient Name -->
                                 <div *ngIf="ing.substanceKey; else noIngred">
-                                  <span class="colorred">&diams;</span>
-                                  <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank"
-                                    onmouseover="document.getElementById('div1').style.display = 'block';">
-                                    {{ing._ingredientName}}
-                                  </a>
-                                    <!-- Display Structure -->
-                                    <div id="div1" *ngIf="ing._substanceUuid" style="display:none;">
-                                      <img class="structure-img" appSubstanceImage [entityId]="ing._substanceUuid" size="400">
+                                  <div class="divflex">
+                                    <div>
+                                      <span class="colorred">&diams;</span>
+                                      <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank">
+                                        {{ing._ingredientName}}
+                                      </a>
+                                      <!--
+                                      <button mat-button class="structure-parameters"
+                                        (mouseover)="openImageModal($event, ing._substanceUuid)">
+                                        <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
+                                      </button>
+                                      -->
                                     </div>
-                                  <br>
+                                    <!--
+                                    <div class="structure-parameters bordergray">
+                                      <button mat-icon-button (click)="openImageModal($event, ing._substanceUuid)">
+                                        <mat-icon class="bordergray">analytics</mat-icon>
+                                      </button>
+                                    -->
+                                      &nbsp;&nbsp;
+                                      <a class="zoom" (click)="openImageModal($event, ing._substanceUuid)">
+                                        <img class="structure-image" appSubstanceImage [entityId]="ing._substanceUuid" size="20"
+                                          [stereo]="showStereo" [atomMaps]="null">
+                                      </a>
+
+                                    <!-- Display Structure -->
+                                    <!--
+                                      <div id="struct_{{index}}_{{indexProd}}_{{indexIng}}" *ngIf="ing._substanceUuid"
+                                        class="structure-style displaynone">
+                                        <img class="structure-img" appSubstanceImage [entityId]="ing._substanceUuid"
+                                          size="400">
+                                      </div>
+
+                                    </div>
+                                    -->
+                                  </div>
 
                                   <!-- Display Ingredient Type -->
                                   <div *ngIf="ing.ingredientType">

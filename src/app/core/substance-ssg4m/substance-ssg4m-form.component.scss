@@ -1,0 +1,154 @@
+.top-fixed {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    top: 64px;
+    width: 100%;
+    background-color: white;
+    align-items: center;
+    justify-content: center;
+    box-shadow:     0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+    z-index: 1001;
+}
+
+.cdk-overlay-pane {
+  z-index: 1005;
+}
+mat-select-panel{
+  z-index: 1005;
+}
+
+.admin-functions, .changeClass {
+  margin-bottom: -15px;
+  margin-left: 30px;
+  margin-right: 5px;
+  margin-top: -10px;
+  color: #4793d1;
+
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 20px !important;
+  }
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 5px;
+}
+.advanced-features {
+  z-index: 2000 !important;
+
+  display:flex;
+  flex-direction: row;
+  padding-left: 10px;
+}
+::ng-deep .cdk-overlay-pane {
+  margin-top: 20px !important;
+}
+
+.form-content-container {
+    // position: fixed;
+    // top: 121px;
+    // right: 0;
+    // bottom: 0;
+    // left: 0;
+    overflow: hidden;
+    padding-top: 121px;
+}
+
+.actions-container {
+    max-width: 1028px;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    display: flex;
+}
+
+.mat-accordion {
+    width: 100%;
+    max-width: 1020px;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.submission-messages {
+  overflow: hidden;
+  height: auto;
+  -webkit-transition: all 500ms ease-out;
+  transition: all 500ms ease-out;
+  max-width: 1028px;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+
+  &.collapsed {
+    max-height: 0;
+  }
+
+  &.expanded {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .submission-message {
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .validation-message {
+    display: flex;
+    padding: 5px 0;
+    align-items: center;
+
+    .message-type {
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-right: 20px;
+      padding:10px;
+      border-radius:3px;
+    }
+  }
+
+  .dismiss-container {
+    display: flex;
+  }
+
+  .warning-message {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+
+  }
+
+
+  .error-message {
+    color: #a94442;
+    background-color: #f2dede;
+  }
+
+}
+
+.validate-button{
+  margin-left:15px;
+}
+
+.mat-expansion-panel-header-title {
+  align-items: center;
+}
+
+.hide-show-messages {
+  margin-left: 10px;
+  border: 1px solid;
+}
+
+.internal-link {
+  color: #448aff;
+}
+
+.import-button {
+  margin-left: 15px;
+}
+

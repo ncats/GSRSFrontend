@@ -141,7 +141,7 @@
               <mat-form-field class="col-1">
                 <input matInput [disabled]="isDisableData" placeholder="Submit Date (mm/dd/yyyy)"
                   [(ngModel)]="application.submitDate" name="submitDate" (change)="validateSubmitDate()" />
-                <mat-hint *ngIf="submitDateMessage">{{submitDateMessage}}</mat-hint>
+                <mat-hint *ngIf="submitDateMessage"><span class="colorred">{{submitDateMessage}}</span></mat-hint>
               </mat-form-field>
 
               <!--
@@ -172,7 +172,7 @@
               <mat-form-field class="col-1">
                 <input matInput [disabled]="isDisableData" placeholder="Status Date (mm/dd/yyyy)"
                   [(ngModel)]="application.statusDate" name="statusDate" (change)="validateStatusDate()" />
-                <mat-hint *ngIf="statusDateMessage">{{statusDateMessage}}</mat-hint>
+                <mat-hint *ngIf="statusDateMessage"><span class="colorred">{{statusDateMessage}}</span></mat-hint>
               </mat-form-field>
             </div>
 

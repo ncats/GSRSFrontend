@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-  SubstanceDetail,
-  SubstanceName,
-  SubstanceStructure,
+  SubstanceDetail
+} from '../substance/substance.model';
+import { SubstanceName, SubstanceNameOrg,  SubstanceStructure,
   SubstanceMoiety,
   Subunit,
   Link,
@@ -13,22 +13,21 @@ import {
   Sugar,
   Linkage,
   NucleicAcid,
-  StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification
-} from '../substance/substance.model';
+  StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification} from '../substance/substance.model';
 import {
   SequenceUnit,
   SubstanceFormDefinition,
   SubstanceFormResults, SubunitSequence, ValidationResults, ValidationMessage
-} from './substance-form.model';
+} from '../substance-form/substance-form.model';
 import { Observable, Subject, ReplaySubject, Subscription } from 'rxjs';
-import { SubstanceService } from '../substance/substance.service';
-import { UtilsService } from '../utils/utils.service';
+import { SubstanceService } from '@gsrs-core/substance/substance.service';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
 import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
 
 @Injectable()
-export class SubstanceFormService implements OnDestroy {
+export class SubstanceSsg4mService implements OnDestroy {
   private privateSubstance: SubstanceDetail;
   private substanceStateHash?: number;
   private substanceEmitter: ReplaySubject<SubstanceDetail>;
@@ -68,6 +67,7 @@ export class SubstanceFormService implements OnDestroy {
     this.unloadSubstance();
   }
 
+  /*
   loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean): Observable<void> {
 
     if (method) {
@@ -167,17 +167,6 @@ export class SubstanceFormService implements OnDestroy {
             codes: [],
             properties: []
           };
-        } else if (substanceClass === 'specifiedSubstanceG4m') {
-          this.privateSubstance = {
-            substanceClass: substanceClass,
-            references: [],
-            specifiedSubstanceG4m: {
-              parentSubstance: {},
-              process: [],
-            },
-            codes: [],
-            properties: []
-          };
         } else if (substanceClass === 'polymer') {
           this.privateSubstance = {
             substanceClass: substanceClass,
@@ -229,6 +218,7 @@ export class SubstanceFormService implements OnDestroy {
       observer.complete();
     });
   }
+  */
 
   get substanceFormAction(): Observable<'load' | 'unload'> {
     return this.substanceFormActionEmitter.asObservable();
@@ -279,6 +269,7 @@ export class SubstanceFormService implements OnDestroy {
     });
   }
 
+  /*
   setDefinitionFromDefRef(access: any) {
 
     if (this.privateSubstance.structurallyDiverse) {
@@ -505,6 +496,7 @@ export class SubstanceFormService implements OnDestroy {
     this.privateSubstance.definitionType = definition.definitionType;
     this.definitionEmitter.next(this.getDefinition());
   }
+  */
 
   getJson() {
     return this.privateSubstance;
@@ -522,7 +514,7 @@ export class SubstanceFormService implements OnDestroy {
     this.privateSubstance.status = status;
     alert('Status changed to ' + status);
   }
-
+/*
   private getDefinition(): SubstanceFormDefinition {
 
     if (!this.privateSubstance[this.subClass]) {
@@ -592,730 +584,7 @@ export class SubstanceFormService implements OnDestroy {
   }
 
 
-  getAllSites(): Array<DisplaySite> {
-
-    const allSitesArr = [];
-
-    if (this.privateSubstance.substanceClass === 'protein') {
-      if (this.privateSubstance.protein.disulfideLinks) {
-        this.privateSubstance.protein.disulfideLinks.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              if (site.subunitIndex && site.residueIndex) {
-                const newLink: DisplaySite = {
-                  residue: site.residueIndex,
-                  subunit: site.subunitIndex,
-                  type: 'disulfide'
-                };
-                allSitesArr.push(newLink);
-              }
-            });
-          }
-        });
-      }
-      if (this.privateSubstance.protein.otherLinks) {
-        this.privateSubstance.protein.otherLinks.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              if (site.subunitIndex && site.residueIndex) {
-                const newLink: DisplaySite = { residue: site.residueIndex, subunit: site.subunitIndex, type: 'other' };
-                allSitesArr.push(newLink);
-              }
-            });
-          }
-        });
-      }
-      if (this.privateSubstance.protein.glycosylation) {
-        const glycosylation = this.privateSubstance.protein.glycosylation;
-        if (glycosylation.CGlycosylationSites) {
-          glycosylation.CGlycosylationSites.forEach(site => {
-            const newLink: DisplaySite = {
-              residue: site.residueIndex,
-              subunit: site.subunitIndex,
-              type: 'C-Glycosylation'
-            };
-            allSitesArr.push(newLink);
-          });
-        }
-        if (glycosylation.NGlycosylationSites) {
-          glycosylation.NGlycosylationSites.forEach(site => {
-            const newLink: DisplaySite = {
-              residue: site.residueIndex,
-              subunit: site.subunitIndex,
-              type: 'N-Glycosylation'
-            };
-            allSitesArr.push(newLink);
-          });
-        }
-
-        if (glycosylation.OGlycosylationSites) {
-          glycosylation.OGlycosylationSites.forEach(site => {
-            if (site.subunitIndex && site.residueIndex) {
-              const newLink: DisplaySite = {
-                residue: site.residueIndex,
-                subunit: site.subunitIndex,
-                type: 'O-Glycosylation'
-              };
-              allSitesArr.push(newLink);
-            }
-          });
-        }
-      }
-    }
-    if (this.privateSubstance.modifications.structuralModifications) {
-      this.privateSubstance.modifications.structuralModifications.forEach(mod => {
-        if (mod.sites) {
-          mod.sites.forEach(site => {
-            if (site.subunitIndex && site.residueIndex) {
-              const newLink: DisplaySite = {
-                residue: site.residueIndex,
-                subunit: site.subunitIndex,
-                type: 'modification'
-              };
-              allSitesArr.push(newLink);
-            }
-          });
-        }
-      });
-    }
-    if (this.privateSubstance.properties) {
-      this.privateSubstance.properties.forEach(prop => {
-        if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
-          const featArr = prop.value.nonNumericValue.split(';');
-          featArr.forEach(f => {
-            const sites = f.split('-');
-            const subunitIndex = Number(sites[0].split('_')[0]);
-            for (let i = Number(sites[0].split('_')[1]); i <= Number(sites[1].split('_')[1]); i++) {
-              const newLink: DisplaySite = { residue: Number(i), subunit: subunitIndex, type: 'feature' };
-              allSitesArr.push(newLink);
-            }
-          });
-        }
-      });
-    }
-    return allSitesArr;
-  }
-
-  // ### possibly use type to only partially calculate allsites?
-  recalculateAllSites(type?: string): void {
-    const newSites = this.getAllSites();
-    if (newSites !== this.allSitesArr) {
-      this.allSitesArr = newSites;
-      this.allSitesEmitter.next(this.allSitesArr);
-    }
-  }
-
-  resolvedName(mol: string): void {
-    this.nameResolver.next(mol);
-  }
-
-  updateNucleicAcidDetails(acid: NucleicAcid): void {
-    this.privateSubstance.nucleicAcid.nucleicAcidType = acid.nucleicAcidType;
-    this.privateSubstance.nucleicAcid.nucleicAcidSubType = acid.nucleicAcidSubType;
-    this.privateSubstance.nucleicAcid.sequenceOrigin = acid.sequenceOrigin;
-    this.privateSubstance.nucleicAcid.sequenceType = acid.sequenceType;
-  }
-
-  get substanceNucleicAcid(): Observable<NucleicAcid> {
-    return new Observable(observer => {
-      this.ready().subscribe(substance => {
-        if (this.privateSubstance.nucleicAcid == null) {
-          this.privateSubstance.nucleicAcid = { nucleicAcidType: '' };
-
-        }
-        observer.next(this.privateSubstance.nucleicAcid);
-        this.substanceNucleicAcidEmitter.subscribe(protein => {
-          observer.next(this.privateSubstance.nucleicAcid);
-        });
-      });
-    });
-  }
-
-  // Names start
-
-  namesUpdated(): Observable<Array<SubstanceName>> {
-    return this.substanceNamesEmitter.asObservable();
-  }
-
-  // Names end
-
-  // Subunits start
-
-  get substanceSubunits(): Observable<Array<Subunit>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.privateSubstance.substanceClass === 'protein') {
-          if (!this.privateSubstance.protein.subunits) {
-            this.privateSubstance.protein.subunits = [];
-            const substanceString = JSON.stringify(this.privateSubstance);
-            this.substanceStateHash = this.utilsService.hashCode(substanceString);
-          }
-          observer.next(this.privateSubstance.protein.subunits);
-          this.substanceSubunitsEmitter.subscribe(subunits => {
-            observer.next(this.privateSubstance.protein.subunits);
-          });
-        } else {
-          if (!this.privateSubstance.nucleicAcid.subunits) {
-            this.privateSubstance.nucleicAcid.subunits = [];
-            const substanceString = JSON.stringify(this.privateSubstance);
-            this.substanceStateHash = this.utilsService.hashCode(substanceString);
-          }
-          observer.next(this.privateSubstance.nucleicAcid.subunits);
-          this.substanceSubunitsEmitter.subscribe(subunits => {
-            observer.next(this.privateSubstance.nucleicAcid.subunits);
-          });
-        }
-      });
-    });
-  }
-
-  get subunitDisplaySequences(): Observable<Array<SubunitSequence>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (!this.displaySequences) {
-          this.displaySequences = this.createSubunitDisplay();
-        }
-        observer.next(this.displaySequences);
-        this.displaySequencesEmitter.subscribe(newDisplay => {
-          this.displaySequences = newDisplay;
-          observer.next(this.displaySequences);
-        });
-      });
-    });
-  }
-
-
-  addSubstanceSubunit(): void {
-    if (this.privateSubstance.substanceClass === 'protein') {
-      const index: number = this.privateSubstance.protein.subunits.length + 1;
-      const newSubunit: Subunit = {
-        references: [],
-        access: [],
-        sequence: '',
-        subunitIndex: index
-      };
-      this.privateSubstance.protein.subunits.push(newSubunit);
-      this.displaySequencesEmitter.next(this.createSubunitDisplay());
-      this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
-    } else {
-      let index = this.privateSubstance.nucleicAcid.subunits.length || 0;
-      index = index + 1;
-      const newSubunit: Subunit = {
-        references: [],
-        access: [],
-        sequence: '',
-        subunitIndex: index
-      };
-      this.privateSubstance.nucleicAcid.subunits.push(newSubunit);
-      this.displaySequencesEmitter.next(this.createSubunitDisplay());
-      this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
-      this.emitSugarUpdate();
-      this.emitLinkUpdate();
-    }
-
-  }
-
-  deleteSubstanceSubunit(subunit: Subunit): void {
-    if (this.privateSubstance.substanceClass === 'protein') {
-      const subUnitIndex = this.privateSubstance.protein.subunits.findIndex(subUnit => subunit.subunitIndex === subUnit.subunitIndex);
-      if (subUnitIndex > -1) {
-        this.rearrangeSubunitIndexes('protein', subunit.subunitIndex);
-        this.displaySequencesEmitter.next(this.createSubunitDisplay());
-        this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
-      }
-    } else {
-      const subUnitIndex = this.privateSubstance.nucleicAcid.subunits.findIndex(subUnit => subunit.subunitIndex === subUnit.subunitIndex);
-      if (subUnitIndex > -1) {
-        this.rearrangeNAIndexes('nucleicAdid', subunit.subunitIndex);
-        this.displaySequencesEmitter.next(this.createSubunitDisplay());
-        this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
-        this.emitSugarUpdate();
-        this.emitLinkUpdate();
-      }
-    }
-
-  }
-
-  rearrangeNAIndexes(type: string, index: number) {
-    const arrIndex = this.privateSubstance.nucleicAcid.subunits.findIndex(subUnit => index === subUnit.subunitIndex);
-    this.privateSubstance.nucleicAcid.subunits.splice(arrIndex, 1);
-    if (this.privateSubstance.nucleicAcid.subunits.length > (arrIndex - 1)) {
-      this.privateSubstance.nucleicAcid.subunits.forEach(subunit => {
-        if (subunit.subunitIndex > index) {
-
-          const newIndex = subunit.subunitIndex - 1;
-          subunit.subunitIndex = newIndex;
-        }
-      });
-      if (this.privateSubstance.nucleicAcid.sugars) {
-        this.privateSubstance.nucleicAcid.sugars.forEach(link => {
-          if (link.sites) {
-            link.sites = link.sites.filter(site => (site.subunitIndex !== index));
-            link.sites.forEach(site => {
-              if (site.subunitIndex && (site.subunitIndex > index)) {
-                site.subunitIndex = site.subunitIndex - 1;
-              }
-            });
-          }
-        });
-        this.emitSugarUpdate();
-      }
-      if (this.privateSubstance.nucleicAcid.linkages) {
-        this.privateSubstance.nucleicAcid.linkages.forEach(link => {
-          if (link.sites) {
-            link.sites = link.sites.filter(site => (site.subunitIndex !== index));
-            link.sites.forEach(site => {
-              if (site.subunitIndex && (site.subunitIndex > index)) {
-                site.subunitIndex = site.subunitIndex - 1;
-              }
-            });
-          }
-        });
-        this.emitSugarUpdate();
-      }
-    }
-  }
-
-  rearrangeSubunitIndexes(type: string, index: number) {
-    const arrIndex = this.privateSubstance.protein.subunits.findIndex(subUnit => index === subUnit.subunitIndex);
-    this.privateSubstance.protein.subunits.splice(arrIndex, 1);
-    if (this.privateSubstance.protein.subunits.length > (arrIndex - 1)) {
-      this.privateSubstance.protein.subunits.forEach(subunit => {
-        if (subunit.subunitIndex > index) {
-
-          const newIndex = subunit.subunitIndex - 1;
-          subunit.subunitIndex = newIndex;
-        }
-      });
-      if (this.privateSubstance.protein.disulfideLinks) {
-        this.privateSubstance.protein.disulfideLinks.forEach(link => {
-          if (link.sites) {
-            link.sites.forEach(site => {
-              if (site.subunitIndex === index) {
-                site = {};
-              }
-              if (site.subunitIndex && (site.subunitIndex > index)) {
-                site.subunitIndex = site.subunitIndex - 1;
-              }
-            });
-          }
-        });
-
-        this.emitDisulfideLinkUpdate();
-      }
-      if (this.privateSubstance.protein.otherLinks) {
-        this.privateSubstance.protein.otherLinks.forEach(link => {
-          if (link.sites) {
-            link.sites = link.sites.filter(site => (site.subunitIndex !== index));
-            link.sites.forEach(site => {
-              if (site.subunitIndex && (site.subunitIndex > index)) {
-                site.subunitIndex = site.subunitIndex - 1;
-              }
-            });
-          }
-        });
-        this.emitOtherLinkUpdate();
-      }
-      if (this.privateSubstance.protein.glycosylation) {
-        const glycosylation = this.privateSubstance.protein.glycosylation;
-        if (glycosylation.CGlycosylationSites) {
-          glycosylation.CGlycosylationSites = glycosylation.CGlycosylationSites.filter(site => (site.subunitIndex !== index));
-          glycosylation.CGlycosylationSites.forEach(site => {
-            if (site.subunitIndex && (site.subunitIndex > index)) {
-              site.subunitIndex = site.subunitIndex - 1;
-            }
-          });
-        }
-        if (glycosylation.NGlycosylationSites) {
-          glycosylation.NGlycosylationSites = glycosylation.NGlycosylationSites.filter(site => (site.subunitIndex !== index));
-          glycosylation.NGlycosylationSites.forEach(site => {
-            if (site.subunitIndex && (site.subunitIndex > index)) {
-              site.subunitIndex = site.subunitIndex - 1;
-            }
-          });
-        }
-
-        if (glycosylation.OGlycosylationSites) {
-          glycosylation.OGlycosylationSites = glycosylation.OGlycosylationSites.filter(site => (site.subunitIndex !== index));
-          glycosylation.OGlycosylationSites.forEach(site => {
-            if (site.subunitIndex && (site.subunitIndex > index)) {
-              site.subunitIndex = site.subunitIndex - 1;
-            }
-          });
-        }
-        this.emitGlycosylationUpdate();
-      }
-      if (this.privateSubstance.modifications.structuralModifications) {
-        this.privateSubstance.modifications.structuralModifications.forEach(link => {
-          if (link.sites) {
-            link.sites = link.sites.filter(site => (site.subunitIndex !== index));
-            link.sites.forEach(site => {
-              if (site.subunitIndex && (site.subunitIndex > index)) {
-                site.subunitIndex = site.subunitIndex - 1;
-              }
-            });
-          }
-        });
-        this.emitStructuralModificationsUpdate();
-      }
-      if (this.privateSubstance.properties) {
-        this.privateSubstance.properties.forEach(prop => {
-          if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
-            const featArr = prop.value.nonNumericValue.split(';');
-            featArr.forEach(f => {
-            });
-          }
-        });
-      }
-    }
-  }
-
-  emitSubunitUpdate(): void {
-    if (this.privateSubstance.substanceClass === 'protein') {
-      this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
-      this.displaySequencesEmitter.next(this.createSubunitDisplay());
-    } else {
-      this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
-      this.displaySequencesEmitter.next(this.createSubunitDisplay());
-      this.emitSugarUpdate();
-      this.emitLinkUpdate();
-    }
-  }
-
-  // subunits end
-
-  // other links start
-
-  otherLinksUpdated(): Observable<Array<Link>> {
-    return this.substanceOtherLinksEmitter.asObservable();
-  }
-
-  emitOtherLinkUpdate(): void {
-    this.recalculateAllSites('other');
-    this.substanceOtherLinksEmitter.next(this.privateSubstance.protein.otherLinks);
-  }
-
-  // other links end
-
-  // disulfide links start
-  copyDisulfideLinks(to: number, from: number): any {
- const test= JSON.parse(JSON.stringify(this.privateSubstance.protein.disulfideLinks));
-const push = [];
-const test3 = [];
-for (let i = 0; i < test.length; i++) {
-  const link = JSON.parse(JSON.stringify(test[i]));
-  if (link['sites'][0].subunitIndex === to || (link['sites'][1].subunitIndex === to)) {
-  } else if (link['sites'][0].subunitIndex === from && link['sites'][1].subunitIndex === from) {
-    const copy = JSON.parse(JSON.stringify(test[i]));
-    copy.sites[0].subunitIndex = to;
-  copy.sites[1].subunitIndex = to;
-  copy.sitesShorthand = copy.sites[0].subunitIndex + '_' + copy.sites[0].residueIndex +
-    ';' + copy.sites[1].subunitIndex + '_' + copy.sites[1].residueIndex;
-    test3.push(link);
-    test3.push(copy);
-  } else {
-    test3.push(link);
-  }
-}
-
-this.privateSubstance.protein.disulfideLinks = test3;
-this.emitDisulfideLinkUpdate();
-  }
-
-  disulfideLinksUpdated(): Observable<Array<DisulfideLink>> {
-    return this.substanceDisulfideLinksEmitter.asObservable();
-  }
-
-  private emitDisulfideLinkUpdate(): void {
-    this.recalculateAllSites('disulfide');
-    this.substanceDisulfideLinksEmitter.next(this.privateSubstance.protein.disulfideLinks);
-    this.recalculateCysteine();
-  }
-
-  // disulfide links end
-
-  // Glycosylation start
-
-  glycosylationUpdated(): Observable<Glycosylation> {
-    return this.substanceGlycosylationEmitter.asObservable();
-  }
-
-  emitGlycosylationUpdate(): void {
-    this.recalculateAllSites('glycosylation');
-    this.substanceGlycosylationEmitter.next(this.privateSubstance.protein.glycosylation);
-  }
-
-  // Glycosylation end
-
-  // modifications start
-
-  structuralModificationsUpdated(): Observable<Array<StructuralModification>> {
-    return this.substanceStructuralModificationsEmitter.asObservable();
-  }
-
-  emitStructuralModificationsUpdate(): void {
-    if (this.privateSubstance.substanceClass === 'protein' || 'nucleic acid') {
-      this.recalculateAllSites('glycosylation');
-    }
-    this.substanceStructuralModificationsEmitter.next(this.privateSubstance.modifications.structuralModifications);
-  }
-
-  // modifications end
-
-  cysteineUpdated(): Observable<Array<Site>> {
-    return this.substanceCysteineEmitter.asObservable();
-  }
-
-  recalculateCysteine(): void {
-    let available = [];
-    if (this.privateSubstance.substanceClass === 'protein') {
-      for (let i = 0; i < this.privateSubstance.protein.subunits.length; i++) {
-        const sequence = this.privateSubstance.protein.subunits[i].sequence;
-        if (sequence != null && sequence.length > 0) {
-          for (let j = 0; j < sequence.length; j++) {
-            const site = sequence[j];
-            if (site.toUpperCase() === 'C') {
-              available.push({ 'residueIndex': (j + 1), 'subunitIndex': (i + 1) });
-            }
-          }
-        }
-      }
-
-      this.privateSubstance.protein.disulfideLinks.forEach(link => {
-        if (link.sites) {
-          link.sites.forEach(site => {
-            available = available.filter(r => (r.residueIndex !== site.residueIndex) || (r.subunitIndex !== site.subunitIndex));
-          });
-        }
-      });
-    }
-    this.substanceCysteineEmitter.next(available);
-  }
-
-  // ################################ Start Nucleic acid (break into new file, one for each class or on with only class specific?
-
-  // begin link
-
-  linksUpdated(): Observable<Array<Linkage>> {
-    return this.substanceLinksEmitter.asObservable();
-  }
-
-  emitLinkUpdate(): void {
-    this.substanceLinksEmitter.next(this.privateSubstance.nucleicAcid.linkages);
-  }
-
-
-  // begin sugars
-
-  get substanceSugars(): Observable<Array<Sugar>> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        if (this.privateSubstance.nucleicAcid.sugars == null) {
-          this.privateSubstance.nucleicAcid.sugars = [];
-          const substanceString = JSON.stringify(this.privateSubstance);
-
-          this.substanceStateHash = this.utilsService.hashCode(substanceString);
-        }
-        observer.next(this.privateSubstance.nucleicAcid.sugars);
-        this.substanceSugarsEmitter.subscribe(sugars => {
-          observer.next(this.privateSubstance.nucleicAcid.sugars);
-        });
-      });
-    });
-  }
-
-  addSubstanceSugar(): void {
-    const newSugars: Sugar = {
-      sites: [],
-      sugar: ''
-    };
-    this.privateSubstance.nucleicAcid.sugars.unshift(newSugars);
-    this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
-  }
-
-  deleteSubstanceSugar(sugar: Sugar): void {
-    const subSugarIndex = this.privateSubstance.nucleicAcid.sugars.findIndex(subCode => sugar.$$deletedCode === subCode.$$deletedCode);
-    if (subSugarIndex > -1) {
-      this.privateSubstance.nucleicAcid.sugars.splice(subSugarIndex, 1);
-      this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
-    }
-  }
-
-  emitSugarUpdate(): void {
-    this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
-  }
-
-  // end sugars
-
-  // start change reason
-
-  get changeReason(): Observable<string> {
-    return new Observable(observer => {
-      this.ready().subscribe(() => {
-        observer.next(this.privateSubstance.changeReason);
-        this.substanceChangeReasonEmitter.subscribe(changeReason => {
-          observer.next(this.privateSubstance.changeReason);
-        });
-      });
-    });
-  }
-
-  updateChangeReason(changeReason: string): void {
-    this.privateSubstance.changeReason = changeReason;
-    this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
-  }
-
-
-
-  // end change reason
-
-  validateSubstance(): Observable<ValidationResults> {
-    return new Observable(observer => {
-      const substanceCopy = this.cleanSubstance();
-      this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
-        // check for missing required reference fields and append a validationMessage
-        if (results.validationMessages) {
-          for (let i = 0; i < substanceCopy.references.length; i++) {
-            const ref = substanceCopy.references[i];
-            if (ref.docType !== 'SYSTEM') {
-            if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
-              const invalidReferenceMessage: ValidationMessage = {
-                actionType: 'frontEnd',
-                appliedChange: false,
-                links: [],
-                message: 'All references require a non-empty source type and text/citation value',
-                messageType: 'WARNING',
-                suggestedChange: true
-              };
-              results.validationMessages.push(invalidReferenceMessage);
-              break;
-            }
-          }
-          }
-          if (substanceCopy.properties) {
-            for (let i = 0; i < substanceCopy.properties.length; i++) {
-              const prop = substanceCopy.properties[i];
-              if (!prop.propertyType || ! prop.name) {
-                const invalidPropertyMessage: ValidationMessage = {
-                  actionType: 'frontEnd',
-                  appliedChange: false,
-                  links: [],
-                  message: 'Property #' + (i + 1) + ' requires a non-empty name and type',
-                  messageType: 'ERROR',
-                  suggestedChange: true
-                };
-                results.validationMessages.push(invalidPropertyMessage);
-                results.valid = false;
-              }
-            }
-          }
-          if (substanceCopy.relationships) {
-            for (let i = 0; i < substanceCopy.relationships.length; i++) {
-              const relationship = substanceCopy.relationships[i];
-              if (!relationship.relatedSubstance || !relationship.type || relationship.type === '') {
-                const invalidRelationshipMessage: ValidationMessage = {
-                  actionType: 'frontEnd',
-                  appliedChange: false,
-                  links: [],
-                  message: 'Relationship  #' + (i + 1) + ' requires a non-empty related substance and type',
-                  messageType: 'ERROR',
-                  suggestedChange: true
-                };
-                results.validationMessages.push(invalidRelationshipMessage);
-                results.valid = false;
-              }
-            }
-          }
-          if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
-            for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
-              const prop = substanceCopy.polymer.monomers[i];
-              if (!prop.monomerSubstance || prop.monomerSubstance === {}) {
-                const invalidPropertyMessage: ValidationMessage = {
-                  actionType: 'frontEnd',
-                  appliedChange: false,
-                  links: [],
-                  message: 'Monomer #' + (i + 1) + ' requires a selected substance',
-                  messageType: 'ERROR',
-                  suggestedChange: true
-                };
-                results.validationMessages.push(invalidPropertyMessage);
-                results.valid = false;
-              }
-            }
-          }
-          if (substanceCopy.modifications && substanceCopy.modifications.physicalModifications) {
-            for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
-              const prop = substanceCopy.modifications.physicalModifications[i];
-              let present = false;
-                prop.parameters.forEach (param => {
-                  if (param.parameterName) {
-                    present = true;
-                  }
-              });
-
-              if (!prop.physicalModificationRole && !present) {
-                const invalidPropertyMessage: ValidationMessage = {
-                  actionType: 'frontEnd',
-                  appliedChange: false,
-                  links: [],
-                  message: 'Physical Modification #' + (i + 1) + ' requires a modification role or valid parameter',
-                  messageType: 'ERROR',
-                  suggestedChange: true
-                };
-                results.validationMessages.push(invalidPropertyMessage);
-                results.valid = false;
-              }
-            }
-          }
-        }
-        observer.next(results);
-        observer.complete();
-      }, error => {
-        observer.error();
-        observer.complete();
-      });
-    });
-  }
-
-  cleanSubstance(): SubstanceDetail {
-    if (this.privateSubstance.structurallyDiverse) {
-      if (this.privateSubstance.structurallyDiverse.$$diverseType) {
-        delete this.privateSubstance.structurallyDiverse.$$diverseType;
-      }
-      if (this.privateSubstance.structurallyDiverse.$$storedPart) {
-        delete this.privateSubstance.structurallyDiverse.$$storedPart;
-      }
-
-      const toclean = ['organismFamily', 'organismGenus', 'organismSpecies', 'organismAuthor', 'infraSpecificName', 'infraSpecificType', 'fractionMaterialType', 'fractionName', 'developmentalStage'];
-      toclean.forEach( field => {
-        if (this.privateSubstance.structurallyDiverse[field] && this.privateSubstance.structurallyDiverse[field] !== null &&
-          this.privateSubstance.structurallyDiverse[field] !== '') {
-            this.privateSubstance.structurallyDiverse[field] = this.privateSubstance.structurallyDiverse[field].trim();
-          }
-      });
-    }
-    /*
-    if (this.privateSubstance.nucleicAcid) {
-      if (this.privateSubstance.nucleicAcid.sugars) {
-        this.privateSubstance.nucleicAcid.sugars.forEach((sugar, index) => {
-          if (sugar.sites.length === 0) {
-            this.privateSubstance.nucleicAcid.sugars.splice(index, 1);
-          }
-        });
-      }
-      if (this.privateSubstance.nucleicAcid.linkages) {
-        this.privateSubstance.nucleicAcid.linkages.forEach((linkage, index) => {
-          if (linkage.sites.length === 0) {
-            this.privateSubstance.nucleicAcid.linkages.splice(index, 1);
-          }
-        });
-      }
-    }
-    */
-
-    /*the substance API call for view=internal vs the usual 'view=full' adds some properties that should not be submitted
-    and can cause errors upon submission. the view change was to allow the stdName property to be visible to the forms*/
-    if (this.privateSubstance.structure) {
+   if (this.privateSubstance.structure) {
 
       if ( this.privateSubstance.structure.properties) {
         delete this.privateSubstance.structure.properties;
@@ -1892,7 +1161,7 @@ this.emitDisulfideLinkUpdate();
     // gsites.$$displayString = angular.element(document.body).injector().get('siteList').siteString(gsites);
 
   }
-
+*/
 }
 
 

@@ -660,7 +660,9 @@
         "Dosage Form",
         "Division Class Description",
         "Source",
-        "Product Name Deprecated"
+        "Product Name Deprecated",
+        "NCT Number",
+        "Has Clinical Trials"
       ],
       "admin": [
         "Record Created By",

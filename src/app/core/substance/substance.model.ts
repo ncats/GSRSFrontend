@@ -58,8 +58,6 @@ export interface ParentCountHref {
   constituents?: CountRef;
 }
 
-
-
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
   names?: Array<SubstanceName>;
   codes?: Array<SubstanceCode>;
@@ -74,6 +72,7 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
   modifications?: SubstanceModifications;
   specifiedSubstance?: SpecifiedSubstance;
   specifiedSubstanceG3?: SpecifiedSubstanceG3;
+  specifiedSubstanceG4m?: SpecifiedSubstanceG4m;
   _matchContext?: MatchContext;
 }
 
@@ -455,6 +454,21 @@ export interface SpecifiedSubstanceG3 extends SubstanceBase {
   parentSubstance?: SubstanceRelated;
   grade?: Grade;
   definition?: Definition;
+}
+
+export interface SpecifiedSubstanceG4m extends SubstanceBase {
+  references?: Array<string>;
+  parentSubstance?: SubstanceRelated;
+  process?: Array<SpecifiedSubstanceG4mProcess>;
+ // grade?: Grade;
+ // definition?: Definition;
+}
+
+export interface SpecifiedSubstanceG4mProcess extends SubstanceBase {
+  references?: Array<string>;
+  processName?: string;
+ // grade?: Grade;
+ // definition?: Definition;
 }
 
 export interface Grade extends SubstanceBase {

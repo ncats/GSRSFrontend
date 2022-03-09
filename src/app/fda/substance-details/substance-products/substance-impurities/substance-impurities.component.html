@@ -99,19 +99,18 @@
             -->
             <div *ngFor="let impDetail of impTest.impuritiesDetailsList; let detIndex = index" class="font12px">
               <div *ngIf="impDetail.relatedSubstanceUuid === substanceUuid">
-                <b>{{substanceName}}</b>
+                <!--<b>{{substanceName}}</b>-->
                 <!--
                   <li>
                     <a [routerLink]="['/substances', impDetail.relatedSubstanceUuid]"
                     target="_blank"><b>{{impDetail._ingredientName}}</b></a>
                     -->
-
+                <span class="colorgreen">
+                  <span *ngIf="impDetail.limitType">&nbsp;&nbsp;&nbsp;&nbsp;{{impDetail.limitType}}&nbsp;</span>
+                  {{impDetail.limitValue}}&nbsp;{{impDetail.unit}}
+                </span>
                 <span *ngIf="impDetail.impurityType"
                   class="colorpurple"><br>&nbsp;&nbsp;&nbsp;&nbsp;{{impDetail.impurityType}}
-                </span>
-                <span class="colorgreen">
-                  <span *ngIf="impDetail.limitType"><br>&nbsp;&nbsp;&nbsp;&nbsp;{{impDetail.limitType}}&nbsp;</span>
-                  {{impDetail.limitValue}}&nbsp;{{impDetail.unit}}
                 </span>
                 <!--
                   </li>

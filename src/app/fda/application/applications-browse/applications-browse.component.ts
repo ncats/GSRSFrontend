@@ -21,6 +21,7 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { environment } from '../../../../environments/environment';
 import { applicationSearchSortValues } from './application-search-sort-values';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
 import { ApplicationService } from '../service/application.service';
 import { GeneralService } from '../../service/general.service';
 import { Application } from '../model/application.model';
@@ -122,7 +123,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
-
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -438,4 +439,37 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     });
   }
 
+  openImageModal($event, subUuid: string): void {
+   // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
+
+  //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+
+    let data: any;
+
+   // if (substance.substanceClass === 'chemical') {
+      data = {
+        structure: subUuid,
+     //   smiles: substance.structure.smiles,
+        uuid: subUuid,
+    //    names: substance.names
+      };
+   // }
+
+    const dialogRef = this.dialog.open(StructureImageModalComponent, {
+      height: '90%',
+      width: '650px',
+      panelClass: 'structure-image-panel',
+      data: data
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    const subscription = dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    });
+  }
 }
