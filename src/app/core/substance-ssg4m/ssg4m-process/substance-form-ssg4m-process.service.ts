@@ -25,12 +25,12 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<S
         this.substance.specifiedSubstanceG4m.process = [];
       }
       this.substanceFormService.resetState();
-      this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
+  //    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
     });
     this.subscriptions.push(subscription);
   }
 
-  get specifiedSubstanceG4mProcess(): Observable<Array<SpecifiedSubstanceG4mProcess>> {
-    return this.propertyEmitter.asObservable();
-  }
+  //get specifiedSubstanceG4mProcess(): Observable<Array<SpecifiedSubstanceG4mProcess>> {
+  //  return this.propertyEmitter.asObservable();
+ // }
 }

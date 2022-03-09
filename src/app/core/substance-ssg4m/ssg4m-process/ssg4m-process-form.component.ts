@@ -39,11 +39,11 @@ export class Ssg4mProcessFormComponent extends SubstanceFormBase implements OnIn
 
   ngOnInit() {
     this.menuLabelUpdate.emit('process');
-    const processSubscription = this.substanceFormSsg4mProcessService.specifiedSubstanceG4mProcess.subscribe(specifiedSubstanceG4mProcess => {
-     this.privateProcess = specifiedSubstanceG4mProcess[];
+  //  const processSubscription = this.substanceFormSsg4mProcessService.specifiedSubstanceG4mProcess.subscribe(specifiedSubstanceG4mProcess => {
+  //   this.privateProcess = specifiedSubstanceG4mProcess[];
     //  this.relatedSubstanceUuid = this.classification.parentSubstance && this.classification.parentSubstance.refuuid || '';
-    });
-    this.subscriptions.push(processSubscription);
+ //   });
+  //  this.subscriptions.push(processSubscription);
 
  //   this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All',
   //    unSelectAllText: 'UnSelect All', itemsShowLimit: 3, allowSearchFilter: true};
