@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { SubstanceFormBase } from '../../substance-form/base-classes/substance-form-base';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -22,79 +22,41 @@ import { SubstanceFormSsg4mProcessService } from './substance-form-ssg4m-process
   templateUrl: './ssg4m-process-form.component.html',
   styleUrls: ['./ssg4m-process-form.component.scss']
 })
-export class Ssg4mProcessFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
+export class Ssg4mProcessFormComponent implements OnInit {
   private privateProcess: SpecifiedSubstanceG4mProcess;
   parent: SubstanceRelated;
+  private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   // @Output() noteDeleted = new EventEmitter<SpecifiedSubstanceG4mProcess>();
 
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private overlayContainerService: OverlayContainer
   ) {
-    super();
-    this.analyticsEventCategory = 'specified substance groupb 4 manufacturing';
   }
 
   ngOnInit() {
-    this.menuLabelUpdate.emit('process');
-    const processSubscription = this.substanceFormSsg4mProcessService.specifiedSubstanceG4mProcess.subscribe(specifiedSubstanceG4mProcess => {
-     this.privateProcess = specifiedSubstanceG4mProcess[];
-    //  this.relatedSubstanceUuid = this.classification.parentSubstance && this.classification.parentSubstance.refuuid || '';
-    });
-    this.subscriptions.push(processSubscription);
-
- //   this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All',
-  //    unSelectAllText: 'UnSelect All', itemsShowLimit: 3, allowSearchFilter: true};
+  //  this.getVocabularies();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+  //  this.updateDisplay();
+  //  this.getSubstanceType();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
+
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
+  @Input()
+  set process(process: SpecifiedSubstanceG4mProcess) {
+    this.privateProcess = process;
+  //  this.relatedSubstanceUuid = this.privateMod.molecularFragment && this.privateMod.molecularFragment.refuuid || '';
   }
 
-  update(tags: Array<string>): void {
-  //  this.classification.polymerSubclass = tags;
+  get process(): SpecifiedSubstanceG4mProcess {
+    return this.privateProcess;
   }
 
-  updateType(type: string): void {
-  //  this.classification.sourceType = type;
-  }
-
-  updateGeometry(type: string): void {
-  //  this.classification.polymerGeometry = type;
-  }
-
-  updateClass(type: string): void {
-     // this.classification.polymerClass = type;
-  }
-
-  /*
-  parentSubstanceUpdated(substance: SubstanceSummary): void {
-    if (substance !== null){
-      const relatedSubstance: SubstanceRelated = {
-        refPname: substance._name,
-        name: substance._name,
-        refuuid: substance.uuid,
-        substanceClass: 'reference',
-        approvalID: substance.approvalID
-      };
-      this.classification.parentSubstance = relatedSubstance;
-      this.relatedSubstanceUuid = relatedSubstance && relatedSubstance.refuuid || '';
-    } else {
-      this.classification.parentSubstance = null;
-      this.relatedSubstanceUuid = null;
-    }
-  }
-  */
-
-  updateAccess(access: Array<string>): void {
-   // this.classification.access = access;
-  }
 }
 

@@ -12,11 +12,12 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { Ssg4mProcessFormComponent } from './ssg4m-process-form.component';
+import { SubstanceFormSsg4mProcessCardComponent } from './substance-form-ssg4m-process-card.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(Ssg4mProcessFormComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormSsg4mProcessCardComponent),
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
@@ -30,7 +31,8 @@ import { Ssg4mProcessFormComponent } from './ssg4m-process-form.component';
   ],
   declarations: [
   //  SubstanceFormNotesCardComponent,
-    Ssg4mProcessFormComponent
+    Ssg4mProcessFormComponent,
+  SubstanceFormSsg4mProcessCardComponent
   ]
 })
 export class SubstanceSsg4mProcessModule { }

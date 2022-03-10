@@ -1,1 +1,32 @@
-ttttttttttt
+<div class="note-form-container">
+    <div *ngIf="note.$$deletedCode" class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+    <div class="form-row">
+      <div class="delete-container">
+        <button mat-icon-button matTooltip="Delete Process" (click)="deleteNote()">
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
+      <div class="note">
+        <div class="textarea-label">Process Name</div>
+        <textarea placeholder="Enter text here" [(ngModel)]="process.processName" required name="process.processName">
+        </textarea>
+      </div>
+      <div>
+        <app-access-manager (accessOut)="updateAccess($event)" [access]="process.access">
+        </app-access-manager>
+      </div>
+    </div>
+    <div class="form-row" *ngIf="!process.$$deletedCode">
+      <div class="references-container">
+        <app-domain-references [referencesUuids]="process.references" #references></app-domain-references>
+      </div>
+    </div>
+    <!--
+    <app-audit-info [source] = "process"></app-audit-info>
+    -->
+  </div>

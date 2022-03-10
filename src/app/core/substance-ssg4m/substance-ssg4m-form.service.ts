@@ -26,6 +26,10 @@ import { StructureService } from '@gsrs-core/structure';
 import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
 
+@Injectable({
+  providedIn: 'root'
+})
+
 @Injectable()
 export class SubstanceSsg4mService implements OnDestroy {
   private privateSubstance: SubstanceDetail;
