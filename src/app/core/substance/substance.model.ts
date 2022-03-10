@@ -467,3 +467,7 @@ export interface Definition extends SubstanceBase {
   references?: Array<string>;
   definition?: string;
 }
+export interface TableFilterDDModel {
+  value: string;
+  display: string;
+}

@@ -46,7 +46,7 @@ export class FacetHttpParams extends HttpParams {
     }
 
     appendDictionary(params: {
-        [name: string]: string
+        [name: string]: string;
     }): FacetHttpParams {
         let clone = new FacetHttpParams({ fromString: super.toString() , encoder: new CustomEncoder()});
         if (params != null) {

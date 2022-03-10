@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { PageEvent } from '@angular/material';
-import { MatDialog } from '@angular/material';
+import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';

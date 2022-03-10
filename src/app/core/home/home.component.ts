@@ -6,7 +6,8 @@ import { AuthService } from '@gsrs-core/auth';
 import { Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '@gsrs-core/substance';
 import { take } from 'rxjs/operators';
-import { MatDialog, MatSidenav } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { UtilsService } from '@gsrs-core/utils';
 

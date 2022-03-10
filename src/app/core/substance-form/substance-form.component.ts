@@ -27,12 +27,12 @@ import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.j
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '@gsrs-core/auth';
 import { take, map } from 'rxjs/operators';
-import { MatExpansionPanel } from '@angular/material';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
 import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
-
+import { StructuralUnit } from '@gsrs-core/substance';
 
 @Component({
   selector: 'app-substance-form',
@@ -72,6 +72,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   uuid: string;
   substanceClass: string;
   status: string;
+  hidePopup: boolean;
+  unit: StructuralUnit;
   classes = [
     'concept',
     'protein',
@@ -103,6 +105,17 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private authService: AuthService,
     private titleService: Title
   ) {
+    this.substanceService.showImagePopup.subscribe (data => {
+      this.hidePopup = data;
+    })
+    this.substanceService.imagePopupUnit.subscribe (data => {
+      this.unit = data;
+    })
+  }
+
+  showHidePopup(): void {
+    this.hidePopup = !this.hidePopup;
+    this.substanceService.showImagePopup.next(this.hidePopup);
   }
 
   importDialog(): void {
@@ -281,7 +294,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 const currentTime = new Date();
                 if (currentTime.getTime() - startTime.getTime() > 12000) {
                   if (confirm('There was a network error while fetching files, would you like to refresh?')) {
-                    window.location.reload(true);
+                    window.location.reload();
                   }
                 }
               }

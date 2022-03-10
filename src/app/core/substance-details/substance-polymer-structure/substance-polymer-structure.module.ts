@@ -4,7 +4,8 @@ import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dyn
 import { SubstancePolymerStructureComponent } from './substance-polymer-structure.component';
 import {RouterModule} from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
-import { MatIconModule, MatTooltipModule } from '@angular/material';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   imports: [

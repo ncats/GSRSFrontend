@@ -51,7 +51,8 @@ import { TakePipe } from './utils/take.pipe';
 import { EnvironmentModule } from '../../environments/environment';
 import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
-import { MatTabsModule, MatNativeDateModule } from '@angular/material';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatNativeDateModule } from '@angular/material/core';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
 import { SubstanceCardsModule } from './substance-details/substance-cards.module';
@@ -74,13 +75,14 @@ import { GuidedSearchModule } from './guided-search/guided-search.module';
 import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { NamesDisplayPipe } from '@gsrs-core/utils/names-display-order.pipe';
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
-import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
+import { ShowMolfileDialogComponent } from
+'@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
 
 @NgModule({

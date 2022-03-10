@@ -19,7 +19,7 @@ import { ProductService } from '../../product/service/product.service';
 import { ClinicalTrialService } from '../../clinical-trials/clinical-trial/clinical-trial.service';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils';
 import { AdvancedSearchService } from '../service/advanced-search.service';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-advanced-query-statement',

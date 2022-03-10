@@ -20,7 +20,7 @@ import {Router} from '@angular/router';
 import {Alignment} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 import { ConfigService } from '@gsrs-core/config';
 

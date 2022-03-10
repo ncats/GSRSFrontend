@@ -11,7 +11,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
-import {MatDialogModule} from '@angular/material';
+import {MatDialogModule} from '@angular/material/dialog';
 import {MatSortModule} from '@angular/material/sort';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 

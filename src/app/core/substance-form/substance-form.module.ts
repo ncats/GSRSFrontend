@@ -80,7 +80,7 @@ import { SubstanceFormRelationshipsService } from './relationships/substance-for
 import { SubstanceFormStructuralModificationsService } from './structural-modifications/substance-form-structural-modifications.service';
 import { PreviousReferencesComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references.component';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
-import { MatProgressSpinnerModule } from '@angular/material';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-disulfide-dialog/copy-disulfide-dialog.component';
 
 @NgModule({
@@ -200,7 +200,7 @@ import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-dis
   ]
 })
 export class SubstanceFormModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<any> {
       return {
         ngModule: SubstanceFormModule,
         providers: [

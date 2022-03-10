@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Injectable } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 
+@Injectable()
 export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredList<any> implements OnInit {
 
   totalRecords: 0;

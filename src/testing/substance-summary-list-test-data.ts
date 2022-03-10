@@ -1,7 +1,7 @@
 import { PagingResponse } from '../app/utils/paging-response.model';
 import { SubstanceSummary } from '../app/substance/substance.model';
 
-/* tslint:disable:max-line-length */
+/* eslint-disable max-len */
 export const SubstanceSummaryListData: PagingResponse<SubstanceSummary> = {
     'id': 37192136,
     'version': 1,

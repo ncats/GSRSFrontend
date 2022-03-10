@@ -14,7 +14,7 @@ import { SubstanceFormGlycosylationService } from './substance-form-glycosylatio
   templateUrl: './substance-form-glycosylation.component.html',
   styleUrls: ['./substance-form-glycosylation.component.scss']
 })
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit, AfterViewInit, OnDestroy {
   glycosylation: Glycosylation;
   glycosylationTypes: Array<VocabularyTerm>;

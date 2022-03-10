@@ -1,6 +1,9 @@
 import { Component, OnInit,  ViewChild } from '@angular/core';
 import { User, Auth, AuthService } from '@gsrs-core/auth';
-import { MatDialog, Sort, MatTableDataSource, PageEvent } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { Sort } from '@angular/material/sort';
+import { PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-edit-dialog/user-edit-dialog.component';
 import { AdminService } from '@gsrs-core/admin/admin.service';
@@ -15,6 +18,7 @@ import {MatPaginator} from '@angular/material/paginator';
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent implements OnInit {
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   userID: number;
   alert: string;
   filtered = new MatTableDataSource();
@@ -22,15 +26,14 @@ export class UserManagementComponent implements OnInit {
   loading = false;
   showAll = false;
   showInactive = false;
-  private overlayContainer: HTMLElement;
   displayedColumns: string[] = ['name', 'email', 'created', 'modified', 'active'];
   page = 0;
   pageSize = 10000;
   paged: Array< any >;
   users: Array< any > = [];
-  private searchTimer: any;
   lastSort: Sort;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  private searchTimer: any;
+  private overlayContainer: HTMLElement;
 
 constructor(
     private dialog: MatDialog,
@@ -121,7 +124,7 @@ showInactiveUsers(): void {
 
   editUser(userID: any, index: number): void {
     const dialogRef = this.dialog.open(UserEditDialogComponent, {
-      data: {'userID': userID},
+      data: {userID: userID},
       width: '800px',
       autoFocus: false,
       disableClose: true
@@ -176,7 +179,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
 
   addUser(): void {
     const dialogRef = this.dialog.open(UserEditDialogComponent, {
-      data: {'type': 'add'},
+      data: {type: 'add'},
       width: '800px',
       autoFocus: false,
       disableClose: true

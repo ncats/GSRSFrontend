@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-/* tslint:disable:component-selector */
+/* eslint-disable @angular-eslint/component-selector */
 @Component({
   selector: 'router-outlet',
   template: '<div></div>'

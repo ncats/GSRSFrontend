@@ -25,9 +25,10 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
   canReuse = false;
   references: Array<SubstanceReference> = [];
   documentTypesDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
-  displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'remove', 'attachment', 'delete', 'apply'];
+  displayedColumns: string[] = ['type', 'citation', 'publicDomain', 'access', 'goToReference', 'remove', 'attachment', 'tags', 'apply'];
   tableData: MatTableDataSource<SubstanceReference>;
   isExpanded = false;
+  showmore = false;
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
 
@@ -201,10 +202,11 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
     this.tableData.data = this.references;
   }
 
-  deleteReference(reference: SubstanceReference): void {
-    reference.$$deletedCode = this.utilsService.newUUID();
-    this.substanceFormReferencesService.emitReferencesUpdate();
-  }
+  // COMMENTING OUT IN CASE WE NEED TO ADD BACK SOMEDAY
+  // deleteReference(reference: SubstanceReference): void {
+  //   reference.$$deletedCode = this.utilsService.newUUID();
+  //   this.substanceFormReferencesService.emitReferencesUpdate();
+  // }
 
   panelOpened(): void {
     this.isExpanded = true;
