@@ -1,7 +1,7 @@
 setup_git() {
   cd ../
 ls
-  git clone --depth=50 -b fda https://GsrsBot:${GIT_ACCESS_TOKEN}@github.com/ncats/gsrs-ci.git
+  git clone https://GsrsBot:${GIT_ACCESS_TOKEN}@github.com/ncats/gsrs-ci.git
 cd gsrs-ci
 ls
   echo "git status"
