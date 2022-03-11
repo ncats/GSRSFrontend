@@ -2,8 +2,10 @@
 
 setup_git() {
   cd ../
+ls
   git clone --depth=50 -b fda_travis_sync https://GsrsBot:${GIT_ACCESS_TOKEN}@github.com/ncats/gsrs-ci.git
 git init
+ls
 cp -r frontend/src/main/resources/static/substanceRelationshipVisualizer ./
 rm -rf frontend/src/main/resources/static
 mkdir frontend/src/main/resources/static
