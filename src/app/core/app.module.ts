@@ -84,7 +84,6 @@ import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
 import { ShowMolfileDialogComponent } from
 '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
-import { SubstanceSsg4mModule } from './substance-ssg4m/substance-ssg4m.module';
 
 @NgModule({
   declarations: [
@@ -166,8 +165,7 @@ import { SubstanceSsg4mModule } from './substance-ssg4m/substance-ssg4m.module';
     MatNativeDateModule,
     AdminModule,
     FacetsManagerModule,
-    CodeDisplayModule,
-    SubstanceSsg4mModule
+    CodeDisplayModule
   ],
   providers: [
     {

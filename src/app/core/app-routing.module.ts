@@ -21,7 +21,6 @@ import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { CanActivateAdminPage } from './admin/can-activate-admin-page';
 import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
-import { SubstanceSsg4ManufactureFormComponent } from './substance-ssg4m/substance-ssg4m-form.component';
 
 const childRoutes: Routes = [
   {
@@ -114,14 +113,7 @@ const childRoutes: Routes = [
   {
     path: 'user-downloads/:id',
     component: UserDownloadsComponent
-  },
-  {
-    path: 'substances-ssg4m/register',
-    component: SubstanceSsg4ManufactureFormComponent
-  //  canActivate: [CanRegisterSubstanceForm],
-  //  canDeactivate: [CanDeactivateSubstanceFormGuard]
-  },
-
+  }
 ];
 
 const routes: Routes = [
