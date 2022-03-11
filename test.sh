@@ -10,6 +10,7 @@ cd gsrs-ci
   echo "git status"
 git status
 git fetch
+echo "now git branch"
 git branch -a
 git checkout fda_travis_sync
   git pull
