@@ -9,9 +9,9 @@ cd gsrs-ci
   git fetch
   echo "git status"
 git status
-
+git fetch
+git branch -a
 git checkout fda_travis_sync
-  git fetch
   git pull
   git merge fda
 cp -r frontend/src/main/resources/static/substanceRelationshipVisualizer ./
