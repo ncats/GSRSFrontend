@@ -2,11 +2,14 @@ setup_git() {
   cd ../
 ls
   git clone --depth=50 -b fda https://GsrsBot:${GIT_ACCESS_TOKEN}@github.com/ncats/gsrs-ci.git
+git init
 
 ls
 cd gsrs-ci
-git init
+  git fetch
+  echo "git status"
 git status
+
 git checkout fda_travis_sync
   git fetch
   git pull
