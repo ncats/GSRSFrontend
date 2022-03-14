@@ -8,6 +8,23 @@
       <div class = "top-button">
           <button mat-button (click) = "showInactiveUsers()">{{showInactive? 'Show':'Hide'}} Inactive Users</button>
       </div>
+      <div class = "top-button">
+        <button class="dropbtn" mat-button>Action</button>
+        <div class="dropdown-content">
+          <a (click)="markSelected('inactive')">Mark Selected Inactive</a>
+          <a class="hide"(click)="markSelected('active')">Mark Selected Active</a> <!-- hidden for now-->
+        </div>
+      </div>
+      <div class = "form-row">
+        <div class = "top-button">
+           
+          </div>
+        <span class="middle-fill"></span>
+  
+        <mat-form-field [floatLabel]="'never'" class="search">
+          <input matInput placeholder="Search Names / Emails" [formControl]="searchControl">
+        </mat-form-field>
+      </div>
 </div>
 
 <div class = "responsive" *ngIf = "loading === true">
@@ -33,7 +50,18 @@
   </mat-form-field>
 </div>
 <table mat-table [dataSource] = "paged"  matSort (matSortChange)="sortData($event)">
-    <ng-container matColumnDef="name">
+      <ng-container matColumnDef="checkbox">
+        <th mat-header-cell *matHeaderCellDef> 
+          <input
+          (change)="selectUnselectAll()"
+          type="checkbox"/> (Un)Select All</th>
+        <td mat-cell *matCellDef="let user">
+          <input [checked]="isInCheckList(user.user.username)" 
+          (change)="checkListToggle(user.user.username)" 
+          type="checkbox"/>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef  mat-sort-header> User Name</th>
         <td mat-cell *matCellDef="let user; index as index">
           <a class = "mat-button" matTooltip = "select to edit" (click) = "editUser(user.id, index)">
