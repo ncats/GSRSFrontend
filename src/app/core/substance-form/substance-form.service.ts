@@ -1260,7 +1260,7 @@ this.emitDisulfideLinkUpdate();
         observer.next(results);
         observer.complete();
       }, error => {
-        observer.error();
+        observer.error(error);
         observer.complete();
       });
     });

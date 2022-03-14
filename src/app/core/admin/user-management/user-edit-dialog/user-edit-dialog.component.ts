@@ -13,8 +13,10 @@ import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
   styleUrls: ['./user-edit-dialog.component.scss']
 })
 export class UserEditDialogComponent implements OnInit {
+  userLoggedIn: any;
   user: any;
   userID: string;
+  userHasAdminRole: boolean;
   originalName: string;
   newPassword: string;
   newUser = false;
@@ -43,6 +45,8 @@ export class UserEditDialogComponent implements OnInit {
   ) {
     this.user = data.user;
     this.userID = data.userID;
+    this.submitted = data.submission;
+    this.userLoggedIn = this.authService.getUser();
     }
 
     ngOnInit() {
@@ -51,6 +55,7 @@ export class UserEditDialogComponent implements OnInit {
         this.originalName = this.user.username;
         this.loading = false;
         this.newUser = false;
+        this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
           this.adminService.getGroups().pipe(take(1)).subscribe( response => {
             this.groups = [];
             response.forEach( grp => {
@@ -70,6 +75,7 @@ export class UserEditDialogComponent implements OnInit {
             this.originalName = resp.user.username;
             this.loading = false;
             this.newUser = false;
+            this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
             this.adminService.getGroups().pipe(take(1)).subscribe( response => {
               this.groups = [];
               response.forEach( grp => {
@@ -85,6 +91,7 @@ export class UserEditDialogComponent implements OnInit {
           });
       } else {
         this.newUser = true;
+        this.userHasAdminRole = false;
         this.user = {groups: [], roles: [],  user: {}};
         this.user.active = true;
         this.loading = false;
@@ -106,6 +113,16 @@ export class UserEditDialogComponent implements OnInit {
         }
     });
   });
+  }
+
+  checkIfUserHasAdminRole(roles): boolean {
+    let toReturn = false;
+    roles.forEach(role => {
+      if(role.toLowerCase() === 'admin') {
+        toReturn = true;
+      }
+    });
+    return toReturn;
   }
 
   checkGroups(): void {
@@ -150,23 +167,38 @@ export class UserEditDialogComponent implements OnInit {
         groups: groups
       };
 
-      this.adminService.editUser(userEditObj, this.userID).pipe(take(1)).subscribe(response => {
-        if (response && response.user) {
-          this.isError = false;
-          this.successfulChange(response);
-        } else {
-          this.isError = true;
-          this.message = 'Unable to edit user';
+      if(this.userLoggedIn === this.user.user.username) { // if userLoggedIn is making changes to their account
+        if((this.userHasAdminRole !== this.checkIfUserHasAdminRole(rolesArr))
+        || !this.user.active) { // user is trying to remove their admin role or make themselves inactive
+          if (confirm('Setting your own account as inactive or removing admin role are significant changes. ARE YOU SURE YOU WANT TO PROCEED?')) {
+            this.editUser(userEditObj);
+          }
+        } else { // safe changes
+          this.editUser(userEditObj);
         }
-      }, error => {
+      } else { // not userloggedin's acct
+        this.editUser(userEditObj);
+      }
+    }
+  }
+
+  editUser(userEditObj): void {
+    this.adminService.editUser(userEditObj, this.userID).pipe(take(1)).subscribe(response => {
+      if (response && response.user) {
+        this.isError = false;
+        this.successfulChange(response);
+      } else {
         this.isError = true;
         this.message = 'Unable to edit user';
-        if (error.error) {
-          this.isError = true;
-          this.message = error;
-        }
-      });
-    }
+      }
+    }, error => {
+      this.isError = true;
+      this.message = 'Unable to edit user';
+      if (error.error) {
+        this.isError = true;
+        this.message = error;
+      }
+    });
   }
 
   addUser(): void {
