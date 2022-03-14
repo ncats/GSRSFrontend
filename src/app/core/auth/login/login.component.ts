@@ -29,6 +29,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute
   ) { }
 
+  @HostListener('keyup', ['$event'])
+  onKeyup(event: KeyboardEvent) {
+    if (event.code && event.code.toLowerCase() === 'enter') {
+      this.login();
+    }
+  }
+
   ngOnInit() {
     this.loadingService.setLoading(true);
     const subscription = this.authService.getAuth().subscribe(auth => {
@@ -52,13 +59,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
-  }
-
-  @HostListener('keyup', ['$event'])
-  onKeyup(event: KeyboardEvent) {
-    if (event.code && event.code.toLowerCase() === 'enter') {
-      this.login();
-    }
   }
 
   login() {

@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, Output, EventEmitter, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { JSDraw } from './jsdraw';
+import { JSDraw } from './jsdraw.model';
 
 @Component({
   selector: 'ncats-jsdraw-wrapper',

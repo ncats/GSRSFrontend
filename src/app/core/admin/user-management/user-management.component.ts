@@ -18,6 +18,7 @@ import {MatPaginator} from '@angular/material/paginator';
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent implements OnInit {
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   userID: number;
   alert: string;
   filtered = new MatTableDataSource();
@@ -34,7 +35,6 @@ export class UserManagementComponent implements OnInit {
   lastSort: Sort;
   checkedList: Array<string> = [];
   private searchTimer: any;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
 constructor(
     private dialog: MatDialog,

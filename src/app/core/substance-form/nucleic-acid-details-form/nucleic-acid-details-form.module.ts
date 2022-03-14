@@ -7,7 +7,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 import {NucleicAcidDetailsFormComponent} from '@gsrs-core/substance-form/nucleic-acid-details-form/nucleic-acid-details-form.component';
 

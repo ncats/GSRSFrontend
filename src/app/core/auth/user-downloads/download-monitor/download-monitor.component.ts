@@ -91,7 +91,8 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
         this.type = 'product';
       } else if ((url.indexOf('v1/applications') > 0) || (url.indexOf('v1/applicationsall') > 0)) {
         this.type = 'application';
-      } else if ((url.indexOf('v1/adverseeventpt') > 0) || (url.indexOf('v1/adverseeventdme') > 0) || (url.indexOf('v1/adverseeventcvm') > 0)) {
+      } else if
+      ((url.indexOf('v1/adverseeventpt') > 0) || (url.indexOf('v1/adverseeventdme') > 0) || (url.indexOf('v1/adverseeventcvm') > 0)) {
         this.type = 'adverseevent';
       } else {
         this.type = 'browse';
@@ -121,7 +122,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
         });
         if (exists === false) {
           this.facetArray.push(
-            { 'facet': facet[0], 'valueString': value, 'values': [bool === 'false' ? 'NOT ' + facet[1] : facet[1]] }
+            { facet: facet[0], valueString: value, values: [bool === 'false' ? 'NOT ' + facet[1] : facet[1]] }
           );
         }
       });

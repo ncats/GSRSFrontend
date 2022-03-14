@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { QueryStatement } from './query-statement/query-statement.model';
 
 export interface QueryableSubstanceDictionary {

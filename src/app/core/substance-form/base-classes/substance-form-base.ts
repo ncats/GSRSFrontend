@@ -1,5 +1,6 @@
-import { Output, EventEmitter } from '@angular/core';
+import { Output, EventEmitter, Injectable } from '@angular/core';
 
+@Injectable()
 export abstract class SubstanceFormBase {
     analyticsEventCategory: string;
     @Output() menuLabelUpdate = new EventEmitter<string>();

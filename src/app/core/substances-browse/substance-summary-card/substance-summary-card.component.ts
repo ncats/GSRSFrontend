@@ -20,7 +20,7 @@ import {Router} from '@angular/router';
 import {Alignment} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 import { ConfigService } from '@gsrs-core/config';
 
@@ -190,13 +190,15 @@ export class SubstanceSummaryCardComponent implements OnInit {
   loadDynamicContent(): void {
     const viewContainerRef = this.dynamicContentContainer.viewContainerRef;
     viewContainerRef.clear();
-    const dynamicContentItemsFlat =  this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
-    .filter(item => item.componentType === 'summary');
-    dynamicContentItemsFlat.forEach(dynamicContentItem => {
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
-      const componentRef = viewContainerRef.createComponent(componentFactory);
-      (<SubstanceSummaryDynamicContent>componentRef.instance).substance = this.privateSubstance;
-    });
+    if (this.configService.configData && this.configService.configData.loadedComponents){
+      const dynamicContentItemsFlat =  this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
+      .filter(item => item.componentType === 'summary');
+      dynamicContentItemsFlat.forEach(dynamicContentItem => {
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
+        const componentRef = viewContainerRef.createComponent(componentFactory);
+        (<SubstanceSummaryDynamicContent>componentRef.instance).substance = this.privateSubstance;
+      });
+  }
   }
 
   downloadJson() {

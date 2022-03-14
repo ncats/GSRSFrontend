@@ -1,14 +1,15 @@
 import {Component, OnInit, AfterViewInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
-import {SubstanceDetail, SubstanceName} from '../../substance/substance.model';
+import {SubstanceDetail, SubstanceName, TableFilterDDModel} from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
-import {Sort} from '@angular/material';
+import {Sort} from '@angular/material/sort';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {UtilsService} from '@gsrs-core/utils';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-substance-names',
@@ -28,6 +29,11 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   filterSelectObj = [];
   filterBackup: Array<any>;
   typeFilterOn = 'false';
+  nameFilter = new FormControl();
+  typeFilter = new FormControl();
+  langFilter = new FormControl();
+  langFilterOptions: Array<TableFilterDDModel> = [];
+  typeFilterOptions: Array<TableFilterDDModel> = [];
 
   constructor(
     private dialog: MatDialog,
@@ -92,13 +98,110 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       });
       });
       this.overlayContainer = this.overlayContainerService.getContainerElement();
+      this.nameFilter.valueChanges.subscribe((nameFilterValue) => {
+        this.filterTable();
+      });
+      this.typeFilter.valueChanges.subscribe((typeFilterValue) => {
+        this.filterTable();
+      });
+      this.langFilter.valueChanges.subscribe((langFilterValue) => {
+        this.filterTable();
+      });
+  }
 
+  filterTable() {
+    const nFilter = this.nameFilter.value === null ? '' : this.nameFilter.value;
+    const lFilter = this.langFilter.value === null ? '' : this.langFilter.value;
+    const tFilter = this.typeFilter.value === null ? '' : this.typeFilter.value;
+    const lFilterCode = this.getLangFilterValue(lFilter) === undefined ? '' : this.getLangFilterValue(lFilter).value;
+    const tFilterCode = this.getTypeFilterValue(tFilter) === undefined ? '' : this.getTypeFilterValue(tFilter).value;
+    this.filtered = [];
+    for(let n of this.names) {
+      if((n.name.toLowerCase().includes(nFilter.toLowerCase())) &&
+      (this.isIncluded(n, tFilterCode, 'type')) &&
+      (this.isIncluded(n, lFilterCode, 'lang'))) {
+        this.filtered.push(n);
+      }
+    }
+    this.pageChange();
+  }
+
+  isIncluded(name: SubstanceName, value: string, field: string) {
+    if(field === 'type') {
+      if(value.length > 0) {
+        if(name.type.includes(value)) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    } else if(field === 'lang') {
+      if(value.length > 0) {
+        if(name.languages.includes(value)) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    }
+  }
+
+  getLangFilterValue(value) {
+    for(let l of this.langFilterOptions) {
+      if(l.display === value) {
+        return l;
+      }
+    }
+  }
+
+  getLangFilterOptions() {
+    for(let n of this.names) {
+      let nLangs = n.languages;
+      for(let l of nLangs) {
+        let oneLang = l;
+        let oneLangDisplay = this.languageVocabulary[oneLang] && this.languageVocabulary[oneLang].display ? this.languageVocabulary[oneLang].display : oneLang;
+        let value: TableFilterDDModel = {
+          value: oneLang,
+          display: oneLangDisplay
+        }
+        if (this.langFilterOptions.filter(e => e.value === oneLang).length > 0) {
+        } else {
+          this.langFilterOptions.push(value);
+        }
+      }
+    }
+  }
+
+  getTypeFilterValue(value) {
+    for(let l of this.typeFilterOptions) {
+      if(l.display === value) {
+        return l;
+      }
+    }
+  }
+
+  getTypeFilterOptions() {
+    for(let n of this.names) {
+        let oneType = n.type;
+        let oneTypeDisplay = this.typeVocabulary[oneType] && this.typeVocabulary[oneType].display ? this.typeVocabulary[oneType].display : oneType;
+        let value: TableFilterDDModel = {
+          value: oneType,
+          display: oneTypeDisplay
+        }
+        if (this.typeFilterOptions.filter(e => e.value === oneType).length > 0) {
+        } else {
+          this.typeFilterOptions.push(value);
+        }
+    }
   }
 
   filterChange(filter, event) {
     this.typeFilterOn = 'disable search';
     const tempFiltered = [];
-    // const tempFiltered = this.filtered;
     this.filterBackup = [];
       this.names.forEach(item => {
         const itemString = JSON.stringify(item[filter.columnProp]).toLowerCase();
@@ -172,6 +275,9 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     this.filtered = this.names;
     this.pageChange();
     this.searchControl.setValue('');
+    this.nameFilter.setValue('');
+    this.langFilter.setValue('');
+    this.typeFilter.setValue('');
   }
 
 
@@ -179,6 +285,8 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     this.cvService.getDomainVocabulary('LANGUAGE', 'NAME_TYPE').subscribe(response => {
       this.languageVocabulary = response['LANGUAGE'] && response['LANGUAGE'].dictionary;
       this.typeVocabulary = response['NAME_TYPE'] && response['NAME_TYPE'].dictionary;
+      this.getLangFilterOptions();
+      this.getTypeFilterOptions();
     });
   }
 

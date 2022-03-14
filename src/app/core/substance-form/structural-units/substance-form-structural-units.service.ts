@@ -50,7 +50,7 @@ export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBas
 
   private setSRUConnectivityDisplay(srus: any) {
     const rmap = this.getAttachmentMapUnits(srus);
-    // tslint:disable-next-line:forin
+    // eslint-disable-next-line guard-for-in
     for (const i in srus) {
       const disp = this.sruConnectivityToDisplay(srus[i].attachmentMap, rmap);
       srus[i]._displayConnectivity = disp;
@@ -59,7 +59,7 @@ export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBas
 
   private getAttachmentMapUnits(srus: any) {
     const rmap = {};
-    // tslint:disable-next-line:forin
+    // eslint-disable-next-line guard-for-in
     for (const i in srus) {
       let lab = srus[i].label;
       if (!lab) {
@@ -79,7 +79,7 @@ export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBas
     for (const k in amap) {
       if (amap.hasOwnProperty(k)) {
         const start = rmap[k] + '_' + k;
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const i in amap[k]) {
           const end = rmap[amap[k][i]] + '_' + amap[k][i];
           disp += start + '-' + end + ';\n';

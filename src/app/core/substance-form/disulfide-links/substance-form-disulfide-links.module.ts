@@ -12,10 +12,10 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 import {SubstanceFormDisulfideLinksCardComponent} from '@gsrs-core/substance-form/disulfide-links/substance-form-disulfide-links-card.component';
 import { DisulfideLinksFormComponent } from './disulfide-links-form.component';
-import { MatSelectModule } from '@angular/material';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [

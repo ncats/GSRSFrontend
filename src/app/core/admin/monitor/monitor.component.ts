@@ -70,7 +70,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
 
   clearJob(): void {
     const navigationExtras: NavigationExtras = {
-      queryParams: { 'function': 'data' }
+      queryParams: { function: 'data' }
     };
     this.router.navigate(['/admin'], navigationExtras);
   }
@@ -159,7 +159,9 @@ export class MonitorComponent implements OnInit, OnDestroy {
         case '...': this.ellipses = '.'; break;
         default: this.ellipses = '.'; break;
       }
-      setTimeout(() => {this.changeEllipses(); }, 1000);
+      setTimeout(() => {
+        this.changeEllipses();
+      }, 1000);
     } else {
       this.ellipses = '';
     }

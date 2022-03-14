@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy } from '@angular/core';
-import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
+import { Router, RouterEvent, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
@@ -7,7 +7,8 @@ import { ConfigService } from '../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { LoadingService } from '../loading/loading.service';
 import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
-import { MatBottomSheet, MatBottomSheetRef, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { Observable, Subscription } from 'rxjs';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
@@ -29,16 +30,9 @@ export class BaseComponent implements OnInit, OnDestroy {
   auth?: Auth;
   environment: Environment;
   searchValue: string;
-  private overlayContainer: HTMLElement;
-  private bottomSheetOpenTimer: any;
-  private bottomSheetRef: MatBottomSheetRef;
-  private bottomSheetCloseTimer: any;
-  private selectedText: string;
-  private subscriptions: Array<Subscription> = [];
   baseDomain: string;
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
-  private classicLinkQueryParams = {};
   isAdmin = false;
   contactEmail: string;
   version?: string;
@@ -50,6 +44,13 @@ export class BaseComponent implements OnInit, OnDestroy {
   registerNav: Array<NavItem>;
   adverseEventShinyHomepageDisplay = false;
   loadedComponents: LoadedComponents;
+  private overlayContainer: HTMLElement;
+  private bottomSheetOpenTimer: any;
+  private bottomSheetRef: MatBottomSheetRef;
+  private bottomSheetCloseTimer: any;
+  private selectedText: string;
+  private subscriptions: Array<Subscription> = [];
+  private classicLinkQueryParams = {};
 
   constructor(
     private router: Router,
@@ -70,9 +71,67 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.navItems = this.configService.configData.navItems;
   }
 
+  @HostListener('document:mouseup', ['$event'])
+  @HostListener('document:keyup', ['$event'])
+  // @HostListener('document:selectionchange', ['$event'])
+  onKeyUp(event: Event) {
+    let text = '';
+    let selection: Selection;
+    let range: Range;
+    let selectionStart: number;
+    let selectionEnd: number;
+    const activeEl: HTMLInputElement = document.activeElement as HTMLInputElement;
+
+    if (activeEl != null) {
+      const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
+      if (
+        (activeElTagName === 'textarea') || (activeElTagName === 'input' &&
+          /^(?:text|search|password|tel|url)$/i.test(activeEl.type)) &&
+        (typeof activeEl.selectionStart === 'number')
+      ) {
+        selectionStart = activeEl.selectionStart;
+        selectionEnd = activeEl.selectionEnd;
+        text = activeEl.value.slice(selectionStart, selectionEnd);
+      } else if (window.getSelection) {
+        selection = window.getSelection();
+        // ###### why just chrome?
+        if (selection.rangeCount > 0) {
+          range = selection.getRangeAt(0);
+        }
+        text = selection.toString();
+      }
+
+      clearTimeout(this.bottomSheetOpenTimer);
+
+      if (text && text !== this.selectedText) {
+        this.selectedText = text;
+       /* this.bottomSheetOpenTimer = setTimeout(() => {
+          const subscription = this.openSearchBottomSheet(text).subscribe(() => {
+            setTimeout(() => {
+              if (selection != null && range != null) {
+                selection.removeAllRanges();
+                selection.addRange(range);
+              } else if (selectionStart != null) {
+                activeEl.focus();
+                activeEl.selectionStart = selectionStart;
+                activeEl.selectionEnd = selectionEnd;
+              }
+            });
+            subscription.unsubscribe();
+          }, () => {
+            subscription.unsubscribe();
+          }, () => {
+            this.selectedText = '';
+            subscription.unsubscribe();
+          });
+        }, 600);*/
+      }
+    }
+  }
+
   ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-   
+
   let notempty = false;
     if (this.loadedComponents) {
       if (this.loadedComponents.applications) {
@@ -96,7 +155,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(roleSubscription);
 
-    const regSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater', 'DataEntry', 'SuperDataEntry').subscribe(response => {
+    const regSubscription =
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater', 'DataEntry', 'SuperDataEntry').subscribe(response => {
       this.canRegister = response;
     });
     this.subscriptions.push(regSubscription);
@@ -107,8 +167,6 @@ export class BaseComponent implements OnInit, OnDestroy {
       this.versionTooltipMessage = `V${this.version}`;
       this.versionTooltipMessage += ` built on ${moment(buildInfo.buildTime).utc().format('ddd MMM D YYYY HH:mm:SS z')}`;
     });
-    
-    
     this.navItems.forEach(item => {
       if (item.display === 'Register') {
         this.registerNav = item.children;
@@ -125,7 +183,6 @@ export class BaseComponent implements OnInit, OnDestroy {
         }
 
         }
-        
     }
     if (this.navItems[i].component) {
       if (!this.loadedComponents[this.navItems[i].component]) {
@@ -228,7 +285,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   navigateToSearchResults(searchTerm: string) {
 
     const navigationExtras: NavigationExtras = {
-      queryParams: searchTerm ? { 'search': searchTerm } : null
+      queryParams: searchTerm ? { search: searchTerm } : null
     };
 
     this.router.navigate(['/browse-substance'], navigationExtras);
@@ -240,64 +297,6 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   removeZindex(): void {
     this.overlayContainer.style.zIndex = null;
-  }
-
-  @HostListener('document:mouseup', ['$event'])
-  @HostListener('document:keyup', ['$event'])
-  // @HostListener('document:selectionchange', ['$event'])
-  onKeyUp(event: Event) {
-    let text = '';
-    let selection: Selection;
-    let range: Range;
-    let selectionStart: number;
-    let selectionEnd: number;
-    const activeEl: HTMLInputElement = document.activeElement as HTMLInputElement;
-
-    if (activeEl != null) {
-      const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
-      if (
-        (activeElTagName === 'textarea') || (activeElTagName === 'input' &&
-          /^(?:text|search|password|tel|url)$/i.test(activeEl.type)) &&
-        (typeof activeEl.selectionStart === 'number')
-      ) {
-        selectionStart = activeEl.selectionStart;
-        selectionEnd = activeEl.selectionEnd;
-        text = activeEl.value.slice(selectionStart, selectionEnd);
-      } else if (window.getSelection) {
-        selection = window.getSelection();
-        // ###### why just chrome?
-        if (selection.rangeCount > 0) {
-          range = selection.getRangeAt(0);
-        }
-        text = selection.toString();
-      }
-
-      clearTimeout(this.bottomSheetOpenTimer);
-
-      if (text && text !== this.selectedText) {
-        this.selectedText = text;
-       /* this.bottomSheetOpenTimer = setTimeout(() => {
-          const subscription = this.openSearchBottomSheet(text).subscribe(() => {
-            setTimeout(() => {
-              if (selection != null && range != null) {
-                selection.removeAllRanges();
-                selection.addRange(range);
-              } else if (selectionStart != null) {
-                activeEl.focus();
-                activeEl.selectionStart = selectionStart;
-                activeEl.selectionEnd = selectionEnd;
-              }
-            });
-            subscription.unsubscribe();
-          }, () => {
-            subscription.unsubscribe();
-          }, () => {
-            this.selectedText = '';
-            subscription.unsubscribe();
-          });
-        }, 600);*/
-      }
-    }
   }
 
   openSearchBottomSheet(searchTerm: string): Observable<void> {

@@ -38,17 +38,6 @@
 </div>
 
 <div class = "responsive" *ngIf = "loading === false && showAll === true">
-
-  <div class = "form-row">
-      <div class = "top-button">
-         
-        </div>
-      <span class="middle-fill"></span>
-
-  <mat-form-field [floatLabel]="'never'" class="search">
-    <input matInput placeholder="Search Names / Emails" [formControl]="searchControl">
-  </mat-form-field>
-</div>
 <table mat-table [dataSource] = "paged"  matSort (matSortChange)="sortData($event)">
       <ng-container matColumnDef="checkbox">
         <th mat-header-cell *matHeaderCellDef> 

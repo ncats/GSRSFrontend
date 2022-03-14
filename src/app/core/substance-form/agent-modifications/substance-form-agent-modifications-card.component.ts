@@ -11,7 +11,7 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
   templateUrl: './substance-form-agent-modifications-card.component.html',
   styleUrls: ['./substance-form-agent-modifications-card.component.scss']
 })
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 export class SubstanceFormAgentModificationsCardComponent
   extends SubstanceCardBaseFilteredList<AgentModification>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

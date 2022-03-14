@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import {SubstanceDetail, SubstanceRelationship} from '../../substance/substance.model';
 import { UtilsService } from '../../utils/utils.service';
 import { ConfigService } from '../../config/config.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {Sort} from '@angular/material';
+import {Sort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-substance-relationships',

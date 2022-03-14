@@ -1,3 +1,7 @@
+<div (click)="showHidePopup()" id="overlay" [ngClass]="{'hide': !hidePopup}"></div>
+<div class="center-screen" [ngClass]="{'hide': !hidePopup}">
+  <img (click)="showHidePopup()" class = "image-popped-up" appSubstanceImage [entityId]="unit && (unit.uuid || (unit._structure && unit._structure.id))">
+</div>
 <div class="top-fixed">
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>

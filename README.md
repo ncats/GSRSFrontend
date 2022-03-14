@@ -37,7 +37,6 @@ Make sure to have these installed in order to run the application:
      path as the command will be used a lot.
    * The angular CLI tool currently needs to have build-angular version <=0.803.25
    * To force this installation after an audit fix run `npm i @angular-devkit/build-angular@0.803.25`
-
   
 ## Step 2 [Optional]: Clear any Previous Build Files
 
@@ -97,8 +96,7 @@ npm install
 Doing the install at this time may reveal some elements that suggest an audit fix. While this can be done, newer versions of the angular build tool are not compatible with the current build process, so the specific <=0.803.25 version must be forced. To both do a basic audit fix and force this version, you can run the following commands (either windows CMD or bash):
 
 ```
-npm audit fix
-npm i @angular-devkit/build-angular@0.803.25
+npm audit fix // this step not needed after angular upgrade
 ```
 
 ## Step 6: Run Application for Specific Environment
@@ -109,6 +107,10 @@ npm i @angular-devkit/build-angular@0.803.25
  - So to run the public local environment, you would run `npm run start:gsrs:local`
 - After a few seconds of compiling the application, you're ready to view your application
 - Open your browser and navigate to http://localhost:4200
+
+## Troubleshooting
+
+GSRSFrontend uses node-sass, which has varying compatibilities based on the version of node.js being used. See https://www.npmjs.com/package/node-sass to check which version is compatable with your node version. The value of node-sass being used can be changed in the root 'package.json' file, where the default value is set as `"node-sass": "4.13.1",`
 
 # Development tools
 
@@ -124,6 +126,8 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ## Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+
+
 
 ## Further help
 

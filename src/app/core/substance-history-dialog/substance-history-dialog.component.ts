@@ -3,7 +3,7 @@ import { LoadingService } from '@gsrs-core/loading';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({

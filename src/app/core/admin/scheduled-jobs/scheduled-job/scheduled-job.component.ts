@@ -101,7 +101,7 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
     this.monitor = false;
 }
 
-disable (job: any) {
+disable(job: any) {
   this.adminService.runJob(job['@disable']).pipe(take(1)).subscribe( response => {
     this.refresh();
   });
@@ -118,7 +118,9 @@ execute(job: any) {
   this.adminService.runJob(job['@execute']).pipe(take(1)).subscribe( response => {
     this.refresh(true);
   }, error => {
-    setTimeout(() => {this.refresh(); } );
+    setTimeout(() => {
+      this.refresh();
+    } );
   });
 }
 cancel(job: any) {
