@@ -10,7 +10,7 @@ git fetch
 echo "now git branch"
 git branch -a
 git status
-git checkout -b branch remote/fda_travis_sync
+git checkout fda_travis_sync
   git pull
   git merge fda
   cd gsrs-ci
