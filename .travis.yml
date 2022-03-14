@@ -22,6 +22,4 @@ script:
   - npm run build:fda:prod
   
   after_success:
-  - ls ./dist/browser
-  - ls
   - bash travisBuild.sh
