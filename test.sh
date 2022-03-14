@@ -12,7 +12,7 @@ git branch -a
 git status
 git checkout fda_travis_sync
   git pull
-  git merge fda
+  git merge origin/fda
   cd gsrs-ci
 
 cp -r frontend/src/main/resources/static/substanceRelationshipVisualizer ./
