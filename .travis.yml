@@ -20,6 +20,5 @@ install:
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
-  
-  after_success:
+after_success:
   - bash travisBuild.sh
