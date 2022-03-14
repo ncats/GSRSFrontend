@@ -1,3 +1,4 @@
+ #!/bin/bash
 setup_git() {
   cd ../
 ls
