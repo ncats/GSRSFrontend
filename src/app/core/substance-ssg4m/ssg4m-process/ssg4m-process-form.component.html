@@ -1,32 +1,62 @@
-<div class="note-form-container">
-    <div *ngIf="note.$$deletedCode" class="notification-backdrop">
-      Deleted&nbsp;
-      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-        <mat-icon svgIcon="undo"></mat-icon>
+<div class="process-form-container">
+  <div *ngIf="process.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;GGGGGGG
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete Process" (click)="deleteProcess()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <div class="form-row">
-      <div class="delete-container">
-        <button mat-icon-button matTooltip="Delete Process" (click)="deleteNote()">
-          <mat-icon svgIcon="delete_forever"></mat-icon>
-        </button>
-      </div>
-      <div class="note">
-        <div class="textarea-label">Process Name</div>
-        <textarea placeholder="Enter text here" [(ngModel)]="process.processName" required name="process.processName">
-        </textarea>
-      </div>
-      <div>
-        <app-access-manager (accessOut)="updateAccess($event)" [access]="process.access">
-        </app-access-manager>
-      </div>
+
+    <div class="process">
+      <mat-form-field class="col-5-1">
+        <input matInput placeholder="Process Name" [(ngModel)]="process.processName" name="process.processName" />
+      </mat-form-field>
+      <!--
+      <button mat-button (click)="addSite()">
+        Add Sites <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
+      -->
     </div>
-    <div class="form-row" *ngIf="!process.$$deletedCode">
-      <div class="references-container">
-        <app-domain-references [referencesUuids]="process.references" #references></app-domain-references>
-      </div>
+  </div> <!-- form row -->
+
+  <!-- SITES LIST BEGIN -->
+  <div class="">
+    <hr>
+    <span matBadge="{{process.sites.length}}" matBadgeOverlap="false">
+      <span class="titlegreen"><b>Site Information</b></span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="primary" (click)="addSite()" matTooltip="Add New Manufacture">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Sites
+    </button>
+    <br><br>
+
+    <div class="marginbottom10px" *ngFor="let site of process.sites; let siteIndex = index">
+      <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex">
+      </app-ssg4m-sites>
     </div>
-    <!--
-    <app-audit-info [source] = "process"></app-audit-info>
-    -->
   </div>
+  <!-- SITES LIST END -->
+
+  <!--
+                  [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex"
+            (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
+            (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)"
+    -->
+
+  <!-- Sites List -->
+  <!--
+    <app-substance-form-ssg4m-sites-card></app-substance-form-ssg4m-sites-card>
+    -->
+
+  <div class="form-row" *ngIf="!process.$$deletedCode">
+    <div class="references-container">
+      <app-domain-references [referencesUuids]="process.references" #references></app-domain-references>
+    </div>
+  </div>
+</div>

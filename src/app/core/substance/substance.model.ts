@@ -456,21 +456,6 @@ export interface SpecifiedSubstanceG3 extends SubstanceBase {
   definition?: Definition;
 }
 
-export interface SpecifiedSubstanceG4m extends SubstanceBase {
-  references?: Array<string>;
-  parentSubstance?: SubstanceRelated;
-  process?: Array<SpecifiedSubstanceG4mProcess>;
- // grade?: Grade;
- // definition?: Definition;
-}
-
-export interface SpecifiedSubstanceG4mProcess extends SubstanceBase {
-  references?: Array<string>;
-  processName?: string;
- // grade?: Grade;
- // definition?: Definition;
-}
-
 export interface Grade extends SubstanceBase {
   references?: Array<string>;
   name?: string;
@@ -480,4 +465,35 @@ export interface Grade extends SubstanceBase {
 export interface Definition extends SubstanceBase {
   references?: Array<string>;
   definition?: string;
+}
+
+export interface SpecifiedSubstanceG4m extends SubstanceBase {
+  references?: Array<string>;
+  parentSubstance?: SubstanceRelated;
+  process?: Array<SpecifiedSubstanceG4mProcess>;
+}
+
+export interface SpecifiedSubstanceG4mProcess extends SubstanceBase {
+  references?: Array<string>;
+  processName?: string;
+  sites?: Array<SpecifiedSubstanceG4mSite>;
+}
+
+export interface SpecifiedSubstanceG4mSite extends SubstanceBase {
+  references?: Array<string>;
+  siteName?: string;
+  stages?: Array<SpecifiedSubstanceG4mStage>;
+}
+
+export interface SpecifiedSubstanceG4mStage extends SubstanceBase {
+  references?: Array<string>;
+  stageNumber?: number;
+}
+
+export interface SpecifiedSubstanceG4mCriticalParameter extends SubstanceBase {
+  references?: Array<string>;
+  name?: string;
+  propertyType?: string;
+  amount?: number;
+  referenceSubstance?: SubstanceRelated;
 }

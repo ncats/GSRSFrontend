@@ -14,7 +14,7 @@ import { SubstanceFormBase } from '../base-classes/substance-form-base';
 })
 
 export class SsgParentSubstanceFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
-
+  substanceClass: string;
   parentSubstance: SubstanceRelated;
   relatedSubstanceUuid: string;
   private subscriptions: Array<Subscription> = [];
@@ -30,7 +30,7 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   ngOnInit() {
     this.menuLabelUpdate.emit('Parent Substance');
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
-      alert('WWWW ' + JSON.stringify(substance));
+      this.substanceClass = substance.substanceClass;
       // Specified Substance Group 3
       /*
       if (substance.specifiedSubstanceG3.parentSubstance == null) {
@@ -69,9 +69,15 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
     });
   }
 
+  setParentSubstance() {
+    if (this.substanceClass && this.substanceClass === 'specifiedSubstanceG4m') {
+    //  substance.specifiedSubstanceG4m.parentSubstance != null)
+    }
+   // if (substance.specifiedSubstanceG4m.parentSubstance == null
+  }
+
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     if (substance != null) {
-      alert('GGGGGGGGGGGG');
       this.parentSubstance.refPname = substance._name;
       this.parentSubstance.name = substance._name;
       this.parentSubstance.refuuid = substance.uuid;
@@ -80,6 +86,8 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
 
       this.relatedSubstanceUuid = this.parentSubstance.refuuid;
     }
+
+    this.setParentSubstance();
   }
 
 }

@@ -25,7 +25,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     public gaService: GoogleAnalyticsService
   ) {
     super(gaService);
-    this.analyticsEventCategory = 'substance form ssg4m process';
+  //  this.analyticsEventCategory = 'substance form ssg4m process';
   }
 
   ngOnInit() {
@@ -73,4 +73,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     this.substanceFormSsg4mProcessService.deleteProcess(process);
   }
 
+  updateProcess($event) {
+
+  }
 }

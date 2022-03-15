@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { SubstanceFormServiceBase } from '../../substance-form/base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
-import { Observable } from 'rxjs';
-import { SpecifiedSubstanceG4mProcess, SpecifiedSubstanceG4mSite } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mSite, SpecifiedSubstanceG4mStage } from '@gsrs-core/substance/substance.model';
 
 @Injectable({
   providedIn: 'root'
 })
 
 @Injectable()
-export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<Array<SpecifiedSubstanceG4mProcess>> {
+export class SubstanceFormSsg4mSitesService extends SubstanceFormServiceBase<Array<SpecifiedSubstanceG4mSite>> {
 
   constructor(
     public substanceFormService: SubstanceFormService
@@ -25,44 +25,49 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
         this.substance.specifiedSubstanceG4m = {};
       }
       if (!this.substance.specifiedSubstanceG4m.process) {
-        this.substance.specifiedSubstanceG4m.process = [];
+        this.substance.specifiedSubstanceG4m.process = [{sites:[]}];
       }
+      if (!this.substance.specifiedSubstanceG4m.process) {
+        this.substance.specifiedSubstanceG4m.process = [{sites:[]}];
+      }
+
       this.substanceFormService.resetState();
       this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
     });
     this.subscriptions.push(subscription);
   }
 
-  get specifiedSubstanceG4mProcess(): Observable<Array<SpecifiedSubstanceG4mProcess>> {
+  get specifiedSubstanceG4mSite(): Observable<Array<SpecifiedSubstanceG4mSite>> {
     return this.propertyEmitter.asObservable();
   }
 
-  addProcess(): void {
-    const newProcess: SpecifiedSubstanceG4mProcess = {
-      references: [],
-      access: [],
-      sites: []
-    };
-    this.substance.specifiedSubstanceG4m.process.unshift(newProcess);
-    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
-  }
-
-  deleteProcess(process: SpecifiedSubstanceG4mProcess): void {
-    const processIndex = this.substance.specifiedSubstanceG4m.process.findIndex(pro => pro.$$deletedCode === pro.$$deletedCode);
-    if (processIndex > -1) {
-      this.substance.specifiedSubstanceG4m.process.splice(processIndex, 1);
-      this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
-    }
-  }
-
-  addSite(processIndex: number): void {
+  addSite(): void {
     const newSite: SpecifiedSubstanceG4mSite = {
       references: [],
       access: [],
       stages: []
     };
-    this.substance.specifiedSubstanceG4m.process[processIndex].sites.unshift(newSite);
+  //  this.substance.specifiedSubstanceG4m.process[processIndex].sites.unshift(newSite);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
-  //  this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites);
   }
+
+  deleteSite(site: SpecifiedSubstanceG4mSite): void {
+    /*
+    const siteIndex = this.substance.specifiedSubstanceG4m.process.findIndex(pro => pro.$$deletedCode === pro.$$deletedCode);
+    if (processIndex > -1) {
+      this.substance.specifiedSubstanceG4m.process.splice(processIndex, 1);
+      this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
+    }*/
+  }
+
+  addStage(processIndex: number, siteIndex: number): void {
+    const newStage: SpecifiedSubstanceG4mStage = {
+      references: [],
+      access: []
+    };
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.unshift(newStage);
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
+    //  this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites);
+  }
+
 }
