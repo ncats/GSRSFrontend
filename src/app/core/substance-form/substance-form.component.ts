@@ -82,8 +82,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     'mixture',
     'specifiedSubstanceG1',
     'specifiedSubstanceG2',
-    'specifiedSubstanceG3',
-    'specifiedSubstanceG4m'];
+    'specifiedSubstanceG3'];
     imported = false;
     forceChange = false;
     sameSubstance = false;

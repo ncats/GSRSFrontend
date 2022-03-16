@@ -167,17 +167,6 @@ export class SubstanceFormService implements OnDestroy {
             codes: [],
             properties: []
           };
-        } else if (substanceClass === 'specifiedSubstanceG4m') {
-          this.privateSubstance = {
-            substanceClass: substanceClass,
-            references: [],
-            specifiedSubstanceG4m: {
-              parentSubstance: {},
-              process: [],
-            },
-            codes: [],
-            properties: []
-          };
         } else if (substanceClass === 'polymer') {
           this.privateSubstance = {
             substanceClass: substanceClass,

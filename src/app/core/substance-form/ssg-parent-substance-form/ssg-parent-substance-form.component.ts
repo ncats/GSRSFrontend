@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { SubstanceRelated, SubstanceSummary, SpecifiedSubstanceG3,  SpecifiedSubstanceG4m} from '@gsrs-core/substance';
+import { SubstanceRelated, SubstanceSummary, SpecifiedSubstanceG3} from '@gsrs-core/substance';
 import { Subscription } from 'rxjs';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
@@ -30,7 +30,6 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   ngOnInit() {
     this.menuLabelUpdate.emit('Parent Substance');
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
-      alert('WWWW ' + JSON.stringify(substance));
       // Specified Substance Group 3
       /*
       if (substance.specifiedSubstanceG3.parentSubstance == null) {
@@ -43,19 +42,6 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
         this.relatedSubstanceUuid = substance.specifiedSubstanceG3.parentSubstance.refuuid;
       }
       */
-
-      // Specified Substance Group 4 Manufacturing
-   //   alert('RRRRRR ' + JSON.stringify(substance.specifiedSubstanceG4m.parentSubstance));
-     // if (substance.specifiedSubstanceG4m.parentSubstance == null) {
-     //   alert('GGGGG');
-     //   substance.specifiedSubstanceG4m.parentSubstance = { "uuid": 'test'};
-     // }
-      this.substanceFormService.resetState();
-    //  this.parentSubstance = substance.specifiedSubstanceG4m.parentSubstance;
-
-     // if (substance.specifiedSubstanceG4m.parentSubstance != null) {
-     //   this.relatedSubstanceUuid = substance.specifiedSubstanceG4m.parentSubstance.refuuid;
-     // }
     });
     this.subscriptions.push(substanceSubscription);
   }
@@ -71,7 +57,6 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     if (substance != null) {
-      alert('GGGGGGGGGGGG');
       this.parentSubstance.refPname = substance._name;
       this.parentSubstance.name = substance._name;
       this.parentSubstance.refuuid = substance.uuid;

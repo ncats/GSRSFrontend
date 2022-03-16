@@ -91,8 +91,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
         this.substanceClass = 'Specified Substance Group 1';
       } else if (this.definition.substanceClass.toUpperCase() === 'SPECIFIEDSUBSTANCEG3') {
         this.substanceClass = 'Specified Substance Group 3';
-      } else if (this.definition.substanceClass.toUpperCase() === 'SPECIFIEDSUBSTANCEG4M') {
-        this.substanceClass = 'Specified Substance Group 4 Manufacturing';
       } else {
         this.substanceClass = this.definition.substanceClass;
       }
