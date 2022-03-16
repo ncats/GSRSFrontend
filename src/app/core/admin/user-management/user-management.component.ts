@@ -2,8 +2,8 @@ import { Component, OnInit,  ViewChild } from '@angular/core';
 import { User, Auth, AuthService } from '@gsrs-core/auth';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
-import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { PageEvent } from '@angular/material/paginator';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-edit-dialog/user-edit-dialog.component';
 import { AdminService } from '@gsrs-core/admin/admin.service';
@@ -26,14 +26,15 @@ export class UserManagementComponent implements OnInit {
   loading = false;
   showAll = false;
   showInactive = false;
-  displayedColumns: string[] = ['name', 'email', 'created', 'modified', 'active'];
+  private overlayContainer: HTMLElement;
+  displayedColumns: string[] = ['checkbox', 'name', 'email', 'created', 'modified', 'active'];
   page = 0;
   pageSize = 10000;
   paged: Array< any >;
   users: Array< any > = [];
   lastSort: Sort;
+  checkedList: Array<string> = [];
   private searchTimer: any;
-  private overlayContainer: HTMLElement;
 
 constructor(
     private dialog: MatDialog,
@@ -53,6 +54,71 @@ constructor(
           this.filterList(value, this.users);
         }, error => {
         });
+}
+
+selectUnselectAll(): void {
+  if(this.checkedList.length === this.paged.length) { // all are selected, need to deselect all
+    this.checkedList = [];
+  } else { // select all
+    this.checkedList = [];
+    for(let user of this.paged) {
+      this.checkedList.push(user.user.username);
+    }
+  }
+}
+
+isInCheckList(username): boolean {
+  let toReturn = false;
+  for(let users of this.checkedList) {
+    if(users === username) {
+      toReturn = true;
+    }
+  }
+  return toReturn;
+}
+
+getPagedIndex(username): number {
+  let toReturn = 0;
+  this.paged.forEach((user, index) => {
+    if(user.user.username === username) {
+      toReturn = index;
+    }
+  });
+  return toReturn;
+}
+
+markSelected(status): void {
+  let extraWarning = '';
+  if(status === 'inactive') {
+    extraWarning = '. If the user is inactive that user won\'t be able to log in until they\'ve been reactivated'
+  }
+  if (confirm('Please confirm you would like to set the selected accounts to ' + status + extraWarning
+  + '. \n NOTE: Selecting up to 50 at a time may take some time and so is not adviseable.')) {
+     switch(status) {
+       case 'inactive': 
+      this.setSelectedToInactive();
+       break;
+    }
+  }
+}
+
+setSelectedToInactive(): void {
+  for(let user of this.checkedList) {
+    let index = this.getPagedIndex(user);
+    this.deleteUsers(user, index);
+  }
+}
+
+checkListToggle(username): void {
+  if(this.checkedList.includes(username)) {
+    this.checkedList.forEach((user, index) => {
+      if(user === username) {
+        this.checkedList.splice(index, 1);
+      }
+    })
+  } else {
+    this.checkedList.push(username);
+  }
 }
 
 showAllUsers(): void {
@@ -124,7 +190,7 @@ showInactiveUsers(): void {
 
   editUser(userID: any, index: number): void {
     const dialogRef = this.dialog.open(UserEditDialogComponent, {
-      data: {userID: userID},
+      data: {userID: userID, submission: false},
       width: '800px',
       autoFocus: false,
       disableClose: true
@@ -165,21 +231,54 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
 
 
   deleteUser(username: string, index: number): void {
-    if (confirm('Are you sure you want to set this user to inactive? This is essentially deleting the user.')) {
+    if (confirm('Are you sure you want to set this user to inactive? If the user is inactive that user won\'t be able to log in until they\'ve been reactivated.')) {
     this.adminService.deleteUser(username).subscribe( response => {
-      if (response) {
-        this.updateLocalData(response, index, null, username);
-          const backup = this.filtered.data;
-        backup[index] = response;
-        this.filtered.data = backup;
-      }
+      const dialogRef = this.dialog.open(UserEditDialogComponent, {
+        data: {userID: response.id, submission: true},
+        width: '800px',
+        autoFocus: false,
+        disableClose: true
+      });
+      this.overlayContainer.style.zIndex = '1002';
+      const dialogSubscription = dialogRef.afterClosed().subscribe(response1 => {
+        this.overlayContainer.style.zIndex = null;
+        if (response) {
+          this.updateLocalData(response, index, null, username);
+            const backup = this.filtered.data;
+          backup[index] = response;
+          this.filtered.data = backup;
+        }
+      });
     });
   }
   }
 
+  // identical to deleteUser but no warning since warning is combined in mark selected
+  // only used when user selects multiple users to set inactive
+  deleteUsers(username: string, index: number): void {
+    this.adminService.deleteUser(username).subscribe( response => {
+      const dialogRef = this.dialog.open(UserEditDialogComponent, {
+        data: {userID: response.id, submission: true},
+        width: '800px',
+        autoFocus: false,
+        disableClose: true
+      });
+      this.overlayContainer.style.zIndex = '1002';
+      const dialogSubscription = dialogRef.afterClosed().subscribe(response1 => {
+        this.overlayContainer.style.zIndex = null;
+        if (response) {
+          this.updateLocalData(response, index, null, username);
+            const backup = this.filtered.data;
+          backup[index] = response;
+          this.filtered.data = backup;
+        }
+      });
+    });
+  }
+
   addUser(): void {
     const dialogRef = this.dialog.open(UserEditDialogComponent, {
-      data: {type: 'add'},
+      data: {type: 'add', submission: false},
       width: '800px',
       autoFocus: false,
       disableClose: true

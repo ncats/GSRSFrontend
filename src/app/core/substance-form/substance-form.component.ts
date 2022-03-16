@@ -32,7 +32,7 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
 import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
 import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
-
+import { StructuralUnit } from '@gsrs-core/substance';
 
 @Component({
   selector: 'app-substance-form',
@@ -72,6 +72,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   uuid: string;
   substanceClass: string;
   status: string;
+  hidePopup: boolean;
+  unit: StructuralUnit;
   classes = [
     'concept',
     'protein',
@@ -102,6 +104,17 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private authService: AuthService,
     private titleService: Title
   ) {
+    this.substanceService.showImagePopup.subscribe (data => {
+      this.hidePopup = data;
+    })
+    this.substanceService.imagePopupUnit.subscribe (data => {
+      this.unit = data;
+    })
+  }
+
+  showHidePopup(): void {
+    this.hidePopup = !this.hidePopup;
+    this.substanceService.showImagePopup.next(this.hidePopup);
   }
 
   importDialog(): void {
