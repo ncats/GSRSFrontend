@@ -84,8 +84,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     'mixture',
     'specifiedSubstanceG1',
     'specifiedSubstanceG2',
-    'specifiedSubstanceG3',
-    'specifiedSubstanceG4'];
+    'specifiedSubstanceG3'];
     imported = false;
     forceChange = false;
     sameSubstance = false;
@@ -156,13 +155,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             this.router.onSameUrlNavigation = 'reload';
             this.loadingService.setLoading(false);
             this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
-  
+
           }, 1000);
         }
        // }
      // }
     });
- 
+
   }
 
   test() {
@@ -215,7 +214,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.setFormSections(formSections[this.subClass]);
                 this.loadingService.setLoading(false);
                 this.isLoading = false;
-                
+
               });
             });
           }
@@ -243,7 +242,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
-       
+
       });
     });
 

@@ -113,7 +113,6 @@ const childRoutes: Routes = [
   {
     path: 'user-downloads/:id',
     component: UserDownloadsComponent
-
   }
 ];
 

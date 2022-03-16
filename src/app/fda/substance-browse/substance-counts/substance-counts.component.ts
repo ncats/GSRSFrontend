@@ -35,10 +35,11 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
 
   ngOnInit() {
     this.substanceId = this.substance.uuid;
-    this.getSearchCount();
-    this.getAppIngredMatchListCount();
     this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
-
+    if (this.loadedComponents && this.loadedComponents.applications) {
+      this.getSearchCount();
+      this.getAppIngredMatchListCount();
+    }
   }
 
   getSearchCount(): void {

@@ -79,6 +79,11 @@ const applicationRoutes: Routes = [
     canActivate: [ApplicationLoadedComponent]
   },
   {
+    path: 'application/:appType/:appNumber',
+    component: ApplicationDetailsComponent,
+    canActivate: [ApplicationLoadedComponent]
+  },
+  {
     path: 'application-darrts/:appType/:appNumber',
     component: ApplicationDarrtsDetailsComponent,
     canActivate: [ApplicationLoadedComponent]

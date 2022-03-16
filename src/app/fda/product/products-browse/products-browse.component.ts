@@ -21,6 +21,7 @@ import { environment } from '../../../../environments/environment';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config';
 import { LoadingService } from '@gsrs-core/loading';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { ProductService } from '../service/product.service';
@@ -131,7 +132,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
-
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -419,4 +420,37 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     return false;
   }
 
+  openImageModal($event, subUuid: string): void {
+    // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
+
+   //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+
+     let data: any;
+
+    // if (substance.substanceClass === 'chemical') {
+       data = {
+         structure: subUuid,
+      //   smiles: substance.structure.smiles,
+         uuid: subUuid,
+     //    names: substance.names
+       };
+    // }
+
+     const dialogRef = this.dialog.open(StructureImageModalComponent, {
+       height: '90%',
+       width: '650px',
+       panelClass: 'structure-image-panel',
+       data: data
+     });
+
+     this.overlayContainer.style.zIndex = '1002';
+
+     const subscription = dialogRef.afterClosed().subscribe(() => {
+       this.overlayContainer.style.zIndex = null;
+       subscription.unsubscribe();
+     }, () => {
+       this.overlayContainer.style.zIndex = null;
+       subscription.unsubscribe();
+     });
+   }
 }

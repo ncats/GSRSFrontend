@@ -50,6 +50,8 @@ export class ApplicationDetailsBaseComponent implements OnInit {
       } else {
         this.message = 'The application Id in url should be a number';
       }
+    } else if ((this.appType != null) && (this.appNumber != null)) {
+      // get Application Id by Type and Number. To be done soon.
     } else {
       this.handleSubstanceRetrivalError();
     }

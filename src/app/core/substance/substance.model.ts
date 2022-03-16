@@ -58,8 +58,6 @@ export interface ParentCountHref {
   constituents?: CountRef;
 }
 
-
-
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
   names?: Array<SubstanceName>;
   codes?: Array<SubstanceCode>;
