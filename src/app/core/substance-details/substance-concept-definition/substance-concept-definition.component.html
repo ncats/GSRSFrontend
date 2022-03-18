@@ -1,7 +1,7 @@
 
   <div *ngIf="definitions.length > 0">
-    This is a Definitional Concept of
-    <div *ngFor="let definition of definitions">
+    This record is a subconcept of
+    <span *ngFor="let definition of definitions">
       <div class="thumb-col">
        <img class="image-thumb" appSubstanceImage [entityId]="definition.refuuid">
         <div>
@@ -10,7 +10,7 @@
           </a>
         </div>
       </div>
-    </div>
+    </span>
   </div>
   <div *ngIf = "definitions.length == 0">
     <i>This is a non-substance concept</i>
