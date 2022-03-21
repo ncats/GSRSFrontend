@@ -1,3 +1,7 @@
+<div (click)="showHidePopup()" id="overlay" [ngClass]="{'hide': !hidePopup}"></div>
+<div class="center-screen" [ngClass]="{'hide': !hidePopup}">
+  <img (click)="showHidePopup()" class = "image-popped-up" appSubstanceImage [entityId]="unit && (unit.uuid || (unit._structure && unit._structure.id))">
+</div>
 <div class="top-fixed">
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
@@ -85,17 +89,21 @@
         <div class="submission-message" *ngIf='!serverError && !approving'>
           Please correct or dismiss the following errors and submit again:
         </div>
-        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+        <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
+          <span class = "validation-body" >
           <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
             {{message.messageType}}</div>
           <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br />
               <a [href]="fixLink(link.href)" class="internal-link"
                 target="_blank">{{link.text}}</a></span>
           </div>
+        </span>
+        <span class = "validation-dismiss">
           <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
             (click)="dismissValidationMessage(i)">
             <mat-icon svgIcon="cancel"></mat-icon>
           </button>
+        </span>
         </div>
       </span>
       <div class="dismiss-container">

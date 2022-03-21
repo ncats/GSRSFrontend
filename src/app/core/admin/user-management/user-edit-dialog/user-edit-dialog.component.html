@@ -1,3 +1,4 @@
+<div class="message" [ngClass]="{'error-msg' : isError}">{{message}}</div>
 <div mat-dialog-title class = "title" *ngIf = "!submitted">
         <h1 *ngIf = "newUser">
          Add User
@@ -69,8 +70,6 @@
                 <div>
             </div>
       </div>
-      <div class = "message">{{message}}</div>
-
     </div>
     
     

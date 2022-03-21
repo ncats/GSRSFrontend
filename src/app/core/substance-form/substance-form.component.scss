@@ -1,3 +1,45 @@
+#overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: block; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0; 
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+.hide {
+  display: none!important;
+}
+.center-screen {
+  z-index: 2;
+  position: fixed;
+  background-color: white;
+  width: 50%;
+  height: 50%;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+.center-screen img {
+  transition-duration: 4s;
+  margin: 0 auto;
+  display: block;
+}
+.center-screen img:hover {
+  transform: scale(1.7);
+  -webkit-transform: scale(1.7);
+  -moz-transform: scale(1.7);
+  z-index: 0;
+}
+.image-popped-up {
+  width: 100%;
+  height: 100%;
+}
 .top-fixed {
     position: fixed;
     display: flex;
@@ -73,6 +115,15 @@ mat-select-panel{
     display: none !important;
 }
 
+.validation-body {
+  max-width:95%;
+   display:flex;
+}
+
+.validation-dismiss {
+  width: 5%;
+}
+
 .submission-messages {
   overflow: hidden;
   height: auto;
@@ -110,6 +161,7 @@ mat-select-panel{
       margin-right: 20px;
       padding:10px;
       border-radius:3px;
+      height: 40px;
     }
   }
 

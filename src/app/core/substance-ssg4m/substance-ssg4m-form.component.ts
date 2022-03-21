@@ -184,7 +184,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         } else {
           const action = this.activatedRoute.snapshot.queryParams['action'] || null;
           if (action && action === 'import' && window.history.state) {
-            alert('IMMMMMMMMMMMMMMMMMM');
             const record = window.history.state;
             this.imported = true;
             this.getDetailsFromImport(record.record);

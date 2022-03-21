@@ -34,3 +34,23 @@
     height: 20px;
     line-height: 20px;
 }
+.dropdown-content {
+    display: none;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.dropdown-content a {
+    font-size: 12px;
+    color: black;
+    display: block;
+    padding: 12px 16px;
+    width: 170px;
+}
+.dropdown-content a:hover {
+    background-color: #f1f1f1
+}
+.show {
+    display: block !important;
+}
+.hide {
+    display: none !important;
+}

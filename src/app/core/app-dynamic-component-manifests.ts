@@ -1,7 +1,6 @@
 import {
   LazyLoadedComponentManifest
 } from './dynamic-component-loader/dynamic-component-manifest';
-import {SubstanceSsg4mProcessModule } from './substance-ssg4m/ssg4m-process/substance-form-ssg4m-process.module'
 
 export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
@@ -177,6 +176,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'substance-mixture-parent',
     loadChildren: () => import('./substance-details/substance-mixture-parent/substance-mixture-parent.module')
       .then(m => m.SubstanceMixtureParentModule),
+  },
+  {
+    componentId: 'substance-hierarchy',
+    path: 'substance-hierarchy',
+    loadChildren: () => import('./substance-details/substance-hierarchy/substance-hierarchy.module')
+      .then(m => m.SubstanceHierarchyModule),
   },
   {
     componentId: 'substance-history',

@@ -202,31 +202,43 @@
 
                                 <!-- Display Ingredient Name -->
                                 <div *ngIf="ing.substanceKey; else noIngred">
-                                  <div class="divflex">
-                                    <div>
-                                      <span class="colorred">&diams;</span>
-                                      <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank">
-                                        {{ing._ingredientName}}
-                                      </a>
-                                      <!--
+                                  <div class="">
+                                    <span class="colorred">&diams;</span>
+                                    <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank">
+                                      {{ing._ingredientName}}
+                                    </a>
+                                    <!-- Display Structure when rollover icon -->
+                                    <button mat-button class="structure-parameters"
+                                      (mouseover)="openImageModal($event, ing._substanceUuid)">
+                                      <mat-icon>analytics</mat-icon>
+                                    </button>
+
+                                    <!--
                                       <button mat-button class="structure-parameters"
                                         (mouseover)="openImageModal($event, ing._substanceUuid)">
                                         <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
                                       </button>
                                       -->
-                                    </div>
+
                                     <!--
                                     <div class="structure-parameters bordergray">
                                       <button mat-icon-button (click)="openImageModal($event, ing._substanceUuid)">
                                         <mat-icon class="bordergray">analytics</mat-icon>
                                       </button>
                                     -->
-                                      &nbsp;&nbsp;
-                                      <a class="zoom" (click)="openImageModal($event, ing._substanceUuid)">
-                                        <img class="structure-image" appSubstanceImage [entityId]="ing._substanceUuid" size="20"
-                                          [stereo]="showStereo" [atomMaps]="null">
-                                      </a>
+                                    <!--
+                                    &nbsp;&nbsp;
 
+                                    <button mat-button class="structure-parameters"
+                                      (mouseover)="openImageModal($event, ing._substanceUuid)">
+                                      <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
+                                    </button>
+
+                                    <a class="zoom" (click)="openImageModal($event, ing._substanceUuid)">
+                                      <img class="structure-image" appSubstanceImage [entityId]="ing._substanceUuid"
+                                        size="20" [stereo]="showStereo" [atomMaps]="null">
+                                    </a>
+                                    -->
                                     <!-- Display Structure -->
                                     <!--
                                       <div id="struct_{{index}}_{{indexProd}}_{{indexIng}}" *ngIf="ing._substanceUuid"

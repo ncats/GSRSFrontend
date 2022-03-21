@@ -525,3 +525,7 @@ export interface SpecifiedSubstanceG4mCriticalParameter extends SubstanceBase {
   amount?: number;
   referenceSubstance?: SubstanceRelated;
 }
+export interface TableFilterDDModel {
+  value: string;
+  display: string;
+}

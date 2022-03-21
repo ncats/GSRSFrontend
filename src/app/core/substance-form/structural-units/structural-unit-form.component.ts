@@ -22,6 +22,7 @@ export class StructuralUnitFormComponent implements OnInit {
   siteDisplay: string;
   substanceType: string;
   errors = [];
+  hidePopup: boolean = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -30,11 +31,21 @@ export class StructuralUnitFormComponent implements OnInit {
     private substanceService: SubstanceService,
     private overlayContainerService: OverlayContainer,
     private substanceFormService: SubstanceFormService
-  ) { }
+  ) { 
+    this.substanceService.showImagePopup.subscribe (data => {
+      this.hidePopup = data;
+    })
+  }
 
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+  }
+
+  showHidePopup(): void {
+    this.hidePopup = !this.hidePopup;
+    this.substanceService.showImagePopup.next(this.hidePopup);
+    this.substanceService.imagePopupUnit.next(this.unit);
   }
 
   openAmountDialog(): void {

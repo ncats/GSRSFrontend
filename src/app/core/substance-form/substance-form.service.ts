@@ -173,7 +173,7 @@ export class SubstanceFormService implements OnDestroy {
             specifiedSubstanceG4m: {
               parentSubstance: {},
               process: []
-            },
+            }
             // codes: [],
             //  properties: []
           };
@@ -1273,7 +1273,7 @@ export class SubstanceFormService implements OnDestroy {
         observer.next(results);
         observer.complete();
       }, error => {
-        observer.error();
+        observer.error(error);
         observer.complete();
       });
     });

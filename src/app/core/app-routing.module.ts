@@ -121,7 +121,6 @@ const childRoutes: Routes = [
   //  canActivate: [CanRegisterSubstanceForm],
   //  canDeactivate: [CanDeactivateSubstanceFormGuard]
   },
-
 ];
 
 const routes: Routes = [
