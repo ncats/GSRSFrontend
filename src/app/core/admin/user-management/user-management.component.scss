@@ -48,8 +48,8 @@
 .dropdown-content a:hover {
     background-color: #f1f1f1
 }
-.top-button:hover .dropdown-content {
-  display: block;
+.show {
+    display: block !important;
 }
 .hide {
     display: none !important;

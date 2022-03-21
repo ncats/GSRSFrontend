@@ -236,7 +236,9 @@ export class UserEditDialogComponent implements OnInit {
       }, error => {
         if (error.error) {
           this.isError = true;
-          this.message = error.error.message.split(':')[1];
+          this.message = 'ERROR: ';
+          this.message += error.error.message === undefined ?
+          error.statusText : error.error.message.split(':')[1];
         }
         this.adminService.getUserByName(this.user.user.username).pipe(take(1)).subscribe(response => {
           let userIsActive = false;

@@ -99,6 +99,11 @@ export class AmountFormComponent implements OnInit {
     return this.privateSubstanceAmount;
   }
 
+  updateAccess(access: Array<string>): void {
+    this.privateSubstanceAmount.access = access;
+    this.substanceAmount.access = access;
+  }
+
   updateType(event: any) {
     setTimeout(() => {
       this.typeControl.setValue(event.value);
