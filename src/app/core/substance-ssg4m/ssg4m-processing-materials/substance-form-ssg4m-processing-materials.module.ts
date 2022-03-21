@@ -30,27 +30,8 @@ import { ScrollToModule } from '@gsrs-core/scroll-to/scroll-to.module';
 import { ExpandDetailsModule } from '@gsrs-core/expand-details/expand-details.module';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
-
-import { CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
-import { CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
-import { JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import { AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
-
-// import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
-// import { MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
-// import { SubstanceFormComponent } from './substance-form.component';
-// import { CanActivateSubstanceForm } from './can-activate-substance-form';
-// import { CanRegisterSubstanceForm } from './can-register-substance-form';
-// import { SubstanceFormService } from '../substance-form.service';
-// import { AccessManagerComponent } from './access-manager/access-manager.component';
-// import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
-// import { SubstanceFormComponent } from '../substance-form/substance-form.component';
-// import { SubstanceFormSsg4mSitesService } from './ssg4m-sites/substance-form-ssg4m-sites.service.';
-import { SubstanceFormSsg4mStartingMaterialsModule } from '../ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
-import { SubstanceFormSsg4mProcessingMaterialsModule } from '../ssg4m-processing-materials/substance-form-ssg4m-processing-materials.module';
-import { SubstanceFormSsg4mResultingMaterialsModule } from '../ssg4m-resulting-materials/substance-form-ssg4m-resulting-materials.module';
-import { SubstanceFormSsg4mStagesService } from './substance-form-ssg4m-stages.service';
-import { Ssg4mStagesFormComponent } from './ssg4m-stages-form.component';
+import { SubstanceFormModule } from '@gsrs-core/substance-form/substance-form.module';
+import { Ssg4mProcessingMaterialsFormComponent } from './ssg4m-processing-materials-form.component';
 
 @NgModule({
   imports: [
@@ -82,42 +63,17 @@ import { Ssg4mStagesFormComponent } from './ssg4m-stages-form.component';
     MatButtonToggleModule,
     NgxJsonViewerModule,
     RouterModule,
-    SubstanceImageModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    SubstanceFormSsg4mStartingMaterialsModule,
-    SubstanceFormSsg4mProcessingMaterialsModule,
-    SubstanceFormSsg4mResultingMaterialsModule
+    SubstanceImageModule,
+    SubstanceSelectorModule,
+    SubstanceFormModule
   ],
   declarations: [
-  //  SubstanceFormComponent,
-    Ssg4mStagesFormComponent
- //   CvInputComponent,
-  //  CvDialogComponent,
- //   JsonDialogComponent
+    Ssg4mProcessingMaterialsFormComponent
   ],
   exports: [
-    Ssg4mStagesFormComponent
-  //  SubstanceFormComponent,
-  // SubstanceSsg4ManufactureFormComponent,
-  //  CvInputComponent,
-  //  CvDialogComponent,
-  //  JsonDialogComponent,
-  ],
-  entryComponents: [
-  //  CvDialogComponent,
- //   JsonDialogComponent,
- //   AuditInfoComponent,
-  //  SubmitSuccessDialogComponent,
+    Ssg4mProcessingMaterialsFormComponent
   ]
 })
-
-export class Ssg4mStagesModule {
-  static forRoot(): ModuleWithProviders<any> {
-    return {
-      ngModule: Ssg4mStagesModule,
-      providers: [
-      ]
-    };
-  }
-}
+export class SubstanceFormSsg4mProcessingMaterialsModule { }

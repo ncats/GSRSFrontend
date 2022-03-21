@@ -1,6 +1,7 @@
-.process-form-container {
+.form-container {
   padding: 5px 10px 12px 10px;
   position: relative;
+  border: 1px solid rgb(228, 218, 218);
 }
 
 .notification-backdrop {
@@ -28,7 +29,7 @@
       padding: 0 10px 8px 0;
   }
 
-  .process {
+  .col {
       flex-grow: 1;
       padding-right: 15px;
   }
@@ -39,31 +40,32 @@
   width: 100%;
 }
 
-hr {
-  border: none;
-  border-top: 3px dotted green;
-  color: #333;
-  overflow: visible;
-  text-align: center;
-  height: 5px;
+.related-substance {
+  width: 300px;
+  max-width: 300px;
+}
+
+::ng-deep .selected-substance {
+  display: flex;
+  flex-direction: column;
+  text-align: left !important;
+  position: relative;
+  img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-width: 220px;
+  }
+}
+
+.divflex {
+  display: flex;
 }
 
 .bordergray {
   border: 1px solid gray;
 }
 
-.borderorange {
-  border: 1px solid orangered;
-}
-
-.fontsize18px {
-  font-size: 18px;
-}
-
-.margintop10px {
-  margin-top: 10px;
-}
-
-.marginbottom10px {
-  margin-bottom: 10px;
+.padleftneg10 {
+  padding-left: -10px;
 }

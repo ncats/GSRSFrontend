@@ -7,32 +7,34 @@ import {
   QueryList,
   OnDestroy, HostListener
 } from '@angular/core';
-import { formSections } from '../substance-form/form-sections.constant';
 import { ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
-import { SubstanceService } from '../substance/substance.service';
-import { LoadingService } from '../loading/loading.service';
-import { MainNotificationService } from '../main-notification/main-notification.service';
-import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
-import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { SubstanceFormSection } from '../substance-form/substance-form-section';
-import { SubstanceFormService } from '../substance-form/substance-form.service';
-import { ValidationMessage, SubstanceFormResults, SubstanceFormDefinition } from '../substance-form/substance-form.model';
-import { Subscription, Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
-import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
+import { take, map } from 'rxjs/operators';
+import { Subscription, Observable } from 'rxjs';
 import * as _ from 'lodash';
 import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import { Title } from '@angular/platform-browser';
+// GSRS Import
+import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
+import { formSections } from '../substance-form/form-sections.constant';
+import { SubstanceFormSection } from '../substance-form/substance-form-section';
+import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AuthService } from '@gsrs-core/auth';
-import { take, map } from 'rxjs/operators';
-import { MatExpansionPanel } from '@angular/material/expansion';
+import { LoadingService } from '../loading/loading.service';
+import { SubstanceService } from '../substance/substance.service';
+import { SubstanceFormService } from '../substance-form/substance-form.service';
+import { AppNotification, NotificationType } from '../main-notification/notification.model';
+import { ValidationResults } from '../substance-form/substance-form.model';
+import { ValidationMessage, SubstanceFormResults, SubstanceFormDefinition } from '../substance-form/substance-form.model';
 import { SubmitSuccessDialogComponent } from '../substance-form/submit-success-dialog/submit-success-dialog.component';
 import { MergeConceptDialogComponent } from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
 import { DefinitionSwitchDialogComponent } from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
-
+import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
+import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
 
 @Component({
   selector: 'app-substance-ssg4m-form',
@@ -97,6 +99,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     private router: Router,
     private dynamicComponentLoader: DynamicComponentLoader,
     private gaService: GoogleAnalyticsService,
+    private substanceSsg4mService: SubstanceSsg4mService,
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
@@ -142,7 +145,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         setTimeout(() => {
           this.router.onSameUrlNavigation = 'reload';
           this.loadingService.setLoading(false);
-          this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+          this.router.navigateByUrl('/substances-ssg4m/register?action=import', { state: { record: response } });
 
         }, 1000);
       }
@@ -181,6 +184,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         } else {
           const action = this.activatedRoute.snapshot.queryParams['action'] || null;
           if (action && action === 'import' && window.history.state) {
+            alert('IMMMMMMMMMMMMMMMMMM');
             const record = window.history.state;
             this.imported = true;
             this.getDetailsFromImport(record.record);
@@ -196,8 +200,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
                 this.gaService.sendPageView(`Substance Register`);
                 this.subClass = this.activatedRoute.snapshot.params['type'] || 'specifiedSubstanceG4m';
                 this.substanceClass = this.subClass;
-                this.titleService.setTitle('Register - ' + this.subClass);
+                this.titleService.setTitle('Register - Specified Substance Group 4 Manufacturing');
                 this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+                // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
                   this.setFormSections(formSections[this.subClass]);
                   this.loadingService.setLoading(false);
                   this.isLoading = false;
@@ -210,23 +215,24 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.subscriptions.push(routeSubscription);
     const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationStart) {
-        this.substanceFormService.unloadSubstance();
+        this.substanceSsg4mService.unloadSubstance();
       }
     });
     this.subscriptions.push(routerSubscription);
     this.approving = false;
-    const definitionSubscription = this.substanceFormService.definition.subscribe(response => {
+    /* // Commenting this out
+    const definitionSubscription = this.substanceSsg4mService.definition.subscribe(response => {
       this.definition = response;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
       });
     });
     this.subscriptions.push(definitionSubscription);
+    */
     this.authService.getAuth().pipe(take(1)).subscribe(auth => {
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
-
       });
     });
   }
@@ -281,7 +287,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
                 }
                 setTimeout(() => {
                   this.loadingService.setLoading(false);
-                  this.UNII = this.substanceFormService.getUNII();
+                  //  this.UNII = this.substanceSsg4mService.getUNII();
                 }, 5);
               });
           });
@@ -300,6 +306,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     }
   }
 
+  /*
   useFeature(feature: any): void {
     this.feature = feature.value;
     if (this.feature === 'glyco') {
@@ -368,6 +375,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.substanceFormService.disulfideLinks();
     this.feature = undefined;
   }
+  */
 
   ngOnDestroy(): void {
     // this.substanceFormService.unloadSubstance();
@@ -417,12 +425,12 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       }
       if (response) {
         this.definitionType = response.definitionType;
-        if (newType) {
-          response = this.substanceFormService.switchType(response, newType);
-        }
+        // if (newType) {
+        //  response = this.substanceSsg4mService.switchType(response, newType);
+        // }
         this.substanceClass = response.substanceClass;
         this.status = response.status;
-        this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+        this.substanceSsg4mService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
           this.setFormSections(formSections[response.substanceClass]);
         });
       } else {
@@ -455,6 +463,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       this.substanceClass = response.substanceClass;
       this.status = response.status;
       this.substanceFormService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
+     // this.substanceSsg4mService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
         this.setFormSections(formSections[response.substanceClass]);
         if (!same) {
           setTimeout(() => {
@@ -514,7 +523,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
           delete response._name;
         }
         this.scrub(response, type);
-        this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+        this.substanceSsg4mService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
           this.setFormSections(formSections[response.substanceClass]);
           this.loadingService.setLoading(false);
           this.isLoading = false;
@@ -552,7 +561,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       this.router.navigate(['/substances/register']);
-      this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+      this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
         this.setFormSections(formSections.chemical);
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -569,7 +578,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
-    this.substanceFormService.validateSubstance().pipe(take(1)).subscribe(results => {
+    /*
+    this.substanceSsg4mService.validateSubstance().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
@@ -588,12 +598,14 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       this.loadingService.setLoading(false);
       this.isLoading = false;
     });
+    */
   }
 
+  /*
   approve(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    this.substanceFormService.approveSubstance().pipe(take(1)).subscribe(response => {
+    this.substanceSsg4mService.approveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
@@ -615,12 +627,123 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       }
     );
   }
+  */
+
+  validateSubstance(): Observable<ValidationResults> {
+    return new Observable(observer => {
+      // const substanceCopy = this.cleanSubstance();
+      // CHANGING THIS NOW CHANGING THIS NOW
+      const substanceCopy = null;
+      this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
+        // check for missing required reference fields and append a validationMessage
+        if (results.validationMessages) {
+          for (let i = 0; i < substanceCopy.references.length; i++) {
+            const ref = substanceCopy.references[i];
+            if (ref.docType !== 'SYSTEM') {
+              if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
+                const invalidReferenceMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'All references require a non-empty source type and text/citation value',
+                  messageType: 'WARNING',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidReferenceMessage);
+                break;
+              }
+            }
+          }
+          if (substanceCopy.properties) {
+            for (let i = 0; i < substanceCopy.properties.length; i++) {
+              const prop = substanceCopy.properties[i];
+              if (!prop.propertyType || !prop.name) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Property #' + (i + 1) + ' requires a non-empty name and type',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              }
+            }
+          }
+          if (substanceCopy.relationships) {
+            for (let i = 0; i < substanceCopy.relationships.length; i++) {
+              const relationship = substanceCopy.relationships[i];
+              if (!relationship.relatedSubstance || !relationship.type || relationship.type === '') {
+                const invalidRelationshipMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Relationship  #' + (i + 1) + ' requires a non-empty related substance and type',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidRelationshipMessage);
+                results.valid = false;
+              }
+            }
+          }
+          if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
+            for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
+              const prop = substanceCopy.polymer.monomers[i];
+              if (!prop.monomerSubstance || prop.monomerSubstance === {}) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Monomer #' + (i + 1) + ' requires a selected substance',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              }
+            }
+          }
+          if (substanceCopy.modifications && substanceCopy.modifications.physicalModifications) {
+            for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
+              const prop = substanceCopy.modifications.physicalModifications[i];
+              let present = false;
+              prop.parameters.forEach(param => {
+                if (param.parameterName) {
+                  present = true;
+                }
+              });
+
+              if (!prop.physicalModificationRole && !present) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Physical Modification #' + (i + 1) + ' requires a modification role or valid parameter',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              }
+            }
+          }
+        }
+        observer.next(results);
+        observer.complete();
+      }, error => {
+        observer.error();
+        observer.complete();
+      });
+    });
+  }
 
   submit(): void {
     this.isLoading = true;
     this.approving = false;
     this.loadingService.setLoading(true);
-    this.substanceFormService.saveSubstance().pipe(take(1)).subscribe(response => {
+    this.substanceSsg4mService.saveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
@@ -700,7 +823,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
-    if (this.substanceFormService.isSubstanceUpdated) {
+    if (this.substanceSsg4mService.isSubstanceUpdated) {
       $event.returnValue = true;
     }
   }
@@ -832,7 +955,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
 
-      this.substanceFormService.bypassUpdateCheck();
+      this.substanceSsg4mService.bypassUpdateCheck();
       if (response === 'continue') {
         this.router.navigate(['/substances', this.id, 'edit']);
       } else if (response === 'browse') {
@@ -856,7 +979,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.subscriptions.push(dialogSubscription);
 
   }
-
 
   mergeConcept() {
     this.feature = undefined;

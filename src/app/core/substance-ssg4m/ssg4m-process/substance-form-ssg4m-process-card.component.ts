@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Input } from '@angular/core';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { Subscription } from 'rxjs';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
@@ -18,6 +18,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
 
   process: Array<SpecifiedSubstanceG4mProcess>;
   private subscriptions: Array<Subscription> = [];
+  showAdvancedSettings = false;
 
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
@@ -75,5 +76,9 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
 
   updateProcess($event) {
 
+  }
+
+  updateAdvancedSettings(event): void {
+    this.showAdvancedSettings = event.checked;
   }
 }

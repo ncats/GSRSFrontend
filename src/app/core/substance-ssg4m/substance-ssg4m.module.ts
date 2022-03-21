@@ -86,7 +86,7 @@ import { Ssg4mSitesModule } from './ssg4m-sites/ssg4m-sites.module';
   ],
   declarations: [
   //  SubstanceFormComponent,
-    SubstanceSsg4ManufactureFormComponent,
+    SubstanceSsg4ManufactureFormComponent
  //   CvInputComponent,
   //  CvDialogComponent,
  //   JsonDialogComponent

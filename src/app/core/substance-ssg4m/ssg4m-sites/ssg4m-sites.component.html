@@ -1,66 +1,67 @@
-<div class="form-container">
-  <div *ngIf="site.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;GGGGGGG
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
-  <div class="form-row bordergray">
-    <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Site" (click)="deleteSite()">
-        <mat-icon svgIcon="delete_forever"></mat-icon>
+<div [ngClass]="{'bordergreen': showAdvancedSettings === true}">
+  <div class="form-container">
+    <div *ngIf="site.$$deletedCode" class="notification-backdrop">
+      Deleted&nbsp;GGGGGGG
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
       </button>
     </div>
+    <div class="form-row" *ngIf="showAdvancedSettings">
+      <div class="delete-container">
+        <button mat-icon-button matTooltip="Delete Site" (click)="deleteSite()">
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
 
-    <div class="row">
-      <mat-form-field class="">
-        <input matInput placeholder="Site Name" [(ngModel)]="privateSite.siteName" name="privateSite.siteName" />
-      </mat-form-field>
-      <!--
+      <div class="row">
+        <mat-form-field class="">
+          <input matInput placeholder="Site Name" [(ngModel)]="site.siteName" name="site.siteName" />
+        </mat-form-field>
+        <!--
       <button mat-button (click)="addSite()">
         Add Sites <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
       -->
+      </div>
+    </div> <!-- form row -->
+
+    <!-- STAGES LIST BEGIN -->
+    <hr *ngIf="showAdvancedSettings">
+    <div>
+      <span matBadge="{{site.stages.length}}" matBadgeOverlap="false">
+        <span class="fontsize18px"><b>Stage Information</b></span>
+      </span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button mat-raised-button color="primary" (click)="addStage(processIndex, siteIndex)" matTooltip="Add New Stage">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Stage
+      </button>
+      <br><br>
+
+      <div class="marginbottom10px" *ngFor="let stage of site.stages; let stageIndex = index">
+        <app-ssg4m-stages-form [stage]="stage" [processIndex]="processIndex" [siteIndex]="siteIndex"
+          [stageIndex]="stageIndex">
+        </app-ssg4m-stages-form>
+      </div>
     </div>
-  </div> <!-- form row -->
-
-  <!-- STAGES LIST BEGIN -->
-  <div class="">
-    <hr>
-    <!--
-    <span matBadge="{{privateSite.stages.length}}" matBadgeOverlap="false">
-      <span class="titlegreen"><b>Stage Information</b></span>
-    </span>
-    -->
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button mat-raised-button color="primary" (click)="addStage(processIndex, siteIndex)" matTooltip="Add New Stage">
-      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Stage
-    </button>
-    <br><br>
+    <!-- STAGES LIST END -->
 
     <!--
-    <div class="marginbottom10px" *ngFor="let stage of privateSites.stages; let stageIndex = index">
-      <app-ssg4m-stages-form [stage]="stage">
-      </app-ssg4m-stages-form>
-    </div>
-    -->
-  </div>
-  <!-- STAGES LIST END -->
-
-  <!--
                   [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex"
             (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
             (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)"
     -->
 
-  <!-- Sites List -->
-  <!--
+    <!-- Sites List -->
+    <!--
     <app-substance-form-ssg4m-sites-card></app-substance-form-ssg4m-sites-card>
     -->
 
+    <!--
   <div class="form-row" *ngIf="!site.$$deletedCode">
     <div class="references-container">
       <app-domain-references [referencesUuids]="site.references" #references></app-domain-references>
     </div>
+  </div>
+  -->
   </div>
 </div>

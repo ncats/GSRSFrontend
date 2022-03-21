@@ -451,7 +451,7 @@ export interface Feature {
 
 export interface SpecifiedSubstanceG3 extends SubstanceBase {
   references?: Array<string>;
-  parentSubstance?: SubstanceRelated;
+  parentSubstance?: SpecifiedSubstanceParent;
   grade?: Grade;
   definition?: Definition;
 }
@@ -467,31 +467,59 @@ export interface Definition extends SubstanceBase {
   definition?: string;
 }
 
-export interface SpecifiedSubstanceG4m extends SubstanceBase {
-  references?: Array<string>;
+export interface SpecifiedSubstanceParent extends SubstanceBase {
   parentSubstance?: SubstanceRelated;
+}
+
+export interface SpecifiedSubstanceG4m extends SubstanceBase {
+  // references?: Array<string>;
+  parentSubstance?: SpecifiedSubstanceParent;
   process?: Array<SpecifiedSubstanceG4mProcess>;
 }
 
 export interface SpecifiedSubstanceG4mProcess extends SubstanceBase {
-  references?: Array<string>;
+  // references?: Array<string>;
   processName?: string;
   sites?: Array<SpecifiedSubstanceG4mSite>;
 }
 
 export interface SpecifiedSubstanceG4mSite extends SubstanceBase {
-  references?: Array<string>;
+  // references?: Array<string>;
   siteName?: string;
   stages?: Array<SpecifiedSubstanceG4mStage>;
 }
 
 export interface SpecifiedSubstanceG4mStage extends SubstanceBase {
-  references?: Array<string>;
-  stageNumber?: number;
+  // references?: Array<string>;
+  stageNumber?: string;
+  startingMaterials?: Array<SpecifiedSubstanceG4mStartingMaterial>;
+  processingMaterials?: Array<SpecifiedSubstanceG4mProcessingMaterial>;
+  resultingMaterials?: Array<SpecifiedSubstanceG4mResultingMaterial>;
+}
+
+export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
+  // references?: Array<string>;
+  substanceName?: SubstanceRelated;
+  verbatimName?: string;
+  substanceRole?: string;
+}
+
+export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
+  // references?: Array<string>;
+  substanceName?: SubstanceRelated;
+  verbatimName?: string;
+  substanceRole?: string;
+}
+
+export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
+  // references?: Array<string>;
+  substanceName?: SubstanceRelated;
+  verbatimName?: string;
+  substanceRole?: string;
 }
 
 export interface SpecifiedSubstanceG4mCriticalParameter extends SubstanceBase {
-  references?: Array<string>;
+  // references?: Array<string>;
   name?: string;
   propertyType?: string;
   amount?: number;

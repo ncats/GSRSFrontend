@@ -46,13 +46,15 @@ mat-select-panel{
 }
 
 .form-content-container {
-    // position: fixed;
-    // top: 121px;
-    // right: 0;
-    // bottom: 0;
-    // left: 0;
-    overflow: hidden;
-    padding-top: 121px;
+  // position: fixed;
+  // top: 121px;
+  // right: 0;
+  // bottom: 0;
+  // left: 0;
+  overflow: hidden;
+  margin-top: -100;
+  padding-top: 0;
+  // padding-top: 121px;
 }
 
 .actions-container {
@@ -123,7 +125,6 @@ mat-select-panel{
 
   }
 
-
   .error-message {
     color: #a94442;
     background-color: #f2dede;
@@ -152,3 +153,32 @@ mat-select-panel{
   margin-left: 15px;
 }
 
+.substance-form-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-header-title {
+  max-width: 1028px;
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  /*overflow: hidden;*/
+  padding-top: 150px;
+  margin: 0 auto;
+}
+
+.form-header {
+  // padding-bottom:20px;
+  font-weight:500;
+  font-size: 28px;
+  }
+
+.sub-header {
+  font-weight: 400;
+  padding-right:5px;
+}
+
+.bordergray {
+  border: 1px solid green;
+}

@@ -25,9 +25,10 @@ import { SpecifiedSubstanceG4mSite } from '@gsrs-core/substance/substance.model'
 })
 export class Ssg4mSitesComponent implements OnInit {
 
-  @Input() processIndex: number;
-  @Input() siteIndex: number;
   privateSite: SpecifiedSubstanceG4mSite;
+  privateProcessIndex: number;
+  privateSiteIndex: number;
+  privateShowAdvancedSettings: boolean;
 
   constructor(
     public substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
@@ -40,15 +41,47 @@ export class Ssg4mSitesComponent implements OnInit {
     this.privateSite = site;
   }
 
-  ngOnInit(): void {
+  get site(): SpecifiedSubstanceG4mSite {
+    return this.privateSite;
+  }
 
+  @Input()
+  set processIndex(processIndex: number) {
+    this.privateProcessIndex = processIndex;
+  }
+
+  get processIndex(): number {
+    return this.privateProcessIndex;
+  }
+
+  @Input()
+  set siteIndex(siteIndex: number) {
+    this.privateSiteIndex = siteIndex;
+    // Set the Site Name
+    this.privateSite.siteName = 'Site ' + (this.privateSiteIndex + 1);
+  }
+
+  get siteIndex(): number {
+    return this.privateSiteIndex;
+  }
+
+  @Input()
+  set showAdvancedSettings(showAdvancedSettings: boolean) {
+    this.privateShowAdvancedSettings = showAdvancedSettings;
+  }
+
+  get showAdvancedSettings(): boolean {
+    return this.privateShowAdvancedSettings;
+  }
+
+  ngOnInit(): void {
   }
 
   deleteSite(): void {
 
   }
 
-  addStage(processIndex:number, siteIndex:number) {
+  addStage(processIndex: number, siteIndex: number) {
     this.substanceFormSsg4mSitesService.addStage(processIndex, siteIndex);
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-process-site-stage-0`, 'center');

@@ -8,6 +8,7 @@
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
       <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
+    <!--
     <div *ngIf="isAdmin === true || isUpdater === true" class="advanced-features">
       <div class="admin-functions">
         <mat-form-field>
@@ -33,7 +34,8 @@
               <mat-option value="unapprove">
                 Un-approve record (Remove approval ID)
               </mat-option>
-              <mat-option value="changeApproval" [disabled]="!id || status === 'pending' || (substanceClass === 'concept' && UNII === 'non-approved record')">
+              <mat-option value="changeApproval"
+                [disabled]="!id || status === 'pending' || (substanceClass === 'concept' && UNII === 'non-approved record')">
                 Change Approval ID
               </mat-option>
               <mat-option value="concept" [disabled]="substanceClass != 'concept'">
@@ -69,6 +71,7 @@
         </mat-form-field>
       </div>
     </div>
+    -->
     <span class="middle-fill"></span>
     <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
     <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
@@ -89,8 +92,7 @@
           <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
             {{message.messageType}}</div>
           <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br />
-              <a [href]="fixLink(link.href)" class="internal-link"
-                target="_blank">{{link.text}}</a></span>
+              <a [href]="fixLink(link.href)" class="internal-link" target="_blank">{{link.text}}</a></span>
           </div>
           <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
             (click)="dismissValidationMessage(i)">
@@ -103,7 +105,7 @@
         <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
           [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
           Submit</button>
-          <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false">
+        <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false">
           Cancel</button>
         <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
           [disabled]="isLoading || !canApprove"> Confirm Approval</button>
@@ -111,6 +113,14 @@
     </div>
   </div>
 </div>
+
+<div class="form-header-title form-header">
+  <div>
+    <span class="sub-header">{{(uuid && !imported) ? 'Editing ' : 'Registering New '}}</span>
+    <span>Specified Substance Group 4 Manufacturing</span>
+  </div>
+</div>
+
 <div class="form-content-container">
   <div class="scrollable-container">
     <div class="cards-container">
@@ -123,8 +133,8 @@
               <h2>{{section.menuLabel}}</h2>
               <div class="middle-fill"></div>
               <div *ngIf="section.canAddItem">
-                <button mat-flat-button color="primary" id = "Add new {{section.menuLabel}}" (click)="section.addItem(); $event.stopPropagation()"
-                  matTooltip="Add new {{section.menuLabel}}">
+                <button mat-flat-button color="primary" id="Add new {{section.menuLabel}}"
+                  (click)="section.addItem(); $event.stopPropagation()" matTooltip="Add new {{section.menuLabel}}">
                   Add {{section.menuLabel}}
                   <mat-icon svgIcon="add_circle_outline"></mat-icon>
                 </button>

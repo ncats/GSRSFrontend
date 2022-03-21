@@ -25,21 +25,21 @@
   </div> <!-- form row -->
 
   <!-- SITES LIST BEGIN -->
-  <div class="">
-    <hr>
+  <hr>
+  <div *ngIf="showAdvancedSettings">
     <span matBadge="{{process.sites.length}}" matBadgeOverlap="false">
-      <span class="titlegreen"><b>Site Information</b></span>
+      <span class="fontsize18px"><b>Site Information</b></span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-raised-button color="primary" (click)="addSite()" matTooltip="Add New Manufacture">
       <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Sites
     </button>
     <br><br>
-
-    <div class="marginbottom10px" *ngFor="let site of process.sites; let siteIndex = index">
-      <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex">
-      </app-ssg4m-sites>
-    </div>
+  </div>
+  <div class="marginbottom10px" *ngFor="let site of process.sites; let siteIndex = index">
+    <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
+      [showAdvancedSettings]="showAdvancedSettings">
+    </app-ssg4m-sites>
   </div>
   <!-- SITES LIST END -->
 

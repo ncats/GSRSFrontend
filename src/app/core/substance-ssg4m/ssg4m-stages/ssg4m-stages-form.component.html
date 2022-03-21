@@ -1,1 +1,146 @@
-<p>ssg4m-stages works!</p>
+<div class="form-container borderorange margintop10px">
+  <div *ngIf="stage.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;GGGGGGG
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete Stage" (click)="deleteStage()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+
+    <div class="row">
+      <mat-form-field class="">
+        <input matInput placeholder="Stage Number" [(ngModel)]="stage.stageNumber" name="stage.stageNumber" />
+      </mat-form-field>
+      <!--
+        <button mat-button (click)="addSite()">
+          Add Sites <mat-icon svgIcon="add_circle_outline"></mat-icon>
+        </button>
+        -->
+    </div>
+  </div> <!-- form row -->
+
+  <!-- STARTING MATERIALS LIST BEGIN -->
+  <div class="materialborder">
+    <span matBadge="{{stage.startingMaterials.length}}" matBadgeOverlap="false">
+      <span class="materialtitle"><b>Starting Materials</b></span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="primary" (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)"
+      matTooltip="Add New Starting Material">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Starting Materials
+    </button>
+    <!-- Show More Details button-->
+    <!--
+    <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
+      <span class="colorgreen">Show More Details</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    -->
+    <br><br>
+    <div class="marginbottom10px" *ngFor="let startingMaterial of stage.startingMaterials; let startMatIndex = index">
+      <app-ssg4m-starting-materials-form [startingMaterial]="startingMaterial"></app-ssg4m-starting-materials-form>
+    </div>
+    <!-- Another Add Button-->
+    <!--
+    <div *ngIf="stage.startingMaterials && stage.startingMaterials.length > 0" style="display:flex;">
+      <span class="middle-fill"></span>
+      <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
+        Add Another Starting Material <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
+    </div>
+    -->
+  </div>
+  <!-- STARTING MATERIALS LIST END -->
+
+
+  <!-- PROCESSING MATERIALS LIST BEGIN -->
+  <div class="materialborder">
+    <span matBadge="{{stage.processingMaterials.length}}" matBadgeOverlap="false">
+      <span class="materialtitle"><b>Processing Materials</b></span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="primary" (click)="addProcessingMaterial(processIndex, siteIndex, stageIndex)"
+      matTooltip="Add New Processing Material">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Processing Materials
+    </button>
+    <!-- Show More Details button-->
+    <!--
+    <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
+      <span class="colorgreen">Show More Details</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    -->
+    <br><br>
+    <div class="marginbottom10px"
+      *ngFor="let processingMaterial of stage.processingMaterials; let processMatIndex = index">
+      <app-ssg4m-processing-materials-form [processingMaterial]="processingMaterial">
+      </app-ssg4m-processing-materials-form>
+    </div>
+    <!-- Another Add Button-->
+    <div *ngIf="stage.processingMaterials && stage.processingMaterials.length > 0" style="display:flex;">
+      <span class="middle-fill"></span>
+      <button mat-button (click)="addProcessingMaterial(processIndex, siteIndex, stageIndex)">
+        Add Another Processing Material <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
+    </div>
+  </div>
+  <!-- PROCESSING MATERIALS LIST END -->
+
+
+  <!-- RESULTING MATERIALS LIST BEGIN -->
+  <div class="materialborder">
+    <span matBadge="{{stage.resultingMaterials.length}}" matBadgeOverlap="false">
+      <span class="materialtitle"><b>Resulting Materials</b></span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="primary" (click)="addResultingMaterial(processIndex, siteIndex, stageIndex)"
+      matTooltip="Add New Resulting Material">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Resulting Materials
+    </button>
+    <!-- Show More Details button-->
+    <!--
+    <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
+      <span class="colorgreen">Show More Details</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    -->
+    <br><br>
+    <div class="marginbottom10px"
+      *ngFor="let resultingMaterial of stage.resultingMaterials; let resultMatIndex = index">
+      <app-ssg4m-resulting-materials-form [resultingMaterial]="resultingMaterial">
+      </app-ssg4m-resulting-materials-form>
+    </div>
+    <!-- Another Add Button-->
+    <div *ngIf="stage.resultingMaterials && stage.resultingMaterials.length > 0" style="display:flex;">
+      <span class="middle-fill"></span>
+      <button mat-button (click)="addResultingMaterial(processIndex, siteIndex, stageIndex)">
+        Add Another Resulting Material <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
+    </div>
+  </div>
+  <!-- RESULTING MATERIALS LIST END -->
+
+  <!--
+                    [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex"
+              (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
+              (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)"
+      -->
+
+  <!-- Sites List -->
+  <!--
+      <app-substance-form-ssg4m-sites-card></app-substance-form-ssg4m-sites-card>
+      -->
+
+  <!--
+    <div class="form-row" *ngIf="!site.$$deletedCode">
+      <div class="references-container">
+        <app-domain-references [referencesUuids]="site.references" #references></app-domain-references>
+      </div>
+    </div>
+    -->
+</div>

@@ -39,9 +39,10 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
 
   addProcess(): void {
     const newProcess: SpecifiedSubstanceG4mProcess = {
-      references: [],
-      access: [],
-      sites: []
+      processName: 'Process ',
+    //  references: [],
+    //  access: [],
+      sites: [{siteName: 'Site 1', stages: []}]
     };
     this.substance.specifiedSubstanceG4m.process.unshift(newProcess);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
@@ -57,10 +58,13 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
 
   addSite(processIndex: number): void {
     const newSite: SpecifiedSubstanceG4mSite = {
-      references: [],
-      access: [],
+    //  references: [],
+    //  access: [],
       stages: []
     };
+  //  if (!this.substance.specifiedSubstanceG4m.process[processIndex].sites) {
+  //    this.substance.specifiedSubstanceG4m.process[processIndex].sites = [];
+  //  }
     this.substance.specifiedSubstanceG4m.process[processIndex].sites.unshift(newSite);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
   //  this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites);
