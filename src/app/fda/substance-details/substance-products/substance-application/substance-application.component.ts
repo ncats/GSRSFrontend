@@ -130,7 +130,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         this.foundCenterList = true;
 
         // Replace 'Darrts' to 'Integrity' and 'SRS' to 'GSRS'
-        this.centerList.forEach((cent, index) => {
+        /* this.centerList.forEach((cent, index) => {
           if (cent != null) {
             let centerReplace = '';
             if (cent.indexOf('Darrts') > 0) {
@@ -143,7 +143,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
               this.centerList[index] = centerReplace;
             }
           }
-        });
+        }); */
       }
       this.loadingComplete = true;
     });
@@ -160,8 +160,8 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         this.center = textLabel.slice(0, index);
         this.fromTable = textLabel.slice(index + 1, textLabel.length);
 
-        let fromReplace = '';
-
+        //let fromReplace = '';
+        /*
         if (this.fromTable.indexOf('Integrity') >= 0) {
           fromReplace = this.fromTable.replace('Integrity', 'Darrts');
         } else if (this.fromTable.indexOf('GSRS') >= 0) {
@@ -170,6 +170,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         if (fromReplace && fromReplace.length > 0) {
           this.fromTable = fromReplace;
         }
+        */
       }
 
       // set the current result data to empty or null.

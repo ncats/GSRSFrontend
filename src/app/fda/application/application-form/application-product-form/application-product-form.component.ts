@@ -41,7 +41,7 @@ export class ApplicationProductFormComponent implements OnInit {
 
   confirmDeleteProduct(prodIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Product Details ' + (prodIndex + 1) + ' data?'}
+      data: { message: 'Are you sure you want to delete Product Details ' + (prodIndex + 1) + ' data?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -57,7 +57,7 @@ export class ApplicationProductFormComponent implements OnInit {
 
   confirmDeleteProductName(prodIndex: number, prodNameIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?'}
+      data: { message: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -78,7 +78,7 @@ export class ApplicationProductFormComponent implements OnInit {
   confirmReviewProduct(prodIndex: number) {
     if (this.application.applicationProductList[prodIndex].reviewDate) {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        data: {message: 'Are you sure you want to overwrite Reviewed By and Review Date?'}
+        data: { message: 'Are you sure you want to overwrite Reviewed By and Review Date?' }
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -101,4 +101,18 @@ export class ApplicationProductFormComponent implements OnInit {
     this.applicationService.addNewIngredient(prodIndex);
   }
 
+  /*
+  loadRouteAdmin() {
+    this.application.applicationProductList.forEach((elementProd, prodIndex) => {
+      if (elementProd != null) {
+        if (elementProd.routeAdmin) {
+        }
+      }
+    });
+  }
+  */
+
+  updateRouteAdmin(routeAdmins: Array<string>, prodIndex: number): void {
+    this.application.applicationProductList[prodIndex].routeAdmin = routeAdmins.toString();
+  }
 }

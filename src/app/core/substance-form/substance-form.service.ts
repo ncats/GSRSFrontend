@@ -86,7 +86,7 @@ export class SubstanceFormService implements OnDestroy {
         substanceClass = this.privateSubstance.substanceClass;
       } else {
         // the second case happens in the forms sometimes but really shouldn't
-        if (substanceClass === 'chemical' || substanceClass === 'structure') { 
+        if (substanceClass === 'chemical' || substanceClass === 'structure') {
           this.privateSubstance = {
             substanceClass: 'chemical',
             references: [],
@@ -190,11 +190,11 @@ export class SubstanceFormService implements OnDestroy {
           };
         }
         // default values
-        
+
         // TP: default to protected for root level record.
         this.privateSubstance.access=["protected"];
         this.privateSubstance.definitionLevel = "COMPLETE";
-        this.privateSubstance.definitionType = "PRIMARY";        
+        this.privateSubstance.definitionType = "PRIMARY";
       }
 
       this.subClass = this.privateSubstance.substanceClass;
@@ -202,10 +202,10 @@ export class SubstanceFormService implements OnDestroy {
       // Only these two substance classes differ from
       // the name of their JSON defintional element
       // That's why they are used as exceptions
-      
+
       if (this.subClass === 'chemical') {
         this.subClass = 'structure';
-      } else if (this.subClass === 'specifiedSubstanceG1') { 
+      } else if (this.subClass === 'specifiedSubstanceG1') {
         this.subClass = 'specifiedSubstance';
       }
 
@@ -312,7 +312,7 @@ export class SubstanceFormService implements OnDestroy {
 
   changeApproval() {
     const apid = prompt('Enter new ApprovalID:');
-  
+
     if (apid) {
       const old = this.privateSubstance.approvalID;
       this.privateSubstance.approvalID = apid;
@@ -1253,7 +1253,7 @@ this.emitDisulfideLinkUpdate();
                 };
                 results.validationMessages.push(invalidPropertyMessage);
                 results.valid = false;
-              } 
+              }
             }
           }
         }

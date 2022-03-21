@@ -40,7 +40,8 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     });
 
     this.id = this.activatedRoute.snapshot.params['id'];
-
+    this.appType = this.activatedRoute.snapshot.params['appType'];
+    this.appNumber = this.activatedRoute.snapshot.params['appNumber'];
     super.ngOnInit();
 
   }

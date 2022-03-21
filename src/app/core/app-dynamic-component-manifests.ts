@@ -178,6 +178,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceMixtureParentModule),
   },
   {
+    componentId: 'substance-hierarchy',
+    path: 'substance-hierarchy',
+    loadChildren: () => import('./substance-details/substance-hierarchy/substance-hierarchy.module')
+      .then(m => m.SubstanceHierarchyModule),
+  },
+  {
     componentId: 'substance-history',
     path: 'substance-history',
     loadChildren: () => import('./substance-details/substance-history/substance-history.module')

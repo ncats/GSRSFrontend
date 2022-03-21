@@ -14,6 +14,8 @@ import { Application } from '../application/model/application.model';
 @Injectable()
 export class GeneralService extends BaseHttpService {
 
+  apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService
@@ -109,6 +111,18 @@ export class GeneralService extends BaseHttpService {
           return res;
         })
       );
+  }
+
+  searchApplicationByAppTypeNumber(
+    appType: string, appNumber: number
+  ): Observable<Array<any>> {
+    const url = this.apiBaseUrlWithApplicationEntityUrl + 'search?skip=0&top=10&q=root_appType:\"^' + appType + '\" AND root_appNumber:\"*' + appNumber + '*\"';
+    // + '&center=' + center + '&fromTable=' + fromTable + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
   }
 
   getAppIngredtMatchListSearchResult(
