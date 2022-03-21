@@ -1,0 +1,71 @@
+.form-container {
+  padding: 5px 10px 12px 10px;
+  position: relative;
+}
+
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, .8);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: #666;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+      padding: 0 10px 8px 0;
+  }
+
+  .row {
+      flex-grow: 1;
+      padding-right: 15px;
+  }
+
+}
+
+.references-container {
+  width: 100%;
+}
+
+.materialborder {
+  padding-top: 10px;
+  margin-top: 15px;
+  border: 2px solid rgb(182, 175, 175);
+}
+
+.materialtitle {
+  font-size: 18px;
+  padding-left: 10px;
+}
+
+.bordergray {
+  border: 1px solid gray;
+}
+
+.borderorange {
+  border: 1px solid orangered;
+}
+
+.fontsize18px {
+  font-size: 18px;
+}
+
+.colorgreen {
+  color: green;
+}
+
+.margintop10px {
+  margin-top: 10px;
+}

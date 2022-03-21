@@ -1,0 +1,39 @@
+<div class="form-container">
+  <div *ngIf="resultingMaterial.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete Processing Material" (click)="deleteResultingMaterial()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+
+    <div class="divflex">
+      <div class="col related-substance">
+        <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" header="Substance Name"
+          [subuuid]="relatedSubstanceUuid">
+        </app-substance-selector>
+      </div>
+
+      <!-- Register Subtance icon -->
+      <div class="col">
+        <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
+          <mat-icon svgIcon="edit"></mat-icon>
+        </a>
+      </div>
+    </div>
+
+    <mat-form-field class="col">
+      <input matInput placeholder="Verbatim Name" [(ngModel)]="resultingMaterial.verbatimName"
+        name="resultingMaterial.verbatimName" />
+    </mat-form-field>
+    <app-cv-input domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role"
+      [model]="resultingMaterial.substanceRole" (valueChange)="updateSubstanceRole($event)"></app-cv-input>
+  </div> <!-- form row -->
+
+</div>
