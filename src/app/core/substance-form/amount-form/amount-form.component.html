@@ -1,3 +1,7 @@
+<div class = "access">
+  <app-access-manager class="right" (accessOut)="updateAccess($event)" [access]="substanceAmount.access">
+  </app-access-manager>
+</div>
 <form class="amount-form" *ngIf="substanceAmount">
   <div class="form-row">
     <div class = "other-container">
