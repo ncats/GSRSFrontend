@@ -1,4 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SpecifiedSubstanceG4mProcessingMaterial } from '@gsrs-core/substance/substance.model';
 
@@ -7,12 +10,19 @@ import { SpecifiedSubstanceG4mProcessingMaterial } from '@gsrs-core/substance/su
   templateUrl: './ssg4m-processing-materials-form.component.html',
   styleUrls: ['./ssg4m-processing-materials-form.component.scss']
 })
-export class Ssg4mProcessingMaterialsFormComponent implements OnInit {
+export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy {
 
+  @Input() processingMaterialIndex: number;
+  privateProcessIndex: number;
+  privateSiteIndex: number;
+  privateStageIndex: number;
   privateProcessingMaterial: SpecifiedSubstanceG4mProcessingMaterial;
   relatedSubstanceUuid: string;
+  substance: SubstanceDetail;
+  private subscriptions: Array<Subscription> = [];
 
-  constructor() { }
+  constructor(
+    private substanceFormService: SubstanceFormService) { }
 
   @Input()
   set processingMaterial(startingMaterial: SpecifiedSubstanceG4mProcessingMaterial) {
@@ -23,7 +33,50 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit {
     return this.privateProcessingMaterial;
   }
 
+  @Input()
+  set processIndex(processIndex: number) {
+    this.privateProcessIndex = processIndex;
+  }
+
+  get processIndex(): number {
+    return this.privateProcessIndex;
+  }
+
+  @Input()
+  set siteIndex(siteIndex: number) {
+    this.privateSiteIndex = siteIndex;
+  }
+
+  get siteIndex(): number {
+    return this.privateSiteIndex;
+  }
+
+  @Input()
+  set stageIndex(stageIndex: number) {
+    this.privateStageIndex = stageIndex;
+  }
+
+  get stageIndex(): number {
+    return this.privateStageIndex;
+  }
+
   ngOnInit(): void {
+    const subscription = this.substanceFormService.substance.subscribe(substance => {
+      this.substance = substance;
+    });
+    this.subscriptions.push(subscription);
+
+    // Load Substance Name
+    if (this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].processingMaterials[this.processingMaterialIndex].substanceName) {
+      let substanceRelated = this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].processingMaterials[this.processingMaterialIndex].substanceName;
+      this.relatedSubstanceUuid = substanceRelated.refuuid;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   updateSubstanceRole(role: string): void {
@@ -45,6 +98,7 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit {
   }
 
   deleteProcessingMaterial(): void {
-
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].processingMaterials.splice(this.processingMaterialIndex, 1);
   }
+
 }

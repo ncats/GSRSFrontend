@@ -52,8 +52,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   expandedComponents = [
     'substance-form-definition',
     'substance-form-structure',
-    'substance-form-moieties',
-    'substance-form-references'
+    'substance-form-moieties'
+   // 'substance-form-references'
   ];
   showSubmissionMessages = false;
   submissionMessage: string;
