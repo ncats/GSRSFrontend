@@ -314,6 +314,16 @@
     border-radius: 4px;
 }
 
+.similarity {
+    padding-left: 10px;
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    color: #c7254e;
+}
+  
+.similarity-label {
+    font-style: italic;
+}
+
 .menu-checkbox:hover {
     background-color: white;
 }

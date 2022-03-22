@@ -376,6 +376,9 @@
                         [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
                     </div>
                   </div>
+                  <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
+                    <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
+                  </div>
                   <div class="tile-name">
                     <a class="substance-name table-view-name" [innerHTML] = "substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
                     </a>
