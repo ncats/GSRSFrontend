@@ -40,16 +40,14 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
   addProcess(): void {
     const newProcess: SpecifiedSubstanceG4mProcess = {
       processName: 'Process ',
-    //  references: [],
-    //  access: [],
       sites: [{siteName: 'Site 1', stages: []}]
     };
     this.substance.specifiedSubstanceG4m.process.unshift(newProcess);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
   }
 
-  deleteProcess(process: SpecifiedSubstanceG4mProcess): void {
-    const processIndex = this.substance.specifiedSubstanceG4m.process.findIndex(pro => pro.$$deletedCode === pro.$$deletedCode);
+  deleteProcess(process: SpecifiedSubstanceG4mProcess, processIndex: number): void {
+   // const processIndex = this.substance.specifiedSubstanceG4m.process.findIndex(pro => pro.$$deletedCode === pro.$$deletedCode);
     if (processIndex > -1) {
       this.substance.specifiedSubstanceG4m.process.splice(processIndex, 1);
       this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);

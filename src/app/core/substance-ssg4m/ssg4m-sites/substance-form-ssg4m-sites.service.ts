@@ -64,6 +64,7 @@ export class SubstanceFormSsg4mSitesService extends SubstanceFormServiceBase<Arr
     const newStage: SpecifiedSubstanceG4mStage = {
      // references: [],
      // access: []
+     stageNumber: '',
      startingMaterials: [],
      processingMaterials: [],
      resultingMaterials: []

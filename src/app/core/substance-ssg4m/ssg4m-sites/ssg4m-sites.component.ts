@@ -15,6 +15,7 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/substance.model';
+import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mSitesService } from './substance-form-ssg4m-sites.service';
 import { SpecifiedSubstanceG4mSite } from '@gsrs-core/substance/substance.model';
 
@@ -28,10 +29,13 @@ export class Ssg4mSitesComponent implements OnInit {
   privateSite: SpecifiedSubstanceG4mSite;
   privateProcessIndex: number;
   privateSiteIndex: number;
+  substance: SubstanceDetail;
   privateShowAdvancedSettings: boolean;
+  subscriptions: Array<Subscription> = [];
 
   constructor(
     public substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
+    private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
     private scrollToService: ScrollToService) { }
@@ -75,10 +79,22 @@ export class Ssg4mSitesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.substance = this.substanceFormSsg4mSitesService.substance;
+    const subscription = this.substanceFormService.substance.subscribe(substance => {
+      this.substance = substance;
+    });
+    this.subscriptions.push(subscription);
+  }
+
+  ngOnDestroy(): void {
+    // this.substanceFormService.unloadSubstance();
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   deleteSite(): void {
-
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites.splice(this.siteIndex, 1);
   }
 
   addStage(processIndex: number, siteIndex: number) {

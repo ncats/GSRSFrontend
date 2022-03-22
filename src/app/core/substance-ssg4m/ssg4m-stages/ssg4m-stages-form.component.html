@@ -42,18 +42,19 @@
     </button>
     -->
     <br><br>
-    <div class="marginbottom10px" *ngFor="let startingMaterial of stage.startingMaterials; let startMatIndex = index">
-      <app-ssg4m-starting-materials-form [startingMaterial]="startingMaterial"></app-ssg4m-starting-materials-form>
+    <div class="marginbottom10px"
+      *ngFor="let startingMaterial of stage.startingMaterials; let startingMaterialIndex = index">
+      <app-ssg4m-starting-materials-form [startingMaterial]="startingMaterial" [processIndex]="processIndex"
+        [siteIndex]="siteIndex" [stageIndex]="stageIndex" [startingMaterialIndex]="startingMaterialIndex">
+      </app-ssg4m-starting-materials-form>
     </div>
     <!-- Another Add Button-->
-    <!--
     <div *ngIf="stage.startingMaterials && stage.startingMaterials.length > 0" style="display:flex;">
       <span class="middle-fill"></span>
       <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
         Add Another Starting Material <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
     </div>
-    -->
   </div>
   <!-- STARTING MATERIALS LIST END -->
 
@@ -77,8 +78,9 @@
     -->
     <br><br>
     <div class="marginbottom10px"
-      *ngFor="let processingMaterial of stage.processingMaterials; let processMatIndex = index">
-      <app-ssg4m-processing-materials-form [processingMaterial]="processingMaterial">
+      *ngFor="let processingMaterial of stage.processingMaterials; let processingMaterialIndex = index">
+      <app-ssg4m-processing-materials-form [processingMaterial]="processingMaterial" [processIndex]="processIndex"
+        [siteIndex]="siteIndex" [stageIndex]="stageIndex" [processingMaterialIndex]="processingMaterialIndex">
       </app-ssg4m-processing-materials-form>
     </div>
     <!-- Another Add Button-->
@@ -111,8 +113,9 @@
     -->
     <br><br>
     <div class="marginbottom10px"
-      *ngFor="let resultingMaterial of stage.resultingMaterials; let resultMatIndex = index">
-      <app-ssg4m-resulting-materials-form [resultingMaterial]="resultingMaterial">
+      *ngFor="let resultingMaterial of stage.resultingMaterials; let resultingMaterialIndex = index">
+      <app-ssg4m-resulting-materials-form [resultingMaterial]="resultingMaterial" [processIndex]="processIndex"
+        [siteIndex]="siteIndex" [stageIndex]="stageIndex" [resultingMaterialIndex]="resultingMaterialIndex">
       </app-ssg4m-resulting-materials-form>
     </div>
     <!-- Another Add Button-->

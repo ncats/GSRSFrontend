@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { Subscription } from 'rxjs';
@@ -15,6 +15,7 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/substance.model';
+import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mStagesService } from './substance-form-ssg4m-stages.service';
 import { SpecifiedSubstanceG4mSite, SpecifiedSubstanceG4mStage } from '@gsrs-core/substance/substance.model';
 
@@ -23,15 +24,18 @@ import { SpecifiedSubstanceG4mSite, SpecifiedSubstanceG4mStage } from '@gsrs-cor
   templateUrl: './ssg4m-stages-form.component.html',
   styleUrls: ['./ssg4m-stages-form.component.scss']
 })
-export class Ssg4mStagesFormComponent implements OnInit {
+export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
 
   privateStage: SpecifiedSubstanceG4mStage;
   privateProcessIndex: number;
   privateSiteIndex: number;
   privateStageIndex: number;
+  substance: SubstanceDetail;
+  subscriptions: Array<Subscription> = [];
 
   constructor(
     public substanceFormSsg4mStagesService: SubstanceFormSsg4mStagesService,
+    private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
     private scrollToService: ScrollToService) { }
@@ -75,10 +79,22 @@ export class Ssg4mStagesFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.substance = this.substanceFormSsg4mStagesService.substance;
+    const subscription = this.substanceFormService.substance.subscribe(substance => {
+      this.substance = substance;
+    });
+    this.subscriptions.push(subscription);
+  }
+
+  ngOnDestroy(): void {
+    // this.substanceFormService.unloadSubstance();
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   deleteStage(): void {
-
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages.splice(this.stageIndex, 1);
   }
 
   addStartingMaterial(processIndex: number, siteIndex: number, stageIndex: number) {

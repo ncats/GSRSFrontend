@@ -10,6 +10,8 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { ConfigService } from '@gsrs-core/config';
 import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceFormBase } from '../../substance-form/base-classes/substance-form-base';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/substance.model';
 import { SubstanceFormSsg4mProcessService } from './substance-form-ssg4m-process.service';
 
@@ -18,26 +20,24 @@ import { SubstanceFormSsg4mProcessService } from './substance-form-ssg4m-process
   templateUrl: './ssg4m-process-form.component.html',
   styleUrls: ['./ssg4m-process-form.component.scss']
 })
-export class Ssg4mProcessFormComponent implements OnInit {
+export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
   // @Input() showAdvancedSettings: boolean;
   private privatesShowAdvancedSettings: boolean;
   private privateProcessIndex: number;
   private privateProcess: SpecifiedSubstanceG4mProcess;
   parent: SubstanceRelated;
+  private substance: SubstanceDetail;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
+    private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService,
     private overlayContainerService: OverlayContainer,
     private scrollToService: ScrollToService,
   ) {
-  }
-
-  ngOnInit() {
-    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit(): void {
@@ -72,8 +72,23 @@ export class Ssg4mProcessFormComponent implements OnInit {
     return this.privatesShowAdvancedSettings;
   }
 
-  deleteProcess() {
+  ngOnInit() {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+    const subscription = this.substanceFormService.substance.subscribe(substance => {
+      this.substance = substance;
+    });
+    this.subscriptions.push(subscription);
+  }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
+  deleteProcess() {
+    this.substanceFormSsg4mProcessService.deleteProcess(this.privateProcess, this.processIndex);
+    // this.substance.specifiedSubstanceG4m.process.splice(this.processIndex, 1);
   }
 
   updateAccess() {

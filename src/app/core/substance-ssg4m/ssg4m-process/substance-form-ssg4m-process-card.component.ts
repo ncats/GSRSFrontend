@@ -71,7 +71,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   }
 
   deleteProcess(process: SpecifiedSubstanceG4mProcess): void {
-    this.substanceFormSsg4mProcessService.deleteProcess(process);
+  //  this.substanceFormSsg4mProcessService.deleteProcess(process);
   }
 
   updateProcess($event) {
