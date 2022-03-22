@@ -1,0 +1,51 @@
+<div class="form-container">
+  <div *ngIf="startingMaterial.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete Stage" (click)="deleteStartingMaterial()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+
+    <!--
+    <div class="col">
+
+      <div class="divflex">
+      -->
+    <div class="col related-substance">
+      <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header="Substance Name"
+        [subuuid]="relatedSubstanceUuid">
+      </app-substance-selector>
+    </div>
+
+    <mat-form-field class="col">
+      <input matInput placeholder="Verbatim Name" [(ngModel)]="startingMaterial.verbatimName"
+        name="startingMaterial.verbatimName" />
+    </mat-form-field>
+
+    <app-cv-input class="col" domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role"
+      [model]="startingMaterial.substanceRole" (valueChange)="updateSubstanceRole($event)"></app-cv-input>
+  </div> <!-- form row -->
+
+  <div class="form-row">
+    <div class="col marginleft50px">
+      <!-- Register Subtance -->
+      <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
+        <span class="font11px">Register New</span>
+      </a>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <!-- Structure search -->
+      <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
+        <span class="font11px">Search By Structure</span>
+      </a>
+    </div>
+  </div>
+
+</div>
