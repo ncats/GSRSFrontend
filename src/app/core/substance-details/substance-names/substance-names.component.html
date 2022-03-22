@@ -6,6 +6,16 @@
 </div>
 
 <div class = "flex-row right">
+  
+  <div class = "name-view"><span class = "name-view-label">Name View:</span>
+    <mat-radio-group class = 'type'(change) = 'updateType($event)'>
+      <mat-radio-button  value = 'name' [checked] = '(nameType === "name")'>Name (UTF-8)</mat-radio-button>
+      <mat-radio-button value = 'ascii' [checked] = '(nameType === "ascii")'>Std. Name (ASCII)</mat-radio-button>
+      <mat-radio-button value = 'both' [checked] = '(nameType === "both")
+      '>Both</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  
   <span class = "middle-fill"></span>
     <mat-form-field *ngFor="let filter of filterSelectObj" style="margin-left: 15px;">
         <mat-label>Filter {{filter.name}}</mat-label>
@@ -31,6 +41,24 @@
         </div>
       </th>
       <td mat-cell *matCellDef="let name" >{{name.name}}
+        <span *ngIf="name.displayName == true" matTooltip="Accepted Name">
+          <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
+        </span>
+        <span *ngIf="name.access.length" matTooltip="Not Public">
+        <mat-icon svgIcon="lock" class="icon-align blue-font" *ngIf="name.access.length"></mat-icon></span>
+
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="stdName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Std. Name
+        <div class="tableFilter">
+          <mat-form-field>
+            <input matInput class="form-field" [formControl]="stdNameFilter" placeholder="Std. Name Filter">
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let name" >{{name.stdName}}
         <span *ngIf="name.displayName == true" matTooltip="Accepted Name">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
         </span>

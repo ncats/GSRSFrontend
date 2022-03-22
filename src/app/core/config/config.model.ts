@@ -13,6 +13,8 @@ export interface Config {
     codeSystemOrder?: Array<string>;
     contactEmail?: string;
     defaultCodeSystem?: string;
+    primaryCode?: string;
+    typeaheadFields?: Array<string>;
     navItems?: Array<NavItem>;
     substanceSelectorProperties?: Array<string>;
     displayMatchApplication?: string;

@@ -15,6 +15,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { TableModule } from 'primeng/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatDialogModule,
     MatSortModule,
     TableModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatRadioModule
   ],
   declarations: [SubstanceNamesComponent,
   ]

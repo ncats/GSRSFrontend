@@ -30,10 +30,12 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   filterBackup: Array<any>;
   typeFilterOn = 'false';
   nameFilter = new FormControl();
+  stdNameFilter = new FormControl();
   typeFilter = new FormControl();
   langFilter = new FormControl();
   langFilterOptions: Array<TableFilterDDModel> = [];
   typeFilterOptions: Array<TableFilterDDModel> = [];
+  nameType = 'name';
 
   constructor(
     private dialog: MatDialog,
@@ -101,6 +103,9 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       this.nameFilter.valueChanges.subscribe((nameFilterValue) => {
         this.filterTable();
       });
+      this.stdNameFilter.valueChanges.subscribe((stdNameFilterValue) => {
+        this.filterTable('std');
+      });
       this.typeFilter.valueChanges.subscribe((typeFilterValue) => {
         this.filterTable();
       });
@@ -109,20 +114,46 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       });
   }
 
-  filterTable() {
+  updateType(event) {
+    console.log(event);
+    this.nameType = event.value;
+    if(event.value === 'name') {
+      this.displayedColumns = ['name', 'type', 'language', 'details', 'references'];
+    } else if (event.value === 'ascii') {
+      this.displayedColumns = ['stdName', 'type', 'language', 'details', 'references'];
+    } else {
+      this.displayedColumns = ['name', 'stdName', 'type',  'language', 'details', 'references'];
+    }
+}
+
+  filterTable(type?:string) {
     const nFilter = this.nameFilter.value === null ? '' : this.nameFilter.value;
+    const snFilter = this.stdNameFilter.value === null ? '' : this.stdNameFilter.value;
+
     const lFilter = this.langFilter.value === null ? '' : this.langFilter.value;
     const tFilter = this.typeFilter.value === null ? '' : this.typeFilter.value;
     const lFilterCode = this.getLangFilterValue(lFilter) === undefined ? '' : this.getLangFilterValue(lFilter).value;
     const tFilterCode = this.getTypeFilterValue(tFilter) === undefined ? '' : this.getTypeFilterValue(tFilter).value;
     this.filtered = [];
-    for(let n of this.names) {
-      if((n.name.toLowerCase().includes(nFilter.toLowerCase())) &&
-      (this.isIncluded(n, tFilterCode, 'type')) &&
-      (this.isIncluded(n, lFilterCode, 'lang'))) {
-        this.filtered.push(n);
+    if(type && type === 'std') {
+      
+      for(let n of this.names) {
+        if((n.stdName.toLowerCase().includes(snFilter.toLowerCase())) &&
+        (this.isIncluded(n, tFilterCode, 'type')) &&
+        (this.isIncluded(n, lFilterCode, 'lang'))) {
+          this.filtered.push(n);
+        }
+      }
+    } else {
+      for(let n of this.names) {
+        if((n.name.toLowerCase().includes(nFilter.toLowerCase())) &&
+        (this.isIncluded(n, tFilterCode, 'type')) &&
+        (this.isIncluded(n, lFilterCode, 'lang'))) {
+          this.filtered.push(n);
+        }
       }
     }
+    
     this.pageChange();
   }
 
@@ -276,6 +307,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     this.pageChange();
     this.searchControl.setValue('');
     this.nameFilter.setValue('');
+    this.stdNameFilter.setValue('');
     this.langFilter.setValue('');
     this.typeFilter.setValue('');
   }

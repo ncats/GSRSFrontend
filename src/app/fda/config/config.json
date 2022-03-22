@@ -9,7 +9,9 @@
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
-  "approvalCodeName":"UNII",
+  "approvalCodeName":"UNIT",
+  "primaryCode": "BDNUM",
+  "typeaheadFields": ["Display_Name", "CAS", "Name", "Approval_ID" ],
   "loadedComponents": {
     "applications": true,
     "products": true,
@@ -509,6 +511,15 @@
         {
           "filterName": "exists",
           "propertyToCheck": "properties"
+        }
+      ]
+    },
+    {      "card": "substance-hierarchy",
+      "title": "hierarchy",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
         }
       ]
     },
