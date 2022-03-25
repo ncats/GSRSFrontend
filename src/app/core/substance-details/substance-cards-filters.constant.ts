@@ -34,9 +34,35 @@ export const substanceCardsFilters: Array<SubstanceCardFilter> = [
     {
       name: 'hasCredentials',
       filter: credentialsFilter
+    },
+    {
+      name: 'countFilter',
+      filter: countFilter
     }
 ];
 
+
+export function countFilter(
+    substance: SubstanceDetail,
+    filter: SubstanceCardFilterParameters
+): Observable<boolean> {
+    return new Observable(observer => {
+        let isApproved = false;
+        let countMin = (filter.countMinimum!=null)?filter.countMinimum:1;
+        let countMax =  (filter.countMaximum!=null)?filter.countMaximum:999999;
+      
+        if (filter.propertyToCheck != null) {
+            const evaluatedProperty = getEvaluatedProperty(substance, filter.propertyToCheck);
+            if (evaluatedProperty != null
+                && (Object.prototype.toString.call(evaluatedProperty) === '[object Array]'
+                    && (evaluatedProperty.length >= countMin && evaluatedProperty.length <= countMax)) {
+                isApproved = true;
+            }
+        }
+        observer.next(isApproved);
+        observer.complete();
+    });
+}
 
 export function equalsFilter(
     substance: SubstanceDetail,
