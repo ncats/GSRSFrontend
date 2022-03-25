@@ -107,6 +107,22 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (response) {
           this.productService.loadProduct(response);
           this.product = this.productService.product;
+          // Check if there is not Product Code Object, create one
+          if (this.product.productCodeList.length == 0) {
+            this.product.productCodeList = [{}];
+          }
+          let prodCode = '';
+          if (this.product.productCodeList.length > 0) {
+            for (let codeObj of this.product.productCodeList) {
+              if (codeObj) {
+                if (codeObj.productCode) {
+                  prodCode = codeObj.productCode;
+                  break;
+                }
+              }
+            }
+          }
+          this.titleService.setTitle(`Edit Product ` + prodCode);
         } else {
           this.handleProductRetrivalError();
         }

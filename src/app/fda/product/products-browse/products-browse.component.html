@@ -235,7 +235,12 @@
               <div>
                 <span class="font13px">Application:</span>&nbsp;
                 <span *ngIf="(product.appType && product.appNumber); else noAppType">
+                  <!--
                   <a [routerLink]="['/applicationDarrtsDetails', product.appType, product.appNumber]"
+                    target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
+                  </a>
+                  -->
+                  <a href="{{getAppTypeNumberUrl(product.appType, product.appNumber)}}"
                     target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
                   </a>
                 </span>
