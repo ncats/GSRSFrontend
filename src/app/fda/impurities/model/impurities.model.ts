@@ -5,8 +5,8 @@ export interface Impurities {
   sourceId?: string;
   type?: string;
   specType?: string;
-  companyProductName?: string;
-  companyName?: string;
+  productSubstanceName?: string;
+  submitterName?: string;
   productId?: string;
   dateType?: string;
   dateTypeDate?: string;
