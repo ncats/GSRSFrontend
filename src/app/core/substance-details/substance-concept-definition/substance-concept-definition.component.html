@@ -1,8 +1,8 @@
 
   <div *ngIf="definitions.length > 0">
-    This is a Definitional Concept of
-    <div *ngFor="let definition of definitions">
-      <div class="thumb-col">
+    This record is a subconcept of
+    <div class ="thumb-row">
+      <div class="thumb-col" *ngFor="let definition of definitions">
        <img class="image-thumb" appSubstanceImage [entityId]="definition.refuuid">
         <div>
           <a class="substance-name" [routerLink]="['/substances', definition.refuuid]" >
