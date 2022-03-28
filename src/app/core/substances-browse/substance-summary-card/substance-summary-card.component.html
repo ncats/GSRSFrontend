@@ -250,7 +250,7 @@
             <div class="label">Status: </div>
             <div>
               <span class="value">
-                {{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}
+                {{substance.status | statusDisplay}}
               </span>
             </div>
           </div>

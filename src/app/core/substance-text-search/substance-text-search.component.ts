@@ -32,6 +32,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   @Output() closed = new EventEmitter<void>();
   @Input() source?: string;
   private CasDisplay = 'CAS';
+  codeSystemVocab?: any;
 
   constructor(
     private utilsService: UtilsService,
@@ -45,6 +46,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       let resp;
       resp = response['CODE_SYSTEM'].dictionary;
+      this.codeSystemVocab = response['CODE_SYSTEM'].dictionary;
       if (resp['CAS']) {
         this.CasDisplay = resp['CAS'].display;
         }
@@ -61,7 +63,10 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
-      const showTypes = [ 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
+      let showTypes = [ 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
+      if(this.configService && this.configService.configData && this.configService.configData.typeaheadFields) {
+         showTypes = this.configService.configData.typeaheadFields;
+      } 
       this.suggestionsFields =   Object.keys(this.substanceSuggestionsGroup).filter(function(item) {
         return showTypes.indexOf(item) > -1;
       });
@@ -76,12 +81,18 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       this.suggestionsFields.sort(function(x, y) { return x === 'Display_Name' ? -1 : y === 'Display_Name' ? 1 : 0; });
       this.suggestionsFields.forEach((value, index) => {
         if (value === 'Approval_ID') {
-          this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
+          if(this.configService && this.configService.configData && this.configService.configData.approvalCodeName) {
+            this.suggestionsFields[index] = {value: 'Approval_ID', display: this.configService.configData.approvalCodeName};
+          } else {
+            this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
+          }
         } else if (value === 'Display_Name') {
           this.suggestionsFields[index] =  {value: 'Display_Name', display: 'Preferred Term'};
         } else if (value === 'CAS') {
           this.suggestionsFields[index] =  {value: 'CAS', display: this.CasDisplay};
-
+        } else if(this.codeSystemVocab[value]){
+                 let disp = this.codeSystemVocab[value].display;
+                 this.suggestionsFields[index] =  {value: value, display: disp};
         } else {
           this.suggestionsFields[index] =  {value: value, display: value};
         }
@@ -97,10 +108,6 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       console.log(error);
     });
 
-  }
-
-  getCasDisplay() {
-    this.cvService.getDomainVocabulary('CODE_SYSTEM');
   }
 
   @Input()
