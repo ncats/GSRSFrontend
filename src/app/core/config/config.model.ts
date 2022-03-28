@@ -38,6 +38,7 @@ export interface Config {
     molWeightRounding?: number;
     usefulLinks?: Array<UsefulLink>;
     approvalCodeName?: string;
+    g4ssForm?: any;
 }
 
 export interface LoadedComponents {

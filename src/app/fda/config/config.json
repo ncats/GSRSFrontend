@@ -1029,5 +1029,12 @@
         "clinicalTrialKeyType":"UUID"
       }
     }
+  },
+  "g4ssForm":{
+    "titles":{
+      "processingMaterials":"Solvents and Catalysts",
+      "stage":"Step",
+      "parentSubstance":"Resulting Substance"
+    }
   }
 }
