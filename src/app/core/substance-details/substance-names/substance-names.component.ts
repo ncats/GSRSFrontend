@@ -19,6 +19,7 @@ import { FormControl } from '@angular/forms';
 export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit {
   names: Array<SubstanceName>;
   displayedColumns: string[] = ['name', 'type', 'language', 'details', 'references'];
+  displayedFilterColumns: string[] = ['nameFilter', 'typeFilter', 'languageFilter'];
   languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   substanceUpdated = new Subject<SubstanceDetail>();
@@ -231,7 +232,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   filterChange(filter, event) {
-    this.typeFilterOn = 'disable search';
+    this.typeFilterOn = 'false';
     const tempFiltered = [];
     this.filterBackup = [];
       this.names.forEach(item => {
@@ -349,6 +350,15 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     dialogRef.afterClosed().subscribe(result => {
       this.overlayContainer.style.zIndex = null;
     });
+  }
+
+  isButtonDisabled(name) {
+    if((!name.nameOrgs || name.nameOrgs.length == 0) && (!name.domains || name.domains.length == 0) &&
+    (!name.nameJurisdiction || name.nameJurisdiction.length == 0 )) {
+      return true;
+    } else {
+      return false
+    }
   }
 
 }
