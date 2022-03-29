@@ -57,6 +57,20 @@
           <button mat-menu-item (click)="reference.uploadedFile = null">Delete</button>
         </mat-menu>
       </div>
+      <div class = "loading-container" *ngIf = "loading === true">
+        <div class = "spinner-container">
+            <mat-progress-spinner
+            class="progress-spinner spinner"
+            [color]="primary"
+            mode = "indeterminate">
+        </mat-progress-spinner>
+        </div>
+        
+      <span>Uploading</span>
+      </div>
+      <div class = "loading-container" *ngIf = "loading === false && error === true">
+          Error: There was a problem uploading this document
+        </div>
       <div *ngIf="!reference.uuid">
           <button mat-button  (click)="showPrev = !showPrev" matTooltip = "use a previously submitted reference">
             <span>{{showPrev? 'Hide':'Use'}} Previous Substance Reference</span>&nbsp;
