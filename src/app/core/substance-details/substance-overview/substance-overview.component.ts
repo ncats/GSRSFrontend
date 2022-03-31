@@ -145,7 +145,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.defAccess = this.substance.specifiedSubstance.access;
     }
 
-    console.log(this.defAccess);
   }
 
   getSubtypeRefs(substance: SubstanceDetail): void  {

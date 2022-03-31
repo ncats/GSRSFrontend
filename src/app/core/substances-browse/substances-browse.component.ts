@@ -363,7 +363,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.facetViewCategory.push(category);
     });
     this.facetViewCategory.push('All');
-    console.log('loaded');
   }
 
   // for facets

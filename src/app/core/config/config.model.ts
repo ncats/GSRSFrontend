@@ -40,6 +40,7 @@ export interface Config {
     molWeightRounding?: number;
     usefulLinks?: Array<UsefulLink>;
     approvalCodeName?: string;
+    approvalType?: string;
 }
 
 export interface LoadedComponents {

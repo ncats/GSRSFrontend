@@ -90,6 +90,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     forceChange = false;
     sameSubstance = false;
     UNII: string;
+    approvalType = 'lastEdited';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -177,6 +178,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnInit() {
     this.loadingService.setLoading(true);
+    if (this.configService.configData && this.configService.configData.approvalType) {
+      this.approvalType = this.configService.configData.approvalType;
+    }
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -405,21 +409,38 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (action && action === 'import') {
       return false;
     }
-    if (this.definition && this.definition.createdBy && this.user) {
-      const creator = this.definition.createdBy;
-      if (!creator) {
+    if(this.approvalType === 'createdBy') {
+        if (this.definition && this.definition.createdBy && this.user) {
+          const creator = this.definition.createdBy;
+          if (!creator) {
+            return false;
+          }
+          if (this.definition.status === 'approved') {
+            return false;
+          }
+          if (creator === this.user) {
+            return false;
+          }
+          return true;
+    
+        }
         return false;
-      }
-      if (this.definition.status === 'approved') {
-        return false;
-      }
-      if (creator === this.user) {
-        return false;
-      }
-      return true;
+      } else {
+        if (this.definition && this.definition.lastEditedBy && this.user) {
+           const lastEdit = this.definition.lastEditedBy;
+          if (!lastEdit) {
+            return false;
+          }
+          if (this.definition.status === 'approved') {
+            return false;
 
+          }
+          if (lastEdit === this.user) {
+            return false;
+          }
+      }
     }
-    return false;
+    
   }
 
   showJSON(): void {
