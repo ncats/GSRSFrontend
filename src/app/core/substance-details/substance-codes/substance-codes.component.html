@@ -5,6 +5,9 @@
   </mat-form-field>
 </div>
 <div class="responsive">
+  <span class="show-filter-span">
+    <mat-label class = "mat-button mat-button-primary" mat-flat-button color="warn" (click)="toggleFilter()">{{showHideFilterText}}</mat-label>
+  </span>
   <table [ngClass]="{ 'classification': type == 'classification' }" mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
 
     <ng-container matColumnDef="classificationTree">
@@ -36,6 +39,48 @@
 
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef  mat-sort-header> Type </th>
+      <td mat-cell *matCellDef="let code"> {{code.type}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="codeSystemFilter">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="tableFilter">
+          <mat-form-field>
+            <input matInput class="form-field" [formControl]="codeSystemFilter" placeholder="Code System Filter">
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let code"> {{code.codeSystem | codeSystemDisplay | async}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="codeFilter">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="tableFilter">
+          <mat-form-field>
+            <input matInput class="form-field" [formControl]="codeFilter" placeholder="Code Filter">
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let code">
+        <a  class = 'a-link' *ngIf = "code.url" [href] = "code.url" target = "_blank">{{code.code}}</a>
+        <span *ngIf = "!code.url"> {{code.code}}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="typeFilter">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="tableFilter">
+          <mat-form-field appearance="fill">
+            <mat-select [formControl]="typeFilter">
+              <mat-select-trigger>
+                {{typeFilter.value ? typeFilter.value : ''}}
+              </mat-select-trigger>
+              <mat-option [value]="" selected>Select Type Filter</mat-option>
+              <mat-option *ngFor="let type of typeFilterOptions" [value]="type.display">{{type.display}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </th>
       <td mat-cell *matCellDef="let code"> {{code.type}} </td>
     </ng-container>
 
@@ -84,7 +129,21 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="emptyFilter">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+    </ng-container>
+
+    <ng-container matColumnDef="resetFilter">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="tableFilter">
+          <button class = "mat-button mat-button-primary" mat-flat-button color="warn" (click)="resetFilters()">Reset</button>
+        </div>
+      </th>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr [hidden]="hideFilters" mat-header-row *matHeaderRowDef="displayedFilterColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>

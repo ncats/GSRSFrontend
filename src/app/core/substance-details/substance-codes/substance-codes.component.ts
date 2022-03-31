@@ -1,12 +1,13 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
-import {SubstanceCode, SubstanceDetail} from '../../substance/substance.model';
+import {SubstanceCode, SubstanceDetail, SubstanceName, TableFilterDDModel} from '../../substance/substance.model';
 import {MatDialog} from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
 import {Sort} from '@angular/material/sort';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {UtilsService} from '@gsrs-core/utils';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-substance-codes',
@@ -18,6 +19,13 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   codes: Array<SubstanceCode> = [];
   displayedColumns: string[];
   substanceUpdated = new Subject<SubstanceDetail>();
+  hideFilters = true;
+  showHideFilterText = 'Show Filter';
+  displayedFilterColumns: string[];
+  codeSystemFilter = new FormControl();
+  typeFilter = new FormControl();
+  codeFilter = new FormControl();
+  typeFilterOptions: Array<TableFilterDDModel> = [];
   private overlayContainer: HTMLElement;
 
   constructor(
@@ -36,8 +44,10 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       if (this.substance != null && this.type != null) {
         if (this.type === 'Codes - classification') {
           this.displayedColumns = ['classificationTree', 'codeSystem', 'code', 'references'];
+          //this.displayedFilterColumns = ['classTreeFilter', 'codeSystemFilter', 'codeFilter', 'emptyFilter', 'resetFilter'];
         } else {
           this.displayedColumns = ['codeSystem', 'code', 'type', 'comments', 'references'];
+          this.displayedFilterColumns = ['codeSystemFilter', 'codeFilter', 'typeFilter', 'emptyFilter', 'resetFilter'];
         }
 
           this.filterSubstanceCodes();
@@ -56,6 +66,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
           }, error => {
             console.log(error);
           });
+          this.getTypeFilterOptions();
         } else {
           this.filtered = [];
         }
@@ -67,7 +78,64 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   //  }
     
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.codeSystemFilter.valueChanges.subscribe((codeSystemFilterValue) => {
+      this.filterTable();
+    });
+    this.codeFilter.valueChanges.subscribe((codeFilterValue) => {
+      this.filterTable();
+    });
+    this.typeFilter.valueChanges.subscribe((typeFilterValue) => {
+      this.filterTable();
+    });
   }
+
+  filterTable(type?:string) {
+    const csFilter = this.codeSystemFilter.value === null ? '' : this.codeSystemFilter.value;
+    const cFilter = this.codeFilter.value === null ? '' : this.codeFilter.value;
+    const tFilter = this.typeFilter.value === null ? '' : this.typeFilter.value;
+    this.filtered = [];
+    for(let n of this.codes) {
+      if((n.codeSystem.toLowerCase().includes(csFilter.toLowerCase())) &&
+      (n.code.toLowerCase().includes(cFilter.toLowerCase())) &&
+      (n.type.toLowerCase().includes(tFilter.toLowerCase()))) {
+        this.filtered.push(n);
+      }
+    }
+    
+    this.pageChange();
+  }
+
+  toggleFilter() {
+    this.hideFilters = !this.hideFilters;
+    if(this.hideFilters) {
+      this.showHideFilterText = 'Show Filter';
+    } else {
+      this.showHideFilterText = 'Hide Filter';
+    }
+  }
+
+  getTypeFilterValue(value) {
+    for(let l of this.typeFilterOptions) {
+      if(l.display === value) {
+        return l;
+      }
+    }
+  }
+
+  getTypeFilterOptions() {
+    for(let n of this.codes) {
+        let oneType = n.type;
+        let value: TableFilterDDModel = {
+          value: oneType,
+          display: oneType
+        }
+        if (this.typeFilterOptions.filter(e => e.value === oneType).length > 0) {
+        } else {
+          this.typeFilterOptions.push(value);
+        }
+    }
+  }
+
   sortData(sort: Sort) {
     const data = this.codes.slice();
     if (!sort.active || sort.direction === '') {
@@ -102,6 +170,14 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
 
   getClassificationTree(comments: string): Array<string> {
     return comments.split('|');
+  }
+
+  resetFilters() {
+    this.pageChange();
+    this.searchControl.setValue('');
+    this.codeFilter.setValue('');
+    this.codeSystemFilter.setValue('');
+    this.typeFilter.setValue('');
   }
 
   openModal(templateRef) {
