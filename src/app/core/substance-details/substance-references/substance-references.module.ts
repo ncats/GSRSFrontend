@@ -10,6 +10,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
 
 @NgModule({
   imports: [
@@ -19,6 +22,8 @@ import {MatIconModule} from '@angular/material/icon';
     CdkTableModule,
     MatPaginatorModule,
     MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
     ReactiveFormsModule,
     FormsModule,
     MatSortModule,

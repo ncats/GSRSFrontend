@@ -10,6 +10,8 @@ import {Sort} from '@angular/material/sort';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {UtilsService} from '@gsrs-core/utils';
 import { FormControl } from '@angular/forms';
+import { throws } from 'assert';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-substance-names',
@@ -19,7 +21,7 @@ import { FormControl } from '@angular/forms';
 export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit {
   names: Array<SubstanceName>;
   displayedColumns: string[] = ['name', 'type', 'language', 'details', 'references'];
-  displayedFilterColumns: string[] = ['nameFilter', 'typeFilter', 'languageFilter'];
+  displayedFilterColumns: string[] = ['nameFilter', 'typeFilter', 'languageFilter', 'emptyFilter', 'resetFilter'];
   languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   typeVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
   substanceUpdated = new Subject<SubstanceDetail>();
@@ -37,6 +39,8 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   langFilterOptions: Array<TableFilterDDModel> = [];
   typeFilterOptions: Array<TableFilterDDModel> = [];
   nameType = 'name';
+  hideFilters = true;
+  showHideFilterText = 'Show Filter';
 
   constructor(
     private dialog: MatDialog,
@@ -115,14 +119,26 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
       });
   }
 
+  toggleFilter() {
+    this.hideFilters = !this.hideFilters;
+    if(this.hideFilters) {
+      this.showHideFilterText = 'Show Filter';
+    } else {
+      this.showHideFilterText = 'Hide Filter';
+    }
+  }
+
   updateType(event) {
     this.nameType = event.value;
     if(event.value === 'name') {
       this.displayedColumns = ['name', 'type', 'language', 'details', 'references'];
+      this.displayedFilterColumns = ['nameFilter', 'typeFilter', 'languageFilter', 'emptyFilter', 'resetFilter'];
     } else if (event.value === 'ascii') {
       this.displayedColumns = ['stdName', 'type', 'language', 'details', 'references'];
+      this.displayedFilterColumns = ['stdNameFilter', 'typeFilter', 'languageFilter', 'emptyFilter', 'resetFilter'];
     } else {
       this.displayedColumns = ['name', 'stdName', 'type',  'language', 'details', 'references'];
+      this.displayedFilterColumns = ['nameFilter', 'stdNameFilter', 'typeFilter', 'languageFilter', 'resetFilter'];
     }
 }
 
@@ -136,9 +152,9 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     const tFilterCode = this.getTypeFilterValue(tFilter) === undefined ? '' : this.getTypeFilterValue(tFilter).value;
     this.filtered = [];
     if(type && type === 'std') {
-      
       for(let n of this.names) {
-        if((n.stdName.toLowerCase().includes(snFilter.toLowerCase())) &&
+        let stdNameStr = n.stdName === undefined ? '' : n.stdName;
+        if((stdNameStr.toLowerCase().includes(snFilter.toLowerCase())) &&
         (this.isIncluded(n, tFilterCode, 'type')) &&
         (this.isIncluded(n, lFilterCode, 'lang'))) {
           this.filtered.push(n);

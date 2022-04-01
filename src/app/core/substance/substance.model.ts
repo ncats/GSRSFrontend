@@ -281,6 +281,7 @@ export interface SubstanceAmount extends SubstanceBase {
 }
 
 export interface SubstanceReference extends SubstanceBase {
+  linkingID?: any;
   id?: string;
   citation?: string;
   docType?: string;
@@ -291,6 +292,7 @@ export interface SubstanceReference extends SubstanceBase {
   documentDate?: number;
   refuuid?: string;
   uploadedFile?: string;
+  name?: string;
 }
 
 export interface MediatorSubstance extends SubstanceBase {
@@ -529,4 +531,9 @@ export interface SpecifiedSubstanceG4mCriticalParameter extends SubstanceBase {
 export interface TableFilterDDModel {
   value: string;
   display: string;
+}
+
+export interface TableFilterBoolDDModel {
+  value: boolean;
+  display: boolean;
 }
