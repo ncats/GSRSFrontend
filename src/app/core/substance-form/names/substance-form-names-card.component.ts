@@ -77,7 +77,8 @@ export class SubstanceFormNamesCardComponent
   }
 
   standardize(): void {
-    this.substanceFormNamesService.standardizeNames();
+    // We currently only want the back-end to standardize names
+   // this.substanceFormNamesService.standardizeNames();
   }
 
   ngOnDestroy() {

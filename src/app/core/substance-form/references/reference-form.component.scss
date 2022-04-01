@@ -48,3 +48,41 @@
     width:90%;
 }
 
+
+.spinner {
+    height: 20px;
+    width: 20px;
+}
+
+.loading-container {
+   display:flex;
+   text-align:center;
+   height: 26px;
+}
+
+.spinner-container {
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+
+}
+
+.progress-spinner {
+    margin: auto;
+}
+
+
+
+.mat-progress-spinner {
+    height:20px !important;
+    width: 20px !important;
+
+  ::ng-deep svg {
+        height:20px !important;
+        width: 20px !important; 
+    }
+    svg {
+        height:20px !important;
+     width: 20px !important; 
+    }
+}

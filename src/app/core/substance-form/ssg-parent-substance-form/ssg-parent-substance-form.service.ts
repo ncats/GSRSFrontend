@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../substance-form.service';
 import { Observable } from 'rxjs';
-import { SubstanceNote } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceParent } from '@gsrs-core/substance/substance.model';
 
 @Injectable()
-export class SsgParentSubstanceFormService extends SubstanceFormServiceBase<Array<SubstanceNote>> {
+export class SsgParentSubstanceFormService extends SubstanceFormServiceBase<SpecifiedSubstanceParent> {
 
   constructor(
     public substanceFormService: SubstanceFormService
@@ -17,35 +17,16 @@ export class SsgParentSubstanceFormService extends SubstanceFormServiceBase<Arra
     super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
-      if (this.substance.notes == null) {
-        this.substance.notes = [];
+      if (!this.substance.specifiedSubstanceG4m.parentSubstance) {
+        this.substance.specifiedSubstanceG4m.parentSubstance = {};
       }
       this.substanceFormService.resetState();
-      this.propertyEmitter.next(this.substance.notes);
+      this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.parentSubstance);
     });
     this.subscriptions.push(subscription);
   }
 
-  get substanceNotes(): Observable<Array<SubstanceNote>> {
+  get parentSubstance(): Observable<SpecifiedSubstanceParent> {
     return this.propertyEmitter.asObservable();
-  }
-
-  /*
-  addSubstanceNote(): void { :)
-    const newNote: SubstanceNote = {
-      references: [],
-      access: []
-    };
-    this.substance.notes.unshift(newNote);
-    this.propertyEmitter.next(this.substance.notes);
-  }
-  */
-
-  deleteSubstanceNote(note: SubstanceNote): void {
-    const subNoteIndex = this.substance.notes.findIndex(subNote => note.$$deletedCode === subNote.$$deletedCode);
-    if (subNoteIndex > -1) {
-      this.substance.notes.splice(subNoteIndex, 1);
-      this.propertyEmitter.next(this.substance.notes);
-    }
   }
 }

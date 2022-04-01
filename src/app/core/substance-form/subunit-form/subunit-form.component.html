@@ -28,7 +28,7 @@
   </div>
 
 <div class="subunit-edit" [ngClass]="toggle[subunit.subunitIndex] ? 'show': 'hide'" >
-  <textarea #sequence cdkAutosizeMinRows="3" placeholder="Enter sequence here"  [(ngModel)] = 'editSequence' (change) = "change($event)" class = "sequence-textarea"  name="edit"></textarea>
+  <textarea #sequence cdkAutosizeMinRows="3" placeholder="Enter sequence here"  [(ngModel)] = 'editSequence' (change) = "editSubunit(subunit, editSequence)" class = "sequence-textarea"  name="edit"></textarea>
 </div>
 <div [ngClass]="toggle[subunit.subunitIndex] ? 'hide': 'show'"  >
   <div class = "nest">

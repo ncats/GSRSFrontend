@@ -11,6 +11,7 @@ import { UtilsService } from '@gsrs-core/utils';
 import { DataSource } from '@angular/cdk/table';
 import { FormControl } from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
+import { TouchSequence } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-user-management',
@@ -34,6 +35,7 @@ export class UserManagementComponent implements OnInit {
   users: Array< any > = [];
   lastSort: Sort;
   checkedList: Array<string> = [];
+  showHideActions: boolean = false;
   private searchTimer: any;
 
 constructor(
@@ -54,6 +56,10 @@ constructor(
           this.filterList(value, this.users);
         }, error => {
         });
+}
+
+toggleActions() {
+  this.showHideActions = !this.showHideActions;
 }
 
 selectUnselectAll(): void {

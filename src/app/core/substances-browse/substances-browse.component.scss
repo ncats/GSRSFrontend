@@ -11,6 +11,10 @@
     z-index: 1002 !important;
 }
 
+.smiles-input {
+    max-width:350px;
+}
+
 .mat-expansion-panel-header {
     padding: 0 12px;
 }
@@ -312,6 +316,16 @@
 .export-button {
     color: black;
     border-radius: 4px;
+}
+
+.similarity {
+    padding-left: 10px;
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    color: #c7254e;
+}
+  
+.similarity-label {
+    font-style: italic;
 }
 
 .menu-checkbox:hover {

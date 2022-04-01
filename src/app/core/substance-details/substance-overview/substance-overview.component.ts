@@ -43,6 +43,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   defaultCodeSystem = 'BDNUM';
   defaultCodes: string;
   clasicBaseHref: string;
+  primaryCode = "Validated (UNII)";
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   showlinks = false;
@@ -89,6 +90,11 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       && this.configService.configData.defaultCodeSystem !== '') {
         this.defaultCodeSystem = this.configService.configData.defaultCodeSystem;
       }
+
+      if (this.configService.configData.primaryCode 
+        && this.configService.configData.primaryCode !== '') {
+          this.primaryCode = 'Validated (' + this.configService.configData.primaryCode + ')';
+        }
 
     if (this.configService.configData && this.configService.configData.showOldLinks) {
       this.showlinks = true;
@@ -139,7 +145,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.defAccess = this.substance.specifiedSubstance.access;
     }
 
-    console.log(this.defAccess);
   }
 
   getSubtypeRefs(substance: SubstanceDetail): void  {

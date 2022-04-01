@@ -84,6 +84,12 @@ import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
 import { ShowMolfileDialogComponent } from
 '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
+import { SubstanceSsg4mModule } from './substance-ssg4m/substance-ssg4m.module';
+import { SubstanceSsg4mProcessModule } from './substance-ssg4m/ssg4m-process/substance-form-ssg4m-process.module';
+import { Ssg4mSitesModule } from './substance-ssg4m/ssg4m-sites/ssg4m-sites.module';
+import { Ssg4mStagesModule } from './substance-ssg4m/ssg4m-stages/substance-form-ssg4m-stages.module';
+import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
+import { SubstanceStatusPipe } from '@gsrs-core/utils/substance-status.pipe';
 
 @NgModule({
   declarations: [
@@ -109,7 +115,8 @@ import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.comp
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent,
-    NamesDisplayPipe
+    NamesDisplayPipe,
+    SubstanceStatusPipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -165,7 +172,12 @@ import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.comp
     MatNativeDateModule,
     AdminModule,
     FacetsManagerModule,
-    CodeDisplayModule
+    CodeDisplayModule,
+    SubstanceSsg4mModule,
+    SubstanceSsg4mProcessModule,
+    Ssg4mSitesModule,
+    Ssg4mStagesModule,
+    SubstanceFormSsg4mStartingMaterialsModule
   ],
   providers: [
     {

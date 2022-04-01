@@ -115,6 +115,17 @@ mat-select-panel{
     display: none !important;
 }
 
+.validation-body {
+  max-width:95%;
+   display:flex;
+   max-width: 960px;
+word-break: break-word;
+}
+
+.validation-dismiss {
+  width: 5%;
+}
+
 .submission-messages {
   overflow: hidden;
   height: auto;
@@ -144,7 +155,7 @@ mat-select-panel{
   .validation-message {
     display: flex;
     padding: 5px 0;
-    align-items: center;
+
 
     .message-type {
       text-transform: uppercase;
@@ -152,6 +163,8 @@ mat-select-panel{
       margin-right: 20px;
       padding:10px;
       border-radius:3px;
+      height: 40px;
+      min-width: 95px;
     }
   }
 

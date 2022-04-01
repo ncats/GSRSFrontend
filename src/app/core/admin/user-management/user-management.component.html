@@ -9,8 +9,10 @@
           <button mat-button (click) = "showInactiveUsers()">{{showInactive? 'Show':'Hide'}} Inactive Users</button>
       </div>
       <div class = "top-button">
-        <button class="dropbtn" mat-button>Action</button>
-        <div class="dropdown-content">
+        <button (click)="toggleActions()" class="dropbtn" mat-button>Action
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <div [ngClass]="showHideActions ? 'show' : ''" class="dropdown-content">
           <a (click)="markSelected('inactive')">Mark Selected Inactive</a>
           <a class="hide"(click)="markSelected('active')">Mark Selected Active</a> <!-- hidden for now-->
         </div>

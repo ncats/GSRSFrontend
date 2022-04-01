@@ -178,6 +178,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceMixtureParentModule),
   },
   {
+    componentId: 'substance-hierarchy',
+    path: 'substance-hierarchy',
+    loadChildren: () => import('./substance-details/substance-hierarchy/substance-hierarchy.module')
+      .then(m => m.SubstanceHierarchyModule),
+  },
+  {
     componentId: 'substance-history',
     path: 'substance-history',
     loadChildren: () => import('./substance-details/substance-history/substance-history.module')
@@ -400,5 +406,11 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'ssg-definition-form',
     loadChildren: () => import('./substance-form/ssg-definition-form/ssg-definition-form.module')
       .then(m => m.SsgDefinitionFormModule)
+  },
+  {
+    componentId: 'substance-form-ssg4m-process',
+    path: 'ssg4m-process-form',
+    loadChildren: () => import('./substance-ssg4m/ssg4m-process/substance-form-ssg4m-process.module')
+      .then(m => m.SubstanceSsg4mProcessModule)
   }
 ];

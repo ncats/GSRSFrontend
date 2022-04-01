@@ -13,6 +13,8 @@ export interface Config {
     codeSystemOrder?: Array<string>;
     contactEmail?: string;
     defaultCodeSystem?: string;
+    primaryCode?: string;
+    typeaheadFields?: Array<string>;
     navItems?: Array<NavItem>;
     substanceSelectorProperties?: Array<string>;
     displayMatchApplication?: string;
@@ -38,6 +40,7 @@ export interface Config {
     molWeightRounding?: number;
     usefulLinks?: Array<UsefulLink>;
     approvalCodeName?: string;
+    approvalType?: string;
 }
 
 export interface LoadedComponents {
@@ -62,6 +65,8 @@ export interface SubstanceCardFilterParameters {
     value?: any;
     propertyInArray?: string;
     order?: number;
+    countMinimum?: number;
+    countMaximum?: number;
 }
 
 export interface NavItem {
