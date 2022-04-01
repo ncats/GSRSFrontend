@@ -1,4 +1,4 @@
-import {Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
@@ -47,9 +47,9 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       resp = response['CODE_SYSTEM'].dictionary;
       if (resp['CAS']) {
         this.CasDisplay = resp['CAS'].display;
-        }
-      });
-        this.searchControl.valueChanges.pipe(
+      }
+    });
+    this.searchControl.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(searchValue => {
@@ -61,29 +61,29 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
-      const showTypes = [ 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
-      this.suggestionsFields =   Object.keys(this.substanceSuggestionsGroup).filter(function(item) {
+      const showTypes = ['Display_Name', 'CAS', 'Name', 'Approval_ID',];
+      this.suggestionsFields = Object.keys(this.substanceSuggestionsGroup).filter(function (item) {
         return showTypes.indexOf(item) > -1;
       });
-     /* this.suggestionsFields.forEach((value, index) => {
-        if (value === 'Approval_ID') {
-          this.suggestionsFields[index] = 'UNII';
-        }
-        if (value === 'Display_Name') {
-          this.suggestionsFields[index] =  'Preferred Term';
-        }
-      });*/
-      this.suggestionsFields.sort(function(x, y) { return x === 'Display_Name' ? -1 : y === 'Display_Name' ? 1 : 0; });
+      /* this.suggestionsFields.forEach((value, index) => {
+         if (value === 'Approval_ID') {
+           this.suggestionsFields[index] = 'UNII';
+         }
+         if (value === 'Display_Name') {
+           this.suggestionsFields[index] =  'Preferred Term';
+         }
+       });*/
+      this.suggestionsFields.sort(function (x, y) { return x === 'Display_Name' ? -1 : y === 'Display_Name' ? 1 : 0; });
       this.suggestionsFields.forEach((value, index) => {
         if (value === 'Approval_ID') {
-          this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
+          this.suggestionsFields[index] = { value: 'Approval_ID', display: 'UNII' };
         } else if (value === 'Display_Name') {
-          this.suggestionsFields[index] =  {value: 'Display_Name', display: 'Preferred Term'};
+          this.suggestionsFields[index] = { value: 'Display_Name', display: 'Preferred Term' };
         } else if (value === 'CAS') {
-          this.suggestionsFields[index] =  {value: 'CAS', display: this.CasDisplay};
+          this.suggestionsFields[index] = { value: 'CAS', display: this.CasDisplay };
 
         } else {
-          this.suggestionsFields[index] =  {value: value, display: value};
+          this.suggestionsFields[index] = { value: value, display: value };
         }
       });
 
@@ -111,21 +111,21 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   @Input()
   set errorMessage(errorMessage: string) {
     this.searchControl.markAsTouched();
-        if (errorMessage) {
-          this.searchControl.setErrors({
-            error: true
-          });
-        } else {
-          this.searchControl.setErrors(null);
-        }
-        this.privateErrorMessage = errorMessage;
+    if (errorMessage) {
+      this.searchControl.setErrors({
+        error: true
+      });
+    } else {
+      this.searchControl.setErrors(null);
+    }
+    this.privateErrorMessage = errorMessage;
   }
 
   get errorMessage(): string {
     return this.privateErrorMessage;
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
   autoCompleteClosed(): void {
     this.matOpen = false;
@@ -183,7 +183,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
     this.gaService.sendEvent(eventCategory, 'search:submit', eventLabel);
 
     if (eventCategory === 'topSearch') {
-     searchTerm = this.topSearchClean(searchTerm);
+      searchTerm = this.topSearchClean(searchTerm);
     }
     this.searchPerformed.emit(searchTerm);
   }
@@ -204,8 +204,8 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
         this.searchContainerElement.classList.remove('active-' + this.source);
         this.searchContainerElement.classList.remove('deactivate-search');
       } else {
-      this.searchContainerElement.classList.remove('active-search');
-      this.searchContainerElement.classList.remove('deactivate-search');
+        this.searchContainerElement.classList.remove('active-search');
+        this.searchContainerElement.classList.remove('deactivate-search');
       }
     }, 300);
   }
@@ -215,7 +215,23 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       searchTerm = searchTerm.trim();
       if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && searchTerm.indexOf(':') < 0
         && searchTerm.indexOf(' AND ') < 0 && searchTerm.indexOf(' OR ') < 0) {
-        searchTerm = '"' + searchTerm + '"';
+        // Put slash in front of brackets, for example:
+        // 1. [INN] to \[INN\]
+        // 2. IBUPROFEN [INN] to IBUPROFEN \[INN\]
+        // 3. *[INN] to *\[INN\]
+        // 4. [INN]* to \[INN\]*
+        // 5. "[INN]" to "\[INN\]"
+        // 6. "IBUPROFEN [INN]" to "IBUPROFEN \[INN\]"
+        // 7. "*[INN]" to "*\[INN\]"
+        // 8. [INN]* to \[INN\]*
+        searchTerm = '"' + searchTerm
+          .replace(/([^\\])\[/g, "$1\\[").replace(/^\[/g, "\\[")
+          .replace(/([^\\])\]/g, "$1\\]").replace(/^\]/g, "\\]")
+          + '"';
+      } else if (searchTerm.indexOf(':') < 0) {
+        searchTerm = searchTerm
+          .replace(/([^\\])\[/g, "$1\\[").replace(/^\[/g, "\\[")
+          .replace(/([^\\])\]/g, "$1\\]").replace(/^\]/g, "\\]")
       }
       this.searchControl.setValue(searchTerm);
     }
