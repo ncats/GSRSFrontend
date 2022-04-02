@@ -11,7 +11,7 @@
   "advancedSearchFacetDisplay": false,
   "approvalCodeName":"UNIT",
   "primaryCode": "BDNUM",
-  "typeaheadFields": ["Standard_Name", "Display_Name", "CAS", "Name", "Approval_ID" ],
+  "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID" ],
   "loadedComponents": {
     "applications": true,
     "products": true,
