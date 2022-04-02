@@ -64,7 +64,10 @@ export class SubstanceSearchSelectorComponent implements OnInit {
 
     this.searchValue = searchValue;
     const q = searchValue.replace('\"', '');
-    // __alex__ try this instead of below
+    // __alex__ try this instead of below ??? 
+    // ??? is it a problem that the config value
+    // ??? has CAS and EC EINECS and the commented
+    // out code below does not?  
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
 /*
     const searchStr =
