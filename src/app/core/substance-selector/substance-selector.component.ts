@@ -21,14 +21,15 @@ export class SubstanceSelectorComponent implements OnInit {
   showOptions: boolean;
   previousSubstance: SubstanceSummary;
   displayName: string;
-  private substanceSelectorProperties: Array<string> = [
-    'root_names_name',
+  // Shouldn't we use config? or are these defaults?
+  private substanceSelectorProperties: Array<string> = null;
+/*    'root_names_name',
     'root_names_stdName',
     'root_approvalID',
     'CAS',
     'ECHA\ \(EC\/EINECS\)'
   ];
-
+*/
   constructor(
     public substanceService: SubstanceService,
     public configService: ConfigService
@@ -40,7 +41,10 @@ export class SubstanceSelectorComponent implements OnInit {
     }
     if (this.configService.configData.substanceSelectorProperties != null) {
       this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
+      // __alex__  
       console.log("XXXX"+this.substanceSelectorProperties);
+    } else { 
+      console.log("The config value for substanceSelectorProperties is null");
     }
   }
 
@@ -64,6 +68,9 @@ export class SubstanceSelectorComponent implements OnInit {
     const q = searchValue.replace('\"', '');
 
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
+
+    // __alex__ Can we erase this comment? It was here before me 
+
     // const searchStr = `root_names_name:\"^${q}$\" OR ` +
     //   `root_approvalID:\"^${q}$\" OR ` +
     //   `root_codes_BDNUM:\"^${q}$\"`;
