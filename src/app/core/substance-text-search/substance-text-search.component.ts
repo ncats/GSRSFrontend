@@ -63,7 +63,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
-      let showTypes = [ 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
+      let showTypes = ['Standard_Name', 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
       if(this.configService && this.configService.configData && this.configService.configData.typeaheadFields) {
          showTypes = this.configService.configData.typeaheadFields;
       }
@@ -86,6 +86,8 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           } else {
             this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
           }
+        } else if (value === 'Standard_Name') {
+          this.suggestionsFields[index] = { value: 'Standard_Name', display: 'Standard Name' };
         } else if (value === 'Display_Name') {
           this.suggestionsFields[index] = { value: 'Display_Name', display: 'Preferred Term' };
         } else if (value === 'CAS') {
@@ -184,6 +186,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   }
 
   processSubstanceSearch() {
+    console.log("AAAA "+ "processSubstanceSearch");
     let searchTerm = this.searchControl.value;
     const eventCategory = this.eventCategory || 'substanceTextSearch';
     const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchTerm || 'search term option';

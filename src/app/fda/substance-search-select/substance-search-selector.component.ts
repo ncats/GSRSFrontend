@@ -54,10 +54,13 @@ export class SubstanceSearchSelectorComponent implements OnInit {
     this.searchValue = searchValue;
     const q = searchValue.replace('\"', '');
 
-    const searchStr = `root_names_name:\"^${q}$\" OR ` +
+    const searchStr =
+      `root_names_name:\"^${q}$\" OR ` +
+      `root_names_stdName:\"^${q}$\" OR ` +
       `root_approvalID:\"^${q}$\" OR ` +
-      `root_codes_BDNUM:\"^${q}$\"`;
-
+      `root_codes_BDNUM:\"^${q}$\"`
+      ;
+console.log("ZZZZ" + "Just before quick summaries");
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       this.loadingStructure = true;
       if (response.content && response.content.length) {

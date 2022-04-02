@@ -73,6 +73,7 @@ export class RelationshipFormComponent implements OnInit {
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
+console.log("YYYY "+ "related substance updated")
     if ( substance !== null) {
       const relatedSubstance: SubstanceRelated = {
         refPname: substance._name,
