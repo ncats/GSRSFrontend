@@ -7,9 +7,11 @@
   </div>
   <div class="form-row">
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Processing Material" (click)="deleteProcessingMaterial()">
+      <button mat-icon-button matTooltip="Delete Processing Material {{(processingMaterialIndex+1)}}" (click)="deleteProcessingMaterial()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
+      <br>
+      <div class="padleft15px"><b>{{(processingMaterialIndex+1)}}</b></div>
     </div>
 
     <div class="col related-substance">
