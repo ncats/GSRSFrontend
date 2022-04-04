@@ -9,7 +9,9 @@
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
-  "approvalCodeName":"UNII",
+  "approvalCodeName":"UNIT",
+  "primaryCode": "BDNUM",
+  "typeaheadFields": ["Display_Name", "CAS", "Name", "Approval_ID" ],
   "loadedComponents": {
     "applications": true,
     "products": true,
@@ -34,525 +36,534 @@
     "imageFile": "dictionary.png",
   "templateDescription": "Click to download GSRS Data Dictionary.xlsx"}
 ],
-  "substanceDetailsCards": [
-    {
-      "card": "substance-overview",
-      "title": "overview"
-    },
-    {
-      "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs",
-      "filters": [
-        {}
-      ]
-    },
-    {
-      "card": "substance-primary-definition",
-      "title": "primary definition",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "definitionType",
-          "value": "ALTERNATIVE"
-        }
-      ]
-    },
-    {
-      "card": "substance-alternative-definition",
-      "type": "SUBSTANCE->SUB_ALTERNATE",
-      "title": "alternative definitions",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        },
-        {
-          "filterName": "substanceRelationships",
-          "value": "SUBSTANCE->SUB_ALTERNATE"
-        }
-      ]
-    },
-    {
-      "card": "structure-details",
-      "title": "structure",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "chemical|polymer"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "structure"
-        }
-      ]
-    },
-    {
-      "card": "substance-names",
-      "title": "names",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "names"
-        }
-      ]
-    },
-    {
-      "card": "substance-codes",
-      "type": "classification",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "codes"
-        },
-        {
-          "filterName": "substanceCodes",
-          "value": "classification"
-        }
-      ]
-    },
-    {
-      "card": "substance-codes",
-      "type": "identifiers",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "codes"
-        },
-        {
-          "filterName": "substanceCodes",
-          "value": "identifiers"
-        }
-      ]
-    },
-    {
-      "card": "substance-subunits",
-      "title": "subunits",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "protein"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "protein.subunits"
-        }
-      ]
-    },
-    {
-      "card": "substance-subunits",
-      "title": "subunits",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "nucleicAcid"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "nucleicAcid.subunits"
-        }
-      ]
-    },
-    {
-      "card": "substance-glycosylation",
-      "title": "glycosylation",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "protein"
-        },
-        {
-          "filterName": "anyExists",
-          "propertyToCheck": "protein.glycosylation.glycosylationType|protein.glycosylation.CGlycosylationSites|protein.glycosylation.NGlycosylationSites|protein.glycosylation.OGlycosylationSites"
-        }
-      ]
-    },
-    {
-      "card": "substance-disulfide-links",
-      "title": "disulfide links",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "protein"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "protein.disulfideLinks"
-        }
-      ]
-    },
-    {
-      "card": "substance-other-links",
-      "title": "other links",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "protein"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "protein.otherLinks"
-        }
-      ]
-    },
-    {
-      "card": "substance-relationships",
-      "type": "METABOLITE",
-      "title": "metabolites",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        },
-        {
-          "filterName": "substanceRelationships",
-          "value": "METABOLITE"
-        }
-      ]
-    },
-    {
-      "card": "substance-relationships",
-      "type": "IMPURITY",
-      "title": "impurities",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        },
-        {
-          "filterName": "substanceRelationships",
-          "value": "IMPURITY"
-        }
-      ]
-    },
-    {
-      "card": "substance-relationships",
-      "type": "ACTIVE MOIETY",
-      "title": "active moiety",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        },
-        {
-          "filterName": "substanceRelationships",
-          "value": "ACTIVE MOIETY"
-        }
-      ]
-    },
-    {
-      "card": "substance-relationships",
-      "type": "CONSTITUENT",
-      "title": "constituents",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        },
-        {
-          "filterName": "substanceRelationships",
-          "value": "CONSTITUENT"
-        }
-      ]
-    },
-    {
-      "card": "substance-relationships",
-      "type": "SUB_CONCEPT->SUBSTANCE",
-      "title": "variant concepts",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        },
-        {
-          "filterName": "substanceRelationships",
-          "value": "SUB_CONCEPT->SUBSTANCE"
-        }
-      ]
-    },
-    {
-      "card": "substance-relationships",
-      "type": "RELATIONSHIPS",
-      "title": "relationships",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        },
-        {
-          "filterName": "substanceRelationships",
-          "value": [
-            "METABOLITE",
-            "IMPURITY",
-            "ACTIVE MOIETY",
-            "CONSTITUENT",
-            "SUB_CONCEPT->SUBSTANCE"
-          ]
-        }
-      ]
-    },
-    {
-      "card": "substance-relationships-visualization",
-      "title": "Relationships Visualization",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        }
-      ]
-    },
-    {
-      "card": "substance-notes",
-      "title": "notes",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "notes"
-        }
-      ]
-    },
-    {
-      "card": "substance-audit-info",
-      "title": "audit info"
-    },
-    {
-      "card": "substance-references",
-      "title": "references",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "references"
-        }
-      ]
-    },
-    {
-      "card": "substance-moieties",
-      "title": "moieties",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "chemical"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "moieties"
-        }
-      ]
-    },
-    {
-      "card": "substance-concept-definition",
-      "title": "concept definition",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "concept"
-        }
-      ]
-    },
-    {
-      "card": "substance-polymer-structure",
-      "title": "display structure",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "polymer"
-        }
-      ]
-    },
-    {
-      "card": "substance-monomers",
-      "title": "monomers",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "polymer"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "polymer.monomers"
-        }
-      ]
-    },
-    {
-      "card": "substance-structural-units",
-      "title": "Structural Units",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "polymer"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "polymer.structuralUnits"
-        }
-      ]
-    },
-    {
-      "card": "substance-mixture-components",
-      "title": "mixture components",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "mixture"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "mixture.components"
-        }
-      ]
-    },
-    {
-      "card": "substance-mixture-parent",
-      "title": "mixture parent",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "$$mixtureParents"
-        }
-      ]
-    },
-    {
-      "card": "substance-ssg1-parent",
-      "title": "SSG1 parent",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "$$constituentParents"
-        }
-      ]
-    },
-    {
-      "card": "substance-constituents",
-      "title": "specified substance constituents",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "specifiedSubstanceG1"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "specifiedSubstance.constituents"
-        }
-      ]
-    },
-    {
-      "card": "substance-mixture-source",
-      "title": "mixture source",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "mixture"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "mixture.parentSubstance"
-        }
-      ]
-    },
-    {
-      "card": "substance-modifications",
-      "title": "substance modifications",
-      "filters": [
-        {
-          "filterName": "anyExists",
-          "propertyToCheck": "modifications.structuralModifications|modifications.physicalModifications|modifications.agentModifications"
-        }
-      ]
-    },
-    {
-      "card": "substance-na-sugars",
-      "title": "sugars",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "nucleicAcid"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "nucleicAcid.sugars"
-        }
-      ]
-    },
-    {
-      "card": "substance-na-linkages",
-      "title": "linkages",
-      "filters": [
-        {
-          "filterName": "equals",
-          "propertyToCheck": "substanceClass",
-          "value": "nucleicAcid"
-        },
-        {
-          "filterName": "exists",
-          "propertyToCheck": "nucleicAcid.linkages"
-        }
-      ]
-    },
-    {
-      "card": "substance-properties",
-      "title": "characteristic attributes",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "properties"
-        }
-      ]
-    },
-    {
-      "card": "substance-history",
-      "title": "history",
-      "filters": [
-        {
-          "filterName": "hasCredentials",
-          "propertyToCheck": "admin"
-        }
-      ]
-    },
-    {
-      "card": "substance-ssg-parent-substance",
-      "title": "parent substance",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "specifiedSubstanceG3.parentSubstance"
-        }
-      ]
-    },
-    {
-      "card": "substance-ssg-definition",
-      "title": "definition",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "specifiedSubstanceG3.definition"
-        }
-      ]
-    },
-    {
-      "card": "substance-ssg-grade",
-      "title": "grade",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "specifiedSubstanceG3.grade"
-        }
-      ]
-    }
-  ],
+"substanceDetailsCards": [
+  {
+    "card": "substance-overview",
+    "title": "Overview"
+  },
+  {
+    "card": "fda-substance-product",
+    "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs",
+    "filters": [
+      {}
+    ]
+  },
+  {
+    "card": "substance-primary-definition",
+    "title": "Primary Definition",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "definitionType",
+        "value": "ALTERNATIVE"
+      }
+    ]
+  },
+  {
+    "card": "substance-alternative-definition",
+    "type": "SUBSTANCE->SUB_ALTERNATE",
+    "title": "Alternative Definitions",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+      {
+        "filterName": "substanceRelationships",
+        "value": "SUBSTANCE->SUB_ALTERNATE"
+      }
+    ]
+  },
+  {
+    "card": "substance-relationships",
+    "type": "SUB_CONCEPT->SUBSTANCE",
+    "title": "Subconcepts Variants",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+      {
+        "filterName": "substanceRelationships",
+        "value": "SUB_CONCEPT->SUBSTANCE"
+      }
+    ]
+  },
+  {
+    "card": "substance-concept-definition",
+    "title": "Concept Definition",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "concept"
+      }
+    ]
+  },
+  {
+    "card": "substance-mixture-parent",
+    "title": "Found in Mixtures",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "$$mixtureParents"
+      }
+    ]
+  },
+  {
+    "card": "substance-ssg1-parent",
+    "title": "Found in G1SS",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "$$constituentParents"
+      }
+    ]
+  },
+  {      "card": "substance-hierarchy",
+    "title": "Substance Hierarchy",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      }
+    ]
+  },
+  {
+    "card": "structure-details",
+    "title": "Chemical Structure",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "chemical|polymer"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "structure"
+      }
+    ]
+  },
+  {
+    "card": "substance-moieties",
+    "title": "Chemical Moieties",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "chemical"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "moieties"
+      }
+    ]
+  },
+  {
+    "card": "substance-subunits",
+    "title": "Protein Subunits",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "protein"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "protein.subunits"
+      }
+    ]
+  },
+  {
+    "card": "substance-glycosylation",
+    "title": "Protein Glycosylation",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "protein"
+      },
+      {
+        "filterName": "anyExists",
+        "propertyToCheck": "protein.glycosylation.glycosylationType|protein.glycosylation.CGlycosylationSites|protein.glycosylation.NGlycosylationSites|protein.glycosylation.OGlycosylationSites"
+      }
+    ]
+  },
+  {
+    "card": "substance-disulfide-links",
+    "title": "Protein Disulfide Links",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "protein"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "protein.disulfideLinks"
+      }
+    ]
+  },
+  {
+    "card": "substance-other-links",
+    "title": "Protein Other Links",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "protein"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "protein.otherLinks"
+      }
+    ]
+  },
+  {
+    "card": "substance-subunits",
+    "title": "Nuceic Acid Subunits",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "nucleicAcid"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "nucleicAcid.subunits"
+      }
+    ]
+  },
+  {
+    "card": "substance-na-sugars",
+    "title": "Nucleic Acid Sugars",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "nucleicAcid"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "nucleicAcid.sugars"
+      }
+    ]
+  },
+  {
+    "card": "substance-na-linkages",
+    "title": "Nucleic Acid Linkages",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "nucleicAcid"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "nucleicAcid.linkages"
+      }
+    ]
+  },
+  {
+    "card": "substance-polymer-structure",
+    "title": "Polymer Display Structure",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "polymer"
+      }
+    ]
+  },
+  {
+    "card": "substance-monomers",
+    "title": "Polymer Monomers and Starting Materials",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "polymer"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "polymer.monomers"
+      }
+    ]
+  },
+  {
+    "card": "substance-structural-units",
+    "title": "Polymer Structural Units",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "polymer"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "polymer.structuralUnits"
+      }
+    ]
+  },
+  {
+    "card": "substance-mixture-source",
+    "title": "Mixture Source",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "mixture"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "mixture.parentSubstance"
+      }
+    ]
+  },
+  {
+    "card": "substance-mixture-components",
+    "title": "Mixture Components",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "mixture"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "mixture.components"
+      }
+    ]
+  },
+  {
+    "card": "substance-constituents",
+    "title": "G1 Specified Substance Constituents",
+    "filters": [
+      {
+        "filterName": "equals",
+        "propertyToCheck": "substanceClass",
+        "value": "specifiedSubstanceG1"
+      },
+      {
+        "filterName": "exists",
+        "propertyToCheck": "specifiedSubstance.constituents"
+      }
+    ]
+  },
+  {
+    "card": "substance-modifications",
+    "title": "Substance Modifications",
+    "filters": [
+      {
+        "filterName": "anyExists",
+        "propertyToCheck": "modifications.structuralModifications|modifications.physicalModifications|modifications.agentModifications"
+      }
+    ]
+  },
+  {
+    "card": "substance-ssg-parent-substance",
+    "title": "G3 Specified Substance Parent",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "specifiedSubstanceG3.parentSubstance"
+      }
+    ]
+  },
+  {
+    "card": "substance-ssg-definition",
+    "title": "G3 Specified Substance Definition",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "specifiedSubstanceG3.definition"
+      }
+    ]
+  },
+  {
+    "card": "substance-ssg-grade",
+    "title": "G3 Specified Substance Grade",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "specifiedSubstanceG3.grade"
+      }
+    ]
+  },
+  {
+    "card": "substance-names",
+    "title": "Names and Synonyms",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "names"
+      }
+    ]
+  },
+  {
+    "card": "substance-codes",
+    "type": "Codes - Classifications",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "codes"
+      },
+      {
+        "filterName": "substanceCodes",
+        "value": "classification"
+      }
+    ]
+  },
+  {
+    "card": "substance-codes",
+    "type": "Codes - Identifiers",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "codes"
+      },
+      {
+        "filterName": "substanceCodes",
+        "value": "identifiers"
+      }
+    ]
+  },
+  {
+    "card": "substance-properties",
+    "title": "Characteristic Attributes",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "properties"
+      }
+    ]
+  },
+  {
+    "card": "substance-relationships-visualization",
+    "title": "Relationships Visualization",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      }
+    ]
+  },
+  {
+    "card": "substance-relationships",
+    "type": "ACTIVE MOIETY",
+    "title": "Relationships: Active Moiety",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+      {
+        "filterName": "substanceRelationships",
+        "value": "ACTIVE MOIETY"
+      }
+    ]
+  },
+  {
+    "card": "substance-relationships",
+    "type": "METABOLITE",
+    "title": "Relationships: Metabolites",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+      {
+        "filterName": "substanceRelationships",
+        "value": "METABOLITE"
+      }
+    ]
+  },
+  {
+    "card": "substance-relationships",
+    "type": "IMPURITY",
+    "title": "Relationships: Impurities",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+      {
+        "filterName": "substanceRelationships",
+        "value": "IMPURITY"
+      }
+    ]
+  },
+  {
+    "card": "substance-relationships",
+    "type": "CONSTITUENT",
+    "title": "Relationships: Constitents",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+      {
+        "filterName": "substanceRelationships",
+        "value": "CONSTITUENT"
+      }
+    ]
+  },
+  {
+    "card": "substance-relationships",
+    "type": "RELATIONSHIPS",
+    "title": "Relationships",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "relationships"
+      },
+      {
+        "filterName": "substanceRelationships",
+        "value": [
+          "METABOLITE",
+          "IMPURITY",
+          "ACTIVE MOIETY",
+          "CONSTITUENT",
+          "SUB_CONCEPT->SUBSTANCE"
+        ]
+      }
+    ]
+  },
+  {
+    "card": "substance-notes",
+    "title": "Notes",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "notes"
+      }
+    ]
+  },
+  {
+    "card": "substance-references",
+    "title": "References",
+    "filters": [
+      {
+        "filterName": "exists",
+        "propertyToCheck": "references"
+      }
+    ]
+  },
+  {
+    "card": "substance-audit-info",
+    "title": "Audit Information"
+  },
+  {
+    "card": "substance-history",
+    "title": "Record History",
+    "filters": [
+      {
+        "filterName": "hasCredentials",
+        "propertyToCheck": "admin"
+      }
+    ]
+  }
+],
   "facets": {
     "substances": {
       "default": [
@@ -1028,13 +1039,6 @@
         "orgDisplayKeyType":"BDNUM",
         "clinicalTrialKeyType":"UUID"
       }
-    }
-  },
-  "g4ssForm":{
-    "titles":{
-      "processingMaterials":"Solvents and Catalysts",
-      "stage":"Step",
-      "parentSubstance":"Resulting Substance"
     }
   }
 }

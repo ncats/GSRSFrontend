@@ -33,8 +33,9 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   }
 
   ngOnInit() {
-    const configSsg4ParentSub = `${(this.configService.configData && this.configService.configData.g4ssForm.titles.parentSubstance) || '' }`;
-    this.menuLabelUpdate.emit(configSsg4ParentSub);
+   // const configSsg4ParentSub = `${(this.configService.configData && this.configService.configData.g4ssForm
+    //  .titles.parentSubstance) || '' }`;
+    this.menuLabelUpdate.emit('Parent Substance');
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       this.substanceClass = substance.substanceClass;

@@ -1,30 +1,32 @@
-<div [ngClass]="{'bordergreen': showAdvancedSettings === true}">
+<div>
+  <!-- [ngClass]="{'bordergreen': showAdvancedSettings === true}"> -->
   <div class="form-container">
-    <div *ngIf="site.$$deletedCode" class="notification-backdrop">
-      Deleted&nbsp;
-      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-        <mat-icon svgIcon="undo"></mat-icon>
-      </button>
-    </div>
-    <div class="form-row" *ngIf="showAdvancedSettings">
-      <div class="delete-container">
-        <button mat-icon-button matTooltip="Delete Site" (click)="deleteSite()">
-          <mat-icon svgIcon="delete_forever"></mat-icon>
+    <div *ngIf="showAdvancedSettings">
+      <div *ngIf="site.$$deletedCode" class="notification-backdrop">
+        Deleted&nbsp;
+        <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+          <mat-icon svgIcon="undo"></mat-icon>
         </button>
       </div>
+      <div class="form-row" *ngIf="showAdvancedSettings">
+        <div class="delete-container">
+          <button mat-icon-button matTooltip="Delete Site" (click)="deleteSite()">
+            <mat-icon svgIcon="delete_forever"></mat-icon>
+          </button>
+        </div>
 
-      <div class="row">
-        <mat-form-field class="">
-          <input matInput placeholder="Site Name" [(ngModel)]="site.siteName" name="site.siteName" />
-        </mat-form-field>
-        <!--
+        <div class="row">
+          <mat-form-field class="">
+            <input matInput placeholder="Site Name" [(ngModel)]="site.siteName" name="site.siteName" />
+          </mat-form-field>
+          <!--
       <button mat-button (click)="addSite()">
         Add Sites <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
       -->
-      </div>
-    </div> <!-- form row -->
-
+        </div>
+      </div> <!-- form row -->
+    </div>
     <!-- STAGES LIST BEGIN -->
     <hr *ngIf="showAdvancedSettings">
     <div>
@@ -37,10 +39,14 @@
       </button>
       <br><br>
 
-      <div class="marginbottom10px" *ngFor="let stage of site.stages; let stageIndex = index">
-        <app-ssg4m-stages-form [stage]="stage" [processIndex]="processIndex" [siteIndex]="siteIndex"
-          [stageIndex]="stageIndex">
-        </app-ssg4m-stages-form>
+      <div class="margintop10px marginbottom20px" *ngFor="let stage of site.stages; let stageIndex = index">
+        <fieldset class="border">
+          <legend class="border">Stage &nbsp;<b><span class="colorgreen font17px">{{stageIndex + 1}}</span></b>
+          </legend>
+          <app-ssg4m-stages-form [stage]="stage" [processIndex]="processIndex" [siteIndex]="siteIndex"
+            [stageIndex]="stageIndex">
+          </app-ssg4m-stages-form>
+        </fieldset>
       </div>
     </div>
     <!-- STAGES LIST END -->
@@ -57,11 +63,11 @@
     -->
 
     <!--
-  <div class="form-row" *ngIf="!site.$$deletedCode">
+    <div class="form-row" *ngIf="!site.$$deletedCode">
     <div class="references-container">
       <app-domain-references [referencesUuids]="site.references" #references></app-domain-references>
     </div>
-  </div>
-  -->
+    </div>
+    -->
   </div>
 </div>

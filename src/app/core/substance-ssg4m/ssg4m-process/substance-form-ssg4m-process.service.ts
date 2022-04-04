@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { SubstanceFormServiceBase } from '../../substance-form/base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
-import { Observable } from 'rxjs';
+import { SubstanceFormSsg4mSitesService } from '../ssg4m-sites/substance-form-ssg4m-sites.service';
 import { SpecifiedSubstanceG4mProcess, SpecifiedSubstanceG4mSite } from '@gsrs-core/substance/substance.model';
 
 @Injectable({
@@ -12,7 +13,8 @@ import { SpecifiedSubstanceG4mProcess, SpecifiedSubstanceG4mSite } from '@gsrs-c
 export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<Array<SpecifiedSubstanceG4mProcess>> {
 
   constructor(
-    public substanceFormService: SubstanceFormService
+    public substanceFormService: SubstanceFormService,
+    private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
   ) {
     super(substanceFormService);
   }
@@ -40,31 +42,35 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
   addProcess(): void {
     const newProcess: SpecifiedSubstanceG4mProcess = {
       processName: 'Process ',
-      sites: [{siteName: 'Site 1', stages: []}]
+      sites: []
     };
-    this.substance.specifiedSubstanceG4m.process.unshift(newProcess);
+    const processIndex = this.substance.specifiedSubstanceG4m.process.push(newProcess);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
+    //Add Site
+    this.substanceFormSsg4mSitesService.addSite(processIndex-1);
   }
 
   deleteProcess(process: SpecifiedSubstanceG4mProcess, processIndex: number): void {
-   // const processIndex = this.substance.specifiedSubstanceG4m.process.findIndex(pro => pro.$$deletedCode === pro.$$deletedCode);
-    if (processIndex > -1) {
-      this.substance.specifiedSubstanceG4m.process.splice(processIndex, 1);
-      this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
-    }
-  }
+    // const processIndex = this.substance.specifiedSubstanceG4m.process.findIndex(pro => pro.$$deletedCode === pro.$$deletedCode);
+     if (processIndex > -1) {
+       this.substance.specifiedSubstanceG4m.process.splice(processIndex, 1);
+       this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
+     }
+   }
 
+   addSite(processIndex: number): void {
+
+   }
+
+   /*
   addSite(processIndex: number): void {
     const newSite: SpecifiedSubstanceG4mSite = {
     //  references: [],
     //  access: [],
-      stages: []
+    stages: []
     };
-  //  if (!this.substance.specifiedSubstanceG4m.process[processIndex].sites) {
-  //    this.substance.specifiedSubstanceG4m.process[processIndex].sites = [];
-  //  }
     this.substance.specifiedSubstanceG4m.process[processIndex].sites.unshift(newSite);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
-  //  this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites);
   }
+  */
 }
