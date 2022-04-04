@@ -47,6 +47,8 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
           && this.structurallyDiverse.hybridSpeciesMaternalOrganism.refuuid || '';
         this.paternalUuid = this.structurallyDiverse.hybridSpeciesPaternalOrganism
           && this.structurallyDiverse.hybridSpeciesPaternalOrganism.refuuid || '';
+          this.parentUuid = this.structurallyDiverse.parentSubstance
+          && this.structurallyDiverse.parentSubstance.refuuid || null;
        } else if (this.part === 'full_fields') {
         this.menuLabelUpdate.emit('Organism Details / Parts And Fractions');
         this.maternalUuid = this.structurallyDiverse.hybridSpeciesMaternalOrganism

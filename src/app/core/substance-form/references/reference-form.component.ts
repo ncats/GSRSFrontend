@@ -23,6 +23,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   private overlayContainer: HTMLElement;
   deleteTimer: any;
   showPrev = false;
+  loading = false;
+  error = false;
   private subscriptions: Array<Subscription> = [];
   constructor(
     private cvService: ControlledVocabularyService,
@@ -85,9 +87,17 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   fileSelected(file: File): void {
+    this.error = false;
     if (file != null) {
+      this.loading = true;
       this.utilsService.uploadFile(file).subscribe(response => {
         this.reference.uploadedFile = response;
+        this.loading = false;
+
+      }, error => {
+        this.loading = false;
+        this.error = true;
+
       });
     }
   }

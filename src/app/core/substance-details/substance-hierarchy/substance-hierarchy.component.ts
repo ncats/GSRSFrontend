@@ -47,7 +47,6 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
       'relationship': ''
     };
       this.substanceService.getHierarchy(this.uuid).subscribe(resp => {
-        console.log(resp);
         this.loadHierarchy(resp);
       }, error => {
        this.loadHierarchy([this.selfNode]);

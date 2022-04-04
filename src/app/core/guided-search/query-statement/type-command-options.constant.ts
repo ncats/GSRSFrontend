@@ -139,7 +139,10 @@ export const typeCommandOptions: CommandTypesDict = {
                         eventEmitter: EventEmitter<QueryStatement>
                     ) => {
                         if (queryValue) {
+                            // Remove single and double quotes
                             queryValue = queryValue.replace(/['"]+/g, '');
+                            // Put slash \ in front of comma , for scape
+                            // queryValue = queryValue.replace(/[,]/g, '\,');
                         }
                         const query = queryValue.trim() && `${condition}${lucenePath}"*${queryValue.trim()}*"` || '';
                         eventEmitter.emit({
@@ -174,6 +177,29 @@ export const typeCommandOptions: CommandTypesDict = {
                             condition: condition,
                             queryableProperty: queryableProperty,
                             command: 'Starts With',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
+                    }
+                }
+            ]
+        },
+        'Ends With': {
+            commandInputs: [
+                {
+                    type: 'text',
+                    constructQuery: (
+                        queryValue: string,
+                        condition: string,
+                        queryableProperty: string,
+                        lucenePath: string,
+                        eventEmitter: EventEmitter<QueryStatement>
+                    ) => {
+                        const query = queryValue.trim() && `${condition}${lucenePath}"*${queryValue.trim()}$"` || '';
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'Ends With',
                             commandInputValues: [queryValue],
                             query: query
                         });

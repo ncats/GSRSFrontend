@@ -281,7 +281,7 @@ export class SubstanceService extends BaseHttpService {
     facets?: FacetParam,
     order?: string,
     skip: number = 0,
-    sync: boolean = false
+    sync: boolean = true
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
       let params = new FacetHttpParams({encoder: new CustomEncoder()});
@@ -291,9 +291,9 @@ export class SubstanceService extends BaseHttpService {
       structureFacetsKey = this.utilsService.hashCode(searchTerm, cutoff, type, seqType);
       if ((searchKey && searchKey.length > 30) || (!sync && this.searchKeys[structureFacetsKey])) {
         if (!sync && this.searchKeys[structureFacetsKey]) {
-          url += `status(${this.searchKeys[structureFacetsKey]})/results`;
+          url += `status(${this.searchKeys[structureFacetsKey]})`;
         } else {
-          url += `status(${searchKey})/results`;
+          url += `status(${searchKey})`;
         }
         params = params.appendFacetParams(facets, this.showDeprecated);
         params = params.appendDictionary({
@@ -627,6 +627,22 @@ export class SubstanceService extends BaseHttpService {
       return link;
     }
   }
+
+  getPrimaryCode(reference: SubstanceRelated , codeSystem: string): Observable<string> {
+    //TODO: may need to url-encode some codeSystems for spaces/hyphens
+    const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:` + codeSystem + `)(type:PRIMARY)($0)/code`;
+    const refPname = `${this.apiBaseUrl}substances(${ reference.refPname  })/codes(codeSystem:` + codeSystem + `)(type:PRIMARY)($0)/code`;
+        return this.http.get<any>(refuuid).pipe(
+          catchError(error => this.http.get(refPname))
+        );
+  }
+  getPrimaryConfigCode(reference: SubstanceRelated): Observable<string> {
+    let cs: string;
+    //TODO: need to establish the config name, and how to deal with default values
+    cs = this.configService.configData && this.configService.configData.primaryCode ? this.configService.configData.primaryCode : 'BDNUM';
+    return this.getPrimaryCode(reference, cs);
+  }
+
 
   getBDNUM(reference: SubstanceRelated ): Observable<string> {
     const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;

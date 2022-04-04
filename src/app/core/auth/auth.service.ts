@@ -1,6 +1,6 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
-import { Auth, Role } from './auth.model';
+import { Auth, Role, UserGroup } from './auth.model';
 import { Observable, Subject } from 'rxjs';
 import { map, take, catchError } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -150,6 +150,26 @@ export class AuthService {
           return false;
         }
       }
+    } else {
+      return false;
+    }
+    return true;
+  }
+
+  isInGroups(...group: Array<any|string>): boolean {
+    const groupList = [...group];
+
+    if (this._auth && this._auth.groups && groupList && groupList.length) {
+      for (const r of groupList) {
+        let role = r.charAt(0).toLowerCase() + r.slice(1);
+        role = role.charAt(0).toUpperCase() + role.slice(1);
+        this._auth.groups.forEach(group => {
+          if (group.name === role) {
+            return true;
+          }
+        });
+      }
+          return false;
     } else {
       return false;
     }

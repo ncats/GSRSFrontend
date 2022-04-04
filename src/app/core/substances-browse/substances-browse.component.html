@@ -102,7 +102,10 @@
               <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
               &nbsp;
               <span class="no-break">
-                <span>{{this.smiles}}</span>
+                <input readonly [value] = "this.smiles" class = "smiles-input" />
+                <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
+                    <mat-icon svgIcon="paste" matTooltip = "Copy Smiles to clipboard"></mat-icon>
+                  </button>
                 <span *ngIf="searchType && searchType == 'similarity'">
                   &nbsp;&ge; {{searchCutoff}}
                 </span>
@@ -376,6 +379,9 @@
                         [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
                     </div>
                   </div>
+                  <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
+                    <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
+                  </div>
                   <div class="tile-name">
                     <a class="substance-name table-view-name" [innerHTML] = "substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
                     </a>
@@ -498,7 +504,10 @@
             <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
             &nbsp;
             <span class="no-break">
-              <span>{{this.smiles}}</span>
+                <input readonly [value] = "this.smiles" class = "smiles-input" />
+                <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
+                    <mat-icon svgIcon="paste" matTooltip = "Copy Smiles to clipboard"></mat-icon>
+                  </button>
               <span *ngIf="searchType && searchType == 'similarity'">
                 &nbsp;&ge; {{searchCutoff}}
               </span>

@@ -453,4 +453,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
        subscription.unsubscribe();
      });
    }
+
+   getAppTypeNumberUrl(appType: string, appNumber: string): string {
+    let appUrl = 'browse-applications?search=root_appType:\"^' + appType + '$\" AND root_appNumber:\"^' + appNumber + '$\"';
+    return appUrl;
+  }
 }

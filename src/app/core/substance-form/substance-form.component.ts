@@ -33,6 +33,7 @@ import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-conce
 import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { StructuralUnit } from '@gsrs-core/substance';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-form',
@@ -89,6 +90,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     forceChange = false;
     sameSubstance = false;
     UNII: string;
+    approvalType = 'lastEdited';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -100,6 +102,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private gaService: GoogleAnalyticsService,
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
+    private configService: ConfigService,
     private dialog: MatDialog,
     private authService: AuthService,
     private titleService: Title
@@ -127,21 +130,24 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
       if (response) {
+     //   this.overlayContainer.style.zIndex = null;
         this.loadingService.setLoading(true);
-        this.overlayContainer.style.zIndex = null;
 
         // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
         // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
 
-       /* const read = JSON.parse(response);
+       const read = JSON.parse(response);
         if (this.id && read.uuid && this.id === read.uuid) {
           this.substanceFormService.importSubstance(read, 'update');
           this.submissionMessage = null;
           this.validationMessages = [];
           this.showSubmissionMessages = false;
-          this.loadingService.setLoading(false);
-          this.isLoading = false;
-        } else {
+          setTimeout(() => {
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
+            this.overlayContainer.style.zIndex = null;
+          }, 1000);
+      /*   } else {
         if ( read.substanceClass === this.substanceClass) {
           this.imported = true;
           this.substanceFormService.importSubstance(read);
@@ -149,16 +155,17 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           this.validationMessages = [];
           this.showSubmissionMessages = false;
           this.loadingService.setLoading(false);
-          this.isLoading = false;
-        } else {*/
+          this.isLoading = false;*/
+        } else {
           setTimeout(() => {
+            this.overlayContainer.style.zIndex = null;
             this.router.onSameUrlNavigation = 'reload';
             this.loadingService.setLoading(false);
-            this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+           this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
 
           }, 1000);
         }
-       // }
+       }
      // }
     });
 
@@ -171,6 +178,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnInit() {
     this.loadingService.setLoading(true);
+    if (this.configService.configData && this.configService.configData.approvalType) {
+      this.approvalType = this.configService.configData.approvalType;
+    }
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -399,21 +409,38 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (action && action === 'import') {
       return false;
     }
-    if (this.definition && this.definition.lastEditedBy && this.user) {
-      const lastEdit = this.definition.lastEditedBy;
-      if (!lastEdit) {
+    if(this.approvalType === 'createdBy') {
+        if (this.definition && this.definition.createdBy && this.user) {
+          const creator = this.definition.createdBy;
+          if (!creator) {
+            return false;
+          }
+          if (this.definition.status === 'approved') {
+            return false;
+          }
+          if (creator === this.user) {
+            return false;
+          }
+          return true;
+    
+        }
         return false;
-      }
-      if (this.definition.status === 'approved') {
-        return false;
-      }
-      if (lastEdit === this.user) {
-        return false;
-      }
-      return true;
+      } else {
+        if (this.definition && this.definition.lastEditedBy && this.user) {
+           const lastEdit = this.definition.lastEditedBy;
+          if (!lastEdit) {
+            return false;
+          }
+          if (this.definition.status === 'approved') {
+            return false;
 
+          }
+          if (lastEdit === this.user) {
+            return false;
+          }
+      }
     }
-    return false;
+    
   }
 
   showJSON(): void {
@@ -776,9 +803,23 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
     defiant.json.search(old, '//*[uuid]');
-    _.remove(old.codes, {
-      codeSystem: 'BDNUM'
-    });
+    if (this.configService.configData && this.configService.configData.approvalCodeName) {
+      const remove = this.configService.configData.approvalCodeName;
+      _.remove(old.codes, {
+        codeSystem: remove
+      });
+    }
+    if (this.configService.configData && this.configService.configData.primaryCode) {
+      const remove = this.configService.configData.primaryCode;
+      _.remove(old.codes, {
+        codeSystem: remove
+      });
+    } else {
+      _.remove(old.codes, {
+        codeSystem: 'BDNUM'
+      });
+    }
+    
     const createHolders = defiant.json.search(old, '//*[created]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
