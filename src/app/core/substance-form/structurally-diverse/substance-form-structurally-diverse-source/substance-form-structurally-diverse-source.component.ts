@@ -117,7 +117,6 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
 
   updateType(event: any): void {
     this.confirm = false;
-    console.log(event.value);
     if (event.value && event.value !== '' && event.value !== null) {
       this.part = event.value;
     }

@@ -9,3 +9,34 @@
   padding-right:10px;
   max-width:250px;
 }
+
+.thumb-row {
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width:100%;
+}
+
+
+.thumb-col{
+  max-width:400px;
+  min-width: 25%;
+  padding-bottom: 25px;
+  }
+
+
+  .image-icon {
+      width: 150px;
+      height: auto;
+    }
+    
+    .substance-icon-container{
+      text-align:center;
+      padding-left:10px;
+      padding-right:10px;
+      max-width:250px;
+    }
+    
+    .wrap{
+      flex-wrap: wrap;
+    }

@@ -76,7 +76,7 @@
     </div>
     <div class="name-value">
       <div class="name">Record Status</div>
-      <div class="value blue-font">{{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}
+      <div class="value blue-font">{{substance.status === 'approved' ? primaryCode : substance.status}}
         <span class = "deprecated" *ngIf ="substance.deprecated">RECORD IS DEPRECATED</span>
       </div>
     </div>
