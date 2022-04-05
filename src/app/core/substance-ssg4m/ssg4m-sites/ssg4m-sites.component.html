@@ -10,7 +10,7 @@
       </div>
       <div class="form-row" *ngIf="showAdvancedSettings">
         <div class="delete-container">
-          <button mat-icon-button matTooltip="Delete Site" (click)="deleteSite()">
+          <button mat-icon-button matTooltip="Delete Site" (click)="confirmDeleteSite()">
             <mat-icon svgIcon="delete_forever"></mat-icon>
           </button>
         </div>
@@ -31,22 +31,30 @@
     <hr *ngIf="showAdvancedSettings">
     <div>
       <span matBadge="{{site.stages.length}}" matBadgeOverlap="false">
-        <span class="fontsize18px"><b>Stage Information</b></span>
+        <span class="fontsize18px"><b>{{configTitleStage}} Information</b></span>
       </span>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <button mat-raised-button color="primary" (click)="addStage(processIndex, siteIndex)" matTooltip="Add New Stage">
-        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Stage
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
       </button>
       <br><br>
 
-      <div class="margintop10px marginbottom20px" *ngFor="let stage of site.stages; let stageIndex = index">
+      <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
         <fieldset class="border">
-          <legend class="border">Stage &nbsp;<b><span class="colorgreen font17px">{{stageIndex + 1}}</span></b>
+          <legend class="border">Process {{(processIndex+1)}}&nbsp;&nbsp;&nbsp;&nbsp;{{configTitleStage}} &nbsp;<b><span
+                class="colorgreen font17px">{{stageIndex + 1}}</span></b>
           </legend>
           <app-ssg4m-stages-form [stage]="stage" [processIndex]="processIndex" [siteIndex]="siteIndex"
-            [stageIndex]="stageIndex">
+            [stageIndex]="stageIndex" [showAdvancedSettings]="showAdvancedSettings">
           </app-ssg4m-stages-form>
         </fieldset>
+      </div>
+      <!-- Another Add Button-->
+      <div class="divflex" *ngIf="site.stages && site.stages.length > 0">
+        <span class="middle-fill"></span>
+        <button mat-button (click)="addStage(processIndex, siteIndex)">
+          Add Another {{configTitleStage}} <mat-icon svgIcon="add_circle_outline"></mat-icon>
+        </button>
       </div>
     </div>
     <!-- STAGES LIST END -->

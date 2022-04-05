@@ -20,6 +20,7 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   substanceClass: string;
   parentSubstance: SubstanceRelated;
   relatedSubstanceUuid: string;
+  configSsg4Form: any;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -33,9 +34,14 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   }
 
   ngOnInit() {
-   // const configSsg4ParentSub = `${(this.configService.configData && this.configService.configData.g4ssForm
-    //  .titles.parentSubstance) || '' }`;
-    this.menuLabelUpdate.emit('Parent Substance');
+    // Get Config variables for SSG4
+    this.configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
+    let configTitle = 'Parent Substance';
+    if (this.configSsg4Form) {
+      configTitle = this.configSsg4Form.titles.parentSubstance || null;
+    }
+
+    this.menuLabelUpdate.emit(configTitle);
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       this.substanceClass = substance.substanceClass;

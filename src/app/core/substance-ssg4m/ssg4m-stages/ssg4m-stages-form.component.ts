@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { Subscription } from 'rxjs';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { ConfigService } from '@gsrs-core/config/config.service';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../../substance-form/base-classes/substance-form-base-filtered-list';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
 /*
@@ -18,6 +20,7 @@ import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mStagesService } from './substance-form-ssg4m-stages.service';
 import { SpecifiedSubstanceG4mSite, SpecifiedSubstanceG4mStage } from '@gsrs-core/substance/substance.model';
+import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-ssg4m-stages-form',
@@ -30,7 +33,11 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
   privateProcessIndex: number;
   privateSiteIndex: number;
   privateStageIndex: number;
+  privateShowAdvancedSettings: boolean;
   substance: SubstanceDetail;
+  configSsg4Form: any;
+  configTitleStage: string;
+  configTitleProcessingMaterials: string;
   subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -38,7 +45,10 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
-    private scrollToService: ScrollToService) { }
+    private scrollToService: ScrollToService,
+    public configService: ConfigService,
+    private dialog: MatDialog
+  ) { }
 
   @Input()
   set stage(stage: SpecifiedSubstanceG4mStage) {
@@ -78,12 +88,36 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     return this.privateStageIndex;
   }
 
+  @Input()
+  set showAdvancedSettings(showAdvancedSettings: boolean) {
+    this.privateShowAdvancedSettings = showAdvancedSettings;
+  }
+
+  get showAdvancedSettings(): boolean {
+    return this.privateShowAdvancedSettings;
+  }
+
   ngOnInit(): void {
     // this.substance = this.substanceFormSsg4mStagesService.substance;
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
     });
     this.subscriptions.push(subscription);
+
+    // Get Config variables for SSG4
+    this.configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
+    this.configTitleStage = 'Stage';
+    this.configTitleProcessingMaterials = "Processing Materials";
+    if (this.configSsg4Form) {
+      this.configTitleStage = this.configSsg4Form.titles.stage || null;
+      if (!this.configTitleStage) {
+        this.configTitleStage = 'Stage';
+      }
+      this.configTitleProcessingMaterials = this.configSsg4Form.titles.processingMaterials || null;
+      if (!this.configTitleProcessingMaterials) {
+        this.configTitleProcessingMaterials = 'Processing Materials';
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -91,10 +125,6 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
-  }
-
-  deleteStage(): void {
-    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages.splice(this.stageIndex, 1);
   }
 
   addStartingMaterial(processIndex: number, siteIndex: number, stageIndex: number) {
@@ -116,6 +146,22 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-process-site-stage-resultMat-0`, 'center');
     });
+  }
+
+  confirmDeleteStage() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Stage ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteStage();
+      }
+    });
+  }
+
+  deleteStage(): void {
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages.splice(this.stageIndex, 1);
   }
 
   /*

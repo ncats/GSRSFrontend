@@ -42,19 +42,19 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
 
   addStartingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
     const newStartMat: SpecifiedSubstanceG4mStartingMaterial = {};
-    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials.unshift(newStartMat);
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials.push(newStartMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials);
   }
 
   addProcessingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
     const newProcessMat: SpecifiedSubstanceG4mProcessingMaterial = {};
-    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials.unshift(newProcessMat);
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials.push(newProcessMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials);
   }
 
   addResultingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
     const newResultingMat: SpecifiedSubstanceG4mResultingMaterial = {};
-    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials.unshift(newResultingMat);
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials.push(newResultingMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials);
   }
 

@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SpecifiedSubstanceG4mResultingMaterial } from '@gsrs-core/substance/substance.model';
+import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-ssg4m-resulting-materials-form',
@@ -22,7 +24,9 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
   subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService) { }
+    private substanceFormService: SubstanceFormService,
+    private dialog: MatDialog
+    ) { }
 
   @Input()
   set resultingMaterial(resultingMaterial: SpecifiedSubstanceG4mResultingMaterial) {
@@ -98,7 +102,20 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  confirmDeleteResultingMaterial() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Resulting Material ' + (this.resultingMaterialIndex + 1) + ' for Stage ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteResultingMaterial();
+      }
+    });
+  }
+
   deleteResultingMaterial(): void {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].resultingMaterials.splice(this.resultingMaterialIndex, 1);
   }
+
 }
