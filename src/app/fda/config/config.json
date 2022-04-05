@@ -11,7 +11,7 @@
   "advancedSearchFacetDisplay": false,
   "approvalCodeName":"UNIT",
   "primaryCode": "BDNUM",
-  "typeaheadFields": ["Display_Name", "CAS", "Name", "Approval_ID" ],
+  "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID" ],
   "loadedComponents": {
     "applications": true,
     "products": true,
@@ -869,6 +869,7 @@
   ],
   "substanceSelectorProperties": [
     "root_names_name",
+    "root_names_stdName",
     "root_approvalID",
     "root_codes_BDNUM",
     "root_codes_CAS",
