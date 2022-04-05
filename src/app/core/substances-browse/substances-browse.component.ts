@@ -812,7 +812,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
-      height: '90%',
       width: '650px',
       panelClass: 'structure-image-panel',
       data: data
