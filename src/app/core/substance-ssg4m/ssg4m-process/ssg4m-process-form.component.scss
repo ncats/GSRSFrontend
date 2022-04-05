@@ -21,8 +21,20 @@
 
 .form-row {
   display: flex;
+  width: 100%;
+
+  .col-4-1 {
+    width: calc((100% - 20px * 3) / 4); //four column
+    margin-right: 20px;
+  }
+}
+
+/*
+.form-row {
+  display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  width: 100%;
 
   .delete-container {
       padding: 0 10px 8px 0;
@@ -31,9 +43,10 @@
   .process {
       flex-grow: 1;
       padding-right: 15px;
+      border:1px solid green;
   }
-
 }
+*/
 
 .references-container {
   width: 100%;
@@ -46,6 +59,10 @@ hr {
   overflow: visible;
   text-align: center;
   height: 5px;
+}
+
+.divflex {
+  display: flex;
 }
 
 .bordergray {

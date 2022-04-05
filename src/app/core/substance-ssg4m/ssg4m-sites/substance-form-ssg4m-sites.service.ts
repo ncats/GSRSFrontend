@@ -45,6 +45,7 @@ export class SubstanceFormSsg4mSitesService extends SubstanceFormServiceBase<Arr
     const newSite: SpecifiedSubstanceG4mSite = {
      // references: [],
      // access: [],
+      siteName: '',
       stages: []
     };
     this.substance.specifiedSubstanceG4m.process[processIndex].sites.push(newSite);

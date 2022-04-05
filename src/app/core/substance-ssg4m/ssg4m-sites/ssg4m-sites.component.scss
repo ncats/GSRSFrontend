@@ -22,6 +22,17 @@
 
 .form-row {
   display: flex;
+  width: 100%;
+
+  .col-4-1 {
+    width: calc((100% - 20px * 3) / 4); //four column
+    margin-right: 20px;
+  }
+}
+
+/*
+.form-row {
+  display: flex;
   justify-content: space-between;
   align-items: flex-end;
 
@@ -33,11 +44,15 @@
       flex-grow: 1;
       padding-right: 15px;
   }
-
 }
+*/
 
 .references-container {
   width: 100%;
+}
+
+.divflex {
+  display: flex;
 }
 
 hr {
@@ -61,8 +76,8 @@ hr {
   margin-top: 10px;
 }
 
-.marginbottom20px {
-  margin-bottom: 10px;
+.marginbottom30px {
+  margin-bottom: 30px;
 }
 
 .fontsize18px {
@@ -70,7 +85,7 @@ hr {
 }
 
 fieldset.border {
-  border: solid 2px rgb(27, 15, 184) !important;
+  border: solid 2px rgb(179, 101, 12) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 8px;
@@ -85,8 +100,10 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: #174793;
+  color: #b36d13;
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
+  text-align: center;
+  margin-left: 40%;
 }
