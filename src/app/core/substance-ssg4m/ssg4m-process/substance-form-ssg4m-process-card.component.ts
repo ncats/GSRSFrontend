@@ -5,6 +5,7 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../../substance-form/base-classes/substance-form-base-filtered-list';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
 import { SubstanceFormSsg4mProcessService } from './substance-form-ssg4m-process.service';
+import { SubstanceFormSsg4mSitesService } from '../ssg4m-sites/substance-form-ssg4m-sites.service';
 import { SpecifiedSubstanceG4mProcess } from '@gsrs-core/substance/substance.model';
 
 @Component({
@@ -22,6 +23,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
 
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
+    private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
   ) {

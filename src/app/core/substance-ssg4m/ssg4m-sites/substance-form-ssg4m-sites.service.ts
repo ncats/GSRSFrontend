@@ -41,14 +41,14 @@ export class SubstanceFormSsg4mSitesService extends SubstanceFormServiceBase<Arr
     return this.propertyEmitter.asObservable();
   }
 
-  addSite(): void {
+  addSite(processIndex): void {
     const newSite: SpecifiedSubstanceG4mSite = {
      // references: [],
      // access: [],
       stages: []
     };
-  //  this.substance.specifiedSubstanceG4m.process[processIndex].sites.unshift(newSite);
-    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites.push(newSite);
+    this.propertyEmitter.next( this.substance.specifiedSubstanceG4m.process[processIndex].sites);
   }
 
   deleteSite(site: SpecifiedSubstanceG4mSite): void {
@@ -69,9 +69,8 @@ export class SubstanceFormSsg4mSitesService extends SubstanceFormServiceBase<Arr
      processingMaterials: [],
      resultingMaterials: []
     };
-    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.unshift(newStage);
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.push(newStage);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages);
-    //  this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites);
   }
 
 }

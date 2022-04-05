@@ -14,6 +14,7 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/substance.model';
 import { SubstanceFormSsg4mProcessService } from './substance-form-ssg4m-process.service';
+import { SubstanceFormSsg4mSitesService } from '../ssg4m-sites/substance-form-ssg4m-sites.service';
 
 @Component({
   selector: 'app-ssg4m-process-form',
@@ -32,6 +33,7 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
+    private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService,
@@ -96,7 +98,7 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
   }
 
   addSite() {
-    this.substanceFormSsg4mProcessService.addSite(this.processIndex);
+    this.substanceFormSsg4mSitesService.addSite(this.processIndex);
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-process-site-0`, 'center');
     });
