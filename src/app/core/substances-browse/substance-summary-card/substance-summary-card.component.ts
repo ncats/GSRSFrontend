@@ -225,7 +225,6 @@ export class SubstanceSummaryCardComponent implements OnInit {
   openMolModal() {
 
     const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
-
       minWidth: '40%',
       maxWidth: '90%',
       height: '90%',
