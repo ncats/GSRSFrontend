@@ -62,7 +62,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
         return this.utilsService.getStructureSearchSuggestions(searchValue.toUpperCase());
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
-      this.substanceSuggestionsGroup = response;
+      this.substanceSuggestionsGroup = response; 
       let showTypes = ['Standardized_Name', 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
       if(this.configService && this.configService.configData && this.configService.configData.typeaheadFields) {
          showTypes = this.configService.configData.typeaheadFields;
@@ -186,7 +186,6 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   }
 
   processSubstanceSearch() {
-    console.log("AAAA "+ "processSubstanceSearch");
     let searchTerm = this.searchControl.value;
     const eventCategory = this.eventCategory || 'substanceTextSearch';
     const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchTerm || 'search term option';

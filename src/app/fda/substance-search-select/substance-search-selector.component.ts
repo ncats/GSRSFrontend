@@ -30,13 +30,10 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // __alex__ try adding this
     if (this.configService.configData.substanceSelectorProperties != null) {
       this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
-      // __alex__  
-      console.log("XXXX"+this.substanceSelectorProperties);
     } else { 
-      console.log("The config value for substanceSelectorProperties is null");
+      console.log("The config value for substanceSelectorProperties is null.");
     }
   }
 
@@ -64,20 +61,16 @@ export class SubstanceSearchSelectorComponent implements OnInit {
 
     this.searchValue = searchValue;
     const q = searchValue.replace('\"', '');
-    // __alex__ try this instead of below ??? 
-    // ??? is it a problem that the config value
-    // ??? has CAS and EC EINECS and the commented
-    // out code below does not?  
+    // Changed to configuration approach.
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
-/*
+    /*
     const searchStr =
       `root_names_name:\"^${q}$\" OR ` +
       `root_names_stdName:\"^${q}$\" OR ` +
       `root_approvalID:\"^${q}$\" OR ` +
       `root_codes_BDNUM:\"^${q}$\"`
       ;
-*/      
-console.log("ZZZZ" + "Just before quick summaries");
+    */      
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       this.loadingStructure = true;
       if (response.content && response.content.length) {
