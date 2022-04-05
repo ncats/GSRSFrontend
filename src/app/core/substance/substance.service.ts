@@ -281,7 +281,7 @@ export class SubstanceService extends BaseHttpService {
     facets?: FacetParam,
     order?: string,
     skip: number = 0,
-    sync: boolean = false
+    sync: boolean = true
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
       let params = new FacetHttpParams({encoder: new CustomEncoder()});
@@ -291,9 +291,9 @@ export class SubstanceService extends BaseHttpService {
       structureFacetsKey = this.utilsService.hashCode(searchTerm, cutoff, type, seqType);
       if ((searchKey && searchKey.length > 30) || (!sync && this.searchKeys[structureFacetsKey])) {
         if (!sync && this.searchKeys[structureFacetsKey]) {
-          url += `status(${this.searchKeys[structureFacetsKey]})/results`;
+          url += `status(${this.searchKeys[structureFacetsKey]})`;
         } else {
-          url += `status(${searchKey})/results`;
+          url += `status(${searchKey})`;
         }
         params = params.appendFacetParams(facets, this.showDeprecated);
         params = params.appendDictionary({

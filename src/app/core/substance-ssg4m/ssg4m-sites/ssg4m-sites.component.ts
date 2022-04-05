@@ -1,8 +1,10 @@
 import { Component, OnInit, AfterViewInit, Input, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { Subscription } from 'rxjs';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { ConfigService } from '@gsrs-core/config/config.service';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../../substance-form/base-classes/substance-form-base-filtered-list';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
 /*
@@ -18,6 +20,7 @@ import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mSitesService } from './substance-form-ssg4m-sites.service';
 import { SpecifiedSubstanceG4mSite } from '@gsrs-core/substance/substance.model';
+import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-ssg4m-sites',
@@ -31,6 +34,8 @@ export class Ssg4mSitesComponent implements OnInit {
   privateSiteIndex: number;
   substance: SubstanceDetail;
   privateShowAdvancedSettings: boolean;
+  configSsg4Form: any;
+  configTitleStage: string;
   subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -38,7 +43,10 @@ export class Ssg4mSitesComponent implements OnInit {
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
-    private scrollToService: ScrollToService) { }
+    private scrollToService: ScrollToService,
+    public configService: ConfigService,
+    private dialog: MatDialog
+  ) { }
 
   @Input()
   set site(site: SpecifiedSubstanceG4mSite) {
@@ -84,6 +92,15 @@ export class Ssg4mSitesComponent implements OnInit {
       this.substance = substance;
     });
     this.subscriptions.push(subscription);
+    // Get Config variables for SSG4
+    this.configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
+    this.configTitleStage = 'Stage';
+    if (this.configSsg4Form) {
+      this.configTitleStage = this.configSsg4Form.titles.stage || null;
+      if (!this.configTitleStage) {
+        this.configTitleStage = 'Stage';
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -93,14 +110,26 @@ export class Ssg4mSitesComponent implements OnInit {
     });
   }
 
-  deleteSite(): void {
-    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites.splice(this.siteIndex, 1);
-  }
-
   addStage(processIndex: number, siteIndex: number) {
     this.substanceFormSsg4mSitesService.addStage(processIndex, siteIndex);
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-process-site-stage-0`, 'center');
     });
+  }
+
+  confirmDeleteSite() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteSite();
+      }
+    });
+  }
+
+  deleteSite(): void {
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites.splice(this.siteIndex, 1);
   }
 }

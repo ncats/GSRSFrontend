@@ -8,9 +8,11 @@
 
   <div class="form-row">
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Stage" (click)="deleteStartingMaterial()">
+      <button mat-icon-button matTooltip="Delete Starting Material {{(startingMaterialIndex+1)}}" (click)="confirmDeleteStartingMaterial()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
+      <br>
+      <div class="padleft15px"><b>{{(startingMaterialIndex+1)}}</b></div>
     </div>
 
     <!--

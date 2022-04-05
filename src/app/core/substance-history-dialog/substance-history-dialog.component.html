@@ -30,7 +30,7 @@
         <div *ngIf="validationMessages">
                 <span *ngIf = " validationMessages.length > 0"   >
                     <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
-                            {{message.message}}
+                            {{message.message.message? message.message.message : message.message}}
                     </div>
                 </span>
         </div>

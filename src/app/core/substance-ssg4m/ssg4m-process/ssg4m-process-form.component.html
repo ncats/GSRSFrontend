@@ -7,21 +7,28 @@
   </div>
   <div class="form-row">
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Process" (click)="deleteProcess()">
+      <button mat-icon-button matTooltip="Delete Process" (click)="confirmDeleteProcess()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
 
-    <div class="process">
-      <mat-form-field class="col-5-1">
-        <input matInput placeholder="Process Name" [(ngModel)]="process.processName" name="process.processName" />
-      </mat-form-field>
-      <!--
-      <button mat-button (click)="addSite()">
-        Add Sites <mat-icon svgIcon="add_circle_outline"></mat-icon>
-      </button>
-      -->
-    </div>
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Process Name" [(ngModel)]="process.processName" name="process.processName" />
+    </mat-form-field>
+
+    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
+      <input matInput placeholder="Process Role" [(ngModel)]="process.processRole" name="process.processRole" />
+    </mat-form-field>
+
+    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
+      <input matInput placeholder="Process Type" [(ngModel)]="process.processType" name="process.processType" />
+    </mat-form-field>
+
+    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
+      <input matInput placeholder="Process Description" [(ngModel)]="process.processDescription"
+        name="process.processDescription" />
+    </mat-form-field>
+
   </div> <!-- form row -->
 
   <!-- SITES LIST BEGIN -->
@@ -31,34 +38,27 @@
       <span class="fontsize18px"><b>Site Information</b></span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button mat-raised-button color="primary" (click)="addSite()" matTooltip="Add New Manufacture">
+    <button mat-raised-button color="primary" (click)="addSite()" matTooltip="Add New Site">
       <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Sites
     </button>
     <br><br>
   </div>
-  <div class="marginbottom10px" *ngFor="let site of process.sites; let siteIndex = index">
-    <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
-      [showAdvancedSettings]="showAdvancedSettings">
-    </app-ssg4m-sites>
+
+  <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
+    <fieldset class="border">
+      <legend class="border">Site &nbsp;<b><span class="colorgreen font17px">{{siteIndex + 1}}</span></b>
+      </legend>
+      <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
+        [showAdvancedSettings]="showAdvancedSettings">
+      </app-ssg4m-sites>
+    </fieldset>
+  </div> <!-- loop -->
+  <!-- Another Add Button-->
+  <div class="divflex" *ngIf="(process.sites && process.sites.length > 0) && showAdvancedSettings">
+    <span class="middle-fill"></span>
+    <button mat-button (click)="addSite()">
+      Add Another Site <mat-icon svgIcon="add_circle_outline"></mat-icon>
+    </button>
   </div>
   <!-- SITES LIST END -->
-
-  <!--
-                  [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex"
-            (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
-            (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)"
-    -->
-
-  <!-- Sites List -->
-  <!--
-    <app-substance-form-ssg4m-sites-card></app-substance-form-ssg4m-sites-card>
-    -->
-
-  <!--
-  <div class="form-row" *ngIf="!process.$$deletedCode">
-    <div class="references-container">
-      <app-domain-references [referencesUuids]="process.references" #references></app-domain-references>
-    </div>
-  </div>
-  -->
 </div>

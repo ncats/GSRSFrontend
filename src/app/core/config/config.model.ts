@@ -40,6 +40,8 @@ export interface Config {
     molWeightRounding?: number;
     usefulLinks?: Array<UsefulLink>;
     approvalCodeName?: string;
+    approvalType?: string;
+    ssg4Form?: string;
 }
 
 export interface LoadedComponents {

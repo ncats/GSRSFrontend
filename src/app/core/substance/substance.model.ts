@@ -483,18 +483,22 @@ export interface SpecifiedSubstanceG4m extends SubstanceBase {
 export interface SpecifiedSubstanceG4mProcess extends SubstanceBase {
   // references?: Array<string>;
   processName?: string;
+  processRole?: string;
+  processType?: string;
+  processDescription?: string;
   sites?: Array<SpecifiedSubstanceG4mSite>;
 }
 
 export interface SpecifiedSubstanceG4mSite extends SubstanceBase {
-  // references?: Array<string>;
   siteName?: string;
   stages?: Array<SpecifiedSubstanceG4mStage>;
 }
 
 export interface SpecifiedSubstanceG4mStage extends SubstanceBase {
-  // references?: Array<string>;
   stageNumber?: string;
+  stageType?: string;
+  stageRole?: string;
+  equipment?: string;
   startingMaterials?: Array<SpecifiedSubstanceG4mStartingMaterial>;
   processingMaterials?: Array<SpecifiedSubstanceG4mProcessingMaterial>;
   resultingMaterials?: Array<SpecifiedSubstanceG4mResultingMaterial>;

@@ -269,6 +269,9 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     }
     this.selectedLucenePath = this._queryableDictionary[queryableProperty].lucenePath;
     if (this.selectedLucenePath) {
+      // In "Search in Field", replace space with '\ ' in the lucene path
+      this.selectedLucenePath = this.selectedLucenePath.replace(' ', '\\ ');
+      if (this.selectedLucenePath)
       this.selectedLucenePath = this.selectedLucenePath + ':';
     }
     this.selectedQueryablePropertyType = this._queryableDictionary[queryableProperty].type;
@@ -282,7 +285,7 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
         //  return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values'
         // && (this.commandOptionsShowAll === false && (option === 'Contains' || option === 'Exact Match' || option === 'Starts With')));
         if (this.isShowAllCommandOptions === false) {
-          if (option === 'Contains' || option === 'Exact Match' || option === 'Starts With') {
+          if (option === 'Contains' || option === 'Exact Match' || option === 'Starts With' || option === 'Ends With') {
             result = true;
           } else if (this._queryableDictionary[queryableProperty].cvDomain && option === 'the following exact default values') {
             result = true;

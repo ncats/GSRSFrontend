@@ -363,7 +363,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.facetViewCategory.push(category);
     });
     this.facetViewCategory.push('All');
-    console.log('loaded');
   }
 
   // for facets
@@ -894,6 +893,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         this.downloadFile(JSON.stringify(response), id + '.json');
     });
 
+  }
+
+  copySmiles(val: string){
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
 }

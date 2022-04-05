@@ -7,9 +7,11 @@
   </div>
   <div class="form-row">
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Processing Material" (click)="deleteProcessingMaterial()">
+      <button mat-icon-button matTooltip="Delete Processing Material {{(processingMaterialIndex+1)}}" (click)="confirmDeleteProcessingMaterial()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
+      <br>
+      <div class="padleft15px"><b>{{(processingMaterialIndex+1)}}</b></div>
     </div>
 
     <div class="col related-substance">
@@ -27,7 +29,6 @@
     <app-cv-input class="col" domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role"
       [model]="processingMaterial.substanceRole" (valueChange)="updateSubstanceRole($event)"></app-cv-input>
   </div> <!-- form row -->
-
 
   <div class="form-row">
     <div class="col marginleft50px">

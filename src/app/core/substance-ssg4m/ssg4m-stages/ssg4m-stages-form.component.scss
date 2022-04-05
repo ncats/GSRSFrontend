@@ -21,6 +21,16 @@
 
 .form-row {
   display: flex;
+  width: 100%;
+
+  .col-4-1 {
+    width: calc((100% - 20px * 3) / 4); //four column
+    margin-right: 20px;
+  }
+}
+/*
+.form-row {
+  display: flex;
   justify-content: space-between;
   align-items: flex-end;
 
@@ -32,8 +42,8 @@
       flex-grow: 1;
       padding-right: 15px;
   }
-
 }
+*/
 
 .references-container {
   width: 100%;
@@ -48,6 +58,10 @@
 .materialtitle {
   font-size: 18px;
   padding-left: 10px;
+}
+
+.divflex {
+  display: flex;
 }
 
 .bordergray {
@@ -68,4 +82,8 @@
 
 .margintop10px {
   margin-top: 10px;
+}
+
+.marginbottom20px {
+  margin-top: 20px;
 }

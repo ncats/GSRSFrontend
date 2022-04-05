@@ -129,7 +129,6 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   updateType(event) {
-    console.log(event);
     this.nameType = event.value;
     if(event.value === 'name') {
       this.displayedColumns = ['name', 'type', 'language', 'details', 'references'];

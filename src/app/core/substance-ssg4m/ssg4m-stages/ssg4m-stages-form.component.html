@@ -1,4 +1,4 @@
-<div class="form-container borderorange margintop10px">
+<div class="form-container">
   <div *ngIf="stage.$$deletedCode" class="notification-backdrop">
     Deleted&nbsp;
     <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
@@ -7,21 +7,26 @@
   </div>
   <div class="form-row">
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Stage" (click)="deleteStage()">
+      <button mat-icon-button matTooltip="Delete Stage" (click)="confirmDeleteStage()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="{{configTitleStage}} Number" [(ngModel)]="stage.stageNumber"
+        name="stage.stageNumber" />
+    </mat-form-field>
 
-    <div class="row">
-      <mat-form-field class="">
-        <input matInput placeholder="Stage Number" [(ngModel)]="stage.stageNumber" name="stage.stageNumber" />
-      </mat-form-field>
-      <!--
-        <button mat-button (click)="addSite()">
-          Add Sites <mat-icon svgIcon="add_circle_outline"></mat-icon>
-        </button>
-        -->
-    </div>
+    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
+      <input matInput placeholder="{{configTitleStage}} Type" [(ngModel)]="stage.stageType" name="stage.stageType" />
+    </mat-form-field>
+
+    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
+      <input matInput placeholder="{{configTitleStage}} Role" [(ngModel)]="stage.stageRole" name="stage.stageRole" />
+    </mat-form-field>
+
+    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
+      <input matInput placeholder="Equipment" [(ngModel)]="stage.equipment" name="stage.equipment" />
+    </mat-form-field>
   </div> <!-- form row -->
 
   <!-- STARTING MATERIALS LIST BEGIN -->
@@ -49,7 +54,7 @@
       </app-ssg4m-starting-materials-form>
     </div>
     <!-- Another Add Button-->
-    <div *ngIf="stage.startingMaterials && stage.startingMaterials.length > 0" style="display:flex;">
+    <div class="divflex" *ngIf="stage.startingMaterials && stage.startingMaterials.length > 0">
       <span class="middle-fill"></span>
       <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
         Add Another Starting Material <mat-icon svgIcon="add_circle_outline"></mat-icon>
@@ -62,12 +67,12 @@
   <!-- PROCESSING MATERIALS LIST BEGIN -->
   <div class="materialborder">
     <span matBadge="{{stage.processingMaterials.length}}" matBadgeOverlap="false">
-      <span class="materialtitle"><b>Processing Materials</b></span>
+      <span class="materialtitle"><b>{{configTitleProcessingMaterials}}</b></span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-raised-button color="primary" (click)="addProcessingMaterial(processIndex, siteIndex, stageIndex)"
-      matTooltip="Add New Processing Material">
-      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Processing Materials
+      matTooltip="Add New {{configTitleProcessingMaterials}}">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleProcessingMaterials}}
     </button>
     <!-- Show More Details button-->
     <!--
@@ -87,7 +92,7 @@
     <div *ngIf="stage.processingMaterials && stage.processingMaterials.length > 0" style="display:flex;">
       <span class="middle-fill"></span>
       <button mat-button (click)="addProcessingMaterial(processIndex, siteIndex, stageIndex)">
-        Add Another Processing Material <mat-icon svgIcon="add_circle_outline"></mat-icon>
+        Add Another {{configTitleProcessingMaterials}} <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
     </div>
   </div>

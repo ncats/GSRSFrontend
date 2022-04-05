@@ -13,6 +13,7 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { AuthService } from '@gsrs-core/auth';
 import { Subscription } from 'rxjs';
+import { adverseEventPtSearchSortValues } from '../../../../adverse-event/adverse-events-pt-browse/adverse-events-pt-search-sort-values';
 
 @Component({
   selector: 'app-substance-adverseeventpt',
@@ -25,11 +26,12 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   // advPtCount = 0;
   adverseEventCount = 0;
 
-  orderBy = 5;
+  orderBy = '$root_ptCount';
   ascDescDir = 'desc';
   showSpinner = false;
   public privateSearchTerm?: string;
   private privateFacetParams: FacetParam;
+  public sortValues = adverseEventPtSearchSortValues;
   privateExport = false;
   disableExport = false;
   etag = '';
@@ -62,7 +64,6 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     'ptCount',
     'prr'
   ];
-
   constructor(
     private router: Router,
     public gaService: GoogleAnalyticsService,
@@ -105,7 +106,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     const skip = this.page * this.pageSize;
     const privateSearch = 'root_substanceKey:' + this.bdnum;
     const subscription = this.adverseEventService.getAdverseEventPt(
-      'default',
+      this.orderBy,
       skip,
       this.pageSize,
       privateSearch,
@@ -148,8 +149,15 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
 
   sortData(sort: Sort) {
     if (sort.active) {
-      this.orderBy = this.displayedColumns.indexOf(sort.active) + 2; // Adding 2, for name and bdnum.
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
       this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.orderBy = sortValue.value;
+          }
+        }
+      });
       this.getAdverseEventPt();
     }
     return;

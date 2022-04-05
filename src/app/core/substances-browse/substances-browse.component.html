@@ -102,7 +102,10 @@
               <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
               &nbsp;
               <span class="no-break">
-                <span>{{this.smiles}}</span>
+                <input readonly [value] = "this.smiles" class = "smiles-input" />
+                <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
+                    <mat-icon svgIcon="paste" matTooltip = "Copy Smiles to clipboard"></mat-icon>
+                  </button>
                 <span *ngIf="searchType && searchType == 'similarity'">
                   &nbsp;&ge; {{searchCutoff}}
                 </span>
@@ -501,7 +504,10 @@
             <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
             &nbsp;
             <span class="no-break">
-              <span>{{this.smiles}}</span>
+                <input readonly [value] = "this.smiles" class = "smiles-input" />
+                <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
+                    <mat-icon svgIcon="paste" matTooltip = "Copy Smiles to clipboard"></mat-icon>
+                  </button>
               <span *ngIf="searchType && searchType == 'similarity'">
                 &nbsp;&ge; {{searchCutoff}}
               </span>
@@ -540,7 +546,7 @@
 <div [ngClass]="{ hidden: !showExactMatches, 'exact-matches-container': true }">
   <div class="exact-match-control">
     <div>
-      There is one exact (name or code) match for {{this.searchTerm}}
+      There is one exact (name, standardized name or code) match for {{this.searchTerm}}
     </div>
     <button mat-raised-button color="primary" (click)="showAllRecords()">
       Show All Records Matching Search

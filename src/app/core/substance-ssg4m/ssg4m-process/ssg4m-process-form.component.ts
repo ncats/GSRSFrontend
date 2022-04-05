@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
@@ -14,6 +15,8 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/substance.model';
 import { SubstanceFormSsg4mProcessService } from './substance-form-ssg4m-process.service';
+import { SubstanceFormSsg4mSitesService } from '../ssg4m-sites/substance-form-ssg4m-sites.service';
+import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-ssg4m-process-form',
@@ -32,11 +35,13 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
+    private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService,
     private overlayContainerService: OverlayContainer,
     private scrollToService: ScrollToService,
+    private dialog: MatDialog
   ) {
   }
 
@@ -86,20 +91,31 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteProcess() {
-    this.substanceFormSsg4mProcessService.deleteProcess(this.privateProcess, this.processIndex);
-    // this.substance.specifiedSubstanceG4m.process.splice(this.processIndex, 1);
-  }
-
   updateAccess() {
 
   }
 
   addSite() {
-    this.substanceFormSsg4mProcessService.addSite(this.processIndex);
+    this.substanceFormSsg4mSitesService.addSite(this.processIndex);
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-process-site-0`, 'center');
     });
+  }
+
+  confirmDeleteProcess() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProcess();
+      }
+    });
+  }
+
+  deleteProcess() {
+    this.substanceFormSsg4mProcessService.deleteProcess(this.privateProcess, this.processIndex);
   }
 
 }
