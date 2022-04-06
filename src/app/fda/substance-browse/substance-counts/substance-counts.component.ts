@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FacetParam } from '@gsrs-core/facets-manager';
 import { SubstanceSummaryDynamicContent } from '@gsrs-core/substances-browse';
 import { SubstanceDetail } from '@gsrs-core/substance';
 import { GeneralService } from '../../service/general.service';
@@ -14,6 +15,7 @@ import { LoadedComponents } from '@gsrs-core/config';
 })
 export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamicContent {
   substanceNames: any;
+  substanceKey: string;
   substance: SubstanceDetail;
   searchCount: any;
   appMatchListCount = 0;
@@ -21,10 +23,14 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
   substanceId: string;
   fullFacetField = '';
   total = 0;
+  privateSearch: string;
+  privateFacetParams: FacetParam;
+  pageSize = 0;
   isShowMatchList = 'false';
   // application: Application;
   displayMatchApplicationConfig = false;
   loadedComponents: LoadedComponents;
+  appCountConcat = '0';
 
   constructor(
     private applicationService: ApplicationService,
@@ -39,6 +45,24 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
     if (this.loadedComponents && this.loadedComponents.applications) {
       this.getSearchCount();
       this.getAppIngredMatchListCount();
+    }
+    // Get Search Count for Application
+    this.getApplicationBySubstanceKeyCenter();
+  }
+
+  getSubstanceKey() {
+    if (this.substance) {
+      // Get Substance Name
+      // this.substanceName = this.substance._name;
+      if (this.substance.codes.length > 0) {
+        this.substance.codes.forEach(element => {
+          if (element.codeSystem && element.codeSystem === 'BDNUM') {
+            if (element.type && element.type === 'PRIMARY') {
+              this.substanceKey = element.code;
+            }
+          }
+        });
+      }
     }
   }
 
@@ -102,4 +126,30 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
       });
   }
 
+  // GSRS 3.0
+  getApplicationBySubstanceKeyCenter() {
+    const skip = 5000;
+    this.pageSize = 5000;
+    this.privateSearch = this.applicationService.APPALL_SEARCH_SUBSTANCE_KEY + this.substanceKey;
+    // + this.bdnum + ' AND root_center:' + this.center + ' AND root_fromTable: ' + this.fromTable;
+
+    // this.privateSearch = "http://localhost:8083/api/v1/applicationsall/search?q=root_applicationProductList_applicationIngredientList_substanceKey:";
+
+    // if (searchType && searchType === 'initial') {
+    //    this.pageSize = 100;
+    //  }
+    const subscription = this.applicationService.getApplicationAll(
+      'default',
+      skip,
+      this.pageSize,
+      this.privateSearch,
+      this.privateFacetParams
+    ).subscribe(pagingResponse => {
+      this.appCountConcat = pagingResponse.total.toString();
+    }, error => {
+      console.log('error');
+    }, () => {
+      subscription.unsubscribe();
+    });
+  }
 }
