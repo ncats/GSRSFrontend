@@ -36,6 +36,8 @@ export class ApplicationService extends BaseHttpService {
   //TODO: remove explicit references like this if at all possible
   apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
 
+  APPALL_SEARCH_SUBSTANCE_KEY = 'root_applicationProductList_applicationIngredientList_substanceKey:';
+
   constructor(
     public http: HttpClient,
     public configService: ConfigService,

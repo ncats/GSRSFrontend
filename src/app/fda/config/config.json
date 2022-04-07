@@ -9,7 +9,7 @@
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
-  "approvalCodeName":"UNIT",
+  "approvalCodeName":"UNII",
   "primaryCode": "BDNUM",
   "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID" ],
   "loadedComponents": {
