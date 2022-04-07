@@ -75,7 +75,6 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
       .subscribe(e => {
         const data = {value: this.searchControl.value, myIndex: this.myIndex};
         this.miniSearchOutput.emit(data);
-        this.trigger.closePanel();
       });
   }
 
@@ -87,6 +86,7 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
 
   substanceSearchOptionSelected(event?: MatAutocompleteSelectedEvent) {
     // this.navigateToSearchResults(event.option.value);
+    console.log("XXXX");
     const data = {value: event.option.value, myIndex: this.myIndex};
     this.miniSearchOutput.emit(data);
   }
