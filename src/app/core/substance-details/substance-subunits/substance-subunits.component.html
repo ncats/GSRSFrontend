@@ -13,8 +13,10 @@
   <div class = "form-row subunit-row">
     <div class = "subunit-label"> Subunit {{subunitSequence.subunitIndex}}</div>
     <div>
-      <a class = "subunit-title" [routerLink]="['/sequence-search']"
-         [queryParams]="{substance: uuid, subunit: subunitSequence.uuid, seq_type: substanceType}">similarity search</a>
+      <a class = "subunit-title" [routerLink]="['/sequence-search']" target="_blank"
+         [queryParams]="{substance: uuid, subunit: subunitSequence.uuid, seq_type: substanceType}">similarity search
+         <mat-icon class = "icon small-icon" svgIcon="open_in_new"></mat-icon>
+      </a>
     </div>
 
   </div>
