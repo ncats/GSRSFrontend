@@ -38,7 +38,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   }
 
   ngOnInit() {
-    if (this.bdnum) {
+    if (this.substanceUuid) {
       this.getSubstanceClinicalTrials();
       this.clinicalTrialListExportUrl();
     }
