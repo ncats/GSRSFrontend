@@ -65,10 +65,9 @@ export class ClinicalTrialService extends BaseHttpService {
     if (searchTerm !== null && searchTerm !== '') {
       if (type !== null && type !== '') {
         if (type === 'trialNumber' ) {
-          // not working yet
-          params = params.append('q', 'root_ctId:\"^' + searchTerm + '$\"');
+          // having an issue with this locally
+          params = params.append('q', 'root_trialNumber:\"^' + searchTerm + '$\"');
         } else if (type === 'substanceKey' ) {
-          // not working yet
           params = params.append('q', 'root_clinicalTrialUSDrug_substanceKey:\"^' + searchTerm + '$\"');
         } else if (type === 'title') {
           params = params.append('q', 'root_title:\"' + searchTerm + '\"');
