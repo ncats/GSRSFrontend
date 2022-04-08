@@ -3,6 +3,7 @@ setup_git() {
   cd ../
 ls
   git clone https://GsrsBot:${GIT_ACCESS_TOKEN}@github.com/ncats/gsrs-ci.git
+ls
 cd gsrs-ci
 ls
 git status
@@ -20,11 +21,13 @@ mkdir frontend/src/main/resources/static
 cp -r ../GSRSFrontend/dist/browser/* frontend/src/main/resources/static/
 cp -r ./substanceRelationshipVisualizer frontend/src/main/resources/static/
 rm -rf ./substanceRelationshipVisualizer
+git status
 git add frontend/src/main/resources/static
 git add -u 
 git commit -m "pushing new frontend build"
 git status
 ls
+echo "pushing"
 git push -u origin fda_staged_sync
 
 
