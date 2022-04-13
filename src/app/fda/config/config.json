@@ -11,6 +11,7 @@
   "advancedSearchFacetDisplay": false,
   "approvalCodeName":"UNII",
   "primaryCode": "BDNUM",
+  "filteredDuplicationCodes": [ "BDNUM", "FDA_UNII" ],
   "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID" ],
   "loadedComponents": {
     "applications": true,

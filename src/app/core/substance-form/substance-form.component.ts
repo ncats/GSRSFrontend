@@ -803,22 +803,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
     defiant.json.search(old, '//*[uuid]');
-    if (this.configService.configData && this.configService.configData.approvalCodeName) {
-      const remove = this.configService.configData.approvalCodeName;
-      _.remove(old.codes, {
-        codeSystem: remove
-      });
+    let remove = ['BDNUM'];
+    if (this.configService.configData && this.configService.configData.filteredDuplicationCodes) {
+      remove = this.configService.configData.filteredDuplicationCodes;
     }
-    if (this.configService.configData && this.configService.configData.primaryCode) {
-      const remove = this.configService.configData.primaryCode;
-      _.remove(old.codes, {
-        codeSystem: remove
-      });
-    } else {
-      _.remove(old.codes, {
-        codeSystem: 'BDNUM'
-      });
-    }
+      remove.forEach(code => {
+        _.remove(old.codes, {
+          codeSystem: code
+        });
+      })
     
     const createHolders = defiant.json.search(old, '//*[created]');
     for (let i = 0; i < createHolders.length; i++) {
