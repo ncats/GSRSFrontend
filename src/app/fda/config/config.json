@@ -11,6 +11,7 @@
   "advancedSearchFacetDisplay": false,
   "approvalCodeName":"UNII",
   "primaryCode": "BDNUM",
+  "filteredDuplicationCodes": [ "BDNUM", "FDA_UNII" ],
   "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID" ],
   "loadedComponents": {
     "applications": true,
@@ -595,8 +596,7 @@
         "Product Dosage Form",
         "Definition Level",
         "Clinical Trial US Count",
-        "Clinical Trial US Status",
-        "Clinical Trial US Number"
+        "Clinical Trial US Status"
       ],
       "admin": [
         "Record Created By",
@@ -612,7 +612,7 @@
       "facetView": [
         {
           "category": "Default",
-          "facets": ["Deprecated", "Record Status", "Substance Class", "GInAS Tag", "GInAS Domain", "Code System", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Application Center", "Application Type", "Application Status", "Material Type", "Family", "Parts", "Moiety Type", "Molecular Weight", "SubstanceStereochemistry", "root_approved", "Approved By", "root_created", "Record Created By", "root_lastEdited", "root_lastEditedBy", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Protein Type", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Definition Level", "Clinical Trial Count", "Relationships", "Clinical Trial US Count", "Clinical Trial US Status", "Clinical Trial US Number"]
+          "facets": ["Deprecated", "Record Status", "Substance Class", "GInAS Tag", "GInAS Domain", "Code System", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Application Center", "Application Type", "Application Status", "Material Type", "Family", "Parts", "Moiety Type", "Molecular Weight", "SubstanceStereochemistry", "root_approved", "Approved By", "root_created", "Record Created By", "root_lastEdited", "root_lastEditedBy", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Protein Type", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Definition Level", "Clinical Trial Count", "Relationships", "Clinical Trial US Count", "Clinical Trial US Status"]
         },
         {
           "category": "Record Data",
@@ -727,6 +727,7 @@
         "Last Updated Year",
         "Primary Completion Year",
         "First Posted Year",
+        "Trial Status",
         "Study Types",
         "Gender",
         "Age Groups",
@@ -742,6 +743,7 @@
         "Last Updated Year",
         "Primary Completion Year",
         "First Posted Year",
+        "Trial Status",
         "Study Types",
         "Gender",
         "Age Groups",
