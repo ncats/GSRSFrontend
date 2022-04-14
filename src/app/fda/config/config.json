@@ -624,11 +624,11 @@
         },
         {
           "category": "CMC Data",
-          "facets": ["Record Status", "Substance Class", "Code System", "GInAS Tag", "Moiety Type", "Application Center", "Application Type", "Application Status", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial Count", "CFR", "Qualification", "Interaction Type"]
+          "facets": ["Record Status", "Substance Class", "Code System", "GInAS Tag", "Moiety Type", "Application Center", "Application Type", "Application Status", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial US Count", "Clinical Trial US Status", "CFR", "Qualification", "Interaction Type"]
         },
         {
           "category": "Medical Data",
-          "facets": ["Record Status", "Substance Class", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Code System", "GInAS Tag", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial Count", "CFR"]
+          "facets": ["Record Status", "Substance Class", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Code System", "GInAS Tag", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial US Count", "Clinical Trial US Status", "CFR"]
         },
         {
           "category": "Chemistry",
