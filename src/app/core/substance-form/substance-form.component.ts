@@ -90,7 +90,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     forceChange = false;
     sameSubstance = false;
     UNII: string;
-    approvalType = 'lastEdited';
+    approvalType = 'lastEditedBy';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -409,6 +409,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (action && action === 'import') {
       return false;
     }
+    // if config var set and set to 'createdBy then set approval button enabled if user is not creator
     if(this.approvalType === 'createdBy') {
         if (this.definition && this.definition.createdBy && this.user) {
           const creator = this.definition.createdBy;
@@ -425,6 +426,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     
         }
         return false;
+        //default to 'lastEditedBy' if not set in config
       } else {
         if (this.definition && this.definition.lastEditedBy && this.user) {
            const lastEdit = this.definition.lastEditedBy;
@@ -438,6 +440,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           if (lastEdit === this.user) {
             return false;
           }
+          return true;
       }
     }
     
