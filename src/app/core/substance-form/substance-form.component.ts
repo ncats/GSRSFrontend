@@ -409,38 +409,32 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (action && action === 'import') {
       return false;
     }
+    if (this.definition && this.definition.status === 'approved') {
+      return false;
+    }
+    const useApprovalType = (this.approvalType)?this.approvalType:"lastEditedBy";
+    
     if(this.approvalType === 'createdBy') {
         if (this.definition && this.definition.createdBy && this.user) {
           const creator = this.definition.createdBy;
-          if (!creator) {
-            return false;
-          }
-          if (this.definition.status === 'approved') {
-            return false;
-          }
-          if (creator === this.user) {
+          if (!creator || creator === this.user) {
             return false;
           }
           return true;
-    
         }
         return false;
-      } else {
+    } else if(this.approvalType === 'lastEditedBy') {
         if (this.definition && this.definition.lastEditedBy && this.user) {
-           const lastEdit = this.definition.lastEditedBy;
-          if (!lastEdit) {
+          const lastEdit = this.definition.lastEditedBy;
+          if (!lastEdit || lastEdit === this.user) {
             return false;
           }
-          if (this.definition.status === 'approved') {
-            return false;
-
-          }
-          if (lastEdit === this.user) {
-            return false;
-          }
-      }
-    }
-    
+          return true;
+        }
+        return false;
+    } else{
+        return false; 
+    }    
   }
 
   showJSON(): void {
