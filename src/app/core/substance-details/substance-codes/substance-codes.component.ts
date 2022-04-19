@@ -158,7 +158,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   private filterSubstanceCodes(): void {
     if (this.substance.codes && this.substance.codes.length > 0) {
       this.substance.codes.forEach(code => {
-        if (code._isClassification && this.type === 'Codes - Identifiers') {
+        if (code._isClassification && this.type === 'Codes - Classifications') {
           this.codes.push(code);
         } else if (!code._isClassification && this.type === 'Codes - Identifiers') {
           this.codes.push(code);

@@ -15,20 +15,7 @@ git checkout fda_staged_sync
   git merge origin/fda
   cd gsrs-ci
 
-cp -r frontend/src/main/resources/static/substanceRelationshipVisualizer ./
-rm -rf frontend/src/main/resources/static
-mkdir frontend/src/main/resources/static
-cp -r ../GSRSFrontend/dist/browser/* frontend/src/main/resources/static/
-cp -r ./substanceRelationshipVisualizer frontend/src/main/resources/static/
-rm -rf ./substanceRelationshipVisualizer
-git status
-git add frontend/src/main/resources/static
-git add -u 
-git commit -m "pushing new frontend build"
-git status
-ls
-echo "pushing"
-git push -u origin fda_staged_sync
+
 
 
  cd ../

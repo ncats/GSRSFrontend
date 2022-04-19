@@ -10,7 +10,7 @@ export const baseEnvironment: Environment = {
     googleAnalyticsId: '',
     version: '2.3.4',
     isAnalyticsPrivate: false,
-    contactEmail: 'ginas@mail.nih.gov'
+    contactEmail: 'ncatsgsrs@mail.nih.gov'
 };
 
 

@@ -156,16 +156,18 @@ export function substanceCodesFilter(
     substance: SubstanceDetail,
     filter: SubstanceCardFilterParameters
 ): Observable<boolean> {
+    console.log('called filter');
     return new Observable(observer => {
 
         let isApproved = false;
 
         if (substance.codes && substance.codes.length > 0) {
+            console.log(substance.codes);
             for (let i = 0; i < substance.codes.length; i++) {
                 if (substance.codes[i]._isClassification && filter.value === 'classification') {
                     isApproved = true;
                     break;
-                } else if (filter.value === 'identifiers') {
+                } else if (!substance.codes[i]._isClassification && filter.value === 'identifiers') {
                     isApproved = true;
                     break;
                 }
