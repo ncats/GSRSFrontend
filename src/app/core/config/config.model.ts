@@ -42,6 +42,7 @@ export interface Config {
     approvalCodeName?: string;
     approvalType?: string;
     ssg4Form?: string;
+    filteredDuplicationCodes?: Array<string>;
 }
 
 export interface LoadedComponents {

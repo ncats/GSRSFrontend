@@ -91,7 +91,6 @@ export class MonitorComponent implements OnInit, OnDestroy {
             });
           } else {
             this.monitor = false;
-            console.log('no monitor');
           }
       }, error => {
         this.message = 'invalid Job ID';

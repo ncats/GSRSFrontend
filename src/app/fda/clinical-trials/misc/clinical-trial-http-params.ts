@@ -28,7 +28,6 @@ export class ClinicalTrialHttpParams extends HttpParams {
                 }
             });
         }
-        console.log('XXXX  I am here');
         // clone = clone.append('facet', '!Deprecated/Deprecated');
         return clone;
     }
