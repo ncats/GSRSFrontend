@@ -90,6 +90,7 @@ import { Ssg4mSitesModule } from './substance-ssg4m/ssg4m-sites/ssg4m-sites.modu
 import { Ssg4mStagesModule } from './substance-ssg4m/ssg4m-stages/substance-form-ssg4m-stages.module';
 import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 import { SubstanceStatusPipe } from '@gsrs-core/utils/substance-status.pipe';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -176,6 +177,7 @@ import { SubstanceStatusPipe } from '@gsrs-core/utils/substance-status.pipe';
     SubstanceSsg4mModule,
     SubstanceSsg4mProcessModule,
     Ssg4mSitesModule,
+    MatProgressSpinnerModule,
     Ssg4mStagesModule,
     SubstanceFormSsg4mStartingMaterialsModule
   ],

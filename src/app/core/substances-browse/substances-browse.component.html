@@ -142,10 +142,24 @@
           </div>
         </div>
       </ng-template>
+      <div>
+        <div class="sub-search-div">
+          <p class="sub-search-text red-text">Results below are an incomplete preview</p>
+          <div class="sub-search-text-div">
+            <div class="search-spinner">
+              <mat-spinner [diameter]="15"></mat-spinner>
+            </div>
+            <p class="sub-search-text match-txt">searching... {{totalSubstances}} matches</p>
+            <button class="sub-search-ref-btn" (click)="clickToRefreshPreview()">Refresh Preview</button>
+            <button class="sub-search-cancel-btn" (click)="clickToCancel()">Cancel</button>
+          </div>
+          <p class="sub-search-text orange-text">Page will auto-reload when search is complete</p>
+        </div>
+      </div>
       <div class="controls-container">
           <div class = "title-container">
               <span class = "main-title">Browse Substances</span>
-            </div>
+          </div>
 
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
           <mat-button-toggle value="table" matTooltip="Table View">
