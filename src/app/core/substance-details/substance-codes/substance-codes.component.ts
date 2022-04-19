@@ -42,7 +42,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       this.substance = substance;
       this.codes = [];
       if (this.substance != null && this.type != null) {
-        if (this.type === 'Codes - classification') {
+        if (this.type === 'Codes - Classifications') {
           this.displayedColumns = ['classificationTree', 'codeSystem', 'code', 'references'];
           //this.displayedFilterColumns = ['classTreeFilter', 'codeSystemFilter', 'codeFilter', 'emptyFilter', 'resetFilter'];
         } else {
@@ -158,7 +158,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   private filterSubstanceCodes(): void {
     if (this.substance.codes && this.substance.codes.length > 0) {
       this.substance.codes.forEach(code => {
-        if (code._isClassification && this.type === 'Codes - Identifiers') {
+        if (code._isClassification && this.type === 'Codes - Classifications') {
           this.codes.push(code);
         } else if (!code._isClassification && this.type === 'Codes - Identifiers') {
           this.codes.push(code);
