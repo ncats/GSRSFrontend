@@ -8,7 +8,7 @@
   <span class="show-filter-span">
     <mat-label class = "mat-button mat-button-primary" mat-flat-button color="warn" (click)="toggleFilter()">{{showHideFilterText}}</mat-label>
   </span>
-  <table [ngClass]="{ 'classification': type == 'classification' }" mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
+  <table [ngClass]="{ 'classification': type == 'Codes - Classifications' }" mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
 
     <ng-container matColumnDef="classificationTree">
       <th mat-header-cell *matHeaderCellDef> Classification Tree </th>

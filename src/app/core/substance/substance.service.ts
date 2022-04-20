@@ -210,6 +210,9 @@ export class SubstanceService extends BaseHttpService {
       let structureFacetsKey: number;
 
       structureFacetsKey = this.utilsService.hashCode(searchTerm, type, cutoff);
+      if (type && (type === 'flex' || type === 'exact')) {
+        sync = true;
+      }
 
       if (!sync && this.searchKeys[structureFacetsKey]) {
 
@@ -235,6 +238,14 @@ export class SubstanceService extends BaseHttpService {
         }
         if (sync) {
           params = params.append('sync', sync.toString());
+          params = params.appendFacetParams(facets, this.showDeprecated);
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString()
+          });
+          if (order != null && order !== '') {
+            params = params.append('order', order);
+          }
         }
         url += 'substances/structureSearch';
       }
