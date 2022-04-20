@@ -8,7 +8,8 @@
 
   <div class="form-row">
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Starting Material {{(startingMaterialIndex+1)}}" (click)="confirmDeleteStartingMaterial()">
+      <button mat-icon-button matTooltip="Delete Starting Material {{(startingMaterialIndex+1)}}"
+        (click)="confirmDeleteStartingMaterial()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
       <br>
@@ -22,8 +23,8 @@
       -->
     <div class="col related-substance">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header="Substance Name"
-        [subuuid]="relatedSubstanceUuid">
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM"
+        header="Substance Name" [subuuid]="relatedSubstanceUuid">
       </app-substance-selector>
     </div>
 
@@ -48,6 +49,13 @@
         <span class="font11px">Search By Structure</span>
       </a>
     </div>
-  </div>
+  </div> <!-- form-row-->
 
+  <div class="form-row margintop10px" *ngIf="showAdvancedSettings">
+    <div class="marginleft45px">&nbsp;</div>
+    <mat-form-field class="col-1-1">
+      <input matInput placeholder="Comments" [(ngModel)]="startingMaterial.comments"
+        name="startingMaterial.comments" />
+    </mat-form-field>
+  </div> <!-- form-row-->
 </div>

@@ -7,28 +7,33 @@
   </div>
   <div class="form-row">
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Process" (click)="confirmDeleteProcess()">
+      <button mat-icon-button matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
 
-    <mat-form-field class="col-4-1">
+    <mat-form-field class="col-3-1">
       <input matInput placeholder="Process Name" [(ngModel)]="process.processName" name="process.processName" />
     </mat-form-field>
 
-    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
-      <input matInput placeholder="Process Role" [(ngModel)]="process.processRole" name="process.processRole" />
-    </mat-form-field>
+    <app-cv-input class="col-3-1" *ngIf="showAdvancedSettings" domain="SSG_PROCESS_ROLE" title="Process Role" name="processRole"
+    [model]="process.processRole" (valueChange)="process.processRole = $event">
+    </app-cv-input>
 
-    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
-      <input matInput placeholder="Process Type" [(ngModel)]="process.processType" name="process.processType" />
-    </mat-form-field>
+    <app-cv-input class="col-3-1" *ngIf="showAdvancedSettings" domain="SSG_PROCESS_TYPE" title="Process Type" name="processType"
+    [model]="process.processType" (valueChange)="process.processType = $event">
+    </app-cv-input>
+  </div> <!-- form row -->
 
-    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
+  <div class="form-row">
+    <div class="marginleft45px">&nbsp;</div>
+    <mat-form-field class="col-2-1" *ngIf="showAdvancedSettings">
       <input matInput placeholder="Process Description" [(ngModel)]="process.processDescription"
         name="process.processDescription" />
     </mat-form-field>
-
+    <mat-form-field class="col-2-1" *ngIf="showAdvancedSettings">
+      <input matInput placeholder="Comments" [(ngModel)]="process.comments" name="process.comments" />
+    </mat-form-field>
   </div> <!-- form row -->
 
   <!-- SITES LIST BEGIN -->

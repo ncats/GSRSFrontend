@@ -19,7 +19,7 @@ import { SubstanceSummary, SubstanceRelationship } from '../../substance/substan
 import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/substance.model';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mStagesService } from './substance-form-ssg4m-stages.service';
-import { SpecifiedSubstanceG4mSite, SpecifiedSubstanceG4mStage } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mStage } from '@gsrs-core/substance/substance.model';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -124,6 +124,13 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     // this.substanceFormService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
+    });
+  }
+
+  addCriticalParameter(processIndex: number, siteIndex: number, stageIndex: number) {
+    this.substanceFormSsg4mStagesService.addCriticalParameter(processIndex, siteIndex, stageIndex);
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-process-site-stage-criticalParam-0`, 'center');
     });
   }
 

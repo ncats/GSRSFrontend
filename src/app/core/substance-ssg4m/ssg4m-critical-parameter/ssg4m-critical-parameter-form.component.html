@@ -1,0 +1,40 @@
+<div class="form-container">
+  <div *ngIf="criticalParameter.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete Critical Parameter {{(criticalParameterIndex+1)}}"
+        (click)="confirmDeleteCriticalParameter()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+      <br>
+      <div class="padleft15px"><b>{{(criticalParameterIndex+1)}}</b></div>
+    </div>
+
+    <app-cv-input class="col-3-1" class="name property-name" key="Name" title="Name" [model]="criticalParameter.name"
+      (valueChange)="criticalParameter.name = $event">
+    </app-cv-input>
+
+    <mat-form-field class="col-3-1" *ngIf="showAdvancedSettings">
+      <input matInput placeholder="Substance Name" [(ngModel)]="criticalParameter.substanceName"
+        name="criticalParameter.substanceName" />
+    </mat-form-field>
+
+    <app-cv-input class="col-3-1" domain="SSG_PROPERTY_TYPE" required='true' title="Property Type"
+      [model]="criticalParameter.propertyType" (valueChange)="criticalParameter.propertyType = $event">
+    </app-cv-input>
+
+    <div class="col-3-1 related-substance">
+      <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Referenced Substance" header="Reference Substance"
+        [subuuid]="relatedSubstanceUuid">
+      </app-substance-selector>
+    </div>
+
+  </div> <!-- form row -->
+
+</div>

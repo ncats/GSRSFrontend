@@ -27,6 +27,11 @@
     width: calc((100% - 20px * 3) / 4); //four column
     margin-right: 20px;
   }
+
+  .col-1-1 {
+    width: calc((100% - 20px * 1)); //one column
+    margin-right: 20px;
+  }
 }
 /*
 .form-row {
@@ -82,6 +87,10 @@
 
 .margintop10px {
   margin-top: 10px;
+}
+
+.marginleft40px {
+  margin-left: 40px;
 }
 
 .marginbottom20px {

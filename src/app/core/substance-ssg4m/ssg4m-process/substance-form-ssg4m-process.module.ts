@@ -6,6 +6,7 @@ import { SubstanceFormModule } from '../../substance-form/substance-form.module'
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ScrollToModule } from '../../scroll-to/scroll-to.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,6 +27,7 @@ import { Ssg4mSitesComponent } from '../ssg4m-sites/ssg4m-sites.component';
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
+    MatTooltipModule,
     MatButtonModule,
     MatBadgeModule,
     ScrollToModule,

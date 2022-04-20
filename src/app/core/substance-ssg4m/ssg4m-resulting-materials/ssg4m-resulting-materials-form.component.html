@@ -56,4 +56,11 @@
     </div>
   </div>
 
+  <div class="form-row margintop10px" *ngIf="showAdvancedSettings">
+    <div class="marginleft45px">&nbsp;</div>
+    <mat-form-field class="col-1-1">
+      <input matInput placeholder="Comments" [(ngModel)]="resultingMaterial.comments"
+        name="resultingMaterial.comments" />
+    </mat-form-field>
+  </div> <!-- form-row-->
 </div>

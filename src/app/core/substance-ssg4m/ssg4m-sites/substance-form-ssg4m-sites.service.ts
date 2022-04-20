@@ -66,6 +66,7 @@ export class SubstanceFormSsg4mSitesService extends SubstanceFormServiceBase<Arr
      // references: [],
      // access: []
      stageNumber: '',
+     criticalParameters: [],
      startingMaterials: [],
      processingMaterials: [],
      resultingMaterials: []

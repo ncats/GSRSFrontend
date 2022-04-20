@@ -18,6 +18,7 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
   privateProcessIndex: number;
   privateSiteIndex: number;
   privateStageIndex: number;
+  privateShowAdvancedSettings: boolean;
   privateResultingMaterial: SpecifiedSubstanceG4mResultingMaterial;
   relatedSubstanceUuid: string;
   substance: SubstanceDetail;
@@ -62,6 +63,15 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
 
   get stageIndex(): number {
     return this.privateStageIndex;
+  }
+
+  @Input()
+  set showAdvancedSettings(showAdvancedSettings: boolean) {
+    this.privateShowAdvancedSettings = showAdvancedSettings;
+  }
+
+  get showAdvancedSettings(): boolean {
+    return this.privateShowAdvancedSettings;
   }
 
   ngOnInit(): void {

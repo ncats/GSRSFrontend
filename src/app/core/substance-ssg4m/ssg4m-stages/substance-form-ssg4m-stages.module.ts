@@ -28,6 +28,7 @@ import { NgxJsonViewerModule} from 'ngx-json-viewer';
 import { FileSelectModule } from 'file-select';
 import { ScrollToModule } from '@gsrs-core/scroll-to/scroll-to.module';
 import { ExpandDetailsModule } from '@gsrs-core/expand-details/expand-details.module';
+import { SubstanceFormModule } from '../../substance-form/substance-form.module';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
@@ -46,6 +47,7 @@ import { AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-in
 // import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
 // import { SubstanceFormComponent } from '../substance-form/substance-form.component';
 // import { SubstanceFormSsg4mSitesService } from './ssg4m-sites/substance-form-ssg4m-sites.service.';
+import { Ssg4mCriticalParameterModule } from '../ssg4m-critical-parameter/ssg4m-critical-parameter.module';
 import { SubstanceFormSsg4mStartingMaterialsModule } from '../ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 import { SubstanceFormSsg4mProcessingMaterialsModule } from '../ssg4m-processing-materials/substance-form-ssg4m-processing-materials.module';
 import { SubstanceFormSsg4mResultingMaterialsModule } from '../ssg4m-resulting-materials/substance-form-ssg4m-resulting-materials.module';
@@ -85,6 +87,8 @@ import { Ssg4mStagesFormComponent } from './ssg4m-stages-form.component';
     SubstanceImageModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    SubstanceFormModule,
+    Ssg4mCriticalParameterModule,
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceFormSsg4mProcessingMaterialsModule,
     SubstanceFormSsg4mResultingMaterialsModule
