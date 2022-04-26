@@ -80,7 +80,6 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit {
   }
 
   confirmDeleteCriticalParameter() {
-    alert("GGGGGGGGG " + this.criticalParameterIndex);
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delele Critical Parameter ' + (this.criticalParameterIndex + 1) + ' for Stage ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
     });

@@ -17,7 +17,8 @@
     "products": true,
     "clinicaltrials": true,
     "adverseevents": true,
-    "impurities": true
+    "impurities": true,
+    "ssg4m": true
     },
   "usefulLinks": [
     {"title": "GSRSFind Excel tools",
@@ -825,6 +826,12 @@
       "display": "Register",
       "children": [
         {
+          "component": "ssg4m",
+          "display": "G4 Specified Substance Manufacturing",
+          "path": "substances-ssg4m/register",
+          "order": 190
+        },
+        {
            "component": "applications",
           "display": "Application",
           "path": "application/register",
@@ -1046,6 +1053,32 @@
       "parentSubstance":"Resulting Substance",
       "stage":"Step",
       "processingMaterials":"Solvents and Catalysts"
+    },
+    "settingsDisplay": {
+      "process": {
+        "processName": "simple",
+        "processRole": "advanced",
+        "propertyType": "advanced",
+        "processDescription": "advanced",
+        "comments": "advanced"
+      },
+      "site": {
+        "siteName": "advanced",
+        "siteIdType": "advanced",
+        "siteId": "advanced",
+        "siteAddress": "advanced",
+        "gpsSiteLocation": "advanced",
+        "siteClearance": "advanced"
+      },
+      "stage": {
+        "stageNumber": "simple",
+        "stageType": "advanced"
+      },
+      "criteriaParameter": {
+        "name": "advanced",
+        "propertyType": "advanced",
+        "referencedSubstance": "advanced"
+      }
     }
   }
 }

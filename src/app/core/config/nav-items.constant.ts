@@ -59,11 +59,6 @@ export const navItems: Array<NavItem> = [
                 display: 'G1 Specified Substance',
                 path: 'substances/register/specifiedSubstanceG1',
                 order: 80
-            },
-            {
-                display: 'G4 Specified Substance Manufacturing',
-                path: 'substances-ssg4m/register',
-                order: 90
             }
         ]
     }
