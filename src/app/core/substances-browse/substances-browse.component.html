@@ -14,7 +14,7 @@
     </app-facets-manager>
   </mat-sidenav>
   <mat-sidenav-content>
-    <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+    <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
       <mat-icon svgIcon="chevron_right"></mat-icon>
     </button>
     <div class="side-nav-content" *ngIf="substances && substances.length">
@@ -162,13 +162,13 @@
           </div>
 
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-          <mat-button-toggle value="table" matTooltip="Table View">
+          <mat-button-toggle aria-label="Table View" value="table" matTooltip="Table View">
             <mat-icon svgIcon="list"></mat-icon>
           </mat-button-toggle>
-          <mat-button-toggle value="cards" matTooltip="Full View">
+          <mat-button-toggle aria-label="Full View" value="cards" matTooltip="Full View">
             <mat-icon svgIcon="view_stream"></mat-icon>
           </mat-button-toggle>
-          <mat-button-toggle value="tiles">
+          <mat-button-toggle aria-label="Tile View" value="tiles">
             <mat-icon svgIcon="view_module" matTooltip="Tile View"></mat-icon>
           </mat-button-toggle>
         </mat-button-toggle-group>
@@ -212,6 +212,7 @@
               <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
                 [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
                 (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                aria-label="Page Index"
                 (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
             </mat-form-field>
             <span class="page-label"> of {{lastPage}}</span>
@@ -489,6 +490,7 @@
             <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
               [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
               (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+              aria-label="Page Index"
               (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
           </mat-form-field>
           <span class="page-label"> of {{lastPage}}</span>

@@ -11,7 +11,7 @@
               {{node.value.refPname}}
             </a>
             <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']"
-               target = "_blank"  matTooltip = "edit substance in new tab"><span hidden>edit in new tab</span>
+               target = "_blank"  matTooltip = "edit substance in new tab" aria-label="edit substance in new tab"><span hidden>edit in new tab</span>
               <mat-icon *ngIf ="isAdmin" svgIcon="edit"  color = "primary"></mat-icon>
             </a>
           </div>
@@ -41,7 +41,7 @@
                  [routerLink]="['/substances', node.value.refuuid || '']">
                 {{node.value.refPname}}
               </a>
-              <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']">
+              <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']" aria-label="edit substance in new tab">
                 <mat-icon *ngIf ="isAdmin" matTooltip = "edit substance in new tab" svgIcon="edit"  color = "primary"></mat-icon>
               </a>
             </div>
