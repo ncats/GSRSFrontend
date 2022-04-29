@@ -109,16 +109,14 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
         if (searchType && searchType === 'initial') {
           this.etagAllExport = pagingResponse.etag;
         } 
+        // AW removed else clause, it makes it work, but
+        // might need to understand the intention better. 
         // else {
           // this.etagAllExport = pagingResponse.etag;
-          console.log("this.etagAllExport: "+ this.etagAllExport);
           this.clinicalTrialService.totalRecords = pagingResponse.total;
-          console.log("totalRecords: "+ this.clinicalTrialService.totalRecords);
-
           this.setResultData(pagingResponse.content);
           this.clinicalTrialCount = pagingResponse.total;
           this.etag = pagingResponse.etag;
-          console.log("this.etag" + this.etag);
         // }    
 
         this.countClinicalTrialOut.emit(this.clinicalTrialCount);
@@ -141,21 +139,11 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
 
   export() {
-    console.log("---- Exporting clincial trials 1");
     if (this.etagAllExport) {
       // const extension = 'xlsx';
       const extension = 'ctxlsx';
-      
-      console.log("---- Exporting clincial trials 2");
-      console.log(this.etagAllExport);
       const url = this.getApiExportUrl(this.etagAllExport, extension);
-      console.log("---- Exporting clincial trials 3");
-      console.log(url);
-
-      console.log('----' + this.authService.getUser());
       if (this.authService.getUser() !== '') {
-        console.log("---- user found");
-
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
@@ -163,7 +151,6 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
         });
         // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(name => {
-          console.log("---- Dialog clincial trials");
           // this.overlayContainer.style.zIndex = null;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
@@ -175,7 +162,6 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
                   totalSub: this.clinicalTrialCount
                 }
               };
-              console.log("---- After auth clincial trials");
               const params = { 'total': this.clinicalTrialCount };
               this.router.navigate(['/user-downloads/', response.id]);
             }, error => this.loadingService.setLoading(false));
@@ -198,7 +184,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   }
 
   /*
-  // copied from poducuts but has no effect.
+  // copied from products but has no effect. Make approaoch uniform in future. 
   tabSelected($event) {
     if ($event) {
       console.log("EVENT");
