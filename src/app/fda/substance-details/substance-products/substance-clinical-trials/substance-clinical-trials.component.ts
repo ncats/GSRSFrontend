@@ -109,21 +109,19 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
         if (searchType && searchType === 'initial') {
           this.etagAllExport = pagingResponse.etag;
         } 
-        // AW removed else clause, it makes it work, but
-        // might need to understand the intention better. 
+        // AW removed else clause so this runs every time. 
+        // This makes it work, but AW might need to understand the 
+        // intention better. 
         // else {
-          // this.etagAllExport = pagingResponse.etag;
-          this.clinicalTrialService.totalRecords = pagingResponse.total;
-          this.setResultData(pagingResponse.content);
-          this.clinicalTrialCount = pagingResponse.total;
-          this.etag = pagingResponse.etag;
+        this.clinicalTrialService.totalRecords = pagingResponse.total;
+        this.setResultData(pagingResponse.content);
+        this.clinicalTrialCount = pagingResponse.total;
+        this.etag = pagingResponse.etag;
         // }    
 
         this.countClinicalTrialOut.emit(this.clinicalTrialCount);
         this.showSpinner = false;  // Stop progress spinner
       });
-
-
 
     /*
         this.searchControl.valueChanges.subscribe(value => {
