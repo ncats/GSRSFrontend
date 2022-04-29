@@ -100,7 +100,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
       searchTerm: this.substanceUuid,
       cutoff: null,
       type: "substanceKey",
-      // order: 'asc',
+      order: '$trialNumber',
       pageSize: this.pageSize,
       facets: this.privateFacetParams,
       skip: skip
