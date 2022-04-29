@@ -40,6 +40,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   @Output() countClinicalTrialOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
+    'edit',
     'nctNumber',
     'title',
     'sponsorName',
@@ -54,10 +55,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     public authService: AuthService,
     private loadingService: LoadingService,
     private router: Router,
-    private dialog: MatDialog
-
-
-  
+    private dialog: MatDialog 
   ) {
     super(gaService, clinicalTrialService);
   }
@@ -138,8 +136,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
   export() {
     if (this.etagAllExport) {
-      // const extension = 'xlsx';
-      const extension = 'ctxlsx';
+      const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etagAllExport, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {

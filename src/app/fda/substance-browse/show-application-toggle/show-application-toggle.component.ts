@@ -163,7 +163,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
       if (this.exportOptions) {
         this.exportOptions.forEach(element => {
           if (element.extension) {
-            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx') || (element.extension === 'ctxlsx')) {
+            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx') || (element.extension === 'ctusxlsx')) {
               this.hasAdditionalDownloads = true;
               this.additionalExportOptions.push(element.extension);
             }

@@ -20,12 +20,20 @@
 
   <table mat-table [dataSource]="paged">
 
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let clinical"> 
+        <a class="clinical-trials-browse-edit1" target="_blank" title="Edit in new tab" [href]="'edit-clinical-trial/' + clinical.trialNumber">
+          <mat-icon style="width: 20px;  height: 20px;" svgIcon="edit"></mat-icon>
+        </a>          
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="nctNumber">
-      <th mat-header-cell *matHeaderCellDef> NCT Number </th>
+      <th mat-header-cell *matHeaderCellDef>Trial Number</th>
       <td mat-cell *matCellDef="let clinical">
 
         <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.trialNumber">{{clinical.trialNumber}}</a>
-
         <!--
         <div *ngIf="clinical.fromSource === 'EU'">
           <a [routerLink]="['/clinicalTrialEuropeDetails', clinical.nctNumber, 'eu']"
