@@ -1,19 +1,29 @@
 <div class="padtop5px padleft25px font15px colorblue">
-  <b>Clinical Trial</b>
-  <!--
+  <b>Clinical Trial BB</b>
+<!--
+  
   &nbsp;&nbsp;&nbsp;
   <a [href]="exportUrl" target="_blank" matTooltip='Export Clinical Trial Records' *ngIf="totalRecords > 0">
-  -->
-    <!--
+  
     <button mat-raised-button color="primary">
       <mat-icon>arrow_downward</mat-icon>Export
     </button>
-
     <button mat-icon-button color="primary">
       <mat-icon>arrow_downward</mat-icon>Export
     </button>
   </a>
-     -->
+-->
+
+            <!-- Export Button -- *ngIf="isAdmin" -->
+            <span class="export" >
+              <button matTooltip="Export Search Results" mat-button (click)="export()"
+                class="mat-button export-button mat-raised-button">
+                <mat-icon svgIcon="get_app"></mat-icon> Export All CT
+              </button>
+            </span>
+          
+
+
 </div>
 
 <div class="responsive mat-table-style">

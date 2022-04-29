@@ -115,7 +115,13 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
   export(source: string) {
     if (this.etag) {
       const extension = 'xlsx';
+      console.log("this.etag " + this.etag);
+      console.log("source " + source);
+
+
       const url = this.getApiExportUrl(this.etag, extension, source);
+      console.log("url " + url);
+
       if (this.isAdmin === true) {
         let type = '';
         if (source != null) {
@@ -123,7 +129,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
             type = 'browseSubstanceApplication';
           } else if (source === 'prod') {
             type = 'browseSubstanceProduct';
-          } else if (source === 'clinicalus') {
+          } else if (source === 'clinicaltrialsus') {
             type = 'browseSubstanceClinicalTrial-US';
           } else if (source === 'clinicaleurope') {
             type = 'browseSubstanceClinicalTrial-EU';
@@ -138,8 +144,11 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
+            console.log("fullname "+ fullname);
+
             this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
+              console.log("resp id " + response.id);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
                 }
@@ -162,7 +171,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
       if (this.exportOptions) {
         this.exportOptions.forEach(element => {
           if (element.extension) {
-            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx')) {
+            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx') || (element.extension === 'ctxlsx')) {
               this.hasAdditionalDownloads = true;
               this.additionalExportOptions.push(element.extension);
             }

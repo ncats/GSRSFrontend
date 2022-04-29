@@ -24,15 +24,16 @@
       </button>
     </div>
 
-  <!-- THE BACKEND IS NOT READY in 3.0 RC2. DISABLING NOW  -->
-  <!--
-  <div class="padleft10px" *ngIf="isAdmin && loadedComponents && loadedComponents.clinicaltrials && additionalExportOptions.indexOf('clinicalusxlsx') > -1">
+  <div class="padleft10px" *ngIf="isAdmin && loadedComponents && loadedComponents.clinicaltrialsus && 
+  additionalExportOptions.indexOf('ctxlsx') > -1">
     <button matTooltip="Export All Clinical Trials US for Substance Search Results" mat-button
-      (click)="export('clinicalus')" class="mat-button export-button mat-raised-button">
+      (click)="export('clinicaltrialsus')" class="mat-button export-button mat-raised-button">
       <mat-icon svgIcon="get_app"></mat-icon> Clinical Trials US
     </button>
   </div>
 
+  <!-- THE BACKEND IS NOT READY in 3.0 RC2. DISABLING NOW  -->
+  <!--
   <div class="padleft10px" *ngIf="isAdmin && loadedComponents && loadedComponents.clinicaltrials  && additionalExportOptions.indexOf('clinicaleuropexlsx') > -1">
     <button matTooltip="Export All Clinical Trials Europe for Substance Search Results" mat-button
       (click)="export('clinicaleurope')" class="mat-button export-button mat-raised-button">
