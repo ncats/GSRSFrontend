@@ -17,7 +17,6 @@
     "applications": true,
     "products": true,
     "clinicaltrials": true,
-    "clinicaltrialsus": true,
     "adverseevents": true,
     "impurities": true
     },
