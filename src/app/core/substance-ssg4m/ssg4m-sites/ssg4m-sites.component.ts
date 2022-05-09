@@ -19,6 +19,7 @@ import { SubstanceSummary, SubstanceRelationship } from '../../substance/substan
 import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/substance.model';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mSitesService } from './substance-form-ssg4m-sites.service';
+import { SubstanceFormSsg4mStagesService } from '../ssg4m-stages/substance-form-ssg4m-stages.service';
 import { SpecifiedSubstanceG4mSite } from '@gsrs-core/substance/substance.model';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
@@ -28,18 +29,18 @@ import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dial
   styleUrls: ['./ssg4m-sites.component.scss']
 })
 export class Ssg4mSitesComponent implements OnInit {
-
+  privateShowAdvancedSettings: boolean;
+  public configSettingsDisplay = {};
+  configTitleStage: string;
   privateSite: SpecifiedSubstanceG4mSite;
   privateProcessIndex: number;
   privateSiteIndex: number;
   substance: SubstanceDetail;
-  privateShowAdvancedSettings: boolean;
-  configSsg4Form: any;
-  configTitleStage: string;
   subscriptions: Array<Subscription> = [];
 
   constructor(
     public substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
+    private substanceFormSsg4mStagesService: SubstanceFormSsg4mStagesService,
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
@@ -80,6 +81,8 @@ export class Ssg4mSitesComponent implements OnInit {
   @Input()
   set showAdvancedSettings(showAdvancedSettings: boolean) {
     this.privateShowAdvancedSettings = showAdvancedSettings;
+    // Get Config Settins from config file
+    this.getConfigSettings();
   }
 
   get showAdvancedSettings(): boolean {
@@ -93,10 +96,11 @@ export class Ssg4mSitesComponent implements OnInit {
     });
     this.subscriptions.push(subscription);
     // Get Config variables for SSG4
-    this.configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
+    let configSsg4Form: any;
+    configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
     this.configTitleStage = 'Stage';
-    if (this.configSsg4Form) {
-      this.configTitleStage = this.configSsg4Form.titles.stage || null;
+    if (configSsg4Form) {
+      this.configTitleStage = configSsg4Form.titles.stage || null;
       if (!this.configTitleStage) {
         this.configTitleStage = 'Stage';
       }
@@ -110,8 +114,29 @@ export class Ssg4mSitesComponent implements OnInit {
     });
   }
 
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // *** IMPORTANT: get the correct value. Get 'site' json values from config
+    const confSettings = configSsg4Form.settingsDisplay.site;
+    Object.keys(confSettings).forEach(key => {
+      if (confSettings[key] != null) {
+        if (confSettings[key] === 'simple') {
+          this.configSettingsDisplay[key] = true;
+        } else if (confSettings[key] === 'advanced') {
+          if (this.privateShowAdvancedSettings === true) {
+            this.configSettingsDisplay[key] = true;
+          } else {
+            this.configSettingsDisplay[key] = false;
+          }
+        }
+      }
+    });
+  }
+
   addStage(processIndex: number, siteIndex: number) {
-    this.substanceFormSsg4mSitesService.addStage(processIndex, siteIndex);
+    this.substanceFormSsg4mStagesService.addStage(processIndex, siteIndex);
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-process-site-stage-0`, 'center');
     });

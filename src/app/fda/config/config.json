@@ -1058,9 +1058,9 @@
       "process": {
         "processName": "simple",
         "processRole": "advanced",
-        "propertyType": "advanced",
+        "processType": "advanced",
         "processDescription": "advanced",
-        "comments": "advanced"
+        "processComments": "advanced"
       },
       "site": {
         "siteName": "advanced",
@@ -1068,16 +1068,38 @@
         "siteId": "advanced",
         "siteAddress": "advanced",
         "gpsSiteLocation": "advanced",
-        "siteClearance": "advanced"
+        "siteClearance": "advanced",
+        "siteComments": "advanced"
       },
       "stage": {
         "stageNumber": "simple",
-        "stageType": "advanced"
+        "stageType": "advanced",
+        "stageRole": "advanced",
+        "stageEquipment": "advanced",
+        "stageComments": "advanced"
       },
       "criteriaParameter": {
-        "name": "advanced",
-        "propertyType": "advanced",
-        "referencedSubstance": "advanced"
+        "name": "simple",
+        "propertyType": "simple",
+        "referencedSubstance": "simple"
+      },
+      "startingMaterial": {
+        "substanceName": "simple",
+        "verbatimName": "simple",
+        "substanceRole": "simple",
+        "comments": "advanced"
+      },
+      "processingMaterial": {
+        "substanceName": "simple",
+        "verbatimName": "simple",
+        "substanceRole": "simple",
+        "comments": "advanced"
+      },
+      "resultingMaterial": {
+        "substanceName": "simple",
+        "verbatimName": "simple",
+        "substanceRole": "simple",
+        "comments": "advanced"
       }
     }
   }

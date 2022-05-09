@@ -502,7 +502,7 @@ export interface SpecifiedSubstanceG4mStage extends SubstanceBase {
   stageNumber?: string;
   stageType?: string;
   stageRole?: string;
-  equipment?: string;
+  stageEquipment?: string;
   stageComments?: string;
   criticalParameters?: Array<SpecifiedSubstanceG4mCriticalParameter>;
   startingMaterials?: Array<SpecifiedSubstanceG4mStartingMaterial>;

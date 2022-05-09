@@ -11,29 +11,27 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <mat-form-field class="col-4-1">
+    <mat-form-field class="col-4-1" *ngIf="configSettingsDisplay['stageNumber'] || (configSettingsDisplay['stageNumber'] === undefined && true)">
       <input matInput placeholder="{{configTitleStage}} Number" [(ngModel)]="stage.stageNumber"
         name="stage.stageNumber" />
     </mat-form-field>
 
-    <app-cv-input class="col-4-1" *ngIf="showAdvancedSettings" domain="SSG_STAGE_TYPE" title="Stage Type"
+    <app-cv-input class="col-4-1" *ngIf="configSettingsDisplay['stageType'] || (configSettingsDisplay['stageType'] === undefined && showAdvancedSettings)" domain="SSG_STAGE_TYPE" title="Stage Type"
       name="stageType" [model]="stage.stageType" (valueChange)="stage.stageType = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-4-1" *ngIf="showAdvancedSettings" domain="SSG_STAGE_ROLE" title="Stage Role"
+    <app-cv-input class="col-4-1" *ngIf="configSettingsDisplay['stageRole'] || (configSettingsDisplay['stageRole'] === undefined && showAdvancedSettings)" domain="SSG_STAGE_ROLE" title="Stage Role"
       name="stageRole" [model]="stage.stageRole" (valueChange)="stage.stageRole = $event">
     </app-cv-input>
 
-    <mat-form-field class="col-4-1" *ngIf="showAdvancedSettings">
+    <mat-form-field class="col-4-1" *ngIf="configSettingsDisplay['stageEquipment'] || (configSettingsDisplay['stageEquipment'] === undefined && showAdvancedSettings)">
       <input matInput placeholder="Equipment" [(ngModel)]="stage.equipment" name="stage.equipment" />
     </mat-form-field>
   </div> <!-- form row -->
 
-  <div class="form-row" *ngIf="showAdvancedSettings">
-    <div class="marginleft40px">&nbsp;</div>
-    <mat-form-field class="col-1-1">
-      <input matInput placeholder="Comments" [(ngModel)]="stage.stageComments"
-        name="stage.stageComments" />
+  <div class="form-row" *ngIf="configSettingsDisplay['stageComments'] || (configSettingsDisplay['stageComments'] === undefined && showAdvancedSettings)">
+    <mat-form-field class="col-1-1 marginleft40px">
+      <input matInput placeholder="Comments" [(ngModel)]="stage.stageComments" name="stage.stageComments" />
     </mat-form-field>
   </div> <!-- form row -->
 
@@ -51,8 +49,8 @@
     <div class="marginbottom10px"
       *ngFor="let criticalParameter of stage.criticalParameters; let criticalParameterIndex = index">
       <app-ssg4m-critical-parameter-form [criticalParameter]="criticalParameter" [processIndex]="processIndex"
-      [siteIndex]="siteIndex" [stageIndex]="stageIndex" [criticalParameterIndex]="criticalParameterIndex"
-      [showAdvancedSettings]="showAdvancedSettings">
+        [siteIndex]="siteIndex" [stageIndex]="stageIndex" [criticalParameterIndex]="criticalParameterIndex"
+        [showAdvancedSettings]="showAdvancedSettings">
       </app-ssg4m-critical-parameter-form>
     </div>
     <!-- Another Add Button-->

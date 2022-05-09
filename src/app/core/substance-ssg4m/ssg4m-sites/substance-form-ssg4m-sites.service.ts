@@ -61,18 +61,4 @@ export class SubstanceFormSsg4mSitesService extends SubstanceFormServiceBase<Arr
     }*/
   }
 
-  addStage(processIndex: number, siteIndex: number): void {
-    const newStage: SpecifiedSubstanceG4mStage = {
-     // references: [],
-     // access: []
-     stageNumber: '',
-     criticalParameters: [],
-     startingMaterials: [],
-     processingMaterials: [],
-     resultingMaterials: []
-    };
-    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.push(newStage);
-    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages);
-  }
-
 }

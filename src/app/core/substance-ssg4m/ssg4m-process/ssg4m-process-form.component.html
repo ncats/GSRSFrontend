@@ -12,29 +12,39 @@
       </button>
     </div>
 
-    <mat-form-field class="col-3-1">
+    <!-- if Config is not set, as a Default, intitally show some fields and make some fields as Advanced Setting -->
+    <mat-form-field class="col-3-1"
+      *ngIf="configSettingsDisplay['processName'] || (configSettingsDisplay['processName'] === undefined && true)">
       <input matInput placeholder="Process Name" [(ngModel)]="process.processName" name="process.processName" />
     </mat-form-field>
 
-    <app-cv-input class="col-3-1" *ngIf="showAdvancedSettings" domain="SSG_PROCESS_ROLE" title="Process Role" name="processRole"
-    [model]="process.processRole" (valueChange)="process.processRole = $event">
+    <app-cv-input class="col-3-1"
+      *ngIf="configSettingsDisplay['processRole'] || (configSettingsDisplay['processRole'] === undefined && showAdvancedSettings)"
+      domain="SSG_PROCESS_ROLE" title="Process Role" name="processRole" [model]="process.processRole"
+      (valueChange)="process.processRole = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-3-1" *ngIf="showAdvancedSettings" domain="SSG_PROCESS_TYPE" title="Process Type" name="processType"
-    [model]="process.processType" (valueChange)="process.processType = $event">
+    <app-cv-input class="col-3-1"
+      *ngIf="configSettingsDisplay['processType'] || (configSettingsDisplay['processType'] === undefined && showAdvancedSettings)"
+      domain="SSG_PROCESS_TYPE" title="Process Type" name="processType" [model]="process.processType"
+      (valueChange)="process.processType = $event">
     </app-cv-input>
   </div> <!-- form row -->
 
-  <div class="form-row">
-    <div class="marginleft45px">&nbsp;</div>
-    <mat-form-field class="col-2-1" *ngIf="showAdvancedSettings">
-      <input matInput placeholder="Process Description" [(ngModel)]="process.processDescription"
-        name="process.processDescription" />
-    </mat-form-field>
-    <mat-form-field class="col-2-1" *ngIf="showAdvancedSettings">
-      <input matInput placeholder="Comments" [(ngModel)]="process.comments" name="process.comments" />
-    </mat-form-field>
-  </div> <!-- form row -->
+  <div class="marginleft50px">
+    <div class="form-row">
+      <mat-form-field class="col-2-1"
+        *ngIf="configSettingsDisplay['processDescription'] || (configSettingsDisplay['processDescription'] === undefined && showAdvancedSettings)">
+        <input matInput placeholder="Process Description" [(ngModel)]="process.processDescription"
+          name="process.processDescription" />
+      </mat-form-field>
+
+      <mat-form-field class="col-2-1"
+        *ngIf="configSettingsDisplay['processComments'] || (configSettingsDisplay['processComments'] === undefined && showAdvancedSettings)">
+        <input matInput placeholder="Comments" [(ngModel)]="process.processComments" name="process.processComments" />
+      </mat-form-field>
+    </div> <!-- form row -->
+  </div>
 
   <!-- SITES LIST BEGIN -->
   <hr>

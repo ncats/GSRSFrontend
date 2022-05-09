@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { ConfigService } from '@gsrs-core/config/config.service';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
@@ -18,6 +19,7 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
   privateProcessIndex: number;
   privateSiteIndex: number;
   privateStageIndex: number;
+  public configSettingsDisplay = {};
   privateShowAdvancedSettings: boolean;
   privateStartingMaterial: SpecifiedSubstanceG4mStartingMaterial;
   relatedSubstanceUuid: string;
@@ -26,8 +28,9 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private substanceFormService: SubstanceFormService,
+    public configService: ConfigService,
     private dialog: MatDialog
-    ) { }
+  ) { }
 
   @Input()
   set startingMaterial(startingMaterial: SpecifiedSubstanceG4mStartingMaterial) {
@@ -68,6 +71,8 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
   @Input()
   set showAdvancedSettings(showAdvancedSettings: boolean) {
     this.privateShowAdvancedSettings = showAdvancedSettings;
+    // Get Config Settins from config file
+    this.getConfigSettings();
   }
 
   get showAdvancedSettings(): boolean {
@@ -91,6 +96,27 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     // this.substanceFormService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
+    });
+  }
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // *** IMPORTANT: get the correct value. Get 'startingMaterial' json values from config
+    const confSettings = configSsg4Form.settingsDisplay.startingMaterial;
+    Object.keys(confSettings).forEach(key => {
+      if (confSettings[key] != null) {
+        if (confSettings[key] === 'simple') {
+          this.configSettingsDisplay[key] = true;
+        } else if (confSettings[key] === 'advanced') {
+          if (this.privateShowAdvancedSettings === true) {
+            this.configSettingsDisplay[key] = true;
+          } else {
+            this.configSettingsDisplay[key] = false;
+          }
+        }
+      }
     });
   }
 
@@ -126,6 +152,10 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
 
   deleteStartingMaterial(): void {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].startingMaterials.splice(this.startingMaterialIndex, 1);
+  }
+
+  copyResultingToStarting(processIndex:number, siteIndex:number, stageIndex:number) {
+
   }
 
   /*

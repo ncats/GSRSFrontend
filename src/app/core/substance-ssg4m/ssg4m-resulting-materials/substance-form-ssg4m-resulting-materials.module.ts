@@ -31,6 +31,7 @@ import { ExpandDetailsModule } from '@gsrs-core/expand-details/expand-details.mo
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubstanceFormModule } from '@gsrs-core/substance-form/substance-form.module';
+import { Ssg4mStagesModule } from '../ssg4m-stages/substance-form-ssg4m-stages.module';
 import { Ssg4mResultingMaterialsFormComponent } from './ssg4m-resulting-materials-form.component';
 
 @NgModule({
@@ -68,6 +69,7 @@ import { Ssg4mResultingMaterialsFormComponent } from './ssg4m-resulting-material
     SubstanceImageModule,
     SubstanceSelectorModule,
     SubstanceFormModule
+   // Ssg4mStagesModule
   ],
   declarations: [
     Ssg4mResultingMaterialsFormComponent

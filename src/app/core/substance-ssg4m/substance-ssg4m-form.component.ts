@@ -432,7 +432,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.downloadJsonHref = uri;
 
     const date = new Date();
-    this.jsonFileName = 'SSG4m_' + moment(date).format('DD-MM-YYYY_H-mm-ss');
+    this.jsonFileName = 'SSG4m_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 }
 
 getSubstanceDetails(newType ?: string): void {

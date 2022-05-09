@@ -19,6 +19,7 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
   privateProcessIndex: number;
   privateSiteIndex: number;
   privateStageIndex: number;
+  public configSettingsDisplay = {};
   privateShowAdvancedSettings: boolean;
   privateProcessingMaterial: SpecifiedSubstanceG4mProcessingMaterial;
   relatedSubstanceUuid: string;
@@ -70,6 +71,8 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
   @Input()
   set showAdvancedSettings(showAdvancedSettings: boolean) {
     this.privateShowAdvancedSettings = showAdvancedSettings;
+    // Get Config Settins from config file
+    this.getConfigSettings();
   }
 
   get showAdvancedSettings(): boolean {
@@ -92,6 +95,27 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
+    });
+  }
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // *** IMPORTANT: get the correct value. Get 'processingMaterial' json values from config
+    const confSettings = configSsg4Form.settingsDisplay.processingMaterial;
+    Object.keys(confSettings).forEach(key => {
+      if (confSettings[key] != null) {
+        if (confSettings[key] === 'simple') {
+          this.configSettingsDisplay[key] = true;
+        } else if (confSettings[key] === 'advanced') {
+          if (this.privateShowAdvancedSettings === true) {
+            this.configSettingsDisplay[key] = true;
+          } else {
+            this.configSettingsDisplay[key] = false;
+          }
+        }
+      }
     });
   }
 

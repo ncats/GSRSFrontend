@@ -24,8 +24,8 @@ import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dial
   styleUrls: ['./ssg4m-process-form.component.scss']
 })
 export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
-  // @Input() showAdvancedSettings: boolean;
-  private privatesShowAdvancedSettings: boolean;
+  private privateShowAdvancedSettings: boolean;
+  public configSettingsDisplay = {};
   private privateProcessIndex: number;
   private privateProcess: SpecifiedSubstanceG4mProcess;
   parent: SubstanceRelated;
@@ -37,6 +37,7 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
     private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
     private substanceFormService: SubstanceFormService,
+    private configService: ConfigService,
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService,
     private overlayContainerService: OverlayContainer,
@@ -70,11 +71,13 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
 
   @Input()
   set showAdvancedSettings(showAdvancedSettings: boolean) {
-    this.privatesShowAdvancedSettings = showAdvancedSettings;
+    this.privateShowAdvancedSettings = showAdvancedSettings;
+    // Get Config Settins from config file
+    this.getConfigSettings();
   }
 
   get showAdvancedSettings(): boolean {
-    return this.privatesShowAdvancedSettings;
+    return this.privateShowAdvancedSettings;
   }
 
   ngOnInit() {
@@ -88,6 +91,27 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
+    });
+  }
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // Get 'process' json values from config
+    const confSettings = configSsg4Form.settingsDisplay.process;
+    Object.keys(confSettings).forEach(key => {
+      if (confSettings[key] != null) {
+        if (confSettings[key] === 'simple') {
+          this.configSettingsDisplay[key] = true;
+        } else if (confSettings[key] === 'advanced') {
+          if (this.privateShowAdvancedSettings === true) {
+            this.configSettingsDisplay[key] = true;
+          } else {
+            this.configSettingsDisplay[key] = false;
+          }
+        }
+      }
     });
   }
 

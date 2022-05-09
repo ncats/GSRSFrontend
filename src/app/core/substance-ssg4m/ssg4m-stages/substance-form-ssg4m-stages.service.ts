@@ -40,6 +40,20 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
     return this.propertyEmitter.asObservable();
   }
 
+  addStage(processIndex: number, siteIndex: number): void {
+    const newStage: SpecifiedSubstanceG4mStage = {
+     // references: [],
+     // access: []
+     stageNumber: '',
+     criticalParameters: [],
+     startingMaterials: [],
+     processingMaterials: [],
+     resultingMaterials: []
+    };
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.push(newStage);
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages);
+  }
+
   addCriticalParameter(processIndex: number, siteIndex: number, stageIndex: number): void {
     const newCriticalParam: SpecifiedSubstanceG4mCriticalParameter = {};
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].criticalParameters.push(newCriticalParam);
