@@ -55,7 +55,7 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
   }
 
   addCriticalParameter(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newCriticalParam: SpecifiedSubstanceG4mCriticalParameter = {};
+    const newCriticalParam: SpecifiedSubstanceG4mCriticalParameter = {value: {}};
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].criticalParameters.push(newCriticalParam);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].criticalParameters);
   }

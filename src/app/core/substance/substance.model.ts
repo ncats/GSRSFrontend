@@ -513,8 +513,9 @@ export interface SpecifiedSubstanceG4mStage extends SubstanceBase {
 export interface SpecifiedSubstanceG4mCriticalParameter extends SubstanceBase {
   name?: string;
   propertyType?: string;
-  amount?: SubstanceAmount;
-  referenceSubstance?: SubstanceRelated;
+  value?: SubstanceAmount;
+  parameters?: Array<SubstanceParameter>;
+  referencedSubstance?: SubstanceReference;
 }
 
 export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
