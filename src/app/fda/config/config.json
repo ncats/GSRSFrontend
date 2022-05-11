@@ -11,7 +11,7 @@
   "advancedSearchFacetDisplay": false,
   "approvalCodeName":"UNII",
   "primaryCode": "BDNUM",
-  "filteredDuplicationCodes": [ "BDNUM", "FDA_UNII" ],
+  "filteredDuplicationCodes": [ "BDNUM", "FDA UNII" ],
   "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID" ],
   "loadedComponents": {
     "applications": true,
@@ -122,13 +122,7 @@
     ]
   },
   {      "card": "substance-hierarchy",
-    "title": "Substance Hierarchy",
-    "filters": [
-      {
-        "filterName": "exists",
-        "propertyToCheck": "relationships"
-      }
-    ]
+    "title": "Substance Hierarchy"
   },
   {
     "card": "structure-details",

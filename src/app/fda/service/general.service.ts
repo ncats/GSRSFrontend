@@ -255,6 +255,9 @@ export class GeneralService extends BaseHttpService {
       if (source === 'prod') {
         return url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/${etag}/prodxlsx`;
       }
+      if (source === 'clinicaltrialsus') {
+        return url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/${etag}/ctusxlsx`;
+      }
     }
     return url;
   }

@@ -64,7 +64,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
           this.searchControl.valueChanges.subscribe(value => {
             this.filterList(value, this.codes);
           }, error => {
-            console.log(error);
+         //   console.log(error);
           });
           this.getTypeFilterOptions();
         } else {

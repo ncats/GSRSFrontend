@@ -459,7 +459,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.exportOptions = response.filter(exp => {
           if (exp.extension) {
             //TODO Make this generic somehow, so addditional-type exports are isolated
-            if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx')) {
+            if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') || (exp.extension === 'ctusxlsx') ) {
               return false;
             }
           }
