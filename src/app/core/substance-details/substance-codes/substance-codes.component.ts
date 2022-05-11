@@ -168,6 +168,16 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     }
   }
 
+  codeIsProtected(access: string[]) {
+    let itIs = false;
+    for(let a of access) {
+      if(a.toLowerCase() === 'protected') {
+        itIs = true;
+      }
+    }
+    return itIs;
+  }
+
   getClassificationTree(comments: string): Array<string> {
     return comments.split('|');
   }
