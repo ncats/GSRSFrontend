@@ -255,7 +255,7 @@
         </div>
       </mat-sidenav>
       <mat-sidenav-content>
-        <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+        <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
           <mat-icon svgIcon="chevron_right"></mat-icon>
         </button>
     <div class="side-nav-content" [ngClass] = "isClosedWelcomeMessage? 'topMargin' : ''" >

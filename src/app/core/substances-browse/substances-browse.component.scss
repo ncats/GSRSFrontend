@@ -654,3 +654,59 @@ margin-left: 20px;
     line-height: 40px;
     color: black;
 }
+.red-text {
+    color: red;
+    font-style: italic;
+}
+.orange-text {
+    color: orange;
+    font-style: italic;
+}
+.sub-search-div {
+    display: none; // remove to see UI added
+}
+.sub-search-ref-btn {
+    padding: 10px;
+    margin: 0 5px;
+    background-color: white;
+    box-shadow: 2px 2px lightgrey;
+    border: 0.4px solid white;
+    border-radius: 5px;
+}
+.sub-search-cancel-btn {
+    padding: 10px;
+    color: white;
+    background-color: red;
+    box-shadow: 2px 2px lightgrey;
+    border: 0.4px solid red;
+    border-radius: 5px;
+}
+.sub-search-text {
+    text-align: center;
+    // margin: 7px;
+}
+.match-txt {
+    display: inline;
+    padding: 0 5px;
+}
+.sub-search-text-div {
+    text-align: center;
+}
+.search-spinner {
+    width: 15px;
+    height: 15px;
+    display: inline-table;
+    margin: auto;
+}
+// .mat-progress-spinner circle, .mat-spinner circle {
+//     stroke: grey;
+// }
+.search-spinner ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+    stroke: grey;
+    width: 10px !important;
+    height: 10px !important;
+    display: inline;
+}
+.cdk-overlay-backdrop, .cdk-global-overlay-wrapper {
+    display: none !important;
+}

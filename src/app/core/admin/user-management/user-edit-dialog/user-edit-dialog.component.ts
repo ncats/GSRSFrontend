@@ -230,6 +230,7 @@ export class UserEditDialogComponent implements OnInit {
       };
 
       this.adminService.addUser(userEditObj).pipe(take(1)).subscribe(response => {
+        this.message = '';
         if (response && response.user) {
           this.successfulChange(response);
         }

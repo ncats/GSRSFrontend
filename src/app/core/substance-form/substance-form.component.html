@@ -1,5 +1,6 @@
 <div (click)="showHidePopup()" id="overlay" [ngClass]="{'hide': !hidePopup}"></div>
 <div class="center-screen" [ngClass]="{'hide': !hidePopup}">
+  <span class="close-out" (click)="showHidePopup()">x</span>
   <img (click)="showHidePopup()" class = "image-popped-up" appSubstanceImage [entityId]="unit && (unit.uuid || (unit._structure && unit._structure.id))">
 </div>
 <div class="top-fixed">
