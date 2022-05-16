@@ -12,6 +12,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Output() showMessage = new EventEmitter<String>();
+  @Output() searchValueOut = new EventEmitter<String>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   @Input() header = 'Substance';
@@ -50,9 +51,12 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   }
 
   processSubstanceSearch(searchValue: string = ''): void {
-
     this.searchValue = searchValue;
     const q = searchValue.replace('\"', '');
+
+    this.searchValueOut.emit(this.searchValue);
+
+    // const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
 
     const searchStr = `root_names_name:\"^${q}$\" OR ` +
       `root_approvalID:\"^${q}$\" OR ` +
@@ -65,7 +69,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
         this.selectionUpdated.emit(this.selectedSubstance);
         this.errorMessage = '';
       } else {
-        this.showMessage.emit('No substances found');
+        this.showMessage.emit('No substances found for ' + this.searchValue);
       }
       this.loadingStructure = false;
     });

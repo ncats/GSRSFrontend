@@ -61,6 +61,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   title = null;
   submitDateMessage = '';
   statusDateMessage = '';
+  ingredientNameMessage = '';
+  basisOfStrengthMessage = '';
   appForm: FormGroup;
   isAdmin = false;
 
@@ -178,9 +180,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
         this.loadingService.setLoading(false);
         this.isLoading = false;
       });
-
     }
-
   }
 
   setValidationMessage(message: string) {
@@ -219,6 +219,16 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     // Validate Status Date in application
     if ((this.statusDateMessage !== null) && (this.statusDateMessage.length > 0)) {
       this.setValidationMessage(this.statusDateMessage);
+    }
+
+    // Validate Ingredient Name in Ingredient Section
+    if ((this.ingredientNameMessage !== null) && (this.ingredientNameMessage.length > 0)) {
+      this.setValidationMessage(this.ingredientNameMessage);
+    }
+
+    // Validate Basis of Strength in Ingredient Section
+    if ((this.basisOfStrengthMessage !== null) && (this.basisOfStrengthMessage.length > 0)) {
+      this.setValidationMessage(this.basisOfStrengthMessage);
     }
 
     // Validate Product Amount, which should be integer/number
@@ -558,4 +568,11 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
+  ingredientMessageOutChange($event) {
+    this.ingredientNameMessage = $event;
+  }
+
+  basisOfStrengthMessageOutChange($event) {
+    this.basisOfStrengthMessage = $event;
+  }
 }

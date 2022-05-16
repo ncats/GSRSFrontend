@@ -266,7 +266,8 @@
             </div> <!-- Indication Loop-->
 
             <!-- Product Form -->
-            <app-application-product-form [application]="application"></app-application-product-form>
+            <app-application-product-form [application]="application" (ingredientMessageOut)="ingredientMessageOutChange($event)"
+            (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)"></app-application-product-form>
 
           </mat-card-content>
 

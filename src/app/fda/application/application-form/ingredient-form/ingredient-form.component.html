@@ -44,7 +44,7 @@
     <div class="col-2 flex-column related-substance">
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="ingredientNameUpdated($event)"
-          (showMessage)="showMessageIngredientName($event)" eventCategory="ingredName" placeholder="Ingredient Name"
+          (showMessage)="showMessageIngredientName($event)" (searchValueOut)="searchValueOut($event)" eventCategory="ingredName" placeholder="Ingredient Name"
           header="Ingredient Name" [subuuid]="substanceUuid">
         </app-substance-search-selector>
 

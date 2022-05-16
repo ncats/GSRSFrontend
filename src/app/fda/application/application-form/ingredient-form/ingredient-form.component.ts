@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, OnDestroy, EventEmitter, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ApplicationIngredient } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
@@ -23,6 +23,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   @Input() prodIndex: number;
   @Input() ingredIndex: number;
   @Input() totalIngredient: number;
+  @Output() ingredientMessageOut = new EventEmitter<String>();
+  @Output() basisOfStrengthMessageOut = new EventEmitter<String>();
 
   substanceUuid: string;
   ingredientName: string;
@@ -436,13 +438,21 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  searchValueOut($event): void {
+   // this.ingredientNameMessage = message;
+   // alert('Search Value ' + $event);
+  }
 
   showMessageIngredientName(message: string): void {
     this.ingredientNameMessage = message;
+    // Send this to Application form for Validation
+    this.ingredientMessageOut.emit('Ingredient Name - ' + this.ingredientNameMessage);
   }
 
   showMessageBasisOfStrength(message: string): void {
     this.basisOfStrengthMessage = message;
+    // Send this to Application form for Validation
+    this.basisOfStrengthMessageOut.emit('Basis of Strength - ' + this.basisOfStrengthMessage);
   }
 
 }
