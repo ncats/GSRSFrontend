@@ -1,0 +1,59 @@
+<div class="margintop10px" *ngFor="let process of processList; let processIndex = index" appScrollToTarget>
+  <fieldset class="border">
+    <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}}</span></b>
+    </legend>
+
+    <!-- STEPS -->
+    <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
+      <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
+        <div class="divflex">
+          <div>
+            <b>Step {{stageIndex+1}}</b>
+          </div>
+          <div>
+            <button mat-flat-button color="primary" (click)="editInForm()">Edit in Form</button>
+          </div>
+        </div>
+        <table class="width100percent bordergray" border=1>
+          <tr>
+            <td class="width33percent textaligncenter">
+              <div class="paddingleft10px marginbottom10px"
+                *ngFor="let startingMaterial of stage.startingMaterials; let startingMaterialIndex = index">
+                <div *ngIf="startingMaterial.substanceName">
+                  <img class="structure-img" appSubstanceImage [entityId]="startingMaterial.substanceName.refuuid">
+                </div>
+                {{startingMaterial.substanceName.refPname}}
+              </div> <!-- Starting Material Loop -->
+            </td>
+
+            <td class="width33percent">
+              <div class="marginbottom10px"
+                *ngFor="let processingMaterial of stage.processingMaterials; let processingMaterialIndex = index">
+                <div *ngIf="processingMaterial.substanceName">
+                  <a mat-menu-item [routerLink]="['/substances', processingMaterial.substanceName.refuuid]"
+                    matTooltip='View record'>
+                    <mat-icon svgIcon="edit"></mat-icon>
+                  </a>&nbsp;&nbsp;
+                  {{(processingMaterialIndex+1)}}.{{processingMaterial.substanceName.refPname}}
+                </div>
+                <img src="{{imageLoc}}" />
+              </div> <!-- Processing Material Loop -->
+            </td>
+
+            <td class="width33percent textaligncenter">
+              <div class="marginbottom10px"
+                *ngFor="let resultingMaterial of stage.resultingMaterials; let resultingMaterialIndex = index">
+                <div *ngIf="resultingMaterial.substanceName">
+                  <img class="structure-img" appSubstanceImage [entityId]="resultingMaterial.substanceName.refuuid">
+                </div>
+                {{resultingMaterial.substanceName.refPname}}
+              </div> <!-- Resulting Material Loop -->
+            </td>
+
+          </tr>
+        </table>
+      </div> <!-- Stage loop -->
+    </div>
+
+  </fieldset>
+</div>

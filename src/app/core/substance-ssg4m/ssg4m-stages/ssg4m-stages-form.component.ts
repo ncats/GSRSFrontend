@@ -37,6 +37,7 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
   privateSiteIndex: number;
   privateStageIndex: number;
   privateShowAdvancedSettings: boolean;
+  privateTabSelectedView: string;
   substance: SubstanceDetail;
   subscriptions: Array<Subscription> = [];
 
@@ -97,6 +98,15 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
 
   get showAdvancedSettings(): boolean {
     return this.privateShowAdvancedSettings;
+  }
+
+  @Input()
+  set tabSelectedView(tabSelectedView: string) {
+    this.privateTabSelectedView = tabSelectedView;
+  }
+
+  get tabSelectedView(): string {
+    return this.privateTabSelectedView;
   }
 
   ngOnInit(): void {

@@ -27,6 +27,7 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
   private privateShowAdvancedSettings: boolean;
   public configSettingsDisplay = {};
   private privateProcessIndex: number;
+  private privateTabSelectedView: string;
   private privateProcess: SpecifiedSubstanceG4mProcess;
   parent: SubstanceRelated;
   private substance: SubstanceDetail;
@@ -78,6 +79,15 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
 
   get showAdvancedSettings(): boolean {
     return this.privateShowAdvancedSettings;
+  }
+
+  @Input()
+  set tabSelectedView(tabSelectedView: string) {
+    this.privateTabSelectedView = tabSelectedView;
+  }
+
+  get tabSelectedView(): string {
+    return this.privateTabSelectedView;
   }
 
   ngOnInit() {

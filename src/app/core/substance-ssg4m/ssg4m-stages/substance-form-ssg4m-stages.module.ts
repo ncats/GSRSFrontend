@@ -47,12 +47,13 @@ import { AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-in
 // import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
 // import { SubstanceFormComponent } from '../substance-form/substance-form.component';
 // import { SubstanceFormSsg4mSitesService } from './ssg4m-sites/substance-form-ssg4m-sites.service.';
+import { Ssg4mStagesFormComponent } from './ssg4m-stages-form.component';
 import { Ssg4mCriticalParameterModule } from '../ssg4m-critical-parameter/ssg4m-critical-parameter.module';
 import { SubstanceFormSsg4mStartingMaterialsModule } from '../ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 import { SubstanceFormSsg4mProcessingMaterialsModule } from '../ssg4m-processing-materials/substance-form-ssg4m-processing-materials.module';
 import { SubstanceFormSsg4mResultingMaterialsModule } from '../ssg4m-resulting-materials/substance-form-ssg4m-resulting-materials.module';
+import { Ssg4mSchemeViewModule } from '../ssg4m-scheme-view/ssg4m-scheme-view.module';
 import { SubstanceFormSsg4mStagesService } from './substance-form-ssg4m-stages.service';
-import { Ssg4mStagesFormComponent } from './ssg4m-stages-form.component';
 
 @NgModule({
   imports: [
@@ -91,7 +92,8 @@ import { Ssg4mStagesFormComponent } from './ssg4m-stages-form.component';
     Ssg4mCriticalParameterModule,
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceFormSsg4mProcessingMaterialsModule,
-    SubstanceFormSsg4mResultingMaterialsModule
+    SubstanceFormSsg4mResultingMaterialsModule,
+    Ssg4mSchemeViewModule
   ],
   declarations: [
   //  SubstanceFormComponent,

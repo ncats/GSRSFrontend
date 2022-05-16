@@ -14,8 +14,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTabsModule } from '@angular/material/tabs';
 // import { SubstanceFormSsg4mSitesCardComponent} from '../ssg4m-sites/ssg4m-sites.module'
 import { Ssg4mSitesModule } from '../ssg4m-sites/ssg4m-sites.module';
+import { Ssg4mSchemeViewModule } from '../ssg4m-scheme-view/ssg4m-scheme-view.module';
 import { SubstanceFormSsg4mProcessCardComponent } from './substance-form-ssg4m-process-card.component';
 import { Ssg4mProcessFormComponent } from './ssg4m-process-form.component';
 import { Ssg4mSitesComponent } from '../ssg4m-sites/ssg4m-sites.component';
@@ -37,7 +39,9 @@ import { Ssg4mSitesComponent } from '../ssg4m-sites/ssg4m-sites.component';
     MatFormFieldModule,
     ReactiveFormsModule,
     FormsModule,
-    Ssg4mSitesModule
+    MatTabsModule,
+    Ssg4mSitesModule,
+    Ssg4mSchemeViewModule
   ],
   exports: [
     Ssg4mProcessFormComponent

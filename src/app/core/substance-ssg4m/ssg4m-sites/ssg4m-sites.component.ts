@@ -32,6 +32,7 @@ export class Ssg4mSitesComponent implements OnInit {
   privateShowAdvancedSettings: boolean;
   public configSettingsDisplay = {};
   configTitleStage: string;
+  privateTabSelectedView: string;
   privateSite: SpecifiedSubstanceG4mSite;
   privateProcessIndex: number;
   privateSiteIndex: number;
@@ -87,6 +88,15 @@ export class Ssg4mSitesComponent implements OnInit {
 
   get showAdvancedSettings(): boolean {
     return this.privateShowAdvancedSettings;
+  }
+
+  @Input()
+  set tabSelectedView(tabSelectedView: string) {
+    this.privateTabSelectedView = tabSelectedView;
+  }
+
+  get tabSelectedView(): string {
+    return this.privateTabSelectedView;
   }
 
   ngOnInit(): void {
