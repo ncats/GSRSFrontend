@@ -825,6 +825,12 @@
       "display": "Register",
       "children": [
         {
+          "component": "ssg4m",
+          "display": "G4 Specified Substance Manufacturing",
+          "path": "substances-ssg4m/register",
+          "order": 190
+        },
+        {
            "component": "applications",
           "display": "Application",
           "path": "application/register",
@@ -1029,7 +1035,6 @@
       },
       {"facetName": "Record Status",
         "facetValue":"pending"}]
-
     }
   ],
   "substance":{
@@ -1039,13 +1044,6 @@
         "orgDisplayKeyType":"BDNUM",
         "clinicalTrialKeyType":"UUID"
       }
-    }
-  },
-  "ssg4Form":{
-    "titles":{
-      "parentSubstance":"Resulting Substance",
-      "stage":"Step",
-      "processingMaterials":"Solvents and Catalysts"
     }
   }
 }
