@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SubstanceFormServiceBase } from '../../substance-form/base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
-import { SpecifiedSubstanceG4mStage, SpecifiedSubstanceG4mStartingMaterial } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mCriticalParameter, SpecifiedSubstanceG4mStage, SpecifiedSubstanceG4mStartingMaterial } from '@gsrs-core/substance/substance.model';
 import { SpecifiedSubstanceG4mProcessingMaterial, SpecifiedSubstanceG4mResultingMaterial } from '@gsrs-core/substance/substance.model';
 
 @Injectable({
@@ -38,6 +38,26 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
 
   get specifiedSubstanceG4mStage(): Observable<Array<SpecifiedSubstanceG4mStage>> {
     return this.propertyEmitter.asObservable();
+  }
+
+  addStage(processIndex: number, siteIndex: number): void {
+    const newStage: SpecifiedSubstanceG4mStage = {
+     // references: [],
+     // access: []
+     stageNumber: '',
+     criticalParameters: [],
+     startingMaterials: [],
+     processingMaterials: [],
+     resultingMaterials: []
+    };
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.push(newStage);
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages);
+  }
+
+  addCriticalParameter(processIndex: number, siteIndex: number, stageIndex: number): void {
+    const newCriticalParam: SpecifiedSubstanceG4mCriticalParameter = {value: {}};
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].criticalParameters.push(newCriticalParam);
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].criticalParameters);
   }
 
   addStartingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {

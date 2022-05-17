@@ -18,7 +18,8 @@
     "products": true,
     "clinicaltrials": true,
     "adverseevents": true,
-    "impurities": true
+    "impurities": true,
+    "ssg4m": true
     },
   "usefulLinks": [
     {"title": "GSRSFind Excel tools",
@@ -827,6 +828,12 @@
       "display": "Register",
       "children": [
         {
+          "component": "ssg4m",
+          "display": "G4 Specified Substance Manufacturing",
+          "path": "substances-ssg4m/register",
+          "order": 190
+        },
+        {
            "component": "applications",
           "display": "Application",
           "path": "application/register",
@@ -1049,6 +1056,54 @@
       "parentSubstance":"Resulting Substance",
       "stage":"Step",
       "processingMaterials":"Solvents and Catalysts"
+    },
+    "settingsDisplay": {
+      "process": {
+        "processName": "simple",
+        "processRole": "advanced",
+        "processType": "advanced",
+        "processDescription": "advanced",
+        "processComments": "advanced"
+      },
+      "site": {
+        "siteName": "advanced",
+        "siteIdType": "advanced",
+        "siteId": "advanced",
+        "siteAddress": "advanced",
+        "gpsSiteLocation": "advanced",
+        "siteClearance": "advanced",
+        "siteComments": "advanced"
+      },
+      "stage": {
+        "stageNumber": "simple",
+        "stageType": "advanced",
+        "stageRole": "advanced",
+        "stageEquipment": "advanced",
+        "stageComments": "advanced"
+      },
+      "criteriaParameter": {
+        "name": "simple",
+        "propertyType": "simple",
+        "referencedSubstance": "simple"
+      },
+      "startingMaterial": {
+        "substanceName": "simple",
+        "verbatimName": "simple",
+        "substanceRole": "simple",
+        "comments": "advanced"
+      },
+      "processingMaterial": {
+        "substanceName": "simple",
+        "verbatimName": "simple",
+        "substanceRole": "simple",
+        "comments": "advanced"
+      },
+      "resultingMaterial": {
+        "substanceName": "simple",
+        "verbatimName": "simple",
+        "substanceRole": "simple",
+        "comments": "advanced"
+      }
     }
   }
 }

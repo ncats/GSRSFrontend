@@ -1,4 +1,5 @@
 .process-form-container {
+
   padding: 5px 10px 12px 10px;
   position: relative;
 }
@@ -23,8 +24,22 @@
   display: flex;
   width: 100%;
 
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
   .col-4-1 {
-    width: calc((100% - 20px * 3) / 4); //four column
+    width: calc((100% - 20px * 3) / 4); // 4 column
+    margin-right: 20px;
+  }
+
+  .col-3-1 {
+    width: calc((100% - 20px * 2) / 3); // 3 column
+    margin-right: 20px;
+  }
+
+  .col-2-1 {
+    width: calc((100% - 20px * 1) / 2); // 2 column
     margin-right: 20px;
   }
 }
@@ -87,6 +102,10 @@ hr {
 
 .margintop10px {
   margin-top: 10px;
+}
+
+.marginleft50px {
+  margin-left: 50px;
 }
 
 .marginbottom20px {

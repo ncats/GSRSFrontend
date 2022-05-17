@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { SsgParentSubstanceFormComponent } from './ssg-parent-substance-form.component';
 import { SubstanceFormModule } from '../substance-form.module';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
@@ -8,6 +9,7 @@ import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule,
     DynamicComponentLoaderModule.forChild(SsgParentSubstanceFormComponent),
     SubstanceFormModule,
     SubstanceSelectorModule
