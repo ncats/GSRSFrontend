@@ -1,5 +1,5 @@
 <!-- Tabs - Form View and Scheme Preview -->
-<mat-tab-group (selectedTabChange)="tabSelected($event)">
+<mat-tab-group dynamicHeight (selectedTabChange)="tabSelected($event)" [selectedIndex]="active">
   <mat-tab label="Form View">
 
     <div class="flex-row">
@@ -53,7 +53,7 @@
 
   </mat-tab>
 
-  <mat-tab label="Scheme View">
+  <mat-tab label="Scheme Preview">
     <!-- Display in Scheme View-->
     <app-ssg4m-scheme-view></app-ssg4m-scheme-view>
 

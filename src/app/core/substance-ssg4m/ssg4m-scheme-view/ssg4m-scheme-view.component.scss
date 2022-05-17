@@ -1,13 +1,55 @@
+.divflexspace {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.divflex {
+  display: flex;
+}
+
 .bordergray {
   border: 1px solid gray;
+}
+
+.margintopneg10px {
+  margin-top: -10px;
 }
 
 .margintop10px {
   margin-top: 10px;
 }
 
+.marginbottom10px {
+  margin-bottom: 10px;
+}
+
+.marginbottom20px {
+  margin-top: 20px;
+}
+
 .paddingleft10px {
   padding-left: 10px;
+}
+
+.paddingleft20px {
+  padding-left: 20px;
+}
+
+.paddingtop15px {
+  padding-top: 15px;
+}
+
+.paddingbottom10px {
+  padding-bottom: 10px;
+}
+
+.font16px {
+  font-size: 16px;
+}
+
+.font25px {
+  font-size: 25px;
 }
 
 .width100percent {
@@ -44,6 +86,9 @@ legend.border {
   margin-bottom: 10px;
 }
 
-.divflex {
-  display: flex;
+.structure-img-big {
+  width: 100%;
+  height: auto;
 }
+
+

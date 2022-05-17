@@ -4,49 +4,77 @@
     </legend>
 
     <!-- STEPS -->
-    <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
+    <div *ngFor="let site of process.sites; let siteIndex = index">
       <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
-        <div class="divflex">
-          <div>
-            <b>Step {{stageIndex+1}}</b>
+
+        <div class="divflexspace">
+          <div class="paddingtop15px font16px">
+            <b><u>Step {{stageIndex+1}}</u></b>
           </div>
           <div>
-            <button mat-flat-button color="primary" (click)="editInForm()">Edit in Form</button>
+            <button mat-raised-button color="primary" (click)="editInForm()" matTooltip="Edit In Form">
+              <mat-icon svgIcon="edit"></mat-icon>Edit in Form
+            </button>
           </div>
         </div>
-        <table class="width100percent bordergray" border=1>
-          <tr>
+
+        <table class="width100percent bordergray">
+          <tr class="paddingbottom10px">
+            <!-- Starting -->
             <td class="width33percent textaligncenter">
               <div class="paddingleft10px marginbottom10px"
                 *ngFor="let startingMaterial of stage.startingMaterials; let startingMaterialIndex = index">
                 <div *ngIf="startingMaterial.substanceName">
+                  <div class="paddingtop15px font25px"
+                    *ngIf="(stage.startingMaterials.length > 1 && startingMaterialIndex != 0)">
+                    <b>+</b>
+                  </div>
                   <img class="structure-img" appSubstanceImage [entityId]="startingMaterial.substanceName.refuuid">
                 </div>
-                {{startingMaterial.substanceName.refPname}}
+                <a [routerLink]="['/substances', startingMaterial.substanceName.refuuid]" target="_blank">
+                  {{startingMaterial.substanceName.refPname}}</a>
+
               </div> <!-- Starting Material Loop -->
             </td>
 
+            <!-- Processing -->
             <td class="width33percent">
-              <div class="marginbottom10px"
+              <div
                 *ngFor="let processingMaterial of stage.processingMaterials; let processingMaterialIndex = index">
                 <div *ngIf="processingMaterial.substanceName">
-                  <a mat-menu-item [routerLink]="['/substances', processingMaterial.substanceName.refuuid]"
-                    matTooltip='View record'>
-                    <mat-icon svgIcon="edit"></mat-icon>
-                  </a>&nbsp;&nbsp;
-                  {{(processingMaterialIndex+1)}}.{{processingMaterial.substanceName.refPname}}
+                  <div class="divflex">
+                    <div class="margintopneg10px">
+                      <!-- Display Structure when rollover icon -->
+                      <button mat-button
+                        (click)="openImageModal($event, processingMaterial.substanceName.refuuid)">
+                        <mat-icon>remove_red_eye</mat-icon>
+                      </button>&nbsp;&nbsp;
+                    </div>
+                    <div>
+                      <a [routerLink]="['/substances', processingMaterial.substanceName.refuuid]" target="_blank">
+                        <b>{{(processingMaterialIndex+1)}}.&nbsp;{{processingMaterial.substanceName.refPname}}</b></a>
+                    </div>
+                  </div>
                 </div>
-                <img src="{{imageLoc}}" />
               </div> <!-- Processing Material Loop -->
+              <div class="paddingleft20px" *ngIf="stage.processingMaterials.length > 0">
+                <img src="{{imageLoc}}" />
+              </div>
             </td>
 
+            <!-- Resulting -->
             <td class="width33percent textaligncenter">
               <div class="marginbottom10px"
                 *ngFor="let resultingMaterial of stage.resultingMaterials; let resultingMaterialIndex = index">
                 <div *ngIf="resultingMaterial.substanceName">
+                  <div class="paddingtop15px font25px"
+                    *ngIf="(stage.resultingMaterials.length > 1 && resultingMaterialIndex != 0)">
+                    <b>+</b>
+                  </div>
                   <img class="structure-img" appSubstanceImage [entityId]="resultingMaterial.substanceName.refuuid">
                 </div>
-                {{resultingMaterial.substanceName.refPname}}
+                <a [routerLink]="['/substances', resultingMaterial.substanceName.refuuid]" target="_blank">
+                  {{resultingMaterial.substanceName.refPname}}</a>
               </div> <!-- Resulting Material Loop -->
             </td>
 

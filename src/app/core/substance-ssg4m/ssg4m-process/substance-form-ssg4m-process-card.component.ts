@@ -21,6 +21,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   private subscriptions: Array<Subscription> = [];
   showAdvancedSettings = false;
   tabSelectedView = 'Form View';
+  active = 0;
 
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
