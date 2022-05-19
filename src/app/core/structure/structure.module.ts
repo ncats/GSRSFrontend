@@ -9,6 +9,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonModule} from '@angular/material/button';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, NavigationExtras, RouterModule } from '@angular/router';
 import { FileSelectModule } from 'file-select';
 
 
@@ -27,6 +28,7 @@ import { FileSelectModule } from 'file-select';
     ReactiveFormsModule,
     MatProgressBarModule,
     MatButtonModule,
+    RouterModule,
     FileSelectModule
   ],
   exports: [

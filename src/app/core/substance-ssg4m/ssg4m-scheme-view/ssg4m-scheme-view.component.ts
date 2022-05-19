@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,8 @@ import { SubstanceDetail, SpecifiedSubstanceG4mProcess } from '@gsrs-core/substa
   styleUrls: ['./ssg4m-scheme-view.component.scss']
 })
 export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
+  @Output() tabSelectedIndexOut = new EventEmitter<number>();
+
   imageLoc: any;
   environment: Environment;
   substance: SubstanceDetail;
@@ -25,8 +27,9 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   constructor(
     private configService: ConfigService,
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
+    private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer) { }
+  ) { }
 
   ngOnInit(): void {
     const processSubscription = this.substanceFormSsg4mProcessService.specifiedSubstanceG4mProcess.subscribe(process => {
@@ -40,6 +43,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     this.subscriptions.push(processSubscription);
     this.environment = this.configService.environment;
     this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/arrow.png`;
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngOnDestroy(): void {
@@ -48,25 +52,24 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  openImageModal($event, subUuid: string): void {
+  openImageModal(subUuid: string, approvalID: string, displayName: string): void {
     // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
 
     //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
     let data: any;
-
     // if (substance.substanceClass === 'chemical') {
     data = {
       structure: subUuid,
-      //   smiles: substance.structure.smiles,
       uuid: subUuid,
-      //    names: substance.names
+      approvalID: approvalID,
+      displayName: displayName
     };
     // }
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
-      height: '60%',
-      width: '450px',
+      height: '96%',
+      width: '650px',
       panelClass: 'structure-image-panel',
       data: data
     });
@@ -83,6 +86,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   }
 
   editInForm() {
+    this.tabSelectedIndexOut.emit(0);
   }
 
 }

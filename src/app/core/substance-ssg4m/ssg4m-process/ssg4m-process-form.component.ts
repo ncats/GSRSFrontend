@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -24,6 +24,9 @@ import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dial
   styleUrls: ['./ssg4m-process-form.component.scss']
 })
 export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
+  @Output() tabSelectedIndexOut = new EventEmitter<number>();
+
+  tabSelectedIndex: number;
   private privateShowAdvancedSettings: boolean;
   public configSettingsDisplay = {};
   private privateProcessIndex: number;
@@ -152,5 +155,8 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
     this.substanceFormSsg4mProcessService.deleteProcess(this.privateProcess, this.processIndex);
   }
 
+  tabSelectedIndexOutChange(index: number) {
+    this.tabSelectedIndexOut.emit(index);
+  }
 }
 

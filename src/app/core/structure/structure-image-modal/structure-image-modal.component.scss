@@ -6,13 +6,13 @@
       padding: 5px;
       position: relative;
     }
-    
+
     .mat-dialog-content {
       margin: 0;
       padding: 0;
       max-height: 100%;
     }
-    
+
     .mat-tab-body-content {
       padding-left: 10px;
       padding-right: 10px;
@@ -41,4 +41,25 @@ img {
   ::ng-deep .mat-button-wrapper {
       padding: 0;
   }
+}
+
+.approval {
+  position: relative;
+  top: 30px;
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.displayname {
+  width: 80%;
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.viewrecord {
+  color: #448aff;
+  font-weight: bold;
+  font-size: 20px;
 }
