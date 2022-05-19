@@ -25,6 +25,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   @Input() eventCategory: string;
   @Input() styling?: string;
   @Output() searchPerformed = new EventEmitter<string>();
+  @Output() searchValueOut = new EventEmitter<string>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   private privateErrorMessage = '';
@@ -56,6 +57,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       distinctUntilChanged(),
       switchMap(searchValue => {
         this.query = searchValue;
+        this.searchValueOut.emit(this.query);
         const eventCategory = this.eventCategory || 'substanceTextSearch';
         const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
         this.gaService.sendEvent(eventCategory, 'search:enter-term', eventLabel);

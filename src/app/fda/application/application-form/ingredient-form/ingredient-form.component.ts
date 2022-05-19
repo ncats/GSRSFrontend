@@ -41,6 +41,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   username = null;
   substanceConfig: any;
   substanceKeyTypeConfig: string;
+  searchValue: string;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -240,8 +241,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
               this.basisOfStrengthSubstanceUuid = response.uuid;
               this.basisOfStrengthIngredientName = response._name;
 
-               // Get Active Moiety
-               this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
+              // Get Active Moiety
+              this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
             }
           }
         });
@@ -438,15 +439,13 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  searchValueOut($event): void {
-   // this.ingredientNameMessage = message;
-   // alert('Search Value ' + $event);
-  }
-
   showMessageIngredientName(message: string): void {
     this.ingredientNameMessage = message;
     // Send this to Application form for Validation
+    // if (!this.substanceUuid && this.ingredientNameMessage) {
+    //   if (!this.substanceUuid && this.searchValue) {
     this.ingredientMessageOut.emit('Ingredient Name - ' + this.ingredientNameMessage);
+    //  }
   }
 
   showMessageBasisOfStrength(message: string): void {
@@ -455,4 +454,26 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     this.basisOfStrengthMessageOut.emit('Basis of Strength - ' + this.basisOfStrengthMessage);
   }
 
+  searchValueOutChange(searchValue: string) {
+    this.searchValue = searchValue;
+    // SearchValue is empty
+    if (!this.searchValue) {
+      this.ingredientNameMessage = '';
+      this.ingredientMessageOut.emit(this.ingredientNameMessage);
+    }
+    if (this.searchValue && this.substanceUuid) {
+      this.ingredientMessageOut.emit('There is no Ingredient Name found for' + this.searchValue);
+    }
+  }
+
+  searchValueBasisOutChange(searchValue: string) {
+    this.searchValue = searchValue;
+    if (!this.searchValue) {
+      this.basisOfStrengthMessage = '';
+      this.basisOfStrengthMessageOut.emit(this.basisOfStrengthMessage);
+    }
+    if (this.searchValue && this.basisOfStrengthSubstanceUuid) {
+      this.basisOfStrengthMessageOut.emit('There is no Basis of Strength found for ' + this.searchValue);
+    }
+  }
 }

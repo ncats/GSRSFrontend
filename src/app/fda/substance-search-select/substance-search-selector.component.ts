@@ -80,4 +80,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
     this.selectionUpdated.emit(this.selectedSubstance);
   }
 
+  searchValueOutChange(searchValue: string) {
+    this.searchValueOut.emit(searchValue);
+  }
 }
