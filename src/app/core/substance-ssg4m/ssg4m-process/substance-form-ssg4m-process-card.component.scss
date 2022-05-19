@@ -71,44 +71,20 @@ legend.border {
   margin-bottom: 10px;
 }
 
-/* label style */
-.mat-tab-label{
+:host ::ng-deep .mat-tab-list .mat-tab-label {
   /*
-  background: #d1d0d8;
-  color:  rgb(155, 39, 39);
-  min-width: 60px!important;
-  border-radius: 100px;
-  */
-}
-/* focus style */
-.mat-tab-group.mat-primary .mat-tab-label:not(.mat-tab-disabled):focus, .mat-tab-group.mat-primary .mat-tab-link:not(.mat-tab-disabled):focus, .mat-tab-nav-bar.mat-primary .mat-tab-label:not(.mat-tab-disabled):focus, .mat-tab-nav-bar.mat-primary .mat-tab-link:not(.mat-tab-disabled):focus{
-  /* background: #e7e7e7; */
-}
-/* ink bar style */
-.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
-  /*
-  background: rgba(149, 165, 166,0.3);
-  height: 35px;
-  border-radius: 100px;
-  margin-bottom: 5px;
-  */
-}
-
-.tabs .mat-tab-labels, .mat-tab-label, .mat-tab-link {
-  /* color: red !important; */
-}
-
-:host ::ng-deep .mat-tab-label {
   border-width: 1px;
   border-style: solid;
-  border-color: black;
-  background-color: rgb(226, 226, 226);
+  border-color: black;*/
+  color: black;
+   background-color: rgb(247, 241, 241);
+  /*
   margin-left: 5px;
   border-radius: 10px 10px 0px 0px;
   flex-wrap: wrap!important;
   min-width: 120px;
   max-width: 120px;
-  height: 35px;
+  height: 35px;*/
 }
 /*
 ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
@@ -121,10 +97,11 @@ legend.border {
   border-bottom: 2px solid rgb(67, 70, 148);
 }
 
-:host ::ng-deep .mat-tab-label-active {
-  color: #FFFFFF;
+:host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  color: black;
   font-weight: bold;
-  background-color: rgb(20, 76, 189);
+  background-color: #FFFFFF;
+  /*background-color: rgb(20, 76, 189);*/
   /*
    color: rgb(248, 250, 248);
    background-color: rgb(44, 70, 141);
@@ -134,11 +111,8 @@ legend.border {
 }
 
 :host ::ng-deep .mat-ink-bar {
-  background-color: var(--primary-color,#261c53) !important;
-  height: 1px;
+  background-color: var(--primary-color,#3c19d6) !important;
+  height: 3px;
 }
 
-::ng-deep.mat-tab-label .mat-tab-label-content {
-  /* flex-wrap: wrap!important; */
-}
 

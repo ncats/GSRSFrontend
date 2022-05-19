@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
@@ -29,6 +29,8 @@ import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dial
   styleUrls: ['./ssg4m-sites.component.scss']
 })
 export class Ssg4mSitesComponent implements OnInit {
+  @Output() tabSelectedIndexOut = new EventEmitter<number>();
+
   privateShowAdvancedSettings: boolean;
   public configSettingsDisplay = {};
   configTitleStage: string;
@@ -148,7 +150,7 @@ export class Ssg4mSitesComponent implements OnInit {
   addStage(processIndex: number, siteIndex: number) {
     this.substanceFormSsg4mStagesService.addStage(processIndex, siteIndex);
     setTimeout(() => {
-      this.scrollToService.scrollToElement(`substance-process-site-stage-0`, 'center');
+      this.scrollToService.scrollToElement(`stage-0`, 'center');
     });
   }
 
@@ -167,4 +169,9 @@ export class Ssg4mSitesComponent implements OnInit {
   deleteSite(): void {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites.splice(this.siteIndex, 1);
   }
+
+  showSchemePreview() {
+    this.tabSelectedIndexOut.emit(1);
+  }
+
 }

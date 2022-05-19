@@ -65,7 +65,8 @@
         <legend class="border">Site &nbsp;<b><span class="colorgreen font17px">{{siteIndex + 1}}</span></b>
         </legend>
         <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
-          [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView">
+          [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView"
+          (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
         </app-ssg4m-sites>
       </fieldset>
     </div> <!-- loop -->
