@@ -387,6 +387,10 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
             this.substanceUuid = relatedSubstance.refuuid;
             this.ingredientName = relatedSubstance.name;
 
+            // Update Validation
+            this.ingredientNameMessage = '';
+            this.ingredientMessageOut.emit(this.ingredientNameMessage);
+
             // Populate Basis of Strength if it is empty/null
             if (!this.ingredient.basisOfStrengthSubstanceKey) {
               this.basisOfStrengthIngredientName = relatedSubstance.name;
@@ -429,6 +433,10 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
             this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
             this.basisOfStrengthIngredientName = relatedSubstance.name;
 
+            // Update Validation
+            this.basisOfStrengthMessage = '';
+            this.basisOfStrengthMessageOut.emit(this.basisOfStrengthMessage);
+
             // Get Active Moiety
             this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
           }
@@ -461,8 +469,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
       this.ingredientNameMessage = '';
       this.ingredientMessageOut.emit(this.ingredientNameMessage);
     }
-    if (this.searchValue && this.substanceUuid) {
-      this.ingredientMessageOut.emit('There is no Ingredient Name found for' + this.searchValue);
+    if ((this.searchValue) && (this.substanceUuid === null || this.substanceUuid === undefined)) {
+      this.ingredientMessageOut.emit('There is no Ingredient Name found for ' + this.searchValue);
     }
   }
 
@@ -472,7 +480,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
       this.basisOfStrengthMessage = '';
       this.basisOfStrengthMessageOut.emit(this.basisOfStrengthMessage);
     }
-    if (this.searchValue && this.basisOfStrengthSubstanceUuid) {
+    if ((this.searchValue) && (this.basisOfStrengthSubstanceUuid === null || this.basisOfStrengthSubstanceUuid === undefined)) {
       this.basisOfStrengthMessageOut.emit('There is no Basis of Strength found for ' + this.searchValue);
     }
   }
