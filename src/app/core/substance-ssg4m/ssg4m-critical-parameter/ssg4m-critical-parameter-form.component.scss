@@ -1,0 +1,107 @@
+.form-container {
+  padding: 5px 10px 12px 10px;
+  position: relative;
+  border: 1px solid rgb(228, 218, 218);
+}
+
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, .8);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: #666;
+}
+
+.form-row {
+  display: flex;
+  width: 100%;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .col-4-1 {
+    width: calc((100% - 20px * 3) / 4); // 4 column
+    margin-right: 20px;
+  }
+
+  .col-3-1 {
+    width: calc((100% - 20px * 2) / 3); // 3 column
+    margin-right: 20px;
+  }
+
+  .col-2-1 {
+    width: calc((100% - 20px * 1) / 2); // 2 column
+    margin-right: 20px;
+  }
+}
+
+.references-container {
+  width: 100%;
+}
+
+.related-substance {
+  width: 300px;
+  max-width: 300px;
+}
+
+::ng-deep .selected-substance {
+  display: flex;
+  flex-direction: column;
+  text-align: left !important;
+  position: relative;
+  img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-width: 220px;
+  }
+}
+
+.divflex {
+  display: flex;
+}
+
+.bordergray {
+  border: 1px solid gray;
+}
+
+.margintop10px {
+  margin-top: 10px;
+}
+
+.marginleft50px {
+  margin-left: 50px;
+}
+
+.padleftneg10 {
+  padding-left: -10px;
+}
+
+.padleft15px {
+  padding-left: 15px;
+}
+
+.padtop10px {
+  padding-top: 10px;
+}
+
+.padbottom10px {
+  padding-bottom: 10px;
+}
+
+.height40px {
+  height: 40px;
+}
+
+.font11px {
+  font-size: 11px;
+}

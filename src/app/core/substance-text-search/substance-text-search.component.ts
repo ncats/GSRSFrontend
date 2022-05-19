@@ -64,8 +64,8 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
         return this.utilsService.getStructureSearchSuggestions(searchValue.toUpperCase());
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
-      this.substanceSuggestionsGroup = response;
-      let showTypes = [ 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
+      this.substanceSuggestionsGroup = response; 
+      let showTypes = ['Standardized_Name', 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
       if(this.configService && this.configService.configData && this.configService.configData.typeaheadFields) {
          showTypes = this.configService.configData.typeaheadFields;
       }
@@ -88,6 +88,8 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           } else {
             this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
           }
+        } else if (value === 'Standardized_Name') {
+          this.suggestionsFields[index] = { value: 'Standardized_Name', display: 'Standardized Name' };
         } else if (value === 'Display_Name') {
           this.suggestionsFields[index] = { value: 'Display_Name', display: 'Preferred Term' };
         } else if (value === 'CAS') {

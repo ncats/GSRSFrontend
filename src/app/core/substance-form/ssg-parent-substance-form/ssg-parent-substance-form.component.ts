@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { SubstanceRelated, SubstanceSummary, SpecifiedSubstanceG3, SpecifiedSubstanceG4m } from '@gsrs-core/substance';
 import { Subscription } from 'rxjs';
-import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
-import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { SubstanceRelated, SubstanceSummary, SpecifiedSubstanceG3, SpecifiedSubstanceG4m } from '@gsrs-core/substance';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
+import { ConfigService } from '@gsrs-core/config/config.service';
+import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormSsg4mStartingMaterialsModule } from '@gsrs-core/substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 
@@ -19,19 +20,28 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   substanceClass: string;
   parentSubstance: SubstanceRelated;
   relatedSubstanceUuid: string;
+  configSsg4Form: any;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    private substanceFormService: SubstanceFormService,
+    public cvService: ControlledVocabularyService,
+    public configService: ConfigService
   ) {
     super();
     this.analyticsEventCategory = 'substance form ssg 3 and 4 parent substance';
   }
 
   ngOnInit() {
-    this.menuLabelUpdate.emit('Parent Substance');
+    // Get Config variables for SSG4
+    this.configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
+    let configTitle = 'Parent Substance';
+    if (this.configSsg4Form) {
+      configTitle = this.configSsg4Form.titles.parentSubstance || null;
+    }
+
+    this.menuLabelUpdate.emit(configTitle);
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
       this.substanceClass = substance.substanceClass;

@@ -7,12 +7,26 @@
   </div>
   <div class="form-row">
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Processing Material" (click)="deleteResultingMaterial()">
+      <b>{{(resultingMaterialIndex+1)}}</b>
+      <button mat-icon-button matTooltip="Delete Resulting Material {{(resultingMaterialIndex+1)}}"
+        (click)="confirmDeleteResultingMaterial()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
+      <br>
+      &nbsp;&nbsp;
+      <button mat-icon-button matTooltip=" Copy this Resulting Material to Starting Material in next Step"
+        (click)="copyResultingToStarting()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+      <!--
+      <br>
+      <div class="padleft15px"><b>{{(resultingMaterialIndex+1)}}</b>
+      </div>
+      -->
     </div>
 
-    <div class="col related-substance">
+    <div class="col related-substance"
+      *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
         eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM"
         header="Substance Name" [subuuid]="relatedSubstanceUuid">
@@ -31,13 +45,16 @@
     </div>
     -->
 
-    <mat-form-field class="col">
+    <mat-form-field class="col"
+      *ngIf="configSettingsDisplay['verbatimName'] || (configSettingsDisplay['verbatimName'] === undefined && true)">
       <input matInput placeholder="Verbatim Name" [(ngModel)]="resultingMaterial.verbatimName"
         name="resultingMaterial.verbatimName" />
     </mat-form-field>
 
-    <app-cv-input class="col" domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role"
-      [model]="resultingMaterial.substanceRole" (valueChange)="updateSubstanceRole($event)"></app-cv-input>
+    <app-cv-input class="col"
+      *ngIf="configSettingsDisplay['substanceRole'] || (configSettingsDisplay['substanceRole'] === undefined && true)"
+      domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role" [model]="resultingMaterial.substanceRole"
+      (valueChange)="updateSubstanceRole($event)"></app-cv-input>
   </div> <!-- form row -->
 
   <div class="form-row">
@@ -54,4 +71,12 @@
     </div>
   </div>
 
+  <div class="form-row margintop10px"
+    *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
+    <div class="marginleft45px">&nbsp;</div>
+    <mat-form-field class="col-1-1">
+      <input matInput placeholder="Comments" [(ngModel)]="resultingMaterial.comments"
+        name="resultingMaterial.comments" />
+    </mat-form-field>
+  </div> <!-- form-row-->
 </div>

@@ -14,6 +14,9 @@ export class StructureImageModalComponent implements OnInit {
   smiles: string;
   inchi: string;
   inchiKey: string;
+  approvalID: string;
+  uuid: string;
+  displayName: string;
   names: string[] = [];
   constructor(
     private utilsService: UtilsService,
@@ -39,6 +42,15 @@ export class StructureImageModalComponent implements OnInit {
           this.names.push(name.name);
         }
       }
+    }
+    if (this.data && this.data.approvalID) {
+      this.approvalID = this.data.approvalID;
+    }
+    if (this.data && this.data.uuid) {
+      this.uuid = this.data.uuid;
+    }
+    if (this.data && this.data.displayName) {
+      this.displayName = this.data.displayName;
     }
   }
 

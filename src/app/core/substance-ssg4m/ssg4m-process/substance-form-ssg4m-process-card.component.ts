@@ -5,6 +5,7 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../../substance-form/base-classes/substance-form-base-filtered-list';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
 import { SubstanceFormSsg4mProcessService } from './substance-form-ssg4m-process.service';
+import { SubstanceFormSsg4mSitesService } from '../ssg4m-sites/substance-form-ssg4m-sites.service';
 import { SpecifiedSubstanceG4mProcess } from '@gsrs-core/substance/substance.model';
 
 @Component({
@@ -19,14 +20,17 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   process: Array<SpecifiedSubstanceG4mProcess>;
   private subscriptions: Array<Subscription> = [];
   showAdvancedSettings = false;
+  tabSelectedView = 'Form View';
+  tabSelectedIndex = 0;
 
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
+    private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
   ) {
     super(gaService);
-  //  this.analyticsEventCategory = 'substance form ssg4m process';
+    //  this.analyticsEventCategory = 'substance form ssg4m process';
   }
 
   ngOnInit() {
@@ -45,7 +49,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         console.log(error);
       });
       */
-   //   this.subscriptions.push(searchSubscription);
+      //   this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
     });
@@ -71,7 +75,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   }
 
   deleteProcess(process: SpecifiedSubstanceG4mProcess): void {
-  //  this.substanceFormSsg4mProcessService.deleteProcess(process);
+    //  this.substanceFormSsg4mProcessService.deleteProcess(process);
   }
 
   updateProcess($event) {
@@ -81,4 +85,24 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   updateAdvancedSettings(event): void {
     this.showAdvancedSettings = event.checked;
   }
+
+  tabSelected($event) {
+    if ($event) {
+      const evt: any = $event.tab;
+      const textLabel: string = evt.textLabel;
+      if (textLabel != null) {
+        this.tabSelectedView = textLabel;
+
+      }
+    }
+  }
+
+  onSelectedIndexChange(tabIndex: number) {
+    this.tabSelectedIndex = tabIndex;
+  }
+
+  tabSelectedIndexOutChange(tabIndex: number) {
+    this.tabSelectedIndex = tabIndex;
+  }
+
 }

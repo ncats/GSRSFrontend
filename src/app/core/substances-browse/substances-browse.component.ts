@@ -48,6 +48,7 @@ import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-brows
 import { Title } from '@angular/platform-browser';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { FormControl } from '@angular/forms';
+import { SubBrowseEmitterService } from './sub-browse-emitter.service';
 
 @Component({
   selector: 'app-substances-browse',
@@ -76,6 +77,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   privateExport = false;
   disableExport = false;
   isError = false;
+  isRefresher = false;
   @ViewChildren(BrowseHeaderDynamicSectionDirective) dynamicContentContainer: QueryList<BrowseHeaderDynamicSectionDirective>;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
@@ -126,6 +128,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
     public configService: ConfigService,
+    public emitService: SubBrowseEmitterService,
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
     public utilsService: UtilsService,
@@ -259,7 +262,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   private loadComponent(): void {
 
-    if (this.isFacetsParamsInit && this.isComponentInit) {
+    if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) {
       this.searchSubstances();
     } else {
     }
@@ -456,7 +459,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.exportOptions = response.filter(exp => {
           if (exp.extension) {
             //TODO Make this generic somehow, so addditional-type exports are isolated
-            if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx')) {
+            if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') || (exp.extension === 'ctusxlsx') ) {
               return false;
             }
           }
@@ -728,6 +731,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.facetManagerService.clearSelections();
   }
 
+  clickToRefreshPreview() {
+    this.emitService.setRefresh(true);
+    this.isRefresher = true;
+    this.loadComponent();
+  }
+
+  clickToCancel(){
+    this.emitService.setCancel(true);
+  }
+
   get searchTerm(): string {
     return this.privateSearchTerm;
   }
@@ -812,7 +825,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
-      height: '90%',
       width: '650px',
       panelClass: 'structure-image-panel',
       data: data

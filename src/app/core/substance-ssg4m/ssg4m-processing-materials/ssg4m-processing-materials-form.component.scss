@@ -34,6 +34,10 @@
       padding-right: 15px;
   }
 
+  .col-1-1 {
+    width: calc((100% - 20px * 1)); //one column
+    margin-right: 20px;
+  }
 }
 
 .references-container {
@@ -74,8 +78,16 @@
   margin-left: 50px;
 }
 
+.marginleft45px {
+  margin-left: 45px;
+}
+
 .padleftneg10 {
   padding-left: -10px;
+}
+
+.padleft15px {
+  padding-left: 15px;
 }
 
 .padtop10px {

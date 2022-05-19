@@ -1,9 +1,12 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { ConfigService } from '@gsrs-core/config/config.service';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SpecifiedSubstanceG4mStartingMaterial } from '@gsrs-core/substance/substance.model';
+import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-ssg4m-starting-materials-form',
@@ -16,13 +19,18 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
   privateProcessIndex: number;
   privateSiteIndex: number;
   privateStageIndex: number;
+  public configSettingsDisplay = {};
+  privateShowAdvancedSettings: boolean;
   privateStartingMaterial: SpecifiedSubstanceG4mStartingMaterial;
   relatedSubstanceUuid: string;
   substance: SubstanceDetail;
   subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService) { }
+    private substanceFormService: SubstanceFormService,
+    public configService: ConfigService,
+    private dialog: MatDialog
+  ) { }
 
   @Input()
   set startingMaterial(startingMaterial: SpecifiedSubstanceG4mStartingMaterial) {
@@ -60,6 +68,17 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     return this.privateStageIndex;
   }
 
+  @Input()
+  set showAdvancedSettings(showAdvancedSettings: boolean) {
+    this.privateShowAdvancedSettings = showAdvancedSettings;
+    // Get Config Settins from config file
+    this.getConfigSettings();
+  }
+
+  get showAdvancedSettings(): boolean {
+    return this.privateShowAdvancedSettings;
+  }
+
   ngOnInit(): void {
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
@@ -77,6 +96,27 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     // this.substanceFormService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
+    });
+  }
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // *** IMPORTANT: get the correct value. Get 'startingMaterial' json values from config
+    const confSettings = configSsg4Form.settingsDisplay.startingMaterial;
+    Object.keys(confSettings).forEach(key => {
+      if (confSettings[key] != null) {
+        if (confSettings[key] === 'simple') {
+          this.configSettingsDisplay[key] = true;
+        } else if (confSettings[key] === 'advanced') {
+          if (this.privateShowAdvancedSettings === true) {
+            this.configSettingsDisplay[key] = true;
+          } else {
+            this.configSettingsDisplay[key] = false;
+          }
+        }
+      }
     });
   }
 
@@ -98,8 +138,24 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  confirmDeleteStartingMaterial() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Starting Material ' + (this.startingMaterialIndex + 1) + ' for Stage ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteStartingMaterial();
+      }
+    });
+  }
+
   deleteStartingMaterial(): void {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].startingMaterials.splice(this.startingMaterialIndex, 1);
+  }
+
+  copyResultingToStarting(processIndex:number, siteIndex:number, stageIndex:number) {
+
   }
 
   /*

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceSummary } from '@gsrs-core/substance/substance.model';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-search-selector',
@@ -22,12 +23,19 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   displayName: string;
   searchValue: string = null;
   loadingStructure = false;
+  private substanceSelectorProperties: Array<string> = null;
 
   constructor(
     public substanceService: SubstanceService,
+    public configService: ConfigService,
   ) { }
 
   ngOnInit() {
+    if (this.configService.configData.substanceSelectorProperties != null) {
+      this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
+    } else {
+      console.log("The config value for substanceSelectorProperties is null.");
+    }
   }
 
   @Input()
@@ -53,15 +61,16 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   processSubstanceSearch(searchValue: string = ''): void {
     this.searchValue = searchValue;
     const q = searchValue.replace('\"', '');
-
-    this.searchValueOut.emit(this.searchValue);
-
-    // const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
-
-    const searchStr = `root_names_name:\"^${q}$\" OR ` +
+    // Changed to configuration approach.
+    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
+    /*
+    const searchStr =
+      `root_names_name:\"^${q}$\" OR ` +
+      `root_names_stdName:\"^${q}$\" OR ` +
       `root_approvalID:\"^${q}$\" OR ` +
-      `root_codes_BDNUM:\"^${q}$\"`;
-
+      `root_codes_BDNUM:\"^${q}$\"`
+      ;
+    */
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       this.loadingStructure = true;
       if (response.content && response.content.length) {

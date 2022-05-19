@@ -41,6 +41,8 @@ export interface Config {
     usefulLinks?: Array<UsefulLink>;
     approvalCodeName?: string;
     approvalType?: string;
+    ssg4Form?: string;
+    filteredDuplicationCodes?: Array<string>;
 }
 
 export interface LoadedComponents {

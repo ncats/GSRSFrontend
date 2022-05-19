@@ -1,64 +1,82 @@
-<div class="process-form-container">
-  <div *ngIf="process.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
-  <div class="form-row">
-    <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Process" (click)="deleteProcess()">
-        <mat-icon svgIcon="delete_forever"></mat-icon>
+<div *ngIf="tabSelectedView !== 'Scheme View'">
+  <div class="process-form-container">
+    <div *ngIf="process.$$deletedCode" class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
       </button>
     </div>
+    <div class="form-row">
+      <div class="delete-container">
+        <button mat-icon-button matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
 
-    <div class="process">
-      <mat-form-field class="col-5-1">
+      <!-- if Config is not set, as a Default, intitally show some fields and make some fields as Advanced Setting -->
+      <mat-form-field class="col-3-1"
+        *ngIf="configSettingsDisplay['processName'] || (configSettingsDisplay['processName'] === undefined && true)">
         <input matInput placeholder="Process Name" [(ngModel)]="process.processName" name="process.processName" />
       </mat-form-field>
-      <!--
-      <button mat-button (click)="addSite()">
-        Add Sites <mat-icon svgIcon="add_circle_outline"></mat-icon>
+
+      <app-cv-input class="col-3-1"
+        *ngIf="configSettingsDisplay['processRole'] || (configSettingsDisplay['processRole'] === undefined && showAdvancedSettings)"
+        domain="SSG_PROCESS_ROLE" title="Process Role" name="processRole" [model]="process.processRole"
+        (valueChange)="process.processRole = $event">
+      </app-cv-input>
+
+      <app-cv-input class="col-3-1"
+        *ngIf="configSettingsDisplay['processType'] || (configSettingsDisplay['processType'] === undefined && showAdvancedSettings)"
+        domain="SSG_PROCESS_TYPE" title="Process Type" name="processType" [model]="process.processType"
+        (valueChange)="process.processType = $event">
+      </app-cv-input>
+    </div> <!-- form row -->
+
+    <div class="marginleft50px">
+      <div class="form-row">
+        <mat-form-field class="col-2-1"
+          *ngIf="configSettingsDisplay['processDescription'] || (configSettingsDisplay['processDescription'] === undefined && showAdvancedSettings)">
+          <input matInput placeholder="Process Description" [(ngModel)]="process.processDescription"
+            name="process.processDescription" />
+        </mat-form-field>
+
+        <mat-form-field class="col-2-1"
+          *ngIf="configSettingsDisplay['processComments'] || (configSettingsDisplay['processComments'] === undefined && showAdvancedSettings)">
+          <input matInput placeholder="Comments" [(ngModel)]="process.processComments" name="process.processComments" />
+        </mat-form-field>
+      </div> <!-- form row -->
+    </div>
+
+    <!-- SITES LIST BEGIN -->
+    <hr>
+    <div *ngIf="showAdvancedSettings">
+      <span matBadge="{{process.sites.length}}" matBadgeOverlap="false">
+        <span class="fontsize18px"><b>Site Information</b></span>
+      </span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button mat-raised-button color="primary" (click)="addSite()" matTooltip="Add New Site">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Sites
       </button>
-      -->
+      <br><br>
     </div>
-  </div> <!-- form row -->
 
-  <!-- SITES LIST BEGIN -->
-  <hr>
-  <div *ngIf="showAdvancedSettings">
-    <span matBadge="{{process.sites.length}}" matBadgeOverlap="false">
-      <span class="fontsize18px"><b>Site Information</b></span>
-    </span>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button mat-raised-button color="primary" (click)="addSite()" matTooltip="Add New Manufacture">
-      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Sites
-    </button>
-    <br><br>
-  </div>
-  <div class="marginbottom10px" *ngFor="let site of process.sites; let siteIndex = index">
-    <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
-      [showAdvancedSettings]="showAdvancedSettings">
-    </app-ssg4m-sites>
-  </div>
-  <!-- SITES LIST END -->
-
-  <!--
-                  [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex"
-            (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
-            (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)"
-    -->
-
-  <!-- Sites List -->
-  <!--
-    <app-substance-form-ssg4m-sites-card></app-substance-form-ssg4m-sites-card>
-    -->
-
-  <!--
-  <div class="form-row" *ngIf="!process.$$deletedCode">
-    <div class="references-container">
-      <app-domain-references [referencesUuids]="process.references" #references></app-domain-references>
+    <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
+      <fieldset class="border">
+        <legend class="border">Site &nbsp;<b><span class="colorgreen font17px">{{siteIndex + 1}}</span></b>
+        </legend>
+        <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
+          [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView"
+          (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
+        </app-ssg4m-sites>
+      </fieldset>
+    </div> <!-- loop -->
+    <!-- Another Add Button-->
+    <div class="divflex" *ngIf="(process.sites && process.sites.length > 0) && showAdvancedSettings">
+      <span class="middle-fill"></span>
+      <button mat-button (click)="addSite()">
+        Add Another Site <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
     </div>
+    <!-- SITES LIST END -->
   </div>
-  -->
 </div>

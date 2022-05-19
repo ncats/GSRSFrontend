@@ -31,9 +31,13 @@
 
   .col {
       flex-grow: 1;
-      padding-right: 20px;
+      padding-right: 15px;
   }
 
+  .col-1-1 {
+    width: calc((100% - 20px * 1)); //one column
+    margin-right: 20px;
+  }
 }
 
 .references-container {
@@ -78,6 +82,10 @@
   margin-top: 10px;
 }
 
+.marginleft45px {
+  margin-left: 45px;
+}
+
 .marginleft50px {
   margin-left: 50px;
 }
@@ -88,6 +96,10 @@
 
 .padtop10px {
   padding-top: 10px;
+}
+
+.padleft15px {
+  padding-left: 15px;
 }
 
 .height40px {

@@ -53,7 +53,6 @@ export class MixtureComponentFormComponent implements OnInit {
     } else {
       this.invalid = false;
     }
-    console.log(this.invalid);
   }
 
   

@@ -45,6 +45,9 @@ export class AmountFormComponent implements OnInit {
           this.averageControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
           this.averageControl.setValue('');
+        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else {
+          this.averageControl.setValue('');
         }
         this.privateSubstanceAmount.average = value;
       });
@@ -53,6 +56,9 @@ export class AmountFormComponent implements OnInit {
         if(value === null) {
           this.lowControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
+          this.lowControl.setValue('');
+        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else {
           this.lowControl.setValue('');
         }
         this.privateSubstanceAmount.low = value;
@@ -63,6 +69,9 @@ export class AmountFormComponent implements OnInit {
           this.highControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
           this.highControl.setValue('');
+        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else {
+          this.highControl.setValue('');
         }
         this.privateSubstanceAmount.high = value;
       });
@@ -72,6 +81,9 @@ export class AmountFormComponent implements OnInit {
           this.lowLimitControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
           this.lowLimitControl.setValue('');
+        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else {
+          this.lowLimitControl.setValue('');
         }
         this.privateSubstanceAmount.lowLimit = value;
       });
@@ -80,6 +92,9 @@ export class AmountFormComponent implements OnInit {
         if(value === null) {
           this.highLimitControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
+          this.highLimitControl.setValue('');
+        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else {
           this.highLimitControl.setValue('');
         }
         this.privateSubstanceAmount.highLimit = value;

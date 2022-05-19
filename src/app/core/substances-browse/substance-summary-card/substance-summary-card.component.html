@@ -45,12 +45,12 @@
           {{substance.definitionLevel }} DEFINITION
         </div>
         <div class = "button-wrapper">
-        <button class = "summary-button"
+        <button aria-label="Download" class = "summary-button"
           mat-icon-button [matMenuTriggerFor]="downloadMenu">
           <mat-icon svgIcon="get_app"></mat-icon>
         </button>
 
-        <button class = "summary-button" *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
+        <button class = "summary-button" aria-label="Search" *ngIf="substance.structure || substance.polymer" mat-icon-button [matMenuTriggerFor]="searchMenu">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
 
@@ -63,11 +63,11 @@
           <mat-icon svgIcon="edit"></mat-icon>
         </a>
 
-        <button class = "summary-button" *ngIf="canCreate" mat-icon-button [matMenuTriggerFor]="editMenu">
+        <button aria-label="Copy file" class = "summary-button" *ngIf="canCreate" mat-icon-button [matMenuTriggerFor]="editMenu">
           <mat-icon svgIcon="file_copy"></mat-icon>
         </button>
 
-        <button  class = "summary-button" *ngIf="subunits" mat-icon-button [matMenuTriggerFor]="sequenceMenu" matTooltip = "sequence search">
+        <button aria-label="Sequence Search" class = "summary-button" *ngIf="subunits" mat-icon-button [matMenuTriggerFor]="sequenceMenu" matTooltip = "sequence search">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
       </div>

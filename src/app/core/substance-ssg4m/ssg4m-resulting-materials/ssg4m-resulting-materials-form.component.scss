@@ -26,7 +26,7 @@
   align-items: flex-end;
 
   .delete-container {
-      padding: 0 10px 8px 0;
+      padding: 0 0px 8px 0;
   }
 
   .col {
@@ -34,6 +34,10 @@
       padding-right: 15px;
   }
 
+  .col-1-1 {
+    width: calc((100% - 20px * 1)); //one column
+    margin-right: 20px;
+  }
 }
 
 .references-container {
@@ -74,12 +78,20 @@
   margin-top: -50px;
 }
 
+.marginleft45px {
+  margin-left: 45px;
+}
+
 .marginleft50px {
   margin-left: 50px;
 }
 
 .padtop10px {
   padding-top: 10px;
+}
+
+.padleft15px {
+  padding-left: 15px;
 }
 
 .height40px {

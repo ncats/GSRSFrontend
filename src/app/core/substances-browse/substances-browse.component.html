@@ -14,7 +14,7 @@
     </app-facets-manager>
   </mat-sidenav>
   <mat-sidenav-content>
-    <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+    <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
       <mat-icon svgIcon="chevron_right"></mat-icon>
     </button>
     <div class="side-nav-content" *ngIf="substances && substances.length">
@@ -142,19 +142,33 @@
           </div>
         </div>
       </ng-template>
+      <div>
+        <div class="sub-search-div">
+          <p class="sub-search-text red-text">Results below are an incomplete preview</p>
+          <div class="sub-search-text-div">
+            <div class="search-spinner">
+              <mat-spinner [diameter]="15"></mat-spinner>
+            </div>
+            <p class="sub-search-text match-txt">searching... {{totalSubstances}} matches</p>
+            <button class="sub-search-ref-btn" (click)="clickToRefreshPreview()">Refresh Preview</button>
+            <button class="sub-search-cancel-btn" (click)="clickToCancel()">Cancel</button>
+          </div>
+          <p class="sub-search-text orange-text">Page will auto-reload when search is complete</p>
+        </div>
+      </div>
       <div class="controls-container">
           <div class = "title-container">
               <span class = "main-title">Browse Substances</span>
-            </div>
+          </div>
 
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-          <mat-button-toggle value="table" matTooltip="Table View">
+          <mat-button-toggle aria-label="Table View" value="table" matTooltip="Table View">
             <mat-icon svgIcon="list"></mat-icon>
           </mat-button-toggle>
-          <mat-button-toggle value="cards" matTooltip="Full View">
+          <mat-button-toggle aria-label="Full View" value="cards" matTooltip="Full View">
             <mat-icon svgIcon="view_stream"></mat-icon>
           </mat-button-toggle>
-          <mat-button-toggle value="tiles">
+          <mat-button-toggle aria-label="Tile View" value="tiles">
             <mat-icon svgIcon="view_module" matTooltip="Tile View"></mat-icon>
           </mat-button-toggle>
         </mat-button-toggle-group>
@@ -198,6 +212,7 @@
               <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
                 [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
                 (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                aria-label="Page Index"
                 (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
             </mat-form-field>
             <span class="page-label"> of {{lastPage}}</span>
@@ -475,6 +490,7 @@
             <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
               [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
               (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+              aria-label="Page Index"
               (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
           </mat-form-field>
           <span class="page-label"> of {{lastPage}}</span>
@@ -546,7 +562,7 @@
 <div [ngClass]="{ hidden: !showExactMatches, 'exact-matches-container': true }">
   <div class="exact-match-control">
     <div>
-      There is one exact (name or code) match for {{this.searchTerm}}
+      There is one exact (name, standardized name or code) match for {{this.searchTerm}}
     </div>
     <button mat-raised-button color="primary" (click)="showAllRecords()">
       Show All Records Matching Search

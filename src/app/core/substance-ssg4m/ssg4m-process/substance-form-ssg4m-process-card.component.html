@@ -1,41 +1,63 @@
-<div class="flex-row">
-  <div class="paddingleft400px">
-    <mat-checkbox [checked]="showAdvancedSettings" (change)="updateAdvancedSettings($event)">
-      Show Advanced Settings
-    </mat-checkbox>
-  </div>
+<!-- Tabs - Form View and Scheme Preview -->
+<mat-tab-group dynamicHeight (selectedTabChange)="tabSelected($event)" (selectedIndexChange)="onSelectedIndexChange($event)" [selectedIndex]="tabSelectedIndex">
+  <mat-tab label="Form View">
 
-  <mat-form-field [floatLabel]="'never'" class="search" *ngIf="process && process.length > pageSize">
-    <input matInput placeholder="Search" [formControl]="searchControl">
-  </mat-form-field>
-  <span class="middle-fill"></span>
-  <!--
+    <div class="flex-row">
+      <div class="paddingleft400px">
+        <mat-checkbox [checked]="showAdvancedSettings" (change)="updateAdvancedSettings($event)">
+          Show Advanced Settings
+        </mat-checkbox>
+      </div>
+
+      <mat-form-field [floatLabel]="'never'" class="search" *ngIf="process && process.length > pageSize">
+        <input matInput placeholder="Search" [formControl]="searchControl">
+      </mat-form-field>
+      <span class="middle-fill"></span>
+      <!--
   <button mat-button (click)="addProcess()">
     Add note <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
    -->
-</div>
+    </div>
 
-<mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"
-  [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
-  [pageSizeOptions]="[5, 10, 25, 100]">
-</mat-paginator>
+    <mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"
+      [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
+      [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
 
-<div class="process" *ngFor="let process of paged; let processIndex = index" appScrollToTarget
-  [id]="'substance-process-' + index">
-  <app-ssg4m-process-form [process]="process" [processIndex]="processIndex" [showAdvancedSettings]="showAdvancedSettings" (processDeleted)="deleteProcess($event)"></app-ssg4m-process-form>
-  <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
-</div>
+    <div class="process" *ngFor="let process of paged; let processIndex = index" appScrollToTarget
+      [id]="'substance-process-' + index">
+      <fieldset class="border">
+        <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}}</span></b>
+        </legend>
+        <app-ssg4m-process-form [process]="process" [processIndex]="processIndex"
+          [showAdvancedSettings]="showAdvancedSettings" (processDeleted)="deleteProcess($event)"
+          (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
+        </app-ssg4m-process-form>
+        <!--
+      <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
+    -->
+      </fieldset>
+    </div>
 
-<mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"
-  [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
-  [pageSizeOptions]="[5, 10, 25, 100]">
-</mat-paginator>
+    <mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"
+      [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
+      [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
 
-<div *ngIf="process && process.length > 0" style="display: flex;">
-  <span class="middle-fill"></span>
-  <button mat-button (click)="addProcess()">
-    Add Another Process <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
+    <div *ngIf="process && process.length > 0" style="display: flex;">
+      <span class="middle-fill"></span>
+      <button mat-button (click)="addProcess()">
+        Add Another Process <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
+    </div>
 
-</div>
+  </mat-tab>
+
+  <mat-tab label="Scheme Preview">
+    <!-- Display in Scheme View-->
+    <app-ssg4m-scheme-view (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
+    </app-ssg4m-scheme-view>
+
+  </mat-tab>
+</mat-tab-group>
