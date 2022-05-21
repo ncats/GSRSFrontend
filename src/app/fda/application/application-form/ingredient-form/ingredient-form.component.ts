@@ -23,8 +23,6 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   @Input() prodIndex: number;
   @Input() ingredIndex: number;
   @Input() totalIngredient: number;
-  @Output() ingredientMessageOut = new EventEmitter<String>();
-  @Output() basisOfStrengthMessageOut = new EventEmitter<String>();
 
   substanceUuid: string;
   ingredientName: string;
@@ -387,9 +385,9 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
             this.substanceUuid = relatedSubstance.refuuid;
             this.ingredientName = relatedSubstance.name;
 
-            // Update Validation
+            // Clear the Validation Message
             this.ingredientNameMessage = '';
-            this.ingredientMessageOut.emit(this.ingredientNameMessage);
+            this.ingredient.$$ingredientNameValidation = '';
 
             // Populate Basis of Strength if it is empty/null
             if (!this.ingredient.basisOfStrengthSubstanceKey) {
@@ -433,9 +431,9 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
             this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
             this.basisOfStrengthIngredientName = relatedSubstance.name;
 
-            // Update Validation
+            // Clear the Validation Message
             this.basisOfStrengthMessage = '';
-            this.basisOfStrengthMessageOut.emit(this.basisOfStrengthMessage);
+            this.ingredient.$$basisOfStrengthValidation = '';
 
             // Get Active Moiety
             this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
@@ -450,27 +448,27 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   showMessageIngredientName(message: string): void {
     this.ingredientNameMessage = message;
     // Send this to Application form for Validation
-    // if (!this.substanceUuid && this.ingredientNameMessage) {
-    //   if (!this.substanceUuid && this.searchValue) {
-    this.ingredientMessageOut.emit('Ingredient Name - ' + this.ingredientNameMessage);
-    //  }
+    // This message is displayed when 'No Substance Found' is passed from Substance Search Selector
+    this.ingredient.$$ingredientNameValidation = 'Ingredient Name: ' + this.ingredientNameMessage;
   }
 
   showMessageBasisOfStrength(message: string): void {
     this.basisOfStrengthMessage = message;
     // Send this to Application form for Validation
-    this.basisOfStrengthMessageOut.emit('Basis of Strength - ' + this.basisOfStrengthMessage);
+    // This message is displayed when 'No Substance Found' is passed from Substance Search Selector
+    this.ingredient.$$basisOfStrengthValidation = 'Basis of Strength: ' + this.basisOfStrengthMessage;
   }
 
   searchValueOutChange(searchValue: string) {
     this.searchValue = searchValue;
-    // SearchValue is empty
+    // SearchValue is empty, clear the message
     if (!this.searchValue) {
       this.ingredientNameMessage = '';
-      this.ingredientMessageOut.emit(this.ingredientNameMessage);
+      this.ingredient.$$ingredientNameValidation = '';
     }
+    // if searchValue is not empty and there is no Ingredient Name selected, display error message
     if ((this.searchValue) && (this.substanceUuid === null || this.substanceUuid === undefined)) {
-      this.ingredientMessageOut.emit('There is no Ingredient Name found for ' + this.searchValue);
+      this.ingredient.$$ingredientNameValidation = 'Ingredient Name: No substances found for ' + this.searchValue;
     }
   }
 
@@ -478,10 +476,10 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     this.searchValue = searchValue;
     if (!this.searchValue) {
       this.basisOfStrengthMessage = '';
-      this.basisOfStrengthMessageOut.emit(this.basisOfStrengthMessage);
+      this.ingredient.$$basisOfStrengthValidation = '';
     }
     if ((this.searchValue) && (this.basisOfStrengthSubstanceUuid === null || this.basisOfStrengthSubstanceUuid === undefined)) {
-      this.basisOfStrengthMessageOut.emit('There is no Basis of Strength found for ' + this.searchValue);
+      this.ingredient.$$basisOfStrengthValidation = 'Basis of Strength: No substances found for ' + this.searchValue;
     }
   }
 }

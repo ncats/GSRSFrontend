@@ -14,11 +14,7 @@ import { GeneralService } from 'src/app/fda/service/general.service';
   styleUrls: ['./application-product-form.component.scss']
 })
 export class ApplicationProductFormComponent implements OnInit {
-
   @Input() application: Application;
-  @Output() ingredientMessageOut = new EventEmitter<String>();
-  @Output() basisOfStrengthMessageOut = new EventEmitter<String>();
-
   reviewProductMessage: Array<any> = [];
   productMessage = '';
   username = null;
@@ -119,11 +115,4 @@ export class ApplicationProductFormComponent implements OnInit {
     this.application.applicationProductList[prodIndex].routeAdmin = routeAdmins.toString();
   }
 
-  ingredientMessageOutChange($event) {
-     this.ingredientMessageOut.emit($event);
-  }
-
-  basisOfStrengthMessageOutChange($event) {
-    this.basisOfStrengthMessageOut.emit($event);
-  }
 }

@@ -70,50 +70,50 @@
 
 .col-1:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-2 {
   /* width: 348.667px; calc() value*/
-  width: calc((100% - 30px * 2) / 3); 
+  width: calc((100% - 30px * 2) / 3);
   margin-right: 30px;
 }
 
 .col-2:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-3 {
-  /* width: 538px; calc() value*/ 
+  /* width: 538px; calc() value*/
   width: calc((100% - 30px * 1) / 2);
   margin-right: 30px;
 }
 
 .col-3:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-4 {
-  /* width: 724px; calc() value*/ 
+  /* width: 724px; calc() value*/
   width: calc((100% - 20px) / (6/4));
   margin-right: 20px;
 }
 
 .col-4:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-5 {
-  /* width: 913.333px; calc() value*/ 
+  /* width: 913.333px; calc() value*/
   width: calc((100% - 10px) / (6/5));
   margin-right: 10px;
 }
 
 .col-5:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-5-more {
-  /* width: calc() value*/ 
+  /* width: calc() value*/
   width: calc((100% + 100px) / (6/5));
   margin-right: 10px;
 }
@@ -128,8 +128,8 @@
 }
 
 .actions-container {
-  max-width: 1028px;
-  width: 100%;
+  max-width: 1200px;
+  min-width: 1200px;
   background-color: white;
   padding: 10px;
   display: flex;
@@ -281,14 +281,14 @@
   float: left;
 }
 
-.disabled { 
-  cursor: not-allowed; 
-} 
-
-.disabledfield { 
+.disabled {
   cursor: not-allowed;
-  color: red; 
-} 
+}
+
+.disabledfield {
+  cursor: not-allowed;
+  color: red;
+}
 
 /* CV INPUT OVERWRITE WIDTH */
 .cvwidth {
@@ -310,7 +310,7 @@
 
   .mat-select-value {
     color: blue;
-  }  
+  }
 
   .mat-form-field-label {
     color: rgb(127, 127, 133) !important;
@@ -318,7 +318,7 @@
 
   .mat-form-field-underline {
     background-color: rgb(68, 68, 218) !important;
-  } 
+  }
 
   /*Focused: change color of label*/
   .mat-focused .mat-form-field-label {
@@ -328,15 +328,15 @@
   /*Focused: change color of underline*/
   .mat-form-field-ripple {
     background-color: rgb(70, 116, 106) !important;;
-  } 
+  }
 
-  .mat-form-field-disabled .mat-form-field-underline 
-  { 
-    background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 10%, #c2c7cc 0 ) !important; 
+  .mat-form-field-disabled .mat-form-field-underline
+  {
+    background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 10%, #c2c7cc 0 ) !important;
     background-size: 1px 100% !important;
-    background-repeat: repeat-x !important; 
+    background-repeat: repeat-x !important;
     cursor: not-allowed;
-  } 
+  }
 
   .mat-form-field-disabled:hover {
     cursor: not-allowed;
@@ -345,7 +345,7 @@
   mat-hint {
     color: red !important;
   }
-  
+
 }
 
 .errortext {

@@ -61,8 +61,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   title = null;
   submitDateMessage = '';
   statusDateMessage = '';
-  ingredientNameMessage = '';
-  basisOfStrengthMessage = '';
   appForm: FormGroup;
   isAdmin = false;
 
@@ -193,6 +191,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   // Validate data in client side first
   validateClient(): void {
+    this.submissionMessage = null;
     this.validationMessages = [];
     this.validationResult = true;
 
@@ -219,16 +218,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     // Validate Status Date in application
     if ((this.statusDateMessage !== null) && (this.statusDateMessage.length > 0)) {
       this.setValidationMessage(this.statusDateMessage);
-    }
-
-    // Validate Ingredient Name in Ingredient Section
-    if ((this.ingredientNameMessage !== null) && (this.ingredientNameMessage.length > 0)) {
-      this.setValidationMessage(this.ingredientNameMessage);
-    }
-
-    // Validate Basis of Strength in Ingredient Section
-    if ((this.basisOfStrengthMessage !== null) && (this.basisOfStrengthMessage.length > 0)) {
-      this.setValidationMessage(this.basisOfStrengthMessage);
     }
 
     // Validate Product Amount, which should be integer/number
@@ -269,6 +258,14 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
                   this.setValidationMessage('High Limit must be a number');
                 }
               }
+              // Ingredient Name Validation
+              if (elementIngred.$$ingredientNameValidation) {
+                this.setValidationMessage(elementIngred.$$ingredientNameValidation);
+              }
+              // Basis of Strength Validation
+              if (elementIngred.$$basisOfStrengthValidation) {
+                this.setValidationMessage(elementIngred.$$basisOfStrengthValidation);
+              }
             }
           });
 
@@ -281,7 +278,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       this.loadingService.setLoading(false);
       this.isLoading = false;
     }
-
   }
 
   toggleValidation(): void {
@@ -315,11 +311,13 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    // Set Provenance to GSRS
+    // remove non-field form property/field/key from Application object
+    this.application = this.cleanApplication();
     if (this.application) {
       if (this.application.id) {
       } else {
         if (this.application.provenance === null || this.application.provenance === undefined) {
+          // Set Provenance to GSRS
           this.application.provenance = 'GSRS';
         }
       }
@@ -430,18 +428,40 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
+  cleanApplication(): Application {
+    let applicationStr = JSON.stringify(this.application);
+    let applicationCopy: Application = JSON.parse(applicationStr);
+    applicationCopy.applicationProductList.forEach(elementProd => {
+      if (elementProd != null) {
+        elementProd.applicationIngredientList.forEach(elementIngred => {
+          if (elementIngred != null) {
+            // remove property for Ingredient Name Validation. Do not need in the form JSON
+            if (elementIngred.$$ingredientNameValidation || elementIngred.$$ingredientNameValidation === "") {
+              delete elementIngred.$$ingredientNameValidation;
+            }
+            // remove property for Basis of Strength Validation. Do not need in the form JSON
+            if (elementIngred.$$basisOfStrengthValidation || elementIngred.$$basisOfStrengthValidation === "") {
+              delete elementIngred.$$basisOfStrengthValidation;
+            }
+          }
+        });
+      }
+    });
+    return applicationCopy;
+  }
+
   showJSON(): void {
+    let cleanApplication = this.cleanApplication();
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.application
+      data: cleanApplication
     });
 
     //   this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
-
   }
 
   addNewIndication() {
@@ -566,13 +586,5 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       const formattedDate = datepipe.transform(date, 'MM/dd/yyyy');
       return formattedDate;
     }
-  }
-
-  ingredientMessageOutChange($event) {
-    this.ingredientNameMessage = $event;
-  }
-
-  basisOfStrengthMessageOutChange($event) {
-    this.basisOfStrengthMessage = $event;
   }
 }
