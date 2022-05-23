@@ -21,7 +21,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   private subscriptions: Array<Subscription> = [];
   showAdvancedSettings = false;
   tabSelectedView = 'Form View';
-  active = 0;
+  tabSelectedIndex = 0;
 
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
@@ -92,7 +92,17 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
       const textLabel: string = evt.textLabel;
       if (textLabel != null) {
         this.tabSelectedView = textLabel;
+
       }
     }
   }
+
+  onSelectedIndexChange(tabIndex: number) {
+    this.tabSelectedIndex = tabIndex;
+  }
+
+  tabSelectedIndexOutChange(tabIndex: number) {
+    this.tabSelectedIndex = tabIndex;
+  }
+
 }
