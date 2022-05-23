@@ -158,6 +158,10 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
   }
 
   copyResultingToStarting() {
+    this.substanceFormSsg4mStagesService.copyResultingToStarting(this.processIndex, this.siteIndex, this.stageIndex, this.resultingMaterialIndex);
+  }
+  /*
+  copyResultingToStarting() {
     let found = false;
     let resultMatRefUuid = '';
     let startMatRefUuid = '';
@@ -233,4 +237,5 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
       //  this.scrollToService.scrollToElement(`substance-process-site-stage-startMat-0`, 'center');
     });
   }
+  */
 }

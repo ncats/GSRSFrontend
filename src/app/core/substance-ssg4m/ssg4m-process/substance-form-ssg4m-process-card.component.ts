@@ -92,7 +92,6 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
       const textLabel: string = evt.textLabel;
       if (textLabel != null) {
         this.tabSelectedView = textLabel;
-
       }
     }
   }

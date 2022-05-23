@@ -19,7 +19,7 @@ import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dial
   templateUrl: './ssg4m-critical-parameter-form.component.html',
   styleUrls: ['./ssg4m-critical-parameter-form.component.scss']
 })
-export class Ssg4mCriticalParameterFormComponent implements OnInit {
+export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
 
   @Input() criticalParameterIndex: number;
   privateProcessIndex: number;
@@ -103,6 +103,11 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const subscription = this.substanceFormService.substance.subscribe(substance => {
+      this.substance = substance;
+    });
+    this.subscriptions.push(subscription);
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     if (!this.criticalParameter.value) {
       this.criticalParameter.value = {};
@@ -110,6 +115,12 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit {
     this.privateSubstanceAmount = this.criticalParameter.value;
     this.setSubstanceAmount();
     this.getVocabularies();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   getConfigSettings(): void {

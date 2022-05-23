@@ -53,8 +53,8 @@
   <div class="form-row margintop10px" *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
     <div class="marginleft45px">&nbsp;</div>
     <mat-form-field class="col-1-1">
-      <input matInput placeholder="Comments" [(ngModel)]="startingMaterial.comments"
-        name="startingMaterial.comments" />
+      <textarea matInput placeholder="Comments" [(ngModel)]="startingMaterial.comments"
+      name="startingMaterial.comments" rows="1"></textarea>
     </mat-form-field>
   </div> <!-- form-row-->
 </div>
