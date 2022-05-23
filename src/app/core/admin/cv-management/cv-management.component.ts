@@ -91,7 +91,8 @@ export class CvManagementComponent implements OnInit {
       data: {vocabulary: vocab},
       width: '1200px'
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = '50';
+    // this.overlayContainer.style.zIndex = '0';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
       if (response ) {

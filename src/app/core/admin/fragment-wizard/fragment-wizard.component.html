@@ -1,0 +1,71 @@
+<div class = "form-row">
+    <hr>
+</div>
+<div class="editor-container">
+    <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)"></app-structure-editor>
+    
+  </div>
+  <div class = "form-row"><div class = "middle-fill"></div><button mat-button (click) = "getFragmentCV()">Choose Connection Points</button></div>
+  <div class = "form-row" *ngIf = "!vocab">
+    <div *ngFor = "let domain of domains">
+        <button mat-button (click) = "fragmentType(domain.domain)">{{domain.domain}}</button>
+    </div>
+  </div>
+
+
+<div class = "form-row">
+    <div *ngFor = "let form of forms" >
+        <a (click) = "setTermStructure(form.value)"><img src = "{{form.url}}" /></a>
+    </div>
+</div>
+
+<div *ngIf = "!vocab">
+    <div  class = 'form-row'>
+      <mat-form-field class="value">
+        <input matInput placeholder="Value" [(ngModel)]="privateTerm.value" required name="value" />
+      </mat-form-field>
+      <mat-form-field class="display">
+        <input matInput placeholder="display" [(ngModel)]="privateTerm.display" required name="display" />
+      </mat-form-field>
+      <mat-form-field class="description">
+        <input matInput placeholder="description" [(ngModel)]="privateTerm.description" required name="description" />
+      </mat-form-field>
+    </div>
+
+    <div class = "form-row double-row">
+                        <div class = "str-column">
+                                <div>
+                                                <mat-form-field class="group">
+                                                                <input matInput placeholder="Simplified Structure" [(ngModel)]="privateTerm.simplifiedStructure"
+                                                                (input)= "checkImg(term)"  name="simplifiedStructure" />
+                                                        </mat-form-field>
+                                </div>
+                                <div  *ngIf = "privateTerm.simpleSrc">
+                                                <img [src] = "privateTerm.simpleSrc"/>
+                                </div>
+                                
+                        </div>
+                        <div class = "str-column">
+                                <div>
+                                                <mat-form-field class="group">
+                                                                <input matInput placeholder="Fragment Structure" [(ngModel)]="privateTerm.fragmentStructure"
+                                                                (input)= "checkImg(term)"  name="fragmentStructure" />                                 
+                                                        </mat-form-field>
+                                </div>
+                                <div *ngIf = "privateTerm.fragmentSrc">
+                                                <img [src] = "privateTerm.fragmentSrc" />
+                                </div>
+                       
+                       </div>
+               </div>
+
+    <br/><br/>
+    <div class = 'message-field'></div>
+    <div class="actions">
+      <span class="middle-fill"></span>
+      <button mat-button >Cancel</button>
+      <button mat-button [disabled]="!privateTerm.description || privateTerm.value === ''">
+        Save
+      </button>
+    </div>
+  </div>

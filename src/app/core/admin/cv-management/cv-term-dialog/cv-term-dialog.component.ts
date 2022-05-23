@@ -14,6 +14,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   terms: any;
   message: string;
   loading = true;
+  toggled = [];
 
 
   constructor(
@@ -38,6 +39,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 }
 
   ngAfterViewInit() {
+  
     if (this.vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary') {
       this.terms.forEach(term => {
         if (term.simplifiedStructure) {
@@ -48,6 +50,10 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
       }
       });
     }
+  }
+
+  updateStructure(term: any, index: any) {
+    this.terms[index] = term;
   }
 
   getStructure(structure) {

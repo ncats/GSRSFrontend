@@ -32,6 +32,8 @@ import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AllFilesComponent } from '@gsrs-core/admin/all-files/all-files.component';
+import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
+import { StructureEditorModule } from '@gsrs-core/structure-editor';
 
 
 
@@ -59,7 +61,8 @@ import { AllFilesComponent } from '@gsrs-core/admin/all-files/all-files.componen
     MatDialogModule,
     MomentModule,
     MatPaginatorModule,
-  MatIconModule],
+    MatIconModule,
+  StructureEditorModule],
   declarations: [
     CvManagementComponent,
     ScheduledJobsComponent,
@@ -71,7 +74,8 @@ import { AllFilesComponent } from '@gsrs-core/admin/all-files/all-files.componen
     CacheSummaryComponent,
     DataManagementComponent,
     MonitorComponent,
-    AllFilesComponent
+    AllFilesComponent,
+    FragmentWizardComponent
   ],
   exports: [
     CvManagementComponent,
@@ -84,7 +88,8 @@ import { AllFilesComponent } from '@gsrs-core/admin/all-files/all-files.componen
     CacheSummaryComponent,
     DataManagementComponent,
     MonitorComponent,
-    AllFilesComponent
+    AllFilesComponent,
+    FragmentWizardComponent
   ],
   entryComponents: [
     CvTermDialogComponent,
