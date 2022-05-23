@@ -1,4 +1,4 @@
-<div class="margintop10px" *ngFor="let process of processList; let processIndex = index" appScrollToTarget>
+<div class="margintop10px" *ngFor="let process of processList; let processIndex = index">
   <fieldset class="border">
     <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}}</span></b>
     </legend>
@@ -11,8 +11,11 @@
           <div class="paddingtop15px font16px">
             <b><u>Step {{stageIndex+1}}</u></b>
           </div>
-          <div appScrollToTrigger [scrollToElementId]="stage_stageIndex">
+          <div>
             <button mat-raised-button color="primary" (click)="editInForm()" matTooltip="Edit In Form">
+              <!--
+                appScrollToTrigger [scrollToElementId]="'stage_' + processIndex + '_' + stageIndex" vAlign="start"
+              -->
               <mat-icon svgIcon="edit"></mat-icon>Edit in Form
             </button>
           </div>
@@ -29,13 +32,15 @@
                     *ngIf="(stage.startingMaterials.length > 1 && startingMaterialIndex != 0)">
                     <b>+</b>
                   </div>
-                  <a class="zoom" (click)="openImageModal(startingMaterial.substanceName.refuuid, startingMaterial.substanceName.approvalID, startingMaterial.substanceName.refPname)">
+                  <a class="zoom"
+                    (click)="openImageModal(startingMaterial.substanceName.refuuid, startingMaterial.substanceName.approvalID, startingMaterial.substanceName.refPname)">
                     <img appSubstanceImage [entityId]="startingMaterial.substanceName.refuuid">
                   </a>
-                </div>
-                <a [routerLink]="['/substances', startingMaterial.substanceName.refuuid]" target="_blank">
-                  {{startingMaterial.substanceName.refPname}}</a>
-
+                  <div>
+                    <a [routerLink]="['/substances', startingMaterial.substanceName.refuuid]" target="_blank">
+                      {{startingMaterial.substanceName.refPname}}</a>
+                  </div>
+                </div> <!-- if substanceName object exists -->
               </div> <!-- Starting Material Loop -->
             </td>
 
@@ -46,7 +51,8 @@
                   <div class="divflex">
                     <div class="margintopneg10px">
                       <!-- Display Structure when rollover icon -->
-                      <button mat-button (click)="openImageModal(processingMaterial.substanceName.refuuid, processingMaterial.substanceName.approvalID, processingMaterial.substanceName.refPname)">
+                      <button mat-button
+                        (click)="openImageModal(processingMaterial.substanceName.refuuid, processingMaterial.substanceName.approvalID, processingMaterial.substanceName.refPname)">
                         <mat-icon>remove_red_eye</mat-icon>
                       </button>
                     </div>
@@ -55,7 +61,7 @@
                         <b>{{(processingMaterialIndex+1)}}.&nbsp;{{processingMaterial.substanceName.refPname}}</b></a>
                     </div>
                   </div>
-                </div>
+                </div> <!-- if substanceName object exists -->
               </div> <!-- Processing Material Loop -->
               <div class="paddingleft20px" *ngIf="stage.processingMaterials.length > 0">
                 <img src="{{imageLoc}}" />
@@ -71,12 +77,15 @@
                     *ngIf="(stage.resultingMaterials.length > 1 && resultingMaterialIndex != 0)">
                     <b>+</b>
                   </div>
-                  <a class="zoom" (click)="openImageModal(resultingMaterial.substanceName.refuuid, resultingMaterial.substanceName.approvalID, resultingMaterial.substanceName.refPname)">
+                  <a class="zoom"
+                    (click)="openImageModal(resultingMaterial.substanceName.refuuid, resultingMaterial.substanceName.approvalID, resultingMaterial.substanceName.refPname)">
                     <img appSubstanceImage [entityId]="resultingMaterial.substanceName.refuuid">
                   </a>
-                </div>
-                <a [routerLink]="['/substances', resultingMaterial.substanceName.refuuid]" target="_blank">
-                  {{resultingMaterial.substanceName.refPname}}</a>
+                  <div>
+                    <a [routerLink]="['/substances', resultingMaterial.substanceName.refuuid]" target="_blank">
+                      {{resultingMaterial.substanceName.refPname}}</a>
+                  </div>
+                </div> <!-- if substanceName object exists -->
               </div> <!-- Resulting Material Loop -->
             </td>
 
@@ -87,3 +96,9 @@
 
   </fieldset>
 </div>
+<br>
+<!--
+<div appScrollToTarget
+    [id]="'stage_' + 0">TESING TESTING
+</div>
+-->

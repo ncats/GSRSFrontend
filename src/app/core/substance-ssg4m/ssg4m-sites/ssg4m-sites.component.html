@@ -51,7 +51,8 @@
     <div class="marginleft45px">&nbsp;</div>
     -->
     <mat-form-field class="col-1-1 marginleft50px" *ngIf="configSettingsDisplay['siteComments'] || (configSettingsDisplay['siteComments'] === undefined && showAdvancedSettings)">
-      <input matInput placeholder="Comments" [(ngModel)]="site.siteComments" name="site.siteComments" />
+      <textarea matInput placeholder="Comments" [(ngModel)]="site.siteComments"
+      name="site.siteComments" rows="1"></textarea>
     </mat-form-field>
   </div> <!-- form row -->
 
@@ -67,8 +68,8 @@
     </button>
     <br><br>
 
-    <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index" appScrollToTarget
-    [id]="'stage-' + index">
+    <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
+    <!-- </div> appScrollToTarget [id]="'stage_' + processIndex + '_' + stageIndex"> -->
       <fieldset class="border">
         <legend class="border">Process {{(processIndex+1)}}&nbsp;&nbsp;&nbsp;&nbsp;{{configTitleStage}} &nbsp;<b><span
               class="colorgreen font17px">{{stageIndex + 1}}</span></b>

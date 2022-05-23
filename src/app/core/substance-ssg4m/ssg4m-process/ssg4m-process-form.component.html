@@ -1,4 +1,4 @@
-<div *ngIf="tabSelectedView !== 'Scheme View'">
+<div>
   <div class="process-form-container">
     <div *ngIf="process.$$deletedCode" class="notification-backdrop">
       Deleted&nbsp;
@@ -42,7 +42,8 @@
 
         <mat-form-field class="col-2-1"
           *ngIf="configSettingsDisplay['processComments'] || (configSettingsDisplay['processComments'] === undefined && showAdvancedSettings)">
-          <input matInput placeholder="Comments" [(ngModel)]="process.processComments" name="process.processComments" />
+          <textarea matInput placeholder="Comments" [(ngModel)]="process.processComments" name="process.processComments"
+            rows="1"></textarea>
         </mat-form-field>
       </div> <!-- form row -->
     </div>
@@ -80,3 +81,4 @@
     <!-- SITES LIST END -->
   </div>
 </div>
+

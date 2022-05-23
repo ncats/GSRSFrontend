@@ -1,7 +1,7 @@
 <!-- Tabs - Form View and Scheme Preview -->
+
 <mat-tab-group dynamicHeight (selectedTabChange)="tabSelected($event)" (selectedIndexChange)="onSelectedIndexChange($event)" [selectedIndex]="tabSelectedIndex">
   <mat-tab label="Form View">
-
     <div class="flex-row">
       <div class="paddingleft400px">
         <mat-checkbox [checked]="showAdvancedSettings" (change)="updateAdvancedSettings($event)">
@@ -13,11 +13,6 @@
         <input matInput placeholder="Search" [formControl]="searchControl">
       </mat-form-field>
       <span class="middle-fill"></span>
-      <!--
-  <button mat-button (click)="addProcess()">
-    Add note <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button>
-   -->
     </div>
 
     <mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"
@@ -25,13 +20,12 @@
       [pageSizeOptions]="[5, 10, 25, 100]">
     </mat-paginator>
 
-    <div class="process" *ngFor="let process of paged; let processIndex = index" appScrollToTarget
-      [id]="'substance-process-' + index">
+    <div class="process" *ngFor="let process of paged; let processIndex = index">
       <fieldset class="border">
-        <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}}</span></b>
+        <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}} of {{paged.length}}</span></b>
         </legend>
         <app-ssg4m-process-form [process]="process" [processIndex]="processIndex"
-          [showAdvancedSettings]="showAdvancedSettings" (processDeleted)="deleteProcess($event)"
+          [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView" (processDeleted)="deleteProcess($event)"
           (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
         </app-ssg4m-process-form>
         <!--
@@ -55,6 +49,7 @@
   </mat-tab>
 
   <mat-tab label="Scheme Preview">
+
     <!-- Display in Scheme View-->
     <app-ssg4m-scheme-view (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
     </app-ssg4m-scheme-view>

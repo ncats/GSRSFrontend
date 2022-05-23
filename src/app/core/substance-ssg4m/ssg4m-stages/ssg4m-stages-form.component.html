@@ -1,4 +1,5 @@
-<div *ngIf="tabSelectedView !== 'Scheme View'">
+
+<div>
   <div class="form-container">
     <div *ngIf="stage.$$deletedCode" class="notification-backdrop">
       Deleted&nbsp;
@@ -39,7 +40,8 @@
     <div class="form-row"
       *ngIf="configSettingsDisplay['stageComments'] || (configSettingsDisplay['stageComments'] === undefined && showAdvancedSettings)">
       <mat-form-field class="col-1-1 marginleft40px">
-        <input matInput placeholder="Comments" [(ngModel)]="stage.stageComments" name="stage.stageComments" />
+        <textarea matInput placeholder="Comments" [(ngModel)]="stage.stageComments" name="stage.stageComments"
+        rows="1"></textarea>
       </mat-form-field>
     </div> <!-- form row -->
 
@@ -179,9 +181,4 @@
     </div>
     <!-- RESULTING MATERIALS LIST END -->
   </div>
-</div>
-
-<!-- Schema Preview -->
-<div *ngIf="tabSelectedView === 'Scheme View'">
-  STAGE Scheme
 </div>
