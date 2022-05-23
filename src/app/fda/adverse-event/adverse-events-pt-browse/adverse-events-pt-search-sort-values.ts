@@ -64,5 +64,17 @@ export const adverseEventPtSearchSortValues = [
     'display': 'PRR, Descending',
     'displayedColumns': 'prr',
     'direction': 'desc'
+  },
+  {
+    'value': '^root_name',
+    'display': 'Ingredient, Ascending',
+    'displayedColumns': 'ingredientName',
+    'direction': 'asc'
+  },
+  {
+    'value': '$root_name',
+    'display': 'Ingredient Name, Descending',
+    'displayedColumns': 'ingredientName',
+    'direction': 'desc'
   }
 ];

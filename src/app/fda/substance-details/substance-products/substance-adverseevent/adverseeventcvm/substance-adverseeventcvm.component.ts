@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { Sort } from '@angular/material/sort';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverse-event/service/adverseevent.service';
@@ -11,6 +12,7 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { AuthService } from '@gsrs-core/auth';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { Subscription } from 'rxjs';
+import { adverseEventCvmSearchSortValues } from '../../../../adverse-event/adverse-events-cvm-browse/adverse-events-cvm-search-sort-values';
 
 @Component({
   selector: 'app-substance-adverseeventcvm',
@@ -20,9 +22,12 @@ import { Subscription } from 'rxjs';
 
 export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
-  // advCvmCount = 0;
-  adverseEventCount = 0;
+  @Input() bdnum: string;
+  @Output() countAdvCvmOut: EventEmitter<number> = new EventEmitter<number>();
 
+  adverseEventCount = 0;
+  order = '$root_aeCount';
+  ascDescDir = 'desc';
   showSpinner = false;
   public privateSearchTerm?: string;
   private privateFacetParams: FacetParam;
@@ -30,9 +35,8 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
   disableExport = false;
   etag = '';
   loadingStatus = '';
+  public sortValues = adverseEventCvmSearchSortValues;
   private subscriptions: Array<Subscription> = [];
-
-  @Output() countAdvCvmOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'adverseEvent', 'species', 'adverseEventCount', 'routeOfAdmin'
@@ -73,7 +77,7 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
     const skip = this.page * this.pageSize;
     const privateSearch = 'root_substanceKey:' + this.bdnum;
     const subscription = this.adverseEventService.getAdverseEventCvm(
-      'default',
+      this.order,
       skip,
       this.pageSize,
       privateSearch,
@@ -94,19 +98,21 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
     this.showSpinner = false;  // Stop progress spinner
   }
 
-  /*
-  getSubstanceAdverseEventCvm(pageEvent?: PageEvent): void {
-    this.setPageEvent(pageEvent);
-
-    this.showSpinner = true;  // Start progress spinner
-    this.adverseEventService.getSubstanceAdverseEventCvm(this.bdnum, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);
-      this.advCvmCount = this.totalRecords;
-      this.countAdvCvmOut.emit(this.advCvmCount);
-      this.showSpinner = false;  // Stop progress spinner
-    });
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      this.getAdverseEventCvm();
+    }
+    return;
   }
-  */
 
   export() {
     if (this.etag) {

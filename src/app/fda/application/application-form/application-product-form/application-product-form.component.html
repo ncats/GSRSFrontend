@@ -117,11 +117,11 @@
 
       <div *ngFor="let ingredient of product.applicationIngredientList; let ingredIndex = index">
         <app-ingredient-form [ingredient]="ingredient" [prodIndex]="prodIndex" [ingredIndex]="ingredIndex"
-          [totalIngredient]="product.applicationIngredientList.length">
+          [totalIngredient]="product.applicationIngredientList.length" (ingredientMessageOut)="ingredientMessageOutChange($event)"
+          (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)">
         </app-ingredient-form>
       </div>
       <!-- INGREDIENT END -->
-
 
     </fieldset>
     <br><br><br>

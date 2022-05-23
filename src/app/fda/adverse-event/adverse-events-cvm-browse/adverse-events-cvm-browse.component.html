@@ -57,6 +57,16 @@
           <span class="main-title">Browse Adverse Event CVM</span>
         </div>
 
+        <!-- Table, Full, and Title Views -->
+        <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+          <mat-button-toggle value="table" matTooltip="Table View">
+            <mat-icon svgIcon="list"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="cards" matTooltip="Full View">
+            <mat-icon svgIcon="view_stream"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
         <!-- Sort By -->
         <!--
         <mat-form-field class="sort">
@@ -108,22 +118,60 @@
         </button>
       </div>
 
+
       <!-- Display Content Details -->
-      <div class="cards" *ngIf="adverseEventCvm && adverseEventCvm.length; else noRecordAdverseEvent">
-        <div class="substance-cards">
+      <div [ngClass]="view">
+
+        <!-- ***** TABLE VIEW BEGIN ***** -->
+        <div class="table-view">
+          <table mat-table [dataSource]="adverseEventCvm" matSort (matSortChange)="sortData($event)">
+
+            <ng-container matColumnDef="adverseEvent">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Adverse Event </th>
+              <td mat-cell *matCellDef="let adverse"> {{adverse.adverseEvent}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="species">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Species </th>
+              <td mat-cell *matCellDef="let adverse"> {{adverse.species}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ingredientName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Name </th>
+              <td mat-cell *matCellDef="let adverse">
+                <a [routerLink]="['/substances', adverse.substanceId]" target="_blank">
+                  {{adverse.name}}
+                </a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="adverseEventCount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Adverse Event Count </th>
+              <td mat-cell *matCellDef="let adverse"> {{adverse.aeCount}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="routeOfAdmin">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Route of Administration </th>
+              <td mat-cell *matCellDef="let adverse"> {{adverse.routeOfAdmin}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div> <!-- Table View END-->
+
+
+        <!-- Display Content Details -->
+        <div class="cards-view" *ngIf="adverseEventCvm && adverseEventCvm.length; else noRecordAdverseEvent">
           <mat-card *ngFor="let adverseEventCvm of adverseEventCvm">
             <mat-card-title>
               <div>
                 <span class="font13px">Adverse Event:</span>&nbsp;
                 {{adverseEventCvm.adverseEvent}}
               </div>
-
               <div>
-
               </div>
-
               <div>
-
               </div>
             </mat-card-title>
 
@@ -183,8 +231,8 @@
 
             </mat-card-content>
           </mat-card>
-        </div>
-      </div> <!-- class=cards -->
+        </div> <!-- class=cards -->
+      </div> <!-- [ngClass]=view -->
 
       <!-- Pagination at the bottom of the page -->
       <div class="controls-container">
