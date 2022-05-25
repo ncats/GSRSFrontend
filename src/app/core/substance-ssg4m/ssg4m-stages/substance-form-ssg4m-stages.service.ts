@@ -68,19 +68,19 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
   }
 
   addStartingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newStartMat: SpecifiedSubstanceG4mStartingMaterial = {};
+    const newStartMat: SpecifiedSubstanceG4mStartingMaterial = {substanceRole: 'Starting Material'};
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials.push(newStartMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials);
   }
 
   addProcessingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newProcessMat: SpecifiedSubstanceG4mProcessingMaterial = {};
+    const newProcessMat: SpecifiedSubstanceG4mProcessingMaterial = {substanceRole: 'Solvent'};
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials.push(newProcessMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials);
   }
 
   addResultingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newResultingMat: SpecifiedSubstanceG4mResultingMaterial = {};
+    const newResultingMat: SpecifiedSubstanceG4mResultingMaterial = {substanceRole: 'Intermediate'};
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials.push(newResultingMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials);
   }
@@ -158,7 +158,7 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
     const nextStartMat = nextStageObj.startingMaterials[nextStartIndex];
     nextStartMat.substanceName = thisResultMatSubName;
     nextStartMat.verbatimName = thisResultMatObj.verbatimName;
-    nextStartMat.substanceRole = thisResultMatObj.substanceRole;
+    nextStartMat.substanceRole = 'Intermediate';  //  thisResultMatObj.substanceRole;
     nextStartMat.comments = thisResultMatObj.comments;
   }
 }

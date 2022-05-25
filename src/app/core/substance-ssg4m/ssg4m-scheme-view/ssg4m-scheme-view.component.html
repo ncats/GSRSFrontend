@@ -119,7 +119,7 @@
               </div> <!-- Processing Material Loop -->
 
               <!-- SHOW CRITICAL PARAMETER -->
-              <div class="paddingleft20px paddingtop10px bo" *ngFor="let criticalParameter of stage.criticalParameters; let criticalParameterIndex = index">
+              <div class="paddingleft25px paddingtop10px bo" *ngFor="let criticalParameter of stage.criticalParameters; let criticalParameterIndex = index">
                 <span *ngIf="showCriticalParameter">
                   <div *ngIf="criticalParameter.value">
                     <b>{{displayAmount(criticalParameter.value, criticalParameter.name)}}</b>
