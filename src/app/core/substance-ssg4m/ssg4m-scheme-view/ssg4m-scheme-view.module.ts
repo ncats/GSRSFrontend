@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, Routes, RouterModule } from '@angular/router';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -14,6 +15,7 @@ import { Ssg4mSchemeViewComponent } from './ssg4m-scheme-view.component';
   imports: [
     CommonModule,
     RouterModule,
+    MatCheckboxModule,
     MatButtonModule,
     MatIconModule,
     MatListModule,
