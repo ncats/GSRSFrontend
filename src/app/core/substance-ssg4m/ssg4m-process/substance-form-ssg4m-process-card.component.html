@@ -1,4 +1,4 @@
-<!-- Tabs - Form View and Scheme Preview -->
+<!-- Tabs - Form View, Step View, and Scheme Preview -->
 
 <mat-tab-group dynamicHeight (selectedTabChange)="tabSelected($event)" (selectedIndexChange)="onSelectedIndexChange($event)" [selectedIndex]="tabSelectedIndex">
   <mat-tab label="Form View">
@@ -48,11 +48,18 @@
 
   </mat-tab>
 
-  <mat-tab label="Scheme Preview">
+  <mat-tab label="Step View">
 
-    <!-- Display in Scheme View-->
+    <!-- Display in Step View-->
     <app-ssg4m-scheme-view (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
     </app-ssg4m-scheme-view>
 
   </mat-tab>
+
+  <mat-tab label="Scheme View">
+    <!-- Display in Scheme View-->
+    <br><br>
+    &nbsp;&nbsp;&nbsp;<b>Coming Soon</b>
+  </mat-tab>
+
 </mat-tab-group>
