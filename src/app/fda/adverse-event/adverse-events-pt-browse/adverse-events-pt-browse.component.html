@@ -126,7 +126,8 @@
         <!-- ***** TABLE VIEW BEGIN ***** -->
         <div class="table-view">
           <div class="responsive">
-            <table mat-table [dataSource]="adverseEventPtList" matSort (matSortChange)="sortData($event)">
+            <table mat-table [dataSource]="adverseEventPtList" matSort (matSortChange)="sortData($event)"
+            matSortActive="ptCount" matSortDirection="desc" matSortDisableClear>
 
               <ng-container matColumnDef="ptTerm">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Term </th>

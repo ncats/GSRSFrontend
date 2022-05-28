@@ -56,7 +56,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
   private subscriptions: Array<Subscription> = [];
 
   view = 'table';
-  order = '$root_ptCount';
+  order = '$root_aeCount';
   etag = '';
   totalAdverseEventCvm = 0;
   pageIndex: number;

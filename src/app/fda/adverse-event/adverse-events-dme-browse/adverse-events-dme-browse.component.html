@@ -122,7 +122,8 @@
 
         <!-- ***** TABLE VIEW BEGIN ***** -->
         <div class="table-view">
-          <table mat-table [dataSource]="adverseEventDme" matSort (matSortChange)="sortData($event)">
+          <table mat-table [dataSource]="adverseEventDme" matSort (matSortChange)="sortData($event)"
+          matSortActive="dmeCount" matSortDirection="desc" matSortDisableClear>
 
             <ng-container matColumnDef="dmeReactions">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> DME Reactions </th>
