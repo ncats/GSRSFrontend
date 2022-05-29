@@ -105,7 +105,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
     this.gaService.sendPageView('Browse Products');
 
-    this.titleService.setTitle(`Browse Products`);
+    this.titleService.setTitle(`P:Browse Products`);
 
     this.pageSize = 10;
     this.pageIndex = 0;

@@ -104,7 +104,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.gaService.sendPageView('Browse Applications');
 
-    this.titleService.setTitle(`Browse Applications`);
+    this.titleService.setTitle(`A:Browse Applications`);
 
     this.pageSize = 10;
     this.pageIndex = 0;

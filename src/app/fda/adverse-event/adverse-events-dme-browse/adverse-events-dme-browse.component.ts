@@ -109,7 +109,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
   //  this.gaService.sendPageView('Browse Adverse Event Dme');
 
-    this.titleService.setTitle(`Browse Adverse Events`);
+    this.titleService.setTitle(`AE:Browse Adverse Events`);
 
     this.pageSize = 10;
     this.pageIndex = 0;

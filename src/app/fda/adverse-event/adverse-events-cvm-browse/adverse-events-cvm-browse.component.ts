@@ -107,7 +107,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventCvmFacets);
    // this.gaService.sendPageView('Browse Adverse Event Cvm');
 
-    this.titleService.setTitle(`Browse Adverse Events`);
+    this.titleService.setTitle(`AE:Browse Adverse Events`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
