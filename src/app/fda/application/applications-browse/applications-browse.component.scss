@@ -110,6 +110,48 @@
   display: flex;
 }
 
+.cards {
+  .cards-view {
+    display: block;
+  }
+
+  .table-view {
+    display: none;
+  }
+
+  .tiles-view{
+    display: none;
+  }
+}
+
+.table {
+  .cards-view {
+    display: none;
+  }
+
+  .table-view {
+    display: block;
+  }
+
+  .tiles-view{
+    display: none;
+  }
+}
+
+.tiles {
+  .cards-view {
+    display: none;
+  }
+
+  .table-view {
+    display: none;
+  }
+
+  .tiles-view{
+    display: flex;
+  }
+}
+
 .mat-card {
   max-width: 928px;
   margin-bottom: 20px;
@@ -1206,6 +1248,11 @@ margin:auto;
   height: 50px;
   padding: 0px;
   border: 10px solid blue;
+}
+
+.width120px {
+  width: 120px;
+
 }
 
 .width100percent {

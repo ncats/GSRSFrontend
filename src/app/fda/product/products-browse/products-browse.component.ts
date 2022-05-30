@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
@@ -34,6 +35,7 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+  view = 'cards';
   public privateSearchTerm?: string;
   public _searchTerm?: string;
   public products: Array<ProductAll>;
@@ -46,7 +48,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   totalProducts: number;
   isLoading = true;
   isError = false;
-  displayedColumns: string[];
   dataSource = [];
   appType: string;
   appNumber: string;
@@ -65,6 +66,17 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   isSearchEditable = false;
   lastPage: number;
   invalidPage = false;
+  ascDescDir = 'desc';
+  public displayedColumns: string[] = [
+    'productNDC',
+    'productName',
+    'labelerName',
+    'country',
+    'status',
+    'productNameType',
+    'ingredientType',
+    'applicationNumber'
+  ];
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -129,7 +141,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -276,6 +288,27 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   // for facets
   facetsLoaded(numFacetsLoaded: number) {
+  }
+
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search Applications
+      this.searchProducts();
+    }
+    return;
+  }
+
+  updateView(event): void {
+    this.view = event.value;
   }
 
   changePage(pageEvent: PageEvent) {

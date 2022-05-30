@@ -17,6 +17,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
@@ -95,6 +96,7 @@ const productRoutes: Routes = [
     MatExpansionModule,
     MatCheckboxModule,
     MatTableModule,
+    MatSortModule,
     MatPaginatorModule,
     MatSelectModule,
     MatSliderModule,
