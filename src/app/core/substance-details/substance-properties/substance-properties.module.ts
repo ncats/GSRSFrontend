@@ -8,6 +8,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {CdkTableModule} from '@angular/cdk/table';
+import { MatIconModule } from '@angular/material/icon';
 import {RouterModule} from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { ReferencesManagerModule } from '@gsrs-core/references-manager';
@@ -17,6 +18,7 @@ import { ReferencesManagerModule } from '@gsrs-core/references-manager';
     CommonModule,
     DynamicComponentLoaderModule.forChild(SubstancePropertiesComponent),
     MatTableModule,
+    MatIconModule,
     CdkTableModule,
     MatPaginatorModule,
     MatInputModule,
