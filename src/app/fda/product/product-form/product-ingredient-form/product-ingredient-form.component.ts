@@ -43,7 +43,7 @@ export class ProductIngredientFormComponent implements OnInit {
   releaseCharacteristicList: Array<VocabularyTerm> = [];
   */
   username = null;
-
+  searchValue: string;
   substanceUuid: string;
   ingredientName: string;
   basisOfStrengthSubstanceUuid: string;
@@ -240,7 +240,7 @@ export class ProductIngredientFormComponent implements OnInit {
               this.substanceUuid = response.uuid;
               this.ingredientName = response._name;
 
-             // Get Active Moiety
+              // Get Active Moiety
               this.getActiveMoiety(this.substanceUuid, 'ingredientname');
             }
           }
@@ -316,6 +316,10 @@ export class ProductIngredientFormComponent implements OnInit {
             this.substanceUuid = relatedSubstance.refuuid;
             this.ingredientName = relatedSubstance.name;
 
+            // Clear the Validation Message
+            this.ingredientNameMessage = '';
+            this.ingredient.$$ingredientNameValidation = '';
+
             // Populate Basis of Strength if it is empty/null
             if (!this.ingredient.basisOfStrengthSubstanceKey) {
               this.basisOfStrengthIngredientName = relatedSubstance.name;
@@ -358,6 +362,10 @@ export class ProductIngredientFormComponent implements OnInit {
             this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
             this.basisOfStrengthIngredientName = relatedSubstance.name;
 
+            // Clear the Validation Message
+            this.basisOfStrengthMessage = '';
+            this.ingredient.$$basisOfStrengthValidation = '';
+
             // Get Active Moiety
             this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
           }
@@ -367,15 +375,6 @@ export class ProductIngredientFormComponent implements OnInit {
       this.basisOfStrengthSubstanceUuid = null;
     }
   }
-
-  showMessageIngredientName(message: string): void {
-    this.ingredientNameMessage = message;
-  }
-
-  showMessageBasisOfStrength(message: string): void {
-    this.basisOfStrengthMessage = message;
-  }
-
 
   confirmReviewIngredient() {
     if (this.ingredient.reviewDate) {
@@ -399,92 +398,41 @@ export class ProductIngredientFormComponent implements OnInit {
     this.ingredient.reviewedBy = this.username;
   }
 
-  /*
-  getSubstanceUuid(substanceKey: string, type: string) {
-
-  if (substanceKey != null) {
-    this.generalService.getSubstanceDetailsByBdnum(bdnum).subscribe(response => {
-      if (response) {
-        if (response.uuid) {
-          if (type === 'ingredientname') {
-            this.ingredientNameMessage = '';
-            this.ingredient.substanceKey = response.bdnum;
-            this.ingredientName = response.name;
-            this.ingredientNameSubstanceUuid = response.substanceId;
-
-            // Get Active Moiety
-            this.getActiveMoiety(response.substanceId, 'ingredientname');
-
-          } else {    // Basis is strength
-            this.basisOfStrengthMessage = '';
-            this.ingredient._basisOfStrengthIngredientName = response.bdnum;
-            this.basisOfStrengthName = response.name;
-            this.basisofStrengthSubstanceUuid = response.substanceId;
-
-            // Get Active Moiety
-            this.getActiveMoiety(response.substanceId, 'basisofstrength');
-          }
-        } else {
-          this.basisOfStrengthMessage = '';
-          this.basisOfStrengthMessage = 'No Ingredient Name found for this bdnum';
-        }
-      } else {
-        if (type === 'ingredientname') {
-          this.ingredientNameMessage = 'There is no Ingredient Name found for this bdnum';
-        } else {
-          this.basisOfStrengthMessage = 'There is no Basis of Strength found for this bdnum';
-        }
-      }
-    });
+  showMessageIngredientName(message: string): void {
+    this.ingredientNameMessage = message;
+    // Send this to Application form for Validation
+    // This message is displayed when 'No Substance Found' is passed from Substance Search Selector
+    this.ingredient.$$ingredientNameValidation = 'Ingredient Name: ' + this.ingredientNameMessage;
   }
-  */
 
-  /*
-  getBdnum(substanceId: string, type: string) {
-    this.productService.getSubstanceDetailsBySubstanceId(substanceId).subscribe(response => {
-      if (response) {
-        if (response.bdnum) {
-
-          if (type === 'ingredientname') {
-            this.ingredientNameMessage = '';
-            this.ingredient.substanceKey = response.bdnum;
-            this.ingredientName = response.name;
-            this.ingredientNameSubstanceUuid = response.substanceId;
-
-            // Get Active Moiety
-            this.getActiveMoiety(response.substanceId, 'ingredientname');
-
-            // If Basis of Strenght is empty/null, copy the Ingredient Name to Basis of Strength
-            if (this.ingredient.basisOfStrengthSubstanceKey == null) {
-              this.basisOfStrengthMessage = '';
-              this.ingredient.basisOfStrengthSubstanceKey = response.bdnum;
-              this.basisOfStrengthName = response.name;
-              this.basisofStrengthSubstanceUuid = response.substanceId;
-
-              // Get Active Moiety
-              this.getActiveMoiety(response.substanceId, 'basisofstrength');
-            }
-            // Basis is strength
-          } else {
-            this.basisOfStrengthMessage = '';
-            this.ingredient.basisOfStrengthSubstanceKey = response.bdnum;
-            this.basisOfStrengthName = response.name;
-            this.basisofStrengthSubstanceUuid = response.substanceId;
-
-            // Get Active Moiety
-            this.getActiveMoiety(response.substanceId, 'basisofstrength');
-          }
-
-        }
-      } else {
-        if (type === 'ingredientname') {
-          this.ingredientNameMessage = 'There is no Ingredient Name found for this bdnum';
-        } else {
-          this.basisOfStrengthMessage = 'There is no Basis of Strength found for this bdnum';
-        }
-      }
-    });
+  showMessageBasisOfStrength(message: string): void {
+    this.basisOfStrengthMessage = message;
+    // Send this to Application form for Validation
+    // This message is displayed when 'No Substance Found' is passed from Substance Search Selector
+    this.ingredient.$$basisOfStrengthValidation = 'Basis of Strength: ' + this.basisOfStrengthMessage;
   }
-  */
 
+  searchValueOutChange(searchValue: string) {
+    this.searchValue = searchValue;
+    // SearchValue is empty, clear the message
+    if (!this.searchValue) {
+      this.ingredientNameMessage = '';
+      this.ingredient.$$ingredientNameValidation = '';
+    }
+    // if searchValue is not empty and there is no Ingredient Name selected, display error message
+    if ((this.searchValue) && (this.substanceUuid === null || this.substanceUuid === undefined)) {
+      this.ingredient.$$ingredientNameValidation = 'Ingredient Name: No substances found for ' + this.searchValue;
+    }
+  }
+
+  searchValueBasisOutChange(searchValue: string) {
+    this.searchValue = searchValue;
+    if (!this.searchValue) {
+      this.basisOfStrengthMessage = '';
+      this.ingredient.$$basisOfStrengthValidation = '';
+    }
+    if ((this.searchValue) && (this.basisOfStrengthSubstanceUuid === null || this.basisOfStrengthSubstanceUuid === undefined)) {
+      this.ingredient.$$basisOfStrengthValidation = 'Basis of Strength: No substances found for ' + this.searchValue;
+    }
+  }
 }

@@ -124,7 +124,8 @@
 
         <!-- ***** TABLE VIEW BEGIN ***** -->
         <div class="table-view">
-          <table mat-table [dataSource]="adverseEventCvm" matSort (matSortChange)="sortData($event)">
+          <table mat-table [dataSource]="adverseEventCvm" matSort (matSortChange)="sortData($event)"
+          matSortActive="adverseEventCount" matSortDirection="desc" matSortDisableClear>
 
             <ng-container matColumnDef="adverseEvent">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Adverse Event </th>

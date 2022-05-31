@@ -58,6 +58,16 @@
           <span class="main-title">Browse Applications</span>
         </div>
 
+        <!-- Table, Full, and Title Views -->
+        <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+          <mat-button-toggle value="table" matTooltip="Table View">
+            <mat-icon svgIcon="list"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="cards" matTooltip="Full View">
+            <mat-icon svgIcon="view_stream"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
         <!-- Sort By -->
         <mat-form-field class="sort">
           <mat-label>Sort By</mat-label>
@@ -107,9 +117,82 @@
         </button>
       </div>
 
-      <!-- Display Content Details -->
-      <div class="cards" *ngIf="applications && applications.length; else noRecordApplication">
-        <div class="substance-cards">
+      <!--********** Display Content Details ******* -->
+
+      <div [ngClass]="view">
+
+        <!-- ***** TABLE VIEW BEGIN ***** -->
+        <div class="table-view">
+          <div class="responsive">
+
+            <table mat-table [dataSource]="applications" class="font12px" matSort (matSortChange)="sortData($event)"
+            matSortActive="appNumber" matSortDirection="asc" matSortDisableClear>
+
+              <ng-container matColumnDef="appType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Type </th>
+                <td mat-cell *matCellDef="let application">
+                  <div class="width120px">
+                    <a class="substance-name" [routerLink]="['/application', application.id]" target="_blank"
+                      alt="View Application Record" matTooltip='View Application Record'>
+                      {{application.appType}}  <!--&nbsp;{{application.appNumber}} -->
+                    </a>&nbsp;&nbsp;
+                    <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                      matTooltip='Edit Application Record'>
+                      <mat-icon svgIcon="edit"></mat-icon>
+                    </a>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="appNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
+                <td mat-cell *matCellDef="let application"> {{application.appNumber}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="center">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Center </th>
+                <td mat-cell *matCellDef="let application"> {{application.center}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="provenance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Provenance </th>
+                <td mat-cell *matCellDef="let application"> {{application.provenance}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="applicationStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Status </th>
+                <td mat-cell *matCellDef="let application"> {{application.status}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
+                <td mat-cell *matCellDef="let application">
+
+                  <div *ngFor="let prod of application.applicationProductList; let i = index">
+                    <!-- Product Names-->
+                    <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
+                      {{prodName.productName}}
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sponsorName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sponsor Name </th>
+                <td mat-cell *matCellDef="let application"> {{application.sponsorName}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+          </div>
+        </div> <!-- class="table-view" -->
+
+        <!-- TABLE VIEW END -->
+
+        <!-- CARD VIEW BEGIN -->
+        <div class="cards-view" *ngIf="applications && applications.length; else noRecordApplication">
           <mat-card *ngFor="let application of applications; let index = index">
             <mat-card-title>
               <div>
@@ -492,8 +575,8 @@
             </mat-card-content>
 
           </mat-card>
-        </div>
-      </div> <!-- class=cards -->
+        </div> <!-- class=cards -->
+      </div> <!-- [ngClass]=view -->
 
       <!-- Pagination at the bottom of the page -->
       <div class="controls-container">
@@ -513,11 +596,18 @@
             <span class="page-label"> of {{lastPage}}</span>
           </div>
         </div>
-      </div>
+      </div> <!-- Pagination Page-->
 
       <ng-template #noRecordApplication>
         <!-- No Application Found. -->
+        <!--
+      <div class="padleft10px colorred">
+        <br>
+        No Application records found. Please Reindex to see the Application records here.
+      </div>
+      -->
       </ng-template>
+
     </div> <!-- class=side-nav-content -->
   </mat-sidenav-content>
 </mat-sidenav-container>

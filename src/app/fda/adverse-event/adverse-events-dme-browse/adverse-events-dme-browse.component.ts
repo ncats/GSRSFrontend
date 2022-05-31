@@ -56,7 +56,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
   private subscriptions: Array<Subscription> = [];
 
   view = 'table';
-  order = '$root_ptCount';
+  order = '$root_dmeCount';
   etag = '';
   totalAdverseEventDme = 0;
   pageIndex: number;
@@ -109,7 +109,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
   //  this.gaService.sendPageView('Browse Adverse Event Dme');
 
-    this.titleService.setTitle(`Browse Adverse Events`);
+    this.titleService.setTitle(`AE:Browse Adverse Events`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -125,7 +125,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_ptCount';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_dmeCount';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
