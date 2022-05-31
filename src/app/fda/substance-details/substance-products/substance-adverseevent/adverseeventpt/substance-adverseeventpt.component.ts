@@ -22,11 +22,12 @@ import { adverseEventPtSearchSortValues } from '../../../../adverse-event/advers
 })
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
+  @Input() bdnum: string;
+  @Input() substanceName: string;
+  @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
-  // advPtCount = 0;
   adverseEventCount = 0;
-
-  orderBy = '$root_ptCount';
+  order = '$root_ptCount';
   ascDescDir = 'desc';
   showSpinner = false;
   public privateSearchTerm?: string;
@@ -37,10 +38,6 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   etag = '';
   loadingStatus = '';
   private subscriptions: Array<Subscription> = [];
-
-  @Input() bdnum: string;
-  @Input() substanceName: string;
-  @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
   adverseEventShinySubstanceNameDisplay = false;
   adverseEventShinyAdverseEventDisplay = false;
@@ -106,7 +103,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     const skip = this.page * this.pageSize;
     const privateSearch = 'root_substanceKey:' + this.bdnum;
     const subscription = this.adverseEventService.getAdverseEventPt(
-      this.orderBy,
+      this.order,
       skip,
       this.pageSize,
       privateSearch,
@@ -154,7 +151,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
       this.sortValues.forEach(sortValue => {
         if (sortValue.displayedColumns && sortValue.direction) {
           if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
-            this.orderBy = sortValue.value;
+            this.order = sortValue.value;
           }
         }
       });

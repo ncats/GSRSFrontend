@@ -107,7 +107,13 @@ export class ControlledVocabularyService extends BaseHttpService {
     return url;
   }
 
-
+  getStructureUrlFragment(structure: string) {
+    structure = structure.replace(/%/g, "%25").replace(/#/g, "%23").replace(/[;]/g, "%3B").replace(/[+]/g, "%2B");
+    const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
+    return url;
+  }
+  
+  
   search(domain: string, query: string): Observable<Array<VocabularyTerm>> {
     return new Observable(observer => {
       const subscription = this.getDomainVocabulary(domain).subscribe(response => {
@@ -161,6 +167,12 @@ export class ControlledVocabularyService extends BaseHttpService {
   public addVocabTerm(vocab: any): Observable<any> {
     const url = `${this.apiBaseUrl}vocabularies`;
     return this.http.put( url, vocab);
+  }
+
+  public getFragmentCV(): Observable<any> {
+    const url = `${this.apiBaseUrl}vocabularies/search?facet=ix.Class/ix.ginas.models.v1.FragmentControlledVocabulary`;
+    return this.http.get(url);
+  
   }
 
   private fetchVocabulariesFromServer(...domainArgs: Array<string>): Observable<VocabularyDictionary> {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Application } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
@@ -14,7 +14,6 @@ import { GeneralService } from 'src/app/fda/service/general.service';
   styleUrls: ['./application-product-form.component.scss']
 })
 export class ApplicationProductFormComponent implements OnInit {
-
   @Input() application: Application;
   reviewProductMessage: Array<any> = [];
   productMessage = '';
@@ -115,4 +114,5 @@ export class ApplicationProductFormComponent implements OnInit {
   updateRouteAdmin(routeAdmins: Array<string>, prodIndex: number): void {
     this.application.applicationProductList[prodIndex].routeAdmin = routeAdmins.toString();
   }
+
 }

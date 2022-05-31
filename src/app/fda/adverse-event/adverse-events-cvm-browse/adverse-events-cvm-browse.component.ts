@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import { Sort } from '@angular/material/sort';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -24,6 +25,7 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AdverseEventService } from '../service/adverseevent.service';
 import { GeneralService } from '../../service/general.service';
 import { AdverseEventCvm } from '../model/adverse-event.model';
+import { adverseEventCvmSearchSortValues } from './adverse-events-cvm-search-sort-values';
 
 @Component({
   selector: 'app-adverse-events-cvm-browse',
@@ -32,44 +34,44 @@ import { AdverseEventCvm } from '../model/adverse-event.model';
 })
 
 export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  public privateSearchTerm?: string;
-  public adverseEventCvm: Array<AdverseEventCvm>;
-  order: string;
-  // public sortValues = applicationSearchSortValues;
-  pageIndex: number;
-  pageSize: number;
-  jumpToValue: string;
-  totalApplications: number;
-  isLoading = true;
-  isError = false;
   isAdmin: boolean;
   isLoggedIn = false;
-  displayedColumns: string[];
-  dataSource = [];
-  hasBackdrop = false;
-  appType: string;
-  appNumber: string;
-  clinicalTrialApplication: Array<any>;
-  exportUrl: string;
+  isLoading = true;
+  isError = false;
+  invalidPage = false;
   private isComponentInit = false;
   privateExport = false;
-  disableExport = false;
-  private overlayContainer: HTMLElement;
-  etag = '';
+  isSearchEditable = false;
   environment: any;
   previousState: Array<string> = [];
-  private searchTermHash: number;
-  isSearchEditable = false;
-  lastPage: number;
-  invalidPage = false;
-  totalAdverseEventCvm = 0;
+  private overlayContainer: HTMLElement;
 
   // needed for facets
+  ascDescDir = 'desc';
+  private isFacetsParamsInit = false;
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
-  private isFacetsParamsInit = false;
+  private searchTermHash: number;
   public displayFacets: Array<DisplayFacet> = [];
   private subscriptions: Array<Subscription> = [];
+
+  view = 'table';
+  order = '$root_ptCount';
+  etag = '';
+  totalAdverseEventCvm = 0;
+  pageIndex: number;
+  pageSize: number;
+  lastPage: number;
+  public sortValues = adverseEventCvmSearchSortValues;
+  public privateSearchTerm?: string;
+  public adverseEventCvm: Array<AdverseEventCvm>;
+  displayedColumns: string[] = [
+    'adverseEvent',
+    'species',
+    'ingredientName',
+    'adverseEventCount',
+    'routeOfAdmin'
+  ];
 
   constructor(
     public adverseEventService: AdverseEventService,
@@ -103,7 +105,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventCvmFacets);
-    this.gaService.sendPageView('Browse Adverse Event Cvm');
+   // this.gaService.sendPageView('Browse Adverse Event Cvm');
 
     this.titleService.setTitle(`Browse Adverse Events`);
 
@@ -121,7 +123,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_aeCount';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
@@ -172,7 +174,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
         this.adverseEventCvm = pagingResponse.content;
         // didn't work unless I did it like this instead of
         // below export statement
-        this.dataSource = this.adverseEventCvm;
+        // this.dataSource = this.adverseEventCvm;
         this.totalAdverseEventCvm = pagingResponse.total;
         this.etag = pagingResponse.etag;
 
@@ -255,9 +257,27 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
     return this.privateSearchTerm;
   }
 
-  // get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
-  //   return this.privateFacetParams;
-  // }
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search Adverse Event
+      this.searchAdverseEventCvm();
+    }
+    return;
+  }
+
+  updateView(event): void {
+    // this.gaService.sendEvent('adverseeventptsContent', 'button:view-update', event.value);
+    this.view = event.value;
+  }
 
   changePage(pageEvent: PageEvent) {
 
