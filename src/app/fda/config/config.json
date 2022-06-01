@@ -753,10 +753,13 @@
     },
     "adverseeventpt": {
       "default": [
-        "Adverse Event",
+        "PT Term",
         "Prim SOC",
         "Ingredient Name",
+        "Ingredient Name (Case Count)",
         "Substance Key",
+        "Case Count",
+        "PRR",
         "ATC Level 1",
         "ATC Level 2",
         "ATC Level 3",

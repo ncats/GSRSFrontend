@@ -477,47 +477,43 @@
 }
 
 .cards {
-  .controls-container {
-    max-width: 928px;
-  }
-
-  .substance-cards {
+  .cards-view {
     display: block;
   }
 
-  .substance-table {
+  .table-view {
     display: none;
   }
 
-  .substance-tiles{
+  .tiles-view{
     display: none;
   }
 }
 
 .table {
-  .substance-cards {
+  .cards-view {
     display: none;
   }
 
-  .substance-table {
+  .table-view {
     display: block;
   }
 
-  .substance-tiles{
+  .tiles-view{
     display: none;
   }
 }
 
 .tiles {
-  .substance-cards {
+  .cards-view {
     display: none;
   }
 
-  .substance-table {
+  .table-view {
     display: none;
   }
 
-  .substance-tiles{
+  .tiles-view{
     display: flex;
   }
 }
@@ -706,6 +702,48 @@ width:150px;
   display: flex;
   min-width: 660px;
   /*align-items: flex-end;*/
+}
+
+.cards {
+  .cards-view {
+    display: block;
+  }
+
+  .table-view {
+    display: none;
+  }
+
+  .tiles-view{
+    display: none;
+  }
+}
+
+.table {
+  .cards-view {
+    display: none;
+  }
+
+  .table-view {
+    display: block;
+  }
+
+  .tiles-view{
+    display: none;
+  }
+}
+
+.tiles {
+  .cards-view {
+    display: none;
+  }
+
+  .table-view {
+    display: none;
+  }
+
+  .tiles-view{
+    display: flex;
+  }
 }
 
 .mat-card {
@@ -1418,6 +1456,10 @@ margin:auto;
 
 .padleft10px {
   padding-left: 10px;
+}
+
+.width120px {
+  width: 120px;
 }
 
 .width40 {

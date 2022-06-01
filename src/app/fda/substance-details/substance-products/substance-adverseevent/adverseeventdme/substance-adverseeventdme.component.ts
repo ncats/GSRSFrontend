@@ -26,7 +26,7 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
   adverseEventCount = 0;
-  order = '$root_caseCount';
+  order = '$root_dmeCount';
   ascDescDir = 'desc';
   showSpinner = false;
   public privateSearchTerm?: string;

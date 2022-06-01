@@ -34,7 +34,8 @@
     </mat-progress-spinner>
   </div>
 
-  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
+  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)" matSortActive="adverseEventCount"
+    matSortDirection="desc" matSortDisableClear>
 
     <ng-container matColumnDef="adverseEvent">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Adverse Event </th>

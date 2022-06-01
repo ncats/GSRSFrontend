@@ -462,13 +462,13 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   searchValueOutChange(searchValue: string) {
     this.searchValue = searchValue;
     // SearchValue is empty, clear the message
-    if (!this.searchValue) {
+    if (!searchValue) {
       this.ingredientNameMessage = '';
       this.ingredient.$$ingredientNameValidation = '';
     }
     // if searchValue is not empty and there is no Ingredient Name selected, display error message
-    if ((this.searchValue) && (this.substanceUuid === null || this.substanceUuid === undefined)) {
-      this.ingredient.$$ingredientNameValidation = 'Ingredient Name: No substances found for ' + this.searchValue;
+    if ((searchValue) && (this.substanceUuid === null || this.substanceUuid === undefined)) {
+      this.ingredient.$$ingredientNameValidation = 'Ingredient Name: No substances found for ' + searchValue;
     }
   }
 

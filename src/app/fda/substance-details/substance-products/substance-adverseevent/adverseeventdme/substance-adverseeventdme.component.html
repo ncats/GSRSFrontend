@@ -32,11 +32,12 @@
     </mat-progress-spinner>
   </div>
 
-  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
+  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)" matSortActive="dmeCount"
+    matSortDirection="desc" matSortDisableClear>
 
     <ng-container matColumnDef="dmeReactions">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> DME Reactions </th>
-    <td mat-cell *matCellDef="let adverse"> {{adverse.dmeReactions}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> DME Reactions </th>
+      <td mat-cell *matCellDef="let adverse"> {{adverse.dmeReactions}} </td>
     </ng-container>
 
     <ng-container matColumnDef="ptTermMeddra">

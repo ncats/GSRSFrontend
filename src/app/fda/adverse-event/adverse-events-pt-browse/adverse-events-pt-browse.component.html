@@ -126,12 +126,18 @@
         <!-- ***** TABLE VIEW BEGIN ***** -->
         <div class="table-view">
           <div class="responsive">
-            <table mat-table [dataSource]="adverseEventPtList" matSort (matSortChange)="sortData($event)">
+            <table mat-table [dataSource]="adverseEventPtList" matSort (matSortChange)="sortData($event)"
+              matSortActive="ptCount" matSortDirection="desc" matSortDisableClear>
 
               <ng-container matColumnDef="ptTerm">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Term </th>
                 <td mat-cell *matCellDef="let adverse">
-                  {{adverse.ptTerm}}
+                  <div *ngIf="adverse.ptTerm">
+                    <a [routerLink]="['/browse-adverse-events']"
+                      [queryParams]='{search: "\"^" + adverse.ptTerm + "$\""}' target="_blank">
+                      {{adverse.ptTerm}}
+                    </a>
+                  </div>
                 </td>
               </ng-container>
 
@@ -299,25 +305,25 @@
         </div> <!-- class=cards -->
       </div> <!-- [ngClass]=view -->
 
-        <!-- Pagination at the bottom of the page -->
-        <div class="controls-container">
-          <div class="full-paginator">
-            <mat-paginator #paginator [length]="totalAdverseEventPt" [pageIndex]="pageIndex" [pageSize]="pageSize"
-              [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
-            </mat-paginator>
+      <!-- Pagination at the bottom of the page -->
+      <div class="controls-container">
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalAdverseEventPt" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
 
-            <div class="page-selector">
-              <span class="page-label">Page: </span>
-              <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
-                <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
-                  [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
-                  (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
-                  (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
-              </mat-form-field>
-              <span class="page-label"> of {{lastPage}}</span>
-            </div>
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
           </div>
-        </div> <!-- Pagination end -->
+        </div>
+      </div> <!-- Pagination end -->
 
       <ng-template #noRecordAdverseEventPt>
         <!-- No Adverse Event PT Record Found. -->
