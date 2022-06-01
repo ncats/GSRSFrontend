@@ -14,7 +14,7 @@ import { FormControl } from '@angular/forms';
 })
 export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<SubstanceReference> implements OnInit {
   references: Array<SubstanceReference> = [];
-  displayedColumns: string[] = ['citation', 'type', 'tags', 'files', 'access'];
+  displayedColumns: string[] = ['citation', 'docType', 'tags', 'files', 'access'];
   substanceUpdated = new Subject<SubstanceDetail>();
   pageSize = 10;
   hideFilters = true;
@@ -146,7 +146,7 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
     }
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
-      return this.utilsService.compare(a[sort.active] ? a[sort.active].toUpperCase : '', b[sort.active] ? b[sort.active].toUpperCase : '', isAsc);
+      return this.utilsService.compare(a[sort.active] ? a[sort.active].toString().toUpperCase() : null, b[sort.active] ? b[sort.active].toString().toUpperCase() : null, isAsc);
     });
     this.pageChange();
   }
