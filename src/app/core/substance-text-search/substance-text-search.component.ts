@@ -250,15 +250,12 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   }
 
   looksLikeComplexSearchTerm(searchTerm:string): boolean {
-    // if we have an underscore followed by a colon we think it's complex search
-    // root_names_name:Aspirin
-    const regexp : RegExp = /_.*:/g;
-    // The AND/OR unneeded or confounding here?  
-    if (regexp.test(searchTerm) 
-     // || 
-     //searchTerm.indexOf(' AND ') || 
-     // searchTerm.indexOf(' OR ')
-    ){
+    // If we have an underscore followed by a colon, we think it's a complex search.
+    // e.g. root_names_name:Aspirin
+    const regexp : RegExp = /_.+:/g;
+    // The AND/OR checks were in a previous version but may be unneeded/confounding
+    // unless we're considering draft searchTerms that may have forgotten the complex search syntax. 
+    if (regexp.test(searchTerm) || searchTerm.indexOf(' AND ') || searchTerm.indexOf(' OR ')){
       return true;  
     }
     return false;
