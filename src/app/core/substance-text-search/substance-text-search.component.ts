@@ -225,6 +225,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
     if (searchTerm && searchTerm.length > 0) {
       searchTerm = searchTerm.trim();
       const looksComplex = this.looksLikeComplexSearchTerm(searchTerm);
+      console.log("looksComplex: " + looksComplex);
       if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && !looksComplex) {
         // Put slash in front of brackets, for example:
         // 1. [INN] to \[INN\]
@@ -252,10 +253,10 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   looksLikeComplexSearchTerm(searchTerm:string): boolean {
     // If we have an underscore followed by a colon, we think it's a complex search.
     // e.g. root_names_name:Aspirin
-    const regexp : RegExp = /_.+:/g;
+    const regexp : RegExp = /_.*:/g;
     // The AND/OR checks were in a previous version but may be unneeded/confounding
     // unless we're considering draft searchTerms that may have forgotten the complex search syntax. 
-    if (regexp.test(searchTerm) || searchTerm.indexOf(' AND ') || searchTerm.indexOf(' OR ')){
+    if (regexp.test(searchTerm) || (searchTerm.indexOf(' AND ') > -1) || (searchTerm.indexOf(' OR ') > -1)){
       return true;  
     }
     return false;
