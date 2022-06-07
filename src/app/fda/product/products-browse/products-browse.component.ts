@@ -74,7 +74,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     'country',
     'status',
     'productNameType',
-    'ingredientType',
     'applicationNumber'
   ];
 
