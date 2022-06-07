@@ -107,6 +107,7 @@ export class SubstanceService extends BaseHttpService {
       if (args.structureSearchTerm != null && args.structureSearchTerm !== '') {
         this.searchSubstanceStructures(
           args.structureSearchTerm,
+          args.searchTerm,
           args.cutoff,
           args.type,
           args.pageSize,
@@ -125,6 +126,7 @@ export class SubstanceService extends BaseHttpService {
         this.searchSubstanceSequences(
           args.sequenceSearchTerm,
           args.sequenceSearchKey,
+          args.searchTerm,
           args.cutoff,
           args.type,
           args.seqType,
@@ -196,6 +198,7 @@ export class SubstanceService extends BaseHttpService {
 
   searchSubstanceStructures(
     searchTerm: string,
+    querySearchTerm?: string,
     cutoff?: number,
     type: string = 'substructure',
     pageSize: number = 10,
@@ -210,12 +213,12 @@ export class SubstanceService extends BaseHttpService {
       let structureFacetsKey: number;
 
       structureFacetsKey = this.utilsService.hashCode(searchTerm, type, cutoff);
+
       if (type && (type === 'flex' || type === 'exact')) {
         sync = true;
       }
 
       if (!sync && this.searchKeys[structureFacetsKey]) {
-
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
         params = params.appendDictionary({
@@ -227,7 +230,6 @@ export class SubstanceService extends BaseHttpService {
         }
 
       } else {
-
         params = params.append('q', (searchTerm));
         if (type) {
           params = params.append('type', type);
@@ -261,6 +263,7 @@ export class SubstanceService extends BaseHttpService {
             const resultKey = response.key;
             this.searchKeys[structureFacetsKey] = resultKey;
             this.processAsyncSearchResults(
+              querySearchTerm,
               url,
               response,
               observer,
@@ -285,6 +288,7 @@ export class SubstanceService extends BaseHttpService {
   searchSubstanceSequences(
     searchTerm?: string,
     searchKey?: string,
+    querySearchTerm?: string,
     cutoff: number = 0.5,
     type?: string,
     seqType?: string,
@@ -339,6 +343,7 @@ export class SubstanceService extends BaseHttpService {
             const resultKey = response.key;
             this.searchKeys[structureFacetsKey] = resultKey;
             this.processAsyncSearchResults(
+              querySearchTerm,
               url,
               response,
               observer,
@@ -361,6 +366,7 @@ export class SubstanceService extends BaseHttpService {
   }
 
   private processAsyncSearchResults(
+    querySearchTerm: string,
     url: string,
     asyncCallResponse: any,
     observer: Observer<PagingResponse<SubstanceDetail>>,
@@ -372,6 +378,7 @@ export class SubstanceService extends BaseHttpService {
     view?: string
   ): void {
     this.getAsyncSearchResults(
+      querySearchTerm,
       searchKey,
       pageSize,
       facets,
@@ -384,6 +391,7 @@ export class SubstanceService extends BaseHttpService {
           this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
             setTimeout(() => {
               this.processAsyncSearchResults(
+                querySearchTerm,
                 url,
                 searchResponse,
                 observer,
@@ -410,6 +418,7 @@ export class SubstanceService extends BaseHttpService {
   }
 
   private getAsyncSearchResults(
+    querySearchTerm: string,
     structureSearchKey: string,
     pageSize?: number,
     facets?: FacetParam,
@@ -430,6 +439,11 @@ export class SubstanceService extends BaseHttpService {
       skip: skip.toString(),
       view: view || ''
     });
+
+    // Added for 3.0.2, Advanced Search:Combine structure Search with query search.
+    if (querySearchTerm != null && querySearchTerm !== '') {
+      params = params.append('q', querySearchTerm);
+    }
 
     const options = {
       params: params

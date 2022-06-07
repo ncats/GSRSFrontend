@@ -391,6 +391,11 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
 
             // Populate Basis of Strength if it is empty/null
             if (!this.ingredient.basisOfStrengthSubstanceKey) {
+
+              // Clear the Validation Message
+              this.basisOfStrengthMessage = '';
+              this.ingredient.$$basisOfStrengthValidation = '';
+
               this.basisOfStrengthIngredientName = relatedSubstance.name;
               this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
               // Get Active Moiety

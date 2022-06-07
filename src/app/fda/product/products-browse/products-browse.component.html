@@ -194,20 +194,22 @@
                 <td mat-cell *matCellDef="let product"> {{product.productType}} </td>
               </ng-container>
 
+              <!--
               <ng-container matColumnDef="ingredientType">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Type </th>
                 <td mat-cell *matCellDef="let product">
                   <div *ngFor="let prodIng of product.productIngredientAllList; let i = index">
                     <div *ngIf="prodIng.substanceUuid">
-                      <!--
+
                       <div *ngIf="(substance.uuid === prodIng.substanceUuid)">
                         {{prodIng.ingredientType}}
                       </div>
-                      -->
+                      
                     </div>
                   </div>
                 </td>
               </ng-container>
+              -->
 
               <ng-container matColumnDef="applicationNumber">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
