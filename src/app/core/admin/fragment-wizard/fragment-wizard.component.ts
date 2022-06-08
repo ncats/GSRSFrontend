@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, Inject } from '@angular/core';
 import { Editor } from '@gsrs-core/structure-editor';
 import * as _ from 'lodash';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
 import { EventEmitter } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 
 @Component({
@@ -21,12 +22,28 @@ export class FragmentWizardComponent implements OnInit {
   forms: Array<any> = [];
   term2: any = {value: '', display: ''};
   privateTerm: any = {value: '', display: ''};
+  asDialog = false;
+  vocabulary: any;
+  message: string;
+  adminPanel?: boolean;
+
 
 
   constructor(
     private CVService: ControlledVocabularyService,
-    private loadingService: LoadingService
-  ) { }
+    private loadingService: LoadingService,
+    public dialogRef: MatDialogRef<FragmentWizardComponent>,
+
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.vocabulary = data.vocabulary;
+    this.vocab = data.vocabulary.domain;
+    this.privateTerm.value = data.term;
+    this.privateTerm.display = data.term;
+    this.asDialog = true;
+    this.adminPanel = data.adminPanel;
+  }
+  
 
   @Input()
   set term(val: any) {
@@ -39,8 +56,34 @@ export class FragmentWizardComponent implements OnInit {
     return this.privateTerm;
   }
 
-  ngOnInit(): void {
+  close() {
+    this.dialogRef.close();
+  }
 
+  save() {
+    let extant = false;
+    this.vocabulary.terms.forEach(term => {
+      if (term.value === this.privateTerm.value) {
+        extant = true;
+      }
+    });
+    if (!extant) {
+      this.vocabulary.terms.push(this.privateTerm);
+      this.CVService.addVocabTerm( this.vocabulary).subscribe (response => {
+        if (response.terms && response.terms.length === this.vocabulary.terms.length) {
+          this.message = 'Term ' + this.privateTerm.value + ' Added to ' + this.vocabulary.domain + '';
+          setTimeout(() => {this.dialogRef.close(this.privateTerm); }, 3000);
+        }
+      });
+    } else {
+      this.message = 'Term already exists';
+      setTimeout(() => {
+        this.message = '';
+      }, 1000);
+    }
+  }
+
+  ngOnInit(): void {
     if (this.privateTerm.simplifiedStructure) {
       this.privateTerm.simpleSrc = this.CVService.getStructureUrl(this.privateTerm.simplifiedStructure);
   }
@@ -238,7 +281,6 @@ export class FragmentWizardComponent implements OnInit {
   getFragmentCV() {
     this.CVService.getFragmentCV().subscribe(data => {
       this.dat = {};
-      var dat = {};
 
      this.domains = data.content;
 
@@ -259,5 +301,9 @@ export class FragmentWizardComponent implements OnInit {
     this.privateTerm.simplifiedStructure = structure;
     this.checkImg(this.privateTerm);
     this.termUpdated.emit(this.privateTerm);
+    this.forms = [];
+    if(this.adminPanel) {
+      this.dialogRef.close(structure);
+    }
   }
 }

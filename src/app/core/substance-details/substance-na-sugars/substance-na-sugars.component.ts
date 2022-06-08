@@ -11,7 +11,7 @@ import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 })
 export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnInit, OnDestroy {
   sugars: Array<Sugar>;
-  displayedColumns: string[] = ['Sugar' , 'Site Range' , 'Site Count' ];
+  displayedColumns: string[] = ['Sugar' , 'Structure', 'Site Range' , 'Site Count' ];
   siteCount: number;
   vocabulary: any;
   substanceUpdated = new Subject<SubstanceDetail>();
@@ -34,6 +34,13 @@ export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnI
         this.countUpdate.emit(this.sugars.length);
         const cvSubscription =  this.cvService.getDomainVocabulary('NUCLEIC_ACID_SUGAR').subscribe(response => {
           this.vocabulary = response['NUCLEIC_ACID_SUGAR'].dictionary;
+          this.sugars.forEach(sugar => {
+            if(this.vocabulary[sugar.sugar]) {
+              sugar.structure = this.cvService.getStructureUrlFragment(this.vocabulary[sugar.sugar].fragmentStructure);
+            } else {
+              sugar.structure = null;
+            }
+          })
         });
         this.subscriptions.push(cvSubscription);
         this.getTotalSites();

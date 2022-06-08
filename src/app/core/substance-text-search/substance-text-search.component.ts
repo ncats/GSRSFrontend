@@ -180,7 +180,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           }
         }
       }
-      const query = this.query.replace(/(?=[() ])/g, '\\');
+      const query = this.query.replace(/(?=[() \[\]])/g, '\\');
       return field.replace(new RegExp(query, 'gi'), match => {
         return '<strong>' + match + '</strong>';
       });

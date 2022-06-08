@@ -7,6 +7,7 @@ import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sugar-form',
@@ -21,6 +22,9 @@ export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() remaining: Array<Site>;
   deleteTimer: any;
   sugarTypes: any;
+  vocabulary: any;
+  smiles: any;
+  structure: any = null;
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
   siteDisplay: string;
@@ -70,6 +74,28 @@ export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.substanceFormService.emitSugarUpdate();
   }
 
+  getStructure() {
+    this.smiles = this.vocabulary[this.privateSugar.sugar];
+    if (this.smiles && this.smiles.fragmentStructure) {
+      this.structure = this.cvService.getStructureUrlFragment(this.smiles.fragmentStructure);
+    } else {
+      this.cvService.getDomainVocabulary('NUCLEIC_ACID_SUGAR').pipe(take(1)).subscribe(response => {
+        let list = response['NUCLEIC_ACID_SUGAR'].list;
+        let found = false;
+        list.forEach(val => {
+          if (val.value === this.privateSugar.sugar) {
+            this.smiles = val;
+            found = true;
+            this.structure = this.cvService.getStructureUrlFragment(this.smiles.fragmentStructure);
+          }
+        });
+        if (!found) {
+          this.structure = null;
+        }
+      });
+    }
+  }
+
   updateDisplay(sugar?: Sugar): void {
     if (sugar) {
       this.siteDisplay = this.substanceFormService.siteString(sugar.sites);
@@ -97,8 +123,16 @@ export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
   getVocabularies(): void {
     const subscription = this.cvService.getDomainVocabulary('NUCLEIC_ACID_SUGAR').subscribe(response => {
       this.sugarTypes = response['NUCLEIC_ACID_SUGAR'].list;
+      this.vocabulary = response['NUCLEIC_ACID_SUGAR'].dictionary;
+      this.smiles = this.vocabulary[this.privateSugar.sugar];
+      this.getStructure();
     });
     this.subscriptions.push(subscription);
+  }
+
+  updateSugar(event: any) {
+    this.privateSugar.sugar = event;
+    this.getStructure();
   }
 
   openDialog(): void {
