@@ -142,6 +142,8 @@ export class Ssg4mSitesComponent implements OnInit {
           } else {
             this.configSettingsDisplay[key] = false;
           }
+        } else if (confSettings[key] === 'removed') {
+          this.configSettingsDisplay[key] = false;
         }
       }
     });

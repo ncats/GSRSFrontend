@@ -5,6 +5,7 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
+
   <div class="form-row">
     <div class="delete-container">
       <button mat-icon-button matTooltip="Delete Critical Parameter {{(criticalParameterIndex+1)}}"
@@ -15,12 +16,48 @@
       <div class="padleft15px"><b>{{(criticalParameterIndex+1)}}</b></div>
     </div>
 
-    <app-cv-input class="col-3-1"
-      *ngIf="configSettingsDisplay['name'] || (configSettingsDisplay['name'] === undefined && true)"
-      domain="PROPERTY_NAME" required='true' title="Property Name" [model]="criticalParameter.name"
+    <app-cv-input class="width180px padright20px"
+      *ngIf="configSettingsDisplay['propertyName'] || (configSettingsDisplay['propertyName'] === undefined && true)"
+      domain="SSG_CRITICAL_PROPERTY_NAME" required='true' title="Property Name" [model]="criticalParameter.name"
       (valueChange)="criticalParameter.name = $event">
     </app-cv-input>
 
+    <mat-form-field class="amount-average col-5-1"
+      *ngIf="configSettingsDisplay['average'] || (configSettingsDisplay['average'] === undefined && true)">
+      <input type="number" matInput placeholder="Average" [formControl]="averageControl" />
+    </mat-form-field>
+
+    <mat-form-field class="low-limit col-5-1"
+      *ngIf="configSettingsDisplay['lowLimit'] || (configSettingsDisplay['lowLimit'] === undefined && true)">
+      <input type="number" matInput placeholder="Low Limit" [formControl]="lowLimitControl" />
+    </mat-form-field>
+
+    <mat-form-field class="high-limit col-5-1"
+      *ngIf="configSettingsDisplay['highLimit'] || (configSettingsDisplay['highLimit'] === undefined && true)">
+      <input type="number" matInput placeholder="High Limit" [formControl]="highLimitControl" />
+    </mat-form-field>
+
+    <mat-form-field class="amount-units width130px"
+      *ngIf="configSettingsDisplay['units'] || (configSettingsDisplay['units'] === undefined && true)">
+      <mat-label>Units</mat-label>
+      <mat-select [formControl]="unitsControl">
+        <mat-option [value]='null'><span class='deselect'>Clear selection</span></mat-option>
+        <mat-option *ngFor="let unit of amountUnitList" [value]="unit.value">
+          {{unit.display}}
+        </mat-option>
+        <mat-option
+          *ngIf="privateSubstanceAmount.units && !inCV(  amountUnitList, privateSubstanceAmount.units) && privateSubstanceAmount.units !== ''"
+          value="{{privateSubstanceAmount.units}}">{{privateSubstanceAmount.units}} (not in CV)</mat-option>
+        <mat-option value='other'>Other (New Value)</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div *ngIf="privateSubstanceAmount.units === 'other'" class="custom">
+      <input matInput placeholder="Custom value" (focusout)="updateUnits($event.target)" name="custom" />
+    </div>
+
+  </div> <!-- form row -->
+
+  <div class="form-row padleft50px">
     <app-cv-input class="col-3-1"
       *ngIf="configSettingsDisplay['propertyType'] || (configSettingsDisplay['propertyType'] === undefined && true)"
       domain="PROPERTY_TYPE" required='true' title="Property Type" [model]="criticalParameter.propertyType"
@@ -34,11 +71,46 @@
         [subuuid]="relatedSubstanceUuid">
       </app-substance-selector>
     </div>
-  </div> <!-- form row -->
 
+    <mat-form-field class="col-3-1"
+      *ngIf="configSettingsDisplay['amountType'] || (configSettingsDisplay['amountType'] === undefined && true)">
+      <mat-label>Amount Type</mat-label>
+      <mat-select [formControl]="typeControl">
+        <mat-option [value]='null'><span class='deselect'>Clear selection</span></mat-option>
+        <mat-option *ngFor="let type of amountTypeList" [value]="type.value">
+          {{type.display}}
+        </mat-option>
+        <mat-option
+          *ngIf="privateSubstanceAmount.type && !inCV(  amountTypeList, privateSubstanceAmount.type) && privateSubstanceAmount.type !== ''"
+          value="{{privateSubstanceAmount.type}}">{{privateSubstanceAmount.type}} (not in CV)</mat-option>
+        <mat-option value='other'>Other (New Value)</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div *ngIf="privateSubstanceAmount.type === 'other'" class="custom">
+      <input matInput placeholder="Custom value" (focusout)="updateType($event.target)" name="custom" />
+    </div>
+  </div>
 
-  <!-- Parameters -->
-  <div class="form-row">
+  <div class="form-row padleft50px">
+    <mat-form-field class="low col-3-1"
+      *ngIf="configSettingsDisplay['low'] || (configSettingsDisplay['low'] === undefined && true)">
+      <input type="number" matInput placeholder="Low" [formControl]="lowControl" />
+    </mat-form-field>
+
+    <mat-form-field class="high col-3-1"
+      *ngIf="configSettingsDisplay['high'] || (configSettingsDisplay['high'] === undefined && true)">
+      <input type="number" matInput placeholder="High" [formControl]="highControl" />
+    </mat-form-field>
+
+    <mat-form-field class="non-numeric-value col-3-1"
+      *ngIf="configSettingsDisplay['nonNumericValue'] || (configSettingsDisplay['nonNumericValue'] === undefined && true)">
+      <input matInput placeholder="Non-numeric Value" [formControl]="nonNumericValueControl" />
+    </mat-form-field>
+  </div>
+
+  <!-- BEGIN: Parameters -->
+  <div class="form-row padleft15px"
+    *ngIf="configSettingsDisplay['parameters'] || (configSettingsDisplay['parameters'] === undefined && true)">
     <div>
       <h4>
         Parameters
@@ -136,7 +208,8 @@
       </mat-list>
 
     </div>
-  </div> <!-- form-row parameters -->
+  </div>
+  <!-- END: form-row parameters -->
 
   <!-- Amount -->
   <!--
@@ -146,9 +219,13 @@
     <app-amount-form [substanceAmount]="criticalParameter.value"></app-amount-form>
   </div>
  -->
-  <div class="padtop10px padbottom10px"><b>Amount</b></div>
+
+  <!--  COMMENTING NOW -->
+  <!--
+  <div class="padleft15px padtop10px padbottom10px"><b>Amount</b></div>
+
   <form class="amount-form">
-    <div class="form-row">
+    <div class="form-row padleft15px">
       <mat-form-field class="col-4-1">
         <mat-label>Type</mat-label>
         <mat-select [formControl]="typeControl">
@@ -165,49 +242,25 @@
       <div *ngIf="privateSubstanceAmount.type === 'other'" class="custom">
         <input matInput placeholder="Custom value" (focusout)="updateType($event.target)" name="custom" />
       </div>
-
+      -->
+  <!--
       <mat-form-field class="amount-average col-4-1">
         <input type="number" matInput placeholder="Average" [formControl]="averageControl" />
       </mat-form-field>
+      -->
+  <!--
       <mat-form-field class="low col-4-1">
         <input type="number" matInput placeholder="Low" [formControl]="lowControl" />
       </mat-form-field>
       <mat-form-field class="high col-4-1">
         <input type="number" matInput placeholder="High" [formControl]="highControl" />
       </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field class="low-limit col-4-1">
-        <input type="number" matInput placeholder="Low Limit" [formControl]="lowLimitControl" />
-      </mat-form-field>
-      <mat-form-field class="high-limit col-4-1">
-        <input type="number" matInput placeholder="High Limit" [formControl]="highLimitControl" />
-      </mat-form-field>
-
-      <div class="col-4-1">
-        <mat-form-field class="amount-units">
-          <mat-label>Units</mat-label>
-          <mat-select [formControl]="unitsControl">
-            <mat-option [value]='null'><span class='deselect'>Clear selection</span></mat-option>
-            <mat-option *ngFor="let unit of amountUnitList" [value]="unit.value">
-              {{unit.display}}
-            </mat-option>
-            <mat-option
-              *ngIf="privateSubstanceAmount.units && !inCV(  amountUnitList, privateSubstanceAmount.units) && privateSubstanceAmount.units !== ''"
-              value="{{privateSubstanceAmount.units}}">{{privateSubstanceAmount.units}} (not in CV)</mat-option>
-            <mat-option value='other'>Other (New Value)</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div *ngIf="privateSubstanceAmount.units === 'other'" class="custom">
-        <input matInput placeholder="Custom value" (focusout)="updateUnits($event.target)" name="custom" />
-      </div>
 
       <mat-form-field class="non-numeric-value col-4-1">
         <input matInput placeholder="Non-numeric Value" [formControl]="nonNumericValueControl" />
       </mat-form-field>
     </div>
-    <!-- Amount form-row -->
   </form>
+   -->
+  <!-- Amount form-row -->
 </div>

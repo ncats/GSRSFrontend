@@ -9,9 +9,10 @@
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
-  "approvalCodeName":"UNIT",
+  "approvalCodeName":"UNII",
   "primaryCode": "BDNUM",
-  "typeaheadFields": ["Display_Name", "CAS", "Name", "Approval_ID" ],
+  "filteredDuplicationCodes": [ "BDNUM", "FDA UNII" ],
+  "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID" ],
   "loadedComponents": {
     "applications": true,
     "products": true,
@@ -122,13 +123,7 @@
     ]
   },
   {      "card": "substance-hierarchy",
-    "title": "Substance Hierarchy",
-    "filters": [
-      {
-        "filterName": "exists",
-        "propertyToCheck": "relationships"
-      }
-    ]
+    "title": "Substance Hierarchy"
   },
   {
     "card": "structure-details",
@@ -595,7 +590,8 @@
         "Product Type",
         "Product Dosage Form",
         "Definition Level",
-        "Clinical Trial Count"
+        "Clinical Trial US Count",
+        "Clinical Trial US Status"
       ],
       "admin": [
         "Record Created By",
@@ -611,7 +607,7 @@
       "facetView": [
         {
           "category": "Default",
-          "facets": ["Deprecated", "Record Status", "Substance Class", "GInAS Tag", "GInAS Domain", "Code System", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Application Center", "Application Type", "Application Status", "Material Type", "Family", "Parts", "Moiety Type", "Molecular Weight", "SubstanceStereochemistry", "root_approved", "Approved By", "root_created", "Record Created By", "root_lastEdited", "root_lastEditedBy", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Protein Type", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Definition Level", "Clinical Trial Count", "Relationships"]
+          "facets": ["Deprecated", "Record Status", "Substance Class", "GInAS Tag", "GInAS Domain", "Code System", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Application Center", "Application Type", "Application Status", "Material Type", "Family", "Parts", "Moiety Type", "Molecular Weight", "SubstanceStereochemistry", "root_approved", "Approved By", "root_created", "Record Created By", "root_lastEdited", "root_lastEditedBy", "Record Level Access", "Display Name Level Access", "Definition Level Access", "Protein Type", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Definition Level", "Relationships", "Clinical Trial US Count", "Clinical Trial US Status"]
         },
         {
           "category": "Record Data",
@@ -623,11 +619,11 @@
         },
         {
           "category": "CMC Data",
-          "facets": ["Record Status", "Substance Class", "Code System", "GInAS Tag", "Moiety Type", "Application Center", "Application Type", "Application Status", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial Count", "CFR", "Qualification", "Interaction Type"]
+          "facets": ["Record Status", "Substance Class", "Code System", "GInAS Tag", "Moiety Type", "Application Center", "Application Type", "Application Status", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial US Count", "Clinical Trial US Status", "CFR", "Qualification", "Interaction Type"]
         },
         {
           "category": "Medical Data",
-          "facets": ["Record Status", "Substance Class", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Code System", "GInAS Tag", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial Count", "CFR"]
+          "facets": ["Record Status", "Substance Class", "ATC Level 1", "ATC Level 2", "ATC Level 3", "ATC Level 4", "WHO-SDG Level 1", "WHO-SDG Level 2", "DME Reactions", "Code System", "GInAS Tag", "Product Ingredient Type", "Product Type", "Product Dosage Form", "Clinical Trial US Count", "Clinical Trial US Status", "CFR"]
         },
         {
           "category": "Chemistry",
@@ -644,6 +640,10 @@
         {
           "category": "Codes",
           "facets": ["ATCC", "BDNUM", "BIOLOGIC SUBSTANCE CLASSIFICATION CODE", "CAS", "CAYMAN", "CERES", "CFR", "CFSAN PSEUDO CAS", "ChEMBL", "CLINICAL_TRIALS.GOV", "Code System", "CODEX ALIMENTARIUS (GSFA)", "COSMETIC INGREDIENT REVIEW (CIR)", "DASH INDICATION", "DEA NO.", "DME Reactions", "DRUG BANK", "DRUG CENTRAL", "DSLD", "EC (ENZYME CLASS)", "EC SCIENTIFIC COMMITTEE ON CONSUMER SAFETY OPINION", "ECHA (EC/EINECS)", "EMA ASSESSMENT REPORTS", "EMA VETERINARY ASSESSMENT REPORTS", "EPA CompTox", "EPA PESTICIDE CODE", "EU CLINICAL TRIALS REGISTER", "EU FOOD ADDITIVES", "EU-Orphan Drug", "EVMPD", "FARM SUBSTANCE ID", "FDA ORPHAN DRUG", "FDA UNII", "Food Contact Sustance Notif, (FCN No.)", "GENE", "GRIN", "HEALTH -CANADA NHP INGREDIENT MONOGRAPH", "HEALTH-CANADA NHP INGREDIENT RECORD", "HSDB", "IARC", "INCB IDS CODE", "INN", "INS", "ITIS", "IUPHAR", "JAPANESE REVIEW", "JECFA EVALUATION", "JECFA MONOGRAPH", "JMPR-PESTICIDE RESIDUE", "KEGG", "LactMed", "LIVERTOX", "LOINC", "MANUFACTURER PRODUCT INFORMATION", "MERCK INDEX", "MESH", "MIRBASE", "MPNS", "NCBI TAXONOMY", "NCI_THESAURUS", "NDF-RT", "NSC", "Other", "PFAF", "PHAROS", "PROTEIN ID", "PUBCHEM", "RXCUI", "STARI", "SUPERSEDED_BD_NUM", "SWGDRUG", "UCSF-FDA TRANSPORTAL", "UNII", "UNIPROT", "USDA PLANTS", "USP_CATALOG", "USP-HMC", "WEB RESOURCE", "WHO INTERNATIONAL PHARMACOPEIA", "WHO INTERNATIONAL PHARMACPOEIA", "WHO-ATC", "WHO-ESSENTIAL MEDICINES LIST", "WHO-SDG", "WHO-SDG Level 1", "WHO-SDG Level 2", "WHO-VATC", "WIKIPEDIA", "YELLOW LIST"]
+        },
+        {
+          "category": "Clinical Trials",
+          "facets": ["Clinical Trial US Count", "Clinical Trial US Status"]
         }
       ]
     },
@@ -726,6 +726,7 @@
         "Last Updated Year",
         "Primary Completion Year",
         "First Posted Year",
+        "Trial Status",
         "Study Types",
         "Gender",
         "Age Groups",
@@ -741,6 +742,7 @@
         "Last Updated Year",
         "Primary Completion Year",
         "First Posted Year",
+        "Trial Status",
         "Study Types",
         "Gender",
         "Age Groups",
@@ -751,10 +753,12 @@
     },
     "adverseeventpt": {
       "default": [
-        "Adverse Event",
+        "PT Term",
         "Prim SOC",
         "Ingredient Name",
         "Substance Key",
+        "Case Count",
+        "PRR",
         "ATC Level 1",
         "ATC Level 2",
         "ATC Level 3",
@@ -876,6 +880,7 @@
   ],
   "substanceSelectorProperties": [
     "root_names_name",
+    "root_names_stdName",
     "root_approvalID",
     "root_codes_BDNUM",
     "root_codes_CAS",
@@ -1036,7 +1041,6 @@
       },
       {"facetName": "Record Status",
         "facetValue":"pending"}]
-
     }
   ],
   "substance":{
@@ -1079,9 +1083,18 @@
         "stageComments": "advanced"
       },
       "criteriaParameter": {
-        "name": "simple",
-        "propertyType": "simple",
-        "referencedSubstance": "simple"
+        "propertyName": "simple",
+        "average": "simple",
+        "lowLimit": "simple",
+        "highLimit": "simple",
+        "units": "simple",
+        "propertyType": "advanced",
+        "referencedSubstance": "advanced",
+        "amountType": "advanced",
+        "low": "advanced",
+        "high": "advanced",
+        "nonNumericValue": "advanced",
+        "parameters": "removed"
       },
       "startingMaterial": {
         "substanceName": "simple",
