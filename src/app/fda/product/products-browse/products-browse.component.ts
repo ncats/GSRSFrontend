@@ -70,6 +70,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   public displayedColumns: string[] = [
     'productNDC',
     'productName',
+    'ingredientName',
     'labelerName',
     'country',
     'status',

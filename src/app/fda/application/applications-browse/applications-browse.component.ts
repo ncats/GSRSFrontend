@@ -71,7 +71,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     'provenance',
     'applicationStatus',
     'productName',
-    'sponsorName'
+    'sponsorName',
+    'ingredientName'
   ];
 
   // needed for facets
