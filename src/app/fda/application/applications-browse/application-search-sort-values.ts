@@ -89,11 +89,15 @@ export const applicationSearchSortValues = [
   },
   {
     'value': '^root_Ingredient Name',
-    'display': 'Ingredient Name, A-Z'
+    'display': 'Ingredient Name, A-Z',
+    'displayedColumns': 'ingredientName',
+    'direction': 'asc'
   },
   {
     'value': '$root_Ingredient Name',
-    'display': 'Ingredient Name, Z-A'
+    'display': 'Ingredient Name, Z-A',
+    'displayedColumns': 'ingredientName',
+    'direction': 'desc'
   },
   {
     'value': '^root_creationDate',

@@ -110,6 +110,12 @@
   display: flex;
 }
 
+.controls-container-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
 .mat-card {
   max-width: 928px;
   margin-bottom: 20px;
