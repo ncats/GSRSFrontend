@@ -28,6 +28,11 @@
     padding: 0 10px 8px 0;
   }
 
+  .col-5-1 {
+    width: calc((100% - 20px * 5) / 6); // 5 column
+    margin-right: 20px;
+  }
+
   .col-4-1 {
     width: calc((100% - 20px * 3) / 4); // 4 column
     margin-right: 20px;
@@ -42,6 +47,14 @@
     width: calc((100% - 20px * 1) / 2); // 2 column
     margin-right: 20px;
   }
+}
+
+.width130px {
+  width: 130px;
+}
+
+.width180px {
+  width: 180px;
 }
 
 .references-container {
@@ -88,6 +101,14 @@
 
 .padleft15px {
   padding-left: 15px;
+}
+
+.padleft50px {
+  padding-left: 50px;
+}
+
+.padright20px {
+  padding-right: 20px;
 }
 
 .padtop10px {

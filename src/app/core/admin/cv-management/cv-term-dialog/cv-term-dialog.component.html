@@ -8,9 +8,14 @@
                 <div class = "form-row" *ngIf = "toggled[index] && vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'"> 
                                 <hr style = "width: 100%;">
                   </div>
-                <div class = "form-row" *ngIf = "toggled[index] && vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'"> 
+                  <ng-template #index>
+                                <div class = "form-row">
+                        <app-fragment-wizard [vocab] = "vocabulary.domain" style = "margin:auto" [term] = "term" (termUpdated) = "updateStructure(term,index)"></app-fragment-wizard>
+                        </div>
+                  </ng-template>
+               <!-- <div class = "form-row" *ngIf = "toggled[index] && vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'"> 
                           <app-fragment-wizard [vocab] = "vocabulary.domain" style = "margin:auto" [term] = "term" (termUpdated) = "updateStructure(term,index)"></app-fragment-wizard>
-                  </div>
+                  </div>-->
             <div class = "form-row" [id] = "last? 'latest-term': null">
                 <button mat-icon-button (click) = "deleteTerm(index)" class = "delete-icon">
                         <mat-icon svgIcon="delete_forever"></mat-icon>
@@ -40,7 +45,9 @@
                         </mat-checkbox>
                 </div >
                 <div class = "checkbox" *ngIf ="vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'">
-                        <button mat-button (click) = "!toggled[index]? toggled[index] = true : toggled[index] = !toggled[index]">{{toggled[index]?"Hide": "Edit Structure"}}</button>
+                        <button mat-button (click) = "editTerms(term, index)">Edit Structure</button>
+
+                       <!-- <button mat-button (click) = "!toggled[index]? toggled[index] = true : toggled[index] = !toggled[index]">{{toggled[index]?"Hide": "Edit Structure"}}</button>-->
                 </div>
                 </div>
                 <div class = "form-row double-row"

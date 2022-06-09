@@ -8,6 +8,7 @@ import {Subscription} from 'rxjs';
 import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
 import {AuthService} from '@gsrs-core/auth';
+import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 
 /*
   used for any input that uses cv vocabulary to handle custom values after selecting 'other'
@@ -65,7 +66,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
       this.subscriptions.push(cvSubscription);
 
     }
-    this.overlayContainer = this.overlayContainerService.getContainerElement();
+ //   this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.isAdmin = this.authService.hasRoles('admin');
   }
 
@@ -124,13 +125,28 @@ export class CvInputComponent implements OnInit, OnDestroy {
   }
 
   openDialog(vocab: any, term: string): void {
-    const dialogRef = this.dialog.open(CvDialogComponent, {
-      data: {'vocabulary': vocab, 'term': term},
-      width: '1040px'
-    });
-    this.overlayContainer.style.zIndex = '1002';
+    let thisy = window.pageYOffset;
+    window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'auto' 
+});
+
+   // this.overlayContainer = this.overlayContainerService.getContainerElement();
+    if (vocab.domain === 'NUCLEIC_ACID_LINKAGE' || vocab.domain === 'NUCLEIC_ACID_SUGAR'){
+      let dialogRef = this.dialog.open(FragmentWizardComponent, {
+        data: {'vocabulary': vocab, 'term': term},
+        width: '1040px',
+        height: '75%'
+      });
+    //  this.overlayContainer.style.zIndex = '50';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
-      this.overlayContainer.style.zIndex = null;
+      window.scroll({ 
+        top: thisy, 
+        left: 0, 
+        behavior: 'auto' 
+  });
+   //   this.overlayContainer.style.zIndex = null;
       if (response ) {
         this.privateMod = response.display;
         this.vocabulary.push(response);
@@ -138,5 +154,26 @@ export class CvInputComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(dialogSubscription);
+    } else {
+      let dialogRef = this.dialog.open(CvDialogComponent, {
+        data: {'vocabulary': vocab, 'term': term},
+        width: '1040px'
+      });
+  //    this.overlayContainer.style.zIndex = '1002';
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+   //   this.overlayContainer.style.zIndex = null;
+   window.scroll({ 
+    top: thisy, 
+    left: 0, 
+    behavior: 'auto' 
+});
+      if (response ) {
+        this.privateMod = response.display;
+        this.vocabulary.push(response);
+        this.valueChange.emit(this.privateMod);
+      }
+    });
+    this.subscriptions.push(dialogSubscription);
+    }
   }
 }

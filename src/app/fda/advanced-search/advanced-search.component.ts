@@ -25,13 +25,14 @@ import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { UtilsService } from '@gsrs-core/utils';
 import { Ketcher } from 'ketcher-wrapper';
 import { JSDraw } from 'jsdraw-wrapper';
-/*
+
 import { InterpretStructureResponse } from '@gsrs-core/structure/structure-post-response.model';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { StructureImportComponent } from '@gsrs-core/structure/structure-import/structure-import.component';
+import { StructureSearchComponent } from '@gsrs-core/structure-search/structure-search.component';
+import { StructureService } from '@gsrs-core/structure/structure.service';
 import { EditorImplementation } from '@gsrs-core/structure-editor/structure-editor-implementation.model';
-import { ApplicationsBrowseComponent } from '../application/applications-browse/applications-browse.component';
-*/
+
 import { Facet, FacetParam, FacetValue, FacetUpdateEvent, FacetsManagerService } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
@@ -69,12 +70,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   queryableSubstanceDict: QueryableSubstanceDictionary;
   displayProperties: Array<string>;
   displayPropertiesCommon: Array<string>;
-  searchTypeControl = new FormControl();
   facetViewControl = new FormControl();
-  private editor: Editor;
-  private searchType: string;
-  similarityCutoff?: number;
-  showSimilarityCutoff = false;
+
   // editor: EditorImplementation;
   // @Output() editorOnLoad = new EventEmitter<EditorImplementation>();
   // @Output() loadedMolfile = new EventEmitter<string>();
@@ -111,8 +108,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   ];
   ketcherFilePath: string;
   showSpinner = false;
-  @ViewChild('contentContainer', { static: true }) contentContainer;
-  private overlayContainer: HTMLElement;
   dictionaryFileName: string;
   private subscriptions: Array<Subscription> = [];
   panelExpanded = false;
@@ -166,6 +161,19 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   adverseEventDmeCount = '0';
   adverseEventCvmCount = '0';
 
+  // Structure Editor
+  private editor: Editor;
+  private searchType: string;
+  _searchtype: string;
+  similarityCutoff?: number;
+  showSimilarityCutoff = false;
+  searchTypeControl = new FormControl();
+  @ViewChild('contentContainer', { static: true }) contentContainer;
+  private overlayContainer: HTMLElement;
+  navigationExtrasStructure: NavigationExtras = {
+    queryParams: {}
+  };
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -182,10 +190,13 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     private facetManagerService: FacetsManagerService,
     private gaService: GoogleAnalyticsService,
     private titleService: Title,
-    private overlayContainerService: OverlayContainer,
     private location: Location,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+    private structureService: StructureService
+  ) {
+    this.searchType = 'substructure';
+    this._searchtype = 'substructure';
+  }
 
   ngOnInit() {
     this.loadingService.setLoading(true);
@@ -235,7 +246,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.getBrowseProductDetails();
       }
       if (this.loadedComponents.clinicaltrials) {
-     //   this.getBrowseClinicalTrialDetails();
+        //   this.getBrowseClinicalTrialDetails();
       }
       if (this.loadedComponents.adverseevents) {
         this.getBrowseAdverseEventPtDetails();
@@ -472,8 +483,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.facetKey = 'products';
       } else if (this.category === 'Clinical Trial') {
         this.dictionaryFileName = 'ctus_dictionary.json';
-      //  this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
-      //  this.rawFacets = this.rawFacetsClinicalTrial;
+        //  this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
+        //  this.rawFacets = this.rawFacetsClinicalTrial;
         this.facetKey = 'ctclinicaltrial';
       } else if (this.category === 'Adverse Event') {
         this.dictionaryFileName = 'adverseevent_dictionary.json';
@@ -695,7 +706,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       this.location.go(urlTree.toString());
     });
     */
-
   }
 
   setFacetLocationUrl() {
@@ -769,9 +779,63 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       window.history.pushState({}, 'Advanced Search', '/advanced-search'
         + '?g-search-hash=' + navigationExtras2.queryParams['g-search-hash']);
 
+      /*****************************************************************************/
+      /* STRUCTURE SEARCH                                                          */
+      /*****************************************************************************/
+
       if (this.category === 'Substance') {
-        this.router.navigate(['/browse-substance'], navigationExtras);
-      } else if (this.category === 'Application') {
+        const mol = this.editor.getMolfile();
+        if (mol && mol.length > 72) {
+          this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+            const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
+            //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
+            //  this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
+
+            const navigationExtrasStructure: NavigationExtras = {
+              queryParams: {}
+            };
+
+            const navigationExtras3: NavigationExtras = {
+              queryParams: {}
+            };
+
+            const structureSearchTerm = response.structure.id;
+            const smiles = response.structure.smiles;
+
+            navigationExtras.queryParams['structure_search'] = structureSearchTerm || null;
+            navigationExtras.queryParams['type'] = this.searchType || null;
+
+            navigationExtras2.queryParams['structure'] = structureSearchTerm;
+            navigationExtras2.queryParams['type'] = this.searchType || null;
+
+            if (this.searchType === 'similarity') {
+              navigationExtrasStructure.queryParams['cutoff'] = this.similarityCutoff || 0;
+              navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
+            }
+
+            if (smiles != null) {
+              navigationExtrasStructure.queryParams['smiles'] = smiles;
+            }
+            // this is a test of the push state needed
+            // to keep the back button working as desired
+            window.history.pushState({}, 'Structure Search', '/structure-search'
+              + '?structure=' + navigationExtras3.queryParams['structure']
+              + '&type=' + navigationExtras3.queryParams['type']
+              + '&cutoff=' + navigationExtras3.queryParams['cutoff']);
+
+            this.router.navigate(['/browse-substance'], navigationExtras);
+          }, () => { });
+
+        }
+        /********* STRUCTURE QUERY **********/
+
+        // If no structure search, do this
+        else {
+          this.router.navigate(['/browse-substance'], navigationExtras);
+          //    }
+        }
+      }
+      else if (this.category === 'Application') {
         this.router.navigate(['/browse-applications'], navigationExtras);
       } else if (this.category === 'Product') {
         this.router.navigate(['/browse-products'], navigationExtras);
@@ -791,8 +855,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.processSearch();
   }
 
-  /*
-  <!-- STRUCTURE EDITOR -->
+  /***************************************/
+  /*** STRUCTURE FUNCTIONS BELOW *****/
+
   editorOnLoad(editor: Editor): void {
     this.loadingService.setLoading(false);
     this.editor = editor;
@@ -817,7 +882,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           this.searchTypeControl.setValue(this.searchType);
         });
     });
-    }
+  }
 
   searchTypeSelected(event): void {
     this.searchType = event.value;
@@ -891,6 +956,50 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   nameResolved(molfile: string): void {
     this.editor.setMolecule(molfile);
   }
-  */
+
+  searchStructure(): void {
+    const mol = this.editor.getMolfile();
+    this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+      const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
+      //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
+      this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
+    }, () => { });
+  }
+
+  private navigateToBrowseSubstance(structureSearchTerm: string, smiles?: string): void {
+
+    /*
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+    */
+    const navigationExtras2: NavigationExtras = {
+      queryParams: {}
+    };
+
+    this.navigationExtrasStructure.queryParams['structure_search'] = structureSearchTerm || null;
+    this.navigationExtrasStructure.queryParams['type'] = this.searchType || null;
+
+    navigationExtras2.queryParams['structure'] = structureSearchTerm;
+    navigationExtras2.queryParams['type'] = this.searchType || null;
+
+    if (this.searchType === 'similarity') {
+      this.navigationExtrasStructure.queryParams['cutoff'] = this.similarityCutoff || 0;
+      navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
+    }
+
+    if (smiles != null) {
+      this.navigationExtrasStructure.queryParams['smiles'] = smiles;
+    }
+    // this is a test of the push state needed
+    // to keep the back button working as desired
+    window.history.pushState({}, 'Structure Search', '/structure-search'
+      + '?structure=' + navigationExtras2.queryParams['structure']
+      + '&type=' + navigationExtras2.queryParams['type']
+      + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
+
+
+    // this.router.navigate(['/browse-substance'], navigationExtras);
+  }
 
 }

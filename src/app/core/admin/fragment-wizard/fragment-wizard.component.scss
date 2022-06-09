@@ -3,6 +3,10 @@
    min-height: 380px;
 }
 
+.cell {
+    margin-right:5px;
+}
+
 @media(max-width: 1175px) {
     .structure-editor-actions-container {
         flex-direction: column;
@@ -57,4 +61,9 @@
 
 ::ng-deep table {
     z-index: 20000 !important;
+}
+
+.structure-img {
+    margin-top:-20px;
+    margin-bottom: -20px;
 }
