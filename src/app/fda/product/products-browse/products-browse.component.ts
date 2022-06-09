@@ -66,6 +66,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   isSearchEditable = false;
   lastPage: number;
   invalidPage = false;
+  iconSrcPath = '';
+  dailyMedUrl = '';
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
     'productNDC',
@@ -152,6 +154,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
+
+    this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
+    this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=';
 
     this.isComponentInit = true;
     this.loadComponent();

@@ -196,6 +196,11 @@
                                   <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank">
                                     {{ing._ingredientName}}
                                   </a>
+                                  <!-- Display Structure when rollover icon -->
+                                  <button mat-button class="structure-parameters"
+                                    (click)="openImageModal($event, ing._substanceUuid)">
+                                    <mat-icon>analytics</mat-icon>
+                                  </button>
                                 </li>
                               </div>
                             </div>
