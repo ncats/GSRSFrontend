@@ -150,10 +150,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
-   setTimeout(() => {
-     if (this.router.url === this.previousState[0]) {
-      this.ngOnInit();
-     }
+    setTimeout(() => {
+      if (this.router.url === this.previousState[0]) {
+        this.ngOnInit();
+      }
 
     }, 50);
   }
@@ -164,7 +164,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
 
-      });
+    });
     this.title.setTitle('Browse Substances');
 
     this.pageSize = 10;
@@ -182,7 +182,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
-    if ( this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
+    if (this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
       this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
       this.privateSequenceSearchTerm = JSON.parse(sessionStorage.getItem('gsrs_search_sequence_' + this.sequenceID));
     }
@@ -349,7 +349,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.overlayContainer.style.zIndex = '1000';
     }
   }
-  
+
   openedFacetViewChange(event: any) {
     if (event) {
       this.overlayContainer.style.zIndex = '1002';
@@ -457,12 +457,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response.filter(exp => {
-          if (exp.extension) {
-            //TODO Make this generic somehow, so addditional-type exports are isolated
-            if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') || (exp.extension === 'ctusxlsx') ) {
-              return false;
-            }
-          }
+              if (exp.extension) {
+                //TODO Make this generic somehow, so addditional-type exports are isolated
+                if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') || (exp.extension === 'ctusxlsx')) {
+                  return false;
+                }
+              }
               return true;
             });
           });
@@ -572,13 +572,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.codes[substanceId].codeSystems[sysName] = this.codes[substanceId].codeSystems[sysName].sort((a, b) => {
             let test = 0;
             if (a.type === 'PRIMARY' && b.type !== 'PRIMARY') {
-              test =  1;
+              test = 1;
             } else if (a.type !== 'PRIMARY' && b.type === 'PRIMARY') {
-            test = -1;
+              test = -1;
             } else {
-            test = 0;
-          }
-          return test;
+              test = 0;
+            }
+            return test;
           });
         });
 
@@ -620,6 +620,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const eventLabel = environment.isAnalyticsPrivate ? 'advanced search term' :
       `${this.privateSearchTerm}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-advanced-search', eventLabel);
+    // Structure Search
+   // const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
+   // `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
+   // this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
 
     const navigationExtras: NavigationExtras = {
       queryParams: {
@@ -627,6 +631,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
     };
 
+    navigationExtras.queryParams['structure'] = this.privateStructureSearchTerm || null;
+    navigationExtras.queryParams['type'] = this.privateSearchType || null;
+
+    if(this.privateSearchType === 'similarity') {
+      navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
+    }
     this.router.navigate(['/advanced-search'], navigationExtras);
   }
 
@@ -737,7 +747,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.loadComponent();
   }
 
-  clickToCancel(){
+  clickToCancel() {
     this.emitService.setCancel(true);
   }
 
@@ -903,12 +913,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   downloadJson(id: string) {
     this.substanceService.getSubstanceDetails(id).pipe(take(1)).subscribe(response => {
-        this.downloadFile(JSON.stringify(response), id + '.json');
+      this.downloadFile(JSON.stringify(response), id + '.json');
     });
 
   }
 
-  copySmiles(val: string){
+  copySmiles(val: string) {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';

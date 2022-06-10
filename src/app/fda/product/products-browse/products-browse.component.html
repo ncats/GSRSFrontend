@@ -134,22 +134,25 @@
                 <td class="width120px" mat-cell *matCellDef="let product">
                   <!-- If fromtable is SPL, display SPL Details links -->
                   <span *ngIf="product.fromtable === 'SPL'">
-                    <a class="substance-name" [routerLink]="['/product-elist', product.productId]" target="_blank"
-                      alt="View SPL Product Record" title="View SPL Product Record"><span
-                        *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
-                      <ng-template #noProdNDC>(NO ID)</ng-template>
-                    </a>
-                    &nbsp;&nbsp;
-                    <ng-container *ngIf="product.productNDC !== null">
-                      <a href="{{dailyMedUrl}}{{product.productNDC}}" target="_blank" alt="Go to DailyMed website"  title="Go to DailyMed website">
-                        <img [src]="iconSrcPath">
+                    <div class="padtop7px">
+                      <a class="substance-name" [routerLink]="['/product-elist', product.productId]" target="_blank"
+                        alt="View SPL Product Record" title="View SPL Product Record"><span
+                          *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
+                        <ng-template #noProdNDC>(NO ID)</ng-template>
                       </a>
-                      <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
-                      </mat-icon>
-                    </ng-container>
+                    </div>
+                    <div class="padtop15px padbottom7px">
+                      <ng-container *ngIf="product.productNDC !== null">
+                        <a href="{{dailyMedUrl}}{{product.productNDC}}" target="_blank" alt="Go to DailyMed website"
+                          title="Go to DailyMed website">
+                          <img [src]="iconSrcPath">
+                        </a>
+                        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                        </mat-icon>
+                      </ng-container>
+                    </div>
                   </span>
 
-                  &nbsp;&nbsp;&nbsp;
                   <!-- If fromtable is GSRS, display GSRS Details links -->
                   <span *ngIf="product.fromtable === 'GSRS'">
                     <a class="substance-name" [routerLink]="['/product', product.productId]" target="_blank"
@@ -290,7 +293,8 @@
                   </a>
                   <ng-container *ngIf="product.productNDC !== null">
                     &nbsp;&nbsp;
-                    <a href="{{dailyMedUrl}}{{product.productNDC}}" target="_blank"  alt="Go to DailyMed website"  title="Go to DailyMed website">
+                    <a href="{{dailyMedUrl}}{{product.productNDC}}" target="_blank" alt="Go to DailyMed website"
+                      title="Go to DailyMed website">
                       <img [src]="iconSrcPath">
                     </a>
                     <mat-icon class="small-icon margintop20px" svgIcon="open_in_new" matTooltip="opens in new window">
