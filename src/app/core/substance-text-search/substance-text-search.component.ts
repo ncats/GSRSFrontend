@@ -224,8 +224,9 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   topSearchClean(searchTerm): string {
     if (searchTerm && searchTerm.length > 0) {
       searchTerm = searchTerm.trim();
-      if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && searchTerm.indexOf(':') < 0
-        && searchTerm.indexOf(' AND ') < 0 && searchTerm.indexOf(' OR ') < 0) {
+      const looksComplex = this.looksLikeComplexSearchTerm(searchTerm);
+      console.log("looksComplex: " + looksComplex);
+      if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && !looksComplex) {
         // Put slash in front of brackets, for example:
         // 1. [INN] to \[INN\]
         // 2. IBUPROFEN [INN] to IBUPROFEN \[INN\]
@@ -239,13 +240,25 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           .replace(/([^\\])\[/g, "$1\\[").replace(/^\[/g, "\\[")
           .replace(/([^\\])\]/g, "$1\\]").replace(/^\]/g, "\\]")
           + '"';
-      } else if (searchTerm.indexOf(':') < 0) {
-        searchTerm = searchTerm
+      } else if (!looksComplex) {
+          searchTerm
           .replace(/([^\\])\[/g, "$1\\[").replace(/^\[/g, "\\[")
           .replace(/([^\\])\]/g, "$1\\]").replace(/^\]/g, "\\]")
-      }
+      } 
       this.searchControl.setValue(searchTerm);
     }
     return searchTerm;
+  }
+
+  looksLikeComplexSearchTerm(searchTerm:string): boolean {
+    // If we have an underscore followed by a colon, we think it's a complex search.
+    // e.g. root_names_name:Aspirin
+    const regexp : RegExp = /_.*:/g;
+    // The AND/OR checks were in a previous version but may be unneeded/confounding
+    // unless we're considering draft searchTerms that may have forgotten the complex search syntax. 
+    if (regexp.test(searchTerm) || (searchTerm.indexOf(' AND ') > -1) || (searchTerm.indexOf(' OR ') > -1)){
+      return true;  
+    }
+    return false;
   }
 }
