@@ -205,7 +205,7 @@
       <div class="full-paginator">
         <div class="wildcard-div">
           <input type="text" class="wildcard" placeholder="Search Any Text" [(ngModel)]="wildCardText" (change)="saveWildCardText()">
-          <button mat-icon-button (click)="wildCardSearch()">
+          <button aria-label="Search Within Results" mat-icon-button (click)="wildCardSearch()">
             <mat-icon svgIcon="search"></mat-icon>
           </button>
           <!-- <input type="submit"> -->
