@@ -41,11 +41,15 @@ export const productSearchSortValues = [
   },
   {
     'value': '^Ingredient Name',
-    'display': 'Ingredient Name, A-Z'
+    'display': 'Ingredient Name, A-Z',
+    'displayedColumns': 'ingredientName',
+    'direction': 'asc'
   },
   {
     'value': '$Ingredient Name',
-    'display': 'Ingredient Name, Z-A'
+    'display': 'Ingredient Name, Z-A',
+    'displayedColumns': 'ingredientName',
+    'direction': 'desc'
   },
   {
     'value': '^root_productIngredientAllList_ingredientType',
@@ -73,11 +77,15 @@ export const productSearchSortValues = [
   },
   {
     'value': '^root_productIngredientAllList_dosageFormName',
-    'display': 'Dosage Form, A-Z'
+    'display': 'Dosage Form, A-Z',
+    'displayedColumns': 'dosageName',
+    'direction': 'asc'
   },
   {
     'value': '$root_productIngredientAllList_dosageFormName',
-    'display': 'Dosage Form, Z-A'
+    'display': 'Dosage Form, Z-A',
+    'displayedColumns': 'dosageName',
+    'direction': 'desc'
   },
   {
     'value': '^root_productCompanyAllList_labelerName',

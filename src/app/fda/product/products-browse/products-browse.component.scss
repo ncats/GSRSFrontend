@@ -1438,6 +1438,10 @@ margin:auto;
   border:1px solid #bbc2a4;
 }
 
+.margintop20px {
+  margin-top: 20px;
+}
+
 .marginleft20px {
   margin-left: 20px;
 }
@@ -1450,12 +1454,20 @@ margin:auto;
   margin-right: 40px;
 }
 
-.padtop5px {
-  padding-top: 5px;
+.padtop7px {
+  padding-top: 7px;
+}
+
+.padtop15px {
+  padding-top: 15px;
 }
 
 .padleft10px {
   padding-left: 10px;
+}
+
+.padbottom7px {
+  padding-bottom: 7px;
 }
 
 .width120px {
@@ -1516,4 +1528,14 @@ margin:auto;
  /* list-style-position: inside;*/
   padding-left: 0px;
   margin-top: 0px;
+}
+
+.small-icon {
+  width: 15px;
+  height: 15px;
+  padding-left: 5px;
+}
+
+.margintopneg10 {
+  margin-top: -10px;
 }

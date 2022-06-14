@@ -170,9 +170,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   searchTypeControl = new FormControl();
   @ViewChild('contentContainer', { static: true }) contentContainer;
   private overlayContainer: HTMLElement;
-  navigationExtrasStructure: NavigationExtras = {
-    queryParams: {}
-  };
 
   constructor(
     private http: HttpClient,
@@ -789,13 +786,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
             const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
             //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
-            //  this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
 
             const navigationExtrasStructure: NavigationExtras = {
-              queryParams: {}
-            };
-
-            const navigationExtras3: NavigationExtras = {
               queryParams: {}
             };
 
@@ -809,19 +801,20 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
             navigationExtras2.queryParams['type'] = this.searchType || null;
 
             if (this.searchType === 'similarity') {
-              navigationExtrasStructure.queryParams['cutoff'] = this.similarityCutoff || 0;
+              navigationExtras.queryParams['cutoff'] = this.similarityCutoff || 0;
               navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
             }
 
             if (smiles != null) {
-              navigationExtrasStructure.queryParams['smiles'] = smiles;
+              navigationExtras.queryParams['smiles'] = smiles;
             }
+
             // this is a test of the push state needed
             // to keep the back button working as desired
             window.history.pushState({}, 'Structure Search', '/structure-search'
-              + '?structure=' + navigationExtras3.queryParams['structure']
-              + '&type=' + navigationExtras3.queryParams['type']
-              + '&cutoff=' + navigationExtras3.queryParams['cutoff']);
+              + '?structure=' + navigationExtras2.queryParams['structure']
+              + '&type=' + navigationExtras2.queryParams['type']
+              + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
 
             this.router.navigate(['/browse-substance'], navigationExtras);
           }, () => { });
@@ -908,11 +901,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       width: '650px',
       data: {}
     });
-    this.overlayContainer.style.zIndex = '1002';
+    // this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
-      this.overlayContainer.style.zIndex = null;
-
+      // this.overlayContainer.style.zIndex = null;
       if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
         this.editor.setMolecule(structurePostResponse.structure.molfile);
       }
@@ -932,7 +924,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       }
     });
     this.overlayContainer.style.zIndex = '1002';
-
     dialogRef.afterClosed().subscribe(() => {
       this.overlayContainer.style.zIndex = null;
     }, () => {
@@ -955,51 +946,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
   nameResolved(molfile: string): void {
     this.editor.setMolecule(molfile);
-  }
-
-  searchStructure(): void {
-    const mol = this.editor.getMolfile();
-    this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
-      const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
-      //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
-      this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
-    }, () => { });
-  }
-
-  private navigateToBrowseSubstance(structureSearchTerm: string, smiles?: string): void {
-
-    /*
-    const navigationExtras: NavigationExtras = {
-      queryParams: {}
-    };
-    */
-    const navigationExtras2: NavigationExtras = {
-      queryParams: {}
-    };
-
-    this.navigationExtrasStructure.queryParams['structure_search'] = structureSearchTerm || null;
-    this.navigationExtrasStructure.queryParams['type'] = this.searchType || null;
-
-    navigationExtras2.queryParams['structure'] = structureSearchTerm;
-    navigationExtras2.queryParams['type'] = this.searchType || null;
-
-    if (this.searchType === 'similarity') {
-      this.navigationExtrasStructure.queryParams['cutoff'] = this.similarityCutoff || 0;
-      navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
-    }
-
-    if (smiles != null) {
-      this.navigationExtrasStructure.queryParams['smiles'] = smiles;
-    }
-    // this is a test of the push state needed
-    // to keep the back button working as desired
-    window.history.pushState({}, 'Structure Search', '/structure-search'
-      + '?structure=' + navigationExtras2.queryParams['structure']
-      + '&type=' + navigationExtras2.queryParams['type']
-      + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
-
-
-    // this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
 }
