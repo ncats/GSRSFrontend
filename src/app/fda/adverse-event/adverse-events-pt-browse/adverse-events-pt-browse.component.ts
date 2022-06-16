@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -33,6 +33,7 @@ import { adverseEventPtSearchSortValues } from './adverse-events-pt-search-sort-
 })
 
 export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Output() countAdverseEventPtOut: EventEmitter<number> = new EventEmitter<number>();
   isAdmin: boolean;
   isLoggedIn = false;
   isLoading = true;
@@ -209,6 +210,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
         this.isError = false;
         this.adverseEventPtList = pagingResponse.content;
         this.totalAdverseEventPt = pagingResponse.total;
+        this.countAdverseEventPtOut.emit(pagingResponse.total);
         this.etag = pagingResponse.etag;
         if (pagingResponse.total % this.pageSize === 0) {
           this.lastPage = (pagingResponse.total / this.pageSize);
