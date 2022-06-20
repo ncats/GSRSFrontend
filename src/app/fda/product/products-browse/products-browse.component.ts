@@ -63,6 +63,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   environment: any;
   previousState: Array<string> = [];
   private searchTermHash: number;
+  searchValue: string;
   isSearchEditable = false;
   lastPage: number;
   invalidPage = false;
@@ -496,4 +497,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     let appUrl = 'browse-applications?search=root_appType:\"^' + appType + '$\" AND root_appNumber:\"^' + appNumber + '$\"';
     return appUrl;
   }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
+  }
+
 }

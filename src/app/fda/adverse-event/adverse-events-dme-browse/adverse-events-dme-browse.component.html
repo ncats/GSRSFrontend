@@ -106,7 +106,14 @@
       </div>
 
       <div class="search-text">
+        <!-- *** Search Any Text (TYPE AHEAD) *** -->
+        <app-adverse-event-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
+          [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)"
+          eventCategory="adverseEventDmeSearch">
+        </app-adverse-event-text-search>
+
         <!-- Search Any Text Text Box -->
+        <!--
         <mat-form-field class="width350px font13px">
           <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
             size="50" />
@@ -114,6 +121,7 @@
         <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
+        -->
       </div>
 
 
@@ -260,7 +268,7 @@
       </div> <!-- [ngClass]=view -->
 
       <!-- Pagination at the bottom of the page -->
-      <div class="controls-container">
+      <div class="controls-container-right">
         <div class="full-paginator">
           <mat-paginator #paginator [length]="totalAdverseEventDme" [pageIndex]="pageIndex" [pageSize]="pageSize"
             [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">

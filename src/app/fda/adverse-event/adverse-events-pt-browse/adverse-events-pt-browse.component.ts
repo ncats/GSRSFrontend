@@ -43,6 +43,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
   privateExport = false;
   isSearchEditable = false;
   environment: any;
+  searchValue: string;
   previousState: Array<string> = [];
   private overlayContainer: HTMLElement;
 
@@ -426,6 +427,11 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.adverseEventService.getApiExportUrlPt(etag, extension);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
   }
 
 }

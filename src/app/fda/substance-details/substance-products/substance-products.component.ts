@@ -87,7 +87,6 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
       this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"' + this.substance.uuid + '"';
       this.getSubstanceProducts(null, 'initial');
-      //  this.productListExportUrl();
     }
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -242,12 +241,6 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.productService.getApiExportUrl(etag, extension);
-  }
-
-  productListExportUrl() {
-    if (this.substance && this.substance.uuid) {
-      this.exportUrl = this.productService.getProductListExportUrl(this.substance.uuid);
-    }
   }
 
   tabSelected($event) {

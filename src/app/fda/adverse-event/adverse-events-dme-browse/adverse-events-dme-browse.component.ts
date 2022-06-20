@@ -44,6 +44,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
   privateExport = false;
   isSearchEditable = false;
   environment: any;
+  searchValue: string;
   previousState: Array<string> = [];
   private overlayContainer: HTMLElement;
 
@@ -436,6 +437,11 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.adverseEventService.getApiExportUrlDme(etag, extension);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
   }
 
 }

@@ -44,6 +44,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
   privateExport = false;
   isSearchEditable = false;
   environment: any;
+  searchValue: string;
   previousState: Array<string> = [];
   private overlayContainer: HTMLElement;
 
@@ -100,7 +101,6 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
       if (this.router.url === this.previousState[0]) {
         this.ngOnInit();
       }
-
     }, 50);
   }
 
@@ -434,6 +434,11 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.adverseEventService.getApiExportUrlCvm(etag, extension);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
   }
 
 }

@@ -107,7 +107,13 @@
       </div>
 
       <div class="search-text">
+        <!-- *** Search Any Text (TYPE AHEAD) *** -->
+        <app-application-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
+          [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="applicationSearch">
+        </app-application-text-search>
+
         <!-- Search Any Text Text Box -->
+        <!--
         <mat-form-field class="width350px font13px">
           <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
             size="50" />
@@ -115,6 +121,7 @@
         <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
+        -->
       </div>
 
       <!--********** Display Content Details ******* -->
@@ -482,10 +489,7 @@
                     </div>
                     <div class="row-property">
                       <div class="row-property-key">
-                        Clinical Trials:
-                        <span class="badge">
-                          {{application._clinicalTrialList.length}}
-                        </span>
+                        <span matBadge="{{application._clinicalTrialList.length}}" matBadgeOverlap="false">Clinical Trials:</span>
                       </div>
                       <div class="row-property-value">
                         &nbsp;
@@ -614,13 +618,13 @@
       </div> <!-- [ngClass]=view -->
 
       <!-- Pagination at the bottom of the page -->
-      <div class="controls-container">
-        <div class="full-paginator">
+      <div class="controls-container-right">
+        <div class="full-paginator-right">
           <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
             [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
           </mat-paginator>
 
-          <div class="page-selector">
+          <div class="page-selector-right">
             <span class="page-label">Page: </span>
             <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
               <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
