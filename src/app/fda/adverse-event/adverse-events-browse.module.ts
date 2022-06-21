@@ -32,6 +32,7 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
+import { AdverseEventTextSearchModule } from './adverse-event-text-search/adverse-event-text-search.module';
 import { AdverseEventService } from './service/adverseevent.service';
 import { AdverseEventsPtBrowseComponent } from './adverse-events-pt-browse/adverse-events-pt-browse.component';
 import { AdverseEventsDmeBrowseComponent } from './adverse-events-dme-browse/adverse-events-dme-browse.component';
@@ -96,7 +97,8 @@ const advEventRoutes: Routes = [
     OverlayModule,
     SubstanceSearchSelectorModule,
     SubstanceFormModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    AdverseEventTextSearchModule
   ],
   declarations: [
     AdverseEventsPtBrowseComponent,

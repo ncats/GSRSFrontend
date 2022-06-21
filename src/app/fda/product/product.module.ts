@@ -40,6 +40,7 @@ import { ProductIngredientFormComponent } from './product-form/product-ingredien
 import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
+import { ProductTextSearchModule } from './product-text-search/product-text-search.module';
 import { ProductsBrowseComponent } from './products-browse/products-browse.component';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { CanActivateRegisterProductFormComponent } from './product-form/can-activate-register-product-form.component';
@@ -114,7 +115,8 @@ const productRoutes: Routes = [
     SubstanceImageModule,
     SubstanceSearchSelectorModule,
     SubstanceFormModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    ProductTextSearchModule
   ],
   declarations: [
     ProductsBrowseComponent,

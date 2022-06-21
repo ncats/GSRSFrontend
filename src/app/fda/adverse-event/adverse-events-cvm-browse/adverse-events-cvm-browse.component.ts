@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,6 +34,7 @@ import { adverseEventCvmSearchSortValues } from './adverse-events-cvm-search-sor
 })
 
 export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Output() countAdverseEventCvmOut: EventEmitter<number> = new EventEmitter<number>();
   isAdmin: boolean;
   isLoggedIn = false;
   isLoading = true;
@@ -43,6 +44,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
   privateExport = false;
   isSearchEditable = false;
   environment: any;
+  searchValue: string;
   previousState: Array<string> = [];
   private overlayContainer: HTMLElement;
 
@@ -99,7 +101,6 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
       if (this.router.url === this.previousState[0]) {
         this.ngOnInit();
       }
-
     }, 50);
   }
 
@@ -176,6 +177,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
         // below export statement
         // this.dataSource = this.adverseEventCvm;
         this.totalAdverseEventCvm = pagingResponse.total;
+        this.countAdverseEventCvmOut.emit(pagingResponse.total);
         this.etag = pagingResponse.etag;
 
         if (pagingResponse.total % this.pageSize === 0) {
@@ -432,6 +434,11 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.adverseEventService.getApiExportUrlCvm(etag, extension);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
   }
 
 }
