@@ -138,9 +138,8 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
     this.gaService.sendEvent(eventCategory, 'select:auto-complete', eventLabel);
     let searchTerm = event.option.value;
 
-    if (eventCategory === 'topSearch') {
-      searchTerm = this.topSearchClean(searchTerm);
-    }
+    searchTerm = this.topSearchClean(searchTerm);
+    
     this.searchPerformed.emit(searchTerm);
   }
 

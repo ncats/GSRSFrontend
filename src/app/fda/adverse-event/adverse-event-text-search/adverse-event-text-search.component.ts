@@ -159,9 +159,8 @@ export class AdverseEventTextSearchComponent implements OnInit, AfterViewInit, O
     this.gaService.sendEvent(eventCategory, 'select:auto-complete', eventLabel);
     let searchTerm = event.option.value;
 
-    if (eventCategory === 'topSearch') {
-      searchTerm = this.topSearchClean(searchTerm);
-    }
+    searchTerm = this.topSearchClean(searchTerm);
+
     this.searchPerformed.emit(searchTerm);
   }
 
@@ -196,8 +195,6 @@ export class AdverseEventTextSearchComponent implements OnInit, AfterViewInit, O
   }
 
   activateSearch(): void {
-    alert('SOURCE: ' + this.source);
-    alert('GGG: ' + JSON.stringify(this.searchContainerElement.classList));
     if (this.source) {
       this.searchContainerElement.classList.add('active-' + this.source);
     } else {

@@ -158,9 +158,8 @@ export class ProductTextSearchComponent implements OnInit, AfterViewInit, OnDest
     this.gaService.sendEvent(eventCategory, 'select:auto-complete', eventLabel);
     let searchTerm = event.option.value;
 
-    if (eventCategory === 'topSearch') {
-      searchTerm = this.topSearchClean(searchTerm);
-    }
+    searchTerm = this.topSearchClean(searchTerm);
+
     this.searchPerformed.emit(searchTerm);
   }
 
