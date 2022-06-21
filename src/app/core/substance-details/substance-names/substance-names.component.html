@@ -30,6 +30,9 @@
         <span *ngIf="name.displayName == true" matTooltip="Accepted Name">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
         </span>
+        <span *ngIf="name.preferred == true" matTooltip="Preferred Name">
+          <mat-icon class="icon-align grey-font" svgIcon="done"></mat-icon>
+        </span>
         <span *ngIf="name.access.length" matTooltip="Not Public">
         <mat-icon svgIcon="lock" class="icon-align blue-font" *ngIf="name.access.length"></mat-icon></span>
 
