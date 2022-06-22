@@ -34,6 +34,9 @@ import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definit
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { StructuralUnit } from '@gsrs-core/substance';
 import { ConfigService } from '@gsrs-core/config';
+import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
+import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
+import { UtilsService } from '@gsrs-core/utils';
 
 @Component({
   selector: 'app-substance-form',
@@ -72,9 +75,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   messageField: string;
   uuid: string;
   substanceClass: string;
+  drafts: Array<any>;
+  draftCount = 0;
   status: string;
   hidePopup: boolean;
   unit: StructuralUnit;
+  autoSaveWait = 10000;
   classes = [
     'concept',
     'protein',
@@ -91,6 +97,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     sameSubstance = false;
     UNII: string;
     approvalType = 'lastEditedBy';
+    previousState: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -105,7 +112,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private configService: ConfigService,
     private dialog: MatDialog,
     private authService: AuthService,
-    private titleService: Title
+    private titleService: Title,
+    private utilsService: UtilsService
   ) {
     this.substanceService.showImagePopup.subscribe (data => {
       this.hidePopup = data;
@@ -119,6 +127,94 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.hidePopup = !this.hidePopup;
     this.substanceService.showImagePopup.next(this.hidePopup);
   }
+
+
+  autoSave(): void {
+    setTimeout(() => {
+      if (this.substanceFormService.autoSave()) {
+        this.saveDraft(true);
+        console.log(this.substanceFormService.autoSave());
+      } else {
+      }
+      this.autoSave();
+    }, this.autoSaveWait);
+  }
+
+  openModal(templateRef) {
+
+    const dialogRef = this.dialog.open(templateRef, {
+      height: '200px',
+      width: '400px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
+  }
+
+  showDrafts(): void {
+    const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
+      maxHeight: '85%',
+      width: '70%',
+      data: {uuid: this.id}
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+
+
+      if (response) {
+           this.loadingService.setLoading(true);
+         //  console.log(response.json);
+
+          const read = response.substance;
+           if (this.id && read.uuid && this.id === read.uuid) {
+             this.substanceFormService.importSubstance(read, 'update');
+             this.submissionMessage = null;
+             this.validationMessages = [];
+             this.showSubmissionMessages = false;
+             setTimeout(() => {
+               this.loadingService.setLoading(false);
+               this.isLoading = false;
+               this.overlayContainer.style.zIndex = null;
+             }, 1000);
+           }else if (response.uuid && response.uuid != 'register'){
+             const url = '/substances/' + response.uuid + '/edit?action=import';
+            this.router.navigateByUrl(url, { state: { record: response.substance } });
+           } else {
+             setTimeout(() => {
+               this.overlayContainer.style.zIndex = null;
+               this.router.onSameUrlNavigation = 'reload';
+               this.loadingService.setLoading(false);
+              this.router.navigateByUrl('/substances/register?action=import', { state: { record: response.json } });
+   
+             }, 1000);
+           }
+          }
+
+          let keys = Object.keys(localStorage);
+          let i = keys.length;
+          this.draftCount =0;
+          this.drafts = [];
+
+          while ( i-- ) {
+            if (keys[i].startsWith('gsrs-draft-')){
+              const entry = JSON.parse(localStorage.getItem(keys[i]));
+              entry.key = keys[i];
+              if (this.id && entry.uuid === this.id) {
+                this.draftCount++;
+              } else if (!this.id && entry.type ===  (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
+                this.draftCount++;
+              }
+              this.drafts.push( entry );
+
+            }
+          }
+    });
+  }
+  
 
   importDialog(): void {
     const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
@@ -181,6 +277,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.configService.configData && this.configService.configData.approvalType) {
       this.approvalType = this.configService.configData.approvalType;
     }
+    if (this.configService.configData && this.configService.configData.autoSaveWait) {
+      this.autoSaveWait = this.configService.configData.autoSaveWait;
+    }
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -188,20 +287,27 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
+        const action = this.activatedRoute.snapshot.queryParams['action'] || null;
         if (params['id']) {
-          const id = params['id'];
-          if (id !== this.id) {
-            this.id = id;
-            this.gaService.sendPageView(`Substance Edit`);
-            const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
-            if (newType) {
-              this.getSubstanceDetails(newType);
-            } else {
-              this.getSubstanceDetails();
+
+          if(action && action === 'import' && window.history.state) {
+            const record = window.history.state;
+            this.imported = true;
+            this.getDetailsFromImport(record.record);
+          } else {
+            const id = params['id'];
+            if (id !== this.id) {
+              this.id = id;
+              this.gaService.sendPageView(`Substance Edit`);
+              const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
+              if (newType) {
+                this.getSubstanceDetails(newType);
+              } else {
+                this.getSubstanceDetails();
+              }
             }
           }
         } else {
-          const action = this.activatedRoute.snapshot.queryParams['action'] || null;
           if (action && action === 'import' && window.history.state) {
             const record = window.history.state;
             this.imported = true;
@@ -258,7 +364,32 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   }
 
+getDrafts() {
+  let keys = Object.keys(localStorage);
+    let i = keys.length;
+    this.drafts = [];
+    let temp = 0;
+    while ( i-- ) {
+      if (keys[i].startsWith('gsrs-draft-')){
+        const entry = JSON.parse(localStorage.getItem(keys[i]));
+        entry.key = keys[i];
+        if (this.id && entry.uuid === this.id) {
+          temp++;
+         // this.draftCount++;
+        } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
+          temp++;
+        //  this.draftCount++;
+        }
+        this.drafts.push( entry );
+
+      }
+    }
+    this.draftCount = temp;
+}
+
   ngAfterViewInit(): void {
+    this.getDrafts();
+    
 
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
@@ -317,6 +448,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
       }
         subscription.unsubscribe();
+        setTimeout(() => {
+
+        this.autoSave();},10000);
+
       });
   }
 
@@ -369,7 +504,25 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.feature === 'changeApproval') {
       this.substanceFormService.changeApproval();
     }
+    if (this.feature === 'fragment') {
+      this.openFragmentDialog();
+    }
 
+    
+
+  }
+
+  openFragmentDialog(): void {
+    const dialogRef = this.dialog.open(FragmentWizardComponent, {
+      width: '70%',
+      height: '70%'
+    });
+    this.overlayContainer.style.zIndex = '50';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+
+    });
+    this.subscriptions.push(dialogSubscription);
   }
 
   changeClass(type: any): void {
@@ -931,5 +1084,104 @@ mergeConcept() {
 
   fixLink(link: string) {
     return this.substanceService.oldLinkFix(link);
+  }
+
+
+  saveDraft(auto?: boolean) {
+    const json = this.substanceFormService.cleanSubstance();
+    const time = new Date().getTime();
+    
+    const uuid = json.uuid ? json.uuid : 'register';
+    const type = json.substanceClass;
+    let primary = null;
+    json.names.forEach(name => {
+      if (name.displayName) {
+        primary = name.name;
+      }
+    });
+    if (!primary && json.names.length > 0) {
+      primary = name[0].name;
+    }
+    if(!auto) {
+      const file = 'gsrs-draft-' + time;
+
+      let draft = {
+        'uuid': uuid,
+        'date': time,
+        'type': type,
+        'name': primary,
+        'substance': json,
+        'auto': false,
+        'file': file
+      }
+  
+     localStorage.setItem(file, JSON.stringify(draft));
+     this.draftCount++;
+
+    } else {
+      this.getDrafts();
+      let autos = this.drafts.filter(opt => {
+        return opt.auto;
+      });
+      let auto1 = null;
+      let auto2 = null;
+      let auto3 = null;
+      this.drafts.forEach(draft => {
+        if (draft.auto) {
+          if (draft.file === 'gsrs-draft-auto1') {
+            auto1 = draft;
+          }
+          if (draft.file === 'gsrs-draft-auto2') {
+            auto2 = draft;
+          }
+          if (draft.file === 'gsrs-draft-auto3') {
+            auto3 = draft;
+          }
+        }
+      });
+      let file = 'gsrs-draft-auto';
+
+      if (!auto1) {
+         file = 'gsrs-draft-auto1';
+        this.draftCount++;
+
+      } else if (!auto2) {
+         file = 'gsrs-draft-auto2';
+        this.draftCount++;
+
+      } else if (!auto3) {
+         file = 'gsrs-draft-auto3';
+        this.draftCount++;
+
+      } else {
+          if(auto1.date < auto2.date && auto1.date < auto3.date) {
+             file = 'gsrs-draft-auto1';
+        }
+        else if (auto2.date < auto1.date && auto2.date < auto3.date) {
+           file = 'gsrs-draft-auto2';
+        }
+        else {
+           file = 'gsrs-draft-auto3';
+        }
+      }
+
+      let draft = {
+        'uuid': uuid,
+        'date': time,
+        'type': type,
+        'name': primary,
+        'substance': json,
+        'auto': true,
+        'file': file
+      }
+
+     localStorage.setItem(file, JSON.stringify(draft));
+
+      
+    }
+    
+
+    
+
   }
 }

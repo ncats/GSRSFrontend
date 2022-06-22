@@ -43,6 +43,7 @@ export interface Config {
     approvalType?: string;
     ssg4Form?: string;
     filteredDuplicationCodes?: Array<string>;
+    autoSaveWait?: number;
 }
 
 export interface LoadedComponents {

@@ -51,6 +51,7 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _mixture?: ParentCountHref;
   _specifiedSubstance?: ParentCountHref;
   mixture?: any;
+  names?: any;
   specifiedSubstance?: any;
 }
 export interface ParentCountHref {

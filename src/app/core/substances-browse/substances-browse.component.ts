@@ -838,8 +838,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   openImageModal(substance: SubstanceDetail): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
-
-    this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+        this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
     let data: any;
 
@@ -848,12 +847,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         structure: substance.structure.id,
         smiles: substance.structure.smiles,
         uuid: substance.uuid,
-        names: substance.names
+        names: this.names[substance.uuid]
       };
     } else {
       data = {
         structure: substance.polymer.displayStructure.id,
-        names: substance.names
+        names: this.names[substance.uuid]
       };
     }
 

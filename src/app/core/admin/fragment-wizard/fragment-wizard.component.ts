@@ -257,17 +257,39 @@ export class FragmentWizardComponent implements OnInit {
       return t.indexOf('_') == 0;
     }).value();
 
+
+
     var tt = this.getPossibleSmiles(this.editor.getSmiles());
 
     
 
-    if (tt.stars.length <= 0) {
+ /*   if (tt.stars.length <= 0) {
       alert('No star atoms specified, expecting:' + rgs.length + ' star atoms');
       return;
     } else if (tt.stars.length != rgs.length) {
       alert('Expected ' + rgs.length + ' star atoms, but found:' + tt.stars.length);
+    }*/
+    let stars = 0;
+    let dom = "";
+    if (this.vocabulary) {
+      dom = this.vocabulary.domain;
+    } else {
+      dom = this.vocab;
     }
 
+    switch (dom) {
+      case 'NUCLEIC_ACID_LINKAGE' : stars = 2;
+      case 'NUCLEIC_ACID_BASE' : stars = 1;
+      case 'NUCLEIC_ACID_SUGAR' : stars = 3;
+      case 'AMINO_ACID_RESIDUE' : stars = 2;
+      break;
+    }
+    if (tt.stars.length <= 0) {
+      alert('No star atoms specified, expecting:' + stars + ' star atoms');
+      return;
+    } else if (tt.stars.length != stars) {
+      alert('Expected ' + stars + ' star atoms, but found:' + tt.stars.length);
+    }
     var smilesforms = tt.eachForm(rgs);
     this.forms = [];
     smilesforms.forEach(form => {

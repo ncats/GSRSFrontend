@@ -160,6 +160,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   }
 
   openImageModal(): void {
+    this.substance.names = this.names
     this.openImage.emit(this.substance);
   }
 
