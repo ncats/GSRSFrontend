@@ -92,6 +92,9 @@ schemeUtil.makeDisplayGraph = function(g4) {
       }
 
       var rn = { type: "reaction", leftText: "Step " + stage.stageNumber };
+      
+      rn.processIndex=i;
+      rn.stepIndex=iii;
       rn.id = ppid[0];
       ppid[0]++;
       nodes.push(rn);
