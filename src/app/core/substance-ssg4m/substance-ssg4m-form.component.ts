@@ -96,7 +96,11 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   json: SubstanceDetail;
   downloadJsonHref: any;
   jsonFileName: string;
-
+  private jsLibScriptUrls = [
+    `${environment.baseHref || ''}assets/pathway/cola.min.js`,
+    `${environment.baseHref || ''}assets/pathway/d3v4.js`,
+    `${environment.baseHref || ''}assets/jsdraw/pathwayviz.js`
+  ];
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
@@ -241,6 +245,15 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.canApprove = this.canBeApproved();
       });
     });
+    if (!window['schemeUtil']) {
+      for (let i = 0; i < this.jsLibScriptUrls.length; i++) {
+            const node = document.createElement('script');
+            node.src = this.jsLibScriptUrls[i];
+            node.type = 'text/javascript';
+            node.async = false;
+            document.getElementsByTagName('head')[0].appendChild(node);
+      }
+    }
   }
 
   ngAfterViewInit(): void {
