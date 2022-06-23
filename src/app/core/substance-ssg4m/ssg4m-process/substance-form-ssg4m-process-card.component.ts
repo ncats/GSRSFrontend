@@ -26,6 +26,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
     private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
+    private substanceFormService: SubstanceFormService,
     public configService: ConfigService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
@@ -119,10 +120,8 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     console.log("changed to:" + number);
     //This is a hacky placeholder way to force viz
     //TODO finish this
-    /*
-    var ssgjs=document.getElementById("sourceJSON").value;
+    const ssgjs=JSON.stringify(this.substanceFormService.cleanSubstance());
     window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)),"#scheme-viz-view");
-    */
   }
 
   tabSelectedIndexOutChange(tabIndex: number) {
