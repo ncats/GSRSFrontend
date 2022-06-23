@@ -57,7 +57,11 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         window['schemeUtil'].apiBaseURL = url;
         //TODO:
         window['schemeUtil'].onClickReaction = (d) => {
-            
+            //Can we add a popup dialog that would show the specific step here?
+            let pindex=d.processIndex;
+            let sindex=d.stepIndex;
+            //I just want to show a dialog that shows the step/stage component rendered in a popup for now.
+            //maybe in the future it should instead be a side window, I don't know.
         };
         //TODO:
         window['schemeUtil'].onClickMaterial = (d) => {
