@@ -1,6 +1,6 @@
 /**
 * Author: Tyler Peryea
-* 
+*
 * This WIP library will help render synthetic schemes for G4SSM in GSRS via
 * the cola and d3 libraries.
 */
@@ -8,7 +8,7 @@ var schemeUtil={};
 schemeUtil.apiBaseURL="";
 schemeUtil.debug=true;
 schemeUtil.width=800;
-schemeUtil.height=1500;
+schemeUtil.height=1050;
 
 schemeUtil.onClickReaction=(d)=>{};
 schemeUtil.onClickMaterial=(d)=>{};
@@ -33,7 +33,7 @@ schemeUtil.makeMaterialNode = function(smat, pidArr){
    nn.name = smat.substanceName.approvalID;
    nn.type = "material";
    if(!schemeUtil.debug){
-    n.img=schemeUtil.apiBaseURL + "substances.render(" + smat.substanceName.refuuid + ")?format=svg&size=150&stereo=false";
+    nn.img=schemeUtil.apiBaseURL + "substances/render(" + smat.substanceName.refuuid + ")?format=svg&size=150&stereo=false";
    }
    if (!nn.name) {
       nn.name = "UNII: Pending Record";
@@ -231,6 +231,7 @@ schemeUtil.renderScheme=function(nn2, selector) {
     var hh = getHeightPx(n);
     return n.y - hh / 2;
   };
+  d3.select(selector).select('svg').remove();
   var d3cola = cola.d3adaptor(d3).avoidOverlaps(true).size([width, height]);
   var svg = d3
     .select(selector)

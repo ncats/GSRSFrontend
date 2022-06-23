@@ -7,6 +7,7 @@ import { SubstanceFormService } from '../../substance-form/substance-form.servic
 import { SubstanceFormSsg4mProcessService } from './substance-form-ssg4m-process.service';
 import { SubstanceFormSsg4mSitesService } from '../ssg4m-sites/substance-form-ssg4m-sites.service';
 import { SpecifiedSubstanceG4mProcess } from '@gsrs-core/substance/substance.model';
+import { ConfigService } from '@gsrs-core/config/config.service';
 
 @Component({
   selector: 'app-substance-form-ssg4m-process-card',
@@ -36,24 +37,29 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   }
 
   ngOnInit() {
-   
+
     this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Process');
-    
-    //setup viz stuff
-    //TODO: make more configurable and standardized
-    window['schemeUtil'].debug=false;
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    window['schemeUtil'].apiBaseURL=url;
-    //TODO:
-    window['schemeUtil'].onClickReaction=(d)=>{
-      
-    };
-    //TODO:
-    window['schemeUtil'].onClickMaterial=(d)=>{
-      
-    };
-    
+
+    let loaded = false;
+    setInterval(() => {
+      if (window['schemeUtil'] && !loaded) {
+        loaded = true;
+        //setup viz stuff
+        //TODO: make more configurable and standardized
+        window['schemeUtil'].debug = false;
+        const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+        window['schemeUtil'].apiBaseURL = url;
+        //TODO:
+        window['schemeUtil'].onClickReaction = (d) => {
+
+        };
+        //TODO:
+        window['schemeUtil'].onClickMaterial = (d) => {
+
+        };
+      }
+    }, 100);
   }
 
   ngAfterViewInit() {
@@ -111,17 +117,19 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
       if (textLabel != null) {
         this.tabSelectedView = textLabel;
       }
+      const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
+      window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
     }
-    
+
   }
 
   onSelectedIndexChange(tabIndex: number) {
     this.tabSelectedIndex = tabIndex;
-    console.log("changed to:" + number);
+    console.log("changed to:" + this.tabSelectedIndex);
     //This is a hacky placeholder way to force viz
     //TODO finish this
-    const ssgjs=JSON.stringify(this.substanceFormService.cleanSubstance());
-    window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)),"#scheme-viz-view");
+    const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
+    window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
   }
 
   tabSelectedIndexOutChange(tabIndex: number) {

@@ -38,6 +38,7 @@ import { DefinitionSwitchDialogComponent } from '@gsrs-core/substance-form/defin
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
+import { environment } from '@gsrs-core/../../environments/environment';
 
 @Component({
   selector: 'app-substance-ssg4m-form',
@@ -99,7 +100,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   private jsLibScriptUrls = [
     `${environment.baseHref || ''}assets/pathway/cola.min.js`,
     `${environment.baseHref || ''}assets/pathway/d3v4.js`,
-    `${environment.baseHref || ''}assets/jsdraw/pathwayviz.js`
+    `${environment.baseHref || ''}assets/pathway/pathwayviz.js`
   ];
   constructor(
     private activatedRoute: ActivatedRoute,
