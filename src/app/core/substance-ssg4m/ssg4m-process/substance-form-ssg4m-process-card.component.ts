@@ -26,6 +26,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
     private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
+    public configService: ConfigService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService
   ) {
@@ -34,8 +35,24 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   }
 
   ngOnInit() {
+   
     this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Process');
+    
+    //setup viz stuff
+    //TODO: make more configurable and standardized
+    window['schemeUtil'].debug=false;
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    window['schemeUtil'].apiBaseURL=url;
+    //TODO:
+    window['schemeUtil'].onClickReaction=(d)=>{
+      
+    };
+    //TODO:
+    window['schemeUtil'].onClickMaterial=(d)=>{
+      
+    };
+    
   }
 
   ngAfterViewInit() {
@@ -94,10 +111,18 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         this.tabSelectedView = textLabel;
       }
     }
+    
   }
 
   onSelectedIndexChange(tabIndex: number) {
     this.tabSelectedIndex = tabIndex;
+    console.log("changed to:" + number);
+    //This is a hacky placeholder way to force viz
+    //TODO finish this
+    /*
+    var ssgjs=document.getElementById("sourceJSON").value;
+    window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)),"#scheme-viz-view");
+    */
   }
 
   tabSelectedIndexOutChange(tabIndex: number) {
