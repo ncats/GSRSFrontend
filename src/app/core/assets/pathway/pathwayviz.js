@@ -10,8 +10,8 @@ schemeUtil.debug=true;
 schemeUtil.width=800;
 schemeUtil.height=1500;
 
-schemaUtil.onClickReaction=(d)=>{};
-schemaUtil.onClicMaterial=(d)=>{};
+schemeUtil.onClickReaction=(d)=>{};
+schemeUtil.onClickMaterial=(d)=>{};
 
 schemeUtil.rep = function(t, n) {
   var nn = "";
@@ -412,4 +412,5 @@ schemeUtil.isIE = function() {
       ) != null)
   );
 }
+
 
