@@ -32,6 +32,7 @@ schemeUtil.makeMaterialNode = function(smat, pidArr){
    nn.bottomText = smat.substanceName.refPname;
    nn.name = smat.substanceName.approvalID;
    nn.type = "material";
+   nn.refuuid = smat.substanceName.refuuid;
    if(!schemeUtil.debug){
     nn.img=schemeUtil.apiBaseURL + "substances/render(" + smat.substanceName.refuuid + ")?format=svg&size=150&stereo=false";
    }
