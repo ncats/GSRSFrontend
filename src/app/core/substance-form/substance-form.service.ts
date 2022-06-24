@@ -55,6 +55,7 @@ export class SubstanceFormService implements OnDestroy {
   resolvedMol = this.nameResolver.asObservable();
   private _bypassUpdateCheck = false;
   private method?: string;
+  private previousHash?: number;
 
   constructor(
     private substanceService: SubstanceService,
@@ -79,6 +80,11 @@ export class SubstanceFormService implements OnDestroy {
       this.substanceEmitter.next(substance);
       this.namesUpdated();
     }
+
+    console.log('subscribing');
+    this.substanceEmitter.subscribe(val => {
+      console.log(val);
+    });
     return new Observable(observer => {
       if (substance != null) {
         this.privateSubstance = substance;
@@ -453,6 +459,22 @@ export class SubstanceFormService implements OnDestroy {
       return false;
     } else {
       return this.substanceStateHash !== this.utilsService.hashCode(substanceString);
+    }
+  }
+
+  autoSave(): boolean {
+    const substanceString = JSON.stringify(this.privateSubstance);
+    if (!this.previousHash) {
+      this.previousHash = this.utilsService.hashCode(substanceString);
+      return false;
+    } else {
+      const match = this.previousHash !== this.utilsService.hashCode(substanceString);
+      if (match) {
+        this.previousHash = this.utilsService.hashCode(substanceString);
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 

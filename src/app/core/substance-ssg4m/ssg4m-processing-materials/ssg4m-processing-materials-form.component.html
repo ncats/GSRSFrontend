@@ -7,26 +7,25 @@
   </div>
   <div class="form-row">
     <div class="delete-container">
+      <b>{{(processingMaterialIndex+1)}}</b>
       <button mat-icon-button matTooltip="Delete Processing Material {{(processingMaterialIndex+1)}}" (click)="confirmDeleteProcessingMaterial()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
-      <br>
-      <div class="padleft15px"><b>{{(processingMaterialIndex+1)}}</b></div>
     </div>
 
-    <div class="col related-substance">
+    <div class="col related-substance" *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
         eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header="Substance Name"
         [subuuid]="relatedSubstanceUuid">
       </app-substance-selector>
     </div>
 
-    <mat-form-field class="col">
+    <mat-form-field class="col" *ngIf="configSettingsDisplay['verbatimName'] || (configSettingsDisplay['verbatimName'] === undefined && true)">
       <input matInput placeholder="Verbatim Name" [(ngModel)]="processingMaterial.verbatimName"
         name="processingMaterial.verbatimName" />
     </mat-form-field>
 
-    <app-cv-input class="col" domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role"
+    <app-cv-input class="col" *ngIf="configSettingsDisplay['substanceRole'] || (configSettingsDisplay['substanceRole'] === undefined && true)" domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role"
       [model]="processingMaterial.substanceRole" (valueChange)="updateSubstanceRole($event)"></app-cv-input>
   </div> <!-- form row -->
 
@@ -43,5 +42,13 @@
       </a>
     </div>
   </div>
+
+  <div class="form-row margintop10px" *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
+    <div class="marginleft45px">&nbsp;</div>
+    <mat-form-field class="col-1-1">
+      <textarea matInput placeholder="Comments" [(ngModel)]="processingMaterial.comments"
+      name="processingMaterial.comments" rows="1"></textarea>
+    </mat-form-field>
+  </div> <!-- form-row-->
 
 </div>

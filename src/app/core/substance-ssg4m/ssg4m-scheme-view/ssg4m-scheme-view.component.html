@@ -1,0 +1,169 @@
+<div class="paddingleft350px">
+  <mat-checkbox [checked]="showSubstanceRole" (change)="updateShowSubstanceRole($event)">
+    Show Substance Role
+  </mat-checkbox>
+  &nbsp;&nbsp;&nbsp;
+  <mat-checkbox [checked]="showCriticalParameter" (change)="updateShowCriticalParameter($event)">
+    Show Critical Parameter
+  </mat-checkbox>
+</div>
+<div class="margintop10px" *ngFor="let process of processList; let processIndex = index">
+  <fieldset class="border">
+    <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}}</span></b>
+    </legend>
+
+    <!-- STEPS -->
+    <div *ngFor="let site of process.sites; let siteIndex = index">
+      <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
+
+        <div class="divflexspace">
+          <div class="paddingtop15px font16px">
+            <b><u>Step {{stageIndex+1}}</u></b>
+          </div>
+          <div>
+            <button mat-raised-button color="primary" (click)="editInForm()" matTooltip="Edit In Form">
+              <!--
+                appScrollToTrigger [scrollToElementId]="'stage_' + processIndex + '_' + stageIndex" vAlign="start"
+              -->
+              <mat-icon svgIcon="edit"></mat-icon>Edit in Form
+            </button>
+          </div>
+        </div>
+
+        <table class="width100percent bordergray">
+          <tr class="paddingbottom10px">
+            <!-- Starting -->
+            <td class="width33percent textaligncenter">
+              <div class="paddingleft10px marginbottom10px"
+                *ngFor="let startingMaterial of stage.startingMaterials; let startingMaterialIndex = index">
+                <div *ngIf="startingMaterial.substanceName">
+                  <div class="paddingtop15px font30px"
+                    *ngIf="(stage.startingMaterials.length > 1 && startingMaterialIndex != 0)">
+                    <b>+</b>
+                  </div>
+                  <a class="zoom"
+                    (click)="openImageModal(startingMaterial.substanceName.refuuid, startingMaterial.substanceName.approvalID, startingMaterial.substanceName.refPname)">
+                    <img appSubstanceImage [entityId]="startingMaterial.substanceName.refuuid">
+                  </a>
+                  <div>
+                    <a [routerLink]="['/substances', startingMaterial.substanceName.refuuid]" target="_blank">
+                      {{startingMaterial.substanceName.refPname}}</a>
+                    <span *ngIf="showSubstanceRole">
+                      <br>
+                      <b>({{startingMaterial.substanceRole}})</b>
+                    </span>
+                  </div>
+                </div> <!-- if substanceName object exists -->
+              </div> <!-- Starting Material Loop -->
+            </td>
+
+            <!-- Processing -->
+            <td class="width33percent">
+              <!-- BEFORE ARROW  NON-SOLVENT RECORDS -->
+              <div *ngFor="let processingMaterial of stage.processingMaterials; let processingMaterialIndex = index">
+                <div *ngIf="processingMaterial.substanceName">
+                  <div *ngIf="processingMaterial.substanceRole">
+                    <div *ngIf="processingMaterial.substanceRole !== 'Solvent'">
+                      <div class="divflex">
+                        <div class="margintopneg10px">
+                          <!-- Display Structure when rollover icon -->
+                          <button mat-button
+                            (click)="openImageModal(processingMaterial.substanceName.refuuid, processingMaterial.substanceName.approvalID, processingMaterial.substanceName.refPname)">
+                            <mat-icon>remove_red_eye</mat-icon>
+                          </button>
+                        </div>
+                        <div>
+                          <a [routerLink]="['/substances', processingMaterial.substanceName.refuuid]" target="_blank">
+                            <b>{{processingMaterial.substanceName.refPname}}</b>
+                          </a>
+                          <span *ngIf="showSubstanceRole">
+                            &nbsp;<b>({{processingMaterial.substanceRole}})</b>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> <!-- if substanceName object exists -->
+              </div> <!-- Processing Material Loop -->
+
+              <!-- ARROW -->
+              <div class="paddingleft20px" *ngIf="stage.processingMaterials.length > 0">
+                <img src="{{imageLoc}}" />
+              </div>
+
+              <!-- AFTER ARROW SOLVENT RECORDS -->
+              <div *ngFor="let processingMaterial of stage.processingMaterials; let processingMaterialIndex = index">
+                <div *ngIf="processingMaterial.substanceName">
+                  <div *ngIf="processingMaterial.substanceRole">
+                    <div *ngIf="processingMaterial.substanceRole === 'Solvent'">
+                      <div class="divflex">
+                        <div class="margintopneg10px">
+                          <!-- Display Structure when rollover icon -->
+                          <button mat-button
+                            (click)="openImageModal(processingMaterial.substanceName.refuuid, processingMaterial.substanceName.approvalID, processingMaterial.substanceName.refPname)">
+                            <mat-icon>remove_red_eye</mat-icon>
+                          </button>
+                        </div>
+                        <div>
+                          <a [routerLink]="['/substances', processingMaterial.substanceName.refuuid]" target="_blank">
+                            <b>{{processingMaterial.substanceName.refPname}}</b>
+                          </a>
+                          <span *ngIf="showSubstanceRole">
+                            &nbsp;<b>({{processingMaterial.substanceRole}})</b>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> <!-- if substanceName object exists -->
+              </div> <!-- Processing Material Loop -->
+
+              <!-- SHOW CRITICAL PARAMETER -->
+              <div class="paddingleft25px paddingtop10px bo" *ngFor="let criticalParameter of stage.criticalParameters; let criticalParameterIndex = index">
+                <span *ngIf="showCriticalParameter">
+                  <div *ngIf="criticalParameter.value">
+                    <b>{{displayAmount(criticalParameter.value, criticalParameter.name)}}</b>
+                  </div>
+                </span>
+              </div>
+            </td>
+
+            <!-- Resulting -->
+            <td class="width33percent textaligncenter">
+              <div class="marginbottom10px"
+                *ngFor="let resultingMaterial of stage.resultingMaterials; let resultingMaterialIndex = index">
+                <div *ngIf="resultingMaterial.substanceName">
+                  <div class="paddingtop15px font25px"
+                    *ngIf="(stage.resultingMaterials.length > 1 && resultingMaterialIndex != 0)">
+                    <b>+</b>
+                  </div>
+                  <a class="zoom"
+                    (click)="openImageModal(resultingMaterial.substanceName.refuuid, resultingMaterial.substanceName.approvalID, resultingMaterial.substanceName.refPname)">
+                    <img appSubstanceImage [entityId]="resultingMaterial.substanceName.refuuid">
+                  </a>
+                  <div>
+                    <a [routerLink]="['/substances', resultingMaterial.substanceName.refuuid]" target="_blank">
+                      {{resultingMaterial.substanceName.refPname}}
+                    </a>
+                    <span *ngIf="showSubstanceRole">
+                      <br>
+                      <b>({{resultingMaterial.substanceRole}})</b>
+                    </span>
+                  </div>
+                </div> <!-- if substanceName object exists -->
+              </div> <!-- Resulting Material Loop -->
+            </td>
+
+          </tr>
+        </table>
+      </div> <!-- Stage loop -->
+    </div>
+
+  </fieldset>
+</div>
+<br>
+<!--
+<div appScrollToTarget
+    [id]="'stage_' + 0">TESING TESTING
+</div>
+-->

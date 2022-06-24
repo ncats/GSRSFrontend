@@ -1,9 +1,9 @@
 <div class="filters-container">
   <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-    <mat-button-toggle value="details">
+    <mat-button-toggle aria-label="View List" value="details">
       <mat-icon svgIcon="list"></mat-icon>
     </mat-button-toggle>
-    <mat-button-toggle value="raw">
+    <mat-button-toggle aria-label="View Raw" value="raw">
       <mat-icon svgIcon="view_stream"></mat-icon>
     </mat-button-toggle>
   </mat-button-toggle-group>

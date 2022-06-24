@@ -71,3 +71,49 @@ legend.border {
   margin-bottom: 10px;
 }
 
+:host ::ng-deep .mat-tab-list .mat-tab-label {
+  /*
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;*/
+  color: black;
+  background-color: rgb(247, 241, 241);
+  border-right: 1px solid rgb(182, 177, 177);
+  /*
+  margin-left: 5px;
+  border-radius: 10px 10px 0px 0px;
+  flex-wrap: wrap!important;
+  min-width: 120px;
+  max-width: 120px;
+  height: 35px;*/
+}
+/*
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  color: red;
+  background-color: green;
+}
+*/
+
+:host ::ng-deep .mat-tab-header {
+  border-bottom: 2px solid rgb(67, 70, 148);
+}
+
+:host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  color: black;
+  font-weight: bold;
+  background-color: #FFFFFF;
+  /*background-color: rgb(20, 76, 189);*/
+  /*
+   color: rgb(248, 250, 248);
+   background-color: rgb(44, 70, 141);
+
+   opacity: 1;
+     */
+}
+
+:host ::ng-deep .mat-ink-bar {
+  background-color: var(--primary-color,#3c19d6) !important;
+  height: 3px;
+}
+
+

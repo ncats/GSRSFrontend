@@ -13,7 +13,11 @@
 
     <ng-container matColumnDef="amount">
       <th mat-header-cell *matHeaderCellDef> Amount </th>
-      <td mat-cell *matCellDef="let property"> {{toString(property.value)}} </td>
+      <td mat-cell *matCellDef="let property"> {{toString(property.value)}} 
+        <span *ngIf="codeIsProtected(property.value.access)" matTooltip="Not Public">
+          <mat-icon svgIcon="lock" class="icon-align blue-font" *ngIf="codeIsProtected(property.value.access)"></mat-icon>
+        </span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="referenced substance">

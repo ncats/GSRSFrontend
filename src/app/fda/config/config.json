@@ -18,7 +18,8 @@
     "products": true,
     "clinicaltrials": true,
     "adverseevents": true,
-    "impurities": true
+    "impurities": true,
+    "ssg4m": true
     },
   "usefulLinks": [
     {"title": "GSRSFind Excel tools",
@@ -754,10 +755,13 @@
     },
     "adverseeventpt": {
       "default": [
-        "Adverse Event",
+        "PT Term",
         "Prim SOC",
         "Ingredient Name",
+        "Ingredient Name (Case Count)",
         "Substance Key",
+        "Case Count",
+        "PRR",
         "ATC Level 1",
         "ATC Level 2",
         "ATC Level 3",
@@ -828,6 +832,12 @@
     {
       "display": "Register",
       "children": [
+        {
+          "component": "ssg4m",
+          "display": "G4 Specified Substance Manufacturing",
+          "path": "substances-ssg4m/register",
+          "order": 190
+        },
         {
            "component": "applications",
           "display": "Application",
@@ -1034,7 +1044,6 @@
       },
       {"facetName": "Record Status",
         "facetValue":"pending"}]
-
     }
   ],
   "substance":{
@@ -1051,6 +1060,63 @@
       "parentSubstance":"Resulting Substance",
       "stage":"Step",
       "processingMaterials":"Solvents and Catalysts"
+    },
+    "settingsDisplay": {
+      "process": {
+        "processName": "simple",
+        "processRole": "advanced",
+        "processType": "advanced",
+        "processDescription": "advanced",
+        "processComments": "advanced"
+      },
+      "site": {
+        "siteName": "advanced",
+        "siteIdType": "advanced",
+        "siteId": "advanced",
+        "siteAddress": "advanced",
+        "gpsSiteLocation": "advanced",
+        "siteClearance": "advanced",
+        "siteComments": "advanced"
+      },
+      "stage": {
+        "stageNumber": "simple",
+        "stageType": "advanced",
+        "stageRole": "advanced",
+        "stageEquipment": "advanced",
+        "stageComments": "advanced"
+      },
+      "criteriaParameter": {
+        "propertyName": "simple",
+        "average": "simple",
+        "lowLimit": "simple",
+        "highLimit": "simple",
+        "units": "simple",
+        "propertyType": "advanced",
+        "referencedSubstance": "advanced",
+        "amountType": "advanced",
+        "low": "advanced",
+        "high": "advanced",
+        "nonNumericValue": "advanced",
+        "parameters": "removed"
+      },
+      "startingMaterial": {
+        "substanceName": "simple",
+        "verbatimName": "simple",
+        "substanceRole": "simple",
+        "comments": "advanced"
+      },
+      "processingMaterial": {
+        "substanceName": "simple",
+        "verbatimName": "simple",
+        "substanceRole": "simple",
+        "comments": "advanced"
+      },
+      "resultingMaterial": {
+        "substanceName": "simple",
+        "verbatimName": "simple",
+        "substanceRole": "simple",
+        "comments": "advanced"
+      }
     }
   }
 }

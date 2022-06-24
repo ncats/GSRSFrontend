@@ -19,7 +19,7 @@ import { SubstanceSummary, SubstanceRelationship } from '../../substance/substan
 import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/substance.model';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mStagesService } from './substance-form-ssg4m-stages.service';
-import { SpecifiedSubstanceG4mSite, SpecifiedSubstanceG4mStage } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mStage } from '@gsrs-core/substance/substance.model';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -28,16 +28,17 @@ import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dial
   styleUrls: ['./ssg4m-stages-form.component.scss']
 })
 export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
-
+  public configSettingsDisplay = {};
+  configSsg4Form: any;
+  configTitleStage: string;
+  configTitleProcessingMaterials: string;
   privateStage: SpecifiedSubstanceG4mStage;
   privateProcessIndex: number;
   privateSiteIndex: number;
   privateStageIndex: number;
   privateShowAdvancedSettings: boolean;
+  privateTabSelectedView: string;
   substance: SubstanceDetail;
-  configSsg4Form: any;
-  configTitleStage: string;
-  configTitleProcessingMaterials: string;
   subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -91,10 +92,21 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
   @Input()
   set showAdvancedSettings(showAdvancedSettings: boolean) {
     this.privateShowAdvancedSettings = showAdvancedSettings;
+    // Get Config Settins from config file
+    this.getConfigSettings();
   }
 
   get showAdvancedSettings(): boolean {
     return this.privateShowAdvancedSettings;
+  }
+
+  @Input()
+  set tabSelectedView(tabSelectedView: string) {
+    this.privateTabSelectedView = tabSelectedView;
+  }
+
+  get tabSelectedView(): string {
+    return this.privateTabSelectedView;
   }
 
   ngOnInit(): void {
@@ -104,7 +116,7 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(subscription);
 
-    // Get Config variables for SSG4
+    // Get Config variables for SSG4m
     this.configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
     this.configTitleStage = 'Stage';
     this.configTitleProcessingMaterials = "Processing Materials";
@@ -124,6 +136,36 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     // this.substanceFormService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
+    });
+  }
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // Get 'stage' json values from config
+    const confSettings = configSsg4Form.settingsDisplay.stage;
+    Object.keys(confSettings).forEach(key => {
+      if (confSettings[key] != null) {
+        if (confSettings[key] === 'simple') {
+          this.configSettingsDisplay[key] = true;
+        } else if (confSettings[key] === 'advanced') {
+          if (this.privateShowAdvancedSettings === true) {
+            this.configSettingsDisplay[key] = true;
+          } else {
+            this.configSettingsDisplay[key] = false;
+          }
+        } else if (confSettings[key] === 'removed') {
+          this.configSettingsDisplay[key] = false;
+        }
+      }
+    });
+  }
+
+  addCriticalParameter(processIndex: number, siteIndex: number, stageIndex: number) {
+    this.substanceFormSsg4mStagesService.addCriticalParameter(processIndex, siteIndex, stageIndex);
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-process-site-stage-criticalParam-0`, 'center');
     });
   }
 

@@ -58,6 +58,16 @@
           <span class="main-title">Browse Applications</span>
         </div>
 
+        <!-- Table, Full, and Title Views -->
+        <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+          <mat-button-toggle value="table" matTooltip="Table View">
+            <mat-icon svgIcon="list"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="cards" matTooltip="Full View">
+            <mat-icon svgIcon="view_stream"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
         <!-- Sort By -->
         <mat-form-field class="sort">
           <mat-label>Sort By</mat-label>
@@ -97,7 +107,13 @@
       </div>
 
       <div class="search-text">
+        <!-- *** Search Any Text (TYPE AHEAD) *** -->
+        <app-application-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
+          [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="applicationSearch">
+        </app-application-text-search>
+
         <!-- Search Any Text Text Box -->
+        <!--
         <mat-form-field class="width350px font13px">
           <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
             size="50" />
@@ -105,11 +121,120 @@
         <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
+        -->
       </div>
 
-      <!-- Display Content Details -->
-      <div class="cards" *ngIf="applications && applications.length; else noRecordApplication">
-        <div class="substance-cards">
+      <!--********** Display Content Details ******* -->
+
+      <div [ngClass]="view">
+
+        <!-- ***** TABLE VIEW BEGIN ***** -->
+        <div class="table-view">
+          <div class="responsive">
+
+            <table mat-table [dataSource]="applications" class="font12px" matSort (matSortChange)="sortData($event)"
+              matSortActive="appNumber" matSortDirection="asc" matSortDisableClear>
+
+              <ng-container matColumnDef="appType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Type </th>
+                <td mat-cell *matCellDef="let application">
+                  <div class="width120px">
+                    <a class="substance-name" [routerLink]="['/application', application.id]" target="_blank"
+                      alt="View Application Record" matTooltip='View Application Record'>
+                      {{application.appType}}
+                      <!--&nbsp;{{application.appNumber}} -->
+                    </a>&nbsp;&nbsp;
+                    <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                      matTooltip='Edit Application Record'>
+                      <mat-icon svgIcon="edit"></mat-icon>
+                    </a>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="appNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
+                <td mat-cell *matCellDef="let application"> {{application.appNumber}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="center">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Center </th>
+                <td mat-cell *matCellDef="let application"> {{application.center}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="provenance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Provenance </th>
+                <td mat-cell *matCellDef="let application"> {{application.provenance}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="applicationStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Status </th>
+                <td mat-cell *matCellDef="let application"> {{application.status}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
+                <td valign="top" mat-cell *matCellDef="let application">
+                  <ol class="olstyle">
+                    <div *ngFor="let prod of application.applicationProductList; let i = index">
+                      <!-- Product Names-->
+                      <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
+                        <li>
+                          {{prodName.productName}}
+                        </li>
+                      </div>
+                    </div>
+                  </ol>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ingredientName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Name (Active Ingredient) </th>
+                <td valign="top" mat-cell *matCellDef="let application">
+                  <ol class="olstyle">
+                    <div *ngIf="application.applicationProductList.length > 0; else noRecordProdName">
+                      <div *ngFor="let prod of application.applicationProductList; let indexProd = index">
+                        <div *ngFor="let ing of prod.applicationIngredientList; let indexIng = index">
+                          <div *ngIf="ing._ingredientName">
+                            <div *ngIf="ing.ingredientType">
+                              <div
+                                *ngIf="(ing.ingredientType === 'ACTIVE INGREDIENT') || (ing.ingredientType === 'Active Ingredient')">
+                                <li>
+                                  <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank">
+                                    {{ing._ingredientName}}
+                                  </a>
+                                  <!-- Display Structure when rollover icon -->
+                                  <button mat-button class="structure-parameters"
+                                    (click)="openImageModal($event, ing._substanceUuid)">
+                                    <mat-icon>analytics</mat-icon>
+                                  </button>
+                                </li>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ol>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sponsorName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sponsor Name </th>
+                <td mat-cell *matCellDef="let application"> {{application.sponsorName}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+          </div>
+        </div> <!-- class="table-view" -->
+
+        <!-- TABLE VIEW END -->
+
+        <!-- CARD VIEW BEGIN -->
+        <div class="cards-view" *ngIf="applications && applications.length; else noRecordApplication">
           <mat-card *ngFor="let application of applications; let index = index">
             <mat-card-title>
               <div>
@@ -364,10 +489,7 @@
                     </div>
                     <div class="row-property">
                       <div class="row-property-key">
-                        Clinical Trials:
-                        <span class="badge">
-                          {{application._clinicalTrialList.length}}
-                        </span>
+                        <span matBadge="{{application._clinicalTrialList.length}}" matBadgeOverlap="false">Clinical Trials:</span>
                       </div>
                       <div class="row-property-value">
                         &nbsp;
@@ -492,17 +614,17 @@
             </mat-card-content>
 
           </mat-card>
-        </div>
-      </div> <!-- class=cards -->
+        </div> <!-- class=cards -->
+      </div> <!-- [ngClass]=view -->
 
       <!-- Pagination at the bottom of the page -->
-      <div class="controls-container">
-        <div class="full-paginator">
+      <div class="controls-container-right">
+        <div class="full-paginator-right">
           <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
             [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
           </mat-paginator>
 
-          <div class="page-selector">
+          <div class="page-selector-right">
             <span class="page-label">Page: </span>
             <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
               <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
@@ -513,11 +635,18 @@
             <span class="page-label"> of {{lastPage}}</span>
           </div>
         </div>
-      </div>
+      </div> <!-- Pagination Page-->
 
       <ng-template #noRecordApplication>
         <!-- No Application Found. -->
+        <!--
+      <div class="padleft10px colorred">
+        <br>
+        No Application records found. Please Reindex to see the Application records here.
+      </div>
+      -->
       </ng-template>
+
     </div> <!-- class=side-nav-content -->
   </mat-sidenav-content>
 </mat-sidenav-container>

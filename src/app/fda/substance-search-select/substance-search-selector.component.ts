@@ -13,6 +13,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Output() showMessage = new EventEmitter<String>();
+  @Output() searchValueOut = new EventEmitter<String>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   @Input() header = 'Substance';
@@ -32,7 +33,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   ngOnInit() {
     if (this.configService.configData.substanceSelectorProperties != null) {
       this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
-    } else { 
+    } else {
       console.log("The config value for substanceSelectorProperties is null.");
     }
   }
@@ -58,7 +59,6 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   }
 
   processSubstanceSearch(searchValue: string = ''): void {
-
     this.searchValue = searchValue;
     const q = searchValue.replace('\"', '');
     // Changed to configuration approach.
@@ -70,7 +70,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
       `root_approvalID:\"^${q}$\" OR ` +
       `root_codes_BDNUM:\"^${q}$\"`
       ;
-    */      
+    */
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       this.loadingStructure = true;
       if (response.content && response.content.length) {
@@ -78,7 +78,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
         this.selectionUpdated.emit(this.selectedSubstance);
         this.errorMessage = '';
       } else {
-        this.showMessage.emit('No substances found');
+        this.showMessage.emit('No substances found for ' + this.searchValue);
       }
       this.loadingStructure = false;
     });
@@ -89,4 +89,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
     this.selectionUpdated.emit(this.selectedSubstance);
   }
 
+  searchValueOutChange(searchValue: string) {
+    this.searchValueOut.emit(searchValue);
+  }
 }

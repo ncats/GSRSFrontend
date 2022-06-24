@@ -201,22 +201,29 @@
         </div>
 
         <div class="break"></div>
-        <div class="full-paginator">
-          <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
-          </mat-paginator>
+      </div>
+      <div class="full-paginator">
+        <div class="wildcard-div">
+          <input type="text" class="wildcard" placeholder="Search Any Text" [(ngModel)]="wildCardText" (change)="saveWildCardText()">
+          <button aria-label="Search Within Results" mat-icon-button (click)="wildCardSearch()">
+            <mat-icon svgIcon="search"></mat-icon>
+          </button>
+          <!-- <input type="submit"> -->
+        </div>
+        <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+        </mat-paginator>
 
-          <div class="page-selector">
-            <span class="page-label">Page: </span>
-            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
-              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
-                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
-                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
-                aria-label="Page Index"
-                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
-            </mat-form-field>
-            <span class="page-label"> of {{lastPage}}</span>
-          </div>
+        <div class="page-selector">
+          <span class="page-label">Page: </span>
+          <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+            <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+              [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+              (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+              aria-label="Page Index"
+              (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+          </mat-form-field>
+          <span class="page-label"> of {{lastPage}}</span>
         </div>
       </div>
       <ng-template appBrowseHeaderDynamicSection></ng-template>

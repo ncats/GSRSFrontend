@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { Sort } from '@angular/material/sort';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AdverseEventService } from '../../../../adverse-event/service/adverseevent.service';
@@ -11,6 +12,7 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { AuthService } from '@gsrs-core/auth';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { Subscription } from 'rxjs';
+import { adverseEventDmeSearchSortValues } from '../../../../adverse-event/adverse-events-dme-browse/adverse-events-dme-search-sort-values';
 
 @Component({
   selector: 'app-substance-adverseeventdme',
@@ -20,9 +22,12 @@ import { Subscription } from 'rxjs';
 
 export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
-  // advDmeCount = 0;
-  adverseEventCount = 0;
+  @Input() bdnum: string;
+  @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
+  adverseEventCount = 0;
+  order = '$root_dmeCount';
+  ascDescDir = 'desc';
   showSpinner = false;
   public privateSearchTerm?: string;
   private privateFacetParams: FacetParam;
@@ -30,9 +35,8 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   disableExport = false;
   etag = '';
   loadingStatus = '';
+  public sortValues = adverseEventDmeSearchSortValues;
   private subscriptions: Array<Subscription> = [];
-
-  @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'dmeReactions', 'ptTermMeddra', 'caseCount', 'dmeCount', 'dmeCountPercent', 'weightedAvgPrr'
@@ -67,14 +71,14 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
       subscription.unsubscribe();
     });
   }
-  
+
   getAdverseEventDme(pageEvent?: PageEvent) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
     const skip = this.page * this.pageSize;
     const privateSearch = 'root_substanceKey:' + this.bdnum;
     const subscription = this.adverseEventService.getAdverseEventDme(
-      'default',
+      this.order,
       skip,
       this.pageSize,
       privateSearch,
@@ -108,6 +112,22 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
     });
   }
   */
+
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      this.getAdverseEventDme();
+    }
+    return;
+  }
 
   export() {
     if (this.etag) {

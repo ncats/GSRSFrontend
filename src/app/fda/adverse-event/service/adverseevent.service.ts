@@ -8,6 +8,8 @@ import { PagingResponse } from '@gsrs-core/utils';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { AdverseEventPt, AdverseEventDme, AdverseEventCvm } from '../model/adverse-event.model';
+import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
+
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
 
@@ -191,6 +193,18 @@ export class AdverseEventService extends BaseHttpService {
     };
 
     return url;
+  }
+
+  getAdverseEventSearchSuggestions(searchTerm: string, eventCategory: string): Observable<SubstanceSuggestionsGroup> {
+    if (eventCategory && eventCategory === 'adverseEventPtSearch') {
+      return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithEntityPtContext + 'suggest?q=' + searchTerm);
+    } else if (eventCategory && eventCategory === 'adverseEventDmeSearch') {
+      return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithEntityDmeContext + 'suggest?q=' + searchTerm);
+    } else if (eventCategory && eventCategory === 'adverseEventCvmSearch') {
+      return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithEntityCvmContext + 'suggest?q=' + searchTerm);
+    } else {
+      return null;
+    }
   }
 
   getSubstanceAdverseEventPt(

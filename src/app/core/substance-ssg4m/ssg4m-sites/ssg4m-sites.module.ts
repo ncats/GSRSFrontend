@@ -6,6 +6,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ScrollToModule } from '../../scroll-to/scroll-to.module';
@@ -22,6 +23,7 @@ import { Ssg4mSitesComponent } from './ssg4m-sites.component';
     SubstanceFormModule,
     MatDividerModule,
     MatIconModule,
+    MatTooltipModule,
     MatButtonModule,
     ScrollToModule,
     MatFormFieldModule,

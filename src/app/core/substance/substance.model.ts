@@ -51,6 +51,7 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _mixture?: ParentCountHref;
   _specifiedSubstance?: ParentCountHref;
   mixture?: any;
+  names?: any;
   specifiedSubstance?: any;
 }
 export interface ParentCountHref {
@@ -151,12 +152,14 @@ export interface NucleicAcid extends SubstanceBase {
 
 export interface Sugar extends NucleicAcid {
   sugar?: string;
+  structure?: any;
   sitesShorthand?: string;
   sites?: Array<Site>;
 }
 
 export interface Linkage extends NucleicAcid {
   linkage?: string;
+  structure?: any;
   sitesShorthand?: string;
   sites?: Array<Site>;
 }
@@ -486,11 +489,18 @@ export interface SpecifiedSubstanceG4mProcess extends SubstanceBase {
   processRole?: string;
   processType?: string;
   processDescription?: string;
+  processComments?: string;
   sites?: Array<SpecifiedSubstanceG4mSite>;
 }
 
 export interface SpecifiedSubstanceG4mSite extends SubstanceBase {
   siteName?: string;
+  siteIdType?: string;
+  siteId?: string;
+  siteAddress?: string;
+  gpsSiteLocation?: string;
+  siteClearance?: string;
+  siteComments?: string;
   stages?: Array<SpecifiedSubstanceG4mStage>;
 }
 
@@ -498,10 +508,20 @@ export interface SpecifiedSubstanceG4mStage extends SubstanceBase {
   stageNumber?: string;
   stageType?: string;
   stageRole?: string;
-  equipment?: string;
+  stageEquipment?: string;
+  stageComments?: string;
+  criticalParameters?: Array<SpecifiedSubstanceG4mCriticalParameter>;
   startingMaterials?: Array<SpecifiedSubstanceG4mStartingMaterial>;
   processingMaterials?: Array<SpecifiedSubstanceG4mProcessingMaterial>;
   resultingMaterials?: Array<SpecifiedSubstanceG4mResultingMaterial>;
+}
+
+export interface SpecifiedSubstanceG4mCriticalParameter extends SubstanceBase {
+  name?: string;
+  propertyType?: string;
+  value?: SubstanceAmount;
+  parameters?: Array<SubstanceParameter>;
+  referencedSubstance?: SubstanceReference;
 }
 
 export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
@@ -509,6 +529,7 @@ export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
   substanceName?: SubstanceRelated;
   verbatimName?: string;
   substanceRole?: string;
+  comments?: string;
 }
 
 export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
@@ -516,6 +537,7 @@ export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
   substanceName?: SubstanceRelated;
   verbatimName?: string;
   substanceRole?: string;
+  comments?: string;
 }
 
 export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
@@ -523,15 +545,9 @@ export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
   substanceName?: SubstanceRelated;
   verbatimName?: string;
   substanceRole?: string;
+  comments?: string;
 }
 
-export interface SpecifiedSubstanceG4mCriticalParameter extends SubstanceBase {
-  // references?: Array<string>;
-  name?: string;
-  propertyType?: string;
-  amount?: number;
-  referenceSubstance?: SubstanceRelated;
-}
 export interface TableFilterDDModel {
   value: string;
   display: string;

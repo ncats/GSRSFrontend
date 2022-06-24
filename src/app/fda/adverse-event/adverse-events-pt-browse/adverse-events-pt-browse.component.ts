@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import { Sort } from '@angular/material/sort';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -19,11 +20,11 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { environment } from '../../../../environments/environment';
-// import { adverseEventSearchSortValues } from './application-search-sort-values';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AdverseEventService } from '../service/adverseevent.service';
 import { GeneralService } from '../../service/general.service';
 import { AdverseEventPt } from '../model/adverse-event.model';
+import { adverseEventPtSearchSortValues } from './adverse-events-pt-search-sort-values';
 
 @Component({
   selector: 'app-adverse-events-pt-browse',
@@ -32,44 +33,47 @@ import { AdverseEventPt } from '../model/adverse-event.model';
 })
 
 export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  public privateSearchTerm?: string;
-  public adverseEventPt: Array<AdverseEventPt>;
-  order: string;
-  // public sortValues = applicationSearchSortValues;
-  pageIndex: number;
-  pageSize: number;
-  jumpToValue: string;
-  totalApplications: number;
-  isLoading = true;
-  isError = false;
+  @Output() countAdverseEventPtOut: EventEmitter<number> = new EventEmitter<number>();
   isAdmin: boolean;
   isLoggedIn = false;
-  displayedColumns: string[];
-  dataSource = [];
-  hasBackdrop = false;
-  appType: string;
-  appNumber: string;
-  clinicalTrialApplication: Array<any>;
-  exportUrl: string;
+  isLoading = true;
+  isError = false;
+  invalidPage = false;
   private isComponentInit = false;
   privateExport = false;
-  disableExport = false;
-  private overlayContainer: HTMLElement;
-  etag = '';
-  environment: any;
-  previousState: Array<string> = [];
-  private searchTermHash: number;
   isSearchEditable = false;
-  lastPage: number;
-  invalidPage = false;
-  totalAdverseEventPt = 0;
+  environment: any;
+  searchValue: string;
+  previousState: Array<string> = [];
+  private overlayContainer: HTMLElement;
 
   // needed for facets
+  ascDescDir = 'desc';
+  private isFacetsParamsInit = false;
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
-  private isFacetsParamsInit = false;
+  private searchTermHash: number;
   public displayFacets: Array<DisplayFacet> = [];
   private subscriptions: Array<Subscription> = [];
+
+  view = 'table';
+  order = '$root_ptCount';
+  etag = '';
+  totalAdverseEventPt = 0;
+  pageIndex: number;
+  pageSize: number;
+  lastPage: number;
+  public sortValues = adverseEventPtSearchSortValues;
+  public privateSearchTerm?: string;
+  public adverseEventPtList: Array<AdverseEventPt>;
+  displayedColumns: string[] = [
+    'ptTerm',
+    'primSoc',
+    'ingredientName',
+    'caseCount',
+    'ptCount',
+    'prr'
+  ];
 
   constructor(
     public adverseEventService: AdverseEventService,
@@ -97,15 +101,14 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
       if (this.router.url === this.previousState[0]) {
         this.ngOnInit();
       }
-
     }, 50);
   }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventPtFacets);
-    this.gaService.sendPageView('Browse Adverse Event');
+    //  this.gaService.sendPageView('Browse Adverse Event');
 
-    this.titleService.setTitle(`Browse Adverse Events`);
+    this.titleService.setTitle(`AE:Browse Adverse Events`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -121,7 +124,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_ptCount';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
@@ -135,7 +138,6 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
 
     this.isComponentInit = true;
     this.loadComponent();
-
   }
 
   ngAfterViewInit() {
@@ -156,6 +158,45 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     }
   }
 
+  // For Table View
+  /*
+  getAdverseEventPt(pageEvent?: PageEvent) {
+    this.loadingService.setLoading(true);
+    this.setPageEvent(pageEvent);
+    //  this.showSpinner = true;  // Start progress spinner
+    const skip = this.pageIndex * this.pageSize;
+    //  const privateSearch = 'root_substanceKey:' + this.bdnum;
+    const subscription = this.adverseEventService.getAdverseEventPt(
+      this.order,
+      skip,
+      this.pageSize,
+      this.privateSearchTerm,
+      this.privateFacetParams
+    )
+      .subscribe(pagingResponse => {
+        this.totalAdverseEventPt = pagingResponse.total;
+        this.adverseEventService.totalRecords = pagingResponse.total;
+        //  this.adverseEventCount = pagingResponse.total;
+        //   this.setResultData(pagingResponse.content);
+        // this.paged = pagingResponse.content;
+        //    this.results = results;
+        //    this.filtered = results;
+        //    this.totalRecords = this.service.totalRecords;
+        //   this.pageChangeFda();
+        this.etag = pagingResponse.etag;
+      }, error => {
+        console.log('error');
+      }, () => {
+        subscription.unsubscribe();
+        this.isLoading = false;
+        this.loadingService.setLoading(false);
+      });
+    //  this.loadingStatus = '';
+    //  this.showSpinner = false;  // Stop progress spinner
+    // this.loadingService.setLoading(false);
+  }
+  */
+
   searchAdverseEventPt() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
@@ -168,12 +209,9 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     )
       .subscribe(pagingResponse => {
         this.isError = false;
-
-        this.adverseEventPt = pagingResponse.content;
-        // didn't work unless I did it like this instead of
-        // below export statement
-        this.dataSource = this.adverseEventPt;
+        this.adverseEventPtList = pagingResponse.content;
         this.totalAdverseEventPt = pagingResponse.total;
+        this.countAdverseEventPtOut.emit(pagingResponse.total);
         this.etag = pagingResponse.etag;
         if (pagingResponse.total % this.pageSize === 0) {
           this.lastPage = (pagingResponse.total / this.pageSize);
@@ -183,9 +221,6 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
         }
-
-      //  this.getSubstanceBySubstanceKey();
-        // this.applicationService.getClinicalTrialApplication(this.applications);
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -202,6 +237,13 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
+  }
+
+  setPageEvent(pageEvent?: PageEvent): void {
+    if (pageEvent != null) {
+      this.pageIndex = pageEvent.pageIndex;
+      this.pageSize = pageEvent.pageSize;
+    }
   }
 
   setSearchTermValue() {
@@ -254,9 +296,27 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     return this.privateSearchTerm;
   }
 
-  // get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
-  //   return this.privateFacetParams;
-  // }
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search Adverse Event
+      this.searchAdverseEventPt();
+    }
+    return;
+  }
+
+  updateView(event): void {
+    // this.gaService.sendEvent('adverseeventptsContent', 'button:view-update', event.value);
+    this.view = event.value;
+  }
 
   changePage(pageEvent: PageEvent) {
 
@@ -333,55 +393,11 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     this.router.navigate(['/advanced-search'], navigationExtras);
   }
 
-  getSubstanceBySubstanceKey(): void {
-    // let bdnumName: any;
-    // let relationship: any;
-    // let substanceId: string;
-
-    /*
-    this.adverseEventPt.forEach((element, index) => {
-
-      element.applicationProductList.forEach((elementProd, indexProd) => {
-
-        // Sort Product Name by create date descending
-        elementProd.applicationProductNameList.sort((a, b) => {
-          return <any>new Date(b.createDate) - <any>new Date(a.createDate);
-        });
-
-        elementProd.applicationIngredientList.forEach((elementIngred, indexIngred) => {
-          if (elementIngred.substanceKey != null) {
-
-            const substanceSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
-              if (response) {
-                // Get Substance Details, uuid, approval_id, substance name
-                if (elementIngred.substanceKey) {
-                  this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(responseInactive => {
-                    if (responseInactive) {
-                      elementIngred._substanceUuid = responseInactive.uuid;
-                      elementIngred._ingredientName = responseInactive._name;
-                    }
-                  });
-                }
-
-                // Get Active Moiety - Relationship
-
-              }
-            });
-            this.subscriptions.push(substanceSubscription);
-          }
-        }); // Ingredient forEach
-
-      }); // Product forEach
-
-    }); // Application forEach
-    */
-  }
-
   export() {
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-   //   if (this.authService.getUser() !== '') {
+      if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           height: '215x',
           width: '550px',
@@ -405,12 +421,17 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
             }, error => this.loadingService.setLoading(false));
           }
         });
-     // }
+      }
     }
   }
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.adverseEventService.getApiExportUrlPt(etag, extension);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
   }
 
 }

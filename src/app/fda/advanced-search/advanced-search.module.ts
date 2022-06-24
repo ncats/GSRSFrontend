@@ -39,6 +39,7 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor/structure-edi
 import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FacetDisplayPipe } from '@gsrs-core/facets-manager/facet-display.pipe';
+import { StructureModule } from '@gsrs-core/structure/structure.module';
 
 const advSearchRoutes: Routes = [
   {
@@ -83,7 +84,8 @@ const advSearchRoutes: Routes = [
     SubstanceFormModule,
     FacetsManagerModule,
     StructureEditorModule,
-    NameResolverModule
+    NameResolverModule,
+    StructureModule
   ],
   declarations: [
     AdvancedSearchComponent,

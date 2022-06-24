@@ -106,13 +106,65 @@
 }
 }
 
-.controls-container {
-  display: flex;
+.cards {
+  .cards-view {
+    display: block;
+  }
+
+  .table-view {
+    display: none;
+  }
+
+  .tiles-view{
+    display: none;
+  }
 }
 
-.mat-card {
-  max-width: 928px;
-  margin-bottom: 20px;
+.table {
+  .cards-view {
+    display: none;
+  }
+
+  .table-view {
+    display: block;
+  }
+
+  .tiles-view{
+    display: none;
+  }
+}
+
+.tiles {
+  .cards-view {
+    display: none;
+  }
+
+  .table-view {
+    display: none;
+  }
+
+  .tiles-view{
+    display: flex;
+  }
+}
+
+.controls-container-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.full-paginator-right {
+  display: flex;
+  max-width: 700px;
+}
+
+.page-selector-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  max-width: 200px;
 }
 
 .mat-card, .controls-container {
@@ -1006,16 +1058,16 @@ margin:auto;
 }
 
 .row-property-key {
-	min-width: 30%;
-	max-width: 30%;
+	min-width: 32%;
+	max-width: 32%;
 	padding: 7px;
   font-weight: bold;
 	/*background-color: #edeff2;*/
 }
 
 .row-property-value {
-	min-width: 70%;
-	max-width: 70%;
+	min-width: 68%;
+	max-width: 68%;
 	padding: 5px;
 }
 
@@ -1208,6 +1260,11 @@ margin:auto;
   border: 10px solid blue;
 }
 
+.width120px {
+  width: 120px;
+
+}
+
 .width100percent {
   width: 100%;
 }
@@ -1232,4 +1289,16 @@ margin:auto;
   width: 100%;
   height: 30px;
   padding:0px;
+}
+
+.top-search {
+  flex-grow: 1;
+  max-width: 500px;
+
+  ::ng-deep .mat-form-field {
+
+    .mat-form-field-label {
+      font-size: 16px;
+    }
+  }
 }

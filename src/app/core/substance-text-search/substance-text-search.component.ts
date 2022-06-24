@@ -25,6 +25,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   @Input() eventCategory: string;
   @Input() styling?: string;
   @Output() searchPerformed = new EventEmitter<string>();
+  @Output() searchValueOut = new EventEmitter<string>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   private privateErrorMessage = '';
@@ -56,6 +57,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       distinctUntilChanged(),
       switchMap(searchValue => {
         this.query = searchValue;
+        this.searchValueOut.emit(this.query);
         const eventCategory = this.eventCategory || 'substanceTextSearch';
         const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
         this.gaService.sendEvent(eventCategory, 'search:enter-term', eventLabel);
@@ -178,7 +180,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           }
         }
       }
-      const query = this.query.replace(/(?=[() ])/g, '\\');
+      const query = this.query.replace(/(?=[() \[\]])/g, '\\');
       return field.replace(new RegExp(query, 'gi'), match => {
         return '<strong>' + match + '</strong>';
       });
@@ -222,8 +224,9 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   topSearchClean(searchTerm): string {
     if (searchTerm && searchTerm.length > 0) {
       searchTerm = searchTerm.trim();
-      if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && searchTerm.indexOf(':') < 0
-        && searchTerm.indexOf(' AND ') < 0 && searchTerm.indexOf(' OR ') < 0) {
+      const looksComplex = this.looksLikeComplexSearchTerm(searchTerm);
+      console.log("looksComplex: " + looksComplex);
+      if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && !looksComplex) {
         // Put slash in front of brackets, for example:
         // 1. [INN] to \[INN\]
         // 2. IBUPROFEN [INN] to IBUPROFEN \[INN\]
@@ -237,13 +240,25 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           .replace(/([^\\])\[/g, "$1\\[").replace(/^\[/g, "\\[")
           .replace(/([^\\])\]/g, "$1\\]").replace(/^\]/g, "\\]")
           + '"';
-      } else if (searchTerm.indexOf(':') < 0) {
-        searchTerm = searchTerm
+      } else if (!looksComplex) {
+          searchTerm
           .replace(/([^\\])\[/g, "$1\\[").replace(/^\[/g, "\\[")
           .replace(/([^\\])\]/g, "$1\\]").replace(/^\]/g, "\\]")
-      }
+      } 
       this.searchControl.setValue(searchTerm);
     }
     return searchTerm;
+  }
+
+  looksLikeComplexSearchTerm(searchTerm:string): boolean {
+    // If we have an underscore followed by a colon, we think it's a complex search.
+    // e.g. root_names_name:Aspirin
+    const regexp : RegExp = /_.*:/g;
+    // The AND/OR checks were in a previous version but may be unneeded/confounding
+    // unless we're considering draft searchTerms that may have forgotten the complex search syntax. 
+    if (regexp.test(searchTerm) || (searchTerm.indexOf(' AND ') > -1) || (searchTerm.indexOf(' OR ') > -1)){
+      return true;  
+    }
+    return false;
   }
 }

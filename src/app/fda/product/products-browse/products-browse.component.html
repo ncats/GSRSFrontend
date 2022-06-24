@@ -59,6 +59,16 @@
           <span class="main-title">Browse Products</span>
         </div>
 
+        <!-- Table, Full, and Title Views -->
+        <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+          <mat-button-toggle value="table" matTooltip="Table View">
+            <mat-icon svgIcon="list"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="cards" matTooltip="Full View">
+            <mat-icon svgIcon="view_stream"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
         <!-- Sort By -->
         <mat-form-field class="sort">
           <mat-label>Sort By</mat-label>
@@ -99,7 +109,14 @@
       </div> <!-- class=controls-container -->
 
       <div class="search-text">
+        <!-- *** Search Any Text (TYPE AHEAD) *** -->
+        <app-product-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
+          [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)"
+          eventCategory="productSearch">
+        </app-product-text-search>
+
         <!-- Search Any Text Text Box -->
+        <!--
         <mat-form-field class="width350px font13px">
           <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
             size="50" />
@@ -107,90 +124,170 @@
         <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
+        -->
       </div>
 
-      <!--
-    <div class="titlePosition">
-      <span class="title">Browse Products</span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      Total:&nbsp;<span class="totalstyle font17px colorgray">{{totalProducts}}</span>
-      &nbsp;&nbsp;
-    </div>
+      <!-- ******** Display Content Details ******** -->
+      <div [ngClass]="view">
 
-    <div class="paginationPosition">
-      <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
-        [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
-      </mat-paginator>
-    </div>
+        <!-- ***** TABLE VIEW BEGIN ***** -->
+        <div class="table-view">
+          <div class="responsive">
 
-    <br><br><br>
-    <div class="divflex">
+            <table mat-table [dataSource]="products" class="font12px" matSort (matSortChange)="sortData($event)"
+              matSortDisableClear>
 
-      <div class="marginleft20px marginright40px" *ngIf="isLoggedIn">
-        <button matTooltip="Export Search Results" mat-button (click)="export()"
-          class="mat-button export-button mat-raised-button">
-          <mat-icon svgIcon="get_app"></mat-icon> Export
-        </button>
-      </div>
+              <ng-container matColumnDef="productNDC">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product ID </th>
+                <td class="width120px" mat-cell *matCellDef="let product">
+                  <!-- If fromtable is SPL, display SPL Details links -->
+                  <span *ngIf="product.fromtable === 'SPL'">
+                    <div class="padtop7px">
+                      <a class="substance-name" [routerLink]="['/product-elist', product.productId]" target="_blank"
+                        alt="View SPL Product Record" title="View SPL Product Record"><span
+                          *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
+                        <ng-template #noProdNDC>(NO ID)</ng-template>
+                      </a>
+                    </div>
+                    <div class="padtop15px padbottom7px">
+                      <ng-container *ngIf="product.productNDC !== null">
+                        <a href="{{dailyMedUrl}}{{product.productNDC}}" target="_blank" alt="Go to DailyMed website"
+                          title="Go to DailyMed website">
+                          <img [src]="iconSrcPath">
+                        </a>
+                        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                        </mat-icon>
+                      </ng-container>
+                    </div>
+                  </span>
 
-      <div class="marginleft20px">
-        <mat-form-field class="width350px font13px">
-          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
-            size="50" />
-        </mat-form-field>
-        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
-          <mat-icon svgIcon="search"></mat-icon>
-        </button>
-        &nbsp;&nbsp;&nbsp;
-        <button class="activate-search-button" mat-icon-button (click)="clearFilters()">
-          Reset
-        </button>
-      </div>
-    </div>
-    -->
+                  <!-- If fromtable is GSRS, display GSRS Details links -->
+                  <span *ngIf="product.fromtable === 'GSRS'">
+                    <a class="substance-name" [routerLink]="['/product', product.productId]" target="_blank"
+                      alt="View Product Record"><span
+                        *ngIf="product.productNDC; else noProdNDCSRS">{{product.productNDC}}</span>
+                      <ng-template #noProdNDCSRS>(NO ID)</ng-template>
+                    </a>
+                    &nbsp;&nbsp;
+                    <!-- Edit GSRS record button -->
+                    <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
+                      matTooltip='Edit Product Record'>
+                      <mat-icon svgIcon="edit"></mat-icon>
+                    </a>
+                  </span>
+                </td>
+              </ng-container>
 
-      <!--
-    <div class="padleft10px" *ngIf="totalProducts > 0">
-      <div class="search-parameters">
-        <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
-          <div>
-            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-            <span>{{this.searchTerm}}</span>
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
+                <td mat-cell *matCellDef="let product">
+                  <div *ngFor="let prodName of product.productNameAllList; let i = index">
+                    {{prodName.productName}}
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ingredientName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Name (Active Ingredient) </th>
+                <td valign="top" mat-cell *matCellDef="let product">
+                  <ol class="olstyle">
+                    <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
+                      <div *ngIf="ing.substanceName">
+                        <div *ngIf="ing.ingredientType">
+                          <div
+                            *ngIf="(ing.ingredientType === 'ACTIVE INGREDIENT') || (ing.ingredientType === 'Active Ingredient')">
+                            <li>
+                              <a [routerLink]="['/substances', ing.substanceUuid]" target="_blank">{{ing.substanceName}}
+                              </a>
+                              <button mat-button class="structure-parameters"
+                                (click)="openImageModal($event, ing.substanceUuid)">
+                                <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
+                              </button>
+                            </li>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ol>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="labelerName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Labeler Name </th>
+                <td mat-cell *matCellDef="let product"> {{product.labelerName}}
+                  <div *ngFor="let prodComp of product.productCompanyAllList; let i = index">
+                    {{prodComp.labelerName}}
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="country">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
+                <td mat-cell *matCellDef="let product">
+                  <div *ngFor="let prodComp of product.productCompanyAllList; let i = index">
+                    {{prodComp.countryWithoutCode}}
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                <td mat-cell *matCellDef="let product"> {{product.status}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="productNameType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Type </th>
+                <td mat-cell *matCellDef="let product"> {{product.productType}} </td>
+              </ng-container>
+
+              <!--
+              <ng-container matColumnDef="ingredientType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Type </th>
+                <td mat-cell *matCellDef="let product">
+                  <div *ngFor="let prodIng of product.productIngredientAllList; let i = index">
+                    <div *ngIf="prodIng.substanceUuid">
+
+                      <div *ngIf="(substance.uuid === prodIng.substanceUuid)">
+                        {{prodIng.ingredientType}}
+                      </div>
+
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+              -->
+
+              <ng-container matColumnDef="applicationNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
+                <td mat-cell *matCellDef="let product"><span
+                    *ngIf="(product.appType && product.appNumber); else noAppType">
+                    <!--
+                  <a [routerLink]="['/applicationDarrtsDetails', product.appType, product.appNumber]"
+                    target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
+                  </a>
+                  -->
+                    <a href="{{getAppTypeNumberUrl(product.appType, product.appNumber)}}" target="_blank"><span
+                        class="approval-id">{{product.appTypeNumber}}</span>
+                    </a>
+                  </span>
+                  <ng-template #noAppType>
+                    <span class="approval-id">
+                      {{product.appTypeNumber}}
+                    </span>
+                  </ng-template>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
           </div>
-          <div class="actions-container">
+        </div> <!-- class="table-view" -->
+        <!-- TABLE VIEW END -->
 
-            <button mat-icon-button color="primary" (click)="clearSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-
-
-        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
-          <div class='selected-container'>
-            <span class="capitalized font-medium-bold selected-label">
-              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
-              {{facet.type}}:
-            </span>
-            <span class="no-break selected-value">
-              {{facet.val}}
-            </span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button class="display-button" color="primary"
-              (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
-              <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <br>
-    -->
-
-      <!-- Display Content Details -->
-      <div class="cards" *ngIf="products && products.length">
-        <div class="substance-cards">
+        <!-- CARD VIEW BEGIN -->
+        <div class="cards-view" *ngIf="products && products.length; else noRecordProduct">
           <mat-card *ngFor="let product of products; let indexProd = index">
             <mat-card-title>
               <div>
@@ -202,6 +299,15 @@
                       *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
                     <ng-template #noProdNDC>(NO ID)</ng-template>
                   </a>
+                  <ng-container *ngIf="product.productNDC !== null">
+                    &nbsp;&nbsp;
+                    <a href="{{dailyMedUrl}}{{product.productNDC}}" target="_blank" alt="Go to DailyMed website"
+                      title="Go to DailyMed website">
+                      <img [src]="iconSrcPath">
+                    </a>
+                    <mat-icon class="small-icon margintop20px" svgIcon="open_in_new" matTooltip="opens in new window">
+                    </mat-icon>
+                  </ng-container>
                 </span>
 
                 &nbsp;&nbsp;&nbsp;
@@ -240,8 +346,8 @@
                     target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
                   </a>
                   -->
-                  <a href="{{getAppTypeNumberUrl(product.appType, product.appNumber)}}"
-                    target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
+                  <a href="{{getAppTypeNumberUrl(product.appType, product.appNumber)}}" target="_blank"><span
+                      class="approval-id">{{product.appTypeNumber}}</span>
                   </a>
                 </span>
                 <ng-template #noAppType>
@@ -479,8 +585,8 @@
             </mat-card-content>
 
           </mat-card>
-        </div>
-      </div> <!-- class=cards -->
+        </div> <!-- class=cards -->
+      </div> <!-- [ngClass]=view -->
 
       <!-- Pagination at the bottom of the page -->
       <div class="controls-container">
@@ -501,6 +607,16 @@
           </div>
         </div>
       </div>
+
+      <ng-template #noRecordProduct>
+        <!-- No Product Found. -->
+        <!--
+      <div class="padleft10px colorred">
+        <br>
+        No Product records found. Please Reindex to see the Product records here.
+      </div>
+      -->
+      </ng-template>
 
     </div> <!-- class=side-nav-content -->
   </mat-sidenav-content>

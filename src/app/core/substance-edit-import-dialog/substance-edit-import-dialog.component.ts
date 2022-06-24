@@ -72,14 +72,14 @@ export class SubstanceEditImportDialogComponent implements OnInit {
   }
 
 
-  checkLoaded(event: any) {
-    this.pastedJSON = event.target.value;
+  checkLoaded() {
     this.loaded = true;
     try {
       JSON.parse(this.pastedJSON);
+      this.message = '';
   } catch (e) {
     this.message = 'Error: Invalid JSON format in pasted string';
-          this.loaded = false;
+    this.loaded = false;
   }
 }
 

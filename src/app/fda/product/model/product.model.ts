@@ -138,6 +138,8 @@ export interface ProductIngredient {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
+  $$ingredientNameValidation?: string;
+  $$basisOfStrengthValidation?: string;
 }
 
 export interface ProductAll {

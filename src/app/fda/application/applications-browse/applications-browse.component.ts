@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import { Sort } from '@angular/material/sort';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -32,6 +33,7 @@ import { Application } from '../model/application.model';
   styleUrls: ['./applications-browse.component.scss']
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+  view = 'cards';
   public privateSearchTerm?: string;
   public applications: Array<Application>;
   order: string;
@@ -44,7 +46,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   isError = false;
   isAdmin: boolean;
   isLoggedIn = false;
-  displayedColumns: string[];
   dataSource = [];
   hasBackdrop = false;
   appType: string;
@@ -60,8 +61,20 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   previousState: Array<string> = [];
   private searchTermHash: number;
   isSearchEditable = false;
+  searchValue: string;
   lastPage: number;
   invalidPage = false;
+  ascDescDir = 'desc';
+  displayedColumns: string[] = [
+    'appType',
+    'appNumber',
+    'center',
+    'provenance',
+    'applicationStatus',
+    'productName',
+    'sponsorName',
+    'ingredientName'
+  ];
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -104,7 +117,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.gaService.sendPageView('Browse Applications');
 
-    this.titleService.setTitle(`Browse Applications`);
+    this.titleService.setTitle(`A:Browse Applications`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -120,7 +133,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_appNumber';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -131,6 +144,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
+
+    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
+      this.searchValue = params.get('search');
+     // this.setClassicLinkQueryParams(params);
+    });
+    this.subscriptions.push(paramsSubscription);
 
     this.isComponentInit = true;
     this.loadComponent();
@@ -167,7 +186,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     )
       .subscribe(pagingResponse => {
         this.isError = false;
-
         this.applications = pagingResponse.content;
         // didn't work unless I did it like this instead of
         // below export statement
@@ -259,6 +277,28 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   // get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
   //   return this.privateFacetParams;
   // }
+
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search Applications
+      this.searchApplications();
+    }
+    return;
+  }
+
+  updateView(event): void {
+    // this.gaService.sendEvent('adverseeventptsContent', 'button:view-update', event.value);
+    this.view = event.value;
+  }
 
   changePage(pageEvent: PageEvent) {
 
@@ -472,4 +512,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       subscription.unsubscribe();
     });
   }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
+  }
+
 }

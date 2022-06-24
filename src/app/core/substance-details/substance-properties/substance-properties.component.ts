@@ -39,6 +39,16 @@ export class SubstancePropertiesComponent extends SubstanceCardBase implements O
     return this.utilsService.displayAmount(amount);
   }
 
+  codeIsProtected(access: string[]) {
+    let itIs = false;
+    for(let a of access) {
+      if(a.toLowerCase() === 'protected') {
+        itIs = true;
+      }
+    }
+    return itIs;
+  }
+
   openModal(templateRef) {
 
     const dialogRef = this.dialog.open(templateRef, {
