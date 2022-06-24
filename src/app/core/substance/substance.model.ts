@@ -51,6 +51,7 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _mixture?: ParentCountHref;
   _specifiedSubstance?: ParentCountHref;
   mixture?: any;
+  names?: any;
   specifiedSubstance?: any;
 }
 export interface ParentCountHref {
@@ -151,12 +152,14 @@ export interface NucleicAcid extends SubstanceBase {
 
 export interface Sugar extends NucleicAcid {
   sugar?: string;
+  structure?: any;
   sitesShorthand?: string;
   sites?: Array<Site>;
 }
 
 export interface Linkage extends NucleicAcid {
   linkage?: string;
+  structure?: any;
   sitesShorthand?: string;
   sites?: Array<Site>;
 }

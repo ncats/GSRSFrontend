@@ -145,7 +145,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     }
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
-      return this.utilsService.compare(a[sort.active] ? a[sort.active] : null, b[sort.active] ? b[sort.active] : null, isAsc);
+      return this.utilsService.compare(a[sort.active] ? a[sort.active].toString().toUpperCase() : null, b[sort.active] ? b[sort.active].toString().toUpperCase() : null, isAsc);
     });
     this.pageChange();
 

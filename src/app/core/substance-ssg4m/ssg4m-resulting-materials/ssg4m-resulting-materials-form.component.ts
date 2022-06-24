@@ -118,6 +118,8 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
           } else {
             this.configSettingsDisplay[key] = false;
           }
+        } else if (confSettings[key] === 'removed') {
+          this.configSettingsDisplay[key] = false;
         }
       }
     });
@@ -157,6 +159,10 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].resultingMaterials.splice(this.resultingMaterialIndex, 1);
   }
 
+  copyResultingToStarting() {
+    this.substanceFormSsg4mStagesService.copyResultingToStarting(this.processIndex, this.siteIndex, this.stageIndex, this.resultingMaterialIndex);
+  }
+  /*
   copyResultingToStarting() {
     let found = false;
     let resultMatRefUuid = '';
@@ -233,4 +239,5 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
       //  this.scrollToService.scrollToElement(`substance-process-site-stage-startMat-0`, 'center');
     });
   }
+  */
 }

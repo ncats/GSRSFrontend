@@ -49,6 +49,7 @@ import { Title } from '@angular/platform-browser';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { FormControl } from '@angular/forms';
 import { SubBrowseEmitterService } from './sub-browse-emitter.service';
+import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 
 @Component({
   selector: 'app-substances-browse',
@@ -122,7 +123,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   facetDisplayType = 'facetView';
   facetViewCategory: Array<String> = [];
   facetViewControl = new FormControl();
-
+  private wildCardText: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -144,9 +145,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private substanceTextSearchService: SubstanceTextSearchService,
     private title: Title,
     private cvService: ControlledVocabularyService,
+    private wildCardService: WildcardService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
-  ) { }
+  ) {
+  }
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
@@ -156,6 +159,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
 
     }, 50);
+  }
+
+  saveWildCardText() {
+    this.wildCardService.getWildCardText(this.wildCardText);
+  }
+
+  wildCardSearch() {
+    this.wildCardService.getWildCardText(this.wildCardText);
+    this.setUpPrivateSearchTerm();
+    this.searchSubstances();
   }
 
   ngOnInit() {
@@ -170,12 +183,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageSize = 10;
     this.pageIndex = 0;
 
-    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
-
-    if (this.privateSearchTerm) {
-      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
-      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
-    }
+    this.setUpPrivateSearchTerm();
 
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
@@ -217,6 +225,21 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.loadComponent();
 
     this.loadFacetViewFromConfig();
+  }
+
+  setUpPrivateSearchTerm() {
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
+    if(this.wildCardText && this.wildCardText.length > 0) {
+      if(this.privateSearchTerm.length > 0) {
+        this.privateSearchTerm += ' AND "' + this.wildCardText + '"';
+      } else {
+        this.privateSearchTerm += '"' + this.wildCardText + '"';
+      }
+    }
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
   }
 
   ngAfterViewInit() {
@@ -815,8 +838,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   openImageModal(substance: SubstanceDetail): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
-
-    this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+        this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
     let data: any;
 
@@ -825,12 +847,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         structure: substance.structure.id,
         smiles: substance.structure.smiles,
         uuid: substance.uuid,
-        names: substance.names
+        names: this.names[substance.uuid]
       };
     } else {
       data = {
         structure: substance.polymer.displayStructure.id,
-        names: substance.names
+        names: this.names[substance.uuid]
       };
     }
 

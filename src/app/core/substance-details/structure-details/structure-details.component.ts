@@ -90,8 +90,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   openModal(templateRef) {
 
     const dialogRef = this.dialog.open(templateRef, {
-      height: '80%',
-      width: '80%'
+      width: '650px',
+      panelClass: 'structure-image-panel',
     });
     this.overlayContainer.style.zIndex = '1002';
 

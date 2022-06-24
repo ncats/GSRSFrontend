@@ -17,6 +17,8 @@ import { SubstanceDetail, SpecifiedSubstanceG4mProcess } from '@gsrs-core/substa
 export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();
 
+  showSubstanceRole = true;
+  showCriticalParameter = false;
   imageLoc: any;
   environment: Environment;
   substance: SubstanceDetail;
@@ -85,8 +87,107 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     });
   }
 
+  displayAmount(amt, propertyName: string): string {
+    return this.displayAmountCompose(amt, propertyName);
+  }
+
   editInForm() {
     this.tabSelectedIndexOut.emit(0);
   }
 
+  updateShowSubstanceRole(event) {
+    this.showSubstanceRole = event.checked;
+  }
+
+  updateShowCriticalParameter(event) {
+    this.showCriticalParameter = event.checked;
+  }
+
+  displayAmountCompose(amt, propertyType: string): string {
+    function formatValue(v) {
+      if (v) {
+        if (typeof v === 'object') {
+          if (v.display) {
+            return v.display;
+          } else if (v.value) {
+            return v.value;
+          } else {
+            return null;
+          }
+        } else {
+          return v;
+        }
+      }
+      return null;
+    }
+
+    let ret = '';
+    if (amt) {
+      if (typeof amt === 'object') {
+        if (amt) {
+          let addedunits = false;
+          let unittext = formatValue(amt.units);
+          if (!unittext) {
+            unittext = '';
+          }
+          /* const atype = formatValue(amt.type); */
+          const atype = formatValue(propertyType);
+          if (atype) {
+            ret += atype + ':' + '\n';
+          }
+          if (amt.average || amt.high || amt.low) {
+            if (amt.average) {
+              ret += amt.average;
+              if (amt.units) {
+                ret += ' ' + unittext;
+                addedunits = true;
+              }
+            }
+            if (amt.high || amt.low) {
+              ret += ' [';
+              if (amt.high && !amt.low) {
+                ret += '<' + amt.high;
+              } else if (!amt.high && amt.low) {
+                ret += '>' + amt.low;
+              } else if (amt.high && amt.low) {
+                ret += amt.low + ' to ' + amt.high;
+              }
+              ret += '] ';
+              if (!addedunits) {
+                if (amt.units) {
+                  ret += ' ' + unittext;
+                  addedunits = true;
+                }
+              }
+            }
+            ret += ' (average) ';
+          }
+          if (amt.highLimit || amt.lowLimit) {
+            ret += '\n[';
+          }
+          if (amt.highLimit && !amt.lowLimit) {
+            ret += '<' + amt.highLimit;
+          } else if (!amt.highLimit && amt.lowLimit) {
+            ret += '>' + amt.lowLimit;
+          } else if (amt.highLimit && amt.lowLimit) {
+            ret += amt.lowLimit + ' to ' + amt.highLimit;
+          }
+          if (amt.highLimit || amt.lowLimit) {
+            ret += '] ';
+            if (!addedunits) {
+              if (amt.units) {
+                ret += ' ' + unittext;
+                addedunits = true;
+              }
+            }
+            ret += ' (limits)';
+          }
+        }
+        if (amt.nonNumericValue) {
+          ret += ' ' + amt.nonNumericValue;
+        }
+      }
+    }
+    return ret;
+  }
 }

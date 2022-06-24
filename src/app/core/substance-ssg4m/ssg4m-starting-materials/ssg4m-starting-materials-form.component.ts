@@ -115,6 +115,8 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
           } else {
             this.configSettingsDisplay[key] = false;
           }
+        } else if (confSettings[key] === 'removed') {
+          this.configSettingsDisplay[key] = false;
         }
       }
     });

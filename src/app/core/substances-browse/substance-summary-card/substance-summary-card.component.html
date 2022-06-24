@@ -147,18 +147,28 @@
       <div>
         <div class="substance-data substance-names" *ngIf="names && names.length">
           <div class="label">Names:</div>
-          <div>
+          <div [hidden]="!showLessNames">
             <div class="value space-bottom" *ngFor="let nameObject of names | namesDisplayOrder">
               {{nameObject.name}}
               <span *ngIf="nameObject.displayName == true" matTooltip="Accepted Name">
                 <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
               </span>
             </div>
+            <div [hidden]="!moreThanNumberCount(names, 4)" (click)="showMoreLessNames()" class="show-more">See {{names.length - 4}} More</div>
+          </div>
+          <div [hidden]="showLessNames">
+            <div class="value space-bottom" *ngFor="let nameObject of names">
+              {{nameObject.name}}
+              <span *ngIf="nameObject.displayName == true" matTooltip="Accepted Name">
+                <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
+              </span>
+            </div>
+            <div (click)="showMoreLessNames()" class="show-more">Less</div>
           </div>
         </div>
         <div class="substance-data substance-code-systems" *ngIf="codeSystems">
           <div class="label">Codes:</div>
-          <div>
+          <div [hidden]="!showLessCodes">
             <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5; index as codeindex">
               <div class="code-system">
                 <span class="label">{{codeSystemName | codeSystemDisplay | async}}
@@ -191,6 +201,40 @@
                 </span>
               </div>
             </div>
+            <div [hidden]="!moreThanNumberCount(codeSystemNames, 6)" (click)="showMoreLessCodes()" class="show-more">See {{codeSystemNames.length - 5}} More</div>
+          </div>
+          <div [hidden]="showLessCodes">
+            <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames; index as codeindex">
+              <div class="code-system">
+                <span class="label">{{codeSystemName | codeSystemDisplay | async}}
+
+                  </span>:&nbsp;
+                <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast; index as index">
+                  <span *ngIf = "index < 5  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
+                  <span *ngIf="codeObject.url">
+                    <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
+                      evCategory="substancesContent" evAction="link:code" aria-label ="view site in new tab">
+                      <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
+                      <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
+                      <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
+                          font-weight: 400;">[{{codeObject.type}}]</span>
+
+                    </a>
+                  </span>
+                  <span *ngIf="!codeObject.url">{{codeObject.code.trim()}} 
+                      <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
+                          font-weight: 400;">[{{codeObject.type}}]</span>
+                  </span>
+
+                  <span *ngIf="!isLast">, </span>
+                  </span>
+                </span>
+                <span *ngIf = "codeSystems[codeSystemName].length > 4">
+                  <a class = "moreLink" (click) = "!showAll[codeSystemName]? showAll[codeSystemName] = true: (showAll[codeSystemName] === true ? showAll[codeSystemName] = false : showAll[codeSystemName] = true)">{{showAll[codeSystemName] ? 'Show Less': 'Show More'}}</a>
+                </span>
+              </div>
+            </div>
+            <div (click)="showMoreLessCodes()" class="show-more">Less</div>
           </div>
         </div>
         <div class="substance-data substance-relationships"

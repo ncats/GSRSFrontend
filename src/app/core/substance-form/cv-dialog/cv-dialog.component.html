@@ -2,6 +2,9 @@
 <div mat-dialog-content>
 
   <div>
+    <div class = 'form-row' *ngIf = "vocabulary.domain === 'NUCLEIC_ACID_LINKAGE' || vocabulary.domain === 'NUCLEIC_ACID_SUGAR'">true
+        <app-fragment-wizard></app-fragment-wizard>
+    </div>
     <div  class = 'form-row'>
       <mat-form-field class="value">
         <input matInput placeholder="Value" [(ngModel)]="term.value" required name="value" />

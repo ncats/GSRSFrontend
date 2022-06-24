@@ -1084,9 +1084,18 @@
         "stageComments": "advanced"
       },
       "criteriaParameter": {
-        "name": "simple",
-        "propertyType": "simple",
-        "referencedSubstance": "simple"
+        "propertyName": "simple",
+        "average": "simple",
+        "lowLimit": "simple",
+        "highLimit": "simple",
+        "units": "simple",
+        "propertyType": "advanced",
+        "referencedSubstance": "advanced",
+        "amountType": "advanced",
+        "low": "advanced",
+        "high": "advanced",
+        "nonNumericValue": "advanced",
+        "parameters": "removed"
       },
       "startingMaterial": {
         "substanceName": "simple",
