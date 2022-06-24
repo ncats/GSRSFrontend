@@ -222,6 +222,34 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
+        // 'the following contained phrase, which must be found as written (no partial words)': {
+        'Lucene Search': {
+            commandInputs: [
+                {
+                    type: 'text',
+                    example: 'Example: aspirin sodium',
+                    constructQuery: (
+                        queryValue: string,
+                        condition: string,
+                        queryableProperty: string,
+                        lucenePath: string,
+                        eventEmitter: EventEmitter<QueryStatement>
+                    ) => {
+                        if (queryValue) {
+                            queryValue = queryValue.replace(/['"]+/g, '');
+                        }
+                        const query = queryValue.trim() && `${condition}${lucenePath}"^${queryValue.trim()}$"` || '';
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'Lucene Search',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
+                    }
+                }
+            ]
+        },
         'a value that starts with with the word(s)': {
             commandInputs: [
                 {

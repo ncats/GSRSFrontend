@@ -511,7 +511,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.queryableSubstanceDict = response;
 
         const displayProperties = ['All'];
-        const displayPropertiesCommon = ['All'];
+        const displayPropertiesCommon = ['All', 'Lucene Search'];
         Object.keys(this.queryableSubstanceDict).forEach(key => {
           displayProperties.push(key);
           if (this.queryableSubstanceDict[key].priority != null) {

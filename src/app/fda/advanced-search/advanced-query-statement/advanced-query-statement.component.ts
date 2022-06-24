@@ -285,7 +285,7 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
         //  return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values'
         // && (this.commandOptionsShowAll === false && (option === 'Contains' || option === 'Exact Match' || option === 'Starts With')));
         if (this.isShowAllCommandOptions === false) {
-          if (option === 'Contains' || option === 'Exact Match' || option === 'Starts With' || option === 'Ends With') {
+          if (option === 'Contains' || option === 'Exact Match' || option === 'Starts With' || option === 'Ends With' || option === 'Lucene Search') {
             result = true;
           } else if (this._queryableDictionary[queryableProperty].cvDomain && option === 'the following exact default values') {
             result = true;
