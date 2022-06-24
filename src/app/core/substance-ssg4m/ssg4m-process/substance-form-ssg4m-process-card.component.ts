@@ -11,6 +11,7 @@ import { SubstanceFormSsg4mSitesService } from '../ssg4m-sites/substance-form-ss
 import { SpecifiedSubstanceG4mProcess } from '@gsrs-core/substance/substance.model';
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { Ssg4mStepViewDialogComponent } from '../ssg4m-step-view-dialog/ssg4m-step-view-dialog.component';
 
 @Component({
   selector: 'app-substance-form-ssg4m-process-card',
@@ -26,7 +27,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   showAdvancedSettings = false;
   tabSelectedView = 'Form View';
   tabSelectedIndex = 0;
- private overlayContainer: HTMLElement;
+  private overlayContainer: HTMLElement;
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
     private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
@@ -42,7 +43,6 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   }
 
   ngOnInit() {
-
     this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Process');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -57,15 +57,15 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         window['schemeUtil'].apiBaseURL = url;
         //TODO:
         window['schemeUtil'].onClickReaction = (d) => {
-            //Can we add a popup dialog that would show the specific step here?
-            let pindex=d.processIndex;
-            let sindex=d.stepIndex;
-            //I just want to show a dialog that shows the step/stage component rendered in a popup for now.
-            //maybe in the future it should instead be a side window, I don't know.
+          //Can we add a popup dialog that would show the specific step here?
+          let pindex = d.processIndex;
+          let sindex = d.stepIndex;
+          //I just want to show a dialog that shows the step/stage component rendered in a popup for now.
+          //maybe in the future it should instead be a side window, I don't know.
         };
         //TODO:
         window['schemeUtil'].onClickMaterial = (d) => {
-            this.openImageModal(d.refuuid,d.name,d.bottomText);
+          this.openImageModal(d.refuuid, d.name, d.bottomText);
         };
       }
     }, 100);
@@ -99,7 +99,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   addItem(): void {
     this.addProcess();
   }
-    
+
   openImageModal(subUuid: string, approvalID: string, displayName: string): void {
 
     let data: any;
@@ -127,7 +127,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
       subscription.unsubscribe();
     });
   }
-    
+
   addProcess(): void {
     this.substanceFormSsg4mProcessService.addProcess();
     setTimeout(() => {
@@ -162,7 +162,6 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
 
   onSelectedIndexChange(tabIndex: number) {
     this.tabSelectedIndex = tabIndex;
-    console.log("changed to:" + this.tabSelectedIndex);
     //This is a hacky placeholder way to force viz
     //TODO finish this
     const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
@@ -173,4 +172,32 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     this.tabSelectedIndex = tabIndex;
   }
 
+  showStepViewDialog(processIndex: number, siteIndex: number, stageIndex: number) {
+    const data = {
+      processIndex: processIndex,
+      siteIndex: siteIndex,
+      stageIndex: stageIndex
+    };
+
+    const dialogRef = this.dialog.open(Ssg4mStepViewDialogComponent, {
+      width: '90%',
+      height: '80%',
+      panelClass: 'structure-image-panel',
+      data: data
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    let localTabSelectedIndex = -1;
+    const subscription = dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+        localTabSelectedIndex = response;
+      subscription.unsubscribe();
+      if (localTabSelectedIndex > -1) {
+        this.tabSelectedIndex = localTabSelectedIndex;
+      }
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    });
+  }
 }
