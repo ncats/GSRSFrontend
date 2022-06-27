@@ -6,6 +6,7 @@ import { UtilsService } from '@gsrs-core/utils';
 import { Sort } from '@angular/material/sort';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-substance-drafts',
@@ -25,7 +26,7 @@ export class SubstanceDraftsComponent implements OnInit {
   fileName: string;
   filename: string;  
   uploadForm: FormGroup;
-
+  view = 'edit';
   file: any;
   uuid: string;
   
@@ -34,14 +35,20 @@ export class SubstanceDraftsComponent implements OnInit {
     public dialogRef: MatDialogRef<SubstanceDraftsComponent>,
     private utilsService: UtilsService,
     private sanitizer: DomSanitizer,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    
+    this.view = data.view || null;
+    this.data = data;
   }
 
   ngOnInit(): void {
-    this.json = this.substanceFormService.cleanSubstance();
-    this.uuid = this.json.uuid;
+    if (!this.view || this.data.view !== 'user') {
+      this.json = this.substanceFormService.cleanSubstance();
+      this.uuid = this.json.uuid;
+
+    }
+    
     this.fetchDrafts();
     const time = new Date().getTime();
     this.fileName = 'gsrs-drafts-' + time;
@@ -101,6 +108,7 @@ export class SubstanceDraftsComponent implements OnInit {
 
 
   useDraft(index) {
+   
     this.dialogRef.close(index);
   }
 
@@ -160,7 +168,7 @@ export class SubstanceDraftsComponent implements OnInit {
         return b.date - a.date;
     });;
 
-      if (this.json.uuid) {
+      if (this.json && this.json.uuid) {
         this.filterToggle('substance');
       } else {
         this.filterToggle('register');
@@ -181,7 +189,7 @@ export class SubstanceDraftsComponent implements OnInit {
       }
     });
     if (!primary && this.json.names.length > 0) {
-      primary = name[0].name;
+      primary = this.json.names[0].name;
     }
 
     let draft = {
