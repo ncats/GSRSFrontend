@@ -7,7 +7,7 @@
         <div class = 'node-container nochild'>
           <div class = 'title'>
             <a class="hierarchy-link" matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
-               [routerLink]="['/substances', node.value.refuuid || '']" aria-label = "view substance">
+               [routerLink]="['/substances', node.value.refuuid || '']" aria-label = "view substance for {{node.value.refPname}}">
               {{node.value.refPname}}
             </a>
             <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']"

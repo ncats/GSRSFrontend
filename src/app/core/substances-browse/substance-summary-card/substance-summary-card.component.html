@@ -31,7 +31,7 @@
         </div>
         <div class="image-thumbnail">
           <div *ngIf="substance.structure || substance.polymer">
-            <a class="zoom" (click)="openImageModal(substance)">
+            <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(substance)">
               <img appSubstanceImage [entityId]="substance.uuid"
                 [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
             </a>
@@ -68,10 +68,15 @@
           <mat-icon svgIcon="youtube"></mat-icon>
         </a>
         -->
-          <a class="mat-icon-button" matTooltip="edit substance" class="summary-button" aria-label="edit substance"
+          <!-- <a class="mat-icon-button" matTooltip="edit substance" class="summary-button"
             *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
             <mat-icon svgIcon="edit"></mat-icon>
-          </a>
+          </a> -->
+
+          <button aria-label="Edit Substance" class="summary-button" *ngIf="isAdmin" mat-icon-button
+            [matMenuTriggerFor]="editMenu" [routerLink]="['/substances', substance.uuid, 'edit']">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
 
           <button aria-label="Copy file" class="summary-button" *ngIf="canCreate" mat-icon-button
             [matMenuTriggerFor]="editMenu">
@@ -179,7 +184,7 @@
                   <span *ngIf="index < 5  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
                     <span *ngIf="codeObject.url">
                       <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
-                        evCategory="substancesContent" evAction="link:code" aria-label="view site in new tab">
+                        evCategory="substancesContent" evAction="link:code" aria-label="view site for {{codeObject.code.trim()}} in new tab">
                         <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
                         <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
                         <span *ngIf="codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style="font-size: 90%;
