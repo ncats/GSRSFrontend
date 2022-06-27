@@ -295,7 +295,8 @@
 
       <div class="right-aligned">
         <div *ngIf="inxightLink" class="inxight-container">
-          <a class="ext-link" [href]="inxightUrl" target="_blank">
+          <a class="ext-link" [href]="inxightUrl" target="_blank"
+          attr.aria-label="open {{inxightUrl}} in new tab">
             Inxight Drugs <mat-icon class="icon small-icon" svgIcon="open_in_new"></mat-icon>
           </a>
         </div>
