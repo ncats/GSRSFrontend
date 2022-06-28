@@ -61,6 +61,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   previousState: Array<string> = [];
   private searchTermHash: number;
   isSearchEditable = false;
+  searchValue: string;
   lastPage: number;
   invalidPage = false;
   ascDescDir = 'desc';
@@ -143,6 +144,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
+
+    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
+      this.searchValue = params.get('search');
+     // this.setClassicLinkQueryParams(params);
+    });
+    this.subscriptions.push(paramsSubscription);
 
     this.isComponentInit = true;
     this.loadComponent();
@@ -505,4 +512,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       subscription.unsubscribe();
     });
   }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
+  }
+
 }

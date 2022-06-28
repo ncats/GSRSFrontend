@@ -10,14 +10,15 @@ import { AdverseEventService } from '../service/adverseevent.service';
   styleUrls: ['./adverse-events-browse.component.scss']
 })
 export class AdverseEventsBrowseComponent implements OnInit, AfterViewInit {
-
+  adverseEventPtCount = 0;
+  adverseEventDmeCount = 0;
+  adverseEventCvmCount = 0;
   tabSelectedIndex = 0;
   category = 'Adverse Event PT';
 
   constructor(
     public adverseEventService: AdverseEventService,
-    private facetManagerService: FacetsManagerService)
-    { }
+    private facetManagerService: FacetsManagerService) { }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventPtFacets);
@@ -46,6 +47,29 @@ export class AdverseEventsBrowseComponent implements OnInit, AfterViewInit {
       if (this.category === 'Adverse Event CVM') {
         this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventCvmFacets);
       }
+    }
+  }
+
+  getAdverseEventPtCount($event: any) {
+    this.adverseEventPtCount = $event;
+    if (this.adverseEventPtCount > 0) {
+      this.tabSelectedIndex = 0;
+    }
+  }
+
+  getAdverseEventDmeCount($event: any) {
+    this.adverseEventDmeCount = $event;
+    // if PT and CVM counts are 0, and DME count is greater than 0, set the tab to DME
+    if (((this.adverseEventPtCount == 0) && (this.adverseEventCvmCount == 0)) && (this.adverseEventDmeCount > 0)) {
+      this.tabSelectedIndex = 1;
+    }
+  }
+
+  getAdverseEventCvmCount($event: any) {
+    this.adverseEventCvmCount = $event;
+    // if PT and DME counts are 0, and CVM count is greater than 0, set the tab to CVM
+    if (((this.adverseEventPtCount == 0) && (this.adverseEventDmeCount == 0)) && (this.adverseEventCvmCount > 0)) {
+      this.tabSelectedIndex = 2;
     }
   }
 

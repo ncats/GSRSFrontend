@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,6 +34,7 @@ import { adverseEventDmeSearchSortValues } from './adverse-events-dme-search-sor
 })
 
 export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Output() countAdverseEventDmeOut: EventEmitter<number> = new EventEmitter<number>();
   isAdmin: boolean;
   isLoggedIn = false;
   isLoading = true;
@@ -43,6 +44,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
   privateExport = false;
   isSearchEditable = false;
   environment: any;
+  searchValue: string;
   previousState: Array<string> = [];
   private overlayContainer: HTMLElement;
 
@@ -178,6 +180,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
         // below export statement
        // this.dataSource = this.adverseEventDme;
         this.totalAdverseEventDme = pagingResponse.total;
+        this.countAdverseEventDmeOut.emit(pagingResponse.total);
         this.etag = pagingResponse.etag;
 
         if (pagingResponse.total % this.pageSize === 0) {
@@ -434,6 +437,11 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.adverseEventService.getApiExportUrlDme(etag, extension);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
   }
 
 }

@@ -66,7 +66,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
       this.subscriptions.push(cvSubscription);
 
     }
- //   this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.isAdmin = this.authService.hasRoles('admin');
   }
 
@@ -134,19 +134,21 @@ export class CvInputComponent implements OnInit, OnDestroy {
 
    // this.overlayContainer = this.overlayContainerService.getContainerElement();
     if (vocab.domain === 'NUCLEIC_ACID_LINKAGE' || vocab.domain === 'NUCLEIC_ACID_SUGAR'){
+      this.overlayContainer.style.zIndex = '1005';
+
       let dialogRef = this.dialog.open(FragmentWizardComponent, {
         data: {'vocabulary': vocab, 'term': term},
         width: '1040px',
         height: '75%'
       });
-    //  this.overlayContainer.style.zIndex = '50';
+      this.overlayContainer.style.zIndex = '1005';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       window.scroll({ 
         top: thisy, 
         left: 0, 
         behavior: 'auto' 
   });
-   //   this.overlayContainer.style.zIndex = null;
+      this.overlayContainer.style.zIndex = null;
       if (response ) {
         this.privateMod = response.display;
         this.vocabulary.push(response);

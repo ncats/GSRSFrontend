@@ -11,6 +11,7 @@ import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/face
 import { Product, ProductName, ProductTermAndPart, ProductCode, ProductAll } from '../model/product.model';
 import { ProductCompany, ProductComponent, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
+import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 
 @Injectable()
 export class ProductService extends BaseHttpService {
@@ -105,17 +106,13 @@ export class ProductService extends BaseHttpService {
     return url;
   }
 
-  // 2.x play framework, Will REMOVE in Future
-  getProductListExportUrl(substanceId: string): string {
-    return this.baseUrl + 'productListExport?substanceId=' + substanceId;
+  getProductSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
+    return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithProductBrowseEntityUrl + 'suggest?q=' + searchTerm);
   }
 
   getProductProvenanceList(
     substanceUuid: string
   ): Observable<any> {
-
-    //  const url = this.baseUrl + 'getProductProvenanceList?substanceUuid=' + substanceUuid;
-
     const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'distprovenance/' + substanceUuid;
     return this.http.get<any>(url)
       .pipe(
@@ -123,90 +120,6 @@ export class ProductService extends BaseHttpService {
           return result;
         })
       );
-  }
-
-  // 2.x play framework, Will REMOVE in Future
-  getSubstanceProducts(
-    substanceUuid: string, provenance: string, page: number, pageSize: number
-  ): Observable<Array<any>> {
-
-    const funcName = 'productListBySubstanceUuid?substanceUuid=';
-    const url = this.baseUrl + funcName + substanceUuid + '&provenance=' + provenance + '&page=' + (page + 1) + '&pageSize=' + pageSize;
-
-    return this.http.get<Array<any>>(url)
-      .pipe(
-        map(results => {
-          this.totalRecords = results['totalRecords'];
-          return results['data'];
-        })
-      );
-  }
-
-  // 2.x play framework, Will REMOVE in Future
-  getProductsBySubstanceUUid(
-    substanceUuid: string, provenance: string, page: number, pageSize: number
-  ): Observable<Array<any>> {
-
-    const funcName = 'productListBySubstanceUuid?substanceUuid=';
-    const url = this.baseUrl + funcName + substanceUuid + '&provenance=' + provenance + '&page=' + (page + 1) + '&pageSize=' + pageSize;
-
-    return this.http.get<Array<any>>(url)
-      .pipe(
-        map(results => {
-          this.totalRecords = results['totalRecords'];
-          return results['data'];
-        })
-      );
-  }
-
-  // 2.x play framework, Will REMOVE in Future
-  getIngredientNameByBdnum(
-    bdnum: string)
-    : Observable<any> {
-    const url = this.baseUrl + 'getIngredientNameByBdnum?bdnum=' + bdnum;
-
-    return this.http.get<any>(url)
-      .pipe(
-        map(result => {
-          return result;
-        })
-      );
-  }
-
-  // 2.x play framework, Will REMOVE in Future
-  getSubstanceDetailsByBdnum(
-    bdnum: string
-  ): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceDetailsByBdnum?bdnum=' + bdnum;
-    return this.http.get<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
-  }
-
-  // 2.x play framework, Will REMOVE in Future
-  getSubstanceDetailsBySubstanceId(
-    substanceId: string
-  ): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
-    return this.http.get<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
-  }
-
-  // 2.x play framework, Will REMOVE in Future
-  getSubstanceRelationship(
-    substanceId: string
-  ): Observable<Array<any>> {
-    const url = this.baseUrl + 'getRelationshipBySubstanceId?substanceId=' + substanceId;
-    return this.http.get<Array<any>>(url).pipe(
-      map(results => {
-        return results['data'];
-      })
-    );
   }
 
   getProductElist(

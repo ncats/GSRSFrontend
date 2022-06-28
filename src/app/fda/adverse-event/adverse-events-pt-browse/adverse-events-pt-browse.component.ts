@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -33,6 +33,7 @@ import { adverseEventPtSearchSortValues } from './adverse-events-pt-search-sort-
 })
 
 export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Output() countAdverseEventPtOut: EventEmitter<number> = new EventEmitter<number>();
   isAdmin: boolean;
   isLoggedIn = false;
   isLoading = true;
@@ -42,6 +43,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
   privateExport = false;
   isSearchEditable = false;
   environment: any;
+  searchValue: string;
   previousState: Array<string> = [];
   private overlayContainer: HTMLElement;
 
@@ -209,6 +211,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
         this.isError = false;
         this.adverseEventPtList = pagingResponse.content;
         this.totalAdverseEventPt = pagingResponse.total;
+        this.countAdverseEventPtOut.emit(pagingResponse.total);
         this.etag = pagingResponse.etag;
         if (pagingResponse.total % this.pageSize === 0) {
           this.lastPage = (pagingResponse.total / this.pageSize);
@@ -424,6 +427,11 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.adverseEventService.getApiExportUrlPt(etag, extension);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
   }
 
 }

@@ -106,10 +106,6 @@
 }
 }
 
-.controls-container {
-  display: flex;
-}
-
 .controls-container-right {
   display: flex;
   flex-direction: row;
@@ -476,11 +472,6 @@
   }
 }
 */
-
-.mat-card, .controls-container {
-  width: 100%;
-  box-sizing: border-box;
-}
 
 .cards {
   .cards-view {
@@ -1192,6 +1183,18 @@ margin:auto;
 
 .sidenav-container-size {
   width: 100%;
+}
+
+.top-search {
+  flex-grow: 1;
+  max-width: 500px;
+
+  ::ng-deep .mat-form-field {
+
+    .mat-form-field-label {
+      font-size: 16px;
+    }
+  }
 }
 
 /*

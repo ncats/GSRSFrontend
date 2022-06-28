@@ -2,17 +2,38 @@
 <mat-tab-group [(selectedIndex)]="tabSelectedIndex" (selectedTabChange)="tabSelectedUpdated($event)">
 
   <mat-tab label="Adverse Event PT">
-    <app-adverse-events-pt-browse>
+    <ng-template mat-tab-label>
+      <div>Adverse Event PT
+        <div class="font12px">
+          ({{adverseEventPtCount}})
+        </div>
+      </div>
+    </ng-template>
+    <app-adverse-events-pt-browse (countAdverseEventPtOut)="getAdverseEventPtCount($event)">
     </app-adverse-events-pt-browse>
   </mat-tab>
 
   <mat-tab label="Adverse Event DME">
-    <app-adverse-events-dme-browse>
+    <ng-template mat-tab-label>
+      <div>Adverse Event DME
+        <div class="font12px">
+          ({{adverseEventDmeCount}})
+        </div>
+      </div>
+    </ng-template>
+    <app-adverse-events-dme-browse (countAdverseEventDmeOut)="getAdverseEventDmeCount($event)">
     </app-adverse-events-dme-browse>
   </mat-tab>
 
   <mat-tab label="Adverse Event CVM">
-    <app-adverse-events-cvm-browse>
+    <ng-template mat-tab-label>
+      <div>Adverse Event CVM
+        <div class="font12px">
+          ({{adverseEventCvmCount}})
+        </div>
+      </div>
+    </ng-template>
+    <app-adverse-events-cvm-browse (countAdverseEventCvmOut)="getAdverseEventCvmCount($event)">
     </app-adverse-events-cvm-browse>
   </mat-tab>
 
