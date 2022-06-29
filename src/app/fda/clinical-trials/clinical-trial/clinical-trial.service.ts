@@ -178,14 +178,16 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   getSubstanceClinicalTrialsEurope(
-    bdnum: string, page: number, pageSize: number
+    uuid: string, page: number, pageSize: number
   ): Observable<Array<any>> {
-    const url = this.baseUrl + 'clinicalTrialEuropeListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    const skip = page * pageSize;
 
+    const url = this.baseUrl + 'api/v1/clinicaltrialseurope/search?q=root_clinicalTrialEuropeProductList_clinicalTrialEuropeDrugList_substanceKey:"^'+ uuid +'$"' + '&top=' + pageSize + '&skip=' + skip;      
     return this.http.get<Array<any>>(url).pipe(
-      map(results => {
-        this.totalRecords = results['totalRecords'];
-        return results['data'];
+    map(results => {
+        this.totalRecords = results['total'];
+        console.log(JSON.stringify(results));
+        return results;
       })
     );
   }

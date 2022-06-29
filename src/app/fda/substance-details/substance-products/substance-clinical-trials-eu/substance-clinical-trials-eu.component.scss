@@ -1,3 +1,11 @@
+.mat-column-trialNumber {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 20% !important;
+  width: 20% !important;
+  white-space: nowrap 
+}
+
 .mat-table-style {
   td.mat-cell {
     vertical-align: top;
