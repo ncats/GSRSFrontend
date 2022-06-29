@@ -15,7 +15,7 @@ import { ConfigService } from '@gsrs-core/config';
   styleUrls: ['./substance-moieties.component.scss']
 })
 export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnInit {
-  private moieties: Array<SubstanceMoiety> = [];
+  moieties: Array<SubstanceMoiety> = [];
   substanceUpdated = new Subject<SubstanceDetail>();
   private overlayContainer: HTMLElement;
   rounding = '1.0-2';
