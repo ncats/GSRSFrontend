@@ -15,7 +15,7 @@ import { ConfigService } from '@gsrs-core/config';
   styleUrls: ['./substance-moieties.component.scss']
 })
 export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnInit {
-  moieties: Array<SubstanceMoiety> = [];
+  private moieties: Array<SubstanceMoiety> = [];
   substanceUpdated = new Subject<SubstanceDetail>();
   private overlayContainer: HTMLElement;
   rounding = '1.0-2';
@@ -34,7 +34,7 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       if (this.substance != null && this.substance.moieties != null) {
-        this.moieties = this.substance.moieties;
+        this.moieties = JSON.parse(JSON.stringify(this.substance.moieties));
         this.moieties.forEach( unit => {
           unit.formula = this.structureService.formatFormula(unit);
 
