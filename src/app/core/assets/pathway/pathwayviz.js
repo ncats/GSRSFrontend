@@ -5,6 +5,8 @@
 * the cola and d3 libraries.
 */
 var schemeUtil={};
+schemeUtil.showApprovalID=false;
+schemeUtil.approvalCode="UNII";
 schemeUtil.apiBaseURL="";
 schemeUtil.debug=true;
 schemeUtil.width=800;
@@ -40,10 +42,12 @@ schemeUtil.makeMaterialNode = function(smat, pidArr){
    if(!schemeUtil.debug){
     nn.img=schemeUtil.apiBaseURL + "substances/render(" + smat.substanceName.refuuid + ")?format=svg&size=150&stereo=false";
    }
-   if (!nn.name) {
-      nn.name = "UNII: Pending Record";
-   } else {
-      nn.name = "UNII: " + nn.name;
+   if(schemeUtil.showApprovalID){
+     if (!nn.name) {
+        nn.name = schemeUtil.approvalCode + ": Pending Record";
+     } else {
+        nn.name = schemeUtil.approvalCode + ": " + nn.name;
+     }
    }
    if ((smat.substanceRole + "").toUpperCase() === "INTERMEDIATE") {
           nn.brackets = true;
