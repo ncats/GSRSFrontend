@@ -29,7 +29,11 @@ schemeUtil.makeMaterialNode = function(smat, pidArr){
    var nn = {};
    nn.id = pidArr[0];
    pidArr[0]++;
-   nn.bottomText = smat.substanceName.refPname;
+   if(smat.verbatimName){
+    nn.bottomText=smat.verbatimName;
+   }else{
+    nn.bottomText = smat.substanceName.refPname;
+   }
    nn.name = smat.substanceName.approvalID;
    nn.type = "material";
    nn.refuuid = smat.substanceName.refuuid;
