@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,7 +16,9 @@ import { SubstanceDetail, SpecifiedSubstanceG4mProcess } from '@gsrs-core/substa
 })
 export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();
-
+  @Input() showProcessIndex = -1;  // -1 Show all records
+  @Input() showSiteIndex = -1;  // -1 Show all records
+  @Input() showStageIndex = -1;  // -1 Show all records
   showSubstanceRole = true;
   showCriticalParameter = false;
   imageLoc: any;
@@ -76,13 +78,13 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
       data: data
     });
 
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = '1001';
 
     const subscription = dialogRef.afterClosed().subscribe(() => {
-      this.overlayContainer.style.zIndex = null;
+      this.overlayContainer.style.zIndex = '1001';
       subscription.unsubscribe();
     }, () => {
-      this.overlayContainer.style.zIndex = null;
+      this.overlayContainer.style.zIndex = '1001';
       subscription.unsubscribe();
     });
   }

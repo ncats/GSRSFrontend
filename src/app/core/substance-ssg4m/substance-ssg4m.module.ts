@@ -47,6 +47,7 @@ import { SubstanceFormComponent } from '../substance-form/substance-form.compone
 // import { SubstanceFormSsg4mSitesService } from './ssg4m-sites/substance-form-ssg4m-sites.service.';
 import { SubstanceSsg4mProcessModule } from './ssg4m-process/substance-form-ssg4m-process.module';
 import { Ssg4mSitesModule } from './ssg4m-sites/ssg4m-sites.module';
+import { Ssg4mStepViewDialogModule } from './ssg4m-step-view-dialog/ssg4m-step-view-dialog.module';
 
 @NgModule({
   imports: [
@@ -81,6 +82,7 @@ import { Ssg4mSitesModule } from './ssg4m-sites/ssg4m-sites.module';
     SubstanceImageModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    Ssg4mStepViewDialogModule
   //  SubstanceSsg4mProcessModule
   //  Ssg4mSitesModule
   ],
