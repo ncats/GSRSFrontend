@@ -225,7 +225,9 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
     if (searchTerm && searchTerm.length > 0) {
       searchTerm = searchTerm.trim();
       const looksComplex = this.looksLikeComplexSearchTerm(searchTerm);
-      console.log("looksComplex: " + looksComplex);
+      
+      this.transformSimpleStartsWithWildCardSearchTerm(searchTerm);
+
       if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && !looksComplex) {
         // Put slash in front of brackets, for example:
         // 1. [INN] to \[INN\]
@@ -236,6 +238,8 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
         // 6. "IBUPROFEN [INN]" to "IBUPROFEN \[INN\]"
         // 7. "*[INN]" to "*\[INN\]"
         // 8. [INN]* to \[INN\]*
+
+        
         searchTerm = '"' + searchTerm
           .replace(/([^\\])\[/g, "$1\\[").replace(/^\[/g, "\\[")
           .replace(/([^\\])\]/g, "$1\\]").replace(/^\]/g, "\\]")
@@ -248,6 +252,17 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       this.searchControl.setValue(searchTerm);
     }
     return searchTerm;
+  }
+
+  transformSimpleStartsWithWildCardSearchTerm(searchTerm:string): void {
+    // this should NOT be called if the search is complex (e.g root_names_name:"something")
+    // If we have a ONE wildcard * following a word e.g. AZT* consider that it may be a starts with query.
+    const regexp : RegExp = /^\w+\*/;
+    const matches = searchTerm.match(regexp);
+    if(matches!==null && matches.length == 1) {
+      searchTerm =  "^"+  searchTerm;
+      console.log(searchTerm);
+    }
   }
 
   looksLikeComplexSearchTerm(searchTerm:string): boolean {

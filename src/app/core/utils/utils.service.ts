@@ -274,4 +274,28 @@ export class UtilsService {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/buildInfo`;
     return this.http.get<BuildInfo>(url);
   }
+
+  looksLikeComplexSearchTerm(searchTerm:string): boolean {
+    // If we have an underscore followed by a colon, we think it's a complex search.
+    // e.g. root_names_name:Aspirin
+    const regexp : RegExp = /_.*:/g;
+    // The AND/OR checks were in a previous version but may be unneeded/confounding
+    // unless we're considering draft searchTerms that may have forgotten the complex search syntax. 
+    if (regexp.test(searchTerm) || (searchTerm.indexOf(' AND ') > -1) || (searchTerm.indexOf(' OR ') > -1)){
+      return true;  
+    }
+    return false;
+  }
+
+  looksLikeComplexSearchTermOrContainsStrings(searchTerm:string, strings:Array<String>): boolean {
+    // often you'll want to check if the string has a double quote or * 
+    if (this.looksLikeComplexSearchTerm){
+      return true;  
+    }
+    strings.forEach(function(value) {
+      if (searchTerm.indexOf(value.valueOf())) { return true; };
+    });
+    return false;
+  }
+
 }

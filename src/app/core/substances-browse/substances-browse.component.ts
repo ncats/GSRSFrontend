@@ -15,7 +15,6 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceName, SubstanceCode } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
-import * as _ from 'lodash';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
@@ -50,7 +49,8 @@ import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { FormControl } from '@angular/forms';
 import { SubBrowseEmitterService } from './sub-browse-emitter.service';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
-
+import { I } from '@angular/cdk/keycodes';
+import * as _ from 'lodash';
 @Component({
   selector: 'app-substances-browse',
   templateUrl: './substances-browse.component.html',
@@ -459,11 +459,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
           this.narrowSearchSuggestionsCount = 0;
+
+
           if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+
             pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
               if (this.codeSystem && this.codeSystem[suggestion.displayField]) {
                 suggestion.displayField = this.codeSystem[suggestion.displayField].display;
               }
+              console.log("debug suggestion.MatchType:" + suggestion.matchType);
+
               if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
                 this.narrowSearchSuggestions[suggestion.matchType] = [];
                 if (suggestion.matchType === 'WORD') {
@@ -475,9 +480,45 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
               this.narrowSearchSuggestionsCount++;
             });
-          }
-          this.matchTypes.sort();
 
+            if(this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm)) {
+              // This is a quick UI addon to provide a begins with search that is akin 
+              // to an sql like 'AZT%' query. 
+              // remove ^ space and double quote to prevent doubles
+              var st = this.privateSearchTerm.toString().replace(/^[ "]*(.*)[ "]*$/, '$1');
+              console.log('debug _st: '+ st);
+              const lq  ='root_names_name:"^' + st +'"';
+              let suggestion: NarrowSearchSuggestion = {
+                matchType: 'WORD_STARTS_WITH',
+                count: 0,
+                displayField: 'Any Name Begins With',
+                luceneField: 'root_names_name',
+                luceneQuery: lq
+              };
+              this.substanceService.searchSubstances(lq).subscribe(response => {
+                if(response && response.total!==null) {
+                  suggestion.count = response.total;
+                  if (suggestion.matchType === 'WORD') {
+                    this.matchTypes.unshift(suggestion.matchType);
+                  } else {
+                    this.matchTypes.push(suggestion.matchType);
+                  }
+                  this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+                  this.narrowSearchSuggestionsCount++;
+                  console.log('JSON.stringify(this.narrowSearchSuggestions)');
+
+                  console.log(JSON.stringify(this.narrowSearchSuggestions));
+
+                }
+//                this.matchTypes  =  _.sortBy(this.matchTypes); 
+//                console.log('this.matchTypes');
+
+//                console.log(this.matchTypes);
+              });
+            }
+            this.matchTypes.sort();
+  
+          }
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response.filter(exp => {
               if (exp.extension) {
