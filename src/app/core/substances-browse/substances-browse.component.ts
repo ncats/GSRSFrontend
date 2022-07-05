@@ -15,6 +15,7 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceName, SubstanceCode } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
+import * as _ from 'lodash';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
@@ -33,7 +34,6 @@ import { StructureService } from '@gsrs-core/structure';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Facet, FacetUpdateEvent } from '../facets-manager/facet.model';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
@@ -50,7 +50,7 @@ import { FormControl } from '@angular/forms';
 import { SubBrowseEmitterService } from './sub-browse-emitter.service';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 import { I } from '@angular/cdk/keycodes';
-import * as _ from 'lodash';
+
 @Component({
   selector: 'app-substances-browse',
   templateUrl: './substances-browse.component.html',
@@ -467,7 +467,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               if (this.codeSystem && this.codeSystem[suggestion.displayField]) {
                 suggestion.displayField = this.codeSystem[suggestion.displayField].display;
               }
-              console.log("debug suggestion.MatchType:" + suggestion.matchType);
 
               if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
                 this.narrowSearchSuggestions[suggestion.matchType] = [];
@@ -486,7 +485,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               // to an sql like 'AZT%' query. 
               // remove ^ space and double quote to prevent doubles
               var st = this.privateSearchTerm.toString().replace(/^[ "]*(.*)[ "]*$/, '$1');
-              console.log('debug _st: '+ st);
               const lq  ='root_names_name:"^' + st +'"';
               let suggestion: NarrowSearchSuggestion = {
                 matchType: 'WORD_STARTS_WITH',
@@ -506,13 +504,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                   this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
                   this.narrowSearchSuggestionsCount++;
                   console.log('JSON.stringify(this.narrowSearchSuggestions)');
-
                   console.log(JSON.stringify(this.narrowSearchSuggestions));
-
                 }
 //                this.matchTypes  =  _.sortBy(this.matchTypes); 
 //                console.log('this.matchTypes');
-
 //                console.log(this.matchTypes);
               });
             }
