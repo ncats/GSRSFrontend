@@ -131,8 +131,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'];
-    alert('GGGGGGGG ' + this.showHeaderBar);
+    this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadedComponents = this.configService.configData.loadedComponents || null;
 
   let notempty = false;

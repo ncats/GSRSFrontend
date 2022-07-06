@@ -1,4 +1,4 @@
-<div class="top-fixed">
+<div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true'}">
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
     <!--
@@ -57,7 +57,7 @@
   </div>
 </div>
 
-<div class="form-header-title form-header">
+<div class="form-header-title form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
   <div>
     <span class="sub-header">{{(uuid && !imported) ? 'Editing ' : 'Registering New '}}</span>
     <span>Specified Substance Group 4 Manufacturing</span>

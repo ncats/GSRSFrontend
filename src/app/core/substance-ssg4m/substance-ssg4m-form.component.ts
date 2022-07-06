@@ -153,7 +153,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         setTimeout(() => {
           this.router.onSameUrlNavigation = 'reload';
           this.loadingService.setLoading(false);
-          this.router.navigateByUrl('/substances-ssg4m/register?action=import', { state: { record: response } });
+          this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + this.showHeaderBar, { state: { record: response } });
 
         }, 1000);
       }
@@ -169,7 +169,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   }
 
   ngOnInit() {
-    this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'];
+    this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadingService.setLoading(true);
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
