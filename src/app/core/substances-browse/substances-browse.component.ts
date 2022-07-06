@@ -479,8 +479,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               this.narrowSearchSuggestionsCount++;
             });
 
-            this.matchTypes.sort();
-
             if(this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm)) {
             
               const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
@@ -509,13 +507,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                       this.matchTypes.push(suggestion.matchType);
                     }
                   }
-                  this.narrowSearchSuggestions[suggestion.matchType].unshift(suggestion);
+                  this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
                   this.narrowSearchSuggestionsCount++;
                 }
               });
-              this.matchTypes.sort();
             }
-  
+
+            // use method sortMatchTypes in template instead
+            // this.matchTypes.sort();
+
           }
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response.filter(exp => {
@@ -559,6 +559,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
 
   }
+
+sortMatchTypes(a:Array<string>) { 
+    return _.sortBy(a);
+}
 
 searchTermOkforBeginsWithSearch(): boolean {
   return (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm));
