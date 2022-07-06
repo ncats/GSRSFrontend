@@ -223,7 +223,7 @@ export const typeCommandOptions: CommandTypesDict = {
             ]
         },
         // 'the following contained phrase, which must be found as written (no partial words)': {
-        'Lucene Search': {
+        'Manual Query Entry': {
             commandInputs: [
                 {
                     type: 'text',
@@ -235,14 +235,15 @@ export const typeCommandOptions: CommandTypesDict = {
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>
                     ) => {
-                        if (queryValue) {
+                        /* if (queryValue) {
                             queryValue = queryValue.replace(/['"]+/g, '');
-                        }
-                        const query = queryValue.trim() && `${condition}${lucenePath}"^${queryValue.trim()}$"` || '';
+                        } */
+                        const query = queryValue.trim();
+                        // const query = queryValue.trim() && `${condition}${lucenePath}"^${queryValue.trim()}$"` || '';
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'Lucene Search',
+                            command: 'Manual Query Entry',
                             commandInputValues: [queryValue],
                             query: query
                         });

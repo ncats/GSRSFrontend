@@ -58,16 +58,17 @@
             <mat-icon svgIcon="search"></mat-icon>
           </button>
 
+          <!--
           <button class="summary-button" aria-label="Advanced Search" mat-icon-button [matMenuTriggerFor]="advancedSearchMenu">
             <mat-icon svgIcon="youtube"></mat-icon>
           </button>
+          -->
 
-          <!--
-        <a  class = "mat-icon-button" aria-label = "Advanced Search" class = "summary-button" mat-icon-button [routerLink]="['/advanced-search']"
-          matTooltip='Advanced Search'>
+          <a class = "mat-icon-button" aria-label = "Advanced Search" class = "summary-button" mat-icon-button
+          [routerLink]="['/advanced-search']" [queryParams]="{structure : substance.structure.id}" matTooltip='Transfer Structure to Advanced Search'>
           <mat-icon svgIcon="youtube"></mat-icon>
-        </a>
-        -->
+          </a>
+
           <a class="mat-icon-button" matTooltip="edit substance" class="summary-button" aria-label="edit substance"
             *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
             <mat-icon svgIcon="edit"></mat-icon>
@@ -221,7 +222,7 @@
 
                     </a>
                   </span>
-                  <span *ngIf="!codeObject.url">{{codeObject.code.trim()}} 
+                  <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}
                       <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
                           font-weight: 400;">[{{codeObject.type}}]</span>
                   </span>

@@ -197,77 +197,79 @@
   <!-- Structure Editor Begin -->
 
   <!-- Show Structure Search only for Substance Now -->
-  <div class="panel-style" *ngIf="category === 'Substance'">
-    <mat-expansion-panel [expanded]="true" class="panel-style">
-      <mat-expansion-panel-header class="">
-        <mat-panel-title class="margintop12px">
-          AND Search Structure
-        </mat-panel-title>
-        <mat-panel-description class="marginleft25px">
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <div class="search-content-container" #contentContainer>
-        <mat-card>
-          <div class="structure-editor-actions-container">
-            <div class="editor-container">
-              <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)">
-              </app-structure-editor>
-            </div>
-            <div class="search-actions">
-              <div class="two">
-                <mat-form-field class="search-type-select">
-                  <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)"
-                    [formControl]="searchTypeControl" value="substructure">
-                    <mat-option value="substructure">
-                      Substructure
-                    </mat-option>
-                    <mat-option value="similarity">
-                      Similarity
-                    </mat-option>
-                    <mat-option value="exact">
-                      Exact
-                    </mat-option>
-                    <mat-option value="flex">
-                      Flex
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
-                  <div>Similarity cutoff (tanimoto)</div>
-                  <mat-slider min=".40" max="1" step="0.01" [value]="similarityCutoff"
-                    (input)="searchCutoffChanged($event)"></mat-slider>
-                  <div>{{similarityCutoff}}</div>
-                </div>
+  <div class="width100percent">
+    <div class="panel-style" *ngIf="category === 'Substance'">
+      <mat-expansion-panel [expanded]="true" class="panel-style width100percent">
+        <mat-expansion-panel-header class="">
+          <mat-panel-title class="margintop12px">
+            AND Search Structure
+          </mat-panel-title>
+          <mat-panel-description class="marginleft25px">
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="search-content-container" #contentContainer>
+          <mat-card>
+            <div class="structure-editor-actions-container">
+              <div class="editor-container">
+                <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)">
+                </app-structure-editor>
               </div>
+              <div class="search-actions">
+                <div class="two">
+                  <mat-form-field class="search-type-select">
+                    <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)"
+                      [formControl]="searchTypeControl" value="substructure">
+                      <mat-option value="substructure">
+                        Substructure
+                      </mat-option>
+                      <mat-option value="similarity">
+                        Similarity
+                      </mat-option>
+                      <mat-option value="exact">
+                        Exact
+                      </mat-option>
+                      <mat-option value="flex">
+                        Flex
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
+                    <div>Similarity cutoff (tanimoto)</div>
+                    <mat-slider min=".40" max="1" step="0.01" [value]="similarityCutoff"
+                      (input)="searchCutoffChanged($event)"></mat-slider>
+                    <div>{{similarityCutoff}}</div>
+                  </div>
+                </div>
 
-              <!---
+                <!---
               <div class="action-button-container three">
                 <button class="search-button" name="search" mat-raised-button color="primary"
                   (click)="searchStructure()">Search</button>
               </div>
               <br>
               -->
-              <div class="action-button-container one">
-                <button class="import-button" name="export" mat-raised-button color="primary"
-                  (click)="openStructureImportDialog()">Import</button>
-              </div>
-              <div class="action-button-container one">
-                <button class="export-button" name="import" mat-raised-button color="primary"
-                  (click)="openStructureExportDialog()">Export</button>
+                <div class="action-button-container one">
+                  <button class="import-button" name="export" mat-raised-button color="primary"
+                    (click)="openStructureImportDialog()">Import</button>
+                </div>
+                <div class="action-button-container one">
+                  <button class="export-button" name="import" mat-raised-button color="primary"
+                    (click)="openStructureExportDialog()">Export</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <h4>
-              Get Structure From Name
-            </h4>
-            <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
-          </div>
-        </mat-card>
-      </div>
-    </mat-expansion-panel>
-  </div> <!-- Show Structure only for Substance now -->
-  <!-- Structure Editor End -->
+            <div>
+              <h4>
+                Get Structure From Name
+              </h4>
+              <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
+            </div>
+          </mat-card>
+        </div>
+      </mat-expansion-panel>
+    </div> <!-- Show Structure only for Substance now -->
+    <!-- Structure Editor End -->
+  </div>
 
   <!-- Search Button -->
   <div class="search-button">

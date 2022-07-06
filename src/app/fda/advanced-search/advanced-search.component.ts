@@ -71,7 +71,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   displayProperties: Array<string>;
   displayPropertiesCommon: Array<string>;
   facetViewControl = new FormControl();
-
   // editor: EditorImplementation;
   // @Output() editorOnLoad = new EventEmitter<EditorImplementation>();
   // @Output() loadedMolfile = new EventEmitter<string>();
@@ -209,11 +208,14 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     const advancedSearchHash = Number(this.activatedRoute.snapshot.queryParams['g-search-hash']) || null;
 
     // Get Stored Search Criteria
+    // For example: -681458537
     if (advancedSearchHash) {
       const queryStatementHashesString = localStorage.getItem(advancedSearchHash.toString());
+      // Found previous stored search criteria in local Storage
+      // For example: [-900654012,1838576297]
       if (queryStatementHashesString != null) {
+        // For example: [-900654012,1838576297]
         this.queryStatementHashes = JSON.parse(queryStatementHashesString);
-
         // Get Category from Stored Cookies
         if (this.queryStatementHashes[0] != null) {
           const categoryStored = localStorage.getItem(this.queryStatementHashes[0].toString());
@@ -229,6 +231,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
             this.queryStatementHashes.splice(0, 1);
           }
         }
+      } else {
+        // NOT FOUND: could not find this search criteria in local Storage. Use this search critieria
+        // with 'Manual Query Entry' in dropdown 'Search in Field'.
 
       }
     }
@@ -511,7 +516,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.queryableSubstanceDict = response;
 
         const displayProperties = ['All'];
-        const displayPropertiesCommon = ['All', 'Lucene Search'];
+        const displayPropertiesCommon = ['All', 'Manual Query Entry'];
         Object.keys(this.queryableSubstanceDict).forEach(key => {
           displayProperties.push(key);
           if (this.queryableSubstanceDict[key].priority != null) {
@@ -521,8 +526,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.displayProperties = displayProperties;
         this.displayPropertiesCommon = displayPropertiesCommon;
 
+        // Get queryStatement from previous/stored local storage
         if (this.queryStatementHashes != null) {
           if (this.tabClicked === false) {
+            // [1838576297]
             this.queryStatementHashes.forEach(queryStatementHash => {
               this.queryStatements.push({ queryHash: queryStatementHash });
             });

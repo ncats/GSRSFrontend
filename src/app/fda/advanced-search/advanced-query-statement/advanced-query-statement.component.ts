@@ -180,29 +180,48 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
 
     let queryStatement: AdvancedQueryStatement;
 
+    // load/get Search text from hashcode from localStorage.
+    // For example: 1838576297
     if (this.queryStatementHash) {
       const queryStatementString = localStorage.getItem(this.queryStatementHash.toString());
       if (queryStatementString) {
         queryStatement = JSON.parse(queryStatementString);
       }
     }
-
+    
+    // if queryStatement exists from hashcode
+    // queryStatement returns something like this:
+    // {"queryHash":1638073503,"condition":"OR ","queryableProperty":"CAS RN","command":"Contains","commandInputValues":["15475 56 6"],"query":"OR root_codes_CAS:\"*15475 56 6*\""}
     if (queryStatement != null) {
-      const queryablePropertyType = this._queryableDictionary[queryStatement.queryableProperty].type;
+      // Get type (text, Date, Number) for dropdown field 'Search In Field' from dictionary file
+      let queryablePropertyType = 'string';
+      // if (queryStatement.queryableProperty && queryStatement.queryableProperty !== 'Manual Query Entry') {
+      if (this._queryableDictionary[queryStatement.queryableProperty]) {
+        queryablePropertyType = this._queryableDictionary[queryStatement.queryableProperty].type;
+      } else {
+        queryablePropertyType = 'string';
+      }
       let inputType: string;
       const commandObject = typeCommandOptions[queryablePropertyType][queryStatement.command] as Command;
+      // commandObject returns something like this: {"commandInputs":[{"type":"text","example":"Example: sodium"}]}
       if (commandObject.commandInputs) {
         inputType = commandObject.commandInputs[0].type;
+        // search textbox value
+        // {"text":["15475 56 6"],"datetime":[],"number":[],"select":[]}
+        // **** LOAD PREVIOUS SEARCH TEXT BOX VALUE HERE
         this.commandInputValueDict[inputType] = queryStatement.commandInputValues;
       }
       this.queryParts = queryStatement.queryParts;
       this.conditionControl.setValue(queryStatement.condition.trim(), { emitEvent: false });
       this.selectedCondition = queryStatement.condition;
 
-      // Get Suggestion/TypeAhead text from file from 'suggest' key, if there is a value, will use to display
+      // Get value for 'suggest' key from dictionary file, if there is a value, will use to display
       // typeahead text box.
       if (queryStatement.queryableProperty) {
-        this.selectedQueryableSuggest = this._queryableDictionary[queryStatement.queryableProperty].suggest;
+        // if (queryStatement.queryableProperty && queryStatement.queryableProperty !== 'Manual Query Entry') {
+        if (this._queryableDictionary[queryStatement.queryableProperty]) {
+          this.selectedQueryableSuggest = this._queryableDictionary[queryStatement.queryableProperty].suggest;
+        }
       }
 
       this.isShowCommonFields = this.queryableOptionsCommon.indexOf(queryStatement.queryableProperty) > -1;
@@ -213,8 +232,14 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
         this.isShowCommonFields = false;
         this.queryablePropertiesAutocompleteControl.setValue(queryStatement.queryableProperty, { emitEvent: false });
       }
+      // ***** LOAD PREVIOUS Query Properties (Any Name, CAS, etc)
       this.processQueriablePropertyChange(queryStatement.queryableProperty);
+      // ***** LOAD PREVIOUS COMMAND (Contains, Exact, etc)
       this.commandControl.setValue(queryStatement.command);
+      // **** LOAD PREVIOUS SEARCH TEXT BOX VALUE HERE FOR TYPE AHEAD TEXT BOX
+      if (queryStatement.commandInputValues) {
+        this.searchControl.setValue(queryStatement.commandInputValues);
+      }
     } else {
       this.queryablePropertiesControl.setValue('All');
     }
@@ -251,59 +276,68 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
   queryablePropertySelected(queryableProperty: string): void {
     this.processQueriablePropertyChange(queryableProperty);
 
-    // Get Suggestion/TypeAhead text from file
-    this.selectedQueryableSuggest = this._queryableDictionary[queryableProperty].suggest;
+    if (this._queryableDictionary[queryableProperty]) {
+      // Get Suggestion/TypeAhead text from file
+      this.selectedQueryableSuggest = this._queryableDictionary[queryableProperty].suggest;
 
-    if (!this._queryableDictionary[queryableProperty].cvDomain && this._queryableDictionary[queryableProperty].type === 'string') {
-      //  this.commandControl.setValue('ALL of the following words in any order or position');
-      this.commandControl.setValue('Contains');
-    } else {
-      this.commandControl.setValue(this.commandOptions[0]);
+      if (!this._queryableDictionary[queryableProperty].cvDomain && this._queryableDictionary[queryableProperty].type === 'string') {
+        //  this.commandControl.setValue('ALL of the following words in any order or position');
+        this.commandControl.setValue('Contains');
+      } else {
+        this.commandControl.setValue(this.commandOptions[0]);
+      }
     }
   }
 
   private processQueriablePropertyChange(queryableProperty: string): void {
+    let queryablePropertyType = 'string';
+    this.selectedQueryablePropertyType = 'string';
     this.selectedQueryableProperty = queryableProperty;
-    if (this._queryableDictionary[queryableProperty].cvDomain) {
-      this.setCvOptions(this._queryableDictionary[queryableProperty].cvDomain);
-    }
-    this.selectedLucenePath = this._queryableDictionary[queryableProperty].lucenePath;
-    if (this.selectedLucenePath) {
-      // In "Search in Field", replace space with '\ ' in the lucene path
-      this.selectedLucenePath = this.selectedLucenePath.replace(' ', '\\ ');
-      if (this.selectedLucenePath)
-      this.selectedLucenePath = this.selectedLucenePath + ':';
-    }
-    this.selectedQueryablePropertyType = this._queryableDictionary[queryableProperty].type;
-
-    this.commandOptions = Object.keys(
-      this.typeCommandOptions[this._queryableDictionary[queryableProperty].type]
-    )
-    .filter(
-      option => {
-        let result = false;
-        //  return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values'
-        // && (this.commandOptionsShowAll === false && (option === 'Contains' || option === 'Exact Match' || option === 'Starts With')));
-        if (this.isShowAllCommandOptions === false) {
-          if (option === 'Contains' || option === 'Exact Match' || option === 'Starts With' || option === 'Ends With' || option === 'Lucene Search') {
-            result = true;
-          } else if (this._queryableDictionary[queryableProperty].cvDomain && option === 'the following exact default values') {
-            result = true;
-          } else if (this.selectedQueryablePropertyType === 'timestamp') {
-            result = true;
-          } else if (this.selectedQueryablePropertyType === 'number') {
-            result = true;
-          }  else {
-            result = false;
-          }
-        } else {
-          if (this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values') {
-            result = true;
-          }
-        }
-        return result;
+    if (this._queryableDictionary[queryableProperty]) {
+      // if CV
+      if (this._queryableDictionary[queryableProperty].cvDomain) {
+        this.setCvOptions(this._queryableDictionary[queryableProperty].cvDomain);
       }
-    ).sort((a, b) => {
+      this.selectedLucenePath = this._queryableDictionary[queryableProperty].lucenePath;
+      if (this.selectedLucenePath) {
+        // In "Search in Field", replace space with '\ ' in the lucene path
+        this.selectedLucenePath = this.selectedLucenePath.replace(' ', '\\ ');
+        if (this.selectedLucenePath)
+          this.selectedLucenePath = this.selectedLucenePath + ':';
+      }
+      this.selectedQueryablePropertyType = this._queryableDictionary[queryableProperty].type;
+      queryablePropertyType = this._queryableDictionary[queryableProperty].type;
+    }
+    this.commandOptions = Object.keys(
+      this.typeCommandOptions[queryablePropertyType]
+    )
+      .filter(
+        option => {
+          let result = false;
+          //  return this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values'
+          // && (this.commandOptionsShowAll === false && (option === 'Contains' || option === 'Exact Match' || option === 'Starts With')));
+          if (this.isShowAllCommandOptions === false) {
+            if (option === 'Contains' || option === 'Exact Match' || option === 'Starts With' || option === 'Ends With' || option === 'Manual Query Entry') {
+              result = true;
+            } else if (this._queryableDictionary[queryableProperty] && this._queryableDictionary[queryableProperty].cvDomain && option === 'the following exact default values') {
+              result = true;
+            } else if (this.selectedQueryablePropertyType === 'timestamp') {
+              result = true;
+            } else if (this.selectedQueryablePropertyType === 'number') {
+              result = true;
+            } else {
+              result = false;
+            }
+          } else {
+            if (this._queryableDictionary[queryableProperty]) {
+              if (this._queryableDictionary[queryableProperty].cvDomain || option !== 'the following exact default values') {
+                result = true;
+              }
+            }
+          }
+          return result;
+        }
+      ).sort((a, b) => {
         if (a === 'the following exact default values') {
           return -1;
         }
