@@ -740,6 +740,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
 
     this.privateSearchTerm = '';
+    this.wildCardText = '';
     this.searchTermHash = null;
     this.pageIndex = 0;
 
