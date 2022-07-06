@@ -55,6 +55,10 @@ export class CvDialogComponent implements OnInit {
     }
   }
 
+  updateStructure(value) {
+    this.term = value;
+  }
+
   cancel(): void {
     this.dialogRef.close();
   }

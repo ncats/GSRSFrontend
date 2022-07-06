@@ -26,14 +26,13 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-// import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
-// import { ConfirmDialogComponent } from './application-form/confirm-dialog/confirm-dialog.component';
+import { MatSortModule } from '@angular/material/sort';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
-// import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
+import { AdverseEventTextSearchModule } from './adverse-event-text-search/adverse-event-text-search.module';
 import { AdverseEventService } from './service/adverseevent.service';
 import { AdverseEventsPtBrowseComponent } from './adverse-events-pt-browse/adverse-events-pt-browse.component';
 import { AdverseEventsDmeBrowseComponent } from './adverse-events-dme-browse/adverse-events-dme-browse.component';
@@ -81,6 +80,7 @@ const advEventRoutes: Routes = [
     MatExpansionModule,
     MatCheckboxModule,
     MatTableModule,
+    MatSortModule,
     MatPaginatorModule,
     MatSelectModule,
     MatSliderModule,
@@ -97,7 +97,8 @@ const advEventRoutes: Routes = [
     OverlayModule,
     SubstanceSearchSelectorModule,
     SubstanceFormModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    AdverseEventTextSearchModule
   ],
   declarations: [
     AdverseEventsPtBrowseComponent,

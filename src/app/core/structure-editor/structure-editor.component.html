@@ -2,7 +2,7 @@
 
 <ncats-ketcher-wrapper [ketcherFilePath]="ketcherFilePath" (ketcherOnLoad)="ketcherOnLoad($event)" *ngIf="structureEditor == 'ketcher'">
 </ncats-ketcher-wrapper>
-<ncats-jsdraw-wrapper (jsDrawOnLoad)="jsDrawOnLoad($event)" *ngIf="structureEditor == 'jsdraw'"></ncats-jsdraw-wrapper>
+<ncats-jsdraw-wrapper oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" *ngIf="structureEditor == 'jsdraw'"></ncats-jsdraw-wrapper>
 
 <div id ="canvas-container">
   <div class="below-editor-container">
@@ -26,7 +26,7 @@
   </div>
   <div [hidden]="!canvasToggle">
     <div class = "canvas-message canvas" *ngIf = "canvasMessage !== ''">{{canvasMessage}}</div>
-    <canvas #structure_canvas id = "structure_canvas" name = "structure_canvas" [height] = 'height' [width] = "width" >
+    <canvas role="img" aria-label="Structure Canvas" #structure_canvas id = "structure_canvas" name = "structure_canvas" [height] = 'height' [width] = "width" >
     </canvas>
   </div>
 </div> 

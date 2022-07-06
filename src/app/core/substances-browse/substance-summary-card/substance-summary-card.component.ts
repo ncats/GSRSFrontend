@@ -49,6 +49,8 @@ export class SubstanceSummaryCardComponent implements OnInit {
   privateCodeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   privateCodeSystemNames?:  Array<string>;
   allPrimary = [];
+  showLessNames = true;
+  showLessCodes = true;
 
   constructor(
     public utilsService: UtilsService,
@@ -102,7 +104,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
 
     if (this.configService.configData && this.configService.configData.molWeightRounding) {
       this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
-  }
+    }
   }
 
   getApprovalID() {
@@ -158,6 +160,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   }
 
   openImageModal(): void {
+    this.substance.names = this.names
     this.openImage.emit(this.substance);
   }
 
@@ -225,7 +228,6 @@ export class SubstanceSummaryCardComponent implements OnInit {
   openMolModal() {
 
     const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
-
       minWidth: '40%',
       maxWidth: '90%',
       height: '90%',
@@ -236,6 +238,22 @@ export class SubstanceSummaryCardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.overlayContainer.style.zIndex = null;
     });
+  }
+
+  moreThanNumberCount(names, number) {
+    if(names.length < number) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  showMoreLessNames() {
+    this.showLessNames = !this.showLessNames;
+  }
+
+  showMoreLessCodes() {
+    this.showLessCodes = !this.showLessCodes;
   }
 
 

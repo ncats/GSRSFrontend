@@ -107,6 +107,22 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (response) {
           this.productService.loadProduct(response);
           this.product = this.productService.product;
+          // Check if there is not Product Code Object, create one
+          if (this.product.productCodeList.length == 0) {
+            this.product.productCodeList = [{}];
+          }
+          let prodCode = '';
+          if (this.product.productCodeList.length > 0) {
+            for (let codeObj of this.product.productCodeList) {
+              if (codeObj) {
+                if (codeObj.productCode) {
+                  prodCode = codeObj.productCode;
+                  break;
+                }
+              }
+            }
+          }
+          this.titleService.setTitle(`Edit Product ` + prodCode);
         } else {
           this.handleProductRetrivalError();
         }
@@ -160,6 +176,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Validate data in client side first
   validateClient(): void {
+    this.submissionMessage = null;
     this.validationMessages = [];
     this.validationResult = true;
 
@@ -197,6 +214,14 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (this.isNumber(elementIngred.high) === false) {
                       this.setValidationMessage('High must be a number');
                     }
+                  }
+                  // Ingredient Name Validation
+                  if (elementIngred.$$ingredientNameValidation) {
+                    this.setValidationMessage(elementIngred.$$ingredientNameValidation);
+                  }
+                  // Basis of Strength Validation
+                  if (elementIngred.$$basisOfStrengthValidation) {
+                    this.setValidationMessage(elementIngred.$$basisOfStrengthValidation);
                   }
                 }
               });
@@ -245,6 +270,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
+    // remove non-field form property/field/key from Product object
+    this.product = this.cleanProduct();
     this.productService.saveProduct().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -298,6 +325,33 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.router.navigate(['/product/register']);
       this.productService.loadProduct();
     }, 5000);
+  }
+
+  cleanProduct(): Product {
+    let productStr = JSON.stringify(this.product);
+    let productCopy: Product = JSON.parse(productStr);
+    productCopy.productComponentList.forEach(elementComp => {
+      if (elementComp != null) {
+        elementComp.productLotList.forEach(elementLot => {
+          if (elementLot != null) {
+            elementLot.productIngredientList.forEach(elementIngred => {
+              if (elementIngred != null) {
+                // remove property for Ingredient Name Validation. Do not need in the form JSON
+                if (elementIngred.$$ingredientNameValidation || elementIngred.$$ingredientNameValidation === "") {
+                  delete elementIngred.$$ingredientNameValidation;
+                }
+                // remove property for Basis of Strength Validation. Do not need in the form JSON
+                if (elementIngred.$$basisOfStrengthValidation || elementIngred.$$basisOfStrengthValidation === "") {
+                  delete elementIngred.$$basisOfStrengthValidation;
+                }
+              } // if ingred is not null
+            }); // ingred loop
+          } // if lot is not null
+        }); // lot loop
+      } // if comp is not null
+    }); // comp loop
+
+    return productCopy;
   }
 
   showJSON(): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import { Sort } from '@angular/material/sort';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -24,6 +25,7 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AdverseEventService } from '../service/adverseevent.service';
 import { GeneralService } from '../../service/general.service';
 import { AdverseEventDme } from '../model/adverse-event.model';
+import { adverseEventDmeSearchSortValues } from './adverse-events-dme-search-sort-values';
 
 @Component({
   selector: 'app-adverse-events-dme-browse',
@@ -32,44 +34,48 @@ import { AdverseEventDme } from '../model/adverse-event.model';
 })
 
 export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  public privateSearchTerm?: string;
-  public adverseEventDme: Array<AdverseEventDme>;
-  order: string;
-  // public sortValues = applicationSearchSortValues;
-  pageIndex: number;
-  pageSize: number;
-  jumpToValue: string;
-  totalApplications: number;
-  isLoading = true;
-  isError = false;
+  @Output() countAdverseEventDmeOut: EventEmitter<number> = new EventEmitter<number>();
   isAdmin: boolean;
   isLoggedIn = false;
-  displayedColumns: string[];
-  dataSource = [];
-  hasBackdrop = false;
-  appType: string;
-  appNumber: string;
-  clinicalTrialApplication: Array<any>;
-  exportUrl: string;
+  isLoading = true;
+  isError = false;
+  invalidPage = false;
   private isComponentInit = false;
   privateExport = false;
-  disableExport = false;
-  private overlayContainer: HTMLElement;
-  etag = '';
-  environment: any;
-  previousState: Array<string> = [];
-  private searchTermHash: number;
   isSearchEditable = false;
-  lastPage: number;
-  invalidPage = false;
-  totalAdverseEventDme = 0;
+  environment: any;
+  searchValue: string;
+  previousState: Array<string> = [];
+  private overlayContainer: HTMLElement;
 
   // needed for facets
+  ascDescDir = 'desc';
+  private isFacetsParamsInit = false;
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
-  private isFacetsParamsInit = false;
+  private searchTermHash: number;
   public displayFacets: Array<DisplayFacet> = [];
   private subscriptions: Array<Subscription> = [];
+
+  view = 'table';
+  order = '$root_dmeCount';
+  etag = '';
+  totalAdverseEventDme = 0;
+  pageIndex: number;
+  pageSize: number;
+  lastPage: number;
+  public sortValues = adverseEventDmeSearchSortValues;
+  public privateSearchTerm?: string;
+  public adverseEventDme: Array<AdverseEventDme>;
+  displayedColumns: string[] = [
+    'dmeReactions',
+    'ptTermMeddra',
+    'ingredientName',
+    'caseCount',
+    'dmeCount',
+    'dmeCountPercent',
+    'weightedAvgPrr'
+  ];
 
   constructor(
     public adverseEventService: AdverseEventService,
@@ -103,9 +109,9 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
-    this.gaService.sendPageView('Browse Adverse Event Dme');
+  //  this.gaService.sendPageView('Browse Adverse Event Dme');
 
-    this.titleService.setTitle(`Browse Adverse Events`);
+    this.titleService.setTitle(`AE:Browse Adverse Events`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -121,7 +127,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_dmeCount';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
@@ -172,8 +178,9 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
         this.adverseEventDme = pagingResponse.content;
         // didn't work unless I did it like this instead of
         // below export statement
-        this.dataSource = this.adverseEventDme;
+       // this.dataSource = this.adverseEventDme;
         this.totalAdverseEventDme = pagingResponse.total;
+        this.countAdverseEventDmeOut.emit(pagingResponse.total);
         this.etag = pagingResponse.etag;
 
         if (pagingResponse.total % this.pageSize === 0) {
@@ -255,9 +262,27 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     return this.privateSearchTerm;
   }
 
-  // get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
-  //   return this.privateFacetParams;
-  // }
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search Adverse Event
+      this.searchAdverseEventDme();
+    }
+    return;
+  }
+
+  updateView(event): void {
+    // this.gaService.sendEvent('adverseeventptsContent', 'button:view-update', event.value);
+    this.view = event.value;
+  }
 
   changePage(pageEvent: PageEvent) {
 
@@ -378,6 +403,15 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     */
   }
 
+  restricSearh(searchTerm: string): void {
+    this.privateSearchTerm = searchTerm;
+    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    this.populateUrlQueryParameters();
+    this.searchAdverseEventDme();
+    // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+  }
+
   export() {
     if (this.etag) {
       const extension = 'xlsx';
@@ -412,6 +446,11 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
 
   getApiExportUrl(etag: string, extension: string): string {
     return this.adverseEventService.getApiExportUrlDme(etag, extension);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
   }
 
 }

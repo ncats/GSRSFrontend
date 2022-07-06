@@ -11,6 +11,8 @@ import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/face
 import { Application, Product, ProductName, ApplicationIngredient, ApplicationIndication } from '../model/application.model';
 import { ApplicationAll } from '../model/application.model';
 import { ValidationResults } from '../model/application.model';
+import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
+
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
 
@@ -35,6 +37,8 @@ export class ApplicationService extends BaseHttpService {
   apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
   //TODO: remove explicit references like this if at all possible
   apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
+
+  APPALL_SEARCH_SUBSTANCE_KEY = 'root_applicationProductList_applicationIngredientList_substanceKey:';
 
   constructor(
     public http: HttpClient,
@@ -71,20 +75,6 @@ export class ApplicationService extends BaseHttpService {
 
     return this.http.get<PagingResponse<Application>>(url, options);
   }
-
-  /*
-  getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
-    let url: string;
-    if (searchTerm) {
-      url = this.apiBaseUrlWithApplicationEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.application.application.models.Application&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
-    } else if (nextUrl != null) {
-      url = nextUrl;
-    } else {
-      url = facet._self;
-    }
-    return this.http.get<FacetQueryResponse>(url);
-  }
-  */
 
   getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
@@ -129,6 +119,10 @@ export class ApplicationService extends BaseHttpService {
   getApiExportUrl(etag: string, extension: string): string {
     const url = this.apiBaseUrlWithApplicationEntityUrl + 'export/' + etag + '/' + extension;
     return url;
+  }
+
+  getApplicationSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
+    return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithApplicationEntityUrl + 'suggest?q=' + searchTerm);
   }
 
   getApplicationAll(

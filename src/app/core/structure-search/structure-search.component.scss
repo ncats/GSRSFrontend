@@ -1,4 +1,5 @@
 .search-content-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,7 +20,7 @@
     margin-top: -15px;
   }
 
-  
+
 .mat-card {
     margin-top: 15px;
     box-sizing: border-box;
@@ -91,7 +92,7 @@
     .search-actions {
         flex-direction: row;
         width: 100%;
-       
+
     }
     .two {
         width: 50%;

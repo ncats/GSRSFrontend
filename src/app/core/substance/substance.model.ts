@@ -51,6 +51,7 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _mixture?: ParentCountHref;
   _specifiedSubstance?: ParentCountHref;
   mixture?: any;
+  names?: any;
   specifiedSubstance?: any;
 }
 export interface ParentCountHref {
@@ -151,12 +152,14 @@ export interface NucleicAcid extends SubstanceBase {
 
 export interface Sugar extends NucleicAcid {
   sugar?: string;
+  structure?: any;
   sitesShorthand?: string;
   sites?: Array<Site>;
 }
 
 export interface Linkage extends NucleicAcid {
   linkage?: string;
+  structure?: any;
   sitesShorthand?: string;
   sites?: Array<Site>;
 }
@@ -230,6 +233,7 @@ export interface SubstanceCode extends SubstanceBase {
   url?: string;
   references?: Array<string>;
   _self?: string;
+  _isClassification?: boolean;
 }
 
 export interface SubstanceNote extends SubstanceBase {
@@ -280,6 +284,7 @@ export interface SubstanceAmount extends SubstanceBase {
 }
 
 export interface SubstanceReference extends SubstanceBase {
+  linkingID?: any;
   id?: string;
   citation?: string;
   docType?: string;
@@ -290,6 +295,7 @@ export interface SubstanceReference extends SubstanceBase {
   documentDate?: number;
   refuuid?: string;
   uploadedFile?: string;
+  name?: string;
 }
 
 export interface MediatorSubstance extends SubstanceBase {
@@ -545,4 +551,9 @@ export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
 export interface TableFilterDDModel {
   value: string;
   display: string;
+}
+
+export interface TableFilterBoolDDModel {
+  value: boolean;
+  display: boolean;
 }

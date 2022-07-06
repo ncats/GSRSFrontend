@@ -1,5 +1,5 @@
 <div class="counts-container" *ngIf="searchCount && loadedComponents">
-  <div class="counts-column" *ngIf = "loadedComponents && loadedComponents.applications">
+  <div class="counts-column" *ngIf="loadedComponents && loadedComponents.applications">
     <div>
       Application Count:
     </div>
@@ -24,10 +24,30 @@
     </div>
   </div>
 
-  <div class="counts-column" *ngIf = "loadedComponents && loadedComponents.products">
+  <div class="counts-column" *ngIf="loadedComponents && loadedComponents.products">
     <div>
       Product Count:
     </div>
+    <div>
+      <span *ngIf="searchCount.prodCountConcat != '0'; else noRecordProd">
+        <div class="divflex">
+          <div>
+            <a [routerLink]="['/substances', substanceId]" target="_blank"
+              title="View Product Records (opens in new window)">
+              <div innerHTML="{{searchCount.prodCountConcat}}"></div>
+            </a>
+          </div>
+          <div>
+            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          </div>
+        </div>
+      </span>
+      <ng-template #noRecordProd>
+        {{searchCount.prodCountConcat}}
+      </ng-template>
+    </div>
+
+    <!-- Don't need it. Already Added above
     <div>
       <span>Active: </span>
       <span *ngIf="searchCount.prodActiveCount > 0; else noRecordProdActive">
@@ -54,9 +74,10 @@
         {{searchCount.prodInactiveCount}}
       </ng-template>
     </div>
+    -->
   </div>
 
-  <div class="counts-column" *ngIf = "loadedComponents && loadedComponents.clinicaltrials">
+  <div class="counts-column" *ngIf="loadedComponents && loadedComponents.clinicaltrials">
     <div>
       Clinical Trial Count:
     </div>
@@ -74,9 +95,9 @@
     </div>
   </div>
 
-  <div class="counts-column" *ngIf = "loadedComponents && loadedComponents.adverseevents">
+  <div class="counts-column" *ngIf="loadedComponents && loadedComponents.adverseevents">
     <div>
-      Adverse Event Count:
+      Adverse Event Case Count:
     </div>
     <div>
       <span *ngIf="searchCount.adverseEventCount > 0; else noRecordAdverse">
@@ -94,12 +115,14 @@
 </div>
 
 <!-- Application Matching List -->
-<div *ngIf="this.isShowMatchList === 'true' && appMatchListCount >= 0 && loadedComponents && loadedComponents.applications">
-  <br>
-  <a class="colorred padtop10" [routerLink]="['/sub-app-match-list', substanceId]" target="_blank">
-    Matching Application Names&nbsp;
-    <span matBadge="{{appMatchListCount}}" matBadgeOverlap="false" MatBadgeSize="large"
-      MatBadgePosition="below after"></span>
-  </a>
+<div class="divflex"
+  *ngIf="this.isShowMatchList === 'true' && appMatchListCount >= 0 && loadedComponents && loadedComponents.applications">
+  <div>
+    <br>
+    <a class="colorred padtop10" [routerLink]="['/sub-app-match-list', substanceId]" target="_blank">
+      Matching Application Names&nbsp;
+      <span matBadge="{{appMatchListCount}}" matBadgeOverlap="false"></span>
+    </a>
+  </div>
   <br>
 </div>

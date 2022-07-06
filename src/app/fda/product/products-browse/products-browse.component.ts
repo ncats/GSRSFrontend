@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
@@ -34,6 +35,7 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+  view = 'cards';
   public privateSearchTerm?: string;
   public _searchTerm?: string;
   public products: Array<ProductAll>;
@@ -46,7 +48,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   totalProducts: number;
   isLoading = true;
   isError = false;
-  displayedColumns: string[];
   dataSource = [];
   appType: string;
   appNumber: string;
@@ -62,9 +63,23 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   environment: any;
   previousState: Array<string> = [];
   private searchTermHash: number;
+  searchValue: string;
   isSearchEditable = false;
   lastPage: number;
   invalidPage = false;
+  iconSrcPath = '';
+  dailyMedUrl = '';
+  ascDescDir = 'desc';
+  public displayedColumns: string[] = [
+    'productNDC',
+    'productName',
+    'ingredientName',
+    'labelerName',
+    'country',
+    'status',
+    'productNameType',
+    'applicationNumber'
+  ];
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -105,7 +120,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
     this.gaService.sendPageView('Browse Products');
 
-    this.titleService.setTitle(`Browse Products`);
+    this.titleService.setTitle(`P:Browse Products`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -129,7 +144,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -140,6 +155,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
+
+    this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
+    this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=';
 
     this.isComponentInit = true;
     this.loadComponent();
@@ -278,6 +296,27 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   facetsLoaded(numFacetsLoaded: number) {
   }
 
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search Applications
+      this.searchProducts();
+    }
+    return;
+  }
+
+  updateView(event): void {
+    this.view = event.value;
+  }
+
   changePage(pageEvent: PageEvent) {
     let eventAction;
     let eventValue;
@@ -345,6 +384,15 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
     return this.privateFacetParams;
+  }
+
+  restricSearh(searchTerm: string): void {
+    this.privateSearchTerm = searchTerm;
+    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    this.populateUrlQueryParameters();
+    this.searchProducts();
+    // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
   }
 
   export() {
@@ -453,4 +501,15 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
        subscription.unsubscribe();
      });
    }
+
+   getAppTypeNumberUrl(appType: string, appNumber: string): string {
+    let appUrl = 'browse-applications?search=root_appType:\"^' + appType + '$\" AND root_appNumber:\"^' + appNumber + '$\"';
+    return appUrl;
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
+  }
+
 }

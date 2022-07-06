@@ -123,9 +123,9 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
             type = 'browseSubstanceApplication';
           } else if (source === 'prod') {
             type = 'browseSubstanceProduct';
-          } else if (source === 'clinicalus') {
+          } else if (source === 'clinicaltrialsus') {
             type = 'browseSubstanceClinicalTrial-US';
-          } else if (source === 'clinicaleurope') {
+          } else if (source === 'clinicaltrialseurope') {
             type = 'browseSubstanceClinicalTrial-EU';
           }
         }
@@ -138,6 +138,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
+
             this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
@@ -162,7 +163,9 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
       if (this.exportOptions) {
         this.exportOptions.forEach(element => {
           if (element.extension) {
-            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx')) {
+            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx') 
+            || (element.extension === 'ctusxlsx') || (element.extension === 'cteuxlsx')
+            ) {
               this.hasAdditionalDownloads = true;
               this.additionalExportOptions.push(element.extension);
             }

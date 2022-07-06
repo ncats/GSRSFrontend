@@ -1,0 +1,81 @@
+<div mat-dialog-header>
+    
+        <div class = "form-row head">
+
+    <div class = "title">Saved Drafts</div>
+    <span class="middle-fill"></span>
+    <button  mat-icon-button matTooltip="Close Dialog" mat-dialog-close><mat-icon svgIcon="clear"></mat-icon></button>
+            </div>
+
+</div>
+        <mat-dialog-content>
+<table mat-table matSort [dataSource]="filtered" (matSortChange)="sortData($event)" *ngIf = "filtered.length > 0">
+        <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef> Delete </th>
+                <td mat-cell *matCellDef="let draft"> <button mat-icon-button matTooltip="Delete draft" (click) = "deleteDraft(draft)"> <mat-icon svgIcon="delete_forever"></mat-icon></button> </td>
+            </ng-container>
+        <ng-container matColumnDef="type">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Type </th>
+            <td mat-cell *matCellDef="let draft"> {{draft.type}} </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let draft">  {{draft.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef> Date Saved </th>
+                <td mat-cell *matCellDef="let draft"> <span>{{draft.date | date:'medium'}} </span><span *ngIf = "draft.auto" style = "margin-left:8px" ><b>[AUTOSAVE]</b></span><span><br/> {{draft.fromNow}}</span> </td>
+            </ng-container>
+        <ng-container matColumnDef="uuid">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> UUID </th>
+            <td mat-cell *matCellDef="let draft">  {{draft.uuid}} </td>
+        </ng-container>
+        <ng-container matColumnDef="load">
+            <th mat-header-cell *matHeaderCellDef> Use </th>
+            <td mat-cell *matCellDef="let draft"> <button mat-button (click) = "useDraft(draft)">Load Draft</button> </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div class = "form-row" *ngIf = "filtered.length == 0" style = "padding:50px;font-size:17px">
+        No drafts were found for these conditions under local storage. Substance drafts are stored in this browser's cache, so using an incognito tab or clearing cache
+        will clear or not allow access to drafts. You can save and load stored record drafts using the buttons below.
+        </div>
+
+
+    
+
+
+
+        </mat-dialog-content>
+<div mat-dialog-actions>
+
+    <div class = "form-row">
+            <div class = "checkbox" *ngIf = "data.uuid" style = "padding:10px;">
+                    <mat-checkbox [ngModel]="onlyCurrent" (change) = " filterToggle('current')" matTooltip="selected">
+                            Show only current record
+                    </mat-checkbox>
+            </div >
+            
+            <div class = "checkbox" style = "padding:10px;">
+                    <mat-checkbox [ngModel]="onlyRegister"  (change) = " filterToggle('register')" matTooltip="selected">
+                            Show only new registrations
+                    </mat-checkbox>
+            </div >
+    </div>
+
+    <div class = "form-row">
+            <a style = "margin-right:10px;" mat-flat-button color="primary" [href]="downloadJsonHref" download="{{fileName}}.json" matTooltip = "Save a copy of all local drafts to a file">
+                    <span>Save Backup</span>
+                  </a>
+                  <div class="file-row">
+                        <button style = "margin-right:10px;" class="mat-raised-button mat-primary" matTooltip = "choose a local file of draft backups" (click) = "openInput()">Load A Backup</button>
+                    <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
+                    <input id="fileInput" hidden type="file" (change)="onFileSelect($event)" name="file1" accept=".json">
+                      </div>
+                      
+        <span class="middle-fill"></span>
+        <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+      </div>
+      </div>

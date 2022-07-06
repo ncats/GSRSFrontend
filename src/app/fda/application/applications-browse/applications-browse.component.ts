@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import { Sort } from '@angular/material/sort';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -16,6 +17,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { environment } from '../../../../environments/environment';
@@ -32,6 +34,8 @@ import { Application } from '../model/application.model';
   styleUrls: ['./applications-browse.component.scss']
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+ // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
+  view = 'cards';
   public privateSearchTerm?: string;
   public applications: Array<Application>;
   order: string;
@@ -44,7 +48,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   isError = false;
   isAdmin: boolean;
   isLoggedIn = false;
-  displayedColumns: string[];
   dataSource = [];
   hasBackdrop = false;
   appType: string;
@@ -57,11 +60,26 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   private overlayContainer: HTMLElement;
   etag = '';
   environment: any;
+  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
+  matchTypes?: Array<string> = [];
+  narrowSearchSuggestionsCount = 0;
   previousState: Array<string> = [];
   private searchTermHash: number;
   isSearchEditable = false;
+  searchValue: string;
   lastPage: number;
   invalidPage = false;
+  ascDescDir = 'desc';
+  displayedColumns: string[] = [
+    'appType',
+    'appNumber',
+    'center',
+    'provenance',
+    'applicationStatus',
+    'productName',
+    'sponsorName',
+    'ingredientName'
+  ];
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -104,7 +122,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.gaService.sendPageView('Browse Applications');
 
-    this.titleService.setTitle(`Browse Applications`);
+    this.titleService.setTitle(`A:Browse Applications`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -120,7 +138,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_appNumber';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -131,6 +149,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
+
+    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
+      this.searchValue = params.get('search');
+     // this.setClassicLinkQueryParams(params);
+    });
+    this.subscriptions.push(paramsSubscription);
 
     this.isComponentInit = true;
     this.loadComponent();
@@ -167,7 +191,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     )
       .subscribe(pagingResponse => {
         this.isError = false;
-
         this.applications = pagingResponse.content;
         // didn't work unless I did it like this instead of
         // below export statement
@@ -184,6 +207,26 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
         }
+
+        // Narrow Suggest Search
+        this.narrowSearchSuggestions = {};
+        this.matchTypes = [];
+        this.narrowSearchSuggestionsCount = 0;
+        if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+          pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+            if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+              this.narrowSearchSuggestions[suggestion.matchType] = [];
+              if (suggestion.matchType === 'WORD') {
+                this.matchTypes.unshift(suggestion.matchType);
+              } else {
+                this.matchTypes.push(suggestion.matchType);
+              }
+            }
+            this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+            this.narrowSearchSuggestionsCount++;
+          });
+        }
+        this.matchTypes.sort();
 
         this.getSubstanceBySubstanceKey();
         // Get Application Clinical Trial Record
@@ -259,6 +302,33 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   // get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
   //   return this.privateFacetParams;
   // }
+
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search Applications
+      this.searchApplications();
+    }
+    return;
+  }
+
+  openSideNav() {
+    this.gaService.sendEvent('substancesFiltering', 'button:sidenav', 'open');
+   // this.matSideNav.open();
+  }
+
+  updateView(event): void {
+    // this.gaService.sendEvent('adverseeventptsContent', 'button:view-update', event.value);
+    this.view = event.value;
+  }
 
   changePage(pageEvent: PageEvent) {
 
@@ -387,6 +457,15 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   }
 
+  restricSearh(searchTerm: string): void {
+    this.privateSearchTerm = searchTerm;
+    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    this.populateUrlQueryParameters();
+    this.searchApplications();
+    // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+  }
+
   export() {
     // alert('EXPORT etag' + this.etag);
     if (this.etag) {
@@ -472,4 +551,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       subscription.unsubscribe();
     });
   }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
+  }
+
 }

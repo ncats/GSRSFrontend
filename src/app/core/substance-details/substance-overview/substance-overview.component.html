@@ -6,13 +6,13 @@
     </a>
     <span *ngIf="canEdit">
         <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
-        name="edit_record">
+        name="edit_record" aria-label="edit record">
         <mat-icon svgIcon="edit"></mat-icon>
       </a>
 </span>
     <span *ngIf="canEdit">
       <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="copy to edit form options"
-        *ngIf="isEditable; else editClassic">
+        *ngIf="isEditable; else editClassic" aria-label="copy file">
         <mat-icon svgIcon="file_copy"></mat-icon>
       </button>
       <ng-template #editClassic *ngIf = "showlinks">
@@ -22,7 +22,7 @@
         </a>
       </ng-template>
     </span>
-    <button mat-icon-button [matMenuTriggerFor]="downloadMenu" matTooltip="download options" name="download">
+    <button mat-icon-button [matMenuTriggerFor]="downloadMenu" aria-label="download file" matTooltip="download options" name="download">
       <mat-icon svgIcon="get_app"></mat-icon>
     </button>
     <mat-menu #downloadMenu="matMenu" xPosition="before">
@@ -76,7 +76,7 @@
     </div>
     <div class="name-value">
       <div class="name">Record Status</div>
-      <div class="value blue-font">{{substance.status === 'approved' ? 'Validated (UNII)' : 'pending'}}
+      <div class="value blue-font">{{substance.status === 'approved' ? primaryCode : substance.status}}
         <span class = "deprecated" *ngIf ="substance.deprecated">RECORD IS DEPRECATED</span>
       </div>
     </div>
@@ -248,7 +248,7 @@
     </div>
     <div class="name-value" *ngIf="references?.length > 0">
       <div class="name">
-        <a (click)="toggleReferences()" class='blue-font references-link'>
+        <a tabindex="0" role="link" (click)="toggleReferences()" class='blue-font references-link'>
           <span>{{showDef === false ? 'Show' : 'Hide'}} Definitional References</span>
           <mat-icon svgIcon="{{defIcon}}"></mat-icon>
         </a>

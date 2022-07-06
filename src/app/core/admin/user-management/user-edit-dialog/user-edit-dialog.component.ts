@@ -230,6 +230,7 @@ export class UserEditDialogComponent implements OnInit {
       };
 
       this.adminService.addUser(userEditObj).pipe(take(1)).subscribe(response => {
+        this.message = '';
         if (response && response.user) {
           this.successfulChange(response);
         }
@@ -237,8 +238,9 @@ export class UserEditDialogComponent implements OnInit {
         if (error.error) {
           this.isError = true;
           this.message = 'ERROR: ';
+          let dummytext = 'This user either already exists or there was a server problem updating the record';
           this.message += error.error.message === undefined ?
-          error.statusText : error.error.message.split(':')[1];
+          dummytext : error.error.message.split(':')[1];
         }
         this.adminService.getUserByName(this.user.user.username).pipe(take(1)).subscribe(response => {
           let userIsActive = false;

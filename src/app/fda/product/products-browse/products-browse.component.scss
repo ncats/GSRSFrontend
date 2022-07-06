@@ -477,47 +477,43 @@
 }
 
 .cards {
-  .controls-container {
-    max-width: 928px;
-  }
-
-  .substance-cards {
+  .cards-view {
     display: block;
   }
 
-  .substance-table {
+  .table-view {
     display: none;
   }
 
-  .substance-tiles{
+  .tiles-view{
     display: none;
   }
 }
 
 .table {
-  .substance-cards {
+  .cards-view {
     display: none;
   }
 
-  .substance-table {
+  .table-view {
     display: block;
   }
 
-  .substance-tiles{
+  .tiles-view{
     display: none;
   }
 }
 
 .tiles {
-  .substance-cards {
+  .cards-view {
     display: none;
   }
 
-  .substance-table {
+  .table-view {
     display: none;
   }
 
-  .substance-tiles{
+  .tiles-view{
     display: flex;
   }
 }
@@ -706,6 +702,48 @@ width:150px;
   display: flex;
   min-width: 660px;
   /*align-items: flex-end;*/
+}
+
+.cards {
+  .cards-view {
+    display: block;
+  }
+
+  .table-view {
+    display: none;
+  }
+
+  .tiles-view{
+    display: none;
+  }
+}
+
+.table {
+  .cards-view {
+    display: none;
+  }
+
+  .table-view {
+    display: block;
+  }
+
+  .tiles-view{
+    display: none;
+  }
+}
+
+.tiles {
+  .cards-view {
+    display: none;
+  }
+
+  .table-view {
+    display: none;
+  }
+
+  .tiles-view{
+    display: flex;
+  }
 }
 
 .mat-card {
@@ -1400,6 +1438,10 @@ margin:auto;
   border:1px solid #bbc2a4;
 }
 
+.margintop20px {
+  margin-top: 20px;
+}
+
 .marginleft20px {
   margin-left: 20px;
 }
@@ -1412,12 +1454,24 @@ margin:auto;
   margin-right: 40px;
 }
 
-.padtop5px {
-  padding-top: 5px;
+.padtop7px {
+  padding-top: 7px;
+}
+
+.padtop15px {
+  padding-top: 15px;
 }
 
 .padleft10px {
   padding-left: 10px;
+}
+
+.padbottom7px {
+  padding-bottom: 7px;
+}
+
+.width120px {
+  width: 120px;
 }
 
 .width40 {
@@ -1474,4 +1528,40 @@ margin:auto;
  /* list-style-position: inside;*/
   padding-left: 0px;
   margin-top: 0px;
+}
+
+.small-icon {
+  width: 15px;
+  height: 15px;
+  padding-left: 5px;
+}
+
+.margintopneg10 {
+  margin-top: -10px;
+}
+
+.narrow-search-suggestions-container {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.flex-row {
+  width: 100%;
+  margin: auto;
+}
+
+.narrow-search-suggestions {
+  padding: 12px 20px;
+  width: auto;
+  display: flex;
+  align-content: center;
+  align-items: center;
+
+  .mat-flat-button {
+      margin-left: 7px;
+  }
 }

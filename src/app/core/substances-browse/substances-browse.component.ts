@@ -34,7 +34,6 @@ import { StructureService } from '@gsrs-core/structure';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Facet, FacetUpdateEvent } from '../facets-manager/facet.model';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
@@ -48,6 +47,9 @@ import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-brows
 import { Title } from '@angular/platform-browser';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { FormControl } from '@angular/forms';
+import { SubBrowseEmitterService } from './sub-browse-emitter.service';
+import { WildcardService } from '@gsrs-core/utils/wildcard.service';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-substances-browse',
@@ -76,6 +78,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   privateExport = false;
   disableExport = false;
   isError = false;
+  isRefresher = false;
   @ViewChildren(BrowseHeaderDynamicSectionDirective) dynamicContentContainer: QueryList<BrowseHeaderDynamicSectionDirective>;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
@@ -103,6 +106,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   narrowSearchSuggestionsCount = 0;
   private isComponentInit = false;
   sequenceID?: string;
+  searchHashFromAdvanced: string;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -120,12 +124,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   facetDisplayType = 'facetView';
   facetViewCategory: Array<String> = [];
   facetViewControl = new FormControl();
-
+  private wildCardText: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
     public configService: ConfigService,
+    public emitService: SubBrowseEmitterService,
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
     public utilsService: UtilsService,
@@ -141,18 +146,30 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private substanceTextSearchService: SubstanceTextSearchService,
     private title: Title,
     private cvService: ControlledVocabularyService,
+    private wildCardService: WildcardService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
-  ) { }
+  ) {
+  }
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
-   setTimeout(() => {
-     if (this.router.url === this.previousState[0]) {
-      this.ngOnInit();
-     }
+    setTimeout(() => {
+      if (this.router.url === this.previousState[0]) {
+        this.ngOnInit();
+      }
 
     }, 50);
+  }
+
+  saveWildCardText() {
+    this.wildCardService.getWildCardText(this.wildCardText);
+  }
+
+  wildCardSearch() {
+    this.wildCardService.getWildCardText(this.wildCardText);
+    this.setUpPrivateSearchTerm();
+    this.searchSubstances();
   }
 
   ngOnInit() {
@@ -161,25 +178,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
 
-      });
+    });
     this.title.setTitle('Browse Substances');
 
     this.pageSize = 10;
     this.pageIndex = 0;
 
-    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
-
-    if (this.privateSearchTerm) {
-      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
-      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
-    }
+    this.setUpPrivateSearchTerm();
 
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
-    if ( this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
+    if (this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
       this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
       this.privateSequenceSearchTerm = JSON.parse(sessionStorage.getItem('gsrs_search_sequence_' + this.sequenceID));
     }
@@ -190,6 +202,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     const deprecated = this.activatedRoute.snapshot.queryParams['showDeprecated'];
+    this.searchHashFromAdvanced = this.activatedRoute.snapshot.queryParams['g-search-hash'];
     if (this.pageSize > 500) {
       this.pageSize = 500;
     }
@@ -214,6 +227,21 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.loadComponent();
 
     this.loadFacetViewFromConfig();
+  }
+
+  setUpPrivateSearchTerm() {
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
+    if(this.wildCardText && this.wildCardText.length > 0) {
+      if(this.privateSearchTerm.length > 0) {
+        this.privateSearchTerm += ' AND "' + this.wildCardText + '"';
+      } else {
+        this.privateSearchTerm += '"' + this.wildCardText + '"';
+      }
+    }
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
   }
 
   ngAfterViewInit() {
@@ -259,7 +287,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   private loadComponent(): void {
 
-    if (this.isFacetsParamsInit && this.isComponentInit) {
+    if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) {
       this.searchSubstances();
     } else {
     }
@@ -346,7 +374,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.overlayContainer.style.zIndex = '1000';
     }
   }
-  
+
   openedFacetViewChange(event: any) {
     if (event) {
       this.overlayContainer.style.zIndex = '1002';
@@ -363,7 +391,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.facetViewCategory.push(category);
     });
     this.facetViewCategory.push('All');
-    console.log('loaded');
   }
 
   // for facets
@@ -434,11 +461,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
           this.narrowSearchSuggestionsCount = 0;
+
           if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+
             pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
               if (this.codeSystem && this.codeSystem[suggestion.displayField]) {
                 suggestion.displayField = this.codeSystem[suggestion.displayField].display;
               }
+
               if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
                 this.narrowSearchSuggestions[suggestion.matchType] = [];
                 if (suggestion.matchType === 'WORD') {
@@ -450,17 +480,53 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
               this.narrowSearchSuggestionsCount++;
             });
-          }
-          this.matchTypes.sort();
 
+            this.matchTypes.sort();
+
+            if(this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm)) {
+            
+              const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
+
+              // The match type usually originates from the backend.
+              // But below, it is specified here to make additonal match options(s) in the backend.   
+              // Can't figure out why the sort of matchTypes does not work.
+              // I am not sure it worked before this change.
+              // I would like Additional matches to appear first.
+              
+              let suggestion: NarrowSearchSuggestion = {
+                matchType: 'ADDITIONAL',
+                count: 0,
+                displayField: 'Any Name Begins With',
+                luceneField: 'root_names_name',
+                luceneQuery: lq
+              };
+              this.substanceService.searchSubstances(lq).subscribe(response => {
+                if(response && response.total!==null) {
+                  suggestion.count = response.total;
+                  if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+                    this.narrowSearchSuggestions[suggestion.matchType] = [];
+                    if (suggestion.matchType === 'WORD') {
+                      this.matchTypes.unshift(suggestion.matchType);
+                    } else {
+                      this.matchTypes.push(suggestion.matchType);
+                    }
+                  }
+                  this.narrowSearchSuggestions[suggestion.matchType].unshift(suggestion);
+                  this.narrowSearchSuggestionsCount++;
+                }
+              });
+              this.matchTypes.sort();
+            }
+  
+          }
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response.filter(exp => {
-          if (exp.extension) {
-            //TODO Make this generic somehow, so addditional-type exports are isolated
-            if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx')) {
-              return false;
-            }
-          }
+              if (exp.extension) {
+                //TODO Make this generic somehow, so addditional-type exports are isolated
+                if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') || (exp.extension === 'ctusxlsx')) {
+                  return false;
+                }
+              }
               return true;
             });
           });
@@ -495,6 +561,23 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
 
   }
+
+searchTermOkforBeginsWithSearch(): boolean {
+  return (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm));
+}
+
+anyNameBeginsWithSearch(): void { 
+  if(this.searchTermOkforBeginsWithSearch()) {           
+    const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+      }
+    };
+    navigationExtras.queryParams['search'] = lq;
+    this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+}
+
 
   restricSearh(searchTerm: string): void {
     this.privateSearchTerm = searchTerm;
@@ -570,13 +653,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.codes[substanceId].codeSystems[sysName] = this.codes[substanceId].codeSystems[sysName].sort((a, b) => {
             let test = 0;
             if (a.type === 'PRIMARY' && b.type !== 'PRIMARY') {
-              test =  1;
+              test = 1;
             } else if (a.type !== 'PRIMARY' && b.type === 'PRIMARY') {
-            test = -1;
+              test = -1;
             } else {
-            test = 0;
-          }
-          return test;
+              test = 0;
+            }
+            return test;
           });
         });
 
@@ -618,6 +701,45 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const eventLabel = environment.isAnalyticsPrivate ? 'advanced search term' :
       `${this.privateSearchTerm}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-advanced-search', eventLabel);
+    // Structure Search
+   // const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
+   // `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
+   // this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
+
+    // ** BEGIN: Store in Local Storage for Advanced Search
+    // storage searchterm in local storage when going from Browse Substance to Advanced Search (NOT COMING FROM ADVANCED SEARCH)
+    if (!this.searchHashFromAdvanced) {
+      const advSearchTerm: Array<String> = [];
+      advSearchTerm[0] = this.privateSearchTerm;
+      const queryStatementHashes = [];
+      const queryStatement = {
+        condition: '',
+        queryableProperty: 'Manual Query Entry',
+        command: 'Manual Query Entry',
+        commandInputValues: advSearchTerm,
+        query: this.privateSearchTerm
+      };
+
+      // Store in cookies, Category tab (Substance, Application, etc)
+      const categoryHash = this.utilsService.hashCode('Substance');
+      localStorage.setItem(categoryHash.toString(), 'Substance');
+      queryStatementHashes.push(categoryHash);
+
+      const queryStatementString = JSON.stringify(queryStatement);
+      const hash = this.utilsService.hashCode(queryStatementString);
+
+      // Store in cookies, Each Query Statement is stored in separate hash
+      localStorage.setItem(hash.toString(), queryStatementString);
+
+      // Push Query Statements Hashes in Array
+      queryStatementHashes.push(hash);
+
+      // Store in cookies,  store in Query Hash - Query Statement Hashes Array
+      const queryStatementHashesString = JSON.stringify(queryStatementHashes);
+
+      localStorage.setItem(this.searchTermHash.toString(), queryStatementHashesString);
+     }
+    // ** END: Store in Local Storage for Advanced Search
 
     const navigationExtras: NavigationExtras = {
       queryParams: {
@@ -625,6 +747,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
     };
 
+    navigationExtras.queryParams['structure'] = this.privateStructureSearchTerm || null;
+    navigationExtras.queryParams['type'] = this.privateSearchType || null;
+
+    if(this.privateSearchType === 'similarity') {
+      navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
+    }
     this.router.navigate(['/advanced-search'], navigationExtras);
   }
 
@@ -705,6 +833,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
 
     this.privateSearchTerm = '';
+    this.wildCardText = '';
     this.searchTermHash = null;
     this.pageIndex = 0;
 
@@ -727,6 +856,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.clearSearch();
     }
     this.facetManagerService.clearSelections();
+  }
+
+  clickToRefreshPreview() {
+    this.emitService.setRefresh(true);
+    this.isRefresher = true;
+    this.loadComponent();
+  }
+
+  clickToCancel() {
+    this.emitService.setCancel(true);
   }
 
   get searchTerm(): string {
@@ -793,8 +932,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   openImageModal(substance: SubstanceDetail): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
-
-    this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+        this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
     let data: any;
 
@@ -803,17 +941,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         structure: substance.structure.id,
         smiles: substance.structure.smiles,
         uuid: substance.uuid,
-        names: substance.names
+        names: this.names[substance.uuid]
       };
     } else {
       data = {
         structure: substance.polymer.displayStructure.id,
-        names: substance.names
+        names: this.names[substance.uuid]
       };
     }
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
-      height: '90%',
       width: '650px',
       panelClass: 'structure-image-panel',
       data: data
@@ -892,9 +1029,23 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   downloadJson(id: string) {
     this.substanceService.getSubstanceDetails(id).pipe(take(1)).subscribe(response => {
-        this.downloadFile(JSON.stringify(response), id + '.json');
+      this.downloadFile(JSON.stringify(response), id + '.json');
     });
 
+  }
+
+  copySmiles(val: string) {
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
 }

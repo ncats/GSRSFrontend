@@ -40,7 +40,7 @@ export class CvManagementComponent implements OnInit {
 
   ngOnInit() {
       this.getVocab();
-      this.overlayContainer = this.overlayContainerService.getContainerElement();
+   //   this.overlayContainer = this.overlayContainerService.getContainerElement();
 
   }
 
@@ -87,13 +87,23 @@ export class CvManagementComponent implements OnInit {
   }
 
   editTerms(vocab: any, index: number): void {
+    let thisy = window.pageYOffset;
+    window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'auto' });
     const dialogRef = this.dialog.open(CvTermDialogComponent, {
       data: {vocabulary: vocab},
       width: '1200px'
     });
-    this.overlayContainer.style.zIndex = '1002';
+ //   this.overlayContainer.style.zIndex = '50';
+    // this.overlayContainer.style.zIndex = '0';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
-      this.overlayContainer.style.zIndex = null;
+      window.scroll({ 
+        top: thisy, 
+        left: 0, 
+        behavior: 'auto' });
+   //   this.overlayContainer.style.zIndex = null;
       if (response ) {
         //  this.vocabularies[index] = response;
         this.getVocab();

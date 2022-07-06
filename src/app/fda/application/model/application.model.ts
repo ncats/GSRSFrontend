@@ -175,6 +175,8 @@ export interface ApplicationIngredient {
   _substanceUuid?: string;
  // _approvalID?: string;
   _ingredientName?: string;
+  $$ingredientNameValidation?: string;
+  $$basisOfStrengthValidation?: string;
 //  _basisOfStrengthSubstanceUuid?: string;
 //  _basisOfStrengthApprovalID?: string;
 //  _basisOfStrengthIngredientName?: string;

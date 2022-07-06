@@ -8,6 +8,7 @@
 
   <!-- Browse Adverse Event Pt Content -->
   <mat-sidenav-content>
+
     <div class="side-nav-content">
       <div class="search-parameters">
 
@@ -48,14 +49,24 @@
           *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
           <span>RESET</span>
         </button>
-      </div>
+      </div> <!-- search-parameters -->
 
-      <!-- Title, Export, Pagination -->
+      <!-- Title, Views, Export, Pagination -->
       <div class="controls-container">
 
         <div class="title-container">
           <span class="main-title">Browse Adverse Event PT</span>
         </div>
+
+        <!-- Table, Full, and Title Views -->
+        <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+          <mat-button-toggle value="table" matTooltip="Table View">
+            <mat-icon svgIcon="list"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="cards" matTooltip="Full View">
+            <mat-icon svgIcon="view_stream"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
 
         <!-- Sort By -->
         <!--
@@ -96,10 +107,17 @@
           </div>
         </div>
 
-      </div>
+      </div> <!-- controls-container -->
 
       <div class="search-text">
+        <!-- *** Search Any Text (TYPE AHEAD) *** -->
+        <app-adverse-event-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
+          [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)"
+          eventCategory="adverseEventPtSearch">
+        </app-adverse-event-text-search>
+
         <!-- Search Any Text Text Box -->
+        <!--
         <mat-form-field class="width350px font13px">
           <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
             size="50" />
@@ -107,24 +125,89 @@
         <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
+        -->
       </div>
 
       <!-- Display Content Details -->
-      <div class="cards" *ngIf="adverseEventPt && adverseEventPt.length; else noRecordAdverseEventPt">
-        <div class="substance-cards">
-          <mat-card *ngFor="let adverseeventpt of adverseEventPt">
+      <div [ngClass]="view">
+
+        <!-- ***** TABLE VIEW BEGIN ***** -->
+        <div class="table-view">
+          <div class="responsive">
+            <table mat-table [dataSource]="adverseEventPtList" matSort (matSortChange)="sortData($event)"
+              matSortActive="ptCount" matSortDirection="desc" matSortDisableClear>
+
+              <ng-container matColumnDef="ptTerm">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Term </th>
+                <td mat-cell *matCellDef="let adverse">
+                  <div *ngIf="adverse.ptTerm">
+                    <a [routerLink]="['/browse-adverse-events']"
+                      [queryParams]='{search: "\"^" + adverse.ptTerm + "$\""}' target="_blank">
+                      {{adverse.ptTerm}}
+                    </a>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="primSoc">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Prim SOC </th>
+                <td mat-cell *matCellDef="let adverse"> {{adverse.primSoc}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ingredientName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Name </th>
+                <td mat-cell *matCellDef="let adverse">
+                  <a [routerLink]="['/substances', adverse.substanceId]" target="_blank">
+                    {{adverse.name}}
+                  </a>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="caseCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Case Count </th>
+                <td mat-cell *matCellDef="let adverse"> {{adverse.caseCount}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="ptCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Count </th>
+                <td mat-cell *matCellDef="let adverse">
+                  <div *ngIf="FAERSDashboardAdverseEventUrl; else noFaersLink">
+                    <a href="{{FAERSDashboardAdverseEventUrl}}{{getDecodeURL(adverse.ptTerm | titlecase)}}{{FAERSDashboardReactionGroup}}{{getDecodeURL(adverse.primSoc | titlecase)}}"
+                      target="_blank" title="FAERS Public Dashboard">
+                      <div [innerHTML]="adverse.ptCount"></div>
+                    </a>
+                    <span class="colorgray font10px">FAERS Public Dashboard</span>
+                  </div>
+                  <ng-template #noFaersLink>
+                    <div [innerHTML]="adverse.ptCount"></div>
+                  </ng-template>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="prr">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> PRR </th>
+                <td mat-cell *matCellDef="let adverse"> {{adverse.prr | number : '.2-2'}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+        <!-- TABLE VIEW END -->
+
+        <!-- CARD VIEW BEGIN -->
+        <div class="cards-view"
+          *ngIf="adverseEventPtList && adverseEventPtList.length > 0; else noRecordAdverseEventPt">
+          <mat-card *ngFor="let adverse of adverseEventPtList">
             <mat-card-title>
               <div>
                 <span class="font13px">Adverse Event:</span>&nbsp;
-                {{adverseeventpt.ptTerm}}
+                {{adverse.ptTerm}}
               </div>
-
               <div>
-
               </div>
-
               <div>
-
               </div>
             </mat-card-title>
 
@@ -136,8 +219,7 @@
                     Ingredient Name:
                   </div>
                   <div class="row-property-value">
-                    <a [routerLink]="['/substances', adverseeventpt.substanceId]"
-                      target="_blank">{{adverseeventpt.name}}</a>
+                    <a [routerLink]="['/substances', adverse.substanceId]" target="_blank">{{adverse.name}}</a>
                   </div>
                 </div>
                 <div class="row-property">
@@ -145,7 +227,7 @@
                     Substance Key:
                   </div>
                   <div class="row-property-value">
-                    {{adverseeventpt.substanceKey}}
+                    {{adverse.substanceKey}}
                   </div>
                 </div>
               </div>
@@ -156,7 +238,7 @@
                     Prim SOC:
                   </div>
                   <div class="row-property-value">
-                    {{ adverseeventpt.primSoc}}
+                    {{ adverse.primSoc}}
                   </div>
                 </div>
                 <div class="row-property">
@@ -164,7 +246,7 @@
                     PRR:
                   </div>
                   <div class="row-property-value">
-                    {{adverseeventpt.prr | number : '.2-2'}}
+                    {{adverse.prr | number : '.2-2'}}
                   </div>
                 </div>
               </div>
@@ -175,7 +257,7 @@
                     Case Count:
                   </div>
                   <div class="row-property-value">
-                    {{adverseeventpt.caseCount}}
+                    {{adverse.caseCount}}
                   </div>
                 </div>
                 <div class="row-property">
@@ -183,7 +265,7 @@
                     SOC Count:
                   </div>
                   <div class="row-property-value">
-                    {{adverseeventpt.socCount}}
+                    {{adverse.socCount}}
                   </div>
                 </div>
               </div>
@@ -194,7 +276,7 @@
                     PT Count:
                   </div>
                   <div class="row-property-value">
-                    {{adverseeventpt.ptCount}}
+                    {{adverse.ptCount}}
                   </div>
                 </div>
                 <div class="row-property">
@@ -202,7 +284,7 @@
                     SOC Count Percent:
                   </div>
                   <div class="row-property-value">
-                    {{adverseeventpt.socCountPercent}}
+                    {{adverse.socCountPercent}}
                   </div>
                 </div>
               </div>
@@ -213,7 +295,7 @@
                     PT Count Percent:
                   </div>
                   <div class="row-property-value">
-                    {{adverseeventpt.ptCountPercent}}
+                    {{adverse.ptCountPercent}}
                   </div>
                 </div>
                 <div class="row-property">
@@ -221,19 +303,18 @@
                     PT Count Total Vs Drug:
                   </div>
                   <div class="row-property-value">
-                    {{adverseeventpt.ptCountTotalVsDrug}}
+                    {{adverse.ptCountTotalVsDrug}}
                   </div>
                 </div>
               </div>
 
             </mat-card-content>
-
           </mat-card>
-        </div>
-      </div> <!-- class=cards -->
+        </div> <!-- class=cards -->
+      </div> <!-- [ngClass]=view -->
 
       <!-- Pagination at the bottom of the page -->
-      <div class="controls-container">
+      <div class="controls-container-right">
         <div class="full-paginator">
           <mat-paginator #paginator [length]="totalAdverseEventPt" [pageIndex]="pageIndex" [pageSize]="pageSize"
             [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
@@ -250,7 +331,7 @@
             <span class="page-label"> of {{lastPage}}</span>
           </div>
         </div>
-      </div>
+      </div> <!-- Pagination end -->
 
       <ng-template #noRecordAdverseEventPt>
         <!-- No Adverse Event PT Record Found. -->

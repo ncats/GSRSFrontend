@@ -5,7 +5,15 @@ import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/cl
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { PageEvent } from '@angular/material/paginator';
 import { FacetParam } from '@gsrs-core/facets-manager';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { Subscription, Observable, Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '@gsrs-core/auth';
+import { LoadingService } from '@gsrs-core/loading/loading.service';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { take } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-substance-clinical-trials',
@@ -19,10 +27,19 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   clinicalTrialCount = 0;
   showSpinner = false;
   private subscriptions: Array<Subscription> = [];
+
+  privateExport = false;
+  disableExport = false;
+  etag = '';
+  etagAllExport = '';
+  loadedComponents: LoadedComponents;
+  loadingStatus = '';
+
   @Input() substanceUuid: string;
   @Output() countClinicalTrialOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
+    'edit',
     'nctNumber',
     'title',
     'sponsorName',
@@ -32,15 +49,23 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private clinicalTrialService: ClinicalTrialService
+    private clinicalTrialService: ClinicalTrialService,
+    private configService: ConfigService,
+    public authService: AuthService,
+    private loadingService: LoadingService,
+    private router: Router,
+    private dialog: MatDialog 
   ) {
     super(gaService, clinicalTrialService);
   }
 
   ngOnInit() {
-    if (this.bdnum) {
-      this.getSubstanceClinicalTrials();
-      this.clinicalTrialListExportUrl();
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+      this.isAdmin = response;
+    });
+    if (this.substanceUuid) {
+     this.getSubstanceClinicalTrials(null, 'initial');
     }
   }
 
@@ -50,7 +75,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     });
   }
 
-  getSubstanceClinicalTrials(pageEvent?: PageEvent): void {
+  getSubstanceClinicalTrials(pageEvent?: PageEvent, searchType?: string): void {
     this.setPageEvent(pageEvent);
     const skip = this.page * this.pageSize;
     this.showSpinner = true;  // Start progress spinner
@@ -58,18 +83,29 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
       searchTerm: this.substanceUuid,
       cutoff: null,
       type: "substanceKey",
-      order: 'asc',
+      order: '$trialNumber',
       pageSize: this.pageSize,
       facets: this.privateFacetParams,
       skip: skip
     })
       .subscribe(pagingResponse => {
+        if (searchType && searchType === 'initial') {
+          this.etagAllExport = pagingResponse.etag;
+        } 
+        // AW removed else clause so this runs every time. 
+        // This makes it work, but AW might need to understand the 
+        // intention better. 
+        // else {
         this.clinicalTrialService.totalRecords = pagingResponse.total;
         this.setResultData(pagingResponse.content);
         this.clinicalTrialCount = pagingResponse.total;
+        this.etag = pagingResponse.etag;
+        // }    
+
         this.countClinicalTrialOut.emit(this.clinicalTrialCount);
         this.showSpinner = false;  // Stop progress spinner
       });
+
     /*
         this.searchControl.valueChanges.subscribe(value => {
           this.filterList(value, this.clinicaltrials, this.analyticsEventCategory);
@@ -82,10 +118,66 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
      this.subscriptions.push(subscriptionClinical);
   }
 
-  clinicalTrialListExportUrl() {
-    if (this.bdnum != null) {
-      this.exportUrl = this.clinicalTrialService.getClinicalTrialListExportUrl(this.bdnum);
+
+  export() {
+    if (this.etagAllExport) {
+      const extension = 'ctus.xlsx';
+      const url = this.getApiExportUrl(this.etagAllExport, extension);
+      if (this.authService.getUser() !== '') {
+        const dialogReference = this.dialog.open(ExportDialogComponent, {
+          height: '215x',
+          width: '550px',
+          data: { 'extension': extension, 'type': 'substanceClinicalTrialUS' }
+        });
+        // this.overlayContainer.style.zIndex = '1002';
+        dialogReference.afterClosed().subscribe(name => {
+          // this.overlayContainer.style.zIndex = null;
+          if (name && name !== '') {
+            this.loadingService.setLoading(true);
+            const fullname = name + '.' + extension;
+            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              this.loadingService.setLoading(false);
+              const navigationExtras: NavigationExtras = {
+                queryParams: {
+                  totalSub: this.clinicalTrialCount
+                }
+              };
+              const params = { 'total': this.clinicalTrialCount };
+              this.router.navigate(['/user-downloads/', response.id]);
+            }, error => this.loadingService.setLoading(false));
+          }
+        });
+      }
     }
   }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    return this.clinicalTrialService.getApiExportUrl(etag, extension);
+  }
+
+
+
+  clinicalTrialListExportUrl() {
+    if (this.substanceUuid != null) {
+      this.exportUrl = this.clinicalTrialService.getClinicalTrialListExportUrl(this.substanceUuid);
+    }
+  }
+
+  /*
+  // copied from products but has no effect. Make approaoch uniform in future. 
+  tabSelected($event) {
+    if ($event) {
+      console.log("EVENT");
+      const evt: any = $event.tab;
+      const textLabel: string = evt.textLabel;
+      if (textLabel != null) {
+        this.loadingStatus = 'Loading data...';
+        this.paged = [];
+        this.getSubstanceClinicalTrials();
+      }
+
+    }
+  }
+*/
 
 }

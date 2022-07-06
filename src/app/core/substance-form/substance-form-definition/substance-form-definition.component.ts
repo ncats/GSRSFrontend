@@ -15,6 +15,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-substance-form-definition',
@@ -50,7 +51,9 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
     public substanceService: SubstanceService,
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private activatedRoute: ActivatedRoute,
+
   ) {
     super();
   }
@@ -125,7 +128,8 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       }
       this.uuid = this.substanceFormService.getUuid();
       const imported = this.substanceFormService.getMethod();
-      if (imported && imported === 'import') {
+      const source = this.activatedRoute.snapshot.queryParams['source'] || null;
+      if (imported && imported === 'import' && (!source || source !== 'draft')) {
         this.imported = true;
       } else {
         this.imported = false;

@@ -12,7 +12,7 @@
     </div>
     <div class = "full-row-col"  *ngIf = "!this.record" style = "margin-top:10px;">
        <div style = "width:100%">Or paste JSON here:</div> 
-        <textarea [(ngModel)] = "pastedJSON" cdkAutosizeMinRows="5" (change) = "checkLoaded($event)" style = "min-height: 100px;"></textarea>
+        <textarea [(ngModel)] = "pastedJSON" cdkAutosizeMinRows="5" (ngModelChange)="checkLoaded()" style = "min-height: 100px;"></textarea>
     </div>
     <div class = "message">
         {{message}}
@@ -22,5 +22,5 @@
 <div mat-dialog-actions class = "mat-dialog-actions" >
         <button mat-flat-button color="primary" matDialogClose>Cancel</button>
         <span class="middle-fill"></span>
-        <button mat-flat-button color="primary"  *ngIf = "loaded" (click) ="useFile()">Import</button>
+        <button mat-flat-button color="primary"  [disabled]= "!loaded" (click) ="useFile()">Import</button>
 </div>

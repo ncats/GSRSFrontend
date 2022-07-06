@@ -255,7 +255,7 @@
         </div>
       </mat-sidenav>
       <mat-sidenav-content>
-        <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+        <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
           <mat-icon svgIcon="chevron_right"></mat-icon>
         </button>
     <div class="side-nav-content" [ngClass] = "isClosedWelcomeMessage? 'topMargin' : ''" >
@@ -275,16 +275,16 @@
 
         <div class = "flex-row image-row">
           <div class = "image-container">
-            <img class = "display-image" src = "{{imageLoc}}pills1.png" />
+            <img class = "display-image" src = "{{imageLoc}}pills1.png" alt="first display image" />
           </div>
           <div class = "image-container">
-              <img class = "display-image" src = "{{imageLoc}}chemistry2.png" />
+              <img class = "display-image" src = "{{imageLoc}}chemistry2.png" alt="second display image"/>
             </div>
             <div class = "image-container">
-                <img class = "display-image" src = "{{imageLoc}}hydrangea.png" />
+                <img class = "display-image" src = "{{imageLoc}}hydrangea.png" alt="third display image"/>
               </div>
               <div class = "image-container">
-                  <img class = "display-image" src = "{{imageLoc}}dna.png" />
+                  <img class = "display-image" src = "{{imageLoc}}dna.png" alt="fourth display image"/>
                 </div>
            </div>
 
@@ -345,9 +345,9 @@
     <div class = "row3">
       <mat-card class="temprow left-link" id="resource1" *ngIf = "!excelCard">
 
-          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(excel)" >GSRSFind Excel tools <mat-icon svgIcon="get_app"></mat-icon></a></h3>
+          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" tabindex="0" role="link" (click) = "openModal(excel)" >GSRSFind Excel tools <mat-icon svgIcon="get_app"></mat-icon></a></h3>
           <div class = "img-container">
-            <img class = "test" src = "{{imageLoc}}xlsx.png" />
+            <img class = "test" src = "{{imageLoc}}xlsx.png" alt="GSRS excel image"/>
          </div>
             <div class = "resource-desc"> GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)
             GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.
@@ -355,25 +355,25 @@
           </mat-card>
 
           <mat-card class="temprow left-link" id="resource1" *ngIf = "excelCard">
-            <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(excel)" >{{excelCard.title? excelCard.title : 'no tile'}}</a></h3>
+            <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" tabindex="0" role="link" (click) = "openModal(excel)" >{{excelCard.title? excelCard.title : 'no tile'}}</a></h3>
             <div class = "img-container">
-              <img class = "test" src = "{{imageLoc}}{{excelCard.imageFile}}" />
+              <img class = "test" src = "{{imageLoc}}{{excelCard.imageFile}}" alt="GSRS excel card" />
            </div>
               <div class = "resource-desc" [innerHtml] = "excelCard.description">  </div>
             </mat-card>
 
           <mat-card class="temprow right-link" id="resource2" *ngIf = "guideCard">
-          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(guide)" >GSRS User Guide</a></h3>
+          <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" tabindex="0" role="link" (click) = "openModal(guide)" >GSRS User Guide</a></h3>
           <div class = "img-container">
-              <img class = "test" src = "{{imageLoc}}{{guideCard.imageFile}}" />
+              <img class = "test" src = "{{imageLoc}}{{guideCard.imageFile}}" alt="GSRS guide card image" />
            </div>
           <div class = "resource-desc"  [innerHtml] = "guideCard.description">
          </div>
         </mat-card>
         <mat-card class="temprow right-link" id="resource2" *ngIf = "!guideCard">
-            <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(guide)" >GSRS User Guide</a></h3>
+            <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" tabindex="0" role="link" (click) = "openModal(guide)" >GSRS User Guide</a></h3>
             <div class = "img-container">
-                <img class = "test" src = "{{imageLoc}}guide.png" />
+                <img class = "test" src = "{{imageLoc}}guide.png" alt="GSRS guide card"/>
              </div>
             <div class = "resource-desc"> The GSRS user guide is comprehensive set of instructions for searching and registering new substances of all types in GSRS.
            </div>
@@ -381,21 +381,20 @@
       </div>
       <div class = "row3">
       <mat-card class="temprow left-link" id="resource2" *ngIf = "dictionaryCard">
-              <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(dictionary)" >GSRS Data Dictionary</a></h3>
+              <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" tabindex="0" role="link" (click) = "openModal(dictionary)" >GSRS Data Dictionary</a></h3>
               <div class = "img-container">
-                  <img class = "test" src = "{{imageLoc}}{{dictionaryCard.imageFile}}" />
+                  <img class = "test" src = "{{imageLoc}}{{dictionaryCard.imageFile}}" alt="GSRS dictionary card image"/>
                </div>
               <div class = "resource-desc"  [innerHtml] = "dictionaryCard.description">  
                 </div>
 
           </mat-card>
           
-          </div>
-          <div class = "row3">
+          
           <mat-card class="temprow left-link" id="resource2" *ngIf = "!dictionaryCard">
                   <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(dictionary)" >GSRS Data Dictionary</a></h3>
                   <div class = "img-container">
-                      <img class = "test" src = "{{imageLoc}}dictionary.png" />
+                      <img class = "test" src = "{{imageLoc}}dictionary.png" alt="GSRS dictionary card"/>
                    </div>
                   <div class = "resource-desc">  The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.
                     </div>
@@ -405,7 +404,7 @@
           <mat-card class="temprow right-link" id="resource2">
                     <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" target ="_blank" href = "https://gsrs.ncats.nih.gov/#/api#chemical%20search">GSRS API Documentation</a></h3>
                     <div class = "img-container">
-                        <img class = "test" src = "{{imageLoc}}API.png" />
+                        <img class = "test" src = "{{imageLoc}}API.png" alt="GSRS API image"/>
                      </div>
                     <div class = "resource-desc">       Swagger documentation of the GSRS API calls with working examples and implementation notes.
                     </div>
@@ -414,9 +413,9 @@
         <div class = "row3">
             <mat-card class="temprow left-link" id="resource2">
 
-              <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button"  (click) = "openModal(schema)" >GSRS JSON schema</a></h3>
+              <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" tabindex="0" role="link" (click) = "openModal(schema)" >GSRS JSON schema</a></h3>
               <div class = "img-container">
-                  <img class = "test" src = "{{imageLoc}}json.png" />
+                  <img class = "test" src = "{{imageLoc}}json.png" alt="GSRS JSON image"/>
                </div>
                   <div class = "resource-desc">    This file contains a JSON formatted schema used by GSRS for recording substances to help visualize the substance object described by the GSRS Data Dictionary.
                     </div>
@@ -424,7 +423,7 @@
                   <mat-card class="temprow right-link" id="resource2">
                       <h3 class = "resource-link"> <a class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" target ="_blank" href = "https://www.fda.gov/industry/fda-resources-data-standards/substance-identification">ISO 11238 Standard</a></h3>
                       <div class = "img-container">
-                          <img class = "test" src = "{{imageLoc}}iso2.png" />
+                          <img class = "test" src = "{{imageLoc}}iso2.png" alt="GSRS ISO image"/>
                        </div>
                       <div class = "resource-desc">       ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes.
                         </div>

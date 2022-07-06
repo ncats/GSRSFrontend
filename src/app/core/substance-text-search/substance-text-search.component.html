@@ -20,7 +20,8 @@
         <pre aria-hidden="true" class="mat-option overflow-comp" id='overflow'></pre>
       </mat-autocomplete>
     </mat-form-field>
-    <button class="search-button" mat-icon-button (click)="processSubstanceSearch()" [disabled]="searchControl.invalid">
+    <button aria-label="Search Button" class="search-button" mat-icon-button (click)="processSubstanceSearch()" 
+    [disabled]="searchControl.invalid">
       <mat-icon svgIcon="search"></mat-icon>
     </button>
     <button class="close-button" mat-icon-button (click)="deactivateSearch()">

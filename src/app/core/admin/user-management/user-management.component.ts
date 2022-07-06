@@ -215,18 +215,10 @@ showInactiveUsers(): void {
   }
 
   // change both dataSource and original source to avoid making an API call after every edit
-updateLocalData(response: any, index?: number, id?: number, username?: string, ) {
-    this.users.forEach( current => {
-      if (index) {
-        if (current.index === response.index) {
-          current = response;
-        }
-      } else {
-        if (current.id === response.id) {
-          current = response;
-        }
-      }
-    });
+updateLocalData(response: any, index?: number, id?: number, username?: string ) {
+    let i = this.users.findIndex(x => x.id === response.id);
+    let u = this.users[i];
+    this.users[i] = response;
     if (index) {
       const backup = this.filtered.data;
       backup[index] = response;
@@ -250,9 +242,10 @@ updateLocalData(response: any, index?: number, id?: number, username?: string, )
         this.overlayContainer.style.zIndex = null;
         if (response) {
           this.updateLocalData(response, index, null, username);
-            const backup = this.filtered.data;
+          const backup = this.filtered.data;
           backup[index] = response;
           this.filtered.data = backup;
+          this.pageChange();
         }
       });
     });

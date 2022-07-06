@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceSummary } from '@gsrs-core/substance/substance.model';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-search-selector',
@@ -12,6 +13,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Output() showMessage = new EventEmitter<String>();
+  @Output() searchValueOut = new EventEmitter<String>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   @Input() header = 'Substance';
@@ -21,12 +23,19 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   displayName: string;
   searchValue: string = null;
   loadingStructure = false;
+  private substanceSelectorProperties: Array<string> = null;
 
   constructor(
     public substanceService: SubstanceService,
+    public configService: ConfigService,
   ) { }
 
   ngOnInit() {
+    if (this.configService.configData.substanceSelectorProperties != null) {
+      this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
+    } else {
+      console.log("The config value for substanceSelectorProperties is null.");
+    }
   }
 
   @Input()
@@ -50,14 +59,18 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   }
 
   processSubstanceSearch(searchValue: string = ''): void {
-
     this.searchValue = searchValue;
     const q = searchValue.replace('\"', '');
-
-    const searchStr = `root_names_name:\"^${q}$\" OR ` +
+    // Changed to configuration approach.
+    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
+    /*
+    const searchStr =
+      `root_names_name:\"^${q}$\" OR ` +
+      `root_names_stdName:\"^${q}$\" OR ` +
       `root_approvalID:\"^${q}$\" OR ` +
-      `root_codes_BDNUM:\"^${q}$\"`;
-
+      `root_codes_BDNUM:\"^${q}$\"`
+      ;
+    */
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       this.loadingStructure = true;
       if (response.content && response.content.length) {
@@ -65,7 +78,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
         this.selectionUpdated.emit(this.selectedSubstance);
         this.errorMessage = '';
       } else {
-        this.showMessage.emit('No substances found');
+        this.showMessage.emit('No substances found for ' + this.searchValue);
       }
       this.loadingStructure = false;
     });
@@ -76,4 +89,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
     this.selectionUpdated.emit(this.selectedSubstance);
   }
 
+  searchValueOutChange(searchValue: string) {
+    this.searchValueOut.emit(searchValue);
+  }
 }

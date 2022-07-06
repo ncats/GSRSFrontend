@@ -13,6 +13,8 @@ export interface Config {
     codeSystemOrder?: Array<string>;
     contactEmail?: string;
     defaultCodeSystem?: string;
+    primaryCode?: string;
+    typeaheadFields?: Array<string>;
     navItems?: Array<NavItem>;
     substanceSelectorProperties?: Array<string>;
     displayMatchApplication?: string;
@@ -40,6 +42,8 @@ export interface Config {
     approvalCodeName?: string;
     approvalType?: string;
     ssg4Form?: string;
+    filteredDuplicationCodes?: Array<string>;
+    autoSaveWait?: number;
 }
 
 export interface LoadedComponents {
@@ -64,6 +68,8 @@ export interface SubstanceCardFilterParameters {
     value?: any;
     propertyInArray?: string;
     order?: number;
+    countMinimum?: number;
+    countMaximum?: number;
 }
 
 export interface NavItem {

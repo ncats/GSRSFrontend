@@ -89,6 +89,8 @@ import { SubstanceSsg4mProcessModule } from './substance-ssg4m/ssg4m-process/sub
 import { Ssg4mSitesModule } from './substance-ssg4m/ssg4m-sites/ssg4m-sites.module';
 import { Ssg4mStagesModule } from './substance-ssg4m/ssg4m-stages/substance-form-ssg4m-stages.module';
 import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
+import { SubstanceStatusPipe } from '@gsrs-core/utils/substance-status.pipe';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -114,7 +116,8 @@ import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent,
-    NamesDisplayPipe
+    NamesDisplayPipe,
+    SubstanceStatusPipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -174,6 +177,7 @@ import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg
     SubstanceSsg4mModule,
     SubstanceSsg4mProcessModule,
     Ssg4mSitesModule,
+    MatProgressSpinnerModule,
     Ssg4mStagesModule,
     SubstanceFormSsg4mStartingMaterialsModule
   ],

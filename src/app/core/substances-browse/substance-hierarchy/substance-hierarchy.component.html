@@ -7,11 +7,11 @@
         <div class = 'node-container nochild'>
           <div class = 'title'>
             <a class="hierarchy-link" matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
-               [routerLink]="['/substances', node.value.refuuid || '']" aria-label = "view substance">
+               [routerLink]="['/substances', node.value.refuuid || '']" attr.aria-label = "view substance for {{node.value.refPname}}">
               {{node.value.refPname}}
             </a>
             <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']"
-               target = "_blank"  matTooltip = "edit substance in new tab"><span hidden>edit in new tab</span>
+               target = "_blank"  matTooltip = "edit substance in new tab" attr.aria-label="edit substance for {{node.value.refPname}} in new tab"><span hidden>edit in new tab</span>
               <mat-icon *ngIf ="isAdmin" svgIcon="edit"  color = "primary"></mat-icon>
             </a>
           </div>
@@ -41,7 +41,7 @@
                  [routerLink]="['/substances', node.value.refuuid || '']">
                 {{node.value.refPname}}
               </a>
-              <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']">
+              <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']" attr.aria-label="edit substance for {{node.value.refPname}} in new tab">
                 <mat-icon *ngIf ="isAdmin" matTooltip = "edit substance in new tab" svgIcon="edit"  color = "primary"></mat-icon>
               </a>
             </div>

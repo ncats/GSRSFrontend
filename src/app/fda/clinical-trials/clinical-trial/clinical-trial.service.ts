@@ -31,7 +31,6 @@ export class ClinicalTrialService extends BaseHttpService {
     skip?: number
   } = {}): Observable<PagingResponse<ClinicalTrial>> {
     return new Observable(observer => {
-   //   console.log('XXXX 1');
       this.searchClinicalTrials(
           args.searchTerm,
           args.pageSize,
@@ -65,10 +64,9 @@ export class ClinicalTrialService extends BaseHttpService {
     if (searchTerm !== null && searchTerm !== '') {
       if (type !== null && type !== '') {
         if (type === 'trialNumber' ) {
-          // not working yet
-          params = params.append('q', 'root_ctId:\"^' + searchTerm + '$\"');
+          // having an issue with this locally
+          params = params.append('q', 'root_trialNumber:\"^' + searchTerm + '$\"');
         } else if (type === 'substanceKey' ) {
-          // not working yet
           params = params.append('q', 'root_clinicalTrialUSDrug_substanceKey:\"^' + searchTerm + '$\"');
         } else if (type === 'title') {
           params = params.append('q', 'root_title:\"' + searchTerm + '\"');
@@ -94,8 +92,6 @@ export class ClinicalTrialService extends BaseHttpService {
     const options = {
       params: params
     };
-  //  console.log('XXXX 3');
-
     return this.http.get<PagingResponse<ClinicalTrial>>(url, options);
   }
 
@@ -182,14 +178,16 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   getSubstanceClinicalTrialsEurope(
-    bdnum: string, page: number, pageSize: number
+    uuid: string, page: number, pageSize: number
   ): Observable<Array<any>> {
-    const url = this.baseUrl + 'clinicalTrialEuropeListByBdnum?bdnum=' + bdnum + '&page=' + (page + 1) + '&pageSize=' + pageSize;
+    const skip = page * pageSize;
 
+    const url = this.baseUrl + 'api/v1/clinicaltrialseurope/search?q=root_clinicalTrialEuropeProductList_clinicalTrialEuropeDrugList_substanceKey:"^'+ uuid +'$"' + '&top=' + pageSize + '&skip=' + skip;      
     return this.http.get<Array<any>>(url).pipe(
-      map(results => {
-        this.totalRecords = results['totalRecords'];
-        return results['data'];
+    map(results => {
+        this.totalRecords = results['total'];
+        console.log(JSON.stringify(results));
+        return results;
       })
     );
   }
@@ -219,7 +217,6 @@ export class ClinicalTrialService extends BaseHttpService {
 
   // see substance.service
   filterFacets(name: string, category: string ): Observable<any> {
-    console.log('I am in the service, filter facets');
     const url =  `${this.configService.configData.apiBaseUrl}api/v1/clinicaltrialsus/search/@facets?wait=false&kind=ix.ct.models.ClinicalTrial&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
     return this.http.get(url);
   }
@@ -246,6 +243,12 @@ export class ClinicalTrialService extends BaseHttpService {
     }
 
   }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    const url = this.apiBaseUrl + 'clinicaltrialsus/' + `export/${etag}/${extension}`;
+    return url;
+  }
+
   getClinicalTrialListExportUrl(bdnum: string): string {
     return this.baseUrl + 'clinicalTrialListExport?bdnum=' + bdnum;
   }

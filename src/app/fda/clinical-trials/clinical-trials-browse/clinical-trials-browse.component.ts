@@ -97,7 +97,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || 'all';
     this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$trialNumber';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
