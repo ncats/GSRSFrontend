@@ -7,6 +7,7 @@ import { SubstanceSuggestionsGroup } from './substance-suggestions-group.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
 import { BuildInfo } from './build-info.model';
+import { S } from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root'
@@ -298,4 +299,13 @@ export class UtilsService {
     return false;
   }
 
+  makeBeginsWithSearchTerm(targetField: string, searchTerm:string): string {
+    // Make and clean a begins-with search term from a non-complex search term that may 
+    // have a wildcard or quotes.     
+    // Remove extra carets ^ and double quotes " before adding them here.  
+    var s: string = searchTerm.replace(/(^"|"$)/g, '');
+    s = s.replace(/(^^)/g, '');
+    const lq  =targetField + ':"^' + s +'"';
+    return lq;
+  }
 }
