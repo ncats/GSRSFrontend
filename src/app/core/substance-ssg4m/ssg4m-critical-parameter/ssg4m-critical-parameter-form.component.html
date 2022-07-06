@@ -19,7 +19,7 @@
     <app-cv-input class="width180px padright20px"
       *ngIf="configSettingsDisplay['propertyName'] || (configSettingsDisplay['propertyName'] === undefined && true)"
       domain="SSG_CRITICAL_PROPERTY_NAME" required='true' title="Property Name" [model]="criticalParameter.name"
-      (valueChange)="criticalParameter.name = $event">
+      (valueChange)="updatePropertyName($event)">
     </app-cv-input>
 
     <mat-form-field class="amount-average col-5-1"

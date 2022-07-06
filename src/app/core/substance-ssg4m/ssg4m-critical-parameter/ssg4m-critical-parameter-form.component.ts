@@ -294,6 +294,17 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
     this.privateSubstanceAmount.units = event.value;
   }
 
+  updatePropertyName(event: any): void {
+    this.criticalParameter.propertyType = event;
+
+    if (event && event === 'Temperature') {
+      // if Temperature is selected, set the Unit value to C
+      setTimeout(() => {
+        this.unitsControl.setValue('°C');
+      });
+    }
+  }
+
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('AMOUNT_TYPE', 'AMOUNT_UNIT').subscribe(response => {
       this.amountTypeList = response['AMOUNT_TYPE'].list;
