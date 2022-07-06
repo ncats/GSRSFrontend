@@ -386,6 +386,15 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     return this.privateFacetParams;
   }
 
+  restricSearh(searchTerm: string): void {
+    this.privateSearchTerm = searchTerm;
+    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    this.populateUrlQueryParameters();
+    this.searchProducts();
+    // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+  }
+
   export() {
     if (this.etag) {
       const extension = 'xlsx';

@@ -244,6 +244,10 @@ export class SubstanceService extends BaseHttpService {
           }
         }
         if (sync) {
+          // Do text search along with Exact and Flex Structure search
+          if (querySearchTerm) {
+            params = params.append('qText', querySearchTerm);
+          }
           params = params.append('sync', sync.toString());
           params = params.appendFacetParams(facets, this.showDeprecated);
           params = params.appendDictionary({

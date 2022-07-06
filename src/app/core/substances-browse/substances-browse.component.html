@@ -34,8 +34,8 @@
           <button mat-flat-button color="primary" (click)="clearFilters()">
             <span>RESET</span>
           </button>
-          <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
-            <mat-icon svgIcon="edit"></mat-icon>
+          <button mat-icon-button color="primary" (click)="editAdvancedSearch()">
+            <mat-icon svgIcon="edit" tooltip="Go to Advanced Search"></mat-icon>
           </button>
           <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
             <div *ngFor="let matchType of matchTypes">
@@ -59,7 +59,7 @@
       </div>
         <div class = "flex-row">
           <div class="mat-elevation-z2 narrow-search-suggestions" style = "margin:auto; background-color: white; margin-top: 12px; ">
-              For more options use the    <a routerLink="/advanced-search" style = "padding-left: 6px;"> Advanced Search</a>
+              For more options use the    <a routerLink="/advanced-search" style = "padding-left: 6px;" title="Go to Advanced Search"> Advanced Search</a>
           </div>
       </div>
       </div>
@@ -73,8 +73,8 @@
 
 
             <div class="actions-container">
-              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
-                <mat-icon svgIcon="edit"></mat-icon>
+              <button mat-icon-button color="primary" (click)="editAdvancedSearch()">
+                <mat-icon svgIcon="edit" matTooltip="Go to Advanced Search"></mat-icon>
               </button>
               <button *ngIf="searchTermOkforBeginsWithSearch()" mat-icon-button color="primary" matTooltip="Any name begins with ..." (click)="anyNameBeginsWithSearch()" style="font-size: 120%; margin-left: 10px; width: 25px">                
                 &gt;* <!-- mat-icon svgIcon="chevron_right"></mat-icon-->
@@ -124,8 +124,13 @@
             <!--  <button mat-icon-button color="primary" (click)="clipboard(this.smiles)">
                     <mat-icon  color="primary" svgIcon="paste"></mat-icon>
                   </button>-->
-              <button mat-icon-button color="primary" (click)="editStructureSearch()">
-                <mat-icon svgIcon="edit"></mat-icon>
+              <!-- if search is coming from Advanced Search -->
+              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+                <mat-icon svgIcon="edit" matTooltip="Go back to Advanced Search"></mat-icon>
+              </button>
+              <!-- if search is not coming from Advanced Search -->
+              <button mat-icon-button color="primary" *ngIf="!isSearchEditable" (click)="editStructureSearch()">
+                <mat-icon svgIcon="edit" matTooltip="Transfer Structure to Structure Search"></mat-icon>
               </button>
               <button mat-icon-button color="primary" (click)="clearStructureSearch()">
                 <mat-icon svgIcon="delete_forever"></mat-icon>
@@ -421,7 +426,6 @@
                   </div>
                   <div class = "tile-button-container">
                       <button
-                     
                       mat-icon-button [matMenuTriggerFor]="downloadMenu">
                       <mat-icon svgIcon="get_app"></mat-icon>
                     </button>
@@ -524,7 +528,7 @@
           </div>
           <div class="actions-container">
             <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
-              <mat-icon svgIcon="edit"></mat-icon>
+              <mat-icon svgIcon="edit" tooltip="Go to Advanced Search"></mat-icon>
             </button>
             <button mat-icon-button color="primary" (click)="clearSearch()">
               <mat-icon svgIcon="delete_forever"></mat-icon>

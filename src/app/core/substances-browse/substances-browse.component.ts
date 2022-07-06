@@ -106,6 +106,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   narrowSearchSuggestionsCount = 0;
   private isComponentInit = false;
   sequenceID?: string;
+  searchHashFromAdvanced: string;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -201,6 +202,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     const deprecated = this.activatedRoute.snapshot.queryParams['showDeprecated'];
+    this.searchHashFromAdvanced = this.activatedRoute.snapshot.queryParams['g-search-hash'];
     if (this.pageSize > 500) {
       this.pageSize = 500;
     }
@@ -703,6 +705,41 @@ anyNameBeginsWithSearch(): void {
    // const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
    // `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
    // this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
+
+    // ** BEGIN: Store in Local Storage for Advanced Search
+    // storage searchterm in local storage when going from Browse Substance to Advanced Search (NOT COMING FROM ADVANCED SEARCH)
+    if (!this.searchHashFromAdvanced) {
+      const advSearchTerm: Array<String> = [];
+      advSearchTerm[0] = this.privateSearchTerm;
+      const queryStatementHashes = [];
+      const queryStatement = {
+        condition: '',
+        queryableProperty: 'Manual Query Entry',
+        command: 'Manual Query Entry',
+        commandInputValues: advSearchTerm,
+        query: this.privateSearchTerm
+      };
+
+      // Store in cookies, Category tab (Substance, Application, etc)
+      const categoryHash = this.utilsService.hashCode('Substance');
+      localStorage.setItem(categoryHash.toString(), 'Substance');
+      queryStatementHashes.push(categoryHash);
+
+      const queryStatementString = JSON.stringify(queryStatement);
+      const hash = this.utilsService.hashCode(queryStatementString);
+
+      // Store in cookies, Each Query Statement is stored in separate hash
+      localStorage.setItem(hash.toString(), queryStatementString);
+
+      // Push Query Statements Hashes in Array
+      queryStatementHashes.push(hash);
+
+      // Store in cookies,  store in Query Hash - Query Statement Hashes Array
+      const queryStatementHashesString = JSON.stringify(queryStatementHashes);
+
+      localStorage.setItem(this.searchTermHash.toString(), queryStatementHashesString);
+     }
+    // ** END: Store in Local Storage for Advanced Search
 
     const navigationExtras: NavigationExtras = {
       queryParams: {
