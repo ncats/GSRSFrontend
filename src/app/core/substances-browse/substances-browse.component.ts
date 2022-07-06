@@ -102,12 +102,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   } = {};
   narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
-  otherSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {}; 
   matchTypes?: Array<string> = [];
-  otherMatchTypes?: Array<string> = [];
-
   narrowSearchSuggestionsCount = 0;
-  otherSearchSuggestionsCount = 0;
   private isComponentInit = false;
   sequenceID?: string;
 
@@ -518,7 +514,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                   this.narrowSearchSuggestionsCount++;
                 }
               });
-              this.otherMatchTypes.sort();
+              this.matchTypes.sort();
             }
   
           }
