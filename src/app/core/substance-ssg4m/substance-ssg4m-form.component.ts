@@ -96,6 +96,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   json: SubstanceDetail;
   downloadJsonHref: any;
   jsonFileName: string;
+  showHeaderBar = 'true';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -168,6 +169,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   }
 
   ngOnInit() {
+    this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'];
     this.loadingService.setLoading(true);
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');

@@ -1,4 +1,4 @@
-<mat-toolbar class="mat-elevation-z3" color="primary">
+<mat-toolbar class="mat-elevation-z3" color="primary" *ngIf="showHeaderBar === 'true'">
   <div class="logo-container">
     <span class="logo">
       <a routerLink="/home" aria-label="home">
@@ -102,7 +102,7 @@
       </a>
       <div *ngIf="adverseEventShinyHomepageDisplay === true">
         <mat-divider></mat-divider>
-      
+
         <a mat-menu-item [href]="adverseEventShinyHomepageURL" target="_blank">
           Browse Adverse Events
         </a>

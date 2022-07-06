@@ -51,6 +51,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   private selectedText: string;
   private subscriptions: Array<Subscription> = [];
   private classicLinkQueryParams = {};
+  showHeaderBar = 'true';
 
   constructor(
     private router: Router,
@@ -130,6 +131,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'];
+    alert('GGGGGGGG ' + this.showHeaderBar);
     this.loadedComponents = this.configService.configData.loadedComponents || null;
 
   let notempty = false;
