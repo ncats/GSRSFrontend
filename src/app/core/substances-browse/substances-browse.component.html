@@ -39,8 +39,10 @@
           </button>
           <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
             <div *ngFor="let matchType of matchTypes">
-              <div class="match-type">
-                {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+              <div class="match-type" [ngSwitch]="matchType">
+                <div *ngSwitchCase="'WORD'">Contains Match</div>
+                <div *ngSwitchCase="'ADDITIONAL'">Other Match</div>
+                <div *ngSwitchDefault>Exact Match</div>
               </div>
               <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]"
                 (click)="restricSearh(suggestion.luceneQuery)">
@@ -68,15 +70,22 @@
               <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
               <span>{{this.searchTerm}}</span>
             </div>
+
+
             <div class="actions-container">
               <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
                 <mat-icon svgIcon="edit"></mat-icon>
               </button>
-              <button mat-icon-button color="primary" (click)="clearSearch()">
-                <mat-icon svgIcon="delete_forever"></mat-icon>
+              <button *ngIf="searchTermOkforBeginsWithSearch()" mat-icon-button color="primary" matTooltip="Any name begins with ..." (click)="anyNameBeginsWithSearch()" style="font-size: 120%; margin-left: 10px; width: 25px">                
+                &gt;* <!-- mat-icon svgIcon="chevron_right"></mat-icon-->
+              </button>
+    
+              <button mat-icon-button color="primary" (click)="clearSearch()" style="width: 25px">
+                <mat-icon svgIcon="delete_forever" matTooltip="Delete search"></mat-icon>
               </button>
             </div>
           </div>
+
           <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
             <div class='selected-container'>
               <span class="capitalized font-medium-bold selected-label">

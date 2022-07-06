@@ -34,7 +34,6 @@ import { StructureService } from '@gsrs-core/structure';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Facet, FacetUpdateEvent } from '../facets-manager/facet.model';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
@@ -50,6 +49,7 @@ import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { FormControl } from '@angular/forms';
 import { SubBrowseEmitterService } from './sub-browse-emitter.service';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-substances-browse',
@@ -459,11 +459,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
           this.narrowSearchSuggestionsCount = 0;
+
           if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+
             pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
               if (this.codeSystem && this.codeSystem[suggestion.displayField]) {
                 suggestion.displayField = this.codeSystem[suggestion.displayField].display;
               }
+
               if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
                 this.narrowSearchSuggestions[suggestion.matchType] = [];
                 if (suggestion.matchType === 'WORD') {
@@ -475,9 +478,45 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
               this.narrowSearchSuggestionsCount++;
             });
-          }
-          this.matchTypes.sort();
 
+            this.matchTypes.sort();
+
+            if(this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm)) {
+            
+              const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
+
+              // The match type usually originates from the backend.
+              // But below, it is specified here to make additonal match options(s) in the backend.   
+              // Can't figure out why the sort of matchTypes does not work.
+              // I am not sure it worked before this change.
+              // I would like Additional matches to appear first.
+              
+              let suggestion: NarrowSearchSuggestion = {
+                matchType: 'ADDITIONAL',
+                count: 0,
+                displayField: 'Any Name Begins With',
+                luceneField: 'root_names_name',
+                luceneQuery: lq
+              };
+              this.substanceService.searchSubstances(lq).subscribe(response => {
+                if(response && response.total!==null) {
+                  suggestion.count = response.total;
+                  if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+                    this.narrowSearchSuggestions[suggestion.matchType] = [];
+                    if (suggestion.matchType === 'WORD') {
+                      this.matchTypes.unshift(suggestion.matchType);
+                    } else {
+                      this.matchTypes.push(suggestion.matchType);
+                    }
+                  }
+                  this.narrowSearchSuggestions[suggestion.matchType].unshift(suggestion);
+                  this.narrowSearchSuggestionsCount++;
+                }
+              });
+              this.matchTypes.sort();
+            }
+  
+          }
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
             this.exportOptions = response.filter(exp => {
               if (exp.extension) {
@@ -520,6 +559,23 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
 
   }
+
+searchTermOkforBeginsWithSearch(): boolean {
+  return (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm));
+}
+
+anyNameBeginsWithSearch(): void { 
+  if(this.searchTermOkforBeginsWithSearch()) {           
+    const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+      }
+    };
+    navigationExtras.queryParams['search'] = lq;
+    this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+}
+
 
   restricSearh(searchTerm: string): void {
     this.privateSearchTerm = searchTerm;
