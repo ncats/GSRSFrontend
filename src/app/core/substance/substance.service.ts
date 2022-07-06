@@ -103,7 +103,6 @@ export class SubstanceService extends BaseHttpService {
       this.showDeprecated = false;
     }
     return new Observable(observer => {
-
       if (args.structureSearchTerm != null && args.structureSearchTerm !== '') {
         this.searchSubstanceStructures(
           args.structureSearchTerm,
@@ -142,7 +141,6 @@ export class SubstanceService extends BaseHttpService {
           observer.complete();
         });
       } else {
-
         this.searchSubstances(
           args.searchTerm,
           args.pageSize,
@@ -211,7 +209,6 @@ export class SubstanceService extends BaseHttpService {
       let params = new FacetHttpParams({encoder: new CustomEncoder()});
       let url = this.apiBaseUrl;
       let structureFacetsKey: number;
-
       structureFacetsKey = this.utilsService.hashCode(searchTerm, type, cutoff);
 
       if (type && (type === 'flex' || type === 'exact')) {
@@ -221,10 +218,18 @@ export class SubstanceService extends BaseHttpService {
       if (!sync && this.searchKeys[structureFacetsKey]) {
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
-        params = params.appendDictionary({
-          top: pageSize.toString(),
-          skip: skip.toString()
-        });
+        if(querySearchTerm.length > 0) {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString(),
+            q: querySearchTerm.toString()
+          });
+        } else {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString()
+          });
+        }
         if (order != null && order !== '') {
           params = params.append('order', order);
         }

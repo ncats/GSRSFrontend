@@ -5,6 +5,8 @@
 * the cola and d3 libraries.
 */
 var schemeUtil={};
+schemeUtil.showApprovalID=false;
+schemeUtil.approvalCode="UNII";
 schemeUtil.apiBaseURL="";
 schemeUtil.debug=true;
 schemeUtil.width=800;
@@ -29,16 +31,23 @@ schemeUtil.makeMaterialNode = function(smat, pidArr){
    var nn = {};
    nn.id = pidArr[0];
    pidArr[0]++;
-   nn.bottomText = smat.substanceName.refPname;
+   if(smat.verbatimName){
+    nn.bottomText=smat.verbatimName;
+   }else{
+    nn.bottomText = smat.substanceName.refPname;
+   }
    nn.name = smat.substanceName.approvalID;
    nn.type = "material";
+   nn.refuuid = smat.substanceName.refuuid;
    if(!schemeUtil.debug){
     nn.img=schemeUtil.apiBaseURL + "substances/render(" + smat.substanceName.refuuid + ")?format=svg&size=150&stereo=false";
    }
-   if (!nn.name) {
-      nn.name = "UNII: Pending Record";
-   } else {
-      nn.name = "UNII: " + nn.name;
+   if(schemeUtil.showApprovalID){
+     if (!nn.name) {
+        nn.name = schemeUtil.approvalCode + ": Pending Record";
+     } else {
+        nn.name = schemeUtil.approvalCode + ": " + nn.name;
+     }
    }
    if ((smat.substanceRole + "").toUpperCase() === "INTERMEDIATE") {
           nn.brackets = true;
@@ -92,6 +101,9 @@ schemeUtil.makeDisplayGraph = function(g4) {
       }
 
       var rn = { type: "reaction", leftText: "Step " + stage.stageNumber };
+      
+      rn.processIndex=i;
+      rn.stepIndex=iii;
       rn.id = ppid[0];
       ppid[0]++;
       nodes.push(rn);

@@ -126,7 +126,7 @@
       </mat-select>
       <span class="middle-fill"></span>
       <mat-hint class="action-hint">
-        <a (click)="showAllFields()">Show all fields</a>
+        <a tabindex="0" role="link" (click)="showAllFields()">Show all fields</a>
       </mat-hint>
     </mat-form-field>
     <div *ngIf="!isShowCommonFields">
@@ -161,7 +161,7 @@
         </mat-option>
       </mat-select>
       <mat-hint class="action-hint">
-        <a (click)="showAllCommandOptions()">{{isShowAllCommandOptions? 'Hide Some Options':'Show More Options'}}</a>
+        <a tabindex="0" role="link" (click)="showAllCommandOptions()">{{isShowAllCommandOptions? 'Hide Some Options':'Show More Options'}}</a>
       </mat-hint>
     </mat-form-field>
   </div>

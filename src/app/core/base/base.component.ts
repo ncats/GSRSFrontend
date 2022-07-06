@@ -18,6 +18,7 @@ import { take } from 'rxjs/operators';
 import * as moment from 'moment';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
+import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 
 @Component({
   selector: 'app-base',
@@ -450,6 +451,42 @@ export class BaseComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.router.navigate(['/home']);
     }, 1200);
+  }
+
+  viewDrafts(): void {
+    const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
+      maxHeight: '85%',
+      width: '70%',
+      data: {view: 'user'}
+    });
+    this.overlayContainer.style.zIndex = '1002';
+  
+   dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+  
+  
+      if (response) {
+           this.loadingService.setLoading(true);
+         //  console.log(response.json);
+  
+          const read = response.substance;
+          
+          if (response.uuid && response.uuid != 'register'){
+           const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
+          this.router.navigateByUrl(url, { state: { record: response.substance } });
+         } else {
+           setTimeout(() => {
+          //   this.overlayContainer.style.zIndex = null;
+             this.router.onSameUrlNavigation = 'reload';
+             let url = '/substances/register/' + response.substance.substanceClass + '?action=import'
+            this.router.navigateByUrl(url, { state: { record: response.substance } });
+ 
+           }, 500);
+         }
+          }
+  
+         
+    });
   }
 
 }
