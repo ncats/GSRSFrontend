@@ -35,7 +35,6 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   loadedComponents: LoadedComponents;
   loadingStatus = '';
 
-
   @Input() substanceUuid: string;
   @Output() countClinicalTrialOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -60,29 +59,15 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     super(gaService, clinicalTrialService);
   }
 
-//  ngOnInit() {
-//    if (this.substanceUuid) {
-//      this.getSubstanceClinicalTrials();
-//      this.clinicalTrialListExportUrl();
-//    }
-//  }
-
   ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       this.isAdmin = response;
     });
     if (this.substanceUuid) {
-      // this.getSubstanceKey();
-
-
-      // this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"' + this.substance.uuid + '"';
-      this.getSubstanceClinicalTrials(null, 'initial');
-      //  this.productListExportUrl();
+     this.getSubstanceClinicalTrials(null, 'initial');
     }
   }
-
-
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
@@ -136,7 +121,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
   export() {
     if (this.etagAllExport) {
-      const extension = 'xlsx';
+      const extension = 'ctus.xlsx';
       const url = this.getApiExportUrl(this.etagAllExport, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
@@ -173,8 +158,8 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
 
   clinicalTrialListExportUrl() {
-    if (this.bdnum != null) {
-      this.exportUrl = this.clinicalTrialService.getClinicalTrialListExportUrl(this.bdnum);
+    if (this.substanceUuid != null) {
+      this.exportUrl = this.clinicalTrialService.getClinicalTrialListExportUrl(this.substanceUuid);
     }
   }
 

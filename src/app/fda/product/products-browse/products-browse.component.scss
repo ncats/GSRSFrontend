@@ -1539,3 +1539,29 @@ margin:auto;
 .margintopneg10 {
   margin-top: -10px;
 }
+
+.narrow-search-suggestions-container {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.flex-row {
+  width: 100%;
+  margin: auto;
+}
+
+.narrow-search-suggestions {
+  padding: 12px 20px;
+  width: auto;
+  display: flex;
+  align-content: center;
+  align-items: center;
+
+  .mat-flat-button {
+      margin-left: 7px;
+  }
+}

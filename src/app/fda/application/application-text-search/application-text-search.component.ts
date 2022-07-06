@@ -58,7 +58,7 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
-      let showTypes = ['Application_Type', 'Product_Name', 'Sponsor_Name', 'Title', 'Ingredient_Name', 'Division_Class_Division', 'Indication'];
+      let showTypes = ['root_applicationID', 'Application_Type', 'Product_Name', 'Sponsor_Name', 'Title', 'Ingredient_Name', 'Division_Class_Division', 'Indication'];
       /* if(this.configService && this.configService.configData && this.configService.configData.typeaheadFields) {
          showTypes = this.configService.configData.typeaheadFields;
       } */
@@ -67,7 +67,9 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
       });
       // this.suggestionsFields.sort(function (x, y) { return x === 'Display_Name' ? -1 : y === 'Display_Name' ? 1 : 0; });
       this.suggestionsFields.forEach((value, index) => {
-        if (value === 'Application_Type') {
+        if (value === 'root_applicationID') {
+          this.suggestionsFields[index] = { value: 'root_applicationID', display: 'Application Type Number' };
+        } else if (value === 'Application_Type') {
           this.suggestionsFields[index] = { value: 'Application_Type', display: 'Application Type' };
         } else if (value === 'Product_Name') {
           this.suggestionsFields[index] = { value: 'Product_Name', display: 'Product Name' };
@@ -139,7 +141,19 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
     let searchTerm = event.option.value;
 
     searchTerm = this.topSearchClean(searchTerm);
-    
+
+    this.searchPerformed.emit(searchTerm);
+  }
+
+  processSubstanceSearch() {
+    let searchTerm = this.searchControl.value;
+    const eventCategory = this.eventCategory || 'substanceTextSearch';
+    const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchTerm || 'search term option';
+    this.gaService.sendEvent(eventCategory, 'search:submit', eventLabel);
+
+    // Clean up searchTerm
+    searchTerm = this.topSearchClean(searchTerm);
+
     this.searchPerformed.emit(searchTerm);
   }
 
@@ -162,15 +176,6 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
         return '<strong>' + match + '</strong>';
       });
     }
-  }
-
-  processSubstanceSearch() {
-    let searchTerm = this.searchControl.value;
-    const eventCategory = this.eventCategory || 'substanceTextSearch';
-    const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchTerm || 'search term option';
-    this.gaService.sendEvent(eventCategory, 'search:submit', eventLabel);
-
-    this.searchPerformed.emit(searchTerm);
   }
 
   activateSearch(): void {

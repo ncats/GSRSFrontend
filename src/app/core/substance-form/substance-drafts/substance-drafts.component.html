@@ -25,7 +25,7 @@
 
         <ng-container matColumnDef="date">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef> Date Saved </th>
-                <td mat-cell *matCellDef="let draft">  {{draft.date | date:'medium'}} <span *ngIf = "draft.auto" style = "margin-left:8px" ><b>[AUTOSAVE]</b></span> </td>
+                <td mat-cell *matCellDef="let draft"> <span>{{draft.date | date:'medium'}} </span><span *ngIf = "draft.auto" style = "margin-left:8px" ><b>[AUTOSAVE]</b></span><span><br/> {{draft.fromNow}}</span> </td>
             </ng-container>
         <ng-container matColumnDef="uuid">
             <th mat-header-cell mat-sort-header *matHeaderCellDef> UUID </th>

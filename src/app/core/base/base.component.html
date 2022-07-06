@@ -164,6 +164,9 @@
       <a mat-menu-item routerLink="/user-downloads">
         <span>User Downloads</span>
       </a>
+      <a mat-menu-item (click)="viewDrafts()">
+        <span>Saved Edit Drafts</span>
+      </a>
       <a routerLink="/admin" mat-menu-item *ngIf="isAdmin">
         <span>Admin Panel</span>
       </a>

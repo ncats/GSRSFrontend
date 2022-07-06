@@ -125,7 +125,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
             type = 'browseSubstanceProduct';
           } else if (source === 'clinicaltrialsus') {
             type = 'browseSubstanceClinicalTrial-US';
-          } else if (source === 'clinicaleurope') {
+          } else if (source === 'clinicaltrialseurope') {
             type = 'browseSubstanceClinicalTrial-EU';
           }
         }
@@ -163,7 +163,9 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
       if (this.exportOptions) {
         this.exportOptions.forEach(element => {
           if (element.extension) {
-            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx') || (element.extension === 'ctusxlsx')) {
+            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx') 
+            || (element.extension === 'ctusxlsx') || (element.extension === 'cteuxlsx')
+            ) {
               this.hasAdditionalDownloads = true;
               this.additionalExportOptions.push(element.extension);
             }

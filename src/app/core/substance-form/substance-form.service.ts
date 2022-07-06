@@ -81,9 +81,7 @@ export class SubstanceFormService implements OnDestroy {
       this.namesUpdated();
     }
 
-    console.log('subscribing');
     this.substanceEmitter.subscribe(val => {
-      console.log(val);
     });
     return new Observable(observer => {
       if (substance != null) {

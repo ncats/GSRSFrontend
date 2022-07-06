@@ -31,7 +31,7 @@
         </div>
         <div class="image-thumbnail">
           <div *ngIf="substance.structure || substance.polymer">
-            <a class="zoom" (click)="openImageModal(substance)">
+            <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(substance)">
               <img appSubstanceImage [entityId]="substance.uuid"
                 [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
             </a>
@@ -58,20 +58,30 @@
             <mat-icon svgIcon="search"></mat-icon>
           </button>
 
+          <!--
           <button class="summary-button" aria-label="Advanced Search" mat-icon-button [matMenuTriggerFor]="advancedSearchMenu">
             <mat-icon svgIcon="youtube"></mat-icon>
           </button>
+          -->
+
+          <a class = "mat-icon-button" aria-label = "Advanced Search" class = "summary-button" mat-icon-button
+          [routerLink]="['/advanced-search']" [queryParams]="{structure : substance.structure.id}" matTooltip='Transfer Structure to Advanced Search'>
+          <mat-icon svgIcon="youtube"></mat-icon>
+          </a>
 
           <!--
-        <a  class = "mat-icon-button" aria-label = "Advanced Search" class = "summary-button" mat-icon-button [routerLink]="['/advanced-search']"
-          matTooltip='Advanced Search'>
-          <mat-icon svgIcon="youtube"></mat-icon>
-        </a>
-        -->
           <a class="mat-icon-button" matTooltip="edit substance" class="summary-button" aria-label="edit substance"
+          </a>
+          -->
+          <!-- <a class="mat-icon-button" matTooltip="edit substance" class="summary-button"
             *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
             <mat-icon svgIcon="edit"></mat-icon>
-          </a>
+          </a> -->
+
+          <button aria-label="Edit Substance" class="summary-button" *ngIf="isAdmin" mat-icon-button
+            [matMenuTriggerFor]="editMenu" [routerLink]="['/substances', substance.uuid, 'edit']">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
 
           <button aria-label="Copy file" class="summary-button" *ngIf="canCreate" mat-icon-button
             [matMenuTriggerFor]="editMenu">
@@ -179,7 +189,7 @@
                   <span *ngIf="index < 5  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
                     <span *ngIf="codeObject.url">
                       <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
-                        evCategory="substancesContent" evAction="link:code" aria-label="view site in new tab">
+                        evCategory="substancesContent" evAction="link:code" aria-label="view site for {{codeObject.code.trim()}} in new tab">
                         <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
                         <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
                         <span *ngIf="codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style="font-size: 90%;
@@ -221,7 +231,7 @@
 
                     </a>
                   </span>
-                  <span *ngIf="!codeObject.url">{{codeObject.code.trim()}} 
+                  <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}
                       <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
                           font-weight: 400;">[{{codeObject.type}}]</span>
                   </span>
@@ -290,7 +300,8 @@
 
       <div class="right-aligned">
         <div *ngIf="inxightLink" class="inxight-container">
-          <a class="ext-link" [href]="inxightUrl" target="_blank">
+          <a class="ext-link" [href]="inxightUrl" target="_blank"
+          attr.aria-label="open {{inxightUrl}} in new tab">
             Inxight Drugs <mat-icon class="icon small-icon" svgIcon="open_in_new"></mat-icon>
           </a>
         </div>

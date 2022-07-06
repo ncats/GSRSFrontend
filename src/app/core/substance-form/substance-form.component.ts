@@ -133,7 +133,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     setTimeout(() => {
       if (this.substanceFormService.autoSave()) {
         this.saveDraft(true);
-        console.log(this.substanceFormService.autoSave());
       } else {
       }
       this.autoSave();
@@ -181,14 +180,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                this.overlayContainer.style.zIndex = null;
              }, 1000);
            }else if (response.uuid && response.uuid != 'register'){
-             const url = '/substances/' + response.uuid + '/edit?action=import';
+             const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
             this.router.navigateByUrl(url, { state: { record: response.substance } });
            } else {
              setTimeout(() => {
                this.overlayContainer.style.zIndex = null;
                this.router.onSameUrlNavigation = 'reload';
                this.loadingService.setLoading(false);
-              this.router.navigateByUrl('/substances/register?action=import', { state: { record: response.json } });
+               this.router.onSameUrlNavigation = 'reload';
+              this.router.navigateByUrl('/substances/register/' + response.substance.substanceClass + '?action=import', { state: { record: response.substance } });
    
              }, 1000);
            }
@@ -287,12 +287,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
+        
         const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+      
         if (params['id']) {
-
+          
           if(action && action === 'import' && window.history.state) {
             const record = window.history.state;
             this.imported = true;
+            
             this.getDetailsFromImport(record.record);
           } else {
             const id = params['id'];
@@ -649,6 +652,9 @@ getDrafts() {
   }
 
   getDetailsFromImport(state: any, same?: boolean) {
+    if(!this.jsonValid(state)) {
+      state  = JSON.stringify(state);
+    }
     if (state && this.jsonValid(state)) {
       const response = JSON.parse(state);
       same = false;
@@ -1100,7 +1106,7 @@ mergeConcept() {
       }
     });
     if (!primary && json.names.length > 0) {
-      primary = name[0].name;
+      primary = json.names[0].name;
     }
     if(!auto) {
       const file = 'gsrs-draft-' + time;

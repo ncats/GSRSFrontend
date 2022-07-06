@@ -17,6 +17,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { environment } from '../../../../environments/environment';
@@ -33,6 +34,7 @@ import { Application } from '../model/application.model';
   styleUrls: ['./applications-browse.component.scss']
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+ // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   view = 'cards';
   public privateSearchTerm?: string;
   public applications: Array<Application>;
@@ -58,6 +60,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   private overlayContainer: HTMLElement;
   etag = '';
   environment: any;
+  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
+  matchTypes?: Array<string> = [];
+  narrowSearchSuggestionsCount = 0;
   previousState: Array<string> = [];
   private searchTermHash: number;
   isSearchEditable = false;
@@ -203,6 +208,26 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
           this.rawFacets = pagingResponse.facets;
         }
 
+        // Narrow Suggest Search
+        this.narrowSearchSuggestions = {};
+        this.matchTypes = [];
+        this.narrowSearchSuggestionsCount = 0;
+        if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+          pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+            if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+              this.narrowSearchSuggestions[suggestion.matchType] = [];
+              if (suggestion.matchType === 'WORD') {
+                this.matchTypes.unshift(suggestion.matchType);
+              } else {
+                this.matchTypes.push(suggestion.matchType);
+              }
+            }
+            this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+            this.narrowSearchSuggestionsCount++;
+          });
+        }
+        this.matchTypes.sort();
+
         this.getSubstanceBySubstanceKey();
         // Get Application Clinical Trial Record
         this.getClinicalTrialApplication();
@@ -293,6 +318,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.searchApplications();
     }
     return;
+  }
+
+  openSideNav() {
+    this.gaService.sendEvent('substancesFiltering', 'button:sidenav', 'open');
+   // this.matSideNav.open();
   }
 
   updateView(event): void {
@@ -425,6 +455,15 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     }); // Application forEach
 
+  }
+
+  restricSearh(searchTerm: string): void {
+    this.privateSearchTerm = searchTerm;
+    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    this.populateUrlQueryParameters();
+    this.searchApplications();
+    // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
   }
 
   export() {
