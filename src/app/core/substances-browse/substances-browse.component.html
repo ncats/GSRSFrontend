@@ -38,7 +38,7 @@
             <mat-icon svgIcon="edit" tooltip="Go to Advanced Search"></mat-icon>
           </button>
           <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
-            <div *ngFor="let matchType of matchTypes">
+            <div *ngFor="let matchType of sortMatchTypes(matchTypes)">
               <div class="match-type" [ngSwitch]="matchType">
                 <div *ngSwitchCase="'WORD'">Contains Match</div>
                 <div *ngSwitchCase="'ADDITIONAL'">Other Match</div>
