@@ -17,6 +17,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { environment } from '../../../../environments/environment';
@@ -44,6 +45,9 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
   privateExport = false;
   isSearchEditable = false;
   environment: any;
+  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
+  matchTypes?: Array<string> = [];
+  narrowSearchSuggestionsCount = 0;
   searchValue: string;
   previousState: Array<string> = [];
   private overlayContainer: HTMLElement;
@@ -109,7 +113,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
-  //  this.gaService.sendPageView('Browse Adverse Event Dme');
+    //  this.gaService.sendPageView('Browse Adverse Event Dme');
 
     this.titleService.setTitle(`AE:Browse Adverse Events`);
 
@@ -178,7 +182,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
         this.adverseEventDme = pagingResponse.content;
         // didn't work unless I did it like this instead of
         // below export statement
-       // this.dataSource = this.adverseEventDme;
+        // this.dataSource = this.adverseEventDme;
         this.totalAdverseEventDme = pagingResponse.total;
         this.countAdverseEventDmeOut.emit(pagingResponse.total);
         this.etag = pagingResponse.etag;
@@ -192,7 +196,28 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
           this.rawFacets = pagingResponse.facets;
         }
 
-      //  this.getSubstanceBySubstanceKey();
+        // Narrow Suggest Search Begin
+        this.narrowSearchSuggestions = {};
+        this.matchTypes = [];
+        this.narrowSearchSuggestionsCount = 0;
+        if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+          pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+            if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+              this.narrowSearchSuggestions[suggestion.matchType] = [];
+              if (suggestion.matchType === 'WORD') {
+                this.matchTypes.unshift(suggestion.matchType);
+              } else {
+                this.matchTypes.push(suggestion.matchType);
+              }
+            }
+            this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+            this.narrowSearchSuggestionsCount++;
+          });
+        }
+        this.matchTypes.sort();
+        // Narrow Suggest Search End
+
+        //  this.getSubstanceBySubstanceKey();
         // this.applicationService.getClinicalTrialApplication(this.applications);
       }, error => {
         console.log('error');

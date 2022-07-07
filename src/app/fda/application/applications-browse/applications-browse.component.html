@@ -14,7 +14,7 @@
         <mat-icon svgIcon="chevron_right"></mat-icon>
       </button>
 
-      <!-- NARROW SEARCH SUGGESTIONS -->
+      <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
       <div class="narrow-search-suggestions-container"
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
         <div class="flex-row">
@@ -60,7 +60,9 @@
             For more options use the <a routerLink="/advanced-search" style="padding-left: 6px;"> Advanced Search</a>
           </div>
         </div>
-      </div> <!-- Narrow Search Suggestion End -->
+      </div>
+      <!-- Narrow Search Suggestion End -->
+
 
       <!-- SEARCHTERM -->
       <ng-template #filterParameters>
