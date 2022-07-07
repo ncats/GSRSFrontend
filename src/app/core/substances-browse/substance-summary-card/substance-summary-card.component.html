@@ -64,9 +64,10 @@
           </button>
           -->
 
-          <a class = "mat-icon-button" aria-label = "Advanced Search" class = "summary-button" mat-icon-button
-          [routerLink]="['/advanced-search']" [queryParams]="{structure : substance.structure.id}" matTooltip='Transfer Structure to Advanced Search'>
-          <mat-icon svgIcon="youtube"></mat-icon>
+          <a class = "mat-icon-button" aria-label = "Advanced Search" *ngIf="substance.structure"
+            class = "summary-button" mat-icon-button
+            [routerLink]="['/advanced-search']" [queryParams]="{structure : substance.structure.id}" matTooltip='Transfer Structure to Advanced Search'>
+            <mat-icon svgIcon="youtube"></mat-icon>
           </a>
 
           <!--

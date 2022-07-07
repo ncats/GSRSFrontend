@@ -190,6 +190,9 @@ export class ProductTextSearchComponent implements OnInit, AfterViewInit, OnDest
     const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchTerm || 'search term option';
     this.gaService.sendEvent(eventCategory, 'search:submit', eventLabel);
 
+    // Clean up searchTerm
+    searchTerm = this.topSearchClean(searchTerm);
+
     this.searchPerformed.emit(searchTerm);
   }
 
