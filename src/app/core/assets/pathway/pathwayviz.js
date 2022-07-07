@@ -10,7 +10,7 @@ schemeUtil.approvalCode="UNII";
 schemeUtil.apiBaseURL="";
 schemeUtil.debug=true;
 schemeUtil.width=800;
-schemeUtil.height=1550;
+schemeUtil.height=2000;
 schemeUtil.layout="vertical";
 
 schemeUtil.bracketRoleType="NON-ISOLATED INTERMEDIATE";
@@ -108,6 +108,7 @@ schemeUtil.makeDisplayGraph = function(g4) {
       
       rn.processIndex=i;
       rn.stepIndex=iii;
+	  console.log(rn);
       rn.id = ppid[0];
       ppid[0]++;
       nodes.push(rn);
