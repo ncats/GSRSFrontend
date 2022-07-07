@@ -190,3 +190,8 @@ mat-select-panel{
 .bordergray {
   border: 1px solid green;
 }
+
+/* tyler added as quick fix */
+app-substance-form-ssg4m-process-card button[color=primary] {
+    float: right;
+}
