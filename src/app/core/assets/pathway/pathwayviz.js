@@ -83,7 +83,7 @@ schemeUtil.makeDisplayGraph = function(g4) {
           newNode = true;
           nn=schemeUtil.makeMaterialNode(smat,ppid);
         }
-        if ((smat.substanceRole + "").toUpperCase() === "INTERMEDIATE") {
+        if ((smat.substanceRole + "").toUpperCase() === schemeUtil.bracketRoleType) {
           nn.brackets = true;
         }
         //need to think about this in cases where there's more
@@ -127,7 +127,7 @@ schemeUtil.makeDisplayGraph = function(g4) {
           newNode = true;
           nn=schemeUtil.makeMaterialNode(rmat,ppid);
         }
-        if ((rmat.substanceRole + "").toUpperCase() === "INTERMEDIATE") {
+        if ((rmat.substanceRole + "").toUpperCase() === schemeUtil.bracketRoleType) {
           nn.brackets = true;
         }
         //need to think about this in cases where there's more
