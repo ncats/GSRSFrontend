@@ -131,7 +131,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_ptCount';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
-
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -466,6 +466,14 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
   processSubstanceSearch(searchValue: string) {
     this.privateSearchTerm = searchValue;
     this.setSearchTermValue();
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
   }
 
 }

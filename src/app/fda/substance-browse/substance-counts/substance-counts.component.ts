@@ -152,4 +152,9 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
       subscription.unsubscribe();
     });
   }
+
+  launchApplicationMatchingList(substanceId: string) {
+    this.router.navigate(['/sub-app-match-list', substanceId]);
+  }
+
 }
