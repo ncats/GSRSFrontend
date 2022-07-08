@@ -113,9 +113,9 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 
   submit(): void {
     this.vocabulary.terms = this.terms;
+    this.validationMessages = [];
     this.cvService.validateVocab(this.vocabulary).subscribe(response => {
         if(response && response.valid) {
-          this.validationMessages = [];
           this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
             this.loading = false;
       if (response.terms && response.terms.length === this.vocabulary.terms.length) {
@@ -125,7 +125,15 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         }, 200);
       }
     },error => {
-        alert('invalid vocabulary');
+        let str = 'Invalid Vocabulary';
+        if (error.error && error.error.message) {
+          str += '\n\n' + error.error.message;
+  
+        }
+       else if(error.message) {
+          str += '\n\n' + error.message;
+        }
+      alert(str);
         this.loading = false;
   
       });
@@ -137,7 +145,15 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
           }
         }
     },error => {
-      alert('invalid vocabulary');
+      let str = 'Invalid Vocabulary';
+      if (error.error && error.error.message) {
+        str += '\n\n' + error.error.message;
+
+      }
+     else if(error.message) {
+        str += '\n\n' + error.message;
+      }
+      alert(str);
       this.loading = false;
 
     });
@@ -154,6 +170,8 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
     }, error => {
       alert('invalid vocabulary');
     });*/
+    this.loading = false;
+
   }
 
 

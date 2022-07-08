@@ -46,12 +46,24 @@ export class CvDialogComponent implements OnInit {
       this.vocabulary.terms.push(this.term);
       this.cvService.validateVocab(this.vocabulary).subscribe(response => {
         if(response && response.valid) {
-          this.validationMessages = [];
           this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
             if (response.terms && response.terms.length === this.vocabulary.terms.length) {
               this.message = 'Term ' + this.term.value + ' Added to ' + this.vocabulary.domain + '';
               setTimeout(() => {this.dialogRef.close(this.term); }, 3000);
             }
+          }, error => {
+            console.log(error);
+            this.vocabulary.terms.pop();
+            let str = 'Server Error';
+          if (error.error && error.error.message) {
+            str += ' - ' + error.error.message;
+    
+          }
+         else if(error.message) {
+            str += ' - ' + error.message;
+          }
+          this.message = str;
+    
           });
 
         } else {
@@ -60,9 +72,21 @@ export class CvDialogComponent implements OnInit {
               this.validationMessages.push(message.messageType + ': ' +message.message);
             });
           }
+          this.vocabulary.terms.pop();
         }
       },error => {
         console.log(error);
+        this.vocabulary.terms.pop();
+        let str = 'Validation Error';
+      if (error.error && error.error.message) {
+        str += ' - ' + error.error.message;
+
+      }
+     else if(error.message) {
+        str += ' - ' + error.message;
+      }
+      this.message = str;
+
       });
       
     } else {
@@ -70,7 +94,7 @@ export class CvDialogComponent implements OnInit {
       this.message = 'Term already exists';
       setTimeout(() => {
         this.message = '';
-      }, 1000);
+      }, 3000);
     }
   }
 

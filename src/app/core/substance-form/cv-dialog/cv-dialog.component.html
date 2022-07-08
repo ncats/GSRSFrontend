@@ -19,7 +19,7 @@
 
     <br/><br/>
     <div class = 'message-field'>{{message}}</div>
-    <div class = 'validation'><div><b>CV not valid:</b></div>
+    <div class = 'validation' *ngIf = "validationMessages.length > 0"><div><b>CV not valid:</b></div>
     <div *ngFor = "let message of validationMessages">{{message}}</div>
     
     </div>
