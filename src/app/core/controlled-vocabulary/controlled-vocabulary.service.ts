@@ -164,6 +164,12 @@ export class ControlledVocabularyService extends BaseHttpService {
     return this.http.get<PagingResponse<Vocabulary>>(url, options);
   }
 
+  public validateVocab(vocab: any): Observable<any> {
+    const url = `${this.apiBaseUrl}vocabularies/@validate`;
+    return this.http.post( url, vocab);
+  }
+
+
   public addVocabTerm(vocab: any): Observable<any> {
     const url = `${this.apiBaseUrl}vocabularies`;
     return this.http.put( url, vocab);

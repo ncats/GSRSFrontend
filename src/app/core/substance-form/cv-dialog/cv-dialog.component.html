@@ -19,6 +19,10 @@
 
     <br/><br/>
     <div class = 'message-field'>{{message}}</div>
+    <div class = 'validation'><div><b>CV not valid:</b></div>
+    <div *ngFor = "let message of validationMessages">{{message}}</div>
+    
+    </div>
     <div class="actions">
       <span class="middle-fill"></span>
       <button mat-button (click)="cancel()">Cancel</button>

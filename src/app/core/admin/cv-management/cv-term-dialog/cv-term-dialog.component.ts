@@ -15,6 +15,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   vocabulary: Vocabulary;
   terms: any;
   message: string;
+  validationMessages = [];
   loading = true;
   toggled = [];
   private overlayContainer: HTMLElement;
@@ -112,7 +113,35 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 
   submit(): void {
     this.vocabulary.terms = this.terms;
-    this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
+    this.cvService.validateVocab(this.vocabulary).subscribe(response => {
+        if(response && response.valid) {
+          this.validationMessages = [];
+          this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
+            this.loading = false;
+      if (response.terms && response.terms.length === this.vocabulary.terms.length) {
+        alert('vocabulary updated');
+        setTimeout(() => {
+          this.dialogRef.close(response);
+        }, 200);
+      }
+    },error => {
+        alert('invalid vocabulary');
+        this.loading = false;
+  
+      });
+        } else {
+          if(response && response.validationMessages) {
+            response.validationMessages.forEach(message => {
+              this.validationMessages.push(message.messageType + ': ' +message.message);
+            });
+          }
+        }
+    },error => {
+      alert('invalid vocabulary');
+      this.loading = false;
+
+    });
+  /*  this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
       this.loading = false;
       if (response.terms && response.terms.length === this.vocabulary.terms.length) {
         alert('vocabulary updated');
@@ -124,7 +153,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         }
     }, error => {
       alert('invalid vocabulary');
-    });
+    });*/
   }
 
 

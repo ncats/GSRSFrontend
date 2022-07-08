@@ -91,9 +91,14 @@
         
 
         </div>
+        
 </div>
 
     <div mat-dialog-actions class = "actions">
+                <div class = 'validation' *ngIf = "validationMessages.length > 0"><div><b>CV not valid:</b></div>
+                <div class = 'message' *ngFor = "let message of validationMessages">{{message}}</div>
+                
+                </div>
                 <button mat-button (click) = "addTerm()">Add term</button>
             <span class="middle-fill"></span>
             <button mat-button (click)="cancel()">Cancel</button>

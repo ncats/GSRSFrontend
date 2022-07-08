@@ -17,3 +17,15 @@
 .description {
   max-width:50%;
 }
+
+
+.validation {
+  display:flex;
+  flex-direction: column;
+  width: 100%;  
+  }
+  
+  
+  .message {
+      padding-top: 5px;
+  }
