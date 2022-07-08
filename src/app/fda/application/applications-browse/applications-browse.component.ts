@@ -558,4 +558,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.setSearchTermValue();
   }
 
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
 }
