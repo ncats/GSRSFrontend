@@ -538,4 +538,12 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.setSearchTermValue();
   }
 
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
 }

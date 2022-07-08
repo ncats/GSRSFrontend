@@ -116,13 +116,12 @@
 
 <!-- Application Matching List -->
 <div class="divflex"
-  *ngIf="this.isShowMatchList === 'true' && appMatchListCount >= 0 && loadedComponents && loadedComponents.applications">
+  *ngIf="this.isShowMatchList === 'true' && appMatchListCount > 0 && loadedComponents && loadedComponents.applications">
   <div>
     <br>
-    <a class="colorred padtop10" [routerLink]="['/sub-app-match-list', substanceId]" target="_blank">
+    <button matBadge="{{appMatchListCount}}" matBadgeColor="accent" class="button-style" (click)="launchApplicationMatchingList(substanceId)">
       Matching Application Names&nbsp;
-      <span matBadge="{{appMatchListCount}}" matBadgeOverlap="false"></span>
-    </a>
+    </button>
   </div>
   <br>
 </div>
