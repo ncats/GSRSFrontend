@@ -224,9 +224,11 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   topSearchClean(searchTerm): string {
     if (searchTerm && searchTerm.length > 0) {
       searchTerm = searchTerm.trim();
+      // Should rename this util method to looksLikeFieldNameSearchTerm 
       const looksComplex = this.utilsService.looksLikeComplexSearchTerm(searchTerm);
-      
-      if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && !looksComplex) {
+      // Removed this condition to allow automatic quoting of OAT-2* type complex searches 
+      // && searchTerm.indexOf('*') < 0
+      if (searchTerm.indexOf('"') < 0 && !looksComplex) {
         // Put slash in front of brackets, for example:
         // 1. [INN] to \[INN\]
         // 2. IBUPROFEN [INN] to IBUPROFEN \[INN\]
