@@ -139,7 +139,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
       let dialogRef = this.dialog.open(FragmentWizardComponent, {
         data: {'vocabulary': vocab, 'term': term},
         width: '1040px',
-        height: '75%'
+        height: '85%'
       });
       this.overlayContainer.style.zIndex = '1005';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {

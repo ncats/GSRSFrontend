@@ -5,6 +5,8 @@ import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controll
 import { LoadingService } from '@gsrs-core/loading';
 import { EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { StructureService } from '@gsrs-core/structure';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 
 @Component({
@@ -25,14 +27,18 @@ export class FragmentWizardComponent implements OnInit {
   asDialog = false;
   vocabulary: any;
   message: string;
+  validationMessages =[];
   adminPanel?: boolean;
-
+smiles?: any;
+private overlayContainer: HTMLElement;
 
 
   constructor(
     private CVService: ControlledVocabularyService,
     private loadingService: LoadingService,
+    private structureService: StructureService,
     public dialogRef: MatDialogRef<FragmentWizardComponent>,
+    private overlayContainerService: OverlayContainer,
 
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -68,13 +74,54 @@ export class FragmentWizardComponent implements OnInit {
       }
     });
     if (!extant) {
-      this.vocabulary.terms.push(this.privateTerm);
-      this.CVService.addVocabTerm( this.vocabulary).subscribe (response => {
-        if (response.terms && response.terms.length === this.vocabulary.terms.length) {
-          this.message = 'Term ' + this.privateTerm.value + ' Added to ' + this.vocabulary.domain + '';
-          setTimeout(() => {this.dialogRef.close(this.privateTerm); }, 3000);
+      let privateCopy = JSON.parse(JSON.stringify(this.privateTerm));
+      delete privateCopy.simpleSrc;
+      delete privateCopy.fragmentSrc;
+      this.vocabulary.terms.push(privateCopy);
+      this.CVService.validateVocab(this.vocabulary).subscribe(response => {
+        if(response && response.valid) {
+          this.CVService.addVocabTerm( this.vocabulary).subscribe (response => {
+            if (response.terms && response.terms.length === this.vocabulary.terms.length) {
+              this.message = 'Term ' + this.privateTerm.value + ' Added to ' + this.vocabulary.domain + '';
+              setTimeout(() => {this.dialogRef.close(this.privateTerm); }, 3000);
+            }
+          }, error => {
+            this.vocabulary.terms.pop();
+            let str = 'Server Error';
+          if (error.error && error.error.message) {
+            str += ' - ' + error.error.message;
+    
+          }
+         else if(error.message) {
+            str += ' - ' + error.message;
+          }
+          this.message = str;
+    
+          });
+
+        } else {
+          if(response.validationMessages) {
+            response.validationMessages.forEach(message => {
+              this.validationMessages.push(message.messageType + ': ' +message.message);
+            });
+          }
+          this.vocabulary.terms.pop();
         }
+      },error => {
+        console.log(error);
+        this.vocabulary.terms.pop();
+        let str = 'Validation Error';
+      if (error.error && error.error.message) {
+        str += ' - ' + error.error.message;
+
+      }
+     else if(error.message) {
+        str += ' - ' + error.message;
+      }
+      this.message = str;
+
       });
+      
     } else {
       this.message = 'Term already exists';
       setTimeout(() => {
@@ -83,13 +130,15 @@ export class FragmentWizardComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     if (this.privateTerm.simplifiedStructure) {
       this.privateTerm.simpleSrc = this.CVService.getStructureUrl(this.privateTerm.simplifiedStructure);
   }
   if (this.privateTerm.fragmentStructure) {
     this.privateTerm.fragmentSrc = this.CVService.getStructureUrl(this.privateTerm.fragmentStructure);
-}
+  }
+  this.overlayContainer = this.overlayContainerService.getContainerElement();
+
   }
 
 
@@ -100,7 +149,26 @@ export class FragmentWizardComponent implements OnInit {
   editorOnLoad(editor: Editor): void {
     this.loadingService.setLoading(false);
     this.editor = editor;
+    if(this.privateTerm.value && this.privateTerm.value.fragmentStructure) {
+      const pos = this.privateTerm.value.fragmentStructure.substring(0, this.privateTerm.value.fragmentStructure.indexOf(' '));
+      this.structureService.interpretStructure(pos).subscribe(response => {
+        if (response.structure && response.structure.molfile) {
+
+          let test = response.structure.molfile;
+          test = test.replace(/ A  /g, ' *  ');
+          this.editor.setMolecule(test);
+        }
+      });
+    } else {
+     
+    }
+    setTimeout(() => {
+      //  this.dialog.openDialogs.pop();
+      //  this.dialog.openDialogs.pop();
+      this.overlayContainer.style.zIndex = '1003';
   
+      this.overlayContainer.style.zIndex = '10003';
+      });
   }
 
   getCombination(ll, i) {
@@ -235,14 +303,18 @@ export class FragmentWizardComponent implements OnInit {
     return getMarkers(smi);
   }
 
-  fragmentType(domain: any) {
+  fragmentType(domain: any, current?: any) {
     let selected = null;
-    this.domains.forEach(val => {
-      if (val.domain === domain) {
-      
-        selected = val;
-      }
-    });
+    if(!current) {
+      this.domains.forEach(val => {
+        if (val.domain === domain) {
+        
+          selected = val;
+        }
+      });
+    } else {
+      selected = this.vocabulary;
+    }
     var rgs = _.chain(selected.terms).map(function (t) {
       return t.fragmentStructure;
     }).filter(function (t) {
@@ -260,9 +332,6 @@ export class FragmentWizardComponent implements OnInit {
 
 
     var tt = this.getPossibleSmiles(this.editor.getSmiles());
-
-    
-
  /*   if (tt.stars.length <= 0) {
       alert('No star atoms specified, expecting:' + rgs.length + ' star atoms');
       return;
@@ -285,7 +354,7 @@ export class FragmentWizardComponent implements OnInit {
       break;
     }
     if (tt.stars.length <= 0) {
-      alert('No star atoms specified, expecting:' + stars + ' star atoms');
+      alert('No star atoms specified, expecting:' + stars + ' star atoms. Use the star atom selector under the periodic table menu to set');
       return;
     } else if (tt.stars.length != stars) {
       alert('Expected ' + stars + ' star atoms, but found:' + tt.stars.length);
@@ -293,25 +362,40 @@ export class FragmentWizardComponent implements OnInit {
     var smilesforms = tt.eachForm(rgs);
     this.forms = [];
     smilesforms.forEach(form => {
-
-      let temp = {'value':form, 'url':this.CVService.getStructureUrlFragment(form)};
+      let temp = {'value':form, 'url':this.CVService.getStructureUrl(form)};
       this.forms.push(temp);
     });
 
   }
 
   getFragmentCV() {
-    this.CVService.getFragmentCV().subscribe(data => {
-      this.dat = {};
-
-     this.domains = data.content;
-
-     if (this.vocab) {
-      this.fragmentType(this.vocab);
-     }
-
+    if (this.editor.getSmiles() && this.editor.getSmiles() !== '') {
+     
+      if(!this.vocabulary) {
+        this.CVService.getFragmentCV().subscribe(data => {
+          this.dat = {};
     
-    });
+         this.domains = data.content;
+    
+         if (this.vocab) {
+          this.fragmentType(this.vocab);
+         }
+    
+        
+        });
+      } else {
+        if (this.vocab) {
+          this.fragmentType(this.vocab, this.vocabulary);
+         }
+      }
+    } else {
+      this.message = "No Structure Detected in editor";
+      setTimeout(() => {
+        this.message = null;
+      }, 4000);
+    }
+    
+    
   }
   checkImg(term: any) {
     term.fragmentSrc = this.CVService.getStructureUrlFragment(term.fragmentStructure);

@@ -1,6 +1,7 @@
 .editor-container {
     width: 920px;
    min-height: 380px;
+   margin: auto;
 }
 
 .cell {
@@ -67,3 +68,16 @@
     margin-top:-20px;
     margin-bottom: -20px;
 }
+
+
+.validation {
+    display:flex;
+    flex-direction: column;
+    width: 100%;  
+    }
+    
+    
+    .message {
+        padding-top: 5px;
+        padding-left: 15px;
+    }
