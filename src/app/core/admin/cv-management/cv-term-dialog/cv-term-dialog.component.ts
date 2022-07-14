@@ -141,7 +141,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         } else {
           if(response && response.validationMessages) {
             response.validationMessages.forEach(message => {
-              this.validationMessages.push(message.messageType + ': ' +message.message);
+              this.validationMessages.push(message);
             });
           }
         }

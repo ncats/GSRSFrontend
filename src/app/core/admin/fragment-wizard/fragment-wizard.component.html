@@ -72,7 +72,7 @@
   </div>
   <div mat-dialog-actions  *ngIf = "(!vocab || asDialog) && !adminPanel">
       <div class = 'validation' *ngIf = "validationMessages.length > 0"><div><b>CV not valid:</b></div>
-      <div *ngFor = "let message of validationMessages">{{message}}</div>
+      <div class = 'message' *ngFor = "let message of validationMessages"><span class = "{{message.messageType}} type">{{message.messageType}} :</span>{{message.message}}</div>
       
       </div>
     <div class="actions form-row">

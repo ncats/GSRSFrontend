@@ -102,7 +102,7 @@ private overlayContainer: HTMLElement;
         } else {
           if(response.validationMessages) {
             response.validationMessages.forEach(message => {
-              this.validationMessages.push(message.messageType + ': ' +message.message);
+              this.validationMessages.push(message);
             });
           }
           this.vocabulary.terms.pop();
@@ -163,8 +163,7 @@ private overlayContainer: HTMLElement;
      
     }
     setTimeout(() => {
-      //  this.dialog.openDialogs.pop();
-      //  this.dialog.openDialogs.pop();
+      // re-adjust z-index after editor messes it up
       this.overlayContainer.style.zIndex = '1003';
   
       this.overlayContainer.style.zIndex = '10003';
@@ -212,7 +211,7 @@ private overlayContainer: HTMLElement;
   getPossibleSmiles(smi) {
 
     function getMarkers(smi) {
-      let temp = smi.replace(/[^A-Z*]/g, '');
+      let temp = smi.replace(/@H/g, '').replace(/[^A-Z*]/g, '');
       var alias: any = {
         list: []
       };
@@ -228,7 +227,6 @@ private overlayContainer: HTMLElement;
         if (a === '*') {
           alias.stars.push(alias.list.length - 1);
         }
-
         return alias;
       };
 
@@ -296,7 +294,6 @@ private overlayContainer: HTMLElement;
           alias.add('');
         }
       }
-
       return alias;
     }
 
@@ -331,28 +328,26 @@ private overlayContainer: HTMLElement;
 
 
 
+
     var tt = this.getPossibleSmiles(this.editor.getSmiles());
- /*   if (tt.stars.length <= 0) {
-      alert('No star atoms specified, expecting:' + rgs.length + ' star atoms');
-      return;
-    } else if (tt.stars.length != rgs.length) {
-      alert('Expected ' + rgs.length + ' star atoms, but found:' + tt.stars.length);
-    }*/
     let stars = 0;
     let dom = "";
+    // this.vocab is only used when not editing in admin menu, otherwise full vocabulary is sent since it was fetched earlier
     if (this.vocabulary) {
       dom = this.vocabulary.domain;
     } else {
       dom = this.vocab;
     }
 
+
+
     switch (dom) {
-      case 'NUCLEIC_ACID_LINKAGE' : stars = 2;
-      case 'NUCLEIC_ACID_BASE' : stars = 1;
-      case 'NUCLEIC_ACID_SUGAR' : stars = 3;
-      case 'AMINO_ACID_RESIDUE' : stars = 2;
-      break;
+      case 'NUCLEIC_ACID_LINKAGE' : stars = 2; break;
+      case 'NUCLEIC_ACID_BASE' : stars = 1; break;
+      case 'NUCLEIC_ACID_SUGAR' : stars = 3; break;
+      case 'AMINO_ACID_RESIDUE' : stars = 2; break;
     }
+
     if (tt.stars.length <= 0) {
       alert('No star atoms specified, expecting:' + stars + ' star atoms. Use the star atom selector under the periodic table menu to set');
       return;
@@ -404,7 +399,7 @@ private overlayContainer: HTMLElement;
   }
   setTermStructure(structure) {
     this.privateTerm.fragmentStructure = structure;
-    this.privateTerm.simplifiedStructure = structure;
+    this.privateTerm.simplifiedStructure = structure.substring(0, structure.indexOf(' '));;
     this.checkImg(this.privateTerm);
     this.termUpdated.emit(this.privateTerm);
     this.forms = [];
