@@ -17,6 +17,66 @@
     <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
       <mat-icon svgIcon="chevron_right"></mat-icon>
     </button>
+    <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
+      Your search did not return any results. Please try modifying it or
+      <a class="link" (click)="clearFilters()">click here</a> to clear all your search criteria.
+      <div class="search-parameters center">
+        <div class="mat-elevation-z2" *ngIf="searchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+            <span>{{this.searchTerm}}</span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+              <mat-icon svgIcon="edit" tooltip="Go to Advanced Search"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="mat-elevation-z2" *ngIf="smiles">
+          <div>
+            <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
+            &nbsp;
+            <span class="no-break">
+                <input readonly [value] = "this.smiles" class = "smiles-input" />
+                <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
+                    <mat-icon svgIcon="paste" matTooltip = "Copy Smiles to clipboard"></mat-icon>
+                  </button>
+              <span *ngIf="searchType && searchType == 'similarity'">
+                &nbsp;&ge; {{searchCutoff}}
+              </span>
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" (click)="editStructureSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearStructureSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
+            &nbsp;
+            <span class="no-break">
+              <span>{{getSequenceDisplay(sequenceSearchTerm)}}</span>
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" (click)="editSequenceSearh()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="side-nav-content" *ngIf="(substances && substances.length) || (matchTypes && matchTypes.length > 0)">
       <div class="narrow-search-suggestions-container"
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
@@ -525,66 +585,7 @@
       </div>
       </div>
     </div>
-    <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
-      Your search did not return any results. Please try modifying it or
-      <a class="link" (click)="clearFilters()">click here</a> to clear all your search criteria.
-      <div class="search-parameters center">
-        <div class="mat-elevation-z2" *ngIf="searchTerm">
-          <div>
-            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-            <span>{{this.searchTerm}}</span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
-              <mat-icon svgIcon="edit" tooltip="Go to Advanced Search"></mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="clearSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-        <div class="mat-elevation-z2" *ngIf="smiles">
-          <div>
-            <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
-            &nbsp;
-            <span class="no-break">
-                <input readonly [value] = "this.smiles" class = "smiles-input" />
-                <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
-                    <mat-icon svgIcon="paste" matTooltip = "Copy Smiles to clipboard"></mat-icon>
-                  </button>
-              <span *ngIf="searchType && searchType == 'similarity'">
-                &nbsp;&ge; {{searchCutoff}}
-              </span>
-            </span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button color="primary" (click)="editStructureSearch()">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="clearStructureSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-        <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
-          <div>
-            <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
-            &nbsp;
-            <span class="no-break">
-              <span>{{getSequenceDisplay(sequenceSearchTerm)}}</span>
-            </span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button color="primary" (click)="editSequenceSearh()">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+
   </mat-sidenav-content>
 </mat-sidenav-container>
 <div [ngClass]="{ hidden: !showExactMatches, 'exact-matches-container': true }">
