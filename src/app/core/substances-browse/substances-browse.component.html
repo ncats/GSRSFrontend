@@ -40,9 +40,13 @@
           <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
             <div *ngFor="let matchType of sortMatchTypes(matchTypes)">
               <div class="match-type" [ngSwitch]="matchType">
-                <div *ngSwitchCase="'WORD'">Contains Match</div>
                 <div *ngSwitchCase="'ADDITIONAL'">Other Match</div>
-                <div *ngSwitchDefault>Exact Match</div>
+                <div *ngSwitchCase="'FULL'">Exact Match</div>
+                <div *ngSwitchCase="'CONTAINS'">Contains Match</div>
+                <div *ngSwitchCase="'WORD'">Contains Match</div>
+                <div *ngSwitchCase="'WORD_STARTS_WITH'">Contains Match</div>
+                <div *ngSwitchCase="'NO_MATCH'">No Match</div>
+                <div *ngSwitchDefault>Unknown Match</div>
               </div>
               <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]"
                 (click)="restricSearh(suggestion.luceneQuery)">
