@@ -499,7 +499,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                 luceneQuery: lq
               };
               this.substanceService.searchSubstances(lq).subscribe(response => {
-                if(response && response.total>0) {
+                if(response?.total && response.total>0) {
                   suggestion.count = response.total;
                   if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
                     this.narrowSearchSuggestions[suggestion.matchType] = [];
