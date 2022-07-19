@@ -160,6 +160,9 @@
           </div>
         </div>
       </ng-template>
+      
+      <div *ngIf="(substances && substances.length)">
+      
       <div>
         <div class="sub-search-div">
           <p class="sub-search-text red-text">Results below are an incomplete preview</p>
@@ -519,6 +522,7 @@
           </mat-form-field>
           <span class="page-label"> of {{lastPage}}</span>
         </div>
+      </div>
       </div>
     </div>
     <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
