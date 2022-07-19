@@ -17,7 +17,7 @@
     <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
       <mat-icon svgIcon="chevron_right"></mat-icon>
     </button>
-    <div class="side-nav-content" *ngIf="substances && substances.length">
+    <div class="side-nav-content" *ngIf="(substances && substances.length) || (matchTypes && matchTypes.length > 0)">
       <div class="narrow-search-suggestions-container"
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
         <div class = "flex-row">
