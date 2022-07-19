@@ -18,8 +18,13 @@
       <mat-icon svgIcon="chevron_right"></mat-icon>
     </button>
     <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
-      Your search did not return any results. Please try modifying it or
-      <a class="link" (click)="clearFilters()">click here</a> to clear all your search criteria.
+      <div *ngIf="!matchTypes || matchTypes.length === 0">
+        Your search did not return any results. Please try modifying it or
+        <a class="link" (click)="clearFilters()">click here</a> to clear all your search criteria.
+      </div>
+      <div *ngIf="(matchTypes && matchTypes.length > 0)">
+        Your search did not return any results within the default fields. However, this query has some results if you restrict your search to specific fields below.
+      </div>
       <div class="search-parameters center">
         <div class="mat-elevation-z2" *ngIf="searchTerm">
           <div>
