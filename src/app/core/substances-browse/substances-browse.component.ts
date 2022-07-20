@@ -570,17 +570,6 @@ searchTermOkforBeginsWithSearch(): boolean {
   return (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm));
 }
 
-anyNameBeginsWithSearch(): void { 
-  if(this.searchTermOkforBeginsWithSearch()) {           
-    const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
-    const navigationExtras: NavigationExtras = {
-      queryParams: {
-      }
-    };
-    navigationExtras.queryParams['search'] = lq;
-    this.router.navigate(['/browse-substance'], navigationExtras);
-  }
-}
 
 
   restricSearh(searchTerm: string): void {
