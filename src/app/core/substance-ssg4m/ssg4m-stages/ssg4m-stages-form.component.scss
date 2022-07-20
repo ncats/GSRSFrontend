@@ -96,3 +96,25 @@
 .marginbottom20px {
   margin-top: 20px;
 }
+
+fieldset.border {
+  border: solid 1px rgb(33, 136, 20) !important;
+  padding: 0 10px 10px 10px;
+  border-bottom: none;
+  border-radius: 8px;
+  min-width: 0;  /* override the default value of min-content */
+  -webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
+  -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
+  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64);
+}
+
+legend.border {
+  width: auto !important;
+  border: none;
+  border-bottom: none;
+  font-size: 15px;
+  color: #16997d;
+  font-family: Verdana;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
