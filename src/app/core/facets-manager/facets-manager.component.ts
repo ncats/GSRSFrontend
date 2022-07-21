@@ -371,6 +371,14 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
             }
           }
         }
+
+        // Set any facets being used to filter results to the top of the facet display
+        Object.keys(this.privateFacetParams).forEach(key => {
+          const position = newFacets.map(object => object.name).indexOf(key);
+          if (position > 0 ) {
+            newFacets.unshift(newFacets.splice(position, 1)[0]);
+          }
+        });
         this.facets = newFacets;
         this.facetsLoaded.emit(this.facets.length);
         this.cleanFacets();
