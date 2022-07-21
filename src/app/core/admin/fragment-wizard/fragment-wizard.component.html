@@ -61,14 +61,20 @@
         <a (click) = "setTermStructure(form.value)"><img class = "structure-img" src = "{{form.url}}" /></a>
     </div>
 </div>
-<div class = "form-row" style = "width:100%" *ngIf = "forms.length > 0 && adminPanel">
+<div class = "form-row" style = "width:100%;margin-top:20px" *ngIf = "forms.length > 0 && adminPanel">
     <div >Click on a form to set the fragment term structure</div>
+</div>
+<div class = "form-row" style = "width:100%;margin-top:20px" *ngIf = "(!forms || forms.length <= 0) && adminPanel">
+  <div >Set Connection points using  "*" atoms in the periodic table element selector.</div>
 </div>
 
 
   </div>
   <div mat-dialog-actions  *ngIf = "(!vocab || asDialog) && !adminPanel">
-    
+      <div class = 'validation' *ngIf = "validationMessages.length > 0"><div><b>CV not valid:</b></div>
+      <div class = 'message' *ngFor = "let message of validationMessages"><span class = "{{message.messageType}} type">{{message.messageType}} :</span>{{message.message}}</div>
+      
+      </div>
     <div class="actions form-row">
         <div class = 'message-field'>{{message}}</div>
       <span class="middle-fill"></span>

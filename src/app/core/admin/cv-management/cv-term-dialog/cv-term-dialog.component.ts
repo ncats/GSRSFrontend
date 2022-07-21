@@ -42,7 +42,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 
   ngOnInit() {
     this.loading = false;
-  //  this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
 
 }
 
@@ -71,26 +71,27 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   }
 
   editTerms(term: any, index): void {
-    this.dialog.openDialogs.pop();
-
+  //  this.dialog.openDialogs.pop();
+  //  this.overlayContainer.style.zIndex = '1003';
     let thisy = window.pageYOffset;
   /*  window.scroll({ 
       top: 0, 
       left: 0, 
       behavior: 'auto' });*/
-      let dialogConfig = {  width: '60%', height: '80%',data: {vocabulary: this.vocabulary, domain: this.vocabulary.domain, term: term, adminPanel: true}, };
+      let dialogConfig = {  width: '70%', height: '85%',data: {vocabulary: this.vocabulary, domain: this.vocabulary.domain, term: term, adminPanel: true}, };
     const dialogRef = this.dialog.open(FragmentWizardComponent, dialogConfig);
-  
+    this.overlayContainer.style.zIndex = '1003';
+
     setTimeout(() => {
-      this.dialog.openDialogs.pop();
-      this.dialog.openDialogs.pop();
-    },2000);
+    //  this.dialog.openDialogs.pop();
+   // this.overlayContainer.style.zIndex = '10003';
+    },3000);
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       window.scroll({ 
         top: thisy, 
         left: 0, 
         behavior: 'auto' });
-    //  this.overlayContainer.style.zIndex = null;
+   //   this.overlayContainer.style.zIndex = null;
       if (response ) {
           this.terms[index].simplifiedStructure = response;
           this.terms[index].fragmentStructure = response;
@@ -140,7 +141,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         } else {
           if(response && response.validationMessages) {
             response.validationMessages.forEach(message => {
-              this.validationMessages.push(message.messageType + ': ' +message.message);
+              this.validationMessages.push(message);
             });
           }
         }

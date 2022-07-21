@@ -80,7 +80,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   status: string;
   hidePopup: boolean;
   unit: StructuralUnit;
-  autoSaveWait = 10000;
+  autoSaveWait = 60000;
   classes = [
     'concept',
     'protein',

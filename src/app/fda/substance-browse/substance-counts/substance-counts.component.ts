@@ -46,8 +46,8 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
       this.getSearchCount();
       this.getAppIngredMatchListCount();
     }
-    // Get Search Count for Application
-    this.getApplicationBySubstanceKeyCenter();
+    // Get Search Count for Application (Commenting below line, do not need)
+    // this.getApplicationBySubstanceKeyCenter();
   }
 
   getSubstanceKey() {

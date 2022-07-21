@@ -69,7 +69,7 @@ export class CvDialogComponent implements OnInit {
         } else {
           if(response.validationMessages) {
             response.validationMessages.forEach(message => {
-              this.validationMessages.push(message.messageType + ': ' +message.message);
+              this.validationMessages.push(message);
             });
           }
           this.vocabulary.terms.pop();

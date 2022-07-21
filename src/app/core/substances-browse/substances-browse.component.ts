@@ -499,7 +499,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                 luceneQuery: lq
               };
               this.substanceService.searchSubstances(lq).subscribe(response => {
-                if(response && response.total!==null) {
+                if(response?.total && response.total>0) {
                   suggestion.count = response.total;
                   if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
                     this.narrowSearchSuggestions[suggestion.matchType] = [];
@@ -523,7 +523,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.exportOptions = response.filter(exp => {
               if (exp.extension) {
                 //TODO Make this generic somehow, so addditional-type exports are isolated
-                if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') || (exp.extension === 'ctusxlsx')) {
+                if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') || 
+                    (exp.extension === 'ctusxlsx')|| (exp.extension === 'cteuxlsx')) {
                   return false;
                 }
               }
@@ -570,17 +571,6 @@ searchTermOkforBeginsWithSearch(): boolean {
   return (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm));
 }
 
-anyNameBeginsWithSearch(): void { 
-  if(this.searchTermOkforBeginsWithSearch()) {           
-    const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
-    const navigationExtras: NavigationExtras = {
-      queryParams: {
-      }
-    };
-    navigationExtras.queryParams['search'] = lq;
-    this.router.navigate(['/browse-substance'], navigationExtras);
-  }
-}
 
 
   restricSearh(searchTerm: string): void {
