@@ -218,7 +218,9 @@
       </div>
       <div class="full-paginator">
         <div class="wildcard-div">
-          <input type="text" class="wildcard" placeholder="Search Within Results" [(ngModel)]="wildCardText" (change)="saveWildCardText()">
+          <mat-form-field class="search" [floatLabel]="'never'">
+            <input matInput type="text" autocomplete="off" placeholder="Search Within Results" [(ngModel)]="wildCardText" (change)="saveWildCardText()" (keyup.enter)="wildCardSearch()">
+          </mat-form-field>
           <button aria-label="Search Within Results" mat-icon-button (click)="wildCardSearch()">
             <mat-icon svgIcon="search"></mat-icon>
           </button>
