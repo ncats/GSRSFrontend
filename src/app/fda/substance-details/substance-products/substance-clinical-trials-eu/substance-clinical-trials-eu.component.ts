@@ -133,7 +133,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
   }
 
   getApiExportUrl(etag: string, extension: string): string {
-    return this.clinicalTrialService.getApiExportUrl(etag, extension);
+    return this.clinicalTrialService.getApiEuropeExportUrl(etag, extension);
   }
 
 

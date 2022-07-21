@@ -248,6 +248,10 @@ export class ClinicalTrialService extends BaseHttpService {
     const url = this.apiBaseUrl + 'clinicaltrialsus/' + `export/${etag}/${extension}`;
     return url;
   }
+  getApiEuropeExportUrl(etag: string, extension: string): string {
+    const url = this.apiBaseUrl + 'clinicaltrialseurope/' + `export/${etag}/${extension}`;
+    return url;
+  }
 
   getClinicalTrialListExportUrl(bdnum: string): string {
     return this.baseUrl + 'clinicalTrialListExport?bdnum=' + bdnum;
