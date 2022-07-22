@@ -286,12 +286,15 @@
       </div>
       <div class="full-paginator">
         <div class="wildcard-div">
-          <input type="text" class="wildcard" placeholder="Search Within Results" [(ngModel)]="wildCardText" (change)="saveWildCardText()">
+          <mat-form-field class="search" [floatLabel]="'never'">
+            <input matInput type="text" autocomplete="off" placeholder="Search Within Results" [(ngModel)]="wildCardText" (change)="saveWildCardText()" (keyup.enter)="wildCardSearch()">
+          </mat-form-field>
           <button aria-label="Search Within Results" mat-icon-button (click)="wildCardSearch()">
             <mat-icon svgIcon="search"></mat-icon>
           </button>
           <!-- <input type="submit"> -->
         </div>
+        <span class = "middle-fill"></span>
         <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
           [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
         </mat-paginator>
@@ -327,7 +330,7 @@
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Name </th>
                 <td mat-cell *matCellDef="let substance"><a class="table-view-name"
-                    [routerLink]="['/substances', substance.uuid]">{{substance._name}}</a></td>
+                    [routerLink]="['/substances', substance.uuid]"> <span [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name"></span></a></td>
               </ng-container>
 
               <ng-container matColumnDef="approvalID">
@@ -340,7 +343,7 @@
                 <td mat-cell *matCellDef="let substance">
                   <span *ngIf="names[substance.uuid] && names[substance.uuid].length">
                     <div *ngFor="let nameObject of names[substance.uuid] | take: 4; last as isLast">
-                      {{nameObject.name}}
+                      <span [innerHTML] = "nameObject._nameHTML? nameObject._nameHTML : nameObject.name"></span>
                       <span *ngIf="!isLast">; </span>
                     </div>
                   </span>
@@ -487,7 +490,7 @@
                     <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
                   </div>
                   <div class="tile-name">
-                    <a class="substance-name table-view-name" [innerHTML] = "substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
+                    <a class="substance-name table-view-name" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
                     </a>
                     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
                     </mat-icon>
