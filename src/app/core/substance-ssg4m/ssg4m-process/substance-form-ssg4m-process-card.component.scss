@@ -45,8 +45,21 @@
   max-width: 100%;
 }
 
-.paddingleft400px {
-  padding-left: 400px;
+.paddingleft800px {
+  padding-left: 800px;
+}
+
+.divflex {
+  display: flex;
+}
+
+.button-add {
+  z-index: 1;
+  position: relative;
+  top: 25px;
+  margin-right: 25px;
+  background-color: #FFFFFF;
+  border: 1px solid #007CBA;
 }
 
 fieldset.border {
@@ -55,9 +68,10 @@ fieldset.border {
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;  /* override the default value of min-content */
+  /*
   -webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
   -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
-  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64);
+  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64);*/
 }
 
 legend.border {
@@ -65,7 +79,8 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: #174793;
+  /* FDA COLOR BLUE CODE Hex: #007CBA */
+  color: #007CBA;
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
