@@ -66,7 +66,7 @@
 
 <div class="form-content-container">
   <div class="scrollable-container">
-    <div class="cards-container">
+    <div class="cards-container maximize-width-card">
       <mat-accordion multi="true">
         <mat-expansion-panel #expansionPanel [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
           *ngFor="let section of formSections; index as index; last as isLast" [id]="section.dynamicComponentName"
