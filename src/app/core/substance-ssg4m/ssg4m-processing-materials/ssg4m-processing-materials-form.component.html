@@ -1,3 +1,6 @@
+<div *ngIf="processingMaterialIndex > 0">
+  <hr>
+</div>
 <div class="form-container">
   <div *ngIf="processingMaterial.$$deletedCode" class="notification-backdrop">
     Deleted&nbsp;
@@ -5,32 +8,48 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
+
+  <div class="">
+    <div class="button-delete">
+      <button mat-icon-button matTooltip="Delete Processing Material {{(processingMaterialIndex+1)}}"
+        (click)="confirmDeleteProcessingMaterial()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+  </div>
+
   <div class="form-row">
+    <!--
     <div class="delete-container">
       <b>{{(processingMaterialIndex+1)}}</b>
       <button mat-icon-button matTooltip="Delete Processing Material {{(processingMaterialIndex+1)}}" (click)="confirmDeleteProcessingMaterial()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
+    -->
 
-    <div class="col related-substance" *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
+    <div class="col related-substance"
+      *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header="Substance Name"
-        [subuuid]="relatedSubstanceUuid">
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM"
+        header="Substance Name" [subuuid]="relatedSubstanceUuid">
       </app-substance-selector>
     </div>
 
-    <mat-form-field class="col" *ngIf="configSettingsDisplay['verbatimName'] || (configSettingsDisplay['verbatimName'] === undefined && true)">
+    <mat-form-field class="col"
+      *ngIf="configSettingsDisplay['verbatimName'] || (configSettingsDisplay['verbatimName'] === undefined && true)">
       <input matInput placeholder="Material Display Name" [(ngModel)]="processingMaterial.verbatimName"
         name="processingMaterial.verbatimName" />
     </mat-form-field>
 
-    <app-cv-input class="col" *ngIf="configSettingsDisplay['substanceRole'] || (configSettingsDisplay['substanceRole'] === undefined && true)" domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role"
-      [model]="processingMaterial.substanceRole" (valueChange)="updateSubstanceRole($event)"></app-cv-input>
+    <app-cv-input class="col"
+      *ngIf="configSettingsDisplay['substanceRole'] || (configSettingsDisplay['substanceRole'] === undefined && true)"
+      domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role" [model]="processingMaterial.substanceRole"
+      (valueChange)="updateSubstanceRole($event)"></app-cv-input>
   </div> <!-- form row -->
 
   <div class="form-row">
-    <div class="col marginleft50px">
+    <div class="col">
       <!-- Register Subtance -->
       <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
         <span class="font11px">Register New</span>
@@ -43,11 +62,12 @@
     </div>
   </div>
 
-  <div class="form-row margintop10px" *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
-    <div class="marginleft45px">&nbsp;</div>
+  <div class="form-row margintop10px"
+    *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
+    <div class="">&nbsp;</div>
     <mat-form-field class="col-1-1">
       <textarea matInput placeholder="Comments" [(ngModel)]="processingMaterial.comments"
-      name="processingMaterial.comments" rows="1"></textarea>
+        name="processingMaterial.comments" rows="1"></textarea>
     </mat-form-field>
   </div> <!-- form-row-->
 

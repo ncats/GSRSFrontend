@@ -6,12 +6,23 @@
         <mat-icon svgIcon="undo"></mat-icon>
       </button>
     </div>
+
+    <div class="">
+      <div class="button-delete">
+        <button mat-icon-button matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
+    </div>
+
     <div class="form-row">
+      <!--
       <div class="delete-container">
         <button mat-icon-button matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
           <mat-icon svgIcon="delete_forever"></mat-icon>
         </button>
       </div>
+      -->
 
       <!-- if Config is not set, as a Default, intitally show some fields and make some fields as Advanced Setting -->
       <mat-form-field class="col-3-1"
@@ -32,7 +43,7 @@
       </app-cv-input>
     </div> <!-- form row -->
 
-    <div class="marginleft50px">
+    <div class="">
       <div class="form-row">
         <mat-form-field class="col-2-1"
           *ngIf="configSettingsDisplay['processDescription'] || (configSettingsDisplay['processDescription'] === undefined && showAdvancedSettings)">
@@ -49,8 +60,12 @@
     </div>
 
     <!-- SITES LIST BEGIN -->
+    <!--
     <hr>
-    <div *ngIf="showAdvancedSettings">
+    -->
+    <!--  *ngIf="showAdvancedSettings"-->
+    <div>
+      <!--
       <span matBadge="{{process.sites.length}}" matBadgeOverlap="false">
         <span class="fontsize18px"><b>Site Information</b></span>
       </span>
@@ -59,7 +74,28 @@
         <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Sites
       </button>
       <br><br>
-    </div>
+      </div>
+       -->
+      <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
+        <fieldset class="border">
+          <legend class="border">Site &nbsp;<b><span class="font17px">{{siteIndex + 1}} of {{process.sites.length}}</span></b>
+          </legend>
+
+          <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
+            [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView"
+            (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
+          </app-ssg4m-sites>
+
+          <!-- Another Add Button-->
+          <!-- (process.sites && process.sites.length > 0) &&  -->
+          <div class="divflex" *ngIf="showAdvancedSettings">
+            <span class="middle-fill"></span>
+            <button mat-stroked-button color="primary" class="button-add" (click)="addSite()">
+              <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Site
+            </button>
+          </div>
+        </fieldset>
+      </div>
 
     <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
       <fieldset [ngClass]="showAdvancedSettings ? 'border': 'border minimize'">
@@ -70,15 +106,9 @@
           (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
         </app-ssg4m-sites>
       </fieldset>
+
     </div> <!-- loop -->
-    <!-- Another Add Button-->
-    <div class="divflex" *ngIf="(process.sites && process.sites.length > 0) && showAdvancedSettings">
-      <span class="middle-fill"></span>
-      <button mat-button (click)="addSite()">
-        Add Another Site <mat-icon svgIcon="add_circle_outline"></mat-icon>
-      </button>
-    </div>
+
     <!-- SITES LIST END -->
   </div>
 </div>
-

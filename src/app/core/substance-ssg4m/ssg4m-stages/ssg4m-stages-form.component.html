@@ -1,3 +1,6 @@
+<div *ngIf="privateStageIndex > 0">
+  <hr>
+</div>
 <div>
   <div class="form-container">
     <div *ngIf="stage.$$deletedCode" class="notification-backdrop">
@@ -6,12 +9,23 @@
         <mat-icon svgIcon="undo"></mat-icon>
       </button>
     </div>
+
+    <div class="">
+      <div class="button-delete">
+        <button mat-icon-button matTooltip="Delete Stage {{(privateStageIndex+1)}}" (click)="confirmDeleteStage()">
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
+    </div>
+
     <div class="form-row">
+      <!--
       <div class="delete-container">
         <button mat-icon-button matTooltip="Delete Stage {{(privateStageIndex+1)}}" (click)="confirmDeleteStage()">
           <mat-icon svgIcon="delete_forever"></mat-icon>
         </button>
       </div>
+      -->
       <mat-form-field class="col-4-1"
         *ngIf="configSettingsDisplay['stageNumber'] || (configSettingsDisplay['stageNumber'] === undefined && true)">
         <input matInput placeholder="{{configTitleStage}} Number" [(ngModel)]="stage.stageNumber"
@@ -38,144 +52,179 @@
 
     <div class="form-row"
       *ngIf="configSettingsDisplay['stageComments'] || (configSettingsDisplay['stageComments'] === undefined && showAdvancedSettings)">
-      <mat-form-field class="col-1-1 marginleft40px">
+      <mat-form-field class="col-1-1">
         <textarea matInput placeholder="Comments" [(ngModel)]="stage.stageComments" name="stage.stageComments"
           rows="1"></textarea>
       </mat-form-field>
     </div> <!-- form row -->
 
     <!-- STARTING MATERIALS LIST BEGIN -->
-    <div class="materialborder">
-      <span matBadge="{{stage.startingMaterials.length}}" matBadgeOverlap="false">
-        <span class="materialtitle"><b>Starting Materials</b></span>
-      </span>
+    <div class="">
+      <fieldset class="border">
+        <legend class="border">
+          <span matBadge="{{stage.startingMaterials.length}}" matBadgeOverlap="false">
+            <span class=""><b>Starting Materials</b></span>
+          </span>
+        </legend>
+        <!--
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <button mat-raised-button color="primary" (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)"
         matTooltip="Add New Starting Material">
         <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Starting Materials
       </button>
-      <!-- Show More Details button-->
-      <!--
+       -->
+        <!-- Show More Details button-->
+        <!--
     <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
       <span class="colorgreen">Show More Details</span>
       <mat-icon>expand_more</mat-icon>
     </button>
-    -->
       <br><br>
-      <div class="marginbottom10px"
-        *ngFor="let startingMaterial of stage.startingMaterials; let startingMaterialIndex = index">
-        <app-ssg4m-starting-materials-form [startingMaterial]="startingMaterial" [processIndex]="processIndex"
-          [siteIndex]="siteIndex" [stageIndex]="stageIndex" [startingMaterialIndex]="startingMaterialIndex"
-          [showAdvancedSettings]="showAdvancedSettings">
-        </app-ssg4m-starting-materials-form>
-      </div>
-      <!-- Another Add Button-->
-      <div class="divflex" *ngIf="stage.startingMaterials && stage.startingMaterials.length > 0">
-        <span class="middle-fill"></span>
-        <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
-          Add Another Starting Material <mat-icon svgIcon="add_circle_outline"></mat-icon>
-        </button>
-      </div>
+    -->
+        <div class="marginbottom10px"
+          *ngFor="let startingMaterial of stage.startingMaterials; let startingMaterialIndex = index">
+          <app-ssg4m-starting-materials-form [startingMaterial]="startingMaterial" [processIndex]="processIndex"
+            [siteIndex]="siteIndex" [stageIndex]="stageIndex" [startingMaterialIndex]="startingMaterialIndex"
+            [showAdvancedSettings]="showAdvancedSettings">
+          </app-ssg4m-starting-materials-form>
+        </div>
+        <!-- Another Add Button-->
+        <!--  *ngIf="stage.startingMaterials && stage.startingMaterials.length > 0"-->
+        <div class="divflex">
+          <span class="middle-fill"></span>
+          <button mat-stroked-button color="primary" class="button-add"
+            (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Starting Material
+          </button>
+        </div>
+      </fieldset>
     </div>
     <!-- STARTING MATERIALS LIST END -->
 
 
     <!-- PROCESSING MATERIALS LIST BEGIN -->
-    <div class="materialborder">
-      <span matBadge="{{stage.processingMaterials.length}}" matBadgeOverlap="false">
-        <span class="materialtitle"><b>{{configTitleProcessingMaterials}}</b></span>
-      </span>
+    <div class="">
+      <fieldset class="border">
+        <legend class="border">
+          <span matBadge="{{stage.processingMaterials.length}}" matBadgeOverlap="false">
+            <span class=""><b>{{configTitleProcessingMaterials}}</b></span>
+          </span>
+        </legend>
+        <!--
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <button mat-raised-button color="primary" (click)="addProcessingMaterial(processIndex, siteIndex, stageIndex)"
         matTooltip="Add New {{configTitleProcessingMaterials}}">
         <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleProcessingMaterials}}
       </button>
-      <!-- Show More Details button-->
-      <!--
+      -->
+        <!-- Show More Details button-->
+        <!--
     <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
       <span class="colorgreen">Show More Details</span>
       <mat-icon>expand_more</mat-icon>
     </button>
+         <br><br>
     -->
-      <br><br>
-      <div class="marginbottom10px"
-        *ngFor="let processingMaterial of stage.processingMaterials; let processingMaterialIndex = index">
-        <app-ssg4m-processing-materials-form [processingMaterial]="processingMaterial" [processIndex]="processIndex"
-          [siteIndex]="siteIndex" [stageIndex]="stageIndex" [processingMaterialIndex]="processingMaterialIndex"
-          [showAdvancedSettings]="showAdvancedSettings">
-        </app-ssg4m-processing-materials-form>
-      </div>
-      <!-- Another Add Button-->
-      <div *ngIf="stage.processingMaterials && stage.processingMaterials.length > 0" style="display:flex;">
-        <span class="middle-fill"></span>
-        <button mat-button (click)="addProcessingMaterial(processIndex, siteIndex, stageIndex)">
-          Add Another {{configTitleProcessingMaterials}} <mat-icon svgIcon="add_circle_outline"></mat-icon>
-        </button>
-      </div>
+
+        <div class="marginbottom10px"
+          *ngFor="let processingMaterial of stage.processingMaterials; let processingMaterialIndex = index">
+          <app-ssg4m-processing-materials-form [processingMaterial]="processingMaterial" [processIndex]="processIndex"
+            [siteIndex]="siteIndex" [stageIndex]="stageIndex" [processingMaterialIndex]="processingMaterialIndex"
+            [showAdvancedSettings]="showAdvancedSettings">
+          </app-ssg4m-processing-materials-form>
+        </div>
+        <!-- Another Add Button-->
+        <!--
+        *ngIf="stage.processingMaterials && stage.processingMaterials.length > 0" style="display:flex;"
+      -->
+        <div class="divflex">
+          <span class="middle-fill"></span>
+          <button mat-stroked-button color="primary" class="button-add"
+            (click)="addProcessingMaterial(processIndex, siteIndex, stageIndex)">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleProcessingMaterials}}
+          </button>
+        </div>
+      </fieldset>
     </div>
     <!-- PROCESSING MATERIALS LIST END -->
 
 
     <!-- RESULTING MATERIALS LIST BEGIN -->
-    <div class="materialborder">
-      <span matBadge="{{stage.resultingMaterials.length}}" matBadgeOverlap="false">
-        <span class="materialtitle"><b>Resulting Materials</b></span>
-      </span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <button mat-raised-button color="primary" (click)="addResultingMaterial(processIndex, siteIndex, stageIndex)"
-        matTooltip="Add New Resulting Material">
-        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Resulting Materials
-      </button>
-      <!-- Show More Details button-->
-      <!--
-    <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
+    <div class="">
+      <fieldset class="border">
+        <legend class="border">
+          <span matBadge="{{stage.resultingMaterials.length}}" matBadgeOverlap="false">
+            <span class=""><b>Resulting Materials</b></span>
+          </span>
+        </legend>
+        <!--
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button mat-raised-button color="primary" (click)="addResultingMaterial(processIndex, siteIndex, stageIndex)"
+          matTooltip="Add New Resulting Material">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Resulting Materials
+        </button>
+         -->
+        <!-- Show More Details button-->
+        <!--
+      <button mat-button (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
       <span class="colorgreen">Show More Details</span>
       <mat-icon>expand_more</mat-icon>
-    </button>
-    -->
-      <br><br>
-      <div class="marginbottom10px"
-        *ngFor="let resultingMaterial of stage.resultingMaterials; let resultingMaterialIndex = index">
-        <app-ssg4m-resulting-materials-form [resultingMaterial]="resultingMaterial" [processIndex]="processIndex"
-          [siteIndex]="siteIndex" [stageIndex]="stageIndex" [resultingMaterialIndex]="resultingMaterialIndex"
-          [showAdvancedSettings]="showAdvancedSettings">
-        </app-ssg4m-resulting-materials-form>
-      </div>
-      <!-- Another Add Button-->
-      <div *ngIf="stage.resultingMaterials && stage.resultingMaterials.length > 0" style="display:flex;">
-        <span class="middle-fill"></span>
-        <button mat-button (click)="addResultingMaterial(processIndex, siteIndex, stageIndex)">
-          Add Another Resulting Material <mat-icon svgIcon="add_circle_outline"></mat-icon>
-        </button>
-      </div>
+      </button>
+      -->
+        <div class="marginbottom10px"
+          *ngFor="let resultingMaterial of stage.resultingMaterials; let resultingMaterialIndex = index">
+          <app-ssg4m-resulting-materials-form [resultingMaterial]="resultingMaterial" [processIndex]="processIndex"
+            [siteIndex]="siteIndex" [stageIndex]="stageIndex" [resultingMaterialIndex]="resultingMaterialIndex"
+            [showAdvancedSettings]="showAdvancedSettings">
+          </app-ssg4m-resulting-materials-form>
+        </div>
+        <!-- Another Add Button-->
+        <!--
+           *ngIf="stage.resultingMaterials && stage.resultingMaterials.length > 0" style="display:flex;"
+        -->
+        <div class="divflex">
+          <span class="middle-fill"></span>
+          <button mat-stroked-button color="primary" class="button-add"
+            (click)="addResultingMaterial(processIndex, siteIndex, stageIndex)">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Resulting Material
+          </button>
+        </div>
+      </fieldset>
     </div>
     <!-- RESULTING MATERIALS LIST END -->
 
     <!-- CRITICAL PARAMETER/PROCESS CONTROLS LIST BEGIN -->
-    <div class="materialborder">
-      <span matBadge="{{stage.criticalParameters.length}}" matBadgeOverlap="false">
-        <span class="materialtitle"><b>Process Controls</b></span>
-      </span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <button mat-raised-button color="primary" (click)="addCriticalParameter(processIndex, siteIndex, stageIndex)"
-        matTooltip="Add New Critical Parameter">
-        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Process Controls
-      </button>
-      <br><br>
-      <div class="marginbottom10px"
-        *ngFor="let criticalParameter of stage.criticalParameters; let criticalParameterIndex = index">
-        <app-ssg4m-critical-parameter-form [criticalParameter]="criticalParameter" [processIndex]="processIndex"
-          [siteIndex]="siteIndex" [stageIndex]="stageIndex" [criticalParameterIndex]="criticalParameterIndex"
-          [showAdvancedSettings]="showAdvancedSettings">
-        </app-ssg4m-critical-parameter-form>
-      </div>
-      <!-- Another Add Button-->
-      <div class="divflex" *ngIf="stage.criticalParameters && stage.criticalParameters.length > 0">
-        <span class="middle-fill"></span>
-        <button mat-button (click)="addCriticalParameter(processIndex, siteIndex, stageIndex)">
-          Add Another Critical Parameter <mat-icon svgIcon="add_circle_outline"></mat-icon>
+    <div class="">
+      <fieldset class="border">
+        <legend class="border">
+          <b>Process Controls</b>&nbsp;
+          <span matBadge="{{stage.criticalParameters.length}}" matBadgeOverlap="false"></span>
+        </legend>
+        <!--
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button mat-raised-button color="primary" (click)="addCriticalParameter(processIndex, siteIndex, stageIndex)"
+          matTooltip="Add New Critical Parameter">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Process Controls
         </button>
-      </div>
+        <br><br>
+        -->
+        <div class="marginbottom10px"
+          *ngFor="let criticalParameter of stage.criticalParameters; let criticalParameterIndex = index">
+          <app-ssg4m-critical-parameter-form [criticalParameter]="criticalParameter" [processIndex]="processIndex"
+            [siteIndex]="siteIndex" [stageIndex]="stageIndex" [criticalParameterIndex]="criticalParameterIndex"
+            [showAdvancedSettings]="showAdvancedSettings">
+          </app-ssg4m-critical-parameter-form>
+        </div>
+        <!-- Another Add Button-->
+        <div class="divflex">
+          <span class="middle-fill"></span>
+          <button mat-stroked-button color="primary" class="button-add"
+            (click)="addCriticalParameter(processIndex, siteIndex, stageIndex)">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Process Control
+          </button>
+        </div>
+      </fieldset>
+      <br>
     </div>
     <!-- CRITICAL PARAMETER/PROCESS CONTROLS LIST END -->
 
