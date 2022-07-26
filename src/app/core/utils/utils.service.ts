@@ -294,7 +294,7 @@ export class UtilsService {
       return true;  
     }
     strings.forEach(function(value) {
-      if (searchTerm.indexOf(value.valueOf())) { return true; };
+      if (searchTerm.indexOf(value.valueOf())>-1) { return true; };
     });
     return false;
   }

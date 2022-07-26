@@ -14,7 +14,7 @@
         <mat-icon svgIcon="chevron_right"></mat-icon>
       </button>
 
-      <!-- NARROW SEARCH SUGGESTIONS -->
+      <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
       <div class="narrow-search-suggestions-container"
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
         <div class="flex-row">
@@ -37,19 +37,19 @@
             <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
               <div class="narrow-search-dropdown" *ngFor="let matchType of matchTypes">
                 <div *ngIf="((matchType) && (matchType === 'WORD' || matchType === 'FULL'))">
-                <div class="match-type">
-                  {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                  <div class="match-type">
+                    {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                  </div>
+                  <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]"
+                    (click)="restricSearh(suggestion.luceneQuery)">
+                    <div class="suggestion-display">
+                      {{suggestion.displayField}}
+                    </div>
+                    <div class="suggestion-count">
+                      {{suggestion.count}}
+                    </div>
+                  </button>
                 </div>
-                <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]"
-                  (click)="restricSearh(suggestion.luceneQuery)">
-                  <div class="suggestion-display">
-                    {{suggestion.displayField}}
-                  </div>
-                  <div class="suggestion-count">
-                    {{suggestion.count}}
-                  </div>
-                </button>
-              </div>
               </div>
             </mat-menu>
           </div>
@@ -60,7 +60,9 @@
             For more options use the <a routerLink="/advanced-search" style="padding-left: 6px;"> Advanced Search</a>
           </div>
         </div>
-      </div> <!-- Narrow Search Suggestion End -->
+      </div>
+      <!-- Narrow Search Suggestion End -->
+
 
       <!-- SEARCHTERM -->
       <ng-template #filterParameters>
@@ -544,8 +546,11 @@
                     </div>
                     <div class="row-property">
                       <div class="row-property-key">
-                        <span matBadge="{{application._clinicalTrialList.length}}" matBadgeOverlap="false">Clinical
-                          Trials:</span>
+                        <span *ngIf="application._clinicalTrialList">
+                          <span matBadge="{{application._clinicalTrialList.length}}" matBadgeOverlap="false">Clinical
+                            Trials:
+                          </span>
+                        </span>
                       </div>
                       <div class="row-property-value">
                         &nbsp;

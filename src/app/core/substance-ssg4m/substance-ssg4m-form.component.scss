@@ -193,6 +193,7 @@ mat-select-panel{
   border: 1px solid green;
 }
 
+<<<<<<< HEAD
 .fontbold {
   font-weight: bold;
 }
@@ -200,4 +201,9 @@ mat-select-panel{
 /* FDA COLOR BLUE CODE Hex: #007CBA */
 .colorbluefda {
   color: #007CBA;
+}
+
+/* tyler added as quick fix */
+app-substance-form-ssg4m-process-card button[color=primary] {
+    float: right;
 }

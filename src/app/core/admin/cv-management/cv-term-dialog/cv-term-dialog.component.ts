@@ -15,6 +15,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   vocabulary: Vocabulary;
   terms: any;
   message: string;
+  validationMessages = [];
   loading = true;
   toggled = [];
   private overlayContainer: HTMLElement;
@@ -41,7 +42,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 
   ngOnInit() {
     this.loading = false;
-  //  this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
 
 }
 
@@ -70,26 +71,27 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   }
 
   editTerms(term: any, index): void {
-    this.dialog.openDialogs.pop();
-
+  //  this.dialog.openDialogs.pop();
+  //  this.overlayContainer.style.zIndex = '1003';
     let thisy = window.pageYOffset;
   /*  window.scroll({ 
       top: 0, 
       left: 0, 
       behavior: 'auto' });*/
-      let dialogConfig = {  width: '60%', height: '80%',data: {vocabulary: this.vocabulary, domain: this.vocabulary.domain, term: term, adminPanel: true}, };
+      let dialogConfig = {  width: '70%', height: '85%',data: {vocabulary: this.vocabulary, domain: this.vocabulary.domain, term: term, adminPanel: true}, };
     const dialogRef = this.dialog.open(FragmentWizardComponent, dialogConfig);
-  
+    this.overlayContainer.style.zIndex = '1003';
+
     setTimeout(() => {
-      this.dialog.openDialogs.pop();
-      this.dialog.openDialogs.pop();
-    },2000);
+    //  this.dialog.openDialogs.pop();
+   // this.overlayContainer.style.zIndex = '10003';
+    },3000);
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       window.scroll({ 
         top: thisy, 
         left: 0, 
         behavior: 'auto' });
-    //  this.overlayContainer.style.zIndex = null;
+   //   this.overlayContainer.style.zIndex = null;
       if (response ) {
           this.terms[index].simplifiedStructure = response;
           this.terms[index].fragmentStructure = response;
@@ -112,7 +114,51 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 
   submit(): void {
     this.vocabulary.terms = this.terms;
-    this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
+    this.validationMessages = [];
+    this.cvService.validateVocab(this.vocabulary).subscribe(response => {
+        if(response && response.valid) {
+          this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
+            this.loading = false;
+      if (response.terms && response.terms.length === this.vocabulary.terms.length) {
+        alert('vocabulary updated');
+        setTimeout(() => {
+          this.dialogRef.close(response);
+        }, 200);
+      }
+    },error => {
+        let str = 'Invalid Vocabulary';
+        if (error.error && error.error.message) {
+          str += '\n\n' + error.error.message;
+  
+        }
+       else if(error.message) {
+          str += '\n\n' + error.message;
+        }
+      alert(str);
+        this.loading = false;
+  
+      });
+        } else {
+          if(response && response.validationMessages) {
+            response.validationMessages.forEach(message => {
+              this.validationMessages.push(message);
+            });
+          }
+        }
+    },error => {
+      let str = 'Invalid Vocabulary';
+      if (error.error && error.error.message) {
+        str += '\n\n' + error.error.message;
+
+      }
+     else if(error.message) {
+        str += '\n\n' + error.message;
+      }
+      alert(str);
+      this.loading = false;
+
+    });
+  /*  this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
       this.loading = false;
       if (response.terms && response.terms.length === this.vocabulary.terms.length) {
         alert('vocabulary updated');
@@ -124,7 +170,9 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         }
     }, error => {
       alert('invalid vocabulary');
-    });
+    });*/
+    this.loading = false;
+
   }
 
 

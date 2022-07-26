@@ -78,7 +78,8 @@
        -->
       <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
         <fieldset class="border">
-          <legend class="border">Site &nbsp;<b><span class="font17px">{{siteIndex + 1}} of {{process.sites.length}}</span></b>
+          <legend class="border">Site &nbsp;<b><span class="font17px">{{siteIndex + 1}} of
+                {{process.sites.length}}</span></b>
           </legend>
 
           <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
@@ -96,8 +97,18 @@
           </div>
         </fieldset>
       </div>
-    </div> <!-- loop -->
-
-    <!-- SITES LIST END -->
+      <!--
+    <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
+      <fieldset [ngClass]="showAdvancedSettings ? 'border': 'border minimize'">
+        <legend *ngIf="showAdvancedSettings" class="border">Site &nbsp;<b><span class="colorgreen font17px">{{siteIndex + 1}}</span></b>
+        </legend>
+        <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
+          [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView"
+          (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
+        </app-ssg4m-sites>
+      </fieldset>
+    </div> 
+      -->
+      <!-- SITES LIST END -->
+    </div>
   </div>
-</div>

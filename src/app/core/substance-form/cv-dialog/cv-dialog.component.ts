@@ -14,6 +14,7 @@ export class CvDialogComponent implements OnInit {
   term: VocabularyTerm = {value: '', display: ''};
   vocabulary: Vocabulary;
   message: string;
+  validationMessages = [];
 
   constructor(
     public cvService: ControlledVocabularyService,
@@ -34,6 +35,8 @@ export class CvDialogComponent implements OnInit {
 
   submit(): void {
     let extant = false;
+    this.message = '';
+    this.validationMessages = [];
     this.vocabulary.terms.forEach(term => {
       if (term.value === this.term.value) {
         extant = true;
@@ -41,17 +44,57 @@ export class CvDialogComponent implements OnInit {
     });
     if (!extant) {
       this.vocabulary.terms.push(this.term);
-      this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
-        if (response.terms && response.terms.length === this.vocabulary.terms.length) {
-          this.message = 'Term ' + this.term.value + ' Added to ' + this.vocabulary.domain + '';
-          setTimeout(() => {this.dialogRef.close(this.term); }, 3000);
+      this.cvService.validateVocab(this.vocabulary).subscribe(response => {
+        if(response && response.valid) {
+          this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
+            if (response.terms && response.terms.length === this.vocabulary.terms.length) {
+              this.message = 'Term ' + this.term.value + ' Added to ' + this.vocabulary.domain + '';
+              setTimeout(() => {this.dialogRef.close(this.term); }, 3000);
+            }
+          }, error => {
+            console.log(error);
+            this.vocabulary.terms.pop();
+            let str = 'Server Error';
+          if (error.error && error.error.message) {
+            str += ' - ' + error.error.message;
+    
+          }
+         else if(error.message) {
+            str += ' - ' + error.message;
+          }
+          this.message = str;
+    
+          });
+
+        } else {
+          if(response.validationMessages) {
+            response.validationMessages.forEach(message => {
+              this.validationMessages.push(message);
+            });
+          }
+          this.vocabulary.terms.pop();
         }
+      },error => {
+        console.log(error);
+        this.vocabulary.terms.pop();
+        let str = 'Validation Error';
+      if (error.error && error.error.message) {
+        str += ' - ' + error.error.message;
+
+      }
+     else if(error.message) {
+        str += ' - ' + error.message;
+      }
+      this.message = str;
+
       });
+      
     } else {
+      
       this.message = 'Term already exists';
       setTimeout(() => {
         this.message = '';
-      }, 1000);
+      }, 3000);
     }
   }
 

@@ -26,6 +26,17 @@ img {
   height: auto;
 }
 
+.structure-image-content>div {
+    max-width: 500px;
+    margin: auto;
+}
+/* this is a hack to try to add a scroll bar sometimes */
+mat-dialog-container div[mat-dialog-content] {
+    /* background: red; */
+    overflow: auto;
+    height: 100%;
+}
+
 .mat-mini-fab {
   position: absolute;
   right: 17px;

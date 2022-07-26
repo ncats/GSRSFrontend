@@ -49,6 +49,10 @@
                         <div>
                           <a [routerLink]="['/substances', startingMaterial.substanceName.refuuid]" target="_blank">
                             {{startingMaterial.substanceName.refPname}}</a>
+                          <span *ngIf="startingMaterial.verbatimName">
+                            <br>
+                            Material Display Name:{{startingMaterial.verbatimName}}
+                          </span>
                           <span *ngIf="showSubstanceRole">
                             <br>
                             <b>({{startingMaterial.substanceRole}})</b>
@@ -151,6 +155,10 @@
                           <a [routerLink]="['/substances', resultingMaterial.substanceName.refuuid]" target="_blank">
                             {{resultingMaterial.substanceName.refPname}}
                           </a>
+                          <span *ngIf="resultingMaterial.verbatimName">
+                            <br>
+                            Material Display Name:{{resultingMaterial.verbatimName}}
+                          </span>
                           <span *ngIf="showSubstanceRole">
                             <br>
                             <b>({{resultingMaterial.substanceRole}})</b>
