@@ -60,6 +60,13 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
           //Can we add a popup dialog that would show the specific step here?
           let pindex = d.processIndex;
           let sindex = d.stepIndex;
+          let siteIndex= d.siteIndex;
+          if(typeof siteIndex === "undefined"){
+            siteIndex=0;
+          }
+          
+          this.showStepViewDialog(pindex, siteIndex, sindex);
+          
           //I just want to show a dialog that shows the step/stage component rendered in a popup for now.
           //maybe in the future it should instead be a side window, I don't know.
         };

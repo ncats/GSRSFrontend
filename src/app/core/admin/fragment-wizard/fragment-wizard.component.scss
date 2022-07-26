@@ -1,6 +1,7 @@
 .editor-container {
     width: 920px;
    min-height: 380px;
+   margin: auto;
 }
 
 .cell {
@@ -66,4 +67,45 @@
 .structure-img {
     margin-top:-20px;
     margin-bottom: -20px;
+}
+
+
+.validation {
+    display:flex;
+    flex-direction: column;
+    width: 100%;  
+    }
+    
+    
+    .message {
+        padding-top: 5px;
+        padding-left: 15px;
+    }
+
+
+
+.ERROR {
+    background-color: red;
+    color: #a94442;
+    background-color: #f2dede;
+    padding: 4px 5px;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+
+.WARNING {
+color: #8a6d3b;
+background-color: #fcf8e3;
+padding: 4px 5px;
+margin-right: 5px;
+border-radius: 5px;
+}
+
+.INFO {
+color: black;
+background-color: lightgray;
+padding: 4px 5px;
+margin-right: 5px;
+border-radius: 5px;
 }

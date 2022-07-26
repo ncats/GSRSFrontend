@@ -39,8 +39,8 @@ export class AllFilesComponent implements OnInit {
     let node;
     let count = 0;
     for (const l of list) {
-      count++;
       map[l.id] = count;
+      count++;
       l.children = [];
       if (count === 1) {
         l.order = 'primary';

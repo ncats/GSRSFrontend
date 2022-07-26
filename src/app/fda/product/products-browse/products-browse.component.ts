@@ -13,6 +13,7 @@ import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { FacetParam } from '@gsrs-core/facets-manager';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
@@ -61,6 +62,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   isAdmin = false;
   etag = '';
   environment: any;
+  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
+  matchTypes?: Array<string> = [];
+  narrowSearchSuggestionsCount = 0;
   previousState: Array<string> = [];
   private searchTermHash: number;
   searchValue: string;
@@ -208,6 +212,28 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
         }
+
+        // Narrow Suggest Search Begin
+        this.narrowSearchSuggestions = {};
+        this.matchTypes = [];
+        this.narrowSearchSuggestionsCount = 0;
+        if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+          pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+            if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+              this.narrowSearchSuggestions[suggestion.matchType] = [];
+              if (suggestion.matchType === 'WORD') {
+                this.matchTypes.unshift(suggestion.matchType);
+              } else {
+                this.matchTypes.push(suggestion.matchType);
+              }
+            }
+            this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+            this.narrowSearchSuggestionsCount++;
+          });
+        }
+        this.matchTypes.sort();
+        // Narrow Suggest Search End
+
         // Separate Application Type and Application Number in Product Result.
         this.separateAppTypeNumber();
 
@@ -471,38 +497,38 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   openImageModal($event, subUuid: string): void {
     // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
 
-   //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+    //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
-     let data: any;
+    let data: any;
 
     // if (substance.substanceClass === 'chemical') {
-       data = {
-         structure: subUuid,
+    data = {
+      structure: subUuid,
       //   smiles: substance.structure.smiles,
-         uuid: subUuid,
-     //    names: substance.names
-       };
+      uuid: subUuid,
+      //    names: substance.names
+    };
     // }
 
-     const dialogRef = this.dialog.open(StructureImageModalComponent, {
-       height: '90%',
-       width: '650px',
-       panelClass: 'structure-image-panel',
-       data: data
-     });
+    const dialogRef = this.dialog.open(StructureImageModalComponent, {
+      height: '90%',
+      width: '650px',
+      panelClass: 'structure-image-panel',
+      data: data
+    });
 
-     this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = '1002';
 
-     const subscription = dialogRef.afterClosed().subscribe(() => {
-       this.overlayContainer.style.zIndex = null;
-       subscription.unsubscribe();
-     }, () => {
-       this.overlayContainer.style.zIndex = null;
-       subscription.unsubscribe();
-     });
-   }
+    const subscription = dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    });
+  }
 
-   getAppTypeNumberUrl(appType: string, appNumber: string): string {
+  getAppTypeNumberUrl(appType: string, appNumber: string): string {
     let appUrl = 'browse-applications?search=root_appType:\"^' + appType + '$\" AND root_appNumber:\"^' + appNumber + '$\"';
     return appUrl;
   }
@@ -510,6 +536,14 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   processSubstanceSearch(searchValue: string) {
     this.privateSearchTerm = searchValue;
     this.setSearchTermValue();
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
   }
 
 }

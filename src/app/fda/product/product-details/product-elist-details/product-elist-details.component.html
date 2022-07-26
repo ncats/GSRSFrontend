@@ -296,7 +296,17 @@
                 </div>
               </td>
               <td>{{ x.unii }}</td>
-              <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+              <td>
+                <!-- {{ x.strengthNumber }} {{ x.strengthNumeratorUnit}} -->
+                {{x.originalNumeratorNumber}} {{x.originalNumeratorUnit}}
+                <span *ngIf="x.originalDenominatorNumber">
+                  in
+                  {{x.originalDenominatorNumber}}
+                </span>
+                <span *ngIf="x.originalDenominatorUnit && x.originalDenominatorUnit !== '1'">
+                  {{x.originalDenominatorUnit}}
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>

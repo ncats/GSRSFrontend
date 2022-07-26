@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -78,6 +79,7 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     UserManualModule,
     JiraSubmitTicketModule,
     MatCardModule,
+    MatButtonModule,
     MatIconModule,
     MatTooltipModule,
     MatTabsModule,

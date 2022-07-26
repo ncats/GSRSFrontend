@@ -16,7 +16,7 @@
 <mat-accordion multi="true">
 
   <mat-expansion-panel [ngClass]="{'col': calledFrom === 'advancedsearch'}"
-    [expanded]="panelExpanded === true"
+    [expanded]="panelExpanded === true || (facetParams && facetParams[facet.name])"
     *ngFor="let facet of facets; index as topIndex">
     <mat-expansion-panel-header>
       <mat-panel-title>

@@ -208,7 +208,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
           this.rawFacets = pagingResponse.facets;
         }
 
-        // Narrow Suggest Search
+        // Narrow Suggest Search Begin
         this.narrowSearchSuggestions = {};
         this.matchTypes = [];
         this.narrowSearchSuggestionsCount = 0;
@@ -227,6 +227,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
           });
         }
         this.matchTypes.sort();
+        // Narrow Suggest Search End
 
         this.getSubstanceBySubstanceKey();
         // Get Application Clinical Trial Record
@@ -555,6 +556,14 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   processSubstanceSearch(searchValue: string) {
     this.privateSearchTerm = searchValue;
     this.setSearchTermValue();
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
   }
 
 }

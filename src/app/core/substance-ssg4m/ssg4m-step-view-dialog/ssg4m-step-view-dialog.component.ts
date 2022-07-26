@@ -23,7 +23,7 @@ export class Ssg4mStepViewDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.data.processIndex >= 0 && this.data.siteIndex >= 0 && this.data.stageIndex >= 0) {
+    if (this.data.processIndex >= -1 && this.data.siteIndex >= -1 && this.data.stageIndex >= -1) {
       this.showProcessIndex = this.data.processIndex;
       this.showSiteIndex = this.data.siteIndex;
       this.showStageIndex = this.data.stageIndex;

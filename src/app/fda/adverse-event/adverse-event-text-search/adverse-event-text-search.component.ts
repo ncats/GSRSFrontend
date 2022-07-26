@@ -191,6 +191,9 @@ export class AdverseEventTextSearchComponent implements OnInit, AfterViewInit, O
     const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchTerm || 'search term option';
     this.gaService.sendEvent(eventCategory, 'search:submit', eventLabel);
 
+    // Clean up searchTerm
+    searchTerm = this.topSearchClean(searchTerm);
+
     this.searchPerformed.emit(searchTerm);
   }
 

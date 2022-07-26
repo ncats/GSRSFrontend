@@ -181,6 +181,10 @@ body {
   flex-direction: column;
 }
 
+.cards-container.maximize-width-card {
+  display: block;
+}
+
 .scrollable-container {
   height: 100%;
   overflow: auto;

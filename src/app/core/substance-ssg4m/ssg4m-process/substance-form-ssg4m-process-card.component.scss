@@ -131,4 +131,11 @@ legend.border {
   height: 3px;
 }
 
+/* Tyler trying to make the sites disappear by default */
+fieldset.border.minimize {
+    border: none !important;
+    padding: 0px !important;
+    box-shadow: none !important;
+    margin-top: 0px  !important;
+}
 
