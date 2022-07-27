@@ -912,4 +912,28 @@ var callback = function(){
         // Note that this is still an issue if there is more than one editor being used at one
         // time. JSDraw will need to fix.
         JSDraw2.Editor.atomlistDlg=null;
+        
+        // This prevents the context menu from spawning more events on right-click events
+        (function() {
+            var contextMenuChecker = (e) => {
+                if (e.path) {
+                    for (var i = 0; i < e.path.length; i++) {
+                        var elm = e.path[i];
+                        var checkElm = elm;
+                        if (i === 0 && elm.tagName === "TABLE" && e.path[i + 1].tagName === "BODY" && elm.chlidren.length > 0) {
+                            checkElm = elm.children[0];
+                        }
+                        if (checkElm.getAttribute && checkElm.getAttribute("jspopupmenu")) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                }
+            };
+            if (document.addEventListener) {
+                document.addEventListener('contextmenu', contextMenuChecker, false);
+            } else {
+                document.attachEvent('oncontextmenu', contextMenuChecker);
+            }
+        }());
     }
