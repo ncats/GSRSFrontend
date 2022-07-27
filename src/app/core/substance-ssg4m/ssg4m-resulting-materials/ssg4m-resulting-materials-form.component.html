@@ -1,3 +1,6 @@
+<div *ngIf="resultingMaterialIndex > 0">
+<hr>
+</div>
 <div class="form-container">
   <div *ngIf="resultingMaterial.$$deletedCode" class="notification-backdrop">
     Deleted&nbsp;
@@ -5,7 +8,22 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
+
+  <div class="">
+    <div class="button-delete">
+      <button mat-icon-button matTooltip=" Copy this Resulting Material to Starting Material in next Step"
+        (click)="copyResultingToStarting()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Delete Resulting Material {{(resultingMaterialIndex+1)}}"
+        (click)="confirmDeleteResultingMaterial()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+  </div>
+
   <div class="form-row">
+    <!--
     <div class="delete-container">
       <b>{{(resultingMaterialIndex+1)}}</b>
       <button mat-icon-button matTooltip="Delete Resulting Material {{(resultingMaterialIndex+1)}}"
@@ -18,12 +36,11 @@
         (click)="copyResultingToStarting()">
         <mat-icon svgIcon="file_copy"></mat-icon>
       </button>
-      <!--
       <br>
       <div class="padleft15px"><b>{{(resultingMaterialIndex+1)}}</b>
       </div>
-      -->
     </div>
+     -->
 
     <div class="col related-substance"
       *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
@@ -58,7 +75,7 @@
   </div> <!-- form row -->
 
   <div class="form-row">
-    <div class="col marginleft50px">
+    <div class="col">
       <!-- Register Subtance -->
       <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
         <span class="font11px">Register New</span>
@@ -71,12 +88,12 @@
     </div>
   </div>
 
-  <div class="form-row margintop10px"
+  <div class="form-row"
     *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
-    <div class="marginleft45px">&nbsp;</div>
+    <div class="">&nbsp;</div>
     <mat-form-field class="col-1-1">
       <textarea matInput placeholder="Comments" [(ngModel)]="resultingMaterial.comments"
-      name="resultingMaterial.comments" rows="1"></textarea>
+        name="resultingMaterial.comments" rows="1"></textarea>
     </mat-form-field>
   </div> <!-- form-row-->
 </div>
