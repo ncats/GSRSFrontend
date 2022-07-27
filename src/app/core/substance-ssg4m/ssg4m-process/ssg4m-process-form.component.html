@@ -7,14 +7,12 @@
       </button>
     </div>
 
-    <div class="">
-      <div class="button-delete">
-        <button mat-icon-button matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
-          <mat-icon svgIcon="delete_forever"></mat-icon>
-        </button>
-      </div>
-    </div>
-
+    <!--
+    <button mat-stroked-button color="primary" class="button-add divflexright"
+      matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
+      <mat-icon svgIcon="delete_forever"></mat-icon>Delete Process {{(processIndex+1)}}
+    </button>
+  -->
     <div class="form-row">
       <!--
       <div class="delete-container">
@@ -78,7 +76,8 @@
        -->
       <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
         <fieldset class="border">
-          <legend class="border">Site &nbsp;<b><span class="font17px">{{siteIndex + 1}} of {{process.sites.length}}</span></b>
+          <legend class="border">Site &nbsp;<b><span class="font17px">{{siteIndex + 1}} of
+                {{process.sites.length}}</span></b>
           </legend>
 
           <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
@@ -97,18 +96,8 @@
         </fieldset>
       </div>
 
-          <!-- Another Add Button-->
-          <!-- (process.sites && process.sites.length > 0) &&  -->
-          <div class="divflex" *ngIf="showAdvancedSettings">
-            <span class="middle-fill"></span>
-            <button mat-stroked-button color="primary" class="button-add" (click)="addSite()">
-              <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Site
-            </button>
-          </div>
-        </fieldset>
-      </div>
       <!--
-    <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
+      <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
       <fieldset [ngClass]="showAdvancedSettings ? 'border': 'border minimize'">
         <legend *ngIf="showAdvancedSettings" class="border">Site &nbsp;<b><span class="colorgreen font17px">{{siteIndex + 1}}</span></b>
         </legend>
@@ -118,8 +107,9 @@
         </app-ssg4m-sites>
       </fieldset>
 
-    </div> <!-- loop -->
+      </div> <!-- loop -->
 
-    <!-- SITES LIST END -->
+      <!-- SITES LIST END -->
+    </div>
   </div>
 </div>
