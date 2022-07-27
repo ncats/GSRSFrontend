@@ -160,7 +160,7 @@
           <div class="label">Names:</div>
           <div [hidden]="!showLessNames">
             <div class="value space-bottom" *ngFor="let nameObject of names | namesDisplayOrder">
-              {{nameObject.name}}
+              <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
               <span *ngIf="nameObject.displayName == true" matTooltip="Display Name">
                 <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
               </span>
@@ -169,8 +169,8 @@
           </div>
           <div [hidden]="showLessNames">
             <div class="value space-bottom" *ngFor="let nameObject of names">
-              {{nameObject.name}}
-              <span *ngIf="nameObject.displayName == true" matTooltip="Display Name">
+              <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
+                <span *ngIf="nameObject.displayName == true" matTooltip="Display Name">
                 <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
               </span>
               <span *ngIf="nameObject.preferred == true" matTooltip="Additional Listing Name">
