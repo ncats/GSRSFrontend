@@ -116,13 +116,26 @@ hr {
   color: green;
 }
 
+.divflexright {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .button-add {
   z-index: 1;
   position: relative;
-  top: 25px;
+  top: -45px;
   margin-right: 25px;
+  color: red;
   background-color: #FFFFFF;
-  border: 1px solid #007CBA;
+  border: 1px solid red;
+}
+
+.button-delete {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -65px;
+  color: red;
 }
 
 fieldset.border {
@@ -146,10 +159,4 @@ legend.border {
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
-}
-
-.button-delete {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -15px;
 }
