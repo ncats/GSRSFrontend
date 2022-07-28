@@ -82,8 +82,8 @@
   margin-left: 45px;
 }
 
-.marginleft50px {
-  margin-left: 50px;
+.marginleft30px {
+  margin-left: 30px;
 }
 
 .padtop10px {
@@ -100,4 +100,10 @@
 
 .font11px {
   font-size: 11px;
+}
+
+.button-delete {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -15px;
 }

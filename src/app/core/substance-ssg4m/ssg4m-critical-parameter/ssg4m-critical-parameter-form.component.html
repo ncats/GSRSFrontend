@@ -1,3 +1,6 @@
+<div *ngIf="criticalParameterIndex > 0">
+  <hr>
+</div>
 <div class="form-container">
   <div *ngIf="criticalParameter.$$deletedCode" class="notification-backdrop">
     Deleted&nbsp;
@@ -6,7 +9,17 @@
     </button>
   </div>
 
+  <div class="">
+    <div class="">
+      <button mat-icon-button matTooltip="Delete Critical Parameter {{(criticalParameterIndex+1)}}"
+        (click)="confirmDeleteCriticalParameter()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+  </div>
+
   <div class="form-row">
+    <!--
     <div class="delete-container">
       <button mat-icon-button matTooltip="Delete Critical Parameter {{(criticalParameterIndex+1)}}"
         (click)="confirmDeleteCriticalParameter()">
@@ -15,6 +28,7 @@
       <br>
       <div class="padleft15px"><b>{{(criticalParameterIndex+1)}}</b></div>
     </div>
+    -->
 
     <app-cv-input class="width180px padright20px"
       *ngIf="configSettingsDisplay['propertyName'] || (configSettingsDisplay['propertyName'] === undefined && true)"
@@ -57,7 +71,7 @@
 
   </div> <!-- form row -->
 
-  <div class="form-row padleft50px">
+  <div class="form-row">
     <app-cv-input class="col-3-1"
       *ngIf="configSettingsDisplay['propertyType'] || (configSettingsDisplay['propertyType'] === undefined && true)"
       domain="PROPERTY_TYPE" required='true' title="Property Type" [model]="criticalParameter.propertyType"
@@ -91,7 +105,7 @@
     </div>
   </div>
 
-  <div class="form-row padleft50px">
+  <div class="form-row">
     <mat-form-field class="low col-3-1"
       *ngIf="configSettingsDisplay['low'] || (configSettingsDisplay['low'] === undefined && true)">
       <input type="number" matInput placeholder="Low" [formControl]="lowControl" />

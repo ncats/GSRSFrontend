@@ -96,8 +96,17 @@ hr {
   font-size: 18px;
 }
 
+.button-add {
+  z-index: 1;
+  position: relative;
+  top: 25px;
+  margin-right: 25px;
+  background-color: #FFFFFF;
+  border: 1px solid #007CBA;
+}
+
 fieldset.border {
-  border: solid 2px var(--fieldset-orange-border-color) !important;
+  border: solid 2px var(--fieldset-green-border-color) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 8px;
@@ -112,10 +121,16 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: var(--legend-orange-border-color);
+  color: var(--legend-blue-border-color-2);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
   text-align: center;
   /*margin-left: 40%;*/
+}
+
+.button-delete {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -15px;
 }

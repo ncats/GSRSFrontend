@@ -45,7 +45,7 @@ export class AmountFormComponent implements OnInit {
           this.averageControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
           this.averageControl.setValue('');
-        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else if(value.match(/^[0-9,.]*$/)) { // what we want
         } else {
           this.averageControl.setValue('');
         }
@@ -57,7 +57,7 @@ export class AmountFormComponent implements OnInit {
           this.lowControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
           this.lowControl.setValue('');
-        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else if(value.match(/^[0-9,.]*$/)) { // what we want
         } else {
           this.lowControl.setValue('');
         }
@@ -69,7 +69,7 @@ export class AmountFormComponent implements OnInit {
           this.highControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
           this.highControl.setValue('');
-        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else if(value.match(/^[0-9,.]*$/)) { // what we want
         } else {
           this.highControl.setValue('');
         }
@@ -81,7 +81,7 @@ export class AmountFormComponent implements OnInit {
           this.lowLimitControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
           this.lowLimitControl.setValue('');
-        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else if(value.match(/^[0-9,.]*$/)) { // what we want
         } else {
           this.lowLimitControl.setValue('');
         }
@@ -93,7 +93,7 @@ export class AmountFormComponent implements OnInit {
           this.highLimitControl.setValue('');
         } else if(value.length === 1 && value.match(/[a-z]/i)) {
           this.highLimitControl.setValue('');
-        } else if(value.match(/^[0-9,]*$/)) { // what we want
+        } else if(value.match(/^[0-9,.]*$/)) { // what we want
         } else {
           this.highLimitControl.setValue('');
         }

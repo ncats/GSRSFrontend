@@ -18,6 +18,7 @@
 .cdk-overlay-pane {
   z-index: 1005;
 }
+
 mat-select-panel{
   z-index: 1005;
 }
@@ -38,6 +39,7 @@ mat-select-panel{
 ::ng-deep .mat-form-field-wrapper {
   padding-bottom: 5px;
 }
+
 .advanced-features {
   z-index: 2000 !important;
 
@@ -189,6 +191,15 @@ mat-select-panel{
 
 .bordergray {
   border: 1px solid var(--regular-green-color);
+}
+
+.fontbold {
+  font-weight: bold;
+}
+
+/* FDA COLOR BLUE CODE Hex: #007CBA */
+.colorbluefda {
+  color: #007CBA;
 }
 
 /* tyler added as quick fix */

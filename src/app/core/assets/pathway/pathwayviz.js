@@ -9,9 +9,16 @@ schemeUtil.showApprovalID=false;
 schemeUtil.approvalCode="UNII";
 schemeUtil.apiBaseURL="";
 schemeUtil.debug=true;
-schemeUtil.width=800;
+schemeUtil.width=1020;
 schemeUtil.height=2000;
 schemeUtil.layout="vertical";
+schemeUtil.maxTextLen=19;
+schemeUtil.highlightColor="#429ecc";
+schemeUtil.textWidthPx=10;
+schemeUtil.maxContinuousSteps=1000;
+schemeUtil.zoomLevel=1.2;
+
+
 
 schemeUtil.bracketRoleType="NON-ISOLATED INTERMEDIATE";
 
@@ -26,7 +33,15 @@ schemeUtil.rep = function(t, n) {
   }
   return nn;
 }
-schemeUtil.maxLen =function (txt, len) {
+schemeUtil.maxLenAndOffset =function (txt, len) {
+  if (!txt) return {"text":txt, "offset":0};
+  
+  if (txt.length < len) return {"text":txt, "offset":((len - txt.length) / 2 - 1)};
+  
+  return {"text": (txt.substr(0, len - 3) + "...") , "offset": 0 };
+};
+
+schemeUtil.maxLenSpacePad = function (txt, len) {
   if (!txt) return txt;
   if (txt.length < len) return schemeUtil.rep("\xa0", (len - txt.length) / 2 - 1) + txt;
   return txt.substr(0, len - 3) + "...";
@@ -58,7 +73,9 @@ schemeUtil.makeMaterialNode = function(smat, pidArr){
    }
    return nn;
 };
-schemeUtil.makeDisplayGraph = function(g4) {
+schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
+  if(!maxSteps)maxSteps = schemeUtil.maxContinuousSteps;
+  
   var nodes = [];
   var links = [];
   var canMap = {};
@@ -67,7 +84,14 @@ schemeUtil.makeDisplayGraph = function(g4) {
     var p = g4.specifiedSubstanceG4m.process[i];
     var stg = p.sites[0].stages;
     var pcanMap = {};
+	var subSteps=0;
     for (ii = 0; ii < stg.length; ii++) {
+	  if(subSteps>=maxSteps){
+		subSteps=0;
+		pcanMap={};
+		canMap={};
+	  }
+	  subSteps++;
       var stage = stg[ii];
       var sms = stage.startingMaterials;
       var rms = stage.resultingMaterials;
@@ -108,7 +132,6 @@ schemeUtil.makeDisplayGraph = function(g4) {
       
       rn.processIndex=i;
       rn.stepIndex=iii;
-	  console.log(rn);
       rn.id = ppid[0];
       ppid[0]++;
       nodes.push(rn);
@@ -170,13 +193,37 @@ schemeUtil.makeDisplayGraph = function(g4) {
   return ret;
 }
 
+
 schemeUtil.renderScheme=function(nn2, selector) {
   var cheight = 150;
   var pwidth = 16;
-  var maxText = 23;
+  var maxText = schemeUtil.maxTextLen;
   var width = schemeUtil.width;
   var height = schemeUtil.height;
   var paddingBrack = 6;
+  var imageScale=1;
+  
+  function toggleImageZoom(img) {
+        var scale = 1;
+        d3.select(img).each(function (d) {
+            if (Math.abs(img.width.baseVal.value - d.width) < 1) scale /= imageScale;
+        });
+        imageZoom(img, scale);
+  }
+
+  function imageZoom(img, scale) {
+		console.log(img);
+		console.log("Scaling:" + img + " to " + scale);
+        d3.select(img)
+            .transition()
+            .attr("width", function (d) {
+				console.log(d);
+				var nwid = scale * (cheight);
+				console.log(nwid);
+                return nwid;
+            })
+            .attr("height", function (d) { return scale * (cheight); });
+  }
 
   var ss = d3.scaleOrdinal(d3.schemeCategory20);
 
@@ -205,13 +252,13 @@ schemeUtil.renderScheme=function(nn2, selector) {
   };
   var getWidth = (n) => {
     if (n.type === "reaction") {
-      return "32px";
+      return "32";
     } else if (n.imgWidth) {
       return n.imgWidth;
     } else if (n.type === "plus") {
-      return pwidth + "px";
+      return pwidth  + "";
     } else {
-      return cheight + "px";
+      return cheight  + "";
     }
   };
   var getWidthPx = (n) => {
@@ -226,13 +273,13 @@ schemeUtil.renderScheme=function(nn2, selector) {
   };
   var getHeight = (n) => {
     if (n.type === "reaction") {
-      return "32px";
+      return "32";
     } else if (n.imgHeight) {
       return n.imgHeight;
     } else if (n.type === "plus") {
-      return pwidth + "px";
+      return pwidth + "";
     } else {
-      return cheight + "px";
+      return cheight + "";
     }
   };
   var getX = (n) => {
@@ -296,6 +343,7 @@ schemeUtil.renderScheme=function(nn2, selector) {
       .nodes(graph.nodes)
       .links(graph.links)
       .flowLayout(layoutVar, 140)
+	  .avoidOverlaps(true)
       .symmetricDiffLinkLengths(6)
       .start(10, 20, 20);
     var path = svg
@@ -321,19 +369,25 @@ schemeUtil.renderScheme=function(nn2, selector) {
       })
       .on("mouseover", function (d, i) {
         d3.select(this).style("cursor", "pointer");
+		
       })
-      .on("mousemouseoutover", function (d, i) {
+      .on("mouseout", function (d, i) {
         d3.select(this).style("cursor", "default");
+		
       })
       .call(d3cola.drag);
 
     mnode
       .append("text")
       .text(function (d) {
-        return schemeUtil.maxLen(d.bottomText, maxText);
+        return schemeUtil.maxLenAndOffset(d.bottomText, maxText).text;
       })
       .attr("dy", cheight + 20)
-      .attr("font-family", "monospace");
+	  .attr("dx", (d) => schemeUtil.textWidthPx * schemeUtil.maxLenAndOffset(d.bottomText, maxText).offset)
+      .attr("font-family", "monospace")
+	  .attr("fill", schemeUtil.highlightColor)
+	  .attr("font-weight", "bold")
+	  .attr("text-decoration","underline");
     
     //TODO: fix the dy/dx for horizontal layout
     mnode
@@ -341,17 +395,34 @@ schemeUtil.renderScheme=function(nn2, selector) {
       .text((d) => getLeftText(d))
       .attr(
         "dx",
-        (d) => -1 * 5 * getLeftText(d).length - getWidth(d).replace("px", "")
+        (d) => {
+			if(schemeUtil.layout === "vertical"){
+				return -1 * schemeUtil.textWidthPx * getLeftText(d).length - getWidth(d).replace("px", "");
+			}else{
+				return 0;
+			}
+		}
       )
-      .attr("dy", (d) => getHeight(d).replace("px", "") / 2)
-      .attr("font-family", "monospace");
+      .attr("dy", (d) => {
+			if(schemeUtil.layout === "vertical"){
+				return (getHeight(d).replace("px", "")-0) / 2;
+			}else{
+				return -1* ((getHeight(d).replace("px", "")-0));
+			}
+		}
+	  )
+      .attr("font-family", "monospace")
+	  .attr("fill", schemeUtil.highlightColor)
+	  .attr("font-weight", "bold")
+	  .attr("text-decoration","underline");
     
     
     mnode
       .append("text")
       .text(function (d) {
-        return schemeUtil.maxLen(d.name, maxText);
+        return schemeUtil.maxLenAndOffset(d.name, maxText).text;
       })
+	  .attr("dx", (d) => schemeUtil.textWidthPx * schemeUtil.maxLenAndOffset(d.bottomText, maxText).offset)
       .attr("dy", -20)
       .attr("font-family", "monospace");
 
@@ -419,7 +490,19 @@ schemeUtil.renderScheme=function(nn2, selector) {
       .attr("xlink:href", (d) => getImg(d))
       .attr("width", (d) => getWidth(d))
       .attr("height", (d) => getHeight(d))
-      .attr("r", nodeRadius);
+	  .attr("r", nodeRadius)
+	  .on("mouseover", function (d, i) {
+		if(d.type === "material") {
+			console.log(this);
+			imageZoom(this, schemeUtil.zoomLevel);
+		}
+      })
+	   .on("mouseout", function (d, i) {
+		if(d.type === "material") {
+			console.log(this);
+			imageZoom(this, 1);
+		}
+      });
 
     d3cola.on("tick", function () {
       path.each(function (d) {
@@ -458,5 +541,3 @@ schemeUtil.isIE = function() {
       ) != null)
   );
 }
-
-

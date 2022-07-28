@@ -45,8 +45,21 @@
   max-width: 100%;
 }
 
-.paddingleft400px {
-  padding-left: 400px;
+.paddingleft800px {
+  padding-left: 800px;
+}
+
+.divflex {
+  display: flex;
+}
+
+.button-add {
+  z-index: 1;
+  position: relative;
+  top: 25px;
+  margin-right: 25px;
+  background-color: #FFFFFF;
+  border: 1px solid #007CBA;
 }
 
 fieldset.border {
@@ -65,7 +78,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: var(--legend-blue-border-color);
+  color: var(--legend-blue-border-color-2);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
