@@ -272,7 +272,7 @@ margin-bottom: auto;
       .count-row-label {
           margin-left: auto;
           margin-right: auto;
-          text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+          text-shadow: 1px 0 0 var(--text-shadow-color), 0 -1px 0 var(--text-shadow-color), 0 1px 0 var(--text-shadow-color), -1px 0 0 var(--text-shadow-color);
           white-space: nowrap;
       }
   }

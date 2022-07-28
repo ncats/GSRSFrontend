@@ -28,7 +28,7 @@
 .wildcard {
     width: 100%;
     height: 50%;
-    background: transparent;
+    background: var(--regular-transparent-color);
     border-top-style: hidden;
     border-right-style: hidden;
     border-left-style: hidden;
@@ -265,7 +265,7 @@
 }
 
 .mat-paginator {
-    background: transparent;
+    background: var(--regular-transparent-color);
 }
 
 .image-thumbnail{
@@ -696,11 +696,8 @@ margin-left: 20px;
     display: inline-table;
     margin: auto;
 }
-// .mat-progress-spinner circle, .mat-spinner circle {
-//     stroke: grey;
-// }
 .search-spinner ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
-    stroke: grey;
+    stroke: var(--regular-grey-color);
     width: 10px !important;
     height: 10px !important;
     display: inline;

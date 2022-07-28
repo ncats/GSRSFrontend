@@ -601,7 +601,7 @@ height:175px;
 }
 
 .mat-paginator {
-  background: transparent;
+  background: var(--regular-transparent-color);
 }
 
 .image-thumbnail{
@@ -1008,7 +1008,7 @@ mat-sidenav {
   margin: 16px;
   width: 200px;
   border-right: none;
-  background: #002b5c;
+  background: var(--side-nav-bg-color);
   color: var(--regular-white-color);
   border-radius: 10px;
   padding: 16px;
