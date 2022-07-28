@@ -916,16 +916,18 @@ var callback = function(){
         // This prevents the context menu from spawning more events on right-click events
         (function() {
             var contextMenuChecker = (e) => {
-                if (e.path) {
-                    for (var i = 0; i < e.path.length; i++) {
-                        var elm = e.path[i];
+                var path = event.path || (event.composedPath && event.composedPath());
+                if (path) {
+                    for (var i = 0; i < path.length; i++) {
+                        var elm = path[i];
                         var checkElm = elm;
-                        if (i === 0 && elm.tagName === "TABLE" && e.path[i + 1].tagName === "BODY" && elm.chlidren.length > 0) {
+                        if (i === 0 && elm.tagName === "TABLE" && path[i + 1].tagName === "BODY" && elm.chlidren.length > 0) {
                             checkElm = elm.children[0];
                         }
                         if (checkElm.getAttribute && checkElm.getAttribute("jspopupmenu")) {
                             e.preventDefault();
                             return false;
+                        } else {
                         }
                     }
                 }
