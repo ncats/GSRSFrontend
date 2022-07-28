@@ -165,7 +165,7 @@
                 <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
               </span>
             </div>
-            <div [hidden]="!moreThanNumberCount(names, 4)" (click)="showMoreLessNames()" class="show-more">See {{names.length - 4}} More</div>
+            <div [hidden]="!moreThanNumberCount(names, 5)" (click)="showMoreLessNames()" class="show-more">See {{names.length - 4}} More</div>
           </div>
           <div [hidden]="showLessNames">
             <div class="value space-bottom" *ngFor="let nameObject of names">
