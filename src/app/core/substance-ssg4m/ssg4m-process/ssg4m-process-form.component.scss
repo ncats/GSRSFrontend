@@ -1,5 +1,4 @@
 .process-form-container {
-
   padding: 5px 10px 12px 10px;
   position: relative;
 }
@@ -12,12 +11,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: var(--notif-backdrop-bg-color);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--notif-backdrop-color);
 }
 
 .form-row {
@@ -44,33 +43,14 @@
   }
 }
 
-/*
-.form-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  width: 100%;
-
-  .delete-container {
-      padding: 0 10px 8px 0;
-  }
-
-  .process {
-      flex-grow: 1;
-      padding-right: 15px;
-      border:1px solid green;
-  }
-}
-*/
-
 .references-container {
   width: 100%;
 }
 
 hr {
   border: none;
-  border-top: 3px dotted green;
-  color: #333;
+  border-top: 3px dotted var(--regular-green-color);
+  color: var(--hr-color);
   overflow: visible;
   text-align: center;
   height: 5px;
@@ -81,11 +61,11 @@ hr {
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .borderorange {
-  border: 1px solid orangered;
+  border: 1px solid var(--regular-orangered-color);
 }
 
 .fontsize17px {
@@ -113,18 +93,18 @@ hr {
 }
 
 .colorgreen {
-  color: green;
+  color: var(--regular-green-color);
 }
 
 fieldset.border {
-  border: solid 1px rgb(33, 136, 20) !important;
+  border: solid 1px var(--fieldset-green-border-color) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;  /* override the default value of min-content */
-  -webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
-  -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
-  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64);
+  -webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);
 }
 
 legend.border {
@@ -132,7 +112,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: #16997d;
+  color: var(--legend-green-border-color);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;

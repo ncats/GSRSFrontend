@@ -7,7 +7,7 @@
 }
 
 .colororange {
-  color: orange;
+  color: var(--regular-orange-color);
 }
 
 .font14px {
@@ -42,11 +42,11 @@
 }
 
 .colorgray {
-  color: gray;
+  color: var(--regular-grey-color);
 }
 
 .colorgreen {
-  color: green;
+  color: var(--regular-green-color);
 }
 
 #parent #popup {

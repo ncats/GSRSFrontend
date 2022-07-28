@@ -16,7 +16,7 @@
     width: 50%;
   }
   .approval {
-    color: maroon;
+    color: var(--regular-maroon-color);
     flex: 0 0 100%;
   }
   
@@ -42,7 +42,7 @@
     height:30px !important;
     line-height: 30px !important;
     width: 35px;
-    background-color: transparent;
+    background-color: var(--regular-transparent-color);
     border: 0px;
   }
   .right-container {
@@ -88,16 +88,16 @@
     border-top:0px;
   }
   .primary {
-    background-color: #cee8fb !important;
+    background-color: var(--sub-hierarchy-bg-color) !important;
   }
   
   .hierarchy-link {
-    color: #448aff;
+    color: var(--link-primary-color);
     font-style: unset;
     max-lines: 2;
   }
   .odd {
-    background-color : rgba(0, 0, 0, .05);
+    background-color: var(--sub-hierarchy-odd-bg-color);
   }
   .node-container {
     display:flex;

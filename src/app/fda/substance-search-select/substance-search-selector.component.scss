@@ -24,8 +24,8 @@
     flex-direction: column;
 
     .mat-mini-fab {
-        background-color: rgba(242, 242, 242, .85);
-        color: #404040;
+        background-color: var(--mat-icon-button-bg-color);
+        color: var(--label-color);
         width: 35px;
         height: 35px;
 
@@ -44,5 +44,5 @@
 }
 
 .mat-progress-spinner circle, .mat-spinner circle {
-  stroke: #3fb53f;
+  stroke: var(--spinner-stroke-color);
 }

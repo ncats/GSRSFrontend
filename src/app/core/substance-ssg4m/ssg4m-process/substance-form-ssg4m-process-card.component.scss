@@ -1,5 +1,5 @@
 .bordergray {
-  border: 1px border gray;
+  border: 1px border var(--regular-grey-color);
 }
 
 .mat-divider.mat-divider-inset {
@@ -7,19 +7,19 @@
 }
 
 .mat-divider {
-  border-top-color: rgba(0, 0, 0, .5);
+  border-top-color: var(--text-color);
 }
 
 .process {
   margin-bottom: 50px;
 
   &:nth-child(odd) {
-      background-color: rgba(68, 138, 255, .07);
+      background-color: var(--nth-child-color-2);
 
       ::ng-deep {
 
           .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-              background-color: rgba(68, 138, 255, .15);
+              background-color: var(--nth-child-color-3);
           }
       }
   }
@@ -28,14 +28,14 @@
       ::ng-deep {
 
           .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-              background-color: rgba(128, 128, 128, .15);
+              background-color: var(--nth-child-color-1);
           }
       }
   }
 
   ::ng-deep {
       .mat-expansion-panel, .mat-table, textarea {
-          background-color: transparent;
+          background-color: var(--regular-transparent-color);
       }
   }
 }
@@ -50,14 +50,14 @@
 }
 
 fieldset.border {
-  border: solid 2px rgb(27, 15, 184) !important;
+  border: solid 2px var(--fieldset-blue-border-color) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;  /* override the default value of min-content */
-  -webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
-  -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
-  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64);
+  -webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);
 }
 
 legend.border {
@@ -65,54 +65,30 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: #174793;
+  color: var(--legend-blue-border-color);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
 :host ::ng-deep .mat-tab-list .mat-tab-label {
-  /*
-  border-width: 1px;
-  border-style: solid;
-  border-color: black;*/
-  color: black;
-  background-color: rgb(247, 241, 241);
-  border-right: 1px solid rgb(182, 177, 177);
-  /*
-  margin-left: 5px;
-  border-radius: 10px 10px 0px 0px;
-  flex-wrap: wrap!important;
-  min-width: 120px;
-  max-width: 120px;
-  height: 35px;*/
+  color: var(--regular-black-color);
+  background-color: var(--pale-border-color-rgb-2);
+  border-right: 1px solid var(--grey-border-color-rgb);
 }
-/*
-::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-  color: red;
-  background-color: green;
-}
-*/
 
 :host ::ng-deep .mat-tab-header {
-  border-bottom: 2px solid rgb(67, 70, 148);
+  border-bottom: 2px solid var(--deep-purple-border-color-rgb);
 }
 
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-  color: black;
+  color: var(--regular-black-color);
   font-weight: bold;
-  background-color: #FFFFFF;
-  /*background-color: rgb(20, 76, 189);*/
-  /*
-   color: rgb(248, 250, 248);
-   background-color: rgb(44, 70, 141);
-
-   opacity: 1;
-     */
+  background-color: var(--white-color);
 }
 
 :host ::ng-deep .mat-ink-bar {
-  background-color: var(--primary-color,#3c19d6) !important;
+  background-color: var(--primary-color, --royal-blue-color) !important;
   height: 3px;
 }
 

@@ -32,21 +32,21 @@
 
 
 .invalid > * {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 
 .invalid ::ng-deep .mat-form-field-label {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .invalid ::ng-deep .mat-select-arrow {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .invalid-note {
   margin-bottom: 18px;
   font-style: italic;
   font-size: 14px;
-  color: red;
+  color: var(--regular-red-color);
 }

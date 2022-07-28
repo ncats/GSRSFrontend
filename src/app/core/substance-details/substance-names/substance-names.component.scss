@@ -55,6 +55,6 @@ width: 150px;
 display: inline;
 }
 .disabled-btn {
-  color: rgba(0,0,0,.26);
-  background-color: rgba(0,0,0,.12);
+  color: var(--box-shadow-color-5);
+  background-color: var(--box-shadow-color-3);
 }

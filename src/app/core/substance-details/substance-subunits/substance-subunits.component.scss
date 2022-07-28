@@ -6,7 +6,7 @@
 }
 
 .subunit-title {
-  color: #1565C0;
+  color: var(--link-color);
   text-decoration: none;
 }
 
@@ -26,7 +26,7 @@
 }
 
 error {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .subunit-row {
@@ -112,7 +112,7 @@ error {
   padding-bottom: 20px;
 
   &:not(:last-child) {
-    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+    border-bottom: solid 1px var(--box-shadow-color-3);
   }
 }
 

@@ -14,7 +14,7 @@
 
 .show-more {
     text-decoration: underline;
-    color: #448aff;
+    color: var(--link-primary-color);
     cursor: pointer;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .moreLink {
-    color: #448aff;
+    color: var(--link-primary-color);
     font-weight: 600;
     padding-left: 10px;
     font-size: 15px;
@@ -38,13 +38,13 @@
     white-space: normal;
 
     .substance-name {
-        color: #448aff;
+        color: var(--link-primary-color);
         padding-right: 10px;
     }
 
       .approval {
         font-size: 16px;
-        color: #c7254e;
+        color: var(--pink-span-color);
       }
 
 }
@@ -107,7 +107,7 @@
 }
 
 .ext-link{
-    color: #448aff;
+    color: var(--link-primary-color);
     text-decoration-style: unset;
 }
 
@@ -135,7 +135,7 @@
 }
 
 .lock-icon {
-    color: #f0ad4e;
+    color: var(--lock-icon-color);
 }
 
 @media(max-width: 600px) {
@@ -156,7 +156,7 @@
 .similarity {
   padding-left: 10px;
   font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
-  color: #c7254e;
+  color: var(--pink-span-color);
 }
 
 .similarity-label {

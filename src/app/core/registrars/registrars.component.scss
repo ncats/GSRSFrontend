@@ -99,11 +99,11 @@
   padding: 2px;
 }
 a.mat-list-item {
-    color: #1565c0;
+    color: var(--link-color);
 }
 
 .mat-list-base .mat-list-item .mat-list-icon {
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-list-color);
 }
 
 .mat-list-base .mat-list-item.mat-list-item-with-avatar {
@@ -111,8 +111,8 @@ a.mat-list-item {
 }
 .big-button {
   font-size: 19px !important;
-  color: white !important;
-  background-color: #4793d1 !important;
+  color: var(--regular-white-color) !important;
+  background-color: var(--primary-color) !important;
   padding: 3px 14px !important;
 }
 
@@ -123,22 +123,11 @@ a.mat-list-item {
 
   .big-button {
     font-size: 19px !important;
-    color: white !important;
-    background-color: #4793d1 !important;
+    color: var(--regular-white-color) !important;
+    background-color: var(--primary-color) !important;
     padding: 3px 14px !important;
   }
 }
-
-.welcome-banner {
-    margin-top: 75px;
-
-    .close-container {
-      display: flex;
-      justify-content: flex-end;
-      color: #296ca3;
-    }
-  }
-
 
 mat-list-item {
   height: 52px;
@@ -158,7 +147,7 @@ mat-list-item {
 .home {
   font-weight: 500;
   font-size: 27px;
-  color: #4793d1;
+  color: var(--primary-color);
 }
 
 .spaced {
@@ -171,8 +160,6 @@ mat-list-item {
   max-width: 100%;
   min-width: 80%;
 }
-
-
 
 .row {
   line-height: 24px;
@@ -242,7 +229,7 @@ mat-list-item {
 
 .custom-wrap:hover {
   text-decoration: underline;
-  background-color: rgba(94, 145, 186, 0.2);
+  background-color: var(--hover-bg-color);
   cursor: pointer;
 }
 
@@ -254,7 +241,7 @@ mat-list-item {
 }
 
 .entry {
-  color:#1565c0;
+  color:var(--link-color);
   display: flex;
   padding:5px;
   margin: auto;
@@ -262,26 +249,23 @@ mat-list-item {
 
 .entry:hover {
  /* text-decoration: underline;
-  background-color: rgba(94, 145, 186, 0.2);
+  background-color:  var(--hover-bg-color);
   cursor: pointer;*/
 }
 
 .entry:hover div {
   text-decoration: underline;
-  /*background-color: rgba(94, 145, 186, 0.2);*/
+  /*background-color:  var(--hover-bg-color);*/
 }
 
 .half-column {
   width:28%;
-display:flex;
-flex-direction: column;
-font-size: 18px;
-
-
-
+  display:flex;
+  flex-direction: column;
+  font-size: 18px;
 
   color {
-    color:#1565c0;
+    color:var(--link-color);
   }
 }
 .even {

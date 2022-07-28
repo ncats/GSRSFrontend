@@ -1,12 +1,12 @@
 
 
 .mat-row:nth-child(odd){
-  background-color:#f9f9f9;
+  background-color: var(--ref-manager-mat-row-nth-child-color);
 }
 
 
 .morelink {
-   color: #1565c0;
+   color: var(--link-color);
    padding-left:10px;
 
 }

@@ -1,7 +1,7 @@
 @import '../../../styles/variables';
 
 .version {
-  color: #182c4d;
+  color: var(--version-text-color);
   font-size: 10pt;
   line-height: 10px;
   text-align: right;
@@ -15,11 +15,6 @@
   max-width: 160px;
   margin-right: 20px;
 
-}
-
-.tooltiptest {
-  z-index: 9999 !important;
-  background: #b71c1c;
 }
 
 .user {
@@ -131,7 +126,7 @@
 
     &>a {
       font-size: 16px;
-      color: #e6e6e6;
+      color: var(--nav-item-a-color);
       padding-bottom: 7px;
       transition: all 150ms linear;
       text-decoration: none;
@@ -139,10 +134,10 @@
 
       &:hover,
       &.active {
-        color: white;
+        color: var(--regular-white-color);
         cursor: pointer;
         padding-bottom: 5px;
-        border-bottom: 2px solid white;
+        border-bottom: 2px solid var(--regular-white-color);
         text-decoration: none;
       }
     }
@@ -164,7 +159,7 @@
 }
 
 .login-link {
-  color: white;
+  color: var(--regular-white-color);
   font-size: 16px;
   text-decoration: none;
 }
@@ -183,31 +178,15 @@
 }
 
 ::ng-deep .transparent-background {
-  background-color: transparent;
+  background-color: var(--regular-transparent-color);
 }
-
-.classic-view-container {
-  padding-left: 15px;
-
-  ::ng-deep .mat-raised-button {
-    color: #296ca3;
-  }
-}
-
-// @media(max-width: $nav-breaking-point) {
-//   .nav-big {
-//     display: none;
-//   }
-// }
-
-
 
 @media(min-width: $nav-breaking-point) {
   .top-search {
     min-width: 500px;
   }
   .menu-button :hover {
-    background-color: rgb(71, 147, 209) !important;
+    background-color: var(--secondary-rgb-blue) !important;
   }
 }
 .extra-item {

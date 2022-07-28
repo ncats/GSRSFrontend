@@ -51,10 +51,10 @@
     justify-content: flex-end;
 
     a {
-        color: #448aff;
+        color: var(--link-primary-color);
     }
 }
 
 .mat-error {
-    color: red;
+    color: var(--regular-red-color);
 }

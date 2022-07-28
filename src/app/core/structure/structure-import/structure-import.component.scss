@@ -10,7 +10,7 @@ textarea {
     box-sizing: border-box;
     width: 100%;
     height: 50vh;
-    border: solid 1px #b3b3b3;
+    border: solid 1px var(--textarea-light-border-color);
     border-radius: 2px;
     padding: 5px;
     margin: 0;
@@ -32,17 +32,17 @@ textarea {
     border-bottom-right-radius: 2px;
 
     &.default {
-        background-color: rgba(68, 138, 255, .4);
-        color: #595959;
+        background-color: var(--structure-import-default-bg-color);
+        color: var(--structure-import-color);
     }
 
     &.success {
-        background-color: rgba(167, 255, 235, .4);
-        color: #595959;
+        background-color: var(--structure-import-success-bg-color);
+        color: var(--structure-import-color);
     }
 
     &.error {
-        background-color: rgba(229, 115, 115, .4);
-        color: #595959;
+        background-color: var(--structure-import-error-bg-color);
+        color: var(--structure-import-color);
     }
 }

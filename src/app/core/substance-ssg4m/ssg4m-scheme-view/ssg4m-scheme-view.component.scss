@@ -9,7 +9,7 @@
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .margintopneg10px {
@@ -77,14 +77,14 @@
 }
 
 fieldset.border {
-  border: solid 2px rgb(27, 15, 184) !important;
+  border: solid 2px var(--fieldset-blue-border-color) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;  /* override the default value of min-content */
-  -webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
-  -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
-  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64);
+  -webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);
 }
 
 legend.border {
@@ -92,7 +92,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: #174793;
+  color: var(--legend-blue-border-color);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;

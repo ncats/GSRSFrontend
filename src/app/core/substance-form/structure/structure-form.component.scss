@@ -51,23 +51,19 @@
 }
 
 .WARNING {
-  color: #8a6d3b;
-  background-color: #fcf8e3;
+  color: var(--warning-dialog-color);
+  background-color: var(--warning-dialog-bg-color);
 
 }
 
 
 .ERROR {
-  color: #a94442;
-  background-color: #f2dede;
+  color: var(--error-dialog-color);
+  background-color: var(--error-dialog-bg-color);
 }
 
 .dupe-check {
   margin-bottom: 5px;
 
-}
-
-.internal-link {
-  color: #448aff;
 }
 

@@ -1,7 +1,7 @@
 .form-container {
   padding: 5px 10px 12px 10px;
   position: relative;
-  border: 1px solid rgb(228, 218, 218);
+  border: 1px solid var(--pale-border-color-rgb);
 }
 
 .notification-backdrop {
@@ -12,12 +12,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: var(--notif-backdrop-bg-color);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--notif-backdrop-color);
 }
 
 .form-row {
@@ -67,7 +67,7 @@
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .fontsize18px {

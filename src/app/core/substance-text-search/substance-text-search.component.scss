@@ -16,15 +16,15 @@ form {
 
 .substance-suggestion-field {
   padding: 8px 6px;
-  color: white;
+  color: var(--regular-white-color);
   overflow: hidden;
 }
 
 .field-styling {
   padding: 5px;
   border-radius: 5px;
-  background-color: #448aff;
-  color: white;
+  background-color: var(--link-primary-color);
+  color: var(--regular-white-color);
 }
 
 .suggestion-styling {
@@ -87,7 +87,7 @@ form {
       height: 64px;
       padding-right: 210px;
       padding-left: 16px;
-      background-color: #4793d1;
+      background-color: var(--primary-color);
       overflow: hidden;
 
       form {
@@ -108,10 +108,6 @@ form {
       .activate-search-button {
         display: none;
       }
-
-      // ::ng-deep .mat-form-field-infix {
-      //     border-top: 2px solid transparent;
-      // }
 
       .close-button {
         display: inline-block;
@@ -134,7 +130,7 @@ form {
       height: 48px;
       padding-right: 0px;
       padding-left: 0px;
-      background-color: white;
+      background-color: var(--regular-white-color);
       overflow: hidden;
       mat-form-field {
         width: 100% !important;
@@ -158,10 +154,6 @@ form {
       .activate-search-button {
         display: inline-block;
       }
-
-      // ::ng-deep .mat-form-field-infix {
-      //     border-top: 2px solid transparent;
-      // }
 
       .close-button {
         display: inline-block;

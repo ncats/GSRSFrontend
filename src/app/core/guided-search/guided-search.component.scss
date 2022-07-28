@@ -65,8 +65,8 @@
 
 .query-value {
     padding: 10px 15px;
-    background-color: #ECECEC;
-    border: solid 1px #DBDBDB;
+    background-color: var(--query-bg-color);
+    border: solid 1px var(--query-border-color);
     border-radius: 2px;
     min-height: 69px;
 }
