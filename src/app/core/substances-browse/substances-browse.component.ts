@@ -932,17 +932,19 @@ searchTermOkforBeginsWithSearch(): boolean {
 
     if (substance.substanceClass === 'chemical') {
       data = {
-        structure: substance.structure.id,
+        structure: substance.uuid,
         smiles: substance.structure.smiles,
         uuid: substance.uuid,
         names: this.names[substance.uuid]
       };
     } else {
       data = {
-        structure: substance.polymer.displayStructure.id,
+        structure: substance.uuid,
         names: this.names[substance.uuid]
       };
     }
+
+    
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       width: '650px',
