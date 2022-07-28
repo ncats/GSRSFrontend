@@ -917,7 +917,6 @@ var callback = function(){
         (function() {
             var contextMenuChecker = (e) => {
                 var path = event.path || (event.composedPath && event.composedPath());
-                console.log(path);
                 if (path) {
                     for (var i = 0; i < path.length; i++) {
                         var elm = path[i];

@@ -74,15 +74,17 @@
           <a class="mat-icon-button" matTooltip="edit substance" class="summary-button" aria-label="edit substance"
           </a>
           -->
-          <!-- <a class="mat-icon-button" matTooltip="edit substance" class="summary-button"
+          <a class="mat-icon-button" matTooltip="edit substance" aria-label="edit substance" class="summary-button"
             *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
             <mat-icon svgIcon="edit"></mat-icon>
-          </a> -->
+          </a>
 
-          <button aria-label="Edit Substance" class="summary-button" *ngIf="isAdmin" mat-icon-button
-            [matMenuTriggerFor]="editMenu" [routerLink]="['/substances', substance.uuid, 'edit']">
+       <!--  Reverting back from button to link to allow right click -> new tab opening -->
+         
+       <!--   <button aria-label="Edit Substance" class="summary-button" *ngIf="isAdmin" mat-icon-button
+            [routerLink]="['/substances', substance.uuid, 'edit']">
             <mat-icon svgIcon="edit"></mat-icon>
-          </button>
+          </button>-->
 
           <button aria-label="Copy file" class="summary-button" *ngIf="canCreate" mat-icon-button
             [matMenuTriggerFor]="editMenu">
