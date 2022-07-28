@@ -917,17 +917,22 @@ var callback = function(){
         (function() {
             var contextMenuChecker = (e) => {
                 var path = event.path || (event.composedPath && event.composedPath());
+                console.log(path);
                 if (path) {
                     for (var i = 0; i < path.length; i++) {
                         var elm = path[i];
                         var checkElm = elm;
-                        if (i === 0 && elm.tagName === "TABLE" && path[i + 1].tagName === "BODY" && elm.chlidren.length > 0) {
-                            checkElm = elm.children[0];
+                        if (i === 0 && elm.tagName === "TABLE" && path[i + 1].tagName === "BODY") {
+                            if(elm.chlidren && elm.chlidren.length > 0){
+                                checkElm = elm.children[0];
+                            }else{
+                                 e.preventDefault();
+                                 return false;        
+                            }
                         }
                         if (checkElm.getAttribute && checkElm.getAttribute("jspopupmenu")) {
                             e.preventDefault();
                             return false;
-                        } else {
                         }
                     }
                 }
