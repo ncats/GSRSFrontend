@@ -11,6 +11,8 @@ export interface Config {
         };
     };
     codeSystemOrder?: Array<string>;
+    homeHeader?: string;
+    homeContents?: string;
     contactEmail?: string;
     defaultCodeSystem?: string;
     primaryCode?: string;
