@@ -9,10 +9,10 @@
     </div>
     -->
 
-  <div class="">
+  <div *ngIf="showAdvancedSettings">
     <div class="button-delete">
       <button mat-icon-button matTooltip="Delete Site {{(siteIndex+1)}}" (click)="confirmDeleteSite()">
-        <mat-icon svgIcon="delete_forever"></mat-icon>
+        <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
   </div>
@@ -85,51 +85,65 @@
       <span class="fontsize18px"><b>{{configTitleStage}} Information</b></span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    -->
+
+    <div class="divflexright">
+      <!-- Add Button -->
+      <div class="">
+        <span class="middle-fill"></span>
+        <button mat-stroked-button color="primary" class="button-add-top" (click)="addStage(processIndex, siteIndex)"
+          matTooltip="Add New Stage">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
+        </button>
+      </div>
+    </div>
+
+    <!--
     <button mat-raised-button color="primary" (click)="addStage(processIndex, siteIndex)" matTooltip="Add New Stage">
       <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
     </button>
     <br><br>
-     -->
-    <!-- </div> appScrollToTarget [id]="'stage_' + processIndex + '_' + stageIndex"> -->
+    -->
 
-    <fieldset class="border">
-      <legend class="border">{{configTitleStage}}&nbsp;
-        <span *ngIf="site.stages.length > 0">
-          <b><span class="colorgreen font17px">{{site.stages.length}}</span></b>
-          &nbsp;&nbsp;
-        </span>
-        <button class="buttonstyle" mat-button (click)="showSchemePreview()">
-          Step View
-        </button>
-      </legend>
-      <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
+    <!-- </div> appScrollToTarget [id]="'stage_' + processIndex + '_' + stageIndex"> -->
+    <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
+      <fieldset class="border">
+        <legend class="border">{{configTitleStage}}&nbsp;
+          <span *ngIf="site.stages.length > 0">
+            <b>{{(stageIndex+1)}} of {{site.stages.length}}</b>
+            &nbsp;&nbsp;
+          </span>
+          <button class="buttonstyle" mat-button (click)="showSchemePreview()">
+            Step View
+          </button>
+        </legend>
         <app-ssg4m-stages-form [stage]="stage" [processIndex]="processIndex" [siteIndex]="siteIndex"
           [stageIndex]="stageIndex" [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView">
         </app-ssg4m-stages-form>
-      </div>
-      <!-- Another Add Button-->
-      <!--  *ngIf="site.stages && site.stages.length > 0" -->
-      <div class="divflex">
-        <span class="middle-fill"></span>
-        <button mat-stroked-button color="primary" class="button-add" (click)="addStage(processIndex, siteIndex)">
-          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
-        </button>
-      </div>
-    </fieldset>
 
-  </div>
-  <!-- STAGES LIST END -->
+        <!-- Another Add Button-->
+        <!--  *ngIf="site.stages && site.stages.length > 0" -->
+        <div class="divflex">
+          <span class="middle-fill"></span>
+          <button mat-stroked-button color="primary" class="button-add" (click)="addStage(processIndex, siteIndex)">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
+          </button>
+        </div>
+      </fieldset>
+    </div> <!-- for Loop -->
+    <!-- STAGES LIST END -->
 
-  <!-- Sites List -->
-  <!--
+    <!-- Sites List -->
+    <!--
     <app-substance-form-ssg4m-sites-card></app-substance-form-ssg4m-sites-card>
     -->
 
-  <!--
+    <!--
     <div class="form-row" *ngIf="!site.$$deletedCode">
     <div class="references-container">
       <app-domain-references [referencesUuids]="site.references" #references></app-domain-references>
     </div>
     </div>
     -->
+  </div>
 </div>

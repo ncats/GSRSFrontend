@@ -6,9 +6,11 @@
     width: 100%;
     background-color: white;
     align-items: center;
-    justify-content: center;
+    /*justify-content: center;*/
     box-shadow:     0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
     z-index: 1001;
+    justify-content: flex-end;
+    border: 1px solid green;
 }
 
 .top-fixed-top {
@@ -69,6 +71,7 @@ mat-select-panel{
     background-color: white;
     padding: 10px;
     display: flex;
+    justify-content: flex-end;
 }
 
 .mat-accordion {
@@ -189,6 +192,14 @@ mat-select-panel{
   padding-top: 150px;
 }
 
+.fontsize20px {
+  font-size: 20px;
+}
+
+.padleft25px {
+  padding-left: 25px;
+}
+
 .bordergray {
   border: 1px solid green;
 }
@@ -201,6 +212,7 @@ mat-select-panel{
 .colorbluefda {
   color: #007CBA;
 }
+
 
 /* tyler added as quick fix */
 app-substance-form-ssg4m-process-card button[color=primary] {

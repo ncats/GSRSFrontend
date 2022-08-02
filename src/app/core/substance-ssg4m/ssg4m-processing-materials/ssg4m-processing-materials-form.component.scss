@@ -107,3 +107,16 @@
   justify-content: flex-end;
   margin-top: -15px;
 }
+
+.colorred {
+  color: red;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(75, 80, 75, 0.781);
+  color: #333;
+  overflow: visible;
+  text-align: center;
+  height: 5px;
+}

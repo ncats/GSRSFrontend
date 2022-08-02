@@ -1,6 +1,5 @@
 .process-form-container {
-
-  padding: 5px 10px 12px 10px;
+  padding: 5px 10px 0px 10px;
   position: relative;
 }
 
@@ -80,6 +79,11 @@ hr {
   display: flex;
 }
 
+.divflexright {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .bordergray {
   border: 1px solid gray;
 }
@@ -109,7 +113,7 @@ hr {
 }
 
 .marginbottom20px {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .colorgreen {
@@ -121,28 +125,37 @@ hr {
   justify-content: flex-end;
 }
 
+.bordernone {
+  /*border: none !important;*/
+  border: solid 2px rgb(99, 99, 91) !important;
+}
+
 .button-add {
   z-index: 1;
   position: relative;
-  top: -45px;
+  top: 18px;
   margin-right: 25px;
+  background-color: #FFFFFF;
+  border: 1px solid #007CBA;
+}
+
+.button-delete {
+  z-index: 1;
+  position: relative;
+  top: -45px;
+  margin-right: 20px;
   color: red;
   background-color: #FFFFFF;
   border: 1px solid red;
 }
 
-.button-delete {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -65px;
-  color: red;
-}
-
 fieldset.border {
-  border: solid 1px rgb(33, 136, 20) !important;
-  padding: 0 10px 10px 10px;
+  /*border: solid 2px rgb(99, 99, 91) !important;*/
+  border: none;
+  padding: 0 0px 0px 10px;
   border-bottom: none;
-  border-radius: 8px;
+  /*border-radius: 8px;*/
+  /*margin-bottom: 10px;*/
   min-width: 0;  /* override the default value of min-content */
   /*-webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
   -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
@@ -159,4 +172,5 @@ legend.border {
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
+  margin-left: 30px;
 }

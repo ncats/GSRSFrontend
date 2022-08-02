@@ -69,6 +69,11 @@
   display: flex;
 }
 
+.divflexright {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .bordergray {
   border: 1px solid gray;
 }
@@ -101,13 +106,29 @@
   z-index: 1;
   position: relative;
   top: 25px;
-  margin-right: 25px;
+  margin-right: 20px;
   background-color: #FFFFFF;
   border: 1px solid #007CBA;
 }
 
+.button-delete-site {
+  z-index: 1;
+  position: relative;
+  top: -60px;
+  margin-right: 20px;
+  color: red;
+  background-color: #FFFFFF;
+  border: 1px solid red;
+}
+
+.button-delete {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -15px;
+}
+
 fieldset.border {
-  border: solid 1px rgb(33, 136, 20) !important;
+  border: solid 2px #A0A0A3 !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 3px;
@@ -129,10 +150,4 @@ legend.border {
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
-}
-
-.button-delete {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -15px;
 }

@@ -36,7 +36,7 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   ngOnInit() {
     // Get Config variables for SSG4
     this.configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
-    let configTitle = 'Parent Substance';
+    let configTitle = 'Search or Register a New Substance';
     if (this.configSsg4Form) {
       configTitle = this.configSsg4Form.titles.parentSubstance || null;
     }

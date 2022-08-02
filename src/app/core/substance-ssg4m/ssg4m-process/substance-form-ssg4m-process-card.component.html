@@ -3,17 +3,27 @@
 <mat-tab-group dynamicHeight (selectedTabChange)="tabSelected($event)"
   (selectedIndexChange)="onSelectedIndexChange($event)" [selectedIndex]="tabSelectedIndex">
   <mat-tab label="Form View">
-    <div class="flex-row">
-      <div class="paddingleft800px">
+    <div class="divflexright">
+      <!-- Add Button -->
+      <div class="">
+        <span class="middle-fill"></span>
+        <button mat-stroked-button color="primary" class="button-add" (click)="addProcess()">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Process
+        </button>
+      </div>
+
+      <div class="">
         <mat-checkbox [checked]="showAdvancedSettings" (change)="updateAdvancedSettings($event)">
           Show Advanced Settings
         </mat-checkbox>
       </div>
 
+      <!--
       <mat-form-field [floatLabel]="'never'" class="search" *ngIf="process && process.length > pageSize">
         <input matInput placeholder="Search" [formControl]="searchControl">
       </mat-form-field>
       <span class="middle-fill"></span>
+      -->
     </div>
 
     <mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"
@@ -30,13 +40,11 @@
           [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView"
           (processDeleted)="deleteProcess($event)" (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
         </app-ssg4m-process-form>
-        <!--
-      <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
-    -->
+
         <!-- Add Button -->
         <div class="divflex">
           <span class="middle-fill"></span>
-          <button mat-stroked-button color="primary" class="button-add" (click)="addProcess()">
+          <button mat-stroked-button color="primary" class="button-add top25px" (click)="addProcess()">
             <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Process
           </button>
         </div>
