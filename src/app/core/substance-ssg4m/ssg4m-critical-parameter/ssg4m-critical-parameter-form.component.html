@@ -1,6 +1,7 @@
 <div *ngIf="criticalParameterIndex > 0">
   <hr>
 </div>
+
 <div class="form-container">
   <div *ngIf="criticalParameter.$$deletedCode" class="notification-backdrop">
     Deleted&nbsp;
@@ -10,10 +11,10 @@
   </div>
 
   <div class="">
-    <div class="">
+    <div class="button-delete">
       <button mat-icon-button matTooltip="Delete Critical Parameter {{(criticalParameterIndex+1)}}"
         (click)="confirmDeleteCriticalParameter()">
-        <mat-icon svgIcon="delete_forever"></mat-icon>
+        <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
   </div>
@@ -30,7 +31,7 @@
     </div>
     -->
 
-    <app-cv-input class="width180px padright20px"
+    <app-cv-input class="col-5-1"
       *ngIf="configSettingsDisplay['propertyName'] || (configSettingsDisplay['propertyName'] === undefined && true)"
       domain="SSG_CRITICAL_PROPERTY_NAME" required='true' title="Property Name" [model]="criticalParameter.name"
       (valueChange)="updatePropertyName($event)">
@@ -51,7 +52,7 @@
       <input type="number" matInput placeholder="High Limit" [formControl]="highLimitControl" />
     </mat-form-field>
 
-    <mat-form-field class="amount-units width130px"
+    <mat-form-field class="amount-units width130px col-5-1"
       *ngIf="configSettingsDisplay['units'] || (configSettingsDisplay['units'] === undefined && true)">
       <mat-label>Units</mat-label>
       <mat-select [formControl]="unitsControl">
@@ -78,7 +79,7 @@
       (valueChange)="criticalParameter.propertyType = $event">
     </app-cv-input>
 
-    <div class="col-3-1 related-substance"
+    <div class="col-3-1"
       *ngIf="configSettingsDisplay['referencedSubstance'] || (configSettingsDisplay['referencedSubstance'] === undefined && true)">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
         eventCategory="substanceRelationshipRelatedSub" placeholder="Referenced Substance" header="Reference Substance"

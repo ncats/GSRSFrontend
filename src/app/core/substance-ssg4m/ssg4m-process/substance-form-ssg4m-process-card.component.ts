@@ -44,7 +44,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
 
   ngOnInit() {
     this.canAddItemUpdate.emit(true);
-    this.menuLabelUpdate.emit('Process');
+    this.menuLabelUpdate.emit('Processes');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     let loaded = false;
     setInterval(() => {
@@ -64,9 +64,8 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
           if(typeof siteIndex === "undefined"){
             siteIndex=0;
           }
-          
           this.showStepViewDialog(pindex, siteIndex, sindex);
-          
+
           //I just want to show a dialog that shows the step/stage component rendered in a popup for now.
           //maybe in the future it should instead be a side window, I don't know.
         };

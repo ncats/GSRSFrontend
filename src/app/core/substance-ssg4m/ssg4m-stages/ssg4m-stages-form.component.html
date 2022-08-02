@@ -1,6 +1,8 @@
+<!--
 <div *ngIf="privateStageIndex > 0">
   <hr>
 </div>
+-->
 <div>
   <div class="form-container">
     <div *ngIf="stage.$$deletedCode" class="notification-backdrop">
@@ -10,6 +12,14 @@
       </button>
     </div>
 
+    <div class="divflexright">
+      <button mat-stroked-button color="primary" class="button-delete-site" matTooltip="Delete Stage {{(privateStageIndex+1)}}"
+        (click)="confirmDeleteStage()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>Delete Step {{(privateStageIndex+1)}}
+      </button>
+    </div>
+
+    <!--
     <div class="">
       <div class="button-delete">
         <button mat-icon-button matTooltip="Delete Stage {{(privateStageIndex+1)}}" (click)="confirmDeleteStage()">
@@ -17,6 +27,7 @@
         </button>
       </div>
     </div>
+    -->
 
     <div class="form-row">
       <!--

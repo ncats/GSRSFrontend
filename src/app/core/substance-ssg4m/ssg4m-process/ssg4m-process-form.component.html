@@ -13,6 +13,14 @@
       <mat-icon svgIcon="delete_forever"></mat-icon>Delete Process {{(processIndex+1)}}
     </button>
   -->
+
+    <div class="divflexright">
+      <button mat-stroked-button color="primary" class="button-delete" matTooltip="Delete Process {{(processIndex+1)}}"
+        (click)="confirmDeleteProcess()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>Delete Process {{(processIndex+1)}}
+      </button>
+    </div>
+
     <div class="form-row">
       <!--
       <div class="delete-container">
@@ -74,12 +82,12 @@
       <br><br>
       </div>
        -->
-      <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
-        <fieldset class="border">
-          <legend class="border">Site &nbsp;<b><span class="font17px">{{siteIndex + 1}} of
+      <div class="margintop10px" [ngClass]="{'marginbottom20px': showAdvancedSettings === true}" *ngFor="let site of process.sites; let siteIndex = index">
+        <fieldset class="border" [ngClass]="{'bordernone': showAdvancedSettings === true}">
+          <legend class="border" *ngIf="showAdvancedSettings === true">Site &nbsp;<b><span
+                class="font17px">{{siteIndex + 1}} of
                 {{process.sites.length}}</span></b>
           </legend>
-
           <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
             [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView"
             (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
