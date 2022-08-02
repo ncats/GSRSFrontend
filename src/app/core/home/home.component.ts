@@ -21,6 +21,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   baseDomain: string;
   isAuthenticated = false;
   contactEmail: string;
+  homeHeader: string;
+  homeContents: string;
   isClosedWelcomeMessage = true;
   imageLoc: any;
   appId: string;
@@ -77,6 +79,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.appId = this.configService.environment.appId;
     this.bannerMessage = this.configService.configData.bannerMessage || null;
+    this.homeHeader = this.configService.configData.homeHeader || null;
+    this.homeContents = this.configService.configData.homeContents || null;
     this.loadedComponents = this.configService.configData.loadedComponents || null;
     // this code cause memory errors in the build process
     /*let notempty = false;
