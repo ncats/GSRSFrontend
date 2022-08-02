@@ -143,8 +143,8 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
         links.push(lin);
       }
 
-      for (var iii = 0; iii < rms.length; iii++) {
-        var rmat = rms[iii];
+      for (var iiii = 0; iiii < rms.length; iiii++) {
+        var rmat = rms[iiii];
         var nn = canMap[rmat.substanceName.refuuid];
         var newNode = false;
         if (typeof nn === "undefined") {
@@ -155,8 +155,8 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
           nn.brackets = true;
         }
         //need to think about this in cases where there's more
-        nn.siblingsLeft = iii;
-        nn.siblingsRight = rms.length - iii - 1;
+        nn.siblingsLeft = iiii;
+        nn.siblingsRight = rms.length - iiii - 1;
         if (newNode) {
           nodes.push(nn);
         }
@@ -166,10 +166,10 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
         lin.target = nn.id;
         lin.value = 1;
         links.push(lin);
-        if (iii < rms.length - 1) {
+        if (iiii < rms.length - 1) {
           var pn = { type: "plus" };
-          pn.siblingsLeft = iii;
-          pn.siblingsRight = rms.length - iii - 1;
+          pn.siblingsLeft = iiii;
+          pn.siblingsRight = rms.length - iiii - 1;
           pn.id = ppid[0];
           ppid[0]++;
           nodes.push(pn);
