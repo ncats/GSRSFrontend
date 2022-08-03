@@ -64,6 +64,8 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
           if(typeof siteIndex === "undefined"){
             siteIndex=0;
           }
+          console.log("CLICKED");
+          console.log(d);
           this.showStepViewDialog(pindex, siteIndex, sindex);
 
           //I just want to show a dialog that shows the step/stage component rendered in a popup for now.

@@ -1,27 +1,34 @@
 <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true'}">
   <div class="actions-container">
-    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
-    <!--
-    <span class = "middle-fill"></span>
-    -->
+
+    <button mat-stroked-button color="primary" class="borderblue" (click)="showJSON()">Show JSON</button>
+
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <a  mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
-      <span>Save as JSON</span>
-    </a>
+    <div>
+      <a mat-stroked-button color="primary" class="borderblue" [href]="downloadJsonHref" (click)="saveJSON()"
+        download="{{jsonFileName}}.json">
+        <span>Save as JSON</span>
+      </a>
+    </div>
 
-    <button mat-flat-button color="primary" class="import-button" (click)="importDialog()">Import JSON</button>
+    <button mat-stroked-button color="primary" class="borderblue import-button" (click)="importDialog()">Import JSON</button>
 
-    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+    <button mat-stroked-button color="primary" class="borderblue hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
       *ngIf="(validationMessages && validationMessages.length > 0)">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
       <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
-    <span class="middle-fill"></span>
+
     <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
+
+    <!--
     <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
       *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
-      (click)="validate('approval')">Approve</button>
+      (click)="validate('approval')">Approve
+    </button>
+    -->
   </div>
+
   <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
     <div class="submission-message" *ngIf="submissionMessage">
       {{submissionMessage}}
@@ -58,6 +65,7 @@
 </div>
 
 <div class="form-content-container">
+  {{showHeaderBar}}
   <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
     <div>
       <span class="colorbluefda fontbold padleft25px">{{(uuid && !imported) ? 'Editing ' : 'Registering New '}} -
@@ -69,7 +77,8 @@
   <div class="scrollable-container">
     <div class="cards-container maximize-width-card">
       <mat-accordion multi="true">
-        <mat-expansion-panel togglePosition="before" #expansionPanel [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
+        <mat-expansion-panel togglePosition="before" #expansionPanel
+          [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
           *ngFor="let section of formSections; index as index; last as isLast" [id]="section.dynamicComponentName"
           [ngClass]="{'hidden': section.isHidden}">
           <mat-expansion-panel-header>
