@@ -243,12 +243,14 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     });
     this.subscriptions.push(definitionSubscription);
     */
+    /*
     this.authService.getAuth().pipe(take(1)).subscribe(auth => {
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
       });
     });
+    */
     if (!window['schemeUtil']) {
       for (let i = 0; i < this.jsLibScriptUrls.length; i++) {
             const node = document.createElement('script');
