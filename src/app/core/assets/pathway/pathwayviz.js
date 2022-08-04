@@ -5,18 +5,30 @@
 * the cola and d3 libraries.
 */
 var schemeUtil={};
+
+
+schemeUtil.layout="horizontal";
+schemeUtil.maxContinuousSteps=3;
+schemeUtil.debug=true;
+schemeUtil.apiBaseURL="";
+
+
 schemeUtil.showApprovalID=false;
 schemeUtil.approvalCode="UNII";
-schemeUtil.apiBaseURL="";
-schemeUtil.debug=true;
-schemeUtil.width=1020;
+schemeUtil.width=1500;
 schemeUtil.height=2000;
-schemeUtil.layout="vertical";
 schemeUtil.maxTextLen=19;
+schemeUtil.BREAK_GAP=350; //TODO MAKE DYNAMIC
 schemeUtil.highlightColor="#429ecc";
 schemeUtil.textWidthPx=10;
-schemeUtil.maxContinuousSteps=1000;
 schemeUtil.zoomLevel=1.2;
+schemeUtil.getGapAxis = function(){
+	if(schemeUtil.layout === "vertical"){
+		return "x";
+	}else{
+		return "y";
+	}
+};
 
 
 
@@ -25,6 +37,7 @@ schemeUtil.bracketRoleType="NON-ISOLATED INTERMEDIATE";
 
 schemeUtil.onClickReaction=(d)=>{};
 schemeUtil.onClickMaterial=(d)=>{};
+schemeUtil.onFinishedLayout=(svg)=>{};
 
 schemeUtil.rep = function(t, n) {
   var nn = "";
@@ -78,24 +91,38 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
   
   var nodes = [];
   var links = [];
+  var constraints = [];
+  
   var canMap = {};
   var ppid = [0];
+  
+  var firstNodes=[];
+  
   for (var i = 0; i < g4.specifiedSubstanceG4m.process.length; i++) {
     var p = g4.specifiedSubstanceG4m.process[i];
     var stg = p.sites[0].stages;
     var pcanMap = {};
+	
 	var subSteps=0;
+	var addedNodes=[];
     for (ii = 0; ii < stg.length; ii++) {
 	  if(subSteps>=maxSteps){
 		subSteps=0;
 		pcanMap={};
 		canMap={};
+		if(addedNodes.length>0){
+			firstNodes.push(addedNodes);
+		}
+		addedNodes=[];
 	  }
 	  subSteps++;
       var stage = stg[ii];
       var sms = stage.startingMaterials;
       var rms = stage.resultingMaterials;
       var smnodes = [];
+	  
+	 
+	 
       //so we need to model a reaction.
       //first check if the substance is a candidate from other cases
       for (var iii = 0; iii < sms.length; iii++) {
@@ -114,7 +141,8 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
         nn.siblingsLeft = iii;
         nn.siblingsRight = sms.length - iii - 1;
         if (newNode) {
-          nodes.push(nn);
+          addedNodes.push(nodes.length);
+		  nodes.push(nn);		  
         }
         smnodes.push(nn);
         if (iii < sms.length - 1) {
@@ -127,6 +155,7 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
           smnodes.push(pn);
         }
       }
+	  
 
       var rn = { type: "reaction", leftText: "Step " + stage.stageNumber };
       
@@ -142,7 +171,6 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
         lin.value = 1;
         links.push(lin);
       }
-
       for (var iiii = 0; iiii < rms.length; iiii++) {
         var rmat = rms[iiii];
         var nn = canMap[rmat.substanceName.refuuid];
@@ -158,8 +186,10 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
         nn.siblingsLeft = iiii;
         nn.siblingsRight = rms.length - iiii - 1;
         if (newNode) {
-          nodes.push(nn);
+          addedNodes.push(nodes.length);
+		  nodes.push(nn);		  
         }
+		
         pcanMap[rmat.substanceName.refuuid] = nn;
         var lin = {};
         lin.source = rn.id;
@@ -187,21 +217,50 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
         ks.map((kk) => (canMap[kk] = pcanMap[kk]));
       }
     }
+	if(addedNodes.length>0){
+		firstNodes.push(addedNodes);
+	}
   }
-  var ret=JSON.parse(JSON.stringify({ nodes: nodes, links: links }));
-  console.log(ret);
+  
+  
+  
+  //calculate constraints
+  var lax=schemeUtil.getGapAxis();
+  for(var jj=0;jj<firstNodes.length;jj++){
+	var nlist1=firstNodes[jj];	
+	
+	for(var kk=jj+1;kk<firstNodes.length;kk++){
+		var nlist2=firstNodes[kk];
+		for(var ll=0;ll<nlist1.length;ll++){
+			for(var mm=0;mm<nlist2.length;mm++){
+				var con={"axis":lax, "left":nlist1[ll], "right":nlist2[mm], "gap":schemeUtil.BREAK_GAP};
+				constraints.push(con);
+			}
+		}
+	}
+  }  
+  var ret=JSON.parse(JSON.stringify({ nodes: nodes, links: links, constraints: constraints }));
   return ret;
 }
 
 
-schemeUtil.renderScheme=function(nn2, selector) {
+schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
+
+  if((typeof iter) === "undefined"){
+	//do 2 iterations
+	iter=1;
+  }
+
+
   var cheight = 150;
-  var pwidth = 16;
+  var pwidth = 32;
   var maxText = schemeUtil.maxTextLen;
   var width = schemeUtil.width;
   var height = schemeUtil.height;
   var paddingBrack = 6;
   var imageScale=1;
+  
+  
   
   function toggleImageZoom(img) {
         var scale = 1;
@@ -212,14 +271,10 @@ schemeUtil.renderScheme=function(nn2, selector) {
   }
 
   function imageZoom(img, scale) {
-		console.log(img);
-		console.log("Scaling:" + img + " to " + scale);
         d3.select(img)
             .transition()
             .attr("width", function (d) {
-				console.log(d);
 				var nwid = scale * (cheight);
-				console.log(nwid);
                 return nwid;
             })
             .attr("height", function (d) { return scale * (cheight); });
@@ -256,7 +311,7 @@ schemeUtil.renderScheme=function(nn2, selector) {
     } else if (n.imgWidth) {
       return n.imgWidth;
     } else if (n.type === "plus") {
-      return pwidth  + "";
+      return pwidth/2  + "";
     } else {
       return cheight  + "";
     }
@@ -277,7 +332,7 @@ schemeUtil.renderScheme=function(nn2, selector) {
     } else if (n.imgHeight) {
       return n.imgHeight;
     } else if (n.type === "plus") {
-      return pwidth + "";
+      return pwidth/2 + "";
     } else {
       return cheight + "";
     }
@@ -298,9 +353,9 @@ schemeUtil.renderScheme=function(nn2, selector) {
     
     return n.x - ww / 2 + pad;
   };
-  var getY = (n) => {
+  var getY = (n, dy) => {
     var hh = getHeightPx(n);
-    
+    if(!dy)dy=0;
     var pad = 0;
 
     if(schemeUtil.layout === "horizontal"){
@@ -312,15 +367,29 @@ schemeUtil.renderScheme=function(nn2, selector) {
       }
       if (n.type === "plus") pad = 0;   
     }
-    return n.y - hh / 2  + pad;
+    return n.y - hh / 2  + pad + dy;
   };
   d3.select(selector).select('svg').remove();
-  var d3cola = cola.d3adaptor(d3).avoidOverlaps(true).size([width, height]);
-  var svg = d3
+  
+  var d3cola = cola.d3adaptor(d3)
+                   .avoidOverlaps(true)
+				   .size([width, height]);
+  var svgParent = d3
     .select(selector)
     .append("svg")
-    .attr("width", width)
-    .attr("height", height);
+	.attr("viewBox", [0, 0, width, height]);
+    //.attr("width", width)
+    //.attr("height", height);
+	
+  var svg= svgParent
+	.append("g")
+	.attr("id", "full-scheme");
+
+  if(iter===0){
+	svgParent.call(d3.zoom().on("zoom", function () {
+	   svg.attr("transform", d3.event.transform)
+	}));
+  }
 
   var wrap = {
     load: function (a, b) {
@@ -330,7 +399,8 @@ schemeUtil.renderScheme=function(nn2, selector) {
 
   wrap.load(nn2, function (error, graph) {
     var nodeRadius = 5;
-    graph.nodes.forEach(function (v) {
+    
+	graph.nodes.forEach(function (v) {
       v.height = v.width = 2 * nodeRadius;
     });
 
@@ -338,10 +408,15 @@ schemeUtil.renderScheme=function(nn2, selector) {
     if(schemeUtil.layout === "horizontal"){
       layoutVar="x";
     }
+	
+	
+	
+	
     
     d3cola
       .nodes(graph.nodes)
       .links(graph.links)
+	  .constraints(graph.constraints)
       .flowLayout(layoutVar, 140)
 	  .avoidOverlaps(true)
       .symmetricDiffLinkLengths(6)
@@ -389,7 +464,6 @@ schemeUtil.renderScheme=function(nn2, selector) {
 	  .attr("font-weight", "bold")
 	  .attr("text-decoration","underline");
     
-    //TODO: fix the dy/dx for horizontal layout
     mnode
       .append("text")
       .text((d) => getLeftText(d))
@@ -493,21 +567,38 @@ schemeUtil.renderScheme=function(nn2, selector) {
 	  .attr("r", nodeRadius)
 	  .on("mouseover", function (d, i) {
 		if(d.type === "material") {
-			console.log(this);
 			imageZoom(this, schemeUtil.zoomLevel);
 		}
       })
 	   .on("mouseout", function (d, i) {
 		if(d.type === "material") {
-			console.log(this);
 			imageZoom(this, 1);
 		}
       });
 
-    d3cola.on("tick", function () {
+    d3cola
+	 .on('end', function() { 
+		if(iter>0){
+			var bboxn = svg.node();
+			if(bboxn){
+				var bbox=bboxn.getBBox();
+				schemeUtil.renderScheme(nn2, selector, iter - 1, 0, -bbox.y);
+				console.log("regen");
+				console.log(graph.nodes);
+			}
+		} else{
+			schemeUtil.onFinishedLayout(svg);
+			console.log("Done");
+		}		
+	 })
+	 .on("tick", function () {
       path.each(function (d) {
         if (schemeUtil.isIE()) this.parentNode.insertBefore(this, this);
       });
+	  console.log("tick");
+	  
+	  
+	  
       // draw directed edges with proper padding from node centers
       path.attr("d", function (d) {
         var deltaX = d.target.x - d.source.x,
@@ -523,12 +614,17 @@ schemeUtil.renderScheme=function(nn2, selector) {
           targetY = d.target.y - targetPadding * normY;
         return "M" + sourceX + "," + sourceY + "L" + targetX + "," + targetY;
       });
-
+ //console.log(d3.select(selector));
+	  
+	  //console.log(bbox);
+	  
       mnode.attr(
         "transform",
-        (d) => "translate(" + getX(d) + "," + getY(d) + ")"
+        (d) => "translate(" + getX(d) + "," + (getY(d,ddy)) + ")"
       );
-      //                .attr("y", (d)=>getY(d));
+	 
+	  
+	  
     });
   });
 }
