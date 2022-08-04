@@ -47,6 +47,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     this.menuLabelUpdate.emit('Processes');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     let loaded = false;
+
     setInterval(() => {
       if (window['schemeUtil'] && !loaded) {
         loaded = true;
@@ -60,9 +61,9 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
           //Can we add a popup dialog that would show the specific step here?
           let pindex = d.processIndex;
           let sindex = d.stepIndex;
-          let siteIndex= d.siteIndex;
-          if(typeof siteIndex === "undefined"){
-            siteIndex=0;
+          let siteIndex = d.siteIndex;
+          if (typeof siteIndex === "undefined") {
+            siteIndex = 0;
           }
           this.showStepViewDialog(pindex, siteIndex, sindex);
 
@@ -75,6 +76,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         };
       }
     }, 100);
+
   }
 
   ngAfterViewInit() {
@@ -92,6 +94,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
       this.page = 0;
       this.pageChange();
     });
+
     this.subscriptions.push(processSubscription);
   }
 
@@ -197,7 +200,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     let localTabSelectedIndex = -1;
     const subscription = dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
-        localTabSelectedIndex = response;
+      localTabSelectedIndex = response;
       subscription.unsubscribe();
       if (localTabSelectedIndex > -1) {
         this.tabSelectedIndex = localTabSelectedIndex;

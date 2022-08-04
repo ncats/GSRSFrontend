@@ -9,13 +9,11 @@
     </div>
     -->
 
-  <div *ngIf="showAdvancedSettings">
-    <div class="button-delete">
-      <button mat-icon-button matTooltip="Delete Site {{(siteIndex+1)}}" (click)="confirmDeleteSite()">
-        <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
+    <div class="divflexright" *ngIf="showAdvancedSettings">
+      <button mat-stroked-button color="primary" class="button-delete" matTooltip="Delete Site {{(siteIndex+1)}}" (click)="confirmDeleteSite()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>Delete Site {{(siteIndex+1)}}
       </button>
     </div>
-  </div>
 
   <div class="form-row">
     <!--
@@ -87,8 +85,9 @@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     -->
 
+    <!-- Add Button -->
+    <!--
     <div class="divflexright">
-      <!-- Add Button -->
       <div class="">
         <span class="middle-fill"></span>
         <button mat-stroked-button color="primary" class="button-add-top" (click)="addStage(processIndex, siteIndex)"
@@ -96,7 +95,8 @@
           <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
         </button>
       </div>
-    </div>
+   </div>
+   -->
 
     <!--
     <button mat-raised-button color="primary" (click)="addStage(processIndex, siteIndex)" matTooltip="Add New Stage">
@@ -106,7 +106,7 @@
     -->
 
     <!-- </div> appScrollToTarget [id]="'stage_' + processIndex + '_' + stageIndex"> -->
-    <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
+    <div class="marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
       <fieldset class="border">
         <legend class="border">{{configTitleStage}}&nbsp;
           <span *ngIf="site.stages.length > 0">

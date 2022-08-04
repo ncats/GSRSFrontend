@@ -11,7 +11,7 @@
 }
 
 .process {
-  margin-bottom: 50px;
+  margin-bottom: 60px;
 
   &:nth-child(odd) {
       background-color: rgba(68, 138, 255, .07);
@@ -120,6 +120,10 @@ legend.border {
   min-width: 120px;
   max-width: 120px;
   height: 35px;*/
+}
+
+:host ::ng-deep .mat-tab-label-content {
+  margin-top: -5px;
 }
 /*
 ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {

@@ -112,8 +112,8 @@ hr {
   margin-left: 50px;
 }
 
-.marginbottom20px {
-  margin-bottom: 20px;
+.marginbottom25px {
+  margin-bottom: 25px;
 }
 
 .colorgreen {
@@ -141,8 +141,8 @@ hr {
 
 .button-delete {
   z-index: 1;
-  position: relative;
-  top: -45px;
+  position: absolute;
+  top: -40px;
   margin-right: 20px;
   color: red;
   background-color: #FFFFFF;
@@ -152,8 +152,9 @@ hr {
 fieldset.border {
   /*border: solid 2px rgb(99, 99, 91) !important;*/
   border: none;
-  padding: 0 0px 0px 10px;
+  padding: 0 10px 0px 10px;
   border-bottom: none;
+  margin-bottom: 20px;
   /*border-radius: 8px;*/
   /*margin-bottom: 10px;*/
   min-width: 0;  /* override the default value of min-content */
