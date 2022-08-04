@@ -1,6 +1,6 @@
 .form-container {
-  padding: 5px 10px 0px 10px;
-  margin-bottom: 10px;
+  padding: 0px 10px 0px 10px;
+  margin-bottom: 5px;
   position: relative;
 }
 
@@ -136,6 +136,16 @@ hr {
   border: 1px solid #007CBA;
 }
 
+.button-delete {
+  z-index: 1;
+  position: absolute;
+  top: -40px;
+  margin-right: 20px;
+  color: red;
+  background-color: #FFFFFF;
+  border: 1px solid red;
+}
+
 fieldset.border {
   border: solid 2px #0BA711 !important;
   padding: 0 10px 10px 10px;
@@ -161,8 +171,3 @@ legend.border {
   /*margin-left: 40%;*/
 }
 
-.button-delete {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -15px;
-}

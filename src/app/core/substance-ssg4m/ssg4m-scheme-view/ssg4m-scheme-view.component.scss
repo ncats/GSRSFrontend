@@ -25,6 +25,10 @@
   margin-top: -5px;
 }
 
+.margintopneg25px {
+  margin-top: -25px;
+}
+
 .margintopneg10px {
   margin-top: -10px;
 }
@@ -112,9 +116,9 @@
 
 fieldset.border {
   border: solid 2px #222C67 !important;
-  padding: 0 10px 10px 10px;
+  padding: 0 10px 0px 10px;
   border-bottom: none;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   /*border-radius: 8px;*/
   min-width: 0;  /* override the default value of min-content */
   /*-webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);

@@ -1,3 +1,7 @@
+.substance-selector-container {
+  /*margin-top: 10px;*/
+}
+
 .selected-substance-container {
     max-width: 100%;
     width: 100%;
@@ -46,4 +50,13 @@
 
 .hidden {
     display: none !important;
+}
+
+.divflex {
+    display: flex;
+    font-size: 12px;
+}
+
+.marginright10px {
+    margin-right: 10px;
 }

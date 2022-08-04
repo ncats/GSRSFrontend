@@ -17,6 +17,7 @@ export class SubstanceSelectorComponent implements OnInit {
   @Input() header = 'Substance';
   @Input() name?: string;
   @Input() hideImage?: boolean;
+  @Input() showMorelinks? = false;
   errorMessage: string;
   showOptions: boolean;
   previousSubstance: SubstanceSummary;

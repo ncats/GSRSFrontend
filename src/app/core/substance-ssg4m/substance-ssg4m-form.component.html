@@ -64,8 +64,7 @@
   </div>
 </div>
 
-<div class="form-content-container">
-  {{showHeaderBar}}
+<div class="form-content-container" [ngClass]="{'padtop90px': showHeaderBar === 'false'}">
   <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
     <div>
       <span class="colorbluefda fontbold padleft25px">{{(uuid && !imported) ? 'Editing ' : 'Registering New '}} -
