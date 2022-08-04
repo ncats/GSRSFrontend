@@ -32,7 +32,7 @@
       *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
         eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM"
-        header="Substance Name" [subuuid]="relatedSubstanceUuid">
+        header="Substance Name" [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
       </app-substance-selector>
     </div>
 
@@ -48,19 +48,19 @@
       (valueChange)="updateSubstanceRole($event)"></app-cv-input>
   </div> <!-- form row -->
 
+  <!--
   <div class="form-row">
     <div class="col">
-      <!-- Register Subtance -->
       <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
         <span class="font11px">Register New</span>
       </a>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <!-- Structure search -->
       <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
         <span class="font11px">Search By Structure</span>
       </a>
     </div>
   </div>
+  -->
 
   <div class="form-row margintop10px"
     *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">

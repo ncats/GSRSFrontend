@@ -13,7 +13,6 @@
       <mat-icon svgIcon="delete_forever"></mat-icon>Delete Process {{(processIndex+1)}}
     </button>
   -->
-
     <div class="divflexright">
       <button mat-stroked-button color="primary" class="button-delete" matTooltip="Delete Process {{(processIndex+1)}}"
         (click)="confirmDeleteProcess()">
@@ -82,7 +81,8 @@
       <br><br>
       </div>
        -->
-      <div class="margintop10px" [ngClass]="{'marginbottom20px': showAdvancedSettings === true}" *ngFor="let site of process.sites; let siteIndex = index">
+      <div class="margintop10px" [ngClass]="{'marginbottom25px': showAdvancedSettings === true}"
+        *ngFor="let site of process.sites; let siteIndex = index">
         <fieldset class="border" [ngClass]="{'bordernone': showAdvancedSettings === true}">
           <legend class="border" *ngIf="showAdvancedSettings === true">Site &nbsp;<b><span
                 class="font17px">{{siteIndex + 1}} of

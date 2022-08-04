@@ -111,9 +111,9 @@
   border: 1px solid #007CBA;
 }
 
-.button-delete-site {
+.button-delete-stage {
   z-index: 1;
-  position: relative;
+  position: absolute;
   top: -60px;
   margin-right: 20px;
   color: red;
@@ -132,7 +132,7 @@ fieldset.border {
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 3px;
-  margin-top: 30px;
+  margin-bottom: 30px;
   min-width: 0;  /* override the default value of min-content */
   /*
   -webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);

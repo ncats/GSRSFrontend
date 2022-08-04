@@ -18,11 +18,10 @@
       <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}} of
             {{processList.length}}</span></b>
       </legend>
-
       <!-- STEPS -->
       <div *ngFor="let site of process.sites; let siteIndex = index">
         <div *ngIf="((showSiteIndex === -1) || (showSiteIndex > -1 && showSiteIndex === siteIndex))">
-          <div class="margintop10px marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
+          <div class="marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
 
             <div *ngIf="((showStageIndex === -1) || (showStageIndex > -1 && showStageIndex === stageIndex))">
               <fieldset class="border-step">
@@ -30,13 +29,14 @@
                 </legend>
 
                 <div class="divflexright">
-                    <button mat-stroked-button color="primary" class="button-add" (click)="editInForm()" matTooltip="Edit In Form">
-                      <mat-icon svgIcon="edit"></mat-icon>Edit in Form View
-                    </button>
+                  <button mat-stroked-button color="primary" class="button-add" (click)="editInForm()"
+                    matTooltip="Edit In Form">
+                    <mat-icon svgIcon="edit"></mat-icon>Edit in Form View
+                  </button>
                 </div>
 
-                <table class="width100percent marginbottom20px">
-                  <tr class="paddingbottom10px">
+                <table class="width100percent margintopneg25px">
+                  <tr class="">
                     <!-- Starting -->
                     <td class="width33percent textaligncenter">
                       <div class="paddingleft10px marginbottom10px"
@@ -174,8 +174,7 @@
 
                   </tr>
                 </table>
-                <br><br>
-
+                <br>
               </fieldset>
             </div> <!-- stageIndex === showStageIndex -->
           </div> <!-- Stage loop -->

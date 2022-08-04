@@ -176,7 +176,11 @@ export class SubstanceFormService implements OnDestroy {
             // references: [],
             specifiedSubstanceG4m: {
               parentSubstance: {},
-              process: []
+              process: [{sites:[{stages:[{"stageNumber": "Stage 1",
+              startingMaterials: [],
+              processingMaterials: [],
+              resultingMaterials: [],
+              criticalParameters: []}]}]}]
             }
             // codes: [],
             //  properties: []

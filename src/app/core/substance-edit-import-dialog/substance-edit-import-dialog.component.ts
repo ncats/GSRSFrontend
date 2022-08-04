@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,16 +15,21 @@ export class SubstanceEditImportDialogComponent implements OnInit {
   filename: string;
   pastedJSON: string;
   uploaded = false;
+  title = 'Substance Import';
 
   constructor(
     private router: Router,
-    public dialogRef: MatDialogRef<SubstanceEditImportDialogComponent>
-
+    public dialogRef: MatDialogRef<SubstanceEditImportDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
+    if (this.data) {
+      if (this.data.title) {
+        this.title = this.data.title;
+      }
+    }
   }
-
 
   uploadFile(event) {
     if (event.target.files.length !== 1) {

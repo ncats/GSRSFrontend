@@ -42,7 +42,11 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
   addProcess(): void {
     const newProcess: SpecifiedSubstanceG4mProcess = {
       processName: 'Process ',
-      sites: []
+      sites:[{stages:[{"stageNumber": "Stage 1",
+      startingMaterials: [],
+      processingMaterials: [],
+      resultingMaterials: [],
+      criticalParameters: []}]}]
     };
     const processIndex = this.substance.specifiedSubstanceG4m.process.push(newProcess);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
