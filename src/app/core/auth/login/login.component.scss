@@ -1,6 +1,6 @@
 .login-container {
     width: 100%;
-    display: flex;
+    //display: flex;
     align-items: center;
     justify-content: center;
     padding: 86px 20px 20px 20px;
@@ -10,6 +10,7 @@
     max-width: 400px;
     width: 100%;
     box-sizing: border-box;
+    //position: absolute;
 }
 
 .login-form {
@@ -22,4 +23,15 @@
 .mat-card-actions {
     display: flex;
     justify-content: flex-end;
+}
+.reg-link> button {
+    padding: 10px 15px;
+    border: 1px solid var(--primary-color);
+    background-color: var(--primary-color);
+    color: var(--regular-white-color);
+    border-radius: 5px;
+}
+.button-div {
+    margin: auto;
+    text-align: center;
 }

@@ -18,4 +18,18 @@
       <button color="primary" mat-flat-button [disabled]="loginForm.invalid || isLoading" (click)="login()">Login</button>
     </mat-card-actions>
   </mat-card>
+  <br>
+  <div class="button-div">
+    <div class="reg-link">
+      <button (click)="register()">REQUEST ACCESS</button>
+    </div>
+    <br>
+    <div class="reg-link">
+      <button (click)="callPwdPage('reset')">RESET PASSWORD</button>
+    </div>
+    <br>
+    <div class="reg-link">
+      <button (click)="callPwdPage('forgot')">FORGOT PASSWORD?</button>
+    </div>
+  </div>
 </div>
