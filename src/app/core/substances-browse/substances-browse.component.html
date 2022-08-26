@@ -294,6 +294,15 @@
           </button>
           <!-- <input type="submit"> -->
         </div>
+
+<div>
+  <button *ngIf="isLoggedIn" matTooltip="MultiSearch"
+    mat-button class="mat-button export-button mat-raised-button" (click)="showTextInputDialog()">
+    <mat-icon svgIcon="get_app"></mat-icon> MultiSearch
+</button>
+
+</div>
+
         <span class = "middle-fill"></span>
         <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
           [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">

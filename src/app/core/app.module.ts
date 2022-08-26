@@ -74,6 +74,8 @@ import { FacetsManagerModule } from './facets-manager/facets-manager.module';
 import { GuidedSearchModule } from './guided-search/guided-search.module';
 import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { TextInputDialogComponent } from '@gsrs-core/utils/text-input-dialog/text-input-dialog.component';
+
 import { NamesDisplayPipe } from '@gsrs-core/utils/names-display-order.pipe';
 // eslint-disable-next-line max-len
 import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
@@ -113,6 +115,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     SubstanceHierarchyComponent,
     SequenceAlignmentComponent,
     ExportDialogComponent,
+    TextInputDialogComponent,
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent,
@@ -200,6 +203,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   entryComponents: [
     HighlightedSearchActionComponent,
     ExportDialogComponent,
+    TextInputDialogComponent,
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent

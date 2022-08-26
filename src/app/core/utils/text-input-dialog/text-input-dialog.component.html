@@ -1,0 +1,21 @@
+<h2 matDialogTitle>Enter substance names line by line</h2>
+<div>
+    <div style="width: 100%;"><!-- (change)=""-->
+        <mat-form-field>
+            <textarea matInput 
+            cdkTextareaAutosize
+            cdkAutosizeMinCols="50"
+            cdkAutosizeMaxCols="100"
+            cdkAutosizeMinRows="10"
+            cdkAutosizeMaxRows="30"
+                placeholder="Input" 
+                [formControl]="textControl"
+                ></textarea>
+            </mat-form-field> 
+    </div>
+</div>
+<mat-dialog-actions>
+    <button mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
+    <span class="middle-fill"></span>
+    <button mat-flat-button color="primary" (click) = "save()">Save</button>
+</mat-dialog-actions>

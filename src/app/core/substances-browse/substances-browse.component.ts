@@ -40,6 +40,7 @@ import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { TextInputDialogComponent } from '@gsrs-core/utils/text-input-dialog/text-input-dialog.component';
 // eslint-disable-next-line max-len
 import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
 import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
@@ -580,6 +581,26 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.populateUrlQueryParameters();
     this.searchSubstances();
     this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+  }
+
+  showTextInputDialog() {
+    if (this.authService.getUser() !== '') {
+      const text = 'hello';
+      const dialogReference = this.dialog.open(TextInputDialogComponent, {
+        height: '215x',
+        width: '550px',
+        data: { 'text': text }
+      });
+      const showTextInputDialogSub = dialogReference.afterClosed().subscribe(query => {
+        if (query && query !== '') {
+          const navigationExtras = {
+            queryParams: {'search': query}
+          };           
+          this.router.navigate(['/browse-substance'], navigationExtras);        }
+      });
+    } else {
+      //this.disableExport = true;
+    }
   }
 
   export(url: string, extension: string) {
