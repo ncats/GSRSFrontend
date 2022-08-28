@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { UtilsService } from '@gsrs-core/utils';
+import { UsefulLink } from '../config/config.model';
+
 
 @Component({
   selector: 'app-home',
@@ -31,10 +33,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isCollapsed = true;
   hasBackdrop = false;
   bannerMessage?: string;
-  usefulLinks?: Array<any>;
-  excelCard?: any;
-  guideCard?: any;
-  dictionaryCard?: any;
+  usefulLinks?: Array<UsefulLink>;
   
   
   // these may be necessary due to a strange quirk
@@ -79,6 +78,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.appId = this.configService.environment.appId;
     this.bannerMessage = this.configService.configData.bannerMessage || null;
+    this.usefulLinks = this.configService.configData.usefulLinks || [];
     this.homeHeader = this.configService.configData.homeHeader || null;
     this.homeContents = this.configService.configData.homeContents || null;
     this.loadedComponents = this.configService.configData.loadedComponents || null;
@@ -92,24 +92,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (!notempty) {
       this.loadedComponents = null;
     }*/
-
-
-    
-//this is to set the groundwork for having all the 'useful links be dynamically rendered. Right now we are only doing this for excel tools through.
-   
-    if (this.configService.configData.usefulLinks) {
-      this.configService.configData.usefulLinks.forEach (link => {
-        if (link.title === 'GSRSFind Excel tools') {
-          this.excelCard = link;
-        }
-        if (link.title === 'GSRS User Guide') {
-          this.guideCard = link;
-        }
-        if (link.title === 'GSRS Data Dictionary') {
-          this.dictionaryCard = link;
-        }
-      });
-    }
 
     let notempty = false;
     if (this.loadedComponents) {
@@ -211,11 +193,15 @@ private processResponsiveness = () => {
     this.router.navigate(['/browse-substance']);
   }
 
-  openModal(templateRef) {
+  openModal(templateRef, tile:UsefulLink) {
 
     const dialogRef = this.dialog.open(templateRef, {
       height: '200px',
-      width: '400px'
+      width: '400px',
+      data: {
+        href: tile.href,
+        templateDescription: tile.templateDescription
+      }
     });
     this.overlayContainer.style.zIndex = '1002';
 
