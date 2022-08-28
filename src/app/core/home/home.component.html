@@ -337,7 +337,7 @@
     </div>
     </mat-card>
 
-    <mat-card class = "home-card" >
+    <mat-card *ngIf = "usefulLinks?.length" class = "home-card" >
         <h2 class = "home" style = "padding-top:15px;">Helpful Resources</h2>
     </mat-card>
     <mat-grid-list cols="2">
