@@ -25,41 +25,37 @@ import { ExpandDetailsModule } from '../expand-details/expand-details.module';
 import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 import { MatListModule } from '@angular/material/list';
 import { FileSelectModule } from 'file-select';
-import { CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
-import { CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
-import { MatButtonToggleModule} from '@angular/material/button-toggle';
-import { JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import { NgxJsonViewerModule} from 'ngx-json-viewer';
-import { AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { CvDialogComponent } from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 // import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
-import { MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
-import { MatProgressBarModule} from '@angular/material/progress-bar';
+import { MergeConceptDialogComponent } from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 // import { SubstanceFormComponent } from './substance-form.component';
 // import { CanActivateSubstanceForm } from './can-activate-substance-form';
 // import { CanRegisterSubstanceForm } from './can-register-substance-form';
 // import { SubstanceFormService } from '../substance-form.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
-import { SubstanceFormSsg4mProcessService } from './ssg4m-process/substance-form-ssg4m-process.service';
-import { SubstanceSsg4ManufactureFormComponent } from './substance-ssg4m-form.component';
+// import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
+// import { SubstanceFormSsg4mProcessService } from './ssg4m-process/substance-form-ssg4m-process.service';
 import { SubstanceFormComponent } from '../substance-form/substance-form.component';
-// import { SubstanceFormSsg4mSitesService } from './ssg4m-sites/substance-form-ssg4m-sites.service.';
-import { SubstanceSsg4mProcessModule } from './ssg4m-process/substance-form-ssg4m-process.module';
-import { Ssg4mSitesModule } from './ssg4m-sites/ssg4m-sites.module';
-import { Ssg4mStepViewDialogModule } from './ssg4m-step-view-dialog/ssg4m-step-view-dialog.module';
+import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
+import { SubstanceSsg2FormComponent } from './substance-ssg2-form.component';
 
-
-const ssg4mRoutes: Routes = [
+const ssg2Routes: Routes = [
   {
-    path: 'substances-ssg4m/register',
-    component: SubstanceSsg4ManufactureFormComponent
+    path: 'substances-ssg2/register',
+    component: SubstanceSsg2FormComponent
     //  canActivate: [CanRegisterSubstanceForm],
     //  canDeactivate: [CanDeactivateSubstanceFormGuard]
   },
   {
-    path: 'substances-ssg4m/:id/edit',
-    component: SubstanceSsg4ManufactureFormComponent,
+    path: 'substances-ssg2/:id/edit',
+    component: SubstanceSsg2FormComponent,
     //  canActivate: [CanRegisterSubstanceForm],
     //  canDeactivate: [CanDeactivateSubstanceFormGuard]
   }
@@ -72,7 +68,8 @@ const ssg4mRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forChild(ssg4mRoutes),
+    RouterModule.forChild(ssg2Routes),
+    RouterModule,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
@@ -88,63 +85,62 @@ const ssg4mRoutes: Routes = [
     MatInputModule,
     MatChipsModule,
     MatAutocompleteModule,
-    ScrollToModule,
     MatDialogModule,
     MatTableModule,
     MatExpansionModule,
     MatBadgeModule,
     MatRadioModule,
-    ExpandDetailsModule,
-    SubstanceSelectorModule,
-    MatListModule,
-    FileSelectModule,
-    MatButtonToggleModule,
-    NgxJsonViewerModule,
-    RouterModule,
-    SubstanceImageModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    Ssg4mStepViewDialogModule
-  //  SubstanceSsg4mProcessModule
-  //  Ssg4mSitesModule
+    MatListModule,
+    MatButtonToggleModule,
+    ExpandDetailsModule,
+    SubstanceSelectorModule,
+    ScrollToModule,
+    FileSelectModule,
+    NgxJsonViewerModule,
+    SubstanceImageModule
+    // Ssg4mStepViewDialogModule
+    //  SubstanceSsg4mProcessModule
+    //  Ssg4mSitesModule
   ],
   declarations: [
-  //  SubstanceFormComponent,
-    SubstanceSsg4ManufactureFormComponent
- //   CvInputComponent,
-  //  CvDialogComponent,
- //   JsonDialogComponent
+    //  SubstanceFormComponent,
+    SubstanceSsg2FormComponent,
+    //   CvInputComponent,
+    //  CvDialogComponent,
+    //   JsonDialogComponent
   ],
   exports: [
-  //  SubstanceFormComponent,
-  // SubstanceSsg4ManufactureFormComponent,
-  //  CvInputComponent,
-  //  CvDialogComponent,
-  //  JsonDialogComponent,
+    //  SubstanceFormComponent,
+    // SubstanceSsg4ManufactureFormComponent,
+    //  CvInputComponent,
+    //  CvDialogComponent,
+    //  JsonDialogComponent,
   ],
   entryComponents: [
-  //  CvDialogComponent,
- //   JsonDialogComponent,
- //   AuditInfoComponent,
-  //  SubmitSuccessDialogComponent,
+    //  CvDialogComponent,
+    //   JsonDialogComponent,
+    //   AuditInfoComponent,
+    //  SubmitSuccessDialogComponent,
   ]
 })
 
-export class SubstanceSsg4mModule {
+export class SubstanceSsg2Module {
   constructor(router: Router) {
-    ssg4mRoutes.forEach(route => {
+    ssg2Routes.forEach(route => {
       router.config[0].children.push(route);
     });
   }
 
   static forRoot(): ModuleWithProviders<any> {
     return {
-      ngModule: SubstanceSsg4mModule,
+      ngModule: SubstanceSsg2Module,
       providers: [
-     //   SubstanceSsg4mService,
-     //   SubstanceFormSsg4mProcessService,
-     //   SubstanceFormSsg4mSitesService
+       // SubstanceSsg2FormService
       ]
     };
   }
 }
+
+

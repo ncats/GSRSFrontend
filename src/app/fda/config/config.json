@@ -19,6 +19,7 @@
     "clinicaltrials": true,
     "adverseevents": true,
     "impurities": true,
+    "ssg2": true,
     "ssg4m": true
     },
   "usefulLinks": [
@@ -833,6 +834,12 @@
       "display": "Register",
       "children": [
         {
+          "component": "ssg2",
+          "display": "G2 Specified Substance",
+          "path": "substances-ssg2/register",
+          "order": 180
+        },
+        {
           "component": "ssg4m",
           "display": "G4 Specified Substance Manufacturing",
           "path": "substances-ssg4m/register",
@@ -851,7 +858,6 @@
           "order": 210
         },
        {
-
        "component": "impurities",
           "display": "Impurities",
           "path": "impurities/register",
@@ -1056,8 +1062,9 @@
     }
   },
   "ssg4Form":{
+    "showRegisterEditTitle": "true",
     "titles":{
-      "parentSubstance":"Resulting Substance",
+      "parentSubstance":"Search or Register a New Substance",
       "stage":"Step",
       "processingMaterials":"Solvents and Catalysts"
     },

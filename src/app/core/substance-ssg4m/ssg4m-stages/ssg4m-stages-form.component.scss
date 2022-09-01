@@ -127,6 +127,26 @@
   margin-top: -15px;
 }
 
+.button-insert-before {
+  z-index: 1;
+  position: absolute;
+  top: -60px;
+  margin-right: 360px;
+  color: #007CBA;
+  background-color: #FFFFFF;
+  border: 1px solid #007CBA;
+}
+
+.button-insert-after {
+  z-index: 1;
+  position: absolute;
+  top: -60px;
+  margin-right: 180px;
+  color: #007CBA;
+  background-color: #FFFFFF;
+  border: 1px solid #007CBA;
+}
+
 fieldset.border {
   border: solid 2px #A0A0A3 !important;
   padding: 0 10px 10px 10px;

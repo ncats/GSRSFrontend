@@ -14,6 +14,16 @@
     </button>
   -->
     <div class="divflexright">
+      <button mat-stroked-button color="primary" class="button-insert-before" matTooltip="Insert Process Before"
+        (click)="insertProcess(processIndex, 'before')">
+        <mat-icon>arrow_upward</mat-icon>Insert Process Before
+      </button>
+
+      <button mat-stroked-button color="primary" class="button-insert-after" matTooltip="Insert Process After"
+        (click)="insertProcess(processIndex, 'after')">
+        <mat-icon>arrow_downward</mat-icon>Insert Process After
+      </button>
+
       <button mat-stroked-button color="primary" class="button-delete" matTooltip="Delete Process {{(processIndex+1)}}"
         (click)="confirmDeleteProcess()">
         <mat-icon svgIcon="delete_forever"></mat-icon>Delete Process {{(processIndex+1)}}

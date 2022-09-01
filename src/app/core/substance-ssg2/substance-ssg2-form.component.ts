@@ -19,7 +19,7 @@ import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.j
 import { Title } from '@angular/platform-browser';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 // GSRS Import
-import { ConfigService } from '@gsrs-core/config/config.service';
+import { environment } from '@gsrs-core/../../environments/environment';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { formSections } from '../substance-form/form-sections.constant';
@@ -38,16 +38,15 @@ import { MergeConceptDialogComponent } from '@gsrs-core/substance-form/merge-con
 import { DefinitionSwitchDialogComponent } from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
-import { environment } from '@gsrs-core/../../environments/environment';
-import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
+import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
 
 @Component({
-  selector: 'app-substance-ssg4m-form',
-  templateUrl: './substance-ssg4m-form.component.html',
-  styleUrls: ['./substance-ssg4m-form.component.scss']
+  selector: 'app-substance-ssg2-form',
+  templateUrl: './substance-ssg2-form.component.html',
+  styleUrls: ['./substance-ssg2-form.component.scss']
 })
-export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewInit, OnDestroy {
+
+export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   id?: string;
   formSections: Array<SubstanceFormSection> = [];
@@ -56,7 +55,10 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   private subClass: string;
   definitionType: string;
   expandedComponents = [
-    'substance-form-ssg4m-process'
+    'substance-form-definition',
+    'substance-form-structure',
+    'substance-form-moieties'
+    // 'substance-form-references'
   ];
   showSubmissionMessages = false;
   submissionMessage: string;
@@ -97,8 +99,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   downloadJsonHref: any;
   jsonFileName: string;
   showHeaderBar = 'true';
-  showRegisterEditTitle = 'true';
-  ssg4mSyntheticPathway: Ssg4mSyntheticPathway;
 
   private jsLibScriptUrls = [
     `${environment.baseHref || ''}assets/pathway/cola.min.js`,
@@ -114,13 +114,12 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     private router: Router,
     private dynamicComponentLoader: DynamicComponentLoader,
     private gaService: GoogleAnalyticsService,
-    private substanceSsg4mService: SubstanceSsg4mService,
+    private substanceSsg2Service: SubstanceSsg2FormService,
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
     private authService: AuthService,
     private titleService: Title,
-    private configService: ConfigService,
     private sanitizer: DomSanitizer
   ) {
   }
@@ -132,11 +131,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
-
-    let configSsg4Form: any;
-    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
-    // Get 'showRegisterEditTitle' value from config
-    this.showRegisterEditTitle = configSsg4Form.showRegisterEditTitle;
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -185,7 +179,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.subscriptions.push(routeSubscription);
     const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationStart) {
-        this.substanceSsg4mService.unloadSubstance();
+        this.substanceSsg2Service.unloadSubstance();
       }
     });
     this.subscriptions.push(routerSubscription);
@@ -467,10 +461,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   }
 
   getSsg4mDetails(newType?: string): void {
-    this.substanceSsg4mService.getSsg4mDetails(this.id).pipe(take(1)).subscribe(response => {
-      /*if (response._name) {
-        this.titleService.setTitle('Edit - ' + response._name);
-      }*/
+    /*
+    this.substanceSsg2Service.getSsg4mDetails(this.id).pipe(take(1)).subscribe(response => {
       if (response) {
         this.ssg4mSyntheticPathway = response;
         let substanceSsg4mFromDb: SubstanceDetail;
@@ -492,6 +484,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       this.isLoading = false;
       this.handleSubstanceRetrivalError();
     });
+    */
   }
 
   jsonValid(file: any): boolean {
@@ -571,7 +564,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
           delete response._name;
         }
         this.scrub(response, type);
-        this.substanceSsg4mService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+        this.substanceSsg2Service.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
           this.setFormSections(formSections[response.substanceClass]);
           this.loadingService.setLoading(false);
           this.isLoading = false;
@@ -608,7 +601,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       this.router.navigate(['/substances/register']);
-      this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+      this.substanceSsg2Service.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
         this.setFormSections(formSections.chemical);
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -786,6 +779,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   }
 
   submit(): void {
+    /*
     this.isLoading = true;
     this.approving = false;
     this.loadingService.setLoading(true);
@@ -794,8 +788,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
     // if New Record, initialize object
     if (this.ssg4mSyntheticPathway == null) {
-      this.ssg4mSyntheticPathway = {};
-     // this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2ead5343-6471-88ae-b0b0-88370d44574e", "sbmsnDataText": jsonValue };
+      this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2eaee343-7271-44ae-b0b0-86370d43174e", "sbmsnDataText": jsonValue };
     } else {
       // Existing Record
       // get the JSON from the SSG4m Form and store as a Clob into the database
@@ -833,6 +826,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         }, 8000);
       }
     });
+    */
   }
 
   dismissValidationMessage(index: number) {
@@ -884,7 +878,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
-    if (this.substanceSsg4mService.isSubstanceUpdated) {
+    if (this.substanceSsg2Service.isSubstanceUpdated) {
       $event.returnValue = true;
     }
   }
@@ -1016,7 +1010,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
 
-      this.substanceSsg4mService.bypassUpdateCheck();
+      this.substanceSsg2Service.bypassUpdateCheck();
       if (response === 'continue') {
         this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         // } else if (response === 'browse') {
