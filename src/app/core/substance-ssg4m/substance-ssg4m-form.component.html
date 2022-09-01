@@ -1,6 +1,24 @@
 <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true'}">
   <div class="actions-container">
 
+    <!--
+    <button mat-stroked-button color="primary" class="borderblue" (click)="showJSON()">Show Data Structure</button>
+    &nbsp;&nbsp;&nbsp;
+    -->
+    <!-- Drop down menu with sub menu -->
+    <button mat-stroked-button color="primary" class="borderblue" [matMenuTriggerFor]="menu"><span
+        class="colorbluefda">Import and Export</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" x-position="before" class="custom-menu">
+      <a mat-menu-item [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+        <span>Save Local Copy</span>
+      </a>
+      <button mat-menu-item (click)="importDialog()">Import Local Copy</button>
+      <button mat-menu-item (click)="showJSON()">Show Data Structure</button>
+    </mat-menu>
+
+    <!--
     <button mat-stroked-button color="primary" class="borderblue" (click)="showJSON()">Show JSON</button>
 
     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -11,15 +29,17 @@
       </a>
     </div>
 
-    <button mat-stroked-button color="primary" class="borderblue import-button" (click)="importDialog()">Import JSON</button>
+    <button mat-stroked-button color="primary" class="borderblue import-button" (click)="importDialog()">Import
+      JSON</button>
+    -->
 
-    <button mat-stroked-button color="primary" class="borderblue hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-      *ngIf="(validationMessages && validationMessages.length > 0)">
+    <button mat-stroked-button color="primary" class="borderblue hide-show-messages" (click)="toggleValidation()"
+      [disabled]="isLoading" *ngIf="(validationMessages && validationMessages.length > 0)">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
       <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
 
-    <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
+    <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Save</button>
 
     <!--
     <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
@@ -65,8 +85,13 @@
 </div>
 
 <div class="form-content-container" [ngClass]="{'padtop90px': showHeaderBar === 'false'}">
-  <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
-    <div>
+  <!--
+  <div class="form-header"
+    [ngClass]="{'form-header-no-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'false'), 'form-header-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'true')}">
+    <div *ngIf="showRegisterEditTitle === 'true'">
+    -->
+      <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
+        <div>
       <span class="colorbluefda fontbold padleft25px">{{(uuid && !imported) ? 'Editing ' : 'Registering New '}} -
         Specified Substance Group 4 Manufacturing
       </span>

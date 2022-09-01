@@ -3,7 +3,7 @@ import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } fro
 import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config/config.service';
-import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
+import { Ssg4mSyntheticPathway } from '../substance-ssg4m/model/substance-ssg4m.model';
 import {
   SubstanceDetail
 } from '../substance/substance.model';
@@ -36,7 +36,7 @@ import { StructureService } from '@gsrs-core/structure';
 })
 
 @Injectable()
-export class SubstanceSsg4mService implements OnDestroy {
+export class SubstanceSsg2FormService implements OnDestroy {
   private privateSubstance: SubstanceDetail;
   private substanceStateHash?: number;
   private substanceEmitter: ReplaySubject<SubstanceDetail>;

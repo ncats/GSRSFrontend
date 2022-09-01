@@ -39,6 +39,29 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
     return this.propertyEmitter.asObservable();
   }
 
+  insertProcess(processIndexCurrent: number, insertDirection?: string): void {
+    const newProcess: SpecifiedSubstanceG4mProcess = {
+      processName: 'Process ',
+      sites:[{stages:[{"stageNumber": "Stage 1",
+      startingMaterials: [],
+      processingMaterials: [],
+      resultingMaterials: [],
+      criticalParameters: []}]}]
+    };
+
+    let processIndex = 0;
+    if (insertDirection && insertDirection === 'before') {
+      this.substance.specifiedSubstanceG4m.process.splice(processIndexCurrent, 0, newProcess);
+      processIndex = processIndexCurrent;
+    } else { // after
+      this.substance.specifiedSubstanceG4m.process.splice(processIndexCurrent+1, 0, newProcess);
+      processIndex = processIndexCurrent + 1;
+    }
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
+    // Add Site
+    //this.substanceFormSsg4mSitesService.addSite(processIndex);
+  }
+
   addProcess(): void {
     const newProcess: SpecifiedSubstanceG4mProcess = {
       processName: 'Process ',
@@ -50,8 +73,8 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
     };
     const processIndex = this.substance.specifiedSubstanceG4m.process.push(newProcess);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process);
-    //Add Site
-    this.substanceFormSsg4mSitesService.addSite(processIndex-1);
+    // Add Site
+    // this.substanceFormSsg4mSitesService.addSite(processIndex-1);
   }
 
   deleteProcess(process: SpecifiedSubstanceG4mProcess, processIndex: number): void {

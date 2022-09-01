@@ -46,7 +46,7 @@
       *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
         eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM"
-        header="Substance Name" [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
+        header="" [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
       </app-substance-selector>
     </div>
 
