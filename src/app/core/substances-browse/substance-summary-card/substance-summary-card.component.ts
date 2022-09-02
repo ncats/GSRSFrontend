@@ -23,6 +23,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 import { ConfigService } from '@gsrs-core/config';
+import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -39,6 +40,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
   @Input() names?: Array<SubstanceName>;
   @Input() codeSystemNames?: Array<string>;
+  @Input() codeSystemVocab?: Vocabulary;
 //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   alignments?: Array<Alignment>;
   inxightLink = false;
@@ -67,6 +69,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log(this.codeSystemVocab);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {

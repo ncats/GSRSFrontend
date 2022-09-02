@@ -187,7 +187,7 @@
           <div [hidden]="!showLessCodes">
             <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5; index as codeindex">
               <div class="code-system">
-                <span class="label">{{codeSystemName | codeSystemDisplay | async}}
+                <span class="label">{{(codeSystemVocab && codeSystemVocab[codeSystemName]) ? codeSystemVocab[codeSystemName].display : codeSystemName}}
 
                 </span>:&nbsp;
                 <span class="value"

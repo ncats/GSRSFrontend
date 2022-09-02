@@ -320,7 +320,8 @@
           <app-substance-summary-card *ngFor="let substance of substances" [substance]="substance"
             (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
             [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
-            [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems">
+            [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
+            [codeSystemVocab]="codeSystem">
           </app-substance-summary-card>
         </div>
         <div class="substance-table">
