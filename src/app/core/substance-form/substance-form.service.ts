@@ -157,6 +157,17 @@ export class SubstanceFormService implements OnDestroy {
             relationships: [],
             properties: []
           };
+        } else if (substanceClass === 'specifiedSubstanceG2') {
+          this.privateSubstance = {
+            substanceClass: 'specifiedSubstanceG2',
+            references: [],
+            names: [],
+            specifiedSubstanceG2: {
+              constituents: [],
+              manufacturing: [],
+              references: []
+            }
+          };
         } else if (substanceClass === 'specifiedSubstanceG3') {
           this.privateSubstance = {
             substanceClass: substanceClass,
@@ -176,11 +187,17 @@ export class SubstanceFormService implements OnDestroy {
             // references: [],
             specifiedSubstanceG4m: {
               parentSubstance: {},
-              process: [{sites:[{stages:[{"stageNumber": "Stage 1",
-              startingMaterials: [],
-              processingMaterials: [],
-              resultingMaterials: [],
-              criticalParameters: []}]}]}]
+              process: [{
+                sites: [{
+                  stages: [{
+                    "stageNumber": "Stage 1",
+                    startingMaterials: [],
+                    processingMaterials: [],
+                    resultingMaterials: [],
+                    criticalParameters: []
+                  }]
+                }]
+              }]
             }
             // codes: [],
             //  properties: []
@@ -210,11 +227,14 @@ export class SubstanceFormService implements OnDestroy {
         // default values
 
         // TP: default to protected for root level record.
-        // ***** AN: Adding this right now for SSG4m ******
+        // ***** AN: Adding this right now for SSG4m and G2 ******
         if (substanceClass !== 'specifiedSubstanceG4m') {
           this.privateSubstance.access = ["protected"];
-          this.privateSubstance.definitionLevel = "COMPLETE";
-          this.privateSubstance.definitionType = "PRIMARY";
+
+          if (substanceClass !== 'specifiedSubstanceG2') {
+            this.privateSubstance.definitionLevel = "COMPLETE";
+            this.privateSubstance.definitionType = "PRIMARY";
+          }
         }
       }
 

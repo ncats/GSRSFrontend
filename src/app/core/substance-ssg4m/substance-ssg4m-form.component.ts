@@ -792,47 +792,66 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.json = this.substanceFormService.cleanSubstance();
     let jsonValue = JSON.stringify(this.json);
 
-    // if New Record, initialize object
-    if (this.ssg4mSyntheticPathway == null) {
-      this.ssg4mSyntheticPathway = {};
-     // this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2ead5343-6471-88ae-b0b0-88370d44574e", "sbmsnDataText": jsonValue };
-    } else {
-      // Existing Record
-      // get the JSON from the SSG4m Form and store as a Clob into the database
-      this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
-    }
+    // Save SVG/Image as Blob
+    //This is a hacky placeholder way to force viz
+    //TODO finish this
+    const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
+    window["schemeUtil"].onFinishedLayout = (svg) => {
+      window["schemeUtil"].onFinishedLayout = (svg)=>{};
+      this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
 
-    this.substanceSsg4mService.saveSsg4m(this.ssg4mSyntheticPathway).pipe(take(1)).subscribe(response => {
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.validationMessages = null;
-      this.showSubmissionMessages = false;
-      this.submissionMessage = '';
-      if (!this.id) {
-        if (response) {
-          this.id = response.synthPathwaySkey.toString();
-        }
-      }
-      this.openSuccessDialog();
-    }, (error: SubstanceFormResults) => {
-      this.showSubmissionMessages = true;
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.submissionMessage = null;
-      if (error.validationMessages && error.validationMessages.length) {
-        this.validationResult = error.isSuccessfull;
-        this.validationMessages = error.validationMessages
-          .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-        this.showSubmissionMessages = true;
+      // if New Record, initialize object
+      if (this.ssg4mSyntheticPathway == null) {
+        this.ssg4mSyntheticPathway = {};
+        // this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2ead5343-6471-88ae-b0b0-88370d44574e", "sbmsnDataText": jsonValue };
       } else {
-        this.submissionMessage = 'There was a problem with your submission';
-        this.addServerError(error.serverError);
-        setTimeout(() => {
-          this.showSubmissionMessages = false;
-          this.submissionMessage = null;
-        }, 8000);
+        // Existing Record
+        // get the JSON from the SSG4m Form and store as a Clob into the database
+        this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
       }
-    });
+
+      this.substanceSsg4mService.saveSsg4m(this.ssg4mSyntheticPathway).pipe(take(1)).subscribe(response => {
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+        this.validationMessages = null;
+        this.showSubmissionMessages = false;
+        this.validationResult = false;
+        // this.submissionMessage = 'The record was updated successfully';
+        // if (!this.id) {
+        if (response && response.synthPathwaySkey) {
+          // alert("The record was updated successfully");
+          this.id = response.synthPathwaySkey.toString();
+          // this.applicationService.bypassUpdateCheck();
+          this.openSuccessDialog();
+          // Refresh the current page, this will not cause record locking issue
+          /* this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
+          */
+        }
+        // }
+        // this.openSuccessDialog();
+      }, (error: SubstanceFormResults) => {
+        this.showSubmissionMessages = true;
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+        this.submissionMessage = null;
+        if (error.validationMessages && error.validationMessages.length) {
+          this.validationResult = error.isSuccessfull;
+          this.validationMessages = error.validationMessages
+            .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+          this.showSubmissionMessages = true;
+        } else {
+          this.submissionMessage = 'There was a problem with your submission';
+          this.addServerError(error.serverError);
+          setTimeout(() => {
+            this.showSubmissionMessages = false;
+            this.submissionMessage = null;
+          }, 8000);
+        }
+      });
+    };
+    window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
   }
 
   dismissValidationMessage(index: number) {
@@ -1018,6 +1037,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       this.substanceSsg4mService.bypassUpdateCheck();
       if (response === 'continue') {
+        // Refresh the current page, this will not cause record locking issue
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
         this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         // } else if (response === 'browse') {
         //  this.router.navigate(['/browse-substance']);

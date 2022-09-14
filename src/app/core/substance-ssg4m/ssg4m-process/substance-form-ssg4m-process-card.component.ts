@@ -163,18 +163,23 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
       if (textLabel != null) {
         this.tabSelectedView = textLabel;
       }
-      const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
-      window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+      //  const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
+      //  window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
     }
 
   }
 
   onSelectedIndexChange(tabIndex: number) {
     this.tabSelectedIndex = tabIndex;
-    //This is a hacky placeholder way to force viz
-    //TODO finish this
-    const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
-    window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+    if (this.tabSelectedIndex === 2) {
+      document.querySelector("#scheme-viz-view").className = "";
+      //This is a hacky placeholder way to force viz
+      //TODO finish this
+      const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
+      window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+    } else {
+      document.querySelector("#scheme-viz-view").className = "hidden";
+    }
   }
 
   tabSelectedIndexOutChange(tabIndex: number) {

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceSsg2FormComponent } from './substance-ssg2-form.component';
+import { Ssg2ManufacturingComponent } from './ssg2-manufacturing.component';
 
-describe('SubstanceSsg2FormComponent', () => {
-  let component: SubstanceSsg2FormComponent;
-  let fixture: ComponentFixture<SubstanceSsg2FormComponent>;
+describe('Ssg2ManufacturingComponent', () => {
+  let component: Ssg2ManufacturingComponent;
+  let fixture: ComponentFixture<Ssg2ManufacturingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceSsg2FormComponent ]
+      declarations: [ Ssg2ManufacturingComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceSsg2FormComponent);
+    fixture = TestBed.createComponent(Ssg2ManufacturingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
