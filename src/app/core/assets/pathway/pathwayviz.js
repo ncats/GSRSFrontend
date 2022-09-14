@@ -418,7 +418,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .links(graph.links)
 	  .constraints(graph.constraints)
       .flowLayout(layoutVar, 140)
-	  .avoidOverlaps(true)
+	  .avoidOverlaps(false)
       .symmetricDiffLinkLengths(6)
       .start(10, 20, 20);
     var path = svg
@@ -564,17 +564,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .attr("xlink:href", (d) => getImg(d))
       .attr("width", (d) => getWidth(d))
       .attr("height", (d) => getHeight(d))
-	  .attr("r", nodeRadius)
-	  .on("mouseover", function (d, i) {
-		if(d.type === "material") {
-			imageZoom(this, schemeUtil.zoomLevel);
-		}
-      })
-	   .on("mouseout", function (d, i) {
-		if(d.type === "material") {
-			imageZoom(this, 1);
-		}
-      });
+	  .attr("r", nodeRadius);
 
     d3cola
 	 .on('end', function() { 
@@ -583,19 +573,15 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 			if(bboxn){
 				var bbox=bboxn.getBBox();
 				schemeUtil.renderScheme(nn2, selector, iter - 1, 0, -bbox.y);
-				console.log("regen");
-				console.log(graph.nodes);
 			}
 		} else{
 			schemeUtil.onFinishedLayout(svg);
-			console.log("Done");
 		}		
 	 })
 	 .on("tick", function () {
       path.each(function (d) {
         if (schemeUtil.isIE()) this.parentNode.insertBefore(this, this);
       });
-	  console.log("tick");
 	  
 	  
 	  
@@ -614,9 +600,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
           targetY = d.target.y - targetPadding * normY;
         return "M" + sourceX + "," + sourceY + "L" + targetX + "," + targetY;
       });
- //console.log(d3.select(selector));
 	  
-	  //console.log(bbox);
 	  
       mnode.attr(
         "transform",

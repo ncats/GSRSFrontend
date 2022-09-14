@@ -18,18 +18,31 @@
     "description": "GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)<br/>GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.",
     "href": "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip",
     "imageFile": "xlsx.png",
-  "templateDescription": "Click to download GSRSFind Excel tools.zip"},
-  {"title": "GSRS User Guide",
+    "templateDescription": "Click to download GSRSFind Excel tools.zip"},
+    {"title": "GSRS User Guide",
     "description": "The GSRS user guide is comprehensive set of instructions for searching and registering new substances of all types in GSRS.",
     "href": "https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx",
     "imageFile": "guide.png",
-  "templateDescription": "Click to download GSRS User Guide.docx"},
-  {"title": "GSRS Data Dictionary",
-    "description": " The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.",
+    "templateDescription": "Click to download GSRS User Guide.docx"},
+    {"title": "GSRS Data Dictionary",
+    "description": "The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.",
     "href": "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_11-20-19.xlsx",
     "imageFile": "dictionary.png",
-  "templateDescription": "Click to download GSRS Data Dictionary.xlsx"}
-],
+    "templateDescription": "Click to download GSRS Data Dictionary.xlsx"},
+    {"title": "GSRS API Documentation",
+    "description": "Swagger documentation of the GSRS API calls with working examples and implementation notes.",
+    "href": "https://gsrs.ncats.nih.gov/#/api#chemical%20search",
+    "imageFile": "API.png"},
+    {"title": "GSRS JSON schema",
+    "description": "This file contains a JSON formatted schema used by GSRS for recording substances to help visualize the substance object described by the GSRS Data Dictionary.",
+    "href": "https://gsrs.ncats.nih.gov/downloads/GSRS_schema_2_0_0.json",
+    "imageFile": "json.png",
+    "templateDescription": "Click to download GSRS JSON schema.json"},
+    {"title": "ISO 11238 Standard",
+    "description": "ISO 11238 is the standard that all substance data used by GSRS conforms to. ISO 11238 Substance Identification (SubID) provides an information model to define and identify substances within medicinal products or substances used for medicinal purposes.",
+    "href": "https://www.fda.gov/industry/fda-resources-data-standards/substance-identification",
+    "imageFile": "iso2.png"}
+  ],
   "substanceDetailsCards": [
       {
         "card": "substance-overview",
@@ -622,8 +635,8 @@
     "EVMPD",
     "NCI"
   ],
-
-  "homeContents": "The main goal of ginas is the production of software, called G-SRS, to assist agencies in registering and documenting information about substances found in medicines. The Global Ingredient Archival System provides a common identifier for all of the substances used in medicinal products, utilizing a consistent definition of substances globally, including active substances under clinical investigation, consistent with the ISO 11238 standard.",
+  "homeHeader": "Global Substance Registration System - GSRS",
+  "homeContents": "GSRS has been developed to assist regulators in managing substance information. It was designed to facilitate global monitoring of human and animal medicinal, food, tobacco, and cosmetic products. GSRS provides unique substance identifiers consistent with the ISO 11238 standard. FDA’s GSRS specifically generates the Unique Ingredient Identifiers (UNIIs) used in electronic listing and other regulatory activities.",
   "relationshipsVisualizationUri": "",
   "navItems": [
     {
