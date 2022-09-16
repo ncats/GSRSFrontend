@@ -15,14 +15,35 @@ export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<A
   }
 
   initSubtanceForm(): void {
+    /* G1
+   super.initSubtanceForm();
+   const subscription = this.substanceFormService.substance.subscribe(substance => {
+     this.substance = substance;
+     if (this.substance.specifiedSubstance.constituents == null) {
+       this.substance.specifiedSubstance.constituents = [];
+     }
+     this.substanceFormService.resetState();
+     this.propertyEmitter.next(this.substance.specifiedSubstance.constituents);
+   });
+   this.subscriptions.push(subscription);
+   */
+
     super.initSubtanceForm();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
-      if (this.substance.specifiedSubstance.constituents == null) {
-        this.substance.specifiedSubstance.constituents = [];
+      if (this.substance.substanceClass === 'specifiedSubstanceG1') {
+        if (this.substance.specifiedSubstance.constituents == null) {
+          this.substance.specifiedSubstance.constituents = [];
+        }
+        this.substanceFormService.resetState();
+        this.propertyEmitter.next(this.substance.specifiedSubstance.constituents);
+      } else if (this.substance.substanceClass === 'specifiedSubstanceG2') {
+        if (this.substance.specifiedSubstanceG2.constituents == null) {
+          this.substance.specifiedSubstanceG2.constituents = [];
+        }
+        this.substanceFormService.resetState();
+        this.propertyEmitter.next(this.substance.specifiedSubstanceG2.constituents);
       }
-      this.substanceFormService.resetState();
-      this.propertyEmitter.next(this.substance.specifiedSubstance.constituents);
     });
     this.subscriptions.push(subscription);
   }
@@ -32,9 +53,15 @@ export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<A
   }
 
   addSubstanceConstituent(): void {
-    const constituent: Constituent = {references:[], access:['protected']};
-    this.substance.specifiedSubstance.constituents.unshift(constituent);
-    this.propertyEmitter.next(this.substance.specifiedSubstance.constituents);
+    // for G1 and G2
+    const constituent: Constituent = { references: [], access: ['protected'] };
+    if (this.substance.substanceClass === 'specifiedSubstanceG1') {
+      this.substance.specifiedSubstance.constituents.unshift(constituent);
+      this.propertyEmitter.next(this.substance.specifiedSubstance.constituents);
+    } else if (this.substance.substanceClass === 'specifiedSubstanceG2') {
+      this.substance.specifiedSubstanceG2.constituents.unshift(constituent);
+      this.propertyEmitter.next(this.substance.specifiedSubstanceG2.constituents);
+    }
   }
 
   deleteSubstanceConstituent(sugar: Constituent): void {

@@ -72,6 +72,7 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
   polymer?: Polymer;
   modifications?: SubstanceModifications;
   specifiedSubstance?: SpecifiedSubstance;
+  specifiedSubstanceG2?: SpecifiedSubstanceG2;
   specifiedSubstanceG3?: SpecifiedSubstanceG3;
   specifiedSubstanceG4m?: SpecifiedSubstanceG4m;
   _matchContext?: MatchContext;
@@ -477,10 +478,52 @@ export interface SpecifiedSubstanceParent extends SubstanceBase {
   parentSubstance?: SubstanceRelated;
 }
 
+export interface SpecifiedSubstanceG2 extends SubstanceBase {
+  uuid?: string;
+  substanceRole?: string;
+  grade?: string;
+  comments?: string;
+  references?: Array<string>;
+  constituents?: Array<Constituent>;
+  manufacturing?: Array<SpecifiedSubstanceG2Manufacturing>;
+  organization?: SubstanceSsg2Organization;
+}
+
+export interface SubstanceSsg2Name extends SubstanceBase {
+  name?: string;
+  stdName?: string;
+  type?: string;
+  domains?: Array<string>;
+  languages?: Array<string>;
+  nameJurisdiction?: Array<string>;
+  nameOrgs?: Array<string | SubstanceNameOrg>;
+  preferred?: boolean;
+  displayName?: boolean;
+  references?: Array<string>;
+  _self?: string;
+  _nameHTML?: string;
+}
+
+export interface SpecifiedSubstanceG2Manufacturing extends SubstanceBase {
+  manufacturingType?: string;
+  productionMethodType?: string;
+  productionMethodDescription?: string;
+  productionSystemType?: string;
+  productionSystem?: string;
+}
+
+export interface SubstanceSsg2Organization extends SubstanceBase {
+  manufacturerId?: string;
+  manufacturerName?: string;
+  manufacturerRole?: string;
+  issuerofId?: string;
+}
+
 export interface SpecifiedSubstanceG4m extends SubstanceBase {
   // references?: Array<string>;
   parentSubstance?: SpecifiedSubstanceParent;
   process?: Array<SpecifiedSubstanceG4mProcess>;
+  _svg?: string;
 }
 
 export interface SpecifiedSubstanceG4mProcess extends SubstanceBase {

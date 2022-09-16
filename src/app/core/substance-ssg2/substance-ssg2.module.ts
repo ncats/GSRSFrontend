@@ -45,6 +45,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SubstanceFormComponent } from '../substance-form/substance-form.component';
 import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
 import { SubstanceSsg2FormComponent } from './substance-ssg2-form.component';
+import { Ssg2ManufacturingModule } from './ssg2-manufacturing/ssg2-manufacturing.module';
 
 const ssg2Routes: Routes = [
   {
@@ -99,30 +100,15 @@ const ssg2Routes: Routes = [
     ScrollToModule,
     FileSelectModule,
     NgxJsonViewerModule,
-    SubstanceImageModule
-    // Ssg4mStepViewDialogModule
-    //  SubstanceSsg4mProcessModule
-    //  Ssg4mSitesModule
+    SubstanceImageModule,
+    Ssg2ManufacturingModule
   ],
   declarations: [
-    //  SubstanceFormComponent,
     SubstanceSsg2FormComponent,
-    //   CvInputComponent,
-    //  CvDialogComponent,
-    //   JsonDialogComponent
   ],
   exports: [
-    //  SubstanceFormComponent,
-    // SubstanceSsg4ManufactureFormComponent,
-    //  CvInputComponent,
-    //  CvDialogComponent,
-    //  JsonDialogComponent,
   ],
   entryComponents: [
-    //  CvDialogComponent,
-    //   JsonDialogComponent,
-    //   AuditInfoComponent,
-    //  SubmitSuccessDialogComponent,
   ]
 })
 

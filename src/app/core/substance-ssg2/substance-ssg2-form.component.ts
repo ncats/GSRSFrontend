@@ -7,37 +7,36 @@ import {
   QueryList,
   OnDestroy, HostListener
 } from '@angular/core';
+import { formSections } from '../substance-form/form-sections.constant';
 import { ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatExpansionPanel } from '@angular/material/expansion';
-import { MatDialog } from '@angular/material/dialog';
-import { take, map } from 'rxjs/operators';
+import { SubstanceService } from '../substance/substance.service';
+import { LoadingService } from '../loading/loading.service';
+import { MainNotificationService } from '../main-notification/main-notification.service';
+import { AppNotification, NotificationType } from '../main-notification/notification.model';
+import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
+import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { SubstanceFormSection } from '../substance-form/substance-form-section';
+import { SubstanceFormService } from '../substance-form/substance-form.service';
+import { ValidationMessage, SubstanceFormResults, SubstanceFormDefinition } from '../substance-form/substance-form.model';
 import { Subscription, Observable } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatDialog } from '@angular/material/dialog';
+import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import * as _ from 'lodash';
-import * as moment from 'moment';
 import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import { Title } from '@angular/platform-browser';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-// GSRS Import
-import { environment } from '@gsrs-core/../../environments/environment';
-import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
-import { formSections } from '../substance-form/form-sections.constant';
-import { SubstanceFormSection } from '../substance-form/substance-form-section';
-import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AuthService } from '@gsrs-core/auth';
-import { LoadingService } from '../loading/loading.service';
-import { SubstanceService } from '../substance/substance.service';
-import { SubstanceFormService } from '../substance-form/substance-form.service';
-import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { ValidationResults } from '../substance-form/substance-form.model';
-import { SubstanceDetail } from '../substance/substance.model';
-import { ValidationMessage, SubstanceFormResults, SubstanceFormDefinition } from '../substance-form/substance-form.model';
+import { take, map } from 'rxjs/operators';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { SubmitSuccessDialogComponent } from '../substance-form/submit-success-dialog/submit-success-dialog.component';
 import { MergeConceptDialogComponent } from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
 import { DefinitionSwitchDialogComponent } from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
-import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
+import { StructuralUnit } from '@gsrs-core/substance';
+import { ConfigService } from '@gsrs-core/config';
+import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
+import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
+import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
 
 @Component({
@@ -45,7 +44,6 @@ import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
   templateUrl: './substance-ssg2-form.component.html',
   styleUrls: ['./substance-ssg2-form.component.scss']
 })
-
 export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   id?: string;
@@ -57,8 +55,8 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
   expandedComponents = [
     'substance-form-definition',
     'substance-form-structure',
-    'substance-form-moieties'
-    // 'substance-form-references'
+    'substance-form-moieties',
+    'substance-form-references'
   ];
   showSubmissionMessages = false;
   submissionMessage: string;
@@ -78,7 +76,12 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
   messageField: string;
   uuid: string;
   substanceClass: string;
+  drafts: Array<any>;
+  draftCount = 0;
   status: string;
+  hidePopup: boolean;
+  unit: StructuralUnit;
+  autoSaveWait = 60000;
   classes = [
     'concept',
     'protein',
@@ -89,22 +92,13 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     'mixture',
     'specifiedSubstanceG1',
     'specifiedSubstanceG2',
-    'specifiedSubstanceG3',
-    'specifiedSubstanceG4m'];
+    'specifiedSubstanceG3'];
   imported = false;
   forceChange = false;
   sameSubstance = false;
   UNII: string;
-  json: SubstanceDetail;
-  downloadJsonHref: any;
-  jsonFileName: string;
-  showHeaderBar = 'true';
-
-  private jsLibScriptUrls = [
-    `${environment.baseHref || ''}assets/pathway/cola.min.js`,
-    `${environment.baseHref || ''}assets/pathway/d3v4.js`,
-    `${environment.baseHref || ''}assets/pathway/pathwayviz.js`
-  ];
+  approvalType = 'lastEditedBy';
+  previousState: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -114,19 +108,180 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     private router: Router,
     private dynamicComponentLoader: DynamicComponentLoader,
     private gaService: GoogleAnalyticsService,
-    private substanceSsg2Service: SubstanceSsg2FormService,
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
+    private configService: ConfigService,
     private dialog: MatDialog,
     private authService: AuthService,
     private titleService: Title,
-    private sanitizer: DomSanitizer
+    private utilsService: UtilsService,
+    private substanceSsg2FormService: SubstanceSsg2FormService
   ) {
+    this.substanceService.showImagePopup.subscribe(data => {
+      this.hidePopup = data;
+    })
+    this.substanceService.imagePopupUnit.subscribe(data => {
+      this.unit = data;
+    })
+  }
+
+  showHidePopup(): void {
+    this.hidePopup = !this.hidePopup;
+    this.substanceService.showImagePopup.next(this.hidePopup);
+  }
+
+
+  autoSave(): void {
+    setTimeout(() => {
+      if (this.substanceFormService.autoSave()) {
+        this.saveDraft(true);
+      } else {
+      }
+      this.autoSave();
+    }, this.autoSaveWait);
+  }
+
+  openModal(templateRef) {
+
+    const dialogRef = this.dialog.open(templateRef, {
+      height: '200px',
+      width: '400px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
+  }
+
+  showDrafts(): void {
+    const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
+      maxHeight: '85%',
+      width: '70%',
+      data: { uuid: this.id }
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+
+
+      if (response) {
+        this.loadingService.setLoading(true);
+        //  console.log(response.json);
+
+        const read = response.substance;
+        if (this.id && read.uuid && this.id === read.uuid) {
+          this.substanceFormService.importSubstance(read, 'update');
+          this.submissionMessage = null;
+          this.validationMessages = [];
+          this.showSubmissionMessages = false;
+          setTimeout(() => {
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
+            this.overlayContainer.style.zIndex = null;
+          }, 1000);
+        } else if (response.uuid && response.uuid != 'register') {
+          const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
+          this.router.navigateByUrl(url, { state: { record: response.substance } });
+        } else {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = null;
+            this.router.onSameUrlNavigation = 'reload';
+            this.loadingService.setLoading(false);
+            this.router.onSameUrlNavigation = 'reload';
+            this.router.navigateByUrl('/substances/register/' + response.substance.substanceClass + '?action=import', { state: { record: response.substance } });
+
+          }, 1000);
+        }
+      }
+
+      let keys = Object.keys(localStorage);
+      let i = keys.length;
+      this.draftCount = 0;
+      this.drafts = [];
+
+      while (i--) {
+        if (keys[i].startsWith('gsrs-draft-')) {
+          const entry = JSON.parse(localStorage.getItem(keys[i]));
+          entry.key = keys[i];
+          if (this.id && entry.uuid === this.id) {
+            this.draftCount++;
+          } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
+            this.draftCount++;
+          }
+          this.drafts.push(entry);
+
+        }
+      }
+    });
+  }
+
+
+  importDialog(): void {
+    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
+      width: '650px',
+      autoFocus: false
+
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        //   this.overlayContainer.style.zIndex = null;
+        this.loadingService.setLoading(true);
+
+        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+        const read = JSON.parse(response);
+        if (this.id && read.uuid && this.id === read.uuid) {
+          this.substanceFormService.importSubstance(read, 'update');
+          this.submissionMessage = null;
+          this.validationMessages = [];
+          this.showSubmissionMessages = false;
+          setTimeout(() => {
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
+            this.overlayContainer.style.zIndex = null;
+          }, 1000);
+          /*   } else {
+            if ( read.substanceClass === this.substanceClass) {
+              this.imported = true;
+              this.substanceFormService.importSubstance(read);
+              this.submissionMessage = null;
+              this.validationMessages = [];
+              this.showSubmissionMessages = false;
+              this.loadingService.setLoading(false);
+              this.isLoading = false;*/
+        } else {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = null;
+            this.router.onSameUrlNavigation = 'reload';
+            this.loadingService.setLoading(false);
+            this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+
+          }, 1000);
+        }
+      }
+      // }
+    });
+
+  }
+
+  test() {
+    this.router.navigated = false;
+    this.router.navigate([this.router.url]);
   }
 
   ngOnInit() {
-    this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadingService.setLoading(true);
+    if (this.configService.configData && this.configService.configData.approvalType) {
+      this.approvalType = this.configService.configData.approvalType;
+    }
+    if (this.configService.configData && this.configService.configData.autoSaveWait) {
+      this.autoSaveWait = this.configService.configData.autoSaveWait;
+    }
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -134,84 +289,112 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
+
+        const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+
         if (params['id']) {
-          const id = params['id'];
-          if (id !== this.id) {
-            this.id = id;
-            this.gaService.sendPageView(`Substance Edit`);
-            const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
-            if (newType) {
-              this.getSsg4mDetails(newType);
-            } else {
-              this.getSsg4mDetails();
+
+          if (action && action === 'import' && window.history.state) {
+            const record = window.history.state;
+            this.imported = true;
+
+            this.getDetailsFromImport(record.record);
+          } else {
+            const id = params['id'];
+            if (id !== this.id) {
+              this.id = id;
+              this.gaService.sendPageView(`Substance Edit`);
+              const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
+              if (newType) {
+                this.getSubstanceDetails(newType);
+              } else {
+                this.getSubstanceDetails();
+              }
             }
           }
         } else {
-          const action = this.activatedRoute.snapshot.queryParams['action'] || null;
           if (action && action === 'import' && window.history.state) {
             const record = window.history.state;
             this.imported = true;
             this.getDetailsFromImport(record.record);
             this.gaService.sendPageView(`Substance Register`);
+
           } else {
             this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
             if (this.copy) {
               const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
               this.getPartialSubstanceDetails(this.copy, copyType);
               this.gaService.sendPageView(`Substance Register`);
-            } else {  // new record
+            } else { // new record / register
               setTimeout(() => {
                 this.gaService.sendPageView(`Substance Register`);
-                this.subClass = this.activatedRoute.snapshot.params['type'] || 'specifiedSubstanceG4m';
+                this.subClass = this.activatedRoute.snapshot.params['type'] || 'specifiedSubstanceG2';
                 this.substanceClass = this.subClass;
-                this.titleService.setTitle('Register - Specified Substance Group 4 Manufacturing');
+                this.titleService.setTitle('Register - ' + this.subClass);
                 this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
-                  // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
                   this.setFormSections(formSections[this.subClass]);
                   this.loadingService.setLoading(false);
                   this.isLoading = false;
+
                 });
               });
             }
           }
+
+
         }
       });
     this.subscriptions.push(routeSubscription);
     const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationStart) {
-        this.substanceSsg2Service.unloadSubstance();
+        this.substanceFormService.unloadSubstance();
       }
     });
     this.subscriptions.push(routerSubscription);
     this.approving = false;
-    /* // Commenting this out
-    const definitionSubscription = this.substanceSsg4mService.definition.subscribe(response => {
+    const definitionSubscription = this.substanceFormService.definition.subscribe(response => {
       this.definition = response;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
       });
     });
     this.subscriptions.push(definitionSubscription);
-    */
     this.authService.getAuth().pipe(take(1)).subscribe(auth => {
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
+
       });
     });
-    // Scheme View loading
-    if (!window['schemeUtil']) {
-      for (let i = 0; i < this.jsLibScriptUrls.length; i++) {
-        const node = document.createElement('script');
-        node.src = this.jsLibScriptUrls[i];
-        node.type = 'text/javascript';
-        node.async = false;
-        document.getElementsByTagName('head')[0].appendChild(node);
+
+  }
+
+  getDrafts() {
+    let keys = Object.keys(localStorage);
+    let i = keys.length;
+    this.drafts = [];
+    let temp = 0;
+    while (i--) {
+      if (keys[i].startsWith('gsrs-draft-')) {
+        const entry = JSON.parse(localStorage.getItem(keys[i]));
+        entry.key = keys[i];
+        if (this.id && entry.uuid === this.id) {
+          temp++;
+          // this.draftCount++;
+        } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
+          temp++;
+          //  this.draftCount++;
+        }
+        this.drafts.push(entry);
+
       }
     }
+    this.draftCount = temp;
   }
 
   ngAfterViewInit(): void {
+    this.getDrafts();
+
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
 
@@ -261,7 +444,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
                 }
                 setTimeout(() => {
                   this.loadingService.setLoading(false);
-                  //  this.UNII = this.substanceSsg4mService.getUNII();
+                  this.UNII = this.substanceFormService.getUNII();
                 }, 5);
               });
           });
@@ -269,6 +452,11 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
 
         }
         subscription.unsubscribe();
+        setTimeout(() => {
+
+          this.autoSave();
+        }, 10000);
+
       });
   }
 
@@ -280,7 +468,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  /*
   useFeature(feature: any): void {
     this.feature = feature.value;
     if (this.feature === 'glyco') {
@@ -322,7 +509,25 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     if (this.feature === 'changeApproval') {
       this.substanceFormService.changeApproval();
     }
+    if (this.feature === 'fragment') {
+      this.openFragmentDialog();
+    }
 
+
+
+  }
+
+  openFragmentDialog(): void {
+    const dialogRef = this.dialog.open(FragmentWizardComponent, {
+      width: '70%',
+      height: '70%'
+    });
+    this.overlayContainer.style.zIndex = '50';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+
+    });
+    this.subscriptions.push(dialogSubscription);
   }
 
   changeClass(type: any): void {
@@ -349,7 +554,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     this.substanceFormService.disulfideLinks();
     this.feature = undefined;
   }
-  */
 
   ngOnDestroy(): void {
     // this.substanceFormService.unloadSubstance();
@@ -358,83 +562,46 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     });
   }
 
-
-  importDialog(): void {
-    let data: any;
-    data = {
-      title: 'Manufacturing Scheme Import'
-    };
-    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
-      width: '650px',
-      autoFocus: false,
-      data: data
-    });
-    this.overlayContainer.style.zIndex = '1002';
-
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
-      if (response) {
-        this.loadingService.setLoading(true);
-        this.overlayContainer.style.zIndex = null;
-
-        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
-        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
-
-        /* const read = JSON.parse(response);
-         if (this.id && read.uuid && this.id === read.uuid) {
-           this.substanceFormService.importSubstance(read, 'update');
-           this.submissionMessage = null;
-           this.validationMessages = [];
-           this.showSubmissionMessages = false;
-           this.loadingService.setLoading(false);
-           this.isLoading = false;
-         } else {
-         if ( read.substanceClass === this.substanceClass) {
-           this.imported = true;
-           this.substanceFormService.importSubstance(read);
-           this.submissionMessage = null;
-           this.validationMessages = [];
-           this.showSubmissionMessages = false;
-           this.loadingService.setLoading(false);
-           this.isLoading = false;
-         } else {*/
-        setTimeout(() => {
-          this.router.onSameUrlNavigation = 'reload';
-          this.loadingService.setLoading(false);
-          this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + this.showHeaderBar, { state: { record: response } });
-
-        }, 1000);
-      }
-      // }
-      // }
-    });
-
-  }
-
-  test() {
-    this.router.navigated = false;
-    this.router.navigate([this.router.url]);
-  }
-
   canBeApproved(): boolean {
     const action = this.activatedRoute.snapshot.queryParams['action'] || null;
     if (action && action === 'import') {
       return false;
     }
-    if (this.definition && this.definition.lastEditedBy && this.user) {
-      const lastEdit = this.definition.lastEditedBy;
-      if (!lastEdit) {
-        return false;
-      }
-      if (this.definition.status === 'approved') {
-        return false;
-      }
-      if (lastEdit === this.user) {
-        return false;
-      }
-      return true;
+    // if config var set and set to 'createdBy then set approval button enabled if user is not creator
+    if (this.approvalType === 'createdBy') {
+      if (this.definition && this.definition.createdBy && this.user) {
+        const creator = this.definition.createdBy;
+        if (!creator) {
+          return false;
+        }
+        if (this.definition.status === 'approved') {
+          return false;
+        }
+        if (creator === this.user) {
+          return false;
+        }
+        return true;
 
+      }
+      return false;
+      //default to 'lastEditedBy' if not set in config
+    } else {
+      if (this.definition && this.definition.lastEditedBy && this.user) {
+        const lastEdit = this.definition.lastEditedBy;
+        if (!lastEdit) {
+          return false;
+        }
+        if (this.definition.status === 'approved') {
+          return false;
+
+        }
+        if (lastEdit === this.user) {
+          return false;
+        }
+        return true;
+      }
     }
-    return false;
+
   }
 
   showJSON(): void {
@@ -449,29 +616,20 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     this.subscriptions.push(dialogSubscription);
   }
 
-  saveJSON(): void {
-    // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    this.json = this.substanceFormService.cleanSubstance();
-    // this.json = this.cleanObject(substanceCopy);
-    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(this.json)));
-    this.downloadJsonHref = uri;
-
-    const date = new Date();
-    this.jsonFileName = 'SSG4m_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
-  }
-
-  getSsg4mDetails(newType?: string): void {
-    /*
-    this.substanceSsg2Service.getSsg4mDetails(this.id).pipe(take(1)).subscribe(response => {
+  getSubstanceDetails(newType?: string): void {
+    this.substanceService.getSubstanceDetails(this.id).pipe(take(1)).subscribe(response => {
+      if (response._name) {
+        this.titleService.setTitle('Edit - ' + response._name);
+      }
       if (response) {
-        this.ssg4mSyntheticPathway = response;
-        let substanceSsg4mFromDb: SubstanceDetail;
-        if (response.sbmsnDataText) {
-          substanceSsg4mFromDb = JSON.parse(response.sbmsnDataText);
+        this.definitionType = response.definitionType;
+        if (newType) {
+          response = this.substanceFormService.switchType(response, newType);
         }
-        this.substanceClass = substanceSsg4mFromDb.substanceClass;
-        this.substanceFormService.loadSubstance(substanceSsg4mFromDb.substanceClass, substanceSsg4mFromDb).pipe(take(1)).subscribe(() => {
-          this.setFormSections(formSections[substanceSsg4mFromDb.substanceClass]);
+        this.substanceClass = response.substanceClass;
+        this.status = response.status;
+        this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+          this.setFormSections(formSections[response.substanceClass]);
         });
       } else {
         this.handleSubstanceRetrivalError();
@@ -479,12 +637,11 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       this.loadingService.setLoading(false);
       this.isLoading = false;
     }, error => {
-      this.gaService.sendException('getSsg4mDetails: error from API call');
+      this.gaService.sendException('getSubstanceDetails: error from API call');
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.handleSubstanceRetrivalError();
     });
-    */
   }
 
   jsonValid(file: any): boolean {
@@ -497,6 +654,9 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
   }
 
   getDetailsFromImport(state: any, same?: boolean) {
+    if (!this.jsonValid(state)) {
+      state = JSON.stringify(state);
+    }
     if (state && this.jsonValid(state)) {
       const response = JSON.parse(state);
       same = false;
@@ -504,7 +664,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       this.substanceClass = response.substanceClass;
       this.status = response.status;
       this.substanceFormService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
-        // this.substanceSsg4mService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
         this.setFormSections(formSections[response.substanceClass]);
         if (!same) {
           setTimeout(() => {
@@ -564,7 +723,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
           delete response._name;
         }
         this.scrub(response, type);
-        this.substanceSsg2Service.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+        this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
           this.setFormSections(formSections[response.substanceClass]);
           this.loadingService.setLoading(false);
           this.isLoading = false;
@@ -579,6 +738,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       this.handleSubstanceRetrivalError();
     });
   }
+
 
   private setFormSections(sectionNames: Array<string> = []): void {
     this.formSections = [];
@@ -601,7 +761,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       this.router.navigate(['/substances/register']);
-      this.substanceSsg2Service.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+      this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
         this.setFormSections(formSections.chemical);
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -618,33 +778,31 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
-    //  this.substanceSsg4mService.validateSsg4m().pipe(take(1)).subscribe(results => {
-    this.submissionMessage = null;
-    // this.validationMessages = results.validationMessages.filter(
-    //   message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-    this.validationMessages = [];
-    this.validationResult = true;
-    this.showSubmissionMessages = true;
-    this.loadingService.setLoading(false);
-    this.isLoading = false;
-    if (this.validationMessages.length === 0 && true === true) {
-      this.submissionMessage = 'Specified Substance Group 4 is Valid. Would you like to submit?';
-    }
-    if (validationType && validationType === 'approval') {
-      this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
-    }
-    //  }, error => {
-    //    this.addServerError(error);
-    this.loadingService.setLoading(false);
-    this.isLoading = false;
-    //   });
+    this.substanceFormService.validateSubstance().pipe(take(1)).subscribe(results => {
+      this.submissionMessage = null;
+      this.validationMessages = results.validationMessages.filter(
+        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+      this.validationResult = results.valid;
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      if (this.validationMessages.length === 0 && results.valid === true) {
+        this.submissionMessage = 'Substance is Valid. Would you like to submit?';
+      }
+      if (validationType && validationType === 'approval') {
+        this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
+      }
+    }, error => {
+      this.addServerError(error);
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    });
   }
 
-  /*
   approve(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    this.substanceSsg4mService.approveSubstance().pipe(take(1)).subscribe(response => {
+    this.substanceFormService.approveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
@@ -666,145 +824,19 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       }
     );
   }
-  */
-
-  validateSubstance(): Observable<ValidationResults> {
-    return new Observable(observer => {
-      // const substanceCopy = this.cleanSubstance();
-      // CHANGING THIS NOW CHANGING THIS NOW
-      const substanceCopy = null;
-      this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
-        // check for missing required reference fields and append a validationMessage
-        if (results.validationMessages) {
-          for (let i = 0; i < substanceCopy.references.length; i++) {
-            const ref = substanceCopy.references[i];
-            if (ref.docType !== 'SYSTEM') {
-              if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
-                const invalidReferenceMessage: ValidationMessage = {
-                  actionType: 'frontEnd',
-                  appliedChange: false,
-                  links: [],
-                  message: 'All references require a non-empty source type and text/citation value',
-                  messageType: 'WARNING',
-                  suggestedChange: true
-                };
-                results.validationMessages.push(invalidReferenceMessage);
-                break;
-              }
-            }
-          }
-          if (substanceCopy.properties) {
-            for (let i = 0; i < substanceCopy.properties.length; i++) {
-              const prop = substanceCopy.properties[i];
-              if (!prop.propertyType || !prop.name) {
-                const invalidPropertyMessage: ValidationMessage = {
-                  actionType: 'frontEnd',
-                  appliedChange: false,
-                  links: [],
-                  message: 'Property #' + (i + 1) + ' requires a non-empty name and type',
-                  messageType: 'ERROR',
-                  suggestedChange: true
-                };
-                results.validationMessages.push(invalidPropertyMessage);
-                results.valid = false;
-              }
-            }
-          }
-          if (substanceCopy.relationships) {
-            for (let i = 0; i < substanceCopy.relationships.length; i++) {
-              const relationship = substanceCopy.relationships[i];
-              if (!relationship.relatedSubstance || !relationship.type || relationship.type === '') {
-                const invalidRelationshipMessage: ValidationMessage = {
-                  actionType: 'frontEnd',
-                  appliedChange: false,
-                  links: [],
-                  message: 'Relationship  #' + (i + 1) + ' requires a non-empty related substance and type',
-                  messageType: 'ERROR',
-                  suggestedChange: true
-                };
-                results.validationMessages.push(invalidRelationshipMessage);
-                results.valid = false;
-              }
-            }
-          }
-          if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
-            for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
-              const prop = substanceCopy.polymer.monomers[i];
-              if (!prop.monomerSubstance || prop.monomerSubstance === {}) {
-                const invalidPropertyMessage: ValidationMessage = {
-                  actionType: 'frontEnd',
-                  appliedChange: false,
-                  links: [],
-                  message: 'Monomer #' + (i + 1) + ' requires a selected substance',
-                  messageType: 'ERROR',
-                  suggestedChange: true
-                };
-                results.validationMessages.push(invalidPropertyMessage);
-                results.valid = false;
-              }
-            }
-          }
-          if (substanceCopy.modifications && substanceCopy.modifications.physicalModifications) {
-            for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
-              const prop = substanceCopy.modifications.physicalModifications[i];
-              let present = false;
-              prop.parameters.forEach(param => {
-                if (param.parameterName) {
-                  present = true;
-                }
-              });
-
-              if (!prop.physicalModificationRole && !present) {
-                const invalidPropertyMessage: ValidationMessage = {
-                  actionType: 'frontEnd',
-                  appliedChange: false,
-                  links: [],
-                  message: 'Physical Modification #' + (i + 1) + ' requires a modification role or valid parameter',
-                  messageType: 'ERROR',
-                  suggestedChange: true
-                };
-                results.validationMessages.push(invalidPropertyMessage);
-                results.valid = false;
-              }
-            }
-          }
-        }
-        observer.next(results);
-        observer.complete();
-      }, error => {
-        observer.error();
-        observer.complete();
-      });
-    });
-  }
 
   submit(): void {
-    /*
     this.isLoading = true;
     this.approving = false;
     this.loadingService.setLoading(true);
-    this.json = this.substanceFormService.cleanSubstance();
-    let jsonValue = JSON.stringify(this.json);
-
-    // if New Record, initialize object
-    if (this.ssg4mSyntheticPathway == null) {
-      this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2eaee343-7271-44ae-b0b0-86370d43174e", "sbmsnDataText": jsonValue };
-    } else {
-      // Existing Record
-      // get the JSON from the SSG4m Form and store as a Clob into the database
-      this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
-    }
-
-    this.substanceSsg4mService.saveSsg4m(this.ssg4mSyntheticPathway).pipe(take(1)).subscribe(response => {
+    this.substanceFormService.saveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
       this.showSubmissionMessages = false;
       this.submissionMessage = '';
       if (!this.id) {
-        if (response) {
-          this.id = response.synthPathwaySkey.toString();
-        }
+        this.id = response.uuid;
       }
       this.openSuccessDialog();
     }, (error: SubstanceFormResults) => {
@@ -826,7 +858,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         }, 8000);
       }
     });
-    */
   }
 
   dismissValidationMessage(index: number) {
@@ -878,7 +909,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
 
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
-    if (this.substanceSsg2Service.isSubstanceUpdated) {
+    if (this.substanceFormService.isSubstanceUpdated) {
       $event.returnValue = true;
     }
   }
@@ -936,9 +967,16 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       }
     }
     defiant.json.search(old, '//*[uuid]');
-    _.remove(old.codes, {
-      codeSystem: 'BDNUM'
-    });
+    let remove = ['BDNUM'];
+    if (this.configService.configData && this.configService.configData.filteredDuplicationCodes) {
+      remove = this.configService.configData.filteredDuplicationCodes;
+    }
+    remove.forEach(code => {
+      _.remove(old.codes, {
+        codeSystem: code
+      });
+    })
+
     const createHolders = defiant.json.search(old, '//*[created]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
@@ -1010,13 +1048,13 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
 
-      this.substanceSsg2Service.bypassUpdateCheck();
+      this.substanceFormService.bypassUpdateCheck();
       if (response === 'continue') {
-        this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
-        // } else if (response === 'browse') {
-        //  this.router.navigate(['/browse-substance']);
+        this.router.navigate(['/substances', this.id, 'edit']);
+      } else if (response === 'browse') {
+        this.router.navigate(['/browse-substance']);
       } else if (response === 'view') {
-        this.router.navigate(['/substances-ssg4m', this.id]);
+        this.router.navigate(['/substances', this.id]);
       } else {
         this.submissionMessage = 'Substance was saved successfully!';
         if (type && type === 'approve') {
@@ -1027,13 +1065,14 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         setTimeout(() => {
           this.showSubmissionMessages = false;
           this.submissionMessage = '';
-          this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
+          this.router.navigate(['/substances', this.id, 'edit']);
         }, 3000);
       }
     });
     this.subscriptions.push(dialogSubscription);
 
   }
+
 
   mergeConcept() {
     this.feature = undefined;
@@ -1053,5 +1092,104 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
 
   fixLink(link: string) {
     return this.substanceService.oldLinkFix(link);
+  }
+
+
+  saveDraft(auto?: boolean) {
+    const json = this.substanceFormService.cleanSubstance();
+    const time = new Date().getTime();
+
+    const uuid = json.uuid ? json.uuid : 'register';
+    const type = json.substanceClass;
+    let primary = null;
+    json.names.forEach(name => {
+      if (name.displayName) {
+        primary = name.name;
+      }
+    });
+    if (!primary && json.names.length > 0) {
+      primary = json.names[0].name;
+    }
+    if (!auto) {
+      const file = 'gsrs-draft-' + time;
+
+      let draft = {
+        'uuid': uuid,
+        'date': time,
+        'type': type,
+        'name': primary,
+        'substance': json,
+        'auto': false,
+        'file': file
+      }
+
+      localStorage.setItem(file, JSON.stringify(draft));
+      this.draftCount++;
+
+    } else {
+      this.getDrafts();
+      let autos = this.drafts.filter(opt => {
+        return opt.auto;
+      });
+      let auto1 = null;
+      let auto2 = null;
+      let auto3 = null;
+      this.drafts.forEach(draft => {
+        if (draft.auto) {
+          if (draft.file === 'gsrs-draft-auto1') {
+            auto1 = draft;
+          }
+          if (draft.file === 'gsrs-draft-auto2') {
+            auto2 = draft;
+          }
+          if (draft.file === 'gsrs-draft-auto3') {
+            auto3 = draft;
+          }
+        }
+      });
+      let file = 'gsrs-draft-auto';
+
+      if (!auto1) {
+        file = 'gsrs-draft-auto1';
+        this.draftCount++;
+
+      } else if (!auto2) {
+        file = 'gsrs-draft-auto2';
+        this.draftCount++;
+
+      } else if (!auto3) {
+        file = 'gsrs-draft-auto3';
+        this.draftCount++;
+
+      } else {
+        if (auto1.date < auto2.date && auto1.date < auto3.date) {
+          file = 'gsrs-draft-auto1';
+        }
+        else if (auto2.date < auto1.date && auto2.date < auto3.date) {
+          file = 'gsrs-draft-auto2';
+        }
+        else {
+          file = 'gsrs-draft-auto3';
+        }
+      }
+
+      let draft = {
+        'uuid': uuid,
+        'date': time,
+        'type': type,
+        'name': primary,
+        'substance': json,
+        'auto': true,
+        'file': file
+      }
+
+      localStorage.setItem(file, JSON.stringify(draft));
+
+
+    }
+
+
+
+
   }
 }

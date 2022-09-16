@@ -93,6 +93,7 @@ import { Ssg4mSitesModule } from './substance-ssg4m/ssg4m-sites/ssg4m-sites.modu
 import { Ssg4mStagesModule } from './substance-ssg4m/ssg4m-stages/substance-form-ssg4m-stages.module';
 import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 import { SubstanceSsg2Module } from './substance-ssg2/substance-ssg2.module';
+import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module';
 
 @NgModule({
   declarations: [
@@ -183,7 +184,8 @@ import { SubstanceSsg2Module } from './substance-ssg2/substance-ssg2.module';
     MatProgressSpinnerModule,
     Ssg4mStagesModule,
     SubstanceFormSsg4mStartingMaterialsModule,
-    SubstanceSsg2Module
+    SubstanceSsg2Module,
+    Ssg2ManufacturingModule
   ],
   providers: [
     {

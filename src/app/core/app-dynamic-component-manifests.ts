@@ -412,5 +412,17 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'ssg4m-process-form',
     loadChildren: () => import('./substance-ssg4m/ssg4m-process/substance-form-ssg4m-process.module')
       .then(m => m.SubstanceSsg4mProcessModule)
+  },
+  {
+    componentId: 'substance-form-ssg2-manufacturing',
+    path: 'substance-form-ssg2-manufacturing',
+    loadChildren: () => import('./substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module')
+      .then(m => m.Ssg2ManufacturingModule)
+  },
+  {
+    componentId: 'substance-form-ssg2-overview',
+    path: 'substance-form-ssg2-overview',
+    loadChildren: () => import('./substance-ssg2/ssg2-overview-form/ssg2-overview-form.module')
+      .then(m => m.Ssg2OverviewFormModule)
   }
 ];
