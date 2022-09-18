@@ -266,7 +266,7 @@
           </mat-select>
         </mat-form-field>
         <mat-menu #exportMenu="matMenu">
-          <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.link.url, option.extension)">
+          <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.link.url, option)">
             {{option.displayname}}
           </a>
           <mat-checkbox class="menu-checkbox mat-menu-item"

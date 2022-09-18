@@ -582,12 +582,12 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
   }
 
-  export(url: string, extension: string) {
+  export(url: string, exportOption: any) {
     if (this.authService.getUser() !== '') {
       const dialogReference = this.dialog.open(ExportDialogComponent, {
         height: '215x',
         width: '550px',
-        data: { 'extension': extension }
+        data: exportOption
       });
 
       this.overlayContainer.style.zIndex = '1002';
