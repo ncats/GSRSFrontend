@@ -28,6 +28,7 @@ export class ConfigService {
     // This is the method you want to call at bootstrap
     // Important: It should return a Promise
     load(environment: Environment): Promise<any> {
+        console.log('loading');
         this._environment = environment;
         this._configData = null;
 
@@ -38,6 +39,7 @@ export class ConfigService {
             .get(configFilePath)
             .toPromise()
             .then((config: Config) => {
+                console.log(config);
                 if (config.apiBaseUrl == null && environment.apiBaseUrl != null) {
                     config.apiBaseUrl = environment.apiBaseUrl;
                 }

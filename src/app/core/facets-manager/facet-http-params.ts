@@ -11,6 +11,7 @@ export class FacetHttpParams extends HttpParams {
         let clone = new FacetHttpParams({ fromString: super.toString() , encoder: new CustomEncoder()});
         let hasDeprecated = false;
         if (facets != null) {
+            console.log(facets);
             const facetsKeys = Object.keys(facets);
             facetsKeys.forEach(facetKey => {
                 if (facets[facetKey] != null) {

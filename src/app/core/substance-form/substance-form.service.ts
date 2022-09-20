@@ -13,7 +13,7 @@ import {
   Sugar,
   Linkage,
   NucleicAcid,
-  StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification
+  StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification, SubstanceSummary
 } from '../substance/substance.model';
 import {
   SequenceUnit,
@@ -56,6 +56,7 @@ export class SubstanceFormService implements OnDestroy {
   private _bypassUpdateCheck = false;
   private method?: string;
   private previousHash?: number;
+  storedRelated = {};
 
   constructor(
     private substanceService: SubstanceService,
@@ -68,6 +69,15 @@ export class SubstanceFormService implements OnDestroy {
   ngOnDestroy() {
     this.unloadSubstance();
   }
+
+  getStoredRelated(header: string) {
+    return (this.storedRelated && this.storedRelated[header]) ? this.storedRelated[header] : null;
+  }
+
+  setStoredRelated(substance: SubstanceSummary, header: string) {
+    this.storedRelated[header] = substance;
+
+    }
 
   loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean): Observable<void> {
     if (method) {

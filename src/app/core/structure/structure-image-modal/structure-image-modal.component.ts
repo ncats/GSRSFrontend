@@ -3,6 +3,7 @@ import { UtilsService } from '../../utils/utils.service';
 import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 import { SafeUrl } from '@angular/platform-browser';
 import { StructureService } from '../structure.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-structure-image-modal',
@@ -18,10 +19,13 @@ export class StructureImageModalComponent implements OnInit {
   uuid: string;
   displayName: string;
   names: string[] = [];
+  showSelector =false;
+  showSubstanceSelector = false;
   constructor(
     private utilsService: UtilsService,
     private structureService: StructureService,
     public dialogRef: MatDialogRef<StructureImageModalComponent>,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
@@ -52,10 +56,51 @@ export class StructureImageModalComponent implements OnInit {
     if (this.data && this.data.displayName) {
       this.displayName = this.data.displayName;
     }
+
+    if (this.data.component && this.data.component === 'selector') {
+      this.showSelector = true;
+    }
+
+    if (this.data.component && this.data.component === 'substanceSelector') {
+      this.showSubstanceSelector = true;
+    }
   }
 
   dismissDialog(): void {
     this.dialogRef.close();
+  }
+
+
+
+
+
+  setMolfile(): void {
+    
+    this.dialogRef.close('molfile');
+  }
+  
+  selectSubstance(): void {
+    this.dialogRef.close('select');
+
+  }
+
+  gotoDetails(): void {
+    this.dialogRef.close();
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/substances/' + this.uuid])
+    );
+  
+    window.open(url, '_blank');
+   // this.router.navigate(['/substances/' + this.uuid]);
+  }
+
+  gotoEdit(): void {
+    this.dialogRef.close();
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/substances/' + this.uuid + '/edit'])
+    );
+  
+    window.open(url, '_blank');
   }
 
 }

@@ -1,0 +1,204 @@
+
+<mat-tab-group [selectedIndex] = "activeTab" (selectedTabChange)="onTabChanged($event)" class = "tab-group">
+    <mat-tab  label= "Structure Search">
+
+
+  <div class = "form-row upper-padding">
+    <div class="editor-container">
+        <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)"></app-structure-editor>
+        
+      </div>
+
+
+
+    <div class="search-actions">
+        <div class="two">
+
+              <mat-radio-group class = 'type'(change) = 'updateType($event)'>
+                <span class = "radio-label">Search Type</span>
+                  <mat-radio-button class = 'search-radio' value = 'substructure' [checked] = 'true'>Substructure</mat-radio-button>
+                  <mat-radio-button class = 'search-radio' value = 'similarity'>Similarity</mat-radio-button>
+                  <mat-radio-button class = 'search-radio' value = 'exact' >Exact</mat-radio-button>
+                  <mat-radio-button class = 'search-radio' value = 'flex' >Flex</mat-radio-button>
+                  </mat-radio-group>
+            
+              <div *ngIf = "searchType === 'substructure'">
+                  <div>
+                    <button mat-button mat-flat-button  (click) = "standardize('ADD_HYDROGENS')">Add Explicit Hydrogens</button>
+                  </div>
+                    <div>
+                        <button  mat-button mat-flat-button   (click) = "standardize('STEREO_FLATTEN')">Remove Stereochemistry Bonds</button>
+                      </div>
+                  </div>
+                  <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
+                    <div>Similarity cutoff (tanimoto)</div>
+                    <mat-slider min=".40" max="1" step="0.01" [value]="similarityCutoff" (input)="searchCutoffChanged($event)"></mat-slider>
+                    <div>{{similarityCutoff}}</div>
+                  </div>
+        </div>
+        <div class = "action-button-container">
+          <div class="action-button-container three">
+            <button class="search-button" name = "search" mat-raised-button color="primary" (click)="search()" style = "font-size: 18px;">Search</button>
+          </div>
+          <div class="action-button-container one">
+            <button class="import-button" name = "export" mat-raised-button color="primary">Import</button>
+          </div>
+          <div class="action-button-container one">
+            <button class="export-button" name = "import" mat-raised-button color="primary" >Export</button>
+          </div>
+      </div>
+      </div>
+  </div>
+
+
+
+
+  <div *ngIf = "!totalSubstances || totalSubstances < 1" >
+    <h4>
+      Get Structure From Name
+    </h4>
+    <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
+  </div>
+
+  <div class = "form-row paginator-row" *ngIf = "totalSubstances && totalSubstances > 0">
+      <button mat-button (click) = "navigateToBrowseSubstance('structure')">
+          View in browse page <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
+      </button>
+       <span class = "middle-fill"></span>
+      <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+    </mat-paginator>
+  </div>
+
+  <div class = "form-row2">
+        <mat-card *ngFor="let substance of substances" class="tile">
+                <mat-card-title>
+                  <div class='tile-title'>
+                    <a class="approval-id">
+                      {{substance.approvalID}}
+                    </a>
+                  </div>
+                </mat-card-title>
+    
+                <mat-card-content>
+    <div class="substance-content">
+        <div class="structure-container">
+            <div *ngIf="substance.structure">
+                <div class="mat-chip-list-container-2" *ngIf="substance.structure.stereochemistry">
+                  <mat-chip-list selectable="false" multiple="false">
+                    <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+              </div>
+              <div *ngIf="!substance.structure">
+                <div class="mat-chip-list-container-2">
+                  <mat-chip-list selectable="false" multiple="false">
+                    <mat-chip color="primary" selected>{{substance.substanceClass}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+              </div>
+          <div class="image-thumbnail">
+            <div *ngIf="substance.structure || substance.polymer">
+              <a class="zoom" (click)="openImageModal(substance)">
+                <img appSubstanceImage [entityId]="substance.uuid"
+                  [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
+              </a>
+            </div>
+            <div *ngIf="!substance.structure && !substance.polymer">
+              <img class="image-other" appSubstanceImage [entityId]="substance.uuid" size="175"
+                [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
+            </div>
+          </div>
+          <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
+            <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
+          </div>
+          <div class="tile-name">
+            <a class="substance-name table-view-name" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+      </mat-card-content>
+      </mat-card>
+
+
+      
+  </div>
+</mat-tab>
+<mat-tab label= "Name Search">
+  
+  <div class = "form-row" style = "margin-top: 15px;">
+  <app-substance-text-search class="top-search" [searchValue]="searchValue" placeholder = "Search Substances"
+    (searchPerformed)="nameSearch($event)" eventCategory="selectorSearch" 
+    >
+  </app-substance-text-search>
+</div>
+
+  <div class = "form-row paginator-row" *ngIf = "totalSubstances && totalSubstances > 0">
+      <button mat-button (click) = "navigateToBrowseSubstance('names')">
+          View in browse page <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
+      </button>
+      <span class = "middle-fill"></span>
+      <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+    </mat-paginator>
+  </div>
+
+  <div class = "form-row2">
+      <mat-card *ngFor="let substance of substances" class="tile">
+              <mat-card-title>
+                <div class='tile-title'>
+                  <a class="approval-id">
+                    {{substance.approvalID}}
+                  </a>
+                </div>
+              </mat-card-title>
+  
+              <mat-card-content>
+  <div class="substance-content">
+      <div class="structure-container">
+          <div *ngIf="substance.structure">
+              <div class="mat-chip-list-container-2" *ngIf="substance.structure.stereochemistry">
+                <mat-chip-list selectable="false" multiple="false">
+                  <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
+                </mat-chip-list>
+              </div>
+            </div>
+            <div *ngIf="!substance.structure">
+              <div class="mat-chip-list-container-2">
+                <mat-chip-list selectable="false" multiple="false">
+                  <mat-chip color="primary" selected>{{substance.substanceClass}}</mat-chip>
+                </mat-chip-list>
+              </div>
+            </div>
+        <div class="image-thumbnail">
+          <div *ngIf="substance.structure || substance.polymer">
+            <a class="zoom" (click)="openImageModal(substance)">
+              <img appSubstanceImage [entityId]="substance.uuid"
+                [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
+            </a>
+          </div>
+          <div *ngIf="!substance.structure && !substance.polymer">
+            <img class="image-other" appSubstanceImage [entityId]="substance.uuid" size="175"
+              [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
+          </div>
+        </div>
+        <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
+          <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
+        </div>
+        <div class="tile-name">
+          <a class="substance-name table-view-name" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+    </mat-card-content>
+    </mat-card>
+      
+    </div>
+</mat-tab>
+</mat-tab-group>

@@ -46,6 +46,20 @@
       </mat-tab>
     </mat-tab-group>
   </div>
+  <div *ngIf = "showSelector" class = "button-row">
+    <button mat-flat-button color="primary" class = "modal-button"  (click) = "setMolfile()">Search Structure</button>
+    <button mat-flat-button color="primary" class = "modal-button"  (click) = "selectSubstance()">Select Substance</button>
+    <span class = "middle-fill"></span>
+    <button  class = "modal-button"  mat-flat-button color="primary" (click)="dialogRef.close()">Close</button>
+
+  </div>
+
+  <div *ngIf = "showSubstanceSelector" class = "button-row">
+      <a mat-button color="primary"  class = "modal-button" target = "_blank" (click) = "gotoDetails()">Substance Details <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
+      <a mat-button color="primary" class = "modal-button"  (click) = "gotoEdit()">Substance Edit <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
+      <span class = "middle-fill"></span>
+      <a  class = "modal-button" mat-button color="primary" (click)="dialogRef.close()">Close</a>
+    </div>
 </div>
 <!-- <div mat-dialog-actions class='flex-row'>
   <span class="middle-fill"></span>

@@ -22,22 +22,40 @@
       <button mat-mini-fab (click)="delete()" matTooltip="delete" class="undo">
         <mat-icon aria-label="delete selection" svgIcon="cancel"></mat-icon>
       </button>
+      <button mat-mini-fab (click)="StoreSelection()" matTooltip="Store as default relationship" class="undo">
+        <mat-icon aria-label="Store as default substance for relationship type" svgIcon="move_to_inbox"></mat-icon>
+      </button>
     </div>
     <div class="section-header">{{header}}</div>
+    <a class="zoom" (click)="openImageModal(substance)">
     <img class="related-image" *ngIf="selectedSubstance.uuid && !hideImage" appSubstanceImage
-      [entityId]="selectedSubstance.uuid">
+      [entityId]="selectedSubstance.uuid"></a>
     <div>
       {{selectedSubstance._name}}
       <span class='code' *ngIf="errorMessage === 'Not in database'"><br />NOT IN DATABASE</span>
     </div>
-  </div>
-  <span class='code' *ngIf="errorMessage === 'No substances found'"><br />NO SUBSTANCES FOUND</span>
+    <div  >
+      <a  style = "color: #1565c0;font-weight:550;" (click)="!!editSelectedSubstance()">Change Selection</a> <br/>
+      
 
+    </div>
+    
+  </div>
+  <div  *ngIf="previousSubstance && !selectedSubstance">
+      <a (click) = "revertEdit()"  style = "color: #1565c0;font-weight:550;margin-top:5px">Cancel and Revert</a>
+    </div>
+  <div class = "centered">
+      <a style = "color: #1565c0;font-weight:550;margin-top:3px; margin-right: 10px;" (click)="advanced('structure')">Structure Search</a>
+      <a style = "color: #1565c0;font-weight:550;margin-top:3px;" (click)="advanced('name')">Name Search</a>
+    
+  </div>
+  
+  <span class='code' *ngIf="errorMessage === 'No substances found'"><br />NO SUBSTANCES FOUND</span>
   <!-- Adding Edit, Register, and Structure links-->
   <div class="divflex" *ngIf="showMorelinks">
     <div class="marginright10px" *ngIf="selectedSubstance && selectedSubstance.uuid">
       <!-- Change Selection -->
-      <a href="" (click)="!!editSelectedSubstance()">Change Selection</a>
+      <a style = "color: #1565c0;font-weight:550;text-decoration: underline" (click)="!!editSelectedSubstance()">Change Selection</a>
     </div>
     <div class="marginright10px" *ngIf="errorMessage">
       <!-- Register Subtance -->

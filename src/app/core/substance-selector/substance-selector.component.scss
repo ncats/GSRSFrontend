@@ -7,6 +7,21 @@
     width: 100%;
 }
 
+.zoom {
+    cursor: zoom-in !important;
+}
+
+.zoom :hover {
+    cursor: zoom-in !important;
+
+}
+
+.centered {
+    text-align: center;
+    margin-left: -42px;
+    margin-top: 5px;
+}
+
 .selected-substance {
     display: flex;
     flex-direction: column;
@@ -25,12 +40,18 @@
     margin-top: -5px;
 }
 
+
+.selected-substance-options:hover { 
+    cursor: zoom-in !important;
+}
+
 .selected-substance-options {
     position: absolute;
     right: 5px;
     top: 15px;
     display: flex;
     flex-direction: column;
+    cursor: zoom-in !important;
 
     .mat-mini-fab {
         background-color: rgba(242, 242, 242, .85);
