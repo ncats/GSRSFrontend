@@ -69,11 +69,6 @@ export class BaseComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private wildCardService: WildcardService
   ) {
-    this.classicLinkPath = this.configService.environment.clasicBaseHref;
-    this.classicLinkQueryParamsString = '';
-    this.contactEmail = this.configService.configData.contactEmail;
-    this.clasicBaseHref = this.configService.environment.clasicBaseHref;
-    this.navItems = this.configService.configData.navItems;
     this.wildCardService.wildCardObservable.subscribe((data) => {
       this.wildCardText = data;
     });
@@ -140,6 +135,12 @@ export class BaseComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadedComponents = this.configService.configData.loadedComponents || null;
+
+    this.classicLinkPath = this.configService.environment.clasicBaseHref;
+    this.clasicBaseHref = this.configService.environment.clasicBaseHref;
+    this.classicLinkQueryParamsString = '';
+    this.contactEmail = this.configService.configData.contactEmail || null;
+    this.navItems = this.configService.configData.navItems || null;
 
   let notempty = false;
     if (this.loadedComponents) {
