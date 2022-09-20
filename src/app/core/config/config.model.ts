@@ -47,6 +47,7 @@ export interface Config {
     ssg4Form?: string;
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
+    authenticateAs?: AuthenticateAs;
 }
 
 export interface LoadedComponents {
@@ -91,4 +92,11 @@ export interface UsefulLink {
     imageFile: string;
     linkHref: string;
     templateDescription?: string;
+}
+
+export interface AuthenticateAs {
+    apiUsername?: string,
+    apiPassword?: string,
+    apiKey?: string,
+    apiToken?: string;
 }
