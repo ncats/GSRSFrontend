@@ -19,27 +19,29 @@ export class AuthInterceptor implements HttpInterceptor {
 
             // Reading from config file, and adding additional header
             if (this.configService.configData) {
-                if (this.configService.configData.authenticateAs.apiUsername !== null) {
-                    req = req.clone({
-                        headers: req.headers.set('auth-username', this.configService.configData.authenticateAs.apiUsername)
-                    });
-                }
-                if (this.configService.configData.authenticateAs.apiPassword !== null) {
-                    req = req.clone({
-                        headers: req.headers.set('auth-password', this.configService.configData.authenticateAs.apiPassword)
-                    });
-                }
+                if (this.configService.configData.authenticateAs) {
+                    if (this.configService.configData.authenticateAs.apiUsername !== null) {
+                        req = req.clone({
+                            headers: req.headers.set('auth-username', this.configService.configData.authenticateAs.apiUsername)
+                        });
+                    }
+                    if (this.configService.configData.authenticateAs.apiPassword !== null) {
+                        req = req.clone({
+                            headers: req.headers.set('auth-password', this.configService.configData.authenticateAs.apiPassword)
+                        });
+                    }
 
-                if (this.configService.configData.authenticateAs.apiKey !== null) {
-                    req = req.clone({
-                        headers: req.headers.set('auth-key', this.configService.configData.authenticateAs.apiKey)
-                    });
-                }
+                    if (this.configService.configData.authenticateAs.apiKey !== null) {
+                        req = req.clone({
+                            headers: req.headers.set('auth-key', this.configService.configData.authenticateAs.apiKey)
+                        });
+                    }
 
-                if (this.configService.configData.authenticateAs.apiToken !== null) {
-                    req = req.clone({
-                        headers: req.headers.set('auth-token', this.configService.configData.authenticateAs.apiToken)
-                    });
+                    if (this.configService.configData.authenticateAs.apiToken !== null) {
+                        req = req.clone({
+                            headers: req.headers.set('auth-token', this.configService.configData.authenticateAs.apiToken)
+                        });
+                    }
                 }
 
             } // configData end
