@@ -17,43 +17,47 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (isPlatformBrowser(this.platformId)) {
 
-            // Reading from config file, and adding additional header
-            if (this.configService.configData) {
-                if (this.configService.configData.authenticateAs) {
-                    if (this.configService.configData.authenticateAs.apiUsername !== null) {
-                        req = req.clone({
-                            headers: req.headers.set('auth-username', this.configService.configData.authenticateAs.apiUsername)
-                        });
-                    }
-                    if (this.configService.configData.authenticateAs.apiPassword !== null) {
-                        req = req.clone({
-                            headers: req.headers.set('auth-password', this.configService.configData.authenticateAs.apiPassword)
-                        });
-                    }
+            try {
+                // Reading from config file, and adding additional header
+                if (this.configService.configData) {
+                    if (this.configService.configData.authenticateAs) {
+                        if (this.configService.configData.authenticateAs.apiUsername) {
+                            req = req.clone({
+                                headers: req.headers.set('auth-username', this.configService.configData.authenticateAs.apiUsername)
+                            });
+                        }
+                        if (this.configService.configData.authenticateAs.apiPassword) {
+                            req = req.clone({
+                                headers: req.headers.set('auth-password', this.configService.configData.authenticateAs.apiPassword)
+                            });
+                        }
 
-                    if (this.configService.configData.authenticateAs.apiKey !== null) {
-                        req = req.clone({
-                            headers: req.headers.set('auth-key', this.configService.configData.authenticateAs.apiKey)
-                        });
-                    }
+                        if (this.configService.configData.authenticateAs.apiKey) {
+                            req = req.clone({
+                                headers: req.headers.set('auth-key', this.configService.configData.authenticateAs.apiKey)
+                            });
+                        }
 
-                    if (this.configService.configData.authenticateAs.apiToken !== null) {
-                        req = req.clone({
-                            headers: req.headers.set('auth-token', this.configService.configData.authenticateAs.apiToken)
-                        });
+                        if (this.configService.configData.authenticateAs.apiToken) {
+                            req = req.clone({
+                                headers: req.headers.set('auth-token', this.configService.configData.authenticateAs.apiToken)
+                            });
+                        }
                     }
+                } // configData end
+
+                const authToken = sessionStorage.getItem('authToken');
+                if (authToken) {
+                    req = req.clone({
+                        headers: req.headers.set('auth-token', authToken)
+                    });
                 }
 
-            } // configData end
-
-            const authToken = sessionStorage.getItem('authToken');
-            if (authToken) {
-                req = req.clone({
-                    headers: req.headers.set('auth-token', authToken)
-                });
+            } catch (e) {
+                console.log('ERROR in intercept function: ' + e);
             }
 
-            return next.handle(req);
         }
+        return next.handle(req);
     }
 }

@@ -2,9 +2,10 @@ import { Injectable, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '@gsrs-core/auth';
 import { UtilsService } from '@gsrs-core/utils';
+import { ConfigService } from '@gsrs-core/config/config.service';
 
 @Injectable()
-export class SsoRefreshService implements OnDestroy   {
+export class SsoRefreshService implements OnDestroy {
   private iframe: HTMLIFrameElement;
   private refreshInterval: any;
   private baseHref: string;
@@ -12,7 +13,8 @@ export class SsoRefreshService implements OnDestroy   {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private authService: AuthService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private configService: ConfigService
   ) {
     if (isPlatformBrowser(this.platformId)) {
       this.iframe = document.createElement('IFRAME') as HTMLIFrameElement;
@@ -27,24 +29,28 @@ export class SsoRefreshService implements OnDestroy   {
         this.baseHref = '/ginas/app/beta/';
       }
     }
-  }
+}
 
-  init(): any {
-    this.authService.getAuth().subscribe(auth => {
-      if (auth != null && this.refreshInterval == null) {
-        clearInterval(this.refreshInterval);
-        this.refreshInterval = setInterval(() => {
-          this.iframe.src = `${this.baseHref || ''}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
-        }, 120000);
-      } else {
-        clearInterval(this.refreshInterval);
-        this.refreshInterval = null;
+init(): any {
+  this.authService.getAuth().subscribe(auth => {
+    if (auth != null && this.refreshInterval == null) {
+      const homeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || null;
+      if (homeBaseUrl) {
+        this.baseHref = homeBaseUrl;
       }
-    });
-  }
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = setInterval(() => {
+        this.iframe.src = `${this.baseHref || ''}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
+      }, 120000);
+    } else {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    }
+  });
+}
 
-  ngOnDestroy() {
-    clearInterval(this.refreshInterval);
-    this.refreshInterval = null;
-  }
+ngOnDestroy() {
+  clearInterval(this.refreshInterval);
+  this.refreshInterval = null;
+}
 }
