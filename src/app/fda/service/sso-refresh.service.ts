@@ -10,6 +10,7 @@ export class SsoRefreshService implements OnDestroy {
   private refreshInterval: any;
   private baseHref: string;
 
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private authService: AuthService,
@@ -17,18 +18,25 @@ export class SsoRefreshService implements OnDestroy {
     private configService: ConfigService
   ) {
     if (isPlatformBrowser(this.platformId)) {
-      this.iframe = document.createElement('IFRAME') as HTMLIFrameElement;
-      this.iframe.title = 'page refresher';
-      this.iframe.name = 'refresher';
-      this.iframe.style.height = '0';
-      this.iframe.style.opacity = '0';
-      this.iframe.src = `/assets/refresh/refresh.html`;
-      document.body.appendChild(this.iframe);
-
+     
       if (window.location.pathname.indexOf('/ginas/app/beta/') > -1) {
         this.baseHref = '/ginas/app/beta/';
       }
     }
+}
+
+updateIframe(): any {
+      if(!this.iframe){
+        this.iframe = document.createElement('IFRAME') as HTMLIFrameElement;
+        this.iframe.title = 'page refresher';
+        this.iframe.name = 'refresher';
+        this.iframe.style.height = '0';
+        this.iframe.style.opacity = '0';
+        this.iframe.src = `${this.baseHref || ''}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
+        document.body.appendChild(this.iframe);
+      }else{
+        this.iframe.src = `${this.baseHref || ''}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
+      }
 }
 
 init(): any {
@@ -37,10 +45,11 @@ init(): any {
       const homeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || null;
       if (homeBaseUrl) {
         this.baseHref = homeBaseUrl;
+        updateIframe();
       }
       clearInterval(this.refreshInterval);
       this.refreshInterval = setInterval(() => {
-        this.iframe.src = `${this.baseHref || ''}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
+        updateIframe();
       }, 120000);
     } else {
       clearInterval(this.refreshInterval);
