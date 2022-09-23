@@ -1,6 +1,7 @@
 export interface Config {
     apiBaseUrl?: string;
-    apiSecondBaseUrl?: string;
+    gsrsHomeBaseUrl?: string;
+    apiSSG4mBaseUrl?: string;
     apiUrlDomain?: string;
     googleAnalyticsId?: string;
     version?: string;

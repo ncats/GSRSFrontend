@@ -62,7 +62,7 @@ export class SubstanceSsg4mService implements OnDestroy {
   private _bypassUpdateCheck = false;
   private method?: string;
 
-  apiBaseUrlSsg4mEntityUrl = this.configService.configData.apiSecondBaseUrl + 'api/v1/ssg4m' + '/';
+  apiBaseUrlSsg4mEntityUrl = this.configService.configData.apiSSG4mBaseUrl + 'api/v1/ssg4m' + '/';
 
   constructor(
     private substanceService: SubstanceService,
