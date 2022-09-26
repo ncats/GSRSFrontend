@@ -585,8 +585,9 @@ searchTermOkforBeginsWithSearch(): boolean {
   export(url: string, extension: string) {
     if (this.authService.getUser() !== '') {
       const dialogReference = this.dialog.open(ExportDialogComponent, {
-        height: '215x',
-        width: '550px',
+        maxHeight: '80%',
+        
+        width: '60%',
         data: { 'extension': extension }
       });
 

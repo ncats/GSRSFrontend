@@ -1,5 +1,39 @@
 
-        <h2 matDialogTitle>Enter a Filename</h2>
+  <div mat-dialog-header class = "top-label">
+      <div style = "width:100%;display:flex;flex-direction:row;">
+     
+         <mat-form-field style = "width: 250px" class="testing">
+                <mat-label>Use Export Options: </mat-label> 
+            <mat-select  name = "fileType" >
+                    <mat-option value="JSON" > Example Value
+                    </mat-option>
+                    <mat-option value="SD-default" > Second Example Value
+                    </mat-option>
+                    <mat-option value="SD" >
+                            Third Example Value
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+    
+       
+           <div style = "margin-top: 10px;margin-left: 50px;">
+               <button style = "" mat-flat-button color="primary" (click) = "showOptions = !showOptions">Edit</button>
+        </div> 
+        </div>
+        
+        </div>
+   <mat-dialog-content>
+   <mat-tab-group selectedIndex = "1"  class = "tab-group" *ngIf = "showOptions">
+        <mat-tab  label= "JSON Export Options" disabled = "true"></mat-tab> 
+
+    <mat-tab  label= "Scrubbing" style = "margin-bottom:10px;">
+         
+    <br/>
+    
+    <sf-form [schema]="mySchema"  [(model)]="model" (onChange)="setValue($event.value)" style = "margin-top:15px;"></sf-form>
+    
+    
+    <!--   <h2 matDialogTitle>Enter a Filename</h2>
         <div class = "padding">
             Preparing download. Please enter a file name.
         </div>
@@ -10,9 +44,29 @@
                 </mat-form-field>  
             </div>
             <div class = "format">.{{extension}}</div>
-        </div>
-        <mat-dialog-actions align="end">
+        </div>-->
+        
+
+    </mat-tab>
+    <mat-tab  label= "Advanced" disabled = "true"></mat-tab> 
+    </mat-tab-group>
+    <div style = "width:100%;display:flex;flex-direction:row;margin-top:15px">
+            <div class = "padding" style = "margin-right: 10px;">
+                Please enter a file name.
+            </div>
+            <div class = "dialog-row">
+                <div>
+                    <mat-form-field class = "name-form">
+                        <input matInput class = "name-field" type="text" placeholder="Filename" [(ngModel)] = "name">
+                    </mat-form-field>  
+                </div>
+                <div class = "format">.{{extension}}</div>
+            </div>
+            </div>
+</mat-dialog-content>
+    <mat-dialog-actions align="end">
             <button mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
             <span class="middle-fill"></span>
-            <button mat-flat-button color="primary" (click) = "save()">Save</button>
+            <button mat-flat-button color="primary" disabled (click) = "save()" style = "margin-right:15px;">Save Settings</button>
+            <button mat-flat-button color="primary" (click) = "save()">Export</button>
         </mat-dialog-actions>

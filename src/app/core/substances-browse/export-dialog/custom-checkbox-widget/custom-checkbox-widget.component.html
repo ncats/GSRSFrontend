@@ -1,0 +1,31 @@
+<div class="widget form-group">
+  <!--  <label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
+        TESTING
+    </label>-->
+	<div *ngIf="schema.type!='array'" class="checkbox" [ngClass] ="schema.visibleIf ? 'tabbed': ''" > 
+		<label class="horizontal control-label" [matTooltip] = "schema.comments">
+            <span style = "width:24px; height: 24px; display:inline-block; vertical-align: bottom">
+                    <mat-icon *ngIf = "schema.children && control.value !== true" svgIcon="chevron_right"></mat-icon>
+                    <mat-icon *ngIf = "schema.children && control.value === true" svgIcon="chevron_down"></mat-icon>
+
+            </span>
+			<input [formControl]="control" [attr.name]="name" [attr.id]="id"  type="checkbox" [disableControl]="schema.readOnly">
+			<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+			{{schema.title ? schema.title : schema.description}}
+		</label>
+	</div>
+	<ng-container *ngIf="schema.type==='array'">
+		<div *ngFor="let option of schema.items.oneOf" class="checkbox">
+			<label class="horizontal control-label">
+				<input [attr.name]="name"
+					value="{{option.enum[0]}}" type="checkbox" 
+					[attr.disabled]="schema.readOnly"
+					(change)="onCheck($event.target)"
+					[attr.checked]="checked[option.enum[0]] ? true : null"
+					[attr.id]="id + '.' + option.enum[0]"
+					>
+				{{option.description}}
+			</label>
+		</div>
+	</ng-container>
+</div>

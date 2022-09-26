@@ -94,7 +94,14 @@ import { Ssg4mStagesModule } from './substance-ssg4m/ssg4m-stages/substance-form
 import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 import { SubstanceSsg2Module } from './substance-ssg2/substance-ssg2.module';
 import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module';
-
+import { CustomCheckboxWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-checkbox-widget/custom-checkbox-widget.component';
+import {
+  WidgetRegistry,
+  DefaultWidgetRegistry,
+  SchemaFormModule,
+} from "ngx-schema-form";
+import { MyWidgetRegistry } from '@gsrs-core/substances-browse/export-dialog/custom-checkbox-widget/custom-checkbox-registry';
+import { CustomTextWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-text-widget/custom-text-widget.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -120,7 +127,9 @@ import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent,
     NamesDisplayPipe,
-    SubstanceStatusPipe
+    SubstanceStatusPipe,
+    CustomCheckboxWidgetComponent,
+    CustomTextWidgetComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -185,13 +194,16 @@ import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg
     Ssg4mStagesModule,
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceSsg2Module,
-    Ssg2ManufacturingModule
+    Ssg2ManufacturingModule,
+    SchemaFormModule.forRoot(),
+    
   ],
   providers: [
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler
     },
+    { provide: WidgetRegistry, useClass: DefaultWidgetRegistry },
     CanActivateAdminPage,
     ConfigService,
     {
@@ -200,7 +212,8 @@ import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg
         deps: [ConfigService],
         multi: true
     },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {provide: WidgetRegistry, useClass: MyWidgetRegistry}
   ],
   bootstrap: [AppComponent],
   entryComponents: [
@@ -208,7 +221,9 @@ import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg
     ExportDialogComponent,
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
-    ShowMolfileDialogComponent
+    ShowMolfileDialogComponent,
+    CustomCheckboxWidgetComponent,
+    CustomTextWidgetComponent
   ],
   exports: [
     StructureEditorModule,

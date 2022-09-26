@@ -425,6 +425,8 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
+ 
+
   private getAsyncSearchResults(
     querySearchTerm: string,
     structureSearchKey: string,
@@ -742,6 +744,12 @@ export class SubstanceService extends BaseHttpService {
   }
   getConstituentParent(id: string) {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search?q=root_specifiedSubstance_constituents_substance_refuuid:"${id}"`;
+    return this.http.get< any>(url);
+  }
+
+
+  getSchema(type?: string) {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/scrubber/@schema`;
     return this.http.get< any>(url);
   }
 }
