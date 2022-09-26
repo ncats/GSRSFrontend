@@ -20,7 +20,7 @@ export class SsoRefreshService implements OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
 
       if (window.location.pathname.indexOf('/ginas/app/beta/') > -1) {
-        this.baseHref = '/ginas/app/beta/';
+        this.baseHref = '/ginas/app/';
       }
     }
   }
@@ -32,10 +32,10 @@ export class SsoRefreshService implements OnDestroy {
       this.iframe.name = 'refresher';
       this.iframe.style.height = '0';
       this.iframe.style.opacity = '0';
-      this.iframe.src = `${this.baseHref || ''}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
+      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}`;
       document.body.appendChild(this.iframe);
     } else {
-      this.iframe.src = `${this.baseHref || ''}assets/refresh/refresh.html?key=${this.utilsService.newUUID()}`;
+      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}`;
     }
   }
 
