@@ -4,6 +4,7 @@ import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 import { SafeUrl } from '@angular/platform-browser';
 import { StructureService } from '../structure.service';
 import { Router } from '@angular/router';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-structure-image-modal',
@@ -23,6 +24,7 @@ export class StructureImageModalComponent implements OnInit {
   showSubstanceSelector = false;
   constructor(
     private utilsService: UtilsService,
+    private configService: ConfigService,
     private structureService: StructureService,
     public dialogRef: MatDialogRef<StructureImageModalComponent>,
     private router: Router,
@@ -85,22 +87,34 @@ export class StructureImageModalComponent implements OnInit {
   }
 
   gotoDetails(): void {
+    let url = '';
     this.dialogRef.close();
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/substances/' + this.uuid])
-    );
-  
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + this.uuid;
+      
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/substances/' + this.uuid])
+      );
+    }
     window.open(url, '_blank');
-   // this.router.navigate(['/substances/' + this.uuid]);
   }
 
   gotoEdit(): void {
+    let url = '';
     this.dialogRef.close();
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/substances/' + this.uuid + '/edit'])
-    );
-  
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + this.uuid + '/edit';
+      
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/substances/' + this.uuid + '/edit'])
+      );
+    }
     window.open(url, '_blank');
+
   }
+
+
 
 }

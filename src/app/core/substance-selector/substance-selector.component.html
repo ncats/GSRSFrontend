@@ -16,7 +16,7 @@
         <mat-icon aria-label="Edit Selected Substance" svgIcon="edit" matTooltip="change selection"></mat-icon>
       </button>
       <a *ngIf="selectedSubstance.uuid" mat-mini-fab target="_blank"
-        [routerLink]="['/substances', selectedSubstance.uuid]">
+        (click) ="openInNewTab(selectedSubstance.uuid)">
         <mat-icon aria-label="Open in new tab" svgIcon="open_in_new" matTooltip="view details in a new tab"></mat-icon>
       </a>
       <button mat-mini-fab (click)="delete()" matTooltip="delete" class="undo">

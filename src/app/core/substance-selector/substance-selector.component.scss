@@ -11,7 +11,7 @@
     cursor: zoom-in !important;
 }
 
-.zoom :hover {
+::ng-deep .zoom :hover {
     cursor: zoom-in !important;
 
 }
@@ -22,7 +22,12 @@
     margin-top: 5px;
 }
 
+.selected-substance:hover {
+    cursor: zoom-in !important;
+}
+
 .selected-substance {
+    cursor: zoom-in !important;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -33,6 +38,10 @@
         display: block;
         max-width: 200px;
     }
+     img :hover {
+        cursor: zoom-in !important;
+    
+    }
 }
 
 .undo {
@@ -41,7 +50,11 @@
 }
 
 
-.selected-substance-options:hover { 
+.selected-substance-options :hover { 
+    cursor: zoom-in !important;
+}
+
+::ng-deep .selected-substance-options :hover { 
     cursor: zoom-in !important;
 }
 

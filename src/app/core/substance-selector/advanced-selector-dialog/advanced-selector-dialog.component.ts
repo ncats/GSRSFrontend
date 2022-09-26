@@ -12,6 +12,7 @@ import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
+import { ConfigService } from '@gsrs-core/config';
 @Component({
   selector: 'app-advanced-selector-dialog',
   templateUrl: './advanced-selector-dialog.component.html',
@@ -37,6 +38,9 @@ export class AdvancedSelectorDialogComponent implements OnInit {
   totalSubstances = 0;
   pageIndex = 0;
   pageSize = 10;
+  nameTotalSubstances = 0;
+  namePageIndex = 0;
+  namePageSize = 10;
   lastPage: number;
   searchValue: string;
 
@@ -50,6 +54,8 @@ _searchtype: string;
 similarityCutoff?: number;
 showSimilarityCutoff = false;
 substances?: Array<any>;
+nameSubstances?: Array<any>;
+nameResponse: any;
 response: any;
 private overlayContainer: HTMLElement;
 
@@ -68,6 +74,7 @@ private privateSequenceSearchKey?: string;
     private structureService: StructureService,
     private overlayContainerService: OverlayContainer,
     private substanceService: SubstanceService,
+    private configService: ConfigService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<AdvancedSelectorDialogComponent>,
     private router: Router,
@@ -98,7 +105,6 @@ private privateSequenceSearchKey?: string;
   }
 
   onTabChanged(event: any): void {
-    console.log(event);
     
   }
 
@@ -114,7 +120,6 @@ private privateSequenceSearchKey?: string;
   }
 
   ngOnInit(): void {  
-    console.log(this.data);
     this.activeTab = this.data.tab;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   
@@ -174,14 +179,9 @@ private privateSequenceSearchKey?: string;
   search(): void {
     const mol = this.editor.getMolfile();
     this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
-        console.log(response);
         this.response = response.structure.id;
         this.searchSubstances(response.structure.id, response.structure.smiles);
     }, () => {});
-  /*  this.substanceService.test().subscribe(response => {
-      this.substances = (response && response.content) ? response.content : [];
-      console.log(response);
-    })*/
   }
 
 
@@ -190,7 +190,6 @@ private privateSequenceSearchKey?: string;
   }
 
   updateType(event: any) {
-    console.log(event);
     this.searchType = event.value;
     
     this.privateSearchType = event.value;
@@ -242,14 +241,16 @@ private privateSequenceSearchKey?: string;
       navString += '?search=' + navigationExtras.queryParams['search'];
     }
 
-    console.log(navString);
     this.dialogRef.close();
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/browse-substance'], {
-        queryParams: navigationExtras.queryParams})
-    );
-
-    console.log(url);
+    let url = '';
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/browse-substance' + navString;
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/browse-substance'], {
+          queryParams: navigationExtras.queryParams})
+      );
+    }
   
     window.open(url, '_blank');
 
@@ -258,7 +259,8 @@ private privateSequenceSearchKey?: string;
 
 
   searchSubstances(structureSearchTerm?: string, smiles?: string) {
-    
+    let size = this.pageSize;
+    let index = this.pageIndex;
     if (structureSearchTerm){
       this.privateStructureSearchTerm = structureSearchTerm || null;
       this.privateSearchType = this.searchType || 'substructure';
@@ -266,8 +268,12 @@ private privateSequenceSearchKey?: string;
       if (this.searchType === 'similarity') {
         this.privateSearchCutoff = this.similarityCutoff || 0;
       }
+
+
     } else {
       this.privateStructureSearchTerm = null;
+      size = this.namePageSize;
+      index = this.namePageIndex;
     }
    
       this.loadingService.setLoading(true);
@@ -279,15 +285,14 @@ private privateSequenceSearchKey?: string;
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
         order: null,
-        pageSize: this.pageSize,
+        pageSize: size,
         facets: this.privateFacetParams,
-        skip: this.pageIndex,
+        skip: index,
         sequenceSearchKey: this.privateSequenceSearchKey,
         deprecated: false
       })
         .subscribe(pagingResponse => {
           this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
-          console.log(pagingResponse); 
 
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.total % this.pageSize === 0) {
@@ -300,6 +305,9 @@ private privateSequenceSearchKey?: string;
 
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
+
+          this.nameSubstances = pagingResponse.content;
+          this.nameTotalSubstances = pagingResponse.total;
           this.overlayContainer.style.zIndex = '1003';
         
             this.overlayContainer.style.zIndex = '10003';
@@ -377,7 +385,6 @@ private privateSequenceSearchKey?: string;
     this.overlayContainer.style.zIndex = '1002';
 
     const subscription = dialogRef.afterClosed().subscribe(response => {
-      console.log(response);
       if (response && response === 'molfile') {
         this.editor.setMolecule(molfile);
       }
@@ -398,16 +405,21 @@ private privateSequenceSearchKey?: string;
     this.dialogRef.close(substance);
   }
 
-  changePage(pageEvent: PageEvent) {
-    console.log(pageEvent);
-    this.pageSize = pageEvent.pageSize;
-    this.pageIndex = pageEvent.pageIndex;
-    if (this.activeTab == 0) {
-      this.searchSubstances(this.response);
+  changePage(pageEvent: PageEvent, type?: string) {
+    if (type && type === 'name') {
+      this.namePageSize = pageEvent.pageSize;
+      this.namePageIndex = pageEvent.pageIndex;
+        this.searchSubstances();
+  
+      
 
     } else {
-      this.searchSubstances;
+      this.pageSize = pageEvent.pageSize;
+      this.pageIndex = pageEvent.pageIndex;
+        this.searchSubstances(this.response);
+   
     }
+    
   }
 }
 

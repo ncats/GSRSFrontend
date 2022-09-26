@@ -7,6 +7,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { AdvancedSelectorDialogComponent } from '@gsrs-core/substance-selector/advanced-selector-dialog/advanced-selector-dialog.component';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-substance-selector',
@@ -46,6 +47,7 @@ export class SubstanceSelectorComponent implements OnInit {
     public configService: ConfigService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
+    private router: Router
   ) { }
 
   StoreSelection() {
@@ -196,6 +198,20 @@ export class SubstanceSelectorComponent implements OnInit {
   delete(): void {
     this.selectedSubstance = null;
     this.selectionUpdated.emit(null);
+  }
+
+  openInNewTab(uuid: string): void {
+    let url = '';
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + uuid;
+      
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/substances/' + uuid])
+      );
+    }
+    console.log(url);
+    window.open(url, '_blank');
   }
 
 }

@@ -53,25 +53,25 @@
 
 
 
-  <div *ngIf = "!totalSubstances || totalSubstances < 1" >
+  <div *ngIf = "!nameTotalSubstances || nameTotalSubstances < 1" >
     <h4>
       Get Structure From Name
     </h4>
     <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
   </div>
 
-  <div class = "form-row paginator-row" *ngIf = "totalSubstances && totalSubstances > 0">
+  <div class = "form-row paginator-row" *ngIf = "nameTotalSubstances && nameTotalSubstances > 0">
       <button mat-button (click) = "navigateToBrowseSubstance('structure')">
           View in browse page <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
       </button>
        <span class = "middle-fill"></span>
-      <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
-    </mat-paginator>
+       <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+       [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+     </mat-paginator>
   </div>
 
   <div class = "form-row2">
-        <mat-card *ngFor="let substance of substances" class="tile">
+        <mat-card *ngFor="let substance of nameSubstances" class="tile">
                 <mat-card-title>
                   <div class='tile-title'>
                     <a class="approval-id">
@@ -141,8 +141,9 @@
           View in browse page <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
       </button>
       <span class = "middle-fill"></span>
-      <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+      
+    <mat-paginator #paginator [length]="nameTotalSubstances" [pageIndex]="namePageIndex" [pageSize]="namePageSize"
+      [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event, 'name')" [showFirstLastButtons]="true">
     </mat-paginator>
   </div>
 
