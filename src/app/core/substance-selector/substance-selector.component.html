@@ -59,14 +59,8 @@
     </div>
     <div class="marginright10px" *ngIf="errorMessage">
       <!-- Register Subtance -->
-      <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
+      <a (click) = "registerNew()" target="_blank" matTooltip='Register New Substance'>
         <span class="font11px">Register New</span>
-      </a>
-    </div>
-    <div>
-      <!-- Structure search -->
-      <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
-        <span class="font11px">Search By Structure</span>
       </a>
     </div>
   </div>

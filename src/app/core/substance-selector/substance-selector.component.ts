@@ -94,13 +94,11 @@ export class SubstanceSelectorComponent implements OnInit {
 
   processSubstanceSearch(searchValue: string = ''): void {
     const q = searchValue.replace('\"', '');
-    console.log('processing');
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
 
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       if (response.content && response.content.length) {
         this.selectedSubstance = response.content[0];
-        console.log(response);
         this.selectionUpdated.emit(this.selectedSubstance);
         this.errorMessage = '';
       } else {
@@ -210,7 +208,19 @@ export class SubstanceSelectorComponent implements OnInit {
         this.router.createUrlTree(['/substances/' + uuid])
       );
     }
-    console.log(url);
+    window.open(url, '_blank');
+  }
+
+  registerNew() {
+    let url = '';
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/register';
+      
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/substances/register'])
+      );
+    }
     window.open(url, '_blank');
   }
 
