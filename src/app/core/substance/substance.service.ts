@@ -752,6 +752,28 @@ export class SubstanceService extends BaseHttpService {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/scrubber/@schema`;
     return this.http.get< any>(url);
   }
+
+  getConfigs(id?: string) {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/configs`;
+    return this.http.get< any>(url);
+  }
+
+  getConfigByID(id: string) {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/config/${id}`;
+    return this.http.get< any>(url);
+  }
+
+  storeNewConfig(config: any) {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/config`;
+    console.log(config);
+    return this.http.post< any>(url, config);
+  }
+
+  deleteConfig(id: string) {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/config(${id})`;
+    console.log(id);
+    return this.http.delete< any>(url);
+  }
 }
 
 

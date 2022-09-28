@@ -1,17 +1,17 @@
 
   <div mat-dialog-header class = "top-label">
       <div style = "width:100%;display:flex;flex-direction:row;">
+          <button (click) = "testing()">load</button>
+          <button (click) = "saveConfig()">save</button>
+          <button (click) = "deleteConfig('539')">delete</button>
+
+
      
          <mat-form-field style = "width: 250px" class="testing">
                 <mat-label>Use Export Options: </mat-label> 
             <mat-select  name = "fileType" >
-                    <mat-option value="JSON" > Example Value
-                    </mat-option>
-                    <mat-option value="SD-default" > Second Example Value
-                    </mat-option>
-                    <mat-option value="SD" >
-                            Third Example Value
-                    </mat-option>
+                  <!--  <mat-option *ngFor = "let option of options" value="JSON" > Example Value
+                        </mat-option>-->
                 </mat-select>
             </mat-form-field>
     

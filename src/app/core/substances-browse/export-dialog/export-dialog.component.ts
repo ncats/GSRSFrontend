@@ -336,5 +336,24 @@ export class ExportDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+
+  testing() {
+    this.substanceService.getConfigs().subscribe(response => {
+      console.log(response);
+    });
+  }
+
+  saveConfig() {
+    const test = {"exporterKey":"test export key", "generalSettings":{"removeApprovalId":true,"copyApprovalIdToCode":true,"approvalIdCodeSystem":"Generic UNII","removeUuids":false,"changeAllRecordStatuses":false,"newRecordStatus":null,"setAllAuditorsToAbstractUser":true,"newAbstractUser":"generic registrar","generateNewUuids":false,"definitionalExpansion":null,"referentialExpansion":null,"codeSystemsForReferences":null},"scrubberSettings":null,"exporterSettings":{"columnNames":["SMILES","PT","UNII","UUIC"],"includeRepeatingDataOnEveryRow":false,"transformation":null,"parameters":null}};
+    this.substanceService.storeNewConfig(test).subscribe(response => {
+      console.log(response);
+    });
+  }
+
+  deleteConfig(id: string) {
+    this.substanceService.deleteConfig("540").subscribe(response => {
+      console.log(response);
+    });
+  }
 }
 
