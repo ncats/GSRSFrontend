@@ -50,12 +50,36 @@
                             (click)="openImageModal(startingMaterial.substanceName.refuuid, startingMaterial.substanceName.approvalID, startingMaterial.substanceName.refPname)">
                             <img appSubstanceImage [entityId]="startingMaterial.substanceName.refuuid">
                           </a>
+
                           <div>
-                            <a [routerLink]="['/substances', startingMaterial.substanceName.refuuid]" target="_blank">
-                              {{startingMaterial.substanceName.refPname}}</a>
+                            <span *ngIf="startingMaterial.substanceName.refPname">
+                              <a href="" (click)="openImageModal(startingMaterial.substanceName.refuuid, startingMaterial.substanceName.approvalID, startingMaterial.substanceName.refPname);
+                               false">
+                                {{startingMaterial.substanceName.refPname}}
+                              </a>
+                            </span>
+                            <!--
+                              <a href="{{gsrsHomeBaseUrl}}substances/{{startingMaterial.substanceName.refuuid}}"
+                                target="_blank" title="View Substance Details">
+                                {{startingMaterial.substanceName.refPname}}
+                              </a>
+                              <div>
+                                <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                                </mat-icon>
+                              </div>
+                            -->
+
+                            <!--
+                            <span *ngIf="!gsrsHomeBaseUrl">
+                              <a [routerLink]="['/substances', startingMaterial.substanceName.refuuid]" target="_blank"
+                                title="View Substance Details">
+                                {{startingMaterial.substanceName.refPname}}
+                              </a>
+                            </span>
+                            -->
                             <span *ngIf="startingMaterial.verbatimName">
                               <br>
-                              Material Display Name:{{startingMaterial.verbatimName}}
+                              Material Display Name: {{startingMaterial.verbatimName}}
                             </span>
                             <span *ngIf="showSubstanceRole">
                               <br>
@@ -83,10 +107,18 @@
                                   </button>
                                 </div>
                                 <div>
+                                  <span *ngIf="processingMaterial.substanceName.refPname">
+                                    <a href="" (click)="openImageModal(processingMaterial.substanceName.refuuid, processingMaterial.substanceName.approvalID, processingMaterial.substanceName.refPname);
+                                     false">
+                                      <b>{{processingMaterial.substanceName.refPname}}</b>
+                                    </a>
+                                  </span>
+                                  <!--
                                   <a [routerLink]="['/substances', processingMaterial.substanceName.refuuid]"
                                     target="_blank">
                                     <b>{{processingMaterial.substanceName.refPname}}</b>
                                   </a>
+                                  -->
                                   <span *ngIf="showSubstanceRole">
                                     &nbsp;<b>({{processingMaterial.substanceRole}})</b>
                                   </span>
@@ -117,10 +149,18 @@
                                   </button>
                                 </div>
                                 <div>
+                                  <!--
                                   <a [routerLink]="['/substances', processingMaterial.substanceName.refuuid]"
                                     target="_blank">
                                     <b>{{processingMaterial.substanceName.refPname}}</b>
                                   </a>
+                                  -->
+                                  <span *ngIf="processingMaterial.substanceName.refPname">
+                                    <a href="" (click)="openImageModal(processingMaterial.substanceName.refuuid, processingMaterial.substanceName.approvalID, processingMaterial.substanceName.refPname);
+                                     false">
+                                      <b>{{processingMaterial.substanceName.refPname}}</b>
+                                    </a>
+                                  </span>
                                   <span *ngIf="showSubstanceRole">
                                     &nbsp;<b>({{processingMaterial.substanceRole}})</b>
                                   </span>
@@ -156,9 +196,17 @@
                             <img appSubstanceImage [entityId]="resultingMaterial.substanceName.refuuid">
                           </a>
                           <div>
+                            <!--
                             <a [routerLink]="['/substances', resultingMaterial.substanceName.refuuid]" target="_blank">
                               {{resultingMaterial.substanceName.refPname}}
                             </a>
+                            -->
+                            <span *ngIf="resultingMaterial.substanceName.refPname">
+                              <a href="" (click)="openImageModal(resultingMaterial.substanceName.refuuid, resultingMaterial.substanceName.approvalID, resultingMaterial.substanceName.refPname);
+                               false">
+                                {{resultingMaterial.substanceName.refPname}}
+                              </a>
+                            </span>
                             <span *ngIf="resultingMaterial.verbatimName">
                               <br>
                               Material Display Name:{{resultingMaterial.verbatimName}}
