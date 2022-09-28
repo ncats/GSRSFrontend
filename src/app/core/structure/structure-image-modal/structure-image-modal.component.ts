@@ -3,6 +3,7 @@ import { UtilsService } from '../../utils/utils.service';
 import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 import { SafeUrl } from '@angular/platform-browser';
 import { StructureService } from '../structure.service';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-structure-image-modal',
@@ -18,7 +19,10 @@ export class StructureImageModalComponent implements OnInit {
   uuid: string;
   displayName: string;
   names: string[] = [];
+  gsrsHomeBaseUrl = '';
+
   constructor(
+    private configService: ConfigService,
     private utilsService: UtilsService,
     private structureService: StructureService,
     public dialogRef: MatDialogRef<StructureImageModalComponent>,
@@ -26,6 +30,9 @@ export class StructureImageModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Load Frontend Home URL from config
+    this.getHomepageUrl();
+    
     this.structure = (this.data && this.data.structure) ? this.data.structure : null;
     if (this.data.smiles) {
       this.smiles = this.data.smiles;
@@ -58,4 +65,8 @@ export class StructureImageModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  getHomepageUrl() {
+    // Get GSRS Frontend URL fron config
+    this.gsrsHomeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || '';
+  }
 }
