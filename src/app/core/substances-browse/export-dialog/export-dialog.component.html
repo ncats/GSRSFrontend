@@ -1,36 +1,40 @@
 
   <div mat-dialog-header class = "top-label">
       <div style = "width:100%;display:flex;flex-direction:row;">
-          <button (click) = "testing()">load</button>
-          <button (click) = "saveConfig()">save</button>
-          <button (click) = "deleteConfig('539')">delete</button>
-
 
      
          <mat-form-field style = "width: 250px" class="testing">
                 <mat-label>Use Export Options: </mat-label> 
-            <mat-select  name = "fileType" >
-                  <!--  <mat-option *ngFor = "let option of options" value="JSON" > Example Value
-                        </mat-option>-->
+            <mat-select  name = "fileType" [(ngModel)]="loadedConfig" name="term" (ngModelChange)="switchConfig($event)" >
+                  <mat-option *ngFor = "let option of options" [value]="option" > {{option.exporterKey ? option.exporterKey : 'no name'}}
+                         </mat-option>
                 </mat-select>
             </mat-form-field>
     
        
            <div style = "margin-top: 10px;margin-left: 50px;">
-               <button style = "" mat-flat-button color="primary" (click) = "showOptions = !showOptions">Edit</button>
+               <button mat-flat-button color="primary" (click) = "showOptions = !showOptions">{{ showOptions? 'Hide Options' :'Show / Edit Options'}}</button>
+              &nbsp; <button style = "margin-left:5px" mat-flat-button color="primary" *ngIf = "loadedConfig" (click) = "deleteConfig()"><mat-icon svgIcon="delete_forever"></mat-icon> Delete</button>
+
         </div> 
         </div>
         
         </div>
    <mat-dialog-content>
    <mat-tab-group selectedIndex = "1"  class = "tab-group" *ngIf = "showOptions">
-        <mat-tab  label= "JSON Export Options" disabled = "true"></mat-tab> 
+       
+       
+        <mat-tab  label= "Expander" >
+                <sf-form [schema]="expanderSchema"  [(model)]="expanderModel" (onChange)="setValue($event.value, 'expander')" style = "margin-top:15px;"></sf-form>
 
-    <mat-tab  label= "Scrubbing" style = "margin-bottom:10px;">
+
+        </mat-tab> 
+
+    <mat-tab  label= "Scrubber" style = "margin-bottom:10px;">
          
     <br/>
     
-    <sf-form [schema]="mySchema"  [(model)]="model" (onChange)="setValue($event.value)" style = "margin-top:15px;"></sf-form>
+    <sf-form [schema]="mySchema"  [(model)]="scrubberModel" (onChange)="setValue($event.value)" style = "margin-top:15px;"></sf-form>
     
     
     <!--   <h2 matDialogTitle>Enter a Filename</h2>
@@ -48,11 +52,11 @@
         
 
     </mat-tab>
-    <mat-tab  label= "Advanced" disabled = "true"></mat-tab> 
+    <mat-tab  label= "Format Settings" disabled = "true"></mat-tab> 
     </mat-tab-group>
     <div style = "width:100%;display:flex;flex-direction:row;margin-top:15px">
             <div class = "padding" style = "margin-right: 10px;">
-                Please enter a file name.
+                Please enter a file name:
             </div>
             <div class = "dialog-row">
                 <div>
@@ -65,8 +69,15 @@
             </div>
 </mat-dialog-content>
     <mat-dialog-actions align="end">
+            <div style = "width:100%;display:flex;flex-direction:row">
+                <div *ngIf = "message" style = "font-weight: 500;margin:10px">{{message}}</div>
+            </div>
             <button mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
             <span class="middle-fill"></span>
-            <button mat-flat-button color="primary" disabled (click) = "save()" style = "margin-right:15px;">Save Settings</button>
-            <button mat-flat-button color="primary" (click) = "save()">Export</button>
+            <mat-form-field style = "margin-right:10px"><input style = "margin-right:10px" matInput placeholder="Config Name" [(ngModel)]="configName" name="Config Name" /></mat-form-field>
+
+            <button mat-flat-button color="primary" (click) = "saveConfig()" style = "margin-right:15px;" [disabled] = "!showOptions">Save New Config</button>
+            <button mat-flat-button color="primary" (click) = "updateConfig()" [disabled] = "!loadedConfig" style = "margin-right:15px;">Save Changes</button>
+
+            <button mat-flat-button color="primary" (click) = "save()" >Export{{loadedConfig? '' : ' (no config)'}}</button>
         </mat-dialog-actions>

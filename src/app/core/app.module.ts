@@ -102,6 +102,7 @@ import {
 } from "ngx-schema-form";
 import { MyWidgetRegistry } from '@gsrs-core/substances-browse/export-dialog/custom-checkbox-widget/custom-checkbox-registry';
 import { CustomTextWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-text-widget/custom-text-widget.component';
+import { CustomMultiselectWidgetComponent } from '@gsrs-core/substances-browse/custom-multiselect-widget/custom-multiselect-widget.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -129,7 +130,8 @@ import { CustomTextWidgetComponent } from '@gsrs-core/substances-browse/export-d
     NamesDisplayPipe,
     SubstanceStatusPipe,
     CustomCheckboxWidgetComponent,
-    CustomTextWidgetComponent
+    CustomTextWidgetComponent,
+    CustomMultiselectWidgetComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -223,7 +225,8 @@ import { CustomTextWidgetComponent } from '@gsrs-core/substances-browse/export-d
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent,
     CustomCheckboxWidgetComponent,
-    CustomTextWidgetComponent
+    CustomTextWidgetComponent,
+    CustomMultiselectWidgetComponent
   ],
   exports: [
     StructureEditorModule,

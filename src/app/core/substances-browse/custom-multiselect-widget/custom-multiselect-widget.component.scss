@@ -1,0 +1,37 @@
+.mat-select-panel {
+
+    mat-option.mat-option {
+      display: flex;
+      word-wrap: normal;
+      white-space: normal;
+      align-items: center;
+      align-content: center;
+      height: auto;
+      min-height: 48px;
+      line-height: 24px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+  }
+
+
+  .multiselect {
+      width:100%;
+      display: flex;
+  }
+
+  .label {
+      width: 45%;
+      margin-top: 12px;
+  }
+
+  .cv-select {
+      padding: 8px;
+      border-bottom:1px solid darkgray;
+      margin-bottom: 5px;
+  }
+
+
+  .tabbed {
+    padding-left: 55px;
+  }

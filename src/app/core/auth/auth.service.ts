@@ -220,17 +220,28 @@ export class AuthService {
     });
   }
 
-  startUserDownload(fullUrl: string, privateExport: boolean, filename?: string): Observable< any > {
+  startUserDownload(fullUrl: string, privateExport: boolean, filename?: string, id?: string): Observable< any > {
+    console.log(id);
+    
     let params = new HttpParams();
+   
     if (privateExport) {
       params = params.append('publicOnly', 'false');
     }
     if (filename && filename !== '') {
       params = params.append('filename', filename);
     }
+   if (id) {
+      console.log(id);
+      params = params.append('exportConfigId', id);
+     // fullUrl += '?exportConfigId=' + id;
+    }
+    
+    console.log(params);
     const options = {
       params: params
     };
+    
     return this.http.get< any >(fullUrl, options);
   }
 

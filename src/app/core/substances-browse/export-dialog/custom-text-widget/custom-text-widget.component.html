@@ -1,8 +1,8 @@
 <input *ngIf="this.schema.widget.id ==='hidden'; else notHiddenFieldBlock"
   [attr.name]="name" type="hidden" [formControl]="control">
 <ng-template #notHiddenFieldBlock>
-<div class="widget form-group test">
-    <label [attr.for]="id" class="horizontal control-label" style = "display:inline-block; min-width:250px; margin-right:7px">
+<div class="widget form-group" [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'">
+    <label [attr.for]="id" class="horizontal control-label"  style = "display:inline-block; min-width:250px;margin-right:7px;">
     	{{ schema.title }}
     </label>
     <span *ngIf="schema.description" class="formHelp">{{schema.description}}</span>

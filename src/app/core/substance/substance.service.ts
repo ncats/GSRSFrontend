@@ -749,7 +749,10 @@ export class SubstanceService extends BaseHttpService {
 
 
   getSchema(type?: string) {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/scrubber/@schema`;
+    if(!type) {
+      type = 'scrubber';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/${type}/@schema`;
     return this.http.get< any>(url);
   }
 
@@ -774,6 +777,14 @@ export class SubstanceService extends BaseHttpService {
     console.log(id);
     return this.http.delete< any>(url);
   }
+
+  updateConfig(id: string, config: any) {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/config(${id})`;
+    console.log(id);
+    console.log(config);
+    return this.http.put< any>(url, config);
+  }
+
 }
 
 
