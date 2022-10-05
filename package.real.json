@@ -72,7 +72,7 @@
     "util": "0.12.4",
     "web-animations-js": "2.3.2",
     "zone.js": "0.11.4",
-    "z-schema": "5.0.4",
+    "z-schema": "4.2.2",
     "jexl": "2.3.0",
     "ngx-schema-form": "2.7.0"
   },
