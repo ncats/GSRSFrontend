@@ -12,12 +12,12 @@ install:
   - rm -rf package.json
   - cp package.dev.json package.json
   - npm install
-  - npm install webpack
   - npm run build-file-select
   - npm run build-jsdraw-wrapper
   - npm run build-ketcher-wrapper
   - cp package.real.json package.json
   - npm install --legacy-peer-deps
+  - npm install webpack
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
