@@ -12,6 +12,7 @@ install:
   - rm -rf package.json
   - cp package.dev.json package.json
   - npm install
+  - npm install webpack
   - npm run build-file-select
   - npm run build-jsdraw-wrapper
   - npm run build-ketcher-wrapper
