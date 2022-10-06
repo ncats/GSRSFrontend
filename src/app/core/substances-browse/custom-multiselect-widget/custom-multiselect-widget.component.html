@@ -1,39 +1,39 @@
 <div class="widget form-group multiselect " *ngIf = "schema.CVDomain" [ngClass] ="schema.visibleIf ? 'tabbed': ''">
-        <label *ngIf="schema.title" [attr.for]="id" class="horizontal label control-label">
-            {{ schema.title }}
-        </label>
-        <mat-select  *ngIf="schema.type!='array'" multiple [formControl]="control" [attr.name]="name" [attr.id]="id" 
-        [disableControl]="schema.readOnly" class="form-control cv-select" >
-            <ng-container>
-                <mat-option *ngFor="let option of options" [value]="option.value">{{option.display}}{{schema.widget.test}}</mat-option>
-            </ng-container>
-        </mat-select>
-        <mat-select  *ngIf="schema.type==='array'" multiple [formControl]="control" [attr.name]="name" [attr.id]="id"
-         [disableControl]="schema.readOnly" class="form-control cv-select">
+    <label *ngIf="schema.title" [attr.for]="id" class="horizontal label control-label">
+        {{ schema.title }}
+    </label>
+    <mat-select  *ngIf="schema.type!='array'" multiple [formControl]="control" [attr.name]="name" [attr.id]="id" 
+    [disableControl]="schema.readOnly" class="form-control cv-select" >
+        <ng-container>
+            <mat-option *ngFor="let option of options" [value]="option.value">{{option.display}}{{schema.widget.test}}</mat-option>
+        </ng-container>
+    </mat-select>
+    <mat-select  *ngIf="schema.type==='array'" multiple [formControl]="control" [attr.name]="name" [attr.id]="id"
+     [disableControl]="schema.readOnly" class="form-control cv-select">
 
-            <mat-option *ngFor="let option of options" [value]="option.value" >{{option.display}}</mat-option>
-        </mat-select>
-        <input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
-    </div>
+        <mat-option *ngFor="let option of options" [value]="option.value" >{{option.display}}</mat-option>
+    </mat-select>
+    <input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+</div>
 
 
-    <div class="widget form-group" *ngIf = "!schema.CVDomain">
-        <label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
-            {{ schema.title }}
-        </label>
-        <span *ngIf="schema.description" class="formHelp">
-            {{schema.description}}
-        </span>
-        <select *ngIf="schema.type!='array'" [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control">
-            <ng-container *ngIf="schema.oneOf; else use_enum">
-                <option *ngFor="let option of schema.oneOf" [ngValue]="option.enum[0]" >{{option.description}}</option>
-            </ng-container>
-            <ng-template #use_enum>
-                <option *ngFor="let option of schema.enum" [ngValue]="option" >{{option}}</option>
-            </ng-template>
-        </select>
-        <select *ngIf="schema.type==='array'" multiple [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control">
-        <option *ngFor="let option of schema.items.oneOf" [ngValue]="option.enum[0]" [disabled]="option.readOnly">{{option.description}}</option>
-        </select>
-        <input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
-    </div>
+<div class="widget form-group" *ngIf = "!schema.CVDomain" [ngClass] ="schema.visibleIf ? 'tabbed': ''">
+    <label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
+        {{ schema.title }}
+    </label>
+    <span *ngIf="schema.description" class="formHelp">
+        {{schema.description}}
+    </span>
+    <mat-select *ngIf="schema.type!='array'" [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control">
+        <ng-container *ngIf="schema.oneOf; else use_enum">
+            <option *ngFor="let option of schema.oneOf" [ngValue]="option.enum[0]" >{{option.description}}</option>
+        </ng-container>
+        <ng-template #use_enum>
+            <option *ngFor="let option of schema.enum" [ngValue]="option" >{{option}}</option>
+        </ng-template>
+    </mat-select>
+    <mat-select *ngIf="schema.type==='array'" multiple [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control  cv-select">
+    <mat-option *ngFor="let option of schema.items.options" [ngValue]="option" [disabled]="option.readOnly">{{option}}</mat-option>
+    </mat-select>
+    <input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+</div>
