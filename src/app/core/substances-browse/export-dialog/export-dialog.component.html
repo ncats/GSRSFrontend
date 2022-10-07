@@ -25,7 +25,7 @@
        
        
         <mat-tab  label= "Expander" >
-                <sf-form [schema]="expanderSchema"  [(model)]="expanderModel" (onChange)="setValue($event.value, 'expander')" style = "margin-top:15px;"></sf-form>
+                <sf-form [schema]="expanderSchema"  [model]="expanderModel" (onChange)="setValue($event.value, 'expander')" style = "margin-top:15px;"></sf-form>
 
 
         </mat-tab> 
@@ -34,7 +34,7 @@
          
     <br/>
     
-    <sf-form [schema]="mySchema"  [(model)]="scrubberModel" (onChange)="setValue($event.value)" style = "margin-top:15px;"></sf-form>
+    <sf-form [schema]="scrubberSchema"  [model]="scrubberModel" (onChange)="setValue($event.value, 'scrubber')" style = "margin-top:15px;"></sf-form>
     
     
     <!--   <h2 matDialogTitle>Enter a Filename</h2>

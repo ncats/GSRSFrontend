@@ -19,12 +19,13 @@ export class ExportDialogComponent implements OnInit {
   loadedConfig: any;
   configName: string;
   message: string;
-  privateModel: any;
+  privateExpanderModel: any;
+  privateScrubberModel: any;
   private privateOptions: any;
   temp: any;
   
 
- mySchema = {
+ scrubberSchema = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://gsrs.ncats.nih.gov/#/export.scrubber.schema.json",
   "title": "Scrubber Parameters",
@@ -387,10 +388,10 @@ export class ExportDialogComponent implements OnInit {
         this.expanderModel = {};
     this.substanceService.getSchema('scrubber').subscribe(response => {
         console.log(response);
-    //  this.mySchema = response;
-    console.log(this.mySchema);
-    console.log(this.mySchema.properties);
-        Object.keys(this.mySchema.properties).forEach(val => {
+    //  this.scrubberSchema = response;
+    console.log(this.scrubberSchema);
+    console.log(this.scrubberSchema.properties);
+        Object.keys(this.scrubberSchema.properties).forEach(val => {
         //  console.log(val);
         console.log(val);
         if (response.properties[val]['visibleIf']) {
@@ -407,14 +408,11 @@ export class ExportDialogComponent implements OnInit {
         
     });
     this.substanceService.getSchema('expander').subscribe(response => {
-   //   console.log(response);
       this.expanderSchema = response;
       Object.keys(response.properties).forEach(val => {
-     //   console.log(response.properties[val]);
         if (response.properties[val]['visibleIf']) {
           Object.keys(response.properties[val]['visibleIf']).forEach(vis => {
           if (response.properties[vis]) {
-         //   console.log('found');
             response.properties[vis]['children'] = 1;
           }
         });
@@ -430,19 +428,14 @@ export class ExportDialogComponent implements OnInit {
       this.name = 'export-' + moment(date).format('DD-MM-YYYY_H-mm-ss');
     }
       this.extension = this.data.extension;
-    //  console.log('using extension: ' + this.data.extension);
   }
 
 
   setValue(event: any, model?: string ): void {
-    console.log('triggered');
-    console.log(event);
-    console.log(this.temp);
     if (model && model === 'expander') {
-     // console.log(event);
-      this.expanderModel = event;
+      this.privateExpanderModel = event;
     } else {
-    //  this.scrubberModel = event;
+      this.privateScrubberModel = event;
     }
   }
 
@@ -476,11 +469,11 @@ export class ExportDialogComponent implements OnInit {
 
   saveConfig() {
     console.log(this.scrubberModel);
-    console.log(this.expanderModel);
+    console.log(this.privateScrubberModel);
     this.message = null;
     const test = {"exporterKey":this.configName,
-    "scrubberSettings": this.scrubberModel,
-    "expanderSettings": this.expanderModel,
+    "scrubberSettings": this.privateScrubberModel,
+    "expanderSettings": this.privateExpanderModel,
     "exporterSettings":null};
     this.substanceService.storeNewConfig(test).subscribe(response => {
       console.log(response);
@@ -499,10 +492,11 @@ export class ExportDialogComponent implements OnInit {
 
   updateConfig() {
     this.message = null;
-    console.log(this.expanderModel);
-    this.loadedConfig.scrubberSettings = this.scrubberModel;
-    this.loadedConfig.expanderSettings = this.expanderModel;
-    console.log(this.loadedConfig);
+
+    console.log(this.scrubberModel);
+    console.log(this.privateScrubberModel);
+    this.loadedConfig.scrubberSettings = this.privateScrubberModel;
+    this.loadedConfig.expanderSettings = this.privateExpanderModel;
     this.substanceService.updateConfig(this.loadedConfig.configurationId, this.loadedConfig).subscribe(response => {
       console.log(response);
       if (response.Result) {
@@ -531,14 +525,14 @@ export class ExportDialogComponent implements OnInit {
   }
 
   switchConfig(event: any) {
-    console.log(event);
+ /*   console.log(event);
     this.scrubberModel = null;
     this.expanderModel = null;
     this.scrubberModel = {};
     this.expanderModel = {};
     Object.keys(this.scrubberModel).forEach(val => {
       delete this.scrubberModel[val];
-    });
+    });*/
     if (event.scrubberSettings) {
     //  this.scrubberModel = event.scrubberSettings;
     }
