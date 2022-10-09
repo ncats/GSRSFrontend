@@ -58,17 +58,17 @@
 }
 
 .black-pill, .gray-pill {
-    color: white;
+    color: var(--regular-white-color);
     padding: 1px 7px;
     border-radius: 11px;
 }
 
 .black-pill {
-    background-color: black;
+    background-color: var(--regular-black-color);
 }
 
 .gray-pill {
-    background-color: gray;
+    background-color: var(--regular-grey-color);
 }
 
 .name {

@@ -25,7 +25,7 @@
 }
 
 .white-background {
-    background-color: white;
+    background-color: var(--regular-white-color);
 }
 
 .substance-title {
@@ -34,13 +34,13 @@
 
 .approvalID {
     font-size: 20px;
-    color: #c7254e;
+    color: var(--pink-span-color);
     font-weight: 500;
 }
 
 .chip {
     display: inline-block;
-    background-color: #E0E0E0;
+    background-color: var(--pale-border-color);
     border-radius: 50%;
     padding: 0 5px;
     margin-left: 15px;

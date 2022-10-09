@@ -1,5 +1,6 @@
+/* awtodo come back */
 .bordergray {
-  border: 1px border gray;
+  border: 1px border var(--regular-grey-color);
 }
 
 .mat-divider.mat-divider-inset {
@@ -7,19 +8,19 @@
 }
 
 .mat-divider {
-  border-top-color: rgba(0, 0, 0, .5);
+  border-top-color: var(--text-color);
 }
 
 .process {
   margin-bottom: 60px;
 
   &:nth-child(odd) {
-      background-color: rgba(68, 138, 255, .07);
+      background-color: var(--nth-child-color-2);
 
       ::ng-deep {
 
           .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-              background-color: rgba(68, 138, 255, .15);
+              background-color: var(--nth-child-color-3);
           }
       }
   }
@@ -28,14 +29,14 @@
       ::ng-deep {
 
           .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-              background-color: rgba(128, 128, 128, .15);
+              background-color: var(--nth-child-color-1);
           }
       }
   }
 
   ::ng-deep {
       .mat-expansion-panel, .mat-table, textarea {
-          background-color: transparent;
+          background-color: var(--regular-transparent-color);
       }
   }
 }
@@ -73,16 +74,15 @@
 }
 
 fieldset.border {
-  border: solid 2px #222C67 !important;
+  border: solid 2px var(--fieldset-blue-border-color) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   /*border-radius: 8px;*/
   margin-top: 20px;
   min-width: 0;  /* override the default value of min-content */
-  /*
-  -webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
-  -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
-  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64);*/
+/*-webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);*/
 }
 
 legend.border {
@@ -90,8 +90,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  /* FDA COLOR BLUE CODE Hex: #007CBA */
-  color: #007CBA;
+  color: var(--legend-blue-border-color-2);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
@@ -154,7 +153,7 @@ legend.border {
 }
 
 :host ::ng-deep .mat-ink-bar {
-  /*background-color: var(--primary-color,#3c19d6) !important;
+  /*background-color: var(--primary-color, --royal-blue-color) !important;
   height: 3px;*/
   display: none !important;
 }

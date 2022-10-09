@@ -1,7 +1,3 @@
-.substance-selector-container {
-  /*margin-top: 10px;*/
-}
-
 .selected-substance-container {
     max-width: 100%;
     width: 100%;
@@ -33,8 +29,8 @@
     flex-direction: column;
 
     .mat-mini-fab {
-        background-color: rgba(242, 242, 242, .85);
-        color: #404040;
+        background-color: var(--mat-icon-button-bg-color);
+        color: var(--label-color);
         width: 35px;
         height: 35px;
 

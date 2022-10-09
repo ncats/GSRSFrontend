@@ -32,7 +32,6 @@ img {
 }
 /* this is a hack to try to add a scroll bar sometimes */
 mat-dialog-container div[mat-dialog-content] {
-    /* background: red; */
     overflow: auto;
     height: 100%;
 }
@@ -41,8 +40,8 @@ mat-dialog-container div[mat-dialog-content] {
   position: absolute;
   right: 17px;
   top: 8px;
-  background-color: rgba(242, 242, 242, .85);
-  color: #404040;
+  background-color: var(--mat-icon-button-bg-color);
+  color: var(--label-color);
   width: 35px;
   height: 35px;
 
@@ -71,7 +70,7 @@ mat-dialog-container div[mat-dialog-content] {
 }
 
 .viewrecord {
-  color: #448aff;
+  color: var(--link-primary-color);
   font-weight: bold;
   font-size: 20px;
 }

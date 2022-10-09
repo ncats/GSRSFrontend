@@ -3,9 +3,9 @@
 }
 
 .mat-divider {
-  border-top-color: rgba(0, 0, 0, .12);
+  border-top-color: var(--box-shadow-color-3);
 }
-
+/* awtodo not sure about .code */
 .code {
 
   &:nth-child(odd) {

@@ -7,7 +7,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  background-color: var(--text-color); /* Black background with opacity */
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
 }
@@ -17,7 +17,7 @@
 .center-screen {
   z-index: 2;
   position: fixed;
-  background-color: white;
+  background-color: var(--regular-white-color);
   width: 50%;
   height: 50%;
   top: 50%;
@@ -53,10 +53,10 @@
     flex-direction: column;
     top: 64px;
     width: 100%;
-    background-color: white;
+    background-color: var(--regular-white-color);
     align-items: center;
     justify-content: center;
-    box-shadow:     0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+    box-shadow:     0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
     z-index: 1001;
 }
 
@@ -72,7 +72,7 @@ mat-select-panel{
   margin-left: 30px;
   margin-right: 5px;
   margin-top: -10px;
-  color: #4793d1;
+  color: var(--primary-color);
 
 
   ::ng-deep .mat-form-field-wrapper {
@@ -107,7 +107,7 @@ mat-select-panel{
 .actions-container {
     max-width: 1128px;
     width: 100%;
-    background-color: white;
+    background-color: var(--regular-white-color);
     padding: 10px;
     display: flex;
 }
@@ -140,7 +140,7 @@ word-break: break-word;
   transition: all 500ms ease-out;
   max-width: 1028px;
   width: 100%;
-  background-color: white;
+  background-color: var(--regular-white-color);
   display: flex;
   flex-direction: column;
 
@@ -163,7 +163,6 @@ word-break: break-word;
     display: flex;
     padding: 5px 0;
 
-
     .message-type {
       text-transform: uppercase;
       font-weight: 500;
@@ -180,15 +179,15 @@ word-break: break-word;
   }
 
   .warning-message {
-    color: #8a6d3b;
-    background-color: #fcf8e3;
+    color: var(--warning-dialog-color);
+    background-color: var(--warning-dialog-bg-color);
 
   }
 
 
   .error-message {
-    color: #a94442;
-    background-color: #f2dede;
+    color: var(--error-dialog-color);
+    background-color: var(--error-dialog-bg-color);
   }
 
 }
@@ -207,7 +206,7 @@ word-break: break-word;
 }
 
 .internal-link {
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .import-button {
@@ -223,10 +222,10 @@ word-break: break-word;
 }
 
 .chip {
-  background-color: white;
+  background-color: var(--regular-white-color);
   border-radius: 50%;
   padding: 3px 5px;
   margin-left: 5px;
-  color: #1565c0;
+  color: var(--link-color);
   height: 33px;
 }

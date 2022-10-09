@@ -26,6 +26,9 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Name
       </th>
       <td mat-cell *matCellDef="let name" >
+        <!-- awtodo  should it be kesandu's or the second one --> 
+        <!-- span [innerHTML] = "name._nameHTML ? name._nameHTML : name._name"></span -->
+
         <span [innerHTML] = "name._nameHTML ? name._nameHTML : name.name"></span>
         <span *ngIf="name.displayName == true" matTooltip="Display Name">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
