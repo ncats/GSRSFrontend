@@ -1,0 +1,20 @@
+<div class="text-input-form" style="fxFlex: 60%">
+    <p>{{instruction}}</p>
+    <div>
+        <div><!-- (change)=""-->
+            <!-- mat-form-field -->
+                <textarea matInput
+                    placeholder="placeholder" 
+                    [formControl]="textControl"
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows=10
+                    ></textarea>
+            <!-- mat-form-field --> 
+        </div>
+    </div>
+    <div>
+        <button mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" (click) = "submit()">Submit</button>
+    </div>
+</div>

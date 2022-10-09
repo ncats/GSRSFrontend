@@ -12,6 +12,7 @@ import { split } from 'lodash';
 
 
 
+
 export class TextInputDialogComponent implements OnInit {
   query: string;
   lineCount: number;
