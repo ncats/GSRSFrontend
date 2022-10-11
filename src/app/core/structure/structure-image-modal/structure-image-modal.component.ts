@@ -22,7 +22,10 @@ export class StructureImageModalComponent implements OnInit {
   names: string[] = [];
   showSelector =false;
   showSubstanceSelector = false;
+  gsrsHomeBaseUrl = '';
+
   constructor(
+    private configService: ConfigService,
     private utilsService: UtilsService,
     private configService: ConfigService,
     private structureService: StructureService,
@@ -32,6 +35,9 @@ export class StructureImageModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Load Frontend Home URL from config
+    this.getHomepageUrl();
+    
     this.structure = (this.data && this.data.structure) ? this.data.structure : null;
     if (this.data.smiles) {
       this.smiles = this.data.smiles;
@@ -71,6 +77,7 @@ export class StructureImageModalComponent implements OnInit {
   dismissDialog(): void {
     this.dialogRef.close();
   }
+
 
 
 
@@ -117,4 +124,8 @@ export class StructureImageModalComponent implements OnInit {
 
 
 
+  getHomepageUrl() {
+    // Get GSRS Frontend URL fron config
+    this.gsrsHomeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || '';
+  }
 }

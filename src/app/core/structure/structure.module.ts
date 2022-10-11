@@ -11,7 +11,7 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationExtras, RouterModule } from '@angular/router';
 import { FileSelectModule } from 'file-select';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -23,6 +23,7 @@ import { FileSelectModule } from 'file-select';
     CommonModule,
     MatIconModule,
     MatTabsModule,
+    MatTooltipModule,
     SubstanceImageModule,
     FormsModule,
     ReactiveFormsModule,

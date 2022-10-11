@@ -1,6 +1,7 @@
 export interface Config {
     apiBaseUrl?: string;
-    apiSecondBaseUrl?: string;
+    gsrsHomeBaseUrl?: string;
+    apiSSG4mBaseUrl?: string;
     apiUrlDomain?: string;
     googleAnalyticsId?: string;
     version?: string;
@@ -48,6 +49,7 @@ export interface Config {
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
     gsrsHomeBaseUrl?: string;
+    authenticateAs?: AuthenticateAs;
 }
 
 export interface LoadedComponents {
@@ -92,4 +94,11 @@ export interface UsefulLink {
     imageFile: string;
     linkHref: string;
     templateDescription?: string;
+}
+
+export interface AuthenticateAs {
+    apiUsername?: string,
+    apiPassword?: string,
+    apiKey?: string,
+    apiToken?: string;
 }
