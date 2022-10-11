@@ -116,7 +116,7 @@ private privateSequenceSearchKey?: string;
     this.searchValue = event;
     this.privateSearchTerm = event;
     this.privateStructureSearchTerm = null;
-    this.searchSubstances();
+    this.searchSubstances(null, null, 'name');
   }
 
   ngOnInit(): void {  
@@ -258,7 +258,7 @@ private privateSequenceSearchKey?: string;
   }
 
 
-  searchSubstances(structureSearchTerm?: string, smiles?: string) {
+  searchSubstances(structureSearchTerm?: string, smiles?: string, type?: string) {
     let size = this.pageSize;
     let index = this.pageIndex;
     if (structureSearchTerm){
@@ -292,9 +292,18 @@ private privateSequenceSearchKey?: string;
         deprecated: false
       })
         .subscribe(pagingResponse => {
-          this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
+         // this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
 
-          this.totalSubstances = pagingResponse.total;
+         // this.totalSubstances = pagingResponse.total;
+          
+          if(type && type === 'name') {
+            this.nameSubstances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
+            this.nameTotalSubstances = pagingResponse.total;
+          } else {
+            this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
+            this.totalSubstances = pagingResponse.total;
+          }
+
           if (pagingResponse.total % this.pageSize === 0) {
             this.lastPage = (pagingResponse.total / this.pageSize);
           } else {
@@ -302,17 +311,10 @@ private privateSequenceSearchKey?: string;
           }
 
           
-
-          this.substances = pagingResponse.content;
-          this.totalSubstances = pagingResponse.total;
-
-          this.nameSubstances = pagingResponse.content;
-          this.nameTotalSubstances = pagingResponse.total;
           this.overlayContainer.style.zIndex = '1003';
         
             this.overlayContainer.style.zIndex = '10003';
           this.loadingService.setLoading(false);
-          this.overlayContainer.style.zIndex = '1003';
         
             this.overlayContainer.style.zIndex = '10003';
           setTimeout(() => {
