@@ -56,19 +56,47 @@
 
   <div class="form-row">
 
-    <mat-form-field class="col-3-1">
-      <input matInput placeholder="Manufacturer ID" [(ngModel)]="manufacture.manufacturerId"
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Organization ID" [(ngModel)]="manufacture.manufacturerId"
         name="manufacture.manufacturerId" />
     </mat-form-field>
 
-    <mat-form-field class="col-3-1">
-      <input matInput placeholder="Manufacturer Name" [(ngModel)]="manufacture.manufacturerName"
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Organization Name" [(ngModel)]="manufacture.manufacturerName"
         name="manufacture.manufacturerName" />
     </mat-form-field>
 
-    <app-cv-input class="col-3-1" domain="SSG_STAGE_TYPE" title="Issuer of ID" name="issuerOfID"
+    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Organization Role" name="manufacturerRoleld"
+      [model]="manufacture.manufacturerRoleld" (valueChange)="manufacture.manufacturerRoleld = $event">
+    </app-cv-input>
+
+    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Issuer of ID" name="issuerOfID"
       [model]="manufacture.issuerOfID" (valueChange)="manufacture.issuerOfID = $event">
     </app-cv-input>
+
+  </div> <!-- form row -->
+
+  <div class="form-row">
+
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Organization Address" [(ngModel)]="manufacture.manufacturerAddress"
+        name="manufacture.manufacturerAddress" />
+    </mat-form-field>
+
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Organization City" [(ngModel)]="manufacture.manufacturerCity"
+        name="manufacture.manufacturerCity" />
+    </mat-form-field>
+
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Organization State" [(ngModel)]="manufacture.manufacturerState"
+        name="manufacture.manufacturerState" />
+    </mat-form-field>
+
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Organization Zipcode" [(ngModel)]="manufacture.manufacturerZipcode"
+        name="manufacture.manufacturerZipcode" />
+    </mat-form-field>
 
   </div> <!-- form row -->
 
