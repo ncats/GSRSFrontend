@@ -699,7 +699,7 @@ export class SubstanceService extends BaseHttpService {
     } else {
       url = facet._self;
     }
-    if (filters) {
+    if (otherFacets) {
       let temp = facet._self.split('&');
       temp.forEach(val => {
         if (val.indexOf('facet') >= 0) {
