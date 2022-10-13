@@ -36,10 +36,10 @@
     </div>
     <div  >
       <a  style = "color: #1565c0;font-weight:550;" (click)="!!editSelectedSubstance()">Change Selection</a> <br/>
-      
+
 
     </div>
-    
+
   </div>
   <div  *ngIf="previousSubstance && !selectedSubstance">
       <a (click) = "revertEdit()"  style = "color: #1565c0;font-weight:550;margin-top:5px">Cancel and Revert</a>
@@ -47,16 +47,17 @@
   <div class = "centered">
       <a style = "color: #1565c0;font-weight:550;margin-top:3px; margin-right: 10px;" (click)="advanced('structure')">Structure Search</a>
       <a style = "color: #1565c0;font-weight:550;margin-top:3px;" (click)="advanced('name')">Name Search</a>
-    
+
   </div>
-  
+
   <span class='code' *ngIf="errorMessage === 'No substances found'"><br />NO SUBSTANCES FOUND</span>
   <!-- Adding Edit, Register, and Structure links-->
   <div class="divflex" *ngIf="showMorelinks">
+    <!--
     <div class="marginright10px" *ngIf="selectedSubstance && selectedSubstance.uuid">
-      <!-- Change Selection -->
       <a style = "color: #1565c0;font-weight:550;text-decoration: underline" (click)="!!editSelectedSubstance()">Change Selection</a>
     </div>
+    --->
     <div class="marginright10px" *ngIf="errorMessage">
       <!-- Register Subtance -->
       <a (click) = "registerNew()" target="_blank" matTooltip='Register New Substance'>
