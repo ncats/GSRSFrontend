@@ -48,7 +48,6 @@ export interface Config {
     ssg4Form?: string;
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
-    gsrsHomeBaseUrl?: string;
     authenticateAs?: AuthenticateAs;
 }
 
