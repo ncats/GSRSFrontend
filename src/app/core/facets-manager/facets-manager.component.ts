@@ -43,7 +43,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   _facetNameText: string;
   private privateFacetParams: FacetParam;
   private privateRawFacets: Array<Facet>;
-  private facetSearchChanged = new Subject<{ index: number; query: any; }>();
+  private facetSearchChanged = new Subject<{ index: number; query: any; facets?: any; }>();
   private activeSearchedFaced: Facet;
   private facetsAuthSubscription: Subscription;
   private subscriptions: Array<Subscription> = [];
@@ -168,7 +168,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         distinctUntilChanged(),
         switchMap(event => {
           const facet = this.facets[event.index];
-          return this.facetsService.getFacetsHandler(facet, event.query).pipe(take(1));
+          return this.facetsService.getFacetsHandler(facet, event.query, null, this.privateFacetParams).pipe(take(1));
         })
       ).subscribe(response => {
         this.activeSearchedFaced.values = this.activeSearchedFaced.values.filter(value => {
@@ -657,7 +657,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     if (facet.$next == null) {
       facet.$next = facet._self.replace('fskip=0', 'fskip=10');
     }
-    this.facetManagerService.getFacetsHandler(this.facets[index], '', facet.$next).pipe(take(1)).subscribe(resp => {
+    this.facetManagerService.getFacetsHandler(this.facets[index], '', facet.$next, this.privateFacetParams).pipe(take(1)).subscribe(resp => {
       this.facets[index].$next = resp.nextPageUri;
       this.facets[index].$previous = resp.previousPageUri;
       this.facets[index].values = this.facets[index].values.concat(resp.content);
@@ -672,7 +672,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   lessFacets(index: number) {
     this.facets[index].$isLoading = true;
     const nextUrl = this.facets[index].$next;
-    this.facetManagerService.getFacetsHandler(this.facets[index], null, null).pipe(take(1)).subscribe(response => {
+    this.facetManagerService.getFacetsHandler(this.facets[index], null, null, this.privateFacetParams).pipe(take(1)).subscribe(response => {
       this.facets[index].values = response.content;
       this.facets[index].$fetched = response.content;
       this.facets[index].$next = response.nextPageUri;
@@ -686,7 +686,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   filterFacets(index: number, searchTerm: string, faceName: string): void {
     this.searchText[faceName].isLoading = true;
     this.activeSearchedFaced = this.facets[index];
-    this.facetSearchChanged.next({ index: index, query: searchTerm });
+    this.facetSearchChanged.next({ index: index, query: searchTerm, facets: this.privateFacetParams });
   }
 
   clearFacetSearch(index: number, facetName: string): void {
