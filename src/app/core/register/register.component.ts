@@ -13,7 +13,6 @@ export class RegisterComponent implements OnInit {
     username: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required)
   });
-  
 
   constructor(
     private fb: FormBuilder,
@@ -21,7 +20,7 @@ export class RegisterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('reg>????')
+    console.log('Register component init.')
     this.regForm.controls.email.markAsTouched();
     // this.regForm = this.fb.group({
     //   username: '',

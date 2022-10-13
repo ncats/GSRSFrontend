@@ -49,6 +49,17 @@ export interface Config {
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
     authenticateAs?: AuthenticateAs;
+    userRegistrationConfigurations?: Array<UserRegistrationConfigurations>
+}
+
+export interface UserRegistrationConfigurations {
+    "name": string;
+    "active": boolean;
+    "adminRecipientEmails": Array<string>;
+    "instanceApplicationName": string;
+    "emailSubjectTemplate": string;
+    "instanceApplicationSubjectTag": string;
+    "emailBodyTemplate": string;
 }
 
 export interface LoadedComponents {

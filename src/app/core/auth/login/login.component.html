@@ -18,9 +18,9 @@
       <button color="primary" mat-flat-button [disabled]="loginForm.invalid || isLoading" (click)="login()">Login</button>
     </mat-card-actions>
   </mat-card>
-<!-- awtodo add if statement to turn off --> 
+  
   <br>
-  <div class="button-div">
+  <div *ngIf="emailFormUserRegActive" class="button-div">
     <div class="reg-link">
       <button (click)="register()">REQUEST ACCESS</button>
     </div>
